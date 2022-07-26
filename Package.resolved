@@ -1,0 +1,41 @@
+{
+  "pins" : [
+    {
+      "identity" : "comscore-swift-package-manager",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
+      "state" : {
+        "revision" : "7e3c521ad689b0e2bbf5cfb62e19c9e1619feae2",
+        "version" : "6.10.0"
+      }
+    },
+    {
+      "identity" : "googlecastsdk-no-bluetooth",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SRGSSR/GoogleCastSDK-no-bluetooth.git",
+      "state" : {
+        "revision" : "b245e040c57c74ea54a30d321effafebc79d1341",
+        "version" : "4.7.1-beta.1"
+      }
+    },
+    {
+      "identity" : "tccore-xcframework-apple",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SRGSSR/TCCore-xcframework-apple.git",
+      "state" : {
+        "revision" : "eb686883e63af28174472a09eda97acf07179c88",
+        "version" : "4.5.4-srg5"
+      }
+    },
+    {
+      "identity" : "tcsdk-xcframework-apple",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SRGSSR/TCSDK-xcframework-apple.git",
+      "state" : {
+        "revision" : "c4becb0b250258b78cb46225af5e269da834db5a",
+        "version" : "4.4.1-srg5"
+      }
+    }
+  ],
+  "version" : 2
+}
