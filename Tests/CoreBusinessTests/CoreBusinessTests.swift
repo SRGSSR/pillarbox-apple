@@ -1,7 +1,7 @@
-@testable import Analytics
+@testable import CoreBusiness
 import XCTest
 
-final class AnalyticsTests: XCTestCase {
+final class CoreBusinessTests: XCTestCase {
     func testDummy() {
         XCTAssertTrue(true)
     }
