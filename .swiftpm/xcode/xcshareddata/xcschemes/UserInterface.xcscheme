@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UI"
-               BuildableName = "UI"
-               BlueprintName = "UI"
+               BlueprintIdentifier = "UserInterface"
+               BuildableName = "UserInterface"
+               BlueprintName = "UserInterface"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -34,9 +34,9 @@
             testExecutionOrdering = "random">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UITests"
-               BuildableName = "UITests"
-               BlueprintName = "UITests"
+               BlueprintIdentifier = "UserInterfaceTests"
+               BuildableName = "UserInterfaceTests"
+               BlueprintName = "UserInterfaceTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
@@ -62,9 +62,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "UI"
-            BuildableName = "UI"
-            BlueprintName = "UI"
+            BlueprintIdentifier = "UserInterface"
+            BuildableName = "UserInterface"
+            BlueprintName = "UserInterface"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

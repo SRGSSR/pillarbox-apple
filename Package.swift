@@ -26,8 +26,8 @@ let package = Package(
             targets: ["Player"]
         ),
         .library(
-            name: "UI",
-            targets: ["UI"]
+            name: "UserInterface",
+            targets: ["UserInterface"]
         )
     ],
     dependencies: [
@@ -50,7 +50,7 @@ let package = Package(
         .target(name: "Diagnostics"),
         .target(name: "Player"),
         .target(
-            name: "UI",
+            name: "UserInterface",
             dependencies: [
                 .target(name: "Appearance"),
                 .target(name: "Player"),
@@ -82,9 +82,9 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "UITests",
+            name: "UserInterfaceTests",
             dependencies: [
-                .target(name: "UI")
+                .target(name: "UserInterface")
             ]
         )
     ]

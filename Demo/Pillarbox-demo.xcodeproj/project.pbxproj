@@ -13,7 +13,7 @@
 		6F917C102887EA8E004113BA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F917C0B2887EA8E004113BA /* ContentView.swift */; };
 		6F917C112887EA8E004113BA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F917C0D2887EA8E004113BA /* Preview Assets.xcassets */; };
 		6F9DDB44288FE90E0069B687 /* Player in Frameworks */ = {isa = PBXBuildFile; productRef = 6F9DDB43288FE90E0069B687 /* Player */; };
-		6F9DDB46288FE90E0069B687 /* UI in Frameworks */ = {isa = PBXBuildFile; productRef = 6F9DDB45288FE90E0069B687 /* UI */; };
+		6FBEFCEB289132DB004BE625 /* UserInterface in Frameworks */ = {isa = PBXBuildFile; productRef = 6FBEFCEA289132DB004BE625 /* UserInterface */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,9 +30,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F9DDB46288FE90E0069B687 /* UI in Frameworks */,
 				6F36C62D28910538000DD160 /* CoreBusiness in Frameworks */,
 				6F9DDB44288FE90E0069B687 /* Player in Frameworks */,
+				6FBEFCEB289132DB004BE625 /* UserInterface in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,8 +117,8 @@
 			name = "Pillarbox-demo";
 			packageProductDependencies = (
 				6F9DDB43288FE90E0069B687 /* Player */,
-				6F9DDB45288FE90E0069B687 /* UI */,
 				6F36C62C28910538000DD160 /* CoreBusiness */,
+				6FBEFCEA289132DB004BE625 /* UserInterface */,
 			);
 			productName = PillarboxDemo;
 			productReference = 6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */;
@@ -396,9 +396,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = Player;
 		};
-		6F9DDB45288FE90E0069B687 /* UI */ = {
+		6FBEFCEA289132DB004BE625 /* UserInterface */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = UI;
+			productName = UserInterface;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
