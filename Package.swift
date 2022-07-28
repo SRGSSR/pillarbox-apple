@@ -10,12 +10,12 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "Analytics",
-            targets: ["Analytics"]
-        ),
-        .library(
             name: "Appearance",
             targets: ["Appearance"]
+        ),
+        .library(
+            name: "CoreBusiness",
+            targets: ["CoreBusiness"]
         ),
         .library(
             name: "Diagnostics",
@@ -26,47 +26,36 @@ let package = Package(
             targets: ["Player"]
         ),
         .library(
-            name: "UI",
-            targets: ["UI"]
+            name: "UserInterface",
+            targets: ["UserInterface"]
         )
     ],
     dependencies: [
         .package(url: "https://github.com/comScore/Comscore-Swift-Package-Manager.git", .upToNextMinor(from: "6.10.0")),
         .package(url: "https://github.com/SRGSSR/GoogleCastSDK-no-bluetooth.git", .upToNextMinor(from: "4.7.1-beta.1")),
         .package(url: "https://github.com/SRGSSR/TCCore-xcframework-apple.git", .upToNextMinor(from: "4.5.4-srg5")),
-        .package(url: "https://github.com/SRGSSR/TCSDK-xcframework-apple.git", .upToNextMinor(from: "4.4.1-srg5"))
+        .package(url: "https://github.com/SRGSSR/TCSDK-xcframework-apple.git", .upToNextMinor(from: "4.4.1-srg5")),
+        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")
     ],
     targets: [
+        .target(name: "Appearance"),
         .target(
-            name: "Analytics",
+            name: "CoreBusiness",
             dependencies: [
+                .target(name: "Diagnostics"),
                 .product(name: "ComScore", package: "Comscore-Swift-Package-Manager"),
                 .product(name: "TCCore", package: "TCCore-xcframework-apple"),
                 .product(name: "TCSDK", package: "TCSDK-xcframework-apple")
             ]
         ),
-        .target(name: "Appearance"),
-        .target(
-            name: "Business",
-            dependencies: [
-                .target(name: "Analytics"),
-                .target(name: "Diagnostics")
-            ]
-        ),
         .target(name: "Diagnostics"),
         .target(name: "Player"),
         .target(
-            name: "UI",
+            name: "UserInterface",
             dependencies: [
                 .target(name: "Appearance"),
                 .target(name: "Player"),
                 .product(name: "GoogleCastSDK-no-bluetooth", package: "GoogleCastSDK-no-bluetooth", condition: .when(platforms: [.iOS]))
-            ]
-        ),
-        .testTarget(
-            name: "AnalyticsTests",
-            dependencies: [
-                .target(name: "Analytics")
             ]
         ),
         .testTarget(
@@ -76,9 +65,9 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "BusinessTests",
+            name: "CoreBusinessTests",
             dependencies: [
-                .target(name: "Business")
+                .target(name: "CoreBusiness")
             ]
         ),
         .testTarget(
@@ -94,9 +83,9 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "UITests",
+            name: "UserInterfaceTests",
             dependencies: [
-                .target(name: "UI")
+                .target(name: "UserInterface")
             ]
         )
     ]
