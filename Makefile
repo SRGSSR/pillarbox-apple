@@ -1,12 +1,16 @@
 #!/usr/bin/xcrun make -f
 
-.PHONY: all
-all: test-ios test-tvos
+CONFIGURATION_REPOSITORY_URL=https://github.com/SRGSSR/pillarbox-apple-configuration.git
+CONFIGURATION_COMMIT_SHA1=abbf495cda21533e9af2489622feb5320014e27d
+CONFIGURATION_FOLDER=Configuration
 
-.PHONY: doc
-doc:
-	@echo "Generating documentation sets..."
-	@swift package generate-documentation
+.PHONY: all
+all: setup test-ios test-tvos
+
+.PHONY: setup
+setup:
+	@echo "Setting up the project..."
+	@Scripts/checkout-configuration.sh "${CONFIGURATION_REPOSITORY_URL}" "${CONFIGURATION_COMMIT_SHA1}" "${CONFIGURATION_FOLDER}"
 	@echo "... done.\n"
 
 .PHONY: test-ios
@@ -29,6 +33,12 @@ test-tvos:
 	@xcodebuild test -scheme UserInterface -destination 'platform=tvOS Simulator,name=Apple TV' 2> /dev/null
 	@echo "... done.\n"
 
+.PHONY: doc
+doc:
+	@echo "Generating documentation sets..."
+	@swift package generate-documentation
+	@echo "... done.\n"
+
 .PHONY: lint
 lint:
 	@echo "Linting project..."
@@ -38,9 +48,10 @@ lint:
 .PHONY: help
 help:
 	@echo "The following targets are available:"
-	@echo "   all                 Build and run unit tests for all platforms"
-	@echo "   doc                 Build the documentation"
-	@echo "   lint                Lint project and fix issues"
-	@echo "   test-ios            Build and run unit tests for iOS"
-	@echo "   test-tvos           Build and run unit tests for tvOS"
-	@echo "   help                Display this help message"
+	@echo "   all            Build and run unit tests for all platforms"
+	@echo "   setup          Setup project"
+	@echo "   test-ios       Build and run unit tests for iOS"
+	@echo "   test-tvos      Build and run unit tests for tvOS"
+	@echo "   doc            Build the documentation"
+	@echo "   lint           Lint project and fix issues"
+	@echo "   help           Display this help message"
