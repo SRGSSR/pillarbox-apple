@@ -1,8 +1,7 @@
 #!/usr/bin/xcrun make -f
 
 CONFIGURATION_REPOSITORY_URL=https://github.com/SRGSSR/pillarbox-apple-configuration.git
-CONFIGURATION_COMMIT_SHA1=abbf495cda21533e9af2489622feb5320014e27d
-CONFIGURATION_FOLDER=Configuration
+CONFIGURATION_COMMIT_SHA1=acb9de91aa074905ec87fb89ee01b1a7b8dc972f
 
 .PHONY: all
 all: setup test-ios test-tvos
@@ -10,8 +9,25 @@ all: setup test-ios test-tvos
 .PHONY: setup
 setup:
 	@echo "Setting up the project..."
-	@Scripts/checkout-configuration.sh "${CONFIGURATION_REPOSITORY_URL}" "${CONFIGURATION_COMMIT_SHA1}" "${CONFIGURATION_FOLDER}"
+	@bundle install > /dev/null
+	@Scripts/checkout-configuration.sh "${CONFIGURATION_REPOSITORY_URL}" "${CONFIGURATION_COMMIT_SHA1}" Configuration
 	@echo "... done.\n"
+
+.PHONY: fastlane-ios
+fastlane-ios: setup
+	@bundle exec fastlane --env ios
+
+.PHONY: fastlane-tvos
+fastlane-tvos: setup
+	@bundle exec fastlane --env tvos
+
+.PHONY: fastlane-ios-nightly
+fastlane-ios-nightly: setup
+	@bundle exec fastlane --env ios.nightly
+
+.PHONY: fastlane-tvos-nightly
+fastlane-tvos-nightly: setup
+	@bundle exec fastlane --env tvos.nightly
 
 .PHONY: test-ios
 test-ios:
@@ -48,10 +64,14 @@ lint:
 .PHONY: help
 help:
 	@echo "The following targets are available:"
-	@echo "   all            Build and run unit tests for all platforms"
-	@echo "   setup          Setup project"
-	@echo "   test-ios       Build and run unit tests for iOS"
-	@echo "   test-tvos      Build and run unit tests for tvOS"
-	@echo "   doc            Build the documentation"
-	@echo "   lint           Lint project and fix issues"
-	@echo "   help           Display this help message"
+	@echo "   all                      Build and run unit tests for all platforms"
+	@echo "   setup                    Setup project"
+	@echo "   fastlane-ios             Run fastlane for iOS release targets"
+	@echo "   fastlane-tvos            Run fastlane for tvOS release targets"
+	@echo "   fastlane-ios-nightly     Run fastlane for iOS nightly targets"
+	@echo "   fastlane-tvos-nightly    Run fastlane for tvOS nightly targets"
+	@echo "   test-ios                 Build and run unit tests for iOS"
+	@echo "   test-tvos                Build and run unit tests for tvOS"
+	@echo "   doc                      Build the documentation"
+	@echo "   lint                     Lint project and fix issues"
+	@echo "   help                     Display this help message"

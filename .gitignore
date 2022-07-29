@@ -16,5 +16,7 @@ DerivedData/
 
 /Configuration
 
-/Demo/fastlane/report.xml
-/Demo/fastlane/README.md
+/fastlane/README.md
+/fastlane/report.xml
+/fastlane/test_output
+/Configuration

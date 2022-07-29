@@ -1,0 +1,29 @@
+# frozen_string_literal: true
+
+default_platform(:ios)
+
+platform :ios do
+  desc 'Build and distribute the demo app'
+  lane :demo do
+    build_app(
+      project: 'Demo/Pillarbox-demo.xcodeproj',
+      configuration: ENV['CONFIGURATION'],
+      scheme: 'Pillarbox-demo',
+      destination: "generic/platform=#{ENV['PLATFORM']}",
+      export_team_id: ENV['TEAM_ID'],
+      xcargs: "-authenticationKeyIssuerID #{ENV['KEY_ISSUER_ID']} " \
+              "-authenticationKeyID #{ENV['KEY_ID']} " \
+              "-authenticationKeyPath #{File.expand_path('../Configuration/AppStoreConnect_API_Key.p8')} " \
+              '-allowProvisioningUpdates'
+    )
+  end
+
+  desc 'Build and run unit tests'
+  lane :tests do
+    run_tests(scheme: 'Appearance', device: ENV['DEVICE'], package_path: '.', result_bundle: true)
+    run_tests(scheme: 'CoreBusiness', device: ENV['DEVICE'], package_path: '.', result_bundle: true)
+    run_tests(scheme: 'Diagnostics', device: ENV['DEVICE'], package_path: '.', result_bundle: true)
+    run_tests(scheme: 'Player', device: ENV['DEVICE'], package_path: '.', result_bundle: true)
+    run_tests(scheme: 'UserInterface', device: ENV['DEVICE'], package_path: '.', result_bundle: true)
+  end
+end
