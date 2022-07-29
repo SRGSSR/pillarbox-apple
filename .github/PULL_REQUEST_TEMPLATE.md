@@ -11,6 +11,7 @@
 ### Checklist
 
 - [ ] Your branch has been rebased onto the `main` branch.
+- [ ] `make lint` pass successfully.
 - [ ] APIs have been properly documented (if relevant).
 - [ ] Code linting is successful.
 - [ ] New unit tests have been written (if relevant).
