@@ -1,0 +1,2 @@
+#include? "../Configuration/Xcode/Demo.release.xcconfig"
+#include "Xcode/Shared/Targets/Application.xcconfig"
