@@ -26,10 +26,8 @@ def build_and_sign_app(configuration)
     destination: "generic/platform=#{ENV['PLATFORM']}",
     export_team_id: ENV['TEAM_ID'],
     output_directory: 'Binaries',
-    xcargs: "-authenticationKeyIssuerID #{ENV['KEY_ISSUER_ID']} " \
-            "-authenticationKeyID #{ENV['KEY_ID']} " \
-            "-authenticationKeyPath #{key_filepath} " \
-            '-allowProvisioningUpdates'
+    xcargs: "-authenticationKeyIssuerID #{ENV['KEY_ISSUER_ID']} -authenticationKeyID #{ENV['KEY_ID']} " \
+            "-authenticationKeyPath #{key_filepath} -allowProvisioningUpdates"
   )
 end
 
@@ -41,6 +39,12 @@ def add_version_badge(label, message, color)
     shield_gravity: 'South',
     glob: ENV['ICON_GLOB']
   )
+end
+
+def upload_build_to_testflight
+  xcversion(version: '~> 13')
+  upload_to_testflight
+  xcversion(version: '~> 14')
 end
 
 platform :ios do
@@ -72,9 +76,7 @@ platform :ios do
     build_and_sign_app('Nightly')
     reset_git_repo(skip_clean: true)
     changelog_from_git_commits
-    xcversion(version: '~> 13')
-    upload_to_testflight
-    xcversion(version: '~> 14')
+    upload_build_to_testflight
     reset_git_repo
   end
 
@@ -91,9 +93,7 @@ platform :ios do
     build_and_sign_app('Release')
     reset_git_repo(skip_clean: true)
     changelog_from_git_commits
-    xcversion(version: '~> 13')
-    upload_to_testflight
-    xcversion(version: '~> 14')
+    upload_build_to_testflight
     reset_git_repo
   end
 
