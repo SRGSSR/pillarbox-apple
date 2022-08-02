@@ -17,6 +17,7 @@ platform :ios do
 
   before_all do |lane|
     ensure_git_status_clean
+    xcversion(version: '~> 14')
   end
 
   desc 'Build and distribute the demo app'
@@ -34,7 +35,9 @@ platform :ios do
     )
     changelog_from_git_commits
     login_to_app_store_connect
+    xcversion(version: '~> 13')
     upload_to_testflight
+    xcversion(version: '~> 14')
   end
 
   desc 'Build and run unit tests'
