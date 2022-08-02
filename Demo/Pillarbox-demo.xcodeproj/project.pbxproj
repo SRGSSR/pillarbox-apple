@@ -17,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6F010340289946220021BA76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pillarbox-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F45DB9A2893B773008ACCE6 /* Application.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
 		6F45DB9B2893B773008ACCE6 /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
@@ -47,6 +48,7 @@
 		6F05B8CC2887E934005D75E3 = {
 			isa = PBXGroup;
 			children = (
+				6F010340289946220021BA76 /* Info.plist */,
 				6FAA7E9E288E84BD00380147 /* Packages */,
 				6F917C092887EA8E004113BA /* Sources */,
 				6F917C072887EA8E004113BA /* Resources */,
@@ -351,7 +353,8 @@
 				DEVELOPMENT_TEAM = ABW92QGFZ7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "$(BUNDLE_DISPLAY_NAME)";
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Pillarbox 🛠";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -381,7 +384,8 @@
 				DEVELOPMENT_TEAM = ABW92QGFZ7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "$(BUNDLE_DISPLAY_NAME)";
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Pillarbox 🛠";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -467,7 +471,8 @@
 				DEVELOPMENT_TEAM = ABW92QGFZ7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "$(BUNDLE_DISPLAY_NAME)";
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Pillarbox 🛠";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
