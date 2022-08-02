@@ -3,6 +3,18 @@
 default_platform(:ios)
 
 platform :ios do
+  def key_filepath
+    File.expand_path('../Configuration/AppStoreConnect_API_Key.p8')
+  end
+
+  def login_to_app_store_connect
+    app_store_connect_api_key(
+      key_id: ENV['KEY_ID'],
+      issuer_id: ENV['KEY_ISSUER_ID'],
+      key_filepath: key_filepath
+    )
+  end
+
   before_all do |lane|
     ensure_git_status_clean
   end
@@ -17,9 +29,12 @@ platform :ios do
       export_team_id: ENV['TEAM_ID'],
       xcargs: "-authenticationKeyIssuerID #{ENV['KEY_ISSUER_ID']} " \
               "-authenticationKeyID #{ENV['KEY_ID']} " \
-              "-authenticationKeyPath #{File.expand_path('../Configuration/AppStoreConnect_API_Key.p8')} " \
+              "-authenticationKeyPath #{key_filepath} " \
               '-allowProvisioningUpdates'
     )
+    changelog_from_git_commits
+    login_to_app_store_connect
+    upload_to_testflight
   end
 
   desc 'Build and run unit tests'
