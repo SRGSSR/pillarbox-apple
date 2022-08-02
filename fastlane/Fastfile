@@ -7,6 +7,10 @@ platform :ios do
     File.expand_path('../Configuration/AppStoreConnect_API_Key.p8')
   end
 
+  def application_xcconfig_filepath
+    'Demo/Xcode/Shared/Targets/Application.xcconfig'
+  end
+
   def login_to_app_store_connect
     app_store_connect_api_key(
       key_id: ENV['KEY_ID'],
@@ -28,11 +32,21 @@ platform :ios do
       platform: ENV['TESTFLIGHT_PLATFORM']
     ) + 1
     update_xcconfig_value(
-      path: 'Demo/Xcode/Shared/Targets/Application.xcconfig',
+      path: application_xcconfig_filepath,
       name: 'CURRENT_PROJECT_VERSION',
       value: build_number.to_s
     )
-    add_badge(dark: true)
+    marketing_version = get_xcconfig_value(
+      path: application_xcconfig_filepath,
+      name: 'MARKETING_VERSION'
+    )
+    add_badge(
+      no_badge: true,
+      shield: "#{marketing_version}-#{build_number}-orange",
+      shield_scale: '0.5',
+      shield_gravity: 'South',
+      shield_geometry: '+0+20%'
+    )
     build_app(
       project: 'Demo/Pillarbox-demo.xcodeproj',
       configuration: ENV['CONFIGURATION'],
