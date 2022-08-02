@@ -28,6 +28,7 @@ platform :ios do
       scheme: 'Pillarbox-demo',
       destination: "generic/platform=#{ENV['PLATFORM']}",
       export_team_id: ENV['TEAM_ID'],
+      output_directory: 'Binaries',
       xcargs: "-authenticationKeyIssuerID #{ENV['KEY_ISSUER_ID']} " \
               "-authenticationKeyID #{ENV['KEY_ID']} " \
               "-authenticationKeyPath #{key_filepath} " \
