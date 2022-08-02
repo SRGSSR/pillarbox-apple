@@ -3,6 +3,10 @@
 default_platform(:ios)
 
 platform :ios do
+  before_all do |lane|
+    ensure_git_status_clean
+  end
+
   desc 'Build and distribute the demo app'
   lane :demo do
     build_app(
