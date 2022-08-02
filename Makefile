@@ -21,14 +21,6 @@ fastlane-ios: setup
 fastlane-tvos: setup
 	@bundle exec fastlane --env tvos
 
-.PHONY: fastlane-ios-nightly
-fastlane-ios-nightly: setup
-	@bundle exec fastlane --env ios.nightly
-
-.PHONY: fastlane-tvos-nightly
-fastlane-tvos-nightly: setup
-	@bundle exec fastlane --env tvos.nightly
-
 .PHONY: test-ios
 test-ios:
 	@echo "Running iOS unit tests..."
@@ -64,14 +56,12 @@ lint:
 .PHONY: help
 help:
 	@echo "The following targets are available:"
-	@echo "   all                      Build and run unit tests for all platforms"
-	@echo "   setup                    Setup project"
-	@echo "   fastlane-ios             Run fastlane for iOS release targets"
-	@echo "   fastlane-tvos            Run fastlane for tvOS release targets"
-	@echo "   fastlane-ios-nightly     Run fastlane for iOS nightly targets"
-	@echo "   fastlane-tvos-nightly    Run fastlane for tvOS nightly targets"
-	@echo "   test-ios                 Build and run unit tests for iOS"
-	@echo "   test-tvos                Build and run unit tests for tvOS"
-	@echo "   doc                      Build the documentation"
-	@echo "   lint                     Lint project and fix issues"
-	@echo "   help                     Display this help message"
+	@echo "   all                 Build and run unit tests for all platforms"
+	@echo "   setup               Setup project"
+	@echo "   fastlane-ios        Run fastlane for iOS targets"
+	@echo "   fastlane-tvos       Run fastlane for tvOS targets"
+	@echo "   test-ios            Build and run unit tests for iOS"
+	@echo "   test-tvos           Build and run unit tests for tvOS"
+	@echo "   doc                 Build the documentation"
+	@echo "   lint                Lint project and fix issues"
+	@echo "   help                Display this help message"
