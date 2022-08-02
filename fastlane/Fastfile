@@ -15,13 +15,27 @@ platform :ios do
     )
   end
 
-  before_all do |lane|
+  before_all do
     ensure_git_status_clean
     xcversion(version: '~> 14')
   end
 
   desc 'Build and distribute the demo app'
   lane :demo do
+    login_to_app_store_connect
+    build_number = latest_testflight_build_number(
+      app_identifier: ENV['APP_IDENTIFIER'],
+      platform: ENV['TESTFLIGHT_PLATFORM']
+    ) + 1
+    update_xcconfig_value(
+      path: 'Demo/Xcode/Shared/Targets/Application.xcconfig',
+      name: 'CURRENT_PROJECT_VERSION',
+      value: build_number.to_s
+    )
+    increment_build_number(
+      build_number: build_number,
+      xcodeproj: 'Demo/Pillarbox-demo.xcodeproj'
+    )
     build_app(
       project: 'Demo/Pillarbox-demo.xcodeproj',
       configuration: ENV['CONFIGURATION'],
@@ -35,7 +49,6 @@ platform :ios do
               '-allowProvisioningUpdates'
     )
     changelog_from_git_commits
-    login_to_app_store_connect
     xcversion(version: '~> 13')
     upload_to_testflight
     xcversion(version: '~> 14')
