@@ -345,7 +345,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6F45DB9E2893B773008ACCE6 /* Demo.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Preview Content\"";
@@ -376,7 +375,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6F45DB9F2893B773008ACCE6 /* Demo.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Preview Content\"";
@@ -463,7 +461,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6F45DB9D2893B773008ACCE6 /* Demo.nightly.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Preview Content\"";

@@ -12,3 +12,6 @@ COMMON__BUNDLE_IDENTIFIER = Pillarbox-demo
 
 COMMON__BUNDLE_IDENTIFIER_SUFFIX[config=Nightly] = .nightly
 COMMON__BUNDLE_IDENTIFIER_SUFFIX[config=Debug] = .debug
+
+ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphone*] = AppIcon
+ASSETCATALOG_COMPILER_APPICON_NAME[sdk=appletv*] = App Icon & Top Shelf Image
