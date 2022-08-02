@@ -32,10 +32,7 @@ platform :ios do
       name: 'CURRENT_PROJECT_VERSION',
       value: build_number.to_s
     )
-    increment_build_number(
-      build_number: build_number,
-      xcodeproj: 'Demo/Pillarbox-demo.xcodeproj'
-    )
+    add_badge(dark: true)
     build_app(
       project: 'Demo/Pillarbox-demo.xcodeproj',
       configuration: ENV['CONFIGURATION'],
