@@ -59,10 +59,12 @@ platform :ios do
               "-authenticationKeyPath #{key_filepath} " \
               '-allowProvisioningUpdates'
     )
+    reset_git_repo(skip_clean: true)
     changelog_from_git_commits
     xcversion(version: '~> 13')
     upload_to_testflight
     xcversion(version: '~> 14')
+    reset_git_repo
   end
 
   desc 'Build and run unit tests'
