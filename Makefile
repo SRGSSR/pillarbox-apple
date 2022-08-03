@@ -22,26 +22,26 @@ fastlane-ios: setup
 fastlane-tvos: setup
 	@bundle exec fastlane --env tvos
 
-.PHONY: deliver_demo_nightly-ios
-deliver_demo_nightly-ios: setup
+.PHONY: deliver-demo-nightly-ios
+deliver-demo-nightly-ios: setup
 	@echo "Delivering demo nightly build for iOS..."
 	@bundle exec fastlane deliver_demo_nightly --env ios
 	@echo "... done.\n"
 
-.PHONY: deliver_demo_nightly-tvos
-deliver_demo_nightly-tvos: setup
+.PHONY: deliver-demo-nightly-tvos
+deliver-demo-nightly-tvos: setup
 	@echo "Delivering demo nightly build for tvOS..."
 	@bundle exec fastlane deliver_demo_nightly --env tvos
 	@echo "... done.\n"
 
-.PHONY: deliver_demo_release-ios
-deliver_demo_release-ios: setup
+.PHONY: deliver-demo-release-ios
+deliver-demo-release-ios: setup
 	@echo "Delivering demo release build for iOS..."
 	@bundle exec fastlane deliver_demo_release --env ios
 	@echo "... done.\n"
 
-.PHONY: deliver_demo_release-tvos
-deliver_demo_release-tvos: setup
+.PHONY: deliver-demo-release-tvos
+deliver-demo-release-tvos: setup
 	@echo "Delivering demo release build for tvOS..."
 	@bundle exec fastlane deliver_demo_release --env tvos
 	@echo "... done.\n"
@@ -125,10 +125,10 @@ help:
 	@echo "   setup                              Setup project"
 	@echo "   fastlane-ios                       Run fastlane for iOS targets"
 	@echo "   fastlane-tvos                      Run fastlane for tvOS targets"
-	@echo "   deliver_demo_nightly-ios           Deliver a demo nightly build for iOS"
-	@echo "   deliver_demo_nightly-tvos          Deliver a demo nightly build for tvOS"
-	@echo "   deliver_demo_release-ios           Deliver a demo release build for iOS"
-	@echo "   deliver_demo_release-tvos          Deliver a demo release build for tvOS"
+	@echo "   deliver-demo-nightly-ios           Deliver a demo nightly build for iOS"
+	@echo "   deliver-demo-nightly-tvos          Deliver a demo nightly build for tvOS"
+	@echo "   deliver-demo-release-ios           Deliver a demo release build for iOS"
+	@echo "   deliver-demo-release-tvos          Deliver a demo release build for tvOS"
 	@echo "   test-appearance-ios                Build and run Appearance unit tests for iOS"
 	@echo "   test-appearance-tvos               Build and run Appearance unit tests for tvOS"
 	@echo "   test-core-business-ios             Build and run CoreBusiness unit tests for iOS"
