@@ -118,6 +118,10 @@ rescue StandardError => e
   UI.important('TestFlight external delivery was skipped because a build is already in review')
 end
 
+# Danger requires the PR number to be extracted as environment variable. On TeamCity call:
+#  branch="%teamcity.build.branch%"
+#  export GITHUB_PULL_REQUEST_ID=${branch//pull\//}
+# before calling the lane.
 def run_package_tests(scheme_name)
   run_tests(
     scheme: scheme_name,
