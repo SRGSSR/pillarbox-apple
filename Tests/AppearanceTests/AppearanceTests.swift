@@ -5,4 +5,8 @@ final class AppearanceTests: XCTestCase {
     func testDummy() {
         XCTAssertTrue(true)
     }
+    
+    func testFailure() {
+        XCTFail("Nope")
+    }
 }
