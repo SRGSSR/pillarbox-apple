@@ -103,6 +103,10 @@ def distribute_app_to_testers(app_identifier, build_number)
     demo_account_required: false
   )
   xcversion(version: '~> 14')
+rescue StandardError => e
+  raise e unless e.message.include?('Another build is in review')
+
+  UI.important('TestFlight external delivery was skipped because a build is already in review')
 end
 
 # Lanes
