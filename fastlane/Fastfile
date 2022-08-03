@@ -128,10 +128,9 @@ def run_package_tests(scheme_name)
     fail_build: false
   )
   danger(
-    danger_id: 'unit-tests',
-    dangerfile: 'Dangerfile',
-    github_api_token: ENV['DANGER_GITHUB_TOKEN'],
-    verbose: true
+    danger_id: "#{scheme_name}-unit-tests",
+    pr: 'https://github.com/SRGSSR/pillarbox-apple/pull/4',
+    verbose: false
   )
   trainer(
     path: 'fastlane/test_output',
@@ -195,13 +194,12 @@ platform :ios do
     run_package_tests('UserInterface')
   end
 
-  desc 'Run danger'
+  desc 'Danger'
   lane :run_danger do
     danger(
-      danger_id: 'unit-tests',
-      dangerfile: 'Dangerfile',
-      github_api_token: ENV['DANGER_GITHUB_TOKEN'],
-      verbose: true
+      danger_id: 'danger-test',
+      pr: 'https://github.com/SRGSSR/pillarbox-apple/pull/4',
+      verbose: false
     )
   end
 end
