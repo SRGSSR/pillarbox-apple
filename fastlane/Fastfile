@@ -12,6 +12,14 @@ def application_xcconfig_filepath
   'Demo/Xcode/Shared/Targets/Application.xcconfig'
 end
 
+# Should be called before any operation requiring authentication (expires after 120 seconds)
+#
+# TODO: If build_app is updated to support a JSON API key path for automatic signing in the future (instead
+#       of manually supplied xargs) we could remove this method and have the JSON passed to all fastlane actions
+#       instead. This would be cleaner but currently we still need to duplicate the key as a .p8 file for build_app,
+#       so there is no advantage in adopting the JSON API approach at the moment. See also:
+#         https://docs.fastlane.tools/app-store-connect-api/#using-fastlane-api-key-hash-option
+#         https://github.com/fastlane/fastlane/discussions/19973
 def login_to_app_store_connect
   app_store_connect_api_key(
     key_id: ENV['KEY_ID'],
@@ -20,14 +28,22 @@ def login_to_app_store_connect
   )
 end
 
-def marketing_version
+def xcconfig_marketing_version
   get_xcconfig_value(
     path: application_xcconfig_filepath,
     name: 'MARKETING_VERSION'
   )
 end
 
+def xcconfig_build_number
+  get_xcconfig_value(
+    path: application_xcconfig_filepath,
+    name: 'CURRENT_PROJECT_VERSION'
+  )
+end
+
 def bump_testflight_build_number(app_identifier)
+  login_to_app_store_connect
   build_number = latest_testflight_build_number(
     app_identifier: app_identifier,
     platform: ENV['TESTFLIGHT_PLATFORM']
@@ -63,10 +79,29 @@ def add_version_badge(label, message, color)
   )
 end
 
-# FIXME: Temporary workaround for upload with Xcode 14, see https://github.com/fastlane/fastlane/issues/20371
-def upload_build_to_testflight
+def upload_app_to_testflight
+  # FIXME: Temporary workaround for upload with Xcode 14, see https://github.com/fastlane/fastlane/issues/20371
   xcversion(version: '~> 13')
+  login_to_app_store_connect
   upload_to_testflight
+  xcversion(version: '~> 14')
+end
+
+# Requires `Beta App Information` and `Beta App Review Information` to have been properly filled once in TestFlight)
+def distribute_app_to_testers(app_identifier, build_number)
+  # FIXME: Temporary workaround for upload with Xcode 14, see https://github.com/fastlane/fastlane/issues/20371
+  xcversion(version: '~> 13')
+  login_to_app_store_connect
+  upload_to_testflight(
+    app_identifier: app_identifier,
+    distribute_only: true,
+    app_platform: ENV['TESTFLIGHT_PLATFORM'],
+    build_number: build_number.to_s,
+    distribute_external: true,
+    groups: ENV['TESTFLIGHT_GROUPS'],
+    notify_external_testers: true,
+    demo_account_required: false
+  )
   xcversion(version: '~> 14')
 end
 
@@ -80,24 +115,23 @@ platform :ios do
 
   desc 'Build and distribute a demo app nightly build'
   lane :nightly do
-    login_to_app_store_connect
-    build_number = bump_testflight_build_number('ch.srgssr.Pillarbox-demo.nightly')
-    add_version_badge(marketing_version, build_number, 'orange')
+    app_identifier = 'ch.srgssr.Pillarbox-demo.nightly'
+    build_number = bump_testflight_build_number(app_identifier)
+    add_version_badge(xcconfig_marketing_version, build_number, 'orange')
     build_and_sign_app('Nightly')
     reset_git_repo(skip_clean: true)
-    changelog_from_git_commits
-    upload_build_to_testflight
+    upload_app_to_testflight
+    distribute_app_to_testers(app_identifier, build_number)
     reset_git_repo
   end
 
   desc 'Build and distribute a demo app release build'
   lane :release do
-    login_to_app_store_connect
-    add_version_badge('Ver.', marketing_version, 'blue')
+    add_version_badge('Ver.', xcconfig_marketing_version, 'blue')
     build_and_sign_app('Release')
     reset_git_repo(skip_clean: true)
-    changelog_from_git_commits
-    upload_build_to_testflight
+    upload_app_to_testflight
+    distribute_app_to_testers('ch.srgssr.Pillarbox-demo', xcconfig_build_number)
     reset_git_repo
   end
 

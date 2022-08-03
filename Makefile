@@ -1,7 +1,7 @@
 #!/usr/bin/xcrun make -f
 
 CONFIGURATION_REPOSITORY_URL=https://github.com/SRGSSR/pillarbox-apple-configuration.git
-CONFIGURATION_COMMIT_SHA1=89b7fb21ee3984f7265ad55180936e45b31b2285
+CONFIGURATION_COMMIT_SHA1=887244e044828cc5fb82b107d801f563fb033e18
 
 .PHONY: all
 all: setup test-ios test-tvos
