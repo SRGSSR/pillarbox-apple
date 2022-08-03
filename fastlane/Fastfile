@@ -130,6 +130,7 @@ def run_package_tests(scheme_name)
   danger(
     danger_id: "#{scheme_name}-unit-tests",
     pr: 'https://github.com/SRGSSR/pillarbox-apple/pull/4',
+    base: 'main',
     verbose: false
   )
   trainer(
@@ -199,6 +200,7 @@ platform :ios do
     danger(
       danger_id: 'danger-test',
       pr: 'https://github.com/SRGSSR/pillarbox-apple/pull/4',
+      base: 'main',
       verbose: false
     )
   end
