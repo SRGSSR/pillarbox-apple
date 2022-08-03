@@ -2,6 +2,8 @@
 
 default_platform(:ios)
 
+# Helpers
+
 def key_filepath
   File.expand_path('../Configuration/AppStoreConnect_API_Key.p8')
 end
@@ -16,6 +18,26 @@ def login_to_app_store_connect
     issuer_id: ENV['KEY_ISSUER_ID'],
     key_filepath: key_filepath
   )
+end
+
+def marketing_version
+  get_xcconfig_value(
+    path: application_xcconfig_filepath,
+    name: 'MARKETING_VERSION'
+  )
+end
+
+def bump_testflight_build_number(app_identifier)
+  build_number = latest_testflight_build_number(
+    app_identifier: app_identifier,
+    platform: ENV['TESTFLIGHT_PLATFORM']
+  ) + 1
+  update_xcconfig_value(
+    path: application_xcconfig_filepath,
+    name: 'CURRENT_PROJECT_VERSION',
+    value: build_number.to_s
+  )
+  build_number
 end
 
 def build_and_sign_app(configuration)
@@ -41,11 +63,14 @@ def add_version_badge(label, message, color)
   )
 end
 
+# FIXME: Temporary workaround for upload with Xcode 14, see https://github.com/fastlane/fastlane/issues/20371
 def upload_build_to_testflight
   xcversion(version: '~> 13')
   upload_to_testflight
   xcversion(version: '~> 14')
 end
+
+# Lanes
 
 platform :ios do
   before_all do
@@ -56,22 +81,7 @@ platform :ios do
   desc 'Build and distribute a demo app nightly build'
   lane :nightly do
     login_to_app_store_connect
-
-    build_number = latest_testflight_build_number(
-      app_identifier: 'ch.srgssr.Pillarbox-demo.nightly',
-      platform: ENV['TESTFLIGHT_PLATFORM']
-    ) + 1
-    update_xcconfig_value(
-      path: application_xcconfig_filepath,
-      name: 'CURRENT_PROJECT_VERSION',
-      value: build_number.to_s
-    )
-
-    marketing_version = get_xcconfig_value(
-      path: application_xcconfig_filepath,
-      name: 'MARKETING_VERSION'
-    )
-
+    build_number = bump_testflight_build_number('ch.srgssr.Pillarbox-demo.nightly')
     add_version_badge(marketing_version, build_number, 'orange')
     build_and_sign_app('Nightly')
     reset_git_repo(skip_clean: true)
@@ -83,12 +93,6 @@ platform :ios do
   desc 'Build and distribute a demo app release build'
   lane :release do
     login_to_app_store_connect
-
-    marketing_version = get_xcconfig_value(
-      path: application_xcconfig_filepath,
-      name: 'MARKETING_VERSION'
-    )
-
     add_version_badge('Ver.', marketing_version, 'blue')
     build_and_sign_app('Release')
     reset_git_repo(skip_clean: true)
