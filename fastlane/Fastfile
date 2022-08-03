@@ -148,12 +148,28 @@ platform :ios do
     reset_git_repo
   end
 
-  desc 'Build and run unit tests'
-  lane :tests do
+  desc 'Build and run Appearanc unit testse'
+  lane :test_appearance do
     run_tests(scheme: 'Appearance', device: ENV['DEVICE'], package_path: '.', result_bundle: true)
+  end
+
+  desc 'Build and run CoreBusiness unit tests'
+  lane :test_core_business do
     run_tests(scheme: 'CoreBusiness', device: ENV['DEVICE'], package_path: '.', result_bundle: true)
+  end
+
+  desc 'Build and run Diagnostics unit tests'
+  lane :test_diagnostics do
     run_tests(scheme: 'Diagnostics', device: ENV['DEVICE'], package_path: '.', result_bundle: true)
+  end
+
+  desc 'Build and run Player unit tests'
+  lane :test_player do
     run_tests(scheme: 'Player', device: ENV['DEVICE'], package_path: '.', result_bundle: true)
+  end
+
+  desc 'Build and run UserInterface unit tests'
+  lane :test_user_interface do
     run_tests(scheme: 'UserInterface', device: ENV['DEVICE'], package_path: '.', result_bundle: true)
   end
 end
