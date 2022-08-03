@@ -126,8 +126,8 @@ platform :ios do
     xcversion(version: '~> 14')
   end
 
-  desc 'Build and distribute a demo app nightly build'
-  lane :nightly do
+  desc 'Deliver a demo app nightly build'
+  lane :deliver_demo_nightly do
     app_identifier = 'ch.srgssr.Pillarbox-demo.nightly'
     build_number = bump_testflight_build_number(app_identifier)
     add_version_badge(xcconfig_marketing_version, build_number, 'orange')
@@ -138,8 +138,8 @@ platform :ios do
     reset_git_repo
   end
 
-  desc 'Build and distribute a demo app release build'
-  lane :release do
+  desc 'Deliver a demo app release build'
+  lane :deliver_demo_release do
     add_version_badge('Ver.', xcconfig_marketing_version, 'blue')
     build_and_sign_app('Release')
     reset_git_repo(skip_clean: true)
@@ -148,7 +148,7 @@ platform :ios do
     reset_git_repo
   end
 
-  desc 'Build and run Appearanc unit testse'
+  desc 'Build and run Appearance unit testse'
   lane :test_appearance do
     run_tests(scheme: 'Appearance', device: ENV['DEVICE'], package_path: '.', result_bundle: true)
   end
