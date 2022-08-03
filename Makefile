@@ -1,7 +1,7 @@
 #!/usr/bin/xcrun make -f
 
 CONFIGURATION_REPOSITORY_URL=https://github.com/SRGSSR/pillarbox-apple-configuration.git
-CONFIGURATION_COMMIT_SHA1=3748bf4fc299fb3dbe5d580b121b60c69eb20b2b
+CONFIGURATION_COMMIT_SHA1=8777b100612867166384606300c73b64d264132c
 
 .PHONY: all
 all: help
