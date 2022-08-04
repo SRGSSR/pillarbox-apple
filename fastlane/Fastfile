@@ -120,14 +120,11 @@ end
 
 # Danger requires the PR number to be extracted as environment variable. On TeamCity this can
 # be achieved using TeamCity predefined parameters, provided by the Pull Request build feature
-# which must be added to the TeamCity project configuration to track PRs:
-#
-#  export GITHUB_PULL_REQUEST_ID="%teamcity.pullRequest.number%"
-#
-# before calling the lane.
+# which must be added to the TeamCity project configuration parameters:
+#    env.GITHUB_PULL_REQUEST_ID %teamcity.pullRequest.number%
 def run_danger
   if ENV['GITHUB_PULL_REQUEST_ID']
-    danger(danger_id: 'quality')
+    danger
   else
     UI.important('Danger was skipped since no pull request identifier has been provided')
   end
@@ -191,5 +188,11 @@ platform :ios do
   desc 'Run code quality checks'
   lane :code_quality do
     run_danger
+  end
+
+  desc 'Lint code quality checks'
+  lane :lint_code_quality do
+    # Use dummy PR for linting, see https://danger.systems/guides/troubleshooting.html#i-want-to-work-locally-on-my-dangerfile
+    danger(pr: 'https://github.com/SRGSSR/pillarbox-apple/pull/2')
   end
 end

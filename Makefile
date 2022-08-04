@@ -76,6 +76,12 @@ lint:
 	@swiftlint --fix && swiftlint
 	@echo "... done.\n"
 
+.PHONY: lint-code-quality
+lint-code-quality: setup
+	@echo "Linting code quality manifests..."
+	@bundle exec fastlane lint_code_quality
+	@echo "... done.\n"
+
 .PHONY: help
 help:
 	@echo "The following targets are available:"
@@ -92,4 +98,5 @@ help:
 	@echo "   code-quality               		 Perform code quality checks"
 	@echo "   doc                                Build the documentation"
 	@echo "   lint                               Lint project and fix issues"
+	@echo "   lint-code-quality                  Lint code quality manifests"
 	@echo "   help                               Display this help message"
