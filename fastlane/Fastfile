@@ -119,15 +119,15 @@ rescue StandardError => e
 end
 
 # Danger requires the PR number to be extracted as environment variable. On TeamCity this can
-# be achieved using TeamCity predefined parameters:
+# be achieved using TeamCity predefined parameters, provided by the Pull Request build feature
+# which must be added to the TeamCity project configuration to track PRs:
 #
-#  branch="%teamcity.build.branch%"
-#  export GITHUB_PULL_REQUEST_ID=${branch//pull\//}
+#  export GITHUB_PULL_REQUEST_ID="%teamcity.pullRequest.number%"
 #
 # before calling the lane.
-def run_danger(danger_id)
+def run_danger
   if ENV['GITHUB_PULL_REQUEST_ID']
-    danger(danger_id: "#{danger_id}-unit-tests")
+    danger(danger_id: 'quality')
   else
     UI.important('Danger was skipped since no pull request identifier has been provided')
   end
@@ -142,7 +142,6 @@ def run_package_tests(scheme_name)
     clean: true,
     fail_build: false
   )
-  run_danger(scheme_name)
   trainer(
     path: 'fastlane/test_output',
     output_remove_retry_attempts: true,
@@ -203,5 +202,10 @@ platform :ios do
   desc 'Build and run UserInterface unit tests'
   lane :test_user_interface do
     run_package_tests('UserInterface')
+  end
+
+  desc 'Run code quality checks'
+  lane :code_quality do
+    run_danger
   end
 end
