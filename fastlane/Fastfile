@@ -118,10 +118,21 @@ rescue StandardError => e
   UI.important('TestFlight external delivery was skipped because a build is already in review')
 end
 
-# Danger requires the PR number to be extracted as environment variable. On TeamCity call:
+# Danger requires the PR number to be extracted as environment variable. On TeamCity this can
+# be achieved using TeamCity predefined parameters:
+#
 #  branch="%teamcity.build.branch%"
 #  export GITHUB_PULL_REQUEST_ID=${branch//pull\//}
+#
 # before calling the lane.
+def run_danger(danger_id)
+  if ENV['GITHUB_PULL_REQUEST_ID']
+    danger(danger_id: "#{danger_id}-unit-tests")
+  else
+    UI.important('Danger was skipped since no pull request identifier has been provided')
+  end
+end
+
 def run_package_tests(scheme_name)
   run_tests(
     scheme: scheme_name,
@@ -131,7 +142,7 @@ def run_package_tests(scheme_name)
     clean: true,
     fail_build: false
   )
-  danger(danger_id: "#{scheme_name}-unit-tests")
+  run_danger(scheme_name)
   trainer(
     path: 'fastlane/test_output',
     output_remove_retry_attempts: true,
