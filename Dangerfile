@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+swiftlint.config_file = '.swiftlint.yml'
 swiftlint.lint_files
 
 # Sometimes it's a README fix, or something like that - which isn't relevant for
