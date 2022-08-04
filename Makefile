@@ -46,64 +46,16 @@ deliver-demo-release-tvos: setup
 	@bundle exec fastlane deliver_demo_release --env tvos
 	@echo "... done.\n"
 
-.PHONY: test-appearance-ios
-test-appearance-ios: setup
+.PHONY: test-ios
+test-ios: setup
 	@echo "Running Appearance unit tests..."
-	@bundle exec fastlane test_appearance --env ios
+	@bundle exec fastlane test --env ios
 	@echo "... done.\n"
 
-.PHONY: test-appearance-tvos
-test-appearance-tvos: setup
+.PHONY: test-tvos
+test-tvos: setup
 	@echo "Running Appearance unit tests..."
-	@bundle exec fastlane test_appearance --env tvos
-	@echo "... done.\n"
-
-.PHONY: test-core-business-ios
-test-core-business-ios: setup
-	@echo "Running CoreBusiness unit tests..."
-	@bundle exec fastlane test_core_business --env ios
-	@echo "... done.\n"
-
-.PHONY: test-core-business-tvos
-test-core-business-tvos: setup
-	@echo "Running CoreBusiness unit tests..."
-	@bundle exec fastlane test_core_business --env tvos
-	@echo "... done.\n"
-
-.PHONY: test-diagnostics-ios
-test-diagnostics-ios: setup
-	@echo "Running Diagnostics unit tests..."
-	@bundle exec fastlane test_diagnostics --env ios
-	@echo "... done.\n"
-
-.PHONY: test-diagnostics-tvos
-test-diagnostics-tvos: setup
-	@echo "Running Diagnostics unit tests..."
-	@bundle exec fastlane test_diagnostics --env tvos
-	@echo "... done.\n"
-
-.PHONY: test-player-ios
-test-player-ios: setup
-	@echo "Running Player unit tests..."
-	@bundle exec fastlane test_player --env ios
-	@echo "... done.\n"
-
-.PHONY: test-player-tvos
-test-player-tvos: setup
-	@echo "Running Player unit tests..."
-	@bundle exec fastlane test_player --env tvos
-	@echo "... done.\n"
-
-.PHONY: test-user-interface-ios
-test-user-interface-ios: setup
-	@echo "Running UserInterface unit tests..."
-	@bundle exec fastlane test_user_interface --env ios
-	@echo "... done.\n"
-
-.PHONY: test-user-interface-tvos
-test-user-interface-tvos: setup
-	@echo "Running UserInterface unit tests..."
-	@bundle exec fastlane test_user_interface --env tvos
+	@bundle exec fastlane test --env tvos
 	@echo "... done.\n"
 
 .PHONY: doc
@@ -129,16 +81,8 @@ help:
 	@echo "   deliver-demo-nightly-tvos          Deliver a demo nightly build for tvOS"
 	@echo "   deliver-demo-release-ios           Deliver a demo release build for iOS"
 	@echo "   deliver-demo-release-tvos          Deliver a demo release build for tvOS"
-	@echo "   test-appearance-ios                Build and run Appearance unit tests for iOS"
-	@echo "   test-appearance-tvos               Build and run Appearance unit tests for tvOS"
-	@echo "   test-core-business-ios             Build and run CoreBusiness unit tests for iOS"
-	@echo "   test-core-business-tvos            Build and run CoreBusiness unit tests for tvOS"
-	@echo "   test-diagnostics-ios               Build and run Diagnostics unit tests for iOS"
-	@echo "   test-diagnostics-tvos              Build and run Diagnostics unit tests for tvOS"
-	@echo "   test-player-ios                    Build and run Player unit tests for iOS"
-	@echo "   test-player-tvos                   Build and run Player unit tests for tvOS"
-	@echo "   test-user-interface-ios            Build and run UserInterface unit tests for iOS"
-	@echo "   test-user-interface-tvos           Build and run UserInterface unit tests for tvOS"
+	@echo "   test-ios                           Build and run unit tests for iOS"
+	@echo "   test-tvos               			 Build and run unit tests for tvOS"
 	@echo "   doc                                Build the documentation"
 	@echo "   lint                               Lint project and fix issues"
 	@echo "   help                               Display this help message"

@@ -179,28 +179,12 @@ platform :ios do
     reset_git_repo
   end
 
-  desc 'Build and run Appearance unit testse'
-  lane :test_appearance do
+  desc 'Build and run unit testse'
+  lane :test do
     run_package_tests('Appearance')
-  end
-
-  desc 'Build and run CoreBusiness unit tests'
-  lane :test_core_business do
     run_package_tests('CoreBusiness')
-  end
-
-  desc 'Build and run Diagnostics unit tests'
-  lane :test_diagnostics do
     run_package_tests('Diagnostics')
-  end
-
-  desc 'Build and run Player unit tests'
-  lane :test_player do
     run_package_tests('Player')
-  end
-
-  desc 'Build and run UserInterface unit tests'
-  lane :test_user_interface do
     run_package_tests('UserInterface')
   end
 
