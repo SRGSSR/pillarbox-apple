@@ -58,6 +58,12 @@ test-tvos: setup
 	@bundle exec fastlane test --env tvos
 	@echo "... done.\n"
 
+.PHONY: code-quality
+code-quality: setup
+	@echo "Checking code quality..."
+	@bundle exec fastlane code_quality
+	@echo "... done.\n"
+
 .PHONY: doc
 doc:
 	@echo "Generating documentation sets..."
@@ -83,6 +89,7 @@ help:
 	@echo "   deliver-demo-release-tvos          Deliver a demo release build for tvOS"
 	@echo "   test-ios                           Build and run unit tests for iOS"
 	@echo "   test-tvos               			 Build and run unit tests for tvOS"
+	@echo "   code-quality               		 Perform code quality checks"
 	@echo "   doc                                Build the documentation"
 	@echo "   lint                               Lint project and fix issues"
 	@echo "   help                               Display this help message"
