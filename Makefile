@@ -66,7 +66,7 @@ code-quality: setup
 .PHONY: doc
 doc:
 	@echo "Generating documentation sets..."
-	@Scripts/generate-documentation.sh
+	@bundle exec fastlane doc
 	@echo "... done.\n"
 
 .PHONY: lint
