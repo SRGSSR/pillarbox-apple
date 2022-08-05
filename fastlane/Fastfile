@@ -1,0 +1,212 @@
+# frozen_string_literal: true
+
+default_platform(:ios)
+
+# -- Helpers
+
+def app_identifier(configuration)
+  case configuration
+  when 'Nightly'
+    'ch.srgssr.Pillarbox-demo.nightly'
+  else
+    'ch.srgssr.Pillarbox-demo'
+  end
+end
+
+def key_filepath
+  File.expand_path('../Configuration/AppStoreConnect_API_Key.p8')
+end
+
+def application_xcconfig_filepath
+  'Demo/Xcode/Shared/Targets/Application.xcconfig'
+end
+
+# Should be called before any operation requiring authentication (expires after 120 seconds)
+#
+# TODO: If build_app is updated to support a JSON API key path for automatic signing in the future (instead
+#       of manually supplied xargs) we could remove this method and have the JSON passed to all fastlane actions
+#       instead. This would be cleaner but currently we still need to duplicate the key as a .p8 file for build_app,
+#       so there is no advantage in adopting the JSON API approach at the moment. Also see:
+#         https://docs.fastlane.tools/app-store-connect-api/#using-fastlane-api-key-hash-option
+#         https://github.com/fastlane/fastlane/discussions/19973
+def login_to_app_store_connect
+  app_store_connect_api_key(
+    key_id: ENV['KEY_ID'],
+    issuer_id: ENV['KEY_ISSUER_ID'],
+    key_filepath: key_filepath
+  )
+end
+
+def xcconfig_marketing_version
+  get_xcconfig_value(
+    path: application_xcconfig_filepath,
+    name: 'MARKETING_VERSION'
+  )
+end
+
+def xcconfig_build_number
+  get_xcconfig_value(
+    path: application_xcconfig_filepath,
+    name: 'CURRENT_PROJECT_VERSION'
+  )
+end
+
+def bump_testflight_build_number(configuration)
+  login_to_app_store_connect
+  build_number = latest_testflight_build_number(
+    app_identifier: app_identifier(configuration),
+    platform: ENV['TESTFLIGHT_PLATFORM']
+  ) + 1
+  update_xcconfig_value(
+    path: application_xcconfig_filepath,
+    name: 'CURRENT_PROJECT_VERSION',
+    value: build_number.to_s
+  )
+  build_number
+end
+
+def build_and_sign_app(configuration)
+  build_app(
+    project: 'Demo/Pillarbox-demo.xcodeproj',
+    configuration: configuration,
+    scheme: 'Pillarbox-demo',
+    destination: "generic/platform=#{ENV['PLATFORM']}",
+    export_team_id: ENV['TEAM_ID'],
+    output_directory: 'Binaries',
+    xcargs: "-authenticationKeyIssuerID #{ENV['KEY_ISSUER_ID']} -authenticationKeyID #{ENV['KEY_ID']} " \
+            "-authenticationKeyPath #{key_filepath} -allowProvisioningUpdates"
+  )
+end
+
+def add_version_badge(label, message, color)
+  add_badge(
+    no_badge: true,
+    shield: "#{label}-#{message}-#{color}",
+    shield_scale: ENV['SHIELD_SCALE'],
+    shield_gravity: 'South',
+    glob: ENV['ICON_GLOB']
+  )
+end
+
+def changelog
+  # Same formatters as git-log: https://git-scm.com/docs/pretty-formats
+  changelog_from_git_commits(
+    commits_count: 10,
+    pretty: '- %s'
+  )
+end
+
+def upload_app_to_testflight
+  # FIXME: Temporary workaround for upload with Xcode 14, see https://github.com/fastlane/fastlane/issues/20371
+  xcversion(version: '~> 13')
+  login_to_app_store_connect
+  upload_to_testflight
+  xcversion(version: '~> 14')
+end
+
+# Requires `Beta App Information` and `Beta App Review Information` to have been properly filled once in TestFlight)
+def distribute_app_to_testers(configuration, build_number)
+  # FIXME: Temporary workaround for upload with Xcode 14, see https://github.com/fastlane/fastlane/issues/20371
+  xcversion(version: '~> 13')
+  login_to_app_store_connect
+  upload_to_testflight(
+    app_identifier: app_identifier(configuration),
+    distribute_only: true,
+    app_platform: ENV['TESTFLIGHT_PLATFORM'],
+    build_number: build_number.to_s,
+    distribute_external: true,
+    changelog: changelog,
+    groups: ENV['TESTFLIGHT_GROUPS'],
+    notify_external_testers: true,
+    demo_account_required: false
+  )
+  xcversion(version: '~> 14')
+rescue StandardError => e
+  raise e unless e.message.include?('Another build is in review')
+
+  UI.important('TestFlight external delivery was skipped because a build is already in review')
+end
+
+# Danger requires a few environment variables to be set:
+#
+#   DANGER_GITHUB_API_TOKEN: The GitHub token to post results to pull request comments.
+#   GITHUB_REPO_SLUG: The GitHub Organization/Repository, e.g. SRGSSR/pillarbox-apple.
+#   GITHUB_REPO_URL: The GitHub repository URL, e.g. https://github.com/SRGSSR/pillarbox-apple
+#   GITHUB_PULL_REQUEST_ID: The GitHub pull request number, whose extraction depends on the
+#                           desired CI integration (https://danger.systems/guides/getting_started.html)
+def run_danger
+  if ENV['GITHUB_PULL_REQUEST_ID']
+    danger(remove_previous_comments: true)
+  else
+    UI.important('Danger was skipped since no pull request identifier has been provided')
+  end
+end
+
+def run_package_tests(scheme_name)
+  run_tests(
+    scheme: scheme_name,
+    device: ENV['DEVICE'],
+    package_path: '.',
+    result_bundle: true,
+    clean: true,
+    fail_build: false
+  )
+  trainer(
+    path: 'fastlane/test_output',
+    output_remove_retry_attempts: true,
+    fail_build: false,
+  )
+end
+
+# -- Lanes
+
+platform :ios do
+  before_all do
+    unless File.directory?('../Configuration')
+      UI.user_error!('The use of fastlane requires private configuration details to be available.')
+    end
+    ensure_git_status_clean
+    xcversion(version: '~> 14')
+  end
+
+  desc 'Deliver a demo app nightly build'
+  lane :deliver_demo_nightly do
+    build_number = bump_testflight_build_number('Nightly')
+    add_version_badge(xcconfig_marketing_version, build_number, 'orange')
+    build_and_sign_app('Nightly')
+    reset_git_repo(skip_clean: true)
+    upload_app_to_testflight
+    distribute_app_to_testers('Nightly', build_number)
+    reset_git_repo
+  end
+
+  desc 'Deliver a demo app release build'
+  lane :deliver_demo_release do
+    add_version_badge('v.', xcconfig_marketing_version, 'blue')
+    build_and_sign_app('Release')
+    reset_git_repo(skip_clean: true)
+    upload_app_to_testflight
+    distribute_app_to_testers('Release', xcconfig_build_number)
+    reset_git_repo
+  end
+
+  desc 'Build and run unit testse'
+  lane :test do
+    run_package_tests('Appearance')
+    run_package_tests('CoreBusiness')
+    run_package_tests('Diagnostics')
+    run_package_tests('Player')
+    run_package_tests('UserInterface')
+  end
+
+  desc 'Run code quality checks'
+  lane :code_quality do
+    run_danger
+  end
+
+  desc 'Lint code quality checks'
+  lane :lint_code_quality do
+    # Use dummy PR for linting, see https://danger.systems/guides/troubleshooting.html#i-want-to-work-locally-on-my-dangerfile
+    danger(pr: 'https://github.com/SRGSSR/pillarbox-apple/pull/2')
+  end
+end

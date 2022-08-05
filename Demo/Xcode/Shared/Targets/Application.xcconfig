@@ -1,0 +1,9 @@
+#include "Xcode/Shared/Common.xcconfig"
+
+// Version information
+MARKETING_VERSION = 1.0.0
+CURRENT_PROJECT_VERSION = 1
+
+// Deployment targets
+IPHONEOS_DEPLOYMENT_TARGET = 15.0
+TVOS_DEPLOYMENT_TARGET = 15.0

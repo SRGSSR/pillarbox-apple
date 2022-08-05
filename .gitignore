@@ -12,3 +12,14 @@ DerivedData/
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 
 .netrc
+.vscode
+
+/Binaries
+/Configuration
+
+/fastlane/README.md
+/fastlane/report.xml
+/fastlane/test_output
+/Configuration
+
+/.bundle
