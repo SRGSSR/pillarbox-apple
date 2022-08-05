@@ -54,7 +54,8 @@ To have TeamCity build and validate the documentation for GitHub pull requests a
 2. Add a VCS _Trigger_ on `+:pull/*`.
 3. Add a _Command Line_ build step which simply executes `make doc`.
 4. Add a _Pull Requests_ build monitoring GitHub (requires a personal access token).
-5. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
+5. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token).
+6. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
 ## Unit tests
 
