@@ -5,7 +5,7 @@ failure 'Please re-submit this Pull Request to main.' if github.branch_for_base 
 if prose.proselint_installed?
   prose.lint_files
   if prose.mdspell_installed?
-    prose.ignored_words = ['SRG', 'SSR', 'comScore', 'Webtrekk', 'Mapp', 'TagCommander']
+    prose.ignored_words = %w[SRG SSR comScore Webtrekk Mapp TagCommander]
     prose.check_spelling
   else
     warn('mdspell is not installed. Markdown spellchecking could not be made.')
