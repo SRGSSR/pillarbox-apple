@@ -11,10 +11,9 @@
 ### Checklist
 
 - [ ] Your branch has been rebased onto the `main` branch.
-- [ ] `make lint` pass successfully.
 - [ ] APIs have been properly documented (if relevant).
-- [ ] Code linting is successful.
-- [ ] New unit tests have been written (if relevant).
-- [ ] All unit tests pass.
-- [ ] The demo compiles and runs correctly on all platforms.
 - [ ] The documentation has been updated (if relevant).
+- [ ] New unit tests have been written (if relevant).
+- [ ] The demo compiles and runs correctly on all platforms.
+- [ ] Code quality checks pass (status posted as pull request comment by our continuous integration).
+- [ ] All unit tests pass (status posted as pull request comment by our continuous integration).
