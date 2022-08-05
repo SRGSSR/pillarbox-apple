@@ -124,7 +124,7 @@ end
 #    env.GITHUB_PULL_REQUEST_ID %teamcity.pullRequest.number%
 def run_danger
   if ENV['GITHUB_PULL_REQUEST_ID']
-    danger
+    danger(remove_previous_comments: true)
   else
     UI.important('Danger was skipped since no pull request identifier has been provided')
   end
