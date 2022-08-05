@@ -70,4 +70,4 @@ For comprehensive deliveries other _Demo Release iOS_, _Demo Nightly tvOS_ and _
 
 ### Remark
 
-For Testflight distribution to succeed nightly and release applications must be created with proper identifiers. Beta information must also be properly filled once.
+Nightly and release applications must be created with proper identifiers first on App Store Connect. For submission to succeed each application _Beta App Information_ and _Beta App Review Information_ must also have been properly filled in the TestFlight section of the App Store Connect portal.

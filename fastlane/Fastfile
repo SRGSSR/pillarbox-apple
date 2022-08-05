@@ -2,7 +2,7 @@
 
 default_platform(:ios)
 
-# Helpers
+# -- Helpers
 
 def app_identifier(configuration)
   case configuration
@@ -26,7 +26,7 @@ end
 # TODO: If build_app is updated to support a JSON API key path for automatic signing in the future (instead
 #       of manually supplied xargs) we could remove this method and have the JSON passed to all fastlane actions
 #       instead. This would be cleaner but currently we still need to duplicate the key as a .p8 file for build_app,
-#       so there is no advantage in adopting the JSON API approach at the moment. See also:
+#       so there is no advantage in adopting the JSON API approach at the moment. Also see:
 #         https://docs.fastlane.tools/app-store-connect-api/#using-fastlane-api-key-hash-option
 #         https://github.com/fastlane/fastlane/discussions/19973
 def login_to_app_store_connect
@@ -131,6 +131,12 @@ end
 # be achieved using TeamCity predefined parameters, provided by the Pull Request build feature
 # which must be added to the TeamCity project configuration parameters:
 #    env.GITHUB_PULL_REQUEST_ID %teamcity.pullRequest.number%
+# Danger requires a few environment variables to be set:
+#   DANGER_GITHUB_API_TOKEN: The GitHub token to post results to pull request comments.
+#   GITHUB_REPO_SLUG: The GitHub Organization/Repository, e.g. SRGSSR/pillarbox-apple.
+#   GITHUB_REPO_URL: The GitHub repository URL, e.g. https://github.com/SRGSSR/pillarbox-apple
+#   GITHUB_PULL_REQUEST_ID: The GitHub pull request number, whose extraction depends on the
+#                           desired CI integration (https://danger.systems/guides/getting_started.html)
 def run_danger
   if ENV['GITHUB_PULL_REQUEST_ID']
     danger(remove_previous_comments: true)
@@ -155,7 +161,7 @@ def run_package_tests(scheme_name)
   )
 end
 
-# Lanes
+# -- Lanes
 
 platform :ios do
   before_all do
