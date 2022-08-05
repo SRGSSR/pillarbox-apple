@@ -67,3 +67,7 @@ To have TeamCity deliver nightly and release builds of the demo application to T
 3. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
 For comprehensive deliveries other _Demo Release iOS_, _Demo Nightly tvOS_ and _Demo Release tvOS_ configurations must be created, running `make deliver-demo-release-ios`, `make deliver-demo-nightly-tvos` and `make deliver-demo-release-tvos` respectively. These can be easily created by copying the first configuration you just created and editing the _Command Line_ build step accordingly.
+
+### Remark
+
+For Testflight distribution to succeed nightly and release applications must be created with proper identifiers. Beta information must also be properly filled once.
