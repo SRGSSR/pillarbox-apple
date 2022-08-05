@@ -127,11 +127,8 @@ rescue StandardError => e
   UI.important('TestFlight external delivery was skipped because a build is already in review')
 end
 
-# Danger requires the PR number to be extracted as environment variable. On TeamCity this can
-# be achieved using TeamCity predefined parameters, provided by the Pull Request build feature
-# which must be added to the TeamCity project configuration parameters:
-#    env.GITHUB_PULL_REQUEST_ID %teamcity.pullRequest.number%
 # Danger requires a few environment variables to be set:
+#
 #   DANGER_GITHUB_API_TOKEN: The GitHub token to post results to pull request comments.
 #   GITHUB_REPO_SLUG: The GitHub Organization/Repository, e.g. SRGSSR/pillarbox-apple.
 #   GITHUB_REPO_URL: The GitHub repository URL, e.g. https://github.com/SRGSSR/pillarbox-apple
