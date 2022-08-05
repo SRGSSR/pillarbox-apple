@@ -66,7 +66,7 @@ code-quality: setup
 .PHONY: doc
 doc:
 	@echo "Generating documentation sets..."
-	@swift package generate-documentation
+	@Scripts/generate-documentation.sh
 	@echo "... done.\n"
 
 .PHONY: lint
