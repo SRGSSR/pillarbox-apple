@@ -1,7 +1,3 @@
 public struct Appearance {
-    let test = "test"
-
-
-
-    
+    let test = "test
 }
