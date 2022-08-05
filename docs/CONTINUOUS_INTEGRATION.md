@@ -45,6 +45,15 @@ To have TeamCity run code quality checks for GitHub pull requests and post the c
 	- `env.GITHUB_REPO_URL` with value `https://github.com/SRGSSR/pillarbox-apple`.
 5. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
+## Documentation
+
+To have TeamCity build and validate the documentation for GitHub pull requests and post the corresponding status back to GitHub:
+
+1. Create a TeamCity configuration called _Documentation_.
+2. Add a _Command Line_ build step which simply executes `make doc`.
+3. Add a _Pull Requests_ build monitoring GitHub (requires a personal access token).
+4. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
+
 ## Unit tests
 
 To have TeamCity run unit tests for GitHub pull requests and post the corresponding status back to GitHub:
