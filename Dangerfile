@@ -6,6 +6,8 @@ if prose.proselint_installed?
   prose.lint_files
   prose.ignored_words = ["SRG", "SSR", "comScore", "Webtrekk", "Mapp", "TagCommander"]
   prose.check_spelling
+else
+  warn('proselint is not installed. Spellchecking could not be made.')
 end
 
 swiftlint.lint_files inline_mode: true
