@@ -204,6 +204,11 @@ platform :ios do
     run_danger
   end
 
+  desc 'Build documentation'
+  lane :doc do
+    sh('../Scripts/generate-documentation.sh')
+  end
+
   desc 'Lint code quality checks'
   lane :lint_code_quality do
     # Use dummy PR for linting, see https://danger.systems/guides/troubleshooting.html#i-want-to-work-locally-on-my-dangerfile
