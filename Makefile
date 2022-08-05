@@ -9,7 +9,7 @@ all: help
 .PHONY: setup
 setup:
 	@echo "Setting up the project..."
-	@bundle install --path vendor/bundle > /dev/null
+	@bundle install > /dev/null
 	@Scripts/checkout-configuration.sh "${CONFIGURATION_REPOSITORY_URL}" "${CONFIGURATION_COMMIT_SHA1}" Configuration
 	@echo "... done.\n"
 
