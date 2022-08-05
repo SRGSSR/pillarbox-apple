@@ -168,11 +168,11 @@ platform :ios do
 
   desc 'Deliver a demo app release build'
   lane :deliver_demo_release do
-    add_version_badge('Ver.', xcconfig_marketing_version, 'blue')
-    build_and_sign_app('Release')
-    reset_git_repo(skip_clean: true)
-    upload_app_to_testflight
-    distribute_app_to_testers('ch.srgssr.Pillarbox-demo', xcconfig_build_number)
+    #add_version_badge('Ver.', xcconfig_marketing_version, 'blue')
+    #build_and_sign_app('Release')
+    #reset_git_repo(skip_clean: true)
+    #upload_app_to_testflight
+    #distribute_app_to_testers('ch.srgssr.Pillarbox-demo', xcconfig_build_number)
     reset_git_repo
   end
 
