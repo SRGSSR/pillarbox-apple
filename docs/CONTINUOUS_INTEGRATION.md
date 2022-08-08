@@ -6,6 +6,7 @@ Commands are available to:
 
 - Build the project documentation.
 - Run unit tests.
+- Archive the demo.
 - Perform nightly and release deliveries on TestFlight.
 - Lint the code.
 - Run code quality checks using [Danger](https://danger.systems/ruby/).
@@ -36,7 +37,7 @@ Of course a proper SSH setup is also required so that repositories can be pulled
 
 To have TeamCity run code quality checks for GitHub pull requests and post the corresponding status back to GitHub:
 
-1. Create a TeamCity configuration called _Code quality_.
+1. Create a TeamCity configuration called _Code Quality_.
 2. Add a VCS _Trigger_ on `+:pull/*`.
 3. Add a _Command Line_ build step which simply executes `make code-quality`.
 4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
@@ -45,6 +46,19 @@ To have TeamCity run code quality checks for GitHub pull requests and post the c
 	- `env.GITHUB_REPO_SLUG` with value `SRGSSR/pillarbox-apple`.
 	- `env.GITHUB_REPO_URL` with value `https://github.com/SRGSSR/pillarbox-apple`.
 6. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
+
+## Demo archiving
+
+To have TeamCity archive the demo (archive for all configurations without TestFlight submission) for GitHub pull requests and post the corresponding status back to GitHub:
+
+1. Create a TeamCity configuration called _Demo Archiving iOS_.
+2. Add a VCS _Trigger_ on `+:pull/*`.
+3. Add a _Command Line_ build step which simply executes `make archive-demo-ios`.
+4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
+5. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token).
+6. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
+
+For comprehensive results a second _Demo Archiving tvOS_ configuration must be created for tvOS. This is easily achieved by copying the configuration you just created and editing the _Command Line_ build step to execute `make archive-demo-tvos`.
 
 ## Documentation
 
