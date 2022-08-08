@@ -21,6 +21,14 @@ fastlane-ios: setup
 fastlane-tvos: setup
 	@bundle exec fastlane --env tvos
 
+.PHONY: archive-demo-ios
+archive-demo-ios: setup
+	@bundle exec fastlane archive_demo --env ios
+
+.PHONY: archive-demo-tvos
+archive-demo-tvos: setup
+	@bundle exec fastlane archive_demo --env tvos
+
 .PHONY: deliver-demo-nightly-ios
 deliver-demo-nightly-ios: setup
 	@echo "Delivering demo nightly build for iOS..."
@@ -88,6 +96,8 @@ help:
 	@echo "   setup                              Setup project"
 	@echo "   fastlane-ios                       Run fastlane for iOS targets"
 	@echo "   fastlane-tvos                      Run fastlane for tvOS targets"
+	@echo "   archive-demo-ios                   Archive the iOS demo (for all configurations)"
+	@echo "   archive-demo-tvos                  Archive the tvOS demo (for all configurations)"
 	@echo "   deliver-demo-nightly-ios           Deliver a demo nightly build for iOS"
 	@echo "   deliver-demo-nightly-tvos          Deliver a demo nightly build for tvOS"
 	@echo "   deliver-demo-release-ios           Deliver a demo release build for iOS"

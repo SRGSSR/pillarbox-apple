@@ -169,6 +169,16 @@ platform :ios do
     xcversion(version: '~> 14')
   end
 
+  after_all do
+    reset_git_repo
+  end
+
+  desc 'Archive the demo app'
+  lane :archive_demo do
+    build_and_sign_app('Nightly')
+    build_and_sign_app('Release')
+  end
+
   desc 'Deliver a demo app nightly build'
   lane :deliver_demo_nightly do
     build_number = bump_testflight_build_number('Nightly')
@@ -177,7 +187,6 @@ platform :ios do
     reset_git_repo(skip_clean: true)
     upload_app_to_testflight
     distribute_app_to_testers('Nightly', build_number)
-    reset_git_repo
   end
 
   desc 'Deliver a demo app release build'
@@ -187,7 +196,6 @@ platform :ios do
     reset_git_repo(skip_clean: true)
     upload_app_to_testflight
     distribute_app_to_testers('Release', xcconfig_build_number)
-    reset_git_repo
   end
 
   desc 'Build and run unit testse'
