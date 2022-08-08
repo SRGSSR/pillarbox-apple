@@ -14,4 +14,5 @@
 - [ ] APIs have been properly documented (if relevant).
 - [ ] The documentation has been updated (if relevant).
 - [ ] New unit tests have been written (if relevant).
-- [ ] All code quality checks posted in this PR comment section successfully pass.
+- [ ] The demo has been updated (if relevant).
+- [ ] All pull request status checks pass.
