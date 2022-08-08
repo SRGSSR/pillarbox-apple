@@ -1,3 +1,3 @@
+/// Diagnostics
 public struct Diagnostics {
-    
 }
