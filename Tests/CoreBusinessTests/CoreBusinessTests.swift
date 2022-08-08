@@ -1,8 +1,9 @@
 @testable import CoreBusiness
+import Nimble
 import XCTest
 
 final class CoreBusinessTests: XCTestCase {
     func testDummy() {
-        XCTAssertTrue(true)
+        expect(true).to(beTrue())
     }
 }
