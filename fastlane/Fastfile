@@ -104,7 +104,7 @@ def upload_app_to_testflight
   xcversion(version: '~> 14')
 end
 
-# Requires `Beta App Information` and `Beta App Review Information` to have been properly filled once in TestFlight)
+# Requires `Beta App Information` and `Beta App Review Information` to have been properly filled once in TestFlight
 def distribute_app_to_testers(configuration, build_number)
   # FIXME: Temporary workaround for upload with Xcode 14, see https://github.com/fastlane/fastlane/issues/20371
   xcversion(version: '~> 13')
@@ -154,7 +154,7 @@ def run_package_tests(scheme_name)
   trainer(
     path: 'fastlane/test_output',
     output_remove_retry_attempts: true,
-    fail_build: false,
+    fail_build: false
   )
 end
 
