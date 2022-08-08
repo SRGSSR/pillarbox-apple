@@ -14,6 +14,4 @@
 - [ ] APIs have been properly documented (if relevant).
 - [ ] The documentation has been updated (if relevant).
 - [ ] New unit tests have been written (if relevant).
-- [ ] The demo compiles and runs correctly on all platforms.
-- [ ] Code quality checks pass (status posted as pull request comment by our continuous integration).
-- [ ] All unit tests pass (status posted as pull request comment by our continuous integration).
+- [ ] All code quality checks posted in this PR comment section successfully pass.
