@@ -35,6 +35,7 @@ let package = Package(
         .package(url: "https://github.com/SRGSSR/GoogleCastSDK-no-bluetooth.git", .upToNextMinor(from: "4.7.1-beta.1")),
         .package(url: "https://github.com/SRGSSR/TCCore-xcframework-apple.git", .upToNextMinor(from: "4.5.4-srg5")),
         .package(url: "https://github.com/SRGSSR/TCSDK-xcframework-apple.git", .upToNextMinor(from: "4.4.1-srg5")),
+        .package(url: "https://github.com/Quick/Nimble.git", .upToNextMajor(from: "10.0.0")),
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")
     ],
     targets: [
@@ -61,31 +62,36 @@ let package = Package(
         .testTarget(
             name: "AppearanceTests",
             dependencies: [
-                .target(name: "Appearance")
+                .target(name: "Appearance"),
+                .product(name: "Nimble", package: "Nimble")
             ]
         ),
         .testTarget(
             name: "CoreBusinessTests",
             dependencies: [
-                .target(name: "CoreBusiness")
+                .target(name: "CoreBusiness"),
+                .product(name: "Nimble", package: "Nimble")
             ]
         ),
         .testTarget(
             name: "DiagnosticsTests",
             dependencies: [
-                .target(name: "Diagnostics")
+                .target(name: "Diagnostics"),
+                .product(name: "Nimble", package: "Nimble")
             ]
         ),
         .testTarget(
             name: "PlayerTests",
             dependencies: [
-                .target(name: "Player")
+                .target(name: "Player"),
+                .product(name: "Nimble", package: "Nimble")
             ]
         ),
         .testTarget(
             name: "UserInterfaceTests",
             dependencies: [
-                .target(name: "UserInterface")
+                .target(name: "UserInterface"),
+                .product(name: "Nimble", package: "Nimble")
             ]
         )
     ]

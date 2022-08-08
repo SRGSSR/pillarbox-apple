@@ -1,8 +1,9 @@
 @testable import Appearance
+import Nimble
 import XCTest
 
 final class AppearanceTests: XCTestCase {
     func testDummy() {
-        XCTAssertTrue(true)
+        expect(true).to(beTrue())
     }
 }

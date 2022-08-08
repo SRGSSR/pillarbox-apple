@@ -1,8 +1,9 @@
 @testable import Diagnostics
+import Nimble
 import XCTest
 
 final class DiagnosticsTests: XCTestCase {
     func testDummy() {
-        XCTAssertTrue(true)
+        expect(true).to(beTrue())
     }
 }

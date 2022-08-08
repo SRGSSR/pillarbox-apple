@@ -1,8 +1,9 @@
 @testable import UserInterface
+import Nimble
 import XCTest
 
 final class UserInterfaceTests: XCTestCase {
     func testDummy() {
-        XCTAssertTrue(true)
+        expect(true).to(beTrue())
     }
 }
