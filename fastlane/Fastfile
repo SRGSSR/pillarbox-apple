@@ -31,8 +31,8 @@ end
 #         https://github.com/fastlane/fastlane/discussions/19973
 def login_to_app_store_connect
   app_store_connect_api_key(
-    key_id: ENV['KEY_ID'],
-    issuer_id: ENV['KEY_ISSUER_ID'],
+    key_id: ENV.fetch('KEY_ID'),
+    issuer_id: ENV.fetch('KEY_ISSUER_ID'),
     key_filepath: key_filepath
   )
 end
@@ -55,7 +55,7 @@ def bump_testflight_build_number(configuration)
   login_to_app_store_connect
   build_number = latest_testflight_build_number(
     app_identifier: app_identifier(configuration),
-    platform: ENV['TESTFLIGHT_PLATFORM']
+    platform: ENV.fetch('TESTFLIGHT_PLATFORM')
   ) + 1
   update_xcconfig_value(
     path: application_xcconfig_filepath,
@@ -70,10 +70,10 @@ def build_and_sign_app(configuration)
     project: 'Demo/Pillarbox-demo.xcodeproj',
     configuration: configuration,
     scheme: 'Pillarbox-demo',
-    destination: "generic/platform=#{ENV['PLATFORM']}",
-    export_team_id: ENV['TEAM_ID'],
+    destination: "generic/platform=#{ENV.fetch('PLATFORM')}",
+    export_team_id: ENV.fetch('TEAM_ID'),
     output_directory: 'Binaries',
-    xcargs: "-authenticationKeyIssuerID #{ENV['KEY_ISSUER_ID']} -authenticationKeyID #{ENV['KEY_ID']} " \
+    xcargs: "-authenticationKeyIssuerID #{ENV.fetch('KEY_ISSUER_ID')} -authenticationKeyID #{ENV.fetch('KEY_ID')} " \
             "-authenticationKeyPath #{key_filepath} -allowProvisioningUpdates"
   )
 end
@@ -82,9 +82,9 @@ def add_version_badge(label, message, color)
   add_badge(
     no_badge: true,
     shield: "#{label}-#{message}-#{color}",
-    shield_scale: ENV['SHIELD_SCALE'],
+    shield_scale: ENV.fetch('SHIELD_SCALE'),
     shield_gravity: 'South',
-    glob: ENV['ICON_GLOB']
+    glob: ENV.fetch('ICON_GLOB')
   )
 end
 
@@ -112,11 +112,11 @@ def distribute_app_to_testers(configuration, build_number)
   upload_to_testflight(
     app_identifier: app_identifier(configuration),
     distribute_only: true,
-    app_platform: ENV['TESTFLIGHT_PLATFORM'],
+    app_platform: ENV.fetch('TESTFLIGHT_PLATFORM'),
     build_number: build_number.to_s,
     distribute_external: true,
     changelog: changelog,
-    groups: ENV['TESTFLIGHT_GROUPS'],
+    groups: ENV.fetch('TESTFLIGHT_GROUPS'),
     notify_external_testers: true,
     demo_account_required: false
   )
@@ -135,7 +135,7 @@ end
 #   GITHUB_PULL_REQUEST_ID: The GitHub pull request number, whose extraction depends on the
 #                           desired CI integration (https://danger.systems/guides/getting_started.html)
 def run_danger
-  if ENV['GITHUB_PULL_REQUEST_ID']
+  if ENV.fetch('GITHUB_PULL_REQUEST_ID', nil)
     danger(remove_previous_comments: true)
   else
     UI.important('Danger was skipped since no pull request identifier has been provided')
@@ -145,7 +145,7 @@ end
 def run_package_tests(scheme_name)
   run_tests(
     scheme: scheme_name,
-    device: ENV['DEVICE'],
+    device: ENV.fetch('DEVICE'),
     package_path: '.',
     result_bundle: true,
     clean: true,
