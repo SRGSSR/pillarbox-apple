@@ -65,10 +65,28 @@ test-tvos: setup
 	@bundle exec fastlane test --env tvos
 	@echo "... done.\n"
 
-.PHONY: code-quality
-code-quality: setup
-	@echo "Checking code quality..."
-	@bundle exec fastlane code_quality
+.PHONY: check-swift
+check-swift:
+	@echo "Checking code quality (Swift)..."
+	@swiftlint
+	@echo "... done.\n"
+
+.PHONY: check-ruby
+check-ruby:
+	@echo "Checking code quality (Ruby)..."
+	@rubocop
+	@echo "... done.\n"
+
+.PHONY: check-shell
+check-shell:
+	@echo "Checking code quality (Shell)..."
+	@shellcheck Scripts/*.sh
+	@echo "... done.\n"
+
+.PHONY: fix-swift
+fix-swift:
+	@echo "Linting project..."
+	@swiftlint --fix && swiftlint
 	@echo "... done.\n"
 
 .PHONY: doc
@@ -77,35 +95,33 @@ doc:
 	@bundle exec fastlane doc
 	@echo "... done.\n"
 
-.PHONY: lint
-lint:
-	@echo "Linting project..."
-	@swiftlint --fix && swiftlint
-	@echo "... done.\n"
-
-.PHONY: lint-code-quality
-lint-code-quality: setup
-	@echo "Linting code quality manifests..."
-	@bundle exec fastlane lint_code_quality
-	@echo "... done.\n"
-
 .PHONY: help
 help:
 	@echo "The following targets are available:"
 	@echo "   all                                Default target"
 	@echo "   setup                              Setup project"
+	@echo ""
 	@echo "   fastlane-ios                       Run fastlane for iOS targets"
 	@echo "   fastlane-tvos                      Run fastlane for tvOS targets"
+	@echo ""
 	@echo "   archive-demo-ios                   Archive the iOS demo (for all configurations)"
 	@echo "   archive-demo-tvos                  Archive the tvOS demo (for all configurations)"
+	@echo ""
 	@echo "   deliver-demo-nightly-ios           Deliver a demo nightly build for iOS"
 	@echo "   deliver-demo-nightly-tvos          Deliver a demo nightly build for tvOS"
+	@echo ""
 	@echo "   deliver-demo-release-ios           Deliver a demo release build for iOS"
 	@echo "   deliver-demo-release-tvos          Deliver a demo release build for tvOS"
+	@echo ""
 	@echo "   test-ios                           Build and run unit tests for iOS"
 	@echo "   test-tvos                          Build and run unit tests for tvOS"
-	@echo "   code-quality                       Perform code quality checks"
+	@echo ""
+	@echo "   check-swift                        Run code quality checks (Swift)"
+	@echo "   check-ruby                         Run code quality checks (Ruby)"
+	@echo "   check-shell                        Run code quality checks (Shell)"
+	@echo ""
+	@echo "   fix-swift                          Fix Swift code quality automatically"
+	@echo ""
 	@echo "   doc                                Build the documentation"
-	@echo "   lint                               Lint project and fix issues"
-	@echo "   lint-code-quality                  Lint code quality manifests"
+	@echo ""
 	@echo "   help                               Display this help message"

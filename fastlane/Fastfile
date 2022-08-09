@@ -127,21 +127,6 @@ rescue StandardError => e
   UI.important('TestFlight external delivery was skipped because a build is already in review')
 end
 
-# Danger requires a few environment variables to be set:
-#
-#   DANGER_GITHUB_API_TOKEN: The GitHub token to post results to pull request comments.
-#   GITHUB_REPO_SLUG: The GitHub Organization/Repository, e.g. SRGSSR/pillarbox-apple.
-#   GITHUB_REPO_URL: The GitHub repository URL, e.g. https://github.com/SRGSSR/pillarbox-apple
-#   GITHUB_PULL_REQUEST_ID: The GitHub pull request number, whose extraction depends on the
-#                           desired CI integration (https://danger.systems/guides/getting_started.html)
-def run_danger
-  if ENV.fetch('GITHUB_PULL_REQUEST_ID', nil)
-    danger(remove_previous_comments: true)
-  else
-    UI.important('Danger was skipped since no pull request identifier has been provided')
-  end
-end
-
 def run_package_tests(scheme_name)
   run_tests(
     scheme: scheme_name,
@@ -207,19 +192,8 @@ platform :ios do
     run_package_tests('UserInterface')
   end
 
-  desc 'Run code quality checks'
-  lane :code_quality do
-    run_danger
-  end
-
   desc 'Build documentation'
   lane :doc do
     sh('../Scripts/generate-documentation.sh')
-  end
-
-  desc 'Lint code quality checks'
-  lane :lint_code_quality do
-    # Use dummy PR for linting, see https://danger.systems/guides/troubleshooting.html#i-want-to-work-locally-on-my-dangerfile
-    danger(pr: 'https://github.com/SRGSSR/pillarbox-apple/pull/2')
   end
 end
