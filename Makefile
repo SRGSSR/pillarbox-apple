@@ -67,20 +67,26 @@ test-tvos: setup
 
 .PHONY: check-swift
 check-swift:
-	@echo "Checking code quality (Swift)..."
+	@echo "Checking Swift quality..."
 	@swiftlint
 	@echo "... done.\n"
 
 .PHONY: check-ruby
 check-ruby:
-	@echo "Checking code quality (Ruby)..."
-	@rubocop
+	@echo "Checking Ruby quality..."
+	@bundle exec rubocop
 	@echo "... done.\n"
 
 .PHONY: check-shell
 check-shell:
-	@echo "Checking code quality (Shell)..."
+	@echo "Checking Shell quality..."
 	@shellcheck Scripts/*.sh
+	@echo "... done.\n"
+
+.PHONY: check-markdown
+check-markdown:
+	@echo "Checking Markdown quality..."
+	@bundle exec mdl --style markdown_style.rb docs .github Sources/**/*.docc
 	@echo "... done.\n"
 
 .PHONY: fix-swift
@@ -98,6 +104,7 @@ doc:
 .PHONY: help
 help:
 	@echo "The following targets are available:"
+	@echo ""
 	@echo "   all                                Default target"
 	@echo "   setup                              Setup project"
 	@echo ""
@@ -116,9 +123,10 @@ help:
 	@echo "   test-ios                           Build and run unit tests for iOS"
 	@echo "   test-tvos                          Build and run unit tests for tvOS"
 	@echo ""
-	@echo "   check-swift                        Run code quality checks (Swift)"
-	@echo "   check-ruby                         Run code quality checks (Ruby)"
-	@echo "   check-shell                        Run code quality checks (Shell)"
+	@echo "   check-swift                        Run Swift quality checks"
+	@echo "   check-ruby                         Run Ruby quality checks"
+	@echo "   check-shell                        Run Shell quality checks"
+	@echo "   check-markdown                     Run Markdown quality checks"
 	@echo ""
 	@echo "   fix-swift                          Fix Swift code quality automatically"
 	@echo ""

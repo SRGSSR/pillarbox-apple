@@ -42,9 +42,9 @@ To have TeamCity run code quality checks for GitHub pull requests and post the c
 3. Add a _Command Line_ build step which simply executes `make code-quality`.
 4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
 5. Checks are performed by Danger, which requires a few [environment variables](https://danger.systems/guides/getting_started.html) to be properly set. Add the following three environment variable _Parameters_ to the configuration:
-	- `env.GITHUB_PULL_REQUEST_ID` with value  `%teamcity.pullRequest.number%`.
-	- `env.GITHUB_REPO_SLUG` with value `SRGSSR/pillarbox-apple`.
-	- `env.GITHUB_REPO_URL` with value `https://github.com/SRGSSR/pillarbox-apple`.
+    1. `env.GITHUB_PULL_REQUEST_ID` with value `%teamcity.pullRequest.number%`.
+    2. `env.GITHUB_REPO_SLUG` with value `SRGSSR/pillarbox-apple`.
+    3. `env.GITHUB_REPO_URL` with value `https://github.com/SRGSSR/pillarbox-apple`.
 6. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
 ## Demo archiving

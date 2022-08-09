@@ -2,7 +2,7 @@
 >
 > You are free to remove sections which might not be relevant to your case (e.g. if you have no code sample).
 
-### Issue type
+# Issue type
 
 > Only keep the relevant value below.
 
@@ -16,15 +16,15 @@ Help / documentation
 
 Other: _classification_
 
-### Description of the problem
+# Description of the problem
 
 > Enter a brief description of the problem. Include any meaningful logs or stack traces in code blocks as well.
 
-```
+```text
 Stack trace or log information
 ```
 
-### Environment information
+# Environment information
 
 > The simulator is a valid device as well. If all versions or devices seem to be affected, simply enter 'Any'.
 
@@ -32,7 +32,7 @@ Stack trace or log information
 * iOS / tvOS version: _version_
 * Device: _model_
 
-### Reproducibility
+# Reproducibility
 
 > Only keep the relevant value below.
 
@@ -40,16 +40,16 @@ Always reproducible
 
 Difficult to reproduce
 
-### Code sample
+# Code sample
 
 > The easiest way to understand your issue is with a simple code sample. If you can provide one, please add a link to it here.
 
 [Code sample](https://github.com/username/repository)
 
-### Steps to reproduce
+# Steps to reproduce
 
 > Provide step-by-step instructions about how to reliably reproduce the issue (or with a good probability).
 
 1. _Step 1_
-1. _Step 2_
-1. _Step 3_
+2. _Step 2_
+3. _Step 3_
