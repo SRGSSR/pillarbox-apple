@@ -76,6 +76,8 @@ check-quality: setup
 	@shellcheck Scripts/*.sh
 	@echo "... checking Markdown documentation..."
 	@bundle exec mdl --style markdown_style.rb docs .github Sources/**/*.docc
+	@echo "... checking YAML files..."
+	@yamllint .*.yml .github
 	@echo "... done.\n"
 
 .PHONY: fix-quality

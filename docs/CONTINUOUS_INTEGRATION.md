@@ -20,8 +20,9 @@ The continuous integration agents must have the following tools installed:
 - [bundler](https://bundler.io)
 - [swiftlint](https://github.com/realm/SwiftLint)
 - [shellcheck](https://www.shellcheck.net)
+- [yamllint](https://github.com/adrienverge/yamllint)
 
-swiftlint and shellcheck can be easily installed with [Homebrew](https://brew.sh).
+swiftlint, shellcheck and yamllint can easily be installed with [Homebrew](https://brew.sh).
 
 ## Configuration
 
