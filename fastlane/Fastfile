@@ -21,6 +21,12 @@ def application_xcconfig_filepath
   'Demo/Xcode/Shared/Targets/Application.xcconfig'
 end
 
+def ensure_configuration_availability
+  return if File.directory?('../Configuration')
+
+  UI.user_error!('Use of this lane requires private configuration details to be available.')
+end
+
 # Should be called before any operation requiring authentication (expires after 120 seconds)
 #
 # TODO: If build_app is updated to support a JSON API key path for automatic signing in the future (instead
@@ -147,9 +153,6 @@ end
 
 platform :ios do
   before_all do
-    unless File.directory?('../Configuration')
-      UI.user_error!('The use of fastlane requires private configuration details to be available.')
-    end
     ensure_git_status_clean
     xcversion(version: '~> 14')
   end
@@ -160,12 +163,14 @@ platform :ios do
 
   desc 'Archive the demo app'
   lane :archive_demo do
+    ensure_configuration_availability
     build_and_sign_app('Nightly')
     build_and_sign_app('Release')
   end
 
   desc 'Deliver a demo app nightly build'
   lane :deliver_demo_nightly do
+    ensure_configuration_availability
     build_number = bump_testflight_build_number('Nightly')
     add_version_badge(xcconfig_marketing_version, build_number, 'orange')
     build_and_sign_app('Nightly')
@@ -176,6 +181,7 @@ platform :ios do
 
   desc 'Deliver a demo app release build'
   lane :deliver_demo_release do
+    ensure_configuration_availability
     add_version_badge('v.', xcconfig_marketing_version, 'blue')
     build_and_sign_app('Release')
     reset_git_repo(skip_clean: true)
