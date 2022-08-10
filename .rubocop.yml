@@ -1,0 +1,10 @@
+AllCops:
+  NewCops: enable
+
+Metrics/BlockLength:
+  Enabled: true
+  IgnoredMethods: ['platform']
+
+Metrics/MethodLength:
+  Enabled: true
+  Max: 20

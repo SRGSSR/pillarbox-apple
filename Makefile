@@ -1,7 +1,7 @@
 #!/usr/bin/xcrun make -f
 
 CONFIGURATION_REPOSITORY_URL=https://github.com/SRGSSR/pillarbox-apple-configuration.git
-CONFIGURATION_COMMIT_SHA1=2058ec97df46c428841fd4d7003bde04ad8e0a47
+CONFIGURATION_COMMIT_SHA1=e9cd78f090b9e73a7595b90140182989d4d8c7ef
 
 .PHONY: all
 all: help
@@ -65,10 +65,23 @@ test-tvos: setup
 	@bundle exec fastlane test --env tvos
 	@echo "... done.\n"
 
-.PHONY: code-quality
-code-quality: setup
-	@echo "Checking code quality..."
-	@bundle exec fastlane code_quality
+.PHONY: check-quality
+check-quality: setup
+	@echo "Checking quality..."
+	@echo "... checking Swift code..."
+	@swiftlint --quiet
+	@echo "... checking Ruby scripts..."
+	@bundle exec rubocop --format quiet
+	@echo "... checking Shell scripts..."
+	@shellcheck Scripts/*.sh
+	@echo "... checking Markdown documentation..."
+	@bundle exec mdl --style markdown_style.rb docs .github Sources/**/*.docc
+	@echo "... done.\n"
+
+.PHONY: fix-quality
+fix-quality:
+	@echo "Fixing quality..."
+	@swiftlint --fix && swiftlint
 	@echo "... done.\n"
 
 .PHONY: doc
@@ -77,35 +90,31 @@ doc:
 	@bundle exec fastlane doc
 	@echo "... done.\n"
 
-.PHONY: lint
-lint:
-	@echo "Linting project..."
-	@swiftlint --fix && swiftlint
-	@echo "... done.\n"
-
-.PHONY: lint-code-quality
-lint-code-quality: setup
-	@echo "Linting code quality manifests..."
-	@bundle exec fastlane lint_code_quality
-	@echo "... done.\n"
-
 .PHONY: help
 help:
 	@echo "The following targets are available:"
+	@echo ""
 	@echo "   all                                Default target"
 	@echo "   setup                              Setup project"
+	@echo ""
 	@echo "   fastlane-ios                       Run fastlane for iOS targets"
 	@echo "   fastlane-tvos                      Run fastlane for tvOS targets"
+	@echo ""
 	@echo "   archive-demo-ios                   Archive the iOS demo (for all configurations)"
 	@echo "   archive-demo-tvos                  Archive the tvOS demo (for all configurations)"
+	@echo ""
 	@echo "   deliver-demo-nightly-ios           Deliver a demo nightly build for iOS"
 	@echo "   deliver-demo-nightly-tvos          Deliver a demo nightly build for tvOS"
+	@echo ""
 	@echo "   deliver-demo-release-ios           Deliver a demo release build for iOS"
 	@echo "   deliver-demo-release-tvos          Deliver a demo release build for tvOS"
+	@echo ""
 	@echo "   test-ios                           Build and run unit tests for iOS"
 	@echo "   test-tvos                          Build and run unit tests for tvOS"
-	@echo "   code-quality                       Perform code quality checks"
+	@echo ""
+	@echo "   check-quality                      Run quality checks"
+	@echo "   fix-quality                        Fix quality automatically (if possible)"
+	@echo ""
 	@echo "   doc                                Build the documentation"
-	@echo "   lint                               Lint project and fix issues"
-	@echo "   lint-code-quality                  Lint code quality manifests"
+	@echo ""
 	@echo "   help                               Display this help message"
