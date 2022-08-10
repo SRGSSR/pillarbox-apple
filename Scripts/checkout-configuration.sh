@@ -45,12 +45,12 @@ if [[ $(git status --porcelain 2> /dev/null) ]]; then
 fi
 
 if ! git fetch &> /dev/null; then
-    echo "The repository '${CONFIGURATION_FOLDER}' could not be updated." 
+    echo "The repository '${CONFIGURATION_FOLDER}' could not be updated."
     exit 1
 fi
 
 if git checkout -q "${CONFIGURATION_COMMIT_SHA1}" &> /dev/null; then
-    echo "The '${CONFIGURATION_FOLDER}' repository has been switched to commit ${CONFIGURATION_COMMIT_SHA1}." 
+    echo "The '${CONFIGURATION_FOLDER}' repository has been switched to commit ${CONFIGURATION_COMMIT_SHA1}."
 else
     echo "The repository '${CONFIGURATION_FOLDER}' could not be switched to commit ${CONFIGURATION_COMMIT_SHA1}. Does this commit exist?"
     exit 1
