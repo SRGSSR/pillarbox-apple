@@ -65,33 +65,22 @@ test-tvos: setup
 	@bundle exec fastlane test --env tvos
 	@echo "... done.\n"
 
-.PHONY: check-swift
-check-swift:
-	@echo "Checking Swift quality..."
+.PHONY: check-code-quality
+check-code-quality: setup
+	@echo "Checking code quality..."
+	@echo "... checking Swift code..."
 	@swiftlint
-	@echo "... done.\n"
-
-.PHONY: check-ruby
-check-ruby: setup
-	@echo "Checking Ruby quality..."
+	@echo "... checking Ruby scripts..."
 	@bundle exec rubocop
-	@echo "... done.\n"
-
-.PHONY: check-shell
-check-shell:
-	@echo "Checking Shell quality..."
+	@echo "... checking Shell scripts..."
 	@shellcheck Scripts/*.sh
-	@echo "... done.\n"
-
-.PHONY: check-markdown
-check-markdown: setup
-	@echo "Checking Markdown quality..."
+	@echo "... checking Markdown documentation..."
 	@bundle exec mdl --style markdown_style.rb docs .github Sources/**/*.docc
 	@echo "... done.\n"
 
-.PHONY: fix-swift
-fix-swift:
-	@echo "Linting project..."
+.PHONY: fix-code-quality
+fix-code-quality:
+	@echo "Fixing codeq quality..."
 	@swiftlint --fix && swiftlint
 	@echo "... done.\n"
 
@@ -123,12 +112,8 @@ help:
 	@echo "   test-ios                           Build and run unit tests for iOS"
 	@echo "   test-tvos                          Build and run unit tests for tvOS"
 	@echo ""
-	@echo "   check-swift                        Run Swift quality checks"
-	@echo "   check-ruby                         Run Ruby quality checks"
-	@echo "   check-shell                        Run Shell quality checks"
-	@echo "   check-markdown                     Run Markdown quality checks"
-	@echo ""
-	@echo "   fix-swift                          Fix Swift code quality automatically"
+	@echo "   check-code-quality                 Run code quality checks"
+	@echo "   fix-code-quality                   Fix code quality automatically (where possible)"
 	@echo ""
 	@echo "   doc                                Build the documentation"
 	@echo ""
