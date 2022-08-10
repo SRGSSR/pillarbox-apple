@@ -65,9 +65,9 @@ test-tvos: setup
 	@bundle exec fastlane test --env tvos
 	@echo "... done.\n"
 
-.PHONY: check-code-quality
+.PHONY: check-quality
 check-code-quality: setup
-	@echo "Checking code quality..."
+	@echo "Checking quality..."
 	@echo "... checking Swift code..."
 	@swiftlint --quiet
 	@echo "... checking Ruby scripts..."
@@ -78,9 +78,9 @@ check-code-quality: setup
 	@bundle exec mdl --style markdown_style.rb docs .github Sources/**/*.docc
 	@echo "... done.\n"
 
-.PHONY: fix-code-quality
-fix-code-quality:
-	@echo "Fixing code quality..."
+.PHONY: fix-quality
+fix-quality:
+	@echo "Fixing quality..."
 	@swiftlint --fix && swiftlint
 	@echo "... done.\n"
 
@@ -112,8 +112,8 @@ help:
 	@echo "   test-ios                           Build and run unit tests for iOS"
 	@echo "   test-tvos                          Build and run unit tests for tvOS"
 	@echo ""
-	@echo "   check-code-quality                 Run code quality checks"
-	@echo "   fix-code-quality                   Fix code quality automatically (where possible)"
+	@echo "   check-quality                      Run quality checks"
+	@echo "   fix-quality                        Fix quality automatically (if possible)"
 	@echo ""
 	@echo "   doc                                Build the documentation"
 	@echo ""
