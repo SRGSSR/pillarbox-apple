@@ -1,0 +1,62 @@
+name: 🐞 Bug report
+description: File a bug report
+labels: ["bug", "triage"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description of the problem
+      description: Describe the issue you encountered as precisely as possible.
+    validations:
+      required: true
+  - type: textarea
+    id: trace
+    attributes:
+      label: Relevant stack trace or log output
+      description: Include a crash stack trace or a log output if available.
+      render: shell
+  - type: dropdown
+    id: reproducibility
+    attributes:
+      label: Reproducibility
+      description: Evaluate how easy it is to reproduce the issue.
+      options:
+        - Always
+        - Difficult
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: Include step-by-step instructions to reproduce the issue.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Library version
+      description: Version of the library which is affected.
+      placeholder: ex. 1.2.3
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: Operating system
+      description: Operating system(s) and version(s) you used.
+      placeholder: ex. iOS 15.1 / tvOS 15.2
+    validations:
+      required: true
+  - type: textarea
+    id: sample
+    attributes:
+      label: Code sample
+      description: Attach a code sample reproducing the issue if possible.
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if an [issue](https://github.com/SRGSSR/pillarbox-apple/issues?q=is%3Aissue) already exists for the bug you encountered.
+      options:
+      - label: I have searched existing issues and found no similar bug report.
+        required: true
+  
