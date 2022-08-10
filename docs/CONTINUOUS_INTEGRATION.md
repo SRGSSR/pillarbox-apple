@@ -12,10 +12,6 @@ Commands are available to:
 
 We currently use TeamCity for continuous integration and GitHub for issue and pull request management. This document describes the steps required to fully integrate the tool suite with TeamCity and GitHub.
 
-### Remark
-
-Use of archive and delivery commands requires access to a [private configuration repository](https://github.com/SRGSSR/pillarbox-apple-configuration) which contains all secrets required for TestFlight and GitHub integration.
-
 ## Required tools
 
 The continuous integration server must have the following tools installed:
@@ -26,6 +22,10 @@ The continuous integration server must have the following tools installed:
 - [shellcheck](https://www.shellcheck.net)
 
 swiftlint and shellcheck can be easily installed with [Homebrew](https://brew.sh).
+
+## Configuration
+
+Use of archive and delivery commands requires access to a [private configuration repository](https://github.com/SRGSSR/pillarbox-apple-configuration). This repository is transparently pulled before the commands are executed (provided the continuous integration server has access to it).
 
 ## Continuous integration user
 
@@ -46,10 +46,7 @@ To have TeamCity run code quality checks for GitHub pull requests and post the c
 2. Add a VCS _Trigger_ on `+:pull/*`.
 3. Add a _Command Line_ build step which simply executes `make check-quality`.
 4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
-5. Checks are performed by Danger, which requires a few [environment variables](https://danger.systems/guides/getting_started.html) to be properly set. Add the following three environment variable _Parameters_ to the configuration:
-    1. `env.GITHUB_PULL_REQUEST_ID` with value `%teamcity.pullRequest.number%`.
-    2. `env.GITHUB_REPO_SLUG` with value `SRGSSR/pillarbox-apple`.
-    3. `env.GITHUB_REPO_URL` with value `https://github.com/SRGSSR/pillarbox-apple`.
+5. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token).
 6. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
 ## Demo archiving
