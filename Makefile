@@ -72,7 +72,7 @@ check-swift:
 	@echo "... done.\n"
 
 .PHONY: check-ruby
-check-ruby:
+check-ruby: setup
 	@echo "Checking Ruby quality..."
 	@bundle exec rubocop
 	@echo "... done.\n"
