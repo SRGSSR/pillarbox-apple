@@ -38,11 +38,11 @@ Proper integration with GitHub requires the use of a dedicated continuous integr
 
 Of course a proper SSH setup is also required so that repositories can be pulled by the continuous integration server.
 
-## Code quality checks
+## Quality checks
 
-To have TeamCity run code quality checks for GitHub pull requests and post the corresponding status back to GitHub:
+To have TeamCity run quality checks for GitHub pull requests and post the corresponding status back to GitHub:
 
-1. Create a TeamCity configuration called _Code Quality_.
+1. Create a TeamCity configuration called _Quality_.
 2. Add a VCS _Trigger_ on `+:pull/*`.
 3. Add a _Command Line_ build step which simply executes `make check-quality`.
 4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
