@@ -1,0 +1,43 @@
+---
+name: 💡 Feature request
+description: Request a feature or submit an idea you have.
+labels: ["enhancement", "triage"]
+body:
+  - type: textarea
+    id: use_case
+    attributes:
+      label: Use case description
+      description: Describe your use case in more detail.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance criteria
+      description: Provide us with a few acceptance criteria if possible.
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: >
+        Propose a solution if you have an idea how the feature could be
+        implemented.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: >
+        Describe any alternative solutions you might consider applicable.
+  - type: checkboxes
+    attributes:
+      label: Is there an existing similar feature request?
+      options:
+        - label: >
+            I have searched existing
+            [features](https://github.com/SRGSSR/pillarbox-apple/issues?q=is%3Aissue+label%3Aenhancement+)
+            and found no similar request.
+          required: true
+        - label: >
+            I have browsed the available API and found no way to achieve
+            the use case I described.
+          required: true
