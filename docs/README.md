@@ -22,6 +22,7 @@ The library can be integrated using [Swift Package Manager](https://swift.org/pa
 
 Follow the links below for further technical documentation:
 
+- [Development setup](DEVELOPMENT_SETUP.md)
 - [Continuous integration](CONTINUOUS_INTEGRATION.md)
 
 ## License
