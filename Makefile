@@ -84,7 +84,7 @@ check-shell:
 	@echo "... done.\n"
 
 .PHONY: check-markdown
-check-markdown:
+check-markdown: setup
 	@echo "Checking Markdown quality..."
 	@bundle exec mdl --style markdown_style.rb docs .github Sources/**/*.docc
 	@echo "... done.\n"
