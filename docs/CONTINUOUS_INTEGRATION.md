@@ -89,11 +89,12 @@ For comprehensive results a second _Tests tvOS_ configuration must be created fo
 
 ## Deliveries
 
-To have TeamCity deliver nightly and release builds of the demo application to TestFlight:
+To have TeamCity deliver nightly and release builds of the demo application to TestFlight after pull requests are merged back to the `main` branch:
 
 1. Create a TeamCity configuration called _Demo Nightly iOS_.
-2. Add a _Command Line_ build step which simply executes `make deliver-demo-nightly-ios`.
-3. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
+2. Add a VCS _Trigger_ on `+:main`.
+3. Add a _Command Line_ build step which simply executes `make deliver-demo-nightly-ios`.
+4. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
 For comprehensive deliveries other _Demo Release iOS_, _Demo Nightly tvOS_ and _Demo Release tvOS_ configurations must be created, running `make deliver-demo-release-ios`, `make deliver-demo-nightly-tvos` and `make deliver-demo-release-tvos` respectively. These can be easily created by copying the first configuration you just created and editing the _Command Line_ build step accordingly.
 
