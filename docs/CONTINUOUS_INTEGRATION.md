@@ -14,7 +14,7 @@ We currently use TeamCity for continuous integration and GitHub for issue and pu
 
 ## Required tools
 
-The continuous integration server must have the following tools installed:
+The continuous integration agents must have the following tools installed:
 
 - [gem](https://rubygems.org)
 - [bundler](https://bundler.io)
