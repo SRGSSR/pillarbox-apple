@@ -69,9 +69,9 @@ test-tvos: setup
 check-code-quality: setup
 	@echo "Checking code quality..."
 	@echo "... checking Swift code..."
-	@swiftlint
+	@swiftlint --quiet
 	@echo "... checking Ruby scripts..."
-	@bundle exec rubocop
+	@bundle exec rubocop --format quiet
 	@echo "... checking Shell scripts..."
 	@shellcheck Scripts/*.sh
 	@echo "... checking Markdown documentation..."
@@ -80,7 +80,7 @@ check-code-quality: setup
 
 .PHONY: fix-code-quality
 fix-code-quality:
-	@echo "Fixing codeq quality..."
+	@echo "Fixing code quality..."
 	@swiftlint --fix && swiftlint
 	@echo "... done.\n"
 
