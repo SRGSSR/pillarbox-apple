@@ -13,56 +13,52 @@ setup:
 	@Scripts/checkout-configuration.sh "${CONFIGURATION_REPOSITORY_URL}" "${CONFIGURATION_COMMIT_SHA1}" Configuration
 	@echo "... done.\n"
 
-.PHONY: fastlane-ios
-fastlane-ios: setup
-	@bundle exec fastlane --env ios
-
-.PHONY: fastlane-tvos
-fastlane-tvos: setup
-	@bundle exec fastlane --env tvos
+.PHONY: fastlane
+fastlane: setup
+	@bundle exec fastlane
 
 .PHONY: archive-demo-ios
 archive-demo-ios: setup
-	@bundle exec fastlane archive_demo --env ios
+	@bundle exec fastlane archive_demo_ios
 
 .PHONY: archive-demo-tvos
 archive-demo-tvos: setup
-	@bundle exec fastlane archive_demo --env tvos
+	@bundle exec fastlane archive_demo_tvos
 
 .PHONY: deliver-demo-nightly-ios
 deliver-demo-nightly-ios: setup
 	@echo "Delivering demo nightly build for iOS..."
-	@bundle exec fastlane deliver_demo_nightly --env ios
+	@bundle exec fastlane deliver_demo_nightly_ios
 	@echo "... done.\n"
 
 .PHONY: deliver-demo-nightly-tvos
 deliver-demo-nightly-tvos: setup
 	@echo "Delivering demo nightly build for tvOS..."
-	@bundle exec fastlane deliver_demo_nightly --env tvos
+	@bundle exec fastlane deliver_demo_nightly_tvos
 	@echo "... done.\n"
 
 .PHONY: deliver-demo-release-ios
 deliver-demo-release-ios: setup
 	@echo "Delivering demo release build for iOS..."
-	@bundle exec fastlane deliver_demo_release --env ios
+	@bundle exec fastlane deliver_demo_release_ios
 	@echo "... done.\n"
 
 .PHONY: deliver-demo-release-tvos
 deliver-demo-release-tvos: setup
 	@echo "Delivering demo release build for tvOS..."
-	@bundle exec fastlane deliver_demo_release --env tvos
+	@bundle exec fastlane deliver_demo_release_tvos
 	@echo "... done.\n"
 
 .PHONY: test-ios
 test-ios: setup
 	@echo "Running Appearance unit tests..."
-	@bundle exec fastlane test --env ios
+	@bundle exec fastlane test_ios
 	@echo "... done.\n"
 
 .PHONY: test-tvos
 test-tvos: setup
 	@echo "Running Appearance unit tests..."
-	@bundle exec fastlane test --env tvos
+	@bundle exec fastlane test_tvos
 	@echo "... done.\n"
 
 .PHONY: check-quality
@@ -99,8 +95,7 @@ help:
 	@echo "   all                                Default target"
 	@echo "   setup                              Setup project"
 	@echo ""
-	@echo "   fastlane-ios                       Run fastlane for iOS targets"
-	@echo "   fastlane-tvos                      Run fastlane for tvOS targets"
+	@echo "   fastlane                           Run fastlane"
 	@echo ""
 	@echo "   archive-demo-ios                   Archive the iOS demo (for all configurations)"
 	@echo "   archive-demo-tvos                  Archive the tvOS demo (for all configurations)"

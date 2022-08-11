@@ -3,8 +3,8 @@
 source 'https://rubygems.org'
 
 gem 'fastlane'
-gem 'octokit'
 gem 'mdl'
+gem 'octokit'
 gem 'rubocop'
 gem 'xcode-install'
 
