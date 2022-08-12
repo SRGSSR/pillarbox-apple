@@ -46,6 +46,10 @@ This ensures that Swift files, scripts and documentation conform to common best 
 
 ## Editor configuration
 
-An [editor configuration file](../.editorconfig) is provided to ensure common styling (tabs, spaces, etc.).
+An [editor configuration file](../.editorconfig) and several linter configuration files are provided to ensure common styling and best practices. Editors can usually be configured to apply some of these rules automatically and consistently.
 
-[Various widely used editors](https://editorconfig.org) support this file automatically. A [plugin](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) is required for Visual Studio Code users.
+### Visual Studio Code
+
+- [.editorconfig extension](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig).
+- [shellcheck extension](https://marketplace.visualstudio.com/items?itemName=timonwong.shellcheck).
+- [rubocop extension](https://marketplace.visualstudio.com/items?itemName=misogi.ruby-rubocop).
