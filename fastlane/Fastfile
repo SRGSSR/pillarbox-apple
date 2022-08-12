@@ -235,6 +235,7 @@ end
 
 # -- GitHub comment builders
 
+# Insert data into a comment so that it can be retrieved when updating the comment
 def build_github_comment_body(identifier, text, data)
   <<~MESSAGE
     <!--PB_#{identifier}_BEGIN
