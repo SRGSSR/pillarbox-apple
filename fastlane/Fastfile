@@ -292,7 +292,7 @@ def post_github_issue_comment(identifier, issue_id, data, &text_builder)
   if comment.nil?
     add_github_issue_comment(client, identifier, issue_id, data, text_builder)
   else
-    update_github_issue_comment(client, comment, data, text_builder)
+    update_github_issue_comment(client, identifier, comment, data, text_builder)
   end
 end
 
