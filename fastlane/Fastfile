@@ -275,11 +275,11 @@ def add_github_issue_comment(client, identifier, issue_id, data, text_builder)
   client.add_comment(github_repository, issue_id, body)
 end
 
-def update_github_issue_comment(client, comment, data, text_builder)
+def update_github_issue_comment(client, identifier, comment, data, text_builder)
   original_data = parse_github_comment_data(comment)[:data]
   merged_data = original_data.merge(data)
   text = text_builder.call(merged_data)
-  body = build_github_comment_body(comment.id, text, merged_data)
+  body = build_github_comment_body(identifier, text, merged_data)
   client.update_comment(github_repository, comment.id, body)
 end
 
