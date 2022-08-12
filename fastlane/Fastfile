@@ -52,15 +52,15 @@ APP_IDENTIFIERS = {
 # -- External configuration
 
 def github_api_token
-  ENV.fetch('GITHUB_API_TOKEN')
+  ENV.fetch('GITHUB_API_TOKEN', nil)
 end
 
 def github_repository
-  ENV.fetch('GITHUB_REPO_SLUG')
+  ENV.fetch('GITHUB_REPO_SLUG', nil)
 end
 
 def github_issue_id
-  ENV.fetch('GITHUB_ISSUE_ID')
+  ENV.fetch('GITHUB_ISSUE_ID', nil)
 end
 
 def key_filepath
@@ -292,6 +292,10 @@ end
 
 ## -- GitHub integration helpers
 
+def github_environment?
+  !github_api_token.nil? && !github_repository.nil? && !github_issue_id.nil?
+end
+
 def availability_data(platform_id, version)
   case platform_id
   when :tvos
@@ -302,7 +306,9 @@ def availability_data(platform_id, version)
 end
 
 def update_github_nightly_availability(platform_id, version)
-  post_github_comment('nightly-status', availability_data(platform_id, version)) do |data|
+  return unless github_environment?
+
+  post_github_comment('nightly', availability_data(platform_id, version)) do |data|
     ios = data['ios'] ||= '-'
     tvos = data['tvos'] ||= '-'
 
