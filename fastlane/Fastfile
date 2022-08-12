@@ -13,39 +13,41 @@ APPLICATION_XCCONFIG_FILEPATH = 'Demo/Xcode/Shared/Targets/Application.xcconfig'
 PLATFORMS = {
   ios: 'iOS',
   tvos: 'tvOS'
-}
+}.freeze
 
 TESTFLIGHT_PLATFORMS = {
   ios: 'ios',
   tvos: 'appletvos'
-}
+}.freeze
 
 DEVICES = {
   ios: 'iPhone 13',
   tvos: 'Apple TV'
-}
+}.freeze
 
 ICON_GLOBS = {
   ios: '/Demo/Resources/Assets.xcassets/AppIcon.appiconset/*.png',
-  tvos: '/Demo/Resources/Assets.xcassets/App Icon & Top Shelf Image.brandassets/*/Back.imagestacklayer/Content.imageset/*.png'
-}
+  tvos: \
+    '/Demo/Resources/Assets.xcassets/App Icon & Top Shelf Image.brandassets/*/Back.imagestacklayer' \
+    '/Content.imageset/*.png'
+}.freeze
 
 SHIELD_SCALES = {
   ios: 0.8,
   tvos: 0.4
-}
+}.freeze
 
 # -- Configuration-specific constants
 
 CONFIGURATIONS = {
   nightly: 'Nightly',
   release: 'Release'
-}
+}.freeze
 
 APP_IDENTIFIERS = {
   nightly: 'ch.srgssr.Pillarbox-demo.nightly',
   release: 'ch.srgssr.Pillarbox-demo'
-}
+}.freeze
 
 # -- External configuration
 
@@ -232,59 +234,87 @@ end
 
 # -- GitHub comment helpers
 
-def build_github_comment_body(body, data)
+def build_github_comment_body(identifier, text, data)
   <<~MESSAGE
-    <!--PB_BEGIN
+    <!--PB_#{identifier}_BEGIN
     #{data.map { |key, value| "#{key}: #{value}" }.join("\n")}
     PB_END-->
-    #{body}
+    #{text}
   MESSAGE
 end
 
 def parse_github_comment_data(comment)
-  comment.match(/<!--PB_BEGIN\n(.*)\nPB_END-->/m)[1].split("\n").to_h { |component|
-    component.split(': ')
+  regex = comment.body.match(/<!--PB_(.*)_BEGIN\n(.*)\nPB_END-->/m)
+  {
+    id: regex[1],
+    data: regex[2].split("\n").to_h { |component| component.split(': ') }
   }
 rescue StandardError
   nil
 end
 
-def comment_with_identifier(client, identifier)
+def find_comment_with_identifier(client, identifier)
   comments = client.issue_comments(github_repository, github_issue_id)
   comments.find { |comment| comment_has_identifier(comment, identifier) }
 end
 
 def comment_has_identifier(comment, identifier)
-  data = parse_github_comment_data(comment.body)
+  data = parse_github_comment_data(comment)
   return if data.nil?
 
-  data['id'] == identifier
+  data[:id] == identifier
 end
 
-def comment_text(ios, tvos)
-  <<~BODY
-    # 🌙 Available in TestFlight nightlies
-
-    The most recent state can be tested in the following builds:
-
-    | Platform | Version |
-    |:-- |:--:|
-    | iOS | #{ios} |
-    | tvOS | #{tvos} |
-  BODY
+def add_github_comment(client, identifier, data, text_builder)
+  text = text_builder.call(data)
+  body = build_github_comment_body(identifier, text, data)
+  client.add_comment(github_repository, github_issue_id, body)
 end
 
-def update_github_nightly_comment(version)
-  text = comment_text('1.2.3 (765)', '2.3.4 (897)')
-  data = { id: 'nightly', ios: version, tvos: version }
-  body = build_github_comment_body(text, data)
+def update_github_comment(client, comment, data, text_builder)
+  original_data = parse_github_comment_data(comment)[:data]
+  merged_data = original_data.merge(data)
+  text = text_builder.call(merged_data)
+  body = build_github_comment_body(comment.id, text, merged_data)
+  client.update_comment(github_repository, comment.id, body)
+end
 
+def post_github_comment(identifier, data, &text_builder)
   client = Octokit::Client.new(access_token: github_api_token)
-  comment = comment_with_identifier(client, 'nightly')
+  comment = find_comment_with_identifier(client, identifier)
   if comment.nil?
-    client.add_comment(github_repository, github_issue_id, body)
+    add_github_comment(client, identifier, data, text_builder)
   else
-    client.update_comment(github_repository, comment.id, body)
+    update_github_comment(client, comment, data, text_builder)
+  end
+end
+
+## -- GitHub integration helpers
+
+def availability_data(platform_id, version)
+  case platform_id
+  when :tvos
+    { 'tvos' => version }
+  else
+    { 'ios' => version }
+  end
+end
+
+def update_github_nightly_availability(platform_id, version)
+  post_github_comment('nightly-status', availability_data(platform_id, version)) do |data|
+    ios = data['ios'] ||= '-'
+    tvos = data['tvos'] ||= '-'
+
+    <<~BODY
+      # 🌙 Available in TestFlight nightlies
+
+      The most recent state can be tested in the following builds:
+
+      | Platform | Version |
+      |:-- |:--:|
+      | iOS | #{ios} |
+      | tvOS | #{tvos} |
+    BODY
   end
 end
 
@@ -345,8 +375,13 @@ platform :ios do
     sh('../Scripts/generate-documentation.sh')
   end
 
-  desc 'Display nightly availability'
-  lane :comment_availability do
-    update_github_nightly_comment('1234')
+  desc 'Display nightly availability for iOS'
+  lane :comment_availability_ios do
+    update_github_nightly_availability(:ios, '1.2.3 (456)')
+  end
+
+  desc 'Display nightly availability for tvOS'
+  lane :comment_availability_tvos do
+    update_github_nightly_availability(:tvos, '9.8.7 (654)')
   end
 end
