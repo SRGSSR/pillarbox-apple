@@ -281,6 +281,7 @@ end
 
 def post_github_comment(identifier, data, &text_builder)
   client = Octokit::Client.new(access_token: github_api_token)
+  client.auto_paginate = true
   comment = find_comment_with_identifier(client, identifier)
   if comment.nil?
     add_github_comment(client, identifier, data, text_builder)
