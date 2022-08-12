@@ -245,6 +245,7 @@ def build_github_comment_body(identifier, text, data)
   MESSAGE
 end
 
+# Extract data stored as a comment
 def parse_github_comment_data(comment)
   regex = comment.body.match(/<!--PB_(.*)_BEGIN\n(.*)\nPB_END-->/m)
   {
