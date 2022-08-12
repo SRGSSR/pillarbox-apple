@@ -197,6 +197,7 @@ def deliver_demo_nightly(platform_id)
   reset_git_repo(skip_clean: true)
   upload_app_to_testflight
   distribute_app_to_testers(platform_id, :nightly, build_number)
+  update_github_nightly_availability(platform_id, "#{marketing_version} (#{build_number})")
 end
 
 def deliver_demo_release(platform_id)
@@ -380,15 +381,5 @@ platform :ios do
   desc 'Build documentation'
   lane :doc do
     sh('../Scripts/generate-documentation.sh')
-  end
-
-  desc 'Display nightly availability for iOS'
-  lane :comment_availability_ios do
-    update_github_nightly_availability(:ios, '1.2.3 (456)')
-  end
-
-  desc 'Display nightly availability for tvOS'
-  lane :comment_availability_tvos do
-    update_github_nightly_availability(:tvos, '9.8.7 (654)')
   end
 end
