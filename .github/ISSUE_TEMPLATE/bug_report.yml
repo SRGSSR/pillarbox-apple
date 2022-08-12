@@ -30,6 +30,7 @@ body:
     attributes:
       label: Steps to reproduce
       description: Include step-by-step instructions to reproduce the issue.
+      placeholder: 1. …
     validations:
       required: true
   - type: input
