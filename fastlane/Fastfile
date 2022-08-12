@@ -197,7 +197,7 @@ def deliver_demo_nightly(platform_id)
   reset_git_repo(skip_clean: true)
   upload_app_to_testflight
   distribute_app_to_testers(platform_id, :nightly, build_number)
-  update_github_nightly_availability(platform_id, "#{marketing_version} (#{build_number})")
+  update_github_nightly_availability(platform_id, "#{xcconfig_marketing_version} (#{build_number})")
 end
 
 def deliver_demo_release(platform_id)
