@@ -51,7 +51,7 @@ APP_IDENTIFIERS = {
 
 # -- Helpers
 
-def is_valid_float(string)
+def valid_float?(string)
   true if Float string
 rescue StandardError
   false
@@ -68,7 +68,7 @@ end
 
 def github_pull_request_id
   id = ENV.fetch('GITHUB_PULL_REQUEST_ID', nil)
-  id if is_valid_float(id)
+  id if valid_float?(id)
 end
 
 def key_filepath
