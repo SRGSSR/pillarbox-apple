@@ -59,8 +59,8 @@ def github_repository
   ENV.fetch('GITHUB_REPO_SLUG', nil)
 end
 
-def github_issue_id
-  ENV.fetch('GITHUB_ISSUE_ID', nil)
+def github_pull_request_id
+  ENV.fetch('GITHUB_PULL_REQUEST_ID', nil)
 end
 
 def key_filepath
@@ -233,7 +233,7 @@ def run_all_tests(platform_id)
   run_package_tests(platform_id, 'UserInterface')
 end
 
-# -- GitHub comment helpers
+# -- GitHub comment builders
 
 def build_github_comment_body(identifier, text, data)
   <<~MESSAGE
@@ -254,11 +254,6 @@ rescue StandardError
   nil
 end
 
-def find_comment_with_identifier(client, identifier)
-  comments = client.issue_comments(github_repository, github_issue_id)
-  comments.find { |comment| comment_has_identifier(comment, identifier) }
-end
-
 def comment_has_identifier(comment, identifier)
   data = parse_github_comment_data(comment)
   return if data.nil?
@@ -266,13 +261,21 @@ def comment_has_identifier(comment, identifier)
   data[:id] == identifier
 end
 
-def add_github_comment(client, identifier, data, text_builder)
-  text = text_builder.call(data)
-  body = build_github_comment_body(identifier, text, data)
-  client.add_comment(github_repository, github_issue_id, body)
+## -- GitHub issue comment management (can be used for PR comments as well)
+##      See https://docs.github.com/en/rest/issues/comments
+
+def find_issue_comment_with_identifier(client, identifier, issue_id)
+  comments = client.issue_comments(github_repository, issue_id)
+  comments.find { |comment| comment_has_identifier(comment, identifier) }
 end
 
-def update_github_comment(client, comment, data, text_builder)
+def add_github_issue_comment(client, identifier, issue_id, data, text_builder)
+  text = text_builder.call(data)
+  body = build_github_comment_body(identifier, text, data)
+  client.add_comment(github_repository, issue_id, body)
+end
+
+def update_github_issue_comment(client, comment, data, text_builder)
   original_data = parse_github_comment_data(comment)[:data]
   merged_data = original_data.merge(data)
   text = text_builder.call(merged_data)
@@ -280,22 +283,18 @@ def update_github_comment(client, comment, data, text_builder)
   client.update_comment(github_repository, comment.id, body)
 end
 
-def post_github_comment(identifier, data, &text_builder)
+def post_github_issue_comment(identifier, issue_id, data, &text_builder)
   client = Octokit::Client.new(access_token: github_api_token)
   client.auto_paginate = true
-  comment = find_comment_with_identifier(client, identifier)
+  comment = find_issue_comment_with_identifier(client, identifier, issue_id)
   if comment.nil?
-    add_github_comment(client, identifier, data, text_builder)
+    add_github_issue_comment(client, identifier, issue_id, data, text_builder)
   else
-    update_github_comment(client, comment, data, text_builder)
+    update_github_issue_comment(client, comment, data, text_builder)
   end
 end
 
 ## -- GitHub integration helpers
-
-def github_environment?
-  !github_api_token.nil? && !github_repository.nil? && !github_issue_id.nil?
-end
 
 def availability_data(platform_id, version)
   case platform_id
@@ -307,12 +306,12 @@ def availability_data(platform_id, version)
 end
 
 def update_github_nightly_availability(platform_id, version)
-  unless github_environment?
+  if github_api_token.nil? || github_repository.nil? || github_pull_request_id.nil?
     UI.message 'Incomplete GitHub environment information. Status availability could not be posted.'
     return
   end
 
-  post_github_comment('nightly', availability_data(platform_id, version)) do |data|
+  post_github_issue_comment('nightly', github_pull_request_id, availability_data(platform_id, version)) do |data|
     ios = data['ios'] ||= '-'
     tvos = data['tvos'] ||= '-'
 
@@ -384,10 +383,5 @@ platform :ios do
   desc 'Build documentation'
   lane :doc do
     sh('../Scripts/generate-documentation.sh')
-  end
-
-  desc 'Environment'
-  lane :environment_test do
-    UI.message ENV.fetch('ENV_TEST_VALUE')
   end
 end
