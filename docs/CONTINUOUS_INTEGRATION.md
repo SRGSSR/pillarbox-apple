@@ -114,11 +114,12 @@ To have TeamCity deliver nightly builds of the demo application to TestFlight wh
 2. Add a VCS _Trigger_ on `+:main` and `+pull/*`.
 3. Add a _Command Line_ build step which simply executes `make deliver-demo-nightly-ios`.
 4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
-5. Add the following environment variable _Parameters_ to the configuration to provide GitHub contextual information to our delivery tools:
+5. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token).
+6. Add the following environment variable _Parameters_ to the configuration to provide GitHub contextual information to our delivery tools:
     1. `env.GITHUB_API_TOKEN` with a valid personal access token.
     2. `env.GITHUB_PULL_REQUEST_ID` with value `%teamcity.pullRequest.number%`.
     3. `env.GITHUB_REPO_SLUG` with value `SRGSSR/pillarbox-apple` (organization/repository).
-6. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
+7. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
 For comprehensive results a second _Demo Nightly tvOS_ configuration must be created for tvOS. This is easily achieved by copying the configuration you just created and editing the _Command Line_ build step to execute `make deliver-demo-nightly-tvos`.
 
