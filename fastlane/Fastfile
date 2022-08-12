@@ -371,12 +371,12 @@ platform :ios do
     deliver_demo_release(:tvos)
   end
 
-  desc 'Build and run iOS unit testse'
+  desc 'Build and run iOS unit tests'
   lane :test_ios do
     run_all_tests(:ios)
   end
 
-  desc 'Build and run tvOS unit testse'
+  desc 'Build and run tvOS unit tests'
   lane :test_tvos do
     run_all_tests(:tvos)
   end
@@ -384,5 +384,10 @@ platform :ios do
   desc 'Build documentation'
   lane :doc do
     sh('../Scripts/generate-documentation.sh')
+  end
+
+  desc 'Environment'
+  lane :environment_test do
+    UI.message ENV.fetch('ENV_TEST_VALUE')
   end
 end
