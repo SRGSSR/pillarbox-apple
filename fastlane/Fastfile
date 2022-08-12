@@ -51,8 +51,8 @@ APP_IDENTIFIERS = {
 
 # -- Helpers
 
-def is_valid_float(s)
-  true if Float s
+def is_valid_float(string)
+  true if Float string
 rescue StandardError
   false
 end
@@ -317,7 +317,8 @@ end
 
 def update_github_nightly_availability(platform_id, version)
   if github_api_token.nil? || github_repository.nil? || github_pull_request_id.nil?
-    UI.message 'Not a pull request or missing GitHub environment information. Nightly availability will not be posted to GitHub.'
+    UI.message \
+      'Not a pull request or missing GitHub environment information. Nightly availability will not be posted to GitHub.'
     return
   end
 
