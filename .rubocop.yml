@@ -4,7 +4,7 @@ AllCops:
 
 Metrics/BlockLength:
   Enabled: true
-  IgnoredMethods: ['platform']
+  AllowedMethods: ['platform']
 
 Metrics/MethodLength:
   Enabled: true
