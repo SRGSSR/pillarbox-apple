@@ -166,7 +166,7 @@ def distribute_app_to_testers(platform_id, configuration_id, build_number)
   xcversion(version: '~> 13')
   login_to_app_store_connect
   upload_to_testflight(
-    app_identifier: app_identifier(configuration_id),
+    app_identifier: APP_IDENTIFIERS[configuration_id],
     distribute_only: true,
     app_platform: TESTFLIGHT_PLATFORMS[platform_id],
     build_number: build_number.to_s,
