@@ -10,11 +10,11 @@ Commands are available to:
 - Perform nightly and release deliveries on TestFlight.
 - Run code quality checks.
 
-We currently use TeamCity for continuous integration and GitHub for issue and pull request management. This document describes the steps required to fully integrate the tool suite with TeamCity and GitHub. Our goal is to:
+We currently use TeamCity for continuous integration and GitHub for issue and pull request management. This document describes the steps required to fully integrate the tool suite with TeamCity and GitHub. We want to:
 
 - Execute status checks and post results to GitHub when a pull request is opened or updated.
 - Build nightly demo apps when a pull request is opened or updated.
-- We might want to open a pull request early in draft, in this case we want to avoid status checks and nightly deliveries on commit (manual triggering must still be possible, though).
+- Use draft pull requests for early preview of features in development (without on-commit status checks or deliveries, though).
 
 ## Required tools
 
@@ -48,10 +48,14 @@ Our current workflow is based on pull requests, which TeamCity is able to automa
 
 Proper integration with GitHub requires the use of a dedicated continuous integration user (a bot) with write access to the repository. We already have a dedicated [RTS devops](https://github.com/rts-devops) user, we therefore only need a few additional configuration steps:
 
-1. Ensure the bot has write access to the GitHub repository.
+1. Ensure the bot has write access to the GitHub repository (not necessary for a public repository).
 2. Integration with GitHub requires the creation of a dedicated [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) with minimal permissions (_public_repo_ is sufficient for a public repository).
 
 Of course a proper SSH setup is also required so that main and configuration repositories can be properly pulled by the continuous integration server.
+
+## App Store Connect configuration
+
+Nightly and release applications must be created with proper identifiers first on App Store Connect. For submission to succeed each application _Beta App Information_ and _Beta App Review Information_ must also have been properly filled in the TestFlight section of the App Store Connect portal.
 
 ## Quality checks
 
@@ -102,22 +106,32 @@ To have TeamCity run tests for GitHub pull requests and post the corresponding s
 
 For comprehensive results a second _Tests tvOS_ configuration must be created for tvOS. This is easily achieved by copying the configuration you just created and editing the _Command Line_ build step to execute `make test-tvos`.
 
-## Deliveries
+## Demo nightlies
 
-To have TeamCity deliver nightly and release builds of the demo application to TestFlight when pull requests are updated or merged back to `main`:
+To have TeamCity deliver nightly builds of the demo application to TestFlight when pull requests are updated or merged back to `main`:
 
 1. Create a TeamCity configuration called _Demo Nightly iOS_.
 2. Add a VCS _Trigger_ on `+:main` and `+pull/*`.
 3. Add a _Command Line_ build step which simply executes `make deliver-demo-nightly-ios`.
 4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
 5. Add the following environment variable _Parameters_ to the configuration to provide GitHub contextual information to our delivery tools:
-        - `env.GITHUB_API_TOKEN` with a valid personal access token.
-        - `env.GITHUB_PULL_REQUEST_ID` with value `%teamcity.pullRequest.number%`.
-        - `env.GITHUB_REPO_SLUG` with value `SRGSSR/pillarbox-apple`.
+    1. `env.GITHUB_API_TOKEN` with a valid personal access token.
+    2. `env.GITHUB_PULL_REQUEST_ID` with value `%teamcity.pullRequest.number%`.
+    3. `env.GITHUB_REPO_SLUG` with value `SRGSSR/pillarbox-apple` (organization/repository).
 6. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
-For comprehensive deliveries other _Demo Release iOS_, _Demo Nightly tvOS_ and _Demo Release tvOS_ configurations must be created, running `make deliver-demo-release-ios`, `make deliver-demo-nightly-tvos` and `make deliver-demo-release-tvos` respectively. These can be easily created by copying the first configuration you just created and editing the _Command Line_ build step accordingly.
+For comprehensive results a second _Demo Nightly tvOS_ configuration must be created for tvOS. This is easily achieved by copying the configuration you just created and editing the _Command Line_ build step to execute `make deliver-demo-nightly-tvos`.
 
-### Remark
+## Demo releases
 
-Nightly and release applications must be created with proper identifiers first on App Store Connect. For submission to succeed each application _Beta App Information_ and _Beta App Review Information_ must also have been properly filled in the TestFlight section of the App Store Connect portal.
+To have TeamCity deliver release builds of the demo application to TestFlight manually when required:
+
+1. Create a TeamCity configuration called _Demo Release iOS_.
+2. Add a _Command Line_ build step which simply executes `make deliver-demo-release-ios`.
+3. Add the following environment variable _Parameters_ to the configuration to provide GitHub contextual information to our delivery tools:
+    1. `env.GITHUB_API_TOKEN` with a valid personal access token.
+    2. `env.GITHUB_PULL_REQUEST_ID` with value `%teamcity.pullRequest.number%`.
+    3. `env.GITHUB_REPO_SLUG` with value `SRGSSR/pillarbox-apple` (organization/repository).
+4. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
+
+For comprehensive results a second _Demo Release tvOS_ configuration must be created for tvOS. This is easily achieved by copying the configuration you just created and editing the _Command Line_ build step to execute `make deliver-demo-release-tvos`.
