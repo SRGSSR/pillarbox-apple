@@ -307,7 +307,10 @@ def availability_data(platform_id, version)
 end
 
 def update_github_nightly_availability(platform_id, version)
-  return unless github_environment?
+  unless github_environment?
+    UI.message 'Incomplete GitHub environment information. Status availability could not be posted.'
+    return
+  end
 
   post_github_comment('nightly', availability_data(platform_id, version)) do |data|
     ios = data['ios'] ||= '-'
