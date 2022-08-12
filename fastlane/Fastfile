@@ -49,6 +49,13 @@ APP_IDENTIFIERS = {
   release: 'ch.srgssr.Pillarbox-demo'
 }.freeze
 
+# -- Helpers
+
+def is_valid_float(s)
+  true if Float s
+rescue StandardError
+  false
+end
 # -- External configuration
 
 def github_api_token
@@ -60,7 +67,8 @@ def github_repository
 end
 
 def github_pull_request_id
-  ENV.fetch('GITHUB_PULL_REQUEST_ID', nil)
+  id = ENV.fetch('GITHUB_PULL_REQUEST_ID', nil)
+  id if is_valid_float(id)
 end
 
 def key_filepath
@@ -309,7 +317,7 @@ end
 
 def update_github_nightly_availability(platform_id, version)
   if github_api_token.nil? || github_repository.nil? || github_pull_request_id.nil?
-    UI.message 'Incomplete GitHub environment information. Status availability could not be posted.'
+    UI.message 'Not a pull request or missing GitHub environment information. Nightly availability will not be posted to GitHub.'
     return
   end
 
