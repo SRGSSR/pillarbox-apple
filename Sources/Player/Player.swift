@@ -1,9 +1,20 @@
+//
+//  Copyright (c) SRG SSR. All rights reserved.
+//
+//  License information is available from the LICENSE file.
+//
+
+import AVFoundation
 import Combine
 
 // MARK: Player
 
 public final class Player: ObservableObject {
     @Published public private(set) var state: State = .idle
+
+    var items: [AVPlayerItem] {
+        return []
+    }
 }
 
 // MARK: Types
