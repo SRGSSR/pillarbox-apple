@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import Combine
 
 extension Player {
     enum ItemState: Equatable {
@@ -25,6 +26,21 @@ extension Player {
                 return lhsError.localizedDescription == rhsError.localizedDescription
             default:
                 return false
+            }
+        }
+
+        static func publisher(for item: AVPlayerItem) -> AnyPublisher<ItemState, Never> {
+            return item.publisher(for: \.status)
+                .map { ItemState(from: $0) }
+                .eraseToAnyPublisher()
+        }
+
+        init(from status: AVPlayerItem.Status) {
+            switch status {
+            case .readyToPlay:
+                self = .readyToPlay
+            default:
+                self = .unknown
             }
         }
     }
