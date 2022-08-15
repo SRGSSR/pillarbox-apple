@@ -3,7 +3,8 @@ import Nimble
 import XCTest
 
 final class PlayerTests: XCTestCase {
-    func testDummy() {
-        expect(true).to(beTrue())
+    func testInitialState() {
+        let player = Player()
+        expect(player.state).to(equal(.idle))
     }
 }
