@@ -12,8 +12,18 @@ import Combine
 public final class Player: ObservableObject {
     @Published public private(set) var state: State = .idle
 
-    var items: [AVPlayerItem] {
-        return []
+    private let player: AVQueuePlayer
+
+    public init(items: [AVPlayerItem] = []) {
+        self.player = AVQueuePlayer(items: items)
+    }
+
+    public convenience init(item: AVPlayerItem) {
+        self.init(items: [item])
+    }
+
+    public var items: [AVPlayerItem] {
+        return player.items()
     }
 }
 
