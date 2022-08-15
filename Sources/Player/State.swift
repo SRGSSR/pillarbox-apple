@@ -16,9 +16,10 @@ extension Player {
 
         public static func == (lhs: Player.State, rhs: Player.State) -> Bool {
             switch (lhs, rhs) {
-            case (.idle, .idle), (.playing, .playing), (.paused, .paused),
-                (.ended, .ended), (.failed, .failed):
+            case (.idle, .idle), (.playing, .playing), (.paused, .paused), (.ended, .ended):
                 return true
+            case let (.failed(error: lhsError), .failed(error: rhsError)):
+                return lhsError.localizedDescription == rhsError.localizedDescription
             default:
                 return false
             }
