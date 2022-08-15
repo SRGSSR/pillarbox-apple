@@ -33,6 +33,14 @@ public final class Player: ObservableObject {
     public func append(_ item: AVPlayerItem) {
         insert(item, after: nil)
     }
+
+    public func remove(_ item: AVPlayerItem) {
+        player.remove(item)
+    }
+
+    public func removeAllItems() {
+        player.removeAllItems()
+    }
 }
 
 // MARK: Types
