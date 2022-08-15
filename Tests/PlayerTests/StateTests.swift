@@ -28,7 +28,6 @@ final class StateTests: XCTestCase {
 
     func testSimpleInequality() {
         expect(Player.State.idle).notTo(equal(.playing))
-        expect(Player.State.playing).notTo(equal(.paused))
         expect(Player.State.playing).notTo(equal(.failed(error: TestError.message1)))
     }
 
