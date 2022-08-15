@@ -41,4 +41,8 @@ public final class Player: ObservableObject {
     public func removeAllItems() {
         player.removeAllItems()
     }
+
+    public func play() {
+
+    }
 }
