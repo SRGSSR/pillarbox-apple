@@ -17,8 +17,7 @@ final class ItemStateTests: XCTestCase {
     private let queue = DispatchQueue(label: "ch.srgssr.failing-resource-loader")
 
     private enum TestError: Error {
-        case message1
-        case message2
+        case any
     }
 
     override func tearDown() {
@@ -26,7 +25,7 @@ final class ItemStateTests: XCTestCase {
     }
 
     func testValidStream() throws {
-        let item = AVPlayerItem(url: URL(string: "http://localhost:8000/valid_stream/master.m3u8")!)
+        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
         player = AVPlayer(playerItem: item)
         player!.play()
         Task {
@@ -45,11 +44,11 @@ final class ItemStateTests: XCTestCase {
             .unknown,
             .readyToPlay,
             .ended
-        ]))
+        ], by: areSimilar))
     }
 
     func testUnavailableStream() throws {
-        let item = AVPlayerItem(url: URL(string: "http://httpbin.org/status/404")!)
+        let item = AVPlayerItem(url: TestStreams.unavailableStreamUrl)
         player = AVPlayer(playerItem: item)
         let states = try awaitPublisher(
             Player.ItemState.publisher(for: item)
@@ -57,12 +56,12 @@ final class ItemStateTests: XCTestCase {
         )
         expect(states).to(equal([
             .unknown,
-            .failed
-        ]))
+            .failed(error: TestError.any)
+        ], by: areSimilar))
     }
 
     func testCorruptStream() throws {
-        let item = AVPlayerItem(url: URL(string: "http://localhost:8000/corrupt_stream/master.m3u8")!)
+        let item = AVPlayerItem(url: TestStreams.corruptStreamUrl)
         player = AVPlayer(playerItem: item)
         let states = try awaitPublisher(
             Player.ItemState.publisher(for: item)
@@ -70,12 +69,12 @@ final class ItemStateTests: XCTestCase {
         )
         expect(states).to(equal([
             .unknown,
-            .failed
-        ]))
+            .failed(error: TestError.any)
+        ], by: areSimilar))
     }
 
     func testResourceLoadingFailure() throws {
-        let asset = AVURLAsset(url: URL(string: "custom://arbitrary.server/some.m3u8")!)
+        let asset = AVURLAsset(url: TestStreams.customStreamUrl)
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: queue)
         let item = AVPlayerItem(asset: asset)
         player = AVPlayer(playerItem: item)
@@ -86,13 +85,7 @@ final class ItemStateTests: XCTestCase {
         )
         expect(states).to(equal([
             .unknown,
-            .failed
-        ]))
-    }
-
-    func testFailedToPlayToEndTime() {
-        // TODO: Cannot find a use case to test `AVPlayerItemFailedToPlayToEndTime` and no documentation is provided.
-        //       When is this notification actually posted? Already tested: Stream with missing chunks.
-        fail()
+            .failed(error: TestError.any)
+        ], by: areSimilar))
     }
 }

@@ -12,29 +12,29 @@ extension Player {
         case unknown
         case readyToPlay
         case ended
-        case failed
+        case failed(error: Error)
 
         static func publisher(for item: AVPlayerItem) -> AnyPublisher<ItemState, Never> {
-            Publishers.Merge3(
+            Publishers.Merge(
                 item.publisher(for: \.status)
-                    .map { ItemState(from: $0) },
+                    .map { status in
+                        switch status {
+                        case .readyToPlay:
+                            return .readyToPlay
+                        case .failed:
+                            return .failed(error: item.error ?? PlaybackError.unknown)
+                        default:
+                            return .unknown
+                        }
+                    },
                 NotificationCenter.default.publisher(for: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: item)
-                    .map { _ in .ended },
-                NotificationCenter.default.publisher(for: NSNotification.Name.AVPlayerItemFailedToPlayToEndTime, object: item)
-                    .map { _ in .failed }
+                    .map { _ in .ended }
             )
             .eraseToAnyPublisher()
         }
+    }
 
-        init(from status: AVPlayerItem.Status) {
-            switch status {
-            case .readyToPlay:
-                self = .readyToPlay
-            case .failed:
-                self = .failed
-            default:
-                self = .unknown
-            }
-        }
+    enum PlaybackError: Error {
+        case unknown
     }
 }

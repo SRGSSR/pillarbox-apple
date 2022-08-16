@@ -21,7 +21,7 @@ extension XCTestCase {
         let cancellable = publisher.sink(
             receiveCompletion: { completion in
                 switch completion {
-                case .failure(let error):
+                case let .failure(error):
                     result = .failure(error)
                 case .finished:
                     break
@@ -42,7 +42,6 @@ extension XCTestCase {
             file: file,
             line: line
         )
-
         return try unwrappedResult.get()
     }
 }
