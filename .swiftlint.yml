@@ -106,6 +106,14 @@ opt_in_rules:
   - vertical_whitespace_opening_braces
   - xct_specific_matcher
 
+file_header:
+  required_pattern: |
+    \/\/
+    \/\/  Copyright \(c\) SRG SSR. All rights reserved.
+    \/\/
+    \/\/  License information is available from the LICENSE file.
+    \/\/
+
 function_parameter_count:
   warning: 8
 

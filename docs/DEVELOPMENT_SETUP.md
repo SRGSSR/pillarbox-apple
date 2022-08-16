@@ -9,7 +9,7 @@ The following tools are required for the best possible development experience:
 
 - The latest version of Xcode.
 - The tvOS simulator (otherwise provisioning fails for tvOS when archiving the tvOS app).
-- [Python](https://www.python.org).
+- [Python](https://www.python.org)
 - [gem](https://rubygems.org)
 - [bundler](https://bundler.io)
 - [swiftlint](https://github.com/realm/SwiftLint)
