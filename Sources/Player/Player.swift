@@ -21,8 +21,9 @@ public final class Player: ObservableObject {
     public init(items: [AVPlayerItem] = []) {
         player = AVQueuePlayer(items: items)
         Self.statePublisher(for: player)
-            .receive(on: DispatchQueue.main)
             .map { State(from: $0) }
+            .removeDuplicates { State.areDuplicates(lhsState: $0, rhsState: $1) }
+            .receive(on: DispatchQueue.main)
             .assign(to: &$state)
     }
 

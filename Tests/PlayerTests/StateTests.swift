@@ -15,27 +15,37 @@ final class StateTests: XCTestCase {
         case message2
     }
 
-    func testEmptyState() {
-        let player = Player()
-        expect(player.state).to(beSimilarTo(.idle))
+    private var player: Player?
+
+    override func tearDown() {
+        super.tearDown()
+        player = nil
     }
 
-    func testInitialStateWithItem() {
+    func testPlaybackStartPaused() throws {
         let item = AVPlayerItem(url: TestStreams.validStreamUrl)
-        let player = Player(item: item)
-        expect(player.state).to(beSimilarTo(.idle))
+        player = Player(item: item)
+        let states = try awaitPublisher(
+            player!.$state
+                .collectNext(2)
+        )
+        expect(states).to(equal([
+            .idle,
+            .paused
+        ], by: areSimilar))
     }
 
-    func testInitialPausedState() {
+    func testPlaybackStartPlaying() throws {
         let item = AVPlayerItem(url: TestStreams.validStreamUrl)
-        let player = Player(item: item)
-        expect(player.state).toEventually(beSimilarTo(.paused), timeout: .seconds(2))
-    }
-
-    func testInitialPlayingState() {
-        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
-        let player = Player(item: item)
-        player.play()
-        expect(player.state).toEventually(beSimilarTo(.playing), timeout: .seconds(2))
+        player = Player(item: item)
+        player!.play()
+        let states = try awaitPublisher(
+            player!.$state
+                .collectNext(2)
+        )
+        expect(states).to(equal([
+            .idle,
+            .playing
+        ], by: areSimilar))
     }
 }

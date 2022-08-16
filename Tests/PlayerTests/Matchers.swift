@@ -57,15 +57,11 @@ public func beSimilarTo(_ expectedValue: Player.ItemState) -> Predicate<Player.I
 /// Return `true` iff states are similar (up to associated values).
 func areSimilar(lhsState: Player.State, rhsState: Player.State) -> Bool {
     switch (lhsState, rhsState) {
-    case (.idle, .idle):
-        return true
-    case (.playing, .playing):
-        return true
-    case (.paused, .paused):
-        return true
-    case (.ended, .ended):
-        return true
-    case (.failed, .failed):
+    case (.idle, .idle),
+        (.playing, .playing),
+        (.paused, .paused),
+        (.ended, .ended),
+        (.failed, .failed):
         return true
     default:
         return false
