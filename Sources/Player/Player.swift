@@ -23,7 +23,7 @@ public final class Player: ObservableObject {
     }
 
     public var items: [AVPlayerItem] {
-        return player.items()
+        player.items()
     }
 
     public func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
@@ -43,6 +43,5 @@ public final class Player: ObservableObject {
     }
 
     public func play() {
-
     }
 }

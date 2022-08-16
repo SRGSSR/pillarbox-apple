@@ -11,7 +11,7 @@ import Nimble
 import XCTest
 
 final class ItemStateTests: XCTestCase {
-    var player: AVPlayer? = nil
+    private var player: AVPlayer?
 
     private enum TestError: Error {
         case message1

@@ -49,7 +49,7 @@ extension XCTestCase {
 
 extension Published.Publisher {
     func collectNext(_ count: Int) -> AnyPublisher<[Output], Never> {
-        return dropFirst()
+        dropFirst()
             .collect(count)
             .first()
             .eraseToAnyPublisher()
@@ -58,7 +58,7 @@ extension Published.Publisher {
 
 extension Publisher where Failure == Never {
     func collectFirst(_ count: Int) -> AnyPublisher<[Output], Never> {
-        return collect(count)
+        collect(count)
             .first()
             .eraseToAnyPublisher()
     }
