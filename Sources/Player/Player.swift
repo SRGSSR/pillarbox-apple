@@ -14,16 +14,16 @@ public final class Player: ObservableObject {
 
     private let player: AVQueuePlayer
 
+    public var items: [AVPlayerItem] {
+        player.items()
+    }
+
     public init(items: [AVPlayerItem] = []) {
         player = AVQueuePlayer(items: items)
     }
 
     public convenience init(item: AVPlayerItem) {
         self.init(items: [item])
-    }
-
-    public var items: [AVPlayerItem] {
-        player.items()
     }
 
     public func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {

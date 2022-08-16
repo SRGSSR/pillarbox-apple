@@ -6,8 +6,8 @@
 
 import Foundation
 
-extension Player {
-    public enum State {
+public extension Player {
+    enum State {
         case idle
         case playing
         case paused

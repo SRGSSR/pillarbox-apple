@@ -11,16 +11,17 @@ import Nimble
 import XCTest
 
 final class ItemStateTests: XCTestCase {
+    private enum TestError: Error {
+        case any
+    }
+
     private var player: AVPlayer?
 
     private let resourceLoaderDelegate = FailingResourceLoaderDelegate()
     private let queue = DispatchQueue(label: "ch.srgssr.failing-resource-loader")
 
-    private enum TestError: Error {
-        case any
-    }
-
     override func tearDown() {
+        super.tearDown()
         player = nil
     }
 

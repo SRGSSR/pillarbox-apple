@@ -12,7 +12,7 @@ final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelega
     //   - The error code must be different from 0.
     enum PlaybackError: Int, LocalizedError {
         case cannotLoadResource = 1
-        case cannotRenewResource
+        case cannotRenewResource = 2
 
         var errorDescription: String? {
             switch self {

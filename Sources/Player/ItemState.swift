@@ -27,7 +27,7 @@ extension Player {
                             return .unknown
                         }
                     },
-                NotificationCenter.default.publisher(for: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: item)
+                NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime, object: item)
                     .map { _ in .ended }
             )
             .eraseToAnyPublisher()

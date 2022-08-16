@@ -17,7 +17,7 @@ func equal<T>(_ expectedValue: T?, by areEquivalent: @escaping (T, T) -> Bool) -
             return PredicateResult(status: .fail, message: message.appendedBeNilHint())
         case (_, nil):
             return PredicateResult(status: .fail, message: message)
-        case (let expected?, let actual?):
+        case let (expected?, actual?):
             let matches = areEquivalent(expected, actual)
             return PredicateResult(bool: matches, message: message)
         }
@@ -43,10 +43,8 @@ func areSimilar(lhsState: Player.ItemState, rhsState: Player.ItemState) -> Bool 
 /// Return `true` iff state arrays are similar (up to associated values).
 func areSimilar(lhsStates: [Player.ItemState], rhsStates: [Player.ItemState]) -> Bool {
     guard lhsStates.count == rhsStates.count else { return false }
-    for (lhsState, rhsState) in zip(lhsStates, rhsStates) {
-        if (!areSimilar(lhsState: lhsState, rhsState: rhsState)) {
-            return false
-        }
+    for (lhsState, rhsState) in zip(lhsStates, rhsStates) where !areSimilar(lhsState: lhsState, rhsState: rhsState) {
+        return false
     }
     return true
 }
@@ -77,10 +75,8 @@ func areSimilar(lhsState: Player.State, rhsState: Player.State) -> Bool {
 /// Return `true` iff states are similar (up to associated values).
 func areSimilar(lhsStates: [Player.State], rhsStates: [Player.State]) -> Bool {
     guard lhsStates.count == rhsStates.count else { return false }
-    for (lhsState, rhsState) in zip(lhsStates, rhsStates) {
-        if (!areSimilar(lhsState: lhsState, rhsState: rhsState)) {
-            return false
-        }
+    for (lhsState, rhsState) in zip(lhsStates, rhsStates) where !areSimilar(lhsState: lhsState, rhsState: rhsState) {
+        return false
     }
     return true
 }
