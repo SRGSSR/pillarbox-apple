@@ -79,4 +79,18 @@ final class ItemStateTests: XCTestCase {
             .failed
         ]))
     }
+
+    func testCorrupt() throws {
+        let item = AVPlayerItem(url: URL(string: "http://localhost:8000/corrupt_stream/master.m3u8")!)
+        player = AVPlayer(playerItem: item)
+        player?.play()
+        let states = try awaitPublisher(
+            Player.ItemState.publisher(for: item)
+                .collectFirst(2)
+        )
+        expect(states).to(equal([
+            .unknown,
+            .readyToPlay
+        ]))
+    }
 }

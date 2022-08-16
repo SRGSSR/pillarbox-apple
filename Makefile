@@ -11,6 +11,7 @@ setup:
 	@echo "Setting up the project..."
 	@bundle install > /dev/null
 	@Scripts/checkout-configuration.sh "${CONFIGURATION_REPOSITORY_URL}" "${CONFIGURATION_COMMIT_SHA1}" Configuration
+	@Scripts/serve-test-streams.sh
 	@echo "... done.\n"
 
 .PHONY: fastlane
