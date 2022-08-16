@@ -7,8 +7,9 @@
 import Combine
 import XCTest
 
-// Borrowed from https://www.swiftbysundell.com/articles/unit-testing-combine-based-swift-code/
+/// Borrowed from https://www.swiftbysundell.com/articles/unit-testing-combine-based-swift-code/
 extension XCTestCase {
+    /// Await for a publisher to complete and return its output.
     func awaitPublisher<T: Publisher>(
         _ publisher: T,
         timeout: TimeInterval = 10,
@@ -46,7 +47,9 @@ extension XCTestCase {
     }
 }
 
+/// Borrowed from https://www.swiftbysundell.com/articles/unit-testing-combine-based-swift-code/
 extension Published.Publisher {
+    /// Collect the next number item before completing.
     func collectNext(_ count: Int) -> AnyPublisher<[Output], Never> {
         dropFirst()
             .collect(count)
@@ -56,6 +59,7 @@ extension Published.Publisher {
 }
 
 extension Publisher where Failure == Never {
+    /// Collect the specified number of items (including the current one) and completing.
     func collectFirst(_ count: Int) -> AnyPublisher<[Output], Never> {
         collect(count)
             .first()
