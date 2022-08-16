@@ -44,9 +44,27 @@ final class ItemStateTests: XCTestCase {
         ]))
     }
 
-    func testEnded() {
-        // TODO: Requires a proper test sample
-        fail()
+    func testEnded() throws {
+        let item = AVPlayerItem(url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8")!)
+        player = AVPlayer(playerItem: item)
+        player!.play()
+        Task {
+            let duration = try await item.asset.load(.duration)
+            await player!.seek(
+                to: CMTimeSubtract(duration, CMTime(value: 1, timescale: 10)),
+                toleranceBefore: .zero,
+                toleranceAfter: .zero
+            )
+        }
+        let states = try awaitPublisher(
+            Player.ItemState.publisher(for: item)
+                .collectFirst(3)
+        )
+        expect(states).to(equal([
+            .unknown,
+            .readyToPlay,
+            .ended
+        ]))
     }
 
     func testFailure() throws {

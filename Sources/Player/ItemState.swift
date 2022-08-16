@@ -15,9 +15,13 @@ extension Player {
         case failed
 
         static func publisher(for item: AVPlayerItem) -> AnyPublisher<ItemState, Never> {
-            return item.publisher(for: \.status)
-                .map { ItemState(from: $0) }
-                .eraseToAnyPublisher()
+            return Publishers.Merge(
+                item.publisher(for: \.status)
+                    .map { ItemState(from: $0) },
+                NotificationCenter.default.publisher(for: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: item)
+                    .map { _ in ItemState.ended }
+            )
+            .eraseToAnyPublisher()
         }
 
         init(from status: AVPlayerItem.Status) {
