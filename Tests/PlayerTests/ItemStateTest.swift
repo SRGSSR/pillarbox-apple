@@ -22,25 +22,6 @@ final class ItemStateTests: XCTestCase {
         player = nil
     }
 
-    func testSimpleEquality() {
-        expect(Player.ItemState.unknown).to(equal(.unknown))
-        expect(Player.ItemState.readyToPlay).to(equal(.readyToPlay))
-        expect(Player.ItemState.ended).to(equal(.ended))
-    }
-
-    func testFailureEquality() {
-        expect(Player.ItemState.failed(error: TestError.message1)).to(equal(.failed(error: TestError.message1)))
-    }
-
-    func testSimpleInequality() {
-        expect(Player.ItemState.unknown).notTo(equal(.readyToPlay))
-        expect(Player.ItemState.readyToPlay).notTo(equal(.failed(error: TestError.message1)))
-    }
-
-    func testFailureInequality() {
-        expect(Player.ItemState.failed(error: TestError.message1)).notTo(equal(.failed(error: TestError.message2)))
-    }
-
     func testUnknown() throws {
         let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
         let state = try awaitPublisher(
@@ -64,10 +45,20 @@ final class ItemStateTests: XCTestCase {
     }
 
     func testEnded() {
+        // TODO: Requires a proper test sample
         fail()
     }
 
-    func testFailure() {
-        fail()
+    func testFailure() throws {
+        let item = AVPlayerItem(url: URL(string: "http://httpbin.org/status/404")!)
+        player = AVPlayer(playerItem: item)
+        let states = try awaitPublisher(
+            Player.ItemState.publisher(for: item)
+                .collectFirst(2)
+        )
+        expect(states).to(equal([
+            .unknown,
+            .failed
+        ]))
     }
 }

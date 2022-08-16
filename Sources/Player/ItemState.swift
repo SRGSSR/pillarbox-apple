@@ -8,26 +8,11 @@ import AVFoundation
 import Combine
 
 extension Player {
-    enum ItemState: Equatable {
+    enum ItemState {
         case unknown
         case readyToPlay
         case ended
-        case failed(error: Error)
-
-        static func == (lhs: Player.ItemState, rhs: Player.ItemState) -> Bool {
-            switch (lhs, rhs) {
-            case (.unknown, .unknown):
-                return true
-            case (.readyToPlay, .readyToPlay):
-                return true
-            case (.ended, .ended):
-                return true
-            case let (.failed(error: lhsError), .failed(error: rhsError)):
-                return lhsError.localizedDescription == rhsError.localizedDescription
-            default:
-                return false
-            }
-        }
+        case failed
 
         static func publisher(for item: AVPlayerItem) -> AnyPublisher<ItemState, Never> {
             return item.publisher(for: \.status)
@@ -39,6 +24,8 @@ extension Player {
             switch status {
             case .readyToPlay:
                 self = .readyToPlay
+            case .failed:
+                self = .failed
             default:
                 self = .unknown
             }
