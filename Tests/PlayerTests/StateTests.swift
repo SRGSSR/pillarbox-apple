@@ -48,4 +48,30 @@ final class StateTests: XCTestCase {
             .playing
         ], by: areSimilar))
     }
+
+    func testTogglePlayPause() throws {
+        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
+        player = Player(item: item)
+
+        player!.play()
+        let states1 = try awaitPublisher(
+            player!.$state
+                .collectNext(2)
+        )
+        expect(states1).to(equal([
+            .idle,
+            .playing
+        ], by: areSimilar))
+
+        player!.togglePlayPause()
+        player!.togglePlayPause()
+        let states2 = try awaitPublisher(
+            player!.$state
+                .collectNext(2)
+        )
+        expect(states2).to(equal([
+            .paused,
+            .playing
+        ], by: areSimilar))
+    }
 }

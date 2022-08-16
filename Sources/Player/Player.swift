@@ -51,6 +51,15 @@ public final class Player: ObservableObject {
         player.play()
     }
 
+    public func togglePlayPause() {
+        if player.rate != 0 {
+            player.pause()
+        }
+        else {
+            player.play()
+        }
+    }
+
     private static func statePublisher(for player: AVPlayer) -> AnyPublisher<PlayerState, Never> {
         return Publishers.CombineLatest(
             player.publisher(for: \.currentItem)
