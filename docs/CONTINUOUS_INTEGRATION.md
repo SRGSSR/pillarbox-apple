@@ -20,7 +20,9 @@ We currently use TeamCity for continuous integration and GitHub for issue and pu
 
 The continuous integration agents must have the following tools installed:
 
+- The latest version of Xcode (preferably several versions, including beta releases).
 - The tvOS simulator (otherwise provisioning fails for tvOS when archiving the tvOS app).
+- [Python](https://www.python.org).
 - [gem](https://rubygems.org)
 - [bundler](https://bundler.io)
 - [swiftlint](https://github.com/realm/SwiftLint)
