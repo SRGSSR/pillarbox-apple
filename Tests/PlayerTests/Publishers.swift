@@ -10,13 +10,14 @@ import XCTest
 /// Borrowed from https://www.swiftbysundell.com/articles/unit-testing-combine-based-swift-code/
 extension XCTestCase {
     /// Await for a publisher to complete and return its output.
-    func awaitPublisher<T: Publisher>(
-        _ publisher: T,
+    func awaitPublisher<P: Publisher>(
+        _ publisher: P,
         timeout: TimeInterval = 10,
         file: StaticString = #file,
-        line: UInt = #line
-    ) throws -> T.Output {
-        var result: Result<T.Output, Error>?
+        line: UInt = #line,
+        while executing: (() -> Void)? = nil
+    ) throws -> P.Output {
+        var result: Result<P.Output, Error>?
         let expectation = self.expectation(description: "Awaiting publisher")
 
         let cancellable = publisher.sink(
@@ -33,6 +34,10 @@ extension XCTestCase {
                 result = .success(value)
             }
         )
+
+        if let executing {
+            executing()
+        }
 
         waitForExpectations(timeout: timeout)
         cancellable.cancel()
