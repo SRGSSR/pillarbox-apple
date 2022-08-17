@@ -12,6 +12,7 @@ import SwiftUI
 
 struct PlayerView: View {
     let url: URL
+    @State private var progress = 0.5
     @StateObject private var player = Player()
 
     private var playbackButtonImageName: String {
@@ -35,6 +36,10 @@ struct PlayerView: View {
                     .frame(width: 90, height: 90)
                     .tint(.white)
             }
+            Slider(value: $progress)
+                .tint(.white)
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         }
         .ignoresSafeArea()
         .onAppear {
