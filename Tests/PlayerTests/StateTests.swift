@@ -74,4 +74,31 @@ final class StateTests: XCTestCase {
             .playing
         ], by: areSimilar))
     }
+
+    func testPlaybackUntilCompletion() throws {
+        let item = AVPlayerItem(url: TestStreams.shortStreamUrl)
+        player = Player(item: item)
+        player!.play()
+        let states = try awaitPublisher(
+            player!.$state
+                .collectNext(3)
+        )
+        expect(states).to(equal([
+            .idle,
+            .playing,
+            .ended
+        ], by: areSimilar))
+    }
+
+    func testDoublePlay() {
+        fail()
+    }
+
+    func testDoublePause() {
+        fail()
+    }
+
+    func testItems() {
+        fail()
+    }
 }
