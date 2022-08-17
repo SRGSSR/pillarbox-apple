@@ -6,7 +6,6 @@
 
 @testable import Player
 import AVFoundation
-import Nimble
 import XCTest
 
 final class StateTests: XCTestCase {
@@ -58,7 +57,12 @@ final class StateTests: XCTestCase {
         }
     }
 
-    func testItems() {
-        fail()
+    func testItems() throws {
+        let item1 = AVPlayerItem(url: TestStreams.shortStreamUrl)
+        let item2 = AVPlayerItem(url: TestStreams.shortStreamUrl)
+        let player = Player(items: [item1, item2])
+        try expectPublisher(player.$state, values: [.idle, .playing, .ended, .playing, .ended]) {
+            player.play()
+        }
     }
 }
