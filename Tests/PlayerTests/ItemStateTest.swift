@@ -15,23 +15,16 @@ final class ItemStateTests: XCTestCase {
         case any
     }
 
-    private var player: AVPlayer?
-
     private let resourceLoaderDelegate = FailingResourceLoaderDelegate()
     private let queue = DispatchQueue(label: "ch.srgssr.failing-resource-loader")
 
-    override func tearDown() {
-        super.tearDown()
-        player = nil
-    }
-
     func testValidStream() throws {
         let item = AVPlayerItem(url: TestStreams.validStreamUrl)
-        player = AVPlayer(playerItem: item)
-        player!.play()
+        let player = AVPlayer(playerItem: item)
+        player.play()
         Task {
             let duration = try await item.asset.load(.duration)
-            await player!.seek(
+            await player.seek(
                 to: CMTimeSubtract(duration, CMTime(value: 1, timescale: 10)),
                 toleranceBefore: .zero,
                 toleranceAfter: .zero
@@ -50,7 +43,7 @@ final class ItemStateTests: XCTestCase {
 
     func testUnavailableStream() throws {
         let item = AVPlayerItem(url: TestStreams.unavailableStreamUrl)
-        player = AVPlayer(playerItem: item)
+        let _ = AVPlayer(playerItem: item)
         let states = try awaitPublisher(
             Player.ItemState.publisher(for: item)
                 .collectFirst(2)
@@ -63,7 +56,7 @@ final class ItemStateTests: XCTestCase {
 
     func testCorruptStream() throws {
         let item = AVPlayerItem(url: TestStreams.corruptStreamUrl)
-        player = AVPlayer(playerItem: item)
+        let _ = AVPlayer(playerItem: item)
         let states = try awaitPublisher(
             Player.ItemState.publisher(for: item)
                 .collectFirst(2)
@@ -78,8 +71,8 @@ final class ItemStateTests: XCTestCase {
         let asset = AVURLAsset(url: TestStreams.customStreamUrl)
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: queue)
         let item = AVPlayerItem(asset: asset)
-        player = AVPlayer(playerItem: item)
-        player?.play()
+        let player = AVPlayer(playerItem: item)
+        player.play()
         let states = try awaitPublisher(
             Player.ItemState.publisher(for: item)
                 .collectFirst(2)

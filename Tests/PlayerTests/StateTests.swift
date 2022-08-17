@@ -15,18 +15,11 @@ final class StateTests: XCTestCase {
         case message2
     }
 
-    private var player: Player?
-
-    override func tearDown() {
-        super.tearDown()
-        player = nil
-    }
-
     func testPlaybackStartPaused() throws {
         let item = AVPlayerItem(url: TestStreams.validStreamUrl)
-        player = Player(item: item)
+        let player = Player(item: item)
         let states = try awaitPublisher(
-            player!.$state
+            player.$state
                 .collectNext(2)
         )
         expect(states).to(equal([
@@ -37,10 +30,10 @@ final class StateTests: XCTestCase {
 
     func testPlaybackStartPlaying() throws {
         let item = AVPlayerItem(url: TestStreams.validStreamUrl)
-        player = Player(item: item)
-        player!.play()
+        let player = Player(item: item)
+        player.play()
         let states = try awaitPublisher(
-            player!.$state
+            player.$state
                 .collectNext(2)
         )
         expect(states).to(equal([
@@ -51,11 +44,11 @@ final class StateTests: XCTestCase {
 
     func testTogglePlayPause() throws {
         let item = AVPlayerItem(url: TestStreams.validStreamUrl)
-        player = Player(item: item)
+        let player = Player(item: item)
 
-        player!.play()
+        player.play()
         let states1 = try awaitPublisher(
-            player!.$state
+            player.$state
                 .collectNext(2)
         )
         expect(states1).to(equal([
@@ -63,10 +56,10 @@ final class StateTests: XCTestCase {
             .playing
         ], by: areSimilar))
 
-        player!.togglePlayPause()
-        player!.togglePlayPause()
+        player.togglePlayPause()
+        player.togglePlayPause()
         let states2 = try awaitPublisher(
-            player!.$state
+            player.$state
                 .collectNext(2)
         )
         expect(states2).to(equal([
@@ -77,10 +70,10 @@ final class StateTests: XCTestCase {
 
     func testPlaybackUntilCompletion() throws {
         let item = AVPlayerItem(url: TestStreams.shortStreamUrl)
-        player = Player(item: item)
-        player!.play()
+        let player = Player(item: item)
+        player.play()
         let states = try awaitPublisher(
-            player!.$state
+            player.$state
                 .collectNext(3)
         )
         expect(states).to(equal([
