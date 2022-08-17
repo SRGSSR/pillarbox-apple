@@ -10,7 +10,10 @@ import SwiftUI
 struct PillarboxDemoApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationView {
+                DemosView()
+            }
+            .navigationViewStyle(.stack)
         }
     }
 }

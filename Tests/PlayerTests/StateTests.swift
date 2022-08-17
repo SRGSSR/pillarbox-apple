@@ -71,4 +71,10 @@ final class StateTests: XCTestCase {
             player.play()
         }
     }
+
+    // TODO:
+    //  - State without item
+    //  - Play without item
+    //  - Append item after calling play
+    //  - etc.
 }

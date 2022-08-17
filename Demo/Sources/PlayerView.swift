@@ -4,11 +4,15 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import Player
 import SwiftUI
 
+// MARK: View
+
 struct PlayerView: View {
-    @ObservedObject var player: Player
+    let url: URL
+    @StateObject private var player = Player()
 
     private var playbackButtonImageName: String {
         switch player.state {
@@ -32,5 +36,22 @@ struct PlayerView: View {
                     .tint(.white)
             }
         }
+        .ignoresSafeArea()
+        .onAppear {
+            play()
+        }
+    }
+
+    private func play() {
+        player.append(AVPlayerItem(url: url))
+        player.play()
+    }
+}
+
+// MARK: Preview
+
+struct PlayerView_Previews: PreviewProvider {
+    static var previews: some View {
+        PlayerView(url: URL(string: "http://localhost:8000/valid_stream/master.m3u8")!)
     }
 }
