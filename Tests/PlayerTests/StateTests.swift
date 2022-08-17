@@ -10,11 +10,6 @@ import Nimble
 import XCTest
 
 final class StateTests: XCTestCase {
-    private enum TestError: Error {
-        case message1
-        case message2
-    }
-
     func testPlaybackStartPaused() throws {
         let item = AVPlayerItem(url: TestStreams.validStreamUrl)
         let player = Player(item: item)
@@ -38,6 +33,39 @@ final class StateTests: XCTestCase {
         )
         expect(states).to(equal([
             .idle,
+            .playing
+        ], by: areSimilar))
+    }
+
+    func testPlayPause() throws {
+        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
+        let player = Player(item: item)
+        player.play()
+
+        let states1 = try awaitPublisher(
+            player.$state
+                .collectNext(2)
+        )
+        expect(states1).to(equal([
+            .idle,
+            .playing
+        ], by: areSimilar))
+
+        player.pause()
+        let states2 = try awaitPublisher(
+            player.$state
+                .collectNext(1)
+        )
+        expect(states2).to(equal([
+            .paused
+        ], by: areSimilar))
+
+        player.play()
+        let states3 = try awaitPublisher(
+            player.$state
+                .collectNext(1)
+        )
+        expect(states3).to(equal([
             .playing
         ], by: areSimilar))
     }
@@ -81,14 +109,6 @@ final class StateTests: XCTestCase {
             .playing,
             .ended
         ], by: areSimilar))
-    }
-
-    func testDoublePlay() {
-        fail()
-    }
-
-    func testDoublePause() {
-        fail()
     }
 
     func testItems() {

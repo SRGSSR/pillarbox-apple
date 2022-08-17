@@ -51,6 +51,10 @@ public final class Player: ObservableObject {
         player.play()
     }
 
+    public func pause() {
+        player.pause()
+    }
+
     public func togglePlayPause() {
         if player.rate != 0 {
             player.pause()
