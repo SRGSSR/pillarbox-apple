@@ -7,7 +7,6 @@
 @testable import Player
 import AVFoundation
 import Combine
-import Nimble
 import XCTest
 
 final class ItemStateTests: XCTestCase {
@@ -28,13 +27,13 @@ final class ItemStateTests: XCTestCase {
 
     func testUnavailableStream() throws {
         let item = AVPlayerItem(url: TestStreams.unavailableStreamUrl)
-        let _ = AVPlayer(playerItem: item)
+        _ = AVPlayer(playerItem: item)
         try expectPublisher(Player.ItemState.publisher(for: item), values: [.unknown, .failed(error: TestError.any)])
     }
 
     func testCorruptStream() throws {
         let item = AVPlayerItem(url: TestStreams.corruptStreamUrl)
-        let _ = AVPlayer(playerItem: item)
+        _ = AVPlayer(playerItem: item)
         try expectPublisher(Player.ItemState.publisher(for: item), values: [.unknown, .failed(error: TestError.any)])
     }
 

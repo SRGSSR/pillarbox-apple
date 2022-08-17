@@ -31,6 +31,24 @@ public final class Player: ObservableObject {
         self.init(items: [item])
     }
 
+    private static func statePublisher(for player: AVPlayer) -> AnyPublisher<PlayerState, Never> {
+        Publishers.CombineLatest(
+            player.publisher(for: \.currentItem)
+                .map { item -> AnyPublisher<ItemState, Never> in
+                    guard let item else {
+                        return Just(.unknown)
+                            .eraseToAnyPublisher()
+                    }
+                    return ItemState.publisher(for: item)
+                }
+                .switchToLatest(),
+            player.publisher(for: \.rate)
+        )
+        .map { PlayerState(itemState: $0, rate: $1) }
+        .prepend(PlayerState(itemState: .unknown, rate: player.rate))
+        .eraseToAnyPublisher()
+    }
+
     public func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
         player.insert(item, after: afterItem)
     }
@@ -62,23 +80,5 @@ public final class Player: ObservableObject {
         else {
             player.play()
         }
-    }
-
-    private static func statePublisher(for player: AVPlayer) -> AnyPublisher<PlayerState, Never> {
-        return Publishers.CombineLatest(
-            player.publisher(for: \.currentItem)
-                .map { item -> AnyPublisher<ItemState, Never> in
-                    guard let item else {
-                        return Just(.unknown)
-                            .eraseToAnyPublisher()
-                    }
-                    return ItemState.publisher(for: item)
-                }
-                .switchToLatest(),
-            player.publisher(for: \.rate)
-        )
-        .map { PlayerState(itemState: $0, rate: $1) }
-        .prepend(PlayerState(itemState: .unknown, rate: player.rate))
-        .eraseToAnyPublisher()
     }
 }

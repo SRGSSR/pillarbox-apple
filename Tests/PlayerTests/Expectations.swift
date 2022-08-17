@@ -31,10 +31,10 @@ extension XCTestCase {
             line: line,
             while: executing
         )
-        expect(actualValues).to(equal(values, by: { values1, values2 in
+        expect(actualValues).to(equal(values) { values1, values2 in
             guard values1.count == values2.count else { return false }
             return zip(values1, values2).allSatisfy { areEquivalent($0, $1) }
-        }))
+        })
     }
 
     /// Expect a publisher to emit a list of equatable values.
@@ -94,10 +94,10 @@ extension XCTestCase {
             line: line,
             while: executing
         )
-        expect(actualValues).to(equal(values, by: { values1, values2 in
+        expect(actualValues).to(equal(values) { values1, values2 in
             guard values1.count == values2.count else { return false }
             return zip(values1, values2).allSatisfy { areEquivalent($0, $1) }
-        }))
+        })
     }
 
     /// Expect a `Published` property to emit a list of equatable values.
