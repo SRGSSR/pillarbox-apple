@@ -73,8 +73,7 @@ final class StateTests: XCTestCase {
     }
 
     // TODO:
-    //  - State without item
-    //  - Play without item
+    //  - Play without item (requires a way to check that a state is never reached)
     //  - Append item after calling play
     //  - etc.
 }
