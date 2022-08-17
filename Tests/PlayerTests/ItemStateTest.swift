@@ -10,10 +10,6 @@ import Combine
 import XCTest
 
 final class ItemStateTests: XCTestCase {
-    private enum TestError: Error {
-        case any
-    }
-
     private let resourceLoaderDelegate = FailingResourceLoaderDelegate()
     private let queue = DispatchQueue(label: "ch.srgssr.failing-resource-loader")
 
