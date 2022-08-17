@@ -19,6 +19,7 @@ struct ContentView: View {
             .onAppear {
                 player.play()
             }
+            .ignoresSafeArea()
     }
 }
 
