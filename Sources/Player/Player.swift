@@ -7,12 +7,10 @@
 import AVFoundation
 import Combine
 
-// MARK: Player
-
 public final class Player: ObservableObject {
     @Published public private(set) var state: State = .idle
 
-    private let player: AVQueuePlayer
+    let player: AVQueuePlayer
 
     public var items: [AVPlayerItem] {
         player.items()
