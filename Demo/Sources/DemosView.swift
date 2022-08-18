@@ -19,6 +19,11 @@ struct DemosView: View {
             id: "urn:swi:video:47816310",
             title: "Neuchâtel: where one woman broke the male monopoly on politics",
             url: URL(string: "https://swi-vod.akamaized.net/videoJson/47816310/master.m3u8")!
+        ),
+        Media(
+            id: "urn:rts:video:13317145",
+            title: "Des violents orages ont touché Ajaccio, chef-lieu de la Corse, jeudi",
+            url: URL(string: "https://rts-vod-amd.akamaized.net/ww/13317145/f1d49f18-f302-37ce-866c-1c1c9b76a824/master.m3u8")!
         )
     ]
 
