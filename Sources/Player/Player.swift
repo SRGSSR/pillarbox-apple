@@ -9,6 +9,7 @@ import Combine
 
 public final class Player: ObservableObject {
     @Published public private(set) var state: State = .idle
+    @Published public private(set) var progress: Float = 0
 
     let player: AVQueuePlayer
 
