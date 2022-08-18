@@ -11,7 +11,7 @@ public final class Player: ObservableObject {
     @Published public private(set) var state: State = .idle
     @Published public private(set) var progress: Float = 0
 
-    let player: AVQueuePlayer
+    let player: SystemPlayer
     private let queue = DispatchQueue(label: "ch.srgssr.pillarbox.player")
 
     public var items: [AVPlayerItem] {
@@ -19,7 +19,7 @@ public final class Player: ObservableObject {
     }
 
     public init(items: [AVPlayerItem] = []) {
-        player = AVQueuePlayer(items: items)
+        player = SystemPlayer(items: items)
         Self.statePublisher(for: player)
             .map { State(from: $0) }
             .removeDuplicates { State.areDuplicates($0, $1) }
