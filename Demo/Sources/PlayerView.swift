@@ -23,6 +23,13 @@ struct PlayerView: View {
         }
     }
 
+    private var seekGesture: some Gesture {
+        DragGesture()
+            .onChanged { value in
+                print("--> seek: \(value.predictedEndLocation)")
+            }
+    }
+
     var body: some View {
         ZStack {
             VideoView(player: player)
@@ -40,6 +47,7 @@ struct PlayerView: View {
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         }
+        .gesture(seekGesture)
         .ignoresSafeArea()
         .onAppear {
             play()
