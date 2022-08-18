@@ -24,5 +24,9 @@ final class TimeTests: XCTestCase {
     }
 
     func testProgress() {
+        expect(Player.progress(
+            for: CMTimeMake(value: 1, timescale: 2),
+            in: CMTimeRangeMake(start: .zero, duration: CMTimeMake(value: 1, timescale: 1))
+        )).to(equal(0.5))
     }
 }
