@@ -11,7 +11,7 @@ import Combine
 import XCTest
 
 final class PeriodicTimePublishersTests: XCTestCase {
-    func testUnlimitedDemand() throws {
+    func testPlayback() throws {
         let item = AVPlayerItem(url: TestStreams.validStreamUrl)
         let player = Player(item: item)
         player.play()
@@ -28,4 +28,36 @@ final class PeriodicTimePublishersTests: XCTestCase {
             ],
             toBe: close(within: 0.1))
     }
+
+    func testSeek() throws {
+        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
+        let player = Player(item: item)
+        try expectPublisher(player.$state, values: [.idle, .playing]) {
+            player.play()
+        }
+
+        Task {
+            await player.seek(
+                to: CMTime(value: 3, timescale: 2),
+                toleranceBefore: .zero,
+                toleranceAfter: .zero
+            )
+        }
+        try expectPublisher(
+            player.periodicTimePublisher(forInterval: CMTimeMake(value: 1, timescale: 2))
+                .removeDuplicates(),
+            values: [
+                CMTimeMake(value: 3, timescale: 2),
+                CMTimeMake(value: 4, timescale: 2),
+                CMTimeMake(value: 5, timescale: 2),
+                CMTimeMake(value: 6, timescale: 2)
+            ],
+            toBe: close(within: 0.1))
+    }
+
+    // TODO:
+    //  - Test without playing (no events; requires a way to check that a values are never emitted)
+    //  - Test with pause
+    //  - Test with item change
+    //  - etc.
 }

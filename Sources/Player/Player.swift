@@ -80,6 +80,15 @@ public final class Player: ObservableObject {
         }
     }
 
+    public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
+        player.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
+    }
+
+    @discardableResult
+    public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) async -> Bool {
+        await player.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
+    }
+
     public func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
         Publishers.PeriodicTimePublisher(player: player, interval: interval, queue: queue)
             .eraseToAnyPublisher()
