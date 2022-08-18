@@ -18,7 +18,7 @@ extension XCTestCase {
     func expectPublisher<P: Publisher>(
         _ publisher: P,
         values: [P.Output],
-        equalBy areEquivalent: @escaping (P.Output, P.Output) -> Bool,
+        toBe similar: @escaping (P.Output, P.Output) -> Bool,
         timeout: TimeInterval = 10,
         file: StaticString = #file,
         line: UInt = #line,
@@ -33,7 +33,7 @@ extension XCTestCase {
         )
         expect(actualValues).to(equal(values) { values1, values2 in
             guard values1.count == values2.count else { return false }
-            return zip(values1, values2).allSatisfy { areEquivalent($0, $1) }
+            return zip(values1, values2).allSatisfy { similar($0, $1) }
         })
     }
 
@@ -49,7 +49,7 @@ extension XCTestCase {
         try expectPublisher(
             publisher,
             values: values,
-            equalBy: ==,
+            toBe: ==,
             timeout: timeout,
             file: file,
             line: line,
@@ -69,7 +69,7 @@ extension XCTestCase {
         try expectPublisher(
             publisher,
             values: values,
-            equalBy: ~=,
+            toBe: ~=,
             timeout: timeout,
             file: file,
             line: line,
@@ -81,7 +81,7 @@ extension XCTestCase {
     func expectPublisher<T>(
         _ publisher: Published<T>.Publisher,
         values: [T],
-        equalBy areEquivalent: @escaping (T, T) -> Bool,
+        toBe similar: @escaping (T, T) -> Bool,
         timeout: TimeInterval = 10,
         file: StaticString = #file,
         line: UInt = #line,
@@ -96,7 +96,7 @@ extension XCTestCase {
         )
         expect(actualValues).to(equal(values) { values1, values2 in
             guard values1.count == values2.count else { return false }
-            return zip(values1, values2).allSatisfy { areEquivalent($0, $1) }
+            return zip(values1, values2).allSatisfy { similar($0, $1) }
         })
     }
 
@@ -112,7 +112,7 @@ extension XCTestCase {
         try expectPublisher(
             publisher,
             values: values,
-            equalBy: ==,
+            toBe: ==,
             timeout: timeout,
             file: file,
             line: line,
@@ -132,7 +132,7 @@ extension XCTestCase {
         try expectPublisher(
             publisher,
             values: values,
-            equalBy: ~=,
+            toBe: ~=,
             timeout: timeout,
             file: file,
             line: line,
