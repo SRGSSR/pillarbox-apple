@@ -30,7 +30,7 @@ extension Publishers {
 }
 
 private extension Publishers.PeriodicTimePublisher {
-    final class Subscription<S: Subscriber>: Combine.Subscription where S.Input == Output, S.Failure == Failure {
+    final actor Subscription<S: Subscriber>: Combine.Subscription where S.Input == Output, S.Failure == Failure {
         private var subscriber: S?
         private let player: AVPlayer
         private let interval: CMTime
@@ -46,22 +46,44 @@ private extension Publishers.PeriodicTimePublisher {
             self.queue = queue
         }
 
-        func request(_ demand: Subscribers.Demand) {
+        private func processDemand(_ demand: Subscribers.Demand) {
             self.demand += demand
             guard timeObserver == nil else { return }
             timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: queue) { [weak self] time in
-                guard let self, let subscriber = self.subscriber, self.demand > .none else { return }
-                self.demand -= 1
-                self.demand += subscriber.receive(time)
+                self?.processTime(time)
             }
         }
 
-        func cancel() {
+        private func processCancellation() {
             if let timeObserver {
                 player.removeTimeObserver(timeObserver)
                 self.timeObserver = nil
             }
             subscriber = nil
+        }
+
+        private func send(_ time: CMTime) {
+            guard let subscriber = self.subscriber, self.demand > .none else { return }
+            self.demand -= 1
+            self.demand += subscriber.receive(time)
+        }
+
+        private nonisolated func processTime(_ time: CMTime) {
+            Task {
+                await send(time)
+            }
+        }
+
+        nonisolated func request(_ demand: Subscribers.Demand) {
+            Task {
+                await processDemand(demand)
+            }
+        }
+
+        nonisolated func cancel() {
+            Task {
+                await processCancellation()
+            }
         }
     }
 }

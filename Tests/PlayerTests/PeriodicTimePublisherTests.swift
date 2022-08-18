@@ -17,7 +17,7 @@ final class PeriodicTimePublishersTests: XCTestCase {
         player.play()
         try expectPublisher(
             player.periodicTimePublisher(forInterval: CMTimeMake(value: 1, timescale: 2))
-                .removeDuplicates(),
+                .removeDuplicates(),            // Might provide duplicate values
             values: [
                 CMTimeMake(value: 0, timescale: 2),
                 CMTimeMake(value: 1, timescale: 2),
@@ -45,7 +45,7 @@ final class PeriodicTimePublishersTests: XCTestCase {
         }
         try expectPublisher(
             player.periodicTimePublisher(forInterval: CMTimeMake(value: 1, timescale: 2))
-                .removeDuplicates(),
+                .removeDuplicates(),            // Might provide duplicate values
             values: [
                 CMTimeMake(value: 3, timescale: 2),
                 CMTimeMake(value: 4, timescale: 2),
