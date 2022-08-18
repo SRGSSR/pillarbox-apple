@@ -10,8 +10,8 @@ import AVFoundation
 import Combine
 import XCTest
 
-final class PeriodicTimePublishersTests: XCTestCase {
-    func testPlayback() throws {
+final class PublisherTests: XCTestCase {
+    func testPeriodicTimeDuringPlayback() throws {
         let item = AVPlayerItem(url: TestStreams.validStreamUrl)
         let player = Player(item: item)
         player.play()
@@ -30,7 +30,7 @@ final class PeriodicTimePublishersTests: XCTestCase {
         )
     }
 
-    func testSeek() throws {
+    func testPeriodicTimeDuringSeek() throws {
         let item = AVPlayerItem(url: TestStreams.validStreamUrl)
         let player = Player(item: item)
         try expectPublisher(player.$state, values: [.idle, .playing]) {
