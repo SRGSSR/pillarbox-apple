@@ -20,7 +20,7 @@ enum Time {
         guard range.isValid && !range.isEmpty else { return 0 }
         let elapsedTime = CMTimeGetSeconds(CMTimeSubtract(time, range.start))
         let duration = CMTimeGetSeconds(range.duration)
-        return Float(elapsedTime / duration)
+        return Float(elapsedTime / duration).clamped(to: 0...1)
     }
 
     /// Return a time comparator having some tolerance

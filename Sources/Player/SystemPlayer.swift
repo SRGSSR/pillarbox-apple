@@ -7,5 +7,4 @@
 import AVFoundation
 
 final class SystemPlayer: AVQueuePlayer {
-
 }
