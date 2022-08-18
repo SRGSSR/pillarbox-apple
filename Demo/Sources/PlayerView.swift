@@ -36,6 +36,7 @@ struct PlayerView: View {
                     .tint(.white)
             }
             ProgressView(value: player.progress)
+                .tint(.white)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         }
