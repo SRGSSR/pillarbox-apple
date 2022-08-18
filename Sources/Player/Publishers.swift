@@ -137,6 +137,7 @@ extension Player {
 
     public func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
         Publishers.PeriodicTimePublisher(player: player, interval: interval, queue: queue)
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 }
