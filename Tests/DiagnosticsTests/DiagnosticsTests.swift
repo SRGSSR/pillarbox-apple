@@ -5,6 +5,7 @@
 //
 
 @testable import Diagnostics
+
 import Nimble
 import XCTest
 
