@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-extension Player {
+enum Time {
     static func timeRange(for item: AVPlayerItem?) -> CMTimeRange {
         guard let item,
               let firstRange = item.seekableTimeRanges.first?.timeRangeValue,
@@ -21,5 +21,25 @@ extension Player {
         let elapsedTime = CMTimeGetSeconds(CMTimeSubtract(time, range.start))
         let duration = CMTimeGetSeconds(range.duration)
         return Float(elapsedTime / duration)
+    }
+
+    /// Return a time comparator having some tolerance
+    static func close(within tolerance: TimeInterval) -> ((CMTime, CMTime) -> Bool) {
+        precondition(tolerance >= 0)
+        return {
+            CMTimeCompare(
+                CMTimeAbsoluteValue(CMTimeSubtract($0, $1)),
+                CMTimeMakeWithSeconds(tolerance, preferredTimescale: Int32(NSEC_PER_SEC))
+            ) == -1
+        }
+    }
+
+    /// Return a time range comparator having some tolerance
+    static func close(within tolerance: TimeInterval) -> ((CMTimeRange, CMTimeRange) -> Bool) {
+        precondition(tolerance >= 0)
+        let timeClose: ((CMTime, CMTime) -> Bool) = close(within: tolerance)
+        return {
+            timeClose($0.start, $1.start) && timeClose($0.end, $1.end)
+        }
     }
 }

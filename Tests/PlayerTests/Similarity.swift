@@ -34,22 +34,10 @@ extension Player.ItemState: Similar {
     }
 }
 
-/// Return a time comparator working having some tolerance
 func close(within tolerance: TimeInterval) -> ((CMTime, CMTime) -> Bool) {
-    precondition(tolerance >= 0)
-    return {
-        CMTimeCompare(
-            CMTimeAbsoluteValue(CMTimeSubtract($0, $1)),
-            CMTimeMakeWithSeconds(tolerance, preferredTimescale: Int32(NSEC_PER_SEC))
-        ) == -1
-    }
+    Time.close(within: tolerance)
 }
 
-/// Return a time range comparator working having some tolerance
 func close(within tolerance: TimeInterval) -> ((CMTimeRange, CMTimeRange) -> Bool) {
-    precondition(tolerance >= 0)
-    let timeClose: ((CMTime, CMTime) -> Bool) = close(within: tolerance)
-    return {
-        timeClose($0.start, $1.start) && timeClose($0.end, $1.end)
-    }
+    Time.close(within: tolerance)
 }

@@ -17,14 +17,14 @@ final class TimeTests: XCTestCase {
         try expectPublisher(player.$state, values: [.idle, .playing]) {
             player.play()
         }
-        expect(Player.timeRange(for: item)).to(equal(
+        expect(Time.timeRange(for: item)).to(equal(
             CMTimeRangeMake(start: .zero, duration: CMTime(value: 3, timescale: 1)),
             by: close(within: 0.1)
         ))
     }
 
     func testProgress() {
-        expect(Player.progress(
+        expect(Time.progress(
             for: CMTimeMake(value: 1, timescale: 2),
             in: CMTimeRangeMake(start: .zero, duration: CMTimeMake(value: 1, timescale: 1))
         )).to(equal(0.5))

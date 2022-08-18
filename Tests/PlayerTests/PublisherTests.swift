@@ -55,9 +55,29 @@ final class PublisherTests: XCTestCase {
         )
     }
 
+    func testPeriodicTimeWithItems() throws {
+        let item1 = AVPlayerItem(url: TestStreams.shortStreamUrl)
+        let item2 = AVPlayerItem(url: TestStreams.validStreamUrl)
+        let player = Player(items: [item1, item2])
+        player.play()
+        try expectPublisher(
+            player.periodicTimePublisher(forInterval: CMTimeMake(value: 1, timescale: 2)),
+            values: [
+                CMTimeMake(value: 0, timescale: 2),
+                CMTimeMake(value: 1, timescale: 2),
+                CMTimeMake(value: 2, timescale: 2),
+                CMTimeMake(value: 0, timescale: 2),
+                CMTimeMake(value: 1, timescale: 2),
+                CMTimeMake(value: 2, timescale: 2),
+                CMTimeMake(value: 3, timescale: 2),
+                CMTimeMake(value: 4, timescale: 2)
+            ],
+            toBe: close(within: 0.1)
+        )
+    }
+
     // TODO:
     //  - Test without playing (no events; requires a way to check that a values are never emitted)
     //  - Test with pause
-    //  - Test with item change
     //  - etc.
 }

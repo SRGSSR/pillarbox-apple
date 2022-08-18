@@ -64,7 +64,7 @@ final class StateTests: XCTestCase {
         try expectPublisher(player.$state, values: [.idle, .failed(error: TestError.any)])
     }
 
-    func testItems() throws {
+    func testPlaybackWithItems() throws {
         let item1 = AVPlayerItem(url: TestStreams.shortStreamUrl)
         let item2 = AVPlayerItem(url: TestStreams.shortStreamUrl)
         let player = Player(items: [item1, item2])

@@ -110,8 +110,8 @@ extension Player {
     static func progressPublisher(for player: Player, queue: DispatchQueue) -> AnyPublisher<Float, Never> {
         player.periodicTimePublisher(forInterval: CMTimeMake(value: 1, timescale: 1), queue: queue)
             .map { [weak player] time in
-                let timeRange = timeRange(for: player?.player.currentItem)
-                return progress(for: time, in: timeRange)
+                let timeRange = Time.timeRange(for: player?.player.currentItem)
+                return Time.progress(for: time, in: timeRange)
             }
             .eraseToAnyPublisher()
     }
@@ -137,7 +137,7 @@ extension Player {
 
     public func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
         Publishers.PeriodicTimePublisher(player: player, interval: interval, queue: queue)
-            .removeDuplicates()
+            .removeDuplicates(by: Time.close(within: 0.1))
             .eraseToAnyPublisher()
     }
 }
