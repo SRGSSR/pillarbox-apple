@@ -8,11 +8,6 @@ import AVFoundation
 import Combine
 
 extension Player {
-    public func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
-        Publishers.PeriodicTimePublisher(player: player, interval: interval, queue: queue)
-            .eraseToAnyPublisher()
-    }
-
     static func statePublisher(for player: AVPlayer) -> AnyPublisher<PlayerState, Never> {
         Publishers.CombineLatest(
             player.publisher(for: \.currentItem)
@@ -32,7 +27,7 @@ extension Player {
     }
 
     static func progressPublisher(for player: Player, queue: DispatchQueue) -> AnyPublisher<Float, Never> {
-        return player.periodicTimePublisher(forInterval: CMTimeMake(value: 1, timescale: 1), queue: queue)
+        player.periodicTimePublisher(forInterval: CMTimeMake(value: 1, timescale: 1), queue: queue)
             .map { [weak player] time in
                 let timeRange = timeRange(for: player?.player.currentItem)
                 return progress(for: time, in: timeRange)
@@ -57,6 +52,11 @@ extension Player {
                 .map { _ in .ended }
         )
         .eraseToAnyPublisher()
+    }
+
+    public func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
+        Publishers.PeriodicTimePublisher(player: player, interval: interval, queue: queue)
+            .eraseToAnyPublisher()
     }
 }
 
