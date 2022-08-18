@@ -15,7 +15,7 @@ extension Player {
         }
         return CMTimeRangeFromTimeToTime(start: firstRange.start, end: lastRange.end)
     }
-    
+
     static func progress(for time: CMTime, in range: CMTimeRange) -> Float {
         guard range.isValid && !range.isEmpty else { return 0 }
         let elapsedTime = CMTimeGetSeconds(CMTimeSubtract(time, range.start))

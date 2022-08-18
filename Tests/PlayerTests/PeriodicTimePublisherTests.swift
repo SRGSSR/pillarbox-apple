@@ -26,7 +26,8 @@ final class PeriodicTimePublishersTests: XCTestCase {
                 CMTimeMake(value: 4, timescale: 2),
                 CMTimeMake(value: 5, timescale: 2)
             ],
-            toBe: close(within: 0.1))
+            toBe: close(within: 0.1)
+        )
     }
 
     func testSeek() throws {
@@ -52,7 +53,8 @@ final class PeriodicTimePublishersTests: XCTestCase {
                 CMTimeMake(value: 5, timescale: 2),
                 CMTimeMake(value: 6, timescale: 2)
             ],
-            toBe: close(within: 0.1))
+            toBe: close(within: 0.1)
+        )
     }
 
     // TODO:
