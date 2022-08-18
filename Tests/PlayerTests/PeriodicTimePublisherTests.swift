@@ -15,10 +15,17 @@ final class PeriodicTimePublishersTests: XCTestCase {
         let item = AVPlayerItem(url: TestStreams.validStreamUrl)
         let player = Player(item: item)
         player.play()
-        try expectPublisher(player.periodicTimePublisher(forInterval: CMTimeMake(value: 1, timescale: 1)), values: [
-            CMTimeMake(value: 0, timescale: 1),
-            CMTimeMake(value: 1, timescale: 1),
-            CMTimeMake(value: 2, timescale: 1)
-        ])
+        try expectPublisher(
+            player.periodicTimePublisher(forInterval: CMTimeMake(value: 1, timescale: 2))
+                .removeDuplicates(),
+            values: [
+                CMTimeMake(value: 0, timescale: 2),
+                CMTimeMake(value: 1, timescale: 2),
+                CMTimeMake(value: 2, timescale: 2),
+                CMTimeMake(value: 3, timescale: 2),
+                CMTimeMake(value: 4, timescale: 2),
+                CMTimeMake(value: 5, timescale: 2)
+            ],
+            equalBy: close(within: 0.1))
     }
 }
