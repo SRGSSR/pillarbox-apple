@@ -17,7 +17,7 @@ final class ItemStateTests: XCTestCase {
     func testValidStream() throws {
         let item = AVPlayerItem(url: TestStreams.shortStreamUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublisher(Player.ItemState.publisher(for: item), values: [.unknown, .readyToPlay, .ended]) {
+        try expectPublisher(Player.statePublisher(for: item), values: [.unknown, .readyToPlay, .ended]) {
             player.play()
         }
     }
@@ -25,13 +25,13 @@ final class ItemStateTests: XCTestCase {
     func testUnavailableStream() throws {
         let item = AVPlayerItem(url: TestStreams.unavailableStreamUrl)
         _ = AVPlayer(playerItem: item)
-        try expectPublisher(Player.ItemState.publisher(for: item), values: [.unknown, .failed(error: TestError.any)])
+        try expectPublisher(Player.statePublisher(for: item), values: [.unknown, .failed(error: TestError.any)])
     }
 
     func testCorruptStream() throws {
         let item = AVPlayerItem(url: TestStreams.corruptStreamUrl)
         _ = AVPlayer(playerItem: item)
-        try expectPublisher(Player.ItemState.publisher(for: item), values: [.unknown, .failed(error: TestError.any)])
+        try expectPublisher(Player.statePublisher(for: item), values: [.unknown, .failed(error: TestError.any)])
     }
 
     func testResourceLoadingFailure() throws {
@@ -39,7 +39,7 @@ final class ItemStateTests: XCTestCase {
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: queue)
         let item = AVPlayerItem(asset: asset)
         let player = AVPlayer(playerItem: item)
-        try expectPublisher(Player.ItemState.publisher(for: item), values: [.unknown, .failed(error: TestError.any)]) {
+        try expectPublisher(Player.statePublisher(for: item), values: [.unknown, .failed(error: TestError.any)]) {
             player.play()
         }
     }

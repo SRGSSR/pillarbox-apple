@@ -42,6 +42,13 @@ public extension Player {
         }
     }
 
+    enum ItemState {
+        case unknown
+        case readyToPlay
+        case ended
+        case failed(error: Error)
+    }
+
     struct PlayerState {
         let itemState: ItemState
         let rate: Float

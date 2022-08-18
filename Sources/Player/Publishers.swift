@@ -7,6 +7,59 @@
 import AVFoundation
 import Combine
 
+extension Player {
+    public func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
+        Publishers.PeriodicTimePublisher(player: player, interval: interval, queue: queue)
+            .eraseToAnyPublisher()
+    }
+
+    static func statePublisher(for player: AVPlayer) -> AnyPublisher<PlayerState, Never> {
+        Publishers.CombineLatest(
+            player.publisher(for: \.currentItem)
+                .map { item -> AnyPublisher<ItemState, Never> in
+                    guard let item else {
+                        return Just(.unknown)
+                            .eraseToAnyPublisher()
+                    }
+                    return statePublisher(for: item)
+                }
+                .switchToLatest(),
+            player.publisher(for: \.rate)
+        )
+        .map { PlayerState(itemState: $0, rate: $1) }
+        .prepend(PlayerState(itemState: .unknown, rate: player.rate))
+        .eraseToAnyPublisher()
+    }
+
+    static func progressPublisher(for player: Player, queue: DispatchQueue) -> AnyPublisher<Float, Never> {
+        return player.periodicTimePublisher(forInterval: CMTimeMake(value: 1, timescale: 1), queue: queue)
+            .map { [weak player] time in
+                let timeRange = timeRange(for: player?.player.currentItem)
+                return progress(for: time, in: timeRange)
+            }
+            .eraseToAnyPublisher()
+    }
+
+    static func statePublisher(for item: AVPlayerItem) -> AnyPublisher<ItemState, Never> {
+        Publishers.Merge(
+            item.publisher(for: \.status)
+                .map { status in
+                    switch status {
+                    case .readyToPlay:
+                        return .readyToPlay
+                    case .failed:
+                        return .failed(error: item.error ?? PlaybackError.unknown)
+                    default:
+                        return .unknown
+                    }
+                },
+            NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime, object: item)
+                .map { _ in .ended }
+        )
+        .eraseToAnyPublisher()
+    }
+}
+
 extension Publishers {
     struct PeriodicTimePublisher: Publisher {
         typealias Output = CMTime
