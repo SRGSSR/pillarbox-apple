@@ -29,7 +29,7 @@ public extension Player {
 
         /// Return `true` iff states are guaranteed duplicates (if this
         /// cannot be checked return `false`).
-        static func areDuplicates(lhsState: Self, rhsState: Self) -> Bool {
+        static func areDuplicates(_ lhsState: Self, _ rhsState: Self) -> Bool {
             switch (lhsState, rhsState) {
             case (.idle, .idle),
                 (.playing, .playing),

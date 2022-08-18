@@ -22,7 +22,7 @@ public final class Player: ObservableObject {
         player = AVQueuePlayer(items: items)
         Self.statePublisher(for: player)
             .map { State(from: $0) }
-            .removeDuplicates { State.areDuplicates(lhsState: $0, rhsState: $1) }
+            .removeDuplicates { State.areDuplicates($0, $1) }
             .receive(on: DispatchQueue.main)
             .assign(to: &$state)
         Self.progressPublisher(for: self, queue: queue)
