@@ -10,10 +10,12 @@
 		6F36C62D28910538000DD160 /* CoreBusiness in Frameworks */ = {isa = PBXBuildFile; productRef = 6F36C62C28910538000DD160 /* CoreBusiness */; };
 		6F917C0E2887EA8E004113BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F917C082887EA8E004113BA /* Assets.xcassets */; };
 		6F917C0F2887EA8E004113BA /* PillarboxDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F917C0A2887EA8E004113BA /* PillarboxDemoApp.swift */; };
-		6F917C102887EA8E004113BA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F917C0B2887EA8E004113BA /* ContentView.swift */; };
 		6F917C112887EA8E004113BA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F917C0D2887EA8E004113BA /* Preview Assets.xcassets */; };
 		6F9DDB44288FE90E0069B687 /* Player in Frameworks */ = {isa = PBXBuildFile; productRef = 6F9DDB43288FE90E0069B687 /* Player */; };
 		6FBEFCEB289132DB004BE625 /* UserInterface in Frameworks */ = {isa = PBXBuildFile; productRef = 6FBEFCEA289132DB004BE625 /* UserInterface */; };
+		6FCA8D7C28AD2AB900CF75FB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCA8D7B28AD2AB900CF75FB /* AppDelegate.swift */; };
+		6FCD6A1928AD158E00FCE4EA /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD6A1828AD158E00FCE4EA /* PlayerView.swift */; };
+		6FCD6A1B28AD1B9200FCE4EA /* DemosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD6A1A28AD1B9200FCE4EA /* DemosView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,9 +28,11 @@
 		6F45DB9F2893B773008ACCE6 /* Demo.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Demo.release.xcconfig; sourceTree = "<group>"; };
 		6F917C082887EA8E004113BA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6F917C0A2887EA8E004113BA /* PillarboxDemoApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PillarboxDemoApp.swift; sourceTree = "<group>"; };
-		6F917C0B2887EA8E004113BA /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		6F917C0D2887EA8E004113BA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6F9DDB40288FE8F80069B687 /* pillarbox-apple */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "pillarbox-apple"; path = ..; sourceTree = "<group>"; };
+		6FCA8D7B28AD2AB900CF75FB /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		6FCD6A1828AD158E00FCE4EA /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
+		6FCD6A1A28AD1B9200FCE4EA /* DemosView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemosView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,8 +118,10 @@
 		6F917C092887EA8E004113BA /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				6FCA8D7B28AD2AB900CF75FB /* AppDelegate.swift */,
+				6FCD6A1A28AD1B9200FCE4EA /* DemosView.swift */,
 				6F917C0A2887EA8E004113BA /* PillarboxDemoApp.swift */,
-				6F917C0B2887EA8E004113BA /* ContentView.swift */,
+				6FCD6A1828AD158E00FCE4EA /* PlayerView.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -218,7 +224,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F917C102887EA8E004113BA /* ContentView.swift in Sources */,
+				6FCA8D7C28AD2AB900CF75FB /* AppDelegate.swift in Sources */,
+				6FCD6A1928AD158E00FCE4EA /* PlayerView.swift in Sources */,
+				6FCD6A1B28AD1B9200FCE4EA /* DemosView.swift in Sources */,
 				6F917C0F2887EA8E004113BA /* PillarboxDemoApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

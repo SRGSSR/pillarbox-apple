@@ -35,8 +35,7 @@ let package = Package(
         .package(url: "https://github.com/SRGSSR/GoogleCastSDK-no-bluetooth.git", .upToNextMinor(from: "4.7.1-beta.1")),
         .package(url: "https://github.com/SRGSSR/TCCore-xcframework-apple.git", .upToNextMinor(from: "4.5.4-srg5")),
         .package(url: "https://github.com/SRGSSR/TCSDK-xcframework-apple.git", .upToNextMinor(from: "4.4.1-srg5")),
-        .package(url: "https://github.com/Quick/Nimble.git", .upToNextMajor(from: "10.0.0")),
-        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0")
+        .package(url: "https://github.com/Quick/Nimble.git", .upToNextMajor(from: "10.0.0"))
     ],
     targets: [
         .target(name: "Appearance"),

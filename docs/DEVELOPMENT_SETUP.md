@@ -7,7 +7,9 @@ This article briefly discusses local development setup.
 
 The following tools are required for the best possible development experience:
 
+- The latest version of Xcode.
 - The tvOS simulator (otherwise provisioning fails for tvOS when archiving the tvOS app).
+- [Python](https://www.python.org)
 - [gem](https://rubygems.org)
 - [bundler](https://bundler.io)
 - [swiftlint](https://github.com/realm/SwiftLint)
@@ -22,7 +24,11 @@ The project provides a demo application which can be run to test features offere
 
 ## Unit tests
 
-Unit tests are provided with the Pillarbox package.
+Unit tests are provided with the Pillarbox package. Since Apple players [cannot play local manifests](https://developer.apple.com/forums/thread/69357?answerId=202051022#202051022 ) we are using Python to run a simple [web server](https://docs.python.org/3/library/http.server.html) serving various test streams from a local directory.
+
+### Remark
+
+The web server is started when `make setup` is run and remains up and running afterwards. If unit tests fail please run this command again and ensure the server is serving streams correctly at `http://localhost:8000`.
 
 ## Makefile
 
@@ -53,3 +59,7 @@ An [editor configuration file](../.editorconfig) and several linter configuratio
 - [.editorconfig extension](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig).
 - [shellcheck extension](https://marketplace.visualstudio.com/items?itemName=timonwong.shellcheck).
 - [rubocop extension](https://marketplace.visualstudio.com/items?itemName=misogi.ruby-rubocop).
+
+## Code signing
+
+We are currently using [cloud signing](https://developer.apple.com/wwdc21/10204) with automatic provisioning updates. Code signing requires access to our [internal configuration repository](https://github.com/SRGSSR/pillarbox-apple-configuration) which is automatically pulled when running `make setup`, provided you have been granted access to it.
