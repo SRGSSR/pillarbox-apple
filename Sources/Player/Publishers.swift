@@ -181,6 +181,11 @@ extension Player {
         }
     }
 
+    /// Create a periodic time publisher periodically emitting a time while the player is active.
+    /// - Parameters:
+    ///   - interval: The interval at which events must be emitted.
+    ///   - queue: The queue on which events are received.
+    /// - Returns: The publisher.
     public func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
         Publishers.PeriodicTimePublisher(player: systemPlayer, interval: interval, queue: queue)
             .removeDuplicates(by: Time.close(within: 0.1))
