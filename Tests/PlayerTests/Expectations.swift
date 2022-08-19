@@ -8,7 +8,7 @@ import Combine
 import Nimble
 import XCTest
 
-/// Defines similarity for types not conforming to `Equatable` and which need to be meaningfully comparable.
+/// Defines similarity for types not conforming to `Equatable` and which need to be meaningfully compared in tests.
 protocol Similar {
     static func ~= (lhs: Self, rhs: Self) -> Bool
 }

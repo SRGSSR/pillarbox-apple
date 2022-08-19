@@ -50,5 +50,3 @@ final class ItemStateTests: XCTestCase {
         try expectPublisher(Player.statePublisher(for: item), values: [.unknown, .readyToPlay])
     }
 }
-
-// TODO: Similar individual tests for other publishers in Publishers.swift (Player package)

@@ -28,7 +28,7 @@ Unit tests are provided with the Pillarbox package. Since Apple players [cannot 
 
 ### Remark
 
-The web server is started when `make setup` is run and remains up and running afterwards. If unit tests for some reasons please run this command again and ensure the server is serving streams correctly at `http://localhost:8000`.
+The web server is started when `make setup` is run and remains up and running afterwards. If unit tests fail please run this command again and ensure the server is serving streams correctly at `http://localhost:8000`.
 
 ## Makefile
 
@@ -62,6 +62,4 @@ An [editor configuration file](../.editorconfig) and several linter configuratio
 
 ## Code signing
 
-Code signing requires access to our [internal configuration repository](https://github.com/SRGSSR/pillarbox-apple-configuration) which is automatically pulled when running `make setup`, provided you have been granted access to it.
-
-We are currently using [cloud signing](https://developer.apple.com/wwdc21/10204) with automatic provisioning updates, which also requires you to be logged with a developer account belonging to our team.
+We are currently using [cloud signing](https://developer.apple.com/wwdc21/10204) with automatic provisioning updates. Code signing requires access to our [internal configuration repository](https://github.com/SRGSSR/pillarbox-apple-configuration) which is automatically pulled when running `make setup`, provided you have been granted access to it.

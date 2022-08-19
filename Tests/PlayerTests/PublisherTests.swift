@@ -79,5 +79,6 @@ final class PublisherTests: XCTestCase {
     // TODO:
     //  - Test without playing (no events; requires a way to check that a values are never emitted)
     //  - Test with pause
+    //  - Similar individual tests for other publishers in Publishers.swift (Player package)
     //  - etc.
 }

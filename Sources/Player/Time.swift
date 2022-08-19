@@ -23,7 +23,7 @@ enum Time {
         return Float(elapsedTime / duration).clamped(to: 0...1)
     }
 
-    /// Return a time comparator having some tolerance
+    /// Return a time comparator having some tolerance.
     static func close(within tolerance: TimeInterval) -> ((CMTime, CMTime) -> Bool) {
         precondition(tolerance >= 0)
         return {
@@ -34,7 +34,7 @@ enum Time {
         }
     }
 
-    /// Return a time range comparator having some tolerance
+    /// Return a time range comparator having some tolerance.
     static func close(within tolerance: TimeInterval) -> ((CMTimeRange, CMTimeRange) -> Bool) {
         precondition(tolerance >= 0)
         let timeClose: ((CMTime, CMTime) -> Bool) = close(within: tolerance)

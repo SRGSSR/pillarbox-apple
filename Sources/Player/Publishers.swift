@@ -181,7 +181,7 @@ extension Player {
         }
     }
 
-    /// Create a periodic time publisher periodically emitting a time while the player is active.
+    /// Create a publisher periodically emitting the current time while the player is active.
     /// - Parameters:
     ///   - interval: The interval at which events must be emitted.
     ///   - queue: The queue on which events are received.
@@ -194,8 +194,8 @@ extension Player {
 }
 
 extension NotificationCenter {
-    /// The notification publisher retains the filter object, potentially creating cycles. Apply filter on unfiltered
-    /// stream to avoid this issue.
+    /// The usual notification publisher retains the filter object, potentially creating cycles. Apply filter on
+    /// unfiltered stream to avoid this issue.
     func weakPublisher(for name: Notification.Name, object: AnyObject) -> AnyPublisher<Notification, Never> {
         publisher(for: name, object: nil)
             .filter { [weak object] notification in
