@@ -42,7 +42,6 @@ opt_in_rules:
   - empty_xctest_method
   - enum_case_associated_values_count
   - expiring_todo
-  - explicit_enum_raw_value
   - explicit_init
   - extension_access_modifier
   - fallthrough
