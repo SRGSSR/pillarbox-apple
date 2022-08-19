@@ -25,7 +25,7 @@ final class PublisherTests: XCTestCase {
                 CMTimeMake(value: 4, timescale: 2),
                 CMTimeMake(value: 5, timescale: 2)
             ],
-            toBe: close(within: 0.1)
+            toBe: close(within: 0.5)
         )
     }
 
@@ -51,7 +51,7 @@ final class PublisherTests: XCTestCase {
                 CMTimeMake(value: 5, timescale: 2),
                 CMTimeMake(value: 6, timescale: 2)
             ],
-            toBe: close(within: 0.1)
+            toBe: close(within: 0.5)
         )
     }
 
@@ -72,7 +72,7 @@ final class PublisherTests: XCTestCase {
                 CMTimeMake(value: 3, timescale: 2),
                 CMTimeMake(value: 4, timescale: 2)
             ],
-            toBe: close(within: 0.1)
+            toBe: close(within: 0.4)
         )
     }
 

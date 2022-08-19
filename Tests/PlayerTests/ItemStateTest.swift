@@ -43,4 +43,10 @@ final class ItemStateTests: XCTestCase {
             player.play()
         }
     }
+
+    func testNonPlayingValidStream() throws {
+        let item = AVPlayerItem(url: TestStreams.shortStreamUrl)
+        _ = AVPlayer(playerItem: item)
+        try expectPublisher(Player.statePublisher(for: item), values: [.unknown, .readyToPlay])
+    }
 }

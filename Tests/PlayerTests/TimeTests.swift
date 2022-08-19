@@ -19,7 +19,7 @@ final class TimeTests: XCTestCase {
         }
         expect(Time.timeRange(for: item)).to(equal(
             CMTimeRangeMake(start: .zero, duration: CMTime(value: 3, timescale: 1)),
-            by: close(within: 0.1)
+            by: close(within: 0.5)
         ))
     }
 

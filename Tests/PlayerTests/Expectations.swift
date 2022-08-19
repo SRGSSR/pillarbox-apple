@@ -14,7 +14,7 @@ protocol Similar {
 }
 
 extension XCTestCase {
-    /// Expect a publisher to emit a list of values.
+    /// Expect a publisher to emit a list of values similar according to some criterium.
     func expectPublisher<P: Publisher>(
         _ publisher: P,
         values: [P.Output],
@@ -133,6 +133,54 @@ extension XCTestCase {
             publisher,
             values: values,
             toBe: ~=,
+            timeout: timeout,
+            file: file,
+            line: line,
+            while: executing
+        )
+    }
+}
+
+/// Remark: Nimble provides support for notifications but its collector is not thread-safe and crashes during
+///         collection. We thus need to roll our own solution.
+extension XCTestCase {
+    /// Expect a list of notifications to be received, comparing the emitted values according to some criterium.
+    func expectNotifications(
+        _ names: [Notification.Name],
+        values: [Notification],
+        toBe similar: @escaping (Notification, Notification) -> Bool,
+        timeout: TimeInterval = 10,
+        file: StaticString = #file,
+        line: UInt = #line,
+        while executing: (() -> Void)? = nil
+    ) throws {
+        try expectPublisher(
+            Publishers.MergeMany(
+                // Register once per notification (registration order does not matter)
+                Set(names).map { NotificationCenter.default.publisher(for: $0) }
+            ),
+            values: values,
+            toBe: similar,
+            timeout: timeout,
+            file: file,
+            line: line,
+            while: executing
+        )
+    }
+
+    /// Expect a list of notifications to be received.
+    func expectNotifications(
+        _ names: [Notification.Name],
+        values: [Notification],
+        timeout: TimeInterval = 10,
+        file: StaticString = #file,
+        line: UInt = #line,
+        while executing: (() -> Void)? = nil
+    ) throws {
+        try expectNotifications(
+            names,
+            values: values,
+            toBe: ==,
             timeout: timeout,
             file: file,
             line: line,

@@ -10,6 +10,7 @@ import XCTest
 /// Borrowed from https://www.swiftbysundell.com/articles/unit-testing-combine-based-swift-code/
 extension XCTestCase {
     /// Await for a publisher to complete and return its output.
+    @discardableResult
     func awaitPublisher<P: Publisher>(
         _ publisher: P,
         timeout: TimeInterval = 10,
