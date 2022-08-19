@@ -24,6 +24,7 @@ extension XCTestCase {
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) throws where P.Failure == Never {
+        precondition(!values.isEmpty)
         let actualValues = try awaitPublisher(
             publisher.collectFirst(values.count),
             timeout: timeout,
@@ -87,6 +88,7 @@ extension XCTestCase {
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) throws {
+        precondition(!values.isEmpty)
         let actualValues = try awaitPublisher(
             publisher.collectNext(values.count),        // Skip initial value
             timeout: timeout,
