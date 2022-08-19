@@ -138,9 +138,9 @@ extension Player {
 
     private static func targetTimePublisher(for player: Player) -> AnyPublisher<CMTime?, Never> {
         return Publishers.Merge(
-            NotificationCenter.default.publisher(for: .willSeek, object: player)
+            NotificationCenter.default.weakPublisher(for: .willSeek, object: player)
                 .map { $0.userInfo?[SystemPlayer.SeekInfoKey.targetTime] as? CMTime },
-            NotificationCenter.default.publisher(for: .didSeek, object: player)
+            NotificationCenter.default.weakPublisher(for: .didSeek, object: player)
                 .map { _ in nil }
         )
         .prepend(nil)
@@ -160,7 +160,7 @@ extension Player {
                         return .unknown
                     }
                 },
-            NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime, object: item)
+            NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: item)
                 .map { _ in .ended }
         )
         .eraseToAnyPublisher()
@@ -169,6 +169,19 @@ extension Player {
     public func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
         Publishers.PeriodicTimePublisher(player: systemPlayer, interval: interval, queue: queue)
             .removeDuplicates(by: Time.close(within: 0.1))
+            .eraseToAnyPublisher()
+    }
+}
+
+extension NotificationCenter {
+    /// The notification publisher retains the filter object, potentially creating cycles. Apply filter on unfiltered
+    /// stream to avoid this issue.
+    func weakPublisher(for name: Notification.Name, object: AnyObject) -> AnyPublisher<Notification, Never> {
+        return publisher(for: name, object: nil)
+            .filter { [weak object] notification in
+                guard let notificationObject = notification.object as? AnyObject else { return false }
+                return notificationObject === object
+            }
             .eraseToAnyPublisher()
     }
 }
