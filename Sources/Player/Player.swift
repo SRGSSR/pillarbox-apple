@@ -8,26 +8,21 @@ import AVFoundation
 import Combine
 
 public final class Player: ObservableObject {
-    @Published public private(set) var state: State = .idle
-    @Published public private(set) var progress: Float = 0
+    @Published public private(set) var properties: Properties
 
-    let player: SystemPlayer
-    private let queue = DispatchQueue(label: "ch.srgssr.pillarbox.player")
+    let systemPlayer: SystemPlayer
 
     public var items: [AVPlayerItem] {
-        player.items()
+        systemPlayer.items()
     }
 
     public init(items: [AVPlayerItem] = []) {
-        player = SystemPlayer(items: items)
-        Self.statePublisher(for: player)
-            .map { State(from: $0) }
-            .removeDuplicates { State.areDuplicates($0, $1) }
+        systemPlayer = SystemPlayer(items: items)
+        properties = .empty(for: systemPlayer)
+
+        Self.propertiesPublisher(for: self)
             .receive(on: DispatchQueue.main)
-            .assign(to: &$state)
-        Self.progressPublisher(for: self, queue: queue)
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$progress)
+            .assign(to: &$properties)
     }
 
     public convenience init(item: AVPlayerItem) {
@@ -35,7 +30,7 @@ public final class Player: ObservableObject {
     }
 
     public func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
-        player.insert(item, after: afterItem)
+        systemPlayer.insert(item, after: afterItem)
     }
 
     public func append(_ item: AVPlayerItem) {
@@ -43,36 +38,36 @@ public final class Player: ObservableObject {
     }
 
     public func remove(_ item: AVPlayerItem) {
-        player.remove(item)
+        systemPlayer.remove(item)
     }
 
     public func removeAllItems() {
-        player.removeAllItems()
+        systemPlayer.removeAllItems()
     }
 
     public func play() {
-        player.play()
+        systemPlayer.play()
     }
 
     public func pause() {
-        player.pause()
+        systemPlayer.pause()
     }
 
     public func togglePlayPause() {
-        if player.rate != 0 {
-            player.pause()
+        if systemPlayer.rate != 0 {
+            systemPlayer.pause()
         }
         else {
-            player.play()
+            systemPlayer.play()
         }
     }
 
     public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        player.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
+        systemPlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
     }
 
     @discardableResult
     public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) async -> Bool {
-        await player.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
+        await systemPlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
     }
 }

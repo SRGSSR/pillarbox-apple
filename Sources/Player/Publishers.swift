@@ -89,34 +89,65 @@ private extension Publishers.PeriodicTimePublisher {
 }
 
 extension Player {
-    static func statePublisher(for player: AVPlayer) -> AnyPublisher<PlayerState, Never> {
-        Publishers.CombineLatest(
-            player.publisher(for: \.currentItem)
-                .map { item -> AnyPublisher<ItemState, Never> in
-                    guard let item else {
-                        return Just(.unknown)
-                            .eraseToAnyPublisher()
-                    }
-                    return statePublisher(for: item)
-                }
-                .switchToLatest(),
-            player.publisher(for: \.rate)
+    static func propertiesPublisher(for player: Player) -> AnyPublisher<Properties, Never> {
+        Publishers.CombineLatest4(
+            itemStatePublisher(for: player),
+            ratePublisher(for: player),
+            playbackPublisher(for: player, queue: DispatchQueue(label: "ch.srgssr.pillarbox.player")),
+            targetTimePublisher(for: player)
         )
-        .map { PlayerState(itemState: $0, rate: $1) }
-        .prepend(PlayerState(itemState: .unknown, rate: player.rate))
+        .map { Properties(
+            itemState: $0,
+            rate: $1,
+            playback: $2,
+            targetTime: $3
+        ) }
         .eraseToAnyPublisher()
     }
 
-    static func progressPublisher(for player: Player, queue: DispatchQueue) -> AnyPublisher<Float, Never> {
+    private static func itemStatePublisher(for player: Player) -> AnyPublisher<ItemState, Never> {
+        return player.systemPlayer.publisher(for: \.currentItem)
+            .map { item -> AnyPublisher<ItemState, Never> in
+                guard let item else {
+                    return Just(.unknown)
+                        .eraseToAnyPublisher()
+                }
+                return statePublisher(for: item)
+            }
+            .switchToLatest()
+            .prepend(.unknown)
+            .eraseToAnyPublisher()
+    }
+
+    private static func ratePublisher(for player: Player) -> AnyPublisher<Float, Never> {
+        return player.systemPlayer.publisher(for: \.rate)
+            .prepend(player.systemPlayer.rate)
+            .eraseToAnyPublisher()
+    }
+
+    private static func playbackPublisher(for player: Player, queue: DispatchQueue) -> AnyPublisher<Properties.Playback, Never> {
         player.periodicTimePublisher(forInterval: CMTimeMake(value: 1, timescale: 1), queue: queue)
             .map { [weak player] time in
-                let timeRange = Time.timeRange(for: player?.player.currentItem)
-                return Time.progress(for: time, in: timeRange)
+                return Properties.Playback(
+                    time: time,
+                    timeRange: Time.timeRange(for: player?.systemPlayer.currentItem)
+                )
             }
             .eraseToAnyPublisher()
     }
 
-    static func statePublisher(for item: AVPlayerItem) -> AnyPublisher<ItemState, Never> {
+    private static func targetTimePublisher(for player: Player) -> AnyPublisher<CMTime?, Never> {
+        return Publishers.Merge(
+            NotificationCenter.default.publisher(for: .willSeek, object: player)
+                .map { $0.userInfo?[SystemPlayer.SeekInfoKey.targetTime] as? CMTime },
+            NotificationCenter.default.publisher(for: .didSeek, object: player)
+                .map { _ in nil }
+        )
+        .prepend(nil)
+        .eraseToAnyPublisher()
+    }
+
+    private static func statePublisher(for item: AVPlayerItem) -> AnyPublisher<ItemState, Never> {
         Publishers.Merge(
             item.publisher(for: \.status)
                 .map { status in
@@ -136,7 +167,7 @@ extension Player {
     }
 
     public func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
-        Publishers.PeriodicTimePublisher(player: player, interval: interval, queue: queue)
+        Publishers.PeriodicTimePublisher(player: systemPlayer, interval: interval, queue: queue)
             .removeDuplicates(by: Time.close(within: 0.1))
             .eraseToAnyPublisher()
     }

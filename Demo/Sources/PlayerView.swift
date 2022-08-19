@@ -15,7 +15,7 @@ struct PlayerView: View {
     @StateObject private var player = Player()
 
     private var playbackButtonImageName: String {
-        switch player.state {
+        switch player.properties.state {
         case .playing:
             return "pause.circle.fill"
         default:
@@ -42,7 +42,7 @@ struct PlayerView: View {
                     .frame(width: 90, height: 90)
                     .tint(.white)
             }
-            ProgressView(value: player.progress)
+            ProgressView(value: player.properties.progress)
                 .tint(.white)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
