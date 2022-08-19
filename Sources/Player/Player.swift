@@ -14,7 +14,7 @@ public final class Player: ObservableObject {
     @Published public var targetProgress: Float = 0 {
         willSet {
             let time = properties.playback.time(forProgress: newValue)
-            seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity, completionHandler: { _ in })
+            seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { _ in }
         }
     }
 
