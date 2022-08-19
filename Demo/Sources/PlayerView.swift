@@ -35,7 +35,7 @@ struct PlayerView: View {
                     .frame(width: 90, height: 90)
                     .tint(.white)
             }
-            ProgressView(value: player.properties.progress)
+            Slider(value: $player.targetProgress)
                 .tint(.white)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)

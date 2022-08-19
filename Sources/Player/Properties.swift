@@ -15,6 +15,11 @@ public extension Player {
             static var empty: Self {
                 Playback(time: .zero, timeRange: .invalid)
             }
+
+            func time(forProgress progress: Float) -> CMTime {
+                let multiplier = Float64(progress.clamped(to: 0...1))
+                return CMTimeAdd(timeRange.start, CMTimeMultiplyByFloat64(timeRange.duration, multiplier: multiplier))
+            }
         }
 
         public let playback: Playback

@@ -11,6 +11,13 @@ public final class Player: ObservableObject {
     @Published public private(set) var state: State = .idle
     @Published public private(set) var properties: Properties
 
+    @Published public var targetProgress: Float = 0 {
+        willSet {
+            let time = properties.playback.time(forProgress: newValue)
+            seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity, completionHandler: { _ in })
+        }
+    }
+
     let systemPlayer: SystemPlayer
 
     public var items: [AVPlayerItem] {
@@ -28,6 +35,10 @@ public final class Player: ObservableObject {
         Self.propertiesPublisher(for: self)
             .receive(on: DispatchQueue.main)
             .assign(to: &$properties)
+        $properties
+            .map { $0.targetProgress ?? $0.progress }
+            .removeDuplicates()
+            .assign(to: &$targetProgress)
     }
 
     public convenience init(item: AVPlayerItem) {
