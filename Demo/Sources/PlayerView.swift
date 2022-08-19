@@ -35,10 +35,12 @@ struct PlayerView: View {
                     .frame(width: 90, height: 90)
                     .tint(.white)
             }
+#if os(iOS)
             Slider(value: $player.targetProgress)
                 .tint(.white)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+#endif
         }
         .ignoresSafeArea()
         .onAppear {
