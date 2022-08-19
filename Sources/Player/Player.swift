@@ -34,6 +34,18 @@ public final class Player: ObservableObject {
         self.init(items: [item])
     }
 
+    static func areDuplicates(_ lhsState: State, _ rhsState: State) -> Bool {
+        switch (lhsState, rhsState) {
+        case (.idle, .idle),
+            (.playing, .playing),
+            (.paused, .paused),
+            (.ended, .ended):
+            return true
+        default:
+            return false
+        }
+    }
+
     public func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
         systemPlayer.insert(item, after: afterItem)
     }
@@ -74,17 +86,5 @@ public final class Player: ObservableObject {
     @discardableResult
     public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) async -> Bool {
         await systemPlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
-    }
-
-    static func areDuplicates(_ lhsState: State, _ rhsState: State) -> Bool {
-        switch (lhsState, rhsState) {
-        case (.idle, .idle),
-            (.playing, .playing),
-            (.paused, .paused),
-            (.ended, .ended):
-            return true
-        default:
-            return false
-        }
     }
 }

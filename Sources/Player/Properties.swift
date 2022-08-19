@@ -6,8 +6,8 @@
 
 import AVFoundation
 
-extension Player {
-    public struct Properties {
+public extension Player {
+    struct Properties {
         public struct Playback {
             public let time: CMTime
             public let timeRange: CMTimeRange

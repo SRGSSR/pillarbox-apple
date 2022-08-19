@@ -108,7 +108,7 @@ extension Player {
     }
 
     static func itemStatePublisher(for player: Player) -> AnyPublisher<ItemState, Never> {
-        return player.systemPlayer.publisher(for: \.currentItem)
+        player.systemPlayer.publisher(for: \.currentItem)
             .map { item -> AnyPublisher<ItemState, Never> in
                 guard let item else {
                     return Just(.unknown)
@@ -122,7 +122,7 @@ extension Player {
     }
 
     static func ratePublisher(for player: Player) -> AnyPublisher<Float, Never> {
-        return player.systemPlayer.publisher(for: \.rate)
+        player.systemPlayer.publisher(for: \.rate)
             .prepend(player.systemPlayer.rate)
             .eraseToAnyPublisher()
     }
@@ -130,7 +130,7 @@ extension Player {
     static func playbackPublisher(for player: Player, queue: DispatchQueue) -> AnyPublisher<Properties.Playback, Never> {
         player.periodicTimePublisher(forInterval: CMTimeMake(value: 1, timescale: 1), queue: queue)
             .map { [weak player] time in
-                return Properties.Playback(
+                Properties.Playback(
                     time: time,
                     timeRange: Time.timeRange(for: player?.systemPlayer.currentItem)
                 )
@@ -139,7 +139,7 @@ extension Player {
     }
 
     static func targetTimePublisher(for player: Player) -> AnyPublisher<CMTime?, Never> {
-        return Publishers.Merge(
+        Publishers.Merge(
             NotificationCenter.default.weakPublisher(for: .willSeek, object: player)
                 .map { $0.userInfo?[SystemPlayer.SeekInfoKey.targetTime] as? CMTime },
             NotificationCenter.default.weakPublisher(for: .didSeek, object: player)
@@ -192,7 +192,7 @@ extension NotificationCenter {
     /// The notification publisher retains the filter object, potentially creating cycles. Apply filter on unfiltered
     /// stream to avoid this issue.
     func weakPublisher(for name: Notification.Name, object: AnyObject) -> AnyPublisher<Notification, Never> {
-        return publisher(for: name, object: nil)
+        publisher(for: name, object: nil)
             .filter { [weak object] notification in
                 guard let notificationObject = notification.object as? AnyObject else { return false }
                 return notificationObject === object
