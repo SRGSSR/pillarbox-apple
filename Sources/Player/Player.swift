@@ -8,6 +8,7 @@ import AVFoundation
 import Combine
 
 public final class Player: ObservableObject {
+    @Published public private(set) var state: State = .idle
     @Published public private(set) var properties: Properties
 
     let systemPlayer: SystemPlayer
@@ -20,6 +21,10 @@ public final class Player: ObservableObject {
         systemPlayer = SystemPlayer(items: items)
         properties = .empty(for: systemPlayer)
 
+        Self.statePublisher(for: self)
+            .removeDuplicates(by: Self.areDuplicates)
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$state)
         Self.propertiesPublisher(for: self)
             .receive(on: DispatchQueue.main)
             .assign(to: &$properties)
@@ -69,5 +74,17 @@ public final class Player: ObservableObject {
     @discardableResult
     public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) async -> Bool {
         await systemPlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
+    }
+
+    static func areDuplicates(_ lhsState: State, _ rhsState: State) -> Bool {
+        switch (lhsState, rhsState) {
+        case (.idle, .idle),
+            (.playing, .playing),
+            (.paused, .paused),
+            (.ended, .ended):
+            return true
+        default:
+            return false
+        }
     }
 }

@@ -89,19 +89,21 @@ private extension Publishers.PeriodicTimePublisher {
 }
 
 extension Player {
-    static func propertiesPublisher(for player: Player) -> AnyPublisher<Properties, Never> {
-        Publishers.CombineLatest4(
+    static func statePublisher(for player: Player) -> AnyPublisher<State, Never> {
+        Publishers.CombineLatest(
             itemStatePublisher(for: player),
-            ratePublisher(for: player),
+            ratePublisher(for: player)
+        )
+        .map { state(for: $0, rate: $1) }
+        .eraseToAnyPublisher()
+    }
+
+    static func propertiesPublisher(for player: Player) -> AnyPublisher<Properties, Never> {
+        Publishers.CombineLatest(
             playbackPublisher(for: player, queue: DispatchQueue(label: "ch.srgssr.pillarbox.player")),
             targetTimePublisher(for: player)
         )
-        .map { Properties(
-            itemState: $0,
-            rate: $1,
-            playback: $2,
-            targetTime: $3
-        ) }
+        .map { Properties(playback: $0, targetTime: $1) }
         .eraseToAnyPublisher()
     }
 
@@ -164,6 +166,19 @@ extension Player {
                 .map { _ in .ended }
         )
         .eraseToAnyPublisher()
+    }
+
+    private static func state(for itemState: ItemState, rate: Float) -> State {
+        switch itemState {
+        case .readyToPlay:
+            return (rate == 0) ? .paused : .playing
+        case let .failed(error: error):
+            return .failed(error: error)
+        case .ended:
+            return .ended
+        case .unknown:
+            return .idle
+        }
     }
 
     public func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {

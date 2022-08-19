@@ -17,23 +17,8 @@ extension Player {
             }
         }
 
-        public let itemState: ItemState
-        public let rate: Float
         public let playback: Playback
         public let targetTime: CMTime?
-
-        public var state: State {
-            switch itemState {
-            case .readyToPlay:
-                return (rate == 0) ? .paused : .playing
-            case let .failed(error: error):
-                return .failed(error: error)
-            case .ended:
-                return .ended
-            case .unknown:
-                return .idle
-            }
-        }
 
         public var progress: Float {
             Time.progress(for: playback.time, in: playback.timeRange)
@@ -45,12 +30,7 @@ extension Player {
         }
 
         static func empty(for player: AVPlayer) -> Self {
-            Properties(
-                itemState: .unknown,
-                rate: player.rate,
-                playback: .empty,
-                targetTime: nil
-            )
+            Properties(playback: .empty, targetTime: nil)
         }
     }
 }
