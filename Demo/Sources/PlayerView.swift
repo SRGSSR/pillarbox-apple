@@ -25,16 +25,19 @@ struct PlayerView: View {
 
     var body: some View {
         ZStack {
-            VideoView(player: player)
-            Color(white: 0, opacity: 0.3)
-            Button {
-                player.togglePlayPause()
-            } label: {
-                Image(systemName: playbackButtonImageName)
-                    .resizable()
-                    .frame(width: 90, height: 90)
-                    .tint(.white)
+            Group {
+                VideoView(player: player)
+                Color(white: 0, opacity: 0.3)
+                Button {
+                    player.togglePlayPause()
+                } label: {
+                    Image(systemName: playbackButtonImageName)
+                        .resizable()
+                        .frame(width: 90, height: 90)
+                        .tint(.white)
+                }
             }
+            .ignoresSafeArea()
 #if os(iOS)
             Slider(value: $player.targetProgress)
                 .tint(.white)
@@ -42,7 +45,6 @@ struct PlayerView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
 #endif
         }
-        .ignoresSafeArea()
         .onAppear {
             play()
         }
