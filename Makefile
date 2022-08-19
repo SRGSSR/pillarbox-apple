@@ -86,7 +86,11 @@ fix-quality:
 .PHONY: doc
 doc:
 	@echo "Generating documentation sets..."
-	@bundle exec fastlane doc
+	@xcodebuild docbuild -scheme Appearance -destination generic/platform=iOS
+	@xcodebuild docbuild -scheme CoreBusiness -destination generic/platform=iOS
+	@xcodebuild docbuild -scheme Diagnostics -destination generic/platform=iOS
+	@xcodebuild docbuild -scheme Player -destination generic/platform=iOS
+	@xcodebuild docbuild -scheme UserInterface -destination generic/platform=iOS
 	@echo "... done.\n"
 
 .PHONY: help
