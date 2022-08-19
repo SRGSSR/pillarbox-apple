@@ -105,7 +105,7 @@ extension Player {
         .eraseToAnyPublisher()
     }
 
-    private static func itemStatePublisher(for player: Player) -> AnyPublisher<ItemState, Never> {
+    static func itemStatePublisher(for player: Player) -> AnyPublisher<ItemState, Never> {
         return player.systemPlayer.publisher(for: \.currentItem)
             .map { item -> AnyPublisher<ItemState, Never> in
                 guard let item else {
@@ -119,13 +119,13 @@ extension Player {
             .eraseToAnyPublisher()
     }
 
-    private static func ratePublisher(for player: Player) -> AnyPublisher<Float, Never> {
+    static func ratePublisher(for player: Player) -> AnyPublisher<Float, Never> {
         return player.systemPlayer.publisher(for: \.rate)
             .prepend(player.systemPlayer.rate)
             .eraseToAnyPublisher()
     }
 
-    private static func playbackPublisher(for player: Player, queue: DispatchQueue) -> AnyPublisher<Properties.Playback, Never> {
+    static func playbackPublisher(for player: Player, queue: DispatchQueue) -> AnyPublisher<Properties.Playback, Never> {
         player.periodicTimePublisher(forInterval: CMTimeMake(value: 1, timescale: 1), queue: queue)
             .map { [weak player] time in
                 return Properties.Playback(
@@ -136,7 +136,7 @@ extension Player {
             .eraseToAnyPublisher()
     }
 
-    private static func targetTimePublisher(for player: Player) -> AnyPublisher<CMTime?, Never> {
+    static func targetTimePublisher(for player: Player) -> AnyPublisher<CMTime?, Never> {
         return Publishers.Merge(
             NotificationCenter.default.weakPublisher(for: .willSeek, object: player)
                 .map { $0.userInfo?[SystemPlayer.SeekInfoKey.targetTime] as? CMTime },
@@ -147,7 +147,7 @@ extension Player {
         .eraseToAnyPublisher()
     }
 
-    private static func statePublisher(for item: AVPlayerItem) -> AnyPublisher<ItemState, Never> {
+    static func statePublisher(for item: AVPlayerItem) -> AnyPublisher<ItemState, Never> {
         Publishers.Merge(
             item.publisher(for: \.status)
                 .map { status in
