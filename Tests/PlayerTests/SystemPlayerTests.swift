@@ -15,16 +15,19 @@ final class SystemPlayerTests: XCTestCase {
     func testSeekAsyncBeforePlayback() throws {
         let item = AVPlayerItem(url: TestStreams.validStreamUrl)
         let player = SystemPlayer(playerItem: item)
+        let targetTime = CMTime(value: 2, timescale: 1)
         try expectNotifications(
             [.willSeek, .didSeek],
             values: [
-                Notification(name: .willSeek, object: player),
+                Notification(name: .willSeek, object: player, userInfo: [
+                    SystemPlayer.SeekInfoKey.targetTime: targetTime
+                ]),
                 Notification(name: .didSeek, object: player)
             ]
         ) {
             Task {
                 expect(item.loadedTimeRanges).to(beEmpty())
-                let success = await player.seek(to: CMTime(value: 2, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero)
+                let success = await player.seek(to: targetTime, toleranceBefore: .zero, toleranceAfter: .zero)
                 expect(success).to(beTrue())
             }
         }
@@ -37,16 +40,19 @@ final class SystemPlayerTests: XCTestCase {
             player.play()
         }
 
+        let targetTime = CMTime(value: 2, timescale: 1)
         try expectNotifications(
             [.willSeek, .didSeek],
             values: [
-                Notification(name: .willSeek, object: player),
+                Notification(name: .willSeek, object: player, userInfo: [
+                    SystemPlayer.SeekInfoKey.targetTime: targetTime
+                ]),
                 Notification(name: .didSeek, object: player)
             ]
         ) {
             Task {
                 expect(item.loadedTimeRanges).notTo(beEmpty())
-                let success = await player.seek(to: CMTime(value: 2, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero)
+                let success = await player.seek(to: targetTime, toleranceBefore: .zero, toleranceAfter: .zero)
                 expect(success).to(beTrue())
             }
         }
@@ -55,15 +61,18 @@ final class SystemPlayerTests: XCTestCase {
     func testSeekWithCompletionBeforePlayback() throws {
         let item = AVPlayerItem(url: TestStreams.validStreamUrl)
         let player = SystemPlayer(playerItem: item)
+        let targetTime = CMTime(value: 2, timescale: 1)
         try expectNotifications(
             [.willSeek, .didSeek],
             values: [
-                Notification(name: .willSeek, object: player),
+                Notification(name: .willSeek, object: player, userInfo: [
+                    SystemPlayer.SeekInfoKey.targetTime: targetTime
+                ]),
                 Notification(name: .didSeek, object: player)
             ]
         ) {
             expect(item.loadedTimeRanges).to(beEmpty())
-            player.seek(to: CMTime(value: 2, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero) { finished in
+            player.seek(to: targetTime, toleranceBefore: .zero, toleranceAfter: .zero) { finished in
                 expect(finished).to(beTrue())
             }
         }
@@ -76,15 +85,18 @@ final class SystemPlayerTests: XCTestCase {
             player.play()
         }
 
+        let targetTime = CMTime(value: 2, timescale: 1)
         try expectNotifications(
             [.willSeek, .didSeek],
             values: [
-                Notification(name: .willSeek, object: player),
+                Notification(name: .willSeek, object: player, userInfo: [
+                    SystemPlayer.SeekInfoKey.targetTime: targetTime
+                ]),
                 Notification(name: .didSeek, object: player)
             ]
         ) {
             expect(item.loadedTimeRanges).notTo(beEmpty())
-            player.seek(to: CMTime(value: 2, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero) { finished in
+            player.seek(to: targetTime, toleranceBefore: .zero, toleranceAfter: .zero) { finished in
                 expect(finished).to(beTrue())
             }
         }
@@ -93,22 +105,29 @@ final class SystemPlayerTests: XCTestCase {
     func testMultipleSeeksAsyncBeforePlayback() throws {
         let item = AVPlayerItem(url: TestStreams.validStreamUrl)
         let player = SystemPlayer(playerItem: item)
+
+        let targetTime1 = CMTime(value: 1, timescale: 2)
+        let targetTime2 = CMTime(value: 2, timescale: 2)
         try expectNotifications(
             [.willSeek, .didSeek, .willSeek, .didSeek],
             values: [
-                Notification(name: .willSeek, object: player),
+                Notification(name: .willSeek, object: player, userInfo: [
+                    SystemPlayer.SeekInfoKey.targetTime: targetTime1
+                ]),
                 Notification(name: .didSeek, object: player),
-                Notification(name: .willSeek, object: player),
+                Notification(name: .willSeek, object: player, userInfo: [
+                    SystemPlayer.SeekInfoKey.targetTime: targetTime2
+                ]),
                 Notification(name: .didSeek, object: player)
             ]
         ) {
             Task {
                 expect(item.loadedTimeRanges).to(beEmpty())
 
-                let success1 = await player.seek(to: CMTime(value: 1, timescale: 2), toleranceBefore: .zero, toleranceAfter: .zero)
+                let success1 = await player.seek(to: targetTime1, toleranceBefore: .zero, toleranceAfter: .zero)
                 expect(success1).to(beTrue())
 
-                let success2 = await player.seek(to: CMTime(value: 2, timescale: 2), toleranceBefore: .zero, toleranceAfter: .zero)
+                let success2 = await player.seek(to: targetTime2, toleranceBefore: .zero, toleranceAfter: .zero)
                 expect(success2).to(beTrue())
             }
         }
@@ -121,19 +140,25 @@ final class SystemPlayerTests: XCTestCase {
             player.play()
         }
 
+        let targetTime1 = CMTime(value: 1, timescale: 2)
+        let targetTime2 = CMTime(value: 2, timescale: 2)
         try expectNotifications(
             [.willSeek, .willSeek, .didSeek],
             values: [
-                Notification(name: .willSeek, object: player),
-                Notification(name: .willSeek, object: player),
+                Notification(name: .willSeek, object: player, userInfo: [
+                    SystemPlayer.SeekInfoKey.targetTime: targetTime1
+                ]),
+                Notification(name: .willSeek, object: player, userInfo: [
+                    SystemPlayer.SeekInfoKey.targetTime: targetTime2
+                ]),
                 Notification(name: .didSeek, object: player)
             ]
         ) {
             Task {
                 expect(item.loadedTimeRanges).notTo(beEmpty())
 
-                async let seek1 = player.seek(to: CMTime(value: 1, timescale: 2), toleranceBefore: .zero, toleranceAfter: .zero)
-                async let seek2 = player.seek(to: CMTime(value: 2, timescale: 2), toleranceBefore: .zero, toleranceAfter: .zero)
+                async let seek1 = player.seek(to: targetTime1, toleranceBefore: .zero, toleranceAfter: .zero)
+                async let seek2 = player.seek(to: targetTime2, toleranceBefore: .zero, toleranceAfter: .zero)
                 let (success1, success2) = await (seek1, seek2)
                 expect(success1).to(beFalse())
                 expect(success2).to(beTrue())
@@ -144,21 +169,27 @@ final class SystemPlayerTests: XCTestCase {
     func testMultipleSeeksWithCompletionBeforePlayback() throws {
         let item = AVPlayerItem(url: TestStreams.validStreamUrl)
         let player = SystemPlayer(playerItem: item)
+        let targetTime1 = CMTime(value: 1, timescale: 2)
+        let targetTime2 = CMTime(value: 2, timescale: 2)
         try expectNotifications(
             [.willSeek, .didSeek, .willSeek, .didSeek],
             values: [
-                Notification(name: .willSeek, object: player),
+                Notification(name: .willSeek, object: player, userInfo: [
+                    SystemPlayer.SeekInfoKey.targetTime: targetTime1
+                ]),
                 Notification(name: .didSeek, object: player),
-                Notification(name: .willSeek, object: player),
+                Notification(name: .willSeek, object: player, userInfo: [
+                    SystemPlayer.SeekInfoKey.targetTime: targetTime2
+                ]),
                 Notification(name: .didSeek, object: player)
             ]
         ) {
             expect(item.loadedTimeRanges).to(beEmpty())
 
-            player.seek(to: CMTime(value: 1, timescale: 2), toleranceBefore: .zero, toleranceAfter: .zero) { finished in
+            player.seek(to: targetTime1, toleranceBefore: .zero, toleranceAfter: .zero) { finished in
                 expect(finished).to(beTrue())
             }
-            player.seek(to: CMTime(value: 2, timescale: 2), toleranceBefore: .zero, toleranceAfter: .zero) { finished in
+            player.seek(to: targetTime2, toleranceBefore: .zero, toleranceAfter: .zero) { finished in
                 expect(finished).to(beTrue())
             }
         }
@@ -171,20 +202,26 @@ final class SystemPlayerTests: XCTestCase {
             player.play()
         }
 
+        let targetTime1 = CMTime(value: 1, timescale: 2)
+        let targetTime2 = CMTime(value: 2, timescale: 2)
         try expectNotifications(
             [.willSeek, .willSeek, .didSeek],
             values: [
-                Notification(name: .willSeek, object: player),
-                Notification(name: .willSeek, object: player),
+                Notification(name: .willSeek, object: player, userInfo: [
+                    SystemPlayer.SeekInfoKey.targetTime: targetTime1
+                ]),
+                Notification(name: .willSeek, object: player, userInfo: [
+                    SystemPlayer.SeekInfoKey.targetTime: targetTime2
+                ]),
                 Notification(name: .didSeek, object: player)
             ]
         ) {
             expect(item.loadedTimeRanges).notTo(beEmpty())
 
-            player.seek(to: CMTime(value: 1, timescale: 2), toleranceBefore: .zero, toleranceAfter: .zero) { finished in
+            player.seek(to: targetTime1, toleranceBefore: .zero, toleranceAfter: .zero) { finished in
                 expect(finished).to(beFalse())
             }
-            player.seek(to: CMTime(value: 2, timescale: 2), toleranceBefore: .zero, toleranceAfter: .zero) { finished in
+            player.seek(to: targetTime2, toleranceBefore: .zero, toleranceAfter: .zero) { finished in
                 expect(finished).to(beTrue())
             }
         }

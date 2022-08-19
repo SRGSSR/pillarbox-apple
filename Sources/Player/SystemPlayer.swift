@@ -8,13 +8,22 @@ import AVFoundation
 
 final class SystemPlayer: AVQueuePlayer {
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        NotificationCenter.default.post(name: .willSeek, object: self)
+
+        NotificationCenter.default.post(name: .willSeek, object: self, userInfo: [
+            SeekInfoKey.targetTime: time
+        ])
         super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { finished in
             if finished {
                 NotificationCenter.default.post(name: .didSeek, object: self)
             }
             completionHandler(finished)
         }
+    }
+}
+
+extension SystemPlayer {
+    enum SeekInfoKey: String {
+        case targetTime
     }
 }
 
