@@ -10,7 +10,7 @@ import AVFoundation
 import Combine
 import XCTest
 
-final class PublisherTests: XCTestCase {
+final class PublishersTests: XCTestCase {
     func testPeriodicTimeDuringPlayback() throws {
         let item = AVPlayerItem(url: TestStreams.validStreamUrl)
         let player = Player(item: item)
@@ -74,6 +74,37 @@ final class PublisherTests: XCTestCase {
             ],
             toBe: close(within: 0.4)
         )
+    }
+
+    func testWeakNotificationWithoutObject() throws {
+        let notificationCenter = NotificationCenter.default
+        try awaitPublisher(notificationCenter.weakPublisher(for: .testNotification).first()) {
+            notificationCenter.post(name: .testNotification, object: nil)
+        }
+    }
+
+    func testWeakNotificationWithObject() throws {
+        let object = TestObject()
+        let notificationCenter = NotificationCenter.default
+        try awaitPublisher(notificationCenter.weakPublisher(for: .testNotification, object: object).first()) {
+            notificationCenter.post(name: .testNotification, object: object)
+        }
+    }
+
+    func testWeakNotificationWithNSObject() throws {
+        let object = TestNSObject()
+        let notificationCenter = NotificationCenter.default
+        try awaitPublisher(notificationCenter.weakPublisher(for: .testNotification, object: object).first()) {
+            notificationCenter.post(name: .testNotification, object: object)
+        }
+    }
+
+    func testWeakNotificationWithValueType() throws {
+        let object = TestStruct()
+        let notificationCenter = NotificationCenter.default
+        try awaitPublisher(notificationCenter.weakPublisher(for: .testNotification).first()) {
+            notificationCenter.post(name: .testNotification, object: object)
+        }
     }
 
     // TODO:

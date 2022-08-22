@@ -196,9 +196,10 @@ extension Player {
 extension NotificationCenter {
     /// The usual notification publisher retains the filter object, potentially creating cycles. Apply filter on
     /// unfiltered stream to avoid this issue.
-    func weakPublisher(for name: Notification.Name, object: AnyObject) -> AnyPublisher<Notification, Never> {
+    func weakPublisher(for name: Notification.Name, object: AnyObject? = nil) -> AnyPublisher<Notification, Never> {
         publisher(for: name, object: nil)
             .filter { [weak object] notification in
+                guard let object else { return true }
                 guard let notificationObject = notification.object as? AnyObject else { return false }
                 return notificationObject === object
             }
