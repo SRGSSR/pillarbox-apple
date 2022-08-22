@@ -10,6 +10,8 @@ import XCTest
 /// Borrowed from https://www.swiftbysundell.com/articles/unit-testing-combine-based-swift-code/
 extension XCTestCase {
     /// Await for a publisher to complete and return its output.
+    /// Remark: For non-completing publishers use `.first()`, `.collect()`, `.collectNext()`,
+    ///         `collectFirst()` or similar to have the publisher return values and complete.
     @discardableResult
     func awaitPublisher<P: Publisher>(
         _ publisher: P,

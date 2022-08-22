@@ -10,14 +10,7 @@ import AVFoundation
 import Nimble
 import XCTest
 
-private extension Notification.Name {
-    static let testNotification = Notification.Name("TestNotification")
-}
-
 final class MemoryTests: XCTestCase {
-    final private class TestObject: NSObject {
-    }
-
     func testPlayerRelease() {
         let item = AVPlayerItem(url: TestStreams.validStreamUrl)
         var player: Player? = Player(item: item)
