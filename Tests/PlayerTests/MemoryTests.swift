@@ -22,7 +22,7 @@ final class MemoryTests: XCTestCase {
         expect(weakPlayer).to(beNil())
     }
 
-    func testWeakPublisherbjectRelease() throws {
+    func testWeakNotificationObjectRelease() throws {
         let notificationCenter = NotificationCenter.default
         var object: TestObject? = TestObject()
         let publisher = notificationCenter.weakPublisher(for: .testNotification, object: object).first()
@@ -37,7 +37,7 @@ final class MemoryTests: XCTestCase {
         expect(weakObject).to(beNil())
     }
 
-    func testWeakPublisherNSObjectRelease() throws {
+    func testWeakNotificationNSObjectRelease() throws {
         let notificationCenter = NotificationCenter.default
         var object: TestNSObject? = TestNSObject()
         let publisher = notificationCenter.weakPublisher(for: .testNotification, object: object).first()

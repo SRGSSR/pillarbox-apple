@@ -76,14 +76,14 @@ final class PublishersTests: XCTestCase {
         )
     }
 
-    func testWeakNotificationsWithoutObject() throws {
+    func testWeakNotificationWithoutObject() throws {
         let notificationCenter = NotificationCenter.default
         try awaitPublisher(notificationCenter.weakPublisher(for: .testNotification).first()) {
             notificationCenter.post(name: .testNotification, object: nil)
         }
     }
 
-    func testWeakNotificationsWithObject() throws {
+    func testWeakNotificationWithObject() throws {
         let object = TestObject()
         let notificationCenter = NotificationCenter.default
         try awaitPublisher(notificationCenter.weakPublisher(for: .testNotification, object: object).first()) {
@@ -91,7 +91,7 @@ final class PublishersTests: XCTestCase {
         }
     }
 
-    func testWeakNotificationsWithNSObject() throws {
+    func testWeakNotificationWithNSObject() throws {
         let object = TestNSObject()
         let notificationCenter = NotificationCenter.default
         try awaitPublisher(notificationCenter.weakPublisher(for: .testNotification, object: object).first()) {
@@ -99,7 +99,7 @@ final class PublishersTests: XCTestCase {
         }
     }
 
-    func testWeakNotificationsWithValueType() throws {
+    func testWeakNotificationWithValueType() throws {
         let object = TestStruct()
         let notificationCenter = NotificationCenter.default
         try awaitPublisher(notificationCenter.weakPublisher(for: .testNotification).first()) {
