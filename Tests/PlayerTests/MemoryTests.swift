@@ -15,6 +15,9 @@ private extension Notification.Name {
 }
 
 final class MemoryTests: XCTestCase {
+    final private class TestObject: NSObject {
+    }
+
     func testPlayerRelease() {
         let item = AVPlayerItem(url: TestStreams.validStreamUrl)
         var player: Player? = Player(item: item)
@@ -28,10 +31,16 @@ final class MemoryTests: XCTestCase {
 
     func testWeakPublisherObjectRelease() throws {
         let notificationCenter = NotificationCenter.default
-        try awaitPublisher(
-            notificationCenter.weakPublisher(for: .testNotification).first()
-        ) {
-            notificationCenter.post(Notification(name: .testNotification))
+        var object: TestObject? = TestObject()
+        let publisher = notificationCenter.weakPublisher(for: .testNotification, object: object).first()
+
+        weak var weakObject = object
+        _ = try autoreleasepool {
+            try awaitPublisher(publisher) {
+                notificationCenter.post(name: .testNotification, object: object)
+            }
+            object = nil
         }
+        expect(weakObject).to(beNil())
     }
 }
