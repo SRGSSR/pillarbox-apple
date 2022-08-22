@@ -18,7 +18,7 @@ final class TimeTests: XCTestCase {
             player.play()
         }
         expect(Time.timeRange(for: item)).to(equal(
-            CMTimeRangeMake(start: .zero, duration: CMTime(value: 3, timescale: 1)),
+            CMTimeRangeMake(start: .zero, duration: CMTime(value: 120, timescale: 1)),
             by: close(within: 0.5)
         ))
     }
