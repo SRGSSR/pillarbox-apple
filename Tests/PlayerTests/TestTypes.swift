@@ -6,6 +6,9 @@
 
 import Foundation
 
+struct TestStruct {
+}
+
 final class TestObject {
 }
 
