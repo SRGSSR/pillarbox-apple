@@ -91,6 +91,14 @@ final class PublishersTests: XCTestCase {
         }
     }
 
+    func testWeakNotificationsWithNSObject() throws {
+        let object = TestNSObject()
+        let notificationCenter = NotificationCenter.default
+        try awaitPublisher(notificationCenter.weakPublisher(for: .testNotification, object: object).first()) {
+            notificationCenter.post(name: .testNotification, object: object)
+        }
+    }
+
     // TODO:
     //  - Test without playing (no events; requires a way to check that a values are never emitted)
     //  - Test with pause

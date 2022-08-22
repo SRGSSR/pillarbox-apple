@@ -6,5 +6,8 @@
 
 import Foundation
 
-final class TestObject: NSObject {
+final class TestObject {
+}
+
+final class TestNSObject: NSObject {
 }
