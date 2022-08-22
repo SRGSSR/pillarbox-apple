@@ -52,13 +52,13 @@ deliver-demo-release-tvos: setup
 
 .PHONY: test-ios
 test-ios: setup
-	@echo "Running Appearance unit tests..."
+	@echo "Running unit tests..."
 	@bundle exec fastlane test_ios
 	@echo "... done.\n"
 
 .PHONY: test-tvos
 test-tvos: setup
-	@echo "Running Appearance unit tests..."
+	@echo "Running unit tests..."
 	@bundle exec fastlane test_tvos
 	@echo "... done.\n"
 

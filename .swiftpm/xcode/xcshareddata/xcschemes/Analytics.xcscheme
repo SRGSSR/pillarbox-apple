@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Appearance"
-               BuildableName = "Appearance"
-               BlueprintName = "Appearance"
+               BlueprintIdentifier = "Analytics"
+               BuildableName = "Analytics"
+               BlueprintName = "Analytics"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -26,8 +26,7 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      codeCoverageEnabled = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
          <TestableReference
             skipped = "NO"
@@ -35,9 +34,9 @@
             testExecutionOrdering = "random">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AppearanceTests"
-               BuildableName = "AppearanceTests"
-               BlueprintName = "AppearanceTests"
+               BlueprintIdentifier = "AnalyticsTests"
+               BuildableName = "AnalyticsTests"
+               BlueprintName = "AnalyticsTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
@@ -63,9 +62,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "Appearance"
-            BuildableName = "Appearance"
-            BlueprintName = "Appearance"
+            BlueprintIdentifier = "Analytics"
+            BuildableName = "Analytics"
+            BlueprintName = "Analytics"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

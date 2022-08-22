@@ -10,6 +10,10 @@ let package = Package(
     ],
     products: [
         .library(
+            name: "Analytics",
+            targets: ["Analytics"]
+        ),
+        .library(
             name: "Appearance",
             targets: ["Appearance"]
         ),
@@ -38,14 +42,20 @@ let package = Package(
         .package(url: "https://github.com/Quick/Nimble.git", .upToNextMajor(from: "10.0.0"))
     ],
     targets: [
+        .target(
+            name: "Analytics",
+            dependencies: [
+                .product(name: "ComScore", package: "Comscore-Swift-Package-Manager"),
+                .product(name: "TCCore", package: "TCCore-xcframework-apple"),
+                .product(name: "TCSDK", package: "TCSDK-xcframework-apple")
+            ]
+        ),
         .target(name: "Appearance"),
         .target(
             name: "CoreBusiness",
             dependencies: [
-                .target(name: "Diagnostics"),
-                .product(name: "ComScore", package: "Comscore-Swift-Package-Manager"),
-                .product(name: "TCCore", package: "TCCore-xcframework-apple"),
-                .product(name: "TCSDK", package: "TCSDK-xcframework-apple")
+                .target(name: "Analytics"),
+                .target(name: "Diagnostics")
             ]
         ),
         .target(name: "Diagnostics"),
@@ -56,6 +66,13 @@ let package = Package(
                 .target(name: "Appearance"),
                 .target(name: "Player"),
                 .product(name: "GoogleCastSDK-no-bluetooth", package: "GoogleCastSDK-no-bluetooth", condition: .when(platforms: [.iOS]))
+            ]
+        ),
+        .testTarget(
+            name: "AnalyticsTests",
+            dependencies: [
+                .target(name: "Analytics"),
+                .product(name: "Nimble", package: "Nimble")
             ]
         ),
         .testTarget(
