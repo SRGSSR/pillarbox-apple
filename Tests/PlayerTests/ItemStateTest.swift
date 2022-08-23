@@ -14,6 +14,7 @@ final class ItemStateTests: XCTestCase {
     private let resourceLoaderDelegate = FailingResourceLoaderDelegate()
     private let queue = DispatchQueue(label: "ch.srgssr.failing-resource-loader")
 
+    @MainActor
     func testValidStream() throws {
         let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = AVPlayer(playerItem: item)
@@ -22,18 +23,21 @@ final class ItemStateTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testUnavailableStream() throws {
         let item = AVPlayerItem(url: TestStreams.unavailableUrl)
         _ = AVPlayer(playerItem: item)
         try expectPublisher(Player.statePublisher(for: item), values: [.unknown, .failed(error: TestError.any)])
     }
 
+    @MainActor
     func testCorruptStream() throws {
         let item = AVPlayerItem(url: TestStreams.corruptOnDemandUrl)
         _ = AVPlayer(playerItem: item)
         try expectPublisher(Player.statePublisher(for: item), values: [.unknown, .failed(error: TestError.any)])
     }
 
+    @MainActor
     func testResourceLoadingFailure() throws {
         let asset = AVURLAsset(url: TestStreams.customUrl)
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: queue)
@@ -44,6 +48,7 @@ final class ItemStateTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testNonPlayingValidStream() throws {
         let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         _ = AVPlayer(playerItem: item)

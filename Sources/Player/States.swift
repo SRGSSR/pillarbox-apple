@@ -27,4 +27,16 @@ extension Player {
         case ended
         case failed(error: Error)
     }
+
+    static nonisolated func areDuplicates(_ lhsState: Player.State, _ rhsState: Player.State) -> Bool {
+        switch (lhsState, rhsState) {
+        case (.idle, .idle),
+            (.playing, .playing),
+            (.paused, .paused),
+            (.ended, .ended):
+            return true
+        default:
+            return false
+        }
+    }
 }

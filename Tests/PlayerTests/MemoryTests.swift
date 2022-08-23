@@ -11,6 +11,7 @@ import Nimble
 import XCTest
 
 final class MemoryTests: XCTestCase {
+    @MainActor
     func testPlayerRelease() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         var player: Player? = Player(item: item)

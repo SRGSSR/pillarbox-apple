@@ -54,18 +54,6 @@ public final class Player: ObservableObject {
         self.init(items: [item])
     }
 
-    static func areDuplicates(_ lhsState: State, _ rhsState: State) -> Bool {
-        switch (lhsState, rhsState) {
-        case (.idle, .idle),
-            (.playing, .playing),
-            (.paused, .paused),
-            (.ended, .ended):
-            return true
-        default:
-            return false
-        }
-    }
-
     /// Insert an item into the queue.
     /// - Parameters:
     ///   - item: The item to insert.
