@@ -23,14 +23,27 @@ enum Time {
         return Float(elapsedTime / duration).clamped(to: 0...1)
     }
 
-    /// Return a time comparator having some tolerance.
+    /// Return a time comparator having some tolerance. `CMTime` implements standard equality and comparison operators
+    /// in Swift for convenience.
     static func close(within tolerance: TimeInterval) -> ((CMTime, CMTime) -> Bool) {
         precondition(tolerance >= 0)
-        return {
-            CMTimeCompare(
-                CMTimeAbsoluteValue(CMTimeSubtract($0, $1)),
-                CMTimeMakeWithSeconds(tolerance, preferredTimescale: Int32(NSEC_PER_SEC))
-            ) == -1
+        return { time1, time2 in
+            if time1.isPositiveInfinity && time2.isPositiveInfinity {
+                return true
+            }
+            else if time1.isNegativeInfinity && time2.isNegativeInfinity {
+                return true
+            }
+            else if time1.isIndefinite && time2.isIndefinite {
+                return true
+            }
+            else if !time1.isValid && !time2.isValid {
+                return true
+            }
+            else {
+                return CMTimeAbsoluteValue(CMTimeSubtract(time1, time2))
+                    <= CMTimeMakeWithSeconds(tolerance, preferredTimescale: Int32(NSEC_PER_SEC))
+            }
         }
     }
 

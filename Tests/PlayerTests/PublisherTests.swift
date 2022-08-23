@@ -13,7 +13,7 @@ import XCTest
 
 final class PublisherTests: XCTestCase {
     func testPeriodicTimeDuringPlayback() throws {
-        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
         player.play()
         try expectPublisher(
@@ -31,7 +31,7 @@ final class PublisherTests: XCTestCase {
     }
 
     func testPeriodicTimeDuringSeek() throws {
-        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
         try expectPublisher(player.$state, values: [.idle, .playing]) {
             player.play()

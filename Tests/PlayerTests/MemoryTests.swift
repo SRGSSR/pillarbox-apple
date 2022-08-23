@@ -12,7 +12,7 @@ import XCTest
 
 final class MemoryTests: XCTestCase {
     func testPlayerRelease() {
-        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         var player: Player? = Player(item: item)
 
         weak var weakPlayer = player

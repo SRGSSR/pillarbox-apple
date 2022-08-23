@@ -11,13 +11,13 @@ import XCTest
 
 final class StateTests: XCTestCase {
     func testPlaybackStartPaused() throws {
-        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
         try expectPublisher(player.$state, values: [.idle, .paused])
     }
 
     func testPlaybackStartPlaying() throws {
-        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
         try expectPublisher(player.$state, values: [.idle, .playing]) {
             player.play()
@@ -25,7 +25,7 @@ final class StateTests: XCTestCase {
     }
 
     func testPlayPause() throws {
-        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
         try expectPublisher(player.$state, values: [.idle, .playing]) {
             player.play()
@@ -39,7 +39,7 @@ final class StateTests: XCTestCase {
     }
 
     func testTogglePlayPause() throws {
-        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
         try expectPublisher(player.$state, values: [.idle, .playing]) {
             player.play()
@@ -51,7 +51,7 @@ final class StateTests: XCTestCase {
     }
 
     func testPlaybackUntilCompletion() throws {
-        let item = AVPlayerItem(url: TestStreams.shortStreamUrl)
+        let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = Player(item: item)
         try expectPublisher(player.$state, values: [.idle, .playing, .ended]) {
             player.play()
@@ -59,14 +59,14 @@ final class StateTests: XCTestCase {
     }
 
     func testPlaybackFailure() throws {
-        let item = AVPlayerItem(url: TestStreams.unavailableStreamUrl)
+        let item = AVPlayerItem(url: TestStreams.unavailableUrl)
         let player = Player(item: item)
         try expectPublisher(player.$state, values: [.idle, .failed(error: TestError.any)])
     }
 
     func testPlaybackWithItems() throws {
-        let item1 = AVPlayerItem(url: TestStreams.shortStreamUrl)
-        let item2 = AVPlayerItem(url: TestStreams.shortStreamUrl)
+        let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
+        let item2 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = Player(items: [item1, item2])
         try expectPublisher(player.$state, values: [.idle, .playing, .ended, .playing, .ended]) {
             player.play()

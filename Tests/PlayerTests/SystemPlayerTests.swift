@@ -13,7 +13,7 @@ import XCTest
 
 final class SystemPlayerTests: XCTestCase {
     func testSeekAsyncBeforePlayback() throws {
-        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = SystemPlayer(playerItem: item)
         let targetTime = CMTime(value: 2, timescale: 1)
         try expectNotifications(
@@ -34,7 +34,7 @@ final class SystemPlayerTests: XCTestCase {
     }
 
     func testSeekAsyncDuringPlayback() throws {
-        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = SystemPlayer(playerItem: item)
         try expectPublisher(item.publisher(for: \.status), values: [.unknown, .readyToPlay]) {
             player.play()
@@ -59,7 +59,7 @@ final class SystemPlayerTests: XCTestCase {
     }
 
     func testSeekWithCompletionBeforePlayback() throws {
-        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = SystemPlayer(playerItem: item)
         let targetTime = CMTime(value: 2, timescale: 1)
         try expectNotifications(
@@ -79,7 +79,7 @@ final class SystemPlayerTests: XCTestCase {
     }
 
     func testSeekWithCompletionDuringPlayback() throws {
-        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = SystemPlayer(playerItem: item)
         try expectPublisher(item.publisher(for: \.status), values: [.unknown, .readyToPlay]) {
             player.play()
@@ -103,7 +103,7 @@ final class SystemPlayerTests: XCTestCase {
     }
 
     func testMultipleSeeksAsyncBeforePlayback() throws {
-        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = SystemPlayer(playerItem: item)
 
         let targetTime1 = CMTime(value: 1, timescale: 2)
@@ -134,7 +134,7 @@ final class SystemPlayerTests: XCTestCase {
     }
 
     func testMultipleSeeksAsyncDuringPlayback() throws {
-        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = SystemPlayer(playerItem: item)
         try expectPublisher(item.publisher(for: \.status), values: [.unknown, .readyToPlay]) {
             player.play()
@@ -167,7 +167,7 @@ final class SystemPlayerTests: XCTestCase {
     }
 
     func testMultipleSeeksWithCompletionBeforePlayback() throws {
-        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = SystemPlayer(playerItem: item)
         let targetTime1 = CMTime(value: 1, timescale: 2)
         let targetTime2 = CMTime(value: 2, timescale: 2)
@@ -196,7 +196,7 @@ final class SystemPlayerTests: XCTestCase {
     }
 
     func testMultipleSeeksWithCompletionDuringPlayback() throws {
-        let item = AVPlayerItem(url: TestStreams.validStreamUrl)
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = SystemPlayer(playerItem: item)
         try expectPublisher(item.publisher(for: \.status), values: [.unknown, .readyToPlay]) {
             player.play()
