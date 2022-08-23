@@ -14,8 +14,10 @@ extension XCTestCase {
     }
 
     /// Await for a publisher to complete and return its output.
-    /// Remark: For non-completing publishers use `.first()`, `.collect()`, `.collectNext()`,
-    ///         `collectFirst()` or similar to have the publisher return values and complete.
+    ///
+    /// Remark: For never-ending publishers use `.first()`, `.collect()`, `.collectNext()`,
+    ///         `collectFirst()` or similar to have the publisher complete after having
+    ///         received the desired number of items.
     @discardableResult
     func awaitPublisher<P: Publisher>(
         _ publisher: P,
@@ -58,16 +60,16 @@ extension XCTestCase {
         return try unwrappedResult.get()
     }
 
-    /// Expect a publisher not to emit.
-    func notAwaitPublisher<P: Publisher>(
+    /// Expect a publisher not to emit during some time internal
+    func awaitSilentPublisher<P: Publisher>(
         _ publisher: P,
-        timeout: TimeInterval = 1,
+        during interval: TimeInterval = 1,
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) throws where P.Failure == Never {
-        let expectation = self.expectation(description: "Awaiting publisher not to emit for \(timeout) seconds")
-        DispatchQueue.main.asyncAfter(deadline: .now() + timeout) {
+        let expectation = self.expectation(description: "Awaiting publisher not to emit for \(interval) seconds")
+        DispatchQueue.main.asyncAfter(deadline: .now() + interval) {
             expectation.fulfill()
         }
 
@@ -90,7 +92,7 @@ extension XCTestCase {
             executing()
         }
 
-        waitForExpectations(timeout: timeout)
+        waitForExpectations(timeout: interval + 1)
         cancellable.cancel()
 
         guard result == nil else {

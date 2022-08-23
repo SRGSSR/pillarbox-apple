@@ -14,7 +14,8 @@ protocol Similar {
 }
 
 extension XCTestCase {
-    /// Expect a publisher to emit a list of values similar according to some criterium.
+    /// Expect a publisher to emit a list of values similar according to some criterium. Succeed as soon as the values have
+    /// been received.
     func expectPublisher<P: Publisher>(
         _ publisher: P,
         values: [P.Output],
@@ -38,7 +39,7 @@ extension XCTestCase {
         })
     }
 
-    /// Expect a publisher to emit a list of equatable values.
+    /// Expect a publisher to emit a list of equatable values. Succeed as soon as the values have been received.
     func expectPublisher<P: Publisher>(
         _ publisher: P,
         values: [P.Output],
@@ -58,7 +59,7 @@ extension XCTestCase {
         )
     }
 
-    /// Expect a publisher to emit a list of similar values.
+    /// Expect a publisher to emit a list of similar values. Succeed as soon as the values have been received.
     func expectPublisher<P: Publisher>(
         _ publisher: P,
         values: [P.Output],
@@ -78,7 +79,7 @@ extension XCTestCase {
         )
     }
 
-    /// Expect a `Published` property to emit a list of values.
+    /// Expect a `Published` property to emit a list of values. Succeed as soon as the values have been received.
     func expectPublisher<T>(
         _ publisher: Published<T>.Publisher,
         values: [T],
@@ -102,7 +103,7 @@ extension XCTestCase {
         })
     }
 
-    /// Expect a `Published` property to emit a list of equatable values.
+    /// Expect a `Published` property to emit a list of equatable values. Succeed as soon as the values have been received.
     func expectPublisher<T>(
         _ publisher: Published<T>.Publisher,
         values: [T],
@@ -122,7 +123,7 @@ extension XCTestCase {
         )
     }
 
-    /// Expect a `Published` property to emit a list of similar values.
+    /// Expect a `Published` property to emit a list of similar values. Succeed as soon as the values have been received.
     func expectPublisher<T>(
         _ publisher: Published<T>.Publisher,
         values: [T],
@@ -147,6 +148,7 @@ extension XCTestCase {
 ///         collection. We thus need to roll our own solution.
 extension XCTestCase {
     /// Expect a list of notifications to be received, comparing the emitted values according to some criterium.
+    /// Succeed as soon as the values have been received.
     func expectNotifications(
         _ names: [Notification.Name],
         values: [Notification],
@@ -170,7 +172,7 @@ extension XCTestCase {
         )
     }
 
-    /// Expect a list of notifications to be received.
+    /// Expect a list of notifications to be received. Succeed as soon as the notifications have been received.
     func expectNotifications(
         _ names: [Notification.Name],
         values: [Notification],
