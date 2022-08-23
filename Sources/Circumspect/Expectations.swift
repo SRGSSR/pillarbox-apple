@@ -11,6 +11,7 @@ import XCTest
 
 /// Defines similarity for types not conforming to `Equatable` and which need to be meaningfully compared in tests.
 public protocol Similar {
+    /// Must return `true` iff the two sides can be considered to be similar.
     static func ~= (lhs: Self, rhs: Self) -> Bool
 }
 

@@ -48,6 +48,7 @@ public extension Player {
             Time.progress(for: playback.time, in: playback.timeRange)
         }
 
+        /// The stream type.
         public var streamType: StreamType {
             .unknown
         }
