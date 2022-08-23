@@ -10,22 +10,20 @@ import AVFoundation
 import Nimble
 import XCTest
 
-// TODO: The `Published` property cannot be detected here to drop the first item. Possible to do better?
-
 @MainActor
 final class TimeTests: XCTestCase {
     func testOnDemandTimeRange() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
-        try expectPublisher(
-            player.$properties
-                .map(\.playback.timeRange)
-                .removeDuplicates(by: close(within: 0.5)),
+        try expectPublished(
             values: [
                 .invalid,
                 CMTimeRangeMake(start: .zero, duration: CMTime(value: 120, timescale: 1))
             ],
-            toBe: close(within: 0.5)
+            from: player.$properties
+                .map(\.playback.timeRange)
+                .removeDuplicates(by: beClose(within: 0.5)),
+            to: beClose(within: 0.5)
         ) {
             player.play()
         }
@@ -34,11 +32,11 @@ final class TimeTests: XCTestCase {
     func testLiveTimeRange() throws {
         let item = AVPlayerItem(url: TestStreams.liveUrl)
         let player = Player(item: item)
-        try expectPublisher(
-            player.$properties
+        try expectPublished(
+            values: [.invalid, .zero],
+            from: player.$properties
                 .map(\.playback.timeRange)
-                .removeDuplicates(),
-            values: [.invalid, .zero]
+                .removeDuplicates()
         ) {
             player.play()
         }
@@ -47,11 +45,11 @@ final class TimeTests: XCTestCase {
     func testCorruptTimeRange() throws {
         let item = AVPlayerItem(url: TestStreams.corruptOnDemandUrl)
         let player = Player(item: item)
-        try expectPublisher(
-            player.$properties
+        try expectPublished(
+            values: [.invalid],
+            from: player.$properties
                 .map(\.playback.timeRange)
                 .removeDuplicates(),
-            values: [.invalid],
             during: 2
         ) {
             player.play()
@@ -61,11 +59,11 @@ final class TimeTests: XCTestCase {
     func testUnavailableTimeRange() throws {
         let item = AVPlayerItem(url: TestStreams.unavailableUrl)
         let player = Player(item: item)
-        try expectPublisher(
-            player.$properties
+        try expectPublished(
+            values: [.invalid],
+            from: player.$properties
                 .map(\.playback.timeRange)
                 .removeDuplicates(),
-            values: [.invalid],
             during: 2
         ) {
             player.play()

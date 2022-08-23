@@ -14,13 +14,13 @@ final class StateTests: XCTestCase {
     func testPlaybackStartPaused() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
-        try expectPublisher(player.$state, values: [.idle, .paused])
+        try expectPublishedNext(values: [.idle, .paused], from: player.$state)
     }
 
     func testPlaybackStartPlaying() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
-        try expectPublisher(player.$state, values: [.idle, .playing]) {
+        try expectPublishedNext(values: [.idle, .playing], from: player.$state) {
             player.play()
         }
     }
@@ -28,13 +28,13 @@ final class StateTests: XCTestCase {
     func testPlayPause() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
-        try expectPublisher(player.$state, values: [.idle, .playing]) {
+        try expectPublishedNext(values: [.idle, .playing], from: player.$state) {
             player.play()
         }
-        try expectPublisher(player.$state, values: [.paused]) {
+        try expectPublishedNext(values: [.paused], from: player.$state) {
             player.pause()
         }
-        try expectPublisher(player.$state, values: [.playing]) {
+        try expectPublishedNext(values: [.playing], from: player.$state) {
             player.play()
         }
     }
@@ -42,10 +42,10 @@ final class StateTests: XCTestCase {
     func testTogglePlayPause() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
-        try expectPublisher(player.$state, values: [.idle, .playing]) {
+        try expectPublishedNext(values: [.idle, .playing], from: player.$state) {
             player.play()
         }
-        try expectPublisher(player.$state, values: [.paused, .playing]) {
+        try expectPublishedNext(values: [.paused, .playing], from: player.$state) {
             player.togglePlayPause()
             player.togglePlayPause()
         }
@@ -54,7 +54,7 @@ final class StateTests: XCTestCase {
     func testPlaybackUntilCompletion() throws {
         let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = Player(item: item)
-        try expectPublisher(player.$state, values: [.idle, .playing, .ended]) {
+        try expectPublishedNext(values: [.idle, .playing, .ended], from: player.$state) {
             player.play()
         }
     }
@@ -62,14 +62,14 @@ final class StateTests: XCTestCase {
     func testPlaybackFailure() throws {
         let item = AVPlayerItem(url: TestStreams.unavailableUrl)
         let player = Player(item: item)
-        try expectPublisher(player.$state, values: [.idle, .failed(error: TestError.any)])
+        try expectPublishedNext(values: [.idle, .failed(error: TestError.any)], from: player.$state)
     }
 
     func testPlaybackWithItems() throws {
         let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let item2 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = Player(items: [item1, item2])
-        try expectPublisher(player.$state, values: [.idle, .playing, .ended, .playing, .ended]) {
+        try expectPublishedNext(values: [.idle, .playing, .ended, .playing, .ended], from: player.$state) {
             player.play()
         }
     }
@@ -77,12 +77,12 @@ final class StateTests: XCTestCase {
     func testWithoutPlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
-        try expectPublisher(player.$state, values: [.idle, .paused], during: 3)
+        try expectPublishedNext(values: [.idle, .paused], from: player.$state, during: 3)
     }
 
     func testWithoutItems() throws {
         let player = Player()
-        try expectPublisher(player.$state, values: [.idle], during: 3)
+        try expectPublishedNext(values: [.idle], from: player.$state, during: 3)
     }
 
     // TODO:

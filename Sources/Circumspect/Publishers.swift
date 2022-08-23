@@ -15,8 +15,8 @@ public extension XCTestCase {
     ///         `collectFirst()` or similar to have the publisher complete after having
     ///         received the desired number of items.
     @discardableResult
-    func awaitPublisher<P: Publisher>(
-        _ publisher: P,
+    func awaitCompletion<P: Publisher>(
+        from publisher: P,
         timeout: TimeInterval = 10,
         file: StaticString = #file,
         line: UInt = #line,
@@ -56,9 +56,9 @@ public extension XCTestCase {
         return try unwrappedResult.get()
     }
 
-    /// Collect values emitted by a publisher during some interval and return them.
-    func collectPublisher<P: Publisher>(
-        _ publisher: P,
+    /// Collect output emitted by a publisher during some interval.
+    func collectOutput<P: Publisher>(
+        from publisher: P,
         during interval: TimeInterval,
         file: StaticString = #file,
         line: UInt = #line,
@@ -89,21 +89,18 @@ public extension XCTestCase {
     }
 }
 
-/// Borrowed from https://www.swiftbysundell.com/articles/unit-testing-combine-based-swift-code/
-public extension Published.Publisher {
-    /// Collect the next number item before completing.
-    func collectNext(_ count: Int) -> AnyPublisher<[Output], Never> {
-        dropFirst()
-            .collect(count)
+public extension Publisher where Failure == Never {
+    /// Collect the specified number of items (including the current one) before completing.
+    func collectFirst(_ count: Int) -> AnyPublisher<[Output], Never> {
+        collect(count)
             .first()
             .eraseToAnyPublisher()
     }
-}
 
-public extension Publisher where Failure == Never {
-    /// Collect the specified number of items (including the current one) and completing.
-    func collectFirst(_ count: Int) -> AnyPublisher<[Output], Never> {
-        collect(count)
+    /// Collect the next number of items before completing.
+    func collectNext(_ count: Int) -> AnyPublisher<[Output], Never> {
+        dropFirst()
+            .collect(count)
             .first()
             .eraseToAnyPublisher()
     }

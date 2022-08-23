@@ -30,7 +30,7 @@ final class MemoryTests: XCTestCase {
 
         weak var weakObject = object
         _ = try autoreleasepool {
-            try awaitPublisher(publisher) {
+            try awaitCompletion(from: publisher) {
                 notificationCenter.post(name: .testNotification, object: object)
             }
             object = nil
@@ -45,7 +45,7 @@ final class MemoryTests: XCTestCase {
 
         weak var weakObject = object
         _ = try autoreleasepool {
-            try awaitPublisher(publisher) {
+            try awaitCompletion(from: publisher) {
                 notificationCenter.post(name: .testNotification, object: object)
             }
             object = nil

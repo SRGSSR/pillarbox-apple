@@ -16,49 +16,41 @@ public protocol Similar {
 }
 
 public extension XCTestCase {
-    /// Expect a publisher to emit a list of values similar according to some criterium. Succeed as soon as the values have
-    /// been received or throws if the expectation is not fulfilled.
-    func expectPublisher<P: Publisher>(
-        _ publisher: P,
+    /// Wait for a publisher to emit a list of expected values.
+    func expectPublished<P: Publisher>(
         values: [P.Output],
-        toBe similar: @escaping (P.Output, P.Output) -> Bool,
+        from publisher: P,
+        to satisfy: @escaping (P.Output, P.Output) -> Bool,
         timeout: TimeInterval = 10,
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) throws where P.Failure == Never {
-        precondition(!values.isEmpty)
-        let actualValues = try awaitPublisher(
-            publisher.collectFirst(values.count),
+        try expectPublished(
+            next: false,
+            values: values,
+            from: publisher,
+            to: satisfy,
             timeout: timeout,
             file: file,
             line: line,
             while: executing
         )
-        let assertExpression = {
-            guard actualValues.count == values.count else { return false }
-            return zip(actualValues, values).allSatisfy { similar($0, $1) }
-        }()
-        let message = {
-            "expected to equal \(values), got \(actualValues)"
-        }()
-        XCTAssert(assertExpression, message, file: file, line: line)
     }
 
-    /// Expect a publisher to emit a list of equatable values. Succeed as soon as the values have been received or
-    /// throws if the expectation is not fulfilled
-    func expectPublisher<P: Publisher>(
-        _ publisher: P,
+    /// Wait for a publisher to emit a list of expected values.
+    func expectPublished<P: Publisher>(
         values: [P.Output],
+        from publisher: P,
         timeout: TimeInterval = 10,
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) throws where P.Failure == Never, P.Output: Equatable {
-        try expectPublisher(
-            publisher,
+        try expectPublished(
             values: values,
-            toBe: ==,
+            from: publisher,
+            to: ==,
             timeout: timeout,
             file: file,
             line: line,
@@ -66,20 +58,19 @@ public extension XCTestCase {
         )
     }
 
-    /// Expect a publisher to emit a list of similar values. Succeed as soon as the values have been received or
-    /// throws if the expectation is not fulfilled.
-    func expectPublisher<P: Publisher>(
-        _ publisher: P,
+    /// Wait for a publisher to emit a list of expected values.
+    func expectPublished<P: Publisher>(
         values: [P.Output],
+        from publisher: P,
         timeout: TimeInterval = 10,
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) throws where P.Failure == Never, P.Output: Similar {
-        try expectPublisher(
-            publisher,
+        try expectPublished(
             values: values,
-            toBe: ~=,
+            from: publisher,
+            to: ~=,
             timeout: timeout,
             file: file,
             line: line,
@@ -87,20 +78,86 @@ public extension XCTestCase {
         )
     }
 
-    /// Expect a `Published` property to emit a list of values. Succeed as soon as the values have been received or
-    /// throws if the expectation is not fulfilled.
-    func expectPublisher<T>(
-        _ publisher: Published<T>.Publisher,
-        values: [T],
-        toBe similar: @escaping (T, T) -> Bool,
+    /// Wait for a publisher to emit a list of expected values, ignoring the first value. Useful when testing
+    /// publishers which automatically deliver a non-relevant stored value upon subscription.
+    func expectPublishedNext<P: Publisher>(
+        values: [P.Output],
+        from publisher: P,
+        to satisfy: @escaping (P.Output, P.Output) -> Bool,
         timeout: TimeInterval = 10,
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws {
+    ) throws where P.Failure == Never {
+        try expectPublished(
+            next: true,
+            values: values,
+            from: publisher,
+            to: satisfy,
+            timeout: timeout,
+            file: file,
+            line: line,
+            while: executing
+        )
+    }
+
+    /// Wait for a publisher to emit a list of expected values, ignoring the first value. Useful when testing
+    /// publishers which automatically deliver a non-relevant stored value upon subscription.
+    func expectPublishedNext<P: Publisher>(
+        values: [P.Output],
+        from publisher: P,
+        timeout: TimeInterval = 10,
+        file: StaticString = #file,
+        line: UInt = #line,
+        while executing: (() -> Void)? = nil
+    ) throws where P.Failure == Never, P.Output: Equatable {
+        try expectPublished(
+            next: true,
+            values: values,
+            from: publisher,
+            to: ==,
+            timeout: timeout,
+            file: file,
+            line: line,
+            while: executing
+        )
+    }
+
+    /// Wait for a publisher to emit a list of expected values, ignoring the first value. Useful when testing
+    /// publishers which automatically deliver a non-relevant stored value upon subscription.
+    func expectPublishedNext<P: Publisher>(
+        values: [P.Output],
+        from publisher: P,
+        timeout: TimeInterval = 10,
+        file: StaticString = #file,
+        line: UInt = #line,
+        while executing: (() -> Void)? = nil
+    ) throws where P.Failure == Never, P.Output: Similar {
+        try expectPublished(
+            next: true,
+            values: values,
+            from: publisher,
+            to: ~=,
+            timeout: timeout,
+            file: file,
+            line: line,
+            while: executing
+        )
+    }
+
+    private func expectPublished<P: Publisher>(
+        next: Bool,
+        values: [P.Output],
+        from publisher: P,
+        to satisfy: @escaping (P.Output, P.Output) -> Bool,
+        timeout: TimeInterval,
+        file: StaticString,
+        line: UInt,
+        while executing: (() -> Void)?
+    ) throws where P.Failure == Never {
         precondition(!values.isEmpty)
-        let actualValues = try awaitPublisher(
-            publisher.collectNext(values.count),        // Skip initial value
+        let actualValues = try awaitCompletion(
+            from: next ? publisher.collectNext(values.count) : publisher.collectFirst(values.count),
             timeout: timeout,
             file: file,
             line: line,
@@ -108,92 +165,52 @@ public extension XCTestCase {
         )
         let assertExpression = {
             guard actualValues.count == values.count else { return false }
-            return zip(actualValues, values).allSatisfy { similar($0, $1) }
+            return zip(actualValues, values).allSatisfy { satisfy($0, $1) }
         }()
         let message = {
             "expected to equal \(values), got \(actualValues)"
         }()
         XCTAssert(assertExpression, message, file: file, line: line)
     }
-
-    /// Expect a `Published` property to emit a list of equatable values. Succeed as soon as the values have been
-    /// received or throws if the expectation is not fulfilled.
-    func expectPublisher<T>(
-        _ publisher: Published<T>.Publisher,
-        values: [T],
-        timeout: TimeInterval = 10,
-        file: StaticString = #file,
-        line: UInt = #line,
-        while executing: (() -> Void)? = nil
-    ) throws where T: Equatable {
-        try expectPublisher(
-            publisher,
-            values: values,
-            toBe: ==,
-            timeout: timeout,
-            file: file,
-            line: line,
-            while: executing
-        )
-    }
-
-    /// Expect a `Published` property to emit a list of similar values. Succeed as soon as the values have been
-    /// received or throws if the expectation is not fulfilled.
-    func expectPublisher<T>(
-        _ publisher: Published<T>.Publisher,
-        values: [T],
-        timeout: TimeInterval = 10,
-        file: StaticString = #file,
-        line: UInt = #line,
-        while executing: (() -> Void)? = nil
-    ) throws where T: Similar {
-        try expectPublisher(
-            publisher,
-            values: values,
-            toBe: ~=,
-            timeout: timeout,
-            file: file,
-            line: line,
-            while: executing
-        )
-    }
 }
 
 public extension XCTestCase {
-    /// Expect a publisher to emit an exact list of values according to some criterium during some time interval.
-    func expectPublisher<P: Publisher>(
-        _ publisher: P,
+    /// Collect values emitted by a publisher during some time interval and match them against an expected result.
+    func expectPublished<P: Publisher>(
         values: [P.Output],
-        toBe similar: @escaping (P.Output, P.Output) -> Bool,
+        from publisher: P,
+        to satisfy: @escaping (P.Output, P.Output) -> Bool,
         during interval: TimeInterval,
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) throws where P.Failure == Never {
-        let actualValues = collectPublisher(publisher, during: interval, while: executing)
-        let assertExpression = {
-            guard actualValues.count == values.count else { return false }
-            return zip(actualValues, values).allSatisfy { similar($0, $1) }
-        }()
-        let message = {
-            "expected to equal \(values), got \(actualValues)"
-        }()
-        XCTAssert(assertExpression, message, file: file, line: line)
+        try expectPublished(
+            next: false,
+            values: values,
+            from: publisher,
+            to: satisfy,
+            during: interval,
+            file: file,
+            line: line,
+            while: executing
+        )
     }
 
-    /// Expect a publisher to emit an exact list of equatable values during some time interval.
-    func expectPublisher<P: Publisher>(
-        _ publisher: P,
+    /// Collect values emitted by a publisher during some time interval and match them against an expected result.
+    func expectPublished<P: Publisher>(
         values: [P.Output],
+        from publisher: P,
         during interval: TimeInterval,
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) throws where P.Failure == Never, P.Output: Equatable {
-        try expectPublisher(
-            publisher,
+        try expectPublished(
+            next: false,
             values: values,
-            toBe: ==,
+            from: publisher,
+            to: ==,
             during: interval,
             file: file,
             line: line,
@@ -201,19 +218,20 @@ public extension XCTestCase {
         )
     }
 
-    /// Expect a publisher to emit an exact list of similar values during some time interval.
-    func expectPublisher<P: Publisher>(
-        _ publisher: P,
+    /// Collect values emitted by a publisher during some time interval and match them against an expected result.
+    func expectPublished<P: Publisher>(
         values: [P.Output],
+        from publisher: P,
         during interval: TimeInterval,
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) throws where P.Failure == Never, P.Output: Similar {
-        try expectPublisher(
-            publisher,
+        try expectPublished(
+            next: false,
             values: values,
-            toBe: ~=,
+            from: publisher,
+            to: ~=,
             during: interval,
             file: file,
             line: line,
@@ -221,99 +239,150 @@ public extension XCTestCase {
         )
     }
 
-    /// Expect a `Published` property to emit an exact list of values according to some criterium during some time
-    /// interval.
-    func expectPublisher<T>(
-        _ publisher: Published<T>.Publisher,
-        values: [T],
-        toBe similar: @escaping (T, T) -> Bool,
+    /// Collect values emitted by a publisher during some time interval and match them against an expected result,
+    /// ignoring the first value. Useful when testing publishers which automatically deliver a non-relevant stored
+    /// value upon subscription.
+    func expectPublishedNext<P: Publisher>(
+        values: [P.Output],
+        from publisher: P,
+        to satisfy: @escaping (P.Output, P.Output) -> Bool,
         during interval: TimeInterval,
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws {
-        let actualValues = collectPublisher(
-            publisher,
+    ) throws where P.Failure == Never {
+        try expectPublished(
+            next: true,
+            values: values,
+            from: publisher,
+            to: satisfy,
             during: interval,
+            file: file,
+            line: line,
             while: executing
-        ).dropFirst()        // Skip initial value
+        )
+    }
+
+    /// Collect values emitted by a publisher during some time interval and match them against an expected result,
+    /// ignoring the first value. Useful when testing publishers which automatically deliver a non-relevant stored
+    /// value upon subscription.
+    func expectPublishedNext<P: Publisher>(
+        values: [P.Output],
+        from publisher: P,
+        during interval: TimeInterval,
+        file: StaticString = #file,
+        line: UInt = #line,
+        while executing: (() -> Void)? = nil
+    ) throws where P.Failure == Never, P.Output: Equatable {
+        try expectPublished(
+            next: true,
+            values: values,
+            from: publisher,
+            to: ==,
+            during: interval,
+            file: file,
+            line: line,
+            while: executing
+        )
+    }
+
+    /// Collect values emitted by a publisher during some time interval and match them against an expected result,
+    /// ignoring the first value. Useful when testing publishers which automatically deliver a non-relevant stored
+    /// value upon subscription.
+    func expectPublishedNext<P: Publisher>(
+        values: [P.Output],
+        from publisher: P,
+        during interval: TimeInterval,
+        file: StaticString = #file,
+        line: UInt = #line,
+        while executing: (() -> Void)? = nil
+    ) throws where P.Failure == Never, P.Output: Similar {
+        try expectPublished(
+            next: true,
+            values: values,
+            from: publisher,
+            to: ~=,
+            during: interval,
+            file: file,
+            line: line,
+            while: executing
+        )
+    }
+
+    private func expectPublished<P: Publisher>(
+        next: Bool,
+        values: [P.Output],
+        from publisher: P,
+        to satisfy: @escaping (P.Output, P.Output) -> Bool,
+        during interval: TimeInterval,
+        file: StaticString = #file,
+        line: UInt = #line,
+        while executing: (() -> Void)? = nil
+    ) throws where P.Failure == Never {
+        var actualValues = collectOutput(from: publisher, during: interval, while: executing)
+        if next {
+            actualValues.removeFirst()
+        }
         let assertExpression = {
             guard actualValues.count == values.count else { return false }
-            return zip(actualValues, values).allSatisfy { similar($0, $1) }
+            return zip(actualValues, values).allSatisfy { satisfy($0, $1) }
         }()
         let message = {
             "expected to equal \(values), got \(actualValues)"
         }()
         XCTAssert(assertExpression, message, file: file, line: line)
     }
-
-    /// Expect a `Published` property to emit an exact list of equatable values during some time interval.
-    func expectPublisher<T>(
-        _ publisher: Published<T>.Publisher,
-        values: [T],
-        during interval: TimeInterval,
-        file: StaticString = #file,
-        line: UInt = #line,
-        while executing: (() -> Void)? = nil
-    ) throws where T: Equatable {
-        try expectPublisher(
-            publisher,
-            values: values,
-            toBe: ==,
-            during: interval,
-            file: file,
-            line: line,
-            while: executing
-        )
-    }
-
-    /// Expect a `Published` property to emit an exact list of similar values during some time interval.
-    func expectPublisher<T>(
-        _ publisher: Published<T>.Publisher,
-        values: [T],
-        during interval: TimeInterval,
-        file: StaticString = #file,
-        line: UInt = #line,
-        while executing: (() -> Void)? = nil
-    ) throws where T: Similar {
-        try expectPublisher(
-            publisher,
-            values: values,
-            toBe: ~=,
-            during: interval,
-            file: file,
-            line: line,
-            while: executing
-        )
-    }
 }
 
 public extension XCTestCase {
-    /// Expect that a publisher does not emit any value during some time interval.
-    func expectNoValuesFromPublisher<P: Publisher>(
-        _ publisher: P,
+    /// Ensure a publisher does not emit any value during some time interval.
+    func expectNothingPublished<P: Publisher>(
+        from publisher: P,
         during interval: TimeInterval,
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) throws where P.Failure == Never {
-        let actualValues = collectPublisher(publisher, during: interval, while: executing)
-        let message = {
-            "expected no values but got \(actualValues)"
-        }()
-        XCTAssertTrue(actualValues.isEmpty, message, file: file, line: line)
+        try expectNothingPublished(
+            next: false,
+            from: publisher,
+            during: interval,
+            file: file,
+            line: line,
+            while: executing
+        )
     }
 
-    /// Expect that a `Published` property does not emit any value during some time interval.
-    func expectNoValuesFromPublisher<T>(
-        _ publisher: Published<T>.Publisher,
+    /// Ensure a publisher does not emit any value during some time interval.
+    func expectNothingPublishedNext<P: Publisher>(
+        from publisher: P,
         during interval: TimeInterval,
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws {
-        let actualValues = collectPublisher(publisher, during: interval, while: executing)
-            .dropFirst()
+    ) throws where P.Failure == Never {
+        try expectNothingPublished(
+            next: true,
+            from: publisher,
+            during: interval,
+            file: file,
+            line: line,
+            while: executing
+        )
+    }
+
+    private func expectNothingPublished<P: Publisher>(
+        next: Bool,
+        from publisher: P,
+        during interval: TimeInterval,
+        file: StaticString = #file,
+        line: UInt = #line,
+        while executing: (() -> Void)? = nil
+    ) throws where P.Failure == Never {
+        var actualValues = collectOutput(from: publisher, during: interval, while: executing)
+        if next {
+            actualValues.removeFirst()
+        }
         let message = {
             "expected no values but got \(actualValues)"
         }()
@@ -321,27 +390,25 @@ public extension XCTestCase {
     }
 }
 
-/// Remark: Nimble provides support for notifications but its collector is not thread-safe and crashes during
-///         collection. We thus need to roll our own solution.
+/// Remark: Nimble provides support for notifications but its collector is not thread-safe and might crash during
+///         collection.
 public extension XCTestCase {
-    /// Expect a list of notifications to be received, comparing the emitted values according to some criterium.
-    /// Succeed as soon as the values have been received or throws if the expectation is not fulfilled.
-    func expectNotifications(
-        _ names: [Notification.Name],
-        values: [Notification],
-        toBe similar: @escaping (Notification, Notification) -> Bool,
+    /// Wait until a list of notifications has been received.
+    func expectReceived(
+        notifications: [Notification],
+        for names: Set<Notification.Name>,
+        object: AnyObject? = nil,
         timeout: TimeInterval = 10,
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) throws {
-        try expectPublisher(
-            Publishers.MergeMany(
-                // Register once per notification (registration order does not matter)
-                Set(names).map { NotificationCenter.default.publisher(for: $0) }
+        try expectPublished(
+            values: notifications,
+            from: Publishers.MergeMany(
+                names.map { NotificationCenter.default.publisher(for: $0, object: object) }
             ),
-            values: values,
-            toBe: similar,
+            to: ==,
             timeout: timeout,
             file: file,
             line: line,
@@ -349,21 +416,43 @@ public extension XCTestCase {
         )
     }
 
-    /// Expect a list of notifications to be received. Succeed as soon as the notifications have been received or
-    /// throws if the expectation is not fulfilled.
-    func expectNotifications(
-        _ names: [Notification.Name],
-        values: [Notification],
-        timeout: TimeInterval = 10,
+    /// Collect notifications during some time interval and match them against an expected result.
+    func expectReceived(
+        notifications: [Notification],
+        for names: Set<Notification.Name>,
+        object: AnyObject? = nil,
+        during interval: TimeInterval,
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) throws {
-        try expectNotifications(
-            names,
-            values: values,
-            toBe: ==,
-            timeout: timeout,
+        try expectPublished(
+            values: notifications,
+            from: Publishers.MergeMany(
+                names.map { NotificationCenter.default.publisher(for: $0, object: object) }
+            ),
+            to: ==,
+            during: interval,
+            file: file,
+            line: line,
+            while: executing
+        )
+    }
+
+    /// Ensure no notifications are emitted during some time interval.
+    func expectNoNotifications(
+        for names: Set<Notification.Name>,
+        object: AnyObject? = nil,
+        during interval: TimeInterval,
+        file: StaticString = #file,
+        line: UInt = #line,
+        while executing: (() -> Void)? = nil
+    ) throws {
+        try expectNothingPublished(
+            from: Publishers.MergeMany(
+                names.map { NotificationCenter.default.publisher(for: $0, object: object) }
+            ),
+            during: interval,
             file: file,
             line: line,
             while: executing

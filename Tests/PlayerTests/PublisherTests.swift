@@ -17,8 +17,7 @@ final class PublisherTests: XCTestCase {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
         player.play()
-        try expectPublisher(
-            player.periodicTimePublisher(forInterval: CMTimeMake(value: 1, timescale: 2)),
+        try expectPublished(
             values: [
                 CMTimeMake(value: 0, timescale: 2),
                 CMTimeMake(value: 1, timescale: 2),
@@ -27,14 +26,18 @@ final class PublisherTests: XCTestCase {
                 CMTimeMake(value: 4, timescale: 2),
                 CMTimeMake(value: 5, timescale: 2)
             ],
-            toBe: close(within: 0.5)
+            from: player.periodicTimePublisher(forInterval: CMTimeMake(value: 1, timescale: 2)),
+            to: beClose(within: 0.5)
         )
     }
 
     func testPeriodicTimeDuringSeek() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
-        try expectPublisher(player.$state, values: [.idle, .playing]) {
+        try expectPublishedNext(
+            values: [.idle, .playing],
+            from: player.$state
+        ) {
             player.play()
         }
 
@@ -45,21 +48,21 @@ final class PublisherTests: XCTestCase {
                 toleranceAfter: .zero
             )
         }
-        try expectPublisher(
-            player.periodicTimePublisher(forInterval: CMTimeMake(value: 1, timescale: 2)),
+        try expectPublished(
             values: [
                 CMTimeMake(value: 3, timescale: 2),
                 CMTimeMake(value: 4, timescale: 2),
                 CMTimeMake(value: 5, timescale: 2),
                 CMTimeMake(value: 6, timescale: 2)
             ],
-            toBe: close(within: 0.5)
+            from: player.periodicTimePublisher(forInterval: CMTimeMake(value: 1, timescale: 2)),
+            to: beClose(within: 0.5)
         )
     }
 
     func testWeakNotificationWithoutObject() throws {
         let notificationCenter = NotificationCenter.default
-        try awaitPublisher(notificationCenter.weakPublisher(for: .testNotification).first()) {
+        try awaitCompletion(from: notificationCenter.weakPublisher(for: .testNotification).first()) {
             notificationCenter.post(name: .testNotification, object: nil)
         }
     }
@@ -67,7 +70,7 @@ final class PublisherTests: XCTestCase {
     func testWeakNotificationWithObject() throws {
         let object = TestObject()
         let notificationCenter = NotificationCenter.default
-        try awaitPublisher(notificationCenter.weakPublisher(for: .testNotification, object: object).first()) {
+        try awaitCompletion(from: notificationCenter.weakPublisher(for: .testNotification, object: object).first()) {
             notificationCenter.post(name: .testNotification, object: object)
         }
     }
@@ -75,7 +78,7 @@ final class PublisherTests: XCTestCase {
     func testWeakNotificationWithNSObject() throws {
         let object = TestNSObject()
         let notificationCenter = NotificationCenter.default
-        try awaitPublisher(notificationCenter.weakPublisher(for: .testNotification, object: object).first()) {
+        try awaitCompletion(from: notificationCenter.weakPublisher(for: .testNotification, object: object).first()) {
             notificationCenter.post(name: .testNotification, object: object)
         }
     }
@@ -83,7 +86,7 @@ final class PublisherTests: XCTestCase {
     func testWeakNotificationWithValueType() throws {
         let object = TestStruct()
         let notificationCenter = NotificationCenter.default
-        try awaitPublisher(notificationCenter.weakPublisher(for: .testNotification).first()) {
+        try awaitCompletion(from: notificationCenter.weakPublisher(for: .testNotification).first()) {
             notificationCenter.post(name: .testNotification, object: object)
         }
     }
@@ -101,7 +104,7 @@ final class PublisherTests: XCTestCase {
 
         // We were interested in notifications from `object` only. After its release we should not receive other
         // notifications from any other source anymore.
-        try expectNoValuesFromPublisher(publisher, during: 1) {
+        try expectNothingPublished(from: publisher, during: 1) {
             notificationCenter.post(name: .testNotification, object: nil)
         }
     }

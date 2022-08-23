@@ -36,11 +36,11 @@ extension Player.ItemState: Similar {
     }
 }
 
-func close(within tolerance: TimeInterval) -> ((CMTime, CMTime) -> Bool) {
+func beClose(within tolerance: TimeInterval) -> ((CMTime, CMTime) -> Bool) {
     Time.close(within: tolerance)
 }
 
-func close(within tolerance: TimeInterval) -> ((CMTimeRange, CMTimeRange) -> Bool) {
+func beClose(within tolerance: TimeInterval) -> ((CMTimeRange, CMTimeRange) -> Bool) {
     Time.close(within: tolerance)
 }
 
