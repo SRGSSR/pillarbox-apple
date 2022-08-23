@@ -6,8 +6,8 @@
 
 import AVFoundation
 
-// TODO: Improve with a seek count to only send `.didSeek` when all pending seeks are finished. Requires careful
-//       locking as seeks can be triggered from any threads.
+// TODO: Improve with a seek count to only send `.didSeek` when all pending seeks are finished.
+@MainActor
 final class SystemPlayer: AVQueuePlayer {
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         NotificationCenter.default.post(name: .willSeek, object: self, userInfo: [
