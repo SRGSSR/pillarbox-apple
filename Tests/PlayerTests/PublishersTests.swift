@@ -8,6 +8,7 @@
 
 import AVFoundation
 import Combine
+import Nimble
 import XCTest
 
 final class PublishersTests: XCTestCase {
@@ -86,8 +87,26 @@ final class PublishersTests: XCTestCase {
         }
     }
 
+    func testWeakNotificationAfterObjectRelease() throws {
+        let notificationCenter = NotificationCenter.default
+        var object: TestObject? = TestObject()
+        let publisher = notificationCenter.weakPublisher(for: .testNotification, object: object).first()
+
+        weak var weakObject = object
+        autoreleasepool {
+            object = nil
+        }
+        expect(weakObject).to(beNil())
+
+        // We were interested in notifications from `object` only. After its release we should not receive other
+        // notifications from any other source anymore.
+        try notAwaitPublisher(publisher) {
+            notificationCenter.post(name: .testNotification, object: nil)
+        }
+    }
+
     // TODO:
-    //  - Test without playing (no events; requires a way to check that a values are never emitted)
+    //  - Test without playing (no events; requires a way to check that values are never emitted)
     //  - Test with pause
     //  - Similar individual tests for other publishers in Publishers.swift (Player package)
     //  - etc.

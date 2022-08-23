@@ -228,6 +228,6 @@ final class SystemPlayerTests: XCTestCase {
     }
 
     // TODO:
-    //  - Test without media (no events; requires a way to check that a values are never emitted)
+    //  - Test without media (no events; requires a way to check that values are never emitted)
     //  - etc.
 }
