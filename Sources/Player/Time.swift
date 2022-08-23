@@ -8,10 +8,12 @@ import AVFoundation
 
 enum Time {
     static func timeRange(for item: AVPlayerItem?) -> CMTimeRange {
-        guard let item,
-              let firstRange = item.seekableTimeRanges.first?.timeRangeValue,
+        guard let item else {
+            return .invalid
+        }
+        guard let firstRange = item.seekableTimeRanges.first?.timeRangeValue,
               let lastRange = item.seekableTimeRanges.last?.timeRangeValue else {
-            return .zero
+            return !item.loadedTimeRanges.isEmpty ? .zero : .invalid
         }
         return CMTimeRangeFromTimeToTime(start: firstRange.start, end: lastRange.end)
     }

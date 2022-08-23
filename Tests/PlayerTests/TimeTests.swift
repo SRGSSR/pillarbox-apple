@@ -41,11 +41,9 @@ final class TimeTests: XCTestCase {
                 .map(\.playback.timeRange)
                 .removeDuplicates(),
             values: [.invalid, .zero]
-        )
-    }
-
-    func testDvrTimeRange() throws {
-
+        ) {
+            player.play()
+        }
     }
 
     func testCorruptTimeRange() throws {
