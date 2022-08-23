@@ -12,8 +12,8 @@ import XCTest
 
 // TODO: The `Published` property cannot be detected here to drop the first item. Possible to do better?
 
+@MainActor
 final class TimeTests: XCTestCase {
-    @MainActor
     func testOnDemandTimeRange() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
@@ -31,7 +31,6 @@ final class TimeTests: XCTestCase {
         }
     }
 
-    @MainActor
     func testLiveTimeRange() throws {
         let item = AVPlayerItem(url: TestStreams.liveUrl)
         let player = Player(item: item)
@@ -45,7 +44,6 @@ final class TimeTests: XCTestCase {
         }
     }
 
-    @MainActor
     func testCorruptTimeRange() throws {
         let item = AVPlayerItem(url: TestStreams.corruptOnDemandUrl)
         let player = Player(item: item)
@@ -60,7 +58,6 @@ final class TimeTests: XCTestCase {
         }
     }
 
-    @MainActor
     func testUnavailableTimeRange() throws {
         let item = AVPlayerItem(url: TestStreams.unavailableUrl)
         let player = Player(item: item)

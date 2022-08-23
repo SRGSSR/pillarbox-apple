@@ -10,14 +10,13 @@ import AVFoundation
 import Nimble
 import XCTest
 
+@MainActor
 final class ItemTests: XCTestCase {
-    @MainActor
     func testEmptyItems() {
         let player = Player()
         expect(player.items).to(equal([]))
     }
 
-    @MainActor
     func testNonEmptyItems() {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
@@ -25,14 +24,12 @@ final class ItemTests: XCTestCase {
         expect(player.items).to(equal([item1, item2]))
     }
 
-    @MainActor
     func testSingleItem() {
         let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
         let player = Player(item: item)
         expect(player.items).to(equal([item]))
     }
 
-    @MainActor
     func testInsertion() {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
@@ -43,7 +40,6 @@ final class ItemTests: XCTestCase {
         expect(player.items).to(equal([item1, item3, item2]))
     }
 
-    @MainActor
     func testInsertionAfterNil() {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
@@ -54,7 +50,6 @@ final class ItemTests: XCTestCase {
         expect(player.items).to(equal([item1, item2, item3]))
     }
 
-    @MainActor
     func testAppend() {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
@@ -65,7 +60,6 @@ final class ItemTests: XCTestCase {
         expect(player.items).to(equal([item1, item2, item3]))
     }
 
-    @MainActor
     func testRemoval() {
         let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
         let player = Player(item: item)
@@ -73,7 +67,6 @@ final class ItemTests: XCTestCase {
         expect(player.items).to(equal([]))
     }
 
-    @MainActor
     func testUnknownItemRemoval() {
         let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
         let player = Player(item: item)
@@ -83,7 +76,6 @@ final class ItemTests: XCTestCase {
         expect(player.items).to(equal([item]))
     }
 
-    @MainActor
     func testRemovalWhenEmpty() {
         let player = Player()
         let unknownItem = AVPlayerItem(url: URL(string: "https://www.server.com/unknown.m3u8")!)
@@ -91,7 +83,6 @@ final class ItemTests: XCTestCase {
         expect(player.items).to(equal([]))
     }
 
-    @MainActor
     func testRemoveAll() {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)

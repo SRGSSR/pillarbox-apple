@@ -11,8 +11,8 @@ import Combine
 import Nimble
 import XCTest
 
+@MainActor
 final class SystemPlayerTests: XCTestCase {
-    @MainActor
     func testSeekAsyncBeforePlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = SystemPlayer(playerItem: item)
@@ -34,7 +34,6 @@ final class SystemPlayerTests: XCTestCase {
         }
     }
 
-    @MainActor
     func testSeekAsyncDuringPlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = SystemPlayer(playerItem: item)
@@ -60,7 +59,6 @@ final class SystemPlayerTests: XCTestCase {
         }
     }
 
-    @MainActor
     func testSeekWithCompletionBeforePlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = SystemPlayer(playerItem: item)
@@ -81,7 +79,6 @@ final class SystemPlayerTests: XCTestCase {
         }
     }
 
-    @MainActor
     func testSeekWithCompletionDuringPlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = SystemPlayer(playerItem: item)
@@ -106,7 +103,6 @@ final class SystemPlayerTests: XCTestCase {
         }
     }
 
-    @MainActor
     func testMultipleSeeksAsyncBeforePlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = SystemPlayer(playerItem: item)
@@ -138,7 +134,6 @@ final class SystemPlayerTests: XCTestCase {
         }
     }
 
-    @MainActor
     func testMultipleSeeksAsyncDuringPlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = SystemPlayer(playerItem: item)
@@ -172,7 +167,6 @@ final class SystemPlayerTests: XCTestCase {
         }
     }
 
-    @MainActor
     func testMultipleSeeksWithCompletionBeforePlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = SystemPlayer(playerItem: item)
@@ -202,7 +196,6 @@ final class SystemPlayerTests: XCTestCase {
         }
     }
 
-    @MainActor
     func testMultipleSeeksWithCompletionDuringPlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = SystemPlayer(playerItem: item)

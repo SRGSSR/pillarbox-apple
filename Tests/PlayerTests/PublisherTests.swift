@@ -11,8 +11,8 @@ import Combine
 import Nimble
 import XCTest
 
+@MainActor
 final class PublisherTests: XCTestCase {
-    @MainActor
     func testPeriodicTimeDuringPlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
@@ -31,7 +31,6 @@ final class PublisherTests: XCTestCase {
         )
     }
 
-    @MainActor
     func testPeriodicTimeDuringSeek() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
