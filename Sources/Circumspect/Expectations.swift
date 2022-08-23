@@ -38,7 +38,10 @@ public extension XCTestCase {
             guard actualValues.count == values.count else { return false }
             return zip(actualValues, values).allSatisfy { similar($0, $1) }
         }()
-        XCTAssert(assertExpression, file: file, line: line)
+        let message = {
+            "expected to equal \(values), got \(actualValues)"
+        }()
+        XCTAssert(assertExpression, message, file: file, line: line)
     }
 
     /// Expect a publisher to emit an exact list of values according to some criterium during some time interval.
@@ -56,7 +59,10 @@ public extension XCTestCase {
             guard actualValues.count == values.count else { return false }
             return zip(actualValues, values).allSatisfy { similar($0, $1) }
         }()
-        XCTAssert(assertExpression, file: file, line: line)
+        let message = {
+            "expected to equal \(values), got \(actualValues)"
+        }()
+        XCTAssert(assertExpression, message, file: file, line: line)
     }
 
     /// Expect a publisher to emit a list of equatable values. Succeed as soon as the values have been received or
@@ -164,7 +170,10 @@ public extension XCTestCase {
             guard actualValues.count == values.count else { return false }
             return zip(actualValues, values).allSatisfy { similar($0, $1) }
         }()
-        XCTAssert(assertExpression, file: file, line: line)
+        let message = {
+            "expected to equal \(values), got \(actualValues)"
+        }()
+        XCTAssert(assertExpression, message, file: file, line: line)
     }
 
     /// Expect a `Published` property to emit a list of equatable values. Succeed as soon as the values have been
@@ -218,7 +227,10 @@ public extension XCTestCase {
         while executing: (() -> Void)? = nil
     ) throws where P.Failure == Never {
         let actualValues = collectPublisher(publisher, during: interval, while: executing)
-        XCTAssertTrue(actualValues.isEmpty, file: file, line: line)
+        let message = {
+            "expected no values but got \(actualValues)"
+        }()
+        XCTAssertTrue(actualValues.isEmpty, message, file: file, line: line)
     }
 }
 
