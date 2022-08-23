@@ -11,11 +11,6 @@ import Nimble
 import XCTest
 
 final class TimeTests: XCTestCase {
-    func testEmptyTimeRange() throws {
-        // TODO: Implement expectation which waits for a definite number of values then
-        //       wait for other ones and fail if there are any received
-    }
-
     func testOnDemandTimeRange() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
@@ -47,13 +42,31 @@ final class TimeTests: XCTestCase {
     }
 
     func testCorruptTimeRange() throws {
-        // TODO: Implement expectation which waits for a definite number of values then
-        //       wait for other ones and fail if there are any received
+        let item = AVPlayerItem(url: TestStreams.corruptOnDemandUrl)
+        let player = Player(item: item)
+        try expectPublisher(
+            player.$properties
+                .map(\.playback.timeRange)
+                .removeDuplicates(),
+            values: [.invalid],
+            during: 2
+        ) {
+            player.play()
+        }
     }
 
     func testUnavailableTimeRange() throws {
-        // TODO: Implement expectation which waits for a definite number of values then
-        //       wait for other ones and fail if there are any received
+        let item = AVPlayerItem(url: TestStreams.unavailableUrl)
+        let player = Player(item: item)
+        try expectPublisher(
+            player.$properties
+                .map(\.playback.timeRange)
+                .removeDuplicates(),
+            values: [.invalid],
+            during: 2
+        ) {
+            player.play()
+        }
     }
 
     func testProgress() {
