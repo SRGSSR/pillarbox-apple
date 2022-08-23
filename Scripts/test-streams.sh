@@ -11,9 +11,7 @@ ON_DEMAND_SHORT_DIR="$GENERATED_DIR/on_demand_short"
 ON_DEMAND_CORRUPT_DIR="$GENERATED_DIR/on_demand_corrupt"
 
 LIVE_DIR="$GENERATED_DIR/live"
-
-DVR_SLIDING_DIR="$GENERATED_DIR/dvr_sliding"
-DVR_GROWING_DIR="$GENERATED_DIR/dvr_growing"
+DVR_DIR="$GENERATED_DIR/dvr"
 
 function serve_test_streams {
     kill_test_streams
@@ -34,13 +32,9 @@ function serve_test_streams {
     ffmpeg -stream_loop -1 -re -i "$SOURCES_DIR/nyan_cat.mov" -vcodec copy -acodec copy \
         -f hls -hls_time 4 -hls_list_size 3 -hls_flags delete_segments "$LIVE_DIR/master.m3u8" > /dev/null 2>&1 &
 
-    mkdir -p "$DVR_SLIDING_DIR"
+    mkdir -p "$DVR_DIR"
     ffmpeg -stream_loop -1 -re -i "$SOURCES_DIR/nyan_cat.mov" -vcodec copy -acodec copy \
-        -f hls -hls_time 4 -hls_list_size 20 -hls_flags delete_segments "$DVR_SLIDING_DIR/master.m3u8" > /dev/null 2>&1 &
-
-    mkdir -p "$DVR_GROWING_DIR"
-    ffmpeg -stream_loop -1 -re -i "$SOURCES_DIR/nyan_cat.mov" -vcodec copy -acodec copy \
-        -f hls -hls_time 4 -hls_playlist_type event "$DVR_GROWING_DIR/master.m3u8" > /dev/null 2>&1 &
+        -f hls -hls_time 2 -hls_list_size 10 -hls_flags delete_segments "$DVR_DIR/master.m3u8" > /dev/null 2>&1 &
 
     python3 -m http.server --directory "$GENERATED_DIR" > /dev/null 2>&1 &
 }

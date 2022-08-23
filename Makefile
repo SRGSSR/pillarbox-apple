@@ -57,7 +57,7 @@ test-streams-start:
 
 .PHONY: test-streams-stop
 test-streams-stop:
-	@echo "Starting test streams"
+	@echo "Stopping test streams"
 	@Scripts/test-streams.sh -k
 	@echo "... done.\n"
 
