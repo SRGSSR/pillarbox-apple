@@ -10,12 +10,14 @@ import AVFoundation
 import XCTest
 
 final class StateTests: XCTestCase {
+    @MainActor
     func testPlaybackStartPaused() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
         try expectPublisher(player.$state, values: [.idle, .paused])
     }
 
+    @MainActor
     func testPlaybackStartPlaying() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
@@ -24,6 +26,7 @@ final class StateTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testPlayPause() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
@@ -38,6 +41,7 @@ final class StateTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testTogglePlayPause() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
@@ -50,6 +54,7 @@ final class StateTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testPlaybackUntilCompletion() throws {
         let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = Player(item: item)
@@ -58,12 +63,14 @@ final class StateTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testPlaybackFailure() throws {
         let item = AVPlayerItem(url: TestStreams.unavailableUrl)
         let player = Player(item: item)
         try expectPublisher(player.$state, values: [.idle, .failed(error: TestError.any)])
     }
 
+    @MainActor
     func testPlaybackWithItems() throws {
         let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let item2 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
@@ -73,12 +80,14 @@ final class StateTests: XCTestCase {
         }
     }
 
+    @MainActor
     func testWithoutPlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
         try expectPublisher(player.$state, values: [.idle, .paused], during: 3)
     }
 
+    @MainActor
     func testWithoutItems() throws {
         let player = Player()
         try expectPublisher(player.$state, values: [.idle], during: 3)
