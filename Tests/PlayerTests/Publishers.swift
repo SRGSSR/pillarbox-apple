@@ -9,10 +9,6 @@ import XCTest
 
 /// Borrowed from https://www.swiftbysundell.com/articles/unit-testing-combine-based-swift-code/
 extension XCTestCase {
-    enum AwaitError: Error {
-        case unexpectedActivity
-    }
-
     /// Await for a publisher to complete and return its output.
     ///
     /// Remark: For never-ending publishers use `.first()`, `.collect()`, `.collectNext()`,
@@ -60,31 +56,25 @@ extension XCTestCase {
         return try unwrappedResult.get()
     }
 
-    /// Expect a publisher not to emit during some time internal
-    func awaitSilentPublisher<P: Publisher>(
+    /// Collect values emitted by a publisher during some interval and return them.
+    func collectPublisher<P: Publisher>(
         _ publisher: P,
-        during interval: TimeInterval = 1,
+        during interval: TimeInterval,
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never {
-        let expectation = self.expectation(description: "Awaiting publisher not to emit for \(interval) seconds")
+    ) -> [P.Output] {
+        var values: [P.Output] = []
+        let expectation = self.expectation(description: "Collecting publisher values for \(interval) seconds")
         DispatchQueue.main.asyncAfter(deadline: .now() + interval) {
             expectation.fulfill()
         }
 
-        var result: Result<P.Output, Error>?
         let cancellable = publisher.sink(
-            receiveCompletion: { completion in
-                switch completion {
-                case let .failure(error):
-                    result = .failure(error)
-                case .finished:
-                    break
-                }
+            receiveCompletion: { _ in
             },
             receiveValue: { value in
-                result = .success(value)
+                values.append(value)
             }
         )
 
@@ -95,9 +85,7 @@ extension XCTestCase {
         waitForExpectations(timeout: interval + 1)
         cancellable.cancel()
 
-        guard result == nil else {
-            throw AwaitError.unexpectedActivity
-        }
+        return values
     }
 }
 

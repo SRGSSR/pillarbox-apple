@@ -100,7 +100,7 @@ final class PublisherTests: XCTestCase {
 
         // We were interested in notifications from `object` only. After its release we should not receive other
         // notifications from any other source anymore.
-        try awaitSilentPublisher(publisher) {
+        try expectNoValuesFromPublisher(publisher, during: 1) {
             notificationCenter.post(name: .testNotification, object: nil)
         }
     }
