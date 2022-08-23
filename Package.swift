@@ -18,6 +18,10 @@ let package = Package(
             targets: ["Appearance"]
         ),
         .library(
+            name: "Circumspect",
+            targets: ["Circumspect"]
+        ),
+        .library(
             name: "CoreBusiness",
             targets: ["CoreBusiness"]
         ),
@@ -58,6 +62,7 @@ let package = Package(
                 .target(name: "Diagnostics")
             ]
         ),
+        .target(name: "Circumspect"),
         .target(name: "Diagnostics"),
         .target(name: "Player"),
         .target(
@@ -83,6 +88,13 @@ let package = Package(
             ]
         ),
         .testTarget(
+            name: "CircumspectTests",
+            dependencies: [
+                .target(name: "Circumspect"),
+                .product(name: "Nimble", package: "Nimble")
+            ]
+        ),
+        .testTarget(
             name: "CoreBusinessTests",
             dependencies: [
                 .target(name: "CoreBusiness"),
@@ -99,6 +111,7 @@ let package = Package(
         .testTarget(
             name: "PlayerTests",
             dependencies: [
+                .target(name: "Circumspect"),
                 .target(name: "Player"),
                 .product(name: "Nimble", package: "Nimble")
             ]

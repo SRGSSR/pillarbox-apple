@@ -5,15 +5,14 @@
 //
 
 import Combine
-import Nimble
 import XCTest
 
 /// Defines similarity for types not conforming to `Equatable` and which need to be meaningfully compared in tests.
-protocol Similar {
+public protocol Similar {
     static func ~= (lhs: Self, rhs: Self) -> Bool
 }
 
-extension XCTestCase {
+public extension XCTestCase {
     /// Expect a publisher to emit a list of values similar according to some criterium. Succeed as soon as the values have
     /// been received or throws if the expectation is not fulfilled.
     func expectPublisher<P: Publisher>(
@@ -33,10 +32,10 @@ extension XCTestCase {
             line: line,
             while: executing
         )
-        expect(actualValues).to(equal(values) { values1, values2 in
-            guard values1.count == values2.count else { return false }
-            return zip(values1, values2).allSatisfy { similar($0, $1) }
-        })
+        XCTAssert({
+            guard actualValues.count == values.count else { return false }
+            return zip(actualValues, values).allSatisfy { similar($0, $1) }
+        }(), file: file, line: line)
     }
 
     /// Expect a publisher to emit an exact list of values according to some criterium during some time interval.
@@ -50,10 +49,10 @@ extension XCTestCase {
         while executing: (() -> Void)? = nil
     ) throws where P.Failure == Never {
         let actualValues = collectPublisher(publisher, during: interval, while: executing)
-        expect(actualValues).to(equal(values) { values1, values2 in
-            guard values1.count == values2.count else { return false }
-            return zip(values1, values2).allSatisfy { similar($0, $1) }
-        })
+        XCTAssert({
+            guard actualValues.count == values.count else { return false }
+            return zip(actualValues, values).allSatisfy { similar($0, $1) }
+        }(), file: file, line: line)
     }
 
     /// Expect a publisher to emit a list of equatable values. Succeed as soon as the values have been received or
@@ -157,10 +156,10 @@ extension XCTestCase {
             line: line,
             while: executing
         )
-        expect(actualValues).to(equal(values) { values1, values2 in
-            guard values1.count == values2.count else { return false }
-            return zip(values1, values2).allSatisfy { similar($0, $1) }
-        })
+        XCTAssert({
+            guard actualValues.count == values.count else { return false }
+            return zip(actualValues, values).allSatisfy { similar($0, $1) }
+        }(), file: file, line: line)
     }
 
     /// Expect a `Published` property to emit a list of equatable values. Succeed as soon as the values have been
@@ -214,13 +213,13 @@ extension XCTestCase {
         while executing: (() -> Void)? = nil
     ) throws where P.Failure == Never {
         let actualValues = collectPublisher(publisher, during: interval, while: executing)
-        expect(actualValues).to(beEmpty())
+        XCTAssertTrue(actualValues.isEmpty, file: file, line: line)
     }
 }
 
 /// Remark: Nimble provides support for notifications but its collector is not thread-safe and crashes during
 ///         collection. We thus need to roll our own solution.
-extension XCTestCase {
+public extension XCTestCase {
     /// Expect a list of notifications to be received, comparing the emitted values according to some criterium.
     /// Succeed as soon as the values have been received or throws if the expectation is not fulfilled.
     func expectNotifications(
