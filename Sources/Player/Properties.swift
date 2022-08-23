@@ -6,6 +6,18 @@
 
 import AVFoundation
 
+/// Stream types.
+public enum StreamType {
+    /// Not yet determined.
+    case unknown
+    /// On-demand stream.
+    case onDemand
+    /// Livestream without DVR.
+    case live
+    /// Livestream with DVR.
+    case dvr
+}
+
 public extension Player {
     /// Player properties.
     struct Properties {
