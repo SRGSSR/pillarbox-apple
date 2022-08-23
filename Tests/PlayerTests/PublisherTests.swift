@@ -11,7 +11,7 @@ import Combine
 import Nimble
 import XCTest
 
-final class PublishersTests: XCTestCase {
+final class PublisherTests: XCTestCase {
     func testPeriodicTimeDuringPlayback() throws {
         let item = AVPlayerItem(url: TestStreams.validStreamUrl)
         let player = Player(item: item)

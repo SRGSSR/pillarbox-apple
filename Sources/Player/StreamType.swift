@@ -4,10 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Player
+import Foundation
 
-import Nimble
-import XCTest
-
-final class PropertiesTests: XCTestCase {
+public enum StreamType {
+    case unknown
+    case onDemand
+    case live
+    case dvr
 }

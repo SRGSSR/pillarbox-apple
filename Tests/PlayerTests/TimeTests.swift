@@ -23,6 +23,22 @@ final class TimeTests: XCTestCase {
         ))
     }
 
+    func testLiveTimeRange() throws {
+
+    }
+
+    func testDvrTimeRange() throws {
+
+    }
+
+    func testCorruptTimeRange() throws {
+
+    }
+
+    func testUnavailableTimeRange() throws {
+
+    }
+
     func testProgress() {
         expect(Time.progress(
             for: CMTimeMake(value: 1, timescale: 2),

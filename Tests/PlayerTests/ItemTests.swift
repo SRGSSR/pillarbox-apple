@@ -10,7 +10,7 @@ import AVFoundation
 import Nimble
 import XCTest
 
-final class ItemsTests: XCTestCase {
+final class ItemTests: XCTestCase {
     func testEmptyItems() {
         let player = Player()
         expect(player.items).to(equal([]))

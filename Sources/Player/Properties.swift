@@ -36,6 +36,10 @@ public extension Player {
             Time.progress(for: playback.time, in: playback.timeRange)
         }
 
+        public var streamType: StreamType {
+            .unknown
+        }
+
         /// A value in 0...1 describing the playback progress targeted by a pending seek, if any.
         public var targetProgress: Float? {
             guard let targetTime else { return nil }
