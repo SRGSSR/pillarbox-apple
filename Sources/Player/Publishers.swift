@@ -95,6 +95,7 @@ extension Player {
             ratePublisher(for: player)
         )
         .map { state(for: $0, rate: $1) }
+        .removeDuplicates(by: Self.areDuplicates)
         .eraseToAnyPublisher()
     }
 

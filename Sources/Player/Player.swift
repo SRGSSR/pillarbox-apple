@@ -36,7 +36,6 @@ public final class Player: ObservableObject {
         properties = .empty(for: systemPlayer)
 
         Self.statePublisher(for: self)
-            .removeDuplicates(by: Self.areDuplicates)
             .receive(on: DispatchQueue.main)
             .assign(to: &$state)
         Self.propertiesPublisher(for: self)
