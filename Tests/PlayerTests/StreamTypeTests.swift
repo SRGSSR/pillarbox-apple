@@ -12,8 +12,6 @@ import XCTest
 
 final class StreamTypeTests: XCTestCase {
     func testOnDemandStream() throws {
-        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
-        let player = Player(item: item)
-        try expectPublisher(player.$properties.map(\.streamType), values: [.onDemand])
+        
     }
 }
