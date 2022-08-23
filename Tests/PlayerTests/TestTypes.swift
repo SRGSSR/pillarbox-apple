@@ -6,11 +6,15 @@
 
 import Foundation
 
-struct TestStruct {
+// swiftlint:disable file_types_order
+
+final class TestNSObject: NSObject {
 }
 
 final class TestObject {
 }
 
-final class TestNSObject: NSObject {
+struct TestStruct {
 }
+
+// swiftlint:enable file_types_order

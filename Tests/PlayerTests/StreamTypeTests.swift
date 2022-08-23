@@ -12,6 +12,5 @@ import XCTest
 
 final class StreamTypeTests: XCTestCase {
     func testOnDemandStream() throws {
-        
     }
 }

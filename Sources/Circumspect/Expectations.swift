@@ -7,6 +7,8 @@
 import Combine
 import XCTest
 
+// swiftlint:disable prefer_nimble
+
 /// Defines similarity for types not conforming to `Equatable` and which need to be meaningfully compared in tests.
 public protocol Similar {
     static func ~= (lhs: Self, rhs: Self) -> Bool
@@ -32,10 +34,11 @@ public extension XCTestCase {
             line: line,
             while: executing
         )
-        XCTAssert({
+        let assertExpression = {
             guard actualValues.count == values.count else { return false }
             return zip(actualValues, values).allSatisfy { similar($0, $1) }
-        }(), file: file, line: line)
+        }()
+        XCTAssert(assertExpression, file: file, line: line)
     }
 
     /// Expect a publisher to emit an exact list of values according to some criterium during some time interval.
@@ -49,10 +52,11 @@ public extension XCTestCase {
         while executing: (() -> Void)? = nil
     ) throws where P.Failure == Never {
         let actualValues = collectPublisher(publisher, during: interval, while: executing)
-        XCTAssert({
+        let assertExpression = {
             guard actualValues.count == values.count else { return false }
             return zip(actualValues, values).allSatisfy { similar($0, $1) }
-        }(), file: file, line: line)
+        }()
+        XCTAssert(assertExpression, file: file, line: line)
     }
 
     /// Expect a publisher to emit a list of equatable values. Succeed as soon as the values have been received or
@@ -156,10 +160,11 @@ public extension XCTestCase {
             line: line,
             while: executing
         )
-        XCTAssert({
+        let assertExpression = {
             guard actualValues.count == values.count else { return false }
             return zip(actualValues, values).allSatisfy { similar($0, $1) }
-        }(), file: file, line: line)
+        }()
+        XCTAssert(assertExpression, file: file, line: line)
     }
 
     /// Expect a `Published` property to emit a list of equatable values. Succeed as soon as the values have been
@@ -266,3 +271,5 @@ public extension XCTestCase {
         )
     }
 }
+
+// swiftlint:enable prefer_nimble
