@@ -198,8 +198,10 @@ extension NotificationCenter {
     /// publisher avoids this issue while still only observing the filter object (if any), even after it is
     /// eventually deallocated.
     func weakPublisher(for name: Notification.Name, object: AnyObject? = nil) -> AnyPublisher<Notification, Never> {
-        publisher(for: name)
+        let filtered = (object != nil)
+        return publisher(for: name)
             .filter { [weak object] notification in
+                guard filtered else { return true }
                 guard let object, let notificationObject = notification.object as? AnyObject else {
                     return false
                 }
