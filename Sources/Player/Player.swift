@@ -8,7 +8,6 @@ import AVFoundation
 import Combine
 
 /// Audio and video player.
-@MainActor
 public final class Player: ObservableObject {
     /// The current player state.
     @Published public private(set) var state: State = .idle

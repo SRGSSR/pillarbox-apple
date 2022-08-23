@@ -73,8 +73,18 @@ final class StateTests: XCTestCase {
         }
     }
 
+    func testWithoutPlayback() throws {
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
+        let player = Player(item: item)
+        try expectPublisher(player.$state, values: [.idle, .paused], during: 3)
+    }
+
+    func testWithoutItems() throws {
+        let player = Player()
+        try expectPublisher(player.$state, values: [.idle], during: 3)
+    }
+
     // TODO:
-    //  - Play without item (requires a way to check that a state is never reached)
     //  - Append item after calling play
     //  - etc.
 }

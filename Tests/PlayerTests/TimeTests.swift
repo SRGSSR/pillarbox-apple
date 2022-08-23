@@ -10,6 +10,8 @@ import AVFoundation
 import Nimble
 import XCTest
 
+// TODO: The `Published` property cannot be detected here to drop the first item. Possible to do better?
+
 final class TimeTests: XCTestCase {
     func testOnDemandTimeRange() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
