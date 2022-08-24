@@ -78,7 +78,7 @@ test-tvos: setup
 	@echo "... done.\n"
 
 .PHONY: check-quality
-check-quality: setup
+check-quality:
 	@echo "Checking quality..."
 	@echo "... checking Swift code..."
 	@swiftlint --quiet
