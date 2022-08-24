@@ -50,4 +50,6 @@ final class ItemStateTests: XCTestCase {
         _ = AVPlayer(playerItem: item)
         try expectPublished(values: [.unknown, .readyToPlay], from: Player.statePublisher(for: item))
     }
+
+    // TODO: Test item switch
 }

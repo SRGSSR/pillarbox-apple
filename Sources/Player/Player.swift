@@ -119,4 +119,19 @@ public final class Player: ObservableObject {
     public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) async -> Bool {
         await systemPlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
     }
+
+    static func periodicTimePublisher(for player: AVPlayer, interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
+        Publishers.PeriodicTimePublisher(player: player, interval: interval, queue: queue)
+            .removeDuplicates(by: Time.close(within: 0.1))
+            .eraseToAnyPublisher()
+    }
+
+    /// Create a publisher periodically emitting the current time while the player is active.
+    /// - Parameters:
+    ///   - interval: The interval at which events must be emitted.
+    ///   - queue: The queue on which events are received.
+    /// - Returns: The publisher.
+    public func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
+        Self.periodicTimePublisher(for: systemPlayer, interval: interval, queue: queue)
+    }
 }
