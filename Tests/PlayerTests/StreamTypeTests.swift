@@ -12,7 +12,7 @@ import XCTest
 
 @MainActor
 final class StreamTypeTests: XCTestCase {
-    func testOnDemandStream() throws {
+    func testStartedOnDemandStream() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
         try expectPublished(
@@ -23,5 +23,16 @@ final class StreamTypeTests: XCTestCase {
         ) {
             player.play()
         }
+    }
+
+    func testNonStartedOnDemandStream() throws {
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
+        let player = Player(item: item)
+        try expectPublished(
+            values: [.unknown, .onDemand],
+            from: player.$properties
+                .map(\.streamType)
+                .removeDuplicates()
+        )
     }
 }
