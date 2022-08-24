@@ -162,7 +162,7 @@ public extension XCTestCase {
             file: file,
             line: line,
             while: executing
-        )
+        ).flatMap { $0 }
         let assertExpression = {
             guard actualValues.count == values.count else { return false }
             return zip(actualValues, values).allSatisfy { satisfy($0, $1) }
@@ -320,7 +320,7 @@ public extension XCTestCase {
         while executing: (() -> Void)? = nil
     ) throws where P.Failure == Never {
         var actualValues = collectOutput(from: publisher, during: interval, while: executing)
-        if next {
+        if next, !actualValues.isEmpty {
             actualValues.removeFirst()
         }
         let assertExpression = {
@@ -380,7 +380,7 @@ public extension XCTestCase {
         while executing: (() -> Void)? = nil
     ) throws where P.Failure == Never {
         var actualValues = collectOutput(from: publisher, during: interval, while: executing)
-        if next {
+        if next, !actualValues.isEmpty {
             actualValues.removeFirst()
         }
         let message = {
@@ -398,6 +398,7 @@ public extension XCTestCase {
         notifications: [Notification],
         for names: Set<Notification.Name>,
         object: AnyObject? = nil,
+        center: NotificationCenter = .default,
         timeout: TimeInterval = 10,
         file: StaticString = #file,
         line: UInt = #line,
@@ -406,7 +407,7 @@ public extension XCTestCase {
         try expectPublished(
             values: notifications,
             from: Publishers.MergeMany(
-                names.map { NotificationCenter.default.publisher(for: $0, object: object) }
+                names.map { center.publisher(for: $0, object: object) }
             ),
             to: ==,
             timeout: timeout,
@@ -421,6 +422,7 @@ public extension XCTestCase {
         notifications: [Notification],
         for names: Set<Notification.Name>,
         object: AnyObject? = nil,
+        center: NotificationCenter = .default,
         during interval: TimeInterval,
         file: StaticString = #file,
         line: UInt = #line,
@@ -429,7 +431,7 @@ public extension XCTestCase {
         try expectPublished(
             values: notifications,
             from: Publishers.MergeMany(
-                names.map { NotificationCenter.default.publisher(for: $0, object: object) }
+                names.map { center.publisher(for: $0, object: object) }
             ),
             to: ==,
             during: interval,
@@ -443,6 +445,7 @@ public extension XCTestCase {
     func expectNoNotifications(
         for names: Set<Notification.Name>,
         object: AnyObject? = nil,
+        center: NotificationCenter = .default,
         during interval: TimeInterval,
         file: StaticString = #file,
         line: UInt = #line,
@@ -450,7 +453,7 @@ public extension XCTestCase {
     ) throws {
         try expectNothingPublished(
             from: Publishers.MergeMany(
-                names.map { NotificationCenter.default.publisher(for: $0, object: object) }
+                names.map { center.publisher(for: $0, object: object) }
             ),
             during: interval,
             file: file,

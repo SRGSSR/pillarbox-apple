@@ -9,7 +9,7 @@ import XCTest
 
 /// Borrowed from https://www.swiftbysundell.com/articles/unit-testing-combine-based-swift-code/
 public extension XCTestCase {
-    /// Await for a publisher to complete and return its output.
+    /// Await for a publisher to complete and return its collected output.
     ///
     /// Remark: For never-ending publishers use `.first()`, `.collect()`, `.collectNext()`,
     ///         `collectFirst()` or similar to have the publisher complete after having
@@ -21,9 +21,11 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws -> P.Output {
-        var result: Result<P.Output, Error>?
-        let expectation = self.expectation(description: "Awaiting publisher")
+    ) throws -> [P.Output] {
+        var values: [P.Output] = []
+        var result: Result<[P.Output], Error>?
+
+        let expectation = expectation(description: "Awaiting publisher")
 
         let cancellable = publisher.sink(
             receiveCompletion: { completion in
@@ -31,21 +33,23 @@ public extension XCTestCase {
                 case let .failure(error):
                     result = .failure(error)
                 case .finished:
-                    break
+                    result = .success(values)
                 }
                 expectation.fulfill()
             },
             receiveValue: { value in
-                result = .success(value)
+                values.append(value)
             }
         )
+        defer {
+            cancellable.cancel()
+        }
 
         if let executing {
             executing()
         }
 
         waitForExpectations(timeout: timeout)
-        cancellable.cancel()
 
         let unwrappedResult = try XCTUnwrap(
             result,
@@ -65,11 +69,8 @@ public extension XCTestCase {
         while executing: (() -> Void)? = nil
     ) -> [P.Output] {
         var values: [P.Output] = []
-        let expectation = self.expectation(description: "Collecting publisher values for \(interval) seconds")
-        DispatchQueue.main.asyncAfter(deadline: .now() + interval) {
-            expectation.fulfill()
-        }
 
+        let expectation = expectation(description: "Collecting publisher values for \(interval) seconds")
         let cancellable = publisher.sink(
             receiveCompletion: { _ in
             },
@@ -77,14 +78,15 @@ public extension XCTestCase {
                 values.append(value)
             }
         )
+        defer {
+            cancellable.cancel()
+        }
 
         if let executing {
             executing()
         }
 
-        waitForExpectations(timeout: interval + 1)
-        cancellable.cancel()
-
+        _ = XCTWaiter.wait(for: [expectation], timeout: interval)
         return values
     }
 }
