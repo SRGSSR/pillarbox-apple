@@ -82,7 +82,7 @@ final class StateTests: XCTestCase {
 
     func testWithoutItems() throws {
         let player = Player()
-        try expectPublishedNext(values: [.idle], from: player.$state, during: 3)
+        try expectPublished(values: [.idle], from: player.$state, during: 3)
     }
 
     // TODO:

@@ -36,15 +36,9 @@ extension Player {
 
     static func itemStatePublisher(for player: AVPlayer) -> AnyPublisher<ItemState, Never> {
         player.publisher(for: \.currentItem)
-            .map { item -> AnyPublisher<ItemState, Never> in
-                guard let item else {
-                    return Just(.unknown)
-                        .eraseToAnyPublisher()
-                }
-                return statePublisher(for: item)
-            }
+            .compactMap { $0 }
+            .map { statePublisher(for: $0) }
             .switchToLatest()
-            .prepend(.unknown)
             .eraseToAnyPublisher()
     }
 }
