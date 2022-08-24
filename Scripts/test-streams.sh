@@ -22,7 +22,7 @@ function serve_test_streams {
 
     mkdir -p "$ON_DEMAND_SHORT_DIR"
     ffmpeg -stream_loop -1 -i "$SOURCES_DIR/nyan_cat.mov" -t 1 -vcodec copy -acodec copy \
-        -f hls -hls_time 4 -hls_list_size 0 "$ON_DEMAND_SHORT_DIR/master.m3u8" > /dev/null 2>&1 &
+        -f hls -hls_time 1 -hls_list_size 0 "$ON_DEMAND_SHORT_DIR/master.m3u8" > /dev/null 2>&1 &
 
     mkdir -p "$ON_DEMAND_CORRUPT_DIR"
     ffmpeg -stream_loop -1 -i "$SOURCES_DIR/nyan_cat.mov" -t 2 -vcodec copy -acodec copy \
