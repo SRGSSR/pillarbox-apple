@@ -89,7 +89,7 @@ private extension Publishers.PeriodicTimePublisher {
 }
 
 extension Player {
-    static func statePublisher(for player: Player) -> AnyPublisher<State, Never> {
+    static func statePublisher(for player: AVPlayer) -> AnyPublisher<State, Never> {
         Publishers.CombineLatest(
             itemStatePublisher(for: player),
             ratePublisher(for: player)
@@ -99,7 +99,7 @@ extension Player {
         .eraseToAnyPublisher()
     }
 
-    static func propertiesPublisher(for player: Player) -> AnyPublisher<Properties, Never> {
+    static func propertiesPublisher(for player: AVPlayer) -> AnyPublisher<Properties, Never> {
         Publishers.CombineLatest(
             playbackPublisher(for: player, queue: DispatchQueue(label: "ch.srgssr.pillarbox.player")),
             targetTimePublisher(for: player)
@@ -108,8 +108,8 @@ extension Player {
         .eraseToAnyPublisher()
     }
 
-    static func itemStatePublisher(for player: Player) -> AnyPublisher<ItemState, Never> {
-        player.systemPlayer.publisher(for: \.currentItem)
+    static func itemStatePublisher(for player: AVPlayer) -> AnyPublisher<ItemState, Never> {
+        player.publisher(for: \.currentItem)
             .map { item -> AnyPublisher<ItemState, Never> in
                 guard let item else {
                     return Just(.unknown)
@@ -122,24 +122,24 @@ extension Player {
             .eraseToAnyPublisher()
     }
 
-    static func ratePublisher(for player: Player) -> AnyPublisher<Float, Never> {
-        player.systemPlayer.publisher(for: \.rate)
-            .prepend(player.systemPlayer.rate)
+    static func ratePublisher(for player: AVPlayer) -> AnyPublisher<Float, Never> {
+        player.publisher(for: \.rate)
+            .prepend(player.rate)
             .eraseToAnyPublisher()
     }
 
-    static func playbackPublisher(for player: Player, queue: DispatchQueue) -> AnyPublisher<Properties.Playback, Never> {
-        player.periodicTimePublisher(forInterval: CMTimeMake(value: 1, timescale: 1), queue: queue)
+    static func playbackPublisher(for player: AVPlayer, queue: DispatchQueue) -> AnyPublisher<Properties.Playback, Never> {
+        periodicTimePublisher(for: player, interval: CMTimeMake(value: 1, timescale: 1), queue: queue)
             .map { [weak player] time in
                 Properties.Playback(
                     time: time,
-                    timeRange: Time.timeRange(for: player?.systemPlayer.currentItem)
+                    timeRange: Time.timeRange(for: player?.currentItem)
                 )
             }
             .eraseToAnyPublisher()
     }
 
-    static func targetTimePublisher(for player: Player) -> AnyPublisher<CMTime?, Never> {
+    static func targetTimePublisher(for player: AVPlayer) -> AnyPublisher<CMTime?, Never> {
         Publishers.Merge(
             NotificationCenter.default.weakPublisher(for: .willSeek, object: player)
                 .map { $0.userInfo?[SystemPlayer.SeekInfoKey.targetTime] as? CMTime },
@@ -182,15 +182,19 @@ extension Player {
         }
     }
 
+    private static func periodicTimePublisher(for player: AVPlayer, interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
+        Publishers.PeriodicTimePublisher(player: player, interval: interval, queue: queue)
+            .removeDuplicates(by: Time.close(within: 0.1))
+            .eraseToAnyPublisher()
+    }
+
     /// Create a publisher periodically emitting the current time while the player is active.
     /// - Parameters:
     ///   - interval: The interval at which events must be emitted.
     ///   - queue: The queue on which events are received.
     /// - Returns: The publisher.
     public func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
-        Publishers.PeriodicTimePublisher(player: systemPlayer, interval: interval, queue: queue)
-            .removeDuplicates(by: Time.close(within: 0.1))
-            .eraseToAnyPublisher()
+        Self.periodicTimePublisher(for: systemPlayer, interval: interval, queue: queue)
     }
 }
 

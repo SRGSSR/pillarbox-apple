@@ -36,10 +36,10 @@ public final class Player: ObservableObject {
         systemPlayer = SystemPlayer(items: items)
         properties = .empty(for: systemPlayer)
 
-        Self.statePublisher(for: self)
+        Self.statePublisher(for: systemPlayer)
             .receive(on: DispatchQueue.main)
             .assign(to: &$state)
-        Self.propertiesPublisher(for: self)
+        Self.propertiesPublisher(for: systemPlayer)
             .receive(on: DispatchQueue.main)
             .assign(to: &$properties)
         $properties
