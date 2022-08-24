@@ -50,7 +50,9 @@ public extension Player {
 
         /// The stream type.
         public var streamType: StreamType {
-            .unknown
+            let timeRange = playback.timeRange
+            guard timeRange.isValid else { return .unknown }
+            return .onDemand
         }
 
         /// A value in 0...1 describing the playback progress targeted by a pending seek, if any.
