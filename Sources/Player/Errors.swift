@@ -6,7 +6,7 @@
 
 import Foundation
 
-extension Player {
+public extension Player {
     enum PlaybackError: Error {
         case unknown
     }

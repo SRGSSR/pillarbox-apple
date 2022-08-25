@@ -10,8 +10,7 @@ import AVFoundation
 import Combine
 import XCTest
 
-@MainActor
-final class ItemStateTests: XCTestCase {
+final class ItemStatePublisherTests: XCTestCase {
     private let resourceLoaderDelegate = FailingResourceLoaderDelegate()
     private let queue = DispatchQueue(label: "ch.srgssr.failing-resource-loader")
 

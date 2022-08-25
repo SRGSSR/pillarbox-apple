@@ -34,7 +34,7 @@ extension Player {
         .eraseToAnyPublisher()
     }
 
-    static func itemStatePublisher(for player: AVPlayer) -> AnyPublisher<ItemState, Never> {
+    nonisolated static func itemStatePublisher(for player: AVPlayer) -> AnyPublisher<ItemState, Never> {
         player.publisher(for: \.currentItem)
             .compactMap { $0 }
             .map { statePublisher(for: $0) }

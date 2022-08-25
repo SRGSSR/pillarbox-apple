@@ -8,7 +8,7 @@ import AVFoundation
 import Combine
 
 extension Publishers {
-    struct PeriodicTimePublisher: Publisher {
+    fileprivate struct _PeriodicTimePublisher: Publisher {
         typealias Output = CMTime
         typealias Failure = Never
 
@@ -27,9 +27,15 @@ extension Publishers {
             subscriber.receive(subscription: subscription)
         }
     }
+
+    static func PeriodicTimePublisher(for player: AVPlayer, interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
+        Publishers._PeriodicTimePublisher(player: player, interval: interval, queue: queue)
+            .removeDuplicates(by: Time.close(within: 0.1))
+            .eraseToAnyPublisher()
+    }
 }
 
-private extension Publishers.PeriodicTimePublisher {
+private extension Publishers._PeriodicTimePublisher {
     final actor Subscription<S: Subscriber>: Combine.Subscription where S.Input == Output, S.Failure == Failure {
         private var subscriber: S?
         private let player: AVPlayer
@@ -85,23 +91,5 @@ private extension Publishers.PeriodicTimePublisher {
                 await processCancellation()
             }
         }
-    }
-}
-
-extension NotificationCenter {
-    /// The usual notification publisher retains the filter object, potentially creating cycles. The following
-    /// publisher avoids this issue while still only observing the filter object (if any), even after it is
-    /// eventually deallocated.
-    func weakPublisher(for name: Notification.Name, object: AnyObject? = nil) -> AnyPublisher<Notification, Never> {
-        let filtered = (object != nil)
-        return publisher(for: name)
-            .filter { [weak object] notification in
-                guard filtered else { return true }
-                guard let object, let notificationObject = notification.object as? AnyObject else {
-                    return false
-                }
-                return notificationObject === object
-            }
-            .eraseToAnyPublisher()
     }
 }

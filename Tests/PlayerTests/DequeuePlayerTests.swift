@@ -7,12 +7,12 @@
 @testable import Player
 
 import AVFoundation
-import Combine
+import Circumspect
 import Nimble
 import XCTest
 
 @MainActor
-final class DequeuePlayerTests: XCTestCase {
+final class DequeuePlayerSeekTests: XCTestCase {
     func testSeekAsyncBeforePlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = DequeuePlayer(playerItem: item)
@@ -61,7 +61,7 @@ final class DequeuePlayerTests: XCTestCase {
         }
     }
 
-    func testSeekWithCompletionBeforePlayback() throws {
+    func testSeekWithCompletionHandlerBeforePlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = DequeuePlayer(playerItem: item)
         let targetTime = CMTime(value: 2, timescale: 1)
@@ -82,7 +82,7 @@ final class DequeuePlayerTests: XCTestCase {
         }
     }
 
-    func testSeekWithCompletionDuringPlayback() throws {
+    func testSeekWithCompletionHandlerDuringPlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = DequeuePlayer(playerItem: item)
         try expectPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
@@ -173,7 +173,7 @@ final class DequeuePlayerTests: XCTestCase {
         }
     }
 
-    func testMultipleSeeksWithCompletionBeforePlayback() throws {
+    func testMultipleSeeksWithCompletionHandlerBeforePlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = DequeuePlayer(playerItem: item)
         let targetTime1 = CMTime(value: 1, timescale: 2)
@@ -203,7 +203,7 @@ final class DequeuePlayerTests: XCTestCase {
         }
     }
 
-    func testMultipleSeeksWithCompletionDuringPlayback() throws {
+    func testMultipleSeeksWithCompletionHandlerDuringPlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = DequeuePlayer(playerItem: item)
         try expectPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {

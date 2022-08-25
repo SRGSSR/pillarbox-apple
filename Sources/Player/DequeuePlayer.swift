@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-// TODO: Must later implement dequeue support for items
+// TODO: Must later implement dequeue support for items to have playlist support in forward and backward directions.
 @MainActor
 final class DequeuePlayer: AVQueuePlayer {
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {

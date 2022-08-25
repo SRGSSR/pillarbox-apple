@@ -77,11 +77,11 @@ public extension Player {
     }
 
     static func playbackPublisher(for player: AVPlayer, queue: DispatchQueue) -> AnyPublisher<Properties.Playback, Never> {
-        periodicTimePublisher(for: player, interval: CMTimeMake(value: 1, timescale: 1), queue: queue)
+        Publishers.PeriodicTimePublisher(for: player, interval: CMTimeMake(value: 1, timescale: 1), queue: queue)
             .map { [weak player] time in
                 Properties.Playback(
                     time: time,
-                    timeRange: Time.timeRange(for: player?.currentItem)
+                    timeRange: timeRange(for: player?.currentItem)
                 )
             }
             .eraseToAnyPublisher()
@@ -96,5 +96,16 @@ public extension Player {
         )
         .prepend(nil)
         .eraseToAnyPublisher()
+    }
+
+    private static func timeRange(for item: AVPlayerItem?) -> CMTimeRange {
+        guard let item else {
+            return .invalid
+        }
+        guard let firstRange = item.seekableTimeRanges.first?.timeRangeValue,
+              let lastRange = item.seekableTimeRanges.last?.timeRangeValue else {
+            return !item.loadedTimeRanges.isEmpty ? .zero : .invalid
+        }
+        return CMTimeRangeFromTimeToTime(start: firstRange.start, end: lastRange.end)
     }
 }

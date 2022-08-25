@@ -6,77 +6,20 @@
 
 @testable import Player
 
-import AVFoundation
+import CoreMedia
 import Nimble
 import XCTest
 
-@MainActor
-final class TimeTests: XCTestCase {
-    func testOnDemandTimeRange() throws {
-        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
-        let player = Player(item: item)
-        try expectPublished(
-            values: [
-                .invalid,
-                CMTimeRangeMake(start: .zero, duration: CMTime(value: 120, timescale: 1))
-            ],
-            from: player.$properties
-                .map(\.playback.timeRange)
-                .removeDuplicates(by: beClose(within: 0.5)),
-            to: beClose(within: 0.5)
-        ) {
-            player.play()
-        }
-    }
-
-    func testLiveTimeRange() throws {
-        let item = AVPlayerItem(url: TestStreams.liveUrl)
-        let player = Player(item: item)
-        try expectPublished(
-            values: [.invalid, .zero],
-            from: player.$properties
-                .map(\.playback.timeRange)
-                .removeDuplicates()
-        ) {
-            player.play()
-        }
-    }
-
-    func testCorruptTimeRange() throws {
-        let item = AVPlayerItem(url: TestStreams.corruptOnDemandUrl)
-        let player = Player(item: item)
-        try expectPublished(
-            values: [.invalid],
-            from: player.$properties
-                .map(\.playback.timeRange)
-                .removeDuplicates(),
-            during: 2
-        ) {
-            player.play()
-        }
-    }
-
-    func testUnavailableTimeRange() throws {
-        let item = AVPlayerItem(url: TestStreams.unavailableUrl)
-        let player = Player(item: item)
-        try expectPublished(
-            values: [.invalid],
-            from: player.$properties
-                .map(\.playback.timeRange)
-                .removeDuplicates(),
-            during: 2
-        ) {
-            player.play()
-        }
-    }
-
+final class ProgressTests: XCTestCase {
     func testProgress() {
         expect(Time.progress(
             for: CMTimeMake(value: 1, timescale: 2),
             in: CMTimeRangeMake(start: .zero, duration: CMTimeMake(value: 1, timescale: 1))
         )).to(equal(0.5))
     }
+}
 
+final class TimeCloseTests: XCTestCase {
     func testCloseWithFiniteTimes() {
         expect(Time.close(within: 0)(CMTime.zero, .zero)).to(beTrue())
         expect(Time.close(within: 0.5)(CMTime.zero, .zero)).to(beTrue())
