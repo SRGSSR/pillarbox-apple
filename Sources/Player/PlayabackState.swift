@@ -7,22 +7,20 @@
 import AVFoundation
 import Combine
 
-extension Player {
-    /// Player states.
-    public enum State {
-        /// The player is idle.
-        case idle
-        /// The player is currently playing content.
-        case playing
-        /// The player has been paused.
-        case paused
-        /// The player ended playback of an item.
-        case ended
-        /// The player encountered an error.
-        case failed(error: Error)
-    }
+/// Playback states.
+public enum PlaybackState {
+    /// The player is idle.
+    case idle
+    /// The player is currently playing content.
+    case playing
+    /// The player has been paused.
+    case paused
+    /// The player ended playback of an item.
+    case ended
+    /// The player encountered an error.
+    case failed(error: Error)
 
-    static func statePublisher(for player: AVPlayer) -> AnyPublisher<State, Never> {
+    static func publisher(for player: AVPlayer) -> AnyPublisher<PlaybackState, Never> {
         Publishers.CombineLatest(
             ItemState.publisher(for: player),
             ratePublisher(for: player)
@@ -32,13 +30,13 @@ extension Player {
         .eraseToAnyPublisher()
     }
 
-    static func ratePublisher(for player: AVPlayer) -> AnyPublisher<Float, Never> {
+    private static func ratePublisher(for player: AVPlayer) -> AnyPublisher<Float, Never> {
         player.publisher(for: \.rate)
             .prepend(player.rate)
             .eraseToAnyPublisher()
     }
 
-    private static func state(for itemState: ItemState, rate: Float) -> State {
+    private static func state(for itemState: ItemState, rate: Float) -> PlaybackState {
         switch itemState {
         case .readyToPlay:
             return (rate == 0) ? .paused : .playing
@@ -51,12 +49,9 @@ extension Player {
         }
     }
 
-    static nonisolated func areDuplicates(_ lhsState: Player.State, _ rhsState: Player.State) -> Bool {
+    private static func areDuplicates(_ lhsState: PlaybackState, _ rhsState: PlaybackState) -> Bool {
         switch (lhsState, rhsState) {
-        case (.idle, .idle),
-            (.playing, .playing),
-            (.paused, .paused),
-            (.ended, .ended):
+        case (.idle, .idle), (.playing, .playing), (.paused, .paused), (.ended, .ended):
             return true
         default:
             return false

@@ -7,11 +7,11 @@
 import AVFoundation
 import Combine
 
-/// Audio and video player.
+/// Audio / video player.
 @MainActor
 public final class Player: ObservableObject {
-    /// The current player state.
-    @Published public private(set) var state: State = .idle
+    /// The current playback state.
+    @Published public private(set) var playbackState: PlaybackState = .idle
     /// Current player properties.
     @Published public private(set) var properties: Properties
 
@@ -36,9 +36,9 @@ public final class Player: ObservableObject {
         dequeuePlayer = DequeuePlayer(items: items)
         properties = .empty(for: dequeuePlayer)
 
-        Self.statePublisher(for: dequeuePlayer)
+        PlaybackState.publisher(for: dequeuePlayer)
             .receive(on: DispatchQueue.main)
-            .assign(to: &$state)
+            .assign(to: &$playbackState)
         Self.propertiesPublisher(for: dequeuePlayer)
             .receive(on: DispatchQueue.main)
             .assign(to: &$properties)

@@ -10,12 +10,11 @@ import Circumspect
 import CoreMedia
 import Nimble
 
-extension Player.State: Similar {
+extension PlaybackState: Similar {
     /// Similarity ignores associated values
-    public static func ~= (lhs: Player.State, rhs: Player.State) -> Bool {
+    public static func ~= (lhs: PlaybackState, rhs: PlaybackState) -> Bool {
         switch (lhs, rhs) {
-        case (.idle, .idle), (.playing, .playing), (.paused, .paused),
-            (.ended, .ended), (.failed, .failed):
+        case (.idle, .idle), (.playing, .playing), (.paused, .paused), (.ended, .ended), (.failed, .failed):
             return true
         default:
             return false
@@ -27,8 +26,7 @@ extension ItemState: Similar {
     /// Similarity ignores associated values
     public static func ~= (lhs: ItemState, rhs: ItemState) -> Bool {
         switch (lhs, rhs) {
-        case (.unknown, .unknown), (.readyToPlay, .readyToPlay), (.ended, .ended),
-            (.failed, .failed):
+        case (.unknown, .unknown), (.readyToPlay, .readyToPlay), (.ended, .ended), (.failed, .failed):
             return true
         default:
             return false
