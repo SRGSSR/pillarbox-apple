@@ -10,7 +10,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class PulseTests: XCTestCase {
+final class PulseProgressTests: XCTestCase {
     func testProgress() {
         let pulse = Pulse(
             time: CMTime(value: 10, timescale: 1),
@@ -103,7 +103,9 @@ final class PulseTests: XCTestCase {
         )
         expect(pulse.progress).to(equal(0))
     }
+}
 
+final class PulseTimeTests: XCTestCase {
     func testTimeForProgress() {
         let pulse = Pulse(
             time: .zero,

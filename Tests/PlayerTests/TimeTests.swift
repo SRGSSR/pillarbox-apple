@@ -6,12 +6,61 @@
 
 @testable import Player
 
-import CoreMedia
+import AVFoundation
 import Nimble
 import XCTest
 
+// TODO:
+//  - Keep time range after playback end
+//  - Test with several items (also after playback end)
+//  - Test with failure
+//  - Maybe make time range optional and if present guarantee always valid
+//  - Same for time
+//  - Better wait criteria before the time range / stream type can be checked?
+
 final class TimeRangeTests: XCTestCase {
-    
+    func testOnDemandStream() {
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
+        _ = AVPlayer(playerItem: item)
+        expect(item.status).toEventually(equal(.readyToPlay))
+        expect(Time.timeRange(for: item)).to(equal(
+            CMTimeRangeMake(start: .zero, duration: CMTime(value: 120, timescale: 1)),
+            by: beClose(within: 0.5)
+        ))
+    }
+
+    func testLiveStream() {
+        let item = AVPlayerItem(url: TestStreams.liveUrl)
+        _ = AVPlayer(playerItem: item)
+        expect(item.status).toEventually(equal(.readyToPlay))
+        expect(Time.timeRange(for: item)).to(equal(
+            .zero,
+            by: beClose(within: 0.5)
+        ))
+    }
+
+    func testCorruptOnDemandStream() {
+        let item = AVPlayerItem(url: TestStreams.corruptOnDemandUrl)
+        _ = AVPlayer(playerItem: item)
+        expect(item.status).toEventually(equal(.readyToPlay))
+        expect(Time.timeRange(for: item)).to(equal(
+            .invalid,
+            by: beClose(within: 0.5)
+        ))
+    }
+
+    func testWithoutItem() {
+        expect(Time.timeRange(for: nil)).to(equal(.invalid))
+    }
+
+    func testNonReadyStream() {
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
+        _ = AVPlayer(playerItem: item)
+        expect(Time.timeRange(for: item)).to(equal(
+            .invalid,
+            by: beClose(within: 0.5)
+        ))
+    }
 }
 
 final class CloseTests: XCTestCase {
