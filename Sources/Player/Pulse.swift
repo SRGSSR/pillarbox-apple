@@ -39,11 +39,17 @@ public struct Pulse {
     }
 
     static func publisher(for player: AVPlayer, queue: DispatchQueue) -> AnyPublisher<Pulse?, Never> {
-        Publishers.PeriodicTimePublisher(for: player, interval: CMTimeMake(value: 1, timescale: 1), queue: queue)
-            .map { [weak player] time in
-                guard let player, let timeRange = Time.timeRange(for: player.currentItem) else { return nil }
-                return Pulse(time: time, timeRange: timeRange)
-            }
-            .eraseToAnyPublisher()
+        // TODO: Maybe better criterium than item state (asset duration? Maybe more resilient for AirPlay)
+        Publishers.Merge(
+            ItemState.publisher(for: player)
+                .filter { $0 == .readyToPlay }
+                .map { _ in CMTime.zero },
+            Publishers.PeriodicTimePublisher(for: player, interval: CMTimeMake(value: 1, timescale: 1), queue: queue)
+        )
+        .map { [weak player] time in
+            guard let player, let timeRange = Time.timeRange(for: player.currentItem) else { return nil }
+            return Pulse(time: time, timeRange: timeRange)
+        }
+        .eraseToAnyPublisher()
     }
 }
