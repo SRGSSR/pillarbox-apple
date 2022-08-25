@@ -10,13 +10,15 @@ import CoreMedia
 
 /// Player pulse.
 public struct Pulse {
-    /// The current time.
+    /// The current time. Guaranteed to be numeric.
     public let time: CMTime
-    /// The time range.
+    /// The time range. Guaranteed to be valid.
     public let timeRange: CMTimeRange
 
-    static var empty: Self {
-        Pulse(time: .zero, timeRange: .invalid)
+    init(time: CMTime, timeRange: CMTimeRange) {
+        precondition(time.isNumeric && timeRange.isValid)
+        self.time = time
+        self.timeRange = timeRange
     }
 
     var progress: Float {
@@ -30,17 +32,17 @@ public struct Pulse {
         return Float(elapsedTime / duration).clamped(to: 0...1)
     }
 
-    func time(forProgress progress: Float) -> CMTime {
-        guard timeRange.isValid && !timeRange.isEmpty else { return .invalid }
+    func time(forProgress progress: Float) -> CMTime? {
+        guard timeRange.isValid && !timeRange.isEmpty else { return nil }
         let multiplier = Float64(progress.clamped(to: 0...1))
         return CMTimeAdd(timeRange.start, CMTimeMultiplyByFloat64(timeRange.duration, multiplier: multiplier))
     }
 
-    static func publisher(for player: AVPlayer, queue: DispatchQueue) -> AnyPublisher<Pulse, Never> {
+    static func publisher(for player: AVPlayer, queue: DispatchQueue) -> AnyPublisher<Pulse?, Never> {
         Publishers.PeriodicTimePublisher(for: player, interval: CMTimeMake(value: 1, timescale: 1), queue: queue)
             .map { [weak player] time in
-                guard let player else { return .empty }
-                return Pulse(time: time, timeRange: Time.timeRange(for: player.currentItem))
+                guard let player, let timeRange = Time.timeRange(for: player.currentItem) else { return nil }
+                return Pulse(time: time, timeRange: timeRange)
             }
             .eraseToAnyPublisher()
     }

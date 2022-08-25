@@ -18,9 +18,7 @@ public enum StreamType {
     case dvr
 
     static func streamType(for item: AVPlayerItem?) -> StreamType {
-        guard let item else { return .unknown }
-        let timeRange = Time.timeRange(for: item)
-        guard timeRange.isValid else { return .unknown }
+        guard let item, let timeRange = Time.timeRange(for: item) else { return .unknown }
         return .onDemand
     }
 }

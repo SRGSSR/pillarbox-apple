@@ -44,62 +44,10 @@ final class PulseProgressTests: XCTestCase {
         expect(pulse.progress).to(equal(1))
     }
 
-    func testProgressForInvalidTime() {
-        let pulse = Pulse(
-            time: .invalid,
-            timeRange: CMTimeRange(
-                start: CMTime(value: 10, timescale: 1),
-                duration: CMTime(value: 20, timescale: 1)
-            )
-        )
-        expect(pulse.progress).to(equal(0))
-    }
-
-    func testProgressForIndefiniteTime() {
-        let pulse = Pulse(
-            time: .indefinite,
-            timeRange: CMTimeRange(
-                start: CMTime(value: 10, timescale: 1),
-                duration: CMTime(value: 20, timescale: 1)
-            )
-        )
-        expect(pulse.progress).to(equal(0))
-    }
-
-    func testProgressForNegativeInfinityTime() {
-        let pulse = Pulse(
-            time: .negativeInfinity,
-            timeRange: CMTimeRange(
-                start: CMTime(value: 10, timescale: 1),
-                duration: CMTime(value: 20, timescale: 1)
-            )
-        )
-        expect(pulse.progress).to(equal(0))
-    }
-
-    func testProgressForPositiveInfinityTime() {
-        let pulse = Pulse(
-            time: .positiveInfinity,
-            timeRange: CMTimeRange(
-                start: CMTime(value: 10, timescale: 1),
-                duration: CMTime(value: 20, timescale: 1)
-            )
-        )
-        expect(pulse.progress).to(equal(0))
-    }
-
     func testProgressForEmptyTimeRange() {
         let pulse = Pulse(
             time: CMTime(value: 100, timescale: 1),
             timeRange: .zero
-        )
-        expect(pulse.progress).to(equal(0))
-    }
-
-    func testProgressForInvalidTimeRange() {
-        let pulse = Pulse(
-            time: CMTime(value: 100, timescale: 1),
-            timeRange: .invalid
         )
         expect(pulse.progress).to(equal(0))
     }
@@ -141,11 +89,6 @@ final class PulseTimeTests: XCTestCase {
 
     func testTimeForProgressWithEmptyTimeRange() {
         let pulse = Pulse(time: .zero, timeRange: .zero)
-        expect(pulse.time(forProgress: 2)).to(equal(.invalid))
-    }
-
-    func testTimeForProgressWithInvalidTimeRange() {
-        let pulse = Pulse(time: .zero, timeRange: .invalid)
-        expect(pulse.time(forProgress: 2)).to(equal(.invalid))
+        expect(pulse.time(forProgress: 2)).to(beNil())
     }
 }

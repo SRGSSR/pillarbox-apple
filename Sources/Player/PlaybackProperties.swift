@@ -10,7 +10,7 @@ import Combine
 /// Playback properties.
 public struct PlaybackProperties {
     /// Pulse.
-    public let pulse: Pulse
+    public let pulse: Pulse?
 
     /// Time targeted by a pending seek, if any.
     public let targetTime: CMTime?
@@ -18,11 +18,11 @@ public struct PlaybackProperties {
     /// A value in 0...1 describing the playback progress targeted by a pending seek, if any.
     public var targetProgress: Float? {
         guard let targetTime else { return nil }
-        return pulse.progress(for: targetTime)
+        return pulse?.progress(for: targetTime)
     }
 
     static var empty: Self {
-        PlaybackProperties(pulse: .empty, targetTime: nil)
+        PlaybackProperties(pulse: nil, targetTime: nil)
     }
 
     static func publisher(for player: AVPlayer) -> AnyPublisher<PlaybackProperties, Never> {

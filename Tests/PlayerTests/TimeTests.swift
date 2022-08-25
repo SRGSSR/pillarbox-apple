@@ -12,8 +12,6 @@ import Nimble
 import XCTest
 
 // TODO:
-//  - Maybe make time range optional and if present guarantee always valid
-//  - Maybe same for time
 //  - Better wait criteria before the time range / stream type can be checked?
 
 final class TimeRangeTests: XCTestCase {
@@ -38,16 +36,13 @@ final class TimeRangeTests: XCTestCase {
     }
 
     func testWithoutItem() {
-        expect(Time.timeRange(for: nil)).to(equal(.invalid))
+        expect(Time.timeRange(for: nil)).to(beNil())
     }
 
     func testNonReadyStream() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         _ = AVPlayer(playerItem: item)
-        expect(Time.timeRange(for: item)).to(equal(
-            .invalid,
-            by: beClose(within: 0.5)
-        ))
+        expect(Time.timeRange(for: item)).to(beNil())
     }
 }
 

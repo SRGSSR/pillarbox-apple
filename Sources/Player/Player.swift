@@ -17,14 +17,16 @@ public final class Player: ObservableObject {
 
     /// A value in 0...1 describing the current playback progress.
     public var progress: Float {
-        return playbackProperties.pulse.progress
+        return playbackProperties.pulse?.progress ?? 0
     }
 
     /// Progress which the player is reaching.
     @Published public var targetProgress: Float = 0 {
         willSet {
-            let time = playbackProperties.pulse.time(forProgress: newValue)
-            guard time.isNumeric else { return }
+            guard let time = playbackProperties.pulse?.time(forProgress: newValue),
+                    time.isNumeric else {
+                return
+            }
             seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { _ in }
         }
     }
@@ -53,7 +55,7 @@ public final class Player: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: &$playbackProperties)
         $playbackProperties
-            .map { $0.targetProgress ?? $0.pulse.progress }
+            .map { $0.targetProgress ?? $0.pulse?.progress ?? 0 }
             .removeDuplicates()
             .assign(to: &$targetProgress)
     }
