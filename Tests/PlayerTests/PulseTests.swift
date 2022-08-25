@@ -124,3 +124,5 @@ final class PulseTimeTests: XCTestCase {
         expect(pulse.time(forProgress: 2)).to(beNil())
     }
 }
+
+// TODO: Pulse publisher tests; faster values if also observing readiness to play?
