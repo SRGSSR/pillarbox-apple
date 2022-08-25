@@ -21,8 +21,8 @@ final class PropertiesTimeRangeTests: XCTestCase {
                 .invalid,
                 CMTimeRangeMake(start: .zero, duration: CMTime(value: 120, timescale: 1))
             ],
-            from: player.$properties
-                .map(\.playback.timeRange)
+            from: player.$playbackProperties
+                .map(\.pulse.timeRange)
                 .removeDuplicates(by: beClose(within: 0.5)),
             to: beClose(within: 0.5)
         ) {
@@ -35,8 +35,8 @@ final class PropertiesTimeRangeTests: XCTestCase {
         let player = Player(item: item)
         try expectPublished(
             values: [.invalid, .zero],
-            from: player.$properties
-                .map(\.playback.timeRange)
+            from: player.$playbackProperties
+                .map(\.pulse.timeRange)
                 .removeDuplicates()
         ) {
             player.play()
@@ -48,8 +48,8 @@ final class PropertiesTimeRangeTests: XCTestCase {
         let player = Player(item: item)
         try expectPublished(
             values: [.invalid],
-            from: player.$properties
-                .map(\.playback.timeRange)
+            from: player.$playbackProperties
+                .map(\.pulse.timeRange)
                 .removeDuplicates(),
             during: 2
         ) {
@@ -62,8 +62,8 @@ final class PropertiesTimeRangeTests: XCTestCase {
         let player = Player(item: item)
         try expectPublished(
             values: [.invalid],
-            from: player.$properties
-                .map(\.playback.timeRange)
+            from: player.$playbackProperties
+                .map(\.pulse.timeRange)
                 .removeDuplicates(),
             during: 2
         ) {

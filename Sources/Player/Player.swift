@@ -10,15 +10,15 @@ import Combine
 /// Audio / video player.
 @MainActor
 public final class Player: ObservableObject {
-    /// The current playback state.
+    /// Current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle
-    /// Current player properties.
-    @Published public private(set) var properties: Properties
+    /// Current playback properties.
+    @Published public private(set) var playbackProperties: PlaybackProperties  = .empty
 
-    /// A progress value in 0...1 which the player should reach.
+    /// Progress which the player is reaching.
     @Published public var targetProgress: Float = 0 {
         willSet {
-            let time = properties.playback.time(forProgress: newValue.clamped(to: 0...1))
+            let time = playbackProperties.pulse.time(forProgress: newValue)
             seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { _ in }
         }
     }
@@ -34,16 +34,15 @@ public final class Player: ObservableObject {
     /// - Parameter items: The items to be queued initially.
     public init(items: [AVPlayerItem] = []) {
         dequeuePlayer = DequeuePlayer(items: items)
-        properties = .empty(for: dequeuePlayer)
 
         PlaybackState.publisher(for: dequeuePlayer)
             .receive(on: DispatchQueue.main)
             .assign(to: &$playbackState)
-        Self.propertiesPublisher(for: dequeuePlayer)
+        PlaybackProperties.publisher(for: dequeuePlayer)
             .receive(on: DispatchQueue.main)
-            .assign(to: &$properties)
-        $properties
-            .map { $0.targetProgress ?? $0.progress }
+            .assign(to: &$playbackProperties)
+        $playbackProperties
+            .map { $0.targetProgress ?? $0.pulse.progress }
             .removeDuplicates()
             .assign(to: &$targetProgress)
     }

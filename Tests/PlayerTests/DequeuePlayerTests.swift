@@ -12,7 +12,7 @@ import Nimble
 import XCTest
 
 @MainActor
-final class DequeuePlayerSeekTests: XCTestCase {
+final class DequeuePlayerNotificationTests: XCTestCase {
     func testSeekAsyncBeforePlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = DequeuePlayer(playerItem: item)

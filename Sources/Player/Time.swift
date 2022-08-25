@@ -7,13 +7,6 @@
 import AVFoundation
 
 enum Time {
-    static func progress(for time: CMTime, in range: CMTimeRange) -> Float {
-        guard range.isValid && !range.isEmpty else { return 0 }
-        let elapsedTime = CMTimeGetSeconds(CMTimeSubtract(time, range.start))
-        let duration = CMTimeGetSeconds(range.duration)
-        return Float(elapsedTime / duration).clamped(to: 0...1)
-    }
-
     /// Return a time comparator having some tolerance. `CMTime` implements standard equality and comparison operators
     /// in Swift for convenience.
     static func close(within tolerance: TimeInterval) -> ((CMTime, CMTime) -> Bool) {

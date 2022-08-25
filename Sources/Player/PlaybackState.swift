@@ -26,7 +26,7 @@ public enum PlaybackState {
             ratePublisher(for: player)
         )
         .map { state(for: $0, rate: $1) }
-        .removeDuplicates(by: Self.areDuplicates)
+        .removeDuplicates(by: areDuplicates)
         .eraseToAnyPublisher()
     }
 

@@ -17,7 +17,7 @@ final class StreamTypeTests: XCTestCase {
         let player = Player(item: item)
         try expectPublished(
             values: [.unknown, .onDemand],
-            from: player.$properties
+            from: player.$playbackProperties
                 .map(\.streamType)
                 .removeDuplicates()
         ) {
@@ -30,7 +30,7 @@ final class StreamTypeTests: XCTestCase {
         let player = Player(item: item)
         try expectPublished(
             values: [.unknown, .onDemand],
-            from: player.$properties
+            from: player.$playbackProperties
                 .map(\.streamType)
                 .removeDuplicates()
         )

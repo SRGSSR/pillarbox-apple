@@ -10,15 +10,6 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class ProgressTests: XCTestCase {
-    func testProgress() {
-        expect(Time.progress(
-            for: CMTimeMake(value: 1, timescale: 2),
-            in: CMTimeRangeMake(start: .zero, duration: CMTimeMake(value: 1, timescale: 1))
-        )).to(equal(0.5))
-    }
-}
-
 final class TimeCloseTests: XCTestCase {
     func testCloseWithFiniteTimes() {
         expect(Time.close(within: 0)(CMTime.zero, .zero)).to(beTrue())
