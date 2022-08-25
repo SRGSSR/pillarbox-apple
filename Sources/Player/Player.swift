@@ -13,11 +13,19 @@ public final class Player: ObservableObject {
     /// Current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle
     /// Current playback properties.
-    @Published public private(set) var playbackProperties: PlaybackProperties  = .empty
+    @Published private var playbackProperties: PlaybackProperties  = .empty
 
     /// A value in 0...1 describing the current playback progress.
     public var progress: Float {
         return playbackProperties.pulse?.progress ?? 0
+    }
+
+    public var time: CMTime? {
+        return playbackProperties.pulse?.time
+    }
+
+    public var timeRange: CMTimeRange? {
+        return playbackProperties.pulse?.timeRange
     }
 
     /// Progress which the player is reaching.

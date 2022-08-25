@@ -8,15 +8,15 @@ import AVFoundation
 import Combine
 
 /// Playback properties.
-public struct PlaybackProperties {
+struct PlaybackProperties {
     /// Pulse.
-    public let pulse: Pulse?
+    let pulse: Pulse?
 
     /// Time targeted by a pending seek, if any.
-    public let targetTime: CMTime?
+    let targetTime: CMTime?
 
     /// A value in 0...1 describing the playback progress targeted by a pending seek, if any.
-    public var targetProgress: Float? {
+    var targetProgress: Float? {
         guard let targetTime else { return nil }
         return pulse?.progress(for: targetTime)
     }

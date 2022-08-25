@@ -9,11 +9,11 @@ import Combine
 import CoreMedia
 
 /// Player pulse.
-public struct Pulse {
+struct Pulse {
     /// The current time. Guaranteed to be numeric.
-    public let time: CMTime
+    let time: CMTime
     /// The time range. Guaranteed to be valid.
-    public let timeRange: CMTimeRange
+    let timeRange: CMTimeRange
 
     init?(time: CMTime, timeRange: CMTimeRange) {
         guard time.isNumeric, timeRange.isValid else { return nil }
