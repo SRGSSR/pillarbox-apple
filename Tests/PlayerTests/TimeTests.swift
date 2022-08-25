@@ -11,9 +11,8 @@ import Nimble
 import XCTest
 
 // TODO:
-//  - Keep time range after playback end
+//  - Keep time range after playback end (in properties)
 //  - Test with several items (also after playback end)
-//  - Test with failure
 //  - Maybe make time range optional and if present guarantee always valid
 //  - Same for time
 //  - Better wait criteria before the time range / stream type can be checked?
