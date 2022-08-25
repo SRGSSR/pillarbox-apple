@@ -24,7 +24,11 @@ struct DemosView: View {
             id: "urn:rts:video:13317145",
             title: "Des violents orages ont touché Ajaccio, chef-lieu de la Corse, jeudi",
             url: URL(string: "https://rts-vod-amd.akamaized.net/ww/13317145/f1d49f18-f302-37ce-866c-1c1c9b76a824/master.m3u8")!
-        )
+        ),
+        Media(
+            id: "urn:rts:video:8841634",
+            title: "Couleur 3",
+            url: URL(string: "https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8?dw=0")!)
     ]
 
     var body: some View {
