@@ -19,19 +19,18 @@ public struct Pulse {
         Pulse(time: .zero, timeRange: .invalid)
     }
 
-    /// A value in 0...1 describing the current playback progress.
-    public var progress: Float {
-        progress(for: time)
+    var progress: Float {
+        return progress(for: time)
     }
 
     func progress(for time: CMTime) -> Float {
-        guard timeRange.isValid && !timeRange.isEmpty else { return 0 }
+        guard time.isNumeric && timeRange.isValid && !timeRange.isEmpty else { return 0 }
         let elapsedTime = CMTimeGetSeconds(CMTimeSubtract(time, timeRange.start))
         let duration = CMTimeGetSeconds(timeRange.duration)
         return Float(elapsedTime / duration).clamped(to: 0...1)
     }
 
-    func time(forProgress progress: Float) -> CMTime {
+    func time(forProgress progress: Float) throws -> CMTime {
         let multiplier = Float64(progress.clamped(to: 0...1))
         return CMTimeAdd(timeRange.start, CMTimeMultiplyByFloat64(timeRange.duration, multiplier: multiplier))
     }

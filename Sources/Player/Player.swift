@@ -15,10 +15,15 @@ public final class Player: ObservableObject {
     /// Current playback properties.
     @Published public private(set) var playbackProperties: PlaybackProperties  = .empty
 
+    /// A value in 0...1 describing the current playback progress.
+    public var progress: Float {
+        return playbackProperties.pulse.progress
+    }
+
     /// Progress which the player is reaching.
     @Published public var targetProgress: Float = 0 {
         willSet {
-            let time = playbackProperties.pulse.time(forProgress: newValue)
+            guard let time = try? playbackProperties.pulse.time(forProgress: newValue) else { return }
             seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { _ in }
         }
     }
