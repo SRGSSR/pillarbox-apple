@@ -38,16 +38,6 @@ final class TimeRangeTests: XCTestCase {
         ))
     }
 
-    func testCorruptOnDemandStream() {
-        let item = AVPlayerItem(url: TestStreams.corruptOnDemandUrl)
-        _ = AVPlayer(playerItem: item)
-        expect(item.status).toEventually(equal(.readyToPlay))
-        expect(Time.timeRange(for: item)).to(equal(
-            .invalid,
-            by: beClose(within: 0.5)
-        ))
-    }
-
     func testWithoutItem() {
         expect(Time.timeRange(for: nil)).to(equal(.invalid))
     }

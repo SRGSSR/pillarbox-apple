@@ -114,7 +114,7 @@ final class PulseTimeTests: XCTestCase {
                 duration: CMTime(value: 30, timescale: 1)
             )
         )
-        expect(pulse.time(forProgress: 0.5)).to(equal(CMTime(value: 20, timescale: 1)))
+        expect(pulse.time(forProgress: 0.5)).to(equal(CMTime(value: 25, timescale: 1)))
     }
 
     func testTimeForProgressBelowLowerBound() {
