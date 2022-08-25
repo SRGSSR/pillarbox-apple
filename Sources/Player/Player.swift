@@ -23,23 +23,23 @@ public final class Player: ObservableObject {
         }
     }
 
-    let systemPlayer: SystemPlayer
+    let dequeuePlayer: DequeuePlayer
 
     /// The items currently queued by the player.
     public var items: [AVPlayerItem] {
-        systemPlayer.items()
+        dequeuePlayer.items()
     }
 
     /// Create a player with a given item queue.
     /// - Parameter items: The items to be queued initially.
     public init(items: [AVPlayerItem] = []) {
-        systemPlayer = SystemPlayer(items: items)
-        properties = .empty(for: systemPlayer)
+        dequeuePlayer = DequeuePlayer(items: items)
+        properties = .empty(for: dequeuePlayer)
 
-        Self.statePublisher(for: systemPlayer)
+        Self.statePublisher(for: dequeuePlayer)
             .receive(on: DispatchQueue.main)
             .assign(to: &$state)
-        Self.propertiesPublisher(for: systemPlayer)
+        Self.propertiesPublisher(for: dequeuePlayer)
             .receive(on: DispatchQueue.main)
             .assign(to: &$properties)
         $properties
@@ -59,7 +59,7 @@ public final class Player: ObservableObject {
     ///   - item: The item to insert.
     ///   - afterItem: The item after which the new item must be inserted. If `nil` the item is appended.
     public func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
-        systemPlayer.insert(item, after: afterItem)
+        dequeuePlayer.insert(item, after: afterItem)
     }
 
     /// Append an item to the queue.
@@ -71,31 +71,31 @@ public final class Player: ObservableObject {
     /// Remove an item from the queue.
     /// - Parameter item: The item to remove.
     public func remove(_ item: AVPlayerItem) {
-        systemPlayer.remove(item)
+        dequeuePlayer.remove(item)
     }
 
     /// Remove all items from the queue.
     public func removeAllItems() {
-        systemPlayer.removeAllItems()
+        dequeuePlayer.removeAllItems()
     }
 
     /// Resume playback.
     public func play() {
-        systemPlayer.play()
+        dequeuePlayer.play()
     }
 
     /// Pause playback.
     public func pause() {
-        systemPlayer.pause()
+        dequeuePlayer.pause()
     }
 
     /// Toggle playback between play and pause.
     public func togglePlayPause() {
-        if systemPlayer.rate != 0 {
-            systemPlayer.pause()
+        if dequeuePlayer.rate != 0 {
+            dequeuePlayer.pause()
         }
         else {
-            systemPlayer.play()
+            dequeuePlayer.play()
         }
     }
 
@@ -106,7 +106,7 @@ public final class Player: ObservableObject {
     ///   - toleranceAfter: Tolerance after the desired position.
     ///   - completionHandler: A completion handler called when seeking ends.
     public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        systemPlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
+        dequeuePlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
     }
 
     /// Seek to a given location.
@@ -117,7 +117,7 @@ public final class Player: ObservableObject {
     /// - Returns: `true` if seeking was successful.
     @discardableResult
     public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) async -> Bool {
-        await systemPlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
+        await dequeuePlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
     }
 
     static func periodicTimePublisher(for player: AVPlayer, interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
@@ -132,6 +132,6 @@ public final class Player: ObservableObject {
     ///   - queue: The queue on which events are received.
     /// - Returns: The publisher.
     public func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
-        Self.periodicTimePublisher(for: systemPlayer, interval: interval, queue: queue)
+        Self.periodicTimePublisher(for: dequeuePlayer, interval: interval, queue: queue)
     }
 }

@@ -12,15 +12,15 @@ import Nimble
 import XCTest
 
 @MainActor
-final class SystemPlayerTests: XCTestCase {
+final class DequeuePlayerTests: XCTestCase {
     func testSeekAsyncBeforePlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
-        let player = SystemPlayer(playerItem: item)
+        let player = DequeuePlayer(playerItem: item)
         let targetTime = CMTime(value: 2, timescale: 1)
         try expectReceived(
             notifications: [
                 Notification(name: .willSeek, object: player, userInfo: [
-                    SystemPlayer.SeekInfoKey.targetTime: targetTime
+                    DequeuePlayer.SeekInfoKey.targetTime: targetTime
                 ]),
                 Notification(name: .didSeek, object: player)
             ],
@@ -37,7 +37,7 @@ final class SystemPlayerTests: XCTestCase {
 
     func testSeekAsyncDuringPlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
-        let player = SystemPlayer(playerItem: item)
+        let player = DequeuePlayer(playerItem: item)
         try expectPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
             player.play()
         }
@@ -46,7 +46,7 @@ final class SystemPlayerTests: XCTestCase {
         try expectReceived(
             notifications: [
                 Notification(name: .willSeek, object: player, userInfo: [
-                    SystemPlayer.SeekInfoKey.targetTime: targetTime
+                    DequeuePlayer.SeekInfoKey.targetTime: targetTime
                 ]),
                 Notification(name: .didSeek, object: player)
             ],
@@ -63,12 +63,12 @@ final class SystemPlayerTests: XCTestCase {
 
     func testSeekWithCompletionBeforePlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
-        let player = SystemPlayer(playerItem: item)
+        let player = DequeuePlayer(playerItem: item)
         let targetTime = CMTime(value: 2, timescale: 1)
         try expectReceived(
             notifications: [
                 Notification(name: .willSeek, object: player, userInfo: [
-                    SystemPlayer.SeekInfoKey.targetTime: targetTime
+                    DequeuePlayer.SeekInfoKey.targetTime: targetTime
                 ]),
                 Notification(name: .didSeek, object: player)
             ],
@@ -84,7 +84,7 @@ final class SystemPlayerTests: XCTestCase {
 
     func testSeekWithCompletionDuringPlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
-        let player = SystemPlayer(playerItem: item)
+        let player = DequeuePlayer(playerItem: item)
         try expectPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
             player.play()
         }
@@ -93,7 +93,7 @@ final class SystemPlayerTests: XCTestCase {
         try expectReceived(
             notifications: [
                 Notification(name: .willSeek, object: player, userInfo: [
-                    SystemPlayer.SeekInfoKey.targetTime: targetTime
+                    DequeuePlayer.SeekInfoKey.targetTime: targetTime
                 ]),
                 Notification(name: .didSeek, object: player)
             ],
@@ -109,18 +109,18 @@ final class SystemPlayerTests: XCTestCase {
 
     func testMultipleSeeksAsyncBeforePlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
-        let player = SystemPlayer(playerItem: item)
+        let player = DequeuePlayer(playerItem: item)
 
         let targetTime1 = CMTime(value: 1, timescale: 2)
         let targetTime2 = CMTime(value: 2, timescale: 2)
         try expectReceived(
             notifications: [
                 Notification(name: .willSeek, object: player, userInfo: [
-                    SystemPlayer.SeekInfoKey.targetTime: targetTime1
+                    DequeuePlayer.SeekInfoKey.targetTime: targetTime1
                 ]),
                 Notification(name: .didSeek, object: player),
                 Notification(name: .willSeek, object: player, userInfo: [
-                    SystemPlayer.SeekInfoKey.targetTime: targetTime2
+                    DequeuePlayer.SeekInfoKey.targetTime: targetTime2
                 ]),
                 Notification(name: .didSeek, object: player)
             ],
@@ -141,7 +141,7 @@ final class SystemPlayerTests: XCTestCase {
 
     func testMultipleSeeksAsyncDuringPlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
-        let player = SystemPlayer(playerItem: item)
+        let player = DequeuePlayer(playerItem: item)
         try expectPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
             player.play()
         }
@@ -151,10 +151,10 @@ final class SystemPlayerTests: XCTestCase {
         try expectReceived(
             notifications: [
                 Notification(name: .willSeek, object: player, userInfo: [
-                    SystemPlayer.SeekInfoKey.targetTime: targetTime1
+                    DequeuePlayer.SeekInfoKey.targetTime: targetTime1
                 ]),
                 Notification(name: .willSeek, object: player, userInfo: [
-                    SystemPlayer.SeekInfoKey.targetTime: targetTime2
+                    DequeuePlayer.SeekInfoKey.targetTime: targetTime2
                 ]),
                 Notification(name: .didSeek, object: player)
             ],
@@ -175,17 +175,17 @@ final class SystemPlayerTests: XCTestCase {
 
     func testMultipleSeeksWithCompletionBeforePlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
-        let player = SystemPlayer(playerItem: item)
+        let player = DequeuePlayer(playerItem: item)
         let targetTime1 = CMTime(value: 1, timescale: 2)
         let targetTime2 = CMTime(value: 2, timescale: 2)
         try expectReceived(
             notifications: [
                 Notification(name: .willSeek, object: player, userInfo: [
-                    SystemPlayer.SeekInfoKey.targetTime: targetTime1
+                    DequeuePlayer.SeekInfoKey.targetTime: targetTime1
                 ]),
                 Notification(name: .didSeek, object: player),
                 Notification(name: .willSeek, object: player, userInfo: [
-                    SystemPlayer.SeekInfoKey.targetTime: targetTime2
+                    DequeuePlayer.SeekInfoKey.targetTime: targetTime2
                 ]),
                 Notification(name: .didSeek, object: player)
             ],
@@ -205,7 +205,7 @@ final class SystemPlayerTests: XCTestCase {
 
     func testMultipleSeeksWithCompletionDuringPlayback() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
-        let player = SystemPlayer(playerItem: item)
+        let player = DequeuePlayer(playerItem: item)
         try expectPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
             player.play()
         }
@@ -215,10 +215,10 @@ final class SystemPlayerTests: XCTestCase {
         try expectReceived(
             notifications: [
                 Notification(name: .willSeek, object: player, userInfo: [
-                    SystemPlayer.SeekInfoKey.targetTime: targetTime1
+                    DequeuePlayer.SeekInfoKey.targetTime: targetTime1
                 ]),
                 Notification(name: .willSeek, object: player, userInfo: [
-                    SystemPlayer.SeekInfoKey.targetTime: targetTime2
+                    DequeuePlayer.SeekInfoKey.targetTime: targetTime2
                 ]),
                 Notification(name: .didSeek, object: player)
             ],

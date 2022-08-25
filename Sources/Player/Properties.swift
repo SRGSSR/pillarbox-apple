@@ -90,7 +90,7 @@ public extension Player {
     static func seekTargetTimePublisher(for player: AVPlayer) -> AnyPublisher<CMTime?, Never> {
         Publishers.Merge(
             NotificationCenter.default.weakPublisher(for: .willSeek, object: player)
-                .map { $0.userInfo?[SystemPlayer.SeekInfoKey.targetTime] as? CMTime },
+                .map { $0.userInfo?[DequeuePlayer.SeekInfoKey.targetTime] as? CMTime },
             NotificationCenter.default.weakPublisher(for: .didSeek, object: player)
                 .map { _ in nil }
         )

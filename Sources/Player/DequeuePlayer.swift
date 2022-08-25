@@ -6,9 +6,9 @@
 
 import AVFoundation
 
-// TODO: Improve with a seek count to only send `.didSeek` when all pending seeks are finished.
+// TODO: Must later implement dequeue support for items
 @MainActor
-final class SystemPlayer: AVQueuePlayer {
+final class DequeuePlayer: AVQueuePlayer {
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         NotificationCenter.default.post(name: .willSeek, object: self, userInfo: [
             SeekInfoKey.targetTime: time
@@ -22,7 +22,7 @@ final class SystemPlayer: AVQueuePlayer {
     }
 }
 
-extension SystemPlayer {
+extension DequeuePlayer {
     enum SeekInfoKey: String {
         case targetTime
     }
@@ -30,6 +30,6 @@ extension SystemPlayer {
 
 /// Can be posted from any thread.
 extension Notification.Name {
-    static let willSeek = Notification.Name("SystemPlayerWillSeekNotification")
-    static let didSeek = Notification.Name("SystemPlayerDidSeekNotification")
+    static let willSeek = Notification.Name("DequeuePlayerWillSeekNotification")
+    static let didSeek = Notification.Name("DequeuePlayerDidSeekNotification")
 }
