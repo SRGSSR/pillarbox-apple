@@ -7,6 +7,7 @@
 @testable import Player
 
 import AVFoundation
+import Circumspect
 import Combine
 import XCTest
 
@@ -23,7 +24,7 @@ final class ItemStatePublisherTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         try expectPublished(
             values: [.unknown, .readyToPlay, .ended],
-            from: Player.itemStatePublisher(for: player),
+            from: ItemState.publisher(for: player),
             during: 4
         ) {
             player.play()
@@ -35,7 +36,7 @@ final class ItemStatePublisherTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         try expectPublished(
             values: [.unknown, .failed(error: TestError.any)],
-            from: Player.itemStatePublisher(for: player),
+            from: ItemState.publisher(for: player),
             during: 2
         )
     }
@@ -45,7 +46,7 @@ final class ItemStatePublisherTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         try expectPublished(
             values: [.unknown, .failed(error: TestError.any)],
-            from: Player.itemStatePublisher(for: player),
+            from: ItemState.publisher(for: player),
             during: 2
         )
     }
@@ -57,7 +58,7 @@ final class ItemStatePublisherTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         try expectPublished(
             values: [.unknown, .failed(error: TestError.any)],
-            from: Player.itemStatePublisher(for: player),
+            from: ItemState.publisher(for: player),
             during: 4
         ) {
             player.play()
@@ -69,7 +70,7 @@ final class ItemStatePublisherTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         try expectPublished(
             values: [.unknown, .readyToPlay],
-            from: Player.itemStatePublisher(for: player),
+            from: ItemState.publisher(for: player),
             during: 2
         )
     }
@@ -81,7 +82,7 @@ final class ItemStatePublisherTests: XCTestCase {
         try expectPublished(
             // The second item can be pre-buffered and is immediately ready
             values: [.unknown, .readyToPlay, .ended, .readyToPlay, .ended],
-            from: Player.itemStatePublisher(for: player),
+            from: ItemState.publisher(for: player),
             during: 4
         ) {
             player.play()
@@ -100,7 +101,7 @@ final class ItemStatePublisherTests: XCTestCase {
                 .failed(error: TestError.any),
                 .unknown, .readyToPlay, .ended
             ],
-            from: Player.itemStatePublisher(for: player),
+            from: ItemState.publisher(for: player),
             during: 4
         ) {
             player.play()

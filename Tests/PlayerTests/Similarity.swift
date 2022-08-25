@@ -23,9 +23,9 @@ extension Player.State: Similar {
     }
 }
 
-extension Player.ItemState: Similar {
+extension ItemState: Similar {
     /// Similarity ignores associated values
-    public static func ~= (lhs: Player.ItemState, rhs: Player.ItemState) -> Bool {
+    public static func ~= (lhs: ItemState, rhs: ItemState) -> Bool {
         switch (lhs, rhs) {
         case (.unknown, .unknown), (.readyToPlay, .readyToPlay), (.ended, .ended),
             (.failed, .failed):

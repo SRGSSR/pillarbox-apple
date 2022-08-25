@@ -24,7 +24,7 @@ extension Player {
 
     static func statePublisher(for player: AVPlayer) -> AnyPublisher<State, Never> {
         Publishers.CombineLatest(
-            itemStatePublisher(for: player),
+            ItemState.publisher(for: player),
             ratePublisher(for: player)
         )
         .map { state(for: $0, rate: $1) }
