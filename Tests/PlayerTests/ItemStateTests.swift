@@ -16,7 +16,12 @@ final class ItemStatePublisherTests: XCTestCase {
     private let queue = DispatchQueue(label: "ch.srgssr.failing-resource-loader")
 
     func testNoPlayback() throws {
-
+        let player = AVPlayer()
+        try expectPublished(
+            values: [.unknown],
+            from: ItemState.publisher(for: player),
+            during: 2
+        )
     }
 
     func testValidStream() throws {
@@ -25,7 +30,7 @@ final class ItemStatePublisherTests: XCTestCase {
         try expectPublished(
             values: [.unknown, .readyToPlay, .ended],
             from: ItemState.publisher(for: player),
-            during: 4
+            during: 2
         ) {
             player.play()
         }

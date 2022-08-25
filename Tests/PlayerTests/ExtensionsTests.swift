@@ -21,7 +21,7 @@ final class ClampedTests: XCTestCase {
     }
 }
 
-final class NotificationCenterPublisherTests: XCTestCase {
+final class NotificationCenterWeakPublisherTests: XCTestCase {
     func testWithoutObject() throws {
         let notificationCenter = NotificationCenter.default
         try awaitCompletion(from: notificationCenter.weakPublisher(for: .testNotification).first()) {

@@ -22,18 +22,6 @@ extension PlaybackState: Similar {
     }
 }
 
-extension ItemState: Similar {
-    /// Similarity ignores associated values
-    public static func ~= (lhs: ItemState, rhs: ItemState) -> Bool {
-        switch (lhs, rhs) {
-        case (.unknown, .unknown), (.readyToPlay, .readyToPlay), (.ended, .ended), (.failed, .failed):
-            return true
-        default:
-            return false
-        }
-    }
-}
-
 func beClose(within tolerance: TimeInterval) -> ((CMTime, CMTime) -> Bool) {
     Time.close(within: tolerance)
 }
