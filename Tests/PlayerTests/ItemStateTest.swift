@@ -80,6 +80,7 @@ final class ItemStateTests: XCTestCase {
         let item2 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = AVQueuePlayer(items: [item1, item2])
         try expectPublished(
+            // The second item can be pre-buffered and is immediately ready
             values: [.unknown, .readyToPlay, .ended, .readyToPlay, .ended],
             from: Player.itemStatePublisher(for: player),
             during: 4
@@ -88,12 +89,18 @@ final class ItemStateTests: XCTestCase {
         }
     }
 
-    func testChainedShortItemIntoFailure() throws {
+    func testChainedItemsWithFailure() throws {
         let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let item2 = AVPlayerItem(url: TestStreams.unavailableUrl)
-        let player = AVQueuePlayer(items: [item1, item2])
+        let item3 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
+        let player = AVQueuePlayer(items: [item1, item2, item3])
         try expectPublished(
-            values: [.unknown, .readyToPlay, .ended, .failed(error: TestError.any)],
+            // The third item cannot be pre-buffered and goes through the usual states
+            values: [
+                .unknown, .readyToPlay, .ended,
+                .failed(error: TestError.any),
+                .unknown, .readyToPlay, .ended
+            ],
             from: Player.itemStatePublisher(for: player),
             during: 4
         ) {
