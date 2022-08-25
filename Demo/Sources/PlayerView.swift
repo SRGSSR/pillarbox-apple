@@ -39,10 +39,12 @@ struct PlayerView: View {
             }
             .ignoresSafeArea()
 #if os(iOS)
-            Slider(value: $player.targetProgress)
-                .tint(.white)
-                .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            if player.streamType == .onDemand {
+                Slider(value: $player.targetProgress)
+                    .tint(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            }
 #endif
         }
         .onAppear {
