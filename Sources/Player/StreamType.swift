@@ -17,8 +17,8 @@ public enum StreamType {
     /// Livestream with DVR.
     case dvr
 
-    static func streamType(for item: AVPlayerItem?) -> StreamType {
-        guard let item, let timeRange = Time.timeRange(for: item) else { return .unknown }
-        return .onDemand
+    static func streamType(for pulse: Pulse?) -> StreamType {
+        guard let pulse else { return .unknown }
+        return pulse.timeRange.isEmpty ? .live : .onDemand
     }
 }

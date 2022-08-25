@@ -12,20 +12,26 @@ import XCTest
 
 @MainActor
 final class StreamTypeTests: XCTestCase {
-    func testNoItem() throws {
+    func testUnknown() {
         expect(StreamType.streamType(for: nil)).to(equal(.unknown))
     }
 
-    func testNonReadyOnDemandStream() {
-        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
-        expect(item.status).to(equal(.unknown))
-        expect(StreamType.streamType(for: nil)).to(equal(.unknown))
+    func testOnDemand() {
+        let pulse = Pulse(
+            time: .zero,
+            timeRange: CMTimeRange(
+                start: .zero,
+                duration: CMTime(value: 10, timescale: 1)
+            )
+        )
+        expect(StreamType.streamType(for: pulse)).to(equal(.onDemand))
     }
 
-    func testReadyOnDemandStream() throws {
-        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
-        let _ = AVPlayer(playerItem: item)
-        expect(item.status).toEventually(equal(.readyToPlay))
-        expect(StreamType.streamType(for: item)).to(equal(.onDemand))
+    func testLive() {
+        let pulse = Pulse(
+            time: .zero,
+            timeRange: .zero
+        )
+        expect(StreamType.streamType(for: pulse)).to(equal(.live))
     }
 }

@@ -40,7 +40,7 @@ public final class Player: ObservableObject {
 
     /// The type of stream currently played.
     public var streamType: StreamType {
-        return StreamType.streamType(for: dequeuePlayer.currentItem)
+        return StreamType.streamType(for: playbackProperties.pulse)
     }
 
     /// Create a player with a given item queue.

@@ -15,8 +15,8 @@ public struct Pulse {
     /// The time range. Guaranteed to be valid.
     public let timeRange: CMTimeRange
 
-    init(time: CMTime, timeRange: CMTimeRange) {
-        precondition(time.isNumeric && timeRange.isValid)
+    init?(time: CMTime, timeRange: CMTimeRange) {
+        guard time.isNumeric, timeRange.isValid else { return nil }
         self.time = time
         self.timeRange = timeRange
     }
