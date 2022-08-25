@@ -63,7 +63,7 @@ public final class Player: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: &$playbackProperties)
         $playbackProperties
-            .map { $0.targetProgress ?? $0.pulse?.progress ?? 0 }
+            .map { $0.targetProgress ?? 0 }
             .removeDuplicates()
             .assign(to: &$targetProgress)
     }

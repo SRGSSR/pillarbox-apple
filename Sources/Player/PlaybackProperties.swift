@@ -17,8 +17,10 @@ struct PlaybackProperties {
 
     /// A value in 0...1 describing the playback progress targeted by a pending seek, if any.
     var targetProgress: Float? {
-        guard let targetTime else { return nil }
-        return pulse?.progress(for: targetTime)
+        guard let targetTime, let targetProgress = pulse?.progress(for: targetTime) else {
+            return pulse?.progress
+        }
+        return targetProgress
     }
 
     static var empty: Self {
