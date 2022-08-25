@@ -11,8 +11,9 @@ import AVFoundation
 import Nimble
 import XCTest
 
+// TODO: Test at a lower level in TimeTests.swift
 @MainActor
-final class PropertiesTimeRangeTests: XCTestCase {
+final class PlaybackTimeRangeTests: XCTestCase {
     func testOnDemandTimeRange() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = Player(item: item)
