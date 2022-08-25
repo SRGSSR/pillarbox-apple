@@ -8,7 +8,7 @@ import AVFoundation
 import Combine
 
 /// Playback states.
-public enum PlaybackState {
+public enum PlaybackState: Equatable {
     /// The player is idle.
     case idle
     /// The player is currently playing content.
@@ -26,13 +26,12 @@ public enum PlaybackState {
             ratePublisher(for: player)
         )
         .map { state(for: $0, rate: $1) }
-        .removeDuplicates(by: areDuplicates)
+        .removeDuplicates()
         .eraseToAnyPublisher()
     }
 
-    private static func ratePublisher(for player: AVPlayer) -> AnyPublisher<Float, Never> {
+    static func ratePublisher(for player: AVPlayer) -> AnyPublisher<Float, Never> {
         player.publisher(for: \.rate)
-            .prepend(player.rate)
             .eraseToAnyPublisher()
     }
 
@@ -49,9 +48,10 @@ public enum PlaybackState {
         }
     }
 
-    private static func areDuplicates(_ lhsState: PlaybackState, _ rhsState: PlaybackState) -> Bool {
-        switch (lhsState, rhsState) {
-        case (.idle, .idle), (.playing, .playing), (.paused, .paused), (.ended, .ended):
+    // Ignore differences between errors (different errors should never occur in practice for the same session anyway).
+    public static func == (lhs: PlaybackState, rhs: PlaybackState) -> Bool {
+        switch (lhs, rhs) {
+        case (.idle, .idle), (.playing, .playing), (.paused, .paused), (.ended, .ended), (.failed, .failed):
             return true
         default:
             return false

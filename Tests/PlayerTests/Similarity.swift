@@ -10,18 +10,6 @@ import Circumspect
 import CoreMedia
 import Nimble
 
-extension PlaybackState: Similar {
-    /// Similarity ignores associated values
-    public static func ~= (lhs: PlaybackState, rhs: PlaybackState) -> Bool {
-        switch (lhs, rhs) {
-        case (.idle, .idle), (.playing, .playing), (.paused, .paused), (.ended, .ended), (.failed, .failed):
-            return true
-        default:
-            return false
-        }
-    }
-}
-
 func beClose(within tolerance: TimeInterval) -> ((CMTime, CMTime) -> Bool) {
     Time.close(within: tolerance)
 }

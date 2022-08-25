@@ -11,7 +11,7 @@ import Circumspect
 import Combine
 import XCTest
 
-final class ItemStatePublisherTests: XCTestCase {
+final class SingleItemStatePublisherTests: XCTestCase {
     private let resourceLoaderDelegate = FailingResourceLoaderDelegate()
     private let queue = DispatchQueue(label: "ch.srgssr.failing-resource-loader")
 
@@ -79,7 +79,9 @@ final class ItemStatePublisherTests: XCTestCase {
             during: 1
         )
     }
+}
 
+final class MultipleItemStatePublisherTests: XCTestCase {
     func testChainedShortItems() throws {
         let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let item2 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
