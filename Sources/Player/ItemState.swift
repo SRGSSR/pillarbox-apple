@@ -15,7 +15,7 @@ extension Player {
         case failed(error: Error)
     }
 
-    static func statePublisher(for item: AVPlayerItem) -> AnyPublisher<ItemState, Never> {
+    private static func statePublisher(for item: AVPlayerItem) -> AnyPublisher<ItemState, Never> {
         Publishers.Merge(
             item.publisher(for: \.status)
                 .map { status in

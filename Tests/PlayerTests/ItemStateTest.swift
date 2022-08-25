@@ -24,7 +24,7 @@ final class ItemStateTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         try expectPublished(
             values: [.unknown, .readyToPlay, .ended],
-            from: Player.statePublisher(for: item),
+            from: Player.itemStatePublisher(for: player),
             during: 4
         ) {
             player.play()
@@ -33,20 +33,20 @@ final class ItemStateTests: XCTestCase {
 
     func testUnavailableStream() throws {
         let item = AVPlayerItem(url: TestStreams.unavailableUrl)
-        _ = AVPlayer(playerItem: item)
+        let player = AVPlayer(playerItem: item)
         try expectPublished(
             values: [.unknown, .failed(error: TestError.any)],
-            from: Player.statePublisher(for: item),
+            from: Player.itemStatePublisher(for: player),
             during: 2
         )
     }
 
     func testCorruptStream() throws {
         let item = AVPlayerItem(url: TestStreams.corruptOnDemandUrl)
-        _ = AVPlayer(playerItem: item)
+        let player = AVPlayer(playerItem: item)
         try expectPublished(
             values: [.unknown, .failed(error: TestError.any)],
-            from: Player.statePublisher(for: item),
+            from: Player.itemStatePublisher(for: player),
             during: 2
         )
     }
@@ -58,7 +58,7 @@ final class ItemStateTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         try expectPublished(
             values: [.unknown, .failed(error: TestError.any)],
-            from: Player.statePublisher(for: item),
+            from: Player.itemStatePublisher(for: player),
             during: 4
         ) {
             player.play()
@@ -67,10 +67,10 @@ final class ItemStateTests: XCTestCase {
 
     func testNonPlayingValidStream() throws {
         let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
-        _ = AVPlayer(playerItem: item)
+        let player = AVPlayer(playerItem: item)
         try expectPublished(
             values: [.unknown, .readyToPlay],
-            from: Player.statePublisher(for: item),
+            from: Player.itemStatePublisher(for: player),
             during: 2
         )
     }
