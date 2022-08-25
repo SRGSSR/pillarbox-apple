@@ -22,7 +22,7 @@ final class PulseTests: XCTestCase {
         expect(pulse.progress).to(equal(0.5))
     }
 
-    func testProgressLowerBound() {
+    func testProgressBelowLowerBound() {
         let pulse = Pulse(
             time: CMTime(value: 10, timescale: 1),
             timeRange: CMTimeRange(
@@ -33,7 +33,7 @@ final class PulseTests: XCTestCase {
         expect(pulse.progress).to(equal(0))
     }
 
-    func testProgressUpperBound() {
+    func testProgressAboveUpperBound() {
         let pulse = Pulse(
             time: CMTime(value: 40, timescale: 1),
             timeRange: CMTimeRange(
@@ -105,6 +105,45 @@ final class PulseTests: XCTestCase {
     }
 
     func testTimeForProgress() {
+        let pulse = Pulse(
+            time: .zero,
+            timeRange: CMTimeRange(
+                start: CMTime(value: 10, timescale: 1),
+                duration: CMTime(value: 30, timescale: 1)
+            )
+        )
+        expect(pulse.time(forProgress: 0.5)).to(equal(CMTime(value: 20, timescale: 1)))
+    }
 
+    func testTimeForProgressBelowLowerBound() {
+        let pulse = Pulse(
+            time: .zero,
+            timeRange: CMTimeRange(
+                start: CMTime(value: 10, timescale: 1),
+                duration: CMTime(value: 30, timescale: 1)
+            )
+        )
+        expect(pulse.time(forProgress: -1)).to(equal(CMTime(value: 10, timescale: 1)))
+    }
+
+    func testTimeForProgressAboveUpperBound() {
+        let pulse = Pulse(
+            time: .zero,
+            timeRange: CMTimeRange(
+                start: CMTime(value: 10, timescale: 1),
+                duration: CMTime(value: 30, timescale: 1)
+            )
+        )
+        expect(pulse.time(forProgress: 2)).to(equal(CMTime(value: 40, timescale: 1)))
+    }
+
+    func testTimeForProgressWithEmptyTimeRange() {
+        let pulse = Pulse(time: .zero, timeRange: .zero)
+        expect(pulse.time(forProgress: 2)).to(equal(.invalid))
+    }
+
+    func testTimeForProgressWithInvalidTimeRange() {
+        let pulse = Pulse(time: .zero, timeRange: .invalid)
+        expect(pulse.time(forProgress: 2)).to(equal(.invalid))
     }
 }

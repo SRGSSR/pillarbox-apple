@@ -23,7 +23,8 @@ public final class Player: ObservableObject {
     /// Progress which the player is reaching.
     @Published public var targetProgress: Float = 0 {
         willSet {
-            guard let time = try? playbackProperties.pulse.time(forProgress: newValue) else { return }
+            let time = playbackProperties.pulse.time(forProgress: newValue)
+            guard time.isNumeric else { return }
             seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { _ in }
         }
     }
