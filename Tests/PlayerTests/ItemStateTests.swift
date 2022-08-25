@@ -42,7 +42,7 @@ final class ItemStatePublisherTests: XCTestCase {
         try expectPublished(
             values: [.unknown, .failed(error: TestError.any)],
             from: ItemState.publisher(for: player),
-            during: 2
+            during: 1
         )
     }
 
@@ -52,7 +52,7 @@ final class ItemStatePublisherTests: XCTestCase {
         try expectPublished(
             values: [.unknown, .failed(error: TestError.any)],
             from: ItemState.publisher(for: player),
-            during: 2
+            during: 1
         )
     }
 
@@ -64,7 +64,7 @@ final class ItemStatePublisherTests: XCTestCase {
         try expectPublished(
             values: [.unknown, .failed(error: TestError.any)],
             from: ItemState.publisher(for: player),
-            during: 4
+            during: 1
         ) {
             player.play()
         }
@@ -76,7 +76,7 @@ final class ItemStatePublisherTests: XCTestCase {
         try expectPublished(
             values: [.unknown, .readyToPlay],
             from: ItemState.publisher(for: player),
-            during: 2
+            during: 1
         )
     }
 
@@ -88,7 +88,7 @@ final class ItemStatePublisherTests: XCTestCase {
             // The second item can be pre-buffered and is immediately ready
             values: [.unknown, .readyToPlay, .ended, .readyToPlay, .ended],
             from: ItemState.publisher(for: player),
-            during: 4
+            during: 3
         ) {
             player.play()
         }
@@ -107,7 +107,7 @@ final class ItemStatePublisherTests: XCTestCase {
                 .unknown, .readyToPlay, .ended
             ],
             from: ItemState.publisher(for: player),
-            during: 4
+            during: 3
         ) {
             player.play()
         }
