@@ -7,32 +7,25 @@
 @testable import Player
 
 import AVFoundation
-import Circumspect
+import Nimble
 import XCTest
 
 @MainActor
 final class StreamTypeTests: XCTestCase {
-    func testStartedOnDemandStream() throws {
-        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
-        let player = Player(item: item)
-        try expectPublished(
-            values: [.unknown, .onDemand],
-            from: player.$playbackProperties
-                .map(\.streamType)
-                .removeDuplicates()
-        ) {
-            player.play()
-        }
+    func testNoItem() throws {
+        expect(StreamType.streamType(for: nil)).to(equal(.unknown))
     }
 
-    func testNonStartedOnDemandStream() throws {
+    func testNonReadyOnDemandStream() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
-        let player = Player(item: item)
-        try expectPublished(
-            values: [.unknown, .onDemand],
-            from: player.$playbackProperties
-                .map(\.streamType)
-                .removeDuplicates()
-        )
+        expect(item.status).to(equal(.unknown))
+        expect(StreamType.streamType(for: nil)).to(equal(.unknown))
+    }
+
+    func testReadyOnDemandStream() throws {
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
+        let _ = AVPlayer(playerItem: item)
+        expect(item.status).toEventually(equal(.readyToPlay))
+        expect(StreamType.streamType(for: item)).to(equal(.onDemand))
     }
 }

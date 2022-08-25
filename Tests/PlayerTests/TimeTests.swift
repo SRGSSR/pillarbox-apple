@@ -10,7 +10,11 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class TimeCloseTests: XCTestCase {
+final class TimeRangeTests: XCTestCase {
+    
+}
+
+final class CloseTests: XCTestCase {
     func testCloseWithFiniteTimes() {
         expect(Time.close(within: 0)(CMTime.zero, .zero)).to(beTrue())
         expect(Time.close(within: 0.5)(CMTime.zero, .zero)).to(beTrue())

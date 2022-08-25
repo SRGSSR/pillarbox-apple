@@ -40,19 +40,8 @@ public struct Pulse {
         Publishers.PeriodicTimePublisher(for: player, interval: CMTimeMake(value: 1, timescale: 1), queue: queue)
             .map { [weak player] time in
                 guard let player else { return .empty }
-                return Pulse(time: time, timeRange: timeRange(for: player.currentItem))
+                return Pulse(time: time, timeRange: Time.timeRange(for: player.currentItem))
             }
             .eraseToAnyPublisher()
-    }
-
-    private static func timeRange(for item: AVPlayerItem?) -> CMTimeRange {
-        guard let item else {
-            return .invalid
-        }
-        guard let firstRange = item.seekableTimeRanges.first?.timeRangeValue,
-              let lastRange = item.seekableTimeRanges.last?.timeRangeValue else {
-            return !item.loadedTimeRanges.isEmpty ? .zero : .invalid
-        }
-        return CMTimeRangeFromTimeToTime(start: firstRange.start, end: lastRange.end)
     }
 }

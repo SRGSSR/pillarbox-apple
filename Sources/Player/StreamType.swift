@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
+import AVFoundation
 
 /// Stream types.
 public enum StreamType {
@@ -16,4 +16,11 @@ public enum StreamType {
     case live
     /// Livestream with DVR.
     case dvr
+
+    static func streamType(for item: AVPlayerItem?) -> StreamType {
+        guard let item else { return .unknown }
+        let timeRange = Time.timeRange(for: item)
+        guard timeRange.isValid else { return .unknown }
+        return .onDemand
+    }
 }

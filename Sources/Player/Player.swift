@@ -30,6 +30,11 @@ public final class Player: ObservableObject {
         dequeuePlayer.items()
     }
 
+    /// The type of stream currently played.
+    public var streamType: StreamType {
+        return StreamType.streamType(for: dequeuePlayer.currentItem)
+    }
+
     /// Create a player with a given item queue.
     /// - Parameter items: The items to be queued initially.
     public init(items: [AVPlayerItem] = []) {

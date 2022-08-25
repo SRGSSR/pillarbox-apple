@@ -15,13 +15,6 @@ public struct PlaybackProperties {
     /// Time targeted by a pending seek, if any.
     public let targetTime: CMTime?
 
-    /// The stream type.
-    public var streamType: StreamType {
-        let timeRange = pulse.timeRange
-        guard timeRange.isValid else { return .unknown }
-        return .onDemand
-    }
-
     /// A value in 0...1 describing the playback progress targeted by a pending seek, if any.
     public var targetProgress: Float? {
         guard let targetTime else { return nil }

@@ -7,6 +7,17 @@
 import AVFoundation
 
 enum Time {
+    static func timeRange(for item: AVPlayerItem?) -> CMTimeRange {
+        guard let item else {
+            return .invalid
+        }
+        guard let firstRange = item.seekableTimeRanges.first?.timeRangeValue,
+              let lastRange = item.seekableTimeRanges.last?.timeRangeValue else {
+            return !item.loadedTimeRanges.isEmpty ? .zero : .invalid
+        }
+        return CMTimeRangeFromTimeToTime(start: firstRange.start, end: lastRange.end)
+    }
+
     /// Return a time comparator having some tolerance. `CMTime` implements standard equality and comparison operators
     /// in Swift for convenience.
     static func close(within tolerance: TimeInterval) -> ((CMTime, CMTime) -> Bool) {
