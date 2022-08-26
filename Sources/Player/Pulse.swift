@@ -56,7 +56,7 @@ struct Pulse {
         .eraseToAnyPublisher()
     }
 
-    private static func close(within tolerance: TimeInterval) -> ((Pulse?, Pulse?) -> Bool) {
+    static func close(within tolerance: TimeInterval) -> ((Pulse?, Pulse?) -> Bool) {
         precondition(tolerance >= 0)
         return { pulse1, pulse2 in
             switch (pulse1, pulse2) {

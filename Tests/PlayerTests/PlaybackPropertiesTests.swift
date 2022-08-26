@@ -6,10 +6,26 @@
 
 @testable import Player
 
+import AVFoundation
+import Circumspect
 import XCTest
 
-final class SingleItemTimeRangeTests: XCTestCase {
+final class SingleItemPublisherTests: XCTestCase {
+    func testOnDemand() throws {
+        let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
+        let player = AVPlayer(playerItem: item)
+        try expectPublished(
+            values: [
+                PlaybackProperties(
+                    pulse: Pulse(time: .zero, timeRange: CMTimeRange(
+                        start: .zero,
+                        duration: CMTime(value: 1, timescale: 1)
+                    )),
+                    targetTime: nil
+                )
+            ],
+            from: PlaybackProperties.publisher(for: player)
+        )
+    }
 }
 
-final class MultipleItemTimeRangeTests: XCTestCase {
-}

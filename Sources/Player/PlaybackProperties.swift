@@ -46,4 +46,12 @@ struct PlaybackProperties {
         .prepend(nil)
         .eraseToAnyPublisher()
     }
+
+    static func close(within tolerance: TimeInterval) -> ((PlaybackProperties, PlaybackProperties) -> Bool) {
+        precondition(tolerance >= 0)
+        return { properties1, properties2 in
+            Pulse.close(within: tolerance)(properties1.pulse, properties2.pulse)
+                && Time.close(within: tolerance)(properties1.targetTime, properties2.targetTime)
+        }
+    }
 }
