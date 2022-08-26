@@ -22,10 +22,6 @@ enum TestStreams {
     static let customUrl = URL(string: "custom://arbitrary.server/some.m3u8")!
 }
 
-extension Notification.Name {
-    static let testNotification = Notification.Name("TestNotification")
-}
-
 final class TestNSObject: NSObject {
 }
 
@@ -62,4 +58,8 @@ final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelega
         renewalRequest.finishLoading(with: PlaybackError.cannotRenewResource)
         return true
     }
+}
+
+extension Notification.Name {
+    static let testNotification = Notification.Name("TestNotification")
 }

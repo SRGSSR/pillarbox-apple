@@ -25,19 +25,6 @@ struct Pulse {
         self.timeRange = timeRange
     }
 
-    func progress(for time: CMTime) -> Float {
-        guard time.isNumeric && timeRange.isValid && !timeRange.isEmpty else { return 0 }
-        let elapsedTime = CMTimeGetSeconds(CMTimeSubtract(time, timeRange.start))
-        let duration = CMTimeGetSeconds(timeRange.duration)
-        return Float(elapsedTime / duration).clamped(to: 0...1)
-    }
-
-    func time(forProgress progress: Float) -> CMTime? {
-        guard timeRange.isValid && !timeRange.isEmpty else { return nil }
-        let multiplier = Float64(progress.clamped(to: 0...1))
-        return CMTimeAdd(timeRange.start, CMTimeMultiplyByFloat64(timeRange.duration, multiplier: multiplier))
-    }
-
     static func publisher(for player: AVPlayer, interval: CMTime, queue: DispatchQueue) -> AnyPublisher<Pulse?, Never> {
         // TODO: Maybe better criterium than item state (asset duration? Maybe more resilient for AirPlay)
         Publishers.Merge(
@@ -67,5 +54,18 @@ struct Pulse {
                     && TimeRange.close(within: tolerance)(pulse1.timeRange, pulse2.timeRange)
             }
         }
+    }
+
+    func progress(for time: CMTime) -> Float {
+        guard time.isNumeric && timeRange.isValid && !timeRange.isEmpty else { return 0 }
+        let elapsedTime = CMTimeGetSeconds(CMTimeSubtract(time, timeRange.start))
+        let duration = CMTimeGetSeconds(timeRange.duration)
+        return Float(elapsedTime / duration).clamped(to: 0...1)
+    }
+
+    func time(forProgress progress: Float) -> CMTime? {
+        guard timeRange.isValid && !timeRange.isEmpty else { return nil }
+        let multiplier = Float64(progress.clamped(to: 0...1))
+        return CMTimeAdd(timeRange.start, CMTimeMultiplyByFloat64(timeRange.duration, multiplier: multiplier))
     }
 }

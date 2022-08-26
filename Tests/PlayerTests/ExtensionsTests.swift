@@ -20,7 +20,39 @@ final class ClampedTests: XCTestCase {
     }
 }
 
-final class NotificationCenterWeakPublisherTests: XCTestCase {
+final class NotificationPublisherDeallocationTests: XCTestCase {
+    func testReleaseWithObject() throws {
+        let notificationCenter = NotificationCenter.default
+        var object: TestObject? = TestObject()
+        let publisher = notificationCenter.weakPublisher(for: .testNotification, object: object).first()
+
+        weak var weakObject = object
+        _ = try autoreleasepool {
+            try awaitCompletion(from: publisher) {
+                notificationCenter.post(name: .testNotification, object: object)
+            }
+            object = nil
+        }
+        expect(weakObject).to(beNil())
+    }
+
+    func testReleaseWithNSObject() throws {
+        let notificationCenter = NotificationCenter.default
+        var object: TestNSObject? = TestNSObject()
+        let publisher = notificationCenter.weakPublisher(for: .testNotification, object: object).first()
+
+        weak var weakObject = object
+        _ = try autoreleasepool {
+            try awaitCompletion(from: publisher) {
+                notificationCenter.post(name: .testNotification, object: object)
+            }
+            object = nil
+        }
+        expect(weakObject).to(beNil())
+    }
+}
+
+final class NotificationPublisherTests: XCTestCase {
     func testWithoutObject() throws {
         let notificationCenter = NotificationCenter.default
         try awaitCompletion(from: notificationCenter.weakPublisher(for: .testNotification).first()) {
@@ -68,37 +100,5 @@ final class NotificationCenterWeakPublisherTests: XCTestCase {
         try expectNothingPublished(from: publisher, during: 1) {
             notificationCenter.post(name: .testNotification, object: nil)
         }
-    }
-}
-
-final class NotificationCenterPublisherDeallocationTests: XCTestCase {
-    func testReleaseWithObject() throws {
-        let notificationCenter = NotificationCenter.default
-        var object: TestObject? = TestObject()
-        let publisher = notificationCenter.weakPublisher(for: .testNotification, object: object).first()
-
-        weak var weakObject = object
-        _ = try autoreleasepool {
-            try awaitCompletion(from: publisher) {
-                notificationCenter.post(name: .testNotification, object: object)
-            }
-            object = nil
-        }
-        expect(weakObject).to(beNil())
-    }
-
-    func testReleaseWithNSObject() throws {
-        let notificationCenter = NotificationCenter.default
-        var object: TestNSObject? = TestNSObject()
-        let publisher = notificationCenter.weakPublisher(for: .testNotification, object: object).first()
-
-        weak var weakObject = object
-        _ = try autoreleasepool {
-            try awaitCompletion(from: publisher) {
-                notificationCenter.post(name: .testNotification, object: object)
-            }
-            object = nil
-        }
-        expect(weakObject).to(beNil())
     }
 }

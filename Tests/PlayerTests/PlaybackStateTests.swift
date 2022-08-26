@@ -11,6 +11,41 @@ import Circumspect
 import Nimble
 import XCTest
 
+final class MultipleItemPlaybackStateTests: XCTestCase {
+    func testChainedShortItems() throws {
+        let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
+        let item2 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
+        let player = AVQueuePlayer(items: [item1, item2])
+        try expectPublished(
+            // The second item can be pre-buffered and is immediately played
+            values: [.idle, .playing, .ended, .playing, .ended],
+            from: PlaybackState.publisher(for: player),
+            during: 4
+        ) {
+            player.play()
+        }
+    }
+
+    func testChainedItemsWithFailure() throws {
+        let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
+        let item2 = AVPlayerItem(url: TestStreams.unavailableUrl)
+        let item3 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
+        let player = AVQueuePlayer(items: [item1, item2, item3])
+        try expectPublished(
+            // The third item cannot be pre-buffered and goes through the usual states
+            values: [
+                .idle, .playing, .ended,
+                .failed(error: TestError.any),
+                .idle, .playing, .ended
+            ],
+            from: PlaybackState.publisher(for: player),
+            during: 4
+        ) {
+            player.play()
+        }
+    }
+}
+
 final class SingleItemPlaybackStateTests: XCTestCase {
     func testPlaybackStartWithoutPlaying() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
@@ -62,40 +97,5 @@ final class SingleItemPlaybackStateTests: XCTestCase {
     func testWithoutItems() throws {
         let player = AVPlayer()
         try expectPublished(values: [.idle], from: PlaybackState.publisher(for: player), during: 2)
-    }
-}
-
-final class MultipleItemPlaybackStateTests: XCTestCase {
-    func testChainedShortItems() throws {
-        let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
-        let item2 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
-        let player = AVQueuePlayer(items: [item1, item2])
-        try expectPublished(
-            // The second item can be pre-buffered and is immediately played
-            values: [.idle, .playing, .ended, .playing, .ended],
-            from: PlaybackState.publisher(for: player),
-            during: 4
-        ) {
-            player.play()
-        }
-    }
-
-    func testChainedItemsWithFailure() throws {
-        let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
-        let item2 = AVPlayerItem(url: TestStreams.unavailableUrl)
-        let item3 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
-        let player = AVQueuePlayer(items: [item1, item2, item3])
-        try expectPublished(
-            // The third item cannot be pre-buffered and goes through the usual states
-            values: [
-                .idle, .playing, .ended,
-                .failed(error: TestError.any),
-                .idle, .playing, .ended
-            ],
-            from: PlaybackState.publisher(for: player),
-            during: 4
-        ) {
-            player.play()
-        }
     }
 }

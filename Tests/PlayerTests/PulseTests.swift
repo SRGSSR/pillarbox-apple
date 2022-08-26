@@ -11,38 +11,6 @@ import Circumspect
 import Nimble
 import XCTest
 
-final class PulseTests: XCTestCase {
-    func testValid() {
-        expect(Pulse(time: .zero, timeRange: .zero)).notTo(beNil())
-        expect(Pulse(
-            time: CMTime(value: 1, timescale: 1),
-            timeRange: .zero
-        )).notTo(beNil())
-        expect(Pulse(
-            time: .zero,
-            timeRange: CMTimeRange(
-                start: CMTime(value: 1, timescale: 1),
-                duration: CMTime(value: 10, timescale: 1)
-            )
-        )).notTo(beNil())
-        expect(Pulse(
-            time: CMTime(value: 1, timescale: 1),
-            timeRange: CMTimeRange(
-                start: CMTime(value: 1, timescale: 1),
-                duration: CMTime(value: 10, timescale: 1)
-            )
-        )).notTo(beNil())
-    }
-
-    func testInvalid() {
-        expect(Pulse(time: .invalid, timeRange: .zero)).to(beNil())
-        expect(Pulse(time: .indefinite, timeRange: .zero)).to(beNil())
-        expect(Pulse(time: .positiveInfinity, timeRange: .zero)).to(beNil())
-        expect(Pulse(time: .negativeInfinity, timeRange: .zero)).to(beNil())
-        expect(Pulse(time: .zero, timeRange: .invalid)).to(beNil())
-    }
-}
-
 final class PulseProgressTests: XCTestCase {
     func testProgress() {
         let pulse = Pulse(
@@ -277,5 +245,37 @@ final class MultipleItemPulsePublisherTests: XCTestCase {
         ) {
             player.play()
         }
+    }
+}
+
+final class PulseTests: XCTestCase {
+    func testValid() {
+        expect(Pulse(time: .zero, timeRange: .zero)).notTo(beNil())
+        expect(Pulse(
+            time: CMTime(value: 1, timescale: 1),
+            timeRange: .zero
+        )).notTo(beNil())
+        expect(Pulse(
+            time: .zero,
+            timeRange: CMTimeRange(
+                start: CMTime(value: 1, timescale: 1),
+                duration: CMTime(value: 10, timescale: 1)
+            )
+        )).notTo(beNil())
+        expect(Pulse(
+            time: CMTime(value: 1, timescale: 1),
+            timeRange: CMTimeRange(
+                start: CMTime(value: 1, timescale: 1),
+                duration: CMTime(value: 10, timescale: 1)
+            )
+        )).notTo(beNil())
+    }
+
+    func testInvalid() {
+        expect(Pulse(time: .invalid, timeRange: .zero)).to(beNil())
+        expect(Pulse(time: .indefinite, timeRange: .zero)).to(beNil())
+        expect(Pulse(time: .positiveInfinity, timeRange: .zero)).to(beNil())
+        expect(Pulse(time: .negativeInfinity, timeRange: .zero)).to(beNil())
+        expect(Pulse(time: .zero, timeRange: .invalid)).to(beNil())
     }
 }
