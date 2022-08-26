@@ -28,6 +28,15 @@
       }
     },
     {
+      "identity" : "difference",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/krzysztofzablocki/Difference.git",
+      "state" : {
+        "revision" : "02fe1111edc8318c4f8a0da96336fcbcc201f38b",
+        "version" : "1.0.1"
+      }
+    },
+    {
       "identity" : "googlecastsdk-no-bluetooth",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SRGSSR/GoogleCastSDK-no-bluetooth.git",
