@@ -148,7 +148,7 @@ final class SingleItemPulsePublisherTests: XCTestCase {
                 )
             ],
             from: Pulse.publisher(for: player, queue: .main),
-            during: 3
+            during: 2
         ) {
             player.play()
         }
@@ -195,5 +195,72 @@ final class SingleItemPulsePublisherTests: XCTestCase {
 }
 
 final class MultipleItemPulsePublisherTests: XCTestCase {
+    func testChainedShortItems() throws {
+        let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
+        let item2 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
+        let player = AVQueuePlayer(items: [item1, item2])
+        try expectPublished(
+            values: [
+                Pulse(
+                    time: .zero,
+                    timeRange: CMTimeRange(
+                        start: .zero,
+                        duration: CMTime(value: 1, timescale: 1)
+                    )
+                ),
+                Pulse(
+                    time: CMTime(value: 1, timescale: 1),
+                    timeRange: CMTimeRange(
+                        start: .zero,
+                        duration: CMTime(value: 1, timescale: 1)
+                    )
+                ),
+                Pulse(
+                    time: .zero,
+                    timeRange: CMTimeRange(
+                        start: .zero,
+                        duration: CMTime(value: 1, timescale: 1)
+                    )
+                )
+            ],
+            from: Pulse.publisher(for: player, queue: .main)
+        ) {
+            player.play()
+        }
+    }
 
+    func testChainedItemsWithFailure() throws {
+        let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
+        let item2 = AVPlayerItem(url: TestStreams.unavailableUrl)
+        let item3 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
+        let player = AVQueuePlayer(items: [item1, item2, item3])
+        try expectPublished(
+            values: [
+                Pulse(
+                    time: .zero,
+                    timeRange: CMTimeRange(
+                        start: .zero,
+                        duration: CMTime(value: 1, timescale: 1)
+                    )
+                ),
+                Pulse(
+                    time: CMTime(value: 1, timescale: 1),
+                    timeRange: CMTimeRange(
+                        start: .zero,
+                        duration: CMTime(value: 1, timescale: 1)
+                    )
+                ),
+                Pulse(
+                    time: .zero,
+                    timeRange: CMTimeRange(
+                        start: .zero,
+                        duration: CMTime(value: 1, timescale: 1)
+                    )
+                )
+            ],
+            from: Pulse.publisher(for: player, queue: .main)
+        ) {
+            player.play()
+        }
+    }
 }
