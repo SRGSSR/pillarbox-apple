@@ -81,7 +81,7 @@ test-tvos: setup
 check-quality:
 	@echo "Checking quality..."
 	@echo "... checking Swift code..."
-	@swiftlint --quiet
+	@swiftlint --quiet --strict
 	@echo "... checking Ruby scripts..."
 	@bundle exec rubocop --format quiet
 	@echo "... checking Shell scripts..."
