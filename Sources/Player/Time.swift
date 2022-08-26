@@ -41,11 +41,13 @@ enum Time {
             }
         }
     }
+}
 
+enum TimeRange {
     /// Return a time range comparator having some tolerance.
     static func close(within tolerance: TimeInterval) -> ((CMTimeRange, CMTimeRange) -> Bool) {
         precondition(tolerance >= 0)
-        let timeClose: ((CMTime, CMTime) -> Bool) = close(within: tolerance)
+        let timeClose = Time.close(within: tolerance)
         return {
             timeClose($0.start, $1.start) && timeClose($0.end, $1.end)
         }

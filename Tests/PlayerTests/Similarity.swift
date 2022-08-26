@@ -13,5 +13,5 @@ func beClose(within tolerance: TimeInterval) -> ((CMTime, CMTime) -> Bool) {
 }
 
 func beClose(within tolerance: TimeInterval) -> ((CMTimeRange, CMTimeRange) -> Bool) {
-    Time.close(within: tolerance)
+    TimeRange.close(within: tolerance)
 }
