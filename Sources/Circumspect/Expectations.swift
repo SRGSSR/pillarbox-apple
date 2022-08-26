@@ -5,6 +5,7 @@
 //
 
 import Combine
+import Difference
 import XCTest
 
 // swiftlint:disable prefer_nimble
@@ -161,10 +162,12 @@ public extension XCTestCase {
             guard actualValues.count == values.count else { return false }
             return zip(actualValues, values).allSatisfy { satisfy($0, $1) }
         }()
-        let message = {
-            "expected to equal \(values), got \(actualValues)"
-        }()
-        XCTAssert(assertExpression, message, file: file, line: line)
+        XCTAssert(
+            assertExpression,
+            diff(values, actualValues).joined(separator: ", "),
+            file: file,
+            line: line
+        )
     }
 }
 
@@ -321,10 +324,12 @@ public extension XCTestCase {
             guard actualValues.count == values.count else { return false }
             return zip(actualValues, values).allSatisfy { satisfy($0, $1) }
         }()
-        let message = {
-            "expected to equal \(values), got \(actualValues)"
-        }()
-        XCTAssert(assertExpression, message, file: file, line: line)
+        XCTAssert(
+            assertExpression,
+            diff(values, actualValues).joined(separator: ", "),
+            file: file,
+            line: line
+        )
     }
 }
 
@@ -377,10 +382,12 @@ public extension XCTestCase {
         if next, !actualValues.isEmpty {
             actualValues.removeFirst()
         }
-        let message = {
-            "expected no values but got \(actualValues)"
-        }()
-        XCTAssertTrue(actualValues.isEmpty, message, file: file, line: line)
+        XCTAssertTrue(
+            actualValues.isEmpty,
+            "expected no values but got \(actualValues)",
+            file: file,
+            line: line
+        )
     }
 }
 
