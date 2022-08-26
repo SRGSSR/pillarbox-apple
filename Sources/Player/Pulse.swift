@@ -15,8 +15,6 @@ struct Pulse {
     /// The time range. Guaranteed to be valid.
     let timeRange: CMTimeRange
 
-    private static let tolerance: Int64 = 1
-
     init?(time: CMTime, timeRange: CMTimeRange) {
         guard time.isNumeric, timeRange.isValid else { return nil }
         self.time = time
@@ -40,19 +38,19 @@ struct Pulse {
         return CMTimeAdd(timeRange.start, CMTimeMultiplyByFloat64(timeRange.duration, multiplier: multiplier))
     }
 
-    static func publisher(for player: AVPlayer, queue: DispatchQueue) -> AnyPublisher<Pulse?, Never> {
+    static func publisher(for player: AVPlayer, interval: CMTime, queue: DispatchQueue) -> AnyPublisher<Pulse?, Never> {
         // TODO: Maybe better criterium than item state (asset duration? Maybe more resilient for AirPlay)
         Publishers.Merge(
             ItemState.publisher(for: player)
                 .filter { $0 == .readyToPlay }
                 .map { _ in .zero },
-            Publishers.PeriodicTimePublisher(for: player, interval: CMTimeMake(value: tolerance, timescale: 1), queue: queue)
+            Publishers.PeriodicTimePublisher(for: player, interval: interval, queue: queue)
         )
         .compactMap { [weak player] time in
             guard let player, let timeRange = Time.timeRange(for: player.currentItem) else { return nil }
             return Pulse(time: time, timeRange: timeRange)
         }
-        .removeDuplicates(by: close(within: Double(tolerance) / 2))
+        .removeDuplicates(by: close(within: CMTimeGetSeconds(interval) / 2))
         .eraseToAnyPublisher()
     }
 

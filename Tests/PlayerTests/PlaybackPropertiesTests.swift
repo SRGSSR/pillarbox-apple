@@ -24,7 +24,7 @@ final class SingleItemPublisherTests: XCTestCase {
                     targetTime: nil
                 )
             ],
-            from: PlaybackProperties.publisher(for: player)
+            from: PlaybackProperties.publisher(for: player, interval: CMTime(value: 1, timescale: 1))
         )
     }
 }

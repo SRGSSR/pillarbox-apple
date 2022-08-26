@@ -147,7 +147,7 @@ final class SingleItemPulsePublisherTests: XCTestCase {
                     )
                 )
             ],
-            from: Pulse.publisher(for: player, queue: .main),
+            from: Pulse.publisher(for: player, interval: CMTime(value: 1, timescale: 1), queue: .main),
             during: 4
         ) {
             player.play()
@@ -163,7 +163,7 @@ final class SingleItemPulsePublisherTests: XCTestCase {
                 Pulse(time: CMTime(value: 1, timescale: 1), timeRange: .zero),
                 Pulse(time: CMTime(value: 2, timescale: 1), timeRange: .zero)
             ],
-            from: Pulse.publisher(for: player, queue: .main)
+            from: Pulse.publisher(for: player, interval: CMTime(value: 1, timescale: 1), queue: .main)
         ) {
             player.play()
         }
@@ -174,7 +174,7 @@ final class SingleItemPulsePublisherTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         try expectPublished(
             values: [],
-            from: Pulse.publisher(for: player, queue: .main),
+            from: Pulse.publisher(for: player, interval: CMTime(value: 1, timescale: 1), queue: .main),
             during: 2
         ) {
             player.play()
@@ -185,7 +185,7 @@ final class SingleItemPulsePublisherTests: XCTestCase {
         let player = AVPlayer()
         try expectPublished(
             values: [],
-            from: Pulse.publisher(for: player, queue: .main),
+            from: Pulse.publisher(for: player, interval: CMTime(value: 1, timescale: 1), queue: .main),
             during: 2
         ) {
             player.play()
@@ -229,7 +229,7 @@ final class MultipleItemPulsePublisherTests: XCTestCase {
                     )
                 )
             ],
-            from: Pulse.publisher(for: player, queue: .main),
+            from: Pulse.publisher(for: player, interval: CMTime(value: 1, timescale: 1), queue: .main),
             during: 4
         ) {
             player.play()
@@ -272,7 +272,7 @@ final class MultipleItemPulsePublisherTests: XCTestCase {
                     )
                 )
             ],
-            from: Pulse.publisher(for: player, queue: .main),
+            from: Pulse.publisher(for: player, interval: CMTime(value: 1, timescale: 1), queue: .main),
             during: 4
         ) {
             player.play()

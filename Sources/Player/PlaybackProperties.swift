@@ -27,12 +27,13 @@ struct PlaybackProperties {
         PlaybackProperties(pulse: nil, targetTime: nil)
     }
 
-    static func publisher(for player: AVPlayer) -> AnyPublisher<PlaybackProperties, Never> {
+    static func publisher(for player: AVPlayer, interval: CMTime) -> AnyPublisher<PlaybackProperties, Never> {
         Publishers.CombineLatest(
-            Pulse.publisher(for: player, queue: DispatchQueue(label: "ch.srgssr.pillarbox.player")),
+            Pulse.publisher(for: player, interval: interval, queue: DispatchQueue(label: "ch.srgssr.pillarbox.player")),
             seekTargetPublisher(for: player)
         )
         .map { PlaybackProperties(pulse: $0, targetTime: $1) }
+        .removeDuplicates(by: close(within: CMTimeGetSeconds(interval) / 2))
         .eraseToAnyPublisher()
     }
 
