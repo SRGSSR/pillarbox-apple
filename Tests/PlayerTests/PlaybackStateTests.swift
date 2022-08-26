@@ -16,8 +16,7 @@ final class SingleItemPlaybackStateTests: XCTestCase {
     func testPlaybackStartWithoutPlaying() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(values: [.idle, .paused], from: PlaybackState.publisher(for: player), during: 2
-        )
+        try expectPublished(values: [.idle, .paused], from: PlaybackState.publisher(for: player), during: 2)
     }
 
     func testPlaybackStartPlaying() throws {

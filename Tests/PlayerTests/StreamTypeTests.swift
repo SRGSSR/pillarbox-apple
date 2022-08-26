@@ -10,7 +10,6 @@ import AVFoundation
 import Nimble
 import XCTest
 
-@MainActor
 final class StreamTypeTests: XCTestCase {
     func testUnknown() {
         expect(StreamType.streamType(for: nil)).to(equal(.unknown))

@@ -43,7 +43,7 @@ struct Pulse {
         Publishers.Merge(
             ItemState.publisher(for: player)
                 .filter { $0 == .readyToPlay }
-                .map { _ in CMTime.zero },
+                .map { _ in .zero },
             Publishers.PeriodicTimePublisher(for: player, interval: CMTimeMake(value: 1, timescale: 1), queue: queue)
         )
         .map { [weak player] time in
