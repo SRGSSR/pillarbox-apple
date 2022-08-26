@@ -57,7 +57,8 @@ struct Pulse {
     }
 
     private static func close(within tolerance: TimeInterval) -> ((Pulse?, Pulse?) -> Bool) {
-        { pulse1, pulse2 in
+        precondition(tolerance >= 0)
+        return { pulse1, pulse2 in
             switch (pulse1, pulse2) {
             case (.none, .none):
                 return true
