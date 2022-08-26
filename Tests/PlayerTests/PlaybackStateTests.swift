@@ -41,7 +41,11 @@ final class SingleItemPlaybackStateTests: XCTestCase {
     func testPlaybackUntilCompletion() throws {
         let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(values: [.idle, .playing, .ended], from: PlaybackState.publisher(for: player), during: 2) {
+        try expectPublished(
+            values: [.idle, .playing, .ended],
+            from: PlaybackState.publisher(for: player),
+            during: 2
+        ) {
             player.play()
         }
     }
@@ -72,7 +76,7 @@ final class MultipleItemPlaybackStateTests: XCTestCase {
             // The second item can be pre-buffered and is immediately played
             values: [.idle, .playing, .ended, .playing, .ended],
             from: PlaybackState.publisher(for: player),
-            during: 3
+            during: 4
         ) {
             player.play()
         }
@@ -91,7 +95,7 @@ final class MultipleItemPlaybackStateTests: XCTestCase {
                 .idle, .playing, .ended
             ],
             from: PlaybackState.publisher(for: player),
-            during: 3
+            during: 4
         ) {
             player.play()
         }

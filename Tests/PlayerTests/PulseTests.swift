@@ -147,8 +147,7 @@ final class SingleItemPulsePublisherTests: XCTestCase {
                     )
                 )
             ],
-            from: Pulse.publisher(for: player, queue: .main),
-            during: 2
+            from: Pulse.publisher(for: player, queue: .main)
         ) {
             player.play()
         }
@@ -163,8 +162,7 @@ final class SingleItemPulsePublisherTests: XCTestCase {
                 Pulse(time: CMTime(value: 1, timescale: 1), timeRange: .zero),
                 Pulse(time: CMTime(value: 2, timescale: 1), timeRange: .zero)
             ],
-            from: Pulse.publisher(for: player, queue: .main),
-            during: 3
+            from: Pulse.publisher(for: player, queue: .main)
         ) {
             player.play()
         }
@@ -221,9 +219,17 @@ final class MultipleItemPulsePublisherTests: XCTestCase {
                         start: .zero,
                         duration: CMTime(value: 1, timescale: 1)
                     )
-                )
+                ),
+                Pulse(
+                    time: CMTime(value: 1, timescale: 1),
+                    timeRange: CMTimeRange(
+                        start: .zero,
+                        duration: CMTime(value: 1, timescale: 1)
+                    )
+                ),
             ],
-            from: Pulse.publisher(for: player, queue: .main)
+            from: Pulse.publisher(for: player, queue: .main),
+            during: 4
         ) {
             player.play()
         }
@@ -256,9 +262,17 @@ final class MultipleItemPulsePublisherTests: XCTestCase {
                         start: .zero,
                         duration: CMTime(value: 1, timescale: 1)
                     )
+                ),
+                Pulse(
+                    time: CMTime(value: 1, timescale: 1),
+                    timeRange: CMTimeRange(
+                        start: .zero,
+                        duration: CMTime(value: 1, timescale: 1)
+                    )
                 )
             ],
-            from: Pulse.publisher(for: player, queue: .main)
+            from: Pulse.publisher(for: player, queue: .main),
+            during: 4
         ) {
             player.play()
         }

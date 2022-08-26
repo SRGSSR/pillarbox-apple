@@ -90,7 +90,7 @@ final class MultipleItemStatePublisherTests: XCTestCase {
             // The second item can be pre-buffered and is immediately ready
             values: [.unknown, .readyToPlay, .ended, .readyToPlay, .ended],
             from: ItemState.publisher(for: player),
-            during: 3
+            during: 4
         ) {
             player.play()
         }
@@ -109,7 +109,7 @@ final class MultipleItemStatePublisherTests: XCTestCase {
                 .unknown, .readyToPlay, .ended
             ],
             from: ItemState.publisher(for: player),
-            during: 3
+            during: 4
         ) {
             player.play()
         }

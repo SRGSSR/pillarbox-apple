@@ -50,6 +50,21 @@ struct Pulse {
             guard let player, let timeRange = Time.timeRange(for: player.currentItem) else { return nil }
             return Pulse(time: time, timeRange: timeRange)
         }
+        .removeDuplicates(by: close(within: 0.5))
         .eraseToAnyPublisher()
+    }
+
+    private static func close(within tolerance: TimeInterval) -> ((Pulse?, Pulse?) -> Bool) {
+        return { pulse1, pulse2 in
+            switch (pulse1, pulse2) {
+            case (.none, .none):
+                return true
+            case (.none, .some(_)), (.some(_), .none):
+                return false
+            case let (.some(pulse1), .some(pulse2)):
+                return Time.close(within: tolerance)(pulse1.time, pulse2.time)
+                    && TimeRange.close(within: tolerance)(pulse1.timeRange, pulse2.timeRange)
+            }
+        }
     }
 }
