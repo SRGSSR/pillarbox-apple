@@ -46,7 +46,7 @@ struct Pulse {
                 .map { _ in .zero },
             Publishers.PeriodicTimePublisher(for: player, interval: CMTimeMake(value: 1, timescale: 1), queue: queue)
         )
-        .map { [weak player] time in
+        .compactMap { [weak player] time in
             guard let player, let timeRange = Time.timeRange(for: player.currentItem) else { return nil }
             return Pulse(time: time, timeRange: timeRange)
         }

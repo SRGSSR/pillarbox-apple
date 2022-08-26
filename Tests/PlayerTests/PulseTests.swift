@@ -6,7 +6,8 @@
 
 @testable import Player
 
-import CoreMedia
+import AVFoundation
+import Circumspect
 import Nimble
 import XCTest
 
@@ -125,4 +126,74 @@ final class PulseTimeTests: XCTestCase {
     }
 }
 
-// TODO: Pulse publisher tests; faster values if also observing readiness to play?
+final class SingleItemPulsePublisherTests: XCTestCase {
+    func testOnDemandPulse() throws {
+        let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
+        let player = AVPlayer(playerItem: item)
+        try expectPublished(
+            values: [
+                Pulse(
+                    time: .zero,
+                    timeRange: CMTimeRange(
+                        start: .zero,
+                        duration: CMTime(value: 1, timescale: 1)
+                    )
+                ),
+                Pulse(
+                    time: CMTime(value: 1, timescale: 1),
+                    timeRange: CMTimeRange(
+                        start: .zero,
+                        duration: CMTime(value: 1, timescale: 1)
+                    )
+                )
+            ],
+            from: Pulse.publisher(for: player, queue: .main),
+            during: 3
+        ) {
+            player.play()
+        }
+    }
+
+    func testLivePulse() throws {
+        let item = AVPlayerItem(url: TestStreams.liveUrl)
+        let player = AVPlayer(playerItem: item)
+        try expectPublished(
+            values: [
+                Pulse(time: .zero, timeRange: .zero),
+                Pulse(time: CMTime(value: 1, timescale: 1), timeRange: .zero),
+                Pulse(time: CMTime(value: 2, timescale: 1), timeRange: .zero)
+            ],
+            from: Pulse.publisher(for: player, queue: .main),
+            during: 3
+        ) {
+            player.play()
+        }
+    }
+
+    func testFailedPlaybackPulse() throws {
+        let item = AVPlayerItem(url: TestStreams.unavailableUrl)
+        let player = AVPlayer(playerItem: item)
+        try expectPublished(
+            values: [],
+            from: Pulse.publisher(for: player, queue: .main),
+            during: 2
+        ) {
+            player.play()
+        }
+    }
+
+    func testNonPlayingPulse() throws {
+        let player = AVPlayer()
+        try expectPublished(
+            values: [],
+            from: Pulse.publisher(for: player, queue: .main),
+            during: 2
+        ) {
+            player.play()
+        }
+    }
+}
+
+final class MultipleItemPulsePublisherTests: XCTestCase {
+
+}
