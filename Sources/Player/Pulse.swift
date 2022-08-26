@@ -15,6 +15,8 @@ struct Pulse {
     /// The time range. Guaranteed to be valid.
     let timeRange: CMTimeRange
 
+    private static let tolerance: Int64 = 1
+
     init?(time: CMTime, timeRange: CMTimeRange) {
         guard time.isNumeric, timeRange.isValid else { return nil }
         self.time = time
@@ -44,13 +46,13 @@ struct Pulse {
             ItemState.publisher(for: player)
                 .filter { $0 == .readyToPlay }
                 .map { _ in .zero },
-            Publishers.PeriodicTimePublisher(for: player, interval: CMTimeMake(value: 1, timescale: 1), queue: queue)
+            Publishers.PeriodicTimePublisher(for: player, interval: CMTimeMake(value: tolerance, timescale: 1), queue: queue)
         )
         .compactMap { [weak player] time in
             guard let player, let timeRange = Time.timeRange(for: player.currentItem) else { return nil }
             return Pulse(time: time, timeRange: timeRange)
         }
-        .removeDuplicates(by: close(within: 0.5))
+        .removeDuplicates(by: close(within: Double(tolerance) / 2))
         .eraseToAnyPublisher()
     }
 

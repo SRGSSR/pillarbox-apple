@@ -30,7 +30,7 @@ extension Publishers {
 
     static func PeriodicTimePublisher(for player: AVPlayer, interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
         Publishers._PeriodicTimePublisher(player: player, interval: interval, queue: queue)
-            .removeDuplicates(by: Time.close(within: 0.1))
+            .removeDuplicates(by: Time.close(within: CMTimeGetSeconds(interval) / 2))
             .eraseToAnyPublisher()
     }
 }
