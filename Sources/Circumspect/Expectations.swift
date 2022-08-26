@@ -9,12 +9,6 @@ import XCTest
 
 // swiftlint:disable prefer_nimble
 
-/// Defines similarity for types not conforming to `Equatable` and which need to be meaningfully compared in tests.
-public protocol Similar {
-    /// Must return `true` iff the two sides can be considered to be similar.
-    static func ~= (lhs: Self, rhs: Self) -> Bool
-}
-
 public extension XCTestCase {
     /// Wait for a publisher to emit a list of expected values.
     func expectPublished<P: Publisher>(
