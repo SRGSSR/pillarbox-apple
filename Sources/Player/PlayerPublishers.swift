@@ -13,6 +13,21 @@ import Combine
 //          internally with modern async API). Might be useful as signal for the Pulse publisher.
 
 extension AVPlayer {
+    func itemStatePublisher() -> AnyPublisher<ItemState, Never> {
+        publisher(for: \.currentItem)
+            .compactMap { $0 }
+            .map { $0.itemStatePublisher() }
+            .switchToLatest()
+            .prepend(ItemState.itemState(for: currentItem))
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    func ratePublisher() -> AnyPublisher<Float, Never> {
+        publisher(for: \.rate)
+            .eraseToAnyPublisher()
+    }
+
     func playbackStatePublisher() -> AnyPublisher<PlaybackState, Never> {
         Publishers.CombineLatest(
             itemStatePublisher(),
@@ -23,21 +38,21 @@ extension AVPlayer {
         .eraseToAnyPublisher()
     }
 
-    func ratePublisher() -> AnyPublisher<Float, Never> {
-        publisher(for: \.rate)
+    func itemDurationPublisher() -> AnyPublisher<CMTime, Never> {
+        publisher(for: \.currentItem?.duration)
+            .replaceNil(with: .indefinite)
             .eraseToAnyPublisher()
     }
 
-    func itemDurationPublisher() -> AnyPublisher<CMTime, Never> {
-        Just(.zero).eraseToAnyPublisher()
-    }
-
     func timeRangePublisher() -> AnyPublisher<CMTimeRange, Never> {
+        // TODO: combine latest for loaded and seekable time ranges. No prepend
+        //       most likely as we need both to calculate the time range
         Just(.zero).eraseToAnyPublisher()
     }
 
     func currentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
         Publishers.Merge(
+            // TODO: Maybe better criterium than item state (asset duration? Maybe more resilient for AirPlay)
             itemStatePublisher()
                 .filter { $0 == .readyToPlay }
                 .map { _ in .zero },
@@ -57,23 +72,12 @@ extension AVPlayer {
         .eraseToAnyPublisher()
     }
 
-    func itemStatePublisher() -> AnyPublisher<ItemState, Never> {
-        publisher(for: \.currentItem)
-            .compactMap { $0 }
-            .map { $0.itemStatePublisher() }
-            .switchToLatest()
-            .prepend(ItemState.itemState(for: currentItem))
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-
     func pulsePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<Pulse?, Never> {
-        // TODO: Maybe better criterium than item state (asset duration? Maybe more resilient for AirPlay). Extract
-        //       timeRange by KVObserving loaded and seekable time ranges.
         Publishers.CombineLatest(
             currentTimePublisher(interval: interval, queue: queue),
             itemDurationPublisher()
         )
+        // TODO: Use time range publisher
         .compactMap { [weak self] time, itemDuration in
             guard let self, let timeRange = Time.timeRange(for: self.currentItem) else { return nil }
             return Pulse(time: time, timeRange: timeRange, itemDuration: itemDuration)
