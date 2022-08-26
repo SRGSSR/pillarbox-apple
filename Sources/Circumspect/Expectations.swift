@@ -54,27 +54,7 @@ public extension XCTestCase {
     }
 
     /// Wait for a publisher to emit a list of expected values.
-    func expectPublished<P: Publisher>(
-        values: [P.Output],
-        from publisher: P,
-        timeout: TimeInterval = 10,
-        file: StaticString = #file,
-        line: UInt = #line,
-        while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never, P.Output: Equatable & Similar {
-        try expectPublished(
-            values: values,
-            from: publisher,
-            to: ==,
-            timeout: timeout,
-            file: file,
-            line: line,
-            while: executing
-        )
-    }
-
-    /// Wait for a publisher to emit a list of expected values.
-    func expectPublished<P: Publisher>(
+    func expectSimilarPublished<P: Publisher>(
         values: [P.Output],
         from publisher: P,
         timeout: TimeInterval = 10,
@@ -140,29 +120,7 @@ public extension XCTestCase {
 
     /// Wait for a publisher to emit a list of expected values, ignoring the first value. Useful when testing
     /// publishers which automatically deliver a non-relevant stored value upon subscription.
-    func expectPublishedNext<P: Publisher>(
-        values: [P.Output],
-        from publisher: P,
-        timeout: TimeInterval = 10,
-        file: StaticString = #file,
-        line: UInt = #line,
-        while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never, P.Output: Equatable & Similar {
-        try expectPublished(
-            next: true,
-            values: values,
-            from: publisher,
-            to: ==,
-            timeout: timeout,
-            file: file,
-            line: line,
-            while: executing
-        )
-    }
-
-    /// Wait for a publisher to emit a list of expected values, ignoring the first value. Useful when testing
-    /// publishers which automatically deliver a non-relevant stored value upon subscription.
-    func expectPublishedNext<P: Publisher>(
+    func expectSimilarPublishedNext<P: Publisher>(
         values: [P.Output],
         from publisher: P,
         timeout: TimeInterval = 10,
@@ -258,28 +216,7 @@ public extension XCTestCase {
     }
 
     /// Collect values emitted by a publisher during some time interval and match them against an expected result.
-    func expectPublished<P: Publisher>(
-        values: [P.Output],
-        from publisher: P,
-        during interval: TimeInterval,
-        file: StaticString = #file,
-        line: UInt = #line,
-        while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never, P.Output: Equatable & Similar {
-        try expectPublished(
-            next: false,
-            values: values,
-            from: publisher,
-            to: ==,
-            during: interval,
-            file: file,
-            line: line,
-            while: executing
-        )
-    }
-
-    /// Collect values emitted by a publisher during some time interval and match them against an expected result.
-    func expectPublished<P: Publisher>(
+    func expectSimilarPublished<P: Publisher>(
         values: [P.Output],
         from publisher: P,
         during interval: TimeInterval,
@@ -349,30 +286,7 @@ public extension XCTestCase {
     /// Collect values emitted by a publisher during some time interval and match them against an expected result,
     /// ignoring the first value. Useful when testing publishers which automatically deliver a non-relevant stored
     /// value upon subscription.
-    func expectPublishedNext<P: Publisher>(
-        values: [P.Output],
-        from publisher: P,
-        during interval: TimeInterval,
-        file: StaticString = #file,
-        line: UInt = #line,
-        while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never, P.Output: Equatable & Similar {
-        try expectPublished(
-            next: true,
-            values: values,
-            from: publisher,
-            to: ==,
-            during: interval,
-            file: file,
-            line: line,
-            while: executing
-        )
-    }
-
-    /// Collect values emitted by a publisher during some time interval and match them against an expected result,
-    /// ignoring the first value. Useful when testing publishers which automatically deliver a non-relevant stored
-    /// value upon subscription.
-    func expectPublishedNext<P: Publisher>(
+    func expectSimilarPublishedNext<P: Publisher>(
         values: [P.Output],
         from publisher: P,
         during interval: TimeInterval,

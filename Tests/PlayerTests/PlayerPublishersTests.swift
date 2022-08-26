@@ -14,7 +14,7 @@ final class SingleItemPulsePublisherTests: XCTestCase {
     func testOnDemandPulse() throws {
         let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(
+        try expectSimilarPublished(
             values: [
                 Pulse(
                     time: .zero,
@@ -43,7 +43,7 @@ final class SingleItemPulsePublisherTests: XCTestCase {
     func testLivePulse() throws {
         let item = AVPlayerItem(url: TestStreams.liveUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(
+        try expectSimilarPublished(
             values: [
                 Pulse(time: .zero, timeRange: .zero, itemDuration: .indefinite),
                 Pulse(time: CMTime(value: 1, timescale: 1), timeRange: .zero, itemDuration: .indefinite),
@@ -58,7 +58,7 @@ final class SingleItemPulsePublisherTests: XCTestCase {
     func testFailedPlaybackPulse() throws {
         let item = AVPlayerItem(url: TestStreams.unavailableUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(
+        try expectSimilarPublished(
             values: [],
             from: player.pulsePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main),
             during: 2
@@ -69,7 +69,7 @@ final class SingleItemPulsePublisherTests: XCTestCase {
 
     func testNonPlayingPulse() throws {
         let player = AVPlayer()
-        try expectPublished(
+        try expectSimilarPublished(
             values: [],
             from: player.pulsePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main),
             during: 2
@@ -84,7 +84,7 @@ final class MultipleItemPulsePublisherTests: XCTestCase {
         let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let item2 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = AVQueuePlayer(items: [item1, item2])
-        try expectPublished(
+        try expectSimilarPublished(
             values: [
                 Pulse(
                     time: .zero,
@@ -131,7 +131,7 @@ final class MultipleItemPulsePublisherTests: XCTestCase {
         let item2 = AVPlayerItem(url: TestStreams.unavailableUrl)
         let item3 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = AVQueuePlayer(items: [item1, item2, item3])
-        try expectPublished(
+        try expectSimilarPublished(
             values: [
                 Pulse(
                     time: .zero,
@@ -283,7 +283,7 @@ final class SingleItemPublisherTests: XCTestCase {
     func testOnDemand() throws {
         let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(
+        try expectSimilarPublished(
             values: [
                 PlaybackProperties(
                     pulse: Pulse(
