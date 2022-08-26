@@ -16,6 +16,16 @@ DVR_DIR="$GENERATED_STREAMS_DIR/dvr"
 function serve_test_streams {
     kill_test_streams
 
+    if ! command -v python3 &> /dev/null; then
+        echo "python3 could not be found"
+        exit 1
+    fi
+
+    if ! command -v ffmpeg &> /dev/null; then
+        echo "ffmpeg could not be found"
+        exit 1
+    fi
+
     mkdir -p "$ON_DEMAND_DIR"
     ffmpeg -stream_loop -1 -i "$MEDIAS_DIR/nyan_cat.mov" -t 120 -vcodec copy -acodec copy \
         -f hls -hls_time 4 -hls_list_size 0 "$ON_DEMAND_DIR/master.m3u8" > /dev/null 2>&1 &
