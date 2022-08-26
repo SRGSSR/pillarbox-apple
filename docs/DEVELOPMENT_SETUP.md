@@ -29,7 +29,7 @@ Unit tests are provided with the Pillarbox package. Since Apple players [cannot 
 
 ### Remark
 
-The web server must be manually started using `make test-streams-start` before running the tests. and remaining running afterwards. It can be stopped with `make test-streams-stop`. If unit tests fail please run this command and ensure streams are served correctly at `http://localhost:8000`.
+The web server must be manually started using `make test-streams-start` before running the tests. and remaining running afterwards. It can be stopped with `make test-streams-stop`. If unit tests fail please run this command and ensure streams are served correctly at `http://localhost:8123`.
 
 ## Makefile
 

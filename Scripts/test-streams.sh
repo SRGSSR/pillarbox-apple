@@ -46,7 +46,7 @@ function serve_test_streams {
     ffmpeg -stream_loop -1 -re -i "$MEDIAS_DIR/nyan_cat.mov" -vcodec copy -acodec copy \
         -f hls -hls_time 2 -hls_list_size 10 -hls_flags delete_segments "$DVR_DIR/master.m3u8" > /dev/null 2>&1 &
 
-    python3 -m http.server --directory "$GENERATED_STREAMS_DIR" > /dev/null 2>&1 &
+    python3 -m http.server 8123 --directory "$GENERATED_STREAMS_DIR" > /dev/null 2>&1 &
 }
 
 function kill_test_streams {

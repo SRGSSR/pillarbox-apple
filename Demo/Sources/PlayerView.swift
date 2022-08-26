@@ -62,6 +62,6 @@ struct PlayerView: View {
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerView(url: URL(string: "http://localhost:8000/valid_stream/master.m3u8")!)
+        PlayerView(url: URL(string: "http://localhost::8123/valid_stream/master.m3u8")!)
     }
 }
