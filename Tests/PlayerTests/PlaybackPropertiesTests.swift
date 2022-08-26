@@ -17,10 +17,14 @@ final class SingleItemPublisherTests: XCTestCase {
         try expectPublished(
             values: [
                 PlaybackProperties(
-                    pulse: Pulse(time: .zero, timeRange: CMTimeRange(
-                        start: .zero,
-                        duration: CMTime(value: 1, timescale: 1)
-                    )),
+                    pulse: Pulse(
+                        time: .zero,
+                        timeRange: CMTimeRange(
+                            start: .zero,
+                            duration: CMTime(value: 1, timescale: 1)
+                        ),
+                        itemDuration: CMTime(value: 1, timescale: 1)
+                    ),
                     targetTime: nil
                 )
             ],

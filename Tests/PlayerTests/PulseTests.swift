@@ -18,7 +18,8 @@ final class PulseProgressTests: XCTestCase {
             timeRange: CMTimeRange(
                 start: CMTime(value: 0, timescale: 1),
                 duration: CMTime(value: 20, timescale: 1)
-            )
+            ),
+            itemDuration: CMTime(value: 20, timescale: 1)
         )!
         expect(pulse.progress).to(equal(0.5))
     }
@@ -29,7 +30,8 @@ final class PulseProgressTests: XCTestCase {
             timeRange: CMTimeRange(
                 start: CMTime(value: 30, timescale: 1),
                 duration: CMTime(value: 20, timescale: 1)
-            )
+            ),
+            itemDuration: CMTime(value: 20, timescale: 1)
         )!
         expect(pulse.progress).to(equal(0))
     }
@@ -40,7 +42,8 @@ final class PulseProgressTests: XCTestCase {
             timeRange: CMTimeRange(
                 start: CMTime(value: 10, timescale: 1),
                 duration: CMTime(value: 20, timescale: 1)
-            )
+            ),
+            itemDuration: CMTime(value: 20, timescale: 1)
         )!
         expect(pulse.progress).to(equal(1))
     }
@@ -48,7 +51,8 @@ final class PulseProgressTests: XCTestCase {
     func testProgressForEmptyTimeRange() {
         let pulse = Pulse(
             time: CMTime(value: 100, timescale: 1),
-            timeRange: .zero
+            timeRange: .zero,
+            itemDuration: .indefinite
         )!
         expect(pulse.progress).to(equal(0))
     }
@@ -61,7 +65,8 @@ final class PulseTimeTests: XCTestCase {
             timeRange: CMTimeRange(
                 start: CMTime(value: 10, timescale: 1),
                 duration: CMTime(value: 30, timescale: 1)
-            )
+            ),
+            itemDuration: CMTime(value: 30, timescale: 1)
         )!
         expect(pulse.time(forProgress: 0.5)).to(equal(CMTime(value: 25, timescale: 1)))
     }
@@ -72,7 +77,8 @@ final class PulseTimeTests: XCTestCase {
             timeRange: CMTimeRange(
                 start: CMTime(value: 10, timescale: 1),
                 duration: CMTime(value: 30, timescale: 1)
-            )
+            ),
+            itemDuration: CMTime(value: 30, timescale: 1)
         )!
         expect(pulse.time(forProgress: -1)).to(equal(CMTime(value: 10, timescale: 1)))
     }
@@ -83,13 +89,14 @@ final class PulseTimeTests: XCTestCase {
             timeRange: CMTimeRange(
                 start: CMTime(value: 10, timescale: 1),
                 duration: CMTime(value: 30, timescale: 1)
-            )
+            ),
+            itemDuration: CMTime(value: 30, timescale: 1)
         )!
         expect(pulse.time(forProgress: 2)).to(equal(CMTime(value: 40, timescale: 1)))
     }
 
     func testTimeForProgressWithEmptyTimeRange() {
-        let pulse = Pulse(time: .zero, timeRange: .zero)!
+        let pulse = Pulse(time: .zero, timeRange: .zero, itemDuration: .indefinite)!
         expect(pulse.time(forProgress: 2)).to(beNil())
     }
 }
@@ -105,14 +112,16 @@ final class SingleItemPulsePublisherTests: XCTestCase {
                     timeRange: CMTimeRange(
                         start: .zero,
                         duration: CMTime(value: 1, timescale: 1)
-                    )
+                    ),
+                    itemDuration: CMTime(value: 1, timescale: 1)
                 ),
                 Pulse(
                     time: CMTime(value: 1, timescale: 1),
                     timeRange: CMTimeRange(
                         start: .zero,
                         duration: CMTime(value: 1, timescale: 1)
-                    )
+                    ),
+                    itemDuration: CMTime(value: 1, timescale: 1)
                 )
             ],
             from: Pulse.publisher(for: player, interval: CMTime(value: 1, timescale: 1), queue: .main),
@@ -127,9 +136,9 @@ final class SingleItemPulsePublisherTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         try expectPublished(
             values: [
-                Pulse(time: .zero, timeRange: .zero),
-                Pulse(time: CMTime(value: 1, timescale: 1), timeRange: .zero),
-                Pulse(time: CMTime(value: 2, timescale: 1), timeRange: .zero)
+                Pulse(time: .zero, timeRange: .zero, itemDuration: .indefinite),
+                Pulse(time: CMTime(value: 1, timescale: 1), timeRange: .zero, itemDuration: .indefinite),
+                Pulse(time: CMTime(value: 2, timescale: 1), timeRange: .zero, itemDuration: .indefinite)
             ],
             from: Pulse.publisher(for: player, interval: CMTime(value: 1, timescale: 1), queue: .main)
         ) {
@@ -173,28 +182,32 @@ final class MultipleItemPulsePublisherTests: XCTestCase {
                     timeRange: CMTimeRange(
                         start: .zero,
                         duration: CMTime(value: 1, timescale: 1)
-                    )
+                    ),
+                    itemDuration: CMTime(value: 1, timescale: 1)
                 ),
                 Pulse(
                     time: CMTime(value: 1, timescale: 1),
                     timeRange: CMTimeRange(
                         start: .zero,
                         duration: CMTime(value: 1, timescale: 1)
-                    )
+                    ),
+                    itemDuration: CMTime(value: 1, timescale: 1)
                 ),
                 Pulse(
                     time: .zero,
                     timeRange: CMTimeRange(
                         start: .zero,
                         duration: CMTime(value: 1, timescale: 1)
-                    )
+                    ),
+                    itemDuration: CMTime(value: 1, timescale: 1)
                 ),
                 Pulse(
                     time: CMTime(value: 1, timescale: 1),
                     timeRange: CMTimeRange(
                         start: .zero,
                         duration: CMTime(value: 1, timescale: 1)
-                    )
+                    ),
+                    itemDuration: CMTime(value: 1, timescale: 1)
                 )
             ],
             from: Pulse.publisher(for: player, interval: CMTime(value: 1, timescale: 1), queue: .main),
@@ -216,28 +229,32 @@ final class MultipleItemPulsePublisherTests: XCTestCase {
                     timeRange: CMTimeRange(
                         start: .zero,
                         duration: CMTime(value: 1, timescale: 1)
-                    )
+                    ),
+                    itemDuration: CMTime(value: 1, timescale: 1)
                 ),
                 Pulse(
                     time: CMTime(value: 1, timescale: 1),
                     timeRange: CMTimeRange(
                         start: .zero,
                         duration: CMTime(value: 1, timescale: 1)
-                    )
+                    ),
+                    itemDuration: CMTime(value: 1, timescale: 1)
                 ),
                 Pulse(
                     time: .zero,
                     timeRange: CMTimeRange(
                         start: .zero,
                         duration: CMTime(value: 1, timescale: 1)
-                    )
+                    ),
+                    itemDuration: CMTime(value: 1, timescale: 1)
                 ),
                 Pulse(
                     time: CMTime(value: 1, timescale: 1),
                     timeRange: CMTimeRange(
                         start: .zero,
                         duration: CMTime(value: 1, timescale: 1)
-                    )
+                    ),
+                    itemDuration: CMTime(value: 1, timescale: 1)
                 )
             ],
             from: Pulse.publisher(for: player, interval: CMTime(value: 1, timescale: 1), queue: .main),
@@ -250,32 +267,35 @@ final class MultipleItemPulsePublisherTests: XCTestCase {
 
 final class PulseTests: XCTestCase {
     func testValid() {
-        expect(Pulse(time: .zero, timeRange: .zero)).notTo(beNil())
+        expect(Pulse(time: .zero, timeRange: .zero, itemDuration: .indefinite)).notTo(beNil())
         expect(Pulse(
             time: CMTime(value: 1, timescale: 1),
-            timeRange: .zero
+            timeRange: .zero,
+            itemDuration: .indefinite
         )).notTo(beNil())
         expect(Pulse(
             time: .zero,
             timeRange: CMTimeRange(
                 start: CMTime(value: 1, timescale: 1),
                 duration: CMTime(value: 10, timescale: 1)
-            )
+            ),
+            itemDuration: CMTime(value: 10, timescale: 1)
         )).notTo(beNil())
         expect(Pulse(
             time: CMTime(value: 1, timescale: 1),
             timeRange: CMTimeRange(
                 start: CMTime(value: 1, timescale: 1),
                 duration: CMTime(value: 10, timescale: 1)
-            )
+            ),
+            itemDuration: CMTime(value: 10, timescale: 1)
         )).notTo(beNil())
     }
 
     func testInvalid() {
-        expect(Pulse(time: .invalid, timeRange: .zero)).to(beNil())
-        expect(Pulse(time: .indefinite, timeRange: .zero)).to(beNil())
-        expect(Pulse(time: .positiveInfinity, timeRange: .zero)).to(beNil())
-        expect(Pulse(time: .negativeInfinity, timeRange: .zero)).to(beNil())
-        expect(Pulse(time: .zero, timeRange: .invalid)).to(beNil())
+        expect(Pulse(time: .invalid, timeRange: .zero, itemDuration: .indefinite)).to(beNil())
+        expect(Pulse(time: .indefinite, timeRange: .zero, itemDuration: .indefinite)).to(beNil())
+        expect(Pulse(time: .positiveInfinity, timeRange: .zero, itemDuration: .indefinite)).to(beNil())
+        expect(Pulse(time: .negativeInfinity, timeRange: .zero, itemDuration: .indefinite)).to(beNil())
+        expect(Pulse(time: .zero, timeRange: .invalid, itemDuration: .indefinite)).to(beNil())
     }
 }

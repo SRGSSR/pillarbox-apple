@@ -21,7 +21,8 @@ final class StreamTypeTests: XCTestCase {
             timeRange: CMTimeRange(
                 start: .zero,
                 duration: CMTime(value: 10, timescale: 1)
-            )
+            ),
+            itemDuration: CMTime(value: 10, timescale: 1)
         )
         expect(StreamType.streamType(for: pulse)).to(equal(.onDemand))
     }
@@ -29,7 +30,8 @@ final class StreamTypeTests: XCTestCase {
     func testLive() {
         let pulse = Pulse(
             time: .zero,
-            timeRange: .zero
+            timeRange: .zero,
+            itemDuration: .indefinite
         )
         expect(StreamType.streamType(for: pulse)).to(equal(.live))
     }

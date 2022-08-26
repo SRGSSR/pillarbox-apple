@@ -6,6 +6,8 @@
 
 import AVFoundation
 
+// TODO: Categories on CMTimeRange and CMTime
+
 enum TimeRange {
     /// Return a time range comparator having some tolerance.
     static func close(within tolerance: TimeInterval) -> ((CMTimeRange?, CMTimeRange?) -> Bool) {
