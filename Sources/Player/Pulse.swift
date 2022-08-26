@@ -24,7 +24,7 @@ struct Pulse {
     }
 
     var progress: Float {
-        return progress(for: time)
+        progress(for: time)
     }
 
     func progress(for time: CMTime) -> Float {
@@ -57,11 +57,11 @@ struct Pulse {
     }
 
     private static func close(within tolerance: TimeInterval) -> ((Pulse?, Pulse?) -> Bool) {
-        return { pulse1, pulse2 in
+        { pulse1, pulse2 in
             switch (pulse1, pulse2) {
             case (.none, .none):
                 return true
-            case (.none, .some(_)), (.some(_), .none):
+            case (.none, .some), (.some, .none):
                 return false
             case let (.some(pulse1), .some(pulse2)):
                 return Time.close(within: tolerance)(pulse1.time, pulse2.time)

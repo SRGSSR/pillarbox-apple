@@ -11,7 +11,7 @@ import Circumspect
 
 extension Pulse: Similar {
     public static func ~= (lhs: Pulse, rhs: Pulse) -> Bool {
-        return Time.close(within: 0.5)(lhs.time, rhs.time) && TimeRange.close(within: 0.5)(lhs.timeRange, rhs.timeRange)
+        Time.close(within: 0.5)(lhs.time, rhs.time) && TimeRange.close(within: 0.5)(lhs.timeRange, rhs.timeRange)
     }
 }
 

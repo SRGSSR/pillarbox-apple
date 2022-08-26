@@ -13,11 +13,11 @@ public protocol Similar {
 }
 
 extension Optional: Similar where Wrapped: Similar {
-    public static func ~= (lhs: Optional<Wrapped>, rhs: Optional<Wrapped>) -> Bool {
+    public static func ~= (lhs: Wrapped?, rhs: Wrapped?) -> Bool {
         switch (lhs, rhs) {
         case (.none, .none):
             return true
-        case (.none, .some(_)), (.some(_), .none):
+        case (.none, .some), (.some, .none):
             return false
         case let (.some(lhs), .some(rhs)):
             return lhs ~= rhs

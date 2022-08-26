@@ -13,7 +13,7 @@ public func equal<T>(_ expectedValue: T?, by areEquivalent: @escaping (T, T) -> 
     Predicate.define("equal <\(stringify(expectedValue))>") { actualExpression, message in
         let actualValue = try actualExpression.evaluate()
         switch (expectedValue, actualValue) {
-        case (.none, .some(_)):
+        case (.none, .some):
             return PredicateResult(status: .fail, message: message.appendedBeNilHint())
         case (_, .none):
             return PredicateResult(status: .fail, message: message)
@@ -26,10 +26,10 @@ public func equal<T>(_ expectedValue: T?, by areEquivalent: @escaping (T, T) -> 
 
 /// Borrowed from https://github.com/krzysztofzablocki/Difference
 public func equalDiff<T>(_ expectedValue: T?, by areEquivalent: @escaping (T, T) -> Bool) -> Predicate<T> {
-    return Predicate.define("equal <\(stringify(expectedValue))>") { actualExpression, message in
+    Predicate.define("equal <\(stringify(expectedValue))>") { actualExpression, message in
         let actualValue = try actualExpression.evaluate()
         switch (expectedValue, actualValue) {
-        case (.none, .some(_)):
+        case (.none, .some):
             return PredicateResult(status: .fail, message: message.appendedBeNilHint())
         case (_, .none):
             return PredicateResult(status: .fail, message: message)

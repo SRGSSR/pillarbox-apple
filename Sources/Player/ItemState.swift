@@ -30,7 +30,7 @@ enum ItemState: Equatable {
     }
 
     private static func publisher(for item: AVPlayerItem) -> AnyPublisher<ItemState, Never> {
-        return Publishers.Merge(
+        Publishers.Merge(
             item.publisher(for: \.status)
                 .map { itemState(for: $0, error: item.error) },
             NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: item)

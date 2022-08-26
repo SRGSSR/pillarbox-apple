@@ -13,19 +13,19 @@ public final class Player: ObservableObject {
     /// Current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle
     /// Current playback properties.
-    @Published private var playbackProperties: PlaybackProperties  = .empty
+    @Published private var playbackProperties: PlaybackProperties = .empty
 
     /// A value in 0...1 describing the current playback progress.
     public var progress: Float {
-        return playbackProperties.pulse?.progress ?? 0
+        playbackProperties.pulse?.progress ?? 0
     }
 
     public var time: CMTime? {
-        return playbackProperties.pulse?.time
+        playbackProperties.pulse?.time
     }
 
     public var timeRange: CMTimeRange? {
-        return playbackProperties.pulse?.timeRange
+        playbackProperties.pulse?.timeRange
     }
 
     /// Progress which the player is reaching.
@@ -48,7 +48,7 @@ public final class Player: ObservableObject {
 
     /// The type of stream currently played.
     public var streamType: StreamType {
-        return StreamType.streamType(for: playbackProperties.pulse)
+        StreamType.streamType(for: playbackProperties.pulse)
     }
 
     /// Create a player with a given item queue.

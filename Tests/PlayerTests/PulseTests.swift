@@ -226,7 +226,7 @@ final class MultipleItemPulsePublisherTests: XCTestCase {
                         start: .zero,
                         duration: CMTime(value: 1, timescale: 1)
                     )
-                ),
+                )
             ],
             from: Pulse.publisher(for: player, queue: .main),
             during: 4
