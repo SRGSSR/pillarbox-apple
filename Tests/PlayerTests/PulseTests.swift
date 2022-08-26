@@ -147,7 +147,8 @@ final class SingleItemPulsePublisherTests: XCTestCase {
                     )
                 )
             ],
-            from: Pulse.publisher(for: player, queue: .main)
+            from: Pulse.publisher(for: player, queue: .main),
+            during: 4
         ) {
             player.play()
         }
