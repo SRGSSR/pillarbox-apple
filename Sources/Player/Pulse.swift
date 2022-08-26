@@ -32,13 +32,8 @@ struct Pulse {
         // TODO: Maybe better criterium than item state (asset duration? Maybe more resilient for AirPlay). Extract
         //       timeRange by KVObserving loaded and seekable time ranges.
         Publishers.CombineLatest(
-            Publishers.Merge(
-                ItemState.publisher(for: player)
-                    .filter { $0 == .readyToPlay }
-                    .map { _ in .zero },
-                Publishers.PeriodicTimePublisher(for: player, interval: interval, queue: queue)
-            ),
-            itemDurationPublisher(for: player)
+            AVPlayer.currentTimePublisher(for: player, interval: interval, queue: queue),
+            AVPlayer.itemDurationPublisher(for: player)
         )
         .compactMap { [weak player] time, itemDuration in
             guard let player, let timeRange = Time.timeRange(for: player.currentItem) else { return nil }
@@ -51,11 +46,6 @@ struct Pulse {
     // TODO: Create a timePublisher for the current time and a timeRange publisher for the time range. Maybe on
     //       an AVPlayer category. TDD them and assemble them above. Maybe collect all publishers (playback time,
     //       boundary time, asset properties) on this AVPlayer category.
-
-    static func itemDurationPublisher(for player: AVPlayer) -> AnyPublisher<CMTime, Never> {
-        Just(.zero).eraseToAnyPublisher()
-    }
-
     static func close(within tolerance: TimeInterval) -> ((Pulse?, Pulse?) -> Bool) {
         precondition(tolerance >= 0)
         return { pulse1, pulse2 in

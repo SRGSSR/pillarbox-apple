@@ -30,21 +30,10 @@ struct PlaybackProperties {
     static func publisher(for player: AVPlayer, interval: CMTime) -> AnyPublisher<PlaybackProperties, Never> {
         Publishers.CombineLatest(
             Pulse.publisher(for: player, interval: interval, queue: DispatchQueue(label: "ch.srgssr.pillarbox.player")),
-            seekTargetPublisher(for: player)
+            AVPlayer.seekTargetTimePublisher(for: player)
         )
         .map { PlaybackProperties(pulse: $0, targetTime: $1) }
         .removeDuplicates(by: close(within: CMTimeGetSeconds(interval) / 2))
-        .eraseToAnyPublisher()
-    }
-
-    private static func seekTargetPublisher(for player: AVPlayer) -> AnyPublisher<CMTime?, Never> {
-        Publishers.Merge(
-            NotificationCenter.default.weakPublisher(for: .willSeek, object: player)
-                .map { $0.userInfo?[DequeuePlayer.SeekInfoKey.targetTime] as? CMTime },
-            NotificationCenter.default.weakPublisher(for: .didSeek, object: player)
-                .map { _ in nil }
-        )
-        .prepend(nil)
         .eraseToAnyPublisher()
     }
 
