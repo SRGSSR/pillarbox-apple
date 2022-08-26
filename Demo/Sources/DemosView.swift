@@ -32,7 +32,7 @@ struct DemosView: View {
         ),
         Media(
             id: "urn:rts:audio:3262363",
-            title: "Couleur 3",
+            title: "La 1ère",
             url: URL(string: "http://stream.srg-ssr.ch/m/la-1ere/mp3_128")!
         )
     ]
