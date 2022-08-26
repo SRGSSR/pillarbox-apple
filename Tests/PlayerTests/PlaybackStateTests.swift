@@ -11,7 +11,6 @@ import Circumspect
 import Nimble
 import XCTest
 
-@MainActor
 final class SingleItemPlaybackStateTests: XCTestCase {
     func testPlaybackStartWithoutPlaying() throws {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
@@ -66,7 +65,6 @@ final class SingleItemPlaybackStateTests: XCTestCase {
     }
 }
 
-@MainActor
 final class MultipleItemPlaybackStateTests: XCTestCase {
     func testChainedShortItems() throws {
         let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
