@@ -56,11 +56,11 @@ public final class Player: ObservableObject {
     public init(items: [AVPlayerItem] = []) {
         dequeuePlayer = DequeuePlayer(items: items)
 
-        PlaybackState.publisher(for: dequeuePlayer)
+        dequeuePlayer.playbackStatePublisher()
             .receive(on: DispatchQueue.main)
             .assign(to: &$playbackState)
         // TODO: Interval could be a player parameter
-        PlaybackProperties.publisher(for: dequeuePlayer, interval: CMTime(value: 1, timescale: 1))
+        dequeuePlayer.playbackPropertiesPublisher(interval: CMTime(value: 1, timescale: 1))
             .receive(on: DispatchQueue.main)
             .assign(to: &$playbackProperties)
         $playbackProperties

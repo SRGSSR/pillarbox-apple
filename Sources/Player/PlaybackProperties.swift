@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
+import CoreMedia
 import Combine
 
 /// Playback properties.
@@ -25,16 +25,6 @@ struct PlaybackProperties {
             return pulse?.progress
         }
         return targetProgress
-    }
-
-    static func publisher(for player: AVPlayer, interval: CMTime) -> AnyPublisher<PlaybackProperties, Never> {
-        Publishers.CombineLatest(
-            Pulse.publisher(for: player, interval: interval, queue: DispatchQueue(label: "ch.srgssr.pillarbox.player")),
-            AVPlayer.seekTargetTimePublisher(for: player)
-        )
-        .map { PlaybackProperties(pulse: $0, targetTime: $1) }
-        .removeDuplicates(by: close(within: CMTimeGetSeconds(interval) / 2))
-        .eraseToAnyPublisher()
     }
 
     static func close(within tolerance: TimeInterval) -> ((PlaybackProperties, PlaybackProperties) -> Bool) {

@@ -6,7 +6,7 @@
 
 @testable import Player
 
-import AVFoundation
+import CoreMedia
 import Nimble
 import XCTest
 

@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
-import Combine
 import CoreMedia
 
 /// Player pulse.
@@ -26,21 +24,6 @@ struct Pulse {
         self.time = time
         self.timeRange = timeRange
         self.itemDuration = itemDuration
-    }
-
-    static func publisher(for player: AVPlayer, interval: CMTime, queue: DispatchQueue) -> AnyPublisher<Pulse?, Never> {
-        // TODO: Maybe better criterium than item state (asset duration? Maybe more resilient for AirPlay). Extract
-        //       timeRange by KVObserving loaded and seekable time ranges.
-        Publishers.CombineLatest(
-            AVPlayer.currentTimePublisher(for: player, interval: interval, queue: queue),
-            AVPlayer.itemDurationPublisher(for: player)
-        )
-        .compactMap { [weak player] time, itemDuration in
-            guard let player, let timeRange = Time.timeRange(for: player.currentItem) else { return nil }
-            return Pulse(time: time, timeRange: timeRange, itemDuration: itemDuration)
-        }
-        .removeDuplicates(by: close(within: CMTimeGetSeconds(interval) / 2))
-        .eraseToAnyPublisher()
     }
 
     // TODO: Create a timePublisher for the current time and a timeRange publisher for the time range. Maybe on

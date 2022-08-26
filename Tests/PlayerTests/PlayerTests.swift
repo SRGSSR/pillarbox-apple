@@ -7,7 +7,6 @@
 @testable import Player
 
 import AVFoundation
-import Circumspect
 import Nimble
 import XCTest
 
