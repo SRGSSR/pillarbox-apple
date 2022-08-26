@@ -27,8 +27,14 @@ struct DemosView: View {
         ),
         Media(
             id: "urn:rts:video:8841634",
+            title: "Couleur 3 en vidéo",
+            url: URL(string: "https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8?dw=0")!
+        ),
+        Media(
+            id: "urn:rts:audio:3262363",
             title: "Couleur 3",
-            url: URL(string: "https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8?dw=0")!)
+            url: URL(string: "http://stream.srg-ssr.ch/m/la-1ere/mp3_128")!
+        )
     ]
 
     var body: some View {
