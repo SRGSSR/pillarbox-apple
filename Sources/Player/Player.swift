@@ -7,43 +7,64 @@
 import AVFoundation
 import Combine
 
-/// Audio and video player.
+/// Audio / video player.
+@MainActor
 public final class Player: ObservableObject {
-    /// The current player state.
-    @Published public private(set) var state: State = .idle
-    /// Current player properties.
-    @Published public private(set) var properties: Properties
+    /// Current playback state.
+    @Published public private(set) var playbackState: PlaybackState = .idle
+    /// Current playback properties.
+    @Published private var playbackProperties: PlaybackProperties = .empty
 
-    /// A progress value in 0...1 which the player should reach.
+    /// A value in 0...1 describing the current playback progress.
+    public var progress: Float {
+        playbackProperties.pulse?.progress ?? 0
+    }
+
+    public var time: CMTime? {
+        playbackProperties.pulse?.time
+    }
+
+    public var timeRange: CMTimeRange? {
+        playbackProperties.pulse?.timeRange
+    }
+
+    /// Progress which the player is reaching.
     @Published public var targetProgress: Float = 0 {
         willSet {
-            let time = properties.playback.time(forProgress: newValue.clamped(to: 0...1))
+            guard let time = playbackProperties.pulse?.time(forProgress: newValue),
+                    time.isNumeric else {
+                return
+            }
             seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { _ in }
         }
     }
 
-    let systemPlayer: SystemPlayer
+    let dequeuePlayer: DequeuePlayer
 
     /// The items currently queued by the player.
     public var items: [AVPlayerItem] {
-        systemPlayer.items()
+        dequeuePlayer.items()
+    }
+
+    /// The type of stream currently played.
+    public var streamType: StreamType {
+        StreamType.streamType(for: playbackProperties.pulse)
     }
 
     /// Create a player with a given item queue.
     /// - Parameter items: The items to be queued initially.
     public init(items: [AVPlayerItem] = []) {
-        systemPlayer = SystemPlayer(items: items)
-        properties = .empty(for: systemPlayer)
+        dequeuePlayer = DequeuePlayer(items: items)
 
-        Self.statePublisher(for: self)
-            .removeDuplicates(by: Self.areDuplicates)
+        PlaybackState.publisher(for: dequeuePlayer)
             .receive(on: DispatchQueue.main)
-            .assign(to: &$state)
-        Self.propertiesPublisher(for: self)
+            .assign(to: &$playbackState)
+        // TODO: Interval could be a player parameter
+        PlaybackProperties.publisher(for: dequeuePlayer, interval: CMTime(value: 1, timescale: 1))
             .receive(on: DispatchQueue.main)
-            .assign(to: &$properties)
-        $properties
-            .map { $0.targetProgress ?? $0.progress }
+            .assign(to: &$playbackProperties)
+        $playbackProperties
+            .map { $0.targetProgress ?? 0 }
             .removeDuplicates()
             .assign(to: &$targetProgress)
     }
@@ -54,24 +75,12 @@ public final class Player: ObservableObject {
         self.init(items: [item])
     }
 
-    static func areDuplicates(_ lhsState: State, _ rhsState: State) -> Bool {
-        switch (lhsState, rhsState) {
-        case (.idle, .idle),
-            (.playing, .playing),
-            (.paused, .paused),
-            (.ended, .ended):
-            return true
-        default:
-            return false
-        }
-    }
-
     /// Insert an item into the queue.
     /// - Parameters:
     ///   - item: The item to insert.
     ///   - afterItem: The item after which the new item must be inserted. If `nil` the item is appended.
     public func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
-        systemPlayer.insert(item, after: afterItem)
+        dequeuePlayer.insert(item, after: afterItem)
     }
 
     /// Append an item to the queue.
@@ -83,31 +92,31 @@ public final class Player: ObservableObject {
     /// Remove an item from the queue.
     /// - Parameter item: The item to remove.
     public func remove(_ item: AVPlayerItem) {
-        systemPlayer.remove(item)
+        dequeuePlayer.remove(item)
     }
 
     /// Remove all items from the queue.
     public func removeAllItems() {
-        systemPlayer.removeAllItems()
+        dequeuePlayer.removeAllItems()
     }
 
     /// Resume playback.
     public func play() {
-        systemPlayer.play()
+        dequeuePlayer.play()
     }
 
     /// Pause playback.
     public func pause() {
-        systemPlayer.pause()
+        dequeuePlayer.pause()
     }
 
     /// Toggle playback between play and pause.
     public func togglePlayPause() {
-        if systemPlayer.rate != 0 {
-            systemPlayer.pause()
+        if dequeuePlayer.rate != 0 {
+            dequeuePlayer.pause()
         }
         else {
-            systemPlayer.play()
+            dequeuePlayer.play()
         }
     }
 
@@ -118,7 +127,7 @@ public final class Player: ObservableObject {
     ///   - toleranceAfter: Tolerance after the desired position.
     ///   - completionHandler: A completion handler called when seeking ends.
     public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        systemPlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
+        dequeuePlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
     }
 
     /// Seek to a given location.
@@ -129,6 +138,15 @@ public final class Player: ObservableObject {
     /// - Returns: `true` if seeking was successful.
     @discardableResult
     public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) async -> Bool {
-        await systemPlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
+        await dequeuePlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
+    }
+
+    /// Create a publisher periodically emitting the current time while the player is active.
+    /// - Parameters:
+    ///   - interval: The interval at which events must be emitted.
+    ///   - queue: The queue on which events are received.
+    /// - Returns: The publisher.
+    public func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
+        Publishers.PeriodicTimePublisher(for: dequeuePlayer, interval: interval, queue: queue)
     }
 }

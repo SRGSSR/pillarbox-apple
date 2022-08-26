@@ -236,6 +236,7 @@ end
 def run_all_tests(platform_id)
   run_package_tests(platform_id, 'Analytics')
   run_package_tests(platform_id, 'Appearance')
+  run_package_tests(platform_id, 'Circumspect')
   run_package_tests(platform_id, 'CoreBusiness')
   run_package_tests(platform_id, 'Diagnostics')
   run_package_tests(platform_id, 'Player')

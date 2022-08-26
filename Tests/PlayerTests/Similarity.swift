@@ -7,37 +7,24 @@
 @testable import Player
 
 import CoreMedia
+import Circumspect
 
-extension Player.State: Similar {
-    /// Similarity ignores associated values
-    static func ~= (lhs: Player.State, rhs: Player.State) -> Bool {
-        switch (lhs, rhs) {
-        case (.idle, .idle), (.playing, .playing), (.paused, .paused),
-            (.ended, .ended), (.failed, .failed):
-            return true
-        default:
-            return false
-        }
+extension Pulse: Similar {
+    public static func ~= (lhs: Pulse, rhs: Pulse) -> Bool {
+        Pulse.close(within: 0.5)(lhs, rhs)
     }
 }
 
-extension Player.ItemState: Similar {
-    /// Similarity ignores associated values
-    static func ~= (lhs: Player.ItemState, rhs: Player.ItemState) -> Bool {
-        switch (lhs, rhs) {
-        case (.unknown, .unknown), (.readyToPlay, .readyToPlay), (.ended, .ended),
-            (.failed, .failed):
-            return true
-        default:
-            return false
-        }
+extension PlaybackProperties: Similar {
+    public static func ~= (lhs: PlaybackProperties, rhs: PlaybackProperties) -> Bool {
+        PlaybackProperties.close(within: 0.5)(lhs, rhs)
     }
 }
 
-func close(within tolerance: TimeInterval) -> ((CMTime, CMTime) -> Bool) {
+func beClose(within tolerance: TimeInterval) -> ((CMTime, CMTime) -> Bool) {
     Time.close(within: tolerance)
 }
 
-func close(within tolerance: TimeInterval) -> ((CMTimeRange, CMTimeRange) -> Bool) {
-    Time.close(within: tolerance)
+func beClose(within tolerance: TimeInterval) -> ((CMTimeRange, CMTimeRange) -> Bool) {
+    TimeRange.close(within: tolerance)
 }

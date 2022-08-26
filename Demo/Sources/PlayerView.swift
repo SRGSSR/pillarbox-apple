@@ -15,7 +15,7 @@ struct PlayerView: View {
     @StateObject private var player = Player()
 
     private var playbackButtonImageName: String {
-        switch player.state {
+        switch player.playbackState {
         case .playing:
             return "pause.circle.fill"
         default:
@@ -39,10 +39,12 @@ struct PlayerView: View {
             }
             .ignoresSafeArea()
 #if os(iOS)
-            Slider(value: $player.targetProgress)
-                .tint(.white)
-                .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            if player.streamType == .onDemand {
+                Slider(value: $player.targetProgress)
+                    .tint(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            }
 #endif
         }
         .onAppear {
@@ -60,6 +62,6 @@ struct PlayerView: View {
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerView(url: URL(string: "http://localhost:8000/valid_stream/master.m3u8")!)
+        PlayerView(url: URL(string: "http://localhost::8123/valid_stream/master.m3u8")!)
     }
 }

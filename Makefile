@@ -11,7 +11,6 @@ setup:
 	@echo "Setting up the project..."
 	@bundle install > /dev/null
 	@Scripts/checkout-configuration.sh "${CONFIGURATION_REPOSITORY_URL}" "${CONFIGURATION_COMMIT_SHA1}" Configuration
-	@Scripts/serve-test-streams.sh
 	@echo "... done.\n"
 
 .PHONY: fastlane
@@ -50,23 +49,39 @@ deliver-demo-release-tvos: setup
 	@bundle exec fastlane deliver_demo_release_tvos
 	@echo "... done.\n"
 
+.PHONY: test-streams-start
+test-streams-start:
+	@echo "Starting test streams"
+	@Scripts/test-streams.sh -s
+	@echo "... done.\n"
+
+.PHONY: test-streams-stop
+test-streams-stop:
+	@echo "Stopping test streams"
+	@Scripts/test-streams.sh -k
+	@echo "... done.\n"
+
 .PHONY: test-ios
 test-ios: setup
 	@echo "Running unit tests..."
+	@Scripts/test-streams.sh -s
 	@bundle exec fastlane test_ios
+	@Scripts/test-streams.sh -k
 	@echo "... done.\n"
 
 .PHONY: test-tvos
 test-tvos: setup
 	@echo "Running unit tests..."
+	@Scripts/test-streams.sh -s
 	@bundle exec fastlane test_tvos
+	@Scripts/test-streams.sh -k
 	@echo "... done.\n"
 
 .PHONY: check-quality
-check-quality: setup
+check-quality:
 	@echo "Checking quality..."
 	@echo "... checking Swift code..."
-	@swiftlint --quiet
+	@swiftlint --quiet --strict
 	@echo "... checking Ruby scripts..."
 	@bundle exec rubocop --format quiet
 	@echo "... checking Shell scripts..."
@@ -106,6 +121,9 @@ help:
 	@echo ""
 	@echo "   deliver-demo-release-ios           Deliver a demo release build for iOS"
 	@echo "   deliver-demo-release-tvos          Deliver a demo release build for tvOS"
+	@echo ""
+	@echo "   test-streams-start                 Start servicing test streams"
+	@echo "   test-streams-stop                  Stop servicing test streams"
 	@echo ""
 	@echo "   test-ios                           Build and run unit tests for iOS"
 	@echo "   test-tvos                          Build and run unit tests for tvOS"

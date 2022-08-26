@@ -24,6 +24,7 @@ Follow the links below for further technical documentation:
 
 - [Development setup](DEVELOPMENT_SETUP.md)
 - [Continuous integration](CONTINUOUS_INTEGRATION.md)
+- [Test streams](TEST_STREAMS.md)
 
 ## License
 

@@ -32,11 +32,11 @@ public struct VideoView: UIViewRepresentable {
 
     public func makeUIView(context: Context) -> VideoLayerView {
         let view = VideoLayerView()
-        view.player = player?.systemPlayer
+        view.player = player?.dequeuePlayer
         return view
     }
 
     public func updateUIView(_ uiView: VideoLayerView, context: Context) {
-        uiView.player = player?.systemPlayer
+        uiView.player = player?.dequeuePlayer
     }
 }

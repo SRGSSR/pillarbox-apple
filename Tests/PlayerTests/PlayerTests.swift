@@ -7,16 +7,32 @@
 @testable import Player
 
 import AVFoundation
+import Circumspect
 import Nimble
 import XCTest
 
-final class ItemsTests: XCTestCase {
+@MainActor
+final class PlayerDeallocationTests: XCTestCase {
+    func testPlayerDeallocation() {
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
+        var player: Player? = Player(item: item)
+
+        weak var weakPlayer = player
+        autoreleasepool {
+            player = nil
+        }
+        expect(weakPlayer).to(beNil())
+    }
+}
+
+@MainActor
+final class PlayerItemTests: XCTestCase {
     func testEmptyItems() {
         let player = Player()
         expect(player.items).to(equal([]))
     }
 
-    func testNonEmptyItems() {
+    func testItems() {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
         let player = Player(items: [item1, item2])
