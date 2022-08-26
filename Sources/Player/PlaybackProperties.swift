@@ -9,6 +9,10 @@ import Combine
 
 /// Playback properties.
 struct PlaybackProperties {
+    static var empty: Self {
+        PlaybackProperties(pulse: nil, targetTime: nil)
+    }
+
     /// Pulse.
     let pulse: Pulse?
 
@@ -21,10 +25,6 @@ struct PlaybackProperties {
             return pulse?.progress
         }
         return targetProgress
-    }
-
-    static var empty: Self {
-        PlaybackProperties(pulse: nil, targetTime: nil)
     }
 
     static func publisher(for player: AVPlayer, interval: CMTime) -> AnyPublisher<PlaybackProperties, Never> {

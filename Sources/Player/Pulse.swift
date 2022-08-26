@@ -15,14 +15,14 @@ struct Pulse {
     /// The time range. Guaranteed to be valid.
     let timeRange: CMTimeRange
 
+    var progress: Float {
+        progress(for: time)
+    }
+
     init?(time: CMTime, timeRange: CMTimeRange) {
         guard time.isNumeric, timeRange.isValid else { return nil }
         self.time = time
         self.timeRange = timeRange
-    }
-
-    var progress: Float {
-        progress(for: time)
     }
 
     func progress(for time: CMTime) -> Float {

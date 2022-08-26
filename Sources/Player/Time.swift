@@ -6,6 +6,24 @@
 
 import AVFoundation
 
+enum TimeRange {
+    /// Return a time range comparator having some tolerance.
+    static func close(within tolerance: TimeInterval) -> ((CMTimeRange?, CMTimeRange?) -> Bool) {
+        precondition(tolerance >= 0)
+        let timeClose = Time.close(within: tolerance)
+        return { timeRange1, timeRange2 in
+            switch (timeRange1, timeRange2) {
+            case (.none, .none):
+                return true
+            case (.none, .some), (.some, .none):
+                return false
+            case let (.some(timeRange1), .some(timeRange2)):
+                return timeClose(timeRange1.start, timeRange2.start) && timeClose(timeRange1.duration, timeRange2.duration)
+            }
+        }
+    }
+}
+
 enum Time {
     static func timeRange(for item: AVPlayerItem?) -> CMTimeRange? {
         guard let item else {
@@ -45,24 +63,6 @@ enum Time {
                     return CMTimeAbsoluteValue(CMTimeSubtract(time1, time2))
                         <= CMTimeMakeWithSeconds(tolerance, preferredTimescale: Int32(NSEC_PER_SEC))
                 }
-            }
-        }
-    }
-}
-
-enum TimeRange {
-    /// Return a time range comparator having some tolerance.
-    static func close(within tolerance: TimeInterval) -> ((CMTimeRange?, CMTimeRange?) -> Bool) {
-        precondition(tolerance >= 0)
-        let timeClose = Time.close(within: tolerance)
-        return { timeRange1, timeRange2 in
-            switch (timeRange1, timeRange2) {
-            case (.none, .none):
-                return true
-            case (.none, .some), (.some, .none):
-                return false
-            case let (.some(timeRange1), .some(timeRange2)):
-                return timeClose(timeRange1.start, timeRange2.start) && timeClose(timeRange1.duration, timeRange2.duration)
             }
         }
     }
