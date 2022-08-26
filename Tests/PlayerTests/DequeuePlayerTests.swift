@@ -235,8 +235,4 @@ final class DequeuePlayerNotificationTests: XCTestCase {
             }
         }
     }
-
-    // TODO:
-    //  - Test without media (no events; requires a way to check that values are never emitted)
-    //  - etc.
 }
