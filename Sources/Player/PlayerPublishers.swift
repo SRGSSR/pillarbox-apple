@@ -13,17 +13,25 @@ import Combine
 //          internally with modern async API). Might be useful as signal for the Pulse publisher.
 
 extension AVPlayer {
-    private static func timeRangePublisher(for item: AVPlayerItem) -> AnyPublisher<CMTimeRange, Never> {
-        Publishers.CombineLatest(
+    private static func timeRangePublisher(for item: AVPlayerItem, configuration: PlayerConfiguration) -> AnyPublisher<CMTimeRange, Never> {
+        Publishers.CombineLatest3(
             item.publisher(for: \.loadedTimeRanges),
-            item.publisher(for: \.seekableTimeRanges)
+            item.publisher(for: \.seekableTimeRanges),
+            item.publisher(for: \.duration)
         )
-        .compactMap { loadedTimeRanges, seekableTimeRanges in
+        .compactMap { loadedTimeRanges, seekableTimeRanges, duration in
             guard let firstRange = seekableTimeRanges.first?.timeRangeValue,
                   let lastRange = seekableTimeRanges.last?.timeRangeValue else {
                 return !loadedTimeRanges.isEmpty ? .zero : nil
             }
-            return CMTimeRangeFromTimeToTime(start: firstRange.start, end: lastRange.end)
+
+            let timeRange = CMTimeRangeFromTimeToTime(start: firstRange.start, end: lastRange.end)
+            if duration.isIndefinite && CMTimeCompare(timeRange.duration, configuration.dvrThreshold) == -1 {
+                return CMTimeRange(start: timeRange.start, duration: .zero)
+            }
+            else {
+                return timeRange
+            }
         }
         .eraseToAnyPublisher()
     }
@@ -59,10 +67,10 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    func itemTimeRangePublisher() -> AnyPublisher<CMTimeRange, Never> {
+    func itemTimeRangePublisher(configuration: PlayerConfiguration) -> AnyPublisher<CMTimeRange, Never> {
         publisher(for: \.currentItem)
             .compactMap { $0 }
-            .map { Self.timeRangePublisher(for: $0) }
+            .map { Self.timeRangePublisher(for: $0, configuration: configuration) }
             .switchToLatest()
             .removeDuplicates()
             .eraseToAnyPublisher()
@@ -84,26 +92,26 @@ extension AVPlayer {
         .eraseToAnyPublisher()
     }
 
-    func pulsePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<Pulse?, Never> {
+    func pulsePublisher(configuration: PlayerConfiguration, queue: DispatchQueue) -> AnyPublisher<Pulse?, Never> {
         Publishers.CombineLatest3(
-            currentTimePublisher(interval: interval, queue: queue),
-            itemTimeRangePublisher(),
+            currentTimePublisher(interval: configuration.tick, queue: queue),
+            itemTimeRangePublisher(configuration: configuration),
             itemDurationPublisher()
         )
         .compactMap { time, timeRange, itemDuration in
             Pulse(time: time, timeRange: timeRange, itemDuration: itemDuration)
         }
-        .removeDuplicates(by: Pulse.close(within: CMTimeGetSeconds(interval) / 2))
+        .removeDuplicates(by: Pulse.close(within: CMTimeMultiplyByFloat64(configuration.tick, multiplier: 0.5)))
         .eraseToAnyPublisher()
     }
 
-    func playbackPropertiesPublisher(interval: CMTime) -> AnyPublisher<PlaybackProperties, Never> {
+    func playbackPropertiesPublisher(configuration: PlayerConfiguration) -> AnyPublisher<PlaybackProperties, Never> {
         Publishers.CombineLatest(
-            pulsePublisher(interval: interval, queue: DispatchQueue(label: "ch.srgssr.pillarbox.player")),
+            pulsePublisher(configuration: configuration, queue: DispatchQueue(label: "ch.srgssr.pillarbox.player")),
             seekTargetTimePublisher()
         )
         .map { PlaybackProperties(pulse: $0, targetTime: $1) }
-        .removeDuplicates(by: PlaybackProperties.close(within: CMTimeGetSeconds(interval) / 2))
+        .removeDuplicates(by: PlaybackProperties.close(within: CMTimeMultiplyByFloat64(configuration.tick, multiplier: 0.5)))
         .eraseToAnyPublisher()
     }
 }

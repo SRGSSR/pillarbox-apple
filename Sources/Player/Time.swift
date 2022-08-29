@@ -8,8 +8,8 @@ import AVFoundation
 
 extension CMTimeRange {
     /// Return a time range comparator having some tolerance.
-    static func close(within tolerance: TimeInterval) -> ((CMTimeRange?, CMTimeRange?) -> Bool) {
-        precondition(tolerance >= 0)
+    static func close(within tolerance: CMTime) -> ((CMTimeRange?, CMTimeRange?) -> Bool) {
+        precondition(CMTimeCompare(tolerance, .zero) == 1)
         let timeClose = CMTime.close(within: tolerance)
         return { timeRange1, timeRange2 in
             switch (timeRange1, timeRange2) {
@@ -22,13 +22,17 @@ extension CMTimeRange {
             }
         }
     }
+
+    /// Return a time range comparator having some tolerance.
+    static func close(within tolerance: TimeInterval) -> ((CMTimeRange?, CMTimeRange?) -> Bool) {
+        close(within: CMTimeMakeWithSeconds(tolerance, preferredTimescale: Int32(NSEC_PER_SEC)))
+    }
 }
 
 extension CMTime {
-    /// Return a time comparator having some tolerance. `CMTime` implements standard equality and comparison operators
-    /// in Swift for convenience.
-    static func close(within tolerance: TimeInterval) -> ((CMTime?, CMTime?) -> Bool) {
-        precondition(tolerance >= 0)
+    /// Return a time comparator having some tolerance.
+    static func close(within tolerance: CMTime) -> ((CMTime?, CMTime?) -> Bool) {
+        precondition(CMTimeCompare(.zero, tolerance) != 1)
         return { time1, time2 in
             switch (time1, time2) {
             case (.none, .none):
@@ -49,10 +53,14 @@ extension CMTime {
                     return true
                 }
                 else {
-                    return CMTimeAbsoluteValue(CMTimeSubtract(time1, time2))
-                        <= CMTimeMakeWithSeconds(tolerance, preferredTimescale: Int32(NSEC_PER_SEC))
+                    return CMTimeCompare(CMTimeAbsoluteValue(CMTimeSubtract(time1, time2)), tolerance) != 1
                 }
             }
         }
+    }
+
+    /// Return a time comparator having some tolerance.
+    static func close(within tolerance: TimeInterval) -> ((CMTime?, CMTime?) -> Bool) {
+        close(within: CMTimeMakeWithSeconds(tolerance, preferredTimescale: Int32(NSEC_PER_SEC)))
     }
 }

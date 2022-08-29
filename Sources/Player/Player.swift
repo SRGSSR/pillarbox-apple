@@ -10,6 +10,12 @@ import Combine
 /// Audio / video player.
 @MainActor
 public final class Player: ObservableObject {
+    private static func configure(with configuration: (inout PlayerConfiguration) -> Void) -> PlayerConfiguration {
+        var playerConfiguration = PlayerConfiguration()
+        configuration(&playerConfiguration)
+        return playerConfiguration
+    }
+
     /// Current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle
     /// Current playback properties.
@@ -41,6 +47,8 @@ public final class Player: ObservableObject {
 
     let dequeuePlayer: DequeuePlayer
 
+    private let configuration: PlayerConfiguration
+
     /// The items currently queued by the player.
     public var items: [AVPlayerItem] {
         dequeuePlayer.items()
@@ -53,14 +61,14 @@ public final class Player: ObservableObject {
 
     /// Create a player with a given item queue.
     /// - Parameter items: The items to be queued initially.
-    public init(items: [AVPlayerItem] = []) {
+    public init(items: [AVPlayerItem] = [], configuration: (inout PlayerConfiguration) -> Void = { _ in }) {
         dequeuePlayer = DequeuePlayer(items: items)
+        self.configuration = Self.configure(with: configuration)
 
         dequeuePlayer.playbackStatePublisher()
             .receive(on: DispatchQueue.main)
             .assign(to: &$playbackState)
-        // TODO: Interval could be a player parameter
-        dequeuePlayer.playbackPropertiesPublisher(interval: CMTime(value: 1, timescale: 1))
+        dequeuePlayer.playbackPropertiesPublisher(configuration: self.configuration)
             .receive(on: DispatchQueue.main)
             .assign(to: &$playbackProperties)
         $playbackProperties
@@ -71,8 +79,8 @@ public final class Player: ObservableObject {
 
     /// Create a player with a single item in its queue.
     /// - Parameter item: The item to queue.
-    public convenience init(item: AVPlayerItem) {
-        self.init(items: [item])
+    public convenience init(item: AVPlayerItem, configuration: (inout PlayerConfiguration) -> Void = {_  in }) {
+        self.init(items: [item], configuration: configuration)
     }
 
     /// Insert an item into the queue.

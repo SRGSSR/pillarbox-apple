@@ -11,13 +11,13 @@ import Circumspect
 
 extension Pulse: Similar {
     public static func ~= (lhs: Pulse, rhs: Pulse) -> Bool {
-        Pulse.close(within: 0.5)(lhs, rhs)
+        Pulse.close(within: CMTime(value: 1, timescale: 2))(lhs, rhs)
     }
 }
 
 extension PlaybackProperties: Similar {
     public static func ~= (lhs: PlaybackProperties, rhs: PlaybackProperties) -> Bool {
-        PlaybackProperties.close(within: 0.5)(lhs, rhs)
+        PlaybackProperties.close(within: CMTime(value: 1, timescale: 2))(lhs, rhs)
     }
 }
 

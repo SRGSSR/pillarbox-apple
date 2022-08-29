@@ -26,8 +26,7 @@ struct Pulse {
         self.itemDuration = itemDuration
     }
 
-    static func close(within tolerance: TimeInterval) -> ((Pulse?, Pulse?) -> Bool) {
-        precondition(tolerance >= 0)
+    static func close(within tolerance: CMTime) -> ((Pulse?, Pulse?) -> Bool) {
         return { pulse1, pulse2 in
             switch (pulse1, pulse2) {
             case (.none, .none):

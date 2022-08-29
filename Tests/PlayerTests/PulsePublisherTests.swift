@@ -15,7 +15,7 @@ final class PulsePublisherTests: XCTestCase {
         let player = AVPlayer()
         expectSimilarPublished(
             values: [],
-            from: player.pulsePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main),
+            from: player.pulsePublisher(configuration: PlayerConfiguration(), queue: .main),
             during: 2
         )
     }
@@ -29,7 +29,7 @@ final class PulsePublisherTests: XCTestCase {
                 Pulse(time: CMTime(value: 1, timescale: 1), timeRange: .zero, itemDuration: .indefinite),
                 Pulse(time: CMTime(value: 2, timescale: 1), timeRange: .zero, itemDuration: .indefinite)
             ],
-            from: player.pulsePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main)
+            from: player.pulsePublisher(configuration: PlayerConfiguration(), queue: .main)
         ) {
             player.play()
         }
@@ -40,7 +40,7 @@ final class PulsePublisherTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         expectSimilarPublished(
             values: [],
-            from: player.pulsePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main),
+            from: player.pulsePublisher(configuration: PlayerConfiguration(), queue: .main),
             during: 2
         ) {
             player.play()

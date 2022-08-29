@@ -15,7 +15,7 @@ final class ItemTimeRangePublisherTests: XCTestCase {
         let player = AVPlayer()
         expectEqualPublished(
             values: [],
-            from: player.itemTimeRangePublisher(),
+            from: player.itemTimeRangePublisher(configuration: PlayerConfiguration()),
             during: 2
         )
     }
@@ -25,7 +25,7 @@ final class ItemTimeRangePublisherTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         expectPublished(
             values: [CMTimeRange(start: .zero, duration: CMTime(value: 120, timescale: 1))],
-            from: player.itemTimeRangePublisher(),
+            from: player.itemTimeRangePublisher(configuration: PlayerConfiguration()),
             to: beClose(within: 0.5)
         )
     }
@@ -35,7 +35,7 @@ final class ItemTimeRangePublisherTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         expectEqualPublished(
             values: [.zero],
-            from: player.itemTimeRangePublisher()
+            from: player.itemTimeRangePublisher(configuration: PlayerConfiguration())
         )
     }
 }
