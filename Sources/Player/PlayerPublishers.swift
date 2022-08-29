@@ -69,14 +69,8 @@ extension AVPlayer {
     }
 
     func currentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
-        Publishers.Merge(
-            // TODO: Maybe better criterium than item state (asset duration? Maybe more resilient for AirPlay)
-            itemStatePublisher()
-                .filter { $0 == .readyToPlay }
-                .map { _ in .zero },
-            Publishers.PeriodicTimePublisher(for: self, interval: interval, queue: queue)
-        )
-        .eraseToAnyPublisher()
+        Publishers.PeriodicTimePublisher(for: self, interval: interval, queue: queue)
+            .eraseToAnyPublisher()
     }
 
     func seekTargetTimePublisher() -> AnyPublisher<CMTime?, Never> {
