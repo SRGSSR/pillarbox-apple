@@ -13,6 +13,21 @@ import Combine
 //          internally with modern async API). Might be useful as signal for the Pulse publisher.
 
 extension AVPlayer {
+    private static func timeRangePublisher(for item: AVPlayerItem) -> AnyPublisher<CMTimeRange, Never> {
+        Publishers.CombineLatest(
+            item.publisher(for: \.loadedTimeRanges),
+            item.publisher(for: \.seekableTimeRanges)
+        )
+        .compactMap { loadedTimeRanges, seekableTimeRanges in
+            guard let firstRange = seekableTimeRanges.first?.timeRangeValue,
+                  let lastRange = seekableTimeRanges.last?.timeRangeValue else {
+                return !loadedTimeRanges.isEmpty ? .zero : nil
+            }
+            return CMTimeRangeFromTimeToTime(start: firstRange.start, end: lastRange.end)
+        }
+        .eraseToAnyPublisher()
+    }
+
     func itemStatePublisher() -> AnyPublisher<ItemState, Never> {
         publisher(for: \.currentItem)
             .compactMap { $0 }
@@ -82,7 +97,7 @@ extension AVPlayer {
             itemDurationPublisher()
         )
         .compactMap { time, timeRange, itemDuration in
-            return Pulse(time: time, timeRange: timeRange, itemDuration: itemDuration)
+            Pulse(time: time, timeRange: timeRange, itemDuration: itemDuration)
         }
         .removeDuplicates(by: Pulse.close(within: CMTimeGetSeconds(interval) / 2))
         .eraseToAnyPublisher()
@@ -95,21 +110,6 @@ extension AVPlayer {
         )
         .map { PlaybackProperties(pulse: $0, targetTime: $1) }
         .removeDuplicates(by: PlaybackProperties.close(within: CMTimeGetSeconds(interval) / 2))
-        .eraseToAnyPublisher()
-    }
-
-    private static func timeRangePublisher(for item: AVPlayerItem) -> AnyPublisher<CMTimeRange, Never> {
-        return Publishers.CombineLatest(
-            item.publisher(for: \.loadedTimeRanges),
-            item.publisher(for: \.seekableTimeRanges)
-        )
-        .compactMap { loadedTimeRanges, seekableTimeRanges in
-            guard let firstRange = seekableTimeRanges.first?.timeRangeValue,
-                  let lastRange = seekableTimeRanges.last?.timeRangeValue else {
-                return !loadedTimeRanges.isEmpty ? .zero : nil
-            }
-            return CMTimeRangeFromTimeToTime(start: firstRange.start, end: lastRange.end)
-        }
         .eraseToAnyPublisher()
     }
 }

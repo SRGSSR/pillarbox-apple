@@ -25,6 +25,26 @@ final class PlayerDeallocationTests: XCTestCase {
 }
 
 @MainActor
+final class PlayerStreamTypeTests: XCTestCase {
+    func testEmpty() {
+        let player = Player()
+        expect(player.streamType).toAlways(equal(.unknown))
+    }
+
+    func testOnDemand() {
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
+        let player = Player(item: item)
+        expect(player.streamType).toEventually(equal(.onDemand))
+    }
+
+    func testLive() {
+        let item = AVPlayerItem(url: TestStreams.liveUrl)
+        let player = Player(item: item)
+        expect(player.streamType).toEventually(equal(.live))
+    }
+}
+
+@MainActor
 final class PlayerItemTests: XCTestCase {
     func testEmpty() {
         let player = Player()
@@ -103,25 +123,5 @@ final class PlayerItemTests: XCTestCase {
         let player = Player(items: [item1, item2])
         player.removeAllItems()
         expect(player.items).to(equal([]))
-    }
-}
-
-@MainActor
-final class PlayerStreamTypeTests: XCTestCase {
-    func testEmpty() {
-        let player = Player()
-        expect(player.streamType).toAlways(equal(.unknown))
-    }
-
-    func testOnDemand() {
-        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
-        let player = Player(item: item)
-        expect(player.streamType).toEventually(equal(.onDemand))
-    }
-
-    func testLive() {
-        let item = AVPlayerItem(url: TestStreams.liveUrl)
-        let player = Player(item: item)
-        expect(player.streamType).toEventually(equal(.live))
     }
 }

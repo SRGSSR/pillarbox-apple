@@ -157,7 +157,9 @@ public extension XCTestCase {
             file: file,
             line: line,
             while: executing
-        ).flatMap { $0 }
+        )
+        .flatMap { $0 }
+
         let assertExpression = {
             guard actualValues.count == values.count else { return false }
             return zip(actualValues, values).allSatisfy { satisfy($0, $1) }
