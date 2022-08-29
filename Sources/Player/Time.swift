@@ -6,13 +6,11 @@
 
 import AVFoundation
 
-// TODO: Categories on CMTimeRange and CMTime
-
-enum TimeRange {
+extension CMTimeRange {
     /// Return a time range comparator having some tolerance.
     static func close(within tolerance: TimeInterval) -> ((CMTimeRange?, CMTimeRange?) -> Bool) {
         precondition(tolerance >= 0)
-        let timeClose = Time.close(within: tolerance)
+        let timeClose = CMTime.close(within: tolerance)
         return { timeRange1, timeRange2 in
             switch (timeRange1, timeRange2) {
             case (.none, .none):
@@ -26,18 +24,7 @@ enum TimeRange {
     }
 }
 
-enum Time {
-    static func timeRange(for item: AVPlayerItem?) -> CMTimeRange? {
-        guard let item else {
-            return nil
-        }
-        guard let firstRange = item.seekableTimeRanges.first?.timeRangeValue,
-              let lastRange = item.seekableTimeRanges.last?.timeRangeValue else {
-            return !item.loadedTimeRanges.isEmpty ? .zero : nil
-        }
-        return CMTimeRangeFromTimeToTime(start: firstRange.start, end: lastRange.end)
-    }
-
+extension CMTime {
     /// Return a time comparator having some tolerance. `CMTime` implements standard equality and comparison operators
     /// in Swift for convenience.
     static func close(within tolerance: TimeInterval) -> ((CMTime?, CMTime?) -> Bool) {

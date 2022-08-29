@@ -22,9 +22,9 @@ extension PlaybackProperties: Similar {
 }
 
 func beClose(within tolerance: TimeInterval) -> ((CMTime, CMTime) -> Bool) {
-    Time.close(within: tolerance)
+    CMTime.close(within: tolerance)
 }
 
 func beClose(within tolerance: TimeInterval) -> ((CMTimeRange, CMTimeRange) -> Bool) {
-    TimeRange.close(within: tolerance)
+    CMTimeRange.close(within: tolerance)
 }

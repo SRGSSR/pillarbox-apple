@@ -26,9 +26,6 @@ struct Pulse {
         self.itemDuration = itemDuration
     }
 
-    // TODO: Create a timePublisher for the current time and a timeRange publisher for the time range. Maybe on
-    //       an AVPlayer category. TDD them and assemble them above. Maybe collect all publishers (playback time,
-    //       boundary time, asset properties) on this AVPlayer category.
     static func close(within tolerance: TimeInterval) -> ((Pulse?, Pulse?) -> Bool) {
         precondition(tolerance >= 0)
         return { pulse1, pulse2 in
@@ -38,9 +35,9 @@ struct Pulse {
             case (.none, .some), (.some, .none):
                 return false
             case let (.some(pulse1), .some(pulse2)):
-                return Time.close(within: tolerance)(pulse1.time, pulse2.time)
-                    && TimeRange.close(within: tolerance)(pulse1.timeRange, pulse2.timeRange)
-                    && Time.close(within: tolerance)(pulse1.itemDuration, pulse2.itemDuration)
+                return CMTime.close(within: tolerance)(pulse1.time, pulse2.time)
+                    && CMTimeRange.close(within: tolerance)(pulse1.timeRange, pulse2.timeRange)
+                    && CMTime.close(within: tolerance)(pulse1.itemDuration, pulse2.itemDuration)
             }
         }
     }

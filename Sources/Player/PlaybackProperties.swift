@@ -31,7 +31,7 @@ struct PlaybackProperties {
         precondition(tolerance >= 0)
         return { properties1, properties2 in
             Pulse.close(within: tolerance)(properties1.pulse, properties2.pulse)
-                && Time.close(within: tolerance)(properties1.targetTime, properties2.targetTime)
+                && CMTime.close(within: tolerance)(properties1.targetTime, properties2.targetTime)
         }
     }
 }

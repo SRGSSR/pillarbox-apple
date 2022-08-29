@@ -44,6 +44,12 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
+    func timeRangePublisher() -> AnyPublisher<CMTimeRange, Never> {
+        // TODO: combine latest for loaded and seekable time ranges. No prepend
+        //       most likely as we need both to calculate the time range
+        Just(.zero).eraseToAnyPublisher()
+    }
+
     func currentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
         Publishers.Merge(
             // TODO: Maybe better criterium than item state (asset duration? Maybe more resilient for AirPlay)
@@ -73,7 +79,7 @@ extension AVPlayer {
         )
         // TODO: Use time range publisher
         .compactMap { [weak self] time, itemDuration in
-            guard let self, let timeRange = Time.timeRange(for: self.currentItem) else { return nil }
+            guard let self, let timeRange = Self.timeRange(for: self.currentItem) else { return nil }
             return Pulse(time: time, timeRange: timeRange, itemDuration: itemDuration)
         }
         .removeDuplicates(by: Pulse.close(within: CMTimeGetSeconds(interval) / 2))
@@ -88,5 +94,16 @@ extension AVPlayer {
         .map { PlaybackProperties(pulse: $0, targetTime: $1) }
         .removeDuplicates(by: PlaybackProperties.close(within: CMTimeGetSeconds(interval) / 2))
         .eraseToAnyPublisher()
+    }
+
+    private static func timeRange(for item: AVPlayerItem?) -> CMTimeRange? {
+        guard let item else {
+            return nil
+        }
+        guard let firstRange = item.seekableTimeRanges.first?.timeRangeValue,
+              let lastRange = item.seekableTimeRanges.last?.timeRangeValue else {
+            return !item.loadedTimeRanges.isEmpty ? .zero : nil
+        }
+        return CMTimeRangeFromTimeToTime(start: firstRange.start, end: lastRange.end)
     }
 }
