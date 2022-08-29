@@ -14,29 +14,29 @@ final class ItemStatePublisherTests: XCTestCase {
     private let resourceLoaderDelegate = FailingResourceLoaderDelegate()
     private let queue = DispatchQueue(label: "ch.srgssr.failing-resource-loader")
 
-    func testEmpty() throws {
+    func testEmpty() {
         let player = AVPlayer()
-        try expectPublished(
+        expectPublished(
             values: [.unknown],
             from: player.itemStatePublisher(),
             during: 2
         )
     }
 
-    func testNoPlayback() throws {
+    func testNoPlayback() {
         let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(
+        expectPublished(
             values: [.unknown, .readyToPlay],
             from: player.itemStatePublisher(),
             during: 1
         )
     }
 
-    func testEntirePlayback() throws {
+    func testEntirePlayback() {
         let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(
+        expectPublished(
             values: [.unknown, .readyToPlay, .ended],
             from: player.itemStatePublisher(),
             during: 2
@@ -45,32 +45,32 @@ final class ItemStatePublisherTests: XCTestCase {
         }
     }
 
-    func testUnavailableStream() throws {
+    func testUnavailableStream() {
         let item = AVPlayerItem(url: TestStreams.unavailableUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(
+        expectPublished(
             values: [.unknown, .failed(error: TestError.any)],
             from: player.itemStatePublisher(),
             during: 1
         )
     }
 
-    func testCorruptStream() throws {
+    func testCorruptStream() {
         let item = AVPlayerItem(url: TestStreams.corruptOnDemandUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(
+        expectPublished(
             values: [.unknown, .failed(error: TestError.any)],
             from: player.itemStatePublisher(),
             during: 1
         )
     }
 
-    func testResourceLoadingFailure() throws {
+    func testResourceLoadingFailure() {
         let asset = AVURLAsset(url: TestStreams.customUrl)
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: queue)
         let item = AVPlayerItem(asset: asset)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(
+        expectPublished(
             values: [.unknown, .failed(error: TestError.any)],
             from: player.itemStatePublisher(),
             during: 1
@@ -79,11 +79,11 @@ final class ItemStatePublisherTests: XCTestCase {
 }
 
 final class ItemStatePublisherQueueTests: XCTestCase {
-    func testItems() throws {
+    func testItems() {
         let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let item2 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = AVQueuePlayer(items: [item1, item2])
-        try expectPublished(
+        expectPublished(
             // The second item can be pre-buffered and is immediately ready
             values: [.unknown, .readyToPlay, .ended, .readyToPlay, .ended],
             from: player.itemStatePublisher(),
@@ -93,12 +93,12 @@ final class ItemStatePublisherQueueTests: XCTestCase {
         }
     }
 
-    func testFailure() throws {
+    func testFailure() {
         let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let item2 = AVPlayerItem(url: TestStreams.unavailableUrl)
         let item3 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = AVQueuePlayer(items: [item1, item2, item3])
-        try expectPublished(
+        expectPublished(
             // The third item cannot be pre-buffered and goes through the usual states
             values: [
                 .unknown, .readyToPlay, .ended,
@@ -114,40 +114,40 @@ final class ItemStatePublisherQueueTests: XCTestCase {
 }
 
 final class PlaybackStatePublisherTests: XCTestCase {
-    func testEmpty() throws {
+    func testEmpty() {
         let player = AVPlayer()
-        try expectPublished(values: [.idle], from: player.playbackStatePublisher(), during: 2)
+        expectPublished(values: [.idle], from: player.playbackStatePublisher(), during: 2)
     }
 
-    func testNoPlayback() throws {
+    func testNoPlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(values: [.idle, .paused], from: player.playbackStatePublisher(), during: 2)
+        expectPublished(values: [.idle, .paused], from: player.playbackStatePublisher(), during: 2)
     }
 
-    func testPlayback() throws {
+    func testPlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(values: [.idle, .playing], from: player.playbackStatePublisher(), during: 2) {
+        expectPublished(values: [.idle, .playing], from: player.playbackStatePublisher(), during: 2) {
             player.play()
         }
     }
 
-    func testPlayPause() throws {
+    func testPlayPause() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(values: [.idle, .playing], from: player.playbackStatePublisher()) {
+        expectPublished(values: [.idle, .playing], from: player.playbackStatePublisher()) {
             player.play()
         }
-        try expectPublishedNext(values: [.paused], from: player.playbackStatePublisher(), during: 2) {
+        expectPublishedNext(values: [.paused], from: player.playbackStatePublisher(), during: 2) {
             player.pause()
         }
     }
 
-    func testEntirePlayback() throws {
+    func testEntirePlayback() {
         let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(
+        expectPublished(
             values: [.idle, .playing, .ended],
             from: player.playbackStatePublisher(),
             during: 2
@@ -156,10 +156,10 @@ final class PlaybackStatePublisherTests: XCTestCase {
         }
     }
 
-    func testPlaybackFailure() throws {
+    func testPlaybackFailure() {
         let item = AVPlayerItem(url: TestStreams.unavailableUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(
+        expectPublished(
             values: [.idle, .failed(error: TestError.any)],
             from: player.playbackStatePublisher(),
             during: 2
@@ -168,11 +168,11 @@ final class PlaybackStatePublisherTests: XCTestCase {
 }
 
 final class PlaybackStatePublisherQueueTests: XCTestCase {
-    func testItems() throws {
+    func testItems() {
         let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let item2 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = AVQueuePlayer(items: [item1, item2])
-        try expectPublished(
+        expectPublished(
             // The second item can be pre-buffered and is immediately played
             values: [.idle, .playing, .ended, .playing, .ended],
             from: player.playbackStatePublisher(),
@@ -182,12 +182,12 @@ final class PlaybackStatePublisherQueueTests: XCTestCase {
         }
     }
 
-    func testFailure() throws {
+    func testFailure() {
         let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let item2 = AVPlayerItem(url: TestStreams.unavailableUrl)
         let item3 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = AVQueuePlayer(items: [item1, item2, item3])
-        try expectPublished(
+        expectPublished(
             // The third item cannot be pre-buffered and goes through the usual states
             values: [
                 .idle, .playing, .ended,
@@ -203,10 +203,10 @@ final class PlaybackStatePublisherQueueTests: XCTestCase {
 }
 
 final class ItemDurationPublisherTests: XCTestCase {
-    func testDuration() throws {
+    func testDuration() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(
+        expectPublished(
             values: [.indefinite, CMTime(value: 120, timescale: 1)],
             from: player.itemDurationPublisher(),
             to: beClose(within: 0.5)
@@ -215,11 +215,11 @@ final class ItemDurationPublisherTests: XCTestCase {
 }
 
 final class ItemDurationPublisherQueueTests: XCTestCase {
-    func testItems() throws {
+    func testItems() {
         let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let item2 = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = AVQueuePlayer(items: [item1, item2])
-        try expectPublished(
+        expectPublished(
             values: [
                 .indefinite,
                 CMTime(value: 1, timescale: 1),
@@ -235,12 +235,12 @@ final class ItemDurationPublisherQueueTests: XCTestCase {
         }
     }
 
-    func testFailure() throws {
+    func testFailure() {
         let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let item2 = AVPlayerItem(url: TestStreams.unavailableUrl)
         let item3 = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = AVQueuePlayer(items: [item1, item2, item3])
-        try expectPublished(
+        expectPublished(
             values: [
                 .indefinite,
                 CMTime(value: 1, timescale: 1),
@@ -259,29 +259,29 @@ final class ItemDurationPublisherQueueTests: XCTestCase {
 }
 
 final class ItemTimeRangePublisherTests: XCTestCase {
-    func testEmpty() throws {
+    func testEmpty() {
         let player = AVPlayer()
-        try expectPublished(
+        expectPublished(
             values: [],
             from: player.itemTimeRangePublisher(),
             during: 2
         )
     }
 
-    func testOnDemand() throws {
+    func testOnDemand() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(
+        expectPublished(
             values: [CMTimeRange(start: .zero, duration: CMTime(value: 120, timescale: 1))],
             from: player.itemTimeRangePublisher(),
             to: beClose(within: 0.5)
         )
     }
 
-    func testLive() throws {
+    func testLive() {
         let item = AVPlayerItem(url: TestStreams.liveUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(
+        expectPublished(
             values: [.zero],
             from: player.itemTimeRangePublisher()
         )
@@ -289,11 +289,11 @@ final class ItemTimeRangePublisherTests: XCTestCase {
 }
 
 final class ItemTimeRangePublisherQueueTests: XCTestCase {
-    func testItems() throws {
+    func testItems() {
         let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let item2 = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = AVQueuePlayer(items: [item1, item2])
-        try expectPublished(
+        expectPublished(
             values: [
                 CMTimeRange(start: .zero, duration: CMTime(value: 1, timescale: 1)),
                 CMTimeRange(start: .zero, duration: CMTime(value: 120, timescale: 1))
@@ -306,12 +306,12 @@ final class ItemTimeRangePublisherQueueTests: XCTestCase {
         }
     }
 
-    func testFailure() throws {
+    func testFailure() {
         let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let item2 = AVPlayerItem(url: TestStreams.unavailableUrl)
         let item3 = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = AVQueuePlayer(items: [item1, item2, item3])
-        try expectPublished(
+        expectPublished(
             values: [
                 CMTimeRange(start: .zero, duration: CMTime(value: 1, timescale: 1)),
                 CMTimeRange(start: .zero, duration: CMTime(value: 120, timescale: 1))
@@ -328,19 +328,19 @@ final class ItemTimeRangePublisherQueueTests: XCTestCase {
 // TODO: Current time publisher tests
 
 final class PulsePublisherTests: XCTestCase {
-    func testEmpty() throws {
+    func testEmpty() {
         let player = AVPlayer()
-        try expectSimilarPublished(
+        expectSimilarPublished(
             values: [],
             from: player.pulsePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main),
             during: 2
         )
     }
 
-    func testPlayback() throws {
+    func testPlayback() {
         let item = AVPlayerItem(url: TestStreams.liveUrl)
         let player = AVPlayer(playerItem: item)
-        try expectSimilarPublished(
+        expectSimilarPublished(
             values: [
                 Pulse(time: .zero, timeRange: .zero, itemDuration: .indefinite),
                 Pulse(time: CMTime(value: 1, timescale: 1), timeRange: .zero, itemDuration: .indefinite),
@@ -352,10 +352,10 @@ final class PulsePublisherTests: XCTestCase {
         }
     }
 
-    func testFailure() throws {
+    func testFailure() {
         let item = AVPlayerItem(url: TestStreams.unavailableUrl)
         let player = AVPlayer(playerItem: item)
-        try expectSimilarPublished(
+        expectSimilarPublished(
             values: [],
             from: player.pulsePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main),
             during: 2

@@ -13,11 +13,11 @@ import XCTest
 
 @MainActor
 final class DequeuePlayerNotificationTests: XCTestCase {
-    func testSeekAsyncBeforePlayback() throws {
+    func testSeekAsyncBeforePlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = DequeuePlayer(playerItem: item)
         let targetTime = CMTime(value: 2, timescale: 1)
-        try expectReceived(
+        expectReceived(
             notifications: [
                 Notification(name: .willSeek, object: player, userInfo: [
                     DequeuePlayer.SeekInfoKey.targetTime: targetTime
@@ -35,15 +35,15 @@ final class DequeuePlayerNotificationTests: XCTestCase {
         }
     }
 
-    func testSeekAsyncDuringPlayback() throws {
+    func testSeekAsyncDuringPlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = DequeuePlayer(playerItem: item)
-        try expectPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
+        expectPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
             player.play()
         }
 
         let targetTime = CMTime(value: 2, timescale: 1)
-        try expectReceived(
+        expectReceived(
             notifications: [
                 Notification(name: .willSeek, object: player, userInfo: [
                     DequeuePlayer.SeekInfoKey.targetTime: targetTime
@@ -61,11 +61,11 @@ final class DequeuePlayerNotificationTests: XCTestCase {
         }
     }
 
-    func testSeekWithCompletionHandlerBeforePlayback() throws {
+    func testSeekWithCompletionHandlerBeforePlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = DequeuePlayer(playerItem: item)
         let targetTime = CMTime(value: 2, timescale: 1)
-        try expectReceived(
+        expectReceived(
             notifications: [
                 Notification(name: .willSeek, object: player, userInfo: [
                     DequeuePlayer.SeekInfoKey.targetTime: targetTime
@@ -82,15 +82,15 @@ final class DequeuePlayerNotificationTests: XCTestCase {
         }
     }
 
-    func testSeekWithCompletionHandlerDuringPlayback() throws {
+    func testSeekWithCompletionHandlerDuringPlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = DequeuePlayer(playerItem: item)
-        try expectPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
+        expectPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
             player.play()
         }
 
         let targetTime = CMTime(value: 2, timescale: 1)
-        try expectReceived(
+        expectReceived(
             notifications: [
                 Notification(name: .willSeek, object: player, userInfo: [
                     DequeuePlayer.SeekInfoKey.targetTime: targetTime
@@ -107,13 +107,13 @@ final class DequeuePlayerNotificationTests: XCTestCase {
         }
     }
 
-    func testMultipleSeeksAsyncBeforePlayback() throws {
+    func testMultipleSeeksAsyncBeforePlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = DequeuePlayer(playerItem: item)
 
         let targetTime1 = CMTime(value: 1, timescale: 2)
         let targetTime2 = CMTime(value: 2, timescale: 2)
-        try expectReceived(
+        expectReceived(
             notifications: [
                 Notification(name: .willSeek, object: player, userInfo: [
                     DequeuePlayer.SeekInfoKey.targetTime: targetTime1
@@ -139,16 +139,16 @@ final class DequeuePlayerNotificationTests: XCTestCase {
         }
     }
 
-    func testMultipleSeeksAsyncDuringPlayback() throws {
+    func testMultipleSeeksAsyncDuringPlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = DequeuePlayer(playerItem: item)
-        try expectPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
+        expectPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
             player.play()
         }
 
         let targetTime1 = CMTime(value: 1, timescale: 2)
         let targetTime2 = CMTime(value: 2, timescale: 2)
-        try expectReceived(
+        expectReceived(
             notifications: [
                 Notification(name: .willSeek, object: player, userInfo: [
                     DequeuePlayer.SeekInfoKey.targetTime: targetTime1
@@ -173,12 +173,12 @@ final class DequeuePlayerNotificationTests: XCTestCase {
         }
     }
 
-    func testMultipleSeeksWithCompletionHandlerBeforePlayback() throws {
+    func testMultipleSeeksWithCompletionHandlerBeforePlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = DequeuePlayer(playerItem: item)
         let targetTime1 = CMTime(value: 1, timescale: 2)
         let targetTime2 = CMTime(value: 2, timescale: 2)
-        try expectReceived(
+        expectReceived(
             notifications: [
                 Notification(name: .willSeek, object: player, userInfo: [
                     DequeuePlayer.SeekInfoKey.targetTime: targetTime1
@@ -203,16 +203,16 @@ final class DequeuePlayerNotificationTests: XCTestCase {
         }
     }
 
-    func testMultipleSeeksWithCompletionHandlerDuringPlayback() throws {
+    func testMultipleSeeksWithCompletionHandlerDuringPlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = DequeuePlayer(playerItem: item)
-        try expectPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
+        expectPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
             player.play()
         }
 
         let targetTime1 = CMTime(value: 1, timescale: 2)
         let targetTime2 = CMTime(value: 2, timescale: 2)
-        try expectReceived(
+        expectReceived(
             notifications: [
                 Notification(name: .willSeek, object: player, userInfo: [
                     DequeuePlayer.SeekInfoKey.targetTime: targetTime1

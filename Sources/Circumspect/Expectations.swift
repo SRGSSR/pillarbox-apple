@@ -20,8 +20,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never {
-        try expectPublished(
+    ) where P.Failure == Never {
+        expectPublished(
             next: false,
             values: values,
             from: publisher,
@@ -41,8 +41,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never, P.Output: Equatable {
-        try expectPublished(
+    ) where P.Failure == Never, P.Output: Equatable {
+        expectPublished(
             values: values,
             from: publisher,
             to: ==,
@@ -61,8 +61,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never, P.Output: Similar {
-        try expectPublished(
+    ) where P.Failure == Never, P.Output: Similar {
+        expectPublished(
             values: values,
             from: publisher,
             to: ~=,
@@ -83,8 +83,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never {
-        try expectPublished(
+    ) where P.Failure == Never {
+        expectPublished(
             next: true,
             values: values,
             from: publisher,
@@ -105,8 +105,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never, P.Output: Equatable {
-        try expectPublished(
+    ) where P.Failure == Never, P.Output: Equatable {
+        expectPublished(
             next: true,
             values: values,
             from: publisher,
@@ -127,8 +127,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never, P.Output: Similar {
-        try expectPublished(
+    ) where P.Failure == Never, P.Output: Similar {
+        expectPublished(
             next: true,
             values: values,
             from: publisher,
@@ -149,9 +149,9 @@ public extension XCTestCase {
         file: StaticString,
         line: UInt,
         while executing: (() -> Void)?
-    ) throws where P.Failure == Never {
+    ) where P.Failure == Never {
         precondition(!values.isEmpty)
-        let actualValues = try awaitCompletion(
+        let actualValues = self.waitForOutput(
             from: next ? publisher.collectNext(values.count) : publisher.collectFirst(values.count),
             timeout: timeout,
             file: file,
@@ -181,8 +181,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never {
-        try expectPublished(
+    ) where P.Failure == Never {
+        expectPublished(
             next: false,
             values: values,
             from: publisher,
@@ -202,8 +202,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never, P.Output: Equatable {
-        try expectPublished(
+    ) where P.Failure == Never, P.Output: Equatable {
+        expectPublished(
             next: false,
             values: values,
             from: publisher,
@@ -223,8 +223,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never, P.Output: Similar {
-        try expectPublished(
+    ) where P.Failure == Never, P.Output: Similar {
+        expectPublished(
             next: false,
             values: values,
             from: publisher,
@@ -247,8 +247,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never {
-        try expectPublished(
+    ) where P.Failure == Never {
+        expectPublished(
             next: true,
             values: values,
             from: publisher,
@@ -270,8 +270,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never, P.Output: Equatable {
-        try expectPublished(
+    ) where P.Failure == Never, P.Output: Equatable {
+        expectPublished(
             next: true,
             values: values,
             from: publisher,
@@ -293,8 +293,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never, P.Output: Similar {
-        try expectPublished(
+    ) where P.Failure == Never, P.Output: Similar {
+        expectPublished(
             next: true,
             values: values,
             from: publisher,
@@ -315,8 +315,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never {
-        var actualValues = collectOutput(from: publisher, during: interval, while: executing)
+    ) where P.Failure == Never {
+        var actualValues = self.collectOutput(from: publisher, during: interval, while: executing)
         if next, !actualValues.isEmpty {
             actualValues.removeFirst()
         }
@@ -341,8 +341,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never {
-        try expectNothingPublished(
+    ) where P.Failure == Never {
+        expectNothingPublished(
             next: false,
             from: publisher,
             during: interval,
@@ -359,8 +359,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never {
-        try expectNothingPublished(
+    ) where P.Failure == Never {
+        expectNothingPublished(
             next: true,
             from: publisher,
             during: interval,
@@ -377,8 +377,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws where P.Failure == Never {
-        var actualValues = collectOutput(from: publisher, during: interval, while: executing)
+    ) where P.Failure == Never {
+        var actualValues = self.collectOutput(from: publisher, during: interval, while: executing)
         if next, !actualValues.isEmpty {
             actualValues.removeFirst()
         }
@@ -404,8 +404,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws {
-        try expectPublished(
+    ) {
+        expectPublished(
             values: notifications,
             from: Publishers.MergeMany(
                 names.map { center.publisher(for: $0, object: object) }
@@ -428,8 +428,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws {
-        try expectPublished(
+    ) {
+        expectPublished(
             values: notifications,
             from: Publishers.MergeMany(
                 names.map { center.publisher(for: $0, object: object) }
@@ -451,8 +451,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws {
-        try expectNothingPublished(
+    ) {
+        expectNothingPublished(
             from: Publishers.MergeMany(
                 names.map { center.publisher(for: $0, object: object) }
             ),

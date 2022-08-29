@@ -13,9 +13,9 @@ import Nimble
 import XCTest
 
 final class PeriodicTimePublisherTests: XCTestCase {
-    func testEmpty() throws {
+    func testEmpty() {
         let player = AVPlayer()
-        try expectNothingPublished(
+        expectNothingPublished(
             from: Publishers.PeriodicTimePublisher(
                 for: player,
                 interval: CMTimeMake(value: 1, timescale: 2)
@@ -24,10 +24,10 @@ final class PeriodicTimePublisherTests: XCTestCase {
         )
     }
 
-    func testNoPlayback() throws {
+    func testNoPlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = AVPlayer(playerItem: item)
-        try expectPublished(
+        expectPublished(
             values: [
                 .zero
             ],
@@ -40,11 +40,11 @@ final class PeriodicTimePublisherTests: XCTestCase {
         )
     }
 
-    func testPlayback() throws {
+    func testPlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = AVPlayer(playerItem: item)
         player.play()
-        try expectPublished(
+        expectPublished(
             values: [
                 .zero,
                 CMTimeMake(value: 1, timescale: 2),
