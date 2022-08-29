@@ -49,6 +49,7 @@ extension AVPlayer {
             .compactMap { $0 }
             .map { Self.timeRangePublisher(for: $0) }
             .switchToLatest()
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 

@@ -288,8 +288,44 @@ final class ItemTimeRangePublisherTests: XCTestCase {
     }
 }
 
-// TODO: Current time publisher
-// TODO: Seek target time publisher
+final class ItemTimeRangePublisherQueueTests: XCTestCase {
+    func testItems() throws {
+        let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
+        let item2 = AVPlayerItem(url: TestStreams.onDemandUrl)
+        let player = AVQueuePlayer(items: [item1, item2])
+        try expectPublished(
+            values: [
+                CMTimeRange(start: .zero, duration: CMTime(value: 1, timescale: 1)),
+                CMTimeRange(start: .zero, duration: CMTime(value: 120, timescale: 1))
+            ],
+            from: player.itemTimeRangePublisher(),
+            to: beClose(within: 0.5),
+            during: 3
+        ) {
+            player.play()
+        }
+    }
+
+    func testFailure() throws {
+        let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
+        let item2 = AVPlayerItem(url: TestStreams.unavailableUrl)
+        let item3 = AVPlayerItem(url: TestStreams.onDemandUrl)
+        let player = AVQueuePlayer(items: [item1, item2, item3])
+        try expectPublished(
+            values: [
+                CMTimeRange(start: .zero, duration: CMTime(value: 1, timescale: 1)),
+                CMTimeRange(start: .zero, duration: CMTime(value: 120, timescale: 1))
+            ],
+            from: player.itemTimeRangePublisher(),
+            to: beClose(within: 0.5),
+            during: 3
+        ) {
+            player.play()
+        }
+    }
+}
+
+// TODO: Current time publisher tests
 
 final class PulsePublisherTests: XCTestCase {
     func testEmpty() throws {
