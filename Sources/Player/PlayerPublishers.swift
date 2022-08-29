@@ -44,12 +44,6 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    func timeRangePublisher() -> AnyPublisher<CMTimeRange, Never> {
-        // TODO: combine latest for loaded and seekable time ranges. No prepend
-        //       most likely as we need both to calculate the time range
-        Just(.zero).eraseToAnyPublisher()
-    }
-
     func currentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
         Publishers.Merge(
             // TODO: Maybe better criterium than item state (asset duration? Maybe more resilient for AirPlay)
