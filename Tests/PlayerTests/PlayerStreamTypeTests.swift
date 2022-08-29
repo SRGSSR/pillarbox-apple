@@ -28,4 +28,10 @@ final class PlayerStreamTypeTests: XCTestCase {
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.live))
     }
+
+    func testDVR() {
+        let item = AVPlayerItem(url: TestStreams.dvrUrl)
+        let player = Player(item: item)
+        expect(player.streamType).toEventually(equal(.dvr))
+    }
 }

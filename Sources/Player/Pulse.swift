@@ -12,7 +12,7 @@ struct Pulse {
     let time: CMTime
     /// The time range. Guaranteed to be valid.
     let timeRange: CMTimeRange
-    /// Item duration.
+    /// Item duration. Might be indefinite.
     let itemDuration: CMTime
 
     var progress: Float {
