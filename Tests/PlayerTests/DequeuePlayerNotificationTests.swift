@@ -38,7 +38,7 @@ final class DequeuePlayerNotificationTests: XCTestCase {
     func testSeekAsyncDuringPlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = DequeuePlayer(playerItem: item)
-        expectPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
+        expectEqualPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
             player.play()
         }
 
@@ -85,7 +85,7 @@ final class DequeuePlayerNotificationTests: XCTestCase {
     func testSeekWithCompletionHandlerDuringPlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = DequeuePlayer(playerItem: item)
-        expectPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
+        expectEqualPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
             player.play()
         }
 
@@ -142,7 +142,7 @@ final class DequeuePlayerNotificationTests: XCTestCase {
     func testMultipleSeeksAsyncDuringPlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = DequeuePlayer(playerItem: item)
-        expectPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
+        expectEqualPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
             player.play()
         }
 
@@ -206,7 +206,7 @@ final class DequeuePlayerNotificationTests: XCTestCase {
     func testMultipleSeeksWithCompletionHandlerDuringPlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = DequeuePlayer(playerItem: item)
-        expectPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
+        expectEqualPublished(values: [.unknown, .readyToPlay], from: item.publisher(for: \.status)) {
             player.play()
         }
 

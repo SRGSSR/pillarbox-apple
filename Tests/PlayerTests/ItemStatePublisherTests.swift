@@ -16,7 +16,7 @@ final class ItemStatePublisherTests: XCTestCase {
 
     func testEmpty() {
         let player = AVPlayer()
-        expectPublished(
+        expectEqualPublished(
             values: [.unknown],
             from: player.itemStatePublisher(),
             during: 2
@@ -26,7 +26,7 @@ final class ItemStatePublisherTests: XCTestCase {
     func testNoPlayback() {
         let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = AVPlayer(playerItem: item)
-        expectPublished(
+        expectEqualPublished(
             values: [.unknown, .readyToPlay],
             from: player.itemStatePublisher(),
             during: 1
@@ -36,7 +36,7 @@ final class ItemStatePublisherTests: XCTestCase {
     func testEntirePlayback() {
         let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = AVPlayer(playerItem: item)
-        expectPublished(
+        expectEqualPublished(
             values: [.unknown, .readyToPlay, .ended],
             from: player.itemStatePublisher(),
             during: 2
@@ -48,7 +48,7 @@ final class ItemStatePublisherTests: XCTestCase {
     func testUnavailableStream() {
         let item = AVPlayerItem(url: TestStreams.unavailableUrl)
         let player = AVPlayer(playerItem: item)
-        expectPublished(
+        expectEqualPublished(
             values: [.unknown, .failed(error: TestError.any)],
             from: player.itemStatePublisher(),
             during: 1
@@ -58,7 +58,7 @@ final class ItemStatePublisherTests: XCTestCase {
     func testCorruptStream() {
         let item = AVPlayerItem(url: TestStreams.corruptOnDemandUrl)
         let player = AVPlayer(playerItem: item)
-        expectPublished(
+        expectEqualPublished(
             values: [.unknown, .failed(error: TestError.any)],
             from: player.itemStatePublisher(),
             during: 1
@@ -70,7 +70,7 @@ final class ItemStatePublisherTests: XCTestCase {
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: queue)
         let item = AVPlayerItem(asset: asset)
         let player = AVPlayer(playerItem: item)
-        expectPublished(
+        expectEqualPublished(
             values: [.unknown, .failed(error: TestError.any)],
             from: player.itemStatePublisher(),
             during: 1

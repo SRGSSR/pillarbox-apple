@@ -13,7 +13,7 @@ import XCTest
 final class ItemTimeRangePublisherTests: XCTestCase {
     func testEmpty() {
         let player = AVPlayer()
-        expectPublished(
+        expectEqualPublished(
             values: [],
             from: player.itemTimeRangePublisher(),
             during: 2
@@ -33,7 +33,7 @@ final class ItemTimeRangePublisherTests: XCTestCase {
     func testLive() {
         let item = AVPlayerItem(url: TestStreams.liveUrl)
         let player = AVPlayer(playerItem: item)
-        expectPublished(
+        expectEqualPublished(
             values: [.zero],
             from: player.itemTimeRangePublisher()
         )

@@ -15,7 +15,7 @@ final class ItemStatePublisherQueueTests: XCTestCase {
         let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let item2 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = AVQueuePlayer(items: [item1, item2])
-        expectPublished(
+        expectEqualPublished(
             // The second item can be pre-buffered and is immediately ready
             values: [.unknown, .readyToPlay, .ended, .readyToPlay, .ended],
             from: player.itemStatePublisher(),
@@ -30,7 +30,7 @@ final class ItemStatePublisherQueueTests: XCTestCase {
         let item2 = AVPlayerItem(url: TestStreams.unavailableUrl)
         let item3 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = AVQueuePlayer(items: [item1, item2, item3])
-        expectPublished(
+        expectEqualPublished(
             // The third item cannot be pre-buffered and goes through the usual states
             values: [
                 .unknown, .readyToPlay, .ended,

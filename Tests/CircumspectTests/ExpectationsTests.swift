@@ -12,7 +12,7 @@ import XCTest
 
 final class ExpectationTests: XCTestCase {
     func testExpectPublishedValues() {
-        expectPublished(
+        expectEqualPublished(
             values: [1, 2, 3, 4, 5],
             from: [1, 2, 3, 4, 5].publisher
         )
@@ -20,7 +20,7 @@ final class ExpectationTests: XCTestCase {
 
     func testExpectPublishedValuesWhileExecuting() {
         let subject = PassthroughSubject<Int, Never>()
-        expectPublished(
+        expectEqualPublished(
             values: [4, 7],
             from: subject
         ) {
@@ -31,7 +31,7 @@ final class ExpectationTests: XCTestCase {
     }
 
     func testExpectPublishedNextValues() {
-        expectPublishedNext(
+        expectEqualPublishedNext(
             values: [2, 3, 4, 5],
             from: [1, 2, 3, 4, 5].publisher
         )
@@ -39,7 +39,7 @@ final class ExpectationTests: XCTestCase {
 
     func testExpectPublishedNextValuesWhileExecuting() {
         let subject = PassthroughSubject<Int, Never>()
-        expectPublishedNext(
+        expectEqualPublishedNext(
             values: [7, 8],
             from: subject
         ) {
@@ -52,7 +52,7 @@ final class ExpectationTests: XCTestCase {
 
     func testExpectPublishedValuesDuringInterval() {
         let counter = Counter()
-        expectPublished(
+        expectEqualPublished(
             values: [0, 1, 2],
             from: counter.$count,
             during: 0.5
@@ -61,7 +61,7 @@ final class ExpectationTests: XCTestCase {
 
     func testExpectPublishedValuesDuringIntervalWhileExecuting() {
         let subject = PassthroughSubject<Int, Never>()
-        expectPublished(
+        expectEqualPublished(
             values: [4, 7, 8],
             from: subject,
             during: 0.5
@@ -74,7 +74,7 @@ final class ExpectationTests: XCTestCase {
 
     func testExpectPublishedNextValuesDuringInterval() {
         let counter = Counter()
-        expectPublishedNext(
+        expectEqualPublishedNext(
             values: [1, 2],
             from: counter.$count,
             during: 0.5
@@ -83,7 +83,7 @@ final class ExpectationTests: XCTestCase {
 
     func testExpectPublishedNextValuesDuringIntervalWhileExecuting() {
         let subject = PassthroughSubject<Int, Never>()
-        expectPublishedNext(
+        expectEqualPublishedNext(
             values: [7, 8],
             from: subject,
             during: 0.5

@@ -34,7 +34,7 @@ public extension XCTestCase {
     }
 
     /// Wait for a publisher to emit a list of expected values.
-    func expectPublished<P: Publisher>(
+    func expectEqualPublished<P: Publisher>(
         values: [P.Output],
         from publisher: P,
         timeout: TimeInterval = 10,
@@ -98,7 +98,7 @@ public extension XCTestCase {
 
     /// Wait for a publisher to emit a list of expected values, ignoring the first value. Useful when testing
     /// publishers which automatically deliver a non-relevant stored value upon subscription.
-    func expectPublishedNext<P: Publisher>(
+    func expectEqualPublishedNext<P: Publisher>(
         values: [P.Output],
         from publisher: P,
         timeout: TimeInterval = 10,
@@ -197,7 +197,7 @@ public extension XCTestCase {
     }
 
     /// Collect values emitted by a publisher during some time interval and match them against an expected result.
-    func expectPublished<P: Publisher>(
+    func expectEqualPublished<P: Publisher>(
         values: [P.Output],
         from publisher: P,
         during interval: TimeInterval,
@@ -265,7 +265,7 @@ public extension XCTestCase {
     /// Collect values emitted by a publisher during some time interval and match them against an expected result,
     /// ignoring the first value. Useful when testing publishers which automatically deliver a non-relevant stored
     /// value upon subscription.
-    func expectPublishedNext<P: Publisher>(
+    func expectEqualPublishedNext<P: Publisher>(
         values: [P.Output],
         from publisher: P,
         during interval: TimeInterval,

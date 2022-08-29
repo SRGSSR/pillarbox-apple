@@ -15,7 +15,7 @@ final class PlayerItemPublishersTests: XCTestCase {
     func testValidItemStateWithoutPlayback() {
         let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         _ = AVPlayer(playerItem: item)
-        expectPublished(
+        expectEqualPublished(
             values: [.unknown, .readyToPlay],
             from: item.itemStatePublisher(),
             during: 2
@@ -25,7 +25,7 @@ final class PlayerItemPublishersTests: XCTestCase {
     func testValidItemStateWithPlayback() {
         let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
         let player = AVPlayer(playerItem: item)
-        expectPublished(
+        expectEqualPublished(
             values: [.unknown, .readyToPlay, .ended],
             from: item.itemStatePublisher(),
             during: 2
@@ -37,7 +37,7 @@ final class PlayerItemPublishersTests: XCTestCase {
     func testCorruptStream() {
         let item = AVPlayerItem(url: TestStreams.corruptOnDemandUrl)
         _ = AVPlayer(playerItem: item)
-        expectPublished(
+        expectEqualPublished(
             values: [.unknown, .failed(error: TestError.any)],
             from: item.itemStatePublisher(),
             during: 2
