@@ -105,3 +105,23 @@ final class PlayerItemTests: XCTestCase {
         expect(player.items).to(equal([]))
     }
 }
+
+@MainActor
+final class PlayerStreamTypeTests: XCTestCase {
+    func testEmpty() {
+        let player = Player()
+        expect(player.streamType).toAlways(equal(.unknown))
+    }
+
+    func testOnDemand() {
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
+        let player = Player(item: item)
+        expect(player.streamType).toEventually(equal(.onDemand))
+    }
+
+    func testLive() {
+        let item = AVPlayerItem(url: TestStreams.liveUrl)
+        let player = Player(item: item)
+        expect(player.streamType).toEventually(equal(.live))
+    }
+}
