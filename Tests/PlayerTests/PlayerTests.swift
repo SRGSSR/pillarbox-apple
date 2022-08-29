@@ -26,7 +26,7 @@ final class PlayerDeallocationTests: XCTestCase {
 
 @MainActor
 final class PlayerItemTests: XCTestCase {
-    func testEmptyItems() {
+    func testEmpty() {
         let player = Player()
         expect(player.items).to(equal([]))
     }
