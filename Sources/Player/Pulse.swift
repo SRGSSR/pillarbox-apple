@@ -27,7 +27,7 @@ struct Pulse {
     }
 
     static func close(within tolerance: CMTime) -> ((Pulse?, Pulse?) -> Bool) {
-        return { pulse1, pulse2 in
+        { pulse1, pulse2 in
             switch (pulse1, pulse2) {
             case (.none, .none):
                 return true

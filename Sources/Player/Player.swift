@@ -10,12 +10,6 @@ import Combine
 /// Audio / video player.
 @MainActor
 public final class Player: ObservableObject {
-    private static func configure(with configuration: (inout PlayerConfiguration) -> Void) -> PlayerConfiguration {
-        var playerConfiguration = PlayerConfiguration()
-        configuration(&playerConfiguration)
-        return playerConfiguration
-    }
-
     /// Current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle
     /// Current playback properties.
@@ -79,8 +73,14 @@ public final class Player: ObservableObject {
 
     /// Create a player with a single item in its queue.
     /// - Parameter item: The item to queue.
-    public convenience init(item: AVPlayerItem, configuration: (inout PlayerConfiguration) -> Void = {_  in }) {
+    public convenience init(item: AVPlayerItem, configuration: (inout PlayerConfiguration) -> Void = { _  in }) {
         self.init(items: [item], configuration: configuration)
+    }
+
+    private static func configure(with configuration: (inout PlayerConfiguration) -> Void) -> PlayerConfiguration {
+        var playerConfiguration = PlayerConfiguration()
+        configuration(&playerConfiguration)
+        return playerConfiguration
     }
 
     /// Insert an item into the queue.

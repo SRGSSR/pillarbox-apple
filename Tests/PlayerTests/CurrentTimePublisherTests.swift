@@ -29,7 +29,7 @@ final class CurrentTimePublisherTests: XCTestCase {
                 .zero,
                 CMTime(value: 1, timescale: 1),
                 CMTime(value: 2, timescale: 1),
-                CMTime(value: 3, timescale: 1),
+                CMTime(value: 3, timescale: 1)
             ],
             from: player.currentTimePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main),
             to: beClose(within: 0.5),

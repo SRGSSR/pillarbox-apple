@@ -28,7 +28,7 @@ struct PlaybackProperties {
     }
 
     static func close(within tolerance: CMTime) -> ((PlaybackProperties, PlaybackProperties) -> Bool) {
-        return { properties1, properties2 in
+        { properties1, properties2 in
             Pulse.close(within: tolerance)(properties1.pulse, properties2.pulse)
                 && CMTime.close(within: tolerance)(properties1.targetTime, properties2.targetTime)
         }
