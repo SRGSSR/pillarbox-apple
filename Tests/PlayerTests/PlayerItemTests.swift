@@ -11,40 +11,6 @@ import Nimble
 import XCTest
 
 @MainActor
-final class PlayerDeallocationTests: XCTestCase {
-    func testPlayerDeallocation() {
-        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
-        var player: Player? = Player(item: item)
-
-        weak var weakPlayer = player
-        autoreleasepool {
-            player = nil
-        }
-        expect(weakPlayer).to(beNil())
-    }
-}
-
-@MainActor
-final class PlayerStreamTypeTests: XCTestCase {
-    func testEmpty() {
-        let player = Player()
-        expect(player.streamType).toAlways(equal(.unknown))
-    }
-
-    func testOnDemand() {
-        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
-        let player = Player(item: item)
-        expect(player.streamType).toEventually(equal(.onDemand))
-    }
-
-    func testLive() {
-        let item = AVPlayerItem(url: TestStreams.liveUrl)
-        let player = Player(item: item)
-        expect(player.streamType).toEventually(equal(.live))
-    }
-}
-
-@MainActor
 final class PlayerItemTests: XCTestCase {
     func testEmpty() {
         let player = Player()

@@ -10,48 +10,6 @@ import Circumspect
 import Nimble
 import XCTest
 
-final class ClampedTests: XCTestCase {
-    func testClamped() {
-        expect((-1).clamped(to: 0...1)).to(equal(0))
-        expect(0.clamped(to: 0...1)).to(equal(0))
-        expect(0.5.clamped(to: 0...1)).to(equal(0.5))
-        expect(1.clamped(to: 0...1)).to(equal(1))
-        expect(2.clamped(to: 0...1)).to(equal(1))
-    }
-}
-
-final class NotificationPublisherDeallocationTests: XCTestCase {
-    func testReleaseWithObject() {
-        let notificationCenter = NotificationCenter.default
-        var object: TestObject? = TestObject()
-        let publisher = notificationCenter.weakPublisher(for: .testNotification, object: object).first()
-
-        weak var weakObject = object
-        autoreleasepool {
-            waitForOutput(from: publisher) {
-                notificationCenter.post(name: .testNotification, object: object)
-            }
-            object = nil
-        }
-        expect(weakObject).to(beNil())
-    }
-
-    func testReleaseWithNSObject() {
-        let notificationCenter = NotificationCenter.default
-        var object: TestNSObject? = TestNSObject()
-        let publisher = notificationCenter.weakPublisher(for: .testNotification, object: object).first()
-
-        weak var weakObject = object
-        autoreleasepool {
-            waitForOutput(from: publisher) {
-                notificationCenter.post(name: .testNotification, object: object)
-            }
-            object = nil
-        }
-        expect(weakObject).to(beNil())
-    }
-}
-
 final class NotificationPublisherTests: XCTestCase {
     func testWithoutObject() {
         let notificationCenter = NotificationCenter.default
