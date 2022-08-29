@@ -258,8 +258,34 @@ final class ItemDurationPublisherQueueTests: XCTestCase {
     }
 }
 
-final class TimeRangePublisherQueueTests: XCTestCase {
+final class ItemTimeRangePublisherTests: XCTestCase {
+    func testEmpty() throws {
+        let player = AVPlayer()
+        try expectPublished(
+            values: [],
+            from: player.itemTimeRangePublisher(),
+            during: 2
+        )
+    }
 
+    func testOnDemand() throws {
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
+        let player = AVPlayer(playerItem: item)
+        try expectPublished(
+            values: [CMTimeRange(start: .zero, duration: CMTime(value: 120, timescale: 1))],
+            from: player.itemTimeRangePublisher(),
+            to: beClose(within: 0.5)
+        )
+    }
+
+    func testLive() throws {
+        let item = AVPlayerItem(url: TestStreams.liveUrl)
+        let player = AVPlayer(playerItem: item)
+        try expectPublished(
+            values: [.zero],
+            from: player.itemTimeRangePublisher()
+        )
+    }
 }
 
 // TODO: Current time publisher
