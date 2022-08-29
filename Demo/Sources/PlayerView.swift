@@ -39,7 +39,7 @@ struct PlayerView: View {
             }
             .ignoresSafeArea()
 #if os(iOS)
-            if player.streamType == .onDemand {
+            if [.onDemand, .dvr].contains(player.streamType) {
                 Slider(value: $player.targetProgress)
                     .tint(.white)
                     .padding()

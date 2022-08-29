@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
+import Foundation
 
 /// Stream types.
 public enum StreamType {
@@ -19,6 +19,17 @@ public enum StreamType {
 
     static func streamType(for pulse: Pulse?) -> StreamType {
         guard let pulse else { return .unknown }
-        return pulse.timeRange.isEmpty ? .live : .onDemand
+        if pulse.timeRange.isEmpty {
+            return .live
+        }
+        else {
+            let itemDuration = pulse.itemDuration
+            if itemDuration.isIndefinite {
+                return .dvr
+            }
+            else {
+                return itemDuration == .zero ? .live : .onDemand
+            }
+        }
     }
 }

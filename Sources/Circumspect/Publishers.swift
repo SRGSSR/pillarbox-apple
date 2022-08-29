@@ -9,19 +9,19 @@ import XCTest
 
 /// Borrowed from https://www.swiftbysundell.com/articles/unit-testing-combine-based-swift-code/
 public extension XCTestCase {
-    /// Await for a publisher to complete and return its collected output.
+    /// Wait for a publisher to complete and return its output.
     ///
     /// Remark: For never-ending publishers use `.first()`, `.collect()`, `.collectNext()`,
     ///         `collectFirst()` or similar to have the publisher complete after having
     ///         received the desired number of items.
     @discardableResult
-    func awaitCompletion<P: Publisher>(
+    func waitForOutput<P: Publisher>(
         from publisher: P,
         timeout: TimeInterval = 10,
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws -> [P.Output] {
+    ) -> [P.Output] {
         var values: [P.Output] = []
         var result: Result<[P.Output], Error>?
 
@@ -51,13 +51,11 @@ public extension XCTestCase {
 
         waitForExpectations(timeout: timeout)
 
-        let unwrappedResult = try XCTUnwrap(
-            result,
-            "Awaited publisher did not produce any output",
-            file: file,
-            line: line
-        )
-        return try unwrappedResult.get()
+        guard let output = try? result?.get() else {
+            XCTFail("The publisher did not produce any output", file: file, line: line)
+            return []
+        }
+        return output
     }
 
     /// Collect output emitted by a publisher during some interval.

@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
-import Combine
 import CoreMedia
 
 /// Player pulse.
@@ -14,44 +12,31 @@ struct Pulse {
     let time: CMTime
     /// The time range. Guaranteed to be valid.
     let timeRange: CMTimeRange
+    /// Item duration. Might be indefinite.
+    let itemDuration: CMTime
 
     var progress: Float {
         progress(for: time)
     }
 
-    init?(time: CMTime, timeRange: CMTimeRange) {
+    init?(time: CMTime, timeRange: CMTimeRange, itemDuration: CMTime) {
         guard time.isNumeric, timeRange.isValid else { return nil }
         self.time = time
         self.timeRange = timeRange
+        self.itemDuration = itemDuration
     }
 
-    static func publisher(for player: AVPlayer, interval: CMTime, queue: DispatchQueue) -> AnyPublisher<Pulse?, Never> {
-        // TODO: Maybe better criterium than item state (asset duration? Maybe more resilient for AirPlay)
-        Publishers.Merge(
-            ItemState.publisher(for: player)
-                .filter { $0 == .readyToPlay }
-                .map { _ in .zero },
-            Publishers.PeriodicTimePublisher(for: player, interval: interval, queue: queue)
-        )
-        .compactMap { [weak player] time in
-            guard let player, let timeRange = Time.timeRange(for: player.currentItem) else { return nil }
-            return Pulse(time: time, timeRange: timeRange)
-        }
-        .removeDuplicates(by: close(within: CMTimeGetSeconds(interval) / 2))
-        .eraseToAnyPublisher()
-    }
-
-    static func close(within tolerance: TimeInterval) -> ((Pulse?, Pulse?) -> Bool) {
-        precondition(tolerance >= 0)
-        return { pulse1, pulse2 in
+    static func close(within tolerance: CMTime) -> ((Pulse?, Pulse?) -> Bool) {
+        { pulse1, pulse2 in
             switch (pulse1, pulse2) {
             case (.none, .none):
                 return true
             case (.none, .some), (.some, .none):
                 return false
             case let (.some(pulse1), .some(pulse2)):
-                return Time.close(within: tolerance)(pulse1.time, pulse2.time)
-                    && TimeRange.close(within: tolerance)(pulse1.timeRange, pulse2.timeRange)
+                return CMTime.close(within: tolerance)(pulse1.time, pulse2.time)
+                    && CMTimeRange.close(within: tolerance)(pulse1.timeRange, pulse2.timeRange)
+                    && CMTime.close(within: tolerance)(pulse1.itemDuration, pulse2.itemDuration)
             }
         }
     }

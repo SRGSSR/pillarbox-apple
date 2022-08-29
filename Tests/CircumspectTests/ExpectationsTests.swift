@@ -11,16 +11,16 @@ import Nimble
 import XCTest
 
 final class ExpectationTests: XCTestCase {
-    func testExpectPublishedValues() throws {
-        try expectPublished(
+    func testExpectPublishedValues() {
+        expectEqualPublished(
             values: [1, 2, 3, 4, 5],
             from: [1, 2, 3, 4, 5].publisher
         )
     }
 
-    func testExpectPublishedValuesWhileExecuting() throws {
+    func testExpectPublishedValuesWhileExecuting() {
         let subject = PassthroughSubject<Int, Never>()
-        try expectPublished(
+        expectEqualPublished(
             values: [4, 7],
             from: subject
         ) {
@@ -30,16 +30,16 @@ final class ExpectationTests: XCTestCase {
         }
     }
 
-    func testExpectPublishedNextValues() throws {
-        try expectPublishedNext(
+    func testExpectPublishedNextValues() {
+        expectEqualPublishedNext(
             values: [2, 3, 4, 5],
             from: [1, 2, 3, 4, 5].publisher
         )
     }
 
-    func testExpectPublishedNextValuesWhileExecuting() throws {
+    func testExpectPublishedNextValuesWhileExecuting() {
         let subject = PassthroughSubject<Int, Never>()
-        try expectPublishedNext(
+        expectEqualPublishedNext(
             values: [7, 8],
             from: subject
         ) {
@@ -50,18 +50,18 @@ final class ExpectationTests: XCTestCase {
         }
     }
 
-    func testExpectPublishedValuesDuringInterval() throws {
+    func testExpectPublishedValuesDuringInterval() {
         let counter = Counter()
-        try expectPublished(
+        expectEqualPublished(
             values: [0, 1, 2],
             from: counter.$count,
             during: 0.5
         )
     }
 
-    func testExpectPublishedValuesDuringIntervalWhileExecuting() throws {
+    func testExpectPublishedValuesDuringIntervalWhileExecuting() {
         let subject = PassthroughSubject<Int, Never>()
-        try expectPublished(
+        expectEqualPublished(
             values: [4, 7, 8],
             from: subject,
             during: 0.5
@@ -72,18 +72,18 @@ final class ExpectationTests: XCTestCase {
         }
     }
 
-    func testExpectPublishedNextValuesDuringInterval() throws {
+    func testExpectPublishedNextValuesDuringInterval() {
         let counter = Counter()
-        try expectPublishedNext(
+        expectEqualPublishedNext(
             values: [1, 2],
             from: counter.$count,
             during: 0.5
         )
     }
 
-    func testExpectPublishedNextValuesDuringIntervalWhileExecuting() throws {
+    func testExpectPublishedNextValuesDuringIntervalWhileExecuting() {
         let subject = PassthroughSubject<Int, Never>()
-        try expectPublishedNext(
+        expectEqualPublishedNext(
             values: [7, 8],
             from: subject,
             during: 0.5
@@ -94,20 +94,20 @@ final class ExpectationTests: XCTestCase {
         }
     }
 
-    func testExpectNothingPublished() throws {
+    func testExpectNothingPublished() {
         let subject = PassthroughSubject<Int, Never>()
-        try expectNothingPublished(from: subject, during: 1)
+        expectNothingPublished(from: subject, during: 1)
     }
 
-    func testExpectNothingPublishedNext() throws {
+    func testExpectNothingPublishedNext() {
         let subject = PassthroughSubject<Int, Never>()
-        try expectNothingPublishedNext(from: subject, during: 1) {
+        expectNothingPublishedNext(from: subject, during: 1) {
             subject.send(4)
         }
     }
 
-    func testExpectReceivedNotifications() throws {
-        try expectReceived(
+    func testExpectReceivedNotifications() {
+        expectReceived(
             notifications: [
                 Notification(name: .testNotification, object: self)
             ],
@@ -117,8 +117,8 @@ final class ExpectationTests: XCTestCase {
         }
     }
 
-    func testExpectReceivedNotificationsDuringInterval() throws {
-        try expectReceived(
+    func testExpectReceivedNotificationsDuringInterval() {
+        expectReceived(
             notifications: [
                 Notification(name: .testNotification, object: self)
             ],

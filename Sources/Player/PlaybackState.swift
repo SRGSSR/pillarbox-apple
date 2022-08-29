@@ -4,8 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
-import Combine
+import Foundation
 
 /// Playback states.
 public enum PlaybackState: Equatable {
@@ -20,22 +19,7 @@ public enum PlaybackState: Equatable {
     /// The player encountered an error.
     case failed(error: Error)
 
-    static func publisher(for player: AVPlayer) -> AnyPublisher<PlaybackState, Never> {
-        Publishers.CombineLatest(
-            ItemState.publisher(for: player),
-            ratePublisher(for: player)
-        )
-        .map { state(for: $0, rate: $1) }
-        .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
-
-    static func ratePublisher(for player: AVPlayer) -> AnyPublisher<Float, Never> {
-        player.publisher(for: \.rate)
-            .eraseToAnyPublisher()
-    }
-
-    private static func state(for itemState: ItemState, rate: Float) -> PlaybackState {
+    static func state(for itemState: ItemState, rate: Float) -> PlaybackState {
         switch itemState {
         case .readyToPlay:
             return (rate == 0) ? .paused : .playing

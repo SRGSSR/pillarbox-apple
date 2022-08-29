@@ -11,20 +11,20 @@ import Circumspect
 
 extension Pulse: Similar {
     public static func ~= (lhs: Pulse, rhs: Pulse) -> Bool {
-        Pulse.close(within: 0.5)(lhs, rhs)
+        Pulse.close(within: CMTime(value: 1, timescale: 2))(lhs, rhs)
     }
 }
 
 extension PlaybackProperties: Similar {
     public static func ~= (lhs: PlaybackProperties, rhs: PlaybackProperties) -> Bool {
-        PlaybackProperties.close(within: 0.5)(lhs, rhs)
+        PlaybackProperties.close(within: CMTime(value: 1, timescale: 2))(lhs, rhs)
     }
 }
 
 func beClose(within tolerance: TimeInterval) -> ((CMTime, CMTime) -> Bool) {
-    Time.close(within: tolerance)
+    CMTime.close(within: tolerance)
 }
 
 func beClose(within tolerance: TimeInterval) -> ((CMTimeRange, CMTimeRange) -> Bool) {
-    TimeRange.close(within: tolerance)
+    CMTimeRange.close(within: tolerance)
 }

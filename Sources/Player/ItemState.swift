@@ -5,7 +5,6 @@
 //
 
 import AVFoundation
-import Combine
 
 enum ItemState: Equatable {
     case unknown
@@ -13,12 +12,12 @@ enum ItemState: Equatable {
     case ended
     case failed(error: Error)
 
-    private static func itemState(for item: AVPlayerItem?) -> ItemState {
+    static func itemState(for item: AVPlayerItem?) -> ItemState {
         guard let item else { return .unknown }
         return itemState(for: item.status, error: item.error)
     }
 
-    private static func itemState(for status: AVPlayerItem.Status, error: Error?) -> ItemState {
+    static func itemState(for status: AVPlayerItem.Status, error: Error?) -> ItemState {
         switch status {
         case .readyToPlay:
             return .readyToPlay
@@ -27,26 +26,6 @@ enum ItemState: Equatable {
         default:
             return .unknown
         }
-    }
-
-    private static func publisher(for item: AVPlayerItem) -> AnyPublisher<ItemState, Never> {
-        Publishers.Merge(
-            item.publisher(for: \.status)
-                .map { itemState(for: $0, error: item.error) },
-            NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: item)
-                .map { _ in .ended }
-        )
-        .eraseToAnyPublisher()
-    }
-
-    static func publisher(for player: AVPlayer) -> AnyPublisher<ItemState, Never> {
-        player.publisher(for: \.currentItem)
-            .compactMap { $0 }
-            .map { publisher(for: $0) }
-            .switchToLatest()
-            .prepend(itemState(for: player.currentItem))
-            .removeDuplicates()
-            .eraseToAnyPublisher()
     }
 
     // Ignore differences between errors (different errors should never occur in practice for the same item anyway).

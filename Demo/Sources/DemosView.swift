@@ -31,9 +31,24 @@ struct DemosView: View {
             url: URL(string: "https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8?dw=0")!
         ),
         Media(
+            id: "urn:rts:video:8841634_dvr",
+            title: "Couleur 3 en vidéo (DVR)",
+            url: URL(string: "https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8")!
+        ),
+        Media(
+            id: "urn:rts:audio:13306836",
+            title: "On en parle",
+            url: URL(string: "https://rts-aod-dd.akamaized.net/ww/13306839/63cc2653-8305-3894-a448-108810b553ef.mp3")!
+        ),
+        Media(
             id: "urn:rts:audio:3262363",
             title: "La 1ère",
             url: URL(string: "http://stream.srg-ssr.ch/m/la-1ere/mp3_128")!
+        ),
+        Media(
+            id: "urn:rts:audio:3262363_dvr",
+            title: "La 1ère (DVR)",
+            url: URL(string: "http://lsaplus.swisstxt.ch/audio/rsp_96.stream/playlist.m3u8")!
         )
     ]
 

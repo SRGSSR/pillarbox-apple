@@ -11,28 +11,28 @@ import Nimble
 import XCTest
 
 final class PublisherTests: XCTestCase {
-    func testCollectFirst() throws {
-        let values = try awaitCompletion(
+    func testCollectFirst() {
+        let values = waitForOutput(
             from: [1, 2, 3, 4, 5].publisher.collectFirst(3)
         ).flatMap { $0 }
         expect(values).to(equal([1, 2, 3]))
     }
 
-    func testCollectNext() throws {
-        let values = try awaitCompletion(
+    func testCollectNext() {
+        let values = waitForOutput(
             from: [1, 2, 3, 4, 5].publisher.collectNext(3)
         ).flatMap { $0 }
         expect(values).to(equal([2, 3, 4]))
     }
 
-    func testAwaitCompletion() throws {
-        let values = try awaitCompletion(from: [1, 2, 3].publisher)
+    func testwaitForOutput() {
+        let values = waitForOutput(from: [1, 2, 3].publisher)
         expect(values).to(equal([1, 2, 3]))
     }
 
-    func testAwaitCompletionWhileExecuting() throws {
+    func testwaitForOutputWhileExecuting() {
         let subject = PassthroughSubject<Int, Never>()
-        let values = try awaitCompletion(from: subject) {
+        let values = waitForOutput(from: subject) {
             subject.send(4)
             subject.send(7)
             subject.send(completion: .finished)
@@ -40,13 +40,13 @@ final class PublisherTests: XCTestCase {
         expect(values).to(equal([4, 7]))
     }
 
-    func testCollectOutput() throws {
+    func testCollectOutput() {
         let counter = Counter()
         let values = collectOutput(from: counter.$count, during: 0.5)
         expect(values).to(equal([0, 1, 2]))
     }
 
-    func testCollectOutputWhileExecuting() throws {
+    func testCollectOutputWhileExecuting() {
         let subject = PassthroughSubject<Int, Never>()
         let values = collectOutput(from: subject, during: 0.5) {
             subject.send(4)
