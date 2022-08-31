@@ -8,6 +8,10 @@ import Foundation
 
 /// Playback progress.
 public struct PlaybackProgress: Equatable {
+    static var empty: Self {
+        PlaybackProgress(value: nil, isInteracting: false)
+    }
+
     private static var defaultRange: ClosedRange<Float> = 0...1
 
     /// The current progress as a value in `bounds`.
@@ -23,20 +27,17 @@ public struct PlaybackProgress: Equatable {
 
     private var _value: Float?
 
+    /// Progress lower and upper bounds, if any.
+    public var bounds: ClosedRange<Float>? {
+        value != nil ? Self.defaultRange : nil
+    }
+
     init(value: Float?, isInteracting: Bool) {
         _value = Self.sanitized(from: value)
         self.isInteracting = isInteracting
     }
 
-    static var empty: Self {
-        PlaybackProgress(value: nil, isInteracting: false)
-    }
-
-    public var bounds: ClosedRange<Float>? {
-        return value != nil ? Self.defaultRange : nil
-    }
-
     private static func sanitized(from value: Float?) -> Float? {
-        return value?.clamped(to: Self.defaultRange)
+        value?.clamped(to: Self.defaultRange)
     }
 }

@@ -8,6 +8,12 @@ import SwiftUI
 
 @available(tvOS, unavailable)
 public extension Slider {
+    /// Create a slider bound to a player.
+    /// - Parameters:
+    ///   - player: The player.
+    ///   - label: A view describing the slider purpose.
+    ///   - minimumValueLabel: A view describing the lower bound.
+    ///   - maximumValueLabel: A view describing the upper bound.
     @MainActor
     init(
         player: Player,
@@ -27,6 +33,10 @@ public extension Slider {
 
 @available(tvOS, unavailable)
 public extension Slider where ValueLabel == EmptyView {
+    /// Create a slider bound to a player.
+    /// - Parameters:
+    ///   - player: The player.
+    ///   - label: A view describing the slider purpose.
     @MainActor
     init(player: Player, @ViewBuilder label: () -> Label) {
         self.init(
@@ -41,6 +51,9 @@ public extension Slider where ValueLabel == EmptyView {
 
 @available(tvOS, unavailable)
 public extension Slider where Label == EmptyView, ValueLabel == EmptyView {
+    /// Create a slider bound to a player.
+    /// - Parameters:
+    ///   - player: The player.
     @MainActor
     init(player: Player) {
         self.init(value: sliderValue(for: player), in: sliderBounds(for: player)) { isEditing in
@@ -61,5 +74,5 @@ private func sliderValue(for player: Player) -> Binding<Float> {
 
 @MainActor
 private func sliderBounds(for player: Player) -> ClosedRange<Float> {
-    return player.progress.bounds ?? 0...0
+    player.progress.bounds ?? 0...0
 }
