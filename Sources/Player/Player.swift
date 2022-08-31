@@ -10,14 +10,28 @@ import Combine
 /// Audio / video player.
 @MainActor
 public final class Player: ObservableObject {
+    /// Describe progress.
+    public struct Progress: Equatable {
+        /// The current progress as a value in 0...1.
+        public var value: Float
+        /// Set to `true` when updating progress interactively, e.g. via a seek bar.
+        public var isInteracting: Bool
+    }
+
     /// Current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle
     /// Current playback properties.
     @Published private var playbackProperties: PlaybackProperties = .empty
 
-    /// A value in 0...1 describing the current playback progress.
-    public var progress: Float {
-        playbackProperties.pulse?.progress ?? 0
+    /// Current playback progress.
+    @Published public var progress = Progress(value: 0, isInteracting: false) {
+        willSet {
+            guard let time = playbackProperties.pulse?.time(forProgress: newValue.value),
+                  time.isNumeric else {
+                return
+            }
+            seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { _ in }
+        }
     }
 
     public var time: CMTime? {
@@ -26,17 +40,6 @@ public final class Player: ObservableObject {
 
     public var timeRange: CMTimeRange? {
         playbackProperties.pulse?.timeRange
-    }
-
-    /// Progress which the player is reaching.
-    @Published public var targetProgress: Float = 0 {
-        willSet {
-            guard let time = playbackProperties.pulse?.time(forProgress: newValue),
-                    time.isNumeric else {
-                return
-            }
-            seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { _ in }
-        }
     }
 
     let dequeuePlayer: DequeuePlayer
@@ -66,9 +69,11 @@ public final class Player: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: &$playbackProperties)
         $playbackProperties
-            .map { $0.targetProgress ?? 0 }
+            .weakCapture(self, at: \.progress)
+            .filter { !$1.isInteracting }
+            .map { Progress(value: $0.progress ?? 0, isInteracting: $1.isInteracting) }
             .removeDuplicates()
-            .assign(to: &$targetProgress)
+            .assign(to: &$progress)
     }
 
     /// Create a player with a single item in its queue.

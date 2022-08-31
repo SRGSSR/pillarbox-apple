@@ -40,10 +40,12 @@ struct PlayerView: View {
             .ignoresSafeArea()
 #if os(iOS)
             if [.onDemand, .dvr].contains(player.streamType) {
-                Slider(value: $player.targetProgress)
-                    .tint(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                Slider(value: $player.progress.value) { isEditing in
+                    player.progress.isInteracting = isEditing
+                }
+                .tint(.white)
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
 #endif
         }

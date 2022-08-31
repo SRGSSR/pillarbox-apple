@@ -28,9 +28,6 @@ final class TestNSObject: NSObject {
 final class TestObject {
 }
 
-struct TestStruct {
-}
-
 final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
     // Correct error propagation from the resource loader to the player item requires the following:
     //   - The error code must be an `Int`.
