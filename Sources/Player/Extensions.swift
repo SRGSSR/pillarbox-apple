@@ -6,6 +6,7 @@
 
 import Combine
 import Foundation
+import SwiftUI
 
 extension Comparable {
     func clamped(to range: ClosedRange<Self>) -> Self {
@@ -53,3 +54,12 @@ public extension Publisher {
         weakCapture(other, at: \T.self)
     }
  }
+
+public extension Binding {
+    init<T>(_ object: T, at keyPath: ReferenceWritableKeyPath<T, Value>) {
+        self.init(
+            get: { object[keyPath: keyPath] },
+            set: { object[keyPath: keyPath] = $0 }
+        )
+    }
+}
