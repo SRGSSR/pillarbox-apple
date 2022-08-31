@@ -62,4 +62,11 @@ public extension Binding {
             set: { object[keyPath: keyPath] = $0 }
         )
     }
+
+    init<T>(_ object: T, at keyPath: ReferenceWritableKeyPath<T, Value?>, defaultValue: Value) {
+        self.init(
+            get: { object[keyPath: keyPath] ?? defaultValue },
+            set: { object[keyPath: keyPath] = $0 }
+        )
+    }
 }

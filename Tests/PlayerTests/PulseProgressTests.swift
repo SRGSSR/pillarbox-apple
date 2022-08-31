@@ -53,6 +53,6 @@ final class PulseProgressTests: XCTestCase {
             timeRange: .zero,
             itemDuration: .indefinite
         )!
-        expect(pulse.progress).to(equal(0))
+        expect(pulse.progress).to(beNil())
     }
 }

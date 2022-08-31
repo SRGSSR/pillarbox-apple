@@ -16,9 +16,9 @@ public final class Player: ObservableObject {
     @Published private var playbackProperties: PlaybackProperties = .empty
 
     /// Current playback progress.
-    @Published public var progress = PlaybackProgress(value: 0, isInteracting: false) {
+    @Published public var progress: PlaybackProgress = .empty {
         willSet {
-            guard let time = playbackProperties.pulse?.time(forProgress: newValue.value),
+            guard let progress = newValue.value, let time = playbackProperties.pulse?.time(forProgress: progress),
                   time.isNumeric else {
                 return
             }
@@ -63,7 +63,7 @@ public final class Player: ObservableObject {
         $playbackProperties
             .weakCapture(self, at: \.progress)
             .filter { !$1.isInteracting }
-            .map { PlaybackProgress(value: $0.progress ?? 0, isInteracting: $1.isInteracting) }
+            .map { PlaybackProgress(value: $0.progress, isInteracting: $1.isInteracting) }
             .removeDuplicates()
             .assign(to: &$progress)
     }

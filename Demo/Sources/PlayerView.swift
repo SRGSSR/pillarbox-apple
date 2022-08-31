@@ -39,12 +39,10 @@ struct PlayerView: View {
             }
             .ignoresSafeArea()
 #if os(iOS)
-            if [.onDemand, .dvr].contains(player.streamType) {
-                Slider(player: player)
-                    .tint(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-            }
+            Slider(player: player)
+                .tint(.white)
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
 #endif
         }
         .onAppear {

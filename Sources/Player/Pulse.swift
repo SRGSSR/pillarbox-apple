@@ -15,7 +15,7 @@ struct Pulse {
     /// Item duration. Might be indefinite.
     let itemDuration: CMTime
 
-    var progress: Float {
+    var progress: Float? {
         progress(for: time)
     }
 
@@ -41,8 +41,8 @@ struct Pulse {
         }
     }
 
-    func progress(for time: CMTime) -> Float {
-        guard time.isNumeric && timeRange.isValid && !timeRange.isEmpty else { return 0 }
+    func progress(for time: CMTime) -> Float? {
+        guard time.isNumeric && timeRange.isValid && !timeRange.isEmpty else { return nil }
         let elapsedTime = CMTimeGetSeconds(CMTimeSubtract(time, timeRange.start))
         let duration = CMTimeGetSeconds(timeRange.duration)
         return Float(elapsedTime / duration).clamped(to: 0...1)

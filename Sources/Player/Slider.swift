@@ -15,7 +15,13 @@ public extension Slider {
         @ViewBuilder minimumValueLabel: () -> ValueLabel,
         @ViewBuilder maximumValueLabel: () -> ValueLabel
     ) {
-        self.init(value: Binding(player, at: \.progress.value), label: label, minimumValueLabel: minimumValueLabel, maximumValueLabel: maximumValueLabel)
+        self.init(
+            value: sliderValue(for: player),
+            in: sliderBounds(for: player),
+            label: label,
+            minimumValueLabel: minimumValueLabel,
+            maximumValueLabel: maximumValueLabel
+        )
     }
 }
 
@@ -23,7 +29,11 @@ public extension Slider {
 public extension Slider where ValueLabel == EmptyView {
     @MainActor
     init(player: Player, @ViewBuilder label: () -> Label) {
-        self.init(value: Binding(player, at: \.progress.value), label: label) { isEditing in
+        self.init(
+            value: sliderValue(for: player),
+            in: sliderBounds(for: player),
+            label: label
+        ) { isEditing in
             player.progress.isInteracting = isEditing
         }
     }
@@ -33,8 +43,23 @@ public extension Slider where ValueLabel == EmptyView {
 public extension Slider where Label == EmptyView, ValueLabel == EmptyView {
     @MainActor
     init(player: Player) {
-        self.init(value: Binding(player, at: \.progress.value)) { isEditing in
+        self.init(value: sliderValue(for: player), in: sliderBounds(for: player)) { isEditing in
             player.progress.isInteracting = isEditing
         }
     }
+}
+
+@MainActor
+private func sliderValue(for player: Player) -> Binding<Float> {
+    if player.progress.value != nil {
+        return Binding(player, at: \.progress.value, defaultValue: 0)
+    }
+    else {
+        return .constant(0)
+    }
+}
+
+@MainActor
+private func sliderBounds(for player: Player) -> ClosedRange<Float> {
+    return player.progress.bounds ?? 0...0
 }
