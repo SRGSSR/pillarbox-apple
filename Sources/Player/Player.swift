@@ -10,21 +10,13 @@ import Combine
 /// Audio / video player.
 @MainActor
 public final class Player: ObservableObject {
-    /// Describe progress.
-    public struct Progress: Equatable {
-        /// The current progress as a value in 0...1.
-        public var value: Float
-        /// Set to `true` when updating progress interactively, e.g. via a seek bar.
-        public var isInteracting: Bool
-    }
-
     /// Current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle
     /// Current playback properties.
     @Published private var playbackProperties: PlaybackProperties = .empty
 
     /// Current playback progress.
-    @Published public var progress = Progress(value: 0, isInteracting: false) {
+    @Published public var progress = PlaybackProgress(value: 0, isInteracting: false) {
         willSet {
             guard let time = playbackProperties.pulse?.time(forProgress: newValue.value),
                   time.isNumeric else {
@@ -71,7 +63,7 @@ public final class Player: ObservableObject {
         $playbackProperties
             .weakCapture(self, at: \.progress)
             .filter { !$1.isInteracting }
-            .map { Progress(value: $0.progress ?? 0, isInteracting: $1.isInteracting) }
+            .map { PlaybackProgress(value: $0.progress ?? 0, isInteracting: $1.isInteracting) }
             .removeDuplicates()
             .assign(to: &$progress)
     }
