@@ -4,12 +4,12 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Player
+@testable import Core
 
 import Nimble
 import XCTest
 
-final class ClampedTests: XCTestCase {
+final class ComparableTests: XCTestCase {
     func testClamped() {
         expect((-1).clamped(to: 0...1)).to(equal(0))
         expect(0.clamped(to: 0...1)).to(equal(0))

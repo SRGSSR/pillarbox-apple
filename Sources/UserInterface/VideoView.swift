@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import Player
 import SwiftUI
 import UIKit
 
@@ -32,11 +33,11 @@ public struct VideoView: UIViewRepresentable {
 
     public func makeUIView(context: Context) -> VideoLayerView {
         let view = VideoLayerView()
-        view.player = player?.dequeuePlayer
+        view.player = player?.rawPlayer
         return view
     }
 
     public func updateUIView(_ uiView: VideoLayerView, context: Context) {
-        uiView.player = player?.dequeuePlayer
+        uiView.player = player?.rawPlayer
     }
 }

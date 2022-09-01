@@ -22,22 +22,6 @@ enum TestStreams {
     static let customUrl = URL(string: "custom://arbitrary.server/some.m3u8")!
 }
 
-final class TestNSObject: NSObject {
-    let identifier: String
-
-    init(identifier: String = UUID().uuidString) {
-        self.identifier = identifier
-    }
-}
-
-final class TestObject {
-    let identifier: String
-
-    init(identifier: String = UUID().uuidString) {
-        self.identifier = identifier
-    }
-}
-
 final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
     // Correct error propagation from the resource loader to the player item requires the following:
     //   - The error code must be an `Int`.
@@ -65,8 +49,4 @@ final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelega
         renewalRequest.finishLoading(with: PlaybackError.cannotRenewResource)
         return true
     }
-}
-
-extension Notification.Name {
-    static let testNotification = Notification.Name("TestNotification")
 }

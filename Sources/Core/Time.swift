@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-extension CMTimeRange {
+public extension CMTimeRange {
     /// Return a time range comparator having some tolerance.
     static func close(within tolerance: CMTime) -> ((CMTimeRange?, CMTimeRange?) -> Bool) {
         precondition(CMTimeCompare(tolerance, .zero) == 1)
@@ -29,7 +29,7 @@ extension CMTimeRange {
     }
 }
 
-extension CMTime {
+public extension CMTime {
     /// Return a time comparator having some tolerance.
     static func close(within tolerance: CMTime) -> ((CMTime?, CMTime?) -> Bool) {
         precondition(CMTimeCompare(.zero, tolerance) != 1)

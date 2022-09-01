@@ -6,15 +6,8 @@
 
 import Combine
 import Foundation
-import SwiftUI
 
-extension Comparable {
-    func clamped(to range: ClosedRange<Self>) -> Self {
-        min(max(self, range.lowerBound), range.upperBound)
-    }
-}
-
-extension NotificationCenter {
+public extension NotificationCenter {
     /// The usual notification publisher retains the filter object, potentially creating cycles. The following
     /// publisher avoids this issue while still only observing the filter object (if any), even after it is
     /// eventually deallocated.
@@ -65,28 +58,3 @@ public extension Publisher {
         weakCapture(other, at: \T.self)
     }
  }
-
-public extension Binding {
-    /// Create a binding to an object property.
-    /// - Parameters:
-    ///   - object: The object to bind to.
-    ///   - keyPath: The key path to bind to.
-    init<T>(_ object: T, at keyPath: ReferenceWritableKeyPath<T, Value>) {
-        self.init(
-            get: { object[keyPath: keyPath] },
-            set: { object[keyPath: keyPath] = $0 }
-        )
-    }
-
-    /// Create a binding to an object nullable property.
-    /// - Parameters:
-    ///   - object: The object to bind to.
-    ///   - keyPath: The key path to bind to.
-    ///   - defaultValue: The default value to use when the property is `nil`.
-    init<T>(_ object: T, at keyPath: ReferenceWritableKeyPath<T, Value?>, defaultValue: Value) {
-        self.init(
-            get: { object[keyPath: keyPath] ?? defaultValue },
-            set: { object[keyPath: keyPath] = $0 }
-        )
-    }
-}
