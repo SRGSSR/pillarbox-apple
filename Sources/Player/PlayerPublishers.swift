@@ -7,11 +7,6 @@
 import AVFoundation
 import Combine
 
-// TODO: Other ideas for publishers
-//        - Boundary time publisher
-//        - Asset property publisher (can register to one or several properties and have them published; implemented
-//          internally with modern async API). Might be useful as signal for the Pulse publisher.
-
 extension AVPlayer {
     private static func timeRangePublisher(for item: AVPlayerItem, configuration: PlayerConfiguration) -> AnyPublisher<CMTimeRange, Never> {
         Publishers.CombineLatest3(

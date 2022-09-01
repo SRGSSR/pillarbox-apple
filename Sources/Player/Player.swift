@@ -33,7 +33,7 @@ public final class Player: ObservableObject {
     public var timeRange: CMTimeRange? {
         playbackProperties.pulse?.timeRange
     }
-    
+
     public let rawPlayer: DequeuePlayer
 
     private let configuration: PlayerConfiguration

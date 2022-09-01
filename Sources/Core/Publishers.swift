@@ -7,13 +7,7 @@
 import Combine
 import Foundation
 
-extension Comparable {
-    func clamped(to range: ClosedRange<Self>) -> Self {
-        min(max(self, range.lowerBound), range.upperBound)
-    }
-}
-
-extension NotificationCenter {
+public extension NotificationCenter {
     /// The usual notification publisher retains the filter object, potentially creating cycles. The following
     /// publisher avoids this issue while still only observing the filter object (if any), even after it is
     /// eventually deallocated.

@@ -6,6 +6,7 @@
 
 @testable import Player
 
+import Core
 import CoreMedia
 import Circumspect
 
