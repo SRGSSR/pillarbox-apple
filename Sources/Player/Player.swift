@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import TimelaneCombine
 
 /// Audio / video player.
 @MainActor
@@ -56,9 +57,11 @@ public final class Player: ObservableObject {
 
         rawPlayer.playbackStatePublisher()
             .receive(on: DispatchQueue.main)
+            .lane("playback_state")
             .assign(to: &$playbackState)
         rawPlayer.playbackPropertiesPublisher(configuration: self.configuration)
             .receive(on: DispatchQueue.main)
+            .lane("playback_properties")
             .assign(to: &$playbackProperties)
         $playbackProperties
             .weakCapture(self, at: \.progress)

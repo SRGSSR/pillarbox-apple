@@ -48,7 +48,8 @@ let package = Package(
         .package(url: "https://github.com/SRGSSR/TCCore-xcframework-apple.git", .upToNextMinor(from: "4.5.4-srg5")),
         .package(url: "https://github.com/SRGSSR/TCSDK-xcframework-apple.git", .upToNextMinor(from: "4.4.1-srg5")),
         .package(url: "https://github.com/krzysztofzablocki/Difference.git", .upToNextMajor(from: "1.0.1")),
-        .package(url: "https://github.com/Quick/Nimble.git", .upToNextMajor(from: "10.0.0"))
+        .package(url: "https://github.com/Quick/Nimble.git", .upToNextMajor(from: "10.0.0")),
+        .package(url: "https://github.com/icanzilb/TimelaneCombine.git", .upToNextMajor(from: "2.0.0"))
     ],
     targets: [
         .target(
@@ -79,7 +80,8 @@ let package = Package(
         .target(
             name: "Player",
             dependencies: [
-                .target(name: "Core")
+                .target(name: "Core"),
+                .product(name: "TimelaneCombine", package: "TimelaneCombine")
             ]
         ),
         .target(

@@ -54,3 +54,12 @@ struct Pulse {
         return CMTimeAdd(timeRange.start, CMTimeMultiplyByFloat64(timeRange.duration, multiplier: multiplier))
     }
 }
+
+extension Pulse: CustomDebugStringConvertible {
+    var debugDescription: String {
+        let time = String(format: "%.2f", CMTimeGetSeconds(time))
+        let start = String(format: "%.2f", CMTimeGetSeconds(timeRange.start))
+        let end = String(format: "%.2f", CMTimeGetSeconds(timeRange.end))
+        return "At \(time) in [\(start); \(end)]"
+    }
+}

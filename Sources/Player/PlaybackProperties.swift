@@ -34,3 +34,10 @@ struct PlaybackProperties {
         }
     }
 }
+
+extension PlaybackProperties: CustomDebugStringConvertible {
+    var debugDescription: String {
+        guard let pulse else { return "empty" }
+        return pulse.debugDescription
+    }
+}
