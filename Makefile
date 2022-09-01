@@ -78,7 +78,7 @@ test-tvos: setup
 	@echo "... done.\n"
 
 .PHONY: check-quality
-check-quality:
+check-quality: setup
 	@echo "Checking quality..."
 	@echo "... checking Swift code..."
 	@swiftlint --quiet --strict
@@ -93,13 +93,13 @@ check-quality:
 	@echo "... done.\n"
 
 .PHONY: fix-quality
-fix-quality:
+fix-quality: setup
 	@echo "Fixing quality..."
 	@swiftlint --fix && swiftlint
 	@echo "... done.\n"
 
 .PHONY: doc
-doc:
+doc: setup
 	@echo "Generating documentation sets..."
 	@bundle exec fastlane doc
 	@echo "... done.\n"
