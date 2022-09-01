@@ -344,7 +344,7 @@ platform :ios do
   end
 
   after_all do
-    reset_git_repo
+    reset_git_repo(skip_clean: true)
   end
 
   desc 'Archive the iOS demo app'
