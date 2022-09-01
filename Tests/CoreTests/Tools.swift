@@ -6,6 +6,8 @@
 
 import Foundation
 
+// swiftlint:disable file_types_order
+
 final class TestNSObject: NSObject {
     let identifier: String
 
@@ -25,3 +27,5 @@ final class TestObject {
 extension Notification.Name {
     static let testNotification = Notification.Name("TestNotification")
 }
+
+// swiftlint:enable file_types_order
