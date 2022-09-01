@@ -139,3 +139,9 @@ To have TeamCity deliver release builds of the demo application to TestFlight ma
 4. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
 For comprehensive results a second _Demo Release tvOS_ configuration must be created for tvOS. This is easily achieved by copying the configuration you just created and editing the _Command Line_ build step to execute `make deliver-demo-release-tvos`.
+
+## Ruby version support
+
+The tools we use might require a minimum version of Ruby which might not always be the default one available on an agent.
+
+If this is the case then we can manage Ruby versions with [rbenv](https://github.com/rbenv/rbenv) on each agent and run `rbenv local [version]` in all _Command Line_ builds steps first to ensure a compatible Ruby version is used.

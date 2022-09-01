@@ -1,6 +1,6 @@
 #!/usr/bin/xcrun make -f
 
-CONFIGURATION_REPOSITORY_URL=https://github.com/SRGSSR/pillarbox-apple-configuration.git
+CONFIGURATION_REPOSITORY_URL=git@github.com:SRGSSR/pillarbox-apple-configuration.git
 CONFIGURATION_COMMIT_SHA1=e9cd78f090b9e73a7595b90140182989d4d8c7ef
 
 .PHONY: all
@@ -78,7 +78,7 @@ test-tvos: setup
 	@echo "... done.\n"
 
 .PHONY: check-quality
-check-quality:
+check-quality: setup
 	@echo "Checking quality..."
 	@echo "... checking Swift code..."
 	@swiftlint --quiet --strict
@@ -93,13 +93,13 @@ check-quality:
 	@echo "... done.\n"
 
 .PHONY: fix-quality
-fix-quality:
+fix-quality: setup
 	@echo "Fixing quality..."
 	@swiftlint --fix && swiftlint
 	@echo "... done.\n"
 
 .PHONY: doc
-doc:
+doc: setup
 	@echo "Generating documentation sets..."
 	@bundle exec fastlane doc
 	@echo "... done.\n"
