@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import TimelaneCombine
 
 extension AVPlayer {
     private static func timeRangePublisher(for item: AVPlayerItem, configuration: PlayerConfiguration) -> AnyPublisher<CMTimeRange, Never> {
@@ -38,6 +39,7 @@ extension AVPlayer {
             .switchToLatest()
             .prepend(ItemState.itemState(for: currentItem))
             .removeDuplicates()
+            .lane("player_item_state")
             .eraseToAnyPublisher()
     }
 
