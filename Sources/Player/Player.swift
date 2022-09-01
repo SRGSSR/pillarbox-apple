@@ -22,7 +22,7 @@ public final class Player: ObservableObject {
                   time.isNumeric else {
                 return
             }
-            seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { _ in }
+            seek(to: time)
         }
     }
 
@@ -131,7 +131,7 @@ public final class Player: ObservableObject {
     ///   - toleranceBefore: Tolerance before the desired position.
     ///   - toleranceAfter: Tolerance after the desired position.
     ///   - completionHandler: A completion handler called when seeking ends.
-    public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
+    public func seek(to time: CMTime, toleranceBefore: CMTime = .positiveInfinity, toleranceAfter: CMTime = .positiveInfinity, completionHandler: @escaping (Bool) -> Void = { _ in }) {
         dequeuePlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
     }
 
@@ -142,7 +142,7 @@ public final class Player: ObservableObject {
     ///   - toleranceAfter: Tolerance after the desired position.
     /// - Returns: `true` if seeking was successful.
     @discardableResult
-    public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) async -> Bool {
+    public func seek(to time: CMTime, toleranceBefore: CMTime = .positiveInfinity, toleranceAfter: CMTime = .positiveInfinity) async -> Bool {
         await dequeuePlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
     }
 
