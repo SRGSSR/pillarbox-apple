@@ -15,9 +15,15 @@ public final class Player: ObservableObject {
     /// Current playback properties.
     @Published private var playbackProperties: PlaybackProperties = .empty
 
-    /// A value in 0...1 describing the current playback progress.
-    public var progress: Float {
-        playbackProperties.pulse?.progress ?? 0
+    /// Current playback progress.
+    @Published public var progress: PlaybackProgress = .empty {
+        willSet {
+            guard let progress = newValue.value, let time = playbackProperties.pulse?.time(forProgress: progress),
+                  time.isNumeric else {
+                return
+            }
+            seek(to: time)
+        }
     }
 
     public var time: CMTime? {
@@ -26,17 +32,6 @@ public final class Player: ObservableObject {
 
     public var timeRange: CMTimeRange? {
         playbackProperties.pulse?.timeRange
-    }
-
-    /// Progress which the player is reaching.
-    @Published public var targetProgress: Float = 0 {
-        willSet {
-            guard let time = playbackProperties.pulse?.time(forProgress: newValue),
-                    time.isNumeric else {
-                return
-            }
-            seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { _ in }
-        }
     }
 
     let dequeuePlayer: DequeuePlayer
@@ -66,9 +61,11 @@ public final class Player: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: &$playbackProperties)
         $playbackProperties
-            .map { $0.targetProgress ?? 0 }
+            .weakCapture(self, at: \.progress)
+            .filter { !$1.isInteracting }
+            .map { PlaybackProgress(value: $0.progress, isInteracting: $1.isInteracting) }
             .removeDuplicates()
-            .assign(to: &$targetProgress)
+            .assign(to: &$progress)
     }
 
     /// Create a player with a single item in its queue.
@@ -134,7 +131,7 @@ public final class Player: ObservableObject {
     ///   - toleranceBefore: Tolerance before the desired position.
     ///   - toleranceAfter: Tolerance after the desired position.
     ///   - completionHandler: A completion handler called when seeking ends.
-    public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
+    public func seek(to time: CMTime, toleranceBefore: CMTime = .positiveInfinity, toleranceAfter: CMTime = .positiveInfinity, completionHandler: @escaping (Bool) -> Void = { _ in }) {
         dequeuePlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
     }
 
@@ -145,7 +142,7 @@ public final class Player: ObservableObject {
     ///   - toleranceAfter: Tolerance after the desired position.
     /// - Returns: `true` if seeking was successful.
     @discardableResult
-    public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) async -> Bool {
+    public func seek(to time: CMTime, toleranceBefore: CMTime = .positiveInfinity, toleranceAfter: CMTime = .positiveInfinity) async -> Bool {
         await dequeuePlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
     }
 

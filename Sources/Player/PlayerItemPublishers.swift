@@ -11,8 +11,9 @@ extension AVPlayerItem {
     func itemStatePublisher() -> AnyPublisher<ItemState, Never> {
         Publishers.Merge(
             publisher(for: \.status)
-                .map { [weak self] status in
-                    ItemState.itemState(for: status, error: self?.error)
+                .weakCapture(self, at: \.error)
+                .map { status, error in
+                    ItemState.itemState(for: status, error: error)
                 },
             NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: self)
                 .map { _ in .ended }

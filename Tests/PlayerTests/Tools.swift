@@ -23,12 +23,19 @@ enum TestStreams {
 }
 
 final class TestNSObject: NSObject {
+    let identifier: String
+
+    init(identifier: String = UUID().uuidString) {
+        self.identifier = identifier
+    }
 }
 
 final class TestObject {
-}
+    let identifier: String
 
-struct TestStruct {
+    init(identifier: String = UUID().uuidString) {
+        self.identifier = identifier
+    }
 }
 
 final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {

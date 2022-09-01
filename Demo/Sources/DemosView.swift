@@ -41,14 +41,14 @@ struct DemosView: View {
             url: URL(string: "https://rts-aod-dd.akamaized.net/ww/13306839/63cc2653-8305-3894-a448-108810b553ef.mp3")!
         ),
         Media(
-            id: "urn:rts:audio:3262363",
+            id: "urn:rts:audio:3262320",
             title: "La 1ère",
             url: URL(string: "http://stream.srg-ssr.ch/m/la-1ere/mp3_128")!
         ),
         Media(
-            id: "urn:rts:audio:3262363_dvr",
+            id: "urn:rts:audio:3262320_dvr",
             title: "La 1ère (DVR)",
-            url: URL(string: "http://lsaplus.swisstxt.ch/audio/rsp_96.stream/playlist.m3u8")!
+            url: URL(string: "https://lsaplus.swisstxt.ch/audio/la-1ere_96.stream/playlist.m3u8")!
         )
     ]
 

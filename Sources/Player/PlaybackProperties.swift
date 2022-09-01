@@ -19,8 +19,8 @@ struct PlaybackProperties {
     /// Time targeted by a pending seek, if any.
     let targetTime: CMTime?
 
-    /// A value in 0...1 describing the playback progress targeted by a pending seek, if any.
-    var targetProgress: Float? {
+    /// A value in 0...1 describing the current playback progress, if any.
+    var progress: Float? {
         guard let targetTime, let targetProgress = pulse?.progress(for: targetTime) else {
             return pulse?.progress
         }

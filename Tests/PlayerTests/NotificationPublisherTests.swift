@@ -11,13 +11,6 @@ import Nimble
 import XCTest
 
 final class NotificationPublisherTests: XCTestCase {
-    func testWithoutObject() {
-        let notificationCenter = NotificationCenter.default
-        waitForOutput(from: notificationCenter.weakPublisher(for: .testNotification).first()) {
-            notificationCenter.post(name: .testNotification, object: nil)
-        }
-    }
-
     func testWithObject() {
         let object = TestObject()
         let notificationCenter = NotificationCenter.default
@@ -30,14 +23,6 @@ final class NotificationPublisherTests: XCTestCase {
         let object = TestNSObject()
         let notificationCenter = NotificationCenter.default
         waitForOutput(from: notificationCenter.weakPublisher(for: .testNotification, object: object).first()) {
-            notificationCenter.post(name: .testNotification, object: object)
-        }
-    }
-
-    func testWithValueType() {
-        let object = TestStruct()
-        let notificationCenter = NotificationCenter.default
-        waitForOutput(from: notificationCenter.weakPublisher(for: .testNotification).first()) {
             notificationCenter.post(name: .testNotification, object: object)
         }
     }
