@@ -31,8 +31,9 @@ final class WeakCapturePublisherTests: XCTestCase {
             .weakCapture(object, at: \.identifier)
         expectPublished(
             values: [("output", "weak_capture")],
-            from: publisher,
-            to: { $0.0 == $1.0 && $0.1 == $1.1 }
-        )
+            from: publisher
+        ) { output1, output2 in
+            output1.0 == output2.0 && output1.1 == output2.1
+        }
     }
 }

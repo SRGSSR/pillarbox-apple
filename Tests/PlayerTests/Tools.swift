@@ -25,7 +25,7 @@ enum TestStreams {
 final class TestNSObject: NSObject {
     let identifier: String
 
-    init(identifier: String = NSUUID().uuidString) {
+    init(identifier: String = UUID().uuidString) {
         self.identifier = identifier
     }
 }
@@ -33,7 +33,7 @@ final class TestNSObject: NSObject {
 final class TestObject {
     let identifier: String
 
-    init(identifier: String = NSUUID().uuidString) {
+    init(identifier: String = UUID().uuidString) {
         self.identifier = identifier
     }
 }
