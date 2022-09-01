@@ -13,7 +13,7 @@ import XCTest
 final class WeakCapturePublisherTests: XCTestCase {
     func testDeallocation() {
         var object: TestObject? = TestObject()
-        let publisher = Just("hello, world!")
+        let publisher = Just("output")
             .weakCapture(object)
 
         weak var weakObject = object
@@ -23,5 +23,16 @@ final class WeakCapturePublisherTests: XCTestCase {
         expect(weakObject).to(beNil())
 
         expectNothingPublished(from: publisher, during: 1)
+    }
+
+    func testDelivery() {
+        let object = TestObject(identifier: "weak_capture")
+        let publisher = Just("output")
+            .weakCapture(object, at: \.identifier)
+        expectPublished(
+            values: [("output", "weak_capture")],
+            from: publisher,
+            to: { $0.0 == $1.0 && $0.1 == $1.1 }
+        )
     }
 }
