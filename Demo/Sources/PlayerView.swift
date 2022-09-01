@@ -7,6 +7,7 @@
 import AVFoundation
 import Player
 import SwiftUI
+import UserInterface
 
 // MARK: View
 

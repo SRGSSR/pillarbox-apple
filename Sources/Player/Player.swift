@@ -33,14 +33,14 @@ public final class Player: ObservableObject {
     public var timeRange: CMTimeRange? {
         playbackProperties.pulse?.timeRange
     }
-
-    let dequeuePlayer: DequeuePlayer
+    
+    public let rawPlayer: DequeuePlayer
 
     private let configuration: PlayerConfiguration
 
     /// The items currently queued by the player.
     public var items: [AVPlayerItem] {
-        dequeuePlayer.items()
+        rawPlayer.items()
     }
 
     /// The type of stream currently played.
@@ -51,13 +51,13 @@ public final class Player: ObservableObject {
     /// Create a player with a given item queue.
     /// - Parameter items: The items to be queued initially.
     public init(items: [AVPlayerItem] = [], configuration: (inout PlayerConfiguration) -> Void = { _ in }) {
-        dequeuePlayer = DequeuePlayer(items: items)
+        rawPlayer = DequeuePlayer(items: items)
         self.configuration = Self.configure(with: configuration)
 
-        dequeuePlayer.playbackStatePublisher()
+        rawPlayer.playbackStatePublisher()
             .receive(on: DispatchQueue.main)
             .assign(to: &$playbackState)
-        dequeuePlayer.playbackPropertiesPublisher(configuration: self.configuration)
+        rawPlayer.playbackPropertiesPublisher(configuration: self.configuration)
             .receive(on: DispatchQueue.main)
             .assign(to: &$playbackProperties)
         $playbackProperties
@@ -85,7 +85,7 @@ public final class Player: ObservableObject {
     ///   - item: The item to insert.
     ///   - afterItem: The item after which the new item must be inserted. If `nil` the item is appended.
     public func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
-        dequeuePlayer.insert(item, after: afterItem)
+        rawPlayer.insert(item, after: afterItem)
     }
 
     /// Append an item to the queue.
@@ -97,31 +97,31 @@ public final class Player: ObservableObject {
     /// Remove an item from the queue.
     /// - Parameter item: The item to remove.
     public func remove(_ item: AVPlayerItem) {
-        dequeuePlayer.remove(item)
+        rawPlayer.remove(item)
     }
 
     /// Remove all items from the queue.
     public func removeAllItems() {
-        dequeuePlayer.removeAllItems()
+        rawPlayer.removeAllItems()
     }
 
     /// Resume playback.
     public func play() {
-        dequeuePlayer.play()
+        rawPlayer.play()
     }
 
     /// Pause playback.
     public func pause() {
-        dequeuePlayer.pause()
+        rawPlayer.pause()
     }
 
     /// Toggle playback between play and pause.
     public func togglePlayPause() {
-        if dequeuePlayer.rate != 0 {
-            dequeuePlayer.pause()
+        if rawPlayer.rate != 0 {
+            rawPlayer.pause()
         }
         else {
-            dequeuePlayer.play()
+            rawPlayer.play()
         }
     }
 
@@ -132,7 +132,7 @@ public final class Player: ObservableObject {
     ///   - toleranceAfter: Tolerance after the desired position.
     ///   - completionHandler: A completion handler called when seeking ends.
     public func seek(to time: CMTime, toleranceBefore: CMTime = .positiveInfinity, toleranceAfter: CMTime = .positiveInfinity, completionHandler: @escaping (Bool) -> Void = { _ in }) {
-        dequeuePlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
+        rawPlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
     }
 
     /// Seek to a given location.
@@ -143,7 +143,7 @@ public final class Player: ObservableObject {
     /// - Returns: `true` if seeking was successful.
     @discardableResult
     public func seek(to time: CMTime, toleranceBefore: CMTime = .positiveInfinity, toleranceAfter: CMTime = .positiveInfinity) async -> Bool {
-        await dequeuePlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
+        await rawPlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
     }
 
     /// Create a publisher periodically emitting the current time while the player is active.
@@ -152,6 +152,6 @@ public final class Player: ObservableObject {
     ///   - queue: The queue on which events are received.
     /// - Returns: The publisher.
     public func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
-        Publishers.PeriodicTimePublisher(for: dequeuePlayer, interval: interval, queue: queue)
+        Publishers.PeriodicTimePublisher(for: rawPlayer, interval: interval, queue: queue)
     }
 }
