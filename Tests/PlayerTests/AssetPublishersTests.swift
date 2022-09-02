@@ -19,14 +19,18 @@ final class AssetPublishersTests: XCTestCase {
     }
 
     func testRepeatedFetch() {
+        let asset = AVURLAsset(url: TestStreams.onDemandUrl)
 
+        let duration1 = waitForSingleOutput(from: asset.propertyPublisher(.duration))
+        expect(duration1).to(equal(CMTime(value: 120, timescale: 1), by: beClose(within: 0.5)))
+
+        let duration2 = waitForSingleOutput(from: asset.propertyPublisher(.duration))
+        expect(duration2).to(equal(CMTime(value: 120, timescale: 1), by: beClose(within: 0.5)))
     }
 
     func testInvalidStream() {
-        
-    }
-
-    func testDeallocation() {
-
+        let asset = AVURLAsset(url: TestStreams.unavailableUrl)
+        let error = waitForFailure(from: asset.propertyPublisher(.duration))
+        expect(error).notTo(beNil())
     }
 }
