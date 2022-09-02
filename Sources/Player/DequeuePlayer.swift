@@ -27,7 +27,6 @@ public final class DequeuePlayer: AVQueuePlayer {
     }
 }
 
-/// Can be posted from any thread.
 extension Notification.Name {
     static let willSeek = Notification.Name("DequeuePlayerWillSeekNotification")
     static let didSeek = Notification.Name("DequeuePlayerDidSeekNotification")
