@@ -98,15 +98,15 @@ public extension XCTestCase {
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) throws -> P.Output {
-        let result = try waitForResult(
+        let output = try waitForOutput(
             from: publisher,
             timeout: timeout,
             file: file,
             line: line,
             while: executing
         )
-        let output = try result.get()
         guard output.count == 1, let singleOutput = output.first else {
+            XCTFail("The publisher did not produce a single output", file: file, line: line)
             throw ExpectationError.incorrectResult
         }
         return singleOutput
