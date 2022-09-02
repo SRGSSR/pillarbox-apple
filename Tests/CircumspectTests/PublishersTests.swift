@@ -11,12 +11,12 @@ import Nimble
 import XCTest
 
 final class PublisherTests: XCTestCase {
-    func testSuccessResult() {
+    func testWaitForSuccessResult() {
         let values = try? waitForResult(from: [1, 2, 3, 4, 5].publisher).get()
         expect(values).to(equal([1, 2, 3, 4, 5]))
     }
 
-    func testSuccessResultWhileExecuting() {
+    func testWaitForSuccessResultWhileExecuting() {
         let subject = PassthroughSubject<Int, Never>()
         let values = try? waitForResult(from: subject) {
             subject.send(4)
@@ -26,23 +26,9 @@ final class PublisherTests: XCTestCase {
         expect(values).to(equal([4, 7]))
     }
 
-    func testFailureResult() {
+    func testWaitForFailureResult() {
         let values = try? waitForResult(from: Fail<Int, Error>(error: TestError.any)).get()
         expect(values).to(beNil())
-    }
-
-    func testCollectFirst() throws {
-        let values = try waitForOutput(
-            from: [1, 2, 3, 4, 5].publisher.collectFirst(3)
-        ).flatMap { $0 }
-        expect(values).to(equal([1, 2, 3]))
-    }
-
-    func testCollectNext() throws {
-        let values = try waitForOutput(
-            from: [1, 2, 3, 4, 5].publisher.collectNext(3)
-        ).flatMap { $0 }
-        expect(values).to(equal([2, 3, 4]))
     }
 
     func testWaitForOutput() throws {
@@ -90,11 +76,25 @@ final class PublisherTests: XCTestCase {
         expect(values).to(equal([4, 7]))
     }
 
-    func testCollectImmediateOutput() {
+    func testCollectOutputImmediately() {
         let values = collectOutput(
             from: [1, 2, 3, 4, 5].publisher,
             during: 0
         )
         expect(values).to(equal([1, 2, 3, 4, 5]))
+    }
+
+    func testCollectFirst() throws {
+        let values = try waitForOutput(
+            from: [1, 2, 3, 4, 5].publisher.collectFirst(3)
+        ).flatMap { $0 }
+        expect(values).to(equal([1, 2, 3]))
+    }
+
+    func testCollectNext() throws {
+        let values = try waitForOutput(
+            from: [1, 2, 3, 4, 5].publisher.collectNext(3)
+        ).flatMap { $0 }
+        expect(values).to(equal([2, 3, 4]))
     }
 }
