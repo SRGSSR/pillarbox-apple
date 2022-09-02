@@ -16,6 +16,16 @@ final class PublisherTests: XCTestCase {
         expect(values).to(equal([1, 2, 3, 4, 5]))
     }
 
+    func testSuccessResultWhileExecuting() {
+        let subject = PassthroughSubject<Int, Never>()
+        let values = try? waitForResult(from: subject) {
+            subject.send(4)
+            subject.send(7)
+            subject.send(completion: .finished)
+        }.get()
+        expect(values).to(equal([4, 7]))
+    }
+
     func testFailureResult() {
         let values = try? waitForResult(from: Fail<Int, Error>(error: TestError.any)).get()
         expect(values).to(beNil())
@@ -48,6 +58,21 @@ final class PublisherTests: XCTestCase {
             subject.send(completion: .finished)
         }
         expect(values).to(equal([4, 7]))
+    }
+
+    func testWaitForFailure() {
+        let error = waitForFailure(from: Fail<Int, Error>(error: TestError.any))
+        expect(error).notTo(beNil())
+    }
+
+    func testWaitForFailureWhileExecuting() {
+        let subject = PassthroughSubject<Int, Error>()
+        let error = waitForFailure(from: Fail<Int, Error>(error: TestError.any)) {
+            subject.send(4)
+            subject.send(7)
+            subject.send(completion: .failure(TestError.any))
+        }
+        expect(error).notTo(beNil())
     }
 
     func testCollectOutput() {

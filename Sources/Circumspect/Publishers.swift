@@ -24,9 +24,9 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) -> Result<[P.Output], Error> {
+    ) -> Result<[P.Output], P.Failure> {
         var values: [P.Output] = []
-        var result: Result<[P.Output], Error>?
+        var result: Result<[P.Output], P.Failure>?
 
         let expectation = expectation(description: "Waiting for publisher output")
 
@@ -118,6 +118,38 @@ public extension XCTestCase {
             return nil
         }
         return singleOutput
+    }
+
+    /// Wait for a publisher to complete with a failure. Fails if not the case.
+    /// - Parameters:
+    ///   - publisher: Publisher to monitor.
+    ///   - timeout: Timeout after which the expectation fails.
+    ///   - file: File where the expectation is made.
+    ///   - line: Line where the expectation is made.
+    ///   - executing: Code which must be executed once the expectation has been setup.
+    /// - Returns: The failure reason.
+    @discardableResult
+    func waitForFailure<P: Publisher>(
+        from publisher: P,
+        timeout: TimeInterval = 10,
+        file: StaticString = #file,
+        line: UInt = #line,
+        while executing: (() -> Void)? = nil
+    ) -> P.Failure? {
+        let result = waitForResult(
+            from: publisher,
+            timeout: timeout,
+            file: file,
+            line: line,
+            while: executing
+        )
+        switch result {
+        case .success:
+            XCTFail("The publisher incorrectly succeeded", file: file, line: line)
+            return nil
+        case let .failure(error):
+            return error
+        }
     }
 
     /// Collect output emitted by a publisher during some interval.
