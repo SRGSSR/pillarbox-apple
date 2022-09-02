@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Core
 import CoreMedia
 
 /// Player pulse.
