@@ -25,12 +25,12 @@ final class PublisherTests: XCTestCase {
         expect(values).to(equal([2, 3, 4]))
     }
 
-    func testwaitForOutput() {
+    func testWaitForOutput() {
         let values = waitForOutput(from: [1, 2, 3].publisher)
         expect(values).to(equal([1, 2, 3]))
     }
 
-    func testwaitForOutputWhileExecuting() {
+    func testWaitForOutputWhileExecuting() {
         let subject = PassthroughSubject<Int, Never>()
         let values = waitForOutput(from: subject) {
             subject.send(4)

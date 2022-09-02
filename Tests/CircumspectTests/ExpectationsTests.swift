@@ -128,4 +128,43 @@ final class ExpectationTests: XCTestCase {
             NotificationCenter.default.post(name: .testNotification, object: self)
         }
     }
+
+    func testExpectOnlyPublishedValues() {
+        expectOnlyEqualPublished(
+            values: [1, 2, 3, 4, 5],
+            from: [1, 2, 3, 4, 5].publisher
+        )
+    }
+
+    func testExpectOnlyPublishedValuesWhileExecuting() {
+        let subject = PassthroughSubject<Int, Never>()
+        expectOnlyEqualPublished(
+            values: [4, 7],
+            from: subject
+        ) {
+            subject.send(4)
+            subject.send(7)
+            subject.send(completion: .finished)
+        }
+    }
+
+    func testExpectOnlyPublishedNextValues() {
+        expectOnlyEqualPublishedNext(
+            values: [2, 3, 4, 5],
+            from: [1, 2, 3, 4, 5].publisher
+        )
+    }
+
+    func testExpectOnlyPublishedNextValuesWhileExecuting() {
+        let subject = PassthroughSubject<Int, Never>()
+        expectOnlyEqualPublishedNext(
+            values: [7, 8],
+            from: subject
+        ) {
+            subject.send(4)
+            subject.send(7)
+            subject.send(8)
+            subject.send(completion: .finished)
+        }
+    }
 }

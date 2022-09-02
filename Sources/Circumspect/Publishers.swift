@@ -25,7 +25,7 @@ public extension XCTestCase {
         var values: [P.Output] = []
         var result: Result<[P.Output], Error>?
 
-        let expectation = expectation(description: "Awaiting publisher")
+        let expectation = expectation(description: "Waiting for publisher output")
 
         let cancellable = publisher.sink(
             receiveCompletion: { completion in
@@ -68,7 +68,7 @@ public extension XCTestCase {
     ) -> [P.Output] {
         var values: [P.Output] = []
 
-        let expectation = expectation(description: "Collecting publisher values for \(interval) seconds")
+        let expectation = expectation(description: "Collecting publisher output for \(interval) seconds")
         let cancellable = publisher.sink(
             receiveCompletion: { _ in
             },
