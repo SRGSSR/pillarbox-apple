@@ -65,7 +65,10 @@ public final class Player: ObservableObject {
             .assign(to: &$playbackState)
         rawPlayer.pulsePublisher(configuration: self.configuration, queue: queue)
             .receive(on: DispatchQueue.main)
-            .lane("player_pulse")
+            .lane("player_pulse") { output in
+                guard let output else { return "nil" }
+                return String(describing: output)
+            }
             .assign(to: &$pulse)
         $pulse
             .weakCapture(self, at: \.progress)
