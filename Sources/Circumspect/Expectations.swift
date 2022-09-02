@@ -151,7 +151,7 @@ public extension XCTestCase {
         while executing: (() -> Void)?
     ) where P.Failure == Never {
         precondition(!values.isEmpty)
-        let actualValues = self.waitForOutput(
+        let actualValues = waitForOutput(
             from: next ? publisher.collectNext(values.count) : publisher.collectFirst(values.count),
             timeout: timeout,
             file: file,
@@ -314,7 +314,7 @@ public extension XCTestCase {
         while executing: (() -> Void)?
     ) where P.Failure == Never {
         precondition(!values.isEmpty)
-        let actualValues = self.waitForOutput(
+        let actualValues = waitForOutput(
             from: next ? publisher.dropFirst().eraseToAnyPublisher() : publisher.eraseToAnyPublisher(),
             timeout: timeout,
             file: file,
@@ -480,7 +480,7 @@ public extension XCTestCase {
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) where P.Failure == Never {
-        var actualValues = self.collectOutput(from: publisher, during: interval, while: executing)
+        var actualValues = collectOutput(from: publisher, during: interval, while: executing)
         if next, !actualValues.isEmpty {
             actualValues.removeFirst()
         }
@@ -542,7 +542,7 @@ public extension XCTestCase {
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) where P.Failure == Never {
-        var actualValues = self.collectOutput(from: publisher, during: interval, while: executing)
+        var actualValues = collectOutput(from: publisher, during: interval, while: executing)
         if next, !actualValues.isEmpty {
             actualValues.removeFirst()
         }

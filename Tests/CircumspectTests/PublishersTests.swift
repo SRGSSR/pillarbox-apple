@@ -11,6 +11,16 @@ import Nimble
 import XCTest
 
 final class PublisherTests: XCTestCase {
+    func testSuccessResult() {
+        let values = try? waitForResult(from: [1, 2, 3, 4, 5].publisher).get()
+        expect(values).to(equal([1, 2, 3, 4, 5]))
+    }
+
+    func testFailureResult() {
+        let values = try? waitForResult(from: Fail<Int, Error>(error: TestError.any)).get()
+        expect(values).to(beNil())
+    }
+
     func testCollectFirst() {
         let values = waitForOutput(
             from: [1, 2, 3, 4, 5].publisher.collectFirst(3)

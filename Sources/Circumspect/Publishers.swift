@@ -7,21 +7,24 @@
 import Combine
 import XCTest
 
-/// Borrowed from https://www.swiftbysundell.com/articles/unit-testing-combine-based-swift-code/
+/// Ideas borrowed from https://www.swiftbysundell.com/articles/unit-testing-combine-based-swift-code/
 public extension XCTestCase {
-    /// Wait for a publisher to complete and return its output.
-    ///
-    /// Remark: For never-ending publishers use `.first()`, `.collect()`, `.collectNext()`,
-    ///         `collectFirst()` or similar to have the publisher complete after having
-    ///         received the desired number of items.
+    /// Wait for a publisher to complete and return its result.
+    /// - Parameters:
+    ///   - publisher: Publisher to monitor.
+    ///   - timeout: Timeout after which the expectation fails.
+    ///   - file: File where the expectation is made.
+    ///   - line: Line where the expectation is made.
+    ///   - executing: Code which must be executed once the expectation has been setup.
+    /// - Returns: The result of the publisher.
     @discardableResult
-    func waitForOutput<P: Publisher>(
+    func waitForResult<P: Publisher>(
         from publisher: P,
         timeout: TimeInterval = 10,
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) -> [P.Output] {
+    ) -> Result<[P.Output], Error> {
         var values: [P.Output] = []
         var result: Result<[P.Output], Error>?
 
@@ -50,15 +53,81 @@ public extension XCTestCase {
         }
 
         waitForExpectations(timeout: timeout)
+        return result!
+    }
 
-        guard let output = try? result?.get() else {
+    /// Wait for a publisher to complete and return its output.
+    /// - Parameters:
+    ///   - publisher: Publisher to monitor.
+    ///   - timeout: Timeout after which the expectation fails.
+    ///   - file: File where the expectation is made.
+    ///   - line: Line where the expectation is made.
+    ///   - executing: Code which must be executed once the expectation has been setup.
+    /// - Returns: The collected output.
+    @discardableResult
+    func waitForOutput<P: Publisher>(
+        from publisher: P,
+        timeout: TimeInterval = 10,
+        file: StaticString = #file,
+        line: UInt = #line,
+        while executing: (() -> Void)? = nil
+    ) -> [P.Output] {
+        let result = waitForResult(
+            from: publisher,
+            timeout: timeout,
+            file: file,
+            line: line,
+            while: executing
+        )
+        guard let output = try? result.get() else {
             XCTFail("The publisher did not produce any output", file: file, line: line)
             return []
         }
         return output
     }
 
+    /// Wait for a publisher to complete with a single output. Fails if not the case.
+    /// - Parameters:
+    ///   - publisher: Publisher to monitor.
+    ///   - timeout: Timeout after which the expectation fails.
+    ///   - file: File where the expectation is made.
+    ///   - line: Line where the expectation is made.
+    ///   - executing: Code which must be executed once the expectation has been setup.
+    /// - Returns: The output.
+    @discardableResult
+    func waitForSingleOutput<P: Publisher>(
+        from publisher: P,
+        timeout: TimeInterval = 10,
+        file: StaticString = #file,
+        line: UInt = #line,
+        while executing: (() -> Void)? = nil
+    ) -> P.Output? {
+        let result = waitForResult(
+            from: publisher,
+            timeout: timeout,
+            file: file,
+            line: line,
+            while: executing
+        )
+        guard let output = try? result.get() else {
+            XCTFail("The publisher did not produce any output", file: file, line: line)
+            return nil
+        }
+        guard output.count == 1, let singleOutput = output.first else {
+            XCTFail("The publisher did not produce a single output", file: file, line: line)
+            return nil
+        }
+        return singleOutput
+    }
+
     /// Collect output emitted by a publisher during some interval.
+    /// - Parameters:
+    ///   - publisher: Publisher to monitor.
+    ///   - interval: Timeout after which the expectation fails.
+    ///   - file: File where the expectation is made.
+    ///   - line: Line where the expectation is made.
+    ///   - executing: Code which must be executed once the expectation has been setup.
+    /// - Returns: The collected output.
     func collectOutput<P: Publisher>(
         from publisher: P,
         during interval: TimeInterval,
