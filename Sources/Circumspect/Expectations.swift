@@ -151,14 +151,16 @@ public extension XCTestCase {
         while executing: (() -> Void)?
     ) where P.Failure == Never {
         precondition(!values.isEmpty)
-        let actualValues = waitForOutput(
+        guard let actualValues = try? waitForOutput(
             from: next ? publisher.collectNext(values.count) : publisher.collectFirst(values.count),
             timeout: timeout,
             file: file,
             line: line,
             while: executing
-        )
-        .flatMap { $0 }
+        ).flatMap({ $0 }) else {
+            XCTFail("No values were published", file: file, line: line)
+            return
+        }
 
         let assertExpression = {
             guard actualValues.count == values.count else { return false }
@@ -314,13 +316,16 @@ public extension XCTestCase {
         while executing: (() -> Void)?
     ) where P.Failure == Never {
         precondition(!values.isEmpty)
-        let actualValues = waitForOutput(
+        guard let actualValues = try? waitForOutput(
             from: next ? publisher.dropFirst().eraseToAnyPublisher() : publisher.eraseToAnyPublisher(),
             timeout: timeout,
             file: file,
             line: line,
             while: executing
-        )
+        ) else {
+            XCTFail("No values were produced", file: file, line: line)
+            return
+        }
 
         let assertExpression = {
             guard actualValues.count == values.count else { return false }

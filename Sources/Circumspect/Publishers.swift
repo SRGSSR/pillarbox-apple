@@ -24,7 +24,7 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) -> Result<[P.Output], P.Failure> {
+    ) throws -> Result<[P.Output], P.Failure> {
         var values: [P.Output] = []
         var result: Result<[P.Output], P.Failure>?
 
@@ -53,7 +53,7 @@ public extension XCTestCase {
         }
 
         waitForExpectations(timeout: timeout)
-        return result!
+        return try XCTUnwrap(result, "The publisher did not produce any result", file: file, line: line)
     }
 
     /// Wait for a publisher to complete and return its output.
@@ -71,19 +71,21 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) -> [P.Output] {
-        let result = waitForResult(
+    ) throws -> [P.Output] {
+        let result = try waitForResult(
             from: publisher,
             timeout: timeout,
             file: file,
             line: line,
             while: executing
         )
-        guard let output = try? result.get() else {
-            XCTFail("The publisher did not produce any output", file: file, line: line)
-            return []
+        do {
+            return try result.get()
         }
-        return output
+        catch {
+            XCTFail("The publisher did not produce any output", file: file, line: line)
+            throw error
+        }
     }
 
     /// Wait for a publisher to complete with a single output. Fails if not the case.
@@ -101,23 +103,25 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) -> P.Output? {
-        let result = waitForResult(
+    ) throws -> P.Output {
+        let result = try waitForResult(
             from: publisher,
             timeout: timeout,
             file: file,
             line: line,
             while: executing
         )
-        guard let output = try? result.get() else {
-            XCTFail("The publisher did not produce any output", file: file, line: line)
-            return nil
+        do {
+            let output = try result.get()
+            guard output.count == 1, let singleOutput = output.first else {
+                throw ExpectationError.incorrectResult
+            }
+            return singleOutput
         }
-        guard output.count == 1, let singleOutput = output.first else {
+        catch {
             XCTFail("The publisher did not produce a single output", file: file, line: line)
-            return nil
+            throw error
         }
-        return singleOutput
     }
 
     /// Wait for a publisher to complete with a failure. Fails if not the case.
@@ -135,8 +139,8 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) -> P.Failure? {
-        let result = waitForResult(
+    ) throws -> P.Failure {
+        let result = try waitForResult(
             from: publisher,
             timeout: timeout,
             file: file,
@@ -146,7 +150,7 @@ public extension XCTestCase {
         switch result {
         case .success:
             XCTFail("The publisher incorrectly succeeded", file: file, line: line)
-            return nil
+            throw ExpectationError.incorrectResult
         case let .failure(error):
             return error
         }

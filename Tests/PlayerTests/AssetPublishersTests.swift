@@ -12,25 +12,32 @@ import Nimble
 import XCTest
 
 final class AssetPublishersTests: XCTestCase {
-    func testFetch() {
+    func testFetch() throws {
         let asset = AVURLAsset(url: TestStreams.onDemandUrl)
-        let duration = waitForSingleOutput(from: asset.propertyPublisher(.duration))
+        let duration = try waitForSingleOutput(from: asset.propertyPublisher(.duration))
         expect(duration).to(equal(CMTime(value: 120, timescale: 1), by: beClose(within: 0.5)))
     }
 
-    func testRepeatedFetch() {
+    func testRepeatedFetch() throws {
         let asset = AVURLAsset(url: TestStreams.onDemandUrl)
 
-        let duration1 = waitForSingleOutput(from: asset.propertyPublisher(.duration))
+        let duration1 = try waitForSingleOutput(from: asset.propertyPublisher(.duration))
         expect(duration1).to(equal(CMTime(value: 120, timescale: 1), by: beClose(within: 0.5)))
 
-        let duration2 = waitForSingleOutput(from: asset.propertyPublisher(.duration))
+        let duration2 = try waitForSingleOutput(from: asset.propertyPublisher(.duration))
         expect(duration2).to(equal(CMTime(value: 120, timescale: 1), by: beClose(within: 0.5)))
     }
 
-    func testInvalidStream() {
+    func testInvalidStream() throws {
         let asset = AVURLAsset(url: TestStreams.unavailableUrl)
-        let error = waitForFailure(from: asset.propertyPublisher(.duration))
+        let error = try waitForFailure(from: asset.propertyPublisher(.duration))
         expect(error).notTo(beNil())
+    }
+
+    func testMultipleFetch() throws {
+        let asset = AVURLAsset(url: TestStreams.onDemandUrl)
+        let (duration, preferredRate) = try waitForSingleOutput(from: asset.propertyPublisher(.duration, .preferredRate))
+        expect(duration).to(equal(CMTime(value: 120, timescale: 1), by: beClose(within: 0.5)))
+        expect(preferredRate).to(equal(1))
     }
 }

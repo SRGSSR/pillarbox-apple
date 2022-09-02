@@ -7,7 +7,7 @@
 import AVFoundation
 import Combine
 
-extension AVAsset {
+public extension AVAsset {
     func propertyPublisher<T>(_ property: AVAsyncProperty<AVAsset, T>) -> AnyPublisher<T, Error> {
         Future { promise in
             Task {
@@ -27,7 +27,18 @@ extension AVAsset {
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>
     ) -> AnyPublisher<(A, B), Error> {
-        return Empty(completeImmediately: true).eraseToAnyPublisher()
+        Future { promise in
+            Task {
+                do {
+                    let result = try await self.load(propertyA, propertyB)
+                    promise(.success(result))
+                }
+                catch {
+                    promise(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
 
     func propertyPublisher<A, B, C>(
@@ -35,7 +46,18 @@ extension AVAsset {
         _ propertyB: AVAsyncProperty<AVAsset, B>,
         _ propertyC: AVAsyncProperty<AVAsset, C>
     ) -> AnyPublisher<(A, B, C), Error> {
-        return Empty(completeImmediately: true).eraseToAnyPublisher()
+        Future { promise in
+            Task {
+                do {
+                    let result = try await self.load(propertyA, propertyB, propertyC)
+                    promise(.success(result))
+                }
+                catch {
+                    promise(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
 
     func propertyPublisher<A, B, C, D>(
@@ -44,7 +66,18 @@ extension AVAsset {
         _ propertyC: AVAsyncProperty<AVAsset, C>,
         _ propertyD: AVAsyncProperty<AVAsset, D>
     ) -> AnyPublisher<(A, B, C, D), Error> {
-        return Empty(completeImmediately: true).eraseToAnyPublisher()
+        Future { promise in
+            Task {
+                do {
+                    let result = try await self.load(propertyA, propertyB, propertyC, propertyD)
+                    promise(.success(result))
+                }
+                catch {
+                    promise(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
 
     func propertyPublisher<A, B, C, D, E>(
@@ -54,7 +87,18 @@ extension AVAsset {
         _ propertyD: AVAsyncProperty<AVAsset, D>,
         _ propertyE: AVAsyncProperty<AVAsset, E>
     ) -> AnyPublisher<(A, B, C, D, E), Error> {
-        return Empty(completeImmediately: true).eraseToAnyPublisher()
+        Future { promise in
+            Task {
+                do {
+                    let result = try await self.load(propertyA, propertyB, propertyC, propertyD, propertyE)
+                    promise(.success(result))
+                }
+                catch {
+                    promise(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
 
     func propertyPublisher<A, B, C, D, E, F>(
@@ -65,7 +109,18 @@ extension AVAsset {
         _ propertyE: AVAsyncProperty<AVAsset, E>,
         _ propertyF: AVAsyncProperty<AVAsset, F>
     ) -> AnyPublisher<(A, B, C, D, E, F), Error> {
-        return Empty(completeImmediately: true).eraseToAnyPublisher()
+        Future { promise in
+            Task {
+                do {
+                    let result = try await self.load(propertyA, propertyB, propertyC, propertyD, propertyE, propertyF)
+                    promise(.success(result))
+                }
+                catch {
+                    promise(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
 
     func propertyPublisher<A, B, C, D, E, F, G>(
@@ -77,7 +132,20 @@ extension AVAsset {
         _ propertyF: AVAsyncProperty<AVAsset, F>,
         _ propertyG: AVAsyncProperty<AVAsset, G>
     ) -> AnyPublisher<(A, B, C, D, E, F, G), Error> {
-        return Empty(completeImmediately: true).eraseToAnyPublisher()
+        Future { promise in
+            Task {
+                do {
+                    let result = try await self.load(
+                        propertyA, propertyB, propertyC, propertyD, propertyE, propertyF, propertyG
+                    )
+                    promise(.success(result))
+                }
+                catch {
+                    promise(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
 
     func propertyPublisher<A, B, C, D, E, F, G, H>(
@@ -90,6 +158,19 @@ extension AVAsset {
         _ propertyG: AVAsyncProperty<AVAsset, G>,
         _ propertyH: AVAsyncProperty<AVAsset, H>
     ) -> AnyPublisher<(A, B, C, D, E, F, G, H), Error> {
-        return Empty(completeImmediately: true).eraseToAnyPublisher()
+        Future { promise in
+            Task {
+                do {
+                    let result = try await self.load(
+                        propertyA, propertyB, propertyC, propertyD, propertyE, propertyF, propertyG, propertyH
+                    )
+                    promise(.success(result))
+                }
+                catch {
+                    promise(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
 }
