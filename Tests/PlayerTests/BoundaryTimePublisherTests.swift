@@ -9,6 +9,7 @@
 import AVFoundation
 import Circumspect
 import Combine
+import Nimble
 import XCTest
 
 final class BoundaryTimePublisherTests: XCTestCase {
@@ -53,5 +54,21 @@ final class BoundaryTimePublisherTests: XCTestCase {
         ) {
             player.play()
         }
+    }
+
+    func testDeallocation() {
+        var player: AVPlayer? = AVPlayer()
+        let _ = Publishers.BoundaryTimePublisher(
+            for: player!,
+            times: [
+                CMTimeMake(value: 1, timescale: 2)
+            ]
+        )
+
+        weak var weakPlayer = player
+        autoreleasepool {
+            player = nil
+        }
+        expect(weakPlayer).to(beNil())
     }
 }

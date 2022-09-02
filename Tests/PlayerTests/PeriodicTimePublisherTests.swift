@@ -61,4 +61,18 @@ final class PeriodicTimePublisherTests: XCTestCase {
             player.play()
         }
     }
+
+    func testDeallocation() {
+        var player: AVPlayer? = AVPlayer()
+        let _ = Publishers.PeriodicTimePublisher(
+            for: player!,
+            interval: CMTime(value: 1, timescale: 1)
+        )
+
+        weak var weakPlayer = player
+        autoreleasepool {
+            player = nil
+        }
+        expect(weakPlayer).to(beNil())
+    }
 }
