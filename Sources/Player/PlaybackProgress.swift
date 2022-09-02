@@ -42,3 +42,10 @@ public struct PlaybackProgress: Equatable {
         value?.clamped(to: Self.defaultRange)
     }
 }
+
+extension PlaybackProgress: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        guard let value else { return "No progress" }
+        return String(format: "Progress: %.2f", value)
+    }
+}

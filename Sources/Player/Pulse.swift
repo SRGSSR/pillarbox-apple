@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Core
 import CoreMedia
 
 /// Player pulse.
@@ -51,7 +52,9 @@ struct Pulse {
     func time(forProgress progress: Float) -> CMTime? {
         guard timeRange.isValid && !timeRange.isEmpty else { return nil }
         let multiplier = Float64(progress.clamped(to: 0...1))
-        return CMTimeAdd(timeRange.start, CMTimeMultiplyByFloat64(timeRange.duration, multiplier: multiplier))
+        let time = CMTimeAdd(timeRange.start, CMTimeMultiplyByFloat64(timeRange.duration, multiplier: multiplier))
+        assert(time.isNumeric)
+        return time
     }
 }
 
@@ -60,6 +63,6 @@ extension Pulse: CustomDebugStringConvertible {
         let time = String(format: "%.2f", CMTimeGetSeconds(time))
         let start = String(format: "%.2f", CMTimeGetSeconds(timeRange.start))
         let end = String(format: "%.2f", CMTimeGetSeconds(timeRange.end))
-        return "At \(time) in [\(start); \(end)]"
+        return "At t = \(time) in [\(start); \(end)]"
     }
 }

@@ -39,7 +39,7 @@ extension AVPlayer {
             .switchToLatest()
             .prepend(ItemState.itemState(for: currentItem))
             .removeDuplicates()
-            .lane("player_item_state")
+            .lane("player_item_state") { "Item state: \($0)" }
             .eraseToAnyPublisher()
     }
 
@@ -76,6 +76,17 @@ extension AVPlayer {
     func currentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
         Publishers.PeriodicTimePublisher(for: self, interval: interval, queue: queue)
             .eraseToAnyPublisher()
+    }
+
+    func seekingPublisher() -> AnyPublisher<Bool, Never> {
+        Publishers.Merge(
+            NotificationCenter.default.weakPublisher(for: .willSeek, object: self)
+                .map { _ in true },
+            NotificationCenter.default.weakPublisher(for: .didSeek, object: self)
+                .map { _ in false }
+        )
+        .prepend(false)
+        .eraseToAnyPublisher()
     }
 
     func pulsePublisher(configuration: PlayerConfiguration, queue: DispatchQueue) -> AnyPublisher<Pulse?, Never> {

@@ -19,13 +19,12 @@ public final class Player: ObservableObject {
     /// Current playback progress.
     @Published public var progress: PlaybackProgress = .empty {
         willSet {
-            guard let progress = newValue.value, let time = pulse?.time(forProgress: progress),
-                  time.isNumeric else {
-                return
-            }
+            guard let progress = newValue.value, let time = pulse?.time(forProgress: progress) else { return }
             seek(to: time)
         }
     }
+
+    @Published private var seeking = false
 
     /// Current time.
     public var time: CMTime? {
@@ -61,7 +60,7 @@ public final class Player: ObservableObject {
 
         rawPlayer.playbackStatePublisher()
             .receive(on: DispatchQueue.main)
-            .lane("player_state")
+            .lane("player_state") { "State: \($0)" }
             .assign(to: &$playbackState)
         rawPlayer.pulsePublisher(configuration: self.configuration, queue: queue)
             .receive(on: DispatchQueue.main)
@@ -70,11 +69,21 @@ public final class Player: ObservableObject {
                 return String(describing: output)
             }
             .assign(to: &$pulse)
-        $pulse
+        rawPlayer.seekingPublisher()
+            .receive(on: DispatchQueue.main)
+            .lane("player_seeking") { "Seeking: \($0)" }
+            .assign(to: &$seeking)
+
+        // Update progress from pulse information, except when the player is seeking or the progress updated
+        // interactively.
+        Publishers.CombineLatest($pulse, $seeking)
+            .filter { !$0.1 }
+            .map(\.0)
             .weakCapture(self, at: \.progress)
             .filter { !$1.isInteracting }
-            .map { PlaybackProgress(value: $0?.progress, isInteracting: $1.isInteracting) }
+            .map { PlaybackProgress(value: $0.0?.progress, isInteracting: false) }
             .removeDuplicates()
+            .lane("player_progress")
             .assign(to: &$progress)
     }
 
@@ -172,5 +181,10 @@ public final class Player: ObservableObject {
     /// - Returns: The publisher.
     public func boundaryTimePublisher(for times: [CMTime], queue: DispatchQueue = .main) -> AnyPublisher<Void, Never> {
         Publishers.BoundaryTimePublisher(for: rawPlayer, times: times, queue: queue)
+    }
+
+    deinit {
+        // Further improve deallocation in some cases where `AVQueuePlayer` cannot properly clean everything up.
+        rawPlayer.removeAllItems()
     }
 }
