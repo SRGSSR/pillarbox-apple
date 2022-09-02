@@ -28,7 +28,7 @@ final class AssetPublishersTests: XCTestCase {
         expect(duration2).to(equal(CMTime(value: 120, timescale: 1), by: beClose(within: 0.5)))
     }
 
-    func testInvalidStream() throws {
+    func testFailedFetch() throws {
         let asset = AVURLAsset(url: TestStreams.unavailableUrl)
         let error = try waitForFailure(from: asset.propertyPublisher(.duration))
         expect(error).notTo(beNil())
@@ -39,5 +39,11 @@ final class AssetPublishersTests: XCTestCase {
         let (duration, preferredRate) = try waitForSingleOutput(from: asset.propertyPublisher(.duration, .preferredRate))
         expect(duration).to(equal(CMTime(value: 120, timescale: 1), by: beClose(within: 0.5)))
         expect(preferredRate).to(equal(1))
+    }
+
+    func testFailedMultipleFetch() throws {
+        let asset = AVURLAsset(url: TestStreams.unavailableUrl)
+        let error = try waitForFailure(from: asset.propertyPublisher(.duration, .preferredRate))
+        expect(error).notTo(beNil())
     }
 }
