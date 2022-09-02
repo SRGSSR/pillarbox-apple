@@ -78,6 +78,17 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
+    func seekingPublisher() -> AnyPublisher<Bool, Never> {
+        Publishers.Merge(
+            NotificationCenter.default.weakPublisher(for: .willSeek, object: self)
+                .map { _ in true },
+            NotificationCenter.default.weakPublisher(for: .didSeek, object: self)
+                .map { _ in false }
+        )
+        .prepend(false)
+        .eraseToAnyPublisher()
+    }
+
     func pulsePublisher(configuration: PlayerConfiguration, queue: DispatchQueue) -> AnyPublisher<Pulse?, Never> {
         Publishers.CombineLatest3(
             currentTimePublisher(interval: configuration.tick, queue: queue),
