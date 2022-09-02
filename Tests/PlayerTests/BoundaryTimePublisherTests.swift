@@ -49,7 +49,8 @@ final class BoundaryTimePublisherTests: XCTestCase {
                     CMTimeMake(value: 1, timescale: 2),
                     CMTimeMake(value: 2, timescale: 2)
                 ]
-            ).map { "tick" },
+            )
+            .map { "tick" },
             during: 2
         ) {
             player.play()
@@ -58,7 +59,7 @@ final class BoundaryTimePublisherTests: XCTestCase {
 
     func testDeallocation() {
         var player: AVPlayer? = AVPlayer()
-        let _ = Publishers.BoundaryTimePublisher(
+        _ = Publishers.BoundaryTimePublisher(
             for: player!,
             times: [
                 CMTimeMake(value: 1, timescale: 2)

@@ -7,7 +7,10 @@
 import AVFoundation
 import Combine
 
+// swiftlint:disable large_tuple
+
 public extension AVAsset {
+    /// Produce a given asset property.
     func propertyPublisher<T>(_ property: AVAsyncProperty<AVAsset, T>) -> AnyPublisher<T, Error> {
         Future { promise in
             Task {
@@ -23,6 +26,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
+    /// Produce given asset properties.
     func propertyPublisher<A, B>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>
@@ -41,6 +45,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
+    /// Produce given asset properties.
     func propertyPublisher<A, B, C>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>,
@@ -60,6 +65,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
+    /// Produce given asset properties.
     func propertyPublisher<A, B, C, D>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>,
@@ -80,6 +86,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
+    /// Produce given asset properties.
     func propertyPublisher<A, B, C, D, E>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>,
@@ -101,6 +108,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
+    /// Produce given asset properties.
     func propertyPublisher<A, B, C, D, E, F>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>,
@@ -123,6 +131,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
+    /// Produce given asset properties.
     func propertyPublisher<A, B, C, D, E, F, G>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>,
@@ -148,6 +157,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
+    /// Produce given asset properties.
     func propertyPublisher<A, B, C, D, E, F, G, H>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>,
@@ -174,3 +184,5 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 }
+
+// swiftlint:enable large_tuple
