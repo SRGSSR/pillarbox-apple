@@ -79,13 +79,7 @@ public extension XCTestCase {
             line: line,
             while: executing
         )
-        do {
-            return try result.get()
-        }
-        catch {
-            XCTFail("The publisher did not produce any output", file: file, line: line)
-            throw error
-        }
+        return try result.get()
     }
 
     /// Wait for a publisher to complete with a single output. Fails if not the case.
@@ -111,17 +105,11 @@ public extension XCTestCase {
             line: line,
             while: executing
         )
-        do {
-            let output = try result.get()
-            guard output.count == 1, let singleOutput = output.first else {
-                throw ExpectationError.incorrectResult
-            }
-            return singleOutput
+        let output = try result.get()
+        guard output.count == 1, let singleOutput = output.first else {
+            throw ExpectationError.incorrectResult
         }
-        catch {
-            XCTFail("The publisher did not produce a single output", file: file, line: line)
-            throw error
-        }
+        return singleOutput
     }
 
     /// Wait for a publisher to complete with a failure. Fails if not the case.
