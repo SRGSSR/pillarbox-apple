@@ -85,6 +85,7 @@ public final class Player: ObservableObject {
             .filter { !$0.1 && !$0.2 }
             .map { $0.0?.progress ?? 0 }
             .removeDuplicates()
+            .lane("player_progress")
             .assign(to: &$progress)
     }
 
