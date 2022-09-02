@@ -43,7 +43,6 @@ final class PeriodicTimePublisherTests: XCTestCase {
     func testPlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = AVPlayer(playerItem: item)
-        player.play()
         expectPublished(
             values: [
                 .zero,
@@ -58,6 +57,8 @@ final class PeriodicTimePublisherTests: XCTestCase {
                 interval: CMTimeMake(value: 1, timescale: 2)
             ),
             to: beClose(within: 0.5)
-        )
+        ) {
+            player.play()
+        }
     }
 }

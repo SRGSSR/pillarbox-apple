@@ -156,12 +156,21 @@ public final class Player: ObservableObject {
         await rawPlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
     }
 
-    /// Create a publisher periodically emitting the current time while the player is active.
+    /// Return a publisher periodically emitting the current time while the player is active.
     /// - Parameters:
     ///   - interval: The interval at which events must be emitted.
-    ///   - queue: The queue on which events are received.
+    ///   - queue: The queue on which values are published.
     /// - Returns: The publisher.
     public func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
         Publishers.PeriodicTimePublisher(for: rawPlayer, interval: interval, queue: queue)
+    }
+
+    /// Return a publisher emitting when traversing the specified times during normal playback.
+    /// - Parameters:
+    ///   - times: The times to observe.
+    ///   - queue: The queue on which values are published.
+    /// - Returns: The publisher.
+    public func boundaryTimePublisher(for times: [CMTime], queue: DispatchQueue = .main) -> AnyPublisher<Void, Never> {
+        Publishers.BoundaryTimePublisher(for: rawPlayer, times: times, queue: queue)
     }
 }
