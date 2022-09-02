@@ -11,14 +11,14 @@ import Nimble
 import XCTest
 
 final class NotificationPublisherDeallocationTests: XCTestCase {
-    func testReleaseWithObject() {
+    func testReleaseWithObject() throws {
         let notificationCenter = NotificationCenter.default
         var object: TestObject? = TestObject()
         let publisher = notificationCenter.weakPublisher(for: .testNotification, object: object).first()
 
         weak var weakObject = object
-        autoreleasepool {
-            waitForOutput(from: publisher) {
+        try autoreleasepool {
+            try waitForOutput(from: publisher) {
                 notificationCenter.post(name: .testNotification, object: object)
             }
             object = nil
@@ -26,14 +26,14 @@ final class NotificationPublisherDeallocationTests: XCTestCase {
         expect(weakObject).to(beNil())
     }
 
-    func testReleaseWithNSObject() {
+    func testReleaseWithNSObject() throws {
         let notificationCenter = NotificationCenter.default
         var object: TestNSObject? = TestNSObject()
         let publisher = notificationCenter.weakPublisher(for: .testNotification, object: object).first()
 
         weak var weakObject = object
-        autoreleasepool {
-            waitForOutput(from: publisher) {
+        try autoreleasepool {
+            try waitForOutput(from: publisher) {
                 notificationCenter.post(name: .testNotification, object: object)
             }
             object = nil
