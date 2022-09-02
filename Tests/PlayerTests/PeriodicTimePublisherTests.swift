@@ -43,7 +43,7 @@ final class PeriodicTimePublisherTests: XCTestCase {
     func testPlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = AVPlayer(playerItem: item)
-        expectPublished(
+        expectAtLeastPublished(
             values: [
                 .zero,
                 CMTimeMake(value: 1, timescale: 2),

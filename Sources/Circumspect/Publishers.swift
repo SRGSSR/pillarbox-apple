@@ -15,7 +15,7 @@ public extension XCTestCase {
     ///   - timeout: Timeout after which the expectation fails.
     ///   - file: File where the expectation is made.
     ///   - line: Line where the expectation is made.
-    ///   - executing: Code which must be executed once the expectation has been setup.
+    ///   - executing: Code which must be executed while waiting on the expectation.
     /// - Returns: The result of the publisher.
     @discardableResult
     func waitForResult<P: Publisher>(
@@ -62,7 +62,7 @@ public extension XCTestCase {
     ///   - timeout: Timeout after which the expectation fails.
     ///   - file: File where the expectation is made.
     ///   - line: Line where the expectation is made.
-    ///   - executing: Code which must be executed once the expectation has been setup.
+    ///   - executing: Code which must be executed while waiting on the expectation.
     /// - Returns: The collected output.
     @discardableResult
     func waitForOutput<P: Publisher>(
@@ -88,7 +88,7 @@ public extension XCTestCase {
     ///   - timeout: Timeout after which the expectation fails.
     ///   - file: File where the expectation is made.
     ///   - line: Line where the expectation is made.
-    ///   - executing: Code which must be executed once the expectation has been setup.
+    ///   - executing: Code which must be executed while waiting on the expectation.
     /// - Returns: The output.
     @discardableResult
     func waitForSingleOutput<P: Publisher>(
@@ -118,7 +118,7 @@ public extension XCTestCase {
     ///   - timeout: Timeout after which the expectation fails.
     ///   - file: File where the expectation is made.
     ///   - line: Line where the expectation is made.
-    ///   - executing: Code which must be executed once the expectation has been setup.
+    ///   - executing: Code which must be executed while waiting on the expectation.
     /// - Returns: The failure reason.
     @discardableResult
     func waitForFailure<P: Publisher>(
@@ -150,7 +150,7 @@ public extension XCTestCase {
     ///   - interval: Timeout after which the expectation fails.
     ///   - file: File where the expectation is made.
     ///   - line: Line where the expectation is made.
-    ///   - executing: Code which must be executed once the expectation has been setup.
+    ///   - executing: Code which must be executed while waiting on the expectation.
     /// - Returns: The collected output.
     func collectOutput<P: Publisher>(
         from publisher: P,

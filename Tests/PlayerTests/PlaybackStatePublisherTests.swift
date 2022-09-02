@@ -33,7 +33,7 @@ final class PlaybackStatePublisherTests: XCTestCase {
     func testPlayPause() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(values: [.idle, .playing], from: player.playbackStatePublisher()) {
+        expectAtLeastEqualPublished(values: [.idle, .playing], from: player.playbackStatePublisher()) {
             player.play()
         }
         expectEqualPublishedNext(values: [.paused], from: player.playbackStatePublisher(), during: 2) {

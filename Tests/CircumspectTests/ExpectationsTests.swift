@@ -12,7 +12,7 @@ import XCTest
 
 final class ExpectationTests: XCTestCase {
     func testExpectPublishedValues() {
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [1, 2, 3, 4, 5],
             from: [1, 2, 3, 4, 5].publisher
         )
@@ -20,7 +20,7 @@ final class ExpectationTests: XCTestCase {
 
     func testExpectPublishedValuesWhileExecuting() {
         let subject = PassthroughSubject<Int, Never>()
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [4, 7],
             from: subject
         ) {
@@ -31,7 +31,7 @@ final class ExpectationTests: XCTestCase {
     }
 
     func testExpectPublishedNextValues() {
-        expectEqualPublishedNext(
+        expectAtLeastEqualPublishedNext(
             values: [2, 3, 4, 5],
             from: [1, 2, 3, 4, 5].publisher
         )
@@ -39,7 +39,7 @@ final class ExpectationTests: XCTestCase {
 
     func testExpectPublishedNextValuesWhileExecuting() {
         let subject = PassthroughSubject<Int, Never>()
-        expectEqualPublishedNext(
+        expectAtLeastEqualPublishedNext(
             values: [7, 8],
             from: subject
         ) {

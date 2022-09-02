@@ -29,7 +29,7 @@ final class WeakCapturePublisherTests: XCTestCase {
         let object = TestObject(identifier: "weak_capture")
         let publisher = Just("output")
             .weakCapture(object, at: \.identifier)
-        expectPublished(
+        expectAtLeastPublished(
             values: [("output", "weak_capture")],
             from: publisher
         ) { output1, output2 in

@@ -23,7 +23,7 @@ final class ItemTimeRangePublisherTests: XCTestCase {
     func testOnDemand() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = AVPlayer(playerItem: item)
-        expectPublished(
+        expectAtLeastPublished(
             values: [CMTimeRange(start: .zero, duration: CMTime(value: 120, timescale: 1))],
             from: player.itemTimeRangePublisher(configuration: PlayerConfiguration()),
             to: beClose(within: 0.5)
@@ -33,7 +33,7 @@ final class ItemTimeRangePublisherTests: XCTestCase {
     func testLive() {
         let item = AVPlayerItem(url: TestStreams.liveUrl)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [.zero],
             from: player.itemTimeRangePublisher(configuration: PlayerConfiguration())
         )
