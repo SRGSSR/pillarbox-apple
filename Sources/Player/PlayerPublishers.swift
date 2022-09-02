@@ -39,7 +39,7 @@ extension AVPlayer {
             .switchToLatest()
             .prepend(ItemState.itemState(for: currentItem))
             .removeDuplicates()
-            .lane("player_item_state")
+            .lane("player_item_state") { "Item state: \($0)" }
             .eraseToAnyPublisher()
     }
 

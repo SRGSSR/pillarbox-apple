@@ -60,7 +60,7 @@ public final class Player: ObservableObject {
 
         rawPlayer.playbackStatePublisher()
             .receive(on: DispatchQueue.main)
-            .lane("player_state")
+            .lane("player_state") { "State: \($0)" }
             .assign(to: &$playbackState)
         rawPlayer.pulsePublisher(configuration: self.configuration, queue: queue)
             .receive(on: DispatchQueue.main)
@@ -71,7 +71,7 @@ public final class Player: ObservableObject {
             .assign(to: &$pulse)
         rawPlayer.seekingPublisher()
             .receive(on: DispatchQueue.main)
-            .lane("player_seeking")
+            .lane("player_seeking") { "Seeking: \($0)" }
             .assign(to: &$seeking)
 
         // Update progress from pulse information, except when the player is seeking or the progress updated

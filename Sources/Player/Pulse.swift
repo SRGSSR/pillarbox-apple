@@ -63,6 +63,6 @@ extension Pulse: CustomDebugStringConvertible {
         let time = String(format: "%.2f", CMTimeGetSeconds(time))
         let start = String(format: "%.2f", CMTimeGetSeconds(timeRange.start))
         let end = String(format: "%.2f", CMTimeGetSeconds(timeRange.end))
-        return "At \(time) in [\(start); \(end)]"
+        return "At t = \(time) in [\(start); \(end)]"
     }
 }

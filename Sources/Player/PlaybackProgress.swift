@@ -45,7 +45,7 @@ public struct PlaybackProgress: Equatable {
 
 extension PlaybackProgress: CustomDebugStringConvertible {
     public var debugDescription: String {
-        guard let value else { return "none" }
-        return "\(value), interacting: \(isInteracting)"
+        guard let value else { return "No progress" }
+        return String(format: "Progress: %.2f", value)
     }
 }
