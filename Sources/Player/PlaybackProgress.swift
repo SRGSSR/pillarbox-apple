@@ -42,3 +42,10 @@ public struct PlaybackProgress: Equatable {
         value?.clamped(to: Self.defaultRange)
     }
 }
+
+extension PlaybackProgress: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        guard let value else { return "none" }
+        return "\(value), interacting: \(isInteracting)"
+    }
+}
