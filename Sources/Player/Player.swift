@@ -13,13 +13,13 @@ import TimelaneCombine
 public final class Player: ObservableObject {
     /// Current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle
-    /// Current playback properties.
-    @Published private var playbackProperties: PlaybackProperties = .empty
+    /// Current pulse.
+    @Published private var pulse: Pulse?
 
     /// Current playback progress.
     @Published public var progress: PlaybackProgress = .empty {
         willSet {
-            guard let progress = newValue.value, let time = playbackProperties.pulse?.time(forProgress: progress),
+            guard let progress = newValue.value, let time = pulse?.time(forProgress: progress),
                   time.isNumeric else {
                 return
             }
@@ -27,17 +27,21 @@ public final class Player: ObservableObject {
         }
     }
 
+    /// Current time.
     public var time: CMTime? {
-        playbackProperties.pulse?.time
+        pulse?.time
     }
 
+    /// Available time range.
     public var timeRange: CMTimeRange? {
-        playbackProperties.pulse?.timeRange
+        pulse?.timeRange
     }
 
+    /// Raw player used for playback.
     public let rawPlayer: DequeuePlayer
 
     private let configuration: PlayerConfiguration
+    private let queue = DispatchQueue(label: "ch.srgssr.pillarbox.player")
 
     /// The items currently queued by the player.
     public var items: [AVPlayerItem] {
@@ -46,7 +50,7 @@ public final class Player: ObservableObject {
 
     /// The type of stream currently played.
     public var streamType: StreamType {
-        StreamType.streamType(for: playbackProperties.pulse)
+        StreamType.streamType(for: pulse)
     }
 
     /// Create a player with a given item queue.
@@ -57,16 +61,16 @@ public final class Player: ObservableObject {
 
         rawPlayer.playbackStatePublisher()
             .receive(on: DispatchQueue.main)
-            .lane("playback_state")
+            .lane("player_state")
             .assign(to: &$playbackState)
-        rawPlayer.playbackPropertiesPublisher(configuration: self.configuration)
+        rawPlayer.pulsePublisher(configuration: self.configuration, queue: queue)
             .receive(on: DispatchQueue.main)
-            .lane("playback_properties")
-            .assign(to: &$playbackProperties)
-        $playbackProperties
+            .lane("player_pulse")
+            .assign(to: &$pulse)
+        $pulse
             .weakCapture(self, at: \.progress)
             .filter { !$1.isInteracting }
-            .map { PlaybackProgress(value: $0.progress, isInteracting: $1.isInteracting) }
+            .map { PlaybackProgress(value: $0?.progress, isInteracting: $1.isInteracting) }
             .removeDuplicates()
             .assign(to: &$progress)
     }

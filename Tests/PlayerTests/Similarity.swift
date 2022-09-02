@@ -16,12 +16,6 @@ extension Pulse: Similar {
     }
 }
 
-extension PlaybackProperties: Similar {
-    public static func ~= (lhs: PlaybackProperties, rhs: PlaybackProperties) -> Bool {
-        PlaybackProperties.close(within: CMTime(value: 1, timescale: 2))(lhs, rhs)
-    }
-}
-
 func beClose(within tolerance: TimeInterval) -> ((CMTime, CMTime) -> Bool) {
     CMTime.close(within: tolerance)
 }
