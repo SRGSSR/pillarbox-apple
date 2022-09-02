@@ -17,18 +17,12 @@ public final class Player: ObservableObject {
     @Published private var pulse: Pulse?
 
     /// Current playback progress.
-    @Published public var progress: Float = 0 {
+    @Published public var progress: PlaybackProgress = .empty {
         willSet {
-            guard let time = pulse?.time(forProgress: progress) else {
-                return
-            }
+            guard let progress = newValue.value, let time = pulse?.time(forProgress: progress) else { return }
             seek(to: time)
         }
     }
-
-    /// Must be set to `true` when the progress is updated interactively so that the player can momentarily avoid
-    /// updating the progress reflected in the user interface.
-    @Published public var isUpdatingProgressInteractively = false
 
     @Published private var seeking = false
 
@@ -80,10 +74,14 @@ public final class Player: ObservableObject {
             .lane("player_seeking")
             .assign(to: &$seeking)
 
-        // Update progress from pulse information, except when the player is seeking.
-        Publishers.CombineLatest3($pulse, $seeking, $isUpdatingProgressInteractively)
-            .filter { !$0.1 && !$0.2 }
-            .map { $0.0?.progress ?? 0 }
+        // Update progress from pulse information, except when the player is seeking or the progress updated
+        // interactively.
+        Publishers.CombineLatest($pulse, $seeking)
+            .filter { !$0.1 }
+            .map(\.0)
+            .weakCapture(self, at: \.progress)
+            .filter { !$1.isInteracting }
+            .map { PlaybackProgress(value: $0.0?.progress, isInteracting: false) }
             .removeDuplicates()
             .lane("player_progress")
             .assign(to: &$progress)

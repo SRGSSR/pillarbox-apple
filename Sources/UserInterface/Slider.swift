@@ -45,7 +45,7 @@ public extension Slider where ValueLabel == EmptyView {
             in: sliderBounds(for: player),
             label: label
         ) { isEditing in
-            player.isUpdatingProgressInteractively = isEditing
+            player.progress.isInteracting = isEditing
         }
     }
 }
@@ -58,17 +58,22 @@ public extension Slider where Label == EmptyView, ValueLabel == EmptyView {
     @MainActor
     init(player: Player) {
         self.init(value: sliderValue(for: player), in: sliderBounds(for: player)) { isEditing in
-            player.isUpdatingProgressInteractively = isEditing
+            player.progress.isInteracting = isEditing
         }
     }
 }
 
 @MainActor
 private func sliderValue(for player: Player) -> Binding<Float> {
-    Binding(player, at: \.progress)
+    if player.progress.value != nil {
+        return Binding(player, at: \.progress.value, defaultValue: 0)
+    }
+    else {
+        return .constant(0)
+    }
 }
 
 @MainActor
 private func sliderBounds(for player: Player) -> ClosedRange<Float> {
-    0...1
+    player.progress.bounds ?? 0...0
 }
