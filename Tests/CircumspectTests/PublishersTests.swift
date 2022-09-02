@@ -11,33 +11,68 @@ import Nimble
 import XCTest
 
 final class PublisherTests: XCTestCase {
-    func testCollectFirst() {
-        let values = waitForOutput(
-            from: [1, 2, 3, 4, 5].publisher.collectFirst(3)
-        ).flatMap { $0 }
-        expect(values).to(equal([1, 2, 3]))
+    func testWaitForSuccessResult() {
+        let values = try? waitForResult(from: [1, 2, 3, 4, 5].publisher).get()
+        expect(values).to(equal([1, 2, 3, 4, 5]))
     }
 
-    func testCollectNext() {
-        let values = waitForOutput(
-            from: [1, 2, 3, 4, 5].publisher.collectNext(3)
-        ).flatMap { $0 }
-        expect(values).to(equal([2, 3, 4]))
-    }
-
-    func testwaitForOutput() {
-        let values = waitForOutput(from: [1, 2, 3].publisher)
-        expect(values).to(equal([1, 2, 3]))
-    }
-
-    func testwaitForOutputWhileExecuting() {
+    func testWaitForSuccessResultWhileExecuting() {
         let subject = PassthroughSubject<Int, Never>()
-        let values = waitForOutput(from: subject) {
+        let values = try? waitForResult(from: subject) {
+            subject.send(4)
+            subject.send(7)
+            subject.send(completion: .finished)
+        }.get()
+        expect(values).to(equal([4, 7]))
+    }
+
+    func testWaitForFailureResult() {
+        let values = try? waitForResult(from: Fail<Int, Error>(error: TestError.any)).get()
+        expect(values).to(beNil())
+    }
+
+    func testWaitForOutput() throws {
+        let values = try waitForOutput(from: [1, 2, 3].publisher)
+        expect(values).to(equal([1, 2, 3]))
+    }
+
+    func testWaitForOutputWhileExecuting() throws {
+        let subject = PassthroughSubject<Int, Never>()
+        let values = try waitForOutput(from: subject) {
             subject.send(4)
             subject.send(7)
             subject.send(completion: .finished)
         }
         expect(values).to(equal([4, 7]))
+    }
+
+    func testWaitForSingleOutput() throws {
+        let value = try waitForSingleOutput(from: [1].publisher)
+        expect(value).to(equal(1))
+    }
+
+    func testWaitForSingleOutputWhileExecuting() throws {
+        let subject = PassthroughSubject<Int, Never>()
+        let value = try waitForSingleOutput(from: subject) {
+            subject.send(4)
+            subject.send(completion: .finished)
+        }
+        expect(value).to(equal(4))
+    }
+
+    func testWaitForFailure() throws {
+        let error = try waitForFailure(from: Fail<Int, Error>(error: TestError.any))
+        expect(error).notTo(beNil())
+    }
+
+    func testWaitForFailureWhileExecuting() throws {
+        let subject = PassthroughSubject<Int, Error>()
+        let error = try waitForFailure(from: Fail<Int, Error>(error: TestError.any)) {
+            subject.send(4)
+            subject.send(7)
+            subject.send(completion: .failure(TestError.any))
+        }
+        expect(error).notTo(beNil())
     }
 
     func testCollectOutput() {
@@ -55,11 +90,25 @@ final class PublisherTests: XCTestCase {
         expect(values).to(equal([4, 7]))
     }
 
-    func testCollectImmediateOutput() {
+    func testCollectOutputImmediately() {
         let values = collectOutput(
             from: [1, 2, 3, 4, 5].publisher,
             during: 0
         )
         expect(values).to(equal([1, 2, 3, 4, 5]))
+    }
+
+    func testCollectFirst() throws {
+        let values = try waitForOutput(
+            from: [1, 2, 3, 4, 5].publisher.collectFirst(3)
+        ).flatMap { $0 }
+        expect(values).to(equal([1, 2, 3]))
+    }
+
+    func testCollectNext() throws {
+        let values = try waitForOutput(
+            from: [1, 2, 3, 4, 5].publisher.collectNext(3)
+        ).flatMap { $0 }
+        expect(values).to(equal([2, 3, 4]))
     }
 }

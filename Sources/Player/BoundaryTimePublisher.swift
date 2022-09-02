@@ -8,55 +8,55 @@ import AVFoundation
 import Combine
 
 extension Publishers {
-    fileprivate struct _PeriodicTimePublisher: Publisher {
-        typealias Output = CMTime
+    fileprivate struct _BoundaryTimePublisher: Publisher {
+        typealias Output = Void
         typealias Failure = Never
 
         let player: AVPlayer
-        let interval: CMTime
+        let times: [CMTime]
         let queue: DispatchQueue
 
-        init(player: AVPlayer, interval: CMTime, queue: DispatchQueue) {
+        init(player: AVPlayer, times: [CMTime], queue: DispatchQueue) {
             self.player = player
-            self.interval = interval
+            self.times = times
             self.queue = queue
         }
 
-        func receive<S>(subscriber: S) where S: Subscriber, Never == S.Failure, CMTime == S.Input {
-            let subscription = Subscription(subscriber: subscriber, player: player, interval: interval, queue: queue)
+        func receive<S>(subscriber: S) where S: Subscriber, Never == S.Failure, Void == S.Input {
+            let subscription = Subscription(subscriber: subscriber, player: player, times: times, queue: queue)
             subscriber.receive(subscription: subscription)
         }
     }
 
-    static func PeriodicTimePublisher(for player: AVPlayer, interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
-        Publishers._PeriodicTimePublisher(player: player, interval: interval, queue: queue)
-            .removeDuplicates(by: CMTime.close(within: CMTimeGetSeconds(interval) / 2))
+    static func BoundaryTimePublisher(for player: AVPlayer, times: [CMTime], queue: DispatchQueue = .main) -> AnyPublisher<Void, Never> {
+        Publishers._BoundaryTimePublisher(player: player, times: times, queue: queue)
             .eraseToAnyPublisher()
     }
 }
 
-private extension Publishers._PeriodicTimePublisher {
+private extension Publishers._BoundaryTimePublisher {
     final actor Subscription<S: Subscriber>: Combine.Subscription where S.Input == Output, S.Failure == Failure {
         private var subscriber: S?
         private let player: AVPlayer
-        private let interval: CMTime
+        private let times: [CMTime]
         private let queue: DispatchQueue
 
         private var demand = Subscribers.Demand.none
         private var timeObserver: Any?
 
-        init(subscriber: S, player: AVPlayer, interval: CMTime, queue: DispatchQueue) {
+        init(subscriber: S, player: AVPlayer, times: [CMTime], queue: DispatchQueue) {
             self.subscriber = subscriber
             self.player = player
-            self.interval = interval
+            self.times = times
             self.queue = queue
         }
 
         private func processDemand(_ demand: Subscribers.Demand) {
             self.demand += demand
             guard timeObserver == nil else { return }
-            timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: queue) { [weak self] time in
-                self?.processTime(time)
+            let timeValues = times.map { NSValue(time: $0) }
+            timeObserver = player.addBoundaryTimeObserver(forTimes: timeValues, queue: queue) { [weak self] in
+                self?.processTime()
             }
         }
 
@@ -68,15 +68,15 @@ private extension Publishers._PeriodicTimePublisher {
             subscriber = nil
         }
 
-        private func send(_ time: CMTime) {
+        private func send() {
             guard let subscriber = self.subscriber, self.demand > .none else { return }
             self.demand -= 1
-            self.demand += subscriber.receive(time)
+            self.demand += subscriber.receive(())
         }
 
-        private nonisolated func processTime(_ time: CMTime) {
+        private nonisolated func processTime() {
             Task {
-                await send(time)
+                await send()
             }
         }
 

@@ -7,18 +7,18 @@
 @testable import Player
 
 import AVFoundation
-import Combine
 import Circumspect
+import Combine
 import Nimble
 import XCTest
 
-final class PeriodicTimePublisherTests: XCTestCase {
+final class BoundaryTimePublisherTests: XCTestCase {
     func testEmpty() {
         let player = AVPlayer()
         expectNothingPublished(
-            from: Publishers.PeriodicTimePublisher(
+            from: Publishers.BoundaryTimePublisher(
                 for: player,
-                interval: CMTimeMake(value: 1, timescale: 2)
+                times: [CMTimeMake(value: 1, timescale: 2)]
             ),
             during: 2
         )
@@ -27,15 +27,11 @@ final class PeriodicTimePublisherTests: XCTestCase {
     func testNoPlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = AVPlayer(playerItem: item)
-        expectPublished(
-            values: [
-                .zero
-            ],
-            from: Publishers.PeriodicTimePublisher(
+        expectNothingPublished(
+            from: Publishers.BoundaryTimePublisher(
                 for: player,
-                interval: CMTimeMake(value: 1, timescale: 2)
+                times: [CMTimeMake(value: 1, timescale: 2)]
             ),
-            to: beClose(within: 0.5),
             during: 2
         )
     }
@@ -43,20 +39,19 @@ final class PeriodicTimePublisherTests: XCTestCase {
     func testPlayback() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = AVPlayer(playerItem: item)
-        expectAtLeastPublished(
+        expectEqualPublished(
             values: [
-                .zero,
-                CMTimeMake(value: 1, timescale: 2),
-                CMTimeMake(value: 2, timescale: 2),
-                CMTimeMake(value: 3, timescale: 2),
-                CMTimeMake(value: 4, timescale: 2),
-                CMTimeMake(value: 5, timescale: 2)
+                "tick", "tick"
             ],
-            from: Publishers.PeriodicTimePublisher(
+            from: Publishers.BoundaryTimePublisher(
                 for: player,
-                interval: CMTimeMake(value: 1, timescale: 2)
-            ),
-            to: beClose(within: 0.5)
+                times: [
+                    CMTimeMake(value: 1, timescale: 2),
+                    CMTimeMake(value: 2, timescale: 2)
+                ]
+            )
+            .map { "tick" },
+            during: 2
         ) {
             player.play()
         }
@@ -64,9 +59,11 @@ final class PeriodicTimePublisherTests: XCTestCase {
 
     func testDeallocation() {
         var player: AVPlayer? = AVPlayer()
-        _ = Publishers.PeriodicTimePublisher(
+        _ = Publishers.BoundaryTimePublisher(
             for: player!,
-            interval: CMTime(value: 1, timescale: 1)
+            times: [
+                CMTimeMake(value: 1, timescale: 2)
+            ]
         )
 
         weak var weakPlayer = player

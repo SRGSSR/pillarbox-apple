@@ -11,16 +11,16 @@ import Nimble
 import XCTest
 
 final class ExpectationTests: XCTestCase {
-    func testExpectPublishedValues() {
-        expectEqualPublished(
+    func testExpectAtLeastEqualPublishedValues() {
+        expectAtLeastEqualPublished(
             values: [1, 2, 3, 4, 5],
             from: [1, 2, 3, 4, 5].publisher
         )
     }
 
-    func testExpectPublishedValuesWhileExecuting() {
+    func testExpectAtLeastEqualPublishedValuesWhileExecuting() {
         let subject = PassthroughSubject<Int, Never>()
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [4, 7],
             from: subject
         ) {
@@ -30,16 +30,16 @@ final class ExpectationTests: XCTestCase {
         }
     }
 
-    func testExpectPublishedNextValues() {
-        expectEqualPublishedNext(
+    func testExpectAtLeastEqualPublishedNextValues() {
+        expectAtLeastEqualPublishedNext(
             values: [2, 3, 4, 5],
             from: [1, 2, 3, 4, 5].publisher
         )
     }
 
-    func testExpectPublishedNextValuesWhileExecuting() {
+    func testExpectAtLeastEqualPublishedNextValuesWhileExecuting() {
         let subject = PassthroughSubject<Int, Never>()
-        expectEqualPublishedNext(
+        expectAtLeastEqualPublishedNext(
             values: [7, 8],
             from: subject
         ) {
@@ -50,7 +50,7 @@ final class ExpectationTests: XCTestCase {
         }
     }
 
-    func testExpectPublishedValuesDuringInterval() {
+    func testExpectEqualPublishedValuesDuringInterval() {
         let counter = Counter()
         expectEqualPublished(
             values: [0, 1, 2],
@@ -59,7 +59,7 @@ final class ExpectationTests: XCTestCase {
         )
     }
 
-    func testExpectPublishedValuesDuringIntervalWhileExecuting() {
+    func testExpectEqualPublishedValuesDuringIntervalWhileExecuting() {
         let subject = PassthroughSubject<Int, Never>()
         expectEqualPublished(
             values: [4, 7, 8],
@@ -72,7 +72,7 @@ final class ExpectationTests: XCTestCase {
         }
     }
 
-    func testExpectPublishedNextValuesDuringInterval() {
+    func testExpectEqualPublishedNextValuesDuringInterval() {
         let counter = Counter()
         expectEqualPublishedNext(
             values: [1, 2],
@@ -81,7 +81,7 @@ final class ExpectationTests: XCTestCase {
         )
     }
 
-    func testExpectPublishedNextValuesDuringIntervalWhileExecuting() {
+    func testExpectEqualPublishedNextValuesDuringIntervalWhileExecuting() {
         let subject = PassthroughSubject<Int, Never>()
         expectEqualPublishedNext(
             values: [7, 8],
@@ -126,6 +126,45 @@ final class ExpectationTests: XCTestCase {
             during: 0.5
         ) {
             NotificationCenter.default.post(name: .testNotification, object: self)
+        }
+    }
+
+    func testExpectOnlyEqualPublishedValues() {
+        expectOnlyEqualPublished(
+            values: [1, 2, 3, 4, 5],
+            from: [1, 2, 3, 4, 5].publisher
+        )
+    }
+
+    func testExpectOnlyEqualPublishedValuesWhileExecuting() {
+        let subject = PassthroughSubject<Int, Never>()
+        expectOnlyEqualPublished(
+            values: [4, 7],
+            from: subject
+        ) {
+            subject.send(4)
+            subject.send(7)
+            subject.send(completion: .finished)
+        }
+    }
+
+    func testExpectOnlyEqualPublishedNextValues() {
+        expectOnlyEqualPublishedNext(
+            values: [2, 3, 4, 5],
+            from: [1, 2, 3, 4, 5].publisher
+        )
+    }
+
+    func testExpectOnlyEqualPublishedNextValuesWhileExecuting() {
+        let subject = PassthroughSubject<Int, Never>()
+        expectOnlyEqualPublishedNext(
+            values: [7, 8],
+            from: subject
+        ) {
+            subject.send(4)
+            subject.send(7)
+            subject.send(8)
+            subject.send(completion: .finished)
         }
     }
 }

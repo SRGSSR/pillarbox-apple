@@ -14,7 +14,7 @@ final class ItemDurationPublisherTests: XCTestCase {
     func testDuration() {
         let item = AVPlayerItem(url: TestStreams.onDemandUrl)
         let player = AVPlayer(playerItem: item)
-        expectPublished(
+        expectAtLeastPublished(
             values: [.indefinite, CMTime(value: 120, timescale: 1)],
             from: player.itemDurationPublisher(),
             to: beClose(within: 0.5)

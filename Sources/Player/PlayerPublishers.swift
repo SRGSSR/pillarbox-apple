@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import TimelaneCombine
 
 extension AVPlayer {
     private static func timeRangePublisher(for item: AVPlayerItem, configuration: PlayerConfiguration) -> AnyPublisher<CMTimeRange, Never> {
@@ -38,6 +39,7 @@ extension AVPlayer {
             .switchToLatest()
             .prepend(ItemState.itemState(for: currentItem))
             .removeDuplicates()
+            .lane("player_item_state")
             .eraseToAnyPublisher()
     }
 
@@ -76,17 +78,6 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    func seekTargetTimePublisher() -> AnyPublisher<CMTime?, Never> {
-        Publishers.Merge(
-            NotificationCenter.default.weakPublisher(for: .willSeek, object: self)
-                .map { $0.userInfo?[DequeuePlayer.SeekInfoKey.targetTime] as? CMTime },
-            NotificationCenter.default.weakPublisher(for: .didSeek, object: self)
-                .map { _ in nil }
-        )
-        .prepend(nil)
-        .eraseToAnyPublisher()
-    }
-
     func pulsePublisher(configuration: PlayerConfiguration, queue: DispatchQueue) -> AnyPublisher<Pulse?, Never> {
         Publishers.CombineLatest3(
             currentTimePublisher(interval: configuration.tick, queue: queue),
@@ -97,16 +88,6 @@ extension AVPlayer {
             Pulse(time: time, timeRange: timeRange, itemDuration: itemDuration)
         }
         .removeDuplicates(by: Pulse.close(within: CMTimeMultiplyByFloat64(configuration.tick, multiplier: 0.5)))
-        .eraseToAnyPublisher()
-    }
-
-    func playbackPropertiesPublisher(configuration: PlayerConfiguration) -> AnyPublisher<PlaybackProperties, Never> {
-        Publishers.CombineLatest(
-            pulsePublisher(configuration: configuration, queue: DispatchQueue(label: "ch.srgssr.pillarbox.player")),
-            seekTargetTimePublisher()
-        )
-        .map { PlaybackProperties(pulse: $0, targetTime: $1) }
-        .removeDuplicates(by: PlaybackProperties.close(within: CMTimeMultiplyByFloat64(configuration.tick, multiplier: 0.5)))
         .eraseToAnyPublisher()
     }
 }

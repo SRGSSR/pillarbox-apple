@@ -23,7 +23,7 @@ final class PulsePublisherTests: XCTestCase {
     func testPlayback() {
         let item = AVPlayerItem(url: TestStreams.liveUrl)
         let player = AVPlayer(playerItem: item)
-        expectSimilarPublished(
+        expectAtLeastSimilarPublished(
             values: [
                 Pulse(time: .zero, timeRange: .zero, itemDuration: .indefinite),
                 Pulse(time: CMTime(value: 1, timescale: 1), timeRange: .zero, itemDuration: .indefinite),

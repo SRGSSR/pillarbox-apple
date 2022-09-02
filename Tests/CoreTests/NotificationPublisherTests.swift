@@ -11,18 +11,18 @@ import Nimble
 import XCTest
 
 final class NotificationPublisherTests: XCTestCase {
-    func testWithObject() {
+    func testWithObject() throws {
         let object = TestObject()
         let notificationCenter = NotificationCenter.default
-        waitForOutput(from: notificationCenter.weakPublisher(for: .testNotification, object: object).first()) {
+        try waitForOutput(from: notificationCenter.weakPublisher(for: .testNotification, object: object).first()) {
             notificationCenter.post(name: .testNotification, object: object)
         }
     }
 
-    func testWithNSObject() {
+    func testWithNSObject() throws {
         let object = TestNSObject()
         let notificationCenter = NotificationCenter.default
-        waitForOutput(from: notificationCenter.weakPublisher(for: .testNotification, object: object).first()) {
+        try waitForOutput(from: notificationCenter.weakPublisher(for: .testNotification, object: object).first()) {
             notificationCenter.post(name: .testNotification, object: object)
         }
     }
