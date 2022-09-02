@@ -46,6 +46,20 @@ final class PublisherTests: XCTestCase {
         expect(values).to(equal([4, 7]))
     }
 
+    func testWaitForSingleOutput() throws {
+        let value = try waitForSingleOutput(from: [1].publisher)
+        expect(value).to(equal(1))
+    }
+
+    func testWaitForSingleOutputWhileExecuting() throws {
+        let subject = PassthroughSubject<Int, Never>()
+        let value = try waitForSingleOutput(from: subject) {
+            subject.send(4)
+            subject.send(completion: .finished)
+        }
+        expect(value).to(equal(4))
+    }
+
     func testWaitForFailure() throws {
         let error = try waitForFailure(from: Fail<Int, Error>(error: TestError.any))
         expect(error).notTo(beNil())

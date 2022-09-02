@@ -106,7 +106,7 @@ public extension XCTestCase {
             while: executing
         )
         guard output.count == 1, let singleOutput = output.first else {
-            XCTFail("The publisher did not produce a single output", file: file, line: line)
+            XCTFail("The publisher did not produce one and only one output", file: file, line: line)
             throw ExpectationError.incorrectResult
         }
         return singleOutput
