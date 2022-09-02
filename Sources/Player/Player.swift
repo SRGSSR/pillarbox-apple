@@ -182,4 +182,9 @@ public final class Player: ObservableObject {
     public func boundaryTimePublisher(for times: [CMTime], queue: DispatchQueue = .main) -> AnyPublisher<Void, Never> {
         Publishers.BoundaryTimePublisher(for: rawPlayer, times: times, queue: queue)
     }
+
+    deinit {
+        // Further improve deallocation in some cases where `AVQueuePlayer` cannot properly clean everything up.
+        rawPlayer.removeAllItems()
+    }
 }
