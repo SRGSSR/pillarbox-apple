@@ -19,8 +19,8 @@ Test streams should also be silent for convenience but stripping audio using ffm
 With these constraints in mind we can use ffmpeg to prepare a local media file with fixed GOP size and a volume reduced to zero. Our current 4-second video source is created from the [Nyan Cat](https://www.youtube.com/watch?v=QH2-TGUlwu4) video, downloaded using [yt-dlp](https://github.com/yt-dlp/yt-dlp) and cut into a nicely looping silent 4-second clip out with a GOP size of 2:
 
 ```shell
-$ yt-dlp --format=mp4 -o nyan_cat_original.mp4 https://www.youtube.com/watch\?v\=QH2-TGUlwu4
-$ ffmpeg -i nyan_cat_original.mp4 -ss 10 -t 4 -force_key_frames "expr:if(isnan(prev_forced_n),1,eq(n,prev_forced_n+2))" -filter:a "volume=0" nyan_cat.mp4
+yt-dlp --format=mp4 -o nyan_cat_original.mp4 https://www.youtube.com/watch\?v\=QH2-TGUlwu4
+ffmpeg -i nyan_cat_original.mp4 -ss 10 -t 4 -force_key_frames "expr:if(isnan(prev_forced_n),1,eq(n,prev_forced_n+2))" -filter:a "volume=0" nyan_cat.mp4
 ```
 
 ### On-demand stream
