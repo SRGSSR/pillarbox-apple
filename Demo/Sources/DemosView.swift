@@ -117,9 +117,8 @@ private extension DemosView {
 
 struct DemosView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
+        NavigationStack {
             DemosView()
         }
-        .navigationViewStyle(.stack)
     }
 }

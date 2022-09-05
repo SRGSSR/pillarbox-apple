@@ -12,10 +12,9 @@ struct PillarboxDemoApp: App {
 
     var body: some Scene {
         WindowGroup {
-            NavigationView {
+            NavigationStack {
                 DemosView()
             }
-            .navigationViewStyle(.stack)
         }
     }
 }
