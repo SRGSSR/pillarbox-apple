@@ -17,7 +17,7 @@ final class ItemDurationPublisherTests: XCTestCase {
         expectAtLeastPublished(
             values: [.indefinite, CMTime(value: 120, timescale: 1)],
             from: player.itemDurationPublisher(),
-            to: beClose(within: 0.5)
+            to: beClose(within: 1)
         )
     }
 }
