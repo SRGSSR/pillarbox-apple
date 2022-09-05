@@ -26,7 +26,7 @@ final class ItemTimeRangePublisherTests: XCTestCase {
         expectAtLeastPublished(
             values: [CMTimeRange(start: .zero, duration: CMTime(value: 120, timescale: 1))],
             from: player.itemTimeRangePublisher(configuration: PlayerConfiguration()),
-            to: beClose(within: 0.5)
+            to: beClose(within: 1)
         )
     }
 

@@ -23,8 +23,8 @@ final class ItemDurationPublisherQueueTests: XCTestCase {
                 CMTime(value: 120, timescale: 1)
             ],
             from: player.itemDurationPublisher()
-                .removeDuplicates(by: CMTime.close(within: 0.5)),
-            to: beClose(within: 0.5),
+                .removeDuplicates(by: CMTime.close(within: 1)),
+            to: beClose(within: 1),
             during: 4
         ) {
             player.play()
@@ -45,8 +45,8 @@ final class ItemDurationPublisherQueueTests: XCTestCase {
                 CMTime(value: 120, timescale: 1)
             ],
             from: player.itemDurationPublisher()
-                .removeDuplicates(by: CMTime.close(within: 0.5)),
-            to: beClose(within: 0.5),
+                .removeDuplicates(by: CMTime.close(within: 1)),
+            to: beClose(within: 1),
             during: 4
         ) {
             player.play()

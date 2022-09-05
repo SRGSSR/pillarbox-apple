@@ -15,17 +15,17 @@ final class AssetPublishersTests: XCTestCase {
     func testFetch() throws {
         let asset = AVURLAsset(url: TestStreams.onDemandUrl)
         let duration = try waitForSingleOutput(from: asset.propertyPublisher(.duration))
-        expect(duration).to(equal(CMTime(value: 120, timescale: 1), by: beClose(within: 0.5)))
+        expect(duration).to(equal(CMTime(value: 120, timescale: 1), by: beClose(within: 1)))
     }
 
     func testRepeatedFetch() throws {
         let asset = AVURLAsset(url: TestStreams.onDemandUrl)
 
         let duration1 = try waitForSingleOutput(from: asset.propertyPublisher(.duration))
-        expect(duration1).to(equal(CMTime(value: 120, timescale: 1), by: beClose(within: 0.5)))
+        expect(duration1).to(equal(CMTime(value: 120, timescale: 1), by: beClose(within: 1)))
 
         let duration2 = try waitForSingleOutput(from: asset.propertyPublisher(.duration))
-        expect(duration2).to(equal(CMTime(value: 120, timescale: 1), by: beClose(within: 0.5)))
+        expect(duration2).to(equal(CMTime(value: 120, timescale: 1), by: beClose(within: 1)))
     }
 
     func testFailedFetch() throws {
@@ -37,7 +37,7 @@ final class AssetPublishersTests: XCTestCase {
     func testMultipleFetch() throws {
         let asset = AVURLAsset(url: TestStreams.onDemandUrl)
         let (duration, preferredRate) = try waitForSingleOutput(from: asset.propertyPublisher(.duration, .preferredRate))
-        expect(duration).to(equal(CMTime(value: 120, timescale: 1), by: beClose(within: 0.5)))
+        expect(duration).to(equal(CMTime(value: 120, timescale: 1), by: beClose(within: 1)))
         expect(preferredRate).to(equal(1))
     }
 
