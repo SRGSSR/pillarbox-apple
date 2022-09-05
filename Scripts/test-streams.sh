@@ -28,23 +28,23 @@ function serve_test_streams {
 
     mkdir -p "$ON_DEMAND_DIR"
     ffmpeg -stream_loop -1 -i "$MEDIAS_DIR/nyan_cat.mov" -t 120 -vcodec copy -acodec copy \
-        -f hls -hls_time 4 -hls_list_size 0 "$ON_DEMAND_DIR/master.m3u8" > /dev/null 2>&1 &
+        -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_DIR/master.m3u8" > /dev/null 2>&1 &
 
     mkdir -p "$ON_DEMAND_SHORT_DIR"
     ffmpeg -stream_loop -1 -i "$MEDIAS_DIR/nyan_cat.mov" -t 1 -vcodec copy -acodec copy \
-        -f hls -hls_time 1 -hls_list_size 0 "$ON_DEMAND_SHORT_DIR/master.m3u8" > /dev/null 2>&1 &
+        -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_SHORT_DIR/master.m3u8" > /dev/null 2>&1 &
 
     mkdir -p "$ON_DEMAND_CORRUPT_DIR"
     ffmpeg -stream_loop -1 -i "$MEDIAS_DIR/nyan_cat.mov" -t 2 -vcodec copy -acodec copy \
-        -f hls -hls_time 1 -hls_list_size 0 "$ON_DEMAND_CORRUPT_DIR/master.m3u8" > /dev/null 2>&1; rm "$ON_DEMAND_CORRUPT_DIR"/*.ts &
+        -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_CORRUPT_DIR/master.m3u8" > /dev/null 2>&1; rm "$ON_DEMAND_CORRUPT_DIR"/*.ts &
 
     mkdir -p "$LIVE_DIR"
     ffmpeg -stream_loop -1 -re -i "$MEDIAS_DIR/nyan_cat.mov" -vcodec copy -acodec copy \
-        -f hls -hls_time 4 -hls_list_size 3 -hls_flags delete_segments "$LIVE_DIR/master.m3u8" > /dev/null 2>&1 &
+        -f hls -hls_time 4 -hls_list_size 3 -hls_flags delete_segments+round_durations "$LIVE_DIR/master.m3u8" > /dev/null 2>&1 &
 
     mkdir -p "$DVR_DIR"
     ffmpeg -stream_loop -1 -re -i "$MEDIAS_DIR/nyan_cat.mov" -vcodec copy -acodec copy \
-        -f hls -hls_time 2 -hls_list_size 10 -hls_flags delete_segments "$DVR_DIR/master.m3u8" > /dev/null 2>&1 &
+        -f hls -hls_time 4 -hls_list_size 5 -hls_flags delete_segments+round_durations "$DVR_DIR/master.m3u8" > /dev/null 2>&1 &
 
     python3 -m http.server 8123 --directory "$GENERATED_STREAMS_DIR" > /dev/null 2>&1 &
 }
