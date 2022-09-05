@@ -15,12 +15,14 @@ struct PlayerView: View {
     let url: URL
 
     @StateObject private var player = Player()
+    @State private var isUserInterfaceHidden = false
 
     var body: some View {
         ZStack {
             Group {
                 VideoView(player: player)
                 ControlsView(player: player)
+                    .opacity(isUserInterfaceHidden ? 0 : 1)
             }
             .ignoresSafeArea()
 #if os(iOS)
@@ -32,6 +34,11 @@ struct PlayerView: View {
         }
         .onAppear {
             play()
+        }
+        .onTapGesture {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                isUserInterfaceHidden.toggle()
+            }
         }
     }
 
