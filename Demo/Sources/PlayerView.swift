@@ -13,30 +13,14 @@ import UserInterface
 
 struct PlayerView: View {
     let url: URL
-    @StateObject private var player = Player()
 
-    private var playbackButtonImageName: String {
-        switch player.playbackState {
-        case .playing:
-            return "pause.circle.fill"
-        default:
-            return "play.circle.fill"
-        }
-    }
+    @StateObject private var player = Player()
 
     var body: some View {
         ZStack {
             Group {
                 VideoView(player: player)
-                Color(white: 0, opacity: 0.3)
-                Button {
-                    player.togglePlayPause()
-                } label: {
-                    Image(systemName: playbackButtonImageName)
-                        .resizable()
-                        .frame(width: 90, height: 90)
-                        .tint(.white)
-                }
+                ControlsView(player: player)
             }
             .ignoresSafeArea()
 #if os(iOS)
@@ -54,6 +38,33 @@ struct PlayerView: View {
     private func play() {
         player.append(AVPlayerItem(url: url))
         player.play()
+    }
+}
+
+extension PlayerView {
+    struct ControlsView: View {
+        @ObservedObject var player: Player
+
+        private var playbackButtonImageName: String {
+            switch player.playbackState {
+            case .playing:
+                return "pause.circle.fill"
+            default:
+                return "play.circle.fill"
+            }
+        }
+
+        var body: some View {
+            Color(white: 0, opacity: 0.3)
+            Button {
+                player.togglePlayPause()
+            } label: {
+                Image(systemName: playbackButtonImageName)
+                    .resizable()
+                    .frame(width: 90, height: 90)
+                    .tint(.white)
+            }
+        }
     }
 }
 
