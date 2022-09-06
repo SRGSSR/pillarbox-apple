@@ -17,3 +17,9 @@ struct Chapter: Decodable {
     let title: String
     let resources: [Resource]
 }
+
+extension Chapter {
+    var recommendedResource: Resource {
+        resources.first!
+    }
+}
