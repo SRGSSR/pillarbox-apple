@@ -123,7 +123,8 @@ let package = Package(
             name: "CoreBusinessTests",
             dependencies: [
                 .target(name: "Circumspect"),
-                .target(name: "CoreBusiness")
+                .target(name: "CoreBusiness"),
+                .target(name: "Player")
             ]
         ),
         .testTarget(

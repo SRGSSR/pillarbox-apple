@@ -6,7 +6,7 @@
 
 import Foundation
 
-enum Environment {
+public enum Environment {
     case production
     case stage
     case test
