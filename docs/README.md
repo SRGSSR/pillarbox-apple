@@ -2,7 +2,7 @@
 
 # Overview
 
-Pillarbox is the modern SRG SSR player ecosystem.
+Pillarbox is the modern SRG SSR player platform.
 
 ## Compatibility
 
