@@ -15,3 +15,9 @@ struct MediaComposition: Decodable {
     let chapterUrn: String
     let chapters: [Chapter]
 }
+
+extension MediaComposition {
+    var mainChapter: Chapter {
+        chapters.first { $0.urn == chapterUrn }!
+    }
+}

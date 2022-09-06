@@ -10,8 +10,8 @@ import Nimble
 import XCTest
 
 final class MediaCompositionTests: XCTestCase {
-    func testMediaComposition() {
+    func testMainChapter() {
         let mediaComposition = Mock.mediaComposition()
-        expect(mediaComposition).notTo(beNil())
+        expect(mediaComposition.mainChapter.urn).to(equal(mediaComposition.chapterUrn))
     }
 }
