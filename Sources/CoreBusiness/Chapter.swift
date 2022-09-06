@@ -7,6 +7,12 @@
 import Foundation
 
 struct Chapter: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case urn
+        case title
+        case resources = "resourceList"
+    }
+
     let urn: String
     let title: String
     let resources: [Resource]

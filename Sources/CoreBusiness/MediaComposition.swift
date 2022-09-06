@@ -7,6 +7,11 @@
 import Foundation
 
 struct MediaComposition: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case chapterUrn
+        case chapters = "chapterList"
+    }
+
     let chapterUrn: String
     let chapters: [Chapter]
 }

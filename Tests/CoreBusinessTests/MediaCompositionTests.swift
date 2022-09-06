@@ -9,8 +9,9 @@
 import Nimble
 import XCTest
 
-final class CoreBusinessTests: XCTestCase {
-    func testDummy() {
-        expect(true).to(beTrue())
+final class MediaCompositionTests: XCTestCase {
+    func testMediaComposition() {
+        let mediaComposition = Mock.mediaComposition()
+        expect(mediaComposition).notTo(beNil())
     }
 }
