@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import CoreBusiness
 import Player
 import SwiftUI
 import UserInterface
@@ -12,7 +13,7 @@ import UserInterface
 // MARK: View
 
 struct PlayerView: View {
-    let url: URL
+    let source: MediaSource
 
     @StateObject private var player = Player()
     @State private var isUserInterfaceHidden = false
@@ -43,7 +44,12 @@ struct PlayerView: View {
     }
 
     private func play() {
-        player.append(AVPlayerItem(url: url))
+        switch source {
+        case let .url(url):
+            player.append(AVPlayerItem(url: url))
+        case let .urn(urn):
+            player.append(AVPlayerItem(urn: urn))
+        }
         player.play()
     }
 }
@@ -79,6 +85,6 @@ extension PlayerView {
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerView(url: URL(string: "http://localhost::8123/valid_stream/master.m3u8")!)
+        PlayerView(source: .url(URL(string: "http://localhost::8123/valid_stream/master.m3u8")!))
     }
 }
