@@ -12,7 +12,6 @@ import XCTest
 
 final class ItemStatePublisherTests: XCTestCase {
     private let resourceLoaderDelegate = FailingResourceLoaderDelegate()
-    private let queue = DispatchQueue(label: "ch.srgssr.failing-resource-loader")
 
     func testEmpty() {
         let player = AVPlayer()
@@ -67,7 +66,7 @@ final class ItemStatePublisherTests: XCTestCase {
 
     func testResourceLoadingFailure() {
         let asset = AVURLAsset(url: TestStreams.customUrl)
-        asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: queue)
+        asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: .global())
         let item = AVPlayerItem(asset: asset)
         let player = AVPlayer(playerItem: item)
         expectEqualPublished(

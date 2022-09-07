@@ -66,7 +66,8 @@ let package = Package(
             name: "CoreBusiness",
             dependencies: [
                 .target(name: "Analytics"),
-                .target(name: "Diagnostics")
+                .target(name: "Diagnostics"),
+                .target(name: "Player")
             ]
         ),
         .target(
