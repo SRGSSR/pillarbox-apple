@@ -17,7 +17,7 @@ public final class Player: ObservableObject {
     @Published private var pulse: Pulse?
 
     /// Current playback progress.
-    @Published public var progress: PlaybackProgress = .empty {
+    @Published public var progress: PlaybackProgress = .none {
         willSet {
             guard configuration.seekBehavior == .immediate
                     || (!newValue.isInteracting && progress.isInteracting) else {

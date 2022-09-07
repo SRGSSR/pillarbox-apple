@@ -17,7 +17,7 @@ public struct PlaybackProgress: Equatable {
         case deferred
     }
 
-    static var empty: Self {
+    static var none: Self {
         PlaybackProgress(value: nil, isInteracting: false)
     }
 
