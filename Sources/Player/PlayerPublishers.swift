@@ -73,8 +73,8 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    func currentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
-        Publishers.PeriodicTimePublisher(for: self, interval: interval, queue: queue)
+    func currentTimePublisher(interval: CMTime) -> AnyPublisher<CMTime, Never> {
+        Publishers.PeriodicTimePublisher(for: self, interval: interval, queue: .global(qos: .userInteractive))
             .eraseToAnyPublisher()
     }
 
@@ -89,9 +89,9 @@ extension AVPlayer {
         .eraseToAnyPublisher()
     }
 
-    func pulsePublisher(configuration: PlayerConfiguration, queue: DispatchQueue) -> AnyPublisher<Pulse?, Never> {
+    func pulsePublisher(configuration: PlayerConfiguration) -> AnyPublisher<Pulse?, Never> {
         Publishers.CombineLatest3(
-            currentTimePublisher(interval: configuration.tick, queue: queue),
+            currentTimePublisher(interval: configuration.tick),
             itemTimeRangePublisher(configuration: configuration),
             itemDurationPublisher()
         )

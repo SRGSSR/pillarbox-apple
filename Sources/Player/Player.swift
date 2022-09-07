@@ -40,7 +40,6 @@ public final class Player: ObservableObject {
     public let rawPlayer: DequeuePlayer
 
     private let configuration: PlayerConfiguration
-    private let queue = DispatchQueue(label: "ch.srgssr.pillarbox.player")
 
     /// The items currently queued by the player.
     public var items: [AVPlayerItem] {
@@ -62,7 +61,7 @@ public final class Player: ObservableObject {
             .receive(on: DispatchQueue.main)
             .lane("player_state") { "State: \($0)" }
             .assign(to: &$playbackState)
-        rawPlayer.pulsePublisher(configuration: self.configuration, queue: queue)
+        rawPlayer.pulsePublisher(configuration: self.configuration)
             .receive(on: DispatchQueue.main)
             .lane("player_pulse") { output in
                 guard let output else { return "nil" }
