@@ -8,7 +8,12 @@ import AVFoundation
 import Combine
 
 final class AssetResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
+    private let environment: Environment
     private var cancellables = [String: AnyCancellable]()
+
+    init(environment: Environment) {
+        self.environment = environment
+    }
 
     func resourceLoader(
         _ resourceLoader: AVAssetResourceLoader,
@@ -31,7 +36,7 @@ final class AssetResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate
 
     private func processLoadingRequest(_ loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
         guard let url = loadingRequest.request.url, let urn = URLCoding.decodeUrn(from: url) else { return false }
-        cancellables[urn] = DataProvider().mediaComposition(forUrn: urn)
+        cancellables[urn] = DataProvider(environment: environment).mediaComposition(forUrn: urn)
             .map(\.mainChapter.recommendedResource)
             .sink(receiveCompletion: { completion in
                 switch completion {

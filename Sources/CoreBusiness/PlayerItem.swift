@@ -14,6 +14,10 @@ public extension AVPlayerItem {
     ///   - environment: The environment which the URN is played from.
     convenience init(urn: String, environment: Environment = .production) {
         let asset = AVURLAsset(url: URLCoding.encodeUrl(fromUrn: urn))
-        self.init(asset: asset, associatedDelegate: AssetResourceLoaderDelegate(), queue: .global(qos: .userInteractive))
+        self.init(
+            asset: asset,
+            associatedDelegate: AssetResourceLoaderDelegate(environment: environment),
+            queue: .global(qos: .userInteractive)
+        )
     }
 }
