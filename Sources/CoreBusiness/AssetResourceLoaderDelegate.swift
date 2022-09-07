@@ -10,16 +10,6 @@ import Combine
 final class AssetResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
     private var cancellables = [String: AnyCancellable]()
 
-    private static func urn(from url: URL?) -> String? {
-        guard let url,
-              let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
-              components.scheme == "urn",
-              let urnQueryItem = components.queryItems?.first(where: { $0.name == "urn" }) else {
-            return nil
-        }
-        return urnQueryItem.value
-    }
-
     func resourceLoader(
         _ resourceLoader: AVAssetResourceLoader,
         shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest
@@ -35,12 +25,12 @@ final class AssetResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate
     }
 
     func resourceLoader(_ resourceLoader: AVAssetResourceLoader, didCancel loadingRequest: AVAssetResourceLoadingRequest) {
-        guard let urn = Self.urn(from: loadingRequest.request.url) else { return }
+        guard let url = loadingRequest.request.url, let urn = URLCoding.decodeUrn(from: url) else { return }
         cancellables[urn] = nil
     }
 
     private func processLoadingRequest(_ loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
-        guard let urn = Self.urn(from: loadingRequest.request.url) else { return false }
+        guard let url = loadingRequest.request.url, let urn = URLCoding.decodeUrn(from: url) else { return false }
         cancellables[urn] = DataProvider().mediaComposition(forUrn: urn)
             .map(\.mainChapter.recommendedResource)
             .sink(receiveCompletion: { completion in

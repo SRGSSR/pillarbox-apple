@@ -8,12 +8,9 @@ import AVFoundation
 
 private var resourceLoaderDelegateKey: Void?
 
-// TODO: Move URL creation / interpretation code to a common file
-
 public extension AVPlayerItem {
     convenience init(urn: String, environment: Environment = .production) {
-        let encodedUrn = urn.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-        let asset = AVURLAsset(url: URL(string: "urn://mediacomposition?urn=\(encodedUrn)")!)
+        let asset = AVURLAsset(url: URLCoding.encodeUrl(fromUrn: urn))
         self.init(asset: asset, associatedDelegate: AssetResourceLoaderDelegate(), queue: .global(qos: .userInteractive))
     }
 
