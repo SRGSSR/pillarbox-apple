@@ -21,7 +21,7 @@ public struct PlayerConfiguration {
         set { _dvrThreshold = CMTimeMaximum(newValue, .zero) }
     }
 
-    /// Seek behavior during progress updates.
+    /// Seek behavior during progress updates. Default is `.immediate`.
     public var seekBehavior: PlaybackProgress.SeekBehavior = .immediate
 
     private var _tick = CMTime(value: 1, timescale: 1)
