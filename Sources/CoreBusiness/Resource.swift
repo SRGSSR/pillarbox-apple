@@ -7,5 +7,11 @@
 import Foundation
 
 struct Resource: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case url
+        case streamingMethod = "streaming"
+    }
+
     let url: URL
+    let streamingMethod: StreamingMethod
 }
