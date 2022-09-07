@@ -98,7 +98,7 @@ private extension DemosView {
                 }
             }
             .sheet(isPresented: $isPlayerPresented) {
-                PlayerView(source: media.source)
+                PlayerView(media: media)
             }
         }
 

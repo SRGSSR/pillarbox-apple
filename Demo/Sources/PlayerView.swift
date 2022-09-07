@@ -13,7 +13,7 @@ import UserInterface
 // MARK: View
 
 struct PlayerView: View {
-    let source: MediaSource
+    let media: Media
 
     @StateObject private var player = Player()
     @State private var isUserInterfaceHidden = false
@@ -44,7 +44,7 @@ struct PlayerView: View {
     }
 
     private func play() {
-        switch source {
+        switch media.source {
         case let .url(url):
             player.append(AVPlayerItem(url: url))
         case let .urn(urn):
@@ -84,7 +84,14 @@ extension PlayerView {
 // MARK: Preview
 
 struct PlayerView_Previews: PreviewProvider {
+    static let media = Media(
+        id: "id",
+        title: "Title",
+        description: "Description",
+        source: .url(URL(string: "http://localhost::8123/valid_stream/master.m3u8")!)
+    )
+
     static var previews: some View {
-        PlayerView(source: .url(URL(string: "http://localhost::8123/valid_stream/master.m3u8")!))
+        PlayerView(media: media)
     }
 }
