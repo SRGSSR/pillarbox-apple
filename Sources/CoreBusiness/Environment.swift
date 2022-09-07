@@ -6,12 +6,16 @@
 
 import Foundation
 
+/// Environment.
 public enum Environment {
+    /// Production.
     case production
+    /// State.
     case stage
+    /// Test.
     case test
 
-    var url: URL {
+    internal var url: URL {
         switch self {
         case .production:
             return URL(string: "https://il.srgssr.ch")!
