@@ -19,7 +19,7 @@ struct Chapter: Decodable {
 }
 
 extension Chapter {
-    var recommendedResource: Resource {
-        resources.first!
+    var recommendedResource: Resource? {
+        resources.first { StreamingMethod.supportedMethods.contains($0.streamingMethod) }
     }
 }

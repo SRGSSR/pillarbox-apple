@@ -38,6 +38,12 @@ final class AssetResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate
         guard let url = loadingRequest.request.url, let urn = URLCoding.decodeUrn(from: url) else { return false }
         cancellables[urn] = DataProvider(environment: environment).mediaComposition(forUrn: urn)
             .map(\.mainChapter.recommendedResource)
+            .tryMap { resource in
+                guard let resource else {
+                    throw ResourceLoadingError.notFound
+                }
+                return resource
+            }
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:

@@ -16,4 +16,8 @@ enum StreamingMethod: String, Decodable {
     case https = "HTTPS"
     case dash = "DASH"
     case unknown = "UNKNOWN"
+
+    static var supportedMethods: [StreamingMethod] {
+        [.progressive, .m3uPlaylist, .hls, .http, .https]
+    }
 }
