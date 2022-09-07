@@ -17,12 +17,6 @@ struct DemosView: View {
             source: .url(URL(string: "https://swi-vod.akamaized.net/videoJson/47603186/master.m3u8")!)
         ),
         Media(
-            id: "assets:vod_hls_urn",
-            title: "VOD - HLS (URN)",
-            description: "The circular economy: A new way of making and using things",
-            source: .urn("urn:swi:video:47868616")
-        ),
-        Media(
             id: "assets:vod_hls_short",
             title: "VOD - HLS (short)",
             description: "Des violents orages ont touché Ajaccio, chef-lieu de la Corse, jeudi",
@@ -69,6 +63,36 @@ struct DemosView: View {
             title: "Audio livestream with DVR - HLS",
             description: "Couleur 3",
             source: .url(URL(string: "https://lsaplus.swisstxt.ch/audio/couleur3_96.stream/playlist.m3u8")!)
+        ),
+        Media(
+            id: "assets:vod_hls_16_9_urn",
+            title: "VOD 16:9 - HLS (URN)",
+            description: "Le 19h30",
+            source: .urn("urn:rts:video:6820736")
+        ),
+        Media(
+            id: "assets:vod_hls_1_1_urn",
+            title: "VOD 1:1 - HLS (URN)",
+            description: "Test carré",
+            source: .urn("urn:rts:video:8393241")
+        ),
+        Media(
+            id: "assets:vod_hls_9_16_urn",
+            title: "VOD 9:16 - HLS (URN)",
+            description: "Test 9:16",
+            source: .urn("urn:rts:video:8412286")
+        ),
+        Media(
+            id: "assets:audio_live_dvr_hls_urn",
+            title: "Audio livestream with DVR - HLS (URN)",
+            description: "Couleur 3 en direct",
+            source: .urn("urn:rts:audio:3262363")
+        ),
+        Media(
+            id: "assets:aod_mp3_urn",
+            title: "AOD - MP3 (URN)",
+            description: "Il lavoro di TerraProject per una fotografia documentaria",
+            source: .urn("urn:rsi:audio:8833144")
         )
     ]
 
