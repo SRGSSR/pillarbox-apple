@@ -14,7 +14,7 @@ final class CurrentTimePublisherTests: XCTestCase {
     func testEmpty() {
         let player = AVPlayer()
         expectNothingPublished(
-            from: player.currentTimePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main),
+            from: player.currentTimePublisher(interval: CMTime(value: 1, timescale: 1)),
             during: 2
         ) {
             player.play()
@@ -31,7 +31,7 @@ final class CurrentTimePublisherTests: XCTestCase {
                 CMTime(value: 2, timescale: 1),
                 CMTime(value: 3, timescale: 1)
             ],
-            from: player.currentTimePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main),
+            from: player.currentTimePublisher(interval: CMTime(value: 1, timescale: 1)),
             to: beClose(within: 0.5),
             during: 4
         ) {
@@ -44,7 +44,7 @@ final class CurrentTimePublisherTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         expectEqualPublished(
             values: [.zero],
-            from: player.currentTimePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main),
+            from: player.currentTimePublisher(interval: CMTime(value: 1, timescale: 1)),
             during: 2
         ) {
             player.play()
