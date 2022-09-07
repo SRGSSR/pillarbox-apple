@@ -9,6 +9,14 @@ import Foundation
 
 /// Playback progress.
 public struct PlaybackProgress: Equatable {
+    /// Seek behavior during progress updates.
+    public enum SeekBehavior {
+        /// Seek immediately when updated.
+        case immediate
+        /// Deferred until interaction ends (see `isInteracting`).
+        case deferred
+    }
+
     static var empty: Self {
         PlaybackProgress(value: nil, isInteracting: false)
     }
