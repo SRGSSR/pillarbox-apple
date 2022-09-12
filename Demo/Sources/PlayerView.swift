@@ -29,10 +29,12 @@ struct PlayerView: View {
 #if os(iOS)
             Slider(player: player)
                 .tint(.white)
+                .opacity(isUserInterfaceHidden ? 0 : 1)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
 #endif
         }
+        .background(.black)
         .onAppear {
             play()
         }

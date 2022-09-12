@@ -16,12 +16,12 @@ struct StoriesView: View {
     var body: some View {
         TabView(selection: $model.currentStory) {
             ForEach(model.stories) { story in
-                VideoView(player: model.player(for: story))
+                VideoView(player: model.player(for: story), gravity: .resizeAspectFill)
                     .tag(story)
-                    .background(Color.red)
                     .ignoresSafeArea()
             }
         }
+        .background(.black)
         .tabViewStyle(.page)
         .ignoresSafeArea()
     }

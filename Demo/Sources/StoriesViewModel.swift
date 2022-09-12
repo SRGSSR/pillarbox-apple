@@ -7,6 +7,7 @@
 import AVFoundation
 import Combine
 import Foundation
+import OrderedCollections
 import Player
 
 struct Story: Identifiable, Hashable {
@@ -29,34 +30,61 @@ struct Story: Identifiable, Hashable {
 
 @MainActor
 final class StoriesViewModel: ObservableObject {
-    let stories: [Story]
-    var players: [Story: Player]
+    private static let preloadDistance = 1
+    private var players = OrderedDictionary<Story, Player?>()
 
-    @Published var currentStory: Story
+    var stories: [Story] {
+        Array(players.keys)
+    }
+
+    @Published var currentStory: Story {
+        willSet {
+            player(for: currentStory).pause()
+            players = Self.players(for: stories, around: newValue, reusedFrom: players)
+            player(for: newValue).play()
+        }
+    }
 
     private static func player(for story: Story) -> Player {
         let item = AVPlayerItem(url: story.url)
         return Player(item: item)
     }
 
-    private static func players(for stories: [Story], reusedFrom players: [Story: Player]) -> [Story: Player] {
-        stories.reduce([Story: Player]()) { partialResult, story in
-            var updatedPlayers = partialResult
-            updatedPlayers[story] = players[story] ?? player(for: story)
-            return updatedPlayers
+    private static func players(
+        for stories: [Story],
+        around currentStory: Story,
+        reusedFrom players: OrderedDictionary<Story, Player?>
+    ) -> OrderedDictionary<Story, Player?> {
+        guard let currentIndex = stories.firstIndex(of: currentStory) else { return OrderedDictionary() }
+        return stories.enumerated().reduce(into: OrderedDictionary<Story, Player?>()) { partialResult, item in
+            if abs(item.offset - currentIndex) <= preloadDistance {
+                if let player = players[item.element], let player {
+                    partialResult.updateValue(player, forKey: item.element)
+                }
+                else {
+                    partialResult.updateValue(player(for: item.element), forKey: item.element)
+                }
+            }
+            else {
+                partialResult.updateValue(nil, forKey: item.element)
+            }
         }
     }
 
     init(stories: [Story]) {
         precondition(!stories.isEmpty)
-        self.stories = stories
-        currentStory = stories.first!
-        players = Self.players(for: stories, reusedFrom: [:])
+        let currentStory = stories.first!
+        self.currentStory = currentStory
+        players = Self.players(for: stories, around: currentStory, reusedFrom: [:])
+        player(for: currentStory).play()
     }
 
     func player(for story: Story) -> Player {
-        // TODO: If near current story (+1, 0, -1), check current players and return one playing the current content,
-        //       if any. Otherwise instantiate with new item. Outside these 3 players return dummy Player()
-        return players[story] ?? Player()
+        if let player = players[story], let player {
+            return player
+        }
+        else {
+            return Player()
+        }
     }
 }

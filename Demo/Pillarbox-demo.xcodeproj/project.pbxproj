@@ -14,6 +14,7 @@
 		6F917C0E2887EA8E004113BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F917C082887EA8E004113BA /* Assets.xcassets */; };
 		6F917C0F2887EA8E004113BA /* DemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F917C0A2887EA8E004113BA /* DemoApp.swift */; };
 		6F917C112887EA8E004113BA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F917C0D2887EA8E004113BA /* Preview Assets.xcassets */; };
+		6F9B5BC928CF8C530074B9E0 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 6F9B5BC828CF8C530074B9E0 /* OrderedCollections */; };
 		6F9DDB44288FE90E0069B687 /* Player in Frameworks */ = {isa = PBXBuildFile; productRef = 6F9DDB43288FE90E0069B687 /* Player */; };
 		6FB553B228C3AF020067CFC4 /* StoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB553B128C3AF020067CFC4 /* StoriesView.swift */; };
 		6FBEFCEB289132DB004BE625 /* UserInterface in Frameworks */ = {isa = PBXBuildFile; productRef = 6FBEFCEA289132DB004BE625 /* UserInterface */; };
@@ -50,6 +51,7 @@
 			files = (
 				6F36C62D28910538000DD160 /* CoreBusiness in Frameworks */,
 				6F9DDB44288FE90E0069B687 /* Player in Frameworks */,
+				6F9B5BC928CF8C530074B9E0 /* OrderedCollections in Frameworks */,
 				6FBEFCEB289132DB004BE625 /* UserInterface in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -181,6 +183,7 @@
 				6F9DDB43288FE90E0069B687 /* Player */,
 				6F36C62C28910538000DD160 /* CoreBusiness */,
 				6FBEFCEA289132DB004BE625 /* UserInterface */,
+				6F9B5BC828CF8C530074B9E0 /* OrderedCollections */,
 			);
 			productName = PillarboxDemo;
 			productReference = 6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */;
@@ -210,6 +213,9 @@
 				Base,
 			);
 			mainGroup = 6F05B8CC2887E934005D75E3;
+			packageReferences = (
+				6F9B5BC728CF8C530074B9E0 /* XCRemoteSwiftPackageReference "swift-collections" */,
+			);
 			productRefGroup = 6F05B8D62887E934005D75E3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -514,10 +520,26 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		6F9B5BC728CF8C530074B9E0 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		6F36C62C28910538000DD160 /* CoreBusiness */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CoreBusiness;
+		};
+		6F9B5BC828CF8C530074B9E0 /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6F9B5BC728CF8C530074B9E0 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
 		};
 		6F9DDB43288FE90E0069B687 /* Player */ = {
 			isa = XCSwiftPackageProductDependency;
