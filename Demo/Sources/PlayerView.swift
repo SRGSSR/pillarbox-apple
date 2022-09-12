@@ -54,29 +54,27 @@ struct PlayerView: View {
     }
 }
 
-extension PlayerView {
-    struct ControlsView: View {
-        @ObservedObject var player: Player
+private struct ControlsView: View {
+    @ObservedObject var player: Player
 
-        private var playbackButtonImageName: String {
-            switch player.playbackState {
-            case .playing:
-                return "pause.circle.fill"
-            default:
-                return "play.circle.fill"
-            }
+    private var playbackButtonImageName: String {
+        switch player.playbackState {
+        case .playing:
+            return "pause.circle.fill"
+        default:
+            return "play.circle.fill"
         }
+    }
 
-        var body: some View {
-            Color(white: 0, opacity: 0.3)
-            Button {
-                player.togglePlayPause()
-            } label: {
-                Image(systemName: playbackButtonImageName)
-                    .resizable()
-                    .frame(width: 90, height: 90)
-                    .tint(.white)
-            }
+    var body: some View {
+        Color(white: 0, opacity: 0.3)
+        Button {
+            player.togglePlayPause()
+        } label: {
+            Image(systemName: playbackButtonImageName)
+                .resizable()
+                .frame(width: 90, height: 90)
+                .tint(.white)
         }
     }
 }

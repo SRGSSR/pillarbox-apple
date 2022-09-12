@@ -8,7 +8,7 @@ import SwiftUI
 
 // MARK: View
 
-struct DemosView: View {
+struct MediasView: View {
     private let medias = [
         Media(
             id: "assets:vod_hls",
@@ -106,29 +106,27 @@ struct DemosView: View {
 
 // MARK: Cells
 
-private extension DemosView {
-    private struct MediaCell: View {
-        let media: Media
-        @State var isPlayerPresented = false
+private struct MediaCell: View {
+    let media: Media
+    @State var isPlayerPresented = false
 
-        var body: some View {
-            Button(action: play) {
-                VStack(alignment: .leading) {
-                    Text(media.title)
-                        .foregroundColor(.primary)
-                    Text(media.description)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-            }
-            .sheet(isPresented: $isPlayerPresented) {
-                PlayerView(media: media)
+    var body: some View {
+        Button(action: play) {
+            VStack(alignment: .leading) {
+                Text(media.title)
+                    .foregroundColor(.primary)
+                Text(media.description)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
             }
         }
-
-        private func play() {
-            isPlayerPresented.toggle()
+        .sheet(isPresented: $isPlayerPresented) {
+            PlayerView(media: media)
         }
+    }
+
+    private func play() {
+        isPlayerPresented.toggle()
     }
 }
 
@@ -137,7 +135,7 @@ private extension DemosView {
 struct DemosView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            DemosView()
+            MediasView()
         }
     }
 }
