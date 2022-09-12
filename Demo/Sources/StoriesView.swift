@@ -34,9 +34,11 @@ struct StoryView: View {
         ZStack {
             VideoView(player: player, gravity: .resizeAspectFill)
                 .ignoresSafeArea()
-            ProgressView(value: player.progress.value)
-                .tint(.white)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            if let value = player.progress.value {
+                ProgressView(value: value)
+                    .tint(.white)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            }
         }
     }
 }
