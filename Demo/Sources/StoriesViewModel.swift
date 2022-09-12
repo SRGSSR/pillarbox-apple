@@ -57,16 +57,17 @@ final class StoriesViewModel: ObservableObject {
     ) -> OrderedDictionary<Story, Player?> {
         guard let currentIndex = stories.firstIndex(of: currentStory) else { return OrderedDictionary() }
         return stories.enumerated().reduce(into: OrderedDictionary<Story, Player?>()) { partialResult, item in
+            let story = item.element
             if abs(item.offset - currentIndex) <= preloadDistance {
-                if let player = players[item.element], let player {
-                    partialResult.updateValue(player, forKey: item.element)
+                if let player = players[story], let player {
+                    partialResult.updateValue(player, forKey: story)
                 }
                 else {
-                    partialResult.updateValue(player(for: item.element), forKey: item.element)
+                    partialResult.updateValue(player(for: story), forKey: story)
                 }
             }
             else {
-                partialResult.updateValue(nil, forKey: item.element)
+                partialResult.updateValue(nil, forKey: story)
             }
         }
     }
