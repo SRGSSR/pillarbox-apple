@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import Player
 import SwiftUI
 import UserInterface
 
@@ -16,14 +17,27 @@ struct StoriesView: View {
     var body: some View {
         TabView(selection: $model.currentStory) {
             ForEach(model.stories) { story in
-                VideoView(player: model.player(for: story), gravity: .resizeAspectFill)
+                StoryView(player: model.player(for: story))
                     .tag(story)
-                    .ignoresSafeArea()
             }
         }
         .background(.black)
         .tabViewStyle(.page)
         .ignoresSafeArea()
+    }
+}
+
+struct StoryView: View {
+    @ObservedObject var player: Player
+
+    var body: some View {
+        ZStack {
+            VideoView(player: player, gravity: .resizeAspectFill)
+                .ignoresSafeArea()
+            ProgressView(value: player.progress.value)
+                .tint(.white)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        }
     }
 }
 
