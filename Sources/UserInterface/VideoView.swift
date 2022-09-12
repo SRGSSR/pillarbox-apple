@@ -26,13 +26,18 @@ public final class VideoLayerView: UIView {
 
 public struct VideoView: UIViewRepresentable {
     let player: Player?
+    let backgroundColor: Color
 
-    public init(player: Player?) {
+    public init(player: Player?, backgroundColor: Color = .black) {
         self.player = player
+        self.backgroundColor = backgroundColor
     }
 
     public func makeUIView(context: Context) -> VideoLayerView {
         let view = VideoLayerView()
+        if let backgroundColor = backgroundColor.cgColor {
+            view.backgroundColor = UIColor(cgColor: backgroundColor)
+        }
         view.player = player?.rawPlayer
         return view
     }
