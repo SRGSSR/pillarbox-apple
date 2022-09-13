@@ -11,9 +11,6 @@ import OrderedCollections
 import Player
 
 struct Story: Identifiable, Hashable {
-    let id: Int
-    let url: URL
-
     static let stories: [Story] = [
         URL(string: "https://rts-vod-amd.akamaized.net/ww/13270535/d47afd3d-a0ba-3b59-a3ed-d806097b8a7e/master.m3u8")!,
         URL(string: "https://rts-vod-amd.akamaized.net/ww/13228000/afda78a2-b04b-346c-b01c-00e6a617b993/master.m3u8")!,
@@ -26,6 +23,9 @@ struct Story: Identifiable, Hashable {
         URL(string: "https://rts-vod-amd.akamaized.net/ww/13048001/e7c5b992-feb6-3782-a512-912e97318a86/master.m3u8")!,
         URL(string: "https://rts-vod-amd.akamaized.net/ww/13047962/dd34844b-c569-35e5-8d8b-7134e9d8884c/master.m3u8")!
     ].enumerated().map { Story(id: $0, url: $1) }
+
+    let id: Int
+    let url: URL
 }
 
 @MainActor
@@ -43,6 +43,14 @@ final class StoriesViewModel: ObservableObject {
             players = Self.players(for: stories, around: newValue, reusedFrom: players)
             player(for: newValue).play()
         }
+    }
+
+    init(stories: [Story]) {
+        precondition(!stories.isEmpty)
+        let currentStory = stories.first!
+        self.currentStory = currentStory
+        players = Self.players(for: stories, around: currentStory, reusedFrom: [:])
+        player(for: currentStory).play()
     }
 
     private static func player(for story: Story) -> Player {
@@ -70,14 +78,6 @@ final class StoriesViewModel: ObservableObject {
                 partialResult.updateValue(nil, forKey: story)
             }
         }
-    }
-
-    init(stories: [Story]) {
-        precondition(!stories.isEmpty)
-        let currentStory = stories.first!
-        self.currentStory = currentStory
-        players = Self.players(for: stories, around: currentStory, reusedFrom: [:])
-        player(for: currentStory).play()
     }
 
     func player(for story: Story) -> Player {

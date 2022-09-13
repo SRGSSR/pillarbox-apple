@@ -6,20 +6,6 @@
 
 import SwiftUI
 
-@main
-struct DemoApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-
-    var body: some Scene {
-        WindowGroup {
-            TabView {
-                MediasTab()
-                ShowcaseTab()
-            }
-        }
-    }
-}
-
 private struct MediasTab: View {
     var body: some View {
         NavigationStack {
@@ -38,6 +24,20 @@ private struct ShowcaseTab: View {
         }
         .tabItem {
             Label("Showcase", systemImage: "text.book.closed")
+        }
+    }
+}
+
+@main
+struct DemoApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+
+    var body: some Scene {
+        WindowGroup {
+            TabView {
+                MediasTab()
+                ShowcaseTab()
+            }
         }
     }
 }

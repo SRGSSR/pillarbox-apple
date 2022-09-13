@@ -11,6 +11,22 @@ import UserInterface
 
 // MARK: View
 
+private struct StoryView: View {
+    @ObservedObject var player: Player
+
+    var body: some View {
+        ZStack {
+            VideoView(player: player, gravity: .resizeAspectFill)
+                .ignoresSafeArea()
+            if let value = player.progress.value {
+                ProgressView(value: value)
+                    .tint(.white)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            }
+        }
+    }
+}
+
 struct StoriesView: View {
     @StateObject private var model = StoriesViewModel(stories: Story.stories)
 
@@ -24,22 +40,6 @@ struct StoriesView: View {
         .background(.black)
         .tabViewStyle(.page)
         .ignoresSafeArea()
-    }
-}
-
-struct StoryView: View {
-    @ObservedObject var player: Player
-
-    var body: some View {
-        ZStack {
-            VideoView(player: player, gravity: .resizeAspectFill)
-                .ignoresSafeArea()
-            if let value = player.progress.value {
-                ProgressView(value: value)
-                    .tint(.white)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            }
-        }
     }
 }
 

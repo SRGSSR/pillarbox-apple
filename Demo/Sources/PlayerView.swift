@@ -12,6 +12,31 @@ import UserInterface
 
 // MARK: View
 
+private struct ControlsView: View {
+    @ObservedObject var player: Player
+
+    private var playbackButtonImageName: String {
+        switch player.playbackState {
+        case .playing:
+            return "pause.circle.fill"
+        default:
+            return "play.circle.fill"
+        }
+    }
+
+    var body: some View {
+        Color(white: 0, opacity: 0.3)
+        Button {
+            player.togglePlayPause()
+        } label: {
+            Image(systemName: playbackButtonImageName)
+                .resizable()
+                .frame(width: 90, height: 90)
+                .tint(.white)
+        }
+    }
+}
+
 struct PlayerView: View {
     let media: Media
 
@@ -53,31 +78,6 @@ struct PlayerView: View {
             player.append(AVPlayerItem(urn: urn))
         }
         player.play()
-    }
-}
-
-private struct ControlsView: View {
-    @ObservedObject var player: Player
-
-    private var playbackButtonImageName: String {
-        switch player.playbackState {
-        case .playing:
-            return "pause.circle.fill"
-        default:
-            return "play.circle.fill"
-        }
-    }
-
-    var body: some View {
-        Color(white: 0, opacity: 0.3)
-        Button {
-            player.togglePlayPause()
-        } label: {
-            Image(systemName: playbackButtonImageName)
-                .resizable()
-                .frame(width: 90, height: 90)
-                .tint(.white)
-        }
     }
 }
 

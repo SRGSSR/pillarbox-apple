@@ -16,11 +16,11 @@ struct TwinsView: View {
     @State private var mode: Mode = .both
 
     private var topPlayer: Player? {
-        return mode != .bottom ? player : nil
+        mode != .bottom ? player : nil
     }
 
     private var bottomPlayer: Player? {
-        return mode != .top ? player : nil
+        mode != .top ? player : nil
     }
 
     var body: some View {

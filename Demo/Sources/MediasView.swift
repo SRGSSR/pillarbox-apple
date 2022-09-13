@@ -8,6 +8,30 @@ import SwiftUI
 
 // MARK: View
 
+private struct MediaCell: View {
+    let media: Media
+    @State var isPlayerPresented = false
+
+    var body: some View {
+        Button(action: play) {
+            VStack(alignment: .leading) {
+                Text(media.title)
+                    .foregroundColor(.primary)
+                Text(media.description)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .sheet(isPresented: $isPlayerPresented) {
+            PlayerView(media: media)
+        }
+    }
+
+    private func play() {
+        isPlayerPresented.toggle()
+    }
+}
+
 struct MediasView: View {
     private let medias = [
         Media(
@@ -101,32 +125,6 @@ struct MediasView: View {
             MediaCell(media: media)
         }
         .navigationTitle("Demos")
-    }
-}
-
-// MARK: Cells
-
-private struct MediaCell: View {
-    let media: Media
-    @State var isPlayerPresented = false
-
-    var body: some View {
-        Button(action: play) {
-            VStack(alignment: .leading) {
-                Text(media.title)
-                    .foregroundColor(.primary)
-                Text(media.description)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-        }
-        .sheet(isPresented: $isPlayerPresented) {
-            PlayerView(media: media)
-        }
-    }
-
-    private func play() {
-        isPlayerPresented.toggle()
     }
 }
 
