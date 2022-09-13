@@ -41,6 +41,9 @@ struct ShowcaseView: View {
             Cell(title: "Link") {
                 LinkView()
             }
+            Cell(title: "Wrapped") {
+                WrappedView()
+            }
         }
         .navigationTitle("Showcase")
     }
