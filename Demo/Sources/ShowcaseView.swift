@@ -20,6 +20,9 @@ struct ShowcaseView: View {
             Cell(title: "Multi") {
                 MultiView()
             }
+            Cell(title: "Video link") {
+                VideoLinkView()
+            }
         }
         .navigationTitle("Showcase")
     }

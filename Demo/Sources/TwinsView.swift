@@ -37,6 +37,7 @@ struct TwinsView: View {
                 Text("Bottom").tag(Mode.bottom)
             }
             .pickerStyle(.segmented)
+            .padding()
         }
         .onAppear {
             play()
