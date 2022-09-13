@@ -79,7 +79,9 @@ struct PlayerView: View {
     }
 
     private func play() {
-        player.append(media.source.playerItem)
+        if let item = media.source.playerItem {
+            player.append(item)
+        }
         player.play()
     }
 }

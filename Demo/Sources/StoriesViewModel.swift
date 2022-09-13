@@ -54,7 +54,12 @@ final class StoriesViewModel: ObservableObject {
     }
 
     private static func player(for story: Story) -> Player {
-        Player(item: story.source.playerItem)
+        if let item = story.source.playerItem {
+            return Player(item: item)
+        }
+        else {
+            return Player()
+        }
     }
 
     private static func players(

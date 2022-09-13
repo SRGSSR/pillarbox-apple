@@ -117,6 +117,18 @@ struct MediasView: View {
             title: "AOD - MP3 (URN)",
             description: "Il lavoro di TerraProject per una fotografia documentaria",
             source: .urn("urn:rsi:audio:8833144")
+        ),
+        Media(
+            id: "assets:unknown",
+            title: "Unknown media",
+            description: "This media does not exist",
+            source: .urn("urn:srf:video:unknown")
+        ),
+        Media(
+            id: "assets:empty",
+            title: "Empty",
+            description: "No media is provided",
+            source: .urn("urn:srf:video:unknown")
         )
     ]
 
