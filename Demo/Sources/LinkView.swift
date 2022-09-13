@@ -11,14 +11,14 @@ import UserInterface
 
 // MARK: View
 
-struct VideoLinkView: View {
+struct LinkView: View {
     @StateObject private var player = Player()
     @State private var isDisplayed = true
 
     var body: some View {
         VStack {
             VideoView(player: isDisplayed ? player : nil)
-            Toggle("Player content displayed", isOn: $isDisplayed)
+            Toggle("Content displayed", isOn: $isDisplayed)
                 .padding()
         }
         .onAppear {
@@ -35,8 +35,8 @@ struct VideoLinkView: View {
 
 // MARK: Preview
 
-struct VideoLinkView_Previews: PreviewProvider {
+struct LinkView_Previews: PreviewProvider {
     static var previews: some View {
-        VideoLinkView()
+        LinkView()
     }
 }
