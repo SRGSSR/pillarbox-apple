@@ -126,6 +126,10 @@ To have TeamCity deliver nightly builds of the demo application to TestFlight wh
 
 For comprehensive results a second _Demo Nightly tvOS_ configuration must be created for tvOS. This is easily achieved by copying the configuration you just created and editing the _Command Line_ build step to execute `make deliver-demo-nightly-tvos`.
 
+### Troubleshooting
+
+If submission to App Store Connect fails with a timeout, please check the [service status](https://developer.apple.com/system-status/) and, if status is all green, [login](https://appstoreconnect.apple.com) to check the binary status directly. A manual action (e.g. compliance) might namely sometimes be required.
+
 ## Demo releases
 
 To have TeamCity deliver release builds of the demo application to TestFlight manually when required:
