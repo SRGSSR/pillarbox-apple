@@ -67,13 +67,12 @@ struct PlayerView: View {
 #endif
         }
         .background(.black)
+        .animation(.easeInOut(duration: 0.2), value: isUserInterfaceHidden)
         .onAppear {
             play()
         }
         .onTapGesture {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                isUserInterfaceHidden.toggle()
-            }
+            isUserInterfaceHidden.toggle()
         }
     }
 
