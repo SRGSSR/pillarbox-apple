@@ -12,8 +12,8 @@ import UserInterface
 // MARK: View
 
 struct MultiView: View {
-    @StateObject var topPlayer = Player()
-    @StateObject var bottomPlayer = Player()
+    @StateObject private var topPlayer = Player()
+    @StateObject private var bottomPlayer = Player()
 
     var body: some View {
         VStack {

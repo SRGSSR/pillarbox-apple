@@ -6,11 +6,6 @@
 
 import Foundation
 
-enum MediaSource {
-    case url(URL)
-    case urn(String)
-}
-
 struct Media: Identifiable {
     let id: String
     let title: String

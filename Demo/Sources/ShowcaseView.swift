@@ -10,6 +10,7 @@ import SwiftUI
 
 private struct Cell<Presented: View>: View {
     let title: String
+
     @ViewBuilder var presented: () -> Presented
     @State private var isPresented = false
 

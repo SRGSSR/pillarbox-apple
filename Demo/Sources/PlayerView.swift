@@ -5,7 +5,6 @@
 //
 
 import AVFoundation
-import CoreBusiness
 import Player
 import SwiftUI
 import UserInterface
@@ -71,12 +70,7 @@ struct PlayerView: View {
     }
 
     private func play() {
-        switch media.source {
-        case let .url(url):
-            player.append(AVPlayerItem(url: url))
-        case let .urn(urn):
-            player.append(AVPlayerItem(urn: urn))
-        }
+        player.append(media.source.playerItem)
         player.play()
     }
 }
