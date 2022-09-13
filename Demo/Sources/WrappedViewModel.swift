@@ -9,5 +9,5 @@ import Player
 
 @MainActor
 final class WrappedViewModel: ObservableObject {
-    @Published var player: Player?
+    @Published var player = Player()
 }

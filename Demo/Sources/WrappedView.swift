@@ -41,7 +41,7 @@ struct WrappedView: View {
     }
 
     private func stop() {
-        model.player = nil
+        model.player = Player()
     }
 }
 

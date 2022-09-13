@@ -25,10 +25,10 @@ public final class VideoLayerView: UIView {
 }
 
 public struct VideoView: UIViewRepresentable {
-    let player: Player?
+    @ObservedObject var player: Player
     let gravity: AVLayerVideoGravity
 
-    public init(player: Player?, gravity: AVLayerVideoGravity = .resizeAspect) {
+    public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect) {
         self.player = player
         self.gravity = gravity
     }
@@ -36,12 +36,12 @@ public struct VideoView: UIViewRepresentable {
     public func makeUIView(context: Context) -> VideoLayerView {
         let view = VideoLayerView()
         view.backgroundColor = .clear
-        view.player = player?.rawPlayer
+        view.player = player.rawPlayer
         view.playerLayer.videoGravity = gravity
         return view
     }
 
     public func updateUIView(_ uiView: VideoLayerView, context: Context) {
-        uiView.player = player?.rawPlayer
+        uiView.player = player.rawPlayer
     }
 }

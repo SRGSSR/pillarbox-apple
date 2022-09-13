@@ -17,7 +17,7 @@ struct LinkView: View {
 
     var body: some View {
         VStack {
-            VideoView(player: isDisplayed ? player : nil)
+            VideoView(player: isDisplayed ? player : Player())
             Toggle("Content displayed", isOn: $isDisplayed)
                 .padding()
         }
