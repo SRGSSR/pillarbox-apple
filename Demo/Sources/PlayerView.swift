@@ -40,7 +40,7 @@ private struct ControlsView: View {
             }
         }
         .tint(.white)
-        .animation(.easeInOut(duration: 0.1), value: player.isBuffering)
+        .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
     }
 }
 
