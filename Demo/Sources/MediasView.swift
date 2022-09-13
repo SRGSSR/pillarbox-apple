@@ -124,7 +124,7 @@ struct MediasView: View {
         List(medias) { media in
             MediaCell(media: media)
         }
-        .navigationTitle("Demos")
+        .navigationTitle("Medias")
     }
 }
 
