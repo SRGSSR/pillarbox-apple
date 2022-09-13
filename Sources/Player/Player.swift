@@ -110,6 +110,7 @@ public final class Player: ObservableObject {
     ///   - item: The item to insert.
     ///   - afterItem: The item after which the new item must be inserted. If `nil` the item is appended.
     public func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
+        guard rawPlayer.canInsert(item, after: afterItem) else { return }
         rawPlayer.insert(item, after: afterItem)
     }
 
