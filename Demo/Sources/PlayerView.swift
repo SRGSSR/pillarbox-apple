@@ -25,14 +25,21 @@ private struct ControlsView: View {
 
     var body: some View {
         Color(white: 0, opacity: 0.3)
-        Button {
-            player.togglePlayPause()
-        } label: {
-            Image(systemName: playbackButtonImageName)
-                .resizable()
+        Group {
+            if player.isBuffering {
+                ProgressView()
+            }
+            else {
+                Button {
+                    player.togglePlayPause()
+                } label: {
+                    Image(systemName: playbackButtonImageName)
+                        .resizable()
+                }
                 .frame(width: 90, height: 90)
-                .tint(.white)
+            }
         }
+        .tint(.white)
     }
 }
 
