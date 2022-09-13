@@ -24,6 +24,7 @@
 		6FCD6A1B28AD1B9200FCE4EA /* MediasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD6A1A28AD1B9200FCE4EA /* MediasView.swift */; };
 		6FD1F3A128D0490200DF8CF1 /* MultiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1F3A028D0490200DF8CF1 /* MultiView.swift */; };
 		6FD1F3A328D04AE200DF8CF1 /* LinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1F3A228D04AE200DF8CF1 /* LinkView.swift */; };
+		6FD1F3A728D0646200DF8CF1 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1F3A628D0646200DF8CF1 /* Navigation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		6FCD6A1A28AD1B9200FCE4EA /* MediasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediasView.swift; sourceTree = "<group>"; };
 		6FD1F3A028D0490200DF8CF1 /* MultiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiView.swift; sourceTree = "<group>"; };
 		6FD1F3A228D04AE200DF8CF1 /* LinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkView.swift; sourceTree = "<group>"; };
+		6FD1F3A628D0646200DF8CF1 /* Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +142,7 @@
 				6F482FC928C7A4A200CBC639 /* Media.swift */,
 				6FCD6A1A28AD1B9200FCE4EA /* MediasView.swift */,
 				6FD1F3A028D0490200DF8CF1 /* MultiView.swift */,
+				6FD1F3A628D0646200DF8CF1 /* Navigation.swift */,
 				6FCD6A1828AD158E00FCE4EA /* PlayerView.swift */,
 				6F3F15A628CEEC6900CA2BD1 /* ShowcaseView.swift */,
 				6FB553B128C3AF020067CFC4 /* StoriesView.swift */,
@@ -254,6 +257,7 @@
 				6FCA8D7C28AD2AB900CF75FB /* AppDelegate.swift in Sources */,
 				6FD1F3A328D04AE200DF8CF1 /* LinkView.swift in Sources */,
 				6FB553B228C3AF020067CFC4 /* StoriesView.swift in Sources */,
+				6FD1F3A728D0646200DF8CF1 /* Navigation.swift in Sources */,
 				6FCD6A1928AD158E00FCE4EA /* PlayerView.swift in Sources */,
 				6FCD6A1B28AD1B9200FCE4EA /* MediasView.swift in Sources */,
 				6F917C0F2887EA8E004113BA /* DemoApp.swift in Sources */,
