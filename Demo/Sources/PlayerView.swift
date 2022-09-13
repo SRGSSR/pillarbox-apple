@@ -25,7 +25,7 @@ private struct ControlsView: View {
 
     var body: some View {
         Color(white: 0, opacity: 0.3)
-        Group {
+        ZStack {
             if player.isBuffering {
                 ProgressView()
             }
@@ -40,6 +40,7 @@ private struct ControlsView: View {
             }
         }
         .tint(.white)
+        .animation(.easeInOut(duration: 0.1), value: player.isBuffering)
     }
 }
 
