@@ -13,8 +13,15 @@ import TimelaneCombine
 public final class Player: ObservableObject {
     /// Current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle
-    /// Current pulse.
-    @Published private var pulse: Pulse?
+
+    /// States whether the player is currently buffering.
+    @Published public var isBuffering = false
+
+    /// States whether the player buffer is currently empty.
+    @Published public var isBufferEmpty = true
+
+    /// States whether the player buffer is currently full.
+    @Published public var isBufferFull = false
 
     /// Current playback progress.
     @Published public var progress: PlaybackProgress = .none {
@@ -31,6 +38,7 @@ public final class Player: ObservableObject {
         }
     }
 
+    @Published private var pulse: Pulse?
     @Published private var seeking = false
 
     /// Current time.
@@ -79,6 +87,19 @@ public final class Player: ObservableObject {
             .receive(on: DispatchQueue.main)
             .lane("player_seeking") { "Seeking: \($0)" }
             .assign(to: &$seeking)
+
+        rawPlayer.bufferingPublisher()
+            .receive(on: DispatchQueue.main)
+            .lane("buffering")
+            .assign(to: &$isBuffering)
+        rawPlayer.bufferEmptyPublisher()
+            .receive(on: DispatchQueue.main)
+            .lane("buffer_empty")
+            .assign(to: &$isBufferEmpty)
+        rawPlayer.bufferFullPublisher()
+            .receive(on: DispatchQueue.main)
+            .lane("buffer_full")
+            .assign(to: &$isBufferFull)
 
         // Update progress from pulse information, except when the player is seeking or the progress updated
         // interactively.
