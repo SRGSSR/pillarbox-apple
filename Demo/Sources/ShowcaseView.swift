@@ -17,6 +17,9 @@ struct ShowcaseView: View {
             Cell(title: "Twins") {
                 TwinsView()
             }
+            Cell(title: "Multi") {
+                MultiView()
+            }
         }
         .navigationTitle("Showcase")
     }
