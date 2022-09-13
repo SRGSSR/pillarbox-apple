@@ -9,23 +9,31 @@ import SwiftUI
 // MARK: View
 
 struct ShowcaseView: View {
-    @State private var isPresented = false
-
-    private func action() {
-        isPresented.toggle()
-    }
-
     var body: some View {
         List {
-            Button(action: action) {
-                Text("Stories")
-                    .foregroundColor(.primary)
-            }
+            StoriesCell()
         }
         .navigationTitle("Showcase")
+    }
+}
+
+// MARK: Entries
+
+private struct StoriesCell: View {
+    @State private var isPresented = false
+
+    var body: some View {
+        Button(action: action) {
+            Text("Stories")
+                .foregroundColor(.primary)
+        }
         .sheet(isPresented: $isPresented) {
             StoriesView()
         }
+    }
+
+    private func action() {
+        isPresented.toggle()
     }
 }
 
@@ -33,6 +41,8 @@ struct ShowcaseView: View {
 
 struct ShowcaseView_Previews: PreviewProvider {
     static var previews: some View {
-        ShowcaseView()
+        NavigationStack {
+            ShowcaseView()
+        }
     }
 }
