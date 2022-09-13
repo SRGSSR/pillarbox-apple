@@ -12,12 +12,15 @@ struct ShowcaseView: View {
     var body: some View {
         List {
             StoriesCell()
+            TwinsCell()
         }
         .navigationTitle("Showcase")
     }
 }
 
 // MARK: Entries
+
+// TODO: Use generics to write single cell
 
 private struct StoriesCell: View {
     @State private var isPresented = false
@@ -29,6 +32,24 @@ private struct StoriesCell: View {
         }
         .sheet(isPresented: $isPresented) {
             StoriesView()
+        }
+    }
+
+    private func action() {
+        isPresented.toggle()
+    }
+}
+
+private struct TwinsCell: View {
+    @State private var isPresented = false
+
+    var body: some View {
+        Button(action: action) {
+            Text("Twin players")
+                .foregroundColor(.primary)
+        }
+        .sheet(isPresented: $isPresented) {
+            TwinsView()
         }
     }
 
