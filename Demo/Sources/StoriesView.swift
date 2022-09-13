@@ -21,6 +21,7 @@ private struct StoryView: View {
             if let value = player.progress.value {
                 ProgressView(value: value)
                     .tint(.white)
+                    .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
         }
