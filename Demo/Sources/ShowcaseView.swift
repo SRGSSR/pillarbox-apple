@@ -45,7 +45,7 @@ private struct TwinsCell: View {
 
     var body: some View {
         Button(action: action) {
-            Text("Twin players")
+            Text("Twins")
                 .foregroundColor(.primary)
         }
         .sheet(isPresented: $isPresented) {
