@@ -11,19 +11,6 @@ import UserInterface
 
 // MARK: View
 
-private struct PlaybackView: View {
-    @ObservedObject var player: Player
-
-    var body: some View {
-        ZStack {
-            VideoView(player: player)
-            if player.isBuffering {
-                ProgressView()
-            }
-        }
-    }
-}
-
 struct TwinsView: View {
     @StateObject var player = Player()
     @State private var mode: Mode = .both
@@ -39,8 +26,8 @@ struct TwinsView: View {
     var body: some View {
         VStack {
             Group {
-                PlaybackView(player: topPlayer)
-                PlaybackView(player: bottomPlayer)
+                BasicPlayerView(player: topPlayer)
+                BasicPlayerView(player: bottomPlayer)
             }
             .background(.black)
 
