@@ -11,46 +11,28 @@ import SwiftUI
 struct ShowcaseView: View {
     var body: some View {
         List {
-            StoriesCell()
-            TwinsCell()
+            Cell(title: "Stories") {
+                StoriesView()
+            }
+            Cell(title: "Twins") {
+                TwinsView()
+            }
         }
         .navigationTitle("Showcase")
     }
 }
 
-// MARK: Entries
-
-// TODO: Use generics to write single cell
-
-private struct StoriesCell: View {
+private struct Cell<Presented: View>: View {
+    let title: String
+    @ViewBuilder var presented: () -> Presented
     @State private var isPresented = false
 
     var body: some View {
         Button(action: action) {
-            Text("Stories")
+            Text(title)
                 .foregroundColor(.primary)
         }
-        .sheet(isPresented: $isPresented) {
-            StoriesView()
-        }
-    }
-
-    private func action() {
-        isPresented.toggle()
-    }
-}
-
-private struct TwinsCell: View {
-    @State private var isPresented = false
-
-    var body: some View {
-        Button(action: action) {
-            Text("Twins")
-                .foregroundColor(.primary)
-        }
-        .sheet(isPresented: $isPresented) {
-            TwinsView()
-        }
+        .sheet(isPresented: $isPresented, content: presented)
     }
 
     private func action() {
