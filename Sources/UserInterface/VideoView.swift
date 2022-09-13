@@ -19,21 +19,25 @@ public final class VideoLayerView: UIView {
         set { playerLayer.player = newValue }
     }
 
-    private var playerLayer: AVPlayerLayer {
+    var playerLayer: AVPlayerLayer {
         layer as! AVPlayerLayer
     }
 }
 
 public struct VideoView: UIViewRepresentable {
     let player: Player?
+    let gravity: AVLayerVideoGravity
 
-    public init(player: Player?) {
+    public init(player: Player?, gravity: AVLayerVideoGravity = .resizeAspect) {
         self.player = player
+        self.gravity = gravity
     }
 
     public func makeUIView(context: Context) -> VideoLayerView {
         let view = VideoLayerView()
+        view.backgroundColor = .clear
         view.player = player?.rawPlayer
+        view.playerLayer.videoGravity = gravity
         return view
     }
 

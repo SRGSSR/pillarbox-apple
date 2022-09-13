@@ -8,7 +8,31 @@ import SwiftUI
 
 // MARK: View
 
-struct DemosView: View {
+private struct MediaCell: View {
+    let media: Media
+    @State var isPlayerPresented = false
+
+    var body: some View {
+        Button(action: play) {
+            VStack(alignment: .leading) {
+                Text(media.title)
+                    .foregroundColor(.primary)
+                Text(media.description)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .sheet(isPresented: $isPlayerPresented) {
+            PlayerView(media: media)
+        }
+    }
+
+    private func play() {
+        isPlayerPresented.toggle()
+    }
+}
+
+struct MediasView: View {
     private let medias = [
         Media(
             id: "assets:vod_hls",
@@ -100,35 +124,7 @@ struct DemosView: View {
         List(medias) { media in
             MediaCell(media: media)
         }
-        .navigationTitle("Demos")
-    }
-}
-
-// MARK: Cells
-
-private extension DemosView {
-    private struct MediaCell: View {
-        let media: Media
-        @State var isPlayerPresented = false
-
-        var body: some View {
-            Button(action: play) {
-                VStack(alignment: .leading) {
-                    Text(media.title)
-                        .foregroundColor(.primary)
-                    Text(media.description)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-            }
-            .sheet(isPresented: $isPlayerPresented) {
-                PlayerView(media: media)
-            }
-        }
-
-        private func play() {
-            isPlayerPresented.toggle()
-        }
+        .navigationTitle("Medias")
     }
 }
 
@@ -137,7 +133,7 @@ private extension DemosView {
 struct DemosView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            DemosView()
+            MediasView()
         }
     }
 }

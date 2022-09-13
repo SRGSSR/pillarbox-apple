@@ -5,12 +5,36 @@
 //
 
 import AVFoundation
-import CoreBusiness
 import Player
 import SwiftUI
 import UserInterface
 
 // MARK: View
+
+private struct ControlsView: View {
+    @ObservedObject var player: Player
+
+    private var playbackButtonImageName: String {
+        switch player.playbackState {
+        case .playing:
+            return "pause.circle.fill"
+        default:
+            return "play.circle.fill"
+        }
+    }
+
+    var body: some View {
+        Color(white: 0, opacity: 0.3)
+        Button {
+            player.togglePlayPause()
+        } label: {
+            Image(systemName: playbackButtonImageName)
+                .resizable()
+                .frame(width: 90, height: 90)
+                .tint(.white)
+        }
+    }
+}
 
 struct PlayerView: View {
     let media: Media
@@ -29,10 +53,12 @@ struct PlayerView: View {
 #if os(iOS)
             Slider(player: player)
                 .tint(.white)
+                .opacity(isUserInterfaceHidden ? 0 : 1)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
 #endif
         }
+        .background(.black)
         .onAppear {
             play()
         }
@@ -44,40 +70,8 @@ struct PlayerView: View {
     }
 
     private func play() {
-        switch media.source {
-        case let .url(url):
-            player.append(AVPlayerItem(url: url))
-        case let .urn(urn):
-            player.append(AVPlayerItem(urn: urn))
-        }
+        player.append(media.source.playerItem)
         player.play()
-    }
-}
-
-extension PlayerView {
-    struct ControlsView: View {
-        @ObservedObject var player: Player
-
-        private var playbackButtonImageName: String {
-            switch player.playbackState {
-            case .playing:
-                return "pause.circle.fill"
-            default:
-                return "play.circle.fill"
-            }
-        }
-
-        var body: some View {
-            Color(white: 0, opacity: 0.3)
-            Button {
-                player.togglePlayPause()
-            } label: {
-                Image(systemName: playbackButtonImageName)
-                    .resizable()
-                    .frame(width: 90, height: 90)
-                    .tint(.white)
-            }
-        }
     }
 }
 
