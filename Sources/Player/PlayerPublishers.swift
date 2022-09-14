@@ -87,16 +87,16 @@ extension AVPlayer {
                     item.publisher(for: \.isPlaybackLikelyToKeepUp),
                     item.itemStatePublisher()
                 )
-                .map { isPlaybackLikelyToKeepUp, itemState in
-                    switch itemState {
-                    case .failed:
-                        return false
-                    default:
-                        return !isPlaybackLikelyToKeepUp
-                    }
-                }
             }
             .switchToLatest()
+            .map { isPlaybackLikelyToKeepUp, itemState in
+                switch itemState {
+                case .failed:
+                    return false
+                default:
+                    return !isPlaybackLikelyToKeepUp
+                }
+            }
             .prepend(false)
             .removeDuplicates()
             .eraseToAnyPublisher()
