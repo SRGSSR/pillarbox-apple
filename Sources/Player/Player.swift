@@ -18,7 +18,7 @@ public final class Player: ObservableObject {
     @Published public var isBuffering = false
 
     /// States whether the player buffer is currently empty.
-    @Published public var isBufferEmpty = true
+    @Published public var isBufferEmpty = false
 
     /// States whether the player buffer is currently full.
     @Published public var isBufferFull = false

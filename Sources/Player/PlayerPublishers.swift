@@ -9,6 +9,7 @@ import Combine
 import TimelaneCombine
 
 extension AVPlayer {
+    // TODO: Move these item-related methods to existing `AVPlayerItem` extension
     private static func timeRangePublisher(for item: AVPlayerItem, configuration: PlayerConfiguration) -> AnyPublisher<CMTimeRange, Never> {
         Publishers.CombineLatest3(
             item.publisher(for: \.loadedTimeRanges),
@@ -30,22 +31,6 @@ extension AVPlayer {
             }
         }
         .eraseToAnyPublisher()
-    }
-
-    private static func bufferingPublisher(for item: AVPlayerItem) -> AnyPublisher<Bool, Never> {
-        item.publisher(for: \.isPlaybackLikelyToKeepUp)
-            .map { !$0 }
-            .eraseToAnyPublisher()
-    }
-
-    private static func bufferEmptyPublisher(for item: AVPlayerItem) -> AnyPublisher<Bool, Never> {
-        item.publisher(for: \.isPlaybackBufferEmpty)
-            .eraseToAnyPublisher()
-    }
-
-    private static func bufferFullPublisher(for item: AVPlayerItem) -> AnyPublisher<Bool, Never> {
-        item.publisher(for: \.isPlaybackBufferFull)
-            .eraseToAnyPublisher()
     }
 
     func itemStatePublisher() -> AnyPublisher<ItemState, Never> {
@@ -121,7 +106,20 @@ extension AVPlayer {
     func bufferingPublisher() -> AnyPublisher<Bool, Never> {
         publisher(for: \.currentItem)
             .compactMap { $0 }
-            .map { Self.bufferingPublisher(for: $0) }
+            .map { item in
+                Publishers.CombineLatest(
+                    item.publisher(for: \.isPlaybackLikelyToKeepUp),
+                    item.itemStatePublisher()
+                )
+                .map { isPlaybackLikelyToKeepUp, itemState in
+                    switch itemState {
+                    case .failed:
+                        return false
+                    default:
+                        return !isPlaybackLikelyToKeepUp
+                    }
+                }
+            }
             .switchToLatest()
             .prepend(false)
             .removeDuplicates()
@@ -129,18 +127,20 @@ extension AVPlayer {
     }
 
     func bufferEmptyPublisher() -> AnyPublisher<Bool, Never> {
+        // TODO: Observe \.currentItem?.isPlaybackBufferEmpty directly
         publisher(for: \.currentItem)
             .compactMap { $0 }
-            .map { Self.bufferEmptyPublisher(for: $0) }
+            .map { $0.publisher(for: \.isPlaybackBufferEmpty) }
             .switchToLatest()
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
     func bufferFullPublisher() -> AnyPublisher<Bool, Never> {
+        // TODO: Observe \.currentItem?.isPlaybackBufferFull directly
         publisher(for: \.currentItem)
             .compactMap { $0 }
-            .map { Self.bufferFullPublisher(for: $0) }
+            .map { $0.publisher(for: \.isPlaybackBufferFull) }
             .switchToLatest()
             .removeDuplicates()
             .eraseToAnyPublisher()
