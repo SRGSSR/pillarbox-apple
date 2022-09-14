@@ -49,4 +49,26 @@ final class BufferingPublisherTests: XCTestCase {
             from: player.bufferingPublisher()
         )
     }
+
+    func testSeek() {
+        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
+        let player = AVPlayer(playerItem: item)
+        expectAtLeastEqualPublished(
+            values: [false, true, false],
+            from: player.bufferingPublisher()
+        ) {
+            player.play()
+        }
+        expectAtLeastEqualPublishedNext(
+            values: [true, false],
+            from: player.bufferingPublisher()
+        ) {
+            player.seek(
+                to: CMTime(value: 10, timescale: 1),
+                toleranceBefore: .zero,
+                toleranceAfter: .zero,
+                completionHandler: { _ in }
+            )
+        }
+    }
 }
