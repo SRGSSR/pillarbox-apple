@@ -123,6 +123,7 @@ extension AVPlayer {
             .compactMap { $0 }
             .map { Self.bufferingPublisher(for: $0) }
             .switchToLatest()
+            .prepend(false)
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
