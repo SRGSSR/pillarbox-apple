@@ -101,24 +101,4 @@ extension AVPlayer {
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
-
-    func bufferEmptyPublisher() -> AnyPublisher<Bool, Never> {
-        // TODO: Observe \.currentItem?.isPlaybackBufferEmpty directly
-        publisher(for: \.currentItem)
-            .compactMap { $0 }
-            .map { $0.publisher(for: \.isPlaybackBufferEmpty) }
-            .switchToLatest()
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-
-    func bufferFullPublisher() -> AnyPublisher<Bool, Never> {
-        // TODO: Observe \.currentItem?.isPlaybackBufferFull directly
-        publisher(for: \.currentItem)
-            .compactMap { $0 }
-            .map { $0.publisher(for: \.isPlaybackBufferFull) }
-            .switchToLatest()
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
 }

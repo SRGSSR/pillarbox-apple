@@ -17,12 +17,6 @@ public final class Player: ObservableObject {
     /// States whether the player is currently buffering.
     @Published public var isBuffering = false
 
-    /// States whether the player buffer is currently empty.
-    @Published public var isBufferEmpty = false
-
-    /// States whether the player buffer is currently full.
-    @Published public var isBufferFull = false
-
     /// Current playback progress.
     @Published public var progress: PlaybackProgress = .none {
         willSet {
@@ -92,14 +86,6 @@ public final class Player: ObservableObject {
             .receive(on: DispatchQueue.main)
             .lane("player_buffering")
             .assign(to: &$isBuffering)
-        rawPlayer.bufferEmptyPublisher()
-            .receive(on: DispatchQueue.main)
-            .lane("player_buffer_empty")
-            .assign(to: &$isBufferEmpty)
-        rawPlayer.bufferFullPublisher()
-            .receive(on: DispatchQueue.main)
-            .lane("player_buffer_full")
-            .assign(to: &$isBufferFull)
 
         // Update progress from pulse information, except when the player is seeking or the progress updated
         // interactively.
