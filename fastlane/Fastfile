@@ -179,6 +179,7 @@ def distribute_app_to_testers(platform_id, configuration_id, build_number)
     app_platform: TESTFLIGHT_PLATFORMS[platform_id],
     build_number: build_number.to_s,
     distribute_external: true,
+    skip_waiting_for_build_processing: true,
     changelog: changelog,
     groups: ENV.fetch('TESTFLIGHT_GROUPS'),
     notify_external_testers: true,
