@@ -29,6 +29,18 @@ final class BufferingPublisherTests: XCTestCase {
         )
     }
 
+    func testEntirePlayback() {
+        let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
+        let player = AVPlayer(playerItem: item)
+        expectEqualPublished(
+            values: [false, true, false],
+            from: player.bufferingPublisher(),
+            during: 2
+        ) {
+            player.play()
+        }
+    }
+
     func testFailure() {
         let item = AVPlayerItem(url: TestStreams.unavailableUrl)
         let player = AVPlayer(playerItem: item)
