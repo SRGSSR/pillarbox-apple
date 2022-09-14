@@ -90,15 +90,15 @@ public final class Player: ObservableObject {
 
         rawPlayer.bufferingPublisher()
             .receive(on: DispatchQueue.main)
-            .lane("buffering")
+            .lane("player_buffering")
             .assign(to: &$isBuffering)
         rawPlayer.bufferEmptyPublisher()
             .receive(on: DispatchQueue.main)
-            .lane("buffer_empty")
+            .lane("player_buffer_empty")
             .assign(to: &$isBufferEmpty)
         rawPlayer.bufferFullPublisher()
             .receive(on: DispatchQueue.main)
-            .lane("buffer_full")
+            .lane("player_buffer_full")
             .assign(to: &$isBufferFull)
 
         // Update progress from pulse information, except when the player is seeking or the progress updated
