@@ -560,6 +560,64 @@ public extension XCTestCase {
     }
 }
 
+public extension XCTestCase {
+    /// Expect a publisher to complete successfully.
+    func expectSuccess<P: Publisher>(
+        from publisher: P,
+        timeout: TimeInterval = 10,
+        file: StaticString = #file,
+        line: UInt = #line,
+        while executing: (() -> Void)? = nil
+    ) {
+        let expectation = expectation(description: "Waiting for publisher success")
+        let cancellable = publisher.sink { completion in
+            switch completion {
+            case .finished:
+                expectation.fulfill()
+            case .failure:
+                break
+            }
+        } receiveValue: { _ in }
+        defer {
+            cancellable.cancel()
+        }
+
+        if let executing {
+            executing()
+        }
+
+        waitForExpectations(timeout: timeout)
+    }
+
+    /// Expect a publisher to complete with a failure.
+    func expectFailure<P: Publisher>(
+        from publisher: P,
+        timeout: TimeInterval = 10,
+        file: StaticString = #file,
+        line: UInt = #line,
+        while executing: (() -> Void)? = nil
+    ) {
+        let expectation = expectation(description: "Waiting for publisher failure")
+        let cancellable = publisher.sink { completion in
+            switch completion {
+            case .finished:
+                break
+            case .failure:
+                expectation.fulfill()
+            }
+        } receiveValue: { _ in }
+        defer {
+            cancellable.cancel()
+        }
+
+        if let executing {
+            executing()
+        }
+
+        waitForExpectations(timeout: timeout)
+    }
+}
+
 /// Remark: Nimble provides support for notifications but its collector is not thread-safe and might crash during
 ///         collection.
 public extension XCTestCase {
