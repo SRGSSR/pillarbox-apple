@@ -577,7 +577,8 @@ public extension XCTestCase {
             case .failure:
                 break
             }
-        } receiveValue: { _ in }
+        } receiveValue: { _ in
+        }
         defer {
             cancellable.cancel()
         }
@@ -605,7 +606,8 @@ public extension XCTestCase {
             case .failure:
                 expectation.fulfill()
             }
-        } receiveValue: { _ in }
+        } receiveValue: { _ in
+        }
         defer {
             cancellable.cancel()
         }

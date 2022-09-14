@@ -66,9 +66,9 @@ final class BufferingPublisherTests: XCTestCase {
             player.seek(
                 to: CMTime(value: 10, timescale: 1),
                 toleranceBefore: .zero,
-                toleranceAfter: .zero,
-                completionHandler: { _ in }
-            )
+                toleranceAfter: .zero
+            ) { _ in
+            }
         }
     }
 }
