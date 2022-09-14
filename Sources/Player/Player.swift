@@ -74,7 +74,7 @@ public final class Player: ObservableObject {
 
         rawPlayer.playbackStatePublisher()
             .receive(on: DispatchQueue.main)
-            .lane("player_state") { "State: \($0)" }
+            .lane("player_state")
             .assign(to: &$playbackState)
         rawPlayer.pulsePublisher(configuration: self.configuration)
             .receive(on: DispatchQueue.main)
@@ -85,7 +85,7 @@ public final class Player: ObservableObject {
             .assign(to: &$pulse)
         rawPlayer.seekingPublisher()
             .receive(on: DispatchQueue.main)
-            .lane("player_seeking") { "Seeking: \($0)" }
+            .lane("player_seeking")
             .assign(to: &$seeking)
 
         rawPlayer.bufferingPublisher()
