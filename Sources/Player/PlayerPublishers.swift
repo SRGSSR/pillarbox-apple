@@ -9,29 +9,6 @@ import Combine
 import TimelaneCombine
 
 extension AVPlayer {
-    private static func timeRangePublisher(for item: AVPlayerItem, configuration: PlayerConfiguration) -> AnyPublisher<CMTimeRange, Never> {
-        Publishers.CombineLatest3(
-            item.publisher(for: \.loadedTimeRanges),
-            item.publisher(for: \.seekableTimeRanges),
-            item.publisher(for: \.duration)
-        )
-        .compactMap { loadedTimeRanges, seekableTimeRanges, duration in
-            guard let firstRange = seekableTimeRanges.first?.timeRangeValue,
-                  let lastRange = seekableTimeRanges.last?.timeRangeValue else {
-                return !loadedTimeRanges.isEmpty ? .zero : nil
-            }
-
-            let timeRange = CMTimeRangeFromTimeToTime(start: firstRange.start, end: lastRange.end)
-            if duration.isIndefinite && CMTimeCompare(timeRange.duration, configuration.dvrThreshold) == -1 {
-                return CMTimeRange(start: timeRange.start, duration: .zero)
-            }
-            else {
-                return timeRange
-            }
-        }
-        .eraseToAnyPublisher()
-    }
-
     func itemStatePublisher() -> AnyPublisher<ItemState, Never> {
         publisher(for: \.currentItem)
             .compactMap { $0 }
@@ -39,7 +16,7 @@ extension AVPlayer {
             .switchToLatest()
             .prepend(ItemState.itemState(for: currentItem))
             .removeDuplicates()
-            .lane("player_item_state") { "Item state: \($0)" }
+            .lane("player_item_state")
             .eraseToAnyPublisher()
     }
 
@@ -67,7 +44,7 @@ extension AVPlayer {
     func itemTimeRangePublisher(configuration: PlayerConfiguration) -> AnyPublisher<CMTimeRange, Never> {
         publisher(for: \.currentItem)
             .compactMap { $0 }
-            .map { Self.timeRangePublisher(for: $0, configuration: configuration) }
+            .map { $0.timeRangePublisher(configuration: configuration) }
             .switchToLatest()
             .removeDuplicates()
             .eraseToAnyPublisher()
@@ -100,5 +77,28 @@ extension AVPlayer {
         }
         .removeDuplicates(by: Pulse.close(within: CMTimeMultiplyByFloat64(configuration.tick, multiplier: 0.5)))
         .eraseToAnyPublisher()
+    }
+
+    func bufferingPublisher() -> AnyPublisher<Bool, Never> {
+        publisher(for: \.currentItem)
+            .compactMap { $0 }
+            .map { item in
+                Publishers.CombineLatest(
+                    item.publisher(for: \.isPlaybackLikelyToKeepUp),
+                    item.itemStatePublisher()
+                )
+            }
+            .switchToLatest()
+            .map { isPlaybackLikelyToKeepUp, itemState in
+                switch itemState {
+                case .failed:
+                    return false
+                default:
+                    return !isPlaybackLikelyToKeepUp
+                }
+            }
+            .prepend(false)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 }

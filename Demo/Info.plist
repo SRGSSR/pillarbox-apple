@@ -47,5 +47,7 @@
 		<key>UIImageName</key>
 		<string>LaunchScreen_image</string>
 	</dict>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>

@@ -13,6 +13,7 @@ import UserInterface
 
 private struct ControlsView: View {
     @ObservedObject var player: Player
+    let isUserInterfaceHidden: Bool
 
     private var playbackButtonImageName: String {
         switch player.playbackState {
@@ -24,15 +25,25 @@ private struct ControlsView: View {
     }
 
     var body: some View {
-        Color(white: 0, opacity: 0.3)
-        Button {
-            player.togglePlayPause()
-        } label: {
-            Image(systemName: playbackButtonImageName)
-                .resizable()
-                .frame(width: 90, height: 90)
-                .tint(.white)
+        ZStack {
+            if !isUserInterfaceHidden {
+                Color(white: 0, opacity: 0.3)
+                if !player.isBuffering {
+                    Button {
+                        player.togglePlayPause()
+                    } label: {
+                        Image(systemName: playbackButtonImageName)
+                            .resizable()
+                    }
+                    .frame(width: 90, height: 90)
+                }
+            }
+            if player.isBuffering {
+                ProgressView()
+            }
         }
+        .tint(.white)
+        .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
     }
 }
 
@@ -46,8 +57,7 @@ struct PlayerView: View {
         ZStack {
             Group {
                 VideoView(player: player)
-                ControlsView(player: player)
-                    .opacity(isUserInterfaceHidden ? 0 : 1)
+                ControlsView(player: player, isUserInterfaceHidden: isUserInterfaceHidden)
             }
             .ignoresSafeArea()
 #if os(iOS)
@@ -59,18 +69,19 @@ struct PlayerView: View {
 #endif
         }
         .background(.black)
+        .animation(.easeInOut(duration: 0.2), value: isUserInterfaceHidden)
         .onAppear {
             play()
         }
         .onTapGesture {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                isUserInterfaceHidden.toggle()
-            }
+            isUserInterfaceHidden.toggle()
         }
     }
 
     private func play() {
-        player.append(media.source.playerItem)
+        if let item = media.source.playerItem {
+            player.append(item)
+        }
         player.play()
     }
 }

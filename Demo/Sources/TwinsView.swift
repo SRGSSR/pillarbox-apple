@@ -15,19 +15,19 @@ struct TwinsView: View {
     @StateObject var player = Player()
     @State private var mode: Mode = .both
 
-    private var topPlayer: Player? {
-        mode != .bottom ? player : nil
+    private var topPlayer: Player {
+        mode != .bottom ? player : Player()
     }
 
-    private var bottomPlayer: Player? {
-        mode != .top ? player : nil
+    private var bottomPlayer: Player {
+        mode != .top ? player : Player()
     }
 
     var body: some View {
         VStack {
             Group {
-                VideoView(player: topPlayer)
-                VideoView(player: bottomPlayer)
+                BasicPlayerView(player: topPlayer)
+                BasicPlayerView(player: bottomPlayer)
             }
             .background(.black)
 

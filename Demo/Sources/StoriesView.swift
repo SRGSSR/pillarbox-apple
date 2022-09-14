@@ -18,13 +18,20 @@ private struct StoryView: View {
         ZStack {
             VideoView(player: player, gravity: .resizeAspectFill)
                 .ignoresSafeArea()
+            if player.isBuffering {
+                // Ensure the animation is applied by setting its zIndex
+                // See https://sarunw.com/posts/how-to-fix-zstack-transition-animation-in-swiftui/
+                ProgressView()
+                    .zIndex(1)
+            }
             if let value = player.progress.value {
                 ProgressView(value: value)
-                    .tint(.white)
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
         }
+        .tint(.white)
+        .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
     }
 }
 

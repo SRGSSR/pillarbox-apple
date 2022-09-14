@@ -18,8 +18,8 @@ struct MultiView: View {
     var body: some View {
         VStack {
             Group {
-                VideoView(player: topPlayer)
-                VideoView(player: bottomPlayer)
+                BasicPlayerView(player: topPlayer)
+                BasicPlayerView(player: bottomPlayer)
             }
             .background(.black)
         }

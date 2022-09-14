@@ -13,8 +13,9 @@ import TimelaneCombine
 public final class Player: ObservableObject {
     /// Current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle
-    /// Current pulse.
-    @Published private var pulse: Pulse?
+
+    /// States whether the player is currently buffering.
+    @Published public var isBuffering = false
 
     /// Current playback progress.
     @Published public var progress: PlaybackProgress = .none {
@@ -31,6 +32,7 @@ public final class Player: ObservableObject {
         }
     }
 
+    @Published private var pulse: Pulse?
     @Published private var seeking = false
 
     /// Current time.
@@ -66,7 +68,7 @@ public final class Player: ObservableObject {
 
         rawPlayer.playbackStatePublisher()
             .receive(on: DispatchQueue.main)
-            .lane("player_state") { "State: \($0)" }
+            .lane("player_state")
             .assign(to: &$playbackState)
         rawPlayer.pulsePublisher(configuration: self.configuration)
             .receive(on: DispatchQueue.main)
@@ -77,8 +79,13 @@ public final class Player: ObservableObject {
             .assign(to: &$pulse)
         rawPlayer.seekingPublisher()
             .receive(on: DispatchQueue.main)
-            .lane("player_seeking") { "Seeking: \($0)" }
+            .lane("player_seeking")
             .assign(to: &$seeking)
+
+        rawPlayer.bufferingPublisher()
+            .receive(on: DispatchQueue.main)
+            .lane("player_buffering")
+            .assign(to: &$isBuffering)
 
         // Update progress from pulse information, except when the player is seeking or the progress updated
         // interactively.
@@ -110,6 +117,7 @@ public final class Player: ObservableObject {
     ///   - item: The item to insert.
     ///   - afterItem: The item after which the new item must be inserted. If `nil` the item is appended.
     public func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
+        guard rawPlayer.canInsert(item, after: afterItem) else { return }
         rawPlayer.insert(item, after: afterItem)
     }
 
