@@ -6,20 +6,44 @@
 
 import AVFoundation
 
-enum TestError: Error {
-    case any
+struct Stream {
+    static let onDemand = Stream(
+        url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!,
+        duration: CMTime(value: 120, timescale: 1)
+    )
+    static let shortOnDemand = Stream(
+        url: URL(string: "http://localhost:8123/on_demand_short/master.m3u8")!,
+        duration: CMTime(value: 1, timescale: 1)
+    )
+    static let corruptOnDemand = Stream(
+        url: URL(string: "http://localhost:8123/on_demand_corrupt/master.m3u8")!,
+        duration: CMTime(value: 2, timescale: 1)
+    )
+
+    static let live = Stream(
+        url: URL(string: "http://localhost:8123/live/master.m3u8")!,
+        duration: .zero
+    )
+    static let dvr = Stream(
+        url: URL(string: "http://localhost:8123/dvr/master.m3u8")!,
+        duration: CMTime(value: 20, timescale: 1)
+    )
+
+    static let unavailable = Stream(
+        url: URL(string: "http://localhost:8123/unavailable/master.m3u8")!,
+        duration: .indefinite
+    )
+    static let custom = Stream(
+        url: URL(string: "custom://arbitrary.server/some.m3u8")!,
+        duration: .indefinite
+    )
+
+    let url: URL
+    let duration: CMTime
 }
 
-enum TestStreams {
-    static let onDemandUrl = URL(string: "http://localhost:8123/on_demand/master.m3u8")!
-    static let shortOnDemandUrl = URL(string: "http://localhost:8123/on_demand_short/master.m3u8")!
-    static let corruptOnDemandUrl = URL(string: "http://localhost:8123/on_demand_corrupt/master.m3u8")!
-
-    static let liveUrl = URL(string: "http://localhost:8123/live/master.m3u8")!
-    static let dvrUrl = URL(string: "http://localhost:8123/dvr/master.m3u8")!
-
-    static let unavailableUrl = URL(string: "http://localhost:8123/unavailable/master.m3u8")!
-    static let customUrl = URL(string: "custom://arbitrary.server/some.m3u8")!
+enum TestError: Error {
+    case any
 }
 
 final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {

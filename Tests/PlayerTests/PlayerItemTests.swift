@@ -60,6 +60,19 @@ final class PlayerItemTests: XCTestCase {
         expect(player.items).to(equal([item1, item2, item3]))
     }
 
+    func testIdenticalItems() {
+        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let player = Player(items: [item, item])
+        expect(player.items).to(equal([item]))
+    }
+
+    func testAppendIdentical() {
+        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let player = Player(items: [item])
+        player.append(item)
+        expect(player.items).to(equal([item]))
+    }
+
     func testRemoval() {
         let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
         let player = Player(item: item)

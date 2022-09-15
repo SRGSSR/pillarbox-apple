@@ -59,9 +59,9 @@ An [editor configuration file](../.editorconfig) and several linter configuratio
 
 ### Visual Studio Code
 
-- [.editorconfig extension](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig).
-- [shellcheck extension](https://marketplace.visualstudio.com/items?itemName=timonwong.shellcheck).
-- [rubocop extension](https://marketplace.visualstudio.com/items?itemName=misogi.ruby-rubocop).
+- [EditorConfig extension](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
+- [shellcheck extension](https://marketplace.visualstudio.com/items?itemName=timonwong.shellcheck)
+- [rubocop extension](https://marketplace.visualstudio.com/items?itemName=misogi.ruby-rubocop)
 
 ## Code signing
 

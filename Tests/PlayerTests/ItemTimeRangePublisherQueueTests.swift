@@ -12,13 +12,13 @@ import XCTest
 
 final class ItemTimeRangePublisherQueueTests: XCTestCase {
     func testItems() {
-        let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
-        let item2 = AVPlayerItem(url: TestStreams.onDemandUrl)
+        let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
+        let item2 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2])
         expectPublished(
             values: [
-                CMTimeRange(start: .zero, duration: CMTime(value: 1, timescale: 1)),
-                CMTimeRange(start: .zero, duration: CMTime(value: 120, timescale: 1))
+                CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration),
+                CMTimeRange(start: .zero, duration: Stream.onDemand.duration)
             ],
             from: player.itemTimeRangePublisher(configuration: PlayerConfiguration()),
             to: beClose(within: 1),
@@ -29,14 +29,14 @@ final class ItemTimeRangePublisherQueueTests: XCTestCase {
     }
 
     func testFailure() {
-        let item1 = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
-        let item2 = AVPlayerItem(url: TestStreams.unavailableUrl)
-        let item3 = AVPlayerItem(url: TestStreams.onDemandUrl)
+        let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
+        let item2 = AVPlayerItem(url: Stream.unavailable.url)
+        let item3 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2, item3])
         expectPublished(
             values: [
-                CMTimeRange(start: .zero, duration: CMTime(value: 1, timescale: 1)),
-                CMTimeRange(start: .zero, duration: CMTime(value: 120, timescale: 1))
+                CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration),
+                CMTimeRange(start: .zero, duration: Stream.onDemand.duration)
             ],
             from: player.itemTimeRangePublisher(configuration: PlayerConfiguration()),
             to: beClose(within: 1),

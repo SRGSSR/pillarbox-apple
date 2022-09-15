@@ -25,7 +25,7 @@ final class BoundaryTimePublisherTests: XCTestCase {
     }
 
     func testNoPlayback() {
-        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
+        let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
         expectNothingPublished(
             from: Publishers.BoundaryTimePublisher(
@@ -37,7 +37,7 @@ final class BoundaryTimePublisherTests: XCTestCase {
     }
 
     func testPlayback() {
-        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
+        let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
         expectEqualPublished(
             values: [

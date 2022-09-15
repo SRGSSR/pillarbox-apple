@@ -25,7 +25,7 @@ final class PeriodicTimePublisherTests: XCTestCase {
     }
 
     func testNoPlayback() {
-        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
+        let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
         expectPublished(
             values: [
@@ -41,7 +41,7 @@ final class PeriodicTimePublisherTests: XCTestCase {
     }
 
     func testPlayback() {
-        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
+        let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastPublished(
             values: [

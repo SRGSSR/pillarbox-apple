@@ -12,10 +12,10 @@ import XCTest
 
 final class ItemDurationPublisherTests: XCTestCase {
     func testDuration() {
-        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
+        let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastPublished(
-            values: [.indefinite, CMTime(value: 120, timescale: 1)],
+            values: [.indefinite, Stream.onDemand.duration],
             from: player.itemDurationPublisher(),
             to: beClose(within: 1)
         )

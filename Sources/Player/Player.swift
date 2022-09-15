@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import Core
 import TimelaneCombine
 
 /// Audio / video player.
@@ -63,7 +64,7 @@ public final class Player: ObservableObject {
     /// Create a player with a given item queue.
     /// - Parameter items: The items to be queued initially.
     public init(items: [AVPlayerItem] = [], configuration: (inout PlayerConfiguration) -> Void = { _ in }) {
-        rawPlayer = DequeuePlayer(items: items)
+        rawPlayer = DequeuePlayer(items: items.removeDuplicates())
         self.configuration = Self.configure(with: configuration)
 
         rawPlayer.playbackStatePublisher()

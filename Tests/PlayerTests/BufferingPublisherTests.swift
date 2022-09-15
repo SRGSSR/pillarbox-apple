@@ -21,7 +21,7 @@ final class BufferingPublisherTests: XCTestCase {
     }
 
     func testLoaded() {
-        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
+        let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false, true, false],
@@ -30,7 +30,7 @@ final class BufferingPublisherTests: XCTestCase {
     }
 
     func testEntirePlayback() {
-        let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
+        let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVPlayer(playerItem: item)
         expectEqualPublished(
             values: [false, true, false],
@@ -42,7 +42,7 @@ final class BufferingPublisherTests: XCTestCase {
     }
 
     func testFailure() {
-        let item = AVPlayerItem(url: TestStreams.unavailableUrl)
+        let item = AVPlayerItem(url: Stream.unavailable.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false, true, false],
@@ -51,7 +51,7 @@ final class BufferingPublisherTests: XCTestCase {
     }
 
     func testSeek() {
-        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
+        let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false, true, false],

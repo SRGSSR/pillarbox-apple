@@ -13,7 +13,7 @@ import XCTest
 
 final class PlayerItemPublishersTests: XCTestCase {
     func testValidItemStateWithoutPlayback() {
-        let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
+        let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         _ = AVPlayer(playerItem: item)
         expectEqualPublished(
             values: [.unknown, .readyToPlay],
@@ -23,7 +23,7 @@ final class PlayerItemPublishersTests: XCTestCase {
     }
 
     func testValidItemStateWithPlayback() {
-        let item = AVPlayerItem(url: TestStreams.shortOnDemandUrl)
+        let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVPlayer(playerItem: item)
         expectEqualPublished(
             values: [.unknown, .readyToPlay, .ended],
@@ -35,7 +35,7 @@ final class PlayerItemPublishersTests: XCTestCase {
     }
 
     func testCorruptStream() {
-        let item = AVPlayerItem(url: TestStreams.corruptOnDemandUrl)
+        let item = AVPlayerItem(url: Stream.corruptOnDemand.url)
         _ = AVPlayer(playerItem: item)
         expectEqualPublished(
             values: [.unknown, .failed(error: TestError.any)],

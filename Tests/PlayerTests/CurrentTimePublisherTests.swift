@@ -22,7 +22,7 @@ final class CurrentTimePublisherTests: XCTestCase {
     }
 
     func testPlayback() {
-        let item = AVPlayerItem(url: TestStreams.onDemandUrl)
+        let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
         expectPublished(
             values: [
@@ -40,7 +40,7 @@ final class CurrentTimePublisherTests: XCTestCase {
     }
 
     func testFailure() {
-        let item = AVPlayerItem(url: TestStreams.unavailableUrl)
+        let item = AVPlayerItem(url: Stream.unavailable.url)
         let player = AVPlayer(playerItem: item)
         expectEqualPublished(
             values: [.zero],
