@@ -10,7 +10,7 @@ import UserInterface
 
 // MARK: View
 
-struct BasicPlayerView: View {
+struct PlaybackView: View {
     @ObservedObject var player: Player
 
     var body: some View {
@@ -25,9 +25,9 @@ struct BasicPlayerView: View {
 
 // MARK: Preview
 
-struct BasicPlayerView_Previews: PreviewProvider {
+struct PlaybackView_Previews: PreviewProvider {
     static var previews: some View {
-        BasicPlayerView(player: Player())
+        PlaybackView(player: Player())
             .background(.black)
             .previewLayout(.fixed(width: 320, height: 180))
     }
