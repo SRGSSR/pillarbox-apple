@@ -21,7 +21,7 @@ final class PulsePublisherTests: XCTestCase {
     }
 
     func testPlayback() {
-        let item = AVPlayerItem(url: TestStreams.live.url)
+        let item = AVPlayerItem(url: Stream.live.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastSimilarPublished(
             values: [
@@ -36,7 +36,7 @@ final class PulsePublisherTests: XCTestCase {
     }
 
     func testFailure() {
-        let item = AVPlayerItem(url: TestStreams.unavailable.url)
+        let item = AVPlayerItem(url: Stream.unavailable.url)
         let player = AVPlayer(playerItem: item)
         expectSimilarPublished(
             values: [],

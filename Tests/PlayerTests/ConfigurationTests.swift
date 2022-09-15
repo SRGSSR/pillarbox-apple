@@ -14,7 +14,7 @@ import XCTest
 @MainActor
 final class ConfigurationTests: XCTestCase {
     func testDvrThreshold() {
-        let item = AVPlayerItem(url: TestStreams.dvr.url)
+        let item = AVPlayerItem(url: Stream.dvr.url)
         let player = Player(item: item) { configuration in
             configuration.dvrThreshold = CMTime(value: 30, timescale: 1)
         }

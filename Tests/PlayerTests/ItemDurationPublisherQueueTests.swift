@@ -12,15 +12,15 @@ import XCTest
 
 final class ItemDurationPublisherQueueTests: XCTestCase {
     func testItems() {
-        let item1 = AVPlayerItem(url: TestStreams.shortOnDemand.url)
-        let item2 = AVPlayerItem(url: TestStreams.onDemand.url)
+        let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
+        let item2 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2])
         expectPublished(
             values: [
                 .indefinite,
-                TestStreams.shortOnDemand.duration,
+                Stream.shortOnDemand.duration,
                 // Next media can be prepared and is immediately ready
-                TestStreams.onDemand.duration
+                Stream.onDemand.duration
             ],
             from: player.itemDurationPublisher()
                 .removeDuplicates(by: CMTime.close(within: 1)),
@@ -32,17 +32,17 @@ final class ItemDurationPublisherQueueTests: XCTestCase {
     }
 
     func testFailure() {
-        let item1 = AVPlayerItem(url: TestStreams.shortOnDemand.url)
-        let item2 = AVPlayerItem(url: TestStreams.unavailable.url)
-        let item3 = AVPlayerItem(url: TestStreams.onDemand.url)
+        let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
+        let item2 = AVPlayerItem(url: Stream.unavailable.url)
+        let item3 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2, item3])
         expectPublished(
             values: [
                 .indefinite,
-                TestStreams.shortOnDemand.duration,
+                Stream.shortOnDemand.duration,
                 // Next media cannot be prepared because of the failure
                 .indefinite,
-                TestStreams.onDemand.duration
+                Stream.onDemand.duration
             ],
             from: player.itemDurationPublisher()
                 .removeDuplicates(by: CMTime.close(within: 1)),

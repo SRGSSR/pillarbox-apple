@@ -18,19 +18,19 @@ final class PlayerStreamTypeTests: XCTestCase {
     }
 
     func testOnDemand() {
-        let item = AVPlayerItem(url: TestStreams.onDemand.url)
+        let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.onDemand))
     }
 
     func testLive() {
-        let item = AVPlayerItem(url: TestStreams.live.url)
+        let item = AVPlayerItem(url: Stream.live.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.live))
     }
 
     func testDVR() {
-        let item = AVPlayerItem(url: TestStreams.dvr.url)
+        let item = AVPlayerItem(url: Stream.dvr.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.dvr))
     }

@@ -12,8 +12,8 @@ import XCTest
 
 final class BufferingPublisherQueueTests: XCTestCase {
     func testItems() {
-        let item1 = AVPlayerItem(url: TestStreams.shortOnDemand.url)
-        let item2 = AVPlayerItem(url: TestStreams.onDemand.url)
+        let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
+        let item2 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2])
         expectEqualPublished(
             // Next media can be buffered in advance
@@ -26,9 +26,9 @@ final class BufferingPublisherQueueTests: XCTestCase {
     }
 
     func testFailure() {
-        let item1 = AVPlayerItem(url: TestStreams.shortOnDemand.url)
-        let item2 = AVPlayerItem(url: TestStreams.unavailable.url)
-        let item3 = AVPlayerItem(url: TestStreams.onDemand.url)
+        let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
+        let item2 = AVPlayerItem(url: Stream.unavailable.url)
+        let item3 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2, item3])
         expectEqualPublished(
             // Next media cannot be buffered in advance because of the failure

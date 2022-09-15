@@ -7,15 +7,6 @@
 import AVFoundation
 
 struct Stream {
-    let url: URL
-    let duration: CMTime
-}
-
-enum TestError: Error {
-    case any
-}
-
-enum TestStreams {
     static let onDemand = Stream(
         url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!,
         duration: CMTime(value: 120, timescale: 1)
@@ -46,6 +37,13 @@ enum TestStreams {
         url: URL(string: "custom://arbitrary.server/some.m3u8")!,
         duration: .indefinite
     )
+
+    let url: URL
+    let duration: CMTime
+}
+
+enum TestError: Error {
+    case any
 }
 
 final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
