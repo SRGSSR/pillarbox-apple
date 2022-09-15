@@ -48,7 +48,7 @@ private struct ControlsView: View {
 }
 
 struct PlayerView: View {
-    let media: Media
+    let medias: [Media]
 
     @StateObject private var player = Player()
     @State private var isUserInterfaceHidden = false
@@ -78,8 +78,16 @@ struct PlayerView: View {
         }
     }
 
+    init(medias: [Media]) {
+        self.medias = medias
+    }
+
+    init(media: Media) {
+        self.init(medias: [media])
+    }
+
     private func play() {
-        if let item = media.source.playerItem {
+        medias.compactMap(\.source.playerItem).forEach { item in
             player.append(item)
         }
         player.play()
