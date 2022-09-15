@@ -198,13 +198,14 @@ public final class Player: ObservableObject {
         Publishers.BoundaryTimePublisher(for: rawPlayer, times: times, queue: queue)
     }
 
-    /// Advance to the next item in the queue.
+    /// Advance to the next item in the queue. Does not remove the item from the dequeue.
     public func advanceToNextItem() {
         rawPlayer.advanceToNextItem()
     }
 
-    /// Return to the previous item in the queue.
+    /// Return to the previous item in the queue. Does not remove the item from the dequeue.
     public func returnToPreviousItem() {
+        rawPlayer.returnToPreviousItem()
     }
 
     deinit {
