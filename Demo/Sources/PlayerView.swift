@@ -93,7 +93,7 @@ struct PlayerView_Previews: PreviewProvider {
         id: "id",
         title: "Title",
         description: "Description",
-        source: .url(URL(string: "http://localhost::8123/valid_stream/master.m3u8")!)
+        source: .url(Stream.local)
     )
 
     static var previews: some View {
