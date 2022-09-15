@@ -51,9 +51,7 @@ struct PlaylistView: View {
     ]
 
     var body: some View {
-        ZStack {
-            PlayerView(medias: medias)
-        }
+        PlayerView(medias: medias)
     }
 }
 

@@ -28,14 +28,25 @@ private struct ControlsView: View {
         ZStack {
             if !isUserInterfaceHidden {
                 Color(white: 0, opacity: 0.3)
-                if !player.isBuffering {
-                    Button {
-                        player.togglePlayPause()
-                    } label: {
+                HStack(spacing: 40) {
+                    Button(action: { player.returnToPreviousItem() } ) {
+                        Image(systemName: "arrow.left.circle.fill")
+                            .resizable()
+                    }
+                    .frame(width: 45, height: 45)
+
+                    Button(action: { player.togglePlayPause() } ) {
                         Image(systemName: playbackButtonImageName)
                             .resizable()
                     }
+                    .opacity(player.isBuffering ? 0 : 1)
                     .frame(width: 90, height: 90)
+
+                    Button(action: { player.advanceToNextItem() } ) {
+                        Image(systemName: "arrow.right.circle.fill")
+                            .resizable()
+                    }
+                    .frame(width: 45, height: 45)
                 }
             }
             if player.isBuffering {

@@ -198,6 +198,15 @@ public final class Player: ObservableObject {
         Publishers.BoundaryTimePublisher(for: rawPlayer, times: times, queue: queue)
     }
 
+    /// Advance to the next item in the queue.
+    public func advanceToNextItem() {
+        rawPlayer.advanceToNextItem()
+    }
+
+    /// Return to the previous item in the queue.
+    public func returnToPreviousItem() {
+    }
+
     deinit {
         // Further improve deallocation in some cases where `AVQueuePlayer` cannot properly clean everything up.
         rawPlayer.removeAllItems()
