@@ -207,9 +207,4 @@ public final class Player: ObservableObject {
     public func returnToPreviousItem() {
         rawPlayer.returnToPreviousItem()
     }
-
-    deinit {
-        // Further improve deallocation in some cases where `AVQueuePlayer` cannot properly clean everything up.
-        rawPlayer.removeAllItems()
-    }
 }
