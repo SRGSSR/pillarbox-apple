@@ -35,7 +35,8 @@ public final class DequeuePlayer: AVQueuePlayer {
     ///     of the dequeue.
     /// - Returns: `true` iff the tested item can be inserted.
     func canInsert(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) -> Bool {
-        return false
+        // Same logic as "insertion after" applies
+        canInsert(item, after: beforeItem)
     }
 
     /// Insert an item before another item. Does nothing if the item already belongs to the dequeue.
