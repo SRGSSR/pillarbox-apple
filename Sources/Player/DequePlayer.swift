@@ -69,10 +69,21 @@ public final class DequePlayer: AVQueuePlayer {
     public func insert(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) {
     }
 
+    /// Check whether an item can be inserted after another item. An item can appear once at most in a deque.
+    /// - Parameters:
+    ///   - item: The item to be tested.
+    ///   - afterItem: The item after which insertion should take place. Pass `nil` to check insertion at the back
+    ///     of the deque.
+    /// - Returns: `true` iff the tested item can be inserted.
+    public override func canInsert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) -> Bool {
+        guard let afterItem else { return true }
+        return storedItems.contains(afterItem) && !storedItems.contains(item)
+    }
+
     /// Insert an item after another item. Does nothing if the item already belongs to the deque.
     /// - Parameters:
     ///   - item: The item to insert.
-    ///   - afterItem: The item after which insertion must take place. Pass `nil` to insert the item at the end of
+    ///   - afterItem: The item after which insertion must take place. Pass `nil` to insert the item at the back of
     ///     the queue.
     public override func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
         guard canInsert(item, after: afterItem) else { return }

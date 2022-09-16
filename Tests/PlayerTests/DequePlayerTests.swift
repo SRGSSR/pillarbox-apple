@@ -76,7 +76,6 @@ final class DequePlayerTests: XCTestCase {
         expect(player.canInsert(insertedItem, before: nil)).to(beTrue())
     }
 
-    // Part of the parent API but tested to check for consistency.
     func testCanInsertAfterNextItem() {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
@@ -86,7 +85,6 @@ final class DequePlayerTests: XCTestCase {
         expect(player.canInsert(insertedItem, after: item2)).to(beTrue())
     }
 
-    // Part of the parent API but tested to check for consistency.
     func testCanInsertAfterCurrentItem() {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
@@ -98,7 +96,6 @@ final class DequePlayerTests: XCTestCase {
         expect(player.canInsert(insertedItem, after: player.currentItem)).to(beTrue())
     }
 
-    // Part of the parent API but tested to check for consistency.
     func testCanInsertAfterPreviousItem() {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
@@ -112,7 +109,6 @@ final class DequePlayerTests: XCTestCase {
         expect(player.canInsert(insertedItem, after: item2)).to(beTrue())
     }
 
-    // Part of the parent API but tested to check for consistency.
     func testCanInsertAfterSameItem() {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
@@ -121,7 +117,6 @@ final class DequePlayerTests: XCTestCase {
         expect(player.canInsert(item1, after: item2)).to(beFalse())
     }
 
-    // Part of the parent API but tested to check for consistency.
     func testCanInsertAfterForeignItem() {
         let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
         let insertedItem = AVPlayerItem(url: URL(string: "https://www.server.com/inserted.m3u8")!)
@@ -150,11 +145,9 @@ final class DequePlayerTests: XCTestCase {
     }
 
     func testInsertBeforeCurrentItem() {
-
     }
 
     func testInsertBeforePreviousItem() {
-
     }
 
     func testInsertBeforeSameItem() {
@@ -221,16 +214,40 @@ final class DequePlayerTests: XCTestCase {
     func testAppendSame() {
     }
 
-    func testMoveBeforeNextItem() {
+    func testMovePreviousItemBeforePreviousItem() {
     }
 
-    func testMoveBeforeCurrentItem() {
+    func testMovePreviousItemBeforeCurrentItem() {
     }
 
-    func testMoveBeforePreviousItem() {
+    func testMovePreviousItemBeforeNextItem() {
     }
 
-    func testMoveBeforeSameItem() {
+    func testMoveCurrentItemBeforePreviousItem() {
+    }
+
+    func testMoveCurrentItemBeforeCurrentItem() {
+    }
+
+    func testMoveCurrentItemBeforeNextItem() {
+    }
+
+    func testMoveNextItemBeforePreviousItem() {
+    }
+
+    func testMoveNextItemBeforeCurrentItem() {
+    }
+
+    func testMoveNextItemBeforeNextItem() {
+    }
+
+    func testMoveBeforeSamePreviousItem() {
+    }
+
+    func testMoveBeforeSameCurrentItem() {
+    }
+
+    func testMoveBeforeSameNextItem() {
     }
 
     func testMoveBeforeForeignItem() {
@@ -239,16 +256,40 @@ final class DequePlayerTests: XCTestCase {
     func testMoveBeforeNil() {
     }
 
-    func testMoveAfterNextItem() {
+    func testMovePreviousItemAfterPreviousItem() {
     }
 
-    func testMoveAfterCurrentItem() {
+    func testMovePreviousItemAfterCurrentItem() {
     }
 
-    func testMoveAfterPreviousItem() {
+    func testMovePreviousItemAfterNextItem() {
     }
 
-    func testMoveAfterSameItem() {
+    func testMoveCurrentItemAfterPreviousItem() {
+    }
+
+    func testMoveCurrentItemAfterCurrentItem() {
+    }
+
+    func testMoveCurrentItemAfterNextItem() {
+    }
+
+    func testMoveNextItemAfterPreviousItem() {
+    }
+
+    func testMoveNextItemAfterCurrentItem() {
+    }
+
+    func testMoveNextItemAfterNextItem() {
+    }
+
+    func testMoveAfterSamePreviousItem() {
+    }
+
+    func testMoveAfterSameCurrentItem() {
+    }
+
+    func testMoveAfterSameNextItem() {
     }
 
     func testMoveAfterForeignItem() {
@@ -257,7 +298,13 @@ final class DequePlayerTests: XCTestCase {
     func testMoveAfterNil() {
     }
 
-    func testRemoveItem() {
+    func testRemovePreviousItem() {
+    }
+
+    func testRemoveCurrentItem() {
+    }
+
+    func testRemoveNextItem() {
     }
 
     func testRemoveForeignItem() {
