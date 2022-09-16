@@ -12,10 +12,42 @@ import XCTest
 
 @MainActor
 final class DequePlayerTests: XCTestCase {
-    func testCanInsertBeforeItem() {
+    func testEmpty() {
+        let player = DequePlayer()
+        expect(player.currentItem).to(beNil())
+        expect(player.items()).to(beEmpty())
+        expect(player.nextItems()).to(beEmpty())
+        expect(player.previousItems()).to(beEmpty())
+    }
+
+    func testCanInsertBeforeNextItem() {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
         let player = DequePlayer(items: [item1, item2])
+        let insertedItem = AVPlayerItem(url: URL(string: "https://www.server.com/inserted.m3u8")!)
+        expect(player.canInsert(insertedItem, before: item1)).to(beTrue())
+        expect(player.canInsert(insertedItem, before: item2)).to(beTrue())
+    }
+
+    func testCanInsertBeforeCurrentItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item2))
+        let insertedItem = AVPlayerItem(url: URL(string: "https://www.server.com/inserted.m3u8")!)
+        expect(player.canInsert(insertedItem, before: player.currentItem)).to(beTrue())
+    }
+
+    func testCanInsertBeforePreviousItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        player.advanceToNextItem()
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item3))
         let insertedItem = AVPlayerItem(url: URL(string: "https://www.server.com/inserted.m3u8")!)
         expect(player.canInsert(insertedItem, before: item1)).to(beTrue())
         expect(player.canInsert(insertedItem, before: item2)).to(beTrue())
@@ -45,12 +77,39 @@ final class DequePlayerTests: XCTestCase {
     }
 
     // Part of the parent API but tested to check for consistency.
-    func testCanInsertAfterItem() {
-        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
+    func testCanInsertAfterNextItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let player = DequePlayer(items: [item1, item2])
         let insertedItem = AVPlayerItem(url: URL(string: "https://www.server.com/inserted.m3u8")!)
-        let foreignItem = AVPlayerItem(url: URL(string: "https://www.server.com/foreign.m3u8")!)
-        let player = DequePlayer(items: [item])
-        expect(player.canInsert(insertedItem, after: foreignItem)).to(beFalse())
+        expect(player.canInsert(insertedItem, after: item1)).to(beTrue())
+        expect(player.canInsert(insertedItem, after: item2)).to(beTrue())
+    }
+
+    // Part of the parent API but tested to check for consistency.
+    func testCanInsertAfterCurrentItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item2))
+        let insertedItem = AVPlayerItem(url: URL(string: "https://www.server.com/inserted.m3u8")!)
+        expect(player.canInsert(insertedItem, after: player.currentItem)).to(beTrue())
+    }
+
+    // Part of the parent API but tested to check for consistency.
+    func testCanInsertAfterPreviousItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        player.advanceToNextItem()
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item3))
+        let insertedItem = AVPlayerItem(url: URL(string: "https://www.server.com/inserted.m3u8")!)
+        expect(player.canInsert(insertedItem, after: item1)).to(beTrue())
+        expect(player.canInsert(insertedItem, after: item2)).to(beTrue())
     }
 
     // Part of the parent API but tested to check for consistency.
@@ -78,7 +137,7 @@ final class DequePlayerTests: XCTestCase {
         expect(player.canInsert(insertedItem, after: nil)).to(beTrue())
     }
 
-    func testInsertBeforeItem() {
+    func testInsertBeforeNextItem() {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
         let player = DequePlayer(items: [item1, item2])
@@ -88,6 +147,14 @@ final class DequePlayerTests: XCTestCase {
         expect(player.items()).to(equal([insertedItem, item1, item2]))
         expect(player.nextItems()).to(equal([item2]))
         expect(player.previousItems()).to(equal([insertedItem]))
+    }
+
+    func testInsertBeforeCurrentItem() {
+
+    }
+
+    func testInsertBeforePreviousItem() {
+
     }
 
     func testInsertBeforeSameItem() {
@@ -107,7 +174,7 @@ final class DequePlayerTests: XCTestCase {
         expect(player.previousItems()).to(equal([item2]))
     }
 
-    func testInsertAfterItem() {
+    func testInsertAfterNextItem() {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
         let player = DequePlayer(items: [item1, item2])
@@ -119,10 +186,16 @@ final class DequePlayerTests: XCTestCase {
         expect(player.previousItems()).to(beEmpty())
     }
 
+    func testInsertAfterCurrentItem() {
+    }
+
+    func testInsertAfterPreviousItem() {
+    }
+
     func testInsertAfterSameItem() {
     }
 
-    func testInsertAfterUnknownItem() {
+    func testInsertAfterForeignItem() {
     }
 
     func testInsertAfterNil() {
@@ -148,25 +221,37 @@ final class DequePlayerTests: XCTestCase {
     func testAppendSame() {
     }
 
-    func testMoveBeforeItem() {
+    func testMoveBeforeNextItem() {
+    }
+
+    func testMoveBeforeCurrentItem() {
+    }
+
+    func testMoveBeforePreviousItem() {
     }
 
     func testMoveBeforeSameItem() {
     }
 
-    func testMoveBeforeUnknownItem() {
+    func testMoveBeforeForeignItem() {
     }
 
     func testMoveBeforeNil() {
     }
 
-    func testMoveAfterItem() {
+    func testMoveAfterNextItem() {
+    }
+
+    func testMoveAfterCurrentItem() {
+    }
+
+    func testMoveAfterPreviousItem() {
     }
 
     func testMoveAfterSameItem() {
     }
 
-    func testMoveAfterUnknownItem() {
+    func testMoveAfterForeignItem() {
     }
 
     func testMoveAfterNil() {

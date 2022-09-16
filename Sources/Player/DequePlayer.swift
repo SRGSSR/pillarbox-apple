@@ -15,8 +15,9 @@ public final class DequePlayer: AVQueuePlayer {
     /// Create a deque player with the specified items.
     /// - Parameter items: The items to be initially inserted into the deque.
     public override init(items: [AVPlayerItem]) {
-        storedItems = Deque(items)
+        storedItems = Deque()
         super.init(items: items)
+        storedItems.append(contentsOf: items)
     }
 
     /// Create a deque player with no items.
@@ -28,19 +29,25 @@ public final class DequePlayer: AVQueuePlayer {
     /// All items in the deque.
     /// - Returns: Items
     public override func items() -> [AVPlayerItem] {
-        return super.items()
-    }
-
-    /// Items past the current item (not included).
-    /// - Returns: Items.
-    func nextItems() -> [AVPlayerItem] {
-        return []
+        return Array(storedItems)
     }
 
     /// Items before the current item (not included).
     /// - Returns: Items.
-    func previousItems() -> [AVPlayerItem] {
-        return []
+    public func previousItems() -> [AVPlayerItem] {
+        guard let currentItem, let currentIndex = storedItems.firstIndex(of: currentItem) else {
+            return Array(storedItems)
+        }
+        return Array(storedItems.prefix(upTo: currentIndex))
+    }
+
+    /// Items past the current item (not included).
+    /// - Returns: Items.
+    public func nextItems() -> [AVPlayerItem] {
+        guard let currentItem, let currentIndex = storedItems.firstIndex(of: currentItem) else {
+            return []
+        }
+        return Array(storedItems.suffix(from: currentIndex + 1))
     }
 
     /// Check whether an item can be inserted before another item. An item can appear once at most in a deque.
@@ -49,9 +56,9 @@ public final class DequePlayer: AVQueuePlayer {
     ///   - beforeItem: The item before which insertion should take place. Pass `nil` to check insertion at the front
     ///     of the deque.
     /// - Returns: `true` iff the tested item can be inserted.
-    func canInsert(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) -> Bool {
-        // Same logic as "insertion after" applies
-        canInsert(item, after: beforeItem)
+    public func canInsert(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) -> Bool {
+        guard let beforeItem else { return true }
+        return storedItems.contains(beforeItem) && !storedItems.contains(item)
     }
 
     /// Insert an item before another item. Does nothing if the item already belongs to the deque.
@@ -59,7 +66,7 @@ public final class DequePlayer: AVQueuePlayer {
     ///   - item: The item to insert.
     ///   - beforeItem: The item before which insertion must take place. Pass `nil` to insert the item at the front
     ///     of the deque.
-    func insert(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) {
+    public func insert(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) {
     }
 
     /// Insert an item after another item. Does nothing if the item already belongs to the deque.
@@ -74,13 +81,13 @@ public final class DequePlayer: AVQueuePlayer {
 
     /// Prepend an item to the queue.
     /// - Parameter item: The item to prepend.
-    func prepend(_ item: AVPlayerItem) {
+    public func prepend(_ item: AVPlayerItem) {
         insert(item, before: nil)
     }
 
     /// Append an item to the queue.
     /// - Parameter item: The item to append.
-    func append(_ item: AVPlayerItem) {
+    public func append(_ item: AVPlayerItem) {
         insert(item, after: nil)
     }
 
@@ -89,7 +96,7 @@ public final class DequePlayer: AVQueuePlayer {
     ///   - item: The item to move.
     ///   - beforeItem: The item before which the moved item must be relocated. Pass `nil` to move the item to the
     ///     front of the queue.
-    func move(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) {
+    public func move(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) {
     }
 
     /// Move an item after another item.
@@ -97,7 +104,7 @@ public final class DequePlayer: AVQueuePlayer {
     ///   - item: The item to move.
     ///   - afterItem: The item after which the moved item must be relocated. Pass `nil` to move the item to the
     ///     end of the queue.
-    func move(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
+    public func move(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
     }
 
     /// Remove an item from the queue
@@ -112,7 +119,7 @@ public final class DequePlayer: AVQueuePlayer {
     }
 
     /// Return to the previous item in the deque.
-    func returnToPreviousItem() {
+    public func returnToPreviousItem() {
     }
 
     /// Move to the next item in the deque.

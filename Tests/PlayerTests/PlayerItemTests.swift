@@ -14,7 +14,7 @@ import XCTest
 final class PlayerItemTests: XCTestCase {
     func testEmpty() {
         let player = Player()
-        expect(player.items).to(equal([]))
+        expect(player.items).to(beEmpty())
     }
 
     func testItems() {
@@ -77,7 +77,7 @@ final class PlayerItemTests: XCTestCase {
         let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
         let player = Player(item: item)
         player.remove(item)
-        expect(player.items).to(equal([]))
+        expect(player.items).to(beEmpty())
     }
 
     func testUnknownItemRemoval() {
@@ -93,7 +93,7 @@ final class PlayerItemTests: XCTestCase {
         let player = Player()
         let unknownItem = AVPlayerItem(url: URL(string: "https://www.server.com/unknown.m3u8")!)
         player.remove(unknownItem)
-        expect(player.items).to(equal([]))
+        expect(player.items).to(beEmpty())
     }
 
     func testRemoveAll() {
@@ -101,6 +101,6 @@ final class PlayerItemTests: XCTestCase {
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
         let player = Player(items: [item1, item2])
         player.removeAllItems()
-        expect(player.items).to(equal([]))
+        expect(player.items).to(beEmpty())
     }
 }
