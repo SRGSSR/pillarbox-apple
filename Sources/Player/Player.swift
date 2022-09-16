@@ -47,7 +47,7 @@ public final class Player: ObservableObject {
     }
 
     /// Raw player used for playback.
-    public let rawPlayer: DequeuePlayer
+    public let rawPlayer: DequePlayer
 
     private let configuration: PlayerConfiguration
 
@@ -64,7 +64,7 @@ public final class Player: ObservableObject {
     /// Create a player with a given item queue.
     /// - Parameter items: The items to be queued initially.
     public init(items: [AVPlayerItem] = [], configuration: (inout PlayerConfiguration) -> Void = { _ in }) {
-        rawPlayer = DequeuePlayer(items: items.removeDuplicates())
+        rawPlayer = DequePlayer(items: items.removeDuplicates())
         self.configuration = Self.configure(with: configuration)
 
         rawPlayer.playbackStatePublisher()
@@ -113,7 +113,7 @@ public final class Player: ObservableObject {
         return playerConfiguration
     }
 
-    /// Insert an item after another item. Does nothing if the item already belongs to the dequeue.
+    /// Insert an item after another item. Does nothing if the item already belongs to the deque.
     /// - Parameters:
     ///   - item: The item to insert.
     ///   - afterItem: The item after which insertion must take place. Pass `nil` to insert the item at the end of
@@ -198,12 +198,12 @@ public final class Player: ObservableObject {
         Publishers.BoundaryTimePublisher(for: rawPlayer, times: times, queue: queue)
     }
 
-    /// Advance to the next item in the queue. Does not remove the item from the dequeue.
+    /// Advance to the next item in the queue. Does not remove the item from the deque.
     public func advanceToNextItem() {
         rawPlayer.advanceToNextItem()
     }
 
-    /// Return to the previous item in the queue. Does not remove the item from the dequeue.
+    /// Return to the previous item in the queue. Does not remove the item from the deque.
     public func returnToPreviousItem() {
         rawPlayer.returnToPreviousItem()
     }

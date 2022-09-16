@@ -7,10 +7,10 @@
 import AVFoundation
 
 @MainActor
-public final class DequeuePlayer: AVQueuePlayer {
+public final class DequePlayer: AVQueuePlayer {
     private var seekCount = 0
 
-    /// All items in the dequeue.
+    /// All items in the deque.
     /// - Returns: Items
     public override func items() -> [AVPlayerItem] {
         return super.items()
@@ -28,26 +28,26 @@ public final class DequeuePlayer: AVQueuePlayer {
         return []
     }
 
-    /// Check whether an item can be inserted before another item. An item can appear once at most in a dequeue.
+    /// Check whether an item can be inserted before another item. An item can appear once at most in a deque.
     /// - Parameters:
     ///   - item: The item to be tested.
     ///   - beforeItem: The item before which insertion should take place. Pass `nil` to check insertion at the front
-    ///     of the dequeue.
+    ///     of the deque.
     /// - Returns: `true` iff the tested item can be inserted.
     func canInsert(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) -> Bool {
         // Same logic as "insertion after" applies
         canInsert(item, after: beforeItem)
     }
 
-    /// Insert an item before another item. Does nothing if the item already belongs to the dequeue.
+    /// Insert an item before another item. Does nothing if the item already belongs to the deque.
     /// - Parameters:
     ///   - item: The item to insert.
     ///   - beforeItem: The item before which insertion must take place. Pass `nil` to insert the item at the front
-    ///     of the dequeue.
+    ///     of the deque.
     func insert(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) {
     }
 
-    /// Insert an item after another item. Does nothing if the item already belongs to the dequeue.
+    /// Insert an item after another item. Does nothing if the item already belongs to the deque.
     /// - Parameters:
     ///   - item: The item to insert.
     ///   - afterItem: The item after which insertion must take place. Pass `nil` to insert the item at the end of
@@ -96,11 +96,11 @@ public final class DequeuePlayer: AVQueuePlayer {
         super.removeAllItems()
     }
 
-    /// Return to the previous item in the dequeue.
+    /// Return to the previous item in the deque.
     func returnToPreviousItem() {
     }
 
-    /// Move to the next item in the dequeue.
+    /// Move to the next item in the deque.
     public override func advanceToNextItem() {
         super.advanceToNextItem()
     }
@@ -122,6 +122,6 @@ public final class DequeuePlayer: AVQueuePlayer {
 }
 
 extension Notification.Name {
-    static let willSeek = Notification.Name("DequeuePlayerWillSeekNotification")
-    static let didSeek = Notification.Name("DequeuePlayerDidSeekNotification")
+    static let willSeek = Notification.Name("DequePlayerWillSeekNotification")
+    static let didSeek = Notification.Name("DequePlayerDidSeekNotification")
 }
