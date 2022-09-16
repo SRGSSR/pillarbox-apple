@@ -113,19 +113,19 @@ public final class Player: ObservableObject {
         return playerConfiguration
     }
 
-    /// Insert an item into the queue.
+    /// Insert an item after another item. Does nothing if the item already belongs to the dequeue.
     /// - Parameters:
     ///   - item: The item to insert.
-    ///   - afterItem: The item after which the new item must be inserted. If `nil` the item is appended.
+    ///   - afterItem: The item after which insertion must take place. Pass `nil` to insert the item at the end of
+    ///     the queue.
     public func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
-        guard rawPlayer.canInsert(item, after: afterItem) else { return }
         rawPlayer.insert(item, after: afterItem)
     }
 
     /// Append an item to the queue.
     /// - Parameter item: The item to append.
     public func append(_ item: AVPlayerItem) {
-        insert(item, after: nil)
+        rawPlayer.append(item)
     }
 
     /// Remove an item from the queue.
