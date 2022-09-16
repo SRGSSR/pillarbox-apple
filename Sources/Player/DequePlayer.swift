@@ -5,10 +5,25 @@
 //
 
 import AVFoundation
+import DequeModule
 
 @MainActor
 public final class DequePlayer: AVQueuePlayer {
+    private var storedItems: Deque<AVPlayerItem>
     private var seekCount = 0
+
+    /// Create a deque player with the specified items.
+    /// - Parameter items: The items to be initially inserted into the deque.
+    public override init(items: [AVPlayerItem]) {
+        storedItems = Deque(items)
+        super.init(items: items)
+    }
+
+    /// Create a deque player with no items.
+    public override init() {
+        storedItems = Deque()
+        super.init()
+    }
 
     /// All items in the deque.
     /// - Returns: Items
