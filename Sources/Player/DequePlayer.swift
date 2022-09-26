@@ -17,7 +17,6 @@ public final class DequePlayer: AVQueuePlayer {
     public override init(items: [AVPlayerItem]) {
         storedItems = Deque()
         super.init(items: items)
-        storedItems.append(contentsOf: items)
     }
 
     /// Create a deque player with no items.
@@ -29,7 +28,7 @@ public final class DequePlayer: AVQueuePlayer {
     /// All items in the deque.
     /// - Returns: Items
     public override func items() -> [AVPlayerItem] {
-        return Array(storedItems)
+        Array(storedItems)
     }
 
     /// Items before the current item (not included).
@@ -44,10 +43,7 @@ public final class DequePlayer: AVQueuePlayer {
     /// Items past the current item (not included).
     /// - Returns: Items.
     public func nextItems() -> [AVPlayerItem] {
-        guard let currentItem, let currentIndex = storedItems.firstIndex(of: currentItem) else {
-            return []
-        }
-        return Array(storedItems.suffix(from: currentIndex + 1))
+        Array(super.items().dropFirst())
     }
 
     /// Check whether an item can be inserted before another item. An item can appear once at most in a deque.
@@ -67,6 +63,18 @@ public final class DequePlayer: AVQueuePlayer {
     ///   - beforeItem: The item before which insertion must take place. Pass `nil` to insert the item at the front
     ///     of the deque.
     public func insert(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) {
+        guard canInsert(item, before: beforeItem) else { return }
+        if let beforeItem {
+            guard let index = storedItems.firstIndex(of: beforeItem) else { return }
+            storedItems.insert(item, at: index)
+            if index != 0 {
+                let afterIndex = storedItems.index(before: index)
+                super.insert(item, after: storedItems[afterIndex])
+            }
+        }
+        else {
+            storedItems.prepend(item)
+        }
     }
 
     /// Check whether an item can be inserted after another item. An item can appear once at most in a deque.
@@ -87,7 +95,15 @@ public final class DequePlayer: AVQueuePlayer {
     ///     the queue.
     public override func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
         guard canInsert(item, after: afterItem) else { return }
-        super.insert(item, after: afterItem)
+        if let afterItem {
+            guard let index = storedItems.firstIndex(of: afterItem) else { return }
+            storedItems.insert(item, at: storedItems.index(after: index))
+            super.insert(item, after: afterItem)
+        }
+        else {
+            storedItems.append(item)
+            super.insert(item, after: nil)
+        }
     }
 
     /// Prepend an item to the queue.
