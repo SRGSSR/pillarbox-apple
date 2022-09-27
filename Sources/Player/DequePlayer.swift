@@ -191,9 +191,13 @@ public final class DequePlayer: AVQueuePlayer {
         super.removeAllItems()
     }
 
+    // TODO: canReturn?
+
     /// Return to the previous item in the deque.
     public func returnToPreviousItem() {
     }
+
+    // TODO: canAdvance?
 
     /// Move to the next item in the deque.
     public override func advanceToNextItem() {
