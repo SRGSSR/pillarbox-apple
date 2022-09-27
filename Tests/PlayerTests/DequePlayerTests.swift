@@ -324,15 +324,27 @@ final class DequePlayerTests: XCTestCase {
     }
 
     func testPrepend() {
-    }
+        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
+        let player = DequePlayer(items: [item])
+        expect(player.currentItem).to(equal(item))
 
-    func testPrependSame() {
+        let insertedItem = AVPlayerItem(url: URL(string: "https://www.server.com/inserted.m3u8")!)
+        player.prepend(insertedItem)
+        expect(player.items()).to(equalDiff([insertedItem, item]))
+        expect(player.nextItems()).to(beEmpty())
+        expect(player.previousItems()).to(equalDiff([insertedItem]))
     }
 
     func testAppend() {
-    }
+        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
+        let player = DequePlayer(items: [item])
+        expect(player.currentItem).to(equal(item))
 
-    func testAppendSame() {
+        let insertedItem = AVPlayerItem(url: URL(string: "https://www.server.com/inserted.m3u8")!)
+        player.append(insertedItem)
+        expect(player.items()).to(equalDiff([item, insertedItem]))
+        expect(player.nextItems()).to(equalDiff([insertedItem]))
+        expect(player.previousItems()).to(beEmpty())
     }
 
     func testMovePreviousItemBeforePreviousItem() {
