@@ -137,11 +137,13 @@ public final class DequePlayer: AVQueuePlayer {
     /// Remove an item from the queue
     /// - Parameter item: The item to remove.
     public override func remove(_ item: AVPlayerItem) {
+        storedItems.removeAll { $0 === item }
         super.remove(item)
     }
 
     /// Remove all items in the queue.
     public override func removeAllItems() {
+        storedItems.removeAll()
         super.removeAllItems()
     }
 
