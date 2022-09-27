@@ -64,7 +64,7 @@ final class DequePlayerTests: XCTestCase {
         expect(player.canInsert(insertedItem, before: item1)).to(beTrue())
     }
 
-    func testCannotInsertBeforeSameItem() {
+    func testCannotInsertBeforeIdenticalItem() {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
         let player = DequePlayer(items: [item1, item2])
@@ -129,7 +129,7 @@ final class DequePlayerTests: XCTestCase {
         expect(player.canInsert(insertedItem, after: item2)).to(beTrue())
     }
 
-    func testCannotInsertAfterSameItem() {
+    func testCannotInsertAfterIdenticalItem() {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
         let player = DequePlayer(items: [item1, item2])
@@ -208,7 +208,7 @@ final class DequePlayerTests: XCTestCase {
         expect(player.previousItems()).to(equalDiff([insertedItem]))
     }
 
-    func testInsertBeforeSameItem() {
+    func testInsertBeforeIdenticalItem() {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
         let player = DequePlayer(items: [item1, item2])
@@ -295,7 +295,7 @@ final class DequePlayerTests: XCTestCase {
         expect(player.previousItems()).to(beEmpty())
     }
 
-    func testInsertAfterSameItem() {
+    func testInsertAfterIdenticalItem() {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
         let player = DequePlayer(items: [item1, item2])
@@ -427,44 +427,51 @@ final class DequePlayerTests: XCTestCase {
         expect(player.canMove(item3, before: item2)).to(beTrue())
     }
 
-    func testCannotMoveBeforeSameItem() {
-        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+    func testCannotMoveBeforeIdenticalItem() {
+        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
         let player = DequePlayer(items: [item])
         expect(player.canMove(item, before: item)).to(beFalse())
     }
 
-    func testCannotMoveIfAlreadyBeforeItem() {
+    func testCannotMoveBeforeItemIfAlreadyAtExpectedLocation() {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
         let player = DequePlayer(items: [item1, item2])
         expect(player.canMove(item1, before: item2)).to(beFalse())
     }
 
-    func testCannotMoveFirstItemToFront() {
-        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
-        let player = DequePlayer(items: [item])
-        expect(player.canMove(item, before: nil)).to(beFalse())
-    }
-
-    func testCannotMoveForeignItem() {
+    func testCannotMoveForeignItemBeforeItem() {
         let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
         let foreignItem = AVPlayerItem(url: URL(string: "https://www.server.com/foreign.m3u8")!)
         let player = DequePlayer(items: [item])
         expect(player.canMove(foreignItem, before: item)).to(beFalse())
     }
 
-    func testCannotMoveBeforeForeignItem() {
+    func testCannotMoveItemBeforeForeignItem() {
         let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
         let foreignItem = AVPlayerItem(url: URL(string: "https://www.server.com/foreign.m3u8")!)
         let player = DequePlayer(items: [item])
         expect(player.canMove(item, before: foreignItem)).to(beFalse())
     }
 
-    func testCanMoveBeforeNil() {
+    func testCanMoveBeforeFirstItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let player = DequePlayer(items: [item1, item2])
+        expect(player.canMove(item2, before: item1)).to(beTrue())
+    }
+
+    func testCanMoveItemBeforeNil() {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
         let player = DequePlayer(items: [item1, item2])
         expect(player.canMove(item2, before: nil)).to(beTrue())
+    }
+
+    func testCannotFirstItemBeforeNil() {
+        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
+        let player = DequePlayer(items: [item])
+        expect(player.canMove(item, before: nil)).to(beFalse())
     }
 
     func testMovePreviousItemBeforeNextItem() {
@@ -597,8 +604,8 @@ final class DequePlayerTests: XCTestCase {
         expect(player.previousItems()).to(beEmpty())
     }
 
-    func testMoveBeforeSameItem() {
-        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+    func testMoveBeforeIdenticalItem() {
+        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
         let player = DequePlayer(items: [item])
         player.move(item, before: item)
         expect(player.items()).to(equalDiff([item]))
@@ -620,43 +627,281 @@ final class DequePlayerTests: XCTestCase {
         expect(player.items()).to(equalDiff([item2, item1]))
     }
 
-    func testMovePreviousItemAfterPreviousItem() {
+    func testCanMovePreviousItemAfterNextItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item2))
+        expect(player.canMove(item1, after: item3)).to(beTrue())
     }
 
-    func testMovePreviousItemAfterCurrentItem() {
+    func testCanMovePreviousItemAfterCurrentItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item2))
+        expect(player.canMove(item1, after: item2)).to(beTrue())
+    }
+
+    func testCanMovePreviousItemAfterPreviousItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        player.advanceToNextItem()
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item3))
+        expect(player.canMove(item1, after: item2)).to(beTrue())
+    }
+
+    func testCanMoveCurrentItemAfterNextItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        expect(player.currentItem).to(equal(item1))
+        expect(player.canMove(item1, after: item2)).to(beTrue())
+    }
+
+    func testCanMoveCurrentItemAfterPreviousItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        player.advanceToNextItem()
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item3))
+        expect(player.canMove(item3, after: item1)).to(beTrue())
+    }
+
+    func testCanMoveNextItemAfterPreviousItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item2))
+        expect(player.canMove(item3, after: item1)).to(beTrue())
+    }
+
+    func testCanMoveNextItemAfterCurrentItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        expect(player.currentItem).to(equal(item1))
+        expect(player.canMove(item3, after: item1)).to(beTrue())
+    }
+
+    func testCanMoveNextItemAfterNextItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        expect(player.currentItem).to(equal(item1))
+        expect(player.canMove(item2, after: item3)).to(beTrue())
+    }
+
+    func testCannotMoveAfterIdenticalItem() {
+        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
+        let player = DequePlayer(items: [item])
+        expect(player.canMove(item, after: item)).to(beFalse())
+    }
+
+    func testCannotMoveAfterItemIfAlreadyAtExpectedLocation() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let player = DequePlayer(items: [item1, item2])
+        expect(player.canMove(item2, after: item1)).to(beFalse())
+    }
+
+    func testCannotMoveForeignItemAfterItem() {
+        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
+        let foreignItem = AVPlayerItem(url: URL(string: "https://www.server.com/foreign.m3u8")!)
+        let player = DequePlayer(items: [item])
+        expect(player.canMove(foreignItem, after: item)).to(beFalse())
+    }
+
+    func testCannotMoveItemAfterForeignItem() {
+        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
+        let foreignItem = AVPlayerItem(url: URL(string: "https://www.server.com/foreign.m3u8")!)
+        let player = DequePlayer(items: [item])
+        expect(player.canMove(item, after: foreignItem)).to(beFalse())
+    }
+
+    func testCanMoveAfterLastItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let player = DequePlayer(items: [item1, item2])
+        expect(player.canMove(item1, after: item2)).to(beTrue())
+    }
+
+    func testCanMoveItemAfterNil() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let player = DequePlayer(items: [item1, item2])
+        expect(player.canMove(item1, after: nil)).to(beTrue())
+    }
+
+    func testCannotMoveLastItemAfterNil() {
+        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
+        let player = DequePlayer(items: [item])
+        expect(player.canMove(item, after: nil)).to(beFalse())
     }
 
     func testMovePreviousItemAfterNextItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item2))
+
+        player.move(item1, after: item3)
+        expect(player.items()).to(equalDiff([item2, item3, item1]))
+        expect(player.nextItems()).to(equalDiff([item3, item1]))
+        expect(player.previousItems()).to(beEmpty())
     }
 
-    func testMoveCurrentItemAfterPreviousItem() {
+    func testMovePreviousItemAfterCurrentItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        player.advanceToNextItem()
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item3))
+
+        player.move(item1, after: item3)
+        expect(player.items()).to(equalDiff([item2, item3, item1]))
+        expect(player.nextItems()).to(equalDiff([item1]))
+        expect(player.previousItems()).to(equalDiff([item2]))
+    }
+
+    func testMovePreviousItemAfterPreviousItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        player.advanceToNextItem()
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item3))
+
+        player.move(item1, after: item2)
+        expect(player.items()).to(equalDiff([item2, item1, item3]))
+        expect(player.nextItems()).to(beEmpty())
+        expect(player.previousItems()).to(equalDiff([item2, item1]))
     }
 
     func testMoveCurrentItemAfterNextItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        expect(player.currentItem).to(equal(item1))
+
+        player.move(item1, after: item2)
+        expect(player.currentItem).to(equal(item2))
+        expect(player.items()).to(equalDiff([item2, item1, item3]))
+        expect(player.nextItems()).to(equalDiff([item1, item3]))
+        expect(player.previousItems()).to(beEmpty())
+    }
+
+    func testMoveCurrentItemAfterPreviousItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        player.advanceToNextItem()
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item3))
+
+        player.move(item3, after: item1)
+        expect(player.currentItem).to(beNil())
+        expect(player.items()).to(equalDiff([item1, item3, item2]))
+        expect(player.nextItems()).to(beEmpty())
+        expect(player.previousItems()).to(equalDiff([item1, item3, item2]))
+    }
+
+    func testMoveCurrentFirstItemAfterNextItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        expect(player.currentItem).to(equal(item1))
+
+        player.move(item1, after: item2)
+        expect(player.currentItem).to(equal(item2))
+        expect(player.items()).to(equalDiff([item2, item1, item3]))
+        expect(player.nextItems()).to(equalDiff([item1, item3]))
+        expect(player.previousItems()).to(beEmpty())
     }
 
     func testMoveNextItemAfterPreviousItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        player.advanceToNextItem()
+        expect(player.currentItem).to(equal(item2))
+
+        player.move(item3, after: item1)
+        expect(player.items()).to(equalDiff([item1, item3, item2]))
+        expect(player.nextItems()).to(beEmpty())
+        expect(player.previousItems()).to(equalDiff([item1, item3]))
     }
 
     func testMoveNextItemAfterCurrentItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        expect(player.currentItem).to(equal(item1))
+
+        player.move(item3, after: item1)
+        expect(player.items()).to(equalDiff([item1, item3, item2]))
+        expect(player.nextItems()).to(equalDiff([item3, item2]))
+        expect(player.previousItems()).to(beEmpty())
     }
 
     func testMoveNextItemAfterNextItem() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let player = DequePlayer(items: [item1, item2, item3])
+        expect(player.currentItem).to(equal(item1))
+
+        player.move(item2, after: item3)
+        expect(player.items()).to(equalDiff([item1, item3, item2]))
+        expect(player.nextItems()).to(equalDiff([item3, item2]))
+        expect(player.previousItems()).to(beEmpty())
     }
 
-    func testMoveAfterSamePreviousItem() {
-    }
-
-    func testMoveAfterSameCurrentItem() {
-    }
-
-    func testMoveAfterSameNextItem() {
+    func testMoveAfterIdenticalItem() {
+        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
+        let player = DequePlayer(items: [item])
+        player.move(item, after: item)
+        expect(player.items()).to(equalDiff([item]))
     }
 
     func testMoveAfterForeignItem() {
+        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
+        let foreignItem = AVPlayerItem(url: URL(string: "https://www.server.com/foreign.m3u8")!)
+        let player = DequePlayer(items: [item])
+        player.move(item, after: foreignItem)
+        expect(player.items()).to(equalDiff([item]))
     }
 
     func testMoveAfterNil() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let player = DequePlayer(items: [item1, item2])
+        player.move(item1, after: nil)
+        expect(player.items()).to(equalDiff([item2, item1]))
     }
 
     func testRemovePreviousItem() {
