@@ -81,7 +81,7 @@ public final class DequePlayer: AVQueuePlayer {
     /// - Parameters:
     ///   - item: The item to be tested.
     ///   - afterItem: The item after which insertion should take place. Pass `nil` to check insertion at the back
-    ///     of the deque.
+    ///     of the deque. If this item does not exist the method does nothing.
     /// - Returns: `true` iff the tested item can be inserted.
     public override func canInsert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) -> Bool {
         guard let afterItem else { return true }
@@ -92,7 +92,7 @@ public final class DequePlayer: AVQueuePlayer {
     /// - Parameters:
     ///   - item: The item to insert.
     ///   - afterItem: The item after which insertion must take place. Pass `nil` to insert the item at the back of
-    ///     the queue.
+    ///     the queue. If this item does not exist the method does nothing.
     public override func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
         guard canInsert(item, after: afterItem) else { return }
         if let afterItem {
@@ -118,19 +118,31 @@ public final class DequePlayer: AVQueuePlayer {
         insert(item, after: nil)
     }
 
+    // TODO: canMove API
+
     /// Move an item before another item.
     /// - Parameters:
     ///   - item: The item to move.
     ///   - beforeItem: The item before which the moved item must be relocated. Pass `nil` to move the item to the
-    ///     front of the queue.
+    ///     front of the queue. If this item does not exist the method does nothing.
     public func move(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) {
+        // TODO: Avoid operations if item item to be moved is already before at the target location
+        if let beforeItem {
+            guard item !== beforeItem, storedItems.contains(beforeItem) else { return }
+            remove(item)
+            insert(item, before: beforeItem)
+        }
+        else {
+            remove(item)
+            prepend(item)
+        }
     }
 
     /// Move an item after another item.
     /// - Parameters:
     ///   - item: The item to move.
     ///   - afterItem: The item after which the moved item must be relocated. Pass `nil` to move the item to the
-    ///     end of the queue.
+    ///     end of the queue. If this item does not exist the method does nothing.
     public func move(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
     }
 
