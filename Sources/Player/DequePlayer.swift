@@ -92,7 +92,7 @@ public final class DequePlayer: AVQueuePlayer {
     /// - Parameters:
     ///   - item: The item to insert.
     ///   - afterItem: The item after which insertion must take place. Pass `nil` to insert the item at the back of
-    ///     the queue. If this item does not exist the method does nothing.
+    ///     the deque. If this item does not exist the method does nothing.
     public override func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
         guard canInsert(item, after: afterItem) else { return }
         if let afterItem {
@@ -106,25 +106,42 @@ public final class DequePlayer: AVQueuePlayer {
         }
     }
 
-    /// Prepend an item to the queue.
+    /// Prepend an item to the deque.
     /// - Parameter item: The item to prepend.
     public func prepend(_ item: AVPlayerItem) {
         insert(item, before: nil)
     }
 
-    /// Append an item to the queue.
+    /// Append an item to the deque.
     /// - Parameter item: The item to append.
     public func append(_ item: AVPlayerItem) {
         insert(item, after: nil)
     }
 
-    // TODO: canMove API
+    /// Check whether an item can be moved before another item. `
+    /// - Parameters:
+    ///   - item: The item to move. The method returns `false` if the item does not belong ti the deque.
+    ///   - beforeItem: The item before which the moved item must be inserted. Pass `nil` to insert the item at the
+    ///     front of the deque. If this item does not exist the method returns `false`.
+    /// - Returns: `true` if the item can be moved. Returns `false` if the item cannot be moved or is already at the
+    ///   desired location.
+    public func canMove(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) -> Bool {
+        guard item !== beforeItem, storedItems.contains(item) else { return false }
+        if let beforeItem {
+            guard let index = storedItems.firstIndex(of: beforeItem) else { return false }
+            guard index != 0 else { return true }
+            return storedItems[storedItems.index(before: index)] !== item
+        }
+        else {
+            return storedItems.first != item
+        }
+    }
 
     /// Move an item before another item.
     /// - Parameters:
     ///   - item: The item to move.
     ///   - beforeItem: The item before which the moved item must be relocated. Pass `nil` to move the item to the
-    ///     front of the queue. If this item does not exist the method does nothing.
+    ///     front of the deque. If this item does not exist the method does nothing.
     public func move(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) {
         // TODO: Avoid operations if item item to be moved is already before at the target location
         if let beforeItem {
@@ -142,18 +159,18 @@ public final class DequePlayer: AVQueuePlayer {
     /// - Parameters:
     ///   - item: The item to move.
     ///   - afterItem: The item after which the moved item must be relocated. Pass `nil` to move the item to the
-    ///     end of the queue. If this item does not exist the method does nothing.
+    ///     end of the deque. If this item does not exist the method does nothing.
     public func move(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
     }
 
-    /// Remove an item from the queue
+    /// Remove an item from the deque.
     /// - Parameter item: The item to remove.
     public override func remove(_ item: AVPlayerItem) {
         storedItems.removeAll { $0 === item }
         super.remove(item)
     }
 
-    /// Remove all items in the queue.
+    /// Remove all items in the deque.
     public override func removeAllItems() {
         storedItems.removeAll()
         super.removeAllItems()
