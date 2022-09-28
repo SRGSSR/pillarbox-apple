@@ -214,6 +214,7 @@ public extension Player {
     ///   - beforeItem: The item before which insertion must take place. Pass `nil` to insert the item at the front
     ///     of the deque.
     /// - Returns: `true` iff the item could be inserted.
+    @discardableResult
     func insert(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) -> Bool {
         guard canInsert(item, before: beforeItem) else { return false }
         if let beforeItem {
@@ -247,6 +248,7 @@ public extension Player {
     ///   - afterItem: The item after which insertion must take place. Pass `nil` to insert the item at the back of
     ///     the deque. If this item does not exist the method does nothing.
     /// - Returns: `true` iff the item could be inserted.
+    @discardableResult
     func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) -> Bool {
         guard canInsert(item, after: afterItem) else { return false }
         if let afterItem {
@@ -264,6 +266,7 @@ public extension Player {
     /// Prepend an item to the deque.
     /// - Parameter item: The item to prepend.
     /// - Returns: `true` iff the item could be prepended.
+    @discardableResult
     func prepend(_ item: AVPlayerItem) -> Bool {
         insert(item, before: nil)
     }
@@ -271,6 +274,7 @@ public extension Player {
     /// Append an item to the deque.
     /// - Parameter item: The item to append.
     /// - Returns: `true` iff the item could be appended.
+    @discardableResult
     func append(_ item: AVPlayerItem) -> Bool {
         insert(item, after: nil)
     }
@@ -300,6 +304,7 @@ public extension Player {
     ///   - beforeItem: The item before which the moved item must be relocated. Pass `nil` to move the item to the
     ///     front of the deque. If the item does not belong to the deque the method does nothing.
     /// - Returns: `true` iff the item could be moved.
+    @discardableResult
     func move(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) -> Bool {
         guard canMove(item, before: beforeItem) else { return false }
         remove(item)
@@ -331,6 +336,7 @@ public extension Player {
     ///   - afterItem: The item after which the moved item must be relocated. Pass `nil` to move the item to the
     ///     back of the deque. If the item does not belong to the deque the method does nothing.
     /// - Returns: `true` iff the item could be moved.
+    @discardableResult
     func move(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) -> Bool {
         guard canMove(item, after: afterItem) else { return false }
         remove(item)
