@@ -48,7 +48,7 @@ public final class Player: ObservableObject {
     }
 
     /// Raw player used for playback.
-    public let rawPlayer: DequePlayer
+    public let rawPlayer: RawPlayer
 
     private let configuration: PlayerConfiguration
     private var storedItems: Deque<AVPlayerItem>
@@ -61,7 +61,7 @@ public final class Player: ObservableObject {
     /// Create a player with a given item queue.
     /// - Parameter items: The items to be queued initially.
     public init(items: [AVPlayerItem] = [], configuration: (inout PlayerConfiguration) -> Void = { _ in }) {
-        rawPlayer = DequePlayer(items: items.removeDuplicates())
+        rawPlayer = RawPlayer(items: items.removeDuplicates())
         self.configuration = Self.configure(with: configuration)
         storedItems = Deque(items)
 

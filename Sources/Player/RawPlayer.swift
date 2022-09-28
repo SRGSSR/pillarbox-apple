@@ -6,9 +6,9 @@
 
 import AVFoundation
 
-public final class DequePlayer: AVQueuePlayer {
+public final class RawPlayer: AVQueuePlayer {
     private var seekCount = 0
-    
+
     override public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         if seekCount == 0 {
             NotificationCenter.default.post(name: .willSeek, object: self)
@@ -26,6 +26,6 @@ public final class DequePlayer: AVQueuePlayer {
 }
 
 extension Notification.Name {
-    static let willSeek = Notification.Name("DequePlayerWillSeekNotification")
-    static let didSeek = Notification.Name("DequePlayerDidSeekNotification")
+    static let willSeek = Notification.Name("RawPlayerWillSeekNotification")
+    static let didSeek = Notification.Name("RawPlayerDidSeekNotification")
 }
