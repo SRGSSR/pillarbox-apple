@@ -360,6 +360,10 @@ public extension Player {
 
     /// Return to the previous item in the deque.
     func returnToPreviousItem() {
+        guard let currentItem, let index = storedItems.firstIndex(of: currentItem), index > 0 else { return }
+        let previousItem = storedItems[storedItems.index(before: index)]
+        rawPlayer.replaceCurrentItem(with: previousItem)
+        rawPlayer.insert(currentItem, after: previousItem)
     }
 
     // TODO: canAdvance?
