@@ -213,10 +213,11 @@ public extension Player {
     ///   - item: The item to insert.
     ///   - beforeItem: The item before which insertion must take place. Pass `nil` to insert the item at the front
     ///     of the deque.
-    func insert(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) {
-        guard canInsert(item, before: beforeItem) else { return }
+    /// - Returns: `true` iff the item could be inserted.
+    func insert(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) -> Bool {
+        guard canInsert(item, before: beforeItem) else { return false }
         if let beforeItem {
-            guard let index = storedItems.firstIndex(of: beforeItem) else { return }
+            guard let index = storedItems.firstIndex(of: beforeItem) else { return false }
             storedItems.insert(item, at: index)
             if index != 0 {
                 let afterIndex = storedItems.index(before: index)
@@ -226,6 +227,7 @@ public extension Player {
         else {
             storedItems.prepend(item)
         }
+        return true
     }
 
     /// Check whether an item can be inserted after another item. An item can appear once at most in a deque.
@@ -244,10 +246,11 @@ public extension Player {
     ///   - item: The item to insert.
     ///   - afterItem: The item after which insertion must take place. Pass `nil` to insert the item at the back of
     ///     the deque. If this item does not exist the method does nothing.
-    func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
-        guard canInsert(item, after: afterItem) else { return }
+    /// - Returns: `true` iff the item could be inserted.
+    func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) -> Bool {
+        guard canInsert(item, after: afterItem) else { return false }
         if let afterItem {
-            guard let index = storedItems.firstIndex(of: afterItem) else { return }
+            guard let index = storedItems.firstIndex(of: afterItem) else { return false }
             storedItems.insert(item, at: storedItems.index(after: index))
             rawPlayer.insert(item, after: afterItem)
         }
@@ -255,17 +258,20 @@ public extension Player {
             storedItems.append(item)
             rawPlayer.insert(item, after: nil)
         }
+        return true
     }
 
     /// Prepend an item to the deque.
     /// - Parameter item: The item to prepend.
-    func prepend(_ item: AVPlayerItem) {
+    /// - Returns: `true` iff the item could be prepended.
+    func prepend(_ item: AVPlayerItem) -> Bool {
         insert(item, before: nil)
     }
 
     /// Append an item to the deque.
     /// - Parameter item: The item to append.
-    func append(_ item: AVPlayerItem) {
+    /// - Returns: `true` iff the item could be appended.
+    func append(_ item: AVPlayerItem) -> Bool {
         insert(item, after: nil)
     }
 
@@ -293,10 +299,11 @@ public extension Player {
     ///   - item: The item to move. The method does nothing if the item does not belong to the deque.
     ///   - beforeItem: The item before which the moved item must be relocated. Pass `nil` to move the item to the
     ///     front of the deque. If the item does not belong to the deque the method does nothing.
-    func move(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) {
-        guard canMove(item, before: beforeItem) else { return }
+    /// - Returns: `true` iff the item could be moved.
+    func move(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) -> Bool {
+        guard canMove(item, before: beforeItem) else { return false }
         remove(item)
-        insert(item, before: beforeItem)
+        return insert(item, before: beforeItem)
     }
 
     /// Check whether an item can be moved after another item. `
@@ -323,10 +330,11 @@ public extension Player {
     ///   - item: The item to move.
     ///   - afterItem: The item after which the moved item must be relocated. Pass `nil` to move the item to the
     ///     back of the deque. If the item does not belong to the deque the method does nothing.
-    func move(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) {
-        guard canMove(item, after: afterItem) else { return }
+    /// - Returns: `true` iff the item could be moved.
+    func move(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) -> Bool {
+        guard canMove(item, after: afterItem) else { return false }
         remove(item)
-        insert(item, after: afterItem)
+        return insert(item, after: afterItem)
     }
 
     /// Remove an item from the deque.

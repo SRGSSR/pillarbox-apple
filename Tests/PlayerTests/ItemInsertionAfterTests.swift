@@ -21,7 +21,7 @@ final class ItemInsertionAfterTests: XCTestCase {
         expect(player.currentItem).to(equal(item1))
 
         let insertedItem = AVPlayerItem(url: URL(string: "https://www.server.com/inserted.m3u8")!)
-        player.insert(insertedItem, after: item2)
+        expect(player.insert(insertedItem, after: item2)).to(beTrue())
         expect(player.items).to(equalDiff([item1, item2, insertedItem, item3]))
         expect(player.nextItems).to(equalDiff([item2, insertedItem, item3]))
         expect(player.previousItems).to(beEmpty())
@@ -36,7 +36,7 @@ final class ItemInsertionAfterTests: XCTestCase {
         expect(player.currentItem).to(equal(item2))
 
         let insertedItem = AVPlayerItem(url: URL(string: "https://www.server.com/inserted.m3u8")!)
-        player.insert(insertedItem, after: item2)
+        expect(player.insert(insertedItem, after: item2)).to(beTrue())
         expect(player.items).to(equalDiff([item1, item2, insertedItem, item3]))
         expect(player.nextItems).to(equalDiff([insertedItem, item3]))
         expect(player.previousItems).to(equalDiff([item1]))
@@ -52,7 +52,7 @@ final class ItemInsertionAfterTests: XCTestCase {
         expect(player.currentItem).to(equal(item3))
 
         let insertedItem = AVPlayerItem(url: URL(string: "https://www.server.com/inserted.m3u8")!)
-        player.insert(insertedItem, after: item2)
+        expect(player.insert(insertedItem, after: item2)).to(beTrue())
         expect(player.items).to(equalDiff([item1, item2, insertedItem, item3]))
         expect(player.nextItems).to(beEmpty())
         expect(player.previousItems).to(equalDiff([item1, item2, insertedItem]))
@@ -65,7 +65,7 @@ final class ItemInsertionAfterTests: XCTestCase {
         expect(player.currentItem).to(equal(item1))
 
         let insertedItem = AVPlayerItem(url: URL(string: "https://www.server.com/inserted.m3u8")!)
-        player.insert(insertedItem, after: item2)
+        expect(player.insert(insertedItem, after: item2)).to(beTrue())
         expect(player.items).to(equalDiff([item1, item2, insertedItem]))
         expect(player.nextItems).to(equalDiff([item2, insertedItem]))
         expect(player.previousItems).to(beEmpty())
@@ -75,7 +75,7 @@ final class ItemInsertionAfterTests: XCTestCase {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
         let player = Player(items: [item1, item2])
-        player.insert(item1, after: item2)
+        expect(player.insert(item1, after: item2)).to(beFalse())
         expect(player.items).to(equalDiff([item1, item2]))
     }
 
@@ -84,7 +84,8 @@ final class ItemInsertionAfterTests: XCTestCase {
         let insertedItem = AVPlayerItem(url: URL(string: "https://www.server.com/inserted.m3u8")!)
         let foreignItem = AVPlayerItem(url: URL(string: "https://www.server.com/foreign.m3u8")!)
         let player = Player(items: [item])
-        expect(player.canInsert(insertedItem, after: foreignItem)).to(beFalse())
+        expect(player.insert(insertedItem, after: foreignItem)).to(beFalse())
+        expect(player.items).to(equalDiff([item]))
     }
 
     func testInsertAfterNil() {
@@ -93,7 +94,7 @@ final class ItemInsertionAfterTests: XCTestCase {
         expect(player.currentItem).to(equal(item))
 
         let insertedItem = AVPlayerItem(url: URL(string: "https://www.server.com/inserted.m3u8")!)
-        player.insert(insertedItem, after: nil)
+        expect(player.insert(insertedItem, after: nil)).to(beTrue())
         expect(player.items).to(equalDiff([item, insertedItem]))
         expect(player.nextItems).to(equalDiff([insertedItem]))
         expect(player.previousItems).to(beEmpty())
@@ -105,7 +106,7 @@ final class ItemInsertionAfterTests: XCTestCase {
         expect(player.currentItem).to(equal(item))
 
         let insertedItem = AVPlayerItem(url: URL(string: "https://www.server.com/inserted.m3u8")!)
-        player.prepend(insertedItem)
+        expect(player.prepend(insertedItem)).to(beTrue())
         expect(player.items).to(equalDiff([insertedItem, item]))
         expect(player.nextItems).to(beEmpty())
         expect(player.previousItems).to(equalDiff([insertedItem]))
@@ -117,7 +118,7 @@ final class ItemInsertionAfterTests: XCTestCase {
         expect(player.currentItem).to(equal(item))
 
         let insertedItem = AVPlayerItem(url: URL(string: "https://www.server.com/inserted.m3u8")!)
-        player.append(insertedItem)
+        expect(player.append(insertedItem)).to(beTrue())
         expect(player.items).to(equalDiff([item, insertedItem]))
         expect(player.nextItems).to(equalDiff([insertedItem]))
         expect(player.previousItems).to(beEmpty())

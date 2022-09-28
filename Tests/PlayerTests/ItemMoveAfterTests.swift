@@ -21,7 +21,7 @@ final class ItemMoveAfterTests: XCTestCase {
         player.advanceToNextItem()
         expect(player.currentItem).to(equal(item2))
 
-        player.move(item1, after: item3)
+        expect(player.move(item1, after: item3)).to(beTrue())
         expect(player.items).to(equalDiff([item2, item3, item1]))
         expect(player.nextItems).to(equalDiff([item3, item1]))
         expect(player.previousItems).to(beEmpty())
@@ -36,7 +36,7 @@ final class ItemMoveAfterTests: XCTestCase {
         player.advanceToNextItem()
         expect(player.currentItem).to(equal(item3))
 
-        player.move(item1, after: item3)
+        expect(player.move(item1, after: item3)).to(beTrue())
         expect(player.items).to(equalDiff([item2, item3, item1]))
         expect(player.nextItems).to(equalDiff([item1]))
         expect(player.previousItems).to(equalDiff([item2]))
@@ -51,7 +51,7 @@ final class ItemMoveAfterTests: XCTestCase {
         player.advanceToNextItem()
         expect(player.currentItem).to(equal(item3))
 
-        player.move(item1, after: item2)
+        expect(player.move(item1, after: item2)).to(beTrue())
         expect(player.items).to(equalDiff([item2, item1, item3]))
         expect(player.nextItems).to(beEmpty())
         expect(player.previousItems).to(equalDiff([item2, item1]))
@@ -64,7 +64,7 @@ final class ItemMoveAfterTests: XCTestCase {
         let player = Player(items: [item1, item2, item3])
         expect(player.currentItem).to(equal(item1))
 
-        player.move(item1, after: item2)
+        expect(player.move(item1, after: item2)).to(beTrue())
         expect(player.currentItem).to(equal(item2))
         expect(player.items).to(equalDiff([item2, item1, item3]))
         expect(player.nextItems).to(equalDiff([item1, item3]))
@@ -80,7 +80,7 @@ final class ItemMoveAfterTests: XCTestCase {
         player.advanceToNextItem()
         expect(player.currentItem).to(equal(item3))
 
-        player.move(item3, after: item1)
+        expect(player.move(item3, after: item1)).to(beTrue())
         expect(player.currentItem).to(beNil())
         expect(player.items).to(equalDiff([item1, item3, item2]))
         expect(player.nextItems).to(beEmpty())
@@ -94,7 +94,7 @@ final class ItemMoveAfterTests: XCTestCase {
         let player = Player(items: [item1, item2, item3])
         expect(player.currentItem).to(equal(item1))
 
-        player.move(item1, after: item2)
+        expect(player.move(item1, after: item2)).to(beTrue())
         expect(player.currentItem).to(equal(item2))
         expect(player.items).to(equalDiff([item2, item1, item3]))
         expect(player.nextItems).to(equalDiff([item1, item3]))
@@ -109,7 +109,7 @@ final class ItemMoveAfterTests: XCTestCase {
         player.advanceToNextItem()
         expect(player.currentItem).to(equal(item2))
 
-        player.move(item3, after: item1)
+        expect(player.move(item3, after: item1)).to(beTrue())
         expect(player.items).to(equalDiff([item1, item3, item2]))
         expect(player.nextItems).to(beEmpty())
         expect(player.previousItems).to(equalDiff([item1, item3]))
@@ -122,7 +122,7 @@ final class ItemMoveAfterTests: XCTestCase {
         let player = Player(items: [item1, item2, item3])
         expect(player.currentItem).to(equal(item1))
 
-        player.move(item3, after: item1)
+        expect(player.move(item3, after: item1)).to(beTrue())
         expect(player.items).to(equalDiff([item1, item3, item2]))
         expect(player.nextItems).to(equalDiff([item3, item2]))
         expect(player.previousItems).to(beEmpty())
@@ -135,7 +135,7 @@ final class ItemMoveAfterTests: XCTestCase {
         let player = Player(items: [item1, item2, item3])
         expect(player.currentItem).to(equal(item1))
 
-        player.move(item2, after: item3)
+        expect(player.move(item2, after: item3)).to(beTrue())
         expect(player.items).to(equalDiff([item1, item3, item2]))
         expect(player.nextItems).to(equalDiff([item3, item2]))
         expect(player.previousItems).to(beEmpty())
@@ -144,15 +144,23 @@ final class ItemMoveAfterTests: XCTestCase {
     func testMoveAfterIdenticalItem() {
         let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
         let player = Player(items: [item])
-        player.move(item, after: item)
+        expect(player.move(item, after: item)).to(beFalse())
         expect(player.items).to(equalDiff([item]))
+    }
+
+    func testMoveAfterItemAlreadyAtExpectedLocation() {
+        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let player = Player(items: [item1, item2])
+        expect(player.move(item2, after: item1)).to(beFalse())
+        expect(player.items).to(equalDiff([item1, item2]))
     }
 
     func testMoveAfterForeignItem() {
         let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
         let foreignItem = AVPlayerItem(url: URL(string: "https://www.server.com/foreign.m3u8")!)
         let player = Player(items: [item])
-        player.move(item, after: foreignItem)
+        expect(player.move(item, after: foreignItem)).to(beFalse())
         expect(player.items).to(equalDiff([item]))
     }
 
@@ -160,7 +168,7 @@ final class ItemMoveAfterTests: XCTestCase {
         let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
         let player = Player(items: [item1, item2])
-        player.move(item1, after: nil)
+        expect(player.move(item1, after: nil)).to(beTrue())
         expect(player.items).to(equalDiff([item2, item1]))
     }
 }
