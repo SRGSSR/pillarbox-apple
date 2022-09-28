@@ -356,21 +356,38 @@ public extension Player {
         rawPlayer.removeAllItems()
     }
 
-    // TODO: canReturn?
+    /// Check whether returning to the previous item in the deque is possible.`
+    /// - Returns: `true` if possible.
+    func canReturnToPreviousItem() -> Bool {
+        guard let currentItem else { return false }
+        return currentItem !== storedItems.first
+    }
 
     /// Return to the previous item in the deque.
-    func returnToPreviousItem() {
-        guard let currentItem, let index = storedItems.firstIndex(of: currentItem), index > 0 else { return }
+    /// - Returns: `true` if not possible.
+    @discardableResult
+    func returnToPreviousItem() -> Bool {
+        guard let currentItem, let index = storedItems.firstIndex(of: currentItem), index > 0 else { return false }
         let previousItem = storedItems[storedItems.index(before: index)]
         rawPlayer.replaceCurrentItem(with: previousItem)
         rawPlayer.insert(currentItem, after: previousItem)
+        return true
     }
 
-    // TODO: canAdvance?
+    /// Check whether moving to the next item in the deque is possible.`
+    /// - Returns: `true` if possible.
+    func canAdvanceToNextItem() -> Bool {
+        guard let currentItem else { return false }
+        return currentItem !== storedItems.last
+    }
 
     /// Move to the next item in the deque.
-    func advanceToNextItem() {
+    /// - Returns: `true` if not possible.
+    @discardableResult
+    func advanceToNextItem() -> Bool {
+        guard canAdvanceToNextItem() else { return false }
         rawPlayer.advanceToNextItem()
+        return true
     }
 }
 
