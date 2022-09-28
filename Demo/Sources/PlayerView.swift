@@ -15,6 +15,47 @@ private struct ControlsView: View {
     @ObservedObject var player: Player
     let isUserInterfaceHidden: Bool
 
+    var body: some View {
+        ZStack {
+            if !isUserInterfaceHidden {
+                Color(white: 0, opacity: 0.3)
+                HStack(spacing: 40) {
+                    PreviousButton(player: player)
+                    PlaybackButton(player: player)
+                    NextButton(player: player)
+                }
+            }
+            if player.isBuffering {
+                ProgressView()
+            }
+        }
+        .tint(.white)
+        .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
+    }
+}
+
+private struct NextButton: View {
+    @ObservedObject var player: Player
+
+    var body: some View {
+        Group {
+            if player.canAdvanceToNextItem() {
+                Button(action: { player.advanceToNextItem() } ) {
+                    Image(systemName: "arrow.right.circle.fill")
+                        .resizable()
+                }
+            }
+            else {
+                Color.clear
+            }
+        }
+        .frame(width: 45, height: 45)
+    }
+}
+
+private struct PlaybackButton: View {
+    @ObservedObject var player: Player
+
     private var playbackButtonImageName: String {
         switch player.playbackState {
         case .playing:
@@ -25,36 +66,31 @@ private struct ControlsView: View {
     }
 
     var body: some View {
-        ZStack {
-            if !isUserInterfaceHidden {
-                Color(white: 0, opacity: 0.3)
-                HStack(spacing: 40) {
-                    Button(action: { player.returnToPreviousItem() } ) {
-                        Image(systemName: "arrow.left.circle.fill")
-                            .resizable()
-                    }
-                    .frame(width: 45, height: 45)
+        Button(action: { player.togglePlayPause() } ) {
+            Image(systemName: playbackButtonImageName)
+                .resizable()
+        }
+        .opacity(player.isBuffering ? 0 : 1)
+        .frame(width: 90, height: 90)
+    }
+}
 
-                    Button(action: { player.togglePlayPause() } ) {
-                        Image(systemName: playbackButtonImageName)
-                            .resizable()
-                    }
-                    .opacity(player.isBuffering ? 0 : 1)
-                    .frame(width: 90, height: 90)
+private struct PreviousButton: View {
+    @ObservedObject var player: Player
 
-                    Button(action: { player.advanceToNextItem() } ) {
-                        Image(systemName: "arrow.right.circle.fill")
-                            .resizable()
-                    }
-                    .frame(width: 45, height: 45)
+    var body: some View {
+        Group {
+            if player.canReturnToPreviousItem() {
+                Button(action: { player.returnToPreviousItem() } ) {
+                    Image(systemName: "arrow.left.circle.fill")
+                        .resizable()
                 }
             }
-            if player.isBuffering {
-                ProgressView()
+            else {
+                Color.clear
             }
         }
-        .tint(.white)
-        .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
+        .frame(width: 45, height: 45)
     }
 }
 
