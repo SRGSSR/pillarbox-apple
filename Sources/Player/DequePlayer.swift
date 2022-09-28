@@ -6,7 +6,6 @@
 
 import AVFoundation
 
-@MainActor
 public final class DequePlayer: AVQueuePlayer {
     private var seekCount = 0
     
