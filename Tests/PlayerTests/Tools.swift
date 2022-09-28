@@ -38,6 +38,25 @@ struct Stream {
         duration: .indefinite
     )
 
+    static var item = Stream(
+        url: URL(string: "https://www.server.com/item.m3u8")!,
+        duration: .indefinite
+    )
+    static func item(numbered index: Int) -> Stream {
+        Stream (
+            url: URL(string: "https://www.server.com/item\(index).m3u8")!,
+            duration: .indefinite
+        )
+    }
+    static var insertedItem = Stream(
+        url: URL(string: "https://www.server.com/inserted.m3u8")!,
+        duration: .indefinite
+    )
+    static var foreignItem = Stream(
+        url: URL(string: "https://www.server.com/foreign.m3u8")!,
+        duration: .indefinite
+    )
+
     let url: URL
     let duration: CMTime
 }

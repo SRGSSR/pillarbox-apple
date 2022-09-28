@@ -14,9 +14,9 @@ import XCTest
 @MainActor
 final class ItemRemovalTests: XCTestCase {
     func testRemovePreviousItem() {
-        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
-        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
-        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
         expect(player.currentItem).to(equal(item2))
@@ -28,9 +28,9 @@ final class ItemRemovalTests: XCTestCase {
     }
 
     func testRemoveCurrentItem() {
-        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
-        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
-        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
         expect(player.currentItem).to(equal(item2))
@@ -43,8 +43,8 @@ final class ItemRemovalTests: XCTestCase {
     }
 
     func testRemoveCurrentLastItem() {
-        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
-        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
         let player = Player(items: [item1, item2])
         player.advanceToNextItem()
         expect(player.currentItem).to(equal(item2))
@@ -57,9 +57,9 @@ final class ItemRemovalTests: XCTestCase {
     }
 
     func testRemoveNextItem() {
-        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
-        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
-        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
         expect(player.currentItem).to(equal(item2))
@@ -71,17 +71,17 @@ final class ItemRemovalTests: XCTestCase {
     }
 
     func testRemoveForeignItem() {
-        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
-        let foreignItem = AVPlayerItem(url: URL(string: "https://www.server.com/foreign.m3u8")!)
+        let item = AVPlayerItem(url: Stream.item.url)
+        let foreignItem = AVPlayerItem(url: Stream.foreignItem.url)
         let player = Player(items: [item])
         player.remove(foreignItem)
         expect(player.items).to(equalDiff([item]))
     }
 
     func testRemoveAllItems() {
-        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
-        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
-        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
         expect(player.currentItem).to(equal(item2))

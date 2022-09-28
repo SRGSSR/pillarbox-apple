@@ -14,8 +14,8 @@ import XCTest
 @MainActor
 final class ItemNavigationTests: XCTestCase {
     func testReturnToPreviousItem() {
-        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
-        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
         let player = Player(items: [item1, item2])
         player.advanceToNextItem()
         expect(player.currentItem).to(equal(item2))
@@ -27,8 +27,8 @@ final class ItemNavigationTests: XCTestCase {
     }
 
     func testReturnToPreviousItemAtFront() {
-        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
-        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
         let player = Player(items: [item1, item2])
         expect(player.currentItem).to(equal(item1))
         player.returnToPreviousItem()
@@ -39,8 +39,8 @@ final class ItemNavigationTests: XCTestCase {
     }
 
     func testAdvanceToNextItem() {
-        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
-        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
         let player = Player(items: [item1, item2])
         player.advanceToNextItem()
         expect(player.currentItem).to(equal(item2))
@@ -50,7 +50,7 @@ final class ItemNavigationTests: XCTestCase {
     }
 
     func testAdvanceToNextItemAtEnd() {
-        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
+        let item = AVPlayerItem(url: Stream.item.url)
         let player = Player(items: [item])
         player.advanceToNextItem()
         expect(player.currentItem).to(beNil())

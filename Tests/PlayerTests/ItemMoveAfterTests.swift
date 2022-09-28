@@ -14,9 +14,9 @@ import XCTest
 @MainActor
 final class ItemMoveAfterTests: XCTestCase {
     func testMovePreviousItemAfterNextItem() {
-        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
-        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
-        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
         expect(player.currentItem).to(equal(item2))
@@ -28,9 +28,9 @@ final class ItemMoveAfterTests: XCTestCase {
     }
 
     func testMovePreviousItemAfterCurrentItem() {
-        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
-        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
-        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
         player.advanceToNextItem()
@@ -43,9 +43,9 @@ final class ItemMoveAfterTests: XCTestCase {
     }
 
     func testMovePreviousItemAfterPreviousItem() {
-        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
-        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
-        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
         player.advanceToNextItem()
@@ -58,9 +58,9 @@ final class ItemMoveAfterTests: XCTestCase {
     }
 
     func testMoveCurrentItemAfterNextItem() {
-        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
-        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
-        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         expect(player.currentItem).to(equal(item1))
 
@@ -72,9 +72,9 @@ final class ItemMoveAfterTests: XCTestCase {
     }
 
     func testMoveCurrentItemAfterPreviousItem() {
-        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
-        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
-        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
         player.advanceToNextItem()
@@ -88,9 +88,9 @@ final class ItemMoveAfterTests: XCTestCase {
     }
 
     func testMoveCurrentFirstItemAfterNextItem() {
-        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
-        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
-        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         expect(player.currentItem).to(equal(item1))
 
@@ -102,9 +102,9 @@ final class ItemMoveAfterTests: XCTestCase {
     }
 
     func testMoveNextItemAfterPreviousItem() {
-        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
-        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
-        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
         expect(player.currentItem).to(equal(item2))
@@ -116,9 +116,9 @@ final class ItemMoveAfterTests: XCTestCase {
     }
 
     func testMoveNextItemAfterCurrentItem() {
-        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
-        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
-        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         expect(player.currentItem).to(equal(item1))
 
@@ -129,9 +129,9 @@ final class ItemMoveAfterTests: XCTestCase {
     }
 
     func testMoveNextItemAfterNextItem() {
-        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
-        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
-        let item3 = AVPlayerItem(url: URL(string: "https://www.server.com/item3.m3u8")!)
+        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         expect(player.currentItem).to(equal(item1))
 
@@ -142,31 +142,31 @@ final class ItemMoveAfterTests: XCTestCase {
     }
 
     func testMoveAfterIdenticalItem() {
-        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
+        let item = AVPlayerItem(url: Stream.item.url)
         let player = Player(items: [item])
         expect(player.move(item, after: item)).to(beFalse())
         expect(player.items).to(equalDiff([item]))
     }
 
     func testMoveAfterItemAlreadyAtExpectedLocation() {
-        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
-        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item2.m3u8")!)
+        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
         let player = Player(items: [item1, item2])
         expect(player.move(item2, after: item1)).to(beFalse())
         expect(player.items).to(equalDiff([item1, item2]))
     }
 
     func testMoveAfterForeignItem() {
-        let item = AVPlayerItem(url: URL(string: "https://www.server.com/item.m3u8")!)
-        let foreignItem = AVPlayerItem(url: URL(string: "https://www.server.com/foreign.m3u8")!)
+        let item = AVPlayerItem(url: Stream.item.url)
+        let foreignItem = AVPlayerItem(url: Stream.foreignItem.url)
         let player = Player(items: [item])
         expect(player.move(item, after: foreignItem)).to(beFalse())
         expect(player.items).to(equalDiff([item]))
     }
 
     func testMoveAfterNil() {
-        let item1 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
-        let item2 = AVPlayerItem(url: URL(string: "https://www.server.com/item1.m3u8")!)
+        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
         let player = Player(items: [item1, item2])
         expect(player.move(item1, after: nil)).to(beTrue())
         expect(player.items).to(equalDiff([item2, item1]))
