@@ -128,7 +128,7 @@ struct MediasView: View {
             id: "assets:empty",
             title: "Empty",
             description: "No media is provided",
-            source: .urn("urn:srf:video:unknown")
+            source: .empty
         )
     ]
 
