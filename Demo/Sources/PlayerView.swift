@@ -40,7 +40,7 @@ private struct NextButton: View {
     var body: some View {
         Group {
             if player.canAdvanceToNextItem() {
-                Button(action: { player.advanceToNextItem() } ) {
+                Button(action: { player.advanceToNextItem() }) {
                     Image(systemName: "arrow.right.circle.fill")
                         .resizable()
                 }
@@ -66,7 +66,7 @@ private struct PlaybackButton: View {
     }
 
     var body: some View {
-        Button(action: { player.togglePlayPause() } ) {
+        Button(action: { player.togglePlayPause() }) {
             Image(systemName: playbackButtonImageName)
                 .resizable()
         }
@@ -81,7 +81,7 @@ private struct PreviousButton: View {
     var body: some View {
         Group {
             if player.canReturnToPreviousItem() {
-                Button(action: { player.returnToPreviousItem() } ) {
+                Button(action: { player.returnToPreviousItem() }) {
                     Image(systemName: "arrow.left.circle.fill")
                         .resizable()
                 }
