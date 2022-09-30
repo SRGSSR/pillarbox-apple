@@ -45,8 +45,11 @@ struct ShowcaseView: View {
             Cell(title: "Wrapped") {
                 WrappedView()
             }
-            Cell(title: "Playlist") {
-                PlaylistView()
+            Cell(title: "Playlist (URLs)") {
+                PlayerView(medias: Media.urlPlaylist)
+            }
+            Cell(title: "Playlist (URNs)") {
+                PlayerView(medias: Media.urnPlaylist)
             }
         }
         .navigationTitle("Showcase")
