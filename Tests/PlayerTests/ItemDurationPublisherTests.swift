@@ -17,7 +17,8 @@ final class ItemDurationPublisherTests: XCTestCase {
         expectAtLeastPublished(
             values: [.indefinite, Stream.onDemand.duration],
             from: player.itemDurationPublisher(),
-            to: beClose(within: 1)
+            to: beClose(within: 1),
+            timeout: 20
         )
     }
 }

@@ -15,27 +15,14 @@ private struct ControlsView: View {
     @ObservedObject var player: Player
     let isUserInterfaceHidden: Bool
 
-    private var playbackButtonImageName: String {
-        switch player.playbackState {
-        case .playing:
-            return "pause.circle.fill"
-        default:
-            return "play.circle.fill"
-        }
-    }
-
     var body: some View {
         ZStack {
             if !isUserInterfaceHidden {
                 Color(white: 0, opacity: 0.3)
-                if !player.isBuffering {
-                    Button {
-                        player.togglePlayPause()
-                    } label: {
-                        Image(systemName: playbackButtonImageName)
-                            .resizable()
-                    }
-                    .frame(width: 90, height: 90)
+                HStack(spacing: 40) {
+                    PreviousButton(player: player)
+                    PlaybackButton(player: player)
+                    NextButton(player: player)
                 }
             }
             if player.isBuffering {
@@ -47,8 +34,68 @@ private struct ControlsView: View {
     }
 }
 
+private struct NextButton: View {
+    @ObservedObject var player: Player
+
+    var body: some View {
+        Group {
+            if player.canAdvanceToNextItem() {
+                Button(action: { player.advanceToNextItem() }) {
+                    Image(systemName: "arrow.right.circle.fill")
+                        .resizable()
+                }
+            }
+            else {
+                Color.clear
+            }
+        }
+        .frame(width: 45, height: 45)
+    }
+}
+
+private struct PlaybackButton: View {
+    @ObservedObject var player: Player
+
+    private var playbackButtonImageName: String {
+        switch player.playbackState {
+        case .playing:
+            return "pause.circle.fill"
+        default:
+            return "play.circle.fill"
+        }
+    }
+
+    var body: some View {
+        Button(action: { player.togglePlayPause() }) {
+            Image(systemName: playbackButtonImageName)
+                .resizable()
+        }
+        .opacity(player.isBuffering ? 0 : 1)
+        .frame(width: 90, height: 90)
+    }
+}
+
+private struct PreviousButton: View {
+    @ObservedObject var player: Player
+
+    var body: some View {
+        Group {
+            if player.canReturnToPreviousItem() {
+                Button(action: { player.returnToPreviousItem() }) {
+                    Image(systemName: "arrow.left.circle.fill")
+                        .resizable()
+                }
+            }
+            else {
+                Color.clear
+            }
+        }
+        .frame(width: 45, height: 45)
+    }
+}
+
 struct PlayerView: View {
-    let media: Media
+    let medias: [Media]
 
     @StateObject private var player = Player()
     @State private var isUserInterfaceHidden = false
@@ -78,8 +125,16 @@ struct PlayerView: View {
         }
     }
 
+    init(medias: [Media]) {
+        self.medias = medias
+    }
+
+    init(media: Media) {
+        self.init(medias: [media])
+    }
+
     private func play() {
-        if let item = media.source.playerItem {
+        medias.compactMap(\.source.playerItem).forEach { item in
             player.append(item)
         }
         player.play()

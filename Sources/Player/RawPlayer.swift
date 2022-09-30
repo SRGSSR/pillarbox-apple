@@ -6,9 +6,7 @@
 
 import AVFoundation
 
-// TODO: Must later implement dequeue support for items to have playlist support in forward and backward directions.
-@MainActor
-public final class DequeuePlayer: AVQueuePlayer {
+public final class RawPlayer: AVQueuePlayer {
     private var seekCount = 0
 
     override public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
@@ -28,6 +26,6 @@ public final class DequeuePlayer: AVQueuePlayer {
 }
 
 extension Notification.Name {
-    static let willSeek = Notification.Name("DequeuePlayerWillSeekNotification")
-    static let didSeek = Notification.Name("DequeuePlayerDidSeekNotification")
+    static let willSeek = Notification.Name("RawPlayerWillSeekNotification")
+    static let didSeek = Notification.Name("RawPlayerDidSeekNotification")
 }

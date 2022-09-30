@@ -13,7 +13,7 @@ public extension AVPlayerItem {
     /// by the player item automatically.
     /// - Parameters:
     ///   - asset: The asset.
-    ///   - delegate: The resource loader delegate (retained):
+    ///   - delegate: The resource loader delegate (retained).
     ///   - queue: The queue onto which delegate methods must be called.
     convenience init(asset: AVURLAsset, associatedDelegate delegate: AVAssetResourceLoaderDelegate, queue: DispatchQueue) {
         objc_setAssociatedObject(asset, &resourceLoaderDelegateKey, delegate, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)

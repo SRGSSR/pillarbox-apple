@@ -11,7 +11,7 @@ import Nimble
 import XCTest
 
 @MainActor
-final class PlayerDeallocationTests: XCTestCase {
+final class PlayerTests: XCTestCase {
     func testPlayerDeallocation() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         var player: Player? = Player(item: item)
