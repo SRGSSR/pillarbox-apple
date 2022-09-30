@@ -7,11 +7,6 @@
 import Foundation
 
 struct Media: Identifiable {
-    let id: String
-    let title: String
-    let description: String
-    let source: MediaSource
-
     static var urnPlaylist: [Media] = [
         Media(
             id: "playlist:1",
@@ -89,4 +84,9 @@ struct Media: Identifiable {
             source: .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13161499/6a317edc-283f-3118-a873-f45f4d54f13d/master.m3u8")!)
         )
     ]
+
+    let id: String
+    let title: String
+    let description: String
+    let source: MediaSource
 }
