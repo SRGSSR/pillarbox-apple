@@ -19,12 +19,8 @@ final class ItemRemovalTests: XCTestCase {
         let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
-        expect(player.currentItem).to(equal(item2))
-
         player.remove(item1)
         expect(player.items).to(equalDiff([item2, item3]))
-        expect(player.nextItems).to(equalDiff([item3]))
-        expect(player.previousItems).to(beEmpty())
     }
 
     func testRemoveCurrentItem() {
@@ -33,27 +29,9 @@ final class ItemRemovalTests: XCTestCase {
         let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
-        expect(player.currentItem).to(equal(item2))
-
         player.remove(item2)
         expect(player.currentItem).to(equal(item3))
         expect(player.items).to(equalDiff([item1, item3]))
-        expect(player.nextItems).to(beEmpty())
-        expect(player.previousItems).to(equalDiff([item1]))
-    }
-
-    func testRemoveCurrentLastItem() {
-        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
-        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
-        let player = Player(items: [item1, item2])
-        player.advanceToNextItem()
-        expect(player.currentItem).to(equal(item2))
-
-        player.remove(item2)
-        expect(player.currentItem).to(beNil())
-        expect(player.items).to(equalDiff([item1]))
-        expect(player.nextItems).to(beEmpty())
-        expect(player.previousItems).to(equalDiff([item1]))
     }
 
     func testRemoveNextItem() {
@@ -62,12 +40,8 @@ final class ItemRemovalTests: XCTestCase {
         let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
-        expect(player.currentItem).to(equal(item2))
-
         player.remove(item3)
         expect(player.items).to(equalDiff([item1, item2]))
-        expect(player.nextItems).to(beEmpty())
-        expect(player.previousItems).to(equalDiff([item1]))
     }
 
     func testRemoveForeignItem() {
@@ -83,9 +57,6 @@ final class ItemRemovalTests: XCTestCase {
         let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
         let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
-        player.advanceToNextItem()
-        expect(player.currentItem).to(equal(item2))
-
         player.removeAllItems()
         expect(player.items).to(beEmpty())
         expect(player.currentItem).to(beNil())

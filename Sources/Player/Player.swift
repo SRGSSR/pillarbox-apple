@@ -197,13 +197,7 @@ public extension Player {
         Array(rawPlayer.items().dropFirst())
     }
 
-    /// Check whether an item can be inserted before another item. An item can appear once at most in a deque.
-    /// - Parameters:
-    ///   - item: The item to be tested.
-    ///   - beforeItem: The item before which insertion should take place. Pass `nil` to check insertion at the front
-    ///     of the deque.
-    /// - Returns: `true` iff the tested item can be inserted.
-    func canInsert(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) -> Bool {
+    private func canInsert(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) -> Bool {
         guard let beforeItem else { return true }
         return storedItems.contains(beforeItem) && !storedItems.contains(item)
     }
@@ -231,13 +225,7 @@ public extension Player {
         return true
     }
 
-    /// Check whether an item can be inserted after another item. An item can appear once at most in a deque.
-    /// - Parameters:
-    ///   - item: The item to be tested.
-    ///   - afterItem: The item after which insertion should take place. Pass `nil` to check insertion at the back
-    ///     of the deque. If this item does not exist the method does nothing.
-    /// - Returns: `true` iff the tested item can be inserted.
-    func canInsert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) -> Bool {
+    private func canInsert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) -> Bool {
         guard let afterItem else { return true }
         return storedItems.contains(afterItem) && !storedItems.contains(item)
     }
@@ -279,14 +267,7 @@ public extension Player {
         insert(item, after: nil)
     }
 
-    /// Check whether an item can be moved before another item. `
-    /// - Parameters:
-    ///   - item: The item to move. The method returns `false` if the item does not belong to the deque.
-    ///   - beforeItem: The item before which the moved item must be inserted. Pass `nil` to insert the item at the
-    ///     front of the deque. If the item does not belong to the deque the method returns `false`.
-    /// - Returns: `true` if the item can be moved. Returns `false` if the item cannot be moved or is already at the
-    ///   desired location.
-    func canMove(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) -> Bool {
+    private func canMove(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) -> Bool {
         guard storedItems.contains(item) else { return false }
         if let beforeItem {
             guard item !== beforeItem, let index = storedItems.firstIndex(of: beforeItem) else { return false }
@@ -311,14 +292,7 @@ public extension Player {
         return insert(item, before: beforeItem)
     }
 
-    /// Check whether an item can be moved after another item. `
-    /// - Parameters:
-    ///   - item: The item to move. The method returns `false` if the item does not belong to the deque.
-    ///   - afterItem: The item after which the moved item must be inserted. Pass `nil` to insert the item at the
-    ///     back of the deque. If the item does not belong to the deque the method returns `false`.
-    /// - Returns: `true` if the item can be moved. Returns `false` if the item cannot be moved or is already at the
-    ///   desired location.
-    func canMove(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) -> Bool {
+    private func canMove(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) -> Bool {
         guard storedItems.contains(item) else { return false }
         if let afterItem {
             guard item !== afterItem, let index = storedItems.firstIndex(of: afterItem) else { return false }
