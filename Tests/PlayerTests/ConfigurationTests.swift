@@ -18,6 +18,6 @@ final class ConfigurationTests: XCTestCase {
         let player = Player(item: item) { configuration in
             configuration.dvrThreshold = CMTime(value: 30, timescale: 1)
         }
-        expect(player.streamType).toEventually(equal(.live), timeout: .seconds(10))
+        expect(player.streamType).toEventually(equal(.live), timeout: .seconds(20))
     }
 }
