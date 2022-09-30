@@ -7,7 +7,6 @@
 @testable import Player
 
 import AVFoundation
-import Circumspect
 import Nimble
 import XCTest
 
@@ -85,38 +84,5 @@ final class ItemNavigationTests: XCTestCase {
         expect(player.advanceToNextItem()).to(beTrue())
         expect(player.advanceToNextItem()).to(beFalse())
         expect(player.currentItem).to(equal(item2))
-    }
-
-    func testItemsOnFirstItem() {
-        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
-        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
-        let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
-        let player = Player(items: [item1, item2, item3])
-        expect(player.items).to(equalDiff([item1, item2, item3]))
-        expect(player.previousItems).to(beEmpty())
-        expect(player.nextItems).to(equalDiff([item2, item3]))
-    }
-
-    func testItemsOnMiddleItem() {
-        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
-        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
-        let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
-        let player = Player(items: [item1, item2, item3])
-        expect(player.advanceToNextItem()).to(beTrue())
-        expect(player.items).to(equalDiff([item1, item2, item3]))
-        expect(player.previousItems).to(equalDiff([item1]))
-        expect(player.nextItems).to(equalDiff([item3]))
-    }
-
-    func testItemsOnLastItem() {
-        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
-        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
-        let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
-        let player = Player(items: [item1, item2, item3])
-        expect(player.advanceToNextItem()).to(beTrue())
-        expect(player.advanceToNextItem()).to(beTrue())
-        expect(player.items).to(equalDiff([item1, item2, item3]))
-        expect(player.previousItems).to(equalDiff([item1, item2]))
-        expect(player.nextItems).to(beEmpty())
     }
 }
