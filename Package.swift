@@ -45,8 +45,8 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/comScore/Comscore-Swift-Package-Manager.git", .upToNextMinor(from: "6.10.0")),
         .package(url: "https://github.com/SRGSSR/GoogleCastSDK-no-bluetooth.git", .upToNextMinor(from: "4.7.1-beta.1")),
-        .package(url: "https://github.com/SRGSSR/TCCore-xcframework-apple.git", .upToNextMinor(from: "4.5.4-srg5")),
-        .package(url: "https://github.com/SRGSSR/TCSDK-xcframework-apple.git", .upToNextMinor(from: "4.4.1-srg5")),
+        .package(url: "https://github.com/SRGSSR/TCCore-xcframework-apple.git", .upToNextMinor(from: "5.1.1")),
+        .package(url: "https://github.com/SRGSSR/TCServerSide-xcframework-apple.git", .upToNextMinor(from: "5.1.2")),
         .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.3")),
         .package(url: "https://github.com/krzysztofzablocki/Difference.git", .upToNextMajor(from: "1.0.1")),
         .package(url: "https://github.com/Quick/Nimble.git", .upToNextMajor(from: "10.0.0")),
@@ -58,7 +58,7 @@ let package = Package(
             dependencies: [
                 .product(name: "ComScore", package: "Comscore-Swift-Package-Manager"),
                 .product(name: "TCCore", package: "TCCore-xcframework-apple"),
-                .product(name: "TCSDK", package: "TCSDK-xcframework-apple")
+                .product(name: "TCServerSide", package: "TCServerSide-xcframework-apple")
             ]
         ),
         .target(name: "Appearance"),
