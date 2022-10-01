@@ -14,10 +14,6 @@ let package = Package(
             targets: ["Analytics"]
         ),
         .library(
-            name: "Appearance",
-            targets: ["Appearance"]
-        ),
-        .library(
             name: "Circumspect",
             targets: ["Circumspect"]
         ),
@@ -61,7 +57,6 @@ let package = Package(
                 .product(name: "TCServerSide", package: "TCServerSide-xcframework-apple")
             ]
         ),
-        .target(name: "Appearance"),
         .target(name: "Core"),
         .target(
             name: "CoreBusiness",
@@ -90,7 +85,6 @@ let package = Package(
         .target(
             name: "UserInterface",
             dependencies: [
-                .target(name: "Appearance"),
                 .target(name: "Player"),
                 .product(name: "GoogleCastSDK-no-bluetooth", package: "GoogleCastSDK-no-bluetooth", condition: .when(platforms: [.iOS]))
             ]
@@ -99,13 +93,6 @@ let package = Package(
             name: "AnalyticsTests",
             dependencies: [
                 .target(name: "Analytics"),
-                .target(name: "Circumspect")
-            ]
-        ),
-        .testTarget(
-            name: "AppearanceTests",
-            dependencies: [
-                .target(name: "Appearance"),
                 .target(name: "Circumspect")
             ]
         ),
