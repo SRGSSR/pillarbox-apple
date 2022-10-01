@@ -119,6 +119,36 @@ struct MediasView: View {
             source: .urn("urn:rsi:audio:8833144")
         ),
         Media(
+            id: "assets:apple_basic_4_3",
+            title: "Apple Basic 4:3",
+            description: "4x3 aspect ratio, H.264 @ 30Hz",
+            source: .url(Stream.appleBasic_4_3)
+        ),
+        Media(
+            id: "assets:apple_basic_16_9",
+            title: "Apple Basic 16:9",
+            description: "16x9 aspect ratio, H.264 @ 30Hz",
+            source: .url(Stream.appleBasic_16_9)
+        ),
+        Media(
+            id: "assets:apple_advanced_16_9_ts",
+            title: "Apple Advanced 16:9 (TS)",
+            description: "16x9 aspect ratio, H.264 @ 30Hz and 60Hz, Transport stream",
+            source: .url(Stream.appleAdvanced_16_9_ts)
+        ),
+        Media(
+            id: "assets:apple_advanced_16_9_fmp4",
+            title: "Apple Advanced 16:9 (fMP4)",
+            description: "16x9 aspect ratio, H.264 @ 30Hz and 60Hz, Fragmented MP4",
+            source: .url(Stream.appleAdvanced_16_9_fMP4)
+        ),
+        Media(
+            id: "assets:apple_advanced_16_9_hevc_h264",
+            title: "Apple Advanced 16:9 (HEVC/H.264)",
+            description: "16x9 aspect ratio, H.264 and HEVC @ 30Hz and 60Hz",
+            source: .url(Stream.appleAdvanced_16_9_HEVC_h264)
+        ),
+        Media(
             id: "assets:unknown",
             title: "Unknown media",
             description: "This media does not exist",

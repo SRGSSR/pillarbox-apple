@@ -34,7 +34,7 @@ struct WrappedView: View {
     }
 
     private func play() {
-        let item = AVPlayerItem(url: Stream.appleAdvanced)
+        let item = AVPlayerItem(url: Stream.appleBasic_16_9)
         let player = Player(item: item)
         model.player = player
         player.play()

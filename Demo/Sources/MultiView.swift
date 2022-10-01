@@ -25,11 +25,11 @@ struct MultiView: View {
         }
         .onAppear {
             Self.play(
-                url: Stream.appleAdvanced,
+                url: Stream.appleBasic_16_9,
                 in: topPlayer
             )
             Self.play(
-                url: Stream.appleAdvancedHEVC,
+                url: Stream.appleAdvanced_16_9_HEVC_h264,
                 in: bottomPlayer
             )
         }
