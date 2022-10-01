@@ -106,6 +106,9 @@ struct PlayerView: View {
                 VideoView(player: player)
                 ControlsView(player: player, isUserInterfaceHidden: isUserInterfaceHidden)
             }
+            .onTapGesture {
+                isUserInterfaceHidden.toggle()
+            }
             .ignoresSafeArea()
 #if os(iOS)
             Slider(player: player)
@@ -119,9 +122,6 @@ struct PlayerView: View {
         .animation(.easeInOut(duration: 0.2), value: isUserInterfaceHidden)
         .onAppear {
             play()
-        }
-        .onTapGesture {
-            isUserInterfaceHidden.toggle()
         }
     }
 

@@ -27,7 +27,7 @@ struct LinkView: View {
     }
 
     private func play() {
-        let item = AVPlayerItem(url: Stream.appleAdvanced)
+        let item = AVPlayerItem(url: Stream.appleBasic_16_9)
         player.append(item)
         player.play()
     }

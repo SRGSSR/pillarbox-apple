@@ -7,7 +7,12 @@
 import Foundation
 
 enum Stream {
-    static let appleAdvanced = URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8")!
-    static let appleAdvancedHEVC = URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_adv_example_hevc/master.m3u8")!
+    // Apple streams from https://developer.apple.com/streaming/examples/
+    static let appleBasic_4_3 = URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8")!
+    static let appleBasic_16_9 = URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8")!
+    static let appleAdvanced_16_9_ts = URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!
+    static let appleAdvanced_16_9_fMP4 = URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8")!
+    static let appleAdvanced_16_9_HEVC_h264 = URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_adv_example_hevc/master.m3u8")!
+
     static let local = URL(string: "http://localhost:8123/on_demand/master.m3u8")!
 }
