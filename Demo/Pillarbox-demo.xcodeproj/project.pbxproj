@@ -43,6 +43,7 @@
 		6F45DB9F2893B773008ACCE6 /* Demo.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Demo.release.xcconfig; sourceTree = "<group>"; };
 		6F482FC928C7A4A200CBC639 /* Media.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
 		6F4D9D5228D303AE00AF2237 /* Stream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
+		6F56C23F28E890140056458F /* Pillarbox.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Pillarbox.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		6F5FEDCF28CF328600B88EC0 /* StoriesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesViewModel.swift; sourceTree = "<group>"; };
 		6F65FA2028D0CE8A0081ACD1 /* PlaybackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackView.swift; sourceTree = "<group>"; };
 		6F917C082887EA8E004113BA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -80,6 +81,7 @@
 		6F05B8CC2887E934005D75E3 = {
 			isa = PBXGroup;
 			children = (
+				6F56C23F28E890140056458F /* Pillarbox.playground */,
 				6F010340289946220021BA76 /* Info.plist */,
 				6FAA7E9E288E84BD00380147 /* Packages */,
 				6F917C092887EA8E004113BA /* Sources */,
