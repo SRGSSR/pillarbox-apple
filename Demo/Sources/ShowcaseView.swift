@@ -30,6 +30,9 @@ private struct Cell<Presented: View>: View {
 struct ShowcaseView: View {
     var body: some View {
         List {
+            Cell(title: "Basic") {
+                BasicPlayerView()
+            }
             Cell(title: "Stories") {
                 StoriesView()
             }
