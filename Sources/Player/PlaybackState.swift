@@ -32,11 +32,12 @@ public enum PlaybackState: Equatable {
         }
     }
 
-    // Ignore differences between errors (different errors should never occur in practice for the same session anyway).
     public static func == (lhs: PlaybackState, rhs: PlaybackState) -> Bool {
         switch (lhs, rhs) {
-        case (.idle, .idle), (.playing, .playing), (.paused, .paused), (.ended, .ended), (.failed, .failed):
+        case (.idle, .idle), (.playing, .playing), (.paused, .paused), (.ended, .ended):
             return true
+        case let (.failed(error: lhsError), .failed(error: rhsError)):
+            return lhsError as NSError == rhsError as NSError
         default:
             return false
         }

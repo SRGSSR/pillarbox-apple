@@ -28,11 +28,12 @@ enum ItemState: Equatable {
         }
     }
 
-    // Ignore differences between errors (different errors should never occur in practice for the same item anyway).
     static func == (lhs: ItemState, rhs: ItemState) -> Bool {
         switch (lhs, rhs) {
-        case (.unknown, .unknown), (.readyToPlay, .readyToPlay), (.ended, .ended), (.failed, .failed):
+        case (.unknown, .unknown), (.readyToPlay, .readyToPlay), (.ended, .ended):
             return true
+        case let (.failed(error: lhsError), .failed(error: rhsError)):
+            return lhsError as NSError == rhsError as NSError
         default:
             return false
         }
