@@ -37,6 +37,8 @@ final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelega
 
 enum TestError: Error {
     case any
+    case error1
+    case error2
 }
 
 struct Stream {

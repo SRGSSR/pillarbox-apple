@@ -47,7 +47,7 @@ final class ItemStatePublisherTests: XCTestCase {
     func testUnavailableStream() {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectSimilarPublished(
             values: [.unknown, .failed(error: TestError.any)],
             from: player.itemStatePublisher(),
             during: 1
@@ -57,7 +57,7 @@ final class ItemStatePublisherTests: XCTestCase {
     func testCorruptStream() {
         let item = AVPlayerItem(url: Stream.corruptOnDemand.url)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectSimilarPublished(
             values: [.unknown, .failed(error: TestError.any)],
             from: player.itemStatePublisher(),
             during: 1
@@ -69,7 +69,7 @@ final class ItemStatePublisherTests: XCTestCase {
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: .global())
         let item = AVPlayerItem(asset: asset)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectSimilarPublished(
             values: [.unknown, .failed(error: TestError.any)],
             from: player.itemStatePublisher(),
             during: 1

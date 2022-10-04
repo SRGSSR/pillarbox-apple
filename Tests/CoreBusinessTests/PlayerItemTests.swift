@@ -23,7 +23,7 @@ final class PlayerItemTests: XCTestCase {
     func testFailure() {
         let item = AVPlayerItem(urn: "invalid")
         let player = AVPlayer(playerItem: item)
-        expectAtLeastEqualPublished(values: [.idle, .failed(error: TestError.any)], from: player.playbackStatePublisher()) {
+        expectAtLeastSimilarPublished(values: [.idle, .failed(error: TestError.any)], from: player.playbackStatePublisher()) {
             player.play()
         }
     }
