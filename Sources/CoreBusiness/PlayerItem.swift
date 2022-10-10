@@ -20,7 +20,7 @@ public extension AVPlayerItem {
     ///   - environment: The environment which the URN is played from.
     convenience init(urn: String, automaticallyLoadedAssetKeys: [String]? = nil, environment: Environment = .production) {
         let asset = AVURLAsset(url: URLCoding.encodeUrl(fromUrn: urn))
-        asset.resourceLoader.setDelegate(assetResourceLoaders[environment], queue: .global(qos: .userInteractive))
+        asset.resourceLoader.setDelegate(assetResourceLoaders[environment], queue: .global(qos: .userInitiated))
         self.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
     }
 }
