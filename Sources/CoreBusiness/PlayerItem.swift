@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-private let assetResourceLoaders: [Environment: AssetResourceLoaderDelegate] = [
+private let kAssetResourceLoaders: [Environment: AssetResourceLoaderDelegate] = [
     .production: AssetResourceLoaderDelegate(environment: .production),
     .stage: AssetResourceLoaderDelegate(environment: .stage),
     .test: AssetResourceLoaderDelegate(environment: .test)
@@ -21,7 +21,7 @@ public extension AVPlayerItem {
     ///   - environment: The environment which the URN is played from.
     convenience init(urn: String, automaticallyLoadedAssetKeys: [String], environment: Environment = .production) {
         let asset = AVURLAsset(url: URLCoding.encodeUrl(fromUrn: urn))
-        asset.resourceLoader.setDelegate(assetResourceLoaders[environment], queue: .global(qos: .userInitiated))
+        asset.resourceLoader.setDelegate(kAssetResourceLoaders[environment], queue: .global(qos: .userInitiated))
         self.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
     }
 }
