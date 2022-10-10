@@ -7,17 +7,20 @@
 import AVFoundation
 import Player
 
+private let assetResourceLoaders: [Environment: AssetResourceLoaderDelegate] = [
+    .production: AssetResourceLoaderDelegate(environment: .production),
+    .stage: AssetResourceLoaderDelegate(environment: .stage),
+    .test: AssetResourceLoaderDelegate(environment: .test)
+]
+
 public extension AVPlayerItem {
     /// Create a player item from a URN played in the specified environment.
     /// - Parameters:
     ///   - urn: The URN to play.
     ///   - environment: The environment which the URN is played from.
-    convenience init(urn: String, environment: Environment = .production) {
+    convenience init(urn: String, automaticallyLoadedAssetKeys: [String]? = nil, environment: Environment = .production) {
         let asset = AVURLAsset(url: URLCoding.encodeUrl(fromUrn: urn))
-        self.init(
-            asset: asset,
-            associatedDelegate: AssetResourceLoaderDelegate(environment: environment),
-            queue: .global(qos: .userInteractive)
-        )
+        asset.resourceLoader.setDelegate(assetResourceLoaders[environment], queue: .global(qos: .userInteractive))
+        self.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
     }
 }
