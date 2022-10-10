@@ -18,9 +18,9 @@ enum MediaSource: Hashable {
         case .empty:
             return nil
         case let .url(url):
-            return AVPlayerItem(url: url)
+            return AVPlayerItem(url: url, automaticallyLoadedAssetKeys: [])
         case let .urn(urn):
-            return AVPlayerItem(urn: urn)
+            return AVPlayerItem(urn: urn, automaticallyLoadedAssetKeys: [])
         }
     }
 }
