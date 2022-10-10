@@ -62,8 +62,7 @@ let package = Package(
             name: "CoreBusiness",
             dependencies: [
                 .target(name: "Analytics"),
-                .target(name: "Diagnostics"),
-                .target(name: "Player")
+                .target(name: "Diagnostics")
             ]
         ),
         .target(
@@ -113,7 +112,8 @@ let package = Package(
             name: "CoreBusinessTests",
             dependencies: [
                 .target(name: "Circumspect"),
-                .target(name: "CoreBusiness")
+                .target(name: "CoreBusiness"),
+                .target(name: "Player")
             ]
         ),
         .testTarget(
@@ -127,7 +127,7 @@ let package = Package(
             name: "PlayerTests",
             dependencies: [
                 .target(name: "Circumspect"),
-                .target(name: "Player"),
+                .target(name: "Player")
             ]
         ),
         .testTarget(

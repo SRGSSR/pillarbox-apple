@@ -169,6 +169,13 @@ public final class Player: ObservableObject {
     public func boundaryTimePublisher(for times: [CMTime], queue: DispatchQueue = .main) -> AnyPublisher<Void, Never> {
         Publishers.BoundaryTimePublisher(for: rawPlayer, times: times, queue: queue)
     }
+
+    deinit {
+        storedItems.forEach { item in
+            item.cancelPendingSeeks()
+            item.asset.cancelLoading()
+        }
+    }
 }
 
 public extension Player {

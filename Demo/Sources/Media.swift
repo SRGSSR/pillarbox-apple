@@ -10,78 +10,102 @@ struct Media: Identifiable {
     static var urnPlaylist: [Media] = [
         Media(
             id: "playlist:1",
-            title: "Item 1",
+            title: "Le Rencard 1",
             description: "Playlist item 1",
-            source: .urn("urn:rts:video:13360549")
+            source: .urn("urn:rts:video:13444390")
         ),
         Media(
             id: "playlist:2",
-            title: "Item 2",
+            title: "Le Rencard 2",
             description: "Playlist item 2",
-            source: .urn("urn:rts:video:13270568")
+            source: .urn("urn:rts:video:13444333")
         ),
         Media(
             id: "playlist:3",
-            title: "Item 3",
+            title: "Le Rencard 3",
             description: "Playlist item 3",
-            source: .urn("urn:rts:video:13270535")
+            source: .urn("urn:rts:video:13444466")
         ),
         Media(
             id: "playlist:4",
-            title: "Item 4",
+            title: "Le Rencard 4",
             description: "Playlist item 4",
-            source: .urn("urn:rts:video:13228000")
+            source: .urn("urn:rts:video:13444447")
         ),
         Media(
             id: "playlist:5",
-            title: "Item 5",
+            title: "Le Rencard 5",
             description: "Playlist item 5",
-            source: .urn("urn:rts:video:13227903")
+            source: .urn("urn:rts:video:13444352")
         ),
         Media(
             id: "playlist:6",
-            title: "Item 6",
+            title: "Le Rencard 6",
             description: "Playlist item 6",
-            source: .urn("urn:rts:video:13161499")
+            source: .urn("urn:rts:video:13444409")
+        ),
+        Media(
+            id: "playlist:7",
+            title: "Le Rencard 7",
+            description: "Playlist item 7",
+            source: .urn("urn:rts:video:13444371")
+        ),
+        Media(
+            id: "playlist:8",
+            title: "Le Rencard 8",
+            description: "Playlist item 8",
+            source: .urn("urn:rts:video:13444428")
         )
     ]
 
     static var urlPlaylist: [Media] = [
         Media(
             id: "playlist:1",
-            title: "Item 1",
+            title: "Le Rencard 1",
             description: "Playlist item 1",
-            source: .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13360549/8767046e-2bb2-367c-9489-f0db42fa895d/master.m3u8")!)
+            source: .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13444390/f1b478f7-2ae9-3166-94b9-c5d5fe9610df/master.m3u8")!)
         ),
         Media(
             id: "playlist:2",
-            title: "Item 2",
+            title: "Le Rencard 2",
             description: "Playlist item 2",
-            source: .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13270568/a5aa3481-618b-390b-aeda-4c24324fff0a/master.m3u8")!)
+            source: .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13444333/feb1d08d-e62c-31ff-bac9-64c0a7081612/master.m3u8")!)
         ),
         Media(
             id: "playlist:3",
-            title: "Item 3",
+            title: "Le Rencard 3",
             description: "Playlist item 3",
-            source: .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13270535/d47afd3d-a0ba-3b59-a3ed-d806097b8a7e/master.m3u8")!)
+            source: .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13444466/2787e520-412f-35fb-83d7-8dbb31b5c684/master.m3u8")!)
         ),
         Media(
             id: "playlist:4",
-            title: "Item 4",
+            title: "Le Rencard 4",
             description: "Playlist item 4",
-            source: .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13228000/afda78a2-b04b-346c-b01c-00e6a617b993/master.m3u8")!)
+            source: .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13444447/c1d17174-ad2f-31c2-a084-846a9247fd35/master.m3u8")!)
         ),
         Media(
             id: "playlist:5",
-            title: "Item 5",
+            title: "Le Rencard 5",
             description: "Playlist item 5",
-            source: .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13227903/ee11ce1e-637c-3504-bf80-845143534b47/master.m3u8")!)
+            source: .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13444352/32145dc0-b5f8-3a14-ae11-5fc6e33aaaa4/master.m3u8")!)
         ),
         Media(
             id: "playlist:6",
-            title: "Item 6",
+            title: "Le Rencard 6",
             description: "Playlist item 6",
-            source: .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13161499/6a317edc-283f-3118-a873-f45f4d54f13d/master.m3u8")!)
+            source: .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13444409/23f808a4-b14a-3d3e-b2ed-fa1279f6cf01/master.m3u8")!)
+        ),
+        Media(
+            id: "playlist:7",
+            title: "Le Rencard 7",
+            description: "Playlist item 7",
+            source: .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13444371/3f26467f-cd97-35f4-916f-ba3927445920/master.m3u8")!)
+        ),
+        Media(
+            id: "playlist:8",
+            title: "Le Rencard 8",
+            description: "Playlist item 8",
+            source: .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13444428/857d97ef-0b8e-306e-bf79-3b13e8c901e4/master.m3u8")!)
         )
     ]
 
