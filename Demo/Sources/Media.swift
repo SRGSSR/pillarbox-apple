@@ -7,6 +7,13 @@
 import Foundation
 
 struct Media: Identifiable {
+    static var liveMedia = Media(
+        id: "live",
+        title: "Couleur 3",
+        description: "Couleur 3 livestream",
+        source: .url(Stream.couleur3_livestream)
+    )
+
     static var urnPlaylist: [Media] = [
         Media(
             id: "playlist:1",

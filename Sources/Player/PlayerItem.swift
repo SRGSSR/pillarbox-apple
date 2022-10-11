@@ -10,10 +10,9 @@ public extension AVPlayerItem {
     /// Create a player item from a URL.
     /// - Parameters:
     ///   - url: The URL to play.
-    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play, ensuring they are
-    ///     available, but increasing startup time.
-    convenience init(url: URL, automaticallyLoadedAssetKeys: [String]) {
+    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play.
+    convenience init(url: URL, automaticallyLoadedAssetKeys keys: [String]) {
         let asset = AVURLAsset(url: url)
-        self.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+        self.init(asset: asset, automaticallyLoadedAssetKeys: keys)
     }
 }

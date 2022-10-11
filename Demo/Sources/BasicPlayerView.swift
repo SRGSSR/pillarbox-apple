@@ -15,10 +15,15 @@ struct BasicPlayerView: View {
     @StateObject private var player = Player(item: AVPlayerItem(url: Stream.appleAdvanced_16_9_HEVC_h264))
 
     var body: some View {
-        VideoView(player: player)
-            .onAppear {
-                player.play()
+        ZStack {
+            VideoView(player: player)
+            if player.isBuffering {
+                ProgressView()
             }
+        }
+        .onAppear {
+            player.play()
+        }
     }
 }
 

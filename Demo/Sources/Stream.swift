@@ -14,5 +14,10 @@ enum Stream {
     static let appleAdvanced_16_9_fMP4 = URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8")!
     static let appleAdvanced_16_9_HEVC_h264 = URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_adv_example_hevc/master.m3u8")!
 
+    // Livestreams
+    static let couleur3_livestream = URL(string: "https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8?dw=0")!
+    static let couleur3_livestream_dvr = URL(string: "https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8")!
+
+    // Other
     static let local = URL(string: "http://localhost:8123/on_demand/master.m3u8")!
 }

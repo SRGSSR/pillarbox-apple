@@ -33,6 +33,9 @@ struct ShowcaseView: View {
             Cell(title: "Basic") {
                 BasicPlayerView()
             }
+            Cell(title: "Unbuffered live playback") {
+                PlayerView(media: .liveMedia, buffered: false)
+            }
             Cell(title: "Stories") {
                 StoriesView()
             }
