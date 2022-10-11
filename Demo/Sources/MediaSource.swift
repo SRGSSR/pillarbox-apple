@@ -20,7 +20,7 @@ enum MediaSource: Hashable {
         case let .url(url):
             return AVPlayerItem(url: url, automaticallyLoadedAssetKeys: [])
         case let .urn(urn):
-            return AVPlayerItem(urn: urn, automaticallyLoadedAssetKeys: [])
+            return PlayerItem(urn: urn, automaticallyLoadedAssetKeys: [])
         }
     }
 }
