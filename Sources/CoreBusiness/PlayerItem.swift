@@ -23,5 +23,6 @@ public extension AVPlayerItem {
         let asset = AVURLAsset(url: URLCoding.encodeUrl(fromUrn: urn))
         asset.resourceLoader.setDelegate(kAssetResourceLoaders[environment], queue: .global(qos: .userInitiated))
         self.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+        automaticallyPreservesTimeOffsetFromLive = true
     }
 }
