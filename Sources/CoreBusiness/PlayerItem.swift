@@ -22,9 +22,14 @@ public extension AVPlayerItem {
         let asset = AVURLAsset(url: URLCoding.encodeUrl(fromUrn: urn))
         asset.resourceLoader.setDelegate(kAssetResourceLoaders[environment], queue: .global(qos: .userInitiated))
         self.init(asset: asset, automaticallyLoadedAssetKeys: keys)
+        preventLivestreamDelayedPlayback()
+    }
 
-        // Limit buffering. This ensures that paused livestreams without DVR cannot be played from buffer. Instead
-        // force the player to return to the live edge when re-buffering live content.
+    /// Limit buffering and force the player to return to the live edge when re-buffering. This ensures livestreams
+    /// cannot be paused and resumed in the past, as requested by business people.
+    ///
+    /// Remark: These settings do not negatively affect on-demand or DVR livestream playback.
+    private func preventLivestreamDelayedPlayback() {
         automaticallyPreservesTimeOffsetFromLive = true
         preferredForwardBufferDuration = 1
     }
