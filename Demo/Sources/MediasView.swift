@@ -56,13 +56,13 @@ struct MediasView: View {
             id: "assets:video_live_hls",
             title: "Video livestream - HLS",
             description: "Couleur 3 en vidéo",
-            source: .url(URL(string: "https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8?dw=0")!)
+            source: .url(Stream.couleur3_livestream)
         ),
         Media(
             id: "assets:video_live_dvr_hls",
             title: "Video livestream with DVR - HLS",
             description: "Couleur 3 en vidéo",
-            source: .url(URL(string: "https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8")!)
+            source: .url(Stream.couleur3_livestream_dvr)
         ),
         Media(
             id: "assets:video_live_dvr_timestamps_hls",
