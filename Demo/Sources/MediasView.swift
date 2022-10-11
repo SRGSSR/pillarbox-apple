@@ -172,7 +172,7 @@ struct MediasView: View {
 
 // MARK: Preview
 
-struct DemosView_Previews: PreviewProvider {
+struct MediasView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
             MediasView()
