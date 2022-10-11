@@ -17,7 +17,12 @@ struct LinkView: View {
 
     var body: some View {
         VStack {
-            VideoView(player: isDisplayed ? player : Player())
+            ZStack {
+                VideoView(player: isDisplayed ? player : Player())
+                if player.isBuffering {
+                    ProgressView()
+                }
+            }
             Toggle("Content displayed", isOn: $isDisplayed)
                 .padding()
         }
