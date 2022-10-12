@@ -11,6 +11,7 @@ import Foundation
 enum MediaSource: Hashable {
     case empty
     case url(URL)
+    case unbufferedUrl(URL)
     case urn(String)
 
     var playerItem: AVPlayerItem? {
@@ -18,9 +19,14 @@ enum MediaSource: Hashable {
         case .empty:
             return nil
         case let .url(url):
-            return AVPlayerItem(url: url, automaticallyLoadedAssetKeys: [])
+            return AVPlayerItem(url: url)
+        case let .unbufferedUrl(url):
+            let item = AVPlayerItem(url: url)
+            item.automaticallyPreservesTimeOffsetFromLive = true
+            item.preferredForwardBufferDuration = 1
+            return item
         case let .urn(urn):
-            return PlayerItem(urn: urn, automaticallyLoadedAssetKeys: [])
+            return PlayerItem(urn: urn)
         }
     }
 }

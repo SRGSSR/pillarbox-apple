@@ -56,13 +56,13 @@ struct MediasView: View {
             id: "assets:video_live_hls",
             title: "Video livestream - HLS",
             description: "Couleur 3 en vidéo",
-            source: .url(Stream.couleur3_livestream)
+            source: .url(Stream.couleur3_video_livestream)
         ),
         Media(
             id: "assets:video_live_dvr_hls",
             title: "Video livestream with DVR - HLS",
             description: "Couleur 3 en vidéo",
-            source: .url(Stream.couleur3_livestream_dvr)
+            source: .url(Stream.couleur3_video_livestream_dvr)
         ),
         Media(
             id: "assets:video_live_dvr_timestamps_hls",
@@ -80,7 +80,7 @@ struct MediasView: View {
             id: "assets:audio_live_mp3",
             title: "Audio livestream - MP3",
             description: "Couleur 3",
-            source: .url(URL(string: "http://stream.srg-ssr.ch/m/couleur3/mp3_128")!)
+            source: .url(Stream.couleur3_audio_livestream)
         ),
         Media(
             id: "assets:audio_live_dvr_hls",

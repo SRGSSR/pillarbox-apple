@@ -30,32 +30,42 @@ private struct Cell<Presented: View>: View {
 struct ShowcaseView: View {
     var body: some View {
         List {
-            Cell(title: "Basic") {
-                BasicPlayerView()
+            Group {
+                Cell(title: "Basic") {
+                    BasicPlayerView()
+                }
+                Cell(title: "Unbuffered video livestream") {
+                    PlayerView(media: .unbufferedLiveVideo)
+                }
+                Cell(title: "Unbuffered on-demand audio") {
+                    PlayerView(media: .unbufferedOnDemandAudio)
+                }
+                Cell(title: "Unbuffered audio livestream") {
+                    PlayerView(media: .unbufferedLiveAudio)
+                }
+                Cell(title: "Stories") {
+                    StoriesView()
+                }
+                Cell(title: "Twins") {
+                    TwinsView()
+                }
+                Cell(title: "Multi") {
+                    MultiView()
+                }
             }
-            Cell(title: "Unbuffered live playback") {
-                PlayerView(media: .liveMedia, buffered: false)
-            }
-            Cell(title: "Stories") {
-                StoriesView()
-            }
-            Cell(title: "Twins") {
-                TwinsView()
-            }
-            Cell(title: "Multi") {
-                MultiView()
-            }
-            Cell(title: "Link") {
-                LinkView()
-            }
-            Cell(title: "Wrapped") {
-                WrappedView()
-            }
-            Cell(title: "Playlist (URLs)") {
-                PlayerView(medias: Media.urlPlaylist)
-            }
-            Cell(title: "Playlist (URNs)") {
-                PlayerView(medias: Media.urnPlaylist)
+            Group {
+                Cell(title: "Link") {
+                    LinkView()
+                }
+                Cell(title: "Wrapped") {
+                    WrappedView()
+                }
+                Cell(title: "Playlist (URLs)") {
+                    PlayerView(medias: Media.urlPlaylist)
+                }
+                Cell(title: "Playlist (URNs)") {
+                    PlayerView(medias: Media.urnPlaylist)
+                }
             }
         }
         .navigationTitle("Showcase")

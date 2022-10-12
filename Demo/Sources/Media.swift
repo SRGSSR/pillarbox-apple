@@ -7,11 +7,25 @@
 import Foundation
 
 struct Media: Identifiable {
-    static var liveMedia = Media(
-        id: "live",
+    static var unbufferedLiveVideo = Media(
+        id: "video_live",
         title: "Couleur 3",
-        description: "Couleur 3 livestream",
-        source: .url(Stream.couleur3_livestream)
+        description: "Couleur 3 video livestream",
+        source: .unbufferedUrl(Stream.couleur3_video_livestream)
+    )
+
+    static var unbufferedOnDemandAudio = Media(
+        id: "aod",
+        title: "Forum",
+        description: "Forum AOD",
+        source: .unbufferedUrl(Stream.forum_audio_on_demand)
+    )
+
+    static var unbufferedLiveAudio = Media(
+        id: "audio_live",
+        title: "Couleur 3",
+        description: "Couleur 3 audio livestream",
+        source: .unbufferedUrl(Stream.couleur3_audio_livestream)
     )
 
     static var urnPlaylist: [Media] = [
