@@ -6,38 +6,26 @@
 
 import AVFoundation
 
-private let kAssetResourceLoaders: [Environment: AssetResourceLoaderDelegate] = [
-    .production: AssetResourceLoaderDelegate(environment: .production),
-    .stage: AssetResourceLoaderDelegate(environment: .stage),
-    .test: AssetResourceLoaderDelegate(environment: .test)
-]
+public class PlayerItem: AVPlayerItem {
+    private let resourceLoaderDelegate: AssetResourceLoaderDelegate
 
-public extension AVPlayerItem {
+    // swiftlint:disable discouraged_optional_collection
+
     /// Create a player item from a URN played in the specified environment.
     /// - Parameters:
     ///   - urn: The URN to play.
-    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play.
+    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play. If `nil` default
+    ///     keys are loaded.
     ///   - environment: The environment which the URN is played from.
-    convenience init(urn: String, automaticallyLoadedAssetKeys keys: [String], environment: Environment = .production) {
-        self.init(asset: Self.asset(fromUrn: urn, environment: environment), automaticallyLoadedAssetKeys: keys)
-        preventLivestreamDelayedPlayback()
-    }
-
-    /// Create a player item from a URN played in the specified environment. Loads standard asset keys before the item
-    /// is ready to play.
-    /// - Parameters:
-    ///   - urn: The URN to play.
-    ///   - environment: The environment which the URN is played from.
-    convenience init(urn: String, environment: Environment = .production) {
-        self.init(asset: Self.asset(fromUrn: urn, environment: environment))
-        preventLivestreamDelayedPlayback()
-    }
-
-    private static func asset(fromUrn urn: String, environment: Environment) -> AVAsset {
+    public init(urn: String, automaticallyLoadedAssetKeys keys: [String]? = nil, environment: Environment = .production) {
+        resourceLoaderDelegate = AssetResourceLoaderDelegate(environment: environment)
         let asset = AVURLAsset(url: URLCoding.encodeUrl(fromUrn: urn))
-        asset.resourceLoader.setDelegate(kAssetResourceLoaders[environment], queue: .global(qos: .userInitiated))
-        return asset
+        asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: .global(qos: .userInitiated))
+        super.init(asset: asset, automaticallyLoadedAssetKeys: keys)
+        preventLivestreamDelayedPlayback()
     }
+
+    // swiftlint:enable discouraged_optional_collection
 
     /// Limit buffering and force the player to return to the live edge when re-buffering. This ensures livestreams
     /// cannot be paused and resumed in the past, as requested by business people.

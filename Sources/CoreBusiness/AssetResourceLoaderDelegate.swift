@@ -9,7 +9,7 @@ import Combine
 
 final class AssetResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
     private let environment: Environment
-    private var cancellables = [String: AnyCancellable]()
+    private var cancellable: AnyCancellable?
 
     init(environment: Environment) {
         self.environment = environment
@@ -30,13 +30,12 @@ final class AssetResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate
     }
 
     func resourceLoader(_ resourceLoader: AVAssetResourceLoader, didCancel loadingRequest: AVAssetResourceLoadingRequest) {
-        guard let url = loadingRequest.request.url, let urn = URLCoding.decodeUrn(from: url) else { return }
-        cancellables[urn] = nil
+        cancellable = nil
     }
 
     private func processLoadingRequest(_ loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
         guard let url = loadingRequest.request.url, let urn = URLCoding.decodeUrn(from: url) else { return false }
-        cancellables[urn] = DataProvider(environment: environment).mediaComposition(forUrn: urn)
+        cancellable = DataProvider(environment: environment).mediaComposition(forUrn: urn)
             .map(\.mainChapter.recommendedResource)
             .tryMap { resource in
                 guard let resource else {
