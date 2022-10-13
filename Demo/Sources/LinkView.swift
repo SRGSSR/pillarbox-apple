@@ -12,6 +12,8 @@ import UserInterface
 // MARK: View
 
 struct LinkView: View {
+    let media: Media
+
     @StateObject private var player = Player()
     @State private var isDisplayed = true
 
@@ -32,7 +34,7 @@ struct LinkView: View {
     }
 
     private func play() {
-        let item = AVPlayerItem(url: Stream.appleBasic_16_9)
+        guard let item = media.playerItem else { return }
         player.append(item)
         player.play()
     }
@@ -42,6 +44,6 @@ struct LinkView: View {
 
 struct LinkView_Previews: PreviewProvider {
     static var previews: some View {
-        LinkView()
+        LinkView(media: MediaURL.onDemandVideoLocalHLS)
     }
 }

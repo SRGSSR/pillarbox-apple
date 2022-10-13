@@ -36,7 +36,7 @@ private struct StoryView: View {
 }
 
 struct StoriesView: View {
-    @StateObject private var model = StoriesViewModel(stories: Story.stories)
+    @StateObject private var model = StoriesViewModel(stories: Story.stories(from: MediaURLPlaylist.videos))
 
     var body: some View {
         TabView(selection: $model.currentStory) {

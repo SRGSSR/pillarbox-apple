@@ -12,6 +12,8 @@ import UserInterface
 // MARK: View
 
 struct TwinsView: View {
+    let media: Media
+
     @StateObject var player = Player()
     @State private var mode: Mode = .both
 
@@ -45,7 +47,7 @@ struct TwinsView: View {
     }
 
     private func play() {
-        let item = AVPlayerItem(url: Stream.appleBasic_16_9)
+        guard let item = media.playerItem else { return }
         player.append(item)
         player.play()
     }
@@ -65,6 +67,6 @@ extension TwinsView {
 
 struct TwinsView_Previews: PreviewProvider {
     static var previews: some View {
-        TwinsView()
+        TwinsView(media: MediaURL.onDemandVideoLocalHLS)
     }
 }

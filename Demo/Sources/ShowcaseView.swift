@@ -30,32 +30,45 @@ private struct Cell<Presented: View>: View {
 struct ShowcaseView: View {
     var body: some View {
         List {
-            Cell(title: "Basic") {
-                BasicPlayerView()
+            Group {
+                Cell(title: "Basic") {
+                    BasicPlayerView(media: MediaURL.appleAdvanced_16_9_HEVC_h264_HLS)
+                }
+                Cell(title: "Unbuffered video livestream") {
+                    PlayerView(media: UnbufferedMediaURL.liveVideo)
+                }
+                Cell(title: "Unbuffered on-demand audio") {
+                    PlayerView(media: UnbufferedMediaURL.onDemandAudio)
+                }
+                Cell(title: "Unbuffered audio livestream") {
+                    PlayerView(media: UnbufferedMediaURL.liveAudio)
+                }
+                Cell(title: "Stories") {
+                    StoriesView()
+                }
+                Cell(title: "Twins") {
+                    TwinsView(media: MediaURL.appleBasic_16_9_TS_HLS)
+                }
+                Cell(title: "Multi") {
+                    MultiView(
+                        media1: MediaURL.appleBasic_16_9_TS_HLS,
+                        media2: MediaURL.appleAdvanced_16_9_HEVC_h264_HLS
+                    )
+                }
             }
-            Cell(title: "Unbuffered live playback") {
-                PlayerView(media: .liveMedia, buffered: false)
-            }
-            Cell(title: "Stories") {
-                StoriesView()
-            }
-            Cell(title: "Twins") {
-                TwinsView()
-            }
-            Cell(title: "Multi") {
-                MultiView()
-            }
-            Cell(title: "Link") {
-                LinkView()
-            }
-            Cell(title: "Wrapped") {
-                WrappedView()
-            }
-            Cell(title: "Playlist (URLs)") {
-                PlayerView(medias: Media.urlPlaylist)
-            }
-            Cell(title: "Playlist (URNs)") {
-                PlayerView(medias: Media.urnPlaylist)
+            Group {
+                Cell(title: "Link") {
+                    LinkView(media: MediaURL.appleAdvanced_16_9_fMP4_HLS)
+                }
+                Cell(title: "Wrapped") {
+                    WrappedView(media: MediaURL.appleBasic_16_9_TS_HLS)
+                }
+                Cell(title: "Playlist (URLs)") {
+                    PlayerView(medias: MediaURLPlaylist.videos)
+                }
+                Cell(title: "Playlist (URNs)") {
+                    PlayerView(medias: MediaURNPlaylist.videos)
+                }
             }
         }
         .navigationTitle("Showcase")

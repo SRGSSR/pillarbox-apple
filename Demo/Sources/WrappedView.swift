@@ -13,6 +13,8 @@ import UserInterface
 
 @MainActor
 struct WrappedView: View {
+    let media: Media
+
     @StateObject private var model = WrappedViewModel()
 
     var body: some View {
@@ -34,7 +36,7 @@ struct WrappedView: View {
     }
 
     private func play() {
-        let item = AVPlayerItem(url: Stream.appleBasic_16_9)
+        guard let item = media.playerItem else { return }
         let player = Player(item: item)
         model.player = player
         player.play()
@@ -49,6 +51,6 @@ struct WrappedView: View {
 
 struct WrappedView_Previews: PreviewProvider {
     static var previews: some View {
-        WrappedView()
+        WrappedView(media: MediaURL.onDemandVideoLocalHLS)
     }
 }

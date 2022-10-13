@@ -96,7 +96,6 @@ private struct PreviousButton: View {
 
 struct PlayerView: View {
     let medias: [Media]
-    let buffered: Bool
 
     @StateObject private var player = Player()
     @State private var isUserInterfaceHidden = false
@@ -126,21 +125,16 @@ struct PlayerView: View {
         }
     }
 
-    init(medias: [Media], buffered: Bool = true) {
+    init(medias: [Media]) {
         self.medias = medias
-        self.buffered = buffered
     }
 
-    init(media: Media, buffered: Bool = true) {
-        self.init(medias: [media], buffered: buffered)
+    init(media: Media) {
+        self.init(medias: [media])
     }
 
     private func play() {
-        medias.compactMap(\.source.playerItem).forEach { item in
-            if !buffered {
-                item.automaticallyPreservesTimeOffsetFromLive = true
-                item.preferredForwardBufferDuration = 1
-            }
+        medias.compactMap(\.playerItem).forEach { item in
             player.append(item)
         }
         player.play()
@@ -150,14 +144,7 @@ struct PlayerView: View {
 // MARK: Preview
 
 struct PlayerView_Previews: PreviewProvider {
-    static let media = Media(
-        id: "id",
-        title: "Title",
-        description: "Description",
-        source: .url(Stream.local)
-    )
-
     static var previews: some View {
-        PlayerView(media: media)
+        PlayerView(media: MediaURL.onDemandVideoLocalHLS)
     }
 }

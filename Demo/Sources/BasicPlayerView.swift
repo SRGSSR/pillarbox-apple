@@ -12,7 +12,9 @@ import UserInterface
 // MARK: View
 
 struct BasicPlayerView: View {
-    @StateObject private var player = Player(item: AVPlayerItem(url: Stream.appleAdvanced_16_9_HEVC_h264))
+    let media: Media
+
+    @StateObject private var player = Player()
 
     var body: some View {
         ZStack {
@@ -22,8 +24,14 @@ struct BasicPlayerView: View {
             }
         }
         .onAppear {
-            player.play()
+            play()
         }
+    }
+
+    private func play() {
+        guard let item = media.playerItem else { return }
+        player.append(item)
+        player.play()
     }
 }
 
@@ -31,6 +39,6 @@ struct BasicPlayerView: View {
 
 struct BasicPlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        BasicPlayerView()
+        BasicPlayerView(media: MediaURL.onDemandVideoLocalHLS)
     }
 }
