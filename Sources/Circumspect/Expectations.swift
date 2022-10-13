@@ -576,7 +576,6 @@ public extension XCTestCase {
                 expectation.fulfill()
             case .failure:
                 XCTFail("The publisher incorrectly failed", file: file, line: line)
-                break
             }
         } receiveValue: { _ in
         }
@@ -605,7 +604,6 @@ public extension XCTestCase {
             switch completion {
             case .finished:
                 XCTFail("The publisher incorrectly succeeded", file: file, line: line)
-                break
             case let .failure(actualError):
                 if let error {
                     XCTAssertEqual(error as NSError, actualError as NSError, file: file, line: line)

@@ -9,7 +9,7 @@ import Foundation
 
 extension Publisher {
     func mapHttpErrors() -> Publishers.TryMap<Self, Output> where Output == URLSession.DataTaskPublisher.Output {
-        return tryMap { result in
+        tryMap { result in
             if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode >= 400 {
                 throw NetworkError.http(statusCode: httpResponse.statusCode)
             }
