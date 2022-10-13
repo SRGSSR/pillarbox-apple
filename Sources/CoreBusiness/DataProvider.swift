@@ -23,4 +23,16 @@ final class DataProvider {
             .decode(type: MediaComposition.self, decoder: JSONDecoder())
             .eraseToAnyPublisher()
     }
+
+    func recommendedResource(forUrn urn: String) -> AnyPublisher<Resource, Error> {
+        mediaComposition(forUrn: urn)
+            .map(\.mainChapter.recommendedResource)
+            .tryMap { resource in
+                guard let resource else {
+                    throw ResourceLoadingError.notFound
+                }
+                return resource
+            }
+            .eraseToAnyPublisher()
+    }
 }
