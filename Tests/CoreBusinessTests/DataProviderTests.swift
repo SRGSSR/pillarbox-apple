@@ -22,4 +22,10 @@ final class DataProviderTests: XCTestCase {
             from: DataProvider().mediaComposition(forUrn: "urn:rts:video:unknown")
         )
     }
+
+    func testValidRecommendedResource() {
+        expectSuccess(
+            from: DataProvider().recommendedResource(forUrn: "urn:rts:video:6820736")
+        )
+    }
 }
