@@ -19,6 +19,7 @@ final class DataProvider {
     func mediaComposition(forUrn urn: String) -> AnyPublisher<MediaComposition, Error> {
         let url = environment.url.appending(path: "integrationlayer/2.1/mediaComposition/byUrn/\(urn)")
         return session.dataTaskPublisher(for: url)
+            .mapHttpErrors()
             .map(\.data)
             .decode(type: MediaComposition.self, decoder: JSONDecoder())
             .eraseToAnyPublisher()
@@ -29,7 +30,7 @@ final class DataProvider {
             .map(\.mainChapter.recommendedResource)
             .tryMap { resource in
                 guard let resource else {
-                    throw ResourceLoadingError.notFound
+                    throw DataError.notFound
                 }
                 return resource
             }

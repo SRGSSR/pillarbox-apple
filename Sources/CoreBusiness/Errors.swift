@@ -6,7 +6,10 @@
 
 import Foundation
 
-enum ResourceLoadingError: Error {
-    case notFound
+enum NetworkError: Error {
     case http(statusCode: Int)
+}
+
+enum DataError: Error {
+    case notFound
 }
