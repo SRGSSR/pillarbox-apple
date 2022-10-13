@@ -32,39 +32,42 @@ struct ShowcaseView: View {
         List {
             Group {
                 Cell(title: "Basic") {
-                    BasicPlayerView()
+                    BasicPlayerView(media: MediaURL.appleAdvanced_16_9_HEVC_h264_HLS)
                 }
                 Cell(title: "Unbuffered video livestream") {
-                    PlayerView(media: .unbufferedLiveVideo)
+                    PlayerView(media: UnbufferedMediaURL.liveVideo)
                 }
                 Cell(title: "Unbuffered on-demand audio") {
-                    PlayerView(media: .unbufferedOnDemandAudio)
+                    PlayerView(media: UnbufferedMediaURL.onDemandAudio)
                 }
                 Cell(title: "Unbuffered audio livestream") {
-                    PlayerView(media: .unbufferedLiveAudio)
+                    PlayerView(media: UnbufferedMediaURL.liveAudio)
                 }
                 Cell(title: "Stories") {
                     StoriesView()
                 }
                 Cell(title: "Twins") {
-                    TwinsView()
+                    TwinsView(media: MediaURL.appleBasic_16_9_TS_HLS)
                 }
                 Cell(title: "Multi") {
-                    MultiView()
+                    MultiView(
+                        media1: MediaURL.appleBasic_16_9_TS_HLS,
+                        media2: MediaURL.appleAdvanced_16_9_HEVC_h264_HLS
+                    )
                 }
             }
             Group {
                 Cell(title: "Link") {
-                    LinkView()
+                    LinkView(media: MediaURL.appleAdvanced_16_9_fMP4_HLS)
                 }
                 Cell(title: "Wrapped") {
-                    WrappedView()
+                    WrappedView(media: MediaURL.appleBasic_16_9_TS_HLS)
                 }
                 Cell(title: "Playlist (URLs)") {
-                    PlayerView(medias: Media.urlPlaylist)
+                    PlayerView(medias: MediaURLPlaylist.videos)
                 }
                 Cell(title: "Playlist (URNs)") {
-                    PlayerView(medias: Media.urnPlaylist)
+                    PlayerView(medias: MediaURNPlaylist.videos)
                 }
             }
         }

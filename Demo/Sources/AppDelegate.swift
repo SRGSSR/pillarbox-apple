@@ -10,8 +10,8 @@ import UIKit
 class AppDelegate: NSObject, UIApplicationDelegate {
     // swiftlint:disable discouraged_optional_collection
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-        // swiftlint:enable discouraged_optional_collection
         try? AVAudioSession.sharedInstance().setCategory(.playback)
         return true
     }
+    // swiftlint:enable discouraged_optional_collection
 }

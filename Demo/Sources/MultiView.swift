@@ -12,6 +12,9 @@ import UserInterface
 // MARK: View
 
 struct MultiView: View {
+    let media1: Media
+    let media2: Media
+
     @StateObject private var topPlayer = Player()
     @StateObject private var bottomPlayer = Player()
 
@@ -24,19 +27,14 @@ struct MultiView: View {
             .background(.black)
         }
         .onAppear {
-            Self.play(
-                url: Stream.appleBasic_16_9,
-                in: topPlayer
-            )
-            Self.play(
-                url: Stream.appleAdvanced_16_9_HEVC_h264,
-                in: bottomPlayer
-            )
+            Self.play(media: media1, in: topPlayer)
+            Self.play(media: media2, in: bottomPlayer)
         }
     }
 
-    private static func play(url: URL, in player: Player) {
-        player.append(AVPlayerItem(url: url))
+    private static func play(media: Media, in player: Player) {
+        guard let item = media.playerItem else { return }
+        player.append(item)
         player.play()
     }
 }
@@ -45,6 +43,9 @@ struct MultiView: View {
 
 struct MultiView_Previews: PreviewProvider {
     static var previews: some View {
-        MultiView()
+        MultiView(
+            media1: MediaURL.appleBasic_16_9_TS_HLS,
+            media2: MediaURL.appleAdvanced_16_9_HEVC_h264_HLS
+        )
     }
 }

@@ -11,21 +11,12 @@ import OrderedCollections
 import Player
 
 struct Story: Identifiable, Hashable {
-    static let stories: [Story] = [
-        MediaSource.urn("urn:rts:video:13360549"),
-        MediaSource.urn("urn:rts:video:13270568"),
-        MediaSource.urn("urn:rts:video:13270535"),
-        MediaSource.urn("urn:rts:video:13228000"),
-        MediaSource.urn("urn:rts:video:13227903"),
-        MediaSource.urn("urn:rts:video:13161499"),
-        MediaSource.urn("urn:rts:video:13146443"),
-        MediaSource.urn("urn:rts:video:13103127"),
-        MediaSource.urn("urn:rts:video:13103117"),
-        MediaSource.urn("urn:rts:video:13103078")
-    ].enumerated().map { Story(id: $0, source: $1) }
+    static func stories(from medias: [Media]) -> [Story] {
+        medias.enumerated().map { Story(id: $0, source: $1) }
+    }
 
     let id: Int
-    let source: MediaSource
+    let source: Media
 }
 
 @MainActor

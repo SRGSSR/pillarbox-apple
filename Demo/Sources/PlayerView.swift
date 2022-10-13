@@ -134,7 +134,7 @@ struct PlayerView: View {
     }
 
     private func play() {
-        medias.compactMap(\.source.playerItem).forEach { item in
+        medias.compactMap(\.playerItem).forEach { item in
             player.append(item)
         }
         player.play()
@@ -144,14 +144,7 @@ struct PlayerView: View {
 // MARK: Preview
 
 struct PlayerView_Previews: PreviewProvider {
-    static let media = Media(
-        id: "id",
-        title: "Title",
-        description: "Description",
-        source: .url(Stream.local)
-    )
-
     static var previews: some View {
-        PlayerView(media: media)
+        PlayerView(media: MediaURL.onDemandVideoLocalHLS)
     }
 }

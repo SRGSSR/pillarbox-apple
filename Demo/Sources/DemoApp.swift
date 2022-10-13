@@ -9,10 +9,10 @@ import SwiftUI
 private struct MediasTab: View {
     var body: some View {
         Navigation {
-            MediasView()
+            ExamplesView()
         }
         .tabItem {
-            Label("Medias", systemImage: "list.and.film")
+            Label("Examples", systemImage: "list.and.film")
         }
     }
 }
