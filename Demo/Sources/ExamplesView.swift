@@ -6,50 +6,9 @@
 
 import SwiftUI
 
-// MARK: View
-
-private struct ExampleCell: View {
-    let example: Example
-    
-    @State var isPlayerPresented = false
-
-    var body: some View {
-        Button(action: play) {
-            VStack(alignment: .leading) {
-                Text(example.title)
-                    .foregroundColor(.primary)
-                Text(example.description)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-        }
-        .sheet(isPresented: $isPlayerPresented) {
-            PlayerView(media: example.media)
-        }
-    }
-
-    private func play() {
-        isPlayerPresented.toggle()
-    }
-}
-
-struct ExamplesView: View {
-    var body: some View {
-        List(Example.examples) { example in
-            ExampleCell(example: example)
-        }
-        .navigationTitle("Examples")
-    }
-}
-
 // MARK: Types
 
 private struct Example: Identifiable {
-    let id = UUID()
-    let title: String
-    let description: String
-    let media: Media
-
     static let examples = [
         Example(
             title: "VOD - HLS",
@@ -152,6 +111,47 @@ private struct Example: Identifiable {
             media: .empty
         )
     ]
+
+    let id = UUID()
+    let title: String
+    let description: String
+    let media: Media
+}
+
+// MARK: View
+
+private struct ExampleCell: View {
+    let example: Example
+
+    @State var isPlayerPresented = false
+
+    var body: some View {
+        Button(action: play) {
+            VStack(alignment: .leading) {
+                Text(example.title)
+                    .foregroundColor(.primary)
+                Text(example.description)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .sheet(isPresented: $isPlayerPresented) {
+            PlayerView(media: example.media)
+        }
+    }
+
+    private func play() {
+        isPlayerPresented.toggle()
+    }
+}
+
+struct ExamplesView: View {
+    var body: some View {
+        List(Example.examples) { example in
+            ExampleCell(example: example)
+        }
+        .navigationTitle("Examples")
+    }
 }
 
 // MARK: Preview

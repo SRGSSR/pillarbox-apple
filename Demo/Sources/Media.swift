@@ -8,31 +8,6 @@ import AVFoundation
 import CoreBusiness
 import Foundation
 
-// MARK: Media
-
-enum Media: Hashable {
-    case empty
-    case url(URL)
-    case unbufferedUrl(URL)
-    case urn(String)
-
-    var playerItem: AVPlayerItem? {
-        switch self {
-        case .empty:
-            return nil
-        case let .url(url):
-            return AVPlayerItem(url: url)
-        case let .unbufferedUrl(url):
-            let item = AVPlayerItem(url: url)
-            item.automaticallyPreservesTimeOffsetFromLive = true
-            item.preferredForwardBufferDuration = 1
-            return item
-        case let .urn(urn):
-            return PlayerItem(urn: urn)
-        }
-    }
-}
-
 // MARK: URL-based medias
 
 enum MediaURL {
@@ -107,4 +82,29 @@ enum MediaURNPlaylist {
         .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13444371/3f26467f-cd97-35f4-916f-ba3927445920/master.m3u8")!),
         .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13444428/857d97ef-0b8e-306e-bf79-3b13e8c901e4/master.m3u8")!)
     ]
+}
+
+// MARK: Media
+
+enum Media: Hashable {
+    case empty
+    case url(URL)
+    case unbufferedUrl(URL)
+    case urn(String)
+
+    var playerItem: AVPlayerItem? {
+        switch self {
+        case .empty:
+            return nil
+        case let .url(url):
+            return AVPlayerItem(url: url)
+        case let .unbufferedUrl(url):
+            let item = AVPlayerItem(url: url)
+            item.automaticallyPreservesTimeOffsetFromLive = true
+            item.preferredForwardBufferDuration = 1
+            return item
+        case let .urn(urn):
+            return PlayerItem(urn: urn)
+        }
+    }
 }
