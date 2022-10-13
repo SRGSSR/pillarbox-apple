@@ -60,12 +60,13 @@ private struct ControlsView: View {
     }
 }
 
-private struct ErrorView: View {
-    let error: Error
+private struct MessageView: View {
+    let message: String
 
     var body: some View {
-        Text(error.localizedDescription)
+        Text(message)
             .foregroundColor(.white)
+            .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
@@ -137,11 +138,16 @@ struct PlayerView: View {
 
     var body: some View {
         ZStack {
-            switch player.playbackState {
-            case let .failed(error: error):
-                ErrorView(error: error)
-            default:
-                ContentView(player: player)
+            if !player.items.isEmpty {
+                switch player.playbackState {
+                case let .failed(error: error):
+                    MessageView(message: error.localizedDescription)
+                default:
+                    ContentView(player: player)
+                }
+            }
+            else {
+                MessageView(message: "No content")
             }
         }
         .background(.black)
