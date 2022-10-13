@@ -575,6 +575,7 @@ public extension XCTestCase {
             case .finished:
                 expectation.fulfill()
             case .failure:
+                XCTFail("The publisher incorrectly failed", file: file, line: line)
                 break
             }
         } receiveValue: { _ in
@@ -592,6 +593,7 @@ public extension XCTestCase {
 
     /// Expect a publisher to complete with a failure.
     func expectFailure<P: Publisher>(
+        _ error: Error? = nil,
         from publisher: P,
         timeout: TimeInterval = 10,
         file: StaticString = #file,
@@ -602,8 +604,12 @@ public extension XCTestCase {
         let cancellable = publisher.sink { completion in
             switch completion {
             case .finished:
+                XCTFail("The publisher incorrectly succeeded", file: file, line: line)
                 break
-            case .failure:
+            case let .failure(actualError):
+                if let error {
+                    XCTAssertEqual(error as NSError, actualError as NSError, file: file, line: line)
+                }
                 expectation.fulfill()
             }
         } receiveValue: { _ in
