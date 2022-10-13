@@ -11,6 +11,32 @@ import UserInterface
 
 // MARK: View
 
+private struct ContentView: View {
+    @ObservedObject var player: Player
+    @State private var isUserInterfaceHidden = false
+
+    var body: some View {
+        ZStack {
+            Group {
+                VideoView(player: player)
+                ControlsView(player: player, isUserInterfaceHidden: isUserInterfaceHidden)
+            }
+            .onTapGesture {
+                isUserInterfaceHidden.toggle()
+            }
+            .ignoresSafeArea()
+#if os(iOS)
+            Slider(player: player)
+                .tint(.white)
+                .opacity(isUserInterfaceHidden ? 0 : 1)
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+#endif
+        }
+        .animation(.easeInOut(duration: 0.2), value: isUserInterfaceHidden)
+    }
+}
+
 private struct ControlsView: View {
     @ObservedObject var player: Player
     let isUserInterfaceHidden: Bool
@@ -31,6 +57,16 @@ private struct ControlsView: View {
         }
         .tint(.white)
         .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
+    }
+}
+
+private struct ErrorView: View {
+    let error: Error
+
+    var body: some View {
+        Text(error.localizedDescription)
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
@@ -98,28 +134,17 @@ struct PlayerView: View {
     let medias: [Media]
 
     @StateObject private var player = Player()
-    @State private var isUserInterfaceHidden = false
 
     var body: some View {
         ZStack {
-            Group {
-                VideoView(player: player)
-                ControlsView(player: player, isUserInterfaceHidden: isUserInterfaceHidden)
+            switch player.playbackState {
+            case let .failed(error: error):
+                ErrorView(error: error)
+            default:
+                ContentView(player: player)
             }
-            .onTapGesture {
-                isUserInterfaceHidden.toggle()
-            }
-            .ignoresSafeArea()
-#if os(iOS)
-            Slider(player: player)
-                .tint(.white)
-                .opacity(isUserInterfaceHidden ? 0 : 1)
-                .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-#endif
         }
         .background(.black)
-        .animation(.easeInOut(duration: 0.2), value: isUserInterfaceHidden)
         .onAppear {
             play()
         }
