@@ -18,6 +18,7 @@ final class DataProviderTests: XCTestCase {
 
     func testNonExistingMediaComposition() {
         expectFailure(
+            ResourceLoadingError.http(statusCode: 404),
             from: DataProvider().mediaComposition(forUrn: "urn:rts:video:unknown")
         )
     }

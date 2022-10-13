@@ -8,4 +8,5 @@ import Foundation
 
 enum ResourceLoadingError: Error {
     case notFound
+    case http(statusCode: Int)
 }
