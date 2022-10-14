@@ -11,13 +11,10 @@ import XCTest
 
 final class ErrorTests: XCTestCase {
     func testHttpError() {
-        let error = NSError.httpError(withStatusCode: 404)!
-        expect(error.domain).to(equal("ch.srgssr.pillarbox.core_business.network"))
-        expect(error.code).to(equal(404))
-        expect(error.localizedDescription).notTo(beNil())
+        expect(DataError.http(withStatusCode: 404)).notTo(beNil())
     }
 
-    func testNotHttpError() {
-        expect(NSError.httpError(withStatusCode: 200)).to(beNil())
+    func testNotHttpNSError() {
+        expect(DataError.http(withStatusCode: 200)).to(beNil())
     }
 }

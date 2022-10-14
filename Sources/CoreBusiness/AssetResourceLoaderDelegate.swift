@@ -35,7 +35,7 @@ final class AssetResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate
 
     private func processLoadingRequest(_ loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
         guard let url = loadingRequest.request.url, let urn = URLCoding.decodeUrn(from: url) else { return false }
-        cancellable = DataProvider(environment: environment).recommendedResource(forUrn: urn)
+        cancellable = DataProvider(environment: environment).recommendedPlayableResource(forUrn: urn)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:

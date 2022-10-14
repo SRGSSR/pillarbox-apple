@@ -19,21 +19,21 @@ enum BlockingReason: String, Decodable {
     public var description: String {
         switch self {
         case .ageRating12:
-            return "To protect children, this media is only available between 8PM and 6AM."
+            return "To protect children, this content is only available between 8PM and 6AM."
         case .ageRating18:
-            return "To protect children, this media is only available between 10PM and 5AM."
+            return "To protect children, this content is only available between 10PM and 5AM."
         case .commercial:
-            return "This commercial media is not available."
+            return "This commercial content is not available."
         case .endDate:
-            return "This media is not available anymore."
+            return "This content is not available anymore."
         case .geoblocked:
-            return "This media is not available outside Switzerland."
+            return "This content is not available outside Switzerland."
         case .legal:
-            return "This media is not available due to legal restrictions."
+            return "This content is not available due to legal restrictions."
         case .startDate:
-            return "This media is not available yet. Please try again later."
+            return "This content is not available yet. Please try again later."
         case .unknown:
-            return "This media is not available."
+            return "This content is not available."
         }
     }
 }

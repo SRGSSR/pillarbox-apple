@@ -12,7 +12,7 @@ import XCTest
 final class PublishersTests: XCTestCase {
     func testHttpError() {
         expectFailure(
-            NSError.httpError(withStatusCode: 404),
+            DataError.http(withStatusCode: 404),
             from: URLSession.shared.dataTaskPublisher(for: URL(string: "http://localhost:8123/not_found")!)
                 .mapHttpErrors()
         )

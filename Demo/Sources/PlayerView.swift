@@ -65,6 +65,7 @@ private struct MessageView: View {
 
     var body: some View {
         Text(message)
+            .multilineTextAlignment(.center)
             .foregroundColor(.white)
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)

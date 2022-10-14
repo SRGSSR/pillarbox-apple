@@ -6,23 +6,25 @@
 
 import Foundation
 
-enum DataError: Error {
-    case notFound
-}
+struct DataError: LocalizedError {
+    let errorDescription: String?
 
-extension NSError {
-    static func httpError(from response: URLResponse) -> NSError? {
-        guard let httpResponse = response as? HTTPURLResponse else { return nil }
-        return httpError(withStatusCode: httpResponse.statusCode)
+    static var notFound: Self {
+        DataError(errorDescription: NSLocalizedString("The content cannot be played", comment: "Generic error message when some content cannot be played"))
     }
 
-    // Only errors with codes different from zero can be properly forwarded through the resource loader. The status
-    // code is therefore a natural choice for HTTP errors in a common dedicated domain.
-    static func httpError(withStatusCode statusCode: Int) -> NSError? {
+    static func http(from response: URLResponse) -> Self? {
+        guard let httpResponse = response as? HTTPURLResponse else { return nil }
+        return http(withStatusCode: httpResponse.statusCode)
+    }
+
+    static func http(withStatusCode statusCode: Int) -> Self? {
         guard statusCode >= 400 else { return nil }
-        return Self(domain: "ch.srgssr.pillarbox.core_business.network", code: statusCode, userInfo: [
-            NSLocalizedDescriptionKey: HTTPURLResponse.fixedLocalizedString(forStatusCode: statusCode)
-        ])
+        return DataError(errorDescription: HTTPURLResponse.fixedLocalizedString(forStatusCode: statusCode))
+    }
+
+    static func blocked(withMessage message: String) -> Self {
+        DataError(errorDescription: message)
     }
 }
 

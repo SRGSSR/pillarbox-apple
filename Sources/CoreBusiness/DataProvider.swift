@@ -31,8 +31,19 @@ final class DataProvider {
             .eraseToAnyPublisher()
     }
 
-    func recommendedResource(forUrn urn: String) -> AnyPublisher<Resource, Error> {
+    func playableMediaComposition(forUrn urn: String) -> AnyPublisher<MediaComposition, Error> {
         mediaComposition(forUrn: urn)
+            .tryMap { mediaComposition in
+                if let blockingReason = mediaComposition.mainChapter.blockingReason() {
+                    throw DataError.blocked(withMessage: blockingReason.description)
+                }
+                return mediaComposition
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func recommendedPlayableResource(forUrn urn: String) -> AnyPublisher<Resource, Error> {
+        playableMediaComposition(forUrn: urn)
             .map(\.mainChapter.recommendedResource)
             .tryMap { resource in
                 guard let resource else {

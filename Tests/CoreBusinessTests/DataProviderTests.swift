@@ -10,7 +10,7 @@ import Circumspect
 import XCTest
 
 final class DataProviderTests: XCTestCase {
-    func testValidMediaComposition() {
+    func testExistingMediaComposition() {
         expectSuccess(
             from: DataProvider().mediaComposition(forUrn: "urn:rts:video:6820736")
         )
@@ -18,14 +18,21 @@ final class DataProviderTests: XCTestCase {
 
     func testNonExistingMediaComposition() {
         expectFailure(
-            NSError.httpError(withStatusCode: 404),
+            DataError.http(withStatusCode: 404),
             from: DataProvider().mediaComposition(forUrn: "urn:rts:video:unknown")
         )
     }
 
-    func testValidRecommendedResource() {
+    func testExistingRecommendedResource() {
         expectSuccess(
-            from: DataProvider().recommendedResource(forUrn: "urn:rts:video:6820736")
+            from: DataProvider().recommendedPlayableResource(forUrn: "urn:rts:video:6820736")
+        )
+    }
+
+    func testBlockedMediaComposition() {
+        expectFailure(
+            DataError.blocked(withMessage: "This content is not available anymore."),
+            from: DataProvider().playableMediaComposition(forUrn: "urn:rts:video:13382911")
         )
     }
 }

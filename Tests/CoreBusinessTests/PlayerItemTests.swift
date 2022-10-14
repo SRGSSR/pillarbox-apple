@@ -20,13 +20,27 @@ final class PlayerItemTests: XCTestCase {
         }
     }
 
-    func testFailure() {
+    func testUnknownMedia() {
         let item = PlayerItem(urn: "urn:srf:video:unknown")
         let player = AVPlayer(playerItem: item)
-        expectAtLeastEqualPublished(
+        expectAtLeastSimilarPublished(
             values: [
                 .idle,
-                .failed(error: NSError.httpError(withStatusCode: 404)!)
+                .failed(error: TestError.any)
+            ],
+            from: player.playbackStatePublisher()
+        ) {
+            player.play()
+        }
+    }
+
+    func testUnavailableMedia() {
+        let item = PlayerItem(urn: "urn:rts:video:13382911")
+        let player = AVPlayer(playerItem: item)
+        expectAtLeastSimilarPublished(
+            values: [
+                .idle,
+                .failed(error: TestError.any)
             ],
             from: player.playbackStatePublisher()
         ) {
