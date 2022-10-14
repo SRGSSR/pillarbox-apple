@@ -16,12 +16,18 @@ final class DataProvider {
         session = URLSession(configuration: .default)
     }
 
+    static func decoder() -> JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        return decoder
+    }
+
     func mediaComposition(forUrn urn: String) -> AnyPublisher<MediaComposition, Error> {
         let url = environment.url.appending(path: "integrationlayer/2.1/mediaComposition/byUrn/\(urn)")
         return session.dataTaskPublisher(for: url)
             .mapHttpErrors()
             .map(\.data)
-            .decode(type: MediaComposition.self, decoder: JSONDecoder())
+            .decode(type: MediaComposition.self, decoder: Self.decoder())
             .eraseToAnyPublisher()
     }
 

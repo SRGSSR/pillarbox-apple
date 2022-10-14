@@ -101,6 +101,11 @@ private struct Example: Identifiable {
             media: MediaURL.appleAdvanced_16_9_HEVC_h264_HLS
         ),
         Example(
+            title: "Expired media",
+            description: "This media is not available anymore",
+            media: MediaURN.expired
+        ),
+        Example(
             title: "Unknown media",
             description: "This media does not exist",
             media: MediaURN.unknown

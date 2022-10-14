@@ -45,6 +45,7 @@ enum MediaURN {
     static let dvrAudio = Media.urn("urn:rts:audio:3262363")
     static let onDemandAudio = Media.urn("urn:rsi:audio:8833144")
 
+    static let expired = Media.urn("urn:rts:video:13382911")
     static let unknown = Media.urn("urn:srf:video:unknown")
 }
 
