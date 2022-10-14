@@ -55,6 +55,6 @@ private extension AVAssetResourceLoadingRequest {
         var redirectRequest = request
         redirectRequest.url = url
         redirect = redirectRequest
-        response = HTTPURLResponse(url: url, statusCode: 303, httpVersion: nil, headerFields: nil)
+        response = HTTPURLResponse(url: url, statusCode: 302, httpVersion: nil, headerFields: nil)
     }
 }
