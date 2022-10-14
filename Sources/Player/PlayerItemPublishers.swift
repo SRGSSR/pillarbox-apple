@@ -13,7 +13,7 @@ extension AVPlayerItem {
             publisher(for: \.status)
                 .weakCapture(self, at: \.error)
                 .map { status, error in
-                    ItemState.itemState(for: status, error: Self.localizeError(error))
+                    ItemState.itemState(for: status, error: error?.localized())
                 },
             NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: self)
                 .map { _ in .ended }
@@ -42,15 +42,5 @@ extension AVPlayerItem {
             }
         }
         .eraseToAnyPublisher()
-    }
-
-    // Errors returned through `AVAssetResourceLoader` do not apply correct error localization rules. Fix.
-    private static func localizeError(_ error: Error?) -> Error? {
-        guard let error = error as? NSError else { return nil }
-        var userInfo = error.userInfo
-        let descriptionKey = "NSDescription"
-        userInfo[NSLocalizedDescriptionKey] = userInfo[descriptionKey]
-        userInfo[descriptionKey] = nil
-        return NSError(domain: error.domain, code: error.code, userInfo: userInfo)
     }
 }
