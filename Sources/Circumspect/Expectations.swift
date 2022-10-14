@@ -573,10 +573,11 @@ public extension XCTestCase {
         let cancellable = publisher.sink { completion in
             switch completion {
             case .finished:
-                expectation.fulfill()
+                break
             case .failure:
                 XCTFail("The publisher incorrectly failed", file: file, line: line)
             }
+            expectation.fulfill()
         } receiveValue: { _ in
         }
         defer {
@@ -608,8 +609,8 @@ public extension XCTestCase {
                 if let error {
                     XCTAssertEqual(error as NSError, actualError as NSError, file: file, line: line)
                 }
-                expectation.fulfill()
             }
+            expectation.fulfill()
         } receiveValue: { _ in
         }
         defer {
