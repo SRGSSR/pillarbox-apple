@@ -21,4 +21,3 @@ final class ErrorTests: XCTestCase {
         expect(NSError.httpError(withStatusCode: 200)).to(beNil())
     }
 }
-

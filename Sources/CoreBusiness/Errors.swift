@@ -20,7 +20,7 @@ extension NSError {
     // code is therefore a natural choice for HTTP errors in a common dedicated domain.
     static func httpError(withStatusCode statusCode: Int) -> NSError? {
         guard statusCode >= 400 else { return nil }
-        return Self.init(domain: "ch.srgssr.pillarbox.core_business.network", code: statusCode, userInfo: [
+        return Self(domain: "ch.srgssr.pillarbox.core_business.network", code: statusCode, userInfo: [
             NSLocalizedDescriptionKey: HTTPURLResponse.fixedLocalizedString(forStatusCode: statusCode)
         ])
     }
@@ -28,7 +28,7 @@ extension NSError {
 
 private extension String {
     func capitalizingFirstLetter() -> String {
-        return prefix(1).capitalized + dropFirst()
+        prefix(1).capitalized + dropFirst()
     }
 }
 
