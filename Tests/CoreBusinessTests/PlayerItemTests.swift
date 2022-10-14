@@ -21,9 +21,15 @@ final class PlayerItemTests: XCTestCase {
     }
 
     func testFailure() {
-        let item = PlayerItem(urn: "invalid")
+        let item = PlayerItem(urn: "urn:srf:video:unknown")
         let player = AVPlayer(playerItem: item)
-        expectAtLeastSimilarPublished(values: [.idle, .failed(error: TestError.any)], from: player.playbackStatePublisher()) {
+        expectAtLeastEqualPublished(
+            values: [
+                .idle,
+                .failed(error: NSError.httpError(withStatusCode: 404)!)
+            ],
+            from: player.playbackStatePublisher()
+        ) {
             player.play()
         }
     }
