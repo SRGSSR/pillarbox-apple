@@ -30,22 +30,3 @@ struct DataError: LocalizedError {
         DataError(errorDescription: message)
     }
 }
-
-private extension String {
-    func capitalizingFirstLetter() -> String {
-        prefix(1).capitalized + dropFirst()
-    }
-}
-
-private extension HTTPURLResponse {
-    static func fixedLocalizedString(forStatusCode statusCode: Int) -> String {
-        // The `localizedString(forStatusCode:)` method always returns the English version, which we use as localization key
-        let key = localizedString(forStatusCode: statusCode)
-        if let description = Bundle(identifier: "com.apple.CFNetwork")?.localizedString(forKey: key, value: nil, table: nil) {
-            return description.capitalizingFirstLetter()
-        }
-        else {
-            return NSLocalizedString("Unknown error", comment: "Generic error message")
-        }
-    }
-}
