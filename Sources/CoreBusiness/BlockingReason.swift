@@ -19,21 +19,45 @@ enum BlockingReason: String, Decodable {
     public var description: String {
         switch self {
         case .ageRating12:
-            return "To protect children this content is only available between 8PM and 6AM."
+            return NSLocalizedString(
+                "To protect children this content is only available between 8PM and 6AM.",
+                comment: "Blocking reason description message"
+            )
         case .ageRating18:
-            return "To protect children this content is only available between 10PM and 5AM."
+            return NSLocalizedString(
+                "To protect children this content is only available between 10PM and 5AM.",
+                comment: "Blocking reason description message"
+            )
         case .commercial:
-            return "This commercial content is not available."
+            return NSLocalizedString(
+                "This commercial content is not available.",
+                comment: "Blocking reason description message"
+            )
         case .endDate:
-            return "This content is not available anymore."
+            return NSLocalizedString(
+                "This content is not available anymore.",
+                comment: "Blocking reason description message"
+            )
         case .geoblocked:
-            return "This content is not available outside Switzerland."
+            return NSLocalizedString(
+                "This content is not available outside Switzerland.",
+                comment: "Blocking reason description message"
+            )
         case .legal:
-            return "This content is not available due to legal restrictions."
+            return NSLocalizedString(
+                "This content is not available due to legal restrictions.",
+                comment: "Blocking reason description message"
+            )
         case .startDate:
-            return "This content is not available yet. Please try again later."
+            return NSLocalizedString(
+                "This content is not available yet. Please try again later.",
+                comment: "Blocking reason description message"
+            )
         case .unknown:
-            return "This content is not available."
+            return NSLocalizedString(
+                "This content is not available.",
+                comment: "Blocking reason description message"
+            )
         }
     }
 }

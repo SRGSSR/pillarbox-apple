@@ -10,7 +10,10 @@ struct DataError: LocalizedError {
     let errorDescription: String?
 
     static var notFound: Self {
-        DataError(errorDescription: NSLocalizedString("The content cannot be played", comment: "Generic error message when some content cannot be played"))
+        DataError(errorDescription: NSLocalizedString(
+            "The content cannot be played",
+            comment: "Generic error message when some content cannot be played")
+        )
     }
 
     static func http(from response: URLResponse) -> Self? {
@@ -42,7 +45,7 @@ private extension HTTPURLResponse {
             return description.capitalizingFirstLetter()
         }
         else {
-            return "Unknown error"
+            return NSLocalizedString("Unknown error", comment: "Generic error message")
         }
     }
 }
