@@ -6,12 +6,6 @@
 
 import Foundation
 
-private extension String {
-    func capitalizingFirstLetter() -> String {
-        prefix(1).capitalized + dropFirst()
-    }
-}
-
 extension HTTPURLResponse {
     static func fixedLocalizedString(forStatusCode statusCode: Int) -> String {
         // The `localizedString(forStatusCode:)` method always returns the English version (FB5751726). We can still use
@@ -29,5 +23,11 @@ extension HTTPURLResponse {
         else {
             return NSLocalizedString("Unknown error", comment: "Generic error message")
         }
+    }
+}
+
+private extension String {
+    func capitalizingFirstLetter() -> String {
+        prefix(1).capitalized + dropFirst()
     }
 }

@@ -7,14 +7,14 @@
 import Foundation
 
 struct DataError: LocalizedError {
-    let errorDescription: String?
-
     static var notFound: Self {
         DataError(errorDescription: NSLocalizedString(
             "The content cannot be played",
-            comment: "Generic error message when some content cannot be played")
-        )
+            comment: "Generic error message when some content cannot be played"
+        ))
     }
+
+    let errorDescription: String?
 
     static func http(from response: URLResponse) -> Self? {
         guard let httpResponse = response as? HTTPURLResponse else { return nil }
