@@ -19,9 +19,9 @@ enum BlockingReason: String, Decodable {
     public var description: String {
         switch self {
         case .ageRating12:
-            return "To protect children, this content is only available between 8PM and 6AM."
+            return "To protect children this content is only available between 8PM and 6AM."
         case .ageRating18:
-            return "To protect children, this content is only available between 10PM and 5AM."
+            return "To protect children this content is only available between 10PM and 5AM."
         case .commercial:
             return "This commercial content is not available."
         case .endDate:
