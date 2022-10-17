@@ -11,7 +11,8 @@ enum URLCoding {
     private static let parameterName = "urn"
 
     static func encodeUrl(fromUrn urn: String) -> URL {
-        var components = URLComponents(string: "\(scheme)://mediacomposition")!
+        // An appropriate extension is required so that errors can be correctly forwarded by the resource loader.
+        var components = URLComponents(string: "\(scheme)://mediacomposition.m3u8")!
         components.queryItems = [
             URLQueryItem(name: parameterName, value: urn.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
         ]

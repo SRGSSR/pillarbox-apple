@@ -13,7 +13,7 @@ extension AVPlayerItem {
             publisher(for: \.status)
                 .weakCapture(self, at: \.error)
                 .map { status, error in
-                    ItemState.itemState(for: status, error: error)
+                    ItemState.itemState(for: status, error: error?.localized())
                 },
             NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: self)
                 .map { _ in .ended }

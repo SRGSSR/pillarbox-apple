@@ -35,14 +35,7 @@ final class AssetResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate
 
     private func processLoadingRequest(_ loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
         guard let url = loadingRequest.request.url, let urn = URLCoding.decodeUrn(from: url) else { return false }
-        cancellable = DataProvider(environment: environment).mediaComposition(forUrn: urn)
-            .map(\.mainChapter.recommendedResource)
-            .tryMap { resource in
-                guard let resource else {
-                    throw ResourceLoadingError.notFound
-                }
-                return resource
-            }
+        cancellable = DataProvider(environment: environment).recommendedPlayableResource(forUrn: urn)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished:
@@ -62,6 +55,6 @@ private extension AVAssetResourceLoadingRequest {
         var redirectRequest = request
         redirectRequest.url = url
         redirect = redirectRequest
-        response = HTTPURLResponse(url: url, statusCode: 303, httpVersion: nil, headerFields: nil)
+        response = HTTPURLResponse(url: url, statusCode: 302, httpVersion: nil, headerFields: nil)
     }
 }

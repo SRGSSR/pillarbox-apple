@@ -12,9 +12,9 @@ import XCTest
 final class URLCodingTests: XCTestCase {
     func testEncoding() {
         expect(URLCoding.encodeUrl(fromUrn: "urn:srf:video:6440e95f-71c5-4510-a165-f81e9c0dd391"))
-            .to(equal(URL(string: "urn://mediacomposition?urn=urn:srf:video:6440e95f-71c5-4510-a165-f81e9c0dd391")))
+            .to(equal(URL(string: "urn://mediacomposition.m3u8?urn=urn:srf:video:6440e95f-71c5-4510-a165-f81e9c0dd391")))
         expect(URLCoding.encodeUrl(fromUrn: "random-string"))
-            .to(equal(URL(string: "urn://mediacomposition?urn=random-string")))
+            .to(equal(URL(string: "urn://mediacomposition.m3u8?urn=random-string")))
     }
 
     func testDecoding() {
