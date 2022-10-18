@@ -7,13 +7,14 @@
 @testable import Player
 
 import AVFoundation
+import Combine
 import Nimble
 import XCTest
 
 final class PlayerItemsTests: XCTestCase {
     struct SomeError: Error {}
 
-    func testPlayerItem() {
+    func testNativePlayerItem() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         _ = AVPlayer(playerItem: item)
         expectEqualPublished(
@@ -41,5 +42,39 @@ final class PlayerItemsTests: XCTestCase {
             from: item.itemStatePublisher(),
             during: 2
         )
+    }
+
+    func testCustomItemSuccess() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let publisher = Just(item)
+            .setFailureType(to: Error.self)
+            .delay(for: 0.5, scheduler: DispatchQueue.main)
+        let customItem = PlayerItem(publisher: publisher)
+        expectAtLeastPublished(
+            values: [
+                LoadingPlayerItem(),
+                item
+            ],
+            from: customItem.$item
+        ) { lhsItem, rhsItem in
+            guard lhsItem !== rhsItem else { return true }
+            return type(of: lhsItem) == type(of: rhsItem)
+        }
+    }
+
+    func testCustomItemFailure() {
+        let publisher = Fail<AVPlayerItem, Error>(error: TestError.any)
+            .delay(for: 0.5, scheduler: DispatchQueue.main)
+        let customItem = PlayerItem(publisher: publisher)
+        expectAtLeastPublished(
+            values: [
+                LoadingPlayerItem(),
+                FailingPlayerItem(error: TestError.any)
+            ],
+            from: customItem.$item
+        ) { lhsItem, rhsItem in
+            guard lhsItem !== rhsItem else { return true }
+            return type(of: lhsItem) == type(of: rhsItem)
+        }
     }
 }

@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import Combine
 
 public extension AVPlayerItem {
     /// Create a player item from a URL.
@@ -14,6 +15,18 @@ public extension AVPlayerItem {
     convenience init(url: URL, automaticallyLoadedAssetKeys keys: [String]) {
         let asset = AVURLAsset(url: url)
         self.init(asset: asset, automaticallyLoadedAssetKeys: keys)
+    }
+}
+
+public class PlayerItem {
+    @Published var item: AVPlayerItem = LoadingPlayerItem()
+
+    init<P>(publisher: P) where P: Publisher, P.Output == AVPlayerItem {
+        publisher
+            .catch { error in
+                Just(FailingPlayerItem(error: error))
+            }
+            .assign(to: &$item)
     }
 }
 
