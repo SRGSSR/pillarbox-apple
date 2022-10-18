@@ -24,12 +24,20 @@ enum ResourceLoaderError: Int, LocalizedError {
 }
 
 final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
-    func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
+    func resourceLoader(
+        _ resourceLoader: AVAssetResourceLoader,
+        shouldWaitForLoadingOfRequestedResource loadingRequest:
+        AVAssetResourceLoadingRequest
+    ) -> Bool {
         loadingRequest.finishLoading(with: ResourceLoaderError.cannotLoadResource)
         return true
     }
 
-    func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForRenewalOfRequestedResource renewalRequest: AVAssetResourceRenewalRequest) -> Bool {
+    func resourceLoader(
+        _ resourceLoader: AVAssetResourceLoader,
+        shouldWaitForRenewalOfRequestedResource
+        renewalRequest: AVAssetResourceRenewalRequest
+    ) -> Bool {
         renewalRequest.finishLoading(with: ResourceLoaderError.cannotRenewResource)
         return true
     }
