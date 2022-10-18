@@ -7,7 +7,7 @@
 import Foundation
 
 enum URLCoding {
-    private static let scheme = "urn"
+    private static let scheme = "pillarbox"
     private static let parameterName = "urn"
 
     static func encodeUrl(fromUrn urn: String) -> URL {
