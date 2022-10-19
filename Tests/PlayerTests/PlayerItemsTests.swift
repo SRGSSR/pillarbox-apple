@@ -12,7 +12,7 @@ import Nimble
 import XCTest
 
 final class PlayerItemsTests: XCTestCase {
-    struct SomeError: Error {}
+    private struct SomeError: Error {}
 
     func testNativePlayerItem() {
         let item = AVPlayerItem(url: Stream.onDemand.url)

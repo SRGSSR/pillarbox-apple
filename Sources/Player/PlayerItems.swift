@@ -7,47 +7,17 @@
 import AVFoundation
 import Combine
 
-public extension AVPlayerItem {
-    /// Create a player item from a URL.
-    /// - Parameters:
-    ///   - url: The URL to play.
-    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play.
-    convenience init(url: URL, automaticallyLoadedAssetKeys keys: [String]) {
-        let asset = AVURLAsset(url: url)
-        self.init(asset: asset, automaticallyLoadedAssetKeys: keys)
-    }
-}
-
+/// An item to be inserted into the player.
 public final class PlayerItem {
     @Published var playerItem: AVPlayerItem = LoadingPlayerItem()
 
-    init<P>(publisher: P) where P: Publisher, P.Output == AVPlayerItem {
+    /// Create the item from an `AVPlayerItem` publisher data source.
+    public init<P>(publisher: P) where P: Publisher, P.Output == AVPlayerItem {
         publisher
             .catch { error in
                 Just(FailingPlayerItem(error: error))
             }
             .assign(to: &$playerItem)
-    }
-}
-
-extension PlayerItem {
-    private static func item(url: URL, automaticallyLoadedAssetKeys: [String]?) -> AVPlayerItem {
-        if let automaticallyLoadedAssetKeys {
-            return AVPlayerItem(url: url, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
-        }
-        else {
-            return AVPlayerItem(url: url)
-        }
-    }
-
-    convenience init(url: URL, automaticallyLoadedAssetKeys: [String]? = nil) {
-        let item = Self.item(url: url, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
-        self.init(publisher: Just(item))
-    }
-
-    convenience init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]? = nil) {
-        let item = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
-        self.init(publisher: Just(item))
     }
 }
 
@@ -114,4 +84,50 @@ private final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoad
     ) -> Bool {
         true
     }
+}
+
+public extension AVPlayerItem {
+    /// Create a player item from a URL.
+    /// - Parameters:
+    ///   - url: The URL to play.
+    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play.
+    convenience init(url: URL, automaticallyLoadedAssetKeys keys: [String]) {
+        let asset = AVURLAsset(url: url)
+        self.init(asset: asset, automaticallyLoadedAssetKeys: keys)
+    }
+}
+
+public extension PlayerItem {
+    // swiftlint:disable discouraged_optional_collection
+
+    /// Create a player item from a URL.
+    /// - Parameters:
+    ///   - urn: The URL to play.
+    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play. If `nil` default
+    ///     keys are loaded.
+    convenience init(url: URL, automaticallyLoadedAssetKeys: [String]? = nil) {
+        let item = Self.item(url: url, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+        self.init(publisher: Just(item))
+    }
+
+    /// Create a player item from an asset.
+    /// - Parameters:
+    ///   - asset: The asset to play.
+    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play. If `nil` default
+    ///     keys are loaded.
+    convenience init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]? = nil) {
+        let item = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+        self.init(publisher: Just(item))
+    }
+
+    private static func item(url: URL, automaticallyLoadedAssetKeys: [String]?) -> AVPlayerItem {
+        if let automaticallyLoadedAssetKeys {
+            return AVPlayerItem(url: url, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+        }
+        else {
+            return AVPlayerItem(url: url)
+        }
+    }
+
+    // swiftlint:enable discouraged_optional_collection
 }
