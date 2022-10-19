@@ -6,14 +6,13 @@
 
 @testable import Player
 
-import AVFoundation
 import Nimble
 import XCTest
 
 @MainActor
 final class PlayerTests: XCTestCase {
     func testPlayerDeallocation() {
-        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let item = PlayerItem(url: Stream.onDemand.url)
         var player: Player? = Player(item: item)
 
         weak var weakPlayer = player

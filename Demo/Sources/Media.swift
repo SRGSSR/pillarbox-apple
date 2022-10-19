@@ -5,8 +5,8 @@
 //
 
 import AVFoundation
-import CoreBusiness
 import Foundation
+import Player
 
 // MARK: URL-based medias
 
@@ -93,19 +93,19 @@ enum Media: Hashable {
     case unbufferedUrl(URL)
     case urn(String)
 
-    var playerItem: AVPlayerItem? {
+    var playerItem: PlayerItem? {
         switch self {
         case .empty:
             return nil
         case let .url(url):
-            return AVPlayerItem(url: url)
+            return PlayerItem(url: url)
         case let .unbufferedUrl(url):
             let item = AVPlayerItem(url: url)
             item.automaticallyPreservesTimeOffsetFromLive = true
             item.preferredForwardBufferDuration = 1
-            return item
+            return PlayerItem(item)
         case let .urn(urn):
-            return PlayerItem(urn: urn)
+            return nil
         }
     }
 }

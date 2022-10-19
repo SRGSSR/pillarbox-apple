@@ -51,7 +51,7 @@ public final class Player: ObservableObject {
     public let rawPlayer: RawPlayer
 
     private let configuration: PlayerConfiguration
-    private var storedItems: Deque<AVPlayerItem>
+    private var storedItems: Deque<PlayerItem>
 
     /// The type of stream currently played.
     public var streamType: StreamType {
@@ -60,8 +60,8 @@ public final class Player: ObservableObject {
 
     /// Create a player with a given item queue.
     /// - Parameter items: The items to be queued initially.
-    public init(items: [AVPlayerItem] = [], configuration: (inout PlayerConfiguration) -> Void = { _ in }) {
-        rawPlayer = RawPlayer(items: items.removeDuplicates())
+    public init(items: [PlayerItem] = [], configuration: (inout PlayerConfiguration) -> Void = { _ in }) {
+        rawPlayer = RawPlayer(items: items.map(\.playerItem).removeDuplicates())
         self.configuration = Self.configure(with: configuration)
         storedItems = Deque(items)
 
@@ -101,7 +101,7 @@ public final class Player: ObservableObject {
 
     /// Create a player with a single item in its queue.
     /// - Parameter item: The item to queue.
-    public convenience init(item: AVPlayerItem, configuration: (inout PlayerConfiguration) -> Void = { _  in }) {
+    public convenience init(item: PlayerItem, configuration: (inout PlayerConfiguration) -> Void = { _  in }) {
         self.init(items: [item], configuration: configuration)
     }
 
@@ -171,7 +171,7 @@ public final class Player: ObservableObject {
     }
 
     deinit {
-        storedItems.forEach { item in
+        storedItems.map(\.playerItem).forEach { item in
             item.cancelPendingSeeks()
             item.asset.cancelLoading()
         }
@@ -180,19 +180,19 @@ public final class Player: ObservableObject {
 
 public extension Player {
     /// The items queued by the player.
-    var items: [AVPlayerItem] {
+    var items: [PlayerItem] {
         Array(storedItems)
     }
 
     /// The current item in the queue.
-    var currentItem: AVPlayerItem? {
-        rawPlayer.currentItem
+    var currentItem: PlayerItem? {
+        storedItems.first { $0.playerItem === rawPlayer.currentItem }
     }
 
     /// Items before the current item (not included).
     /// - Returns: Items.
-    var previousItems: [AVPlayerItem] {
-        guard let currentItem, let currentIndex = storedItems.firstIndex(of: currentItem) else {
+    var previousItems: [PlayerItem] {
+        guard let currentItem = rawPlayer.currentItem, let currentIndex = storedItems.firstIndex(where: { $0.playerItem == currentItem }) else {
             return Array(storedItems)
         }
         return Array(storedItems.prefix(upTo: currentIndex))
@@ -200,11 +200,14 @@ public extension Player {
 
     /// Items past the current item (not included).
     /// - Returns: Items.
-    var nextItems: [AVPlayerItem] {
-        Array(rawPlayer.items().dropFirst())
+    var nextItems: [PlayerItem] {
+        guard let currentItem = rawPlayer.currentItem, let currentIndex = storedItems.firstIndex(where: { $0.playerItem == currentItem }) else {
+            return Array(storedItems)
+        }
+        return Array(storedItems.suffix(from: currentIndex).dropFirst())
     }
 
-    private func canInsert(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) -> Bool {
+    private func canInsert(_ item: PlayerItem, before beforeItem: PlayerItem?) -> Bool {
         guard let beforeItem else { return true }
         return storedItems.contains(beforeItem) && !storedItems.contains(item)
     }
@@ -216,14 +219,14 @@ public extension Player {
     ///     of the deque.
     /// - Returns: `true` iff the item could be inserted.
     @discardableResult
-    func insert(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) -> Bool {
+    func insert(_ item: PlayerItem, before beforeItem: PlayerItem?) -> Bool {
         guard canInsert(item, before: beforeItem) else { return false }
         if let beforeItem {
             guard let index = storedItems.firstIndex(of: beforeItem) else { return false }
             storedItems.insert(item, at: index)
             if index != 0 {
                 let afterIndex = storedItems.index(before: index)
-                rawPlayer.insert(item, after: storedItems[afterIndex])
+                rawPlayer.insert(item.playerItem, after: storedItems[afterIndex].playerItem)
             }
         }
         else {
@@ -232,7 +235,7 @@ public extension Player {
         return true
     }
 
-    private func canInsert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) -> Bool {
+    private func canInsert(_ item: PlayerItem, after afterItem: PlayerItem?) -> Bool {
         guard let afterItem else { return true }
         return storedItems.contains(afterItem) && !storedItems.contains(item)
     }
@@ -244,16 +247,16 @@ public extension Player {
     ///     the deque. If this item does not exist the method does nothing.
     /// - Returns: `true` iff the item could be inserted.
     @discardableResult
-    func insert(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) -> Bool {
+    func insert(_ item: PlayerItem, after afterItem: PlayerItem?) -> Bool {
         guard canInsert(item, after: afterItem) else { return false }
         if let afterItem {
             guard let index = storedItems.firstIndex(of: afterItem) else { return false }
             storedItems.insert(item, at: storedItems.index(after: index))
-            rawPlayer.insert(item, after: afterItem)
+            rawPlayer.insert(item.playerItem, after: afterItem.playerItem)
         }
         else {
             storedItems.append(item)
-            rawPlayer.insert(item, after: nil)
+            rawPlayer.insert(item.playerItem, after: nil)
         }
         return true
     }
@@ -262,7 +265,7 @@ public extension Player {
     /// - Parameter item: The item to prepend.
     /// - Returns: `true` iff the item could be prepended.
     @discardableResult
-    func prepend(_ item: AVPlayerItem) -> Bool {
+    func prepend(_ item: PlayerItem) -> Bool {
         insert(item, before: nil)
     }
 
@@ -270,11 +273,11 @@ public extension Player {
     /// - Parameter item: The item to append.
     /// - Returns: `true` iff the item could be appended.
     @discardableResult
-    func append(_ item: AVPlayerItem) -> Bool {
+    func append(_ item: PlayerItem) -> Bool {
         insert(item, after: nil)
     }
 
-    private func canMove(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) -> Bool {
+    private func canMove(_ item: PlayerItem, before beforeItem: PlayerItem?) -> Bool {
         guard storedItems.contains(item) else { return false }
         if let beforeItem {
             guard item !== beforeItem, let index = storedItems.firstIndex(of: beforeItem) else { return false }
@@ -293,13 +296,13 @@ public extension Player {
     ///     front of the deque. If the item does not belong to the deque the method does nothing.
     /// - Returns: `true` iff the item could be moved.
     @discardableResult
-    func move(_ item: AVPlayerItem, before beforeItem: AVPlayerItem?) -> Bool {
+    func move(_ item: PlayerItem, before beforeItem: PlayerItem?) -> Bool {
         guard canMove(item, before: beforeItem) else { return false }
         remove(item)
         return insert(item, before: beforeItem)
     }
 
-    private func canMove(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) -> Bool {
+    private func canMove(_ item: PlayerItem, after afterItem: PlayerItem?) -> Bool {
         guard storedItems.contains(item) else { return false }
         if let afterItem {
             guard item !== afterItem, let index = storedItems.firstIndex(of: afterItem) else { return false }
@@ -318,7 +321,7 @@ public extension Player {
     ///     back of the deque. If the item does not belong to the deque the method does nothing.
     /// - Returns: `true` iff the item could be moved.
     @discardableResult
-    func move(_ item: AVPlayerItem, after afterItem: AVPlayerItem?) -> Bool {
+    func move(_ item: PlayerItem, after afterItem: PlayerItem?) -> Bool {
         guard canMove(item, after: afterItem) else { return false }
         remove(item)
         return insert(item, after: afterItem)
@@ -326,9 +329,9 @@ public extension Player {
 
     /// Remove an item from the deque.
     /// - Parameter item: The item to remove.
-    func remove(_ item: AVPlayerItem) {
+    func remove(_ item: PlayerItem) {
         storedItems.removeAll { $0 === item }
-        rawPlayer.remove(item)
+        rawPlayer.remove(item.playerItem)
     }
 
     /// Remove all items in the deque.
@@ -350,8 +353,8 @@ public extension Player {
     func returnToPreviousItem() -> Bool {
         guard let currentItem, let index = storedItems.firstIndex(of: currentItem), index > 0 else { return false }
         let previousItem = storedItems[storedItems.index(before: index)]
-        rawPlayer.replaceCurrentItem(with: previousItem)
-        rawPlayer.insert(currentItem, after: previousItem)
+        rawPlayer.replaceCurrentItem(with: previousItem.playerItem)
+        rawPlayer.insert(currentItem.playerItem, after: previousItem.playerItem)
         return true
     }
 

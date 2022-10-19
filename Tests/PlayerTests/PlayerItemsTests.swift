@@ -77,6 +77,17 @@ final class PlayerItemsTests: XCTestCase {
         )
     }
 
+    func testRawItem() {
+        let playerItem = AVPlayerItem(url: Stream.onDemand.url)
+        let item = PlayerItem(playerItem)
+        expectAtLeastSimilarPublished(
+            values: [
+                playerItem
+            ],
+            from: item.$playerItem
+        )
+    }
+
     func testCustomItemSuccessAsync() {
         let playerItem = AVPlayerItem(url: Stream.onDemand.url)
         let publisher = Just(playerItem)

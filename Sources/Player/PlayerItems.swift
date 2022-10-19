@@ -8,7 +8,11 @@ import AVFoundation
 import Combine
 
 /// An item to be inserted into the player.
-public final class PlayerItem {
+public final class PlayerItem: Equatable {
+    public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
+        return lhs === rhs
+    }
+
     @Published var playerItem: AVPlayerItem = LoadingPlayerItem()
 
     /// Create the item from an `AVPlayerItem` publisher data source.
@@ -107,7 +111,7 @@ public extension PlayerItem {
     ///     keys are loaded.
     convenience init(url: URL, automaticallyLoadedAssetKeys: [String]? = nil) {
         let item = Self.item(url: url, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
-        self.init(publisher: Just(item))
+        self.init(item)
     }
 
     /// Create a player item from an asset.
@@ -117,6 +121,10 @@ public extension PlayerItem {
     ///     keys are loaded.
     convenience init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]? = nil) {
         let item = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+        self.init(item)
+    }
+
+    convenience init(_ item: AVPlayerItem) {
         self.init(publisher: Just(item))
     }
 
