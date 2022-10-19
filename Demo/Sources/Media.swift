@@ -61,19 +61,6 @@ enum UnbufferedMediaURL {
 
 enum MediaURLPlaylist {
     static let videos: [Media] = [
-        .urn("urn:rts:video:13444390"),
-        .urn("urn:rts:video:13444333"),
-        .urn("urn:rts:video:13444466"),
-        .urn("urn:rts:video:13444447"),
-        .urn("urn:rts:video:13444352"),
-        .urn("urn:rts:video:13444409"),
-        .urn("urn:rts:video:13444371"),
-        .urn("urn:rts:video:13444428")
-    ]
-}
-
-enum MediaURNPlaylist {
-    static let videos: [Media] = [
         .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13444390/f1b478f7-2ae9-3166-94b9-c5d5fe9610df/master.m3u8")!),
         .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13444333/feb1d08d-e62c-31ff-bac9-64c0a7081612/master.m3u8")!),
         .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13444466/2787e520-412f-35fb-83d7-8dbb31b5c684/master.m3u8")!),
@@ -82,6 +69,19 @@ enum MediaURNPlaylist {
         .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13444409/23f808a4-b14a-3d3e-b2ed-fa1279f6cf01/master.m3u8")!),
         .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13444371/3f26467f-cd97-35f4-916f-ba3927445920/master.m3u8")!),
         .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13444428/857d97ef-0b8e-306e-bf79-3b13e8c901e4/master.m3u8")!)
+    ]
+}
+
+enum MediaURNPlaylist {
+    static let videos: [Media] = [
+        .urn("urn:rts:video:13444390"),
+        .urn("urn:rts:video:13444333"),
+        .urn("urn:rts:video:13444466"),
+        .urn("urn:rts:video:13444447"),
+        .urn("urn:rts:video:13444352"),
+        .urn("urn:rts:video:13444409"),
+        .urn("urn:rts:video:13444371"),
+        .urn("urn:rts:video:13444428")
     ]
 }
 
