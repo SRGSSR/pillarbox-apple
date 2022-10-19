@@ -44,10 +44,24 @@ final class PlayerItemsTests: XCTestCase {
         )
     }
 
-    func testCustomItemSuccess() {
+    func testCustomItem() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let publisher = Just(item)
-            .setFailureType(to: Error.self)
+        let customItem = PlayerItem(publisher: publisher)
+        expectAtLeastPublished(
+            values: [
+                item
+            ],
+            from: customItem.$item
+        ) { lhsItem, rhsItem in
+            guard lhsItem !== rhsItem else { return true }
+            return type(of: lhsItem) == type(of: rhsItem)
+        }
+    }
+
+    func testCustomItemSuccessAsync() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let publisher = Just(item)
             .delay(for: 0.5, scheduler: DispatchQueue.main)
         let customItem = PlayerItem(publisher: publisher)
         expectAtLeastPublished(
@@ -62,7 +76,7 @@ final class PlayerItemsTests: XCTestCase {
         }
     }
 
-    func testCustomItemFailure() {
+    func testCustomItemFailureAsync() {
         let publisher = Fail<AVPlayerItem, Error>(error: TestError.any)
             .delay(for: 0.5, scheduler: DispatchQueue.main)
         let customItem = PlayerItem(publisher: publisher)
