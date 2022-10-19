@@ -18,15 +18,36 @@ public extension AVPlayerItem {
     }
 }
 
-public class PlayerItem {
-    @Published var item: AVPlayerItem = LoadingPlayerItem()
+public final class PlayerItem {
+    @Published var playerItem: AVPlayerItem = LoadingPlayerItem()
 
     init<P>(publisher: P) where P: Publisher, P.Output == AVPlayerItem {
         publisher
             .catch { error in
                 Just(FailingPlayerItem(error: error))
             }
-            .assign(to: &$item)
+            .assign(to: &$playerItem)
+    }
+}
+
+extension PlayerItem {
+    private static func item(url: URL, automaticallyLoadedAssetKeys: [String]?) -> AVPlayerItem {
+        if let automaticallyLoadedAssetKeys {
+            return AVPlayerItem(url: url, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+        }
+        else {
+            return AVPlayerItem(url: url)
+        }
+    }
+
+    convenience init(url: URL, automaticallyLoadedAssetKeys: [String]? = nil) {
+        let item = Self.item(url: url, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+        self.init(publisher: Just(item))
+    }
+
+    convenience init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]? = nil) {
+        let item = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+        self.init(publisher: Just(item))
     }
 }
 

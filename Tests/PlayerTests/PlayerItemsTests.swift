@@ -44,51 +44,63 @@ final class PlayerItemsTests: XCTestCase {
         )
     }
 
-    func testCustomItem() {
-        let item = AVPlayerItem(url: Stream.onDemand.url)
-        let publisher = Just(item)
-        let customItem = PlayerItem(publisher: publisher)
-        expectAtLeastPublished(
+    func testGenericItem() {
+        let playerItem = AVPlayerItem(url: Stream.onDemand.url)
+        let publisher = Just(playerItem)
+        let item = PlayerItem(publisher: publisher)
+        expectAtLeastSimilarPublished(
             values: [
-                item
+                playerItem
             ],
-            from: customItem.$item
-        ) { lhsItem, rhsItem in
-            guard lhsItem !== rhsItem else { return true }
-            return type(of: lhsItem) == type(of: rhsItem)
-        }
+            from: item.$playerItem
+        )
+    }
+
+    func testUrlItem() {
+        let item = PlayerItem(url: Stream.onDemand.url)
+        expectAtLeastSimilarPublished(
+            values: [
+                AVPlayerItem(url: Stream.onDemand.url)
+            ],
+            from: item.$playerItem
+        )
+    }
+
+    func testAssetItem() {
+        let asset = AVURLAsset(url: Stream.onDemand.url)
+        let item = PlayerItem(asset: asset)
+        expectAtLeastSimilarPublished(
+            values: [
+                AVPlayerItem(url: Stream.onDemand.url)
+            ],
+            from: item.$playerItem
+        )
     }
 
     func testCustomItemSuccessAsync() {
-        let item = AVPlayerItem(url: Stream.onDemand.url)
-        let publisher = Just(item)
+        let playerItem = AVPlayerItem(url: Stream.onDemand.url)
+        let publisher = Just(playerItem)
             .delay(for: 0.5, scheduler: DispatchQueue.main)
-        let customItem = PlayerItem(publisher: publisher)
-        expectAtLeastPublished(
+        let item = PlayerItem(publisher: publisher)
+        expectAtLeastSimilarPublished(
             values: [
                 LoadingPlayerItem(),
-                item
+                playerItem
             ],
-            from: customItem.$item
-        ) { lhsItem, rhsItem in
-            guard lhsItem !== rhsItem else { return true }
-            return type(of: lhsItem) == type(of: rhsItem)
-        }
+            from: item.$playerItem
+        )
     }
 
     func testCustomItemFailureAsync() {
         let publisher = Fail<AVPlayerItem, Error>(error: TestError.any)
             .delay(for: 0.5, scheduler: DispatchQueue.main)
-        let customItem = PlayerItem(publisher: publisher)
-        expectAtLeastPublished(
+        let item = PlayerItem(publisher: publisher)
+        expectAtLeastSimilarPublished(
             values: [
                 LoadingPlayerItem(),
                 FailingPlayerItem(error: TestError.any)
             ],
-            from: customItem.$item
-        ) { lhsItem, rhsItem in
-            guard lhsItem !== rhsItem else { return true }
-            return type(of: lhsItem) == type(of: rhsItem)
-        }
+            from: item.$playerItem
+        )
     }
 }
