@@ -56,9 +56,9 @@ public extension AVPlayerItem {
     /// - Parameters:
     ///   - url: The URL to play.
     ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play.
-    convenience init(url: URL, automaticallyLoadedAssetKeys keys: [String]) {
+    convenience init(url: URL, automaticallyLoadedAssetKeys: [String]) {
         let asset = AVURLAsset(url: url)
-        self.init(asset: asset, automaticallyLoadedAssetKeys: keys)
+        self.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
     }
 }
 

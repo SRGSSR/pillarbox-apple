@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import CoreBusiness
 import Foundation
 import Player
 
@@ -105,7 +106,7 @@ enum Media: Hashable {
             item.preferredForwardBufferDuration = 1
             return PlayerItem(item)
         case let .urn(urn):
-            return nil
+            return PlayerItem(urn: urn)
         }
     }
 }
