@@ -40,21 +40,7 @@ public extension CMTime {
             case (.none, .some), (.some, .none):
                 return false
             case let (.some(time1), .some(time2)):
-                if time1.isPositiveInfinity && time2.isPositiveInfinity {
-                    return true
-                }
-                else if time1.isNegativeInfinity && time2.isNegativeInfinity {
-                    return true
-                }
-                else if time1.isIndefinite && time2.isIndefinite {
-                    return true
-                }
-                else if !time1.isValid && !time2.isValid {
-                    return true
-                }
-                else {
-                    return CMTimeCompare(CMTimeAbsoluteValue(CMTimeSubtract(time1, time2)), tolerance) != 1
-                }
+                return areClose(time1: time1, time2: time2, within: tolerance)
             }
         }
     }
@@ -62,5 +48,23 @@ public extension CMTime {
     /// Return a time comparator having some tolerance.
     static func close(within tolerance: TimeInterval) -> ((CMTime?, CMTime?) -> Bool) {
         close(within: CMTimeMakeWithSeconds(tolerance, preferredTimescale: Int32(NSEC_PER_SEC)))
+    }
+
+    private static func areClose(time1: CMTime, time2: CMTime, within tolerance: CMTime) -> Bool {
+        if time1.isPositiveInfinity && time2.isPositiveInfinity {
+            return true
+        }
+        else if time1.isNegativeInfinity && time2.isNegativeInfinity {
+            return true
+        }
+        else if time1.isIndefinite && time2.isIndefinite {
+            return true
+        }
+        else if !time1.isValid && !time2.isValid {
+            return true
+        }
+        else {
+            return CMTimeCompare(CMTimeAbsoluteValue(CMTimeSubtract(time1, time2)), tolerance) != 1
+        }
     }
 }
