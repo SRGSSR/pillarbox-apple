@@ -47,5 +47,3 @@ public func equalDiff<T>(_ expectedValue: T?, by areEquivalent: @escaping (T, T)
 public func equalDiff<T: Equatable>(_ expectedValue: T?) -> Predicate<T> {
     equalDiff(expectedValue, by: ==)
 }
-
-

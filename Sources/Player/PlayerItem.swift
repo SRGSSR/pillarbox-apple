@@ -7,29 +7,6 @@
 import AVFoundation
 import Combine
 
-/// An item to be inserted into the player.
-public final class PlayerItem: Equatable {
-    public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
-        return lhs === rhs
-    }
-
-    @Published var playerItem: AVPlayerItem = LoadingPlayerItem()
-
-    /// Create the item from an `AVPlayerItem` publisher data source.
-    public init<P>(publisher: P) where P: Publisher, P.Output == AVPlayerItem {
-        publisher
-            .catch { error in
-                Just(FailingPlayerItem(error: error))
-            }
-            .assign(to: &$playerItem)
-    }
-
-    deinit {
-        playerItem.cancelPendingSeeks()
-        playerItem.asset.cancelLoading()
-    }
-}
-
 /// An item which never loads.
 final class LoadingPlayerItem: AVPlayerItem {
     private let resourceLoaderDelegate: AVAssetResourceLoaderDelegate
@@ -53,6 +30,30 @@ final class FailingPlayerItem: AVPlayerItem {
         let asset = AVURLAsset(url: URL(string: "pillarbox://failing.m3u8")!)
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: .global(qos: .userInitiated))
         super.init(asset: asset, automaticallyLoadedAssetKeys: nil)
+    }
+}
+
+/// An item to be inserted into the player.
+public final class PlayerItem: Equatable {
+    @Published var playerItem: AVPlayerItem = LoadingPlayerItem()
+
+    /// Create the item from an `AVPlayerItem` publisher data source.
+    public init<P>(publisher: P) where P: Publisher, P.Output == AVPlayerItem {
+        publisher
+            .catch { error in
+                Just(FailingPlayerItem(error: error))
+            }
+            .assign(to: &$playerItem)
+    }
+
+    /// Compare two items for equality.
+    public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
+        lhs === rhs
+    }
+
+    deinit {
+        playerItem.cancelPendingSeeks()
+        playerItem.asset.cancelLoading()
     }
 }
 
@@ -90,6 +91,11 @@ public extension PlayerItem {
         self.init(item)
     }
 
+    /// Create a player item from a raw `AVFoundation` item.
+    /// - Parameters:
+    ///   - asset: The asset to play.
+    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play. If `nil` default
+    ///     keys are loaded.
     convenience init(_ item: AVPlayerItem) {
         self.init(publisher: Just(item))
     }

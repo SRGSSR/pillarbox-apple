@@ -7,24 +7,12 @@
 import AVFoundation
 import Player
 
-public extension PlayerItem {
-    convenience init(urn: String, automaticallyLoadedAssetKeys: [String]? = nil, environment: Environment = .production) {
-        self.init(URNPlayerItem(urn: urn, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys, environment: environment))
-    }
-}
-
 private class URNPlayerItem: AVPlayerItem {
     private let resourceLoaderDelegate: AssetResourceLoaderDelegate
 
     // swiftlint:disable discouraged_optional_collection
 
-    /// Create a player item from a URN played in the specified environment.
-    /// - Parameters:
-    ///   - urn: The URN to play.
-    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play. If `nil` default
-    ///     keys are loaded.
-    ///   - environment: The environment which the URN is played from.
-    public init(urn: String, automaticallyLoadedAssetKeys: [String]?, environment: Environment) {
+    init(urn: String, automaticallyLoadedAssetKeys: [String]?, environment: Environment) {
         resourceLoaderDelegate = AssetResourceLoaderDelegate(environment: environment)
         let asset = AVURLAsset(url: URLCoding.encodeUrl(fromUrn: urn))
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: .global(qos: .userInitiated))
@@ -42,4 +30,20 @@ private class URNPlayerItem: AVPlayerItem {
         automaticallyPreservesTimeOffsetFromLive = true
         preferredForwardBufferDuration = 1
     }
+}
+
+public extension PlayerItem {
+    // swiftlint:disable discouraged_optional_collection
+
+    /// Create a player item from a URN played in the specified environment.
+    /// - Parameters:
+    ///   - urn: The URN to play.
+    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play. If `nil` default
+    ///     keys are loaded.
+    ///   - environment: The environment which the URN is played from.
+    convenience init(urn: String, automaticallyLoadedAssetKeys: [String]? = nil, environment: Environment = .production) {
+        self.init(URNPlayerItem(urn: urn, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys, environment: environment))
+    }
+
+    // swiftlint:enable discouraged_optional_collection
 }

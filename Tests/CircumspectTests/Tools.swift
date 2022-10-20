@@ -7,14 +7,14 @@
 import Circumspect
 import Foundation
 
-extension Notification.Name {
-    static let testNotification = Notification.Name("TestNotification")
+struct NamedPerson: Similar {
+    let name: String
+
+    static func ~= (lhs: NamedPerson, rhs: NamedPerson) -> Bool {
+        lhs.name.localizedCaseInsensitiveContains(rhs.name)
+    }
 }
 
-struct NamedPerson: Similar {
-    static func ~= (lhs: NamedPerson, rhs: NamedPerson) -> Bool {
-        return lhs.name.localizedCaseInsensitiveContains(rhs.name)
-    }
-
-    let name: String
+extension Notification.Name {
+    static let testNotification = Notification.Name("TestNotification")
 }
