@@ -51,45 +51,6 @@ final class FailingPlayerItem: AVPlayerItem {
     }
 }
 
-private final class LoadingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
-    func resourceLoader(
-        _ resourceLoader: AVAssetResourceLoader,
-        shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest
-    ) -> Bool {
-        true
-    }
-
-    func resourceLoader(
-        _ resourceLoader: AVAssetResourceLoader, shouldWaitForRenewalOfRequestedResource
-        renewalRequest: AVAssetResourceRenewalRequest
-    ) -> Bool {
-        true
-    }
-}
-
-private final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
-    private let error: Error
-
-    init(error: Error) {
-        self.error = error
-    }
-
-    func resourceLoader(
-        _ resourceLoader: AVAssetResourceLoader,
-        shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest
-    ) -> Bool {
-        loadingRequest.finishLoading(with: error)
-        return true
-    }
-
-    func resourceLoader(
-        _ resourceLoader: AVAssetResourceLoader, shouldWaitForRenewalOfRequestedResource
-        renewalRequest: AVAssetResourceRenewalRequest
-    ) -> Bool {
-        true
-    }
-}
-
 public extension AVPlayerItem {
     /// Create a player item from a URL.
     /// - Parameters:
