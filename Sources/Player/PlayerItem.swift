@@ -23,6 +23,11 @@ public final class PlayerItem: Equatable {
             }
             .assign(to: &$playerItem)
     }
+
+    deinit {
+        playerItem.cancelPendingSeeks()
+        playerItem.asset.cancelLoading()
+    }
 }
 
 /// An item which never loads.
