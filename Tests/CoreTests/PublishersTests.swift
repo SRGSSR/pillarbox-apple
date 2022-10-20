@@ -11,14 +11,14 @@ import Combine
 import XCTest
 
 final class PublisherTests: XCTestCase {
-    static func publisher(at index: Int) -> AnyPublisher<Int, Never> {
+    private static func publisher(at index: Int) -> AnyPublisher<Int, Never> {
         precondition(index > 0)
         return Just(index)
             .delay(for: .seconds(Double(index) * 0.1), scheduler: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 
-    static func prependedPublisher(at index: Int) -> AnyPublisher<Int, Never> {
+    private static func prependedPublisher(at index: Int) -> AnyPublisher<Int, Never> {
         precondition(index > 0)
         return Just(index)
             .delay(for: .seconds(Double(index) * 0.1), scheduler: DispatchQueue.main)

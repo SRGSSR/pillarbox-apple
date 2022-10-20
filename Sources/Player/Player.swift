@@ -34,6 +34,7 @@ public final class Player: ObservableObject {
         }
     }
 
+    @Published private var storedItems: Deque<PlayerItem>
     @Published private var pulse: Pulse?
     @Published private var seeking = false
 
@@ -51,7 +52,7 @@ public final class Player: ObservableObject {
     public let rawPlayer: RawPlayer
 
     private let configuration: PlayerConfiguration
-    private var storedItems: Deque<PlayerItem>
+    private var cancellables = Set<AnyCancellable>()
 
     /// The type of stream currently played.
     public var streamType: StreamType {
@@ -59,7 +60,9 @@ public final class Player: ObservableObject {
     }
 
     /// Create a player with a given item queue.
-    /// - Parameter items: The items to be queued initially.
+    /// - Parameters:
+    ///   - items: The items to be queued initially.
+    ///   - configuration: A closure in which the player can be configured.
     public init(items: [PlayerItem] = [], configuration: (inout PlayerConfiguration) -> Void = { _ in }) {
         rawPlayer = RawPlayer(items: items.map(\.playerItem).removeDuplicates())
         self.configuration = Self.configure(with: configuration)
@@ -97,10 +100,22 @@ public final class Player: ObservableObject {
             .removeDuplicates()
             .lane("player_progress")
             .assign(to: &$progress)
+
+        $storedItems
+            .map { items in
+                Publishers.AccumulateLatestMany(items.map(\.$playerItem))
+            }
+            .switchToLatest()
+            .sink { [rawPlayer] playerItems in
+                Self.update(with: playerItems, player: rawPlayer)
+            }
+            .store(in: &cancellables)
     }
 
     /// Create a player with a single item in its queue.
-    /// - Parameter item: The item to queue.
+    /// - Parameters:
+    ///   - item: The item to queue.
+    ///   - configuration: A closure in which the player can be configured.
     public convenience init(item: PlayerItem, configuration: (inout PlayerConfiguration) -> Void = { _  in }) {
         self.init(items: [item], configuration: configuration)
     }
@@ -109,6 +124,39 @@ public final class Player: ObservableObject {
         var playerConfiguration = PlayerConfiguration()
         configuration(&playerConfiguration)
         return playerConfiguration
+    }
+
+    private static func update(with items: [AVPlayerItem], player: AVQueuePlayer) {
+        if player.items().isEmpty {
+            update(player: player, with: items)
+        }
+        else if let currentItem = player.currentItem, let currentItemIndex = items.firstIndex(of: currentItem) {
+            update(player: player, with: Array(items.suffix(from: currentItemIndex)))
+        }
+        else {
+            for item in player.items() {
+                if items.contains(item) {
+                    break
+                }
+                player.remove(item)
+            }
+            update(with: items, player: player)
+        }
+    }
+
+    private static func update(player: AVQueuePlayer, with items: [AVPlayerItem]) {
+        let diff = items.difference(from: player.items())
+        diff.forEach { change in
+            // `associatedWith` is `nil` since we don't need `.inferringMoves()`
+            switch change {
+            case let .insert(offset: offset, element: element, associatedWith: _):
+                let beforeIndex = player.items().index(before: offset)
+                let afterItem = player.items()[safeIndex: beforeIndex]
+                player.insert(element, after: afterItem)
+            case let .remove(offset: _, element: element, associatedWith: _):
+                player.remove(element)
+            }
+        }
     }
 
     /// Resume playback.
@@ -217,10 +265,6 @@ public extension Player {
         if let beforeItem {
             guard let index = storedItems.firstIndex(of: beforeItem) else { return false }
             storedItems.insert(item, at: index)
-            if index != 0 {
-                let afterIndex = storedItems.index(before: index)
-                rawPlayer.insert(item.playerItem, after: storedItems[afterIndex].playerItem)
-            }
         }
         else {
             storedItems.prepend(item)
@@ -245,11 +289,9 @@ public extension Player {
         if let afterItem {
             guard let index = storedItems.firstIndex(of: afterItem) else { return false }
             storedItems.insert(item, at: storedItems.index(after: index))
-            rawPlayer.insert(item.playerItem, after: afterItem.playerItem)
         }
         else {
             storedItems.append(item)
-            rawPlayer.insert(item.playerItem, after: nil)
         }
         return true
     }
@@ -324,13 +366,11 @@ public extension Player {
     /// - Parameter item: The item to remove.
     func remove(_ item: PlayerItem) {
         storedItems.removeAll { $0 === item }
-        rawPlayer.remove(item.playerItem)
     }
 
     /// Remove all items in the deque.
     func removeAllItems() {
         storedItems.removeAll()
-        rawPlayer.removeAllItems()
     }
 
     /// Check whether returning to the previous item in the deque is possible.`
