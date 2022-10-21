@@ -26,6 +26,19 @@ final class PublisherTests: XCTestCase {
             .eraseToAnyPublisher()
     }
 
+    func testSyntaxWithoutTypeErasure() {
+        expectOnlyEqualPublished(
+            values: [
+                [1, 2, 3]
+            ],
+            from: Publishers.AccumulateLatestMany(
+                Just(1),
+                Just(2),
+                Just(3)
+            )
+        )
+    }
+
     func testAccumulateOne() {
         expectOnlyEqualPublished(
             values: [
