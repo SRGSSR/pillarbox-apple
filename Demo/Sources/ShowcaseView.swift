@@ -69,6 +69,9 @@ struct ShowcaseView: View {
                 Cell(title: "Playlist (URNs)") {
                     PlaylistView(medias: MediaURNPlaylist.videos)
                 }
+                Cell(title: "Playlist (with errors)") {
+                    PlaylistView(medias: MediaURNPlaylist.videosWithErrors)
+                }
             }
         }
         .navigationTitle("Showcase")

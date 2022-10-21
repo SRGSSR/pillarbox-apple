@@ -84,6 +84,11 @@ enum MediaURNPlaylist {
         .urn("urn:rts:video:13444371"),
         .urn("urn:rts:video:13444428")
     ]
+    static let videosWithErrors: [Media] = [
+        .urn("urn:rts:video:13444390"),
+        .urn("urn:rts:video:unknown"),
+        .urn("urn:rts:video:13444466")
+    ]
 }
 
 // MARK: Media
