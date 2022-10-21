@@ -130,7 +130,8 @@ public final class Player: ObservableObject {
         if player.items().isEmpty {
             update(player: player, with: items)
         }
-        else if let currentItem = player.currentItem, let currentItemIndex = items.firstIndex(of: currentItem) {
+        else if let currentItem = player.currentItem,
+                let currentItemIndex = items.firstIndex(where: { $0.id == currentItem.id }) {
             update(player: player, with: Array(items.suffix(from: currentItemIndex)))
         }
         else {
@@ -145,9 +146,15 @@ public final class Player: ObservableObject {
     }
 
     private static func update(player: AVQueuePlayer, with items: [AVPlayerItem]) {
+        // Replace the current item directly. Diffing namely applies removals first and removing the current
+        // item would otherwise make `AVQueuePlayer` move to the next item automatically.
+        if let currentItem = player.currentItem, let updatedCurrentItem = items.first(where: { $0.id == currentItem.id }) {
+            player.replaceCurrentItem(with: updatedCurrentItem)
+        }
+
+        // Apply diffing. `associatedWith` parameters are ignored (and are `nil` without using `.inferringMoves()`).
         let diff = items.difference(from: player.items())
         diff.forEach { change in
-            // `associatedWith` is `nil` since we don't need `.inferringMoves()`.
             switch change {
             case let .insert(offset: offset, element: element, associatedWith: _):
                 let beforeIndex = player.items().index(before: offset)

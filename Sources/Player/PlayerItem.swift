@@ -7,6 +7,8 @@
 import AVFoundation
 import Combine
 
+private var kIdKey: Void?
+
 /// An item which never loads.
 final class LoadingPlayerItem: AVPlayerItem {
     private let resourceLoaderDelegate: AVAssetResourceLoaderDelegate
@@ -37,11 +39,17 @@ final class FailingPlayerItem: AVPlayerItem {
 public final class PlayerItem: Equatable {
     @Published var playerItem: AVPlayerItem = LoadingPlayerItem()
 
+    private let id = UUID()
+
     /// Create the item from an `AVPlayerItem` publisher data source.
     public init<P>(publisher: P) where P: Publisher, P.Output == AVPlayerItem {
         publisher
             .catch { error in
                 Just(FailingPlayerItem(error: error))
+            }
+            .prepend(LoadingPlayerItem())
+            .map { [id] player in
+                player.withId(id)
             }
             .assign(to: &$playerItem)
     }
@@ -110,4 +118,23 @@ public extension PlayerItem {
     }
 
     // swiftlint:enable discouraged_optional_collection
+}
+
+extension AVPlayerItem {
+    var id: UUID! {
+        get {
+            objc_getAssociatedObject(self, &kIdKey) as? UUID
+        }
+        set {
+            objc_setAssociatedObject(self, &kIdKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+
+    /// Assign an identifier to help track items delivered by a single pipeline.
+    /// - Parameter id: The id to assign.
+    /// - Returns: The receiver with the id assigned to it.
+    func withId(_ id: UUID) -> AVPlayerItem {
+        self.id = id
+        return self
+    }
 }
