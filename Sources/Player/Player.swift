@@ -222,7 +222,13 @@ public final class Player: ObservableObject {
 public extension Player {
     /// The items queued by the player.
     var items: [PlayerItem] {
-        Array(storedItems)
+        get {
+            Array(storedItems)
+        }
+        set {
+            let range = storedItems.startIndex..<storedItems.endIndex
+            storedItems.replaceSubrange(range, with: newValue)
+        }
     }
 
     /// The current item in the queue.
