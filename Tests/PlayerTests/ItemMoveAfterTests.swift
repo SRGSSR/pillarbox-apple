@@ -50,7 +50,7 @@ final class ItemMoveAfterTests: XCTestCase {
         let item3 = PlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         expect(player.move(item1, after: item2)).to(beTrue())
-        expect(player.currentItem).to(equal(item2))
+        expect(player.currentItem).to(equal(item1))
         expect(player.items).to(equalDiff([item2, item1, item3]))
     }
 
@@ -62,7 +62,7 @@ final class ItemMoveAfterTests: XCTestCase {
         player.advanceToNextItem()
         player.advanceToNextItem()
         expect(player.move(item3, after: item1)).to(beTrue())
-        expect(player.currentItem).to(beNil())
+        expect(player.currentItem).to(equal(item3))
         expect(player.items).to(equalDiff([item1, item3, item2]))
     }
 

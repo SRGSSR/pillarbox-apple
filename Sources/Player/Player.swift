@@ -130,7 +130,9 @@ public final class Player: ObservableObject {
         if player.items().isEmpty {
             update(player: player, with: items)
         }
-        else if let currentItem = player.currentItem, let currentItemIndex = items.firstIndex(of: currentItem) {
+        // Find the *last* item. If we temporarily have a duplicate current item being moved we want to keep
+        // the last one as the `AVPlayerQueue` overlaps with the end of the item list.
+        else if let currentItem = player.currentItem, let currentItemIndex = items.lastIndex(of: currentItem) {
             update(player: player, with: Array(items.suffix(from: currentItemIndex)))
         }
         else {
@@ -145,12 +147,15 @@ public final class Player: ObservableObject {
     }
 
     private static func update(player: AVQueuePlayer, with items: [AVPlayerItem]) {
-        let diff = items.difference(from: player.items())
+        // Work on reversed arrays to avoid moving the current item.
+        let count = player.items().count
+        let diff = items.reversed().difference(from: player.items().reversed())
         diff.forEach { change in
-            // `associatedWith` is `nil` since we don't need `.inferringMoves()`
+            // `associatedWith` is `nil` since we don't need `.inferringMoves()`.
             switch change {
             case let .insert(offset: offset, element: element, associatedWith: _):
-                let beforeIndex = player.items().index(before: offset)
+                // Rebase offsets to obtain those in the original non-reversed collection.
+                let beforeIndex = player.items().index(after: count - offset)
                 let afterItem = player.items()[safeIndex: beforeIndex]
                 player.insert(element, after: afterItem)
             case let .remove(offset: _, element: element, associatedWith: _):
@@ -332,9 +337,17 @@ public extension Player {
     /// - Returns: `true` iff the item could be moved.
     @discardableResult
     func move(_ item: PlayerItem, before beforeItem: PlayerItem?) -> Bool {
-        guard canMove(item, before: beforeItem) else { return false }
-        remove(item)
-        return insert(item, before: beforeItem)
+        guard canMove(item, before: beforeItem), let movedIndex = storedItems.firstIndex(of: item) else {
+            return false
+        }
+        if let beforeItem {
+            guard let index = storedItems.firstIndex(of: beforeItem) else { return false }
+            storedItems.move(from: movedIndex, to: index)
+        }
+        else {
+            storedItems.move(from: movedIndex, to: storedItems.startIndex)
+        }
+        return true
     }
 
     private func canMove(_ item: PlayerItem, after afterItem: PlayerItem?) -> Bool {
@@ -357,9 +370,17 @@ public extension Player {
     /// - Returns: `true` iff the item could be moved.
     @discardableResult
     func move(_ item: PlayerItem, after afterItem: PlayerItem?) -> Bool {
-        guard canMove(item, after: afterItem) else { return false }
-        remove(item)
-        return insert(item, after: afterItem)
+        guard canMove(item, after: afterItem), let movedIndex = storedItems.firstIndex(of: item) else {
+            return false
+        }
+        if let afterItem {
+            guard let index = storedItems.firstIndex(of: afterItem) else { return false }
+            storedItems.move(from: movedIndex, to: storedItems.index(after: index))
+        }
+        else {
+            storedItems.move(from: movedIndex, to: storedItems.endIndex)
+        }
+        return true
     }
 
     /// Remove an item from the deque.
