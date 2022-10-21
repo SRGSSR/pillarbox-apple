@@ -130,9 +130,7 @@ public final class Player: ObservableObject {
         if player.items().isEmpty {
             update(player: player, with: items)
         }
-        // Find the *last* item. If we temporarily have a duplicate current item being moved we want to keep
-        // the last one as the `AVPlayerQueue` overlaps with the end of the item list.
-        else if let currentItem = player.currentItem, let currentItemIndex = items.lastIndex(of: currentItem) {
+        else if let currentItem = player.currentItem, let currentItemIndex = items.firstIndex(of: currentItem) {
             update(player: player, with: Array(items.suffix(from: currentItemIndex)))
         }
         else {
@@ -147,15 +145,12 @@ public final class Player: ObservableObject {
     }
 
     private static func update(player: AVQueuePlayer, with items: [AVPlayerItem]) {
-        // Work on reversed arrays to avoid moving the current item.
-        let count = player.items().count
-        let diff = items.reversed().difference(from: player.items().reversed())
+        let diff = items.difference(from: player.items())
         diff.forEach { change in
             // `associatedWith` is `nil` since we don't need `.inferringMoves()`.
             switch change {
             case let .insert(offset: offset, element: element, associatedWith: _):
-                // Rebase offsets to obtain those in the original non-reversed collection.
-                let beforeIndex = player.items().index(after: count - offset)
+                let beforeIndex = player.items().index(before: offset)
                 let afterItem = player.items()[safeIndex: beforeIndex]
                 player.insert(element, after: afterItem)
             case let .remove(offset: _, element: element, associatedWith: _):
