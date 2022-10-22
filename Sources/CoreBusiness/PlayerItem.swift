@@ -18,8 +18,16 @@ public extension PlayerItem {
     ///   - environment: The environment which the URN is played from.
     convenience init(urn: String, automaticallyLoadedAssetKeys: [String]? = nil, environment: Environment = .production) {
         let publisher = DataProvider(environment: environment).recommendedPlayableResource(forUrn: urn)
-            .map(\.url)
-            .map { AVPlayerItem(url: $0) }
+            .map { resource in
+                let item = AVPlayerItem(url: resource.url)
+                if resource.streamType == .live {
+                    /// Limit buffering and force the player to return to the live edge when re-buffering. This ensures
+                    /// livestreams cannot be paused and resumed in the past, as requested by business people.
+                    item.automaticallyPreservesTimeOffsetFromLive = true
+                    item.preferredForwardBufferDuration = 1
+                }
+                return item
+            }
         self.init(publisher: publisher)
     }
 
