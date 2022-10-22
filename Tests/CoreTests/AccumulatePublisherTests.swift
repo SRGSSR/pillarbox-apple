@@ -10,7 +10,7 @@ import Circumspect
 import Combine
 import XCTest
 
-final class PublisherTests: XCTestCase {
+final class AccumulatePublisherTests: XCTestCase {
     private static func publisher(at index: Int) -> AnyPublisher<Int, Never> {
         precondition(index > 0)
         return Just(index)

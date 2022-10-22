@@ -16,7 +16,7 @@ final class PlayerItemTests: XCTestCase {
     func testURNPlaybackHLS() {
         let item = PlayerItem(urn: "urn:rts:video:6820736")
         let player = Player(item: item)
-        expectAtLeastEqualPublishedNext(
+        expectAtLeastEqualPublished(
             values: [
                 .idle,
                 .paused
@@ -28,7 +28,7 @@ final class PlayerItemTests: XCTestCase {
     func testURNPlaybackMP3() {
         let item = PlayerItem(urn: "urn:rsi:audio:8833144")
         let player = Player(item: item)
-        expectAtLeastEqualPublishedNext(
+        expectAtLeastEqualPublished(
             values: [
                 .idle,
                 .paused
@@ -40,7 +40,7 @@ final class PlayerItemTests: XCTestCase {
     func testURNPlaybackFailure() {
         let item = PlayerItem(urn: "urn:srf:video:unknown")
         let player = Player(item: item)
-        expectAtLeastSimilarPublishedNext(
+        expectAtLeastSimilarPublished(
             values: [
                 .idle,
                 .failed(error: TestError.any)

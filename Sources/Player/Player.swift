@@ -72,12 +72,12 @@ public final class Player: ObservableObject {
         storedItems = Deque(items)
 
         rawPlayer.playbackStatePublisher()
-            .receive(on: DispatchQueue.main)
+            .receiveOnMainThread()
             .lane("player_state")
             .assign(to: &$playbackState)
 
         rawPlayer.pulsePublisher(configuration: self.configuration)
-            .receive(on: DispatchQueue.main)
+            .receiveOnMainThread()
             .lane("player_pulse") { output in
                 guard let output else { return "nil" }
                 return String(describing: output)
@@ -85,12 +85,12 @@ public final class Player: ObservableObject {
             .assign(to: &$pulse)
 
         rawPlayer.seekingPublisher()
-            .receive(on: DispatchQueue.main)
+            .receiveOnMainThread()
             .lane("player_seeking")
             .assign(to: &$seeking)
 
         rawPlayer.bufferingPublisher()
-            .receive(on: DispatchQueue.main)
+            .receiveOnMainThread()
             .lane("player_buffering")
             .assign(to: &$isBuffering)
 
@@ -103,6 +103,7 @@ public final class Player: ObservableObject {
             .filter { !$1.isInteracting }
             .map { PlaybackProgress(value: $0.0?.progress, isInteracting: false) }
             .removeDuplicates()
+            .receiveOnMainThread()
             .lane("player_progress")
             .assign(to: &$progress)
 
@@ -111,6 +112,7 @@ public final class Player: ObservableObject {
                 storedItems.first { $0.playerItem === currentItem }
             }
             .removeDuplicates()
+            .receiveOnMainThread()
             .lane("player_item")
             .assign(to: &$currentItem)
 
@@ -119,6 +121,7 @@ public final class Player: ObservableObject {
                 Publishers.AccumulateLatestMany(items.map(\.$playerItem))
             }
             .switchToLatest()
+            .receiveOnMainThread()
             .sink { [rawPlayer] playerItems in
                 Self.update(with: playerItems, player: rawPlayer)
             }
