@@ -34,6 +34,9 @@ public final class Player: ObservableObject {
         }
     }
 
+    /// The current item in the queue.
+    @Published public var currentItem: PlayerItem?
+
     @Published private var storedItems: Deque<PlayerItem>
     @Published private var pulse: Pulse?
     @Published private var seeking = false
@@ -72,6 +75,7 @@ public final class Player: ObservableObject {
             .receive(on: DispatchQueue.main)
             .lane("player_state")
             .assign(to: &$playbackState)
+
         rawPlayer.pulsePublisher(configuration: self.configuration)
             .receive(on: DispatchQueue.main)
             .lane("player_pulse") { output in
@@ -79,6 +83,7 @@ public final class Player: ObservableObject {
                 return String(describing: output)
             }
             .assign(to: &$pulse)
+
         rawPlayer.seekingPublisher()
             .receive(on: DispatchQueue.main)
             .lane("player_seeking")
@@ -100,6 +105,14 @@ public final class Player: ObservableObject {
             .removeDuplicates()
             .lane("player_progress")
             .assign(to: &$progress)
+
+        Publishers.CombineLatest($storedItems, rawPlayer.publisher(for: \.currentItem))
+            .map { storedItems, currentItem in
+                storedItems.first { $0.playerItem === currentItem }
+            }
+            .removeDuplicates()
+            .lane("player_item")
+            .assign(to: &$currentItem)
 
         $storedItems
             .map { items in
@@ -236,11 +249,6 @@ public extension Player {
             let range = storedItems.startIndex..<storedItems.endIndex
             storedItems.replaceSubrange(range, with: newValue)
         }
-    }
-
-    /// The current item in the queue.
-    var currentItem: PlayerItem? {
-        storedItems.first { $0.playerItem === rawPlayer.currentItem }
     }
 
     /// Items before the current item (not included).
