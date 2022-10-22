@@ -48,8 +48,8 @@ public final class PlayerItem: Equatable {
                 Just(FailingPlayerItem(error: error))
             }
             .prepend(LoadingPlayerItem())
-            .map { [id] player in
-                player.withId(id)
+            .map { [id] item in
+                item.withId(id)
             }
             .assign(to: &$playerItem)
     }
