@@ -24,6 +24,19 @@ final class PlayerTests: XCTestCase {
         }
     }
 
+    func testSlowFirstCurrentItem() {
+        let item1 = PlayerItem(url: Stream.shortOnDemand.url, delay: 2)
+        let item2 = PlayerItem(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2])
+        expectAtLeastEqualPublished(
+            // `nil` initially not expected but is an artifact of `replaceCurrentItem(with:)`.
+            values: [item1, nil, item2],
+            from: player.$currentItem
+        ) {
+            player.play()
+        }
+    }
+
     func testPlayerDeallocation() {
         let item = PlayerItem(url: Stream.onDemand.url)
         var player: Player? = Player(item: item)
