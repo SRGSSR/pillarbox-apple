@@ -9,17 +9,15 @@ import Player
 
 struct Resource: Decodable {
     enum CodingKeys: String, CodingKey {
-        case url
-        case streamingMethod = "streaming"
         case isDvr = "dvr"
         case isLive = "live"
+        case streamingMethod = "streaming"
+        case tokenType
+        case url
     }
 
     let url: URL
     let streamingMethod: StreamingMethod
-
-    private let isDvr: Bool
-    private let isLive: Bool
 
     var streamType: StreamType {
         if isDvr {
@@ -32,4 +30,9 @@ struct Resource: Decodable {
             return .onDemand
         }
     }
+
+    let tokenType: TokenType
+
+    private let isDvr: Bool
+    private let isLive: Bool
 }
