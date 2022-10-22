@@ -164,7 +164,8 @@ public final class Player: ObservableObject {
     private static func update(player: AVQueuePlayer, with items: [AVPlayerItem]) {
         // Replace the current item directly. Diffing namely applies removals first and removing the current
         // item would otherwise make `AVQueuePlayer` move to the next item automatically.
-        if let currentItem = player.currentItem, let updatedCurrentItem = items.first(where: { $0.id == currentItem.id }) {
+        if let currentItem = player.currentItem,
+            let updatedCurrentItem = items.first(where: { $0.id == currentItem.id }), updatedCurrentItem != currentItem {
             player.replaceCurrentItem(with: updatedCurrentItem)
         }
 
