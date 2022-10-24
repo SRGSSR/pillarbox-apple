@@ -6,21 +6,8 @@
 
 import AVFoundation
 
-// Correct error propagation from the resource loader to the player item requires the following:
-//   - The error code must be an `Int`.
-//   - The error code must be different from 0.
-enum ResourceLoaderError: Int, LocalizedError {
-    case cannotLoadResource = 1
-    case cannotRenewResource
-
-    var errorDescription: String? {
-        switch self {
-        case .cannotLoadResource:
-            return "Failed to load the resource (custom message)"
-        case .cannotRenewResource:
-            return "Failed to renew the resource (custom message)"
-        }
-    }
+struct ResourceLoaderError: Error {
+    let errorDescription: String?
 }
 
 final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
@@ -29,7 +16,8 @@ final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelega
         shouldWaitForLoadingOfRequestedResource loadingRequest:
         AVAssetResourceLoadingRequest
     ) -> Bool {
-        loadingRequest.finishLoading(with: ResourceLoaderError.cannotLoadResource)
+        let error = ResourceLoaderError(errorDescription: "Failed to load the resource (custom message)")
+        loadingRequest.finishLoadingReliably(with: error)
         return true
     }
 
@@ -38,7 +26,8 @@ final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelega
         shouldWaitForRenewalOfRequestedResource
         renewalRequest: AVAssetResourceRenewalRequest
     ) -> Bool {
-        renewalRequest.finishLoading(with: ResourceLoaderError.cannotRenewResource)
+        let error = ResourceLoaderError(errorDescription: "Failed to renew the resource (custom message)")
+        renewalRequest.finishLoadingReliably(with: error)
         return true
     }
 }

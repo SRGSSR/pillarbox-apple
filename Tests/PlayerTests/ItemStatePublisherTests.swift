@@ -70,7 +70,7 @@ final class ItemStatePublisherTests: XCTestCase {
         let item = AVPlayerItem(asset: asset)
         let player = AVPlayer(playerItem: item)
         expectSimilarPublished(
-            values: [.unknown, .failed(error: ResourceLoaderError.cannotLoadResource)],
+            values: [.unknown, .failed(error: TestError.any)],
             from: player.itemStatePublisher(),
             during: 1
         )

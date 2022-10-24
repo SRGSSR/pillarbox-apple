@@ -17,7 +17,7 @@ final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelega
         _ resourceLoader: AVAssetResourceLoader,
         shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest
     ) -> Bool {
-        loadingRequest.finishLoading(with: error)
+        loadingRequest.finishLoadingReliably(with: error)
         return true
     }
 
