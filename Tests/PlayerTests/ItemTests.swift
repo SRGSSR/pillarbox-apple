@@ -6,7 +6,6 @@
 
 @testable import Player
 
-import AVFoundation
 import Circumspect
 import Nimble
 import XCTest
@@ -14,9 +13,9 @@ import XCTest
 @MainActor
 final class ItemTests: XCTestCase {
     func testItemsOnFirstItem() {
-        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
-        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
-        let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
+        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = PlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         expect(player.items).to(equalDiff([item1, item2, item3]))
         expect(player.previousItems).to(beEmpty())
@@ -24,9 +23,9 @@ final class ItemTests: XCTestCase {
     }
 
     func testItemsOnMiddleItem() {
-        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
-        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
-        let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
+        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = PlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         expect(player.advanceToNextItem()).to(beTrue())
         expect(player.items).to(equalDiff([item1, item2, item3]))
@@ -35,9 +34,9 @@ final class ItemTests: XCTestCase {
     }
 
     func testItemsOnLastItem() {
-        let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
-        let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
-        let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
+        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = PlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         expect(player.advanceToNextItem()).to(beTrue())
         expect(player.advanceToNextItem()).to(beTrue())

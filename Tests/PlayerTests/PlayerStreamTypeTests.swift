@@ -6,7 +6,6 @@
 
 @testable import Player
 
-import AVFoundation
 import Nimble
 import XCTest
 
@@ -18,19 +17,19 @@ final class PlayerStreamTypeTests: XCTestCase {
     }
 
     func testOnDemand() {
-        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let item = PlayerItem(url: Stream.onDemand.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.onDemand))
     }
 
     func testLive() {
-        let item = AVPlayerItem(url: Stream.live.url)
+        let item = PlayerItem(url: Stream.live.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.live))
     }
 
     func testDVR() {
-        let item = AVPlayerItem(url: Stream.dvr.url)
+        let item = PlayerItem(url: Stream.dvr.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.dvr))
     }

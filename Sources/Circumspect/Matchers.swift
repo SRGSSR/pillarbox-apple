@@ -24,7 +24,7 @@ public func equal<T>(_ expectedValue: T?, by areEquivalent: @escaping (T, T) -> 
     }
 }
 
-/// Nimble matcher displaying mismatches as differences.
+/// Nimble matcher displaying mismatches in a friendly way.
 /// Borrowed from https://github.com/krzysztofzablocki/Difference
 public func equalDiff<T>(_ expectedValue: T?, by areEquivalent: @escaping (T, T) -> Bool) -> Predicate<T> {
     Predicate.define("equal <\(stringify(expectedValue))>") { actualExpression, message in
@@ -43,12 +43,7 @@ public func equalDiff<T>(_ expectedValue: T?, by areEquivalent: @escaping (T, T)
     }
 }
 
-/// Nimble matcher displaying mismatches as differences.
+/// Nimble matcher displaying equality differences in a friendly way.
 public func equalDiff<T: Equatable>(_ expectedValue: T?) -> Predicate<T> {
     equalDiff(expectedValue, by: ==)
-}
-
-/// Nimble matcher displaying mismatches as differences.
-public func equalDiff<T: Similar>(_ expectedValue: T?) -> Predicate<T> {
-    equalDiff(expectedValue, by: ~=)
 }

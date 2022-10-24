@@ -5,46 +5,47 @@
 //
 
 @testable import CoreBusiness
-@testable import Player
 
-import AVFoundation
 import Circumspect
+import Nimble
+import Player
 import XCTest
 
+@MainActor
 final class PlayerItemTests: XCTestCase {
-    func testPlayback() {
-        let item = PlayerItem(urn: "urn:srf:video:2fde31db-e9a7-4233-a9eb-06ec19f18ba9")
-        let player = AVPlayer(playerItem: item)
-        expectAtLeastEqualPublished(values: [.idle, .playing], from: player.playbackStatePublisher()) {
-            player.play()
-        }
+    func testURNPlaybackHLS() {
+        let item = PlayerItem(urn: "urn:rts:video:6820736")
+        let player = Player(item: item)
+        expectAtLeastEqualPublished(
+            values: [
+                .idle,
+                .paused
+            ],
+            from: player.$playbackState
+        )
     }
 
-    func testUnknownMedia() {
+    func testURNPlaybackMP3() {
+        let item = PlayerItem(urn: "urn:rsi:audio:8833144")
+        let player = Player(item: item)
+        expectAtLeastEqualPublished(
+            values: [
+                .idle,
+                .paused
+            ],
+            from: player.$playbackState
+        )
+    }
+
+    func testURNPlaybackFailure() {
         let item = PlayerItem(urn: "urn:srf:video:unknown")
-        let player = AVPlayer(playerItem: item)
+        let player = Player(item: item)
         expectAtLeastSimilarPublished(
             values: [
                 .idle,
                 .failed(error: TestError.any)
             ],
-            from: player.playbackStatePublisher()
-        ) {
-            player.play()
-        }
-    }
-
-    func testUnavailableMedia() {
-        let item = PlayerItem(urn: "urn:rts:video:13382911")
-        let player = AVPlayer(playerItem: item)
-        expectAtLeastSimilarPublished(
-            values: [
-                .idle,
-                .failed(error: TestError.any)
-            ],
-            from: player.playbackStatePublisher()
-        ) {
-            player.play()
-        }
+            from: player.$playbackState
+        )
     }
 }

@@ -7,6 +7,7 @@
 import AVFoundation
 import CoreBusiness
 import Foundation
+import Player
 
 // MARK: URL-based medias
 
@@ -61,19 +62,6 @@ enum UnbufferedMediaURL {
 
 enum MediaURLPlaylist {
     static let videos: [Media] = [
-        .urn("urn:rts:video:13444390"),
-        .urn("urn:rts:video:13444333"),
-        .urn("urn:rts:video:13444466"),
-        .urn("urn:rts:video:13444447"),
-        .urn("urn:rts:video:13444352"),
-        .urn("urn:rts:video:13444409"),
-        .urn("urn:rts:video:13444371"),
-        .urn("urn:rts:video:13444428")
-    ]
-}
-
-enum MediaURNPlaylist {
-    static let videos: [Media] = [
         .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13444390/f1b478f7-2ae9-3166-94b9-c5d5fe9610df/master.m3u8")!),
         .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13444333/feb1d08d-e62c-31ff-bac9-64c0a7081612/master.m3u8")!),
         .url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13444466/2787e520-412f-35fb-83d7-8dbb31b5c684/master.m3u8")!),
@@ -85,6 +73,24 @@ enum MediaURNPlaylist {
     ]
 }
 
+enum MediaURNPlaylist {
+    static let videos: [Media] = [
+        .urn("urn:rts:video:13444390"),
+        .urn("urn:rts:video:13444333"),
+        .urn("urn:rts:video:13444466"),
+        .urn("urn:rts:video:13444447"),
+        .urn("urn:rts:video:13444352"),
+        .urn("urn:rts:video:13444409"),
+        .urn("urn:rts:video:13444371"),
+        .urn("urn:rts:video:13444428")
+    ]
+    static let videosWithErrors: [Media] = [
+        .urn("urn:rts:video:13444390"),
+        .urn("urn:rts:video:unknown"),
+        .urn("urn:rts:video:13444466")
+    ]
+}
+
 // MARK: Media
 
 enum Media: Hashable {
@@ -93,17 +99,17 @@ enum Media: Hashable {
     case unbufferedUrl(URL)
     case urn(String)
 
-    var playerItem: AVPlayerItem? {
+    var playerItem: PlayerItem? {
         switch self {
         case .empty:
             return nil
         case let .url(url):
-            return AVPlayerItem(url: url)
+            return PlayerItem(url: url)
         case let .unbufferedUrl(url):
             let item = AVPlayerItem(url: url)
             item.automaticallyPreservesTimeOffsetFromLive = true
             item.preferredForwardBufferDuration = 1
-            return item
+            return PlayerItem(item)
         case let .urn(urn):
             return PlayerItem(urn: urn)
         }

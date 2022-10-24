@@ -166,9 +166,7 @@ struct PlayerView: View {
     }
 
     private func play() {
-        medias.compactMap(\.playerItem).forEach { item in
-            player.append(item)
-        }
+        player.items = medias.compactMap(\.playerItem)
         player.play()
     }
 }

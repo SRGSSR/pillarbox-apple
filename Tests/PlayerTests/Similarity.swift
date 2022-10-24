@@ -6,6 +6,7 @@
 
 @testable import Player
 
+import AVFoundation
 import Core
 import CoreMedia
 import Circumspect
@@ -34,6 +35,17 @@ extension PlaybackState: Similar {
             return true
         default:
             return false
+        }
+    }
+}
+
+extension AVPlayerItem: Similar {
+    public static func ~= (lhs: AVPlayerItem, rhs: AVPlayerItem) -> Bool {
+        if let lhsUrlAsset = lhs.asset as? AVURLAsset, let rhsUrlAsset = rhs.asset as? AVURLAsset {
+            return lhsUrlAsset.url == rhsUrlAsset.url
+        }
+        else {
+            return lhs == rhs
         }
     }
 }

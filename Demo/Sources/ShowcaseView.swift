@@ -64,10 +64,13 @@ struct ShowcaseView: View {
                     WrappedView(media: MediaURL.appleBasic_16_9_TS_HLS)
                 }
                 Cell(title: "Playlist (URLs)") {
-                    PlayerView(medias: MediaURLPlaylist.videos)
+                    PlaylistView(medias: MediaURLPlaylist.videos)
                 }
                 Cell(title: "Playlist (URNs)") {
-                    PlayerView(medias: MediaURNPlaylist.videos)
+                    PlaylistView(medias: MediaURNPlaylist.videos)
+                }
+                Cell(title: "Playlist (with errors)") {
+                    PlaylistView(medias: MediaURNPlaylist.videosWithErrors)
                 }
             }
         }
