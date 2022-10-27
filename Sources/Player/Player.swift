@@ -224,6 +224,43 @@ public final class Player: ObservableObject {
         await rawPlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
     }
 
+    /// Return whether the current player item player can be returned to live conditions.
+    /// - Returns: `true`
+    public func canSkipToLive() -> Bool {
+        guard streamType == .dvr, let currentItem, let pulse else { return false }
+        let chunkDuration = currentItem.chunkDuration
+        return chunkDuration.isValid && pulse.time < pulse.timeRange.end - chunkDuration
+    }
+
+    /// Return the current item to live conditions. Does nothing if the current item is not a livestream or does not
+    /// support DVR.
+    /// - Parameter completionHandler: A completion handler called when skipping ends.
+    /// - Returns: `true` if skipping to live conditions is possible.
+    @discardableResult
+    public func skipToLive(completionHandler: @escaping (Bool) -> Void = { _ in }) -> Bool {
+        guard canSkipToLive(), let pulse else { return false }
+        rawPlayer.seek(
+            to: pulse.timeRange.end,
+            toleranceBefore: .positiveInfinity,
+            toleranceAfter: .positiveInfinity,
+            completionHandler: completionHandler
+        )
+        return true
+    }
+
+    /// Return the current item to live conditions. Does nothing if the current item is not a livestream or does not
+    /// support DVR.
+    /// - Returns: `true` if skipping to live conditions is possible.
+    @discardableResult
+    public func skipToLive() async -> Bool {
+        guard canSkipToLive(), let pulse else { return false }
+        return await rawPlayer.seek(
+            to: pulse.timeRange.end,
+            toleranceBefore: .positiveInfinity,
+            toleranceAfter: .positiveInfinity
+        )
+    }
+
     /// Return a publisher periodically emitting the current time while the player is active.
     /// - Parameters:
     ///   - interval: The interval at which events must be emitted.

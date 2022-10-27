@@ -44,7 +44,7 @@ struct Pulse {
 
     func progress(for time: CMTime) -> Float? {
         guard time.isNumeric && timeRange.isValid && !timeRange.isEmpty else { return nil }
-        let elapsedTime = CMTimeGetSeconds(CMTimeSubtract(time, timeRange.start))
+        let elapsedTime = CMTimeGetSeconds(time - timeRange.start)
         let duration = CMTimeGetSeconds(timeRange.duration)
         return Float(elapsedTime / duration).clamped(to: 0...1)
     }
@@ -52,7 +52,7 @@ struct Pulse {
     func time(forProgress progress: Float) -> CMTime? {
         guard timeRange.isValid && !timeRange.isEmpty else { return nil }
         let multiplier = Float64(progress.clamped(to: 0...1))
-        let time = CMTimeAdd(timeRange.start, CMTimeMultiplyByFloat64(timeRange.duration, multiplier: multiplier))
+        let time = timeRange.start + CMTimeMultiplyByFloat64(timeRange.duration, multiplier: multiplier)
         assert(time.isNumeric)
         return time
     }
