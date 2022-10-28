@@ -114,4 +114,12 @@ final class PlayerItemsTests: XCTestCase {
             from: item.$playerItem
         )
     }
+
+    func testChunkSize() {
+        let item = PlayerItem(url: Stream.onDemand.url)
+        expectAtLeastEqualPublished(
+            values: [.invalid, CMTime(value: 4, timescale: 1)],
+            from: item.$chunkDuration
+        )
+    }
 }
