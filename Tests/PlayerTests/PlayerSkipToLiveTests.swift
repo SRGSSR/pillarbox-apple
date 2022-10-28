@@ -35,6 +35,7 @@ final class PlayerSkipToLiveTests: XCTestCase {
     func testCannotSkipToLiveForDvrInLiveConditions() {
         let item = PlayerItem(url: Stream.dvr.url)
         let player = Player(item: item)
+        expect(player.time).toNotEventually(equal(.zero))
         expect(player.canSkipToLive()).toAlways(beFalse())
     }
 
@@ -44,7 +45,7 @@ final class PlayerSkipToLiveTests: XCTestCase {
         expect(player.time).toNotEventually(equal(.zero))
 
         waitUntil { done in
-            player.seek(to: CMTime(value: 1, timescale: 1)) { finished in
+            player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero) { finished in
                 expect(finished).to(beTrue())
                 done()
             }
@@ -82,6 +83,7 @@ final class PlayerSkipToLiveTests: XCTestCase {
     func testSkipToLiveForDvrInLiveConditions() {
         let item = PlayerItem(url: Stream.dvr.url)
         let player = Player(item: item)
+        expect(player.time).toNotEventually(equal(.zero))
         let skipped = player.skipToLive { finished in
             fail("Must not be called")
         }
@@ -94,7 +96,7 @@ final class PlayerSkipToLiveTests: XCTestCase {
         expect(player.time).toNotEventually(equal(.zero))
 
         waitUntil { done in
-            player.seek(to: CMTime(value: 1, timescale: 1)) { finished in
+            player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero) { finished in
                 expect(finished).to(beTrue())
                 done()
             }
