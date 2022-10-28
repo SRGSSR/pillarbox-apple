@@ -26,11 +26,14 @@ private struct ContentView: View {
             }
             .ignoresSafeArea()
 #if os(iOS)
-            Slider(player: player)
-                .tint(.white)
-                .opacity(isUserInterfaceHidden ? 0 : 1)
-                .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            HStack {
+                Slider(player: player)
+                    .tint(.white)
+                    .padding()
+                LiveLabel(player: player)
+            }
+            .opacity(isUserInterfaceHidden ? 0 : 1)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
 #endif
         }
         .animation(.easeInOut(duration: 0.2), value: isUserInterfaceHidden)
@@ -129,6 +132,24 @@ private struct PreviousButton: View {
             }
         }
         .frame(width: 45, height: 45)
+    }
+}
+
+private struct LiveLabel: View {
+    @ObservedObject var player: Player
+
+    var body: some View {
+        if player.streamType == .dvr || player.streamType == .live {
+            Button(action: { player.skipToLive() }) {
+                Text("LIVE")
+                    .foregroundColor(.white)
+                    .padding(.vertical, 4)
+                    .padding(.horizontal, 6)
+                    .background(player.canSkipToLive() ? .gray : .red)
+                    .cornerRadius(4)
+            }
+            .disabled(!player.canSkipToLive())
+        }
     }
 }
 

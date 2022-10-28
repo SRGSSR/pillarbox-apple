@@ -21,25 +21,18 @@ extension AVPlayerItem {
         .eraseToAnyPublisher()
     }
 
-    func timeRangePublisher(configuration: PlayerConfiguration) -> AnyPublisher<CMTimeRange, Never> {
+    func timeRangePublisher() -> AnyPublisher<CMTimeRange, Never> {
         Publishers.CombineLatest3(
             publisher(for: \.loadedTimeRanges),
             publisher(for: \.seekableTimeRanges),
             publisher(for: \.duration)
         )
-        .compactMap { loadedTimeRanges, seekableTimeRanges, duration in
+        .compactMap { loadedTimeRanges, seekableTimeRanges, _ in
             guard let firstRange = seekableTimeRanges.first?.timeRangeValue,
                   let lastRange = seekableTimeRanges.last?.timeRangeValue else {
                 return !loadedTimeRanges.isEmpty ? .zero : nil
             }
-
-            let timeRange = CMTimeRangeFromTimeToTime(start: firstRange.start, end: lastRange.end)
-            if duration.isIndefinite && CMTimeCompare(timeRange.duration, configuration.dvrThreshold) == -1 {
-                return CMTimeRange(start: timeRange.start, duration: .zero)
-            }
-            else {
-                return timeRange
-            }
+            return CMTimeRangeFromTimeToTime(start: firstRange.start, end: lastRange.end)
         }
         .eraseToAnyPublisher()
     }

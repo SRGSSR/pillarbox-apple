@@ -38,6 +38,7 @@ final class FailingPlayerItem: AVPlayerItem {
 /// An item to be inserted into the player.
 public final class PlayerItem: Equatable {
     @Published var playerItem: AVPlayerItem = LoadingPlayerItem()
+    @Published var chunkDuration: CMTime = .invalid
 
     private let id = UUID()
 
@@ -52,6 +53,16 @@ public final class PlayerItem: Equatable {
                 item.withId(id)
             }
             .assign(to: &$playerItem)
+        $playerItem
+            .map { item in
+                item.asset.propertyPublisher(.minimumTimeOffsetFromLive)
+                    .map { CMTimeMultiplyByRatio($0, multiplier: 1, divisor: 3) }       // The minimum offset represents 3 chunks
+                    .replaceError(with: .invalid)
+                    .prepend(.invalid)
+            }
+            .switchToLatest()
+            .removeDuplicates()
+            .assign(to: &$chunkDuration)
     }
 
     /// Compare two items for equality.
