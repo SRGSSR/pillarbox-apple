@@ -29,10 +29,10 @@ private struct ContentView: View {
             HStack {
                 Slider(player: player)
                     .tint(.white)
-                    .opacity(isUserInterfaceHidden ? 0 : 1)
                     .padding()
                 LiveLabel(player: player)
             }
+            .opacity(isUserInterfaceHidden ? 0 : 1)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
 #endif
         }
@@ -148,6 +148,7 @@ private struct LiveLabel: View {
                     .background(player.canSkipToLive() ? .gray : .red)
                     .cornerRadius(4)
             }
+            .disabled(!player.canSkipToLive())
         }
     }
 }
