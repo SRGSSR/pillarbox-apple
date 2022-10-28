@@ -56,7 +56,7 @@ final class PlayerSkipToLiveTests: XCTestCase {
 
     func testSkipToLiveWhenEmpty() {
         let player = Player()
-        let skipped = player.skipToLive { finished in
+        let skipped = player.skipToLive { _ in
             fail("Must not be called")
         }
         expect(skipped).to(beFalse())
@@ -65,7 +65,7 @@ final class PlayerSkipToLiveTests: XCTestCase {
     func testSkipToLiveForOnDemand() {
         let item = PlayerItem(url: Stream.onDemand.url)
         let player = Player(item: item)
-        let skipped = player.skipToLive { finished in
+        let skipped = player.skipToLive { _ in
             fail("Must not be called")
         }
         expect(skipped).to(beFalse())
@@ -74,7 +74,7 @@ final class PlayerSkipToLiveTests: XCTestCase {
     func testSkipToLiveForLive() {
         let item = PlayerItem(url: Stream.live.url)
         let player = Player(item: item)
-        let skipped = player.skipToLive { finished in
+        let skipped = player.skipToLive { _ in
             fail("Must not be called")
         }
         expect(skipped).to(beFalse())
@@ -84,7 +84,7 @@ final class PlayerSkipToLiveTests: XCTestCase {
         let item = PlayerItem(url: Stream.dvr.url)
         let player = Player(item: item)
         expect(player.time).toNotEventually(equal(.zero))
-        let skipped = player.skipToLive { finished in
+        let skipped = player.skipToLive { _ in
             fail("Must not be called")
         }
         expect(skipped).to(beFalse())

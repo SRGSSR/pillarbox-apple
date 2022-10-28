@@ -27,7 +27,7 @@ extension AVPlayerItem {
             publisher(for: \.seekableTimeRanges),
             publisher(for: \.duration)
         )
-        .compactMap { loadedTimeRanges, seekableTimeRanges, duration in
+        .compactMap { loadedTimeRanges, seekableTimeRanges, _ in
             guard let firstRange = seekableTimeRanges.first?.timeRangeValue,
                   let lastRange = seekableTimeRanges.last?.timeRangeValue else {
                 return !loadedTimeRanges.isEmpty ? .zero : nil
