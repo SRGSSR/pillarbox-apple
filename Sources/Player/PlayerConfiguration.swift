@@ -14,16 +14,8 @@ public struct PlayerConfiguration {
         set { _tick = CMTimeMaximum(newValue, CMTime(value: 1, timescale: 10)) }
     }
 
-    /// The minimum duration below which a DVR window is collapsed to zero (so that the stream
-    /// is effectively seen as a livestream without DVR). Defaults to `.zero`.
-    public var dvrThreshold: CMTime {
-        get { _dvrThreshold }
-        set { _dvrThreshold = CMTimeMaximum(newValue, .zero) }
-    }
-
     /// Seek behavior during progress updates. Default is `.immediate`.
     public var seekBehavior: PlaybackProgress.SeekBehavior = .immediate
 
     private var _tick = CMTime(value: 1, timescale: 1)
-    private var _dvrThreshold = CMTime.zero
 }
