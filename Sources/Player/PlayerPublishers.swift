@@ -77,7 +77,7 @@ extension AVPlayer {
         .map { time, timeRange, itemDuration in
             Pulse(time: time, timeRange: timeRange, itemDuration: itemDuration)
         }
-        .removeDuplicates(by: Pulse.close(within: CMTimeMultiplyByFloat64(configuration.tick, multiplier: 0.5)))
+        .removeDuplicates(by: Pulse.close(within: CMTimeMultiplyByRatio(configuration.tick, multiplier: 1, divisor: 2)))
         .eraseToAnyPublisher()
     }
 
