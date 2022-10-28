@@ -103,13 +103,13 @@ final class PlayerItemsTests: XCTestCase {
     }
 
     func testCustomItemFailureAsync() {
-        let publisher = Fail<AVPlayerItem, Error>(error: TestError.any)
+        let publisher = Fail<AVPlayerItem, Error>(error: TestError.error1)
             .delay(for: 0.5, scheduler: DispatchQueue.main)
         let item = PlayerItem(publisher: publisher)
         expectAtLeastSimilarPublished(
             values: [
                 LoadingPlayerItem(),
-                FailingPlayerItem(error: TestError.any)
+                FailingPlayerItem(error: TestError.error1)
             ],
             from: item.$playerItem
         )
