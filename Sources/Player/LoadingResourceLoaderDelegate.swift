@@ -15,8 +15,8 @@ final class LoadingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelega
     }
 
     func resourceLoader(
-        _ resourceLoader: AVAssetResourceLoader, shouldWaitForRenewalOfRequestedResource
-        renewalRequest: AVAssetResourceRenewalRequest
+        _ resourceLoader: AVAssetResourceLoader,
+        shouldWaitForRenewalOfRequestedResource renewalRequest: AVAssetResourceRenewalRequest
     ) -> Bool {
         true
     }

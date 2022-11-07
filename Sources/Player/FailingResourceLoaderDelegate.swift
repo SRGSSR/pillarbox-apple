@@ -22,9 +22,10 @@ final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelega
     }
 
     func resourceLoader(
-        _ resourceLoader: AVAssetResourceLoader, shouldWaitForRenewalOfRequestedResource
-        renewalRequest: AVAssetResourceRenewalRequest
+        _ resourceLoader: AVAssetResourceLoader,
+        shouldWaitForRenewalOfRequestedResource renewalRequest: AVAssetResourceRenewalRequest
     ) -> Bool {
-        true
+        renewalRequest.finishLoadingReliably(with: error)
+        return true
     }
 }
