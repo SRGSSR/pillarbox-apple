@@ -48,7 +48,7 @@ final class ItemStatePublisherTests: XCTestCase {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         let player = AVPlayer(playerItem: item)
         expectSimilarPublished(
-            values: [.unknown, .failed(error: TestError.any)],
+            values: [.unknown, .failed(error: EnumError.any)],
             from: player.itemStatePublisher(),
             during: 1
         )
@@ -58,7 +58,7 @@ final class ItemStatePublisherTests: XCTestCase {
         let item = AVPlayerItem(url: Stream.corruptOnDemand.url)
         let player = AVPlayer(playerItem: item)
         expectSimilarPublished(
-            values: [.unknown, .failed(error: TestError.any)],
+            values: [.unknown, .failed(error: EnumError.any)],
             from: player.itemStatePublisher(),
             during: 1
         )
@@ -70,7 +70,7 @@ final class ItemStatePublisherTests: XCTestCase {
         let item = AVPlayerItem(asset: asset)
         let player = AVPlayer(playerItem: item)
         expectSimilarPublished(
-            values: [.unknown, .failed(error: TestError.any)],
+            values: [.unknown, .failed(error: EnumError.any)],
             from: player.itemStatePublisher(),
             during: 1
         )

@@ -57,7 +57,7 @@ final class PlaybackStatePublisherTests: XCTestCase {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         let player = AVPlayer(playerItem: item)
         expectSimilarPublished(
-            values: [.idle, .failed(error: TestError.any)],
+            values: [.idle, .failed(error: EnumError.any)],
             from: player.playbackStatePublisher(),
             during: 2
         )

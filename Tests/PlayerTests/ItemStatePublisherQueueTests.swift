@@ -34,7 +34,7 @@ final class ItemStatePublisherQueueTests: XCTestCase {
             // The third item cannot be pre-buffered and goes through the usual states
             values: [
                 .unknown, .readyToPlay, .ended,
-                .failed(error: TestError.any),
+                .failed(error: EnumError.any),
                 .unknown, .readyToPlay, .ended
             ],
             from: player.itemStatePublisher(),

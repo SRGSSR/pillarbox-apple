@@ -15,18 +15,18 @@ final class ItemStateTests: XCTestCase {
         expect(ItemState.unknown).to(equal(.unknown))
         expect(ItemState.readyToPlay).to(equal(.readyToPlay))
         expect(ItemState.ended).to(equal(.ended))
-        expect(ItemState.failed(error: TestError.any)).to(equal(.failed(error: TestError.any)))
+        expect(ItemState.failed(error: EnumError.any)).to(equal(.failed(error: EnumError.any)))
     }
 
     func testInequality() {
         expect(ItemState.unknown).notTo(equal(.readyToPlay))
-        expect(ItemState.failed(error: TestError.error1)).notTo(equal(.failed(error: TestError.error2)))
+        expect(ItemState.failed(error: EnumError.error1)).notTo(equal(.failed(error: EnumError.error2)))
     }
 
     func testSimilarity() {
         expect(ItemState.unknown).to(equal(.unknown, by: ~=))
         expect(ItemState.readyToPlay).to(equal(.readyToPlay, by: ~=))
         expect(ItemState.ended).to(equal(.ended, by: ~=))
-        expect(ItemState.failed(error: TestError.any)).to(equal(.failed(error: TestError.any), by: ~=))
+        expect(ItemState.failed(error: EnumError.any)).to(equal(.failed(error: EnumError.any), by: ~=))
     }
 }

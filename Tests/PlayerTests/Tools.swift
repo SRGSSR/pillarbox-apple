@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-enum TestError: Error {
+enum EnumError: Error {
     case any
     case error1
     case error2

@@ -38,7 +38,7 @@ final class PlayerItemPublishersTests: XCTestCase {
         let item = AVPlayerItem(url: Stream.corruptOnDemand.url)
         _ = AVPlayer(playerItem: item)
         expectSimilarPublished(
-            values: [.unknown, .failed(error: TestError.any)],
+            values: [.unknown, .failed(error: EnumError.any)],
             from: item.itemStatePublisher(),
             during: 2
         )
