@@ -14,7 +14,7 @@ public extension AVAssetResourceLoadingRequest {
     func finishLoadingReliably(with error: Error?) {
         let nsError = NSError.error(from: error)
         if let nsError {
-            assert(nsError.code > 0, "Errors must have a code > 0 to be properly returned to the player item")
+            assert(nsError.code != 0, "An error must have a code != 0 to be properly returned by the resource loader")
         }
         finishLoading(with: nsError)
     }
