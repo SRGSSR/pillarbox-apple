@@ -42,6 +42,8 @@ final class ItemStateTests: XCTestCase {
             .to(equal("Not found"))
         expect(ItemState.friendlyComment(from: "The operation couldn't be completed. (CoreMediaErrorDomain error -16839 - Unable to get playlist before long download timer.)"))
             .to(equal("Unable to get playlist before long download timer."))
+        expect(ItemState.friendlyComment(from: "L’opération n’a pas pu s’achever. (CoreBusiness.DataError erreur 1 - Ce contenu n'est plus disponible.)"))
+            .to(equal("Ce contenu n'est plus disponible."))
     }
 
     func testLocalizedErrorFromLocalizedNSError() {
