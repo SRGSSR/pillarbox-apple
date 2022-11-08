@@ -32,7 +32,7 @@ enum PlayerError {
 
     static var segmentNotFound: NSError {
         NSError(
-            domain: "PlayerErrorDomain",
+            domain: "CoreMediaErrorDomain",
             code: -12938,
             userInfo: [
                 NSLocalizedDescriptionKey: "HTTP 404: File Not Found"

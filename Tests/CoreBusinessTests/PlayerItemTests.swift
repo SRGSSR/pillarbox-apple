@@ -65,7 +65,7 @@ final class PlayerItemTests: XCTestCase {
                     domain: "CoreBusiness.DataError",
                     code: 1,
                     userInfo: [
-                        NSLocalizedDescriptionKey: "This content is not available anymore"
+                        NSLocalizedDescriptionKey: "This content is not available anymore."
                     ]
                 ))
             ],

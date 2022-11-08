@@ -29,4 +29,18 @@ final class ItemStateTests: XCTestCase {
         expect(ItemState.ended).to(equal(.ended, by: ~=))
         expect(ItemState.failed(error: StructError())).to(equal(.failed(error: StructError()), by: ~=))
     }
+
+    func testNoFriendlyComment() {
+        expect(ItemState.friendlyComment(from: "The internet connection appears to be offline"))
+            .to(equal("The internet connection appears to be offline"))
+    }
+
+    func testFriendlyComment() {
+        expect(ItemState.friendlyComment(from: "The operation couldn’t be completed. (CoreBusiness.DataError error 1 - This content is not available anymore.)"))
+            .to(equal("This content is not available anymore."))
+        expect(ItemState.friendlyComment(from: "The operation couldn’t be completed. (CoreBusiness.DataError error 1 - Not found)"))
+            .to(equal("Not found"))
+        expect(ItemState.friendlyComment(from: "The operation couldn't be completed. (CoreMediaErrorDomain error -16839 - Unable to get playlist before long download timer.)"))
+            .to(equal("Unable to get playlist before long download timer."))
+    }
 }
