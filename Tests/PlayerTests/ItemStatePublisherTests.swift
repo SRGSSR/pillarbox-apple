@@ -50,13 +50,7 @@ final class ItemStatePublisherTests: XCTestCase {
         expectSimilarPublished(
             values: [
                 .unknown,
-                .failed(error: NSError(
-                    domain: URLError.errorDomain,
-                    code: URLError.fileDoesNotExist.rawValue,
-                    userInfo: [
-                        NSLocalizedDescriptionKey: "The requested URL was not found on this server."
-                    ]
-                ))
+                .failed(error: PlayerError.resourceNotFound)
             ],
             from: player.itemStatePublisher(),
             during: 1
@@ -67,7 +61,10 @@ final class ItemStatePublisherTests: XCTestCase {
         let item = AVPlayerItem(url: Stream.corruptOnDemand.url)
         let player = AVPlayer(playerItem: item)
         expectSimilarPublished(
-            values: [.unknown, .failed(error: EnumError.any)],
+            values: [
+                .unknown,
+                .failed(error: PlayerError.segmentNotFound)
+            ],
             from: player.itemStatePublisher(),
             during: 1
         )
@@ -79,7 +76,16 @@ final class ItemStatePublisherTests: XCTestCase {
         let item = AVPlayerItem(asset: asset)
         let player = AVPlayer(playerItem: item)
         expectSimilarPublished(
-            values: [.unknown, .failed(error: EnumError.any)],
+            values: [
+                .unknown,
+                .failed(error: NSError(
+                    domain: "PlayerTests.ResourceLoaderError",
+                    code: 1,
+                    userInfo: [
+                        NSLocalizedDescriptionKey: "Failed to load the resource (custom message)"
+                    ]
+                ))
+            ],
             from: player.itemStatePublisher(),
             during: 1
         )

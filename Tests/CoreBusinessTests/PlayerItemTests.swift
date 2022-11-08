@@ -37,7 +37,7 @@ final class PlayerItemTests: XCTestCase {
         )
     }
 
-    func testURNPlaybackFailure() {
+    func testURNPlaybackUnknown() {
         let item = PlayerItem(urn: "urn:srf:video:unknown")
         let player = Player(item: item)
         expectAtLeastSimilarPublished(
@@ -48,6 +48,24 @@ final class PlayerItemTests: XCTestCase {
                     code: 1,
                     userInfo: [
                         NSLocalizedDescriptionKey: "Not found"
+                    ]
+                ))
+            ],
+            from: player.$playbackState
+        )
+    }
+
+    func testURNPlaybackNotAvailableAnymore() {
+        let item = PlayerItem(urn: "urn:rts:video:13382911")
+        let player = Player(item: item)
+        expectAtLeastSimilarPublished(
+            values: [
+                .idle,
+                .failed(error: NSError(
+                    domain: "CoreBusiness.DataError",
+                    code: 1,
+                    userInfo: [
+                        NSLocalizedDescriptionKey: "This content is not available anymore"
                     ]
                 ))
             ],

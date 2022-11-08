@@ -16,7 +16,7 @@ final class PlaybackStateTests: XCTestCase {
         expect(PlaybackState.playing).to(equal(.playing))
         expect(PlaybackState.paused).to(equal(.paused))
         expect(PlaybackState.ended).to(equal(.ended))
-        expect(ItemState.failed(error: EnumError.any)).to(equal(.failed(error: EnumError.any)))
+        expect(ItemState.failed(error: StructError())).to(equal(.failed(error: StructError())))
     }
 
     func testInequality() {
@@ -29,6 +29,6 @@ final class PlaybackStateTests: XCTestCase {
         expect(PlaybackState.playing).to(equal(.playing, by: ~=))
         expect(PlaybackState.paused).to(equal(.paused, by: ~=))
         expect(PlaybackState.ended).to(equal(.ended, by: ~=))
-        expect(ItemState.failed(error: EnumError.any)).to(equal(.failed(error: EnumError.any), by: ~=))
+        expect(ItemState.failed(error: StructError())).to(equal(.failed(error: StructError()), by: ~=))
     }
 }

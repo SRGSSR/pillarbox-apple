@@ -15,7 +15,7 @@ final class ItemStateTests: XCTestCase {
         expect(ItemState.unknown).to(equal(.unknown))
         expect(ItemState.readyToPlay).to(equal(.readyToPlay))
         expect(ItemState.ended).to(equal(.ended))
-        expect(ItemState.failed(error: EnumError.any)).to(equal(.failed(error: EnumError.any)))
+        expect(ItemState.failed(error: StructError())).to(equal(.failed(error: StructError())))
     }
 
     func testInequality() {
@@ -27,6 +27,6 @@ final class ItemStateTests: XCTestCase {
         expect(ItemState.unknown).to(equal(.unknown, by: ~=))
         expect(ItemState.readyToPlay).to(equal(.readyToPlay, by: ~=))
         expect(ItemState.ended).to(equal(.ended, by: ~=))
-        expect(ItemState.failed(error: EnumError.any)).to(equal(.failed(error: EnumError.any), by: ~=))
+        expect(ItemState.failed(error: StructError())).to(equal(.failed(error: StructError()), by: ~=))
     }
 }

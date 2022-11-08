@@ -8,10 +8,37 @@
 
 import AVFoundation
 
-enum EnumError: Error {
-    case any
-    case error1
+struct StructError: LocalizedError {
+    var errorDescription: String? {
+        "Struct error description"
+    }
+}
+
+enum EnumError: Int, Error {
+    case error1 = 1
     case error2
+}
+
+enum PlayerError {
+    static var resourceNotFound: NSError {
+        NSError(
+            domain: URLError.errorDomain,
+            code: URLError.fileDoesNotExist.rawValue,
+            userInfo: [
+                NSLocalizedDescriptionKey: "The requested URL was not found on this server."
+            ]
+        )
+    }
+
+    static var segmentNotFound: NSError {
+        NSError(
+            domain: "PlayerErrorDomain",
+            code: -12938,
+            userInfo: [
+                NSLocalizedDescriptionKey: "HTTP 404: File Not Found"
+            ]
+        )
+    }
 }
 
 struct Stream {

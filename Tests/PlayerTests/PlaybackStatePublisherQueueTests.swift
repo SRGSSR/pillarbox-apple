@@ -34,7 +34,7 @@ final class PlaybackStatePublisherQueueTests: XCTestCase {
             // The third item cannot be pre-buffered and goes through the usual states
             values: [
                 .idle, .playing, .ended,
-                .failed(error: EnumError.any),
+                .failed(error: PlayerError.resourceNotFound),
                 .idle, .playing, .ended
             ],
             from: player.playbackStatePublisher(),
