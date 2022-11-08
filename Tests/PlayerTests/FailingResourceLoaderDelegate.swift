@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-struct ResourceLoaderError: Error {
+struct ResourceLoaderError: LocalizedError {
     let errorDescription: String?
 }
 

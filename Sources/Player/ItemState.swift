@@ -42,6 +42,17 @@ enum ItemState: Equatable {
         return String(result.1)
     }
 
+    // Errors returned through `AVAssetResourceLoader` do not apply correct error localization rules. Fix.
+    static func localizedError(from error: Error) -> Error {
+        let bridgedError = error as NSError
+        var userInfo = bridgedError.userInfo
+        let descriptionKey = "NSDescription"
+        guard let description = userInfo[descriptionKey] else { return error }
+        userInfo[NSLocalizedDescriptionKey] = description
+        userInfo[descriptionKey] = nil
+        return NSError(domain: bridgedError.domain, code: bridgedError.code, userInfo: userInfo)
+    }
+
     private static func userInfo(for event: AVPlayerItemErrorLogEvent) -> [String: Any] {
         guard let comment = friendlyComment(from: event.errorComment) else { return [:] }
         return [NSLocalizedDescriptionKey: comment]
@@ -55,8 +66,11 @@ enum ItemState: Equatable {
                 userInfo: userInfo(for: event)
             )
         }
+        else if let error = item.error {
+            return localizedError(from: error)
+        }
         else {
-            return item.error ?? PlaybackError.unknown
+            return PlaybackError.unknown
         }
     }
 }

@@ -43,4 +43,25 @@ final class ItemStateTests: XCTestCase {
         expect(ItemState.friendlyComment(from: "The operation couldn't be completed. (CoreMediaErrorDomain error -16839 - Unable to get playlist before long download timer.)"))
             .to(equal("Unable to get playlist before long download timer."))
     }
+
+    func testLocalizedErrorFromLocalizedNSError() {
+        let error = NSError(domain: "domain", code: 1012, userInfo: [
+            NSLocalizedDescriptionKey: "Error description"
+        ])
+        expect(ItemState.localizedError(from: error) as NSError).to(equal(error))
+    }
+
+    func testLocalizedErrorFromNonLocalizedNSError() {
+        let error = NSError(domain: "domain", code: 1012, userInfo: [
+            "NSDescription": "Error description"
+        ])
+        let expectedError = NSError(domain: "domain", code: 1012, userInfo: [
+            NSLocalizedDescriptionKey: "Error description"
+        ])
+        expect(ItemState.localizedError(from: error) as NSError).to(equal(expectedError))
+    }
+
+    func testLocalizedErrorFromSwiftError() {
+        expect(ItemState.localizedError(from: StructError()) as NSError).to(equal(StructError() as NSError))
+    }
 }

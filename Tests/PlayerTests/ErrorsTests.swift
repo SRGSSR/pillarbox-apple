@@ -30,27 +30,6 @@ final class ErrorsTests: XCTestCase {
         }
     }
 
-    func testLocalizedNSError() {
-        let error = NSError(domain: "domain", code: 1012, userInfo: [
-            NSLocalizedDescriptionKey: "Error description"
-        ])
-        expect(error.localized() as NSError).to(equal(error))
-    }
-
-    func testNonLocalizedNSError() {
-        let error = NSError(domain: "domain", code: 1012, userInfo: [
-            "NSDescription": "Error description"
-        ])
-        let expectedError = NSError(domain: "domain", code: 1012, userInfo: [
-            NSLocalizedDescriptionKey: "Error description"
-        ])
-        expect(error.localized() as NSError).to(equal(expectedError))
-    }
-
-    func testSwiftError() {
-        expect(EnumError.someError.localized() as NSError).to(equal(EnumError.someError as NSError))
-    }
-
     func testNSErrorFromNSError() {
         let error = NSError(domain: "domain", code: 1012, userInfo: [
             NSLocalizedDescriptionKey: "Error description",
