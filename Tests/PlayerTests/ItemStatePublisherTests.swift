@@ -48,7 +48,16 @@ final class ItemStatePublisherTests: XCTestCase {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         let player = AVPlayer(playerItem: item)
         expectSimilarPublished(
-            values: [.unknown, .failed(error: EnumError.any)],
+            values: [
+                .unknown,
+                .failed(error: NSError(
+                    domain: URLError.errorDomain,
+                    code: URLError.fileDoesNotExist.rawValue,
+                    userInfo: [
+                        NSLocalizedDescriptionKey: "The requested URL was not found on this server."
+                    ]
+                ))
+            ],
             from: player.itemStatePublisher(),
             during: 1
         )

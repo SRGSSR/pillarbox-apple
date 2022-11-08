@@ -43,7 +43,13 @@ final class PlayerItemTests: XCTestCase {
         expectAtLeastSimilarPublished(
             values: [
                 .idle,
-                .failed(error: TestError.any)
+                .failed(error: NSError(
+                    domain: "CoreBusiness.DataError",
+                    code: 1,
+                    userInfo: [
+                        NSLocalizedDescriptionKey: "Not found"
+                    ]
+                ))
             ],
             from: player.$playbackState
         )
