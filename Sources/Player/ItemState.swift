@@ -6,6 +6,8 @@
 
 import AVFoundation
 
+private var kCachedError: Void?
+
 enum ItemState: Equatable {
     case unknown
     case readyToPlay
@@ -58,7 +60,9 @@ enum ItemState: Equatable {
         return [NSLocalizedDescriptionKey: comment]
     }
 
-    private static func error(for item: AVPlayerItem) -> Error {
+    /// Consolidate error and error log information. Only reliable the first time the item transitions to the
+    /// failed status as of iOS and tvOS 16.1.
+    private static func consolidatedError(for item: AVPlayerItem) -> Error {
         if let errorLog = item.errorLog(), let event = errorLog.events.last {
             return NSError(
                 domain: event.errorDomain,
@@ -71,6 +75,31 @@ enum ItemState: Equatable {
         }
         else {
             return PlaybackError.unknown
+        }
+    }
+
+    private static func error(for item: AVPlayerItem) -> Error {
+        if let cachedError = item.cachedError {
+            return cachedError
+        }
+        else {
+            let error = consolidatedError(for: item)
+            item.cachedError = error
+            return error
+        }
+    }
+}
+
+/// As of iOS / tvOS 16.1 the error log is cleared when replacing an item with an already failed one in the queue.
+/// For this reason we need to cache the error the first time we can extract it, when the error log (if available)
+/// is reliable.
+private extension AVPlayerItem {
+    var cachedError: Error? {
+        get {
+            objc_getAssociatedObject(self, &kCachedError) as? Error
+        }
+        set {
+            objc_setAssociatedObject(self, &kCachedError, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 }
