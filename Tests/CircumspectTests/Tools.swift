@@ -7,9 +7,7 @@
 import Circumspect
 import Foundation
 
-enum TestError: Error {
-    case any
-}
+struct StructError: Error {}
 
 struct NamedPerson: Similar {
     let name: String

@@ -111,11 +111,11 @@ final class ExpectationTests: XCTestCase {
     }
 
     func testExpectFailure() {
-        expectFailure(from: Fail<Int, Error>(error: TestError.any))
+        expectFailure(from: Fail<Int, Error>(error: StructError()))
     }
 
     func testExpectFailureWithError() {
-        expectFailure(TestError.any, from: Fail<Int, Error>(error: TestError.any))
+        expectFailure(StructError(), from: Fail<Int, Error>(error: StructError()))
     }
 
     func testExpectReceivedNotifications() {
