@@ -36,7 +36,7 @@ function serve_test_streams {
 
     mkdir -p "$ON_DEMAND_CORRUPT_DIR"
     ffmpeg -stream_loop -1 -i "$MEDIAS_DIR/nyan_cat.mov" -t 2 -vcodec copy -acodec copy \
-        -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_CORRUPT_DIR/master.m3u8" > /dev/null 2>&1; rm "$ON_DEMAND_CORRUPT_DIR"/*.ts &
+        -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_CORRUPT_DIR/master.m3u8" > /dev/null 2>&1 && rm "$ON_DEMAND_CORRUPT_DIR"/*.ts &
 
     mkdir -p "$LIVE_DIR"
     ffmpeg -stream_loop -1 -re -i "$MEDIAS_DIR/nyan_cat.mov" -vcodec copy -acodec copy \
@@ -50,8 +50,11 @@ function serve_test_streams {
 }
 
 function kill_test_streams {
-    pkill -if "ffmpeg -stream_loop .*/Streams/Generated/.*"
-    pkill -if "python -m http.server --directory .*/Streams/Generated$"
+    # Kill all processes accessing the generated stream directory (wait for termination)
+    while pkill -if "$GENERATED_STREAMS_DIR"; do
+        sleep 1
+    done
+
     rm -rf "$GENERATED_STREAMS_DIR"
 }
 
