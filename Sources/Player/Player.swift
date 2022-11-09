@@ -455,15 +455,22 @@ public extension Player {
     /// - Returns: `true` if possible.
     func canReturnToPreviousItem() -> Bool {
         guard let currentItem else { return false }
-        return currentItem !== storedItems.first
+        return playablePreviousItem(before: currentItem) != nil
     }
 
-    /// Return to the previous item in the deque.
+    /// Return the previous playable item, i.e. skips items which failed, similarly to what `AVQueuePlayer` natively
+    /// does when advancing in the queue.
+    private func playablePreviousItem(before item: PlayerItem) -> PlayerItem? {
+        guard let index = storedItems.firstIndex(of: item) else { return nil }
+        let previousPlayableItems = storedItems.prefix(upTo: index).filter { $0.playerItem.status != .failed }
+        return previousPlayableItems.last
+    }
+
+    /// Return to the previous item in the deque. Skips failed items.
     /// - Returns: `true` if not possible.
     @discardableResult
     func returnToPreviousItem() -> Bool {
-        guard let currentItem, let index = storedItems.firstIndex(of: currentItem), index > 0 else { return false }
-        let previousItem = storedItems[storedItems.index(before: index)]
+        guard let currentItem, let previousItem = playablePreviousItem(before: currentItem) else { return false }
         rawPlayer.replaceCurrentItem(with: previousItem.playerItem)
         rawPlayer.insert(currentItem.playerItem, after: previousItem.playerItem)
         return true
