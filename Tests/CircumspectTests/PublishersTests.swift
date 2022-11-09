@@ -27,7 +27,7 @@ final class PublisherTests: XCTestCase {
     }
 
     func testWaitForFailureResult() {
-        let values = try? waitForResult(from: Fail<Int, Error>(error: TestError.any)).get()
+        let values = try? waitForResult(from: Fail<Int, Error>(error: StructError())).get()
         expect(values).to(beNil())
     }
 
@@ -61,16 +61,16 @@ final class PublisherTests: XCTestCase {
     }
 
     func testWaitForFailure() throws {
-        let error = try waitForFailure(from: Fail<Int, Error>(error: TestError.any))
+        let error = try waitForFailure(from: Fail<Int, Error>(error: StructError()))
         expect(error).notTo(beNil())
     }
 
     func testWaitForFailureWhileExecuting() throws {
         let subject = PassthroughSubject<Int, Error>()
-        let error = try waitForFailure(from: Fail<Int, Error>(error: TestError.any)) {
+        let error = try waitForFailure(from: Fail<Int, Error>(error: StructError())) {
             subject.send(4)
             subject.send(7)
-            subject.send(completion: .failure(TestError.any))
+            subject.send(completion: .failure(StructError()))
         }
         expect(error).notTo(beNil())
     }

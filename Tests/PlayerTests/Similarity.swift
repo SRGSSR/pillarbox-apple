@@ -17,28 +17,6 @@ extension Pulse: Similar {
     }
 }
 
-extension ItemState: Similar {
-    public static func ~= (lhs: ItemState, rhs: ItemState) -> Bool {
-        switch (lhs, rhs) {
-        case (.unknown, .unknown), (.readyToPlay, .readyToPlay), (.ended, .ended), (.failed, .failed):
-            return true
-        default:
-            return false
-        }
-    }
-}
-
-extension PlaybackState: Similar {
-    public static func ~= (lhs: PlaybackState, rhs: PlaybackState) -> Bool {
-        switch (lhs, rhs) {
-        case (.idle, .idle), (.playing, .playing), (.paused, .paused), (.ended, .ended), (.failed, .failed):
-            return true
-        default:
-            return false
-        }
-    }
-}
-
 extension AVPlayerItem: Similar {
     public static func ~= (lhs: AVPlayerItem, rhs: AVPlayerItem) -> Bool {
         if let lhsUrlAsset = lhs.asset as? AVURLAsset, let rhsUrlAsset = rhs.asset as? AVURLAsset {

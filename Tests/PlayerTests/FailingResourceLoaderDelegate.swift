@@ -6,15 +6,14 @@
 
 import AVFoundation
 
-struct ResourceLoaderError: Error {
+struct ResourceLoaderError: LocalizedError {
     let errorDescription: String?
 }
 
 final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
     func resourceLoader(
         _ resourceLoader: AVAssetResourceLoader,
-        shouldWaitForLoadingOfRequestedResource loadingRequest:
-        AVAssetResourceLoadingRequest
+        shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest
     ) -> Bool {
         let error = ResourceLoaderError(errorDescription: "Failed to load the resource (custom message)")
         loadingRequest.finishLoadingReliably(with: error)
@@ -23,8 +22,7 @@ final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelega
 
     func resourceLoader(
         _ resourceLoader: AVAssetResourceLoader,
-        shouldWaitForRenewalOfRequestedResource
-        renewalRequest: AVAssetResourceRenewalRequest
+        shouldWaitForRenewalOfRequestedResource renewalRequest: AVAssetResourceRenewalRequest
     ) -> Bool {
         let error = ResourceLoaderError(errorDescription: "Failed to renew the resource (custom message)")
         renewalRequest.finishLoadingReliably(with: error)

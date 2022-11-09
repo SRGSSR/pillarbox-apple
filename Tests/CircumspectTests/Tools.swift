@@ -7,6 +7,8 @@
 import Circumspect
 import Foundation
 
+struct StructError: Error {}
+
 struct NamedPerson: Similar {
     let name: String
 

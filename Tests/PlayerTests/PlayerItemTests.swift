@@ -12,8 +12,6 @@ import Nimble
 import XCTest
 
 final class PlayerItemsTests: XCTestCase {
-    private struct SomeError: Error {}
-
     func testNativePlayerItem() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         _ = AVPlayer(playerItem: item)
@@ -35,10 +33,19 @@ final class PlayerItemsTests: XCTestCase {
     }
 
     func testFailingPlayerItem() {
-        let item = FailingPlayerItem(error: SomeError())
+        let item = FailingPlayerItem(error: StructError())
         _ = AVPlayer(playerItem: item)
-        expectSimilarPublished(
-            values: [.unknown, .failed(error: TestError.any)],
+        expectEqualPublished(
+            values: [
+                .unknown,
+                .failed(error: NSError(
+                    domain: "PlayerTests.StructError",
+                    code: 1,
+                    userInfo: [
+                        NSLocalizedDescriptionKey: "Struct error description"
+                    ]
+                ))
+            ],
             from: item.itemStatePublisher(),
             during: 2
         )
@@ -103,13 +110,13 @@ final class PlayerItemsTests: XCTestCase {
     }
 
     func testCustomItemFailureAsync() {
-        let publisher = Fail<AVPlayerItem, Error>(error: TestError.error1)
+        let publisher = Fail<AVPlayerItem, Error>(error: EnumError.error1)
             .delay(for: 0.5, scheduler: DispatchQueue.main)
         let item = PlayerItem(publisher: publisher)
         expectAtLeastSimilarPublished(
             values: [
                 LoadingPlayerItem(),
-                FailingPlayerItem(error: TestError.error1)
+                FailingPlayerItem(error: EnumError.error1)
             ],
             from: item.$playerItem
         )

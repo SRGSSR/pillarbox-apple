@@ -9,14 +9,14 @@ import Combine
 
 extension AVPlayerItem {
     func itemStatePublisher() -> AnyPublisher<ItemState, Never> {
-        Publishers.Merge(
+        Publishers.Merge3(
             publisher(for: \.status)
-                .weakCapture(self, at: \.error)
-                .map { status, error in
-                    ItemState.itemState(for: status, error: error?.localized())
-                },
+                .weakCapture(self)
+                .map { ItemState.itemState(for: $0.1) },
             NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: self)
-                .map { _ in .ended }
+                .map { _ in .ended },
+            NotificationCenter.default.weakPublisher(for: .AVPlayerItemFailedToPlayToEndTime, object: self)
+                .compactMap { ItemState.itemState(for: $0) }
         )
         .eraseToAnyPublisher()
     }

@@ -4,12 +4,48 @@
 //  License information is available from the LICENSE file.
 //
 
+@testable import Player
+
 import AVFoundation
 
-enum TestError: Error {
-    case any
-    case error1
+struct StructError: LocalizedError {
+    var errorDescription: String? {
+        "Struct error description"
+    }
+}
+
+enum EnumError: Int, Error {
+    case error1 = 1
     case error2
+}
+
+enum PlayerError {
+    static var resourceNotFound: NSError {
+        NSError(
+            domain: URLError.errorDomain,
+            code: URLError.fileDoesNotExist.rawValue,
+            userInfo: [
+                NSLocalizedDescriptionKey: "The requested URL was not found on this server.",
+                NSUnderlyingErrorKey: NSError(
+                    domain: "CoreMediaErrorDomain",
+                    code: -12938,
+                    userInfo: [
+                        "NSDescription": "HTTP 404: File Not Found"
+                    ]
+                )
+            ]
+        )
+    }
+
+    static var segmentNotFound: NSError {
+        NSError(
+            domain: "CoreMediaErrorDomain",
+            code: -12938,
+            userInfo: [
+                NSLocalizedDescriptionKey: "HTTP 404: File Not Found"
+            ]
+        )
+    }
 }
 
 struct Stream {

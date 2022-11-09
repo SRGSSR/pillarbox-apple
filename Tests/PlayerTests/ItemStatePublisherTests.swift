@@ -47,8 +47,11 @@ final class ItemStatePublisherTests: XCTestCase {
     func testUnavailableStream() {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         let player = AVPlayer(playerItem: item)
-        expectSimilarPublished(
-            values: [.unknown, .failed(error: TestError.any)],
+        expectEqualPublished(
+            values: [
+                .unknown,
+                .failed(error: PlayerError.resourceNotFound)
+            ],
             from: player.itemStatePublisher(),
             during: 1
         )
@@ -57,8 +60,11 @@ final class ItemStatePublisherTests: XCTestCase {
     func testCorruptStream() {
         let item = AVPlayerItem(url: Stream.corruptOnDemand.url)
         let player = AVPlayer(playerItem: item)
-        expectSimilarPublished(
-            values: [.unknown, .failed(error: TestError.any)],
+        expectEqualPublished(
+            values: [
+                .unknown,
+                .failed(error: PlayerError.segmentNotFound)
+            ],
             from: player.itemStatePublisher(),
             during: 1
         )
@@ -69,8 +75,17 @@ final class ItemStatePublisherTests: XCTestCase {
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: .global())
         let item = AVPlayerItem(asset: asset)
         let player = AVPlayer(playerItem: item)
-        expectSimilarPublished(
-            values: [.unknown, .failed(error: TestError.any)],
+        expectEqualPublished(
+            values: [
+                .unknown,
+                .failed(error: NSError(
+                    domain: "PlayerTests.ResourceLoaderError",
+                    code: 1,
+                    userInfo: [
+                        NSLocalizedDescriptionKey: "Failed to load the resource (custom message)"
+                    ]
+                ))
+            ],
             from: player.itemStatePublisher(),
             during: 1
         )
