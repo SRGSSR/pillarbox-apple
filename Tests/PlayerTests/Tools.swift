@@ -25,7 +25,14 @@ enum PlayerError {
             domain: URLError.errorDomain,
             code: URLError.fileDoesNotExist.rawValue,
             userInfo: [
-                NSLocalizedDescriptionKey: "The requested URL was not found on this server."
+                NSLocalizedDescriptionKey: "The requested URL was not found on this server.",
+                NSUnderlyingErrorKey: NSError(
+                    domain: "CoreMediaErrorDomain",
+                    code: -12938,
+                    userInfo: [
+                        "NSDescription": "HTTP 404: File Not Found"
+                    ]
+                )
             ]
         )
     }

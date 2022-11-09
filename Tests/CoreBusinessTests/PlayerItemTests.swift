@@ -40,7 +40,7 @@ final class PlayerItemTests: XCTestCase {
     func testURNPlaybackUnknown() {
         let item = PlayerItem(urn: "urn:srf:video:unknown")
         let player = Player(item: item)
-        expectAtLeastSimilarPublished(
+        expectAtLeastEqualPublished(
             values: [
                 .idle,
                 .failed(error: NSError(
@@ -58,7 +58,7 @@ final class PlayerItemTests: XCTestCase {
     func testURNPlaybackNotAvailableAnymore() {
         let item = PlayerItem(urn: "urn:rts:video:13382911")
         let player = Player(item: item)
-        expectAtLeastSimilarPublished(
+        expectAtLeastEqualPublished(
             values: [
                 .idle,
                 .failed(error: NSError(

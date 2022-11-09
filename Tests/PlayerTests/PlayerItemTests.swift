@@ -35,7 +35,7 @@ final class PlayerItemsTests: XCTestCase {
     func testFailingPlayerItem() {
         let item = FailingPlayerItem(error: StructError())
         _ = AVPlayer(playerItem: item)
-        expectSimilarPublished(
+        expectEqualPublished(
             values: [
                 .unknown,
                 .failed(error: NSError(

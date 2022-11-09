@@ -37,7 +37,7 @@ final class PlayerItemPublishersTests: XCTestCase {
     func testCorruptStream() {
         let item = AVPlayerItem(url: Stream.corruptOnDemand.url)
         _ = AVPlayer(playerItem: item)
-        expectSimilarPublished(
+        expectEqualPublished(
             values: [
                 .unknown,
                 .failed(error: PlayerError.segmentNotFound)

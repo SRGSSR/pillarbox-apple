@@ -17,46 +17,6 @@ extension Pulse: Similar {
     }
 }
 
-extension ItemState: Similar {
-    private static func areSimilar(_ lhsError: Error, _ rhsError: Error) -> Bool {
-        let nsLhsError = lhsError as NSError
-        let nsRhsError = rhsError as NSError
-        return nsLhsError.domain == nsRhsError.domain && nsLhsError.code == nsRhsError.code
-            && nsLhsError.localizedDescription == nsRhsError.localizedDescription
-    }
-
-    public static func ~= (lhs: ItemState, rhs: ItemState) -> Bool {
-        switch (lhs, rhs) {
-        case (.unknown, .unknown), (.readyToPlay, .readyToPlay), (.ended, .ended):
-            return true
-        case let (.failed(error: lhsError), .failed(error: rhsError)):
-            return areSimilar(lhsError, rhsError)
-        default:
-            return false
-        }
-    }
-}
-
-extension PlaybackState: Similar {
-    private static func areSimilar(_ lhsError: Error, _ rhsError: Error) -> Bool {
-        let nsLhsError = lhsError as NSError
-        let nsRhsError = rhsError as NSError
-        return nsLhsError.domain == nsRhsError.domain && nsLhsError.code == nsRhsError.code
-            && nsLhsError.localizedDescription == nsRhsError.localizedDescription
-    }
-
-    public static func ~= (lhs: PlaybackState, rhs: PlaybackState) -> Bool {
-        switch (lhs, rhs) {
-        case (.idle, .idle), (.playing, .playing), (.paused, .paused), (.ended, .ended):
-            return true
-        case let (.failed(error: lhsError), .failed(error: rhsError)):
-            return areSimilar(lhsError, rhsError)
-        default:
-            return false
-        }
-    }
-}
-
 extension AVPlayerItem: Similar {
     public static func ~= (lhs: AVPlayerItem, rhs: AVPlayerItem) -> Bool {
         if let lhsUrlAsset = lhs.asset as? AVURLAsset, let rhsUrlAsset = rhs.asset as? AVURLAsset {

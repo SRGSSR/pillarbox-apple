@@ -56,7 +56,7 @@ final class PlaybackStatePublisherTests: XCTestCase {
     func testPlaybackFailure() {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         let player = AVPlayer(playerItem: item)
-        expectSimilarPublished(
+        expectEqualPublished(
             values: [
                 .idle,
                 .failed(error: PlayerError.resourceNotFound)

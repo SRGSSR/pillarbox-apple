@@ -30,7 +30,7 @@ final class PlaybackStatePublisherQueueTests: XCTestCase {
         let item2 = AVPlayerItem(url: Stream.unavailable.url)
         let item3 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVQueuePlayer(items: [item1, item2, item3])
-        expectSimilarPublished(
+        expectEqualPublished(
             // The third item cannot be pre-buffered and goes through the usual states
             values: [
                 .idle, .playing, .ended,
