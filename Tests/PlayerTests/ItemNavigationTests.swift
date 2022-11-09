@@ -84,4 +84,21 @@ final class ItemNavigationTests: XCTestCase {
         expect(player.advanceToNextItem()).to(beFalse())
         expect(player.currentItem).to(equal(item2))
     }
+
+    func testAdvanceToFailingItem() {
+        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
+        let failingItem = PlayerItem(url: Stream.unavailable.url)
+        let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
+        let player = Player(items: [item1, failingItem, item2])
+        expect(player.advanceToNextItem()).to(beTrue())
+        expect(player.currentItem).toEventually(equal(item2))
+    }
+
+    func testAdvanceToFailingItemAtBack() {
+        let item = PlayerItem(url: Stream.item.url)
+        let failingItem = PlayerItem(url: Stream.unavailable.url)
+        let player = Player(items: [item, failingItem])
+        expect(player.advanceToNextItem()).to(beTrue())
+        expect(player.currentItem).toEventually(equal(failingItem))
+    }
 }
