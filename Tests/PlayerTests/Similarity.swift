@@ -11,13 +11,6 @@ import Core
 import CoreMedia
 import Circumspect
 
-func ~= (lhs: Error, rhs: Error) -> Bool {
-    let lhsError = lhs as NSError
-    let rhsError = rhs as NSError
-    return lhsError.domain == rhsError.domain && lhsError.code == rhsError.code
-        && lhsError.localizedDescription == rhsError.localizedDescription
-}
-
 extension Pulse: Similar {
     public static func ~= (lhs: Pulse, rhs: Pulse) -> Bool {
         Pulse.close(within: CMTime(value: 1, timescale: 2))(lhs, rhs)
@@ -25,12 +18,19 @@ extension Pulse: Similar {
 }
 
 extension ItemState: Similar {
+    private static func areSimilar(_ lhsError: Error, _ rhsError: Error) -> Bool {
+        let nsLhsError = lhsError as NSError
+        let nsRhsError = rhsError as NSError
+        return nsLhsError.domain == nsRhsError.domain && nsLhsError.code == nsRhsError.code
+            && nsLhsError.localizedDescription == nsRhsError.localizedDescription
+    }
+
     public static func ~= (lhs: ItemState, rhs: ItemState) -> Bool {
         switch (lhs, rhs) {
         case (.unknown, .unknown), (.readyToPlay, .readyToPlay), (.ended, .ended):
             return true
         case let (.failed(error: lhsError), .failed(error: rhsError)):
-            return lhsError ~= rhsError
+            return areSimilar(lhsError, rhsError)
         default:
             return false
         }
@@ -38,12 +38,19 @@ extension ItemState: Similar {
 }
 
 extension PlaybackState: Similar {
+    private static func areSimilar(_ lhsError: Error, _ rhsError: Error) -> Bool {
+        let nsLhsError = lhsError as NSError
+        let nsRhsError = rhsError as NSError
+        return nsLhsError.domain == nsRhsError.domain && nsLhsError.code == nsRhsError.code
+            && nsLhsError.localizedDescription == nsRhsError.localizedDescription
+    }
+
     public static func ~= (lhs: PlaybackState, rhs: PlaybackState) -> Bool {
         switch (lhs, rhs) {
         case (.idle, .idle), (.playing, .playing), (.paused, .paused), (.ended, .ended):
             return true
         case let (.failed(error: lhsError), .failed(error: rhsError)):
-            return lhsError ~= rhsError
+            return areSimilar(lhsError, rhsError)
         default:
             return false
         }
