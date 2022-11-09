@@ -23,6 +23,6 @@ final class HTTPURLResponseTests: XCTestCase {
     }
 
     func testNetworkLocalizedStringForInvalidKey() {
-        expect(HTTPURLResponse.coreNetworkLocalizedString(forKey: "Some key which does not exist")).to(beNil())
+        expect(HTTPURLResponse.coreNetworkLocalizedString(forKey: "Some key which does not exist")).to(equal("Unknown error"))
     }
 }
