@@ -11,6 +11,7 @@ import UserInterface
 
 // MARK: View
 
+// Behavior: h-exp, v-exp
 @MainActor
 struct WrappedView: View {
     let media: Media

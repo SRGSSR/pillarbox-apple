@@ -11,6 +11,7 @@ import UserInterface
 
 // MARK: View
 
+// Behavior: h-exp, v-exp
 struct PlayerView: View {
     let medias: [Media]
 
@@ -51,6 +52,7 @@ struct PlayerView: View {
 }
 
 private extension PlayerView {
+    // Behavior: h-exp, v-exp
     struct ContentView: View {
         @ObservedObject var player: Player
         @State private var isUserInterfaceHidden = false
@@ -65,19 +67,20 @@ private extension PlayerView {
                     isUserInterfaceHidden.toggle()
                 }
                 .ignoresSafeArea()
-    #if os(iOS)
+#if os(iOS)
                 HStack {
                     SliderView(player: player)
                     LiveLabel(player: player)
                 }
                 .opacity(isUserInterfaceHidden ? 0 : 1)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-    #endif
+#endif
             }
             .animation(.easeInOut(duration: 0.2), value: isUserInterfaceHidden)
         }
     }
 
+    // Behavior: h-hug, v-hug
     struct ControlsView: View {
         @ObservedObject var player: Player
         let isUserInterfaceHidden: Bool
@@ -101,6 +104,7 @@ private extension PlayerView {
         }
     }
 
+    // Behavior: h-exp, v-exp
     struct MessageView: View {
         let message: String
 
@@ -113,6 +117,7 @@ private extension PlayerView {
         }
     }
 
+    // Behavior: h-hug, v-hug
     struct NextButton: View {
         @ObservedObject var player: Player
 
@@ -132,6 +137,7 @@ private extension PlayerView {
         }
     }
 
+    // Behavior: h-hug, v-hug
     struct PlaybackButton: View {
         @ObservedObject var player: Player
 
@@ -154,6 +160,7 @@ private extension PlayerView {
         }
     }
 
+    // Behavior: h-hug, v-hug
     struct PreviousButton: View {
         @ObservedObject var player: Player
 
@@ -173,6 +180,7 @@ private extension PlayerView {
         }
     }
 
+    // Behavior: h-hug, v-hug
     struct LiveLabel: View {
         @ObservedObject var player: Player
 
@@ -191,6 +199,7 @@ private extension PlayerView {
         }
     }
 
+    // Behavior: h-exp, v-hug
     @available(tvOS, unavailable)
     struct SliderView: View {
         private static let blankTime = "--:--"
@@ -238,7 +247,9 @@ private extension PlayerView {
                         }
                     )
                 case .unknown:
+                    // `EmptyView` has h-hug, v-hug behavior.
                     EmptyView()
+                        .frame(maxWidth: .infinity)
                 default:
                     Slider(player: player, label: {
                         Text("Progress")

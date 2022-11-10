@@ -11,6 +11,7 @@ import UserInterface
 
 // MARK: View
 
+// Behavior: h-exp, v-exp
 struct MultiView: View {
     let media1: Media
     let media2: Media

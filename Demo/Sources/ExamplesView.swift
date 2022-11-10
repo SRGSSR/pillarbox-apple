@@ -8,6 +8,7 @@ import SwiftUI
 
 // MARK: View
 
+// Behavior: h-exp, v-exp
 struct ExamplesView: View {
     var body: some View {
         List(Example.examples) { example in
@@ -20,11 +21,12 @@ struct ExamplesView: View {
 // MARK: Cells
 
 private extension ExamplesView {
+    // Behavior: h-hug, v-hug
     struct ExampleCell: View {
         let example: Example
-        
+
         @State var isPlayerPresented = false
-        
+
         var body: some View {
             Button(action: play) {
                 VStack(alignment: .leading) {
@@ -39,7 +41,7 @@ private extension ExamplesView {
                 PlayerView(media: example.media)
             }
         }
-        
+
         private func play() {
             isPlayerPresented.toggle()
         }
@@ -157,7 +159,7 @@ private extension ExamplesView {
                 media: .empty
             )
         ]
-        
+
         let id = UUID()
         let title: String
         let description: String

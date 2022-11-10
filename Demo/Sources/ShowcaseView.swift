@@ -8,6 +8,7 @@ import SwiftUI
 
 // MARK: View
 
+// Behavior: h-exp, v-exp
 struct ShowcaseView: View {
     var body: some View {
         List {
@@ -62,6 +63,7 @@ struct ShowcaseView: View {
 // MARK: View
 
 private extension ShowcaseView {
+    // Behavior: h-hug, v-hug
     struct Cell<Presented: View>: View {
         let title: String
 

@@ -11,6 +11,7 @@ import UserInterface
 
 // MARK: View
 
+// Behavior: h-exp, v-exp
 struct StoriesView: View {
     @StateObject private var model = StoriesViewModel(stories: Story.stories(from: MediaURLPlaylist.videos))
 
@@ -28,6 +29,7 @@ struct StoriesView: View {
 }
 
 private extension StoriesView {
+    // Behavior: h-exp, v-exp
     struct StoryView: View {
         @ObservedObject var player: Player
 

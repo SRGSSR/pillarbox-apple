@@ -11,6 +11,7 @@ import UserInterface
 
 // MARK: View
 
+// Behavior: h-exp, v-exp
 struct TwinsView: View {
     let media: Media
 

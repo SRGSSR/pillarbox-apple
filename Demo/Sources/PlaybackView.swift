@@ -10,6 +10,7 @@ import UserInterface
 
 // MARK: View
 
+// Behavior: h-exp, v-exp
 struct PlaybackView: View {
     @ObservedObject var player: Player
 
