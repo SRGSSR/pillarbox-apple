@@ -15,3 +15,4 @@
 - [ ] The documentation has been updated (if relevant).
 - [ ] New unit tests have been written (if relevant).
 - [ ] The demo has been updated (if relevant).
+- [ ] The playground has been updated (if relevant).
