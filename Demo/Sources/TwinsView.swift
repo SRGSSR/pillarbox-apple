@@ -11,6 +11,7 @@ import UserInterface
 
 // MARK: View
 
+// Behavior: h-exp, v-exp
 struct TwinsView: View {
     let media: Media
 
@@ -55,7 +56,7 @@ struct TwinsView: View {
 
 // MARK: Types
 
-extension TwinsView {
+private extension TwinsView {
     enum Mode {
         case both
         case top

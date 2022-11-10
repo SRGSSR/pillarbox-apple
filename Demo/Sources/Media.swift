@@ -91,7 +91,7 @@ enum MediaURNPlaylist {
     ]
 }
 
-// MARK: Media
+// MARK: Types
 
 enum Media: Hashable {
     case empty

@@ -8,6 +8,7 @@ import SwiftUI
 
 // MARK: View
 
+// Behavior: h-exp, v-exp
 struct PlaylistView: View {
     let medias: [Media]
 

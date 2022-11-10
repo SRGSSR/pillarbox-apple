@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-// Remark: This Playground does not compile with the Pillarbox-demo scheme selected.
+// ⚠️ This Playground does not compile with the Pillarbox-demo scheme selected.
 
 import AVFoundation
 import Player
@@ -21,7 +21,7 @@ import SwiftUI
 
 struct PlayerView: View {
     @StateObject private var player = Player(
-        item: AVPlayerItem(url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!)
+        item: PlayerItem(url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!)
     )
 
     private var playbackButtonImage: String? {

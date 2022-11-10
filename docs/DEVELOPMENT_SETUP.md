@@ -23,6 +23,10 @@ ffmpeg, swiftlint, shellcheck and yamllint can easily be installed with [Homebre
 
 The project provides a demo application which can be run to test features offered by the Pillarbox package.
 
+## Playground
+
+A playground can be used to visualize Swift body refreshes.
+
 ## Unit tests
 
 Unit tests are provided with the Pillarbox package. Since Apple players [cannot play local manifests](https://developer.apple.com/forums/thread/69357?answerId=202051022#202051022) we are using Python to run a simple [web server](https://docs.python.org/3/library/http.server.html) serving various [test streams](TEST_STREAM_GENERATION.md) from a local directory.
@@ -70,3 +74,7 @@ We are currently using [cloud signing](https://developer.apple.com/wwdc21/10204)
 ## Timelane
 
 The project supports instrumentation with [Timelane](https://timelane.tools). Simply follow the  instructions to install the dedicated instrument so that you can inspect player events directly within Instruments.
+
+## Other resources
+
+SwiftUI view behavior is documented with the terminology introduced in the [following article](http://defagos.github.io/understanding_swiftui_layout_behaviors).

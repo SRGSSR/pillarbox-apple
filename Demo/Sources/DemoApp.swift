@@ -6,27 +6,7 @@
 
 import SwiftUI
 
-private struct MediasTab: View {
-    var body: some View {
-        Navigation {
-            ExamplesView()
-        }
-        .tabItem {
-            Label("Examples", systemImage: "list.and.film")
-        }
-    }
-}
-
-private struct ShowcaseTab: View {
-    var body: some View {
-        Navigation {
-            ShowcaseView()
-        }
-        .tabItem {
-            Label("Showcase", systemImage: "text.book.closed")
-        }
-    }
-}
+// MARK: Application
 
 @main
 struct DemoApp: App {
@@ -37,6 +17,32 @@ struct DemoApp: App {
             TabView {
                 MediasTab()
                 ShowcaseTab()
+            }
+        }
+    }
+}
+
+// MARK: Tabs
+
+private extension DemoApp {
+    struct MediasTab: View {
+        var body: some View {
+            Navigation {
+                ExamplesView()
+            }
+            .tabItem {
+                Label("Examples", systemImage: "list.and.film")
+            }
+        }
+    }
+
+    struct ShowcaseTab: View {
+        var body: some View {
+            Navigation {
+                ShowcaseView()
+            }
+            .tabItem {
+                Label("Showcase", systemImage: "text.book.closed")
             }
         }
     }
