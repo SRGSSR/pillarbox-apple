@@ -74,3 +74,7 @@ We are currently using [cloud signing](https://developer.apple.com/wwdc21/10204)
 ## Timelane
 
 The project supports instrumentation with [Timelane](https://timelane.tools). Simply follow the  instructions to install the dedicated instrument so that you can inspect player events directly within Instruments.
+
+## Other resources
+
+SwiftUI view behavior is documented with the terminology introduced in the [following article](http://defagos.github.io/understanding_swiftui_layout_behaviors).
