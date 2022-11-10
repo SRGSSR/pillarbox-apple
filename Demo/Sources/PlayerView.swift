@@ -68,11 +68,12 @@ private extension PlayerView {
                 }
                 .ignoresSafeArea()
 #if os(iOS)
-                HStack {
+                HStack(spacing: 0) {
                     SliderView(player: player)
                     LiveLabel(player: player)
                 }
                 .opacity(isUserInterfaceHidden ? 0 : 1)
+                .padding(.horizontal, 6)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
 #endif
             }
