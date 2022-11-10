@@ -6,6 +6,8 @@
 
 import SwiftUI
 
+// MARK: View
+
 struct Navigation<Content: View>: View {
     let content: Content
 

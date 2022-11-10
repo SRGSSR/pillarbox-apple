@@ -9,14 +9,7 @@ import Foundation
 import OrderedCollections
 import Player
 
-struct Story: Identifiable, Hashable {
-    let id: Int
-    let source: Media
-
-    static func stories(from medias: [Media]) -> [Story] {
-        medias.enumerated().map { Story(id: $0, source: $1) }
-    }
-}
+// MARK: View model
 
 @MainActor
 final class StoriesViewModel: ObservableObject {

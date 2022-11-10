@@ -55,7 +55,7 @@ struct TwinsView: View {
 
 // MARK: Types
 
-extension TwinsView {
+private extension TwinsView {
     enum Mode {
         case both
         case top
