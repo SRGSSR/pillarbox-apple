@@ -27,9 +27,7 @@ private struct ContentView: View {
             .ignoresSafeArea()
 #if os(iOS)
             HStack {
-                Slider(player: player)
-                    .tint(.white)
-                    .padding()
+                SliderView(player: player)
                 LiveLabel(player: player)
             }
             .opacity(isUserInterfaceHidden ? 0 : 1)
@@ -149,6 +147,75 @@ private struct LiveLabel: View {
                     .cornerRadius(4)
             }
             .disabled(!player.canSkipToLive())
+        }
+    }
+}
+
+@available(tvOS, unavailable)
+private struct SliderView: View {
+    private static let blankTime = "--:--"
+
+    private static let shortFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.second, .minute]
+        formatter.zeroFormattingBehavior = .pad
+        return formatter
+    }()
+
+    private static let longFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.second, .minute, .hour]
+        formatter.zeroFormattingBehavior = .pad
+        return formatter
+    }()
+
+    @ObservedObject var player: Player
+
+    private var formattedElapsedTime: String {
+        guard let time = player.time, let timeRange = player.timeRange else { return Self.blankTime }
+        return Self.formattedDuration(CMTimeGetSeconds(time - timeRange.start))
+    }
+
+    private var formattedTotalTime: String {
+        guard let timeRange = player.timeRange else { return Self.blankTime }
+        return Self.formattedDuration(CMTimeGetSeconds(timeRange.duration))
+    }
+
+    var body: some View {
+        Group {
+            switch player.streamType {
+            case .onDemand:
+                Slider(
+                    player: player,
+                    label: {
+                        Text("Progress")
+                    },
+                    minimumValueLabel: {
+                        Text(formattedElapsedTime)
+                    },
+                    maximumValueLabel: {
+                        Text(formattedTotalTime)
+                    }
+                )
+            case .unknown:
+                EmptyView()
+            default:
+                Slider(player: player, label: {
+                    Text("Progress")
+                })
+            }
+        }
+        .foregroundColor(.white)
+        .tint(.white)
+        .padding()
+    }
+
+    private static func formattedDuration(_ duration: TimeInterval) -> String {
+        if duration < 60 * 60 {
+            return shortFormatter.string(from: duration)!
+        }
+        else {
+            return longFormatter.string(from: duration)!
         }
     }
 }
