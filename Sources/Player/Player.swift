@@ -242,14 +242,16 @@ public final class Player: ObservableObject {
         rawPlayer.seek(
             to: pulse.timeRange.end,
             toleranceBefore: .positiveInfinity,
-            toleranceAfter: .positiveInfinity,
-            completionHandler: completionHandler
-        )
+            toleranceAfter: .positiveInfinity
+        ) { [weak self] finished in
+            self?.play()
+            completionHandler(finished)
+        }
         return true
     }
 
-    /// Return the current item to live conditions. Does nothing if the current item is not a livestream or does not
-    /// support DVR.
+    /// Return the current item to live conditions, resuming playback if needed. Does nothing if the current item is
+    ///  not a livestream or does not support DVR.
     /// - Returns: `true` if skipping to live conditions is possible.
     @discardableResult
     public func skipToLive() async -> Bool {
