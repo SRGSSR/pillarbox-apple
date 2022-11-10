@@ -111,5 +111,6 @@ final class PlayerSkipToLiveTests: XCTestCase {
         }
 
         expect(player.canSkipToLive()).toAlways(beFalse())
+        expect(player.playbackState).to(equal(.playing))
     }
 }
