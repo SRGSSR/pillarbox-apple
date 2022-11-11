@@ -50,11 +50,11 @@ enum ItemState: Equatable {
         }
     }
 
-    static func friendlyComment(from comment: String?) -> String? {
+    static func innerComment(from comment: String?) -> String? {
         // For some reason extended delimiters are currently required for compilation to succeed in Swift Packages.
-        let regex = #/.* \(.* -?\d+ - (.*)\)/#
+        let regex = #/[^\(\)]* \([^\(\)]* -?\d+ - (.*)\)/#
         guard let comment, let result = try? regex.wholeMatch(in: comment) else { return comment }
-        return String(result.1)
+        return innerComment(from: String(result.1))
     }
 
     static func localizedError(from error: Error) -> Error {
@@ -72,7 +72,7 @@ enum ItemState: Equatable {
     }
 
     private static func userInfo(for event: AVPlayerItemErrorLogEvent) -> [String: Any] {
-        guard let comment = friendlyComment(from: event.errorComment) else { return [:] }
+        guard let comment = innerComment(from: event.errorComment) else { return [:] }
         return [NSLocalizedDescriptionKey: comment]
     }
 
