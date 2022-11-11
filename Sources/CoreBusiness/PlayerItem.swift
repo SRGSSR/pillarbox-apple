@@ -7,9 +7,9 @@
 import AVFoundation
 import Player
 
-public extension PlayerItem {
-    // swiftlint:disable discouraged_optional_collection
+// swiftlint:disable discouraged_optional_collection
 
+public extension PlayerItem {
     /// Create a player item from a URN played in the specified environment.
     /// - Parameters:
     ///   - urn: The URN to play.
@@ -21,8 +21,6 @@ public extension PlayerItem {
             .map { Self.playerItem(for: $0, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys) }
         self.init(publisher: publisher)
     }
-
-    // swiftlint:enable discouraged_optional_collection
 
     private static func url(for resource: Resource) -> URL {
         switch resource.tokenType {
@@ -56,3 +54,5 @@ public extension PlayerItem {
         return item
     }
 }
+
+// swiftlint:enable discouraged_optional_collection

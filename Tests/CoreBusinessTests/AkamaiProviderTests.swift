@@ -16,5 +16,3 @@ final class AkamaiProviderTests: XCTestCase {
         )
     }
 }
-
-

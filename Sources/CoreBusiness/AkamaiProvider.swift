@@ -52,8 +52,7 @@ final class AkamaiProvider {
             .decode(type: TokenPayload.self, decoder: JSONDecoder())
             .map(\.token)
             .tryMap { token in
-                guard let queryItems = token.queryItems(),
-                      let tokenizedUrl = Self.mergeQueryItems(queryItems, into: url) else {
+                guard let tokenizedUrl = Self.mergeQueryItems(token.queryItems(), into: url) else {
                     throw TokenError.malformedParameters
                 }
                 return tokenizedUrl

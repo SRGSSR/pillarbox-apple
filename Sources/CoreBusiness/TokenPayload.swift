@@ -9,10 +9,10 @@ import Foundation
 struct Token: Decodable {
     private let authparams: String
 
-    func queryItems() -> [URLQueryItem]? {
+    func queryItems() -> [URLQueryItem] {
         var components = URLComponents()
         components.query = authparams
-        return components.queryItems
+        return components.queryItems ?? []
     }
 }
 

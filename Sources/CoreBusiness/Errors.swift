@@ -6,6 +6,10 @@
 
 import Foundation
 
+enum TokenError: Error {
+    case malformedParameters
+}
+
 struct DataError: LocalizedError {
     static var noResourceAvailable: Self {
         DataError(errorDescription: NSLocalizedString(
@@ -29,8 +33,4 @@ struct DataError: LocalizedError {
     static func blocked(withMessage message: String) -> Self {
         DataError(errorDescription: message)
     }
-}
-
-enum TokenError: Error {
-    case malformedParameters
 }
