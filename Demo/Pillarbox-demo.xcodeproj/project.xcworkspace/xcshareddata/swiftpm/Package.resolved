@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Quick/Nimble.git",
       "state" : {
-        "revision" : "1f3bde57bde12f5e7b07909848c071e9b73d6edc",
-        "version" : "10.0.0"
+        "revision" : "e669a59a2a82490343885e7c8fc438d45a1101a8",
+        "version" : "11.1.1"
       }
     },
     {
