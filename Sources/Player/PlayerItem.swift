@@ -9,21 +9,18 @@ import Combine
 
 private var kIdKey: Void?
 
-// swiftlint:disable discouraged_optional_collection
-
 /// An item which stores its own custom resource loader delegate.
 final class ResourceLoadedPlayerItem: AVPlayerItem {
     private let resourceLoaderDelegate: AVAssetResourceLoaderDelegate
 
     init(url: URL, resourceLoaderDelegate: AVAssetResourceLoaderDelegate, automaticallyLoadedAssetKeys: [String]?) {
+        // swiftlint:disable:previous discouraged_optional_collection
         self.resourceLoaderDelegate = resourceLoaderDelegate
         let asset = AVURLAsset(url: url)
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: .global(qos: .userInitiated))
         super.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
     }
 }
-
-// swiftlint:enable discouraged_optional_collection
 
 /// An item to be inserted into the player.
 public final class PlayerItem: Equatable {
@@ -66,8 +63,6 @@ public final class PlayerItem: Equatable {
     }
 }
 
-// swiftlint:disable discouraged_optional_collection
-
 public extension AVPlayerItem {
     /// An item which never finishes loading.
     static var loading: AVPlayerItem {
@@ -97,6 +92,7 @@ public extension AVPlayerItem {
         url: URL,
         resourceLoaderDelegate: AVAssetResourceLoaderDelegate? = nil,
         automaticallyLoadedAssetKeys: [String]? = nil
+        // swiftlint:disable:previous discouraged_optional_collection
     ) -> AVPlayerItem {
         if let resourceLoaderDelegate {
             return ResourceLoadedPlayerItem(
@@ -121,6 +117,7 @@ public extension PlayerItem {
     ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play. If `nil` default
     ///     keys are loaded.
     convenience init(url: URL, automaticallyLoadedAssetKeys: [String]? = nil) {
+        // swiftlint:disable:previous discouraged_optional_collection
         let item = Self.item(url: url, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
         self.init(item)
     }
@@ -131,6 +128,7 @@ public extension PlayerItem {
     ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play. If `nil` default
     ///     keys are loaded.
     convenience init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]? = nil) {
+        // swiftlint:disable:previous discouraged_optional_collection
         let item = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
         self.init(item)
     }
@@ -145,6 +143,7 @@ public extension PlayerItem {
     }
 
     private static func item(url: URL, automaticallyLoadedAssetKeys: [String]?) -> AVPlayerItem {
+        // swiftlint:disable:previous discouraged_optional_collection
         if let automaticallyLoadedAssetKeys {
             return AVPlayerItem(url: url, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
         }
@@ -153,8 +152,6 @@ public extension PlayerItem {
         }
     }
 }
-
-// swiftlint:enable discouraged_optional_collection
 
 extension AVPlayerItem {
     /// An identifier to identify player items delivered by the same pipeline.

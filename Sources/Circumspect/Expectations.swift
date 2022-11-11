@@ -8,8 +8,6 @@ import Combine
 import Difference
 import XCTest
 
-// swiftlint:disable prefer_nimble
-
 public extension XCTestCase {
     /// Wait for a publisher to emit at least a list of expected values.
     func expectAtLeastPublished<P: Publisher>(
@@ -166,6 +164,7 @@ public extension XCTestCase {
             guard actualValues.count == values.count else { return false }
             return zip(actualValues, values).allSatisfy { satisfy($0, $1) }
         }()
+        // swiftlint:disable:next prefer_nimble
         XCTAssert(
             assertExpression,
             diff(values, actualValues).joined(separator: ", "),
@@ -331,6 +330,7 @@ public extension XCTestCase {
             guard actualValues.count == values.count else { return false }
             return zip(actualValues, values).allSatisfy { satisfy($0, $1) }
         }()
+        // swiftlint:disable:next prefer_nimble
         XCTAssert(
             assertExpression,
             diff(values, actualValues).joined(separator: ", "),
@@ -493,6 +493,7 @@ public extension XCTestCase {
             guard actualValues.count == values.count else { return false }
             return zip(actualValues, values).allSatisfy { satisfy($0, $1) }
         }()
+        // swiftlint:disable:next prefer_nimble
         XCTAssert(
             assertExpression,
             diff(values, actualValues).joined(separator: ", "),
@@ -551,6 +552,7 @@ public extension XCTestCase {
         if next, !actualValues.isEmpty {
             actualValues.removeFirst()
         }
+        // swiftlint:disable:next prefer_nimble
         XCTAssertTrue(
             actualValues.isEmpty,
             "expected no values but got \(actualValues)",
@@ -607,6 +609,7 @@ public extension XCTestCase {
                 XCTFail("The publisher incorrectly succeeded", file: file, line: line)
             case let .failure(actualError):
                 if let error {
+                    // swiftlint:disable:next prefer_nimble
                     XCTAssertEqual(error as NSError, actualError as NSError, file: file, line: line)
                 }
             }
@@ -697,5 +700,3 @@ public extension XCTestCase {
         )
     }
 }
-
-// swiftlint:enable prefer_nimble
