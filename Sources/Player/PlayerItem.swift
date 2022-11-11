@@ -9,10 +9,11 @@ import Combine
 
 private var kIdKey: Void?
 
-final class URLPlayerItem: AVPlayerItem {
+/// An item which stores its own custom resource loader delegate.
+final class ResourceLoadedPlayerItem: AVPlayerItem {
     private let resourceLoaderDelegate: AVAssetResourceLoaderDelegate
 
-    init(url: URL, resourceLoaderDelegate: AVAssetResourceLoaderDelegate, automaticallyLoadedAssetKeys: [String]? = nil) {
+    init(url: URL, resourceLoaderDelegate: AVAssetResourceLoaderDelegate, automaticallyLoadedAssetKeys: [String]?) {
         self.resourceLoaderDelegate = resourceLoaderDelegate
         let asset = AVURLAsset(url: url)
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: .global(qos: .userInitiated))
@@ -75,14 +76,35 @@ public extension AVPlayerItem {
     static var loading: AVPlayerItem {
         // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
         let url = URL(string: "pillarbox://loading.m3u8")!
-        return URLPlayerItem(url: url, resourceLoaderDelegate: LoadingResourceLoaderDelegate())
+        return ResourceLoadedPlayerItem(url: url, resourceLoaderDelegate: LoadingResourceLoaderDelegate(), automaticallyLoadedAssetKeys: nil)
     }
 
     /// An item which immediately fails with a specific error.
     static func failing(error: Error) -> AVPlayerItem {
         // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
         let url = URL(string: "pillarbox://failing.m3u8")!
-        return URLPlayerItem(url: url, resourceLoaderDelegate: FailingResourceLoaderDelegate(error: error))
+        return ResourceLoadedPlayerItem(url: url, resourceLoaderDelegate: FailingResourceLoaderDelegate(error: error), automaticallyLoadedAssetKeys: nil)
+    }
+
+    /// An item which loads the specified URL (with an optionally associated resource loader delegate).
+    static func loading(
+        url: URL,
+        resourceLoaderDelegate: AVAssetResourceLoaderDelegate? = nil,
+        automaticallyLoadedAssetKeys: [String]? = nil
+    ) -> AVPlayerItem {
+        if let resourceLoaderDelegate {
+            return ResourceLoadedPlayerItem(
+                url: url,
+                resourceLoaderDelegate: resourceLoaderDelegate,
+                automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys
+            )
+        }
+        else if let automaticallyLoadedAssetKeys {
+            return AVPlayerItem(url: url, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+        }
+        else {
+            return AVPlayerItem(url: url)
+        }
     }
 }
 
