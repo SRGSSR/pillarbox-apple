@@ -574,8 +574,8 @@ public extension XCTestCase {
             switch completion {
             case .finished:
                 break
-            case .failure:
-                XCTFail("The publisher incorrectly failed", file: file, line: line)
+            case let .failure(error):
+                XCTFail("The publisher incorrectly failed with error: \(error)", file: file, line: line)
             }
             expectation.fulfill()
         } receiveValue: { _ in
