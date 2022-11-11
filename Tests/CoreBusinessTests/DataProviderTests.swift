@@ -35,4 +35,10 @@ final class DataProviderTests: XCTestCase {
             from: DataProvider().playableMediaComposition(forUrn: "urn:rts:video:13382911")
         )
     }
+
+    func testTokenizeUrl() {
+        expectSuccess(
+            from: DataProvider().tokenizeUrl(URL(string: "https://srgssrch.akamaized.net/hls/live/2022017/srgssr-hls-stream13-ch-dvr/master.m3u8")!)
+        )
+    }
 }
