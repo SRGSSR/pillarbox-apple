@@ -11,8 +11,6 @@ import CoreMedia
 import Nimble
 import XCTest
 
-// TODO: Write tests for async API once Nimble has been updated with async / await support (version 11).
-
 @MainActor
 final class PlayerSkipToLiveTests: XCTestCase {
     func testCannotSkipToLiveWhenEmpty() {
@@ -52,6 +50,15 @@ final class PlayerSkipToLiveTests: XCTestCase {
         }
 
         expect(player.canSkipToLive()).toAlways(beTrue())
+    }
+
+    func testCanSkipToLiveForDvrInPastConditionsAsync() async {
+        let item = PlayerItem(url: Stream.dvr.url)
+        let player = Player(item: item)
+        await expect(player.time).toNotEventually(equal(.zero))
+        let seeked = await player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero)
+        await expect(seeked).to(beTrue())
+        await expect(player.canSkipToLive()).toAlways(beTrue())
     }
 
     func testSkipToLiveWhenEmpty() {
@@ -112,5 +119,17 @@ final class PlayerSkipToLiveTests: XCTestCase {
 
         expect(player.canSkipToLive()).toAlways(beFalse())
         expect(player.playbackState).to(equal(.playing))
+    }
+
+    func testSkipToLiveForDvrInPastConditionsAsync() async {
+        let item = PlayerItem(url: Stream.dvr.url)
+        let player = Player(item: item)
+        await expect(player.time).toNotEventually(equal(.zero))
+        let seeked = await player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero)
+        await expect(seeked).to(beTrue())
+        let skipped = await player.skipToLive()
+        await expect(skipped).to(beTrue())
+        await expect(player.canSkipToLive()).toAlways(beFalse())
+        await expect(player.playbackState).to(equal(.playing))
     }
 }

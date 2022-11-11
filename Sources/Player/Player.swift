@@ -256,11 +256,13 @@ public final class Player: ObservableObject {
     @discardableResult
     public func skipToLive() async -> Bool {
         guard canSkipToLive(), let pulse else { return false }
-        return await rawPlayer.seek(
+        let seeked = await rawPlayer.seek(
             to: pulse.timeRange.end,
             toleranceBefore: .positiveInfinity,
             toleranceAfter: .positiveInfinity
         )
+        rawPlayer.play()
+        return seeked
     }
 
     /// Return a publisher periodically emitting the current time while the player is active.

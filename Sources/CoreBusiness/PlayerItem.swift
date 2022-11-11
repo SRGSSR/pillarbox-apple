@@ -7,8 +7,6 @@
 import AVFoundation
 import Player
 
-// swiftlint:disable discouraged_optional_collection
-
 public extension PlayerItem {
     /// Create a player item from a URN played in the specified environment.
     /// - Parameters:
@@ -17,6 +15,7 @@ public extension PlayerItem {
     ///     keys are loaded.
     ///   - environment: The environment which the URN is played from.
     convenience init(urn: String, automaticallyLoadedAssetKeys: [String]? = nil, environment: Environment = .production) {
+        // swiftlint:disable:previous discouraged_optional_collection
         let publisher = DataProvider(environment: environment).recommendedPlayableResource(forUrn: urn)
             .map { Self.playerItem(for: $0, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys) }
         self.init(publisher: publisher)
@@ -41,6 +40,7 @@ public extension PlayerItem {
     }
 
     private static func playerItem(for resource: Resource, automaticallyLoadedAssetKeys: [String]?) -> AVPlayerItem {
+        // swiftlint:disable:previous discouraged_optional_collection
         let item = AVPlayerItem.loading(
             url: url(for: resource),
             resourceLoaderDelegate: resourceLoaderDelegate(for: resource)
@@ -54,5 +54,3 @@ public extension PlayerItem {
         return item
     }
 }
-
-// swiftlint:enable discouraged_optional_collection

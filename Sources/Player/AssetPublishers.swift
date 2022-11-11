@@ -7,8 +7,6 @@
 import AVFoundation
 import Combine
 
-// swiftlint:disable large_tuple
-
 public extension AVAsset {
     /// Produce a given asset property.
     func propertyPublisher<T>(_ property: AVAsyncProperty<AVAsset, T>) -> AnyPublisher<T, Error> {
@@ -51,6 +49,7 @@ public extension AVAsset {
         _ propertyB: AVAsyncProperty<AVAsset, B>,
         _ propertyC: AVAsyncProperty<AVAsset, C>
     ) -> AnyPublisher<(A, B, C), Error> {
+        // swiftlint:disable:previous large_tuple
         Future { promise in
             Task {
                 do {
@@ -72,6 +71,7 @@ public extension AVAsset {
         _ propertyC: AVAsyncProperty<AVAsset, C>,
         _ propertyD: AVAsyncProperty<AVAsset, D>
     ) -> AnyPublisher<(A, B, C, D), Error> {
+        // swiftlint:disable:previous large_tuple
         Future { promise in
             Task {
                 do {
@@ -94,6 +94,7 @@ public extension AVAsset {
         _ propertyD: AVAsyncProperty<AVAsset, D>,
         _ propertyE: AVAsyncProperty<AVAsset, E>
     ) -> AnyPublisher<(A, B, C, D, E), Error> {
+        // swiftlint:disable:previous large_tuple
         Future { promise in
             Task {
                 do {
@@ -117,6 +118,7 @@ public extension AVAsset {
         _ propertyE: AVAsyncProperty<AVAsset, E>,
         _ propertyF: AVAsyncProperty<AVAsset, F>
     ) -> AnyPublisher<(A, B, C, D, E, F), Error> {
+        // swiftlint:disable:previous large_tuple
         Future { promise in
             Task {
                 do {
@@ -141,6 +143,7 @@ public extension AVAsset {
         _ propertyF: AVAsyncProperty<AVAsset, F>,
         _ propertyG: AVAsyncProperty<AVAsset, G>
     ) -> AnyPublisher<(A, B, C, D, E, F, G), Error> {
+        // swiftlint:disable:previous large_tuple
         Future { promise in
             Task {
                 do {
@@ -168,6 +171,7 @@ public extension AVAsset {
         _ propertyG: AVAsyncProperty<AVAsset, G>,
         _ propertyH: AVAsyncProperty<AVAsset, H>
     ) -> AnyPublisher<(A, B, C, D, E, F, G, H), Error> {
+        // swiftlint:disable:previous large_tuple
         Future { promise in
             Task {
                 do {
@@ -184,5 +188,3 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 }
-
-// swiftlint:enable large_tuple

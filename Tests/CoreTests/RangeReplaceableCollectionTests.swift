@@ -36,12 +36,14 @@ final class RangeReplaceableCollectionTests: XCTestCase {
     }
 
     func testMoveFromInvalidIndex() {
+        guard nimbleThrowAssertionsEnabled() else { return }
         var array = [1, 2, 3, 4, 5, 6, 7]
         expect(array.move(from: -1, to: 2)).to(throwAssertion())
         expect(array.move(from: 8, to: 2)).to(throwAssertion())
     }
 
     func testMoveToInvalidIndex() {
+        guard nimbleThrowAssertionsEnabled() else { return }
         var array = [1, 2, 3, 4, 5, 6, 7]
         expect(array.move(from: 2, to: -1)).to(throwAssertion())
         expect(array.move(from: 2, to: 8)).to(throwAssertion())

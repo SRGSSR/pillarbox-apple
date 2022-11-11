@@ -228,7 +228,7 @@ def run_package_tests(platform_id, scheme_name)
 end
 
 def run_all_tests(platform_id)
-  run_package_tests(platform_id, 'Pillarbox-Package')
+  run_package_tests(platform_id, 'Pillarbox-Package-NoDebug')
 end
 
 # -- GitHub comment builders
