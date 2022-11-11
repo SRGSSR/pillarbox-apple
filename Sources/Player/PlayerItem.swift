@@ -9,35 +9,20 @@ import Combine
 
 private var kIdKey: Void?
 
-/// An item which never loads.
-final class LoadingPlayerItem: AVPlayerItem {
+final class URLPlayerItem: AVPlayerItem {
     private let resourceLoaderDelegate: AVAssetResourceLoaderDelegate
 
-    init() {
-        resourceLoaderDelegate = LoadingResourceLoaderDelegate()
-        // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-        let asset = AVURLAsset(url: URL(string: "pillarbox://loading.m3u8")!)
+    init(url: URL, resourceLoaderDelegate: AVAssetResourceLoaderDelegate, automaticallyLoadedAssetKeys: [String]? = nil) {
+        self.resourceLoaderDelegate = resourceLoaderDelegate
+        let asset = AVURLAsset(url: url)
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: .global(qos: .userInitiated))
-        super.init(asset: asset, automaticallyLoadedAssetKeys: nil)
-    }
-}
-
-/// An item which immediately fails with a specific error.
-final class FailingPlayerItem: AVPlayerItem {
-    private let resourceLoaderDelegate: AVAssetResourceLoaderDelegate
-
-    init(error: Error) {
-        resourceLoaderDelegate = FailingResourceLoaderDelegate(error: error)
-        // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-        let asset = AVURLAsset(url: URL(string: "pillarbox://failing.m3u8")!)
-        asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: .global(qos: .userInitiated))
-        super.init(asset: asset, automaticallyLoadedAssetKeys: nil)
+        super.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
     }
 }
 
 /// An item to be inserted into the player.
 public final class PlayerItem: Equatable {
-    @Published var playerItem: AVPlayerItem = LoadingPlayerItem()
+    @Published var playerItem: AVPlayerItem = AVPlayerItem.loading
     @Published var chunkDuration: CMTime = .invalid
 
     private let id = UUID()
@@ -46,9 +31,9 @@ public final class PlayerItem: Equatable {
     public init<P>(publisher: P) where P: Publisher, P.Output == AVPlayerItem {
         publisher
             .catch { error in
-                Just(FailingPlayerItem(error: error))
+                Just(AVPlayerItem.failing(error: error))
             }
-            .prepend(LoadingPlayerItem())
+            .prepend(AVPlayerItem.loading)
             .map { [id] item in
                 item.withId(id)
             }
@@ -84,6 +69,20 @@ public extension AVPlayerItem {
     convenience init(url: URL, automaticallyLoadedAssetKeys: [String]) {
         let asset = AVURLAsset(url: url)
         self.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+    }
+
+    /// An item which never finishes loading.
+    static var loading: AVPlayerItem {
+        // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
+        let url = URL(string: "pillarbox://loading.m3u8")!
+        return URLPlayerItem(url: url, resourceLoaderDelegate: LoadingResourceLoaderDelegate())
+    }
+
+    /// An item which immediately fails with a specific error.
+    static func failing(error: Error) -> AVPlayerItem {
+        // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
+        let url = URL(string: "pillarbox://failing.m3u8")!
+        return URLPlayerItem(url: url, resourceLoaderDelegate: FailingResourceLoaderDelegate(error: error))
     }
 }
 

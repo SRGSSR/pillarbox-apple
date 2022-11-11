@@ -23,7 +23,7 @@ final class PlayerItemsTests: XCTestCase {
     }
 
     func testLoadingPlayerItem() {
-        let item = LoadingPlayerItem()
+        let item = AVPlayerItem.loading
         _ = AVPlayer(playerItem: item)
         expectEqualPublished(
             values: [false],
@@ -33,7 +33,7 @@ final class PlayerItemsTests: XCTestCase {
     }
 
     func testFailingPlayerItem() {
-        let item = FailingPlayerItem(error: StructError())
+        let item = AVPlayerItem.failing(error: StructError())
         _ = AVPlayer(playerItem: item)
         expectEqualPublished(
             values: [
@@ -102,7 +102,7 @@ final class PlayerItemsTests: XCTestCase {
         let item = PlayerItem(publisher: publisher)
         expectAtLeastSimilarPublished(
             values: [
-                LoadingPlayerItem(),
+                AVPlayerItem.loading,
                 playerItem
             ],
             from: item.$playerItem
@@ -115,8 +115,8 @@ final class PlayerItemsTests: XCTestCase {
         let item = PlayerItem(publisher: publisher)
         expectAtLeastSimilarPublished(
             values: [
-                LoadingPlayerItem(),
-                FailingPlayerItem(error: EnumError.error1)
+                AVPlayerItem.loading,
+                AVPlayerItem.failing(error: EnumError.error1)
             ],
             from: item.$playerItem
         )
