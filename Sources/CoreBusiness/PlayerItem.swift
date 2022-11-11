@@ -24,6 +24,15 @@ public extension PlayerItem {
 
     // swiftlint:enable discouraged_optional_collection
 
+    private static func url(for resource: Resource) -> URL {
+        switch resource.tokenType {
+        case .akamai:
+            return AkamaiURLCoding.encodeUrl(resource.url)
+        default:
+            return resource.url
+        }
+    }
+
     private static func resourceLoaderDelegate(for resource: Resource) -> AVAssetResourceLoaderDelegate? {
         switch resource.tokenType {
         case .akamai:
@@ -35,7 +44,7 @@ public extension PlayerItem {
 
     private static func playerItem(for resource: Resource, automaticallyLoadedAssetKeys: [String]?) -> AVPlayerItem {
         let item = AVPlayerItem.loading(
-            url: resource.url,
+            url: url(for: resource),
             resourceLoaderDelegate: resourceLoaderDelegate(for: resource)
         )
         if resource.streamType == .live {
