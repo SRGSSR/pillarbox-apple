@@ -47,7 +47,7 @@ final class DataProvider {
             .map(\.mainChapter.recommendedResource)
             .tryMap { resource in
                 guard let resource else {
-                    throw DataError.notFound
+                    throw DataError.noResourceAvailable
                 }
                 return resource
             }

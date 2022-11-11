@@ -9,35 +9,25 @@ import Combine
 
 private var kIdKey: Void?
 
-/// An item which never loads.
-final class LoadingPlayerItem: AVPlayerItem {
+// swiftlint:disable discouraged_optional_collection
+
+/// An item which stores its own custom resource loader delegate.
+final class ResourceLoadedPlayerItem: AVPlayerItem {
     private let resourceLoaderDelegate: AVAssetResourceLoaderDelegate
 
-    init() {
-        resourceLoaderDelegate = LoadingResourceLoaderDelegate()
-        // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-        let asset = AVURLAsset(url: URL(string: "pillarbox://loading.m3u8")!)
+    init(url: URL, resourceLoaderDelegate: AVAssetResourceLoaderDelegate, automaticallyLoadedAssetKeys: [String]?) {
+        self.resourceLoaderDelegate = resourceLoaderDelegate
+        let asset = AVURLAsset(url: url)
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: .global(qos: .userInitiated))
-        super.init(asset: asset, automaticallyLoadedAssetKeys: nil)
+        super.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
     }
 }
 
-/// An item which immediately fails with a specific error.
-final class FailingPlayerItem: AVPlayerItem {
-    private let resourceLoaderDelegate: AVAssetResourceLoaderDelegate
-
-    init(error: Error) {
-        resourceLoaderDelegate = FailingResourceLoaderDelegate(error: error)
-        // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-        let asset = AVURLAsset(url: URL(string: "pillarbox://failing.m3u8")!)
-        asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: .global(qos: .userInitiated))
-        super.init(asset: asset, automaticallyLoadedAssetKeys: nil)
-    }
-}
+// swiftlint:enable discouraged_optional_collection
 
 /// An item to be inserted into the player.
 public final class PlayerItem: Equatable {
-    @Published var playerItem: AVPlayerItem = LoadingPlayerItem()
+    @Published var playerItem = AVPlayerItem.loading
     @Published var chunkDuration: CMTime = .invalid
 
     private let id = UUID()
@@ -46,9 +36,9 @@ public final class PlayerItem: Equatable {
     public init<P>(publisher: P) where P: Publisher, P.Output == AVPlayerItem {
         publisher
             .catch { error in
-                Just(FailingPlayerItem(error: error))
+                Just(AVPlayerItem.failing(error: error))
             }
-            .prepend(LoadingPlayerItem())
+            .prepend(AVPlayerItem.loading)
             .map { [id] item in
                 item.withId(id)
             }
@@ -76,7 +66,16 @@ public final class PlayerItem: Equatable {
     }
 }
 
+// swiftlint:disable discouraged_optional_collection
+
 public extension AVPlayerItem {
+    /// An item which never finishes loading.
+    static var loading: AVPlayerItem {
+        // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
+        let url = URL(string: "pillarbox://loading.m3u8")!
+        return ResourceLoadedPlayerItem(url: url, resourceLoaderDelegate: LoadingResourceLoaderDelegate(), automaticallyLoadedAssetKeys: nil)
+    }
+
     /// Create a player item from a URL.
     /// - Parameters:
     ///   - url: The URL to play.
@@ -85,11 +84,37 @@ public extension AVPlayerItem {
         let asset = AVURLAsset(url: url)
         self.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
     }
+
+    /// An item which immediately fails with a specific error.
+    static func failing(error: Error) -> AVPlayerItem {
+        // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
+        let url = URL(string: "pillarbox://failing.m3u8")!
+        return ResourceLoadedPlayerItem(url: url, resourceLoaderDelegate: FailingResourceLoaderDelegate(error: error), automaticallyLoadedAssetKeys: nil)
+    }
+
+    /// An item which loads the specified URL (with an optionally associated resource loader delegate).
+    static func loading(
+        url: URL,
+        resourceLoaderDelegate: AVAssetResourceLoaderDelegate? = nil,
+        automaticallyLoadedAssetKeys: [String]? = nil
+    ) -> AVPlayerItem {
+        if let resourceLoaderDelegate {
+            return ResourceLoadedPlayerItem(
+                url: url,
+                resourceLoaderDelegate: resourceLoaderDelegate,
+                automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys
+            )
+        }
+        else if let automaticallyLoadedAssetKeys {
+            return AVPlayerItem(url: url, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+        }
+        else {
+            return AVPlayerItem(url: url)
+        }
+    }
 }
 
 public extension PlayerItem {
-    // swiftlint:disable discouraged_optional_collection
-
     /// Create a player item from a URL.
     /// - Parameters:
     ///   - urn: The URL to play.
@@ -127,9 +152,9 @@ public extension PlayerItem {
             return AVPlayerItem(url: url)
         }
     }
-
-    // swiftlint:enable discouraged_optional_collection
 }
+
+// swiftlint:enable discouraged_optional_collection
 
 extension AVPlayerItem {
     /// An identifier to identify player items delivered by the same pipeline.

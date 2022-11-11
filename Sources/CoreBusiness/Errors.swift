@@ -6,11 +6,15 @@
 
 import Foundation
 
+enum TokenError: Error {
+    case malformedParameters
+}
+
 struct DataError: LocalizedError {
-    static var notFound: Self {
+    static var noResourceAvailable: Self {
         DataError(errorDescription: NSLocalizedString(
-            "The content cannot be played",
-            comment: "Generic error message when some content cannot be played"
+            "No playable resources could be found",
+            comment: "Generic error message returned when no playable resources could be found"
         ))
     }
 
