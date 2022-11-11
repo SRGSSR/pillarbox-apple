@@ -10,7 +10,7 @@ import Foundation
 final class AkamaiProvider {
     private static let tokenServiceUrl = URL(string: "https://tp.srgssr.ch/akahd/token")!
 
-    let session = URLSession(configuration: .default)
+    private let session = URLSession(configuration: .default)
 
     static func decoder() -> JSONDecoder {
         let decoder = JSONDecoder()
