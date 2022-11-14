@@ -81,7 +81,7 @@ private extension PlayerView {
         }
     }
 
-    // Behavior: h-hug, v-hug
+    // Behavior: h-exp, v-exp
     struct ControlsView: View {
         @ObservedObject var player: Player
         let isUserInterfaceHidden: Bool
@@ -100,6 +100,7 @@ private extension PlayerView {
                     ProgressView()
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .tint(.white)
             .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
         }
