@@ -17,7 +17,7 @@ final class ItemStatePublisherTests: XCTestCase {
         let player = AVPlayer()
         expectEqualPublished(
             values: [.unknown],
-            from: player.itemStatePublisher(),
+            from: player.currentItemStatePublisher(),
             during: 2
         )
     }
@@ -27,7 +27,7 @@ final class ItemStatePublisherTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         expectEqualPublished(
             values: [.unknown, .readyToPlay],
-            from: player.itemStatePublisher(),
+            from: player.currentItemStatePublisher(),
             during: 1
         )
     }
@@ -37,7 +37,7 @@ final class ItemStatePublisherTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         expectEqualPublished(
             values: [.unknown, .readyToPlay, .ended],
-            from: player.itemStatePublisher(),
+            from: player.currentItemStatePublisher(),
             during: 2
         ) {
             player.play()
@@ -52,7 +52,7 @@ final class ItemStatePublisherTests: XCTestCase {
                 .unknown,
                 .failed(error: PlayerError.resourceNotFound)
             ],
-            from: player.itemStatePublisher(),
+            from: player.currentItemStatePublisher(),
             during: 1
         )
     }
@@ -65,7 +65,7 @@ final class ItemStatePublisherTests: XCTestCase {
                 .unknown,
                 .failed(error: PlayerError.segmentNotFound)
             ],
-            from: player.itemStatePublisher(),
+            from: player.currentItemStatePublisher(),
             during: 1
         )
     }
@@ -86,7 +86,7 @@ final class ItemStatePublisherTests: XCTestCase {
                     ]
                 ))
             ],
-            from: player.itemStatePublisher(),
+            from: player.currentItemStatePublisher(),
             during: 1
         )
     }

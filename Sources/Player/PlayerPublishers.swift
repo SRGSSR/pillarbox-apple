@@ -9,7 +9,7 @@ import Combine
 import TimelaneCombine
 
 extension AVPlayer {
-    func itemStatePublisher() -> AnyPublisher<ItemState, Never> {
+    func currentItemStatePublisher() -> AnyPublisher<ItemState, Never> {
         publisher(for: \.currentItem)
             .compactMap { $0 }
             .map { $0.itemStatePublisher() }
@@ -27,7 +27,7 @@ extension AVPlayer {
 
     func playbackStatePublisher() -> AnyPublisher<PlaybackState, Never> {
         Publishers.CombineLatest(
-            itemStatePublisher(),
+            currentItemStatePublisher(),
             ratePublisher()
         )
         .map { PlaybackState.state(for: $0, rate: $1) }
