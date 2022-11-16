@@ -44,7 +44,7 @@ Once you have a player you can display its contents in a `VideoView`, provided y
 
 ```swift
 struct PlayerView: View {
-	@StateObject private var player = Player(
+    @StateObject private var player = Player(
         item: PlayerItem(url: URL(string: "https://server.com/stream.m38u")!)
     )
 
@@ -63,8 +63,7 @@ Pillarbox currently does not provide any standard playback view you can use but 
 
 When significant changes occur within the player (e.g. state or buffering updates) the body of any SwiftUI view observing the player will namely be evaluated again. You can use states available from `Player` to display various UI elements in an appropriate state (e.g. displaying a playback button which can be used to pause or resume playback).
 
-
-## Have fun!
+## Have fun
 
 This is only a glimpse of what can be achieved with Pillarbox. Though the feature set is still limited you should already be able to implement pretty interesting playback experiences. Please have a look at the documentation (which can be built with Xcode _Product_ > _Build Documentation_) and check the demo and its various examples to better understand what is possible.
 
