@@ -155,7 +155,7 @@ public extension PlayerItem {
 
 extension AVPlayerItem {
     /// An identifier to identify player items delivered by the same pipeline.
-    var id: UUID! {
+    var id: UUID? {
         get {
             objc_getAssociatedObject(self, &kIdKey) as? UUID
         }
