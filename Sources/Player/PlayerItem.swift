@@ -106,6 +106,10 @@ public extension AVPlayerItem {
         return ResourceLoadedPlayerItem(url: url, resourceLoaderDelegate: FailingResourceLoaderDelegate(error: error), automaticallyLoadedAssetKeys: nil)
     }
 
+    /// Create a player item from a URL.
+    /// - Parameters:
+    ///   - url: The URL to play.
+    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play.
     static func loading(
         url: URL,
         automaticallyLoadedAssetKeys: [String]? = nil
@@ -120,6 +124,10 @@ public extension AVPlayerItem {
     }
 
     /// An item which loads the specified URL (with an optionally associated resource loader delegate).
+    /// - Parameters:
+    ///   - url: The URL to play.
+    ///   - resourceLoaderDelegate: The resource loader delegate to use (automatically retained).
+    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play.
     static func loading(
         url: URL,
         resourceLoaderDelegate: AVAssetResourceLoaderDelegate,
@@ -133,6 +141,11 @@ public extension AVPlayerItem {
         )
     }
 
+    /// An item which loads the specified URL (with an optionally associated content key session delegate).
+    /// - Parameters:
+    ///   - url: The URL to play.
+    ///   - contentKeySessionDelegate: The content key session delegate (automatically retained).
+    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play.
     static func loading(
         url: URL,
         contentKeySessionDelegate: AVContentKeySessionDelegate,

@@ -17,28 +17,6 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
         self.certificateUrl = certificateUrl
     }
 
-    func contentKeySession(_ session: AVContentKeySession, didProvide keyRequest: AVContentKeyRequest) {
-        cancellable = self.session.dataTaskPublisher(for: certificateUrl)
-            .mapError { $0 /* Convert error type */ }
-            .map { Self.contentKeyRequestDataPublisher(for: keyRequest, certificateData: $0.data) }
-            .switchToLatest()
-            .map { [session = self.session] data in
-                Self.contentKeyContextDataPublisher(fromKeyRequestData: data, identifier: keyRequest.identifier, session: session)
-            }
-            .switchToLatest()
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    break
-                case let .failure(error):
-                    keyRequest.processContentKeyResponseErrorReliably(error)
-                }
-            } receiveValue: { data in
-                let response = AVContentKeyResponse(fairPlayStreamingKeyResponseData: data)
-                keyRequest.processContentKeyResponse(response)
-            }
-    }
-
     private static func contentKeyRequestDataPublisher(for request: AVContentKeyRequest, certificateData: Data) -> AnyPublisher<Data, Error> {
         Future { promise in
             request.makeStreamingContentKeyRequestData(forApp: certificateData, contentIdentifier: "content_id".data(using: .utf8)) { data, error in
@@ -78,5 +56,27 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
             .mapError { $0 }
             .map(\.data)
             .eraseToAnyPublisher()
+    }
+
+    func contentKeySession(_ session: AVContentKeySession, didProvide keyRequest: AVContentKeyRequest) {
+        cancellable = self.session.dataTaskPublisher(for: certificateUrl)
+            .mapError { $0 /* Convert error type */ }
+            .map { Self.contentKeyRequestDataPublisher(for: keyRequest, certificateData: $0.data) }
+            .switchToLatest()
+            .map { [session = self.session] data in
+                Self.contentKeyContextDataPublisher(fromKeyRequestData: data, identifier: keyRequest.identifier, session: session)
+            }
+            .switchToLatest()
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    break
+                case let .failure(error):
+                    keyRequest.processContentKeyResponseErrorReliably(error)
+                }
+            } receiveValue: { data in
+                let response = AVContentKeyResponse(fairPlayStreamingKeyResponseData: data)
+                keyRequest.processContentKeyResponse(response)
+            }
     }
 }

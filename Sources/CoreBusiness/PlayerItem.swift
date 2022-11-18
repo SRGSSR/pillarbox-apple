@@ -22,6 +22,7 @@ public extension PlayerItem {
     }
 
     private static func configuredPlayerItem(for resource: Resource, automaticallyLoadedAssetKeys: [String]?) -> AVPlayerItem {
+        // swiftlint:disable:previous discouraged_optional_collection
         let item = playerItem(for: resource, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
         if resource.streamType == .live {
             /// Limit buffering and force the player to return to the live edge when re-buffering. This ensures

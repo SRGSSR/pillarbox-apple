@@ -7,11 +7,11 @@
 import Foundation
 
 struct DRMError: LocalizedError {
-    let errorDescription: String?
-
     static var missingContentKeyContext: Self {
         DRMError(errorDescription: "Could not retrieve DRM license")
     }
+
+    let errorDescription: String?
 }
 
 enum TokenError: Error {

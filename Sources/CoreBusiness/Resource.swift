@@ -33,6 +33,8 @@ struct Resource: Decodable {
     }
 
     let tokenType: TokenType
+
+    // swiftlint:disable:next discouraged_optional_collection
     let drms: [DRM]?
 
     private let isDvr: Bool
