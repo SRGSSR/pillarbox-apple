@@ -6,8 +6,12 @@
 
 import Foundation
 
-enum DRMError: Error {
-    case missingContentKeyContext
+struct DRMError: LocalizedError {
+    let errorDescription: String?
+
+    static var missingContentKeyContext: Self {
+        DRMError(errorDescription: "Could not retrieve DRM license")
+    }
 }
 
 enum TokenError: Error {

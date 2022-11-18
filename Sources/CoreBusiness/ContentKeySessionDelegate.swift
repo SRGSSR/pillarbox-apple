@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import Player
 
 final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
     private let certificateUrl: URL
@@ -30,7 +31,7 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
                 case .finished:
                     break
                 case let .failure(error):
-                    keyRequest.processContentKeyResponseError(error)
+                    keyRequest.processContentKeyResponseErrorReliably(error)
                 }
             } receiveValue: { data in
                 let response = AVContentKeyResponse(fairPlayStreamingKeyResponseData: data)
