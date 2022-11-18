@@ -9,6 +9,7 @@ import Player
 
 struct Resource: Decodable {
     enum CodingKeys: String, CodingKey {
+        case drms = "drmList"
         case isDvr = "dvr"
         case isLive = "live"
         case streamingMethod = "streaming"
@@ -32,6 +33,7 @@ struct Resource: Decodable {
     }
 
     let tokenType: TokenType
+    let drms: [DRM]?
 
     private let isDvr: Bool
     private let isLive: Bool
