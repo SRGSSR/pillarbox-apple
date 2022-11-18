@@ -36,7 +36,7 @@ final class ContentKeySessionPlayerItem: AVPlayerItem {
 
         let asset = AVURLAsset(url: url)
         contentKeySession.addContentKeyRecipient(asset)
-        contentKeySession.processContentKeyRequest(withIdentifier: url.absoluteString, initializationData: nil)
+        contentKeySession.processContentKeyRequest(withIdentifier: nil, initializationData: nil)
         super.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
     }
 }

@@ -6,6 +6,10 @@
 
 import Foundation
 
+enum DRMError: Error {
+    case missingContentKeyContext
+}
+
 enum TokenError: Error {
     case malformedParameters
 }
