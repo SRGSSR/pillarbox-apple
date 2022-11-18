@@ -19,6 +19,7 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
 
     private static func contentKeyRequestDataPublisher(for request: AVContentKeyRequest, certificateData: Data) -> AnyPublisher<Data, Error> {
         Future { promise in
+            // Use a dummy content identifier (otherwise the request will fail).
             request.makeStreamingContentKeyRequestData(forApp: certificateData, contentIdentifier: "content_id".data(using: .utf8)) { data, error in
                 if let data {
                     promise(.success(data))
