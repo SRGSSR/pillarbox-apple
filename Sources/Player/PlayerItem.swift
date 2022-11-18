@@ -29,15 +29,16 @@ final class ContentKeySessionPlayerItem: AVPlayerItem {
     init(url: URL, contentKeySessionDelegate: AVContentKeySessionDelegate, automaticallyLoadedAssetKeys: [String]?) {
         // swiftlint:disable:previous discouraged_optional_collection
         self.contentKeySessionDelegate = contentKeySessionDelegate
+
+        let asset = AVURLAsset(url: url)
+        super.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+
         contentKeySession.setDelegate(
             contentKeySessionDelegate,
             queue: DispatchQueue(label: "ch.srgssr.player.content_key_session")
         )
-
-        let asset = AVURLAsset(url: url)
         contentKeySession.addContentKeyRecipient(asset)
         contentKeySession.processContentKeyRequest(withIdentifier: nil, initializationData: nil)
-        super.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
     }
 }
 
