@@ -37,7 +37,7 @@ final class PlayerTests: XCTestCase {
         }
     }
 
-    func testPlayerDeallocation() {
+    func testDeallocation() {
         let item = PlayerItem(url: Stream.onDemand.url)
         var player: Player? = Player(item: item)
 

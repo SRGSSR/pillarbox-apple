@@ -43,6 +43,9 @@ enum MediaURN {
     static let onDemandSquareVideo = Media.urn("urn:rts:video:8393241")
     static let onDemandVerticalVideo = Media.urn("urn:rts:video:8412286")
 
+    static let liveVideo = Media.urn("urn:srf:video:c4927fcf-e1a0-0001-7edd-1ef01d441651")
+    static let dvrVideo = Media.urn("urn:rts:video:3608506")
+
     static let dvrAudio = Media.urn("urn:rts:audio:3262363")
     static let onDemandAudio = Media.urn("urn:rsi:audio:8833144")
 

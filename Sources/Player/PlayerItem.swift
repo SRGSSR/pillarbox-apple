@@ -22,6 +22,25 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
     }
 }
 
+final class ContentKeySessionPlayerItem: AVPlayerItem {
+    private let contentKeySessionDelegate: AVContentKeySessionDelegate
+
+    init(url: URL, contentKeySessionDelegate: AVContentKeySessionDelegate, automaticallyLoadedAssetKeys: [String]?) {
+        // swiftlint:disable:previous discouraged_optional_collection
+        self.contentKeySessionDelegate = contentKeySessionDelegate
+        let contentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
+        contentKeySession.setDelegate(
+            contentKeySessionDelegate,
+            queue: DispatchQueue(label: "ch.srgssr.player.content_key_session")
+        )
+
+        let asset = AVURLAsset(url: url)
+        contentKeySession.addContentKeyRecipient(asset)
+        contentKeySession.processContentKeyRequest(withIdentifier: url.absoluteString, initializationData: nil)
+        super.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+    }
+}
+
 /// An item to be inserted into the player.
 public final class PlayerItem: Equatable {
     @Published var playerItem = AVPlayerItem.loading
@@ -87,26 +106,44 @@ public extension AVPlayerItem {
         return ResourceLoadedPlayerItem(url: url, resourceLoaderDelegate: FailingResourceLoaderDelegate(error: error), automaticallyLoadedAssetKeys: nil)
     }
 
-    /// An item which loads the specified URL (with an optionally associated resource loader delegate).
     static func loading(
         url: URL,
-        resourceLoaderDelegate: AVAssetResourceLoaderDelegate? = nil,
         automaticallyLoadedAssetKeys: [String]? = nil
         // swiftlint:disable:previous discouraged_optional_collection
     ) -> AVPlayerItem {
-        if let resourceLoaderDelegate {
-            return ResourceLoadedPlayerItem(
-                url: url,
-                resourceLoaderDelegate: resourceLoaderDelegate,
-                automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys
-            )
-        }
-        else if let automaticallyLoadedAssetKeys {
+        if let automaticallyLoadedAssetKeys {
             return AVPlayerItem(url: url, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
         }
         else {
             return AVPlayerItem(url: url)
         }
+    }
+
+    /// An item which loads the specified URL (with an optionally associated resource loader delegate).
+    static func loading(
+        url: URL,
+        resourceLoaderDelegate: AVAssetResourceLoaderDelegate,
+        automaticallyLoadedAssetKeys: [String]? = nil
+        // swiftlint:disable:previous discouraged_optional_collection
+    ) -> AVPlayerItem {
+        ResourceLoadedPlayerItem(
+            url: url,
+            resourceLoaderDelegate: resourceLoaderDelegate,
+            automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys
+        )
+    }
+
+    static func loading(
+        url: URL,
+        contentKeySessionDelegate: AVContentKeySessionDelegate,
+        automaticallyLoadedAssetKeys: [String]? = nil
+        // swiftlint:disable:previous discouraged_optional_collection
+    ) -> AVPlayerItem {
+        ContentKeySessionPlayerItem(
+            url: url,
+            contentKeySessionDelegate: contentKeySessionDelegate,
+            automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys
+        )
     }
 }
 

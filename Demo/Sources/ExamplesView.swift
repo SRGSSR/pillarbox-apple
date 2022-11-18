@@ -109,6 +109,16 @@ private extension ExamplesView {
                 media: MediaURN.onDemandVerticalVideo
             ),
             Example(
+                title: "Video livestream - HLS (URN)",
+                description: "SRF 1",
+                media: MediaURN.liveVideo
+            ),
+            Example(
+                title: "Video livestream with DVR - HLS (URN)",
+                description: "RTS 1",
+                media: MediaURN.dvrVideo
+            ),
+            Example(
                 title: "Audio livestream with DVR - HLS (URN)",
                 description: "Couleur 3 en direct",
                 media: MediaURN.dvrAudio
