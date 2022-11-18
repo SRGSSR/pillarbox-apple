@@ -11,7 +11,7 @@ import XCTest
 
 final class MediaCompositionTests: XCTestCase {
     func testMainChapter() {
-        let mediaComposition = Mock.mediaComposition(.drm)
+        let mediaComposition = Mock.mediaComposition()
         expect(mediaComposition.mainChapter.urn).to(equal(mediaComposition.chapterUrn))
     }
 }
