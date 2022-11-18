@@ -23,12 +23,12 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
 }
 
 final class ContentKeySessionPlayerItem: AVPlayerItem {
+    private let contentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
     private let contentKeySessionDelegate: AVContentKeySessionDelegate
 
     init(url: URL, contentKeySessionDelegate: AVContentKeySessionDelegate, automaticallyLoadedAssetKeys: [String]?) {
         // swiftlint:disable:previous discouraged_optional_collection
         self.contentKeySessionDelegate = contentKeySessionDelegate
-        let contentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
         contentKeySession.setDelegate(
             contentKeySessionDelegate,
             queue: DispatchQueue(label: "ch.srgssr.player.content_key_session")

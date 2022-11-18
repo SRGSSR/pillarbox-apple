@@ -19,7 +19,7 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
     func contentKeySession(_ session: AVContentKeySession, didProvide keyRequest: AVContentKeyRequest) {
         cancellable = self.session.dataTaskPublisher(for: certificateUrl)
             .mapError { $0 /* Convert error type */ }
-            .map { Self.contentKeyRequestDataPublisher(for: keyRequest, data: $0.data) }
+            .map { Self.contentKeyRequestDataPublisher(for: keyRequest, certificateData: $0.data) }
             .switchToLatest()
             .sink { completion in
                 print("--> completion: \(completion)")
@@ -28,9 +28,9 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
             }
     }
 
-    static func contentKeyRequestDataPublisher(for request: AVContentKeyRequest, data: Data) -> AnyPublisher<Data, Error> {
+    static func contentKeyRequestDataPublisher(for request: AVContentKeyRequest, certificateData: Data) -> AnyPublisher<Data, Error> {
         return Future { promise in
-            request.makeStreamingContentKeyRequestData(forApp: data, contentIdentifier: nil) { data, error in
+            request.makeStreamingContentKeyRequestData(forApp: certificateData, contentIdentifier: "content_id".data(using: .utf8)) { data, error in
                 if let data {
                     promise(.success(data))
                 }
