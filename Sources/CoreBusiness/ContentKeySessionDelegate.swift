@@ -61,7 +61,7 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
 
     func contentKeySession(_ session: AVContentKeySession, didProvide keyRequest: AVContentKeyRequest) {
         cancellable = self.session.dataTaskPublisher(for: certificateUrl)
-            .mapError { $0 /* Convert error type */ }
+            .mapError { $0 }
             .map { Self.contentKeyRequestDataPublisher(for: keyRequest, certificateData: $0.data) }
             .switchToLatest()
             .map { [session = self.session] data in
