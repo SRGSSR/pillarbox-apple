@@ -22,7 +22,6 @@ disabled_rules:
 opt_in_rules:
   - accessibility_label_for_image
   - anonymous_argument_in_multiline_closure
-  - anyobject_protocol
   - array_init
   - attributes
   - balanced_xctest_lifecycle
@@ -136,3 +135,6 @@ function_parameter_count:
 
 nesting:
   type_level: 2
+
+type_name:
+  allowed_symbols: "`"
