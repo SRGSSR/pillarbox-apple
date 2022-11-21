@@ -16,7 +16,7 @@ enum BlockingReason: String, Decodable {
     case startDate = "STARTDATE"
     case unknown = "UNKNOWN"
 
-    public var description: String {
+    var description: String {
         switch self {
         case .ageRating12:
             return NSLocalizedString(

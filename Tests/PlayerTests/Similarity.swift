@@ -7,9 +7,9 @@
 @testable import Player
 
 import AVFoundation
+import Circumspect
 import Core
 import CoreMedia
-import Circumspect
 
 extension Pulse: Similar {
     public static func ~= (lhs: Pulse, rhs: Pulse) -> Bool {

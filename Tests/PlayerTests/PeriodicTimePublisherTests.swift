@@ -7,8 +7,8 @@
 @testable import Player
 
 import AVFoundation
-import Combine
 import Circumspect
+import Combine
 import Nimble
 import XCTest
 
