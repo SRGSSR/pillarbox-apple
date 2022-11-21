@@ -11,6 +11,7 @@ private var kIdKey: Void?
 
 /// An item which stores its own custom resource loader delegate.
 final class ResourceLoadedPlayerItem: AVPlayerItem {
+    // swiftlint:disable:next weak_delegate
     private let resourceLoaderDelegate: AVAssetResourceLoaderDelegate
 
     init(url: URL, resourceLoaderDelegate: AVAssetResourceLoaderDelegate, automaticallyLoadedAssetKeys: [String]?) {
@@ -24,6 +25,8 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
 
 final class ContentKeySessionPlayerItem: AVPlayerItem {
     private let contentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
+
+    // swiftlint:disable:next weak_delegate
     private let contentKeySessionDelegate: AVContentKeySessionDelegate
 
     init(url: URL, contentKeySessionDelegate: AVContentKeySessionDelegate, automaticallyLoadedAssetKeys: [String]?) {

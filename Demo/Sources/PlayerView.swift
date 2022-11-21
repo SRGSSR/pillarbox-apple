@@ -66,6 +66,7 @@ private extension PlayerView {
                 .onTapGesture {
                     isUserInterfaceHidden.toggle()
                 }
+                .accessibilityAddTraits(.isButton)
                 .ignoresSafeArea()
 #if os(iOS)
                 HStack(spacing: 0) {
