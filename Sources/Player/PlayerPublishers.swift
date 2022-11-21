@@ -20,15 +20,10 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    func ratePublisher() -> AnyPublisher<Float, Never> {
-        publisher(for: \.rate)
-            .eraseToAnyPublisher()
-    }
-
     func playbackStatePublisher() -> AnyPublisher<PlaybackState, Never> {
         Publishers.CombineLatest(
             currentItemStatePublisher(),
-            ratePublisher()
+            publisher(for: \.rate)
         )
         .map { PlaybackState.state(for: $0, rate: $1) }
         .removeDuplicates()

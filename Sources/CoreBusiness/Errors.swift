@@ -6,6 +6,14 @@
 
 import Foundation
 
+struct DRMError: LocalizedError {
+    static var missingContentKeyContext: Self {
+        DRMError(errorDescription: "Could not retrieve DRM license")
+    }
+
+    let errorDescription: String?
+}
+
 enum TokenError: Error {
     case malformedParameters
 }

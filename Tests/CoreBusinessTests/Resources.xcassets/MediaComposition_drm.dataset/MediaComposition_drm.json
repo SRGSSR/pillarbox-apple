@@ -1,0 +1,315 @@
+
+{
+   "chapterUrn" : "urn:rts:video:13548828",
+   "episode" : {
+      "id" : "13435837",
+      "title" : "Top Models",
+      "lead" : "8846",
+      "publishedDate" : "2022-11-18T11:44:09+01:00",
+      "imageUrl" : "https://www.rts.ch/2022/11/18/08/05/13548823.image/16x9",
+      "imageTitle" : "Top Models [RTS]"
+   },
+   "show" : {
+      "id" : "532539",
+      "vendor" : "RTS",
+      "transmission" : "TV",
+      "urn" : "urn:rts:show:tv:532539",
+      "title" : "Top Models",
+      "lead" : "Drames, paillettes et glamour au coeur de Los Angeles.\n\nDu lundi au vendredi à 11h45 sur RTS Un. L'épisode du jour est disponible en \"preview\" sur Play RTS 24h avant la diffusion antenne, puis à revoir durant 30 jours.",
+      "description" : "Drames, paillettes et glamour au coeur de Los Angeles.  Du lundi au vendredi à 11h45 sur RTS Un. L'épisode du jour est disponible en \"preview\" sur Play RTS 24h avant la diffusion antenne, puis à revoir durant 30 jours.",
+      "imageUrl" : "https://www.rts.ch/2022/04/26/11/09/11507387.image/16x9",
+      "imageTitle" : "Top Models. [RTS/Monty Brinton/CBS/Courtesy of Sony Pictures of Televisions]",
+      "bannerImageUrl" : "https://www.rts.ch/2022/04/26/11/09/11507387.image/3x1",
+      "posterImageUrl" : "https://www.rts.ch/2022/04/26/10/03/12155676.image/2x3",
+      "posterImageIsFallbackUrl" : false,
+      "homepageUrl" : "https://details.rts.ch/emissions/series",
+      "primaryChannelId" : "143932a79bb5a123a646b68b1d1188d7ae493e5b",
+      "primaryChannelUrn" : "urn:rts:channel:tv:143932a79bb5a123a646b68b1d1188d7ae493e5b",
+      "availableAudioLanguageList" : [ {
+         "locale" : "fr",
+         "language" : "Français"
+      }, {
+         "locale" : "en",
+         "language" : "English"
+      } ],
+      "availableVideoQualityList" : [ "SD" ],
+      "audioDescriptionAvailable" : false,
+      "subtitlesAvailable" : true,
+      "multiAudioLanguagesAvailable" : true,
+      "topicList" : [ {
+         "id" : "2386",
+         "vendor" : "RTS",
+         "transmission" : "TV",
+         "urn" : "urn:rts:topic:tv:2386",
+         "title" : "Top Models"
+      }, {
+         "id" : "2383",
+         "vendor" : "RTS",
+         "transmission" : "TV",
+         "urn" : "urn:rts:topic:tv:2383",
+         "title" : "Séries"
+      }, {
+         "id" : "2026",
+         "vendor" : "RTS",
+         "transmission" : "TV",
+         "urn" : "urn:rts:topic:tv:2026",
+         "title" : "Émissions"
+      } ],
+      "allowIndexing" : false
+   },
+   "channel" : {
+      "id" : "143932a79bb5a123a646b68b1d1188d7ae493e5b",
+      "vendor" : "RTS",
+      "urn" : "urn:rts:channel:tv:143932a79bb5a123a646b68b1d1188d7ae493e5b",
+      "title" : "RTS 1",
+      "imageUrl" : "https://www.rts.ch/2022/04/26/11/09/11507387.image/16x9",
+      "imageUrlRaw" : "https://il.srgssr.ch/image-service/dynamic/8eebe5.svg",
+      "imageTitle" : "Top Models. [RTS/Monty Brinton/CBS/Courtesy of Sony Pictures of Televisions]",
+      "transmission" : "TV"
+   },
+   "chapterList" : [ {
+      "id" : "13548828",
+      "mediaType" : "VIDEO",
+      "vendor" : "RTS",
+      "urn" : "urn:rts:video:13548828",
+      "title" : "8846",
+      "imageUrl" : "https://www.rts.ch/2022/11/18/08/05/13548823.image/16x9",
+      "imageTitle" : "8846 [RTS]",
+      "type" : "EPISODE",
+      "date" : "2022-11-18T11:44:09+01:00",
+      "duration" : 1259200,
+      "validFrom" : "2022-11-17T12:11:44+01:00",
+      "validTo" : "2022-12-18T12:11:44+01:00",
+      "playableAbroad" : false,
+      "socialCountList" : [ {
+         "key" : "srgView",
+         "value" : 4779
+      }, {
+         "key" : "srgLike",
+         "value" : 0
+      }, {
+         "key" : "fbShare",
+         "value" : 1
+      }, {
+         "key" : "twitterShare",
+         "value" : 1
+      }, {
+         "key" : "googleShare",
+         "value" : 0
+      }, {
+         "key" : "whatsAppShare",
+         "value" : 3
+      } ],
+      "displayable" : true,
+      "position" : 0,
+      "noEmbed" : true,
+      "analyticsData" : {
+         "ns_st_ep" : "8846",
+         "ns_st_ty" : "Video",
+         "ns_st_ci" : "13548828",
+         "ns_st_el" : "1259200",
+         "ns_st_cl" : "1259200",
+         "ns_st_sl" : "1259200",
+         "srg_mgeobl" : "true",
+         "ns_st_tp" : "1",
+         "ns_st_cn" : "1",
+         "ns_st_ct" : "vc12",
+         "ns_st_pn" : "1",
+         "ns_st_cdm" : "to",
+         "ns_st_cmt" : "fc"
+      },
+      "analyticsMetadata" : {
+         "media_segment" : "8846",
+         "media_type" : "Video",
+         "media_segment_id" : "13548828",
+         "media_episode_length" : "1259",
+         "media_segment_length" : "1259",
+         "media_number_of_segment_selected" : "1",
+         "media_number_of_segments_total" : "1",
+         "media_duration_category" : "long",
+         "media_is_geoblocked" : "true",
+         "media_is_web_only" : "false",
+         "media_production_source" : "produced.for.broadcasting",
+         "media_urn" : "urn:rts:video:13548828"
+      },
+      "eventData" : "$fbb22ba2ca84dbae$9405a51d787a879d706b2354bbe054bb494dcba5fd4e5769985cb35df800bd3325fe61c69bb52ac217a0e5d5b5f9b679087b77d331f294e663042184283ec77ab2e349cef8cf00412fb057769142e4cfd03afa06e50c39a5d077821cb998a3bd728622d3c9f41f836b9268736db5f9ce11bc5091de7fe319ff4e8e4d1a801c0c9a1ab2f9e435038338d3be4cb1f956ec177901145ae0bc284d967a4c6240d1a70de139c4b06b7bc85b4cafe61ac36f659bca7e579e4be756e89bbab9fb583908afa5f327d5d77e0a6b931ff245fd91c703ff97a02224b62cc09d30d4ec3ef276f994212f5a009521c58b3f9b08b95197d71b3abb0df932802466511d069318acc4205cdc1e73a144ce24caa1becb10acd9afe26c7243e8c8f4ae5bccc28aa813c99a0a8759aa7078f62e4f3c4b8c1722690e48fa1bdc1dab50aaf79d39d9a9b3f035b6d6e2fbc746600fbdbf65a41896dabf07a929fb3182dded8644fa14683a998e9e1b3ce808431d8bceda1bbbd2bf",
+      "resourceList" : [ {
+         "url" : "https://rtsvod-euwe.akamaized.net:443/2a438722-f0c3-4653-8528-6d4dc11543e7/RTSVOD-11c75e3a-3091.ism/manifest(format=mpd-time-csf,encryption=cenc)",
+         "drmList" : [ {
+            "type" : "PLAYREADY",
+            "licenseUrl" : "https://srg.live.ott.irdeto.com/licenseServer/playready/v1/SRG/license?contentId=RTSVOD"
+         }, {
+            "type" : "WIDEVINE",
+            "licenseUrl" : "https://srg.live.ott.irdeto.com/licenseServer/widevine/v1/SRG/license?contentId=RTSVOD"
+         } ],
+         "quality" : "HD",
+         "protocol" : "DASH",
+         "encoding" : "H264",
+         "mimeType" : "application/dash+xml",
+         "presentation" : "DEFAULT",
+         "streaming" : "DASH",
+         "dvr" : false,
+         "live" : false,
+         "mediaContainer" : "FMP4",
+         "audioCodec" : "AAC",
+         "videoCodec" : "H264",
+         "tokenType" : "NONE",
+         "audioTrackList" : [ {
+            "locale" : "fr",
+            "language" : "Français",
+            "source" : "DASH"
+         }, {
+            "locale" : "en",
+            "language" : "English",
+            "source" : "DASH"
+         } ],
+         "subtitleInformationList" : [ {
+            "locale" : "fr",
+            "language" : "Français (SDH)",
+            "source" : "DASH",
+            "type" : "SDH"
+         }, {
+            "locale" : "fr",
+            "language" : "Français (SDH)",
+            "source" : "DASH",
+            "type" : "SDH"
+         } ],
+         "analyticsData" : {
+            "srg_mqual" : "HD",
+            "srg_mpres" : "DEFAULT"
+         },
+         "analyticsMetadata" : {
+            "media_streaming_quality" : "HD",
+            "media_special_format" : "DEFAULT",
+            "media_url" : "https://rtsvod-euwe.akamaized.net:443/2a438722-f0c3-4653-8528-6d4dc11543e7/RTSVOD-11c75e3a-3091.ism/manifest(format=mpd-time-csf,encryption=cenc)"
+         }
+      }, {
+         "url" : "https://rtsvod-euwe.akamaized.net:443/2a438722-f0c3-4653-8528-6d4dc11543e7/RTSVOD-11c75e3a-3091.ism/manifest(format=m3u8-aapl,encryption=cbcs-aapl)",
+         "drmList" : [ {
+            "type" : "FAIRPLAY",
+            "licenseUrl" : "https://srg.live.ott.irdeto.com/licenseServer/streaming/v1/SRG/getckc?contentId=RTSVOD&keyId=6470ddd4-63ab-4d1c-972a-f91b10278eba",
+            "certificateUrl" : "https://srg.live.ott.irdeto.com/licenseServer/streaming/v1/SRG/getcertificate?applicationId=live"
+         } ],
+         "quality" : "HD",
+         "protocol" : "HLS",
+         "encoding" : "H264",
+         "mimeType" : "application/x-mpegURL",
+         "presentation" : "DEFAULT",
+         "streaming" : "HLS",
+         "dvr" : false,
+         "live" : false,
+         "mediaContainer" : "MPEG2_TS",
+         "audioCodec" : "AAC",
+         "videoCodec" : "H264",
+         "tokenType" : "NONE",
+         "audioTrackList" : [ {
+            "locale" : "fr",
+            "language" : "Français",
+            "source" : "HLS"
+         }, {
+            "locale" : "en",
+            "language" : "English",
+            "source" : "HLS"
+         } ],
+         "subtitleInformationList" : [ {
+            "locale" : "fr",
+            "language" : "Français (SDH)",
+            "source" : "HLS",
+            "type" : "SDH"
+         }, {
+            "locale" : "fr",
+            "language" : "Français (SDH)",
+            "source" : "HLS",
+            "type" : "SDH"
+         } ],
+         "analyticsData" : {
+            "srg_mqual" : "HD",
+            "srg_mpres" : "DEFAULT"
+         },
+         "analyticsMetadata" : {
+            "media_streaming_quality" : "HD",
+            "media_special_format" : "DEFAULT",
+            "media_url" : "https://rtsvod-euwe.akamaized.net:443/2a438722-f0c3-4653-8528-6d4dc11543e7/RTSVOD-11c75e3a-3091.ism/manifest(format=m3u8-aapl,encryption=cbcs-aapl)"
+         }
+      } ],
+      "aspectRatio" : "16:9",
+      "timeIntervalList" : [ {
+         "type" : "CLOSING_CREDITS",
+         "markIn" : 1233720,
+         "markOut" : 1259200
+      } ]
+   } ],
+   "topicList" : [ {
+      "id" : "2386",
+      "vendor" : "RTS",
+      "transmission" : "TV",
+      "urn" : "urn:rts:topic:tv:2386",
+      "title" : "Top Models"
+   }, {
+      "id" : "2383",
+      "vendor" : "RTS",
+      "transmission" : "TV",
+      "urn" : "urn:rts:topic:tv:2383",
+      "title" : "Séries"
+   }, {
+      "id" : "2026",
+      "vendor" : "RTS",
+      "transmission" : "TV",
+      "urn" : "urn:rts:topic:tv:2026",
+      "title" : "Émissions"
+   } ],
+   "analyticsData" : {
+      "srg_pr_id" : "13435837",
+      "srg_plid" : "532539",
+      "ns_st_pl" : "Top Models",
+      "ns_st_pr" : "Top Models du 18.11.2022",
+      "ns_st_dt" : "2022-11-18",
+      "ns_st_ddt" : "2022-11-17",
+      "ns_st_tdt" : "2022-11-18",
+      "ns_st_tm" : "11:44:09",
+      "ns_st_tep" : "500386540",
+      "ns_st_li" : "0",
+      "ns_st_stc" : "0867",
+      "ns_st_st" : "RTS Online",
+      "ns_st_tpr" : "532539",
+      "ns_st_en" : "*null",
+      "ns_st_ge" : "*null",
+      "ns_st_ia" : "*null",
+      "ns_st_ce" : "1",
+      "ns_st_cdm" : "to",
+      "ns_st_cmt" : "fc",
+      "srg_unit" : "RTS",
+      "srg_c1" : "full",
+      "srg_c2" : "video_plus7_series_top-models",
+      "srg_c3" : "RTS 1",
+      "srg_tv_id" : "500386540"
+   },
+   "analyticsMetadata" : {
+      "media_episode_id" : "13435837",
+      "media_show_id" : "532539",
+      "media_show" : "Top Models",
+      "media_episode" : "Top Models du 18.11.2022",
+      "media_is_livestream" : "false",
+      "media_full_length" : "full",
+      "media_enterprise_units" : "RTS",
+      "media_joker1" : "full",
+      "media_joker2" : "video_plus7_series_top-models",
+      "media_joker3" : "RTS 1",
+      "media_is_web_only" : "false",
+      "media_production_source" : "produced.for.broadcasting",
+      "media_tv_id" : "500386540",
+      "media_thumbnail" : "https://www.rts.ch/2022/11/18/08/05/13548823.image/16x9/scale/width/344",
+      "media_publication_date" : "2022-11-17",
+      "media_publication_time" : "12:11:44",
+      "media_publication_datetime" : "2022-11-17T12:11:44+01:00",
+      "media_tv_date" : "2022-11-18",
+      "media_tv_time" : "11:44:09",
+      "media_tv_datetime" : "2022-11-18T11:44:09+01:00",
+      "media_content_group" : "Top Models,Séries,Émissions",
+      "media_channel_id" : "143932a79bb5a123a646b68b1d1188d7ae493e5b",
+      "media_channel_cs" : "0867",
+      "media_channel_name" : "RTS 1",
+      "media_since_publication_d" : "0",
+      "media_since_publication_h" : "-3"
+   }
+}

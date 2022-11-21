@@ -22,6 +22,26 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
     }
 }
 
+final class ContentKeySessionPlayerItem: AVPlayerItem {
+    private let contentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
+    private let contentKeySessionDelegate: AVContentKeySessionDelegate
+
+    init(url: URL, contentKeySessionDelegate: AVContentKeySessionDelegate, automaticallyLoadedAssetKeys: [String]?) {
+        // swiftlint:disable:previous discouraged_optional_collection
+        self.contentKeySessionDelegate = contentKeySessionDelegate
+
+        let asset = AVURLAsset(url: url)
+        super.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+
+        contentKeySession.setDelegate(
+            contentKeySessionDelegate,
+            queue: DispatchQueue(label: "ch.srgssr.player.content_key_session")
+        )
+        contentKeySession.addContentKeyRecipient(asset)
+        contentKeySession.processContentKeyRequest(withIdentifier: nil, initializationData: nil)
+    }
+}
+
 /// An item to be inserted into the player.
 public final class PlayerItem: Equatable {
     @Published var playerItem = AVPlayerItem.loading
@@ -87,26 +107,57 @@ public extension AVPlayerItem {
         return ResourceLoadedPlayerItem(url: url, resourceLoaderDelegate: FailingResourceLoaderDelegate(error: error), automaticallyLoadedAssetKeys: nil)
     }
 
-    /// An item which loads the specified URL (with an optionally associated resource loader delegate).
+    /// Create a player item from a URL.
+    /// - Parameters:
+    ///   - url: The URL to play.
+    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play.
     static func loading(
         url: URL,
-        resourceLoaderDelegate: AVAssetResourceLoaderDelegate? = nil,
         automaticallyLoadedAssetKeys: [String]? = nil
         // swiftlint:disable:previous discouraged_optional_collection
     ) -> AVPlayerItem {
-        if let resourceLoaderDelegate {
-            return ResourceLoadedPlayerItem(
-                url: url,
-                resourceLoaderDelegate: resourceLoaderDelegate,
-                automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys
-            )
-        }
-        else if let automaticallyLoadedAssetKeys {
+        if let automaticallyLoadedAssetKeys {
             return AVPlayerItem(url: url, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
         }
         else {
             return AVPlayerItem(url: url)
         }
+    }
+
+    /// An item which loads the specified URL (with an optionally associated resource loader delegate).
+    /// - Parameters:
+    ///   - url: The URL to play.
+    ///   - resourceLoaderDelegate: The resource loader delegate to use (automatically retained).
+    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play.
+    static func loading(
+        url: URL,
+        resourceLoaderDelegate: AVAssetResourceLoaderDelegate,
+        automaticallyLoadedAssetKeys: [String]? = nil
+        // swiftlint:disable:previous discouraged_optional_collection
+    ) -> AVPlayerItem {
+        ResourceLoadedPlayerItem(
+            url: url,
+            resourceLoaderDelegate: resourceLoaderDelegate,
+            automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys
+        )
+    }
+
+    /// An item which loads the specified URL (with an optionally associated content key session delegate).
+    /// - Parameters:
+    ///   - url: The URL to play.
+    ///   - contentKeySessionDelegate: The content key session delegate (automatically retained).
+    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play.
+    static func loading(
+        url: URL,
+        contentKeySessionDelegate: AVContentKeySessionDelegate,
+        automaticallyLoadedAssetKeys: [String]? = nil
+        // swiftlint:disable:previous discouraged_optional_collection
+    ) -> AVPlayerItem {
+        ContentKeySessionPlayerItem(
+            url: url,
+            contentKeySessionDelegate: contentKeySessionDelegate,
+            automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys
+        )
     }
 }
 
