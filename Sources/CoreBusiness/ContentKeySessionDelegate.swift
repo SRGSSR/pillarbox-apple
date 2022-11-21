@@ -17,10 +17,16 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
         self.certificateUrl = certificateUrl
     }
 
-    private static func contentKeyRequestDataPublisher(for request: AVContentKeyRequest, certificateData: Data) -> AnyPublisher<Data, Error> {
+    private static func contentKeyRequestDataPublisher(
+        for request: AVContentKeyRequest,
+        certificateData: Data
+    ) -> AnyPublisher<Data, Error> {
         Future { promise in
             // Use a dummy content identifier (otherwise the request will fail).
-            request.makeStreamingContentKeyRequestData(forApp: certificateData, contentIdentifier: "content_id".data(using: .utf8)) { data, error in
+            request.makeStreamingContentKeyRequestData(
+                forApp: certificateData,
+                contentIdentifier: "content_id".data(using: .utf8)
+            ) { data, error in
                 if let data {
                     promise(.success(data))
                 }
@@ -48,7 +54,11 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
         return request
     }
 
-    private static func contentKeyContextDataPublisher(fromKeyRequestData keyRequestData: Data, identifier: Any?, session: URLSession) -> AnyPublisher<Data, Error> {
+    private static func contentKeyContextDataPublisher(
+        fromKeyRequestData keyRequestData: Data,
+        identifier: Any?,
+        session: URLSession
+    ) -> AnyPublisher<Data, Error> {
         guard let request = contentKeyContextRequest(from: identifier, httpBody: keyRequestData) else {
             return Fail(error: DRMError.missingContentKeyContext)
                 .eraseToAnyPublisher()
