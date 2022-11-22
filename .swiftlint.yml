@@ -97,7 +97,6 @@ opt_in_rules:
   - multiline_literal_brackets
   - multiline_parameters
   - multiline_parameters_brackets
-  - multiple_closures_with_trailing_closure
   - nslocalizedstring_key
   - object_literal
   - operator_usage_whitespace
