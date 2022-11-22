@@ -17,6 +17,7 @@ struct DemoApp: App {
             TabView {
                 MediasTab()
                 ShowcaseTab()
+                SettingsTab()
             }
         }
     }
@@ -32,6 +33,17 @@ private extension DemoApp {
             }
             .tabItem {
                 Label("Examples", systemImage: "list.and.film")
+            }
+        }
+    }
+
+    struct SettingsTab: View {
+        var body: some View {
+            Navigation {
+                SettingsView()
+            }
+            .tabItem {
+                Label("Settings", systemImage: "gearshape.fill")
             }
         }
     }
