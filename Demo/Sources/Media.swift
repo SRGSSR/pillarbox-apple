@@ -12,26 +12,54 @@ import Player
 // MARK: URL-based medias
 
 enum MediaURL {
-    static let onDemandVideoHLS = Media.url(URL(string: "https://swi-vod.akamaized.net/videoJson/47603186/master.m3u8")!)
-    static let shortOnDemandVideoHLS = Media.url(URL(string: "https://rts-vod-amd.akamaized.net/ww/13317145/f1d49f18-f302-37ce-866c-1c1c9b76a824/master.m3u8")!)
+    static let onDemandVideoHLS = Media.url(
+        URL(string: "https://swi-vod.akamaized.net/videoJson/47603186/master.m3u8")!
+    )
+    static let shortOnDemandVideoHLS = Media.url(
+        URL(string: "https://rts-vod-amd.akamaized.net/ww/13317145/f1d49f18-f302-37ce-866c-1c1c9b76a824/master.m3u8")!
+    )
 
-    static let onDemandVideoMP4 = Media.url(URL(string: "https://media.swissinfo.ch/media/video/dddaff93-c2cd-4b6e-bdad-55f75a519480/rendition/154a844b-de1d-4854-93c1-5c61cd07e98c.mp4")!)
+    static let onDemandVideoMP4 = Media.url(
+        URL(string: "https://media.swissinfo.ch/media/video/dddaff93-c2cd-4b6e-bdad-55f75a519480/rendition/154a844b-de1d-4854-93c1-5c61cd07e98c.mp4")!
+    )
 
-    static let liveVideoHLS = Media.url(URL(string: "https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8?dw=0")!)
-    static let dvrVideoHLS = Media.url(URL(string: "https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8")!)
-    static let liveTimestampVideoHLS = Media.url(URL(string: "https://tagesschau.akamaized.net/hls/live/2020115/tagesschau/tagesschau_1/master.m3u8")!)
+    static let liveVideoHLS = Media.url(
+        URL(string: "https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8?dw=0")!
+    )
+    static let dvrVideoHLS = Media.url(
+        URL(string: "https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8")!
+    )
+    static let liveTimestampVideoHLS = Media.url(
+        URL(string: "https://tagesschau.akamaized.net/hls/live/2020115/tagesschau/tagesschau_1/master.m3u8")!
+    )
 
-    static let onDemandAudioMP3 = Media.url(URL(string: "https://rts-aod-dd.akamaized.net/ww/13306839/63cc2653-8305-3894-a448-108810b553ef.mp3")!)
-    static let liveAudioMP3 = Media.url(URL(string: "http://stream.srg-ssr.ch/m/couleur3/mp3_128")!)
+    static let onDemandAudioMP3 = Media.url(
+        URL(string: "https://rts-aod-dd.akamaized.net/ww/13306839/63cc2653-8305-3894-a448-108810b553ef.mp3")!
+    )
+    static let liveAudioMP3 = Media.url(
+        URL(string: "http://stream.srg-ssr.ch/m/couleur3/mp3_128")!
+    )
 
-    static let dvrAudioHLS = Media.url(URL(string: "https://lsaplus.swisstxt.ch/audio/couleur3_96.stream/playlist.m3u8")!)
+    static let dvrAudioHLS = Media.url(
+        URL(string: "https://lsaplus.swisstxt.ch/audio/couleur3_96.stream/playlist.m3u8")!
+    )
 
     // Apple streams from https://developer.apple.com/streaming/examples/
-    static let appleBasic_4_3_HLS = Media.url(URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8")!)
-    static let appleBasic_16_9_TS_HLS = Media.url(URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8")!)
-    static let appleAdvanced_16_9_TS_HLS = Media.url(URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!)
-    static let appleAdvanced_16_9_fMP4_HLS = Media.url(URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8")!)
-    static let appleAdvanced_16_9_HEVC_h264_HLS = Media.url(URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_adv_example_hevc/master.m3u8")!)
+    static let appleBasic_4_3_HLS = Media.url(
+        URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8")!
+    )
+    static let appleBasic_16_9_TS_HLS = Media.url(
+        URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8")!
+    )
+    static let appleAdvanced_16_9_TS_HLS = Media.url(
+        URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!
+    )
+    static let appleAdvanced_16_9_fMP4_HLS = Media.url(
+        URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8")!
+    )
+    static let appleAdvanced_16_9_HEVC_h264_HLS = Media.url(
+        URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_adv_example_hevc/master.m3u8")!
+    )
 
     static let onDemandVideoLocalHLS = Media.url(URL(string: "http://localhost:8123/on_demand/master.m3u8")!)
 }
@@ -56,9 +84,15 @@ enum MediaURN {
 // MARK: Unbuffered URL-based medias
 
 enum UnbufferedMediaURL {
-    static let liveVideo = Media.unbufferedUrl(URL(string: "https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8?dw=0")!)
-    static let onDemandAudio = Media.unbufferedUrl(URL(string: "https://rts-aod-dd.akamaized.net/ww/13432709/2be967ad-e8a5-33c3-8560-83702436fb2e.mp3")!)
-    static let liveAudio = Media.unbufferedUrl(URL(string: "http://stream.srg-ssr.ch/m/couleur3/mp3_128")!)
+    static let liveVideo = Media.unbufferedUrl(
+        URL(string: "https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8?dw=0")!
+    )
+    static let onDemandAudio = Media.unbufferedUrl(
+        URL(string: "https://rts-aod-dd.akamaized.net/ww/13432709/2be967ad-e8a5-33c3-8560-83702436fb2e.mp3")!
+    )
+    static let liveAudio = Media.unbufferedUrl(
+        URL(string: "http://stream.srg-ssr.ch/m/couleur3/mp3_128")!
+    )
 }
 
 // MARK: Playlists

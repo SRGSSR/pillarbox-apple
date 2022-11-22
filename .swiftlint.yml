@@ -22,7 +22,6 @@ disabled_rules:
   - function_default_parameter_at_end
   - identifier_name
   - indentation_width
-  - line_length
   - multiple_closures_with_trailing_closure
   - nimble_operator
   - number_separator
@@ -88,6 +87,7 @@ opt_in_rules:
   - legacy_multiple
   - legacy_objc_type
   - let_var_whitespace
+  - line_length
   - literal_expression_end_indentation
   - lower_acl_than_parent
   - missing_docs
@@ -167,6 +167,10 @@ function_parameter_count:
 file_length:
   warning: 1000
   error: 1500
+
+line_length:
+  warning: 160
+  error: 200
 
 nesting:
   type_level: 2
