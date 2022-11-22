@@ -43,11 +43,11 @@ private extension StoriesView {
                     ProgressView()
                         .zIndex(1)
                 }
-                if let value = player.progress.value {
-                    ProgressView(value: value)
-                        .padding()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                }
+//                if let value = player.progress.value {
+//                    ProgressView(value: value)
+//                        .padding()
+//                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+//                }
             }
             .tint(.white)
             .animation(.easeInOut(duration: 0.2), value: player.isBuffering)

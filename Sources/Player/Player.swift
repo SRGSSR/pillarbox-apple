@@ -16,39 +16,24 @@ public final class Player: ObservableObject {
     /// Current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle
 
-    /// States whether the player is currently buffering.
+    /// Returns whether the player is currently seeking.
+    @Published public var isSeeking = false
+
+    /// Returns whether the player is currently buffering.
     @Published public var isBuffering = false
-
-    /// Current playback progress.
-    @Published public var progress: PlaybackProgress = .none {
-        willSet {
-            guard configuration.seekBehavior == .immediate
-                    || (!newValue.isInteracting && progress.isInteracting) else {
-                return
-            }
-
-            guard let progress = newValue.value, let time = pulse?.time(forProgress: progress) else {
-                return
-            }
-            seek(to: time)
-        }
-    }
 
     /// The current item in the queue.
     @Published public var currentItem: PlayerItem?
 
+    /// Available time range. `.invalid` when not known.
+    @Published public var timeRange: CMTimeRange = .invalid
+
     @Published private var storedItems: Deque<PlayerItem>
-    @Published private var pulse: Pulse?
-    @Published private var seeking = false
+    @Published private var itemDuration: CMTime = .indefinite
 
     /// Current time.
-    public var time: CMTime? {
-        pulse?.time
-    }
-
-    /// Available time range.
-    public var timeRange: CMTimeRange? {
-        pulse?.timeRange
+    public var time: CMTime {
+        rawPlayer.currentTime()
     }
 
     /// Raw player used for playback.
@@ -59,7 +44,18 @@ public final class Player: ObservableObject {
 
     /// The type of stream currently played.
     public var streamType: StreamType {
-        StreamType.streamType(for: pulse)
+        guard timeRange.isValid else { return .unknown }
+        if timeRange.isEmpty {
+            return .live
+        }
+        else {
+            if itemDuration.isIndefinite {
+                return .dvr
+            }
+            else {
+                return itemDuration == .zero ? .live : .onDemand
+            }
+        }
     }
 
     /// Create a player with a given item queue.
@@ -76,36 +72,25 @@ public final class Player: ObservableObject {
             .lane("player_state")
             .assign(to: &$playbackState)
 
-        rawPlayer.pulsePublisher(configuration: self.configuration)
+        rawPlayer.currentItemTimeRangePublisher()
             .receiveOnMainThread()
-            .lane("player_pulse") { output in
-                guard let output else { return "nil" }
-                return String(describing: output)
-            }
-            .assign(to: &$pulse)
+            .lane("player_time_range")
+            .assign(to: &$timeRange)
+
+        rawPlayer.itemDurationPublisher()
+            .receiveOnMainThread()
+            .lane("player_item_duration")
+            .assign(to: &$itemDuration)
 
         rawPlayer.seekingPublisher()
             .receiveOnMainThread()
             .lane("player_seeking")
-            .assign(to: &$seeking)
+            .assign(to: &$isSeeking)
 
         rawPlayer.bufferingPublisher()
             .receiveOnMainThread()
             .lane("player_buffering")
             .assign(to: &$isBuffering)
-
-        // Update progress from pulse information, except when the player is seeking or the progress updated
-        // interactively.
-        Publishers.CombineLatest($pulse, $seeking)
-            .filter { !$0.1 }
-            .map(\.0)
-            .weakCapture(self, at: \.progress)
-            .filter { !$1.isInteracting }
-            .map { PlaybackProgress(value: $0.0?.progress, isInteracting: false) }
-            .removeDuplicates()
-            .receiveOnMainThread()
-            .lane("player_progress")
-            .assign(to: &$progress)
 
         Publishers.CombineLatest($storedItems, rawPlayer.publisher(for: \.currentItem))
             .map { storedItems, currentItem in
@@ -236,9 +221,9 @@ public final class Player: ObservableObject {
     /// Return whether the current player item player can be returned to live conditions.
     /// - Returns: `true`
     public func canSkipToLive() -> Bool {
-        guard streamType == .dvr, let currentItem, let pulse else { return false }
+        guard streamType == .dvr, let currentItem, timeRange.isValid else { return false }
         let chunkDuration = currentItem.chunkDuration
-        return chunkDuration.isValid && pulse.time < pulse.timeRange.end - chunkDuration
+        return chunkDuration.isValid && time < timeRange.end - chunkDuration
     }
 
     /// Return the current item to live conditions. Does nothing if the current item is not a livestream or does not
@@ -247,9 +232,9 @@ public final class Player: ObservableObject {
     /// - Returns: `true` if skipping to live conditions is possible.
     @discardableResult
     public func skipToLive(completionHandler: @escaping (Bool) -> Void = { _ in }) -> Bool {
-        guard canSkipToLive(), let pulse else { return false }
+        guard canSkipToLive(), timeRange.isValid else { return false }
         rawPlayer.seek(
-            to: pulse.timeRange.end,
+            to: timeRange.end,
             toleranceBefore: .positiveInfinity,
             toleranceAfter: .positiveInfinity
         ) { [weak self] finished in
@@ -264,9 +249,9 @@ public final class Player: ObservableObject {
     /// - Returns: `true` if skipping to live conditions is possible.
     @discardableResult
     public func skipToLive() async -> Bool {
-        guard canSkipToLive(), let pulse else { return false }
+        guard canSkipToLive(), timeRange.isValid else { return false }
         let seeked = await rawPlayer.seek(
-            to: pulse.timeRange.end,
+            to: timeRange.end,
             toleranceBefore: .positiveInfinity,
             toleranceAfter: .positiveInfinity
         )

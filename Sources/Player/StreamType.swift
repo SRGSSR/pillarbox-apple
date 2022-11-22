@@ -16,20 +16,4 @@ public enum StreamType {
     case live
     /// Livestream with DVR.
     case dvr
-
-    static func streamType(for pulse: Pulse?) -> StreamType {
-        guard let pulse else { return .unknown }
-        if pulse.timeRange.isEmpty {
-            return .live
-        }
-        else {
-            let itemDuration = pulse.itemDuration
-            if itemDuration.isIndefinite {
-                return .dvr
-            }
-            else {
-                return itemDuration == .zero ? .live : .onDemand
-            }
-        }
-    }
 }

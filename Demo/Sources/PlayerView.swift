@@ -205,7 +205,7 @@ private extension PlayerView {
     // Behavior: h-exp, v-hug
     @available(tvOS, unavailable)
     struct SliderView: View {
-        private static let blankTime = "--:--"
+        private static let blankFormattedTime = "--:--"
 
         private static let shortFormatter: DateComponentsFormatter = {
             let formatter = DateComponentsFormatter()
@@ -223,13 +223,17 @@ private extension PlayerView {
 
         @ObservedObject var player: Player
 
+        private var timeRange: CMTimeRange {
+            player.timeRange
+        }
+
         private var formattedElapsedTime: String {
-            guard let time = player.time, let timeRange = player.timeRange else { return Self.blankTime }
-            return Self.formattedDuration(CMTimeGetSeconds(time - timeRange.start))
+            guard timeRange.isValid else { return Self.blankFormattedTime }
+            return Self.formattedDuration(CMTimeGetSeconds(player.time - timeRange.start))
         }
 
         private var formattedTotalTime: String {
-            guard let timeRange = player.timeRange else { return Self.blankTime }
+            guard timeRange.isValid else { return Self.blankFormattedTime }
             return Self.formattedDuration(CMTimeGetSeconds(timeRange.duration))
         }
 

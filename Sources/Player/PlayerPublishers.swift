@@ -36,7 +36,7 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    func itemTimeRangePublisher() -> AnyPublisher<CMTimeRange, Never> {
+    func currentItemTimeRangePublisher() -> AnyPublisher<CMTimeRange, Never> {
         publisher(for: \.currentItem)
             .map { item in
                 guard let item else { return Just(CMTimeRange.invalid).eraseToAnyPublisher() }
@@ -60,19 +60,6 @@ extension AVPlayer {
                 .map { _ in false }
         )
         .prepend(false)
-        .eraseToAnyPublisher()
-    }
-
-    func pulsePublisher(configuration: PlayerConfiguration) -> AnyPublisher<Pulse?, Never> {
-        Publishers.CombineLatest3(
-            currentTimePublisher(interval: configuration.tick),
-            itemTimeRangePublisher(),
-            itemDurationPublisher()
-        )
-        .map { time, timeRange, itemDuration in
-            Pulse(time: time, timeRange: timeRange, itemDuration: itemDuration)
-        }
-        .removeDuplicates(by: Pulse.close(within: CMTimeMultiplyByRatio(configuration.tick, multiplier: 1, divisor: 2)))
         .eraseToAnyPublisher()
     }
 

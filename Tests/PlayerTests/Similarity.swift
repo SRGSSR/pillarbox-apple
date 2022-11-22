@@ -8,14 +8,7 @@
 
 import AVFoundation
 import Circumspect
-import Core
 import CoreMedia
-
-extension Pulse: Similar {
-    public static func ~= (lhs: Pulse, rhs: Pulse) -> Bool {
-        Pulse.close(within: CMTime(value: 1, timescale: 2))(lhs, rhs)
-    }
-}
 
 extension AVPlayerItem: Similar {
     public static func ~= (lhs: AVPlayerItem, rhs: AVPlayerItem) -> Bool {
