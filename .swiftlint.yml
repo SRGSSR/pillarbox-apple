@@ -34,7 +34,6 @@ disabled_rules:
   - strict_fileprivate
   - strong_iboutlet
   - todo
-  - type_body_length
   - vertical_whitespace_between_cases
   - yoda_condition
 
@@ -135,6 +134,7 @@ opt_in_rules:
   - test_case_accessibility
   - toggle_bool
   - trailing_closure
+  - type_body_length
   - type_contents_order
   - typesafe_array_init
   - unavailable_function
