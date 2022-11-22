@@ -21,6 +21,7 @@
 		6F9DDB44288FE90E0069B687 /* Player in Frameworks */ = {isa = PBXBuildFile; productRef = 6F9DDB43288FE90E0069B687 /* Player */; };
 		6FB553B228C3AF020067CFC4 /* StoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB553B128C3AF020067CFC4 /* StoriesView.swift */; };
 		6FBEFCEB289132DB004BE625 /* UserInterface in Frameworks */ = {isa = PBXBuildFile; productRef = 6FBEFCEA289132DB004BE625 /* UserInterface */; };
+		6FCA4747292CBEC7008C2812 /* ShowTime in Frameworks */ = {isa = PBXBuildFile; productRef = 6FCA4746292CBEC7008C2812 /* ShowTime */; };
 		6FCA8D7C28AD2AB900CF75FB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCA8D7B28AD2AB900CF75FB /* AppDelegate.swift */; };
 		6FCD6A1928AD158E00FCE4EA /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD6A1828AD158E00FCE4EA /* PlayerView.swift */; };
 		6FCD6A1B28AD1B9200FCE4EA /* ExamplesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD6A1A28AD1B9200FCE4EA /* ExamplesView.swift */; };
@@ -71,6 +72,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F36C62D28910538000DD160 /* CoreBusiness in Frameworks */,
+				6FCA4747292CBEC7008C2812 /* ShowTime in Frameworks */,
 				6F9DDB44288FE90E0069B687 /* Player in Frameworks */,
 				6F9B5BC928CF8C530074B9E0 /* OrderedCollections in Frameworks */,
 				6FBEFCEB289132DB004BE625 /* UserInterface in Frameworks */,
@@ -216,6 +218,7 @@
 				6F36C62C28910538000DD160 /* CoreBusiness */,
 				6FBEFCEA289132DB004BE625 /* UserInterface */,
 				6F9B5BC828CF8C530074B9E0 /* OrderedCollections */,
+				6FCA4746292CBEC7008C2812 /* ShowTime */,
 			);
 			productName = PillarboxDemo;
 			productReference = 6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */;
@@ -247,6 +250,7 @@
 			mainGroup = 6F05B8CC2887E934005D75E3;
 			packageReferences = (
 				6F9B5BC728CF8C530074B9E0 /* XCRemoteSwiftPackageReference "swift-collections" */,
+				6FCA4745292CBEC7008C2812 /* XCRemoteSwiftPackageReference "ShowTime" */,
 			);
 			productRefGroup = 6F05B8D62887E934005D75E3 /* Products */;
 			projectDirPath = "";
@@ -571,6 +575,14 @@
 				minimumVersion = 1.0.3;
 			};
 		};
+		6FCA4745292CBEC7008C2812 /* XCRemoteSwiftPackageReference "ShowTime" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/KaneCheshire/ShowTime.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -590,6 +602,11 @@
 		6FBEFCEA289132DB004BE625 /* UserInterface */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = UserInterface;
+		};
+		6FCA4746292CBEC7008C2812 /* ShowTime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6FCA4745292CBEC7008C2812 /* XCRemoteSwiftPackageReference "ShowTime" */;
+			productName = ShowTime;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
