@@ -12,7 +12,9 @@ public extension Publishers {
     /// values in publisher order. The first array is emitted once all publishers have at least emitted a value once.
     /// - Parameter publishers: The publishers to accumulate
     /// - Returns: The publisher
-    static func AccumulateLatestMany<Upstream>(_ publishers: Upstream...) -> AnyPublisher<[Upstream.Output], Upstream.Failure> where Upstream: Publisher {
+    static func AccumulateLatestMany<Upstream>(
+        _ publishers: Upstream...
+    ) -> AnyPublisher<[Upstream.Output], Upstream.Failure> where Upstream: Publisher {
         AccumulateLatestMany(publishers)
     }
 
@@ -20,7 +22,9 @@ public extension Publishers {
     /// values in publisher order. The first array is emitted once all publishers have at least emitted a value once.
     /// - Parameter publishers: The publishers to accumulate
     /// - Returns: The publisher
-    static func AccumulateLatestMany<Upstream, S>(_ publishers: S) -> AnyPublisher<[Upstream.Output], Upstream.Failure> where Upstream: Publisher, S: Swift.Sequence, S.Element == Upstream {
+    static func AccumulateLatestMany<Upstream, S>(
+        _ publishers: S
+    ) -> AnyPublisher<[Upstream.Output], Upstream.Failure> where Upstream: Publisher, S: Swift.Sequence, S.Element == Upstream {
         let publishersArray = Array(publishers)
         switch publishersArray.count {
         case 0:

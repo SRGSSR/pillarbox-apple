@@ -25,8 +25,8 @@ public extension PlayerItem {
         // swiftlint:disable:previous discouraged_optional_collection
         let item = playerItem(for: resource, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
         if resource.streamType == .live {
-            /// Limit buffering and force the player to return to the live edge when re-buffering. This ensures
-            /// livestreams cannot be paused and resumed in the past, as requested by business people.
+            // Limit buffering and force the player to return to the live edge when re-buffering. This ensures
+            // livestreams cannot be paused and resumed in the past, as requested by business people.
             item.automaticallyPreservesTimeOffsetFromLive = true
             item.preferredForwardBufferDuration = 1
         }

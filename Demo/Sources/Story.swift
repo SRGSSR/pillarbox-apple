@@ -12,7 +12,7 @@ struct Story: Identifiable, Hashable {
     let id: Int
     let source: Media
 
-    static func stories(from medias: [Media]) -> [Story] {
-        medias.enumerated().map { Story(id: $0, source: $1) }
+    static func stories(from medias: [Media]) -> [Self] {
+        medias.enumerated().map { .init(id: $0, source: $1) }
     }
 }

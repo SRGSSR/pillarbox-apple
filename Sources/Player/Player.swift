@@ -209,7 +209,12 @@ public final class Player: ObservableObject {
     ///   - toleranceBefore: Tolerance before the desired position.
     ///   - toleranceAfter: Tolerance after the desired position.
     ///   - completionHandler: A completion handler called when seeking ends.
-    public func seek(to time: CMTime, toleranceBefore: CMTime = .positiveInfinity, toleranceAfter: CMTime = .positiveInfinity, completionHandler: @escaping (Bool) -> Void = { _ in }) {
+    public func seek(
+        to time: CMTime,
+        toleranceBefore: CMTime = .positiveInfinity,
+        toleranceAfter: CMTime = .positiveInfinity,
+        completionHandler: @escaping (Bool) -> Void = { _ in }
+    ) {
         rawPlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
     }
 
@@ -220,7 +225,11 @@ public final class Player: ObservableObject {
     ///   - toleranceAfter: Tolerance after the desired position.
     /// - Returns: `true` if seeking was successful.
     @discardableResult
-    public func seek(to time: CMTime, toleranceBefore: CMTime = .positiveInfinity, toleranceAfter: CMTime = .positiveInfinity) async -> Bool {
+    public func seek(
+        to time: CMTime,
+        toleranceBefore: CMTime = .positiveInfinity,
+        toleranceAfter: CMTime = .positiveInfinity
+    ) async -> Bool {
         await rawPlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
     }
 

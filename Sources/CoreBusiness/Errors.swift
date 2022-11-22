@@ -8,7 +8,7 @@ import Foundation
 
 struct DRMError: LocalizedError {
     static var missingContentKeyContext: Self {
-        DRMError(errorDescription: "Could not retrieve DRM license")
+        .init(errorDescription: "Could not retrieve DRM license")
     }
 
     let errorDescription: String?
@@ -20,7 +20,7 @@ enum TokenError: Error {
 
 struct DataError: LocalizedError {
     static var noResourceAvailable: Self {
-        DataError(errorDescription: NSLocalizedString(
+        .init(errorDescription: NSLocalizedString(
             "No playable resources could be found",
             comment: "Generic error message returned when no playable resources could be found"
         ))
@@ -35,10 +35,10 @@ struct DataError: LocalizedError {
 
     static func http(withStatusCode statusCode: Int) -> Self? {
         guard statusCode >= 400 else { return nil }
-        return DataError(errorDescription: HTTPURLResponse.fixedLocalizedString(forStatusCode: statusCode))
+        return .init(errorDescription: HTTPURLResponse.fixedLocalizedString(forStatusCode: statusCode))
     }
 
     static func blocked(withMessage message: String) -> Self {
-        DataError(errorDescription: message)
+        .init(errorDescription: message)
     }
 }

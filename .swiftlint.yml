@@ -8,25 +8,44 @@ excluded:
   - Package.swift
 
 disabled_rules:
-  - identifier_name
-  - file_length
+  - conditional_returns_on_newline
+  - discouraged_none_name
+  - explicit_acl
+  - explicit_enum_raw_value
+  - explicit_self
+  - explicit_top_level_acl
+  - explicit_type_interface
+  - file_name
   - force_cast
   - force_try
-  - function_body_length
-  - line_length
+  - force_unwrapping
+  - function_default_parameter_at_end
+  - identifier_name
+  - indentation_width
   - multiple_closures_with_trailing_closure
+  - nimble_operator
+  - number_separator
+  - no_extension_access_modifier
+  - no_grouping_extension
+  - no_magic_numbers
+  - nslocalizedstring_require_bundle
+  - required_deinit
   - statement_position
+  - strict_fileprivate
+  - strong_iboutlet
   - todo
-  - type_body_length
+  - vertical_whitespace_between_cases
+  - yoda_condition
 
 opt_in_rules:
   - accessibility_label_for_image
+  - accessibility_trait_for_button
   - anonymous_argument_in_multiline_closure
-  - anyobject_protocol
   - array_init
   - attributes
   - balanced_xctest_lifecycle
   - capture_variable
+  - closure_body_length
   - closure_end_indentation
   - closure_spacing
   - collection_alignment
@@ -52,12 +71,14 @@ opt_in_rules:
   - fallthrough
   - fatal_error_message
   - file_header
+  - file_length
   - file_name_no_space
   - file_types_order
   - first_where
   - flatmap_over_map_reduce
+  - function_body_length
+  - ibinspectable_in_extension
   - identical_operands
-  - identifier_name
   - implicit_return
   - implicitly_unwrapped_optional
   - joined_default_parameter
@@ -65,6 +86,7 @@ opt_in_rules:
   - legacy_multiple
   - legacy_objc_type
   - let_var_whitespace
+  - line_length
   - literal_expression_end_indentation
   - lower_acl_than_parent
   - missing_docs
@@ -75,7 +97,6 @@ opt_in_rules:
   - multiline_literal_brackets
   - multiline_parameters
   - multiline_parameters_brackets
-  - multiple_closures_with_trailing_closure
   - nslocalizedstring_key
   - object_literal
   - operator_usage_whitespace
@@ -91,7 +112,11 @@ opt_in_rules:
   - private_action
   - private_outlet
   - private_subject
+  - prohibited_interface_builder
   - prohibited_super_call
+  - quick_discouraged_call
+  - quick_discouraged_focused_test
+  - quick_discouraged_pending_test
   - raw_value_for_camel_cased_codable_enum
   - reduce_into
   - redundant_nil_coalescing
@@ -99,6 +124,7 @@ opt_in_rules:
   - required_enum_case
   - return_value_from_void_function
   - self_binding
+  - shorthand_optional_binding
   - single_test_class
   - sorted_first_last
   - sorted_imports
@@ -107,8 +133,10 @@ opt_in_rules:
   - test_case_accessibility
   - toggle_bool
   - trailing_closure
+  - type_body_length
   - type_contents_order
   - typesafe_array_init
+  - unavailable_function
   - unneeded_parentheses_in_closure_argument
   - unowned_variable_capture
   - untyped_error_in_catch
@@ -117,6 +145,7 @@ opt_in_rules:
   - vertical_parameter_alignment_on_call
   - vertical_whitespace_closing_braces
   - vertical_whitespace_opening_braces
+  - weak_delegate
   - xct_specific_matcher
 
 cyclomatic_complexity:
@@ -134,5 +163,16 @@ file_header:
 function_parameter_count:
   warning: 8
 
+file_length:
+  warning: 1000
+  error: 1500
+
+line_length:
+  warning: 160
+  error: 200
+
 nesting:
   type_level: 2
+
+type_name:
+  allowed_symbols: "`"

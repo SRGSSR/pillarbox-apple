@@ -11,6 +11,7 @@ import SwiftUI
 // Behavior: h-exp, v-exp
 struct ShowcaseView: View {
     var body: some View {
+        // swiftlint:disable:next closure_body_length
         List {
             Group {
                 Cell(title: "Basic") {

@@ -36,19 +36,30 @@ final class ItemStateTests: XCTestCase {
     }
 
     func testInnerComment() {
-        expect(ItemState.innerComment(from: "The operation couldn’t be completed. (CoreBusiness.DataError error 1 - This content is not available anymore.)"))
-            .to(equal("This content is not available anymore."))
-        expect(ItemState.innerComment(from: "The operation couldn’t be completed. (CoreBusiness.DataError error 1 - Not found)"))
-            .to(equal("Not found"))
-        expect(ItemState.innerComment(from: "The operation couldn't be completed. (CoreMediaErrorDomain error -16839 - Unable to get playlist before long download timer.)"))
-            .to(equal("Unable to get playlist before long download timer."))
-        expect(ItemState.innerComment(from: "L’opération n’a pas pu s’achever. (CoreBusiness.DataError erreur 1 - Ce contenu n'est plus disponible.)"))
-            .to(equal("Ce contenu n'est plus disponible."))
+        expect(ItemState.innerComment(
+            from: "The operation couldn’t be completed. (CoreBusiness.DataError error 1 - This content is not available anymore.)"
+        )).to(equal("This content is not available anymore."))
+
+        expect(ItemState.innerComment(
+            from: "The operation couldn’t be completed. (CoreBusiness.DataError error 1 - Not found)"
+        )).to(equal("Not found"))
+
+        expect(ItemState.innerComment(
+            from: "The operation couldn't be completed. (CoreMediaErrorDomain error -16839 - Unable to get playlist before long download timer.)"
+        )).to(equal("Unable to get playlist before long download timer."))
+
+        expect(ItemState.innerComment(
+            from: "L’opération n’a pas pu s’achever. (CoreBusiness.DataError erreur 1 - Ce contenu n'est plus disponible.)"
+        )).to(equal("Ce contenu n'est plus disponible."))
     }
 
     func testNestedInnerComments() {
-        expect(ItemState.innerComment(from: "The operation couldn’t be completed. (CoreMediaErrorDomain error -12660 - The operation couldn’t be completed. (CoreMediaErrorDomain error -12660 - HTTP 403: Forbidden))"))
-            .to(equal("HTTP 403: Forbidden"))
+        expect(ItemState.innerComment(
+            from: """
+            The operation couldn’t be completed. (CoreMediaErrorDomain error -12660 - The operation couldn’t be completed. \
+            (CoreMediaErrorDomain error -12660 - HTTP 403: Forbidden))
+            """
+        )).to(equal("HTTP 403: Forbidden"))
     }
 
     func testLocalizedErrorFromLocalizedNSError() {

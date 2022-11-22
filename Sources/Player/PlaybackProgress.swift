@@ -18,7 +18,7 @@ public struct PlaybackProgress: Equatable {
     }
 
     static var none: Self {
-        PlaybackProgress(value: nil, isInteracting: false)
+        .init(value: nil, isInteracting: false)
     }
 
     private static var defaultRange: ClosedRange<Float> = 0...1

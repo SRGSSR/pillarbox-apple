@@ -11,6 +11,7 @@ import Circumspect
 import XCTest
 
 final class ItemStatePublisherTests: XCTestCase {
+    // swiftlint:disable:next weak_delegate
     private let resourceLoaderDelegate = FailingResourceLoaderDelegate()
 
     func testEmpty() {
