@@ -58,12 +58,10 @@ struct SliderView: View {
     @StateObject private var tracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
 
     var body: some View {
-        Slider(value: $tracker.progress, in: 0...0)
+        Slider(value: $tracker.progress, in: tracker.range)
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-            .onAppear {
-                tracker.player = player
-            }
+            .bind(tracker, to: player)
     }
 }
 

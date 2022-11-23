@@ -12,7 +12,7 @@ import TimelaneCombine
 
 /// An audio / video player maintaining its items as a double-ended queue (deque).
 @MainActor
-public final class Player: ObservableObject {
+public final class Player: ObservableObject, Equatable {
     /// Current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle
 
@@ -117,6 +117,10 @@ public final class Player: ObservableObject {
     ///   - configuration: A closure in which the player can be configured.
     public convenience init(item: PlayerItem, configuration: (inout PlayerConfiguration) -> Void = { _  in }) {
         self.init(items: [item], configuration: configuration)
+    }
+
+    public nonisolated static func == (lhs: Player, rhs: Player) -> Bool {
+        lhs === rhs
     }
 
     private static func configure(with configuration: (inout PlayerConfiguration) -> Void) -> PlayerConfiguration {

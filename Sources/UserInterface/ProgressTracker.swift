@@ -7,6 +7,7 @@
 import Combine
 import CoreMedia
 import Player
+import SwiftUI
 
 @MainActor
 public final class ProgressTracker: ObservableObject {
@@ -53,5 +54,17 @@ public final class ProgressTracker: ObservableObject {
         let elapsedTime = (time - timeRange.start).seconds
         let duration = timeRange.duration.seconds
         return Float(elapsedTime / duration).clamped(to: 0...1)
+    }
+}
+
+public extension View {
+    @MainActor
+    func bind(_ tracker: ProgressTracker, to player: Player) -> some View {
+        onAppear {
+            tracker.player = player
+        }
+        .onChange(of: player) { newValue in
+            tracker.player = newValue
+        }
     }
 }
