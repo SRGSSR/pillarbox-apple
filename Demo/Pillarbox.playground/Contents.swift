@@ -19,6 +19,7 @@ import UserInterface
           to it.
 */
 
+// Behavior: h-exp, v-exp
 struct PlayerView: View {
     @StateObject private var player = Player(
         item: PlayerItem(url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!)
@@ -54,6 +55,7 @@ struct PlayerView: View {
 }
 
 extension PlayerView {
+    // Behavior: h-exp, v-exp
     struct SliderView: View {
         @ObservedObject var player: Player
         @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 10))
