@@ -8,18 +8,39 @@ import Combine
 import CoreMedia
 import Player
 
+@MainActor
 public final class ProgressTracker: ObservableObject {
-    /// Progress in 0...1
-    @Published public var progress: Float = 0
     @Published public var player: Player?
+    @Published private var _progress: Float?
+
+    public var progress: Float {
+        get {
+            _progress ?? 0
+        }
+        set {
+            _progress = newValue
+        }
+    }
 
     public var range: ClosedRange<Float> {
-        0...1
+        _progress != nil ? 0...1 : 0...0
     }
 
     private let interval: CMTime
 
     public init(interval: CMTime) {
         self.interval = interval
+        $player
+            .map { Self.progressPublisher(for: $0) }
+            .switchToLatest()
+            .receiveOnMainThread()
+            .assign(to: &$_progress)
+    }
+
+    private static func progressPublisher(for player: Player?) -> AnyPublisher<Float?, Never> {
+        guard let player else {
+            return Just(Optional<Float>.none).eraseToAnyPublisher()
+        }
+        return Just(Float(0)).eraseToAnyPublisher()
     }
 }
