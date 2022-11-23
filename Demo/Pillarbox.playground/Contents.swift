@@ -45,7 +45,7 @@ struct PlayerView: View {
                         .frame(width: 44, height: 44)
                 }
             }
-            Slider(player: player)
+            Slider(value: .constant(0), in: 0...0)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         }
