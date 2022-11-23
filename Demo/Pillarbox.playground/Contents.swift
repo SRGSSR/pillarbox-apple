@@ -53,15 +53,17 @@ struct PlayerView: View {
     }
 }
 
-struct SliderView: View {
-    @ObservedObject var player: Player
-    @StateObject private var tracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
+extension PlayerView {
+    struct SliderView: View {
+        @ObservedObject var player: Player
+        @StateObject private var tracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
 
-    var body: some View {
-        Slider(value: $tracker.progress, in: tracker.range)
-            .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-            .bind(tracker, to: player)
+        var body: some View {
+            Slider(value: $tracker.progress, in: tracker.range)
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                .bind(tracker, to: player)
+        }
     }
 }
 

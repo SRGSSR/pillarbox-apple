@@ -9,11 +9,14 @@ import CoreMedia
 import Player
 import SwiftUI
 
+/// Tracks playback progress. SwiftUI apps should locally track progress to avoid performing unnecessary view updates.
 @MainActor
 public final class ProgressTracker: ObservableObject {
+    /// The player to attach. Use `View.bind(_:to:)` in SwiftUI code.
     @Published public var player: Player?
     @Published private var _progress: Float?
 
+    /// The current playback progress.
     public var progress: Float {
         get {
             _progress ?? 0
@@ -23,10 +26,13 @@ public final class ProgressTracker: ObservableObject {
         }
     }
 
+    /// Range for progress values.
     public var range: ClosedRange<Float> {
         _progress != nil ? 0...1 : 0...0
     }
 
+    /// Create a tracker updating its progress at the specified interval.
+    /// - Parameter interval: The interval at which progress must be updated.
     public init(interval: CMTime) {
         $player
             .map { Self.progressPublisher(for: $0, interval: interval) }
@@ -58,6 +64,10 @@ public final class ProgressTracker: ObservableObject {
 }
 
 public extension View {
+    /// Bind a tracker to a player.
+    /// - Parameters:
+    ///   - tracker: The tracker to bind.
+    ///   - player: The player to observe.
     @MainActor
     func bind(_ tracker: ProgressTracker, to player: Player) -> some View {
         onAppear {

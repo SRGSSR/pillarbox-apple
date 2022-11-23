@@ -8,5 +8,4 @@ import CoreMedia
 
 /// Player configuration.
 public struct PlayerConfiguration {
-    
 }
