@@ -14,6 +14,9 @@ import SwiftUI
 public final class ProgressTracker: ObservableObject {
     /// The player to attach. Use `View.bind(_:to:)` in SwiftUI code.
     @Published public var player: Player?
+
+    @Published public var isInteracting: Bool = false
+
     @Published private var _progress: Float? {
         willSet {
             guard let player, let _progress, let time = Self.time(forProgress: _progress, in: player.timeRange) else {
@@ -42,17 +45,26 @@ public final class ProgressTracker: ObservableObject {
     /// - Parameter interval: The interval at which progress must be updated.
     public init(interval: CMTime) {
         $player
-            .map { Self.progressPublisher(for: $0, interval: interval) }
+            .map { [$isInteracting] player -> AnyPublisher<Float?, Never> in
+                guard let player else {
+                    return Just(nil).eraseToAnyPublisher()
+                }
+                return Publishers.CombineLatest3(
+                    Self.progressPublisher(for: player, interval: interval),
+                    $isInteracting,
+                    player.$isSeeking
+                )
+                .filter { !$0.1 && !$0.2 }
+                .map(\.0)
+                .eraseToAnyPublisher()
+            }
             .switchToLatest()
             .receiveOnMainThread()
             .assign(to: &$_progress)
     }
 
-    private static func progressPublisher(for player: Player?, interval: CMTime) -> AnyPublisher<Float?, Never> {
-        guard let player else {
-            return Just(Optional<Float>.none).eraseToAnyPublisher()
-        }
-        return Publishers.CombineLatest(
+    private static func progressPublisher(for player: Player, interval: CMTime) -> AnyPublisher<Float?, Never> {
+        Publishers.CombineLatest(
             player.periodicTimePublisher(forInterval: interval, queue: .global(qos: .default)),
             player.$timeRange
         )

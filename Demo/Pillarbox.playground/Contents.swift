@@ -59,10 +59,12 @@ extension PlayerView {
         @StateObject private var tracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
 
         var body: some View {
-            Slider(value: $tracker.progress, in: tracker.range)
-                .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-                .bind(tracker, to: player)
+            Slider(value: $tracker.progress, in: tracker.range) { isEditing in
+                tracker.isInteracting = isEditing
+            }
+            .padding()
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            .bind(tracker, to: player)
         }
     }
 }

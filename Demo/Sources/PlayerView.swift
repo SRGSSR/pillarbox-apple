@@ -242,27 +242,25 @@ private extension PlayerView {
             Group {
                 switch player.streamType {
                 case .onDemand:
-                    Slider(
-                        value: $tracker.progress,
-                        in: tracker.range,
-                        label: {
-                            Text("Progress")
-                        },
-                        minimumValueLabel: {
-                            Text(formattedElapsedTime)
-                        },
-                        maximumValueLabel: {
-                            Text(formattedTotalTime)
-                        }
-                    )
+                    Slider(value: $tracker.progress, in: tracker.range) {
+                        Text("Progress")
+                    } minimumValueLabel: {
+                        Text(formattedElapsedTime)
+                    } maximumValueLabel: {
+                        Text(formattedTotalTime)
+                    } onEditingChanged: { isEditing in
+                        tracker.isInteracting = isEditing
+                    }
                 case .unknown:
                     // `EmptyView` has h-hug, v-hug behavior.
                     EmptyView()
                         .frame(maxWidth: .infinity)
                 default:
-                    Slider(value: $tracker.progress, in: tracker.range, label: {
+                    Slider(value: $tracker.progress, in: tracker.range) {
                         Text("Progress")
-                    })
+                    } onEditingChanged: { isEditing in
+                        tracker.isInteracting = isEditing
+                    }
                 }
             }
             .foregroundColor(.white)

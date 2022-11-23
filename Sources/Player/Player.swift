@@ -19,6 +19,9 @@ public final class Player: ObservableObject, Equatable {
     /// Returns whether the player is currently buffering.
     @Published public var isBuffering = false
 
+    /// Returns whether the player is currently seeking to another position.
+    @Published public var isSeeking = false
+
     /// The current item in the queue.
     @Published public var currentItem: PlayerItem?
 
@@ -27,7 +30,6 @@ public final class Player: ObservableObject, Equatable {
 
     @Published private var storedItems: Deque<PlayerItem>
     @Published private var itemDuration: CMTime = .indefinite
-    @Published private var isSeeking = false
 
     /// Current time.
     public var time: CMTime {
