@@ -222,7 +222,7 @@ private extension PlayerView {
         }()
 
         @ObservedObject var player: Player
-        @State private var progress: Float = 0
+        @StateObject private var tracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
 
         private var timeRange: CMTimeRange {
             player.timeRange
@@ -243,8 +243,8 @@ private extension PlayerView {
                 switch player.streamType {
                 case .onDemand:
                     Slider(
-                        value: $progress,
-                        in: 0...0,
+                        value: $tracker.progress,
+                        in: tracker.range,
                         label: {
                             Text("Progress")
                         },
@@ -260,7 +260,7 @@ private extension PlayerView {
                     EmptyView()
                         .frame(maxWidth: .infinity)
                 default:
-                    Slider(value: $progress, in: 0...0, label: {
+                    Slider(value: $tracker.progress, in: tracker.range, label: {
                         Text("Progress")
                     })
                 }
