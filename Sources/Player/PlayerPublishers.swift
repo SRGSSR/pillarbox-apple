@@ -47,11 +47,6 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    func currentTimePublisher(interval: CMTime) -> AnyPublisher<CMTime, Never> {
-        Publishers.PeriodicTimePublisher(for: self, interval: interval, queue: .global(qos: .userInteractive))
-            .eraseToAnyPublisher()
-    }
-
     func seekingPublisher() -> AnyPublisher<Bool, Never> {
         Publishers.Merge(
             NotificationCenter.default.weakPublisher(for: .willSeek, object: self)
