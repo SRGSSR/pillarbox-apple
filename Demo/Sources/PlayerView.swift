@@ -222,7 +222,7 @@ private extension PlayerView {
         }()
 
         @ObservedObject var player: Player
-        @StateObject private var tracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
+        @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
 
         private var timeRange: CMTimeRange {
             player.timeRange
@@ -242,7 +242,7 @@ private extension PlayerView {
             Group {
                 switch player.streamType {
                 case .onDemand:
-                    Slider(progressTracker: tracker) {
+                    Slider(progressTracker: progressTracker) {
                         Text("Progress")
                     } minimumValueLabel: {
                         Text(formattedElapsedTime)
@@ -254,7 +254,7 @@ private extension PlayerView {
                     EmptyView()
                         .frame(maxWidth: .infinity)
                 default:
-                    Slider(progressTracker: tracker) {
+                    Slider(progressTracker: progressTracker) {
                         Text("Progress")
                     }
                 }
@@ -262,7 +262,7 @@ private extension PlayerView {
             .foregroundColor(.white)
             .tint(.white)
             .padding()
-            .bind(tracker, to: player)
+            .bind(progressTracker, to: player)
         }
 
         private static func formattedDuration(_ duration: TimeInterval) -> String {

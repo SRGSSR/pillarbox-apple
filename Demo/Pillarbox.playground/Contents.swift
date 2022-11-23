@@ -56,13 +56,13 @@ struct PlayerView: View {
 extension PlayerView {
     struct SliderView: View {
         @ObservedObject var player: Player
-        @StateObject private var tracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
+        @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
 
         var body: some View {
-            Slider(progressTracker: tracker)
+            Slider(progressTracker: progressTracker)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-                .bind(tracker, to: player)
+                .bind(progressTracker, to: player)
         }
     }
 }

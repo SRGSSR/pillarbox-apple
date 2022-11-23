@@ -9,7 +9,9 @@ import CoreMedia
 import Player
 import SwiftUI
 
-/// Tracks playback progress. SwiftUI apps should locally track progress to avoid performing unnecessary view updates.
+/// Tracks playback progress. Progress trackers can be locally instantiated in a SwiftUI view hierarchy to trigger
+/// view updates at a specific pace, avoiding unnecessary refreshes in other parts of the view hierarchy that do
+/// not need to be periodically refreshed.
 @MainActor
 public final class ProgressTracker: ObservableObject {
     /// The player to attach. Use `View.bind(_:to:)` in SwiftUI code.
@@ -91,17 +93,17 @@ public final class ProgressTracker: ObservableObject {
 }
 
 public extension View {
-    /// Bind a tracker to a player.
+    /// Bind a progress tracker to a player.
     /// - Parameters:
-    ///   - tracker: The tracker to bind.
+    ///   - progressTracker: The progress tracker to bind.
     ///   - player: The player to observe.
     @MainActor
-    func bind(_ tracker: ProgressTracker, to player: Player) -> some View {
+    func bind(_ progressTracker: ProgressTracker, to player: Player) -> some View {
         onAppear {
-            tracker.player = player
+            progressTracker.player = player
         }
         .onChange(of: player) { newValue in
-            tracker.player = newValue
+            progressTracker.player = newValue
         }
     }
 }

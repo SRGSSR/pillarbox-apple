@@ -32,7 +32,7 @@ private extension StoriesView {
     // Behavior: h-exp, v-exp
     struct StoryView: View {
         @ObservedObject var player: Player
-        @StateObject private var tracker = ProgressTracker(interval: CMTime(value: 1, timescale: 10))
+        @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 10))
 
         var body: some View {
             ZStack {
@@ -44,13 +44,13 @@ private extension StoriesView {
                     ProgressView()
                         .zIndex(1)
                 }
-                ProgressView(value: tracker.progress)
+                ProgressView(value: progressTracker.progress)
                     .padding()
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
             .tint(.white)
             .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
-            .bind(tracker, to: player)
+            .bind(progressTracker, to: player)
         }
     }
 }
