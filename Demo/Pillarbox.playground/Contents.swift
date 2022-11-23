@@ -45,13 +45,25 @@ struct PlayerView: View {
                         .frame(width: 44, height: 44)
                 }
             }
-            Slider(value: .constant(0), in: 0...0)
-                .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            SliderView(player: player)
         }
         .onAppear {
             player.play()
         }
+    }
+}
+
+struct SliderView: View {
+    @ObservedObject var player: Player
+    @StateObject private var tracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
+
+    var body: some View {
+        Slider(value: $tracker.progress, in: 0...0)
+            .padding()
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            .onAppear {
+                tracker.player = player
+            }
     }
 }
 
