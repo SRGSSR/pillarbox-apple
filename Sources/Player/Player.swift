@@ -16,9 +16,6 @@ public final class Player: ObservableObject {
     /// Current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle
 
-    /// Returns whether the player is currently seeking.
-    @Published public var isSeeking = false
-
     /// Returns whether the player is currently buffering.
     @Published public var isBuffering = false
 
@@ -30,6 +27,7 @@ public final class Player: ObservableObject {
 
     @Published private var storedItems: Deque<PlayerItem>
     @Published private var itemDuration: CMTime = .indefinite
+    @Published private var isSeeking = false
 
     /// Current time.
     public var time: CMTime {
