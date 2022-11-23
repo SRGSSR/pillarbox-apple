@@ -230,12 +230,12 @@ private extension PlayerView {
 
         private var formattedElapsedTime: String {
             guard timeRange.isValid else { return Self.blankFormattedTime }
-            return Self.formattedDuration(CMTimeGetSeconds(player.time - timeRange.start))
+            return Self.formattedDuration((player.time - timeRange.start).seconds)
         }
 
         private var formattedTotalTime: String {
             guard timeRange.isValid else { return Self.blankFormattedTime }
-            return Self.formattedDuration(CMTimeGetSeconds(timeRange.duration))
+            return Self.formattedDuration((timeRange.duration).seconds)
         }
 
         var body: some View {

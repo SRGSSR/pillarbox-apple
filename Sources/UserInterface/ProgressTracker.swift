@@ -26,21 +26,32 @@ public final class ProgressTracker: ObservableObject {
         _progress != nil ? 0...1 : 0...0
     }
 
-    private let interval: CMTime
-
     public init(interval: CMTime) {
-        self.interval = interval
         $player
-            .map { Self.progressPublisher(for: $0) }
+            .map { Self.progressPublisher(for: $0, interval: interval) }
             .switchToLatest()
             .receiveOnMainThread()
             .assign(to: &$_progress)
     }
 
-    private static func progressPublisher(for player: Player?) -> AnyPublisher<Float?, Never> {
+    private static func progressPublisher(for player: Player?, interval: CMTime) -> AnyPublisher<Float?, Never> {
         guard let player else {
             return Just(Optional<Float>.none).eraseToAnyPublisher()
         }
-        return Just(Float(0)).eraseToAnyPublisher()
+        return Publishers.CombineLatest(
+            player.periodicTimePublisher(forInterval: interval, queue: .global(qos: .default)),
+            player.$timeRange
+        )
+        .map { time, timeRange in
+            progress(for: time, in: timeRange)
+        }
+        .eraseToAnyPublisher()
+    }
+
+    private static func progress(for time: CMTime, in timeRange: CMTimeRange) -> Float? {
+        guard time.isNumeric && timeRange.isValid && !timeRange.isEmpty else { return nil }
+        let elapsedTime = (time - timeRange.start).seconds
+        let duration = timeRange.duration.seconds
+        return Float(elapsedTime / duration).clamped(to: 0...1)
     }
 }
