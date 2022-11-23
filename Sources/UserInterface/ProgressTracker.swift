@@ -6,10 +6,12 @@
 
 import Combine
 import CoreMedia
+import Player
 
 public final class ProgressTracker: ObservableObject {
     /// Progress in 0...1
     @Published public var progress: Float = 0
+    @Published public var player: Player?
 
     public var range: ClosedRange<Float> {
         0...1

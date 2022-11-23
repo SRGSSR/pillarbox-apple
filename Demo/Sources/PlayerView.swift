@@ -268,6 +268,9 @@ private extension PlayerView {
             .foregroundColor(.white)
             .tint(.white)
             .padding()
+            .onAppear {
+                tracker.player = player
+            }
         }
 
         private static func formattedDuration(_ duration: TimeInterval) -> String {
