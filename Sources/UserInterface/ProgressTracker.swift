@@ -14,7 +14,14 @@ import SwiftUI
 public final class ProgressTracker: ObservableObject {
     /// The player to attach. Use `View.bind(_:to:)` in SwiftUI code.
     @Published public var player: Player?
-    @Published private var _progress: Float?
+    @Published private var _progress: Float? {
+        willSet {
+            guard let player, let _progress, let time = Self.time(forProgress: _progress, in: player.timeRange) else {
+                return
+            }
+            player.seek(to: time)
+        }
+    }
 
     /// The current playback progress.
     public var progress: Float {
@@ -60,6 +67,12 @@ public final class ProgressTracker: ObservableObject {
         let elapsedTime = (time - timeRange.start).seconds
         let duration = timeRange.duration.seconds
         return Float(elapsedTime / duration).clamped(to: 0...1)
+    }
+
+    private static func time(forProgress progress: Float, in timeRange: CMTimeRange) -> CMTime? {
+        guard timeRange.isValid && !timeRange.isEmpty else { return nil }
+        let multiplier = Float64(progress.clamped(to: 0...1))
+        return timeRange.start + CMTimeMultiplyByFloat64(timeRange.duration, multiplier: multiplier)
     }
 }
 
