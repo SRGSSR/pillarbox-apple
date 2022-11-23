@@ -222,7 +222,7 @@ private extension PlayerView {
         }()
 
         @ObservedObject var player: Player
-        @State var progress: Float = 0
+        @State private var progress: Float = 0
 
         private var timeRange: CMTimeRange {
             player.timeRange
@@ -244,6 +244,7 @@ private extension PlayerView {
                 case .onDemand:
                     Slider(
                         value: $progress,
+                        in: 0...0,
                         label: {
                             Text("Progress")
                         },
@@ -259,7 +260,7 @@ private extension PlayerView {
                     EmptyView()
                         .frame(maxWidth: .infinity)
                 default:
-                    Slider(value: $progress, label: {
+                    Slider(value: $progress, in: 0...0, label: {
                         Text("Progress")
                     })
                 }

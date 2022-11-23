@@ -32,6 +32,7 @@ private extension StoriesView {
     // Behavior: h-exp, v-exp
     struct StoryView: View {
         @ObservedObject var player: Player
+        @State private var progress: Float = 0
 
         var body: some View {
             ZStack {
@@ -43,11 +44,9 @@ private extension StoriesView {
                     ProgressView()
                         .zIndex(1)
                 }
-//                if let value = player.progress.value {
-//                    ProgressView(value: value)
-//                        .padding()
-//                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-//                }
+                ProgressView(value: progress)
+                    .padding()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             }
             .tint(.white)
             .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
