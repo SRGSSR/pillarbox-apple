@@ -15,6 +15,8 @@ public final class ProgressTracker: ObservableObject {
     /// The player to attach. Use `View.bind(_:to:)` in SwiftUI code.
     @Published public var player: Player?
 
+    /// Must be set to `true` during interactions updating the progress (e.g. while holding a slider knob controlling
+    /// the progress).
     @Published public var isInteracting: Bool = false
 
     @Published private var _progress: Float? {
