@@ -56,7 +56,7 @@ struct PlayerView: View {
 extension PlayerView {
     struct SliderView: View {
         @ObservedObject var player: Player
-        @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
+        @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 10))
 
         var body: some View {
             Slider(progressTracker: progressTracker)

@@ -222,7 +222,7 @@ private extension PlayerView {
         }()
 
         @ObservedObject var player: Player
-        @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
+        @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 10))
 
         private var timeRange: CMTimeRange {
             player.timeRange
