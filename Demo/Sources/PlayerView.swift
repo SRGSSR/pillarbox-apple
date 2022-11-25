@@ -263,13 +263,18 @@ private extension PlayerView {
             Group {
                 switch player.streamType {
                 case .onDemand:
-                    Slider(progressTracker: progressTracker) {
-                        Text("Progress")
-                    } minimumValueLabel: {
-                        Text(formattedElapsedTime)
-                    } maximumValueLabel: {
-                        Text(formattedTotalTime)
-                    }
+                    Slider(
+                        progressTracker: progressTracker,
+                        label: {
+                            Text("Progress")
+                        },
+                        minimumValueLabel: {
+                            Text(formattedElapsedTime)
+                        },
+                        maximumValueLabel: {
+                            Text(formattedTotalTime)
+                        }
+                    )
                 case .unknown:
                     // `EmptyView` has h-hug, v-hug behavior.
                     EmptyView()
