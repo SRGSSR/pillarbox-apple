@@ -15,11 +15,15 @@ import XCTest
 final class PeriodicTimePublisherTests: XCTestCase {
     func testEmpty() {
         let player = AVPlayer()
-        expectNothingPublished(
+        expectPublished(
+            values: [
+                .invalid
+            ],
             from: Publishers.PeriodicTimePublisher(
                 for: player,
                 interval: CMTimeMake(value: 1, timescale: 2)
             ),
+            to: beClose(within: 0.5),
             during: 2
         )
     }

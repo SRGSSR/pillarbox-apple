@@ -55,6 +55,7 @@ private extension Publishers._PeriodicTimePublisher {
         private func processDemand(_ demand: Subscribers.Demand) {
             self.demand += demand
             guard timeObserver == nil else { return }
+            processTime(player.currentTime())
             timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: queue) { [weak self] time in
                 self?.processTime(time)
             }

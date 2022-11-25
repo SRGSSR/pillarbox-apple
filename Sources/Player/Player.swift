@@ -271,7 +271,8 @@ public final class Player: ObservableObject, Equatable {
         return seeked
     }
 
-    /// Return a publisher periodically emitting the current time while the player is active.
+    /// Return a publisher periodically emitting the current time while the player is active. Emits the current time
+    /// also on subscription.
     /// - Parameters:
     ///   - interval: The interval at which events must be emitted.
     ///   - queue: The queue on which values are published.
