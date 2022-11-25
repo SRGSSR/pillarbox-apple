@@ -69,13 +69,8 @@ private extension PlayerView {
                 .accessibilityAddTraits(.isButton)
                 .ignoresSafeArea()
 #if os(iOS)
-                HStack(spacing: 0) {
-                    TimeSlider(player: player)
-                    LiveLabel(player: player)
-                }
-                .opacity(isUserInterfaceHidden ? 0 : 1)
-                .padding(.horizontal, 6)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                TimeBar(player: player, isUserInterfaceHidden: isUserInterfaceHidden)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
 #endif
             }
             .animation(.easeInOut(duration: 0.2), value: isUserInterfaceHidden)
@@ -186,6 +181,11 @@ private extension PlayerView {
     // Behavior: h-hug, v-hug
     struct LiveLabel: View {
         @ObservedObject var player: Player
+        @ObservedObject var progressTracker: ProgressTracker
+
+        private var canSkipToLive: Bool {
+            player.canSkipToLive(from: progressTracker.time ?? player.time)
+        }
 
         var body: some View {
             if player.streamType == .dvr || player.streamType == .live {
@@ -194,11 +194,30 @@ private extension PlayerView {
                         .foregroundColor(.white)
                         .padding(.vertical, 4)
                         .padding(.horizontal, 6)
-                        .background(player.canSkipToLive() ? .gray : .red)
+                        .background(canSkipToLive ? .gray : .red)
                         .cornerRadius(4)
                 }
-                .disabled(!player.canSkipToLive())
+                .disabled(!canSkipToLive)
             }
+        }
+    }
+
+    // Behavior: h-exp, v-hug
+    @available(tvOS, unavailable)
+    struct TimeBar: View {
+        @ObservedObject var player: Player
+        let isUserInterfaceHidden: Bool
+
+        @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 10))
+
+        var body: some View {
+            HStack(spacing: 0) {
+                TimeSlider(player: player, progressTracker: progressTracker)
+                LiveLabel(player: player, progressTracker: progressTracker)
+            }
+            .opacity(isUserInterfaceHidden ? 0 : 1)
+            .padding(.horizontal, 6)
+            .bind(progressTracker, to: player)
         }
     }
 
@@ -222,7 +241,7 @@ private extension PlayerView {
         }()
 
         @ObservedObject var player: Player
-        @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 10))
+        @ObservedObject var progressTracker: ProgressTracker
 
         private var timeRange: CMTimeRange {
             player.timeRange
@@ -264,7 +283,6 @@ private extension PlayerView {
             .foregroundColor(.white)
             .tint(.white)
             .padding()
-            .bind(progressTracker, to: player)
         }
 
         private static func formattedDuration(_ duration: TimeInterval) -> String {

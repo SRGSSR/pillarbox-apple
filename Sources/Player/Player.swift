@@ -223,8 +223,16 @@ public final class Player: ObservableObject, Equatable {
     }
 
     /// Return whether the current player item player can be returned to live conditions.
-    /// - Returns: `true`
+    /// - Returns: `true` if skipping to live conditions is possible.
     public func canSkipToLive() -> Bool {
+        canSkipToLive(from: time)
+    }
+
+    /// Return whether the current player item player can be returned to live conditions, starting from the specified
+    /// time.
+    /// - Parameter time: The time.
+    /// - Returns: `true` if skipping to live conditions is possible.
+    public func canSkipToLive(from time: CMTime) -> Bool {
         guard streamType == .dvr, let currentItem, timeRange.isValid else { return false }
         let chunkDuration = currentItem.chunkDuration
         return chunkDuration.isValid && time < timeRange.end - chunkDuration
