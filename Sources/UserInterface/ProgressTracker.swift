@@ -45,14 +45,18 @@ public final class ProgressTracker: ObservableObject {
                 guard let player else {
                     return Just(nil).eraseToAnyPublisher()
                 }
-                guard !isInteracting && !player.isSeeking else {
+                guard !isInteracting else {
                     return Empty(completeImmediately: false).eraseToAnyPublisher()
                 }
-                return Publishers.CombineLatest(
+                return Publishers.CombineLatest3(
                     player.periodicTimePublisher(forInterval: interval, queue: .global(qos: .default)),
-                    player.$timeRange
+                    player.$timeRange,
+                    player.$isSeeking
                 )
-                .map { Self.progress(for: $0, in: $1) }
+                .compactMap { time, timeRange, isSeeking in
+                    guard !isSeeking else { return nil }
+                    return Self.progress(for: time, in: timeRange)
+                }
                 .eraseToAnyPublisher()
             }
             .switchToLatest()
