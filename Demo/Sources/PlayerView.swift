@@ -70,7 +70,7 @@ private extension PlayerView {
                 .ignoresSafeArea()
 #if os(iOS)
                 HStack(spacing: 0) {
-                    SliderView(player: player)
+                    TimeSlider(player: player)
                     LiveLabel(player: player)
                 }
                 .opacity(isUserInterfaceHidden ? 0 : 1)
@@ -204,7 +204,7 @@ private extension PlayerView {
 
     // Behavior: h-exp, v-hug
     @available(tvOS, unavailable)
-    struct SliderView: View {
+    struct TimeSlider: View {
         private static let blankFormattedTime = "--:--"
 
         private static let shortFormatter: DateComponentsFormatter = {

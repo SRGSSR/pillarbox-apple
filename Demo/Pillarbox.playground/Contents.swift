@@ -46,7 +46,7 @@ struct PlayerView: View {
                         .frame(width: 44, height: 44)
                 }
             }
-            SliderView(player: player)
+            TimeSlider(player: player)
         }
         .onAppear {
             player.play()
@@ -56,7 +56,7 @@ struct PlayerView: View {
 
 extension PlayerView {
     // Behavior: h-exp, v-exp
-    struct SliderView: View {
+    struct TimeSlider: View {
         @ObservedObject var player: Player
         @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 10))
 
