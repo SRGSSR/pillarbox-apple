@@ -16,8 +16,20 @@ import SwiftUI
 public final class ProgressTracker: ObservableObject {
     /// The player to attach. Use `View.bind(_:to:)` in SwiftUI code.
     @Published public var player: Player?
-    @Published public var isInteracting = false
-    @Published public var progress: Float?
+    @Published public var isInteracting = false {
+        willSet {
+            guard seekBehavior == .deferred, !newValue, let progress else { return }
+            seek(toProgress: progress)
+        }
+    }
+    @Published public var progress: Float? {
+        willSet {
+            guard seekBehavior == .immediate, let newValue else { return }
+            seek(toProgress: newValue)
+        }
+    }
+
+    private let seekBehavior: SeekBehavior
 
     /// Range for progress values.
     public var range: ClosedRange<Float> {
@@ -26,14 +38,15 @@ public final class ProgressTracker: ObservableObject {
 
     /// Create a tracker updating its progress at the specified interval.
     /// - Parameter interval: The interval at which progress must be updated.
-    public init(interval: CMTime, seekBehavior: SeekBehavior = .deferred) {
+    public init(interval: CMTime, seekBehavior: SeekBehavior = .immediate) {
+        self.seekBehavior = seekBehavior
         Publishers.CombineLatest($player, $isInteracting)
             .map { player, isInteracting -> AnyPublisher<Float?, Never> in
-                guard !isInteracting else {
-                    return Empty(completeImmediately: false).eraseToAnyPublisher()
-                }
                 guard let player else {
                     return Just(nil).eraseToAnyPublisher()
+                }
+                guard !isInteracting && !player.isSeeking else {
+                    return Empty(completeImmediately: false).eraseToAnyPublisher()
                 }
                 return Publishers.CombineLatest(
                     player.periodicTimePublisher(forInterval: interval, queue: .global(qos: .default)),
@@ -43,7 +56,6 @@ public final class ProgressTracker: ObservableObject {
                 .eraseToAnyPublisher()
             }
             .switchToLatest()
-            .print()
             .receiveOnMainThread()
             .assign(to: &$progress)
     }
@@ -59,6 +71,11 @@ public final class ProgressTracker: ObservableObject {
         guard timeRange.isValid && !timeRange.isEmpty else { return nil }
         let multiplier = Float64(progress.clamped(to: 0...1))
         return timeRange.start + CMTimeMultiplyByFloat64(timeRange.duration, multiplier: multiplier)
+    }
+
+    private func seek(toProgress progress: Float) {
+        guard let player, let time = Self.time(forProgress: progress, in: player.timeRange) else { return }
+        player.seek(to: time)
     }
 }
 
