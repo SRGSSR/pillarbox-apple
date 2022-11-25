@@ -22,7 +22,7 @@ public extension Slider {
         @ViewBuilder maximumValueLabel: () -> ValueLabel
     ) {
         self.init(
-            value: Binding(progressTracker, at: \.progress, defaultValue: 0),
+            value: Binding(progressTracker, at: \.progress),
             in: progressTracker.range,
             label: label,
             minimumValueLabel: minimumValueLabel,
@@ -42,7 +42,7 @@ public extension Slider where ValueLabel == EmptyView {
     @MainActor
     init(progressTracker: ProgressTracker, @ViewBuilder label: () -> Label) {
         self.init(
-            value: Binding(progressTracker, at: \.progress, defaultValue: 0),
+            value: Binding(progressTracker, at: \.progress),
             in: progressTracker.range,
             label: label
         ) { isEditing in
@@ -59,7 +59,7 @@ public extension Slider where Label == EmptyView, ValueLabel == EmptyView {
     @MainActor
     init(progressTracker: ProgressTracker) {
         self.init(
-            value: Binding(progressTracker, at: \.progress, defaultValue: 0),
+            value: Binding(progressTracker, at: \.progress),
             in: progressTracker.range
         ) { isEditing in
             progressTracker.isInteracting = isEditing
