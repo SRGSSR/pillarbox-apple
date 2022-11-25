@@ -27,7 +27,7 @@ struct TwinsView: View {
     }
 
     var body: some View {
-        VStack {
+        VStack(spacing: 10) {
             Group {
                 PlaybackView(player: topPlayer)
                 PlaybackView(player: bottomPlayer)

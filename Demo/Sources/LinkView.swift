@@ -19,7 +19,7 @@ struct LinkView: View {
     @State private var isDisplayed = true
 
     var body: some View {
-        VStack {
+        VStack(spacing: 10) {
             ZStack {
                 VideoView(player: isDisplayed ? player : Player())
                 if player.isBuffering {
