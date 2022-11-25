@@ -44,9 +44,11 @@ private extension StoriesView {
                     ProgressView()
                         .zIndex(1)
                 }
-                ProgressView(value: progressTracker.progress)
-                    .padding()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                if let progress = progressTracker.progress {
+                    ProgressView(value: progress)
+                        .padding()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                }
             }
             .tint(.white)
             .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
