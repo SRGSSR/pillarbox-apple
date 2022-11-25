@@ -230,7 +230,9 @@ private extension PlayerView {
 
         private var formattedElapsedTime: String {
             guard timeRange.isValid else { return Self.blankFormattedTime }
-            return Self.formattedDuration((player.time - timeRange.start).seconds)
+            let time = progressTracker.time ?? player.time
+            guard time.isValid else { return Self.blankFormattedTime }
+            return Self.formattedDuration((time - timeRange.start).seconds)
         }
 
         private var formattedTotalTime: String {

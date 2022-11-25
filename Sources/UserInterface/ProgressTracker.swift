@@ -31,6 +31,11 @@ public final class ProgressTracker: ObservableObject {
 
     private let seekBehavior: SeekBehavior
 
+    public var time: CMTime? {
+        guard let progress, let timeRange = player?.timeRange else { return nil }
+        return Self.time(forProgress: progress, in: timeRange)
+    }
+
     /// Range for progress values.
     public var range: ClosedRange<Float> {
         progress != nil ? 0...1 : 0...0
