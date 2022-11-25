@@ -38,7 +38,7 @@ public final class ProgressTracker: ObservableObject {
 
     /// Range for progress values.
     public var range: ClosedRange<Float> {
-        progress != nil ? 0...1 : 0...0
+        player?.timeRange.isEmpty == true ? 0...0 : 0...1
     }
 
     /// Create a tracker updating its progress at the specified interval.
