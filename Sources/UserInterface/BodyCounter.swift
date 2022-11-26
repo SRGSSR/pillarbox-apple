@@ -55,6 +55,7 @@ public extension View {
         line: UInt = #line,
         column: UInt = #column
     ) -> some View {
+        // Use stable identifier based on where in the source code the modifier is applied.
         let identifier = "\(file)_\(line)_\(column)"
         return border(color, width: 2)
             .overlay(alignment: alignment) {
