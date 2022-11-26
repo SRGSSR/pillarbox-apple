@@ -12,6 +12,7 @@ import UserInterface
 // MARK: View
 
 // Behavior: h-exp, v-hug
+@available(tvOS, unavailable)
 private struct TimeSlider: View {
     @ObservedObject var player: Player
     @StateObject var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 10))
@@ -30,9 +31,11 @@ struct PlaybackView: View {
     var body: some View {
         ZStack {
             VideoView(player: player)
+#if os(iOS)
             TimeSlider(player: player)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+#endif
             if player.isBuffering {
                 ProgressView()
             }
