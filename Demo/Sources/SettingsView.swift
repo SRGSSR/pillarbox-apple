@@ -9,11 +9,13 @@ import SwiftUI
 // MARK: View
 
 struct SettingsView: View {
-    @AppStorage(UserDefaults.presenterModeEnabledKey) private var isEnabled = false
+    @AppStorage(UserDefaults.presenterModeEnabledKey) private var isPresentedModeEnabled = false
+    @AppStorage(UserDefaults.bodyCountersEnabledKey) private var areBodyCountersEnabled = false
 
     var body: some View {
         List {
-            Toggle("Presenter mode", isOn: $isEnabled)
+            Toggle("Presenter mode", isOn: $isPresentedModeEnabled)
+            Toggle("Body counters", isOn: $areBodyCountersEnabled)
         }
         .navigationTitle("Settings")
     }

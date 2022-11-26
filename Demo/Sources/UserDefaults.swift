@@ -12,8 +12,13 @@ import Foundation
 // For more information see https://stackoverflow.com/a/47856467/760435
 extension UserDefaults {
     static let presenterModeEnabledKey = "presenterModeEnabled"
+    static let bodyCountersEnabledKey = "bodyCountersEnabled"
 
     @objc dynamic var presenterModeEnabled: Bool {
         bool(forKey: Self.presenterModeEnabledKey)
+    }
+
+    @objc dynamic var bodyCountersEnabled: Bool {
+        bool(forKey: Self.bodyCountersEnabledKey)
     }
 }

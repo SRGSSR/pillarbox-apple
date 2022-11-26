@@ -96,9 +96,10 @@ private extension PlayerView {
                     ProgressView()
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .tint(.white)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
+            .debugBodyCounter()
         }
     }
 
@@ -155,6 +156,7 @@ private extension PlayerView {
             }
             .opacity(player.isBuffering ? 0 : 1)
             .frame(width: 90, height: 90)
+            .debugBodyCounter(color: .green)
         }
     }
 
@@ -288,6 +290,7 @@ private extension PlayerView {
             .foregroundColor(.white)
             .tint(.white)
             .padding()
+            .debugBodyCounter(color: .blue)
         }
 
         private static func formattedDuration(_ duration: TimeInterval) -> String {
