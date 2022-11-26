@@ -210,7 +210,10 @@ private extension PlayerView {
         @ObservedObject var player: Player
         let isUserInterfaceHidden: Bool
 
-        @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 10))
+        @StateObject private var progressTracker = ProgressTracker(
+            interval: CMTime(value: 1, timescale: 10),
+            seekBehavior: UserDefaults.standard.seekBehavior
+        )
 
         var body: some View {
             HStack(spacing: 0) {
