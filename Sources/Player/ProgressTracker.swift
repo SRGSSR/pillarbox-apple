@@ -33,6 +33,7 @@ public final class ProgressTracker: ObservableObject {
     /// The player to attach. Use `View.bind(_:to:)` in SwiftUI code.
     @Published public var player: Player?
     @Published public var isInteracting = false {
+        // Not called when updated via $state. Seeks are therefore only triggered with external changes.
         willSet {
             guard seekBehavior == .deferred, !newValue else { return }
             seek(to: state)
@@ -40,6 +41,7 @@ public final class ProgressTracker: ObservableObject {
     }
 
     @Published private var state: State = .invalid {
+        // Not called when updated via $state. Seeks are therefore only triggered with external changes.
         willSet {
             guard seekBehavior == .immediate else { return }
             seek(to: newValue)
