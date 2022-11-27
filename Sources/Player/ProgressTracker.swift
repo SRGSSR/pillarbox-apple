@@ -32,6 +32,8 @@ public final class ProgressTracker: ObservableObject {
 
     /// The player to attach. Use `View.bind(_:to:)` in SwiftUI code.
     @Published public var player: Player?
+
+    /// Must be set to `true` to report user interaction to the progress tracker.
     @Published public var isInteracting = false {
         // Not called when updated via $state. Seeks are therefore only triggered with external changes.
         willSet {
@@ -50,6 +52,7 @@ public final class ProgressTracker: ObservableObject {
 
     private let seekBehavior: SeekBehavior
 
+    /// The current progress. Might be different from the player progress when interaction takes place.
     public var progress: Float {
         get {
             Self.progress(for: state)
@@ -61,6 +64,8 @@ public final class ProgressTracker: ObservableObject {
         }
     }
 
+    /// The time corresponding to the current progress. Might be different from the player current time when
+    /// interaction takes place.
     public var time: CMTime? {
         state.time
     }
