@@ -5,7 +5,7 @@
 //
 
 import Foundation
-import UserInterface
+import Player
 
 @objc enum SeekBehaviorSetting: Int {
     case immediate

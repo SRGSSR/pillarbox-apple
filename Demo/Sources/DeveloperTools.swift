@@ -4,8 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+import Core
 import SwiftUI
-import UserInterface
 
 extension View {
     func debugBodyCounter(

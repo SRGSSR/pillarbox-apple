@@ -4,13 +4,12 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import UserInterface
+@testable import Player
 
 import Circumspect
 import Combine
 import CoreMedia
 import Nimble
-import Player
 import XCTest
 
 @MainActor
@@ -61,7 +60,7 @@ final class ProgressTrackerTests: XCTestCase {
 
     func testProgressForTrackerBoundToPausedPlayer() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        let item = PlayerItem(url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!)
+        let item = PlayerItem(url: Stream.onDemand.url)
         let player = Player(item: item)
         expectEqualPublished(
             values: [0],
@@ -75,7 +74,7 @@ final class ProgressTrackerTests: XCTestCase {
 
     func testRangeForTrackerBoundToPausedPlayer() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        let item = PlayerItem(url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!)
+        let item = PlayerItem(url: Stream.onDemand.url)
         let player = Player(item: item)
         expectEqualPublished(
             values: [0...0, 0...1],
@@ -89,15 +88,13 @@ final class ProgressTrackerTests: XCTestCase {
 
     func testProgressForTrackerDuringEntirePlayback() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        let item = PlayerItem(url: URL(string: "http://localhost:8123/on_demand_short/master.m3u8")!)
+        let item = PlayerItem(url: Stream.shortOnDemand.url)
         let player = Player(item: item)
         expectPublished(
             values: [0, 0.25, 0.5, 0.75, 1, 0],
             from: progressTracker.changePublisher(at: \.progress)
                 .removeDuplicates(),
-            to: { lhs, rhs in
-                fabsf(lhs - rhs) <= 0.1
-            },
+            to: beClose(within: 0.1),
             during: 2
         ) {
             progressTracker.player = player
@@ -107,7 +104,7 @@ final class ProgressTrackerTests: XCTestCase {
 
     func testRangeForTrackerDuringEntirePlayback() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        let item = PlayerItem(url: URL(string: "http://localhost:8123/on_demand_short/master.m3u8")!)
+        let item = PlayerItem(url: Stream.shortOnDemand.url)
         let player = Player(item: item)
         expectEqualPublished(
             values: [0...0, 0...1, 0...0],
@@ -125,7 +122,7 @@ final class ProgressTrackerTests: XCTestCase {
             interval: CMTime(value: 1, timescale: 4),
             seekBehavior: .immediate
         )
-        let item = PlayerItem(url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!)
+        let item = PlayerItem(url: Stream.onDemand.url)
         let player = Player(item: item)
         progressTracker.player = player
         expect(progressTracker.range).toEventually(equal(0...1))
@@ -147,7 +144,7 @@ final class ProgressTrackerTests: XCTestCase {
                 interval: CMTime(value: 1, timescale: 4),
                 seekBehavior: .deferred
             )
-            let item = PlayerItem(url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!)
+            let item = PlayerItem(url: Stream.onDemand.url)
             let player = Player(item: item)
             progressTracker.player = player
             expect(progressTracker.range).toEventually(equal(0...1))
@@ -174,7 +171,7 @@ final class ProgressTrackerTests: XCTestCase {
 
     func testProgressForTrackerRebinding() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        let item = PlayerItem(url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!)
+        let item = PlayerItem(url: Stream.onDemand.url)
         let player = Player(item: item)
         progressTracker.player = player
         player.play()
@@ -193,7 +190,7 @@ final class ProgressTrackerTests: XCTestCase {
 
     func testProgressForTrackerUnbinding() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        let item = PlayerItem(url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!)
+        let item = PlayerItem(url: Stream.onDemand.url)
         let player = Player(item: item)
         progressTracker.player = player
         player.play()
@@ -212,7 +209,7 @@ final class ProgressTrackerTests: XCTestCase {
 
     func testRangeForTrackerRebinding() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        let item = PlayerItem(url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!)
+        let item = PlayerItem(url: Stream.onDemand.url)
         let player = Player(item: item)
         progressTracker.player = player
         player.play()
@@ -230,7 +227,7 @@ final class ProgressTrackerTests: XCTestCase {
 
     func testRangeForTrackerUnbinding() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        let item = PlayerItem(url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!)
+        let item = PlayerItem(url: Stream.onDemand.url)
         let player = Player(item: item)
         progressTracker.player = player
         player.play()

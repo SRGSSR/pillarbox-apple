@@ -10,7 +10,6 @@ import AVFoundation
 import Player
 import PlaygroundSupport
 import SwiftUI
-import UserInterface
 
 /*:
     Implementing a basic player is easy, even in a Playground:
