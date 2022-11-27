@@ -14,7 +14,7 @@ private class TestObservableObject: ObservableObject {
     @Published var publishedProperty2: String = "a"
 
     var nonPublishedProperty: Int {
-        return publishedProperty1 * 2
+        publishedProperty1 * 2
     }
 }
 

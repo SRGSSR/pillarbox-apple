@@ -7,7 +7,8 @@
 import Foundation
 import Player
 
-@objc enum SeekBehaviorSetting: Int {
+@objc
+enum SeekBehaviorSetting: Int {
     case immediate
     case deferred
 }
