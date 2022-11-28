@@ -9,15 +9,11 @@ import SwiftUI
 
 extension View {
     func debugBodyCounter(
-        color: Color = .red,
-        alignment: Alignment = .topTrailing,
-        file: String = #file,
-        line: UInt = #line,
-        column: UInt = #column
+        color: UIColor = .red
     ) -> some View {
         Group {
             if UserDefaults.standard.bodyCountersEnabled {
-                _debugBodyCounter(color: color, alignment: alignment, file: file, line: line, column: column)
+                _debugBodyCounter(color: color)
             }
             else {
                 self

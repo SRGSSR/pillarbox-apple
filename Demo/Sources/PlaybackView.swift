@@ -22,6 +22,7 @@ private struct TimeSlider: View {
     var body: some View {
         Slider(progressTracker: progressTracker)
             .bind(progressTracker, to: player)
+            .debugBodyCounter()
     }
 }
 

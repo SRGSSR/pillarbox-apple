@@ -5,40 +5,63 @@
 //
 
 import SwiftUI
+import UIKit
 
-private enum BodyCounterRecorder {
-    private static var counts: [String: UInt] = [:]
+private struct BodyCounterView: UIViewRepresentable {
+    let id = UUID()         // Force the view to be updated again
+    let color: UIColor
 
-    static func recordBodyUpdate(for identifier: String) {
-        if let count = counts[identifier] {
-            counts[identifier] = count + 1
-        }
-        else {
-            counts[identifier] = 1
-        }
+    func makeUIView(context: Context) -> _BodyCounterView {
+        let view = _BodyCounterView()
+        view.color = color
+        return view
     }
 
-    static func recordDisappearance(for identifier: String) {
-        counts[identifier] = nil
-    }
-
-    static func count(for identifier: String) -> UInt {
-        counts[identifier] ?? 0
+    func updateUIView(_ uiView: _BodyCounterView, context: Context) {
+        uiView.count += 1
     }
 }
 
-private struct BodyCounter: View {
-    let identifier: String
-    let color: Color
+private class _BodyCounterView: UIView {
+    var color: UIColor = .clear {
+        didSet {
+            label.backgroundColor = color
+            layer.borderColor = color.cgColor
+        }
+    }
 
-    var body: some View {
-        Text(String(BodyCounterRecorder.count(for: identifier)))
-            .font(.system(size: 14))
-            .padding(.horizontal, 4)
-            .padding(.vertical, 2)
-            .foregroundColor(.white)
-            .background(color)
-            .allowsHitTesting(false)
+    private var label = UILabel()
+
+    var count: Int = 0 {
+        didSet {
+            label.text = " \(count) "
+        }
+    }
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        configureBorder()
+        configureLabel()
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    private func configureBorder() {
+        layer.borderWidth = 2
+    }
+
+    private func configureLabel() {
+        label.textColor = .white
+        addSubview(label)
+
+        label.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: topAnchor),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor)
+        ])
     }
 }
 
@@ -46,26 +69,13 @@ public extension View {
     /// Decorate the view with a bordered debugging frame whose attached label displays how many times the view
     /// body has been evaluated.
     /// - Parameters:
-    ///   - color: The frame and label color
-    ///   - alignment: The label alignment with the frame.
+    ///   - color: The frame and label color.
     func _debugBodyCounter(
-        color: Color = .red,
-        alignment: Alignment = .topTrailing,
-        file: String = #file,
-        line: UInt = #line,
-        column: UInt = #column
+        color: UIColor = .red
     ) -> some View {
-        // Use stable identifier based on where in the source code the modifier is applied.
-        let identifier = "\(file)_\(line)_\(column)"
-        return border(color, width: 2)
-            .overlay(alignment: alignment) {
-                // swiftlint:disable:next redundant_discardable_let
-                let _ = BodyCounterRecorder.recordBodyUpdate(for: identifier)
-                BodyCounter(identifier: identifier, color: color)
-                    .id(UUID())     // Force updates
-            }
-            .onDisappear {
-                BodyCounterRecorder.recordDisappearance(for: identifier)
-            }
+        overlay {
+            BodyCounterView(color: color)
+                .allowsHitTesting(false)
+        }
     }
 }
