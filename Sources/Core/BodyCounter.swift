@@ -71,9 +71,7 @@ public extension View {
     /// body has been evaluated.
     /// - Parameters:
     ///   - color: The frame and label color.
-    func _debugBodyCounter(
-        color: UIColor = .red
-    ) -> some View {
+    func _debugBodyCounter(color: UIColor = .red) -> some View {
         overlay {
             BodyCounterView(color: color)
                 .allowsHitTesting(false)

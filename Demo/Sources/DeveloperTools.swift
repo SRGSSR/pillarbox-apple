@@ -8,9 +8,7 @@ import Core
 import SwiftUI
 
 extension View {
-    func debugBodyCounter(
-        color: UIColor = .red
-    ) -> some View {
+    func debugBodyCounter(color: UIColor = .red) -> some View {
         Group {
             if UserDefaults.standard.bodyCountersEnabled {
                 _debugBodyCounter(color: color)
