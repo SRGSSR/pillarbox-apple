@@ -21,7 +21,11 @@ struct SettingsView: View {
                 Text("Immediate").tag(SeekBehaviorSetting.immediate)
                 Text("Deferred").tag(SeekBehaviorSetting.deferred)
             }
+#if os(tvOS)
             .pickerStyle(.inline)
+#else
+            .pickerStyle(.menu)
+#endif
         }
         .navigationTitle("Settings")
     }
