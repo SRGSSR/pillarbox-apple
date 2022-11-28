@@ -44,7 +44,7 @@ public final class Player: ObservableObject, Equatable {
 
     /// The type of stream currently played.
     public var streamType: StreamType {
-        guard timeRange.isValid else { return .unknown }
+        guard timeRange.isValid, itemDuration.isValid else { return .unknown }
         if timeRange.isEmpty {
             return .live
         }
@@ -77,7 +77,7 @@ public final class Player: ObservableObject, Equatable {
             .lane("player_time_range")
             .assign(to: &$timeRange)
 
-        rawPlayer.itemDurationPublisher()
+        rawPlayer.currentItemDurationPublisher()
             .receiveOnMainThread()
             .lane("player_item_duration")
             .assign(to: &$itemDuration)
@@ -261,7 +261,9 @@ public final class Player: ObservableObject, Equatable {
     /// - Returns: `true` if skipping to live conditions is possible.
     @discardableResult
     public func skipToLive() async -> Bool {
-        guard canSkipToLive(), timeRange.isValid else { return false }
+        guard canSkipToLive(), timeRange.isValid else {
+            return false
+        }
         let seeked = await rawPlayer.seek(
             to: timeRange.end,
             toleranceBefore: .positiveInfinity,
