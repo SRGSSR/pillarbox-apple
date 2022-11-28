@@ -12,7 +12,7 @@ To instantiate the player you must import the associated package package first:
 import Player
 ```
 
-This package also provides basic user components to build a player user interface. 
+This package also provides basic user components to build a player user interface.
 
 ### Remark
 
