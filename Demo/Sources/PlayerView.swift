@@ -7,7 +7,6 @@
 import AVFoundation
 import Player
 import SwiftUI
-import UserInterface
 
 // MARK: View
 
@@ -69,13 +68,8 @@ private extension PlayerView {
                 .accessibilityAddTraits(.isButton)
                 .ignoresSafeArea()
 #if os(iOS)
-                HStack(spacing: 0) {
-                    SliderView(player: player)
-                    LiveLabel(player: player)
-                }
-                .opacity(isUserInterfaceHidden ? 0 : 1)
-                .padding(.horizontal, 6)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                TimeBar(player: player, isUserInterfaceHidden: isUserInterfaceHidden)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
 #endif
             }
             .animation(.easeInOut(duration: 0.2), value: isUserInterfaceHidden)
@@ -101,9 +95,10 @@ private extension PlayerView {
                     ProgressView()
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .tint(.white)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
+            .debugBodyCounter()
         }
     }
 
@@ -160,6 +155,7 @@ private extension PlayerView {
             }
             .opacity(player.isBuffering ? 0 : 1)
             .frame(width: 90, height: 90)
+            .debugBodyCounter(color: .green)
         }
     }
 
@@ -186,6 +182,11 @@ private extension PlayerView {
     // Behavior: h-hug, v-hug
     struct LiveLabel: View {
         @ObservedObject var player: Player
+        @ObservedObject var progressTracker: ProgressTracker
+
+        private var canSkipToLive: Bool {
+            player.canSkipToLive(from: progressTracker.time ?? player.time)
+        }
 
         var body: some View {
             if player.streamType == .dvr || player.streamType == .live {
@@ -194,18 +195,40 @@ private extension PlayerView {
                         .foregroundColor(.white)
                         .padding(.vertical, 4)
                         .padding(.horizontal, 6)
-                        .background(player.canSkipToLive() ? .gray : .red)
+                        .background(canSkipToLive ? .gray : .red)
                         .cornerRadius(4)
                 }
-                .disabled(!player.canSkipToLive())
+                .disabled(!canSkipToLive)
             }
         }
     }
 
     // Behavior: h-exp, v-hug
     @available(tvOS, unavailable)
-    struct SliderView: View {
-        private static let blankTime = "--:--"
+    struct TimeBar: View {
+        @ObservedObject var player: Player
+        let isUserInterfaceHidden: Bool
+
+        @StateObject private var progressTracker = ProgressTracker(
+            interval: CMTime(value: 1, timescale: 10),
+            seekBehavior: UserDefaults.standard.seekBehavior
+        )
+
+        var body: some View {
+            HStack(spacing: 0) {
+                TimeSlider(player: player, progressTracker: progressTracker)
+                LiveLabel(player: player, progressTracker: progressTracker)
+            }
+            .opacity(isUserInterfaceHidden ? 0 : 1)
+            .padding(.horizontal, 6)
+            .bind(progressTracker, to: player)
+        }
+    }
+
+    // Behavior: h-exp, v-hug
+    @available(tvOS, unavailable)
+    struct TimeSlider: View {
+        private static let blankFormattedTime = "--:--"
 
         private static let shortFormatter: DateComponentsFormatter = {
             let formatter = DateComponentsFormatter()
@@ -222,15 +245,22 @@ private extension PlayerView {
         }()
 
         @ObservedObject var player: Player
+        @ObservedObject var progressTracker: ProgressTracker
+
+        private var timeRange: CMTimeRange {
+            player.timeRange
+        }
 
         private var formattedElapsedTime: String {
-            guard let time = player.time, let timeRange = player.timeRange else { return Self.blankTime }
-            return Self.formattedDuration(CMTimeGetSeconds(time - timeRange.start))
+            guard timeRange.isValid else { return Self.blankFormattedTime }
+            let time = progressTracker.time ?? player.time
+            guard time.isValid else { return Self.blankFormattedTime }
+            return Self.formattedDuration((time - timeRange.start).seconds)
         }
 
         private var formattedTotalTime: String {
-            guard let timeRange = player.timeRange else { return Self.blankTime }
-            return Self.formattedDuration(CMTimeGetSeconds(timeRange.duration))
+            guard timeRange.isValid else { return Self.blankFormattedTime }
+            return Self.formattedDuration((timeRange.duration).seconds)
         }
 
         var body: some View {
@@ -238,7 +268,7 @@ private extension PlayerView {
                 switch player.streamType {
                 case .onDemand:
                     Slider(
-                        player: player,
+                        progressTracker: progressTracker,
                         label: {
                             Text("Progress")
                         },
@@ -254,14 +284,15 @@ private extension PlayerView {
                     EmptyView()
                         .frame(maxWidth: .infinity)
                 default:
-                    Slider(player: player, label: {
+                    Slider(progressTracker: progressTracker) {
                         Text("Progress")
-                    })
+                    }
                 }
             }
             .foregroundColor(.white)
             .tint(.white)
             .padding()
+            .debugBodyCounter(color: .blue)
         }
 
         private static func formattedDuration(_ duration: TimeInterval) -> String {

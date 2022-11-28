@@ -7,7 +7,6 @@
 import AVFoundation
 import Player
 import SwiftUI
-import UserInterface
 
 // MARK: View
 
@@ -19,7 +18,7 @@ struct WrappedView: View {
     @StateObject private var model = WrappedViewModel()
 
     var body: some View {
-        VStack {
+        VStack(spacing: 10) {
             PlaybackView(player: model.player)
             HStack {
                 Button(action: { play() }) {

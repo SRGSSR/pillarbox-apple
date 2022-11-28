@@ -10,7 +10,6 @@ import AVFoundation
 import Player
 import PlaygroundSupport
 import SwiftUI
-import UserInterface
 
 /*:
     Implementing a basic player is easy, even in a Playground:
@@ -19,6 +18,7 @@ import UserInterface
           to it.
 */
 
+// Behavior: h-exp, v-exp
 struct PlayerView: View {
     @StateObject private var player = Player(
         item: PlayerItem(url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!)
@@ -45,12 +45,25 @@ struct PlayerView: View {
                         .frame(width: 44, height: 44)
                 }
             }
-            Slider(player: player)
-                .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+            TimeSlider(player: player)
         }
         .onAppear {
             player.play()
+        }
+    }
+}
+
+extension PlayerView {
+    // Behavior: h-exp, v-exp
+    struct TimeSlider: View {
+        @ObservedObject var player: Player
+        @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 10))
+
+        var body: some View {
+            Slider(progressTracker: progressTracker)
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                .bind(progressTracker, to: player)
         }
     }
 }

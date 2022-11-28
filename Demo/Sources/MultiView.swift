@@ -7,7 +7,6 @@
 import AVFoundation
 import Player
 import SwiftUI
-import UserInterface
 
 // MARK: View
 
@@ -20,7 +19,7 @@ struct MultiView: View {
     @StateObject private var bottomPlayer = Player()
 
     var body: some View {
-        VStack {
+        VStack(spacing: 10) {
             Group {
                 PlaybackView(player: topPlayer)
                 PlaybackView(player: bottomPlayer)

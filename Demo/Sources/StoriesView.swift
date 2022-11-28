@@ -7,7 +7,6 @@
 import AVFoundation
 import Player
 import SwiftUI
-import UserInterface
 
 // MARK: View
 
@@ -43,14 +42,27 @@ private extension StoriesView {
                     ProgressView()
                         .zIndex(1)
                 }
-                if let value = player.progress.value {
-                    ProgressView(value: value)
-                        .padding()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                }
+                TimeProgress(player: player)
             }
             .tint(.white)
             .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
+        }
+    }
+
+    // Behavior: h-exp, v-exp
+    struct TimeProgress: View {
+        @ObservedObject var player: Player
+        @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 10))
+
+        var body: some View {
+            ZStack {
+                if let progress = progressTracker.progress {
+                    ProgressView(value: progress)
+                        .padding()
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .bind(progressTracker, to: player)
         }
     }
 }

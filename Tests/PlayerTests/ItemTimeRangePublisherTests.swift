@@ -15,7 +15,7 @@ final class ItemTimeRangePublisherTests: XCTestCase {
         let player = AVPlayer()
         expectEqualPublished(
             values: [.invalid],
-            from: player.itemTimeRangePublisher(),
+            from: player.currentItemTimeRangePublisher(),
             during: 2
         )
     }
@@ -25,7 +25,7 @@ final class ItemTimeRangePublisherTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         expectAtLeastPublished(
             values: [CMTimeRange(start: .zero, duration: Stream.onDemand.duration)],
-            from: player.itemTimeRangePublisher(),
+            from: player.currentItemTimeRangePublisher(),
             to: beClose(within: 1)
         )
     }
@@ -35,7 +35,7 @@ final class ItemTimeRangePublisherTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [.zero],
-            from: player.itemTimeRangePublisher()
+            from: player.currentItemTimeRangePublisher()
         )
     }
 
@@ -48,7 +48,7 @@ final class ItemTimeRangePublisherTests: XCTestCase {
                 CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration),
                 .invalid
             ],
-            from: player.itemTimeRangePublisher(),
+            from: player.currentItemTimeRangePublisher(),
             during: 2
         ) {
             player.play()
@@ -63,7 +63,7 @@ final class ItemTimeRangePublisherTests: XCTestCase {
             values: [
                 CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration)
             ],
-            from: player.itemTimeRangePublisher(),
+            from: player.currentItemTimeRangePublisher(),
             during: 2
         ) {
             player.play()

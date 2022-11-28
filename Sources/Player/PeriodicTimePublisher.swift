@@ -30,7 +30,7 @@ extension Publishers {
 
     static func PeriodicTimePublisher(for player: AVPlayer, interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
         Publishers._PeriodicTimePublisher(player: player, interval: interval, queue: queue)
-            .removeDuplicates(by: CMTime.close(within: CMTimeGetSeconds(interval) / 2))
+            .removeDuplicates(by: CMTime.close(within: interval.seconds / 2))
             .eraseToAnyPublisher()
     }
 }
@@ -55,6 +55,7 @@ private extension Publishers._PeriodicTimePublisher {
         private func processDemand(_ demand: Subscribers.Demand) {
             self.demand += demand
             guard timeObserver == nil else { return }
+            processTime(player.currentTime())
             timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: queue) { [weak self] time in
                 self?.processTime(time)
             }

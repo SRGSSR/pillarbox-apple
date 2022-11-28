@@ -20,7 +20,7 @@ final class ItemTimeRangePublisherQueueTests: XCTestCase {
                 CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration),
                 CMTimeRange(start: .zero, duration: Stream.onDemand.duration)
             ],
-            from: player.itemTimeRangePublisher(),
+            from: player.currentItemTimeRangePublisher(),
             to: beClose(within: 1),
             during: 3
         ) {
@@ -38,7 +38,7 @@ final class ItemTimeRangePublisherQueueTests: XCTestCase {
                 CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration),
                 CMTimeRange(start: .zero, duration: Stream.onDemand.duration)
             ],
-            from: player.itemTimeRangePublisher(),
+            from: player.currentItemTimeRangePublisher(),
             to: beClose(within: 1),
             during: 3
         ) {

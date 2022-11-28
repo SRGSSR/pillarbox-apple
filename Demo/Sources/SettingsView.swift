@@ -9,11 +9,23 @@ import SwiftUI
 // MARK: View
 
 struct SettingsView: View {
-    @AppStorage(UserDefaults.presenterModeEnabledKey) private var isEnabled = false
+    @AppStorage(UserDefaults.presenterModeEnabledKey) private var isPresentedModeEnabled = false
+    @AppStorage(UserDefaults.bodyCountersEnabledKey) private var areBodyCountersEnabled = false
+    @AppStorage(UserDefaults.seekBehaviorSettingKey) private var seekBehaviorSetting: SeekBehaviorSetting = .immediate
 
     var body: some View {
         List {
-            Toggle("Presenter mode", isOn: $isEnabled)
+            Toggle("Presenter mode", isOn: $isPresentedModeEnabled)
+            Toggle("Body counters", isOn: $areBodyCountersEnabled)
+            Picker("Seek behavior", selection: $seekBehaviorSetting) {
+                Text("Immediate").tag(SeekBehaviorSetting.immediate)
+                Text("Deferred").tag(SeekBehaviorSetting.deferred)
+            }
+#if os(tvOS)
+            .pickerStyle(.inline)
+#else
+            .pickerStyle(.menu)
+#endif
         }
         .navigationTitle("Settings")
     }

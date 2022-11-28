@@ -12,11 +12,7 @@ To instantiate the player you must import the associated package package first:
 import Player
 ```
 
-User interface components, currently in limited number (video view and slider), can be obtained from the corresponding package:
-
-```swift
-import UserInterface
-```
+This package also provides basic user components to build a player user interface.
 
 ### Remark
 

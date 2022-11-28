@@ -7,7 +7,6 @@
 import AVFoundation
 import Player
 import SwiftUI
-import UserInterface
 
 // MARK: View
 
@@ -19,9 +18,9 @@ struct LinkView: View {
     @State private var isDisplayed = true
 
     var body: some View {
-        VStack {
+        VStack(spacing: 10) {
             ZStack {
-                VideoView(player: isDisplayed ? player : Player())
+                PlaybackView(player: isDisplayed ? player : Player())
                 if player.isBuffering {
                     ProgressView()
                 }
