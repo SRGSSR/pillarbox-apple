@@ -8,8 +8,9 @@ import SwiftUI
 import UIKit
 
 private struct BodyCounterView: UIViewRepresentable {
-    let id = UUID()         // Force the view to be updated again
     let color: UIColor
+
+    private let id = UUID()         // Force view updates
 
     func makeUIView(context: Context) -> _BodyCounterView {
         let view = _BodyCounterView()
@@ -23,14 +24,14 @@ private struct BodyCounterView: UIViewRepresentable {
 }
 
 private class _BodyCounterView: UIView {
+    private var label = UILabel()
+
     var color: UIColor = .clear {
         didSet {
             label.backgroundColor = color
             layer.borderColor = color.cgColor
         }
     }
-
-    private var label = UILabel()
 
     var count: Int = 0 {
         didSet {
