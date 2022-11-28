@@ -139,34 +139,32 @@ final class ProgressTrackerTests: XCTestCase {
     }
 
     func testProgressForTrackerDeferredSeekBehavior() {
-        func testTrackerImmediateSeekBehavior() {
-            let progressTracker = ProgressTracker(
-                interval: CMTime(value: 1, timescale: 4),
-                seekBehavior: .deferred
-            )
-            let item = PlayerItem(url: Stream.onDemand.url)
-            let player = Player(item: item)
-            progressTracker.player = player
-            expect(progressTracker.range).toEventually(equal(0...1))
+        let progressTracker = ProgressTracker(
+            interval: CMTime(value: 1, timescale: 4),
+            seekBehavior: .deferred
+        )
+        let item = PlayerItem(url: Stream.onDemand.url)
+        let player = Player(item: item)
+        progressTracker.player = player
+        expect(progressTracker.range).toEventually(equal(0...1))
 
-            expectEqualPublished(
-                values: [false],
-                from: player.$isSeeking,
-                during: 2
-            ) {
-                progressTracker.isInteracting = true
-                progressTracker.progress = 0.5
-            }
-
-            expectEqualPublishedNext(
-                values: [true, false],
-                from: player.$isSeeking,
-                during: 2
-            ) {
-                progressTracker.isInteracting = false
-            }
-            expect(progressTracker.progress).to(equal(0.5))
+        expectEqualPublished(
+            values: [false],
+            from: player.$isSeeking,
+            during: 2
+        ) {
+            progressTracker.isInteracting = true
+            progressTracker.progress = 0.5
         }
+
+        expectEqualPublishedNext(
+            values: [true, false],
+            from: player.$isSeeking,
+            during: 2
+        ) {
+            progressTracker.isInteracting = false
+        }
+        expect(progressTracker.progress).to(equal(0.5))
     }
 
     func testProgressForTrackerRebinding() {
@@ -181,6 +179,24 @@ final class ProgressTrackerTests: XCTestCase {
         expectEqualPublished(
             values: [progress, 0],
             from: progressTracker.changePublisher(at: \.progress)
+                .removeDuplicates(),
+            during: 1
+        ) {
+            progressTracker.player = Player()
+        }
+    }
+
+    func testRangeForTrackerRebinding() {
+        let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
+        let item = PlayerItem(url: Stream.onDemand.url)
+        let player = Player(item: item)
+        progressTracker.player = player
+        player.play()
+        expect(progressTracker.progress).toEventuallyNot(equal(0))
+
+        expectEqualPublished(
+            values: [0...1, 0...0],
+            from: progressTracker.changePublisher(at: \.range)
                 .removeDuplicates(),
             during: 1
         ) {
@@ -204,24 +220,6 @@ final class ProgressTrackerTests: XCTestCase {
             during: 1
         ) {
             progressTracker.player = nil
-        }
-    }
-
-    func testRangeForTrackerRebinding() {
-        let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        let item = PlayerItem(url: Stream.onDemand.url)
-        let player = Player(item: item)
-        progressTracker.player = player
-        player.play()
-        expect(progressTracker.progress).toEventuallyNot(equal(0))
-
-        expectEqualPublished(
-            values: [0...1, 0...0],
-            from: progressTracker.changePublisher(at: \.range)
-                .removeDuplicates(),
-            during: 1
-        ) {
-            progressTracker.player = Player()
         }
     }
 
