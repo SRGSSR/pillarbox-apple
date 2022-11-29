@@ -17,12 +17,12 @@ final class ItemDurationPublisherQueueTests: XCTestCase {
         let player = AVQueuePlayer(items: [item1, item2])
         expectPublished(
             values: [
-                .indefinite,
+                .invalid,
                 Stream.shortOnDemand.duration,
                 // Next media can be prepared and is immediately ready
                 Stream.onDemand.duration
             ],
-            from: player.itemDurationPublisher()
+            from: player.currentItemDurationPublisher()
                 .removeDuplicates(by: CMTime.close(within: 1)),
             to: beClose(within: 1),
             during: 4
@@ -38,13 +38,13 @@ final class ItemDurationPublisherQueueTests: XCTestCase {
         let player = AVQueuePlayer(items: [item1, item2, item3])
         expectPublished(
             values: [
-                .indefinite,
+                .invalid,
                 Stream.shortOnDemand.duration,
                 // Next media cannot be prepared because of the failure
-                .indefinite,
+                .invalid,
                 Stream.onDemand.duration
             ],
-            from: player.itemDurationPublisher()
+            from: player.currentItemDurationPublisher()
                 .removeDuplicates(by: CMTime.close(within: 1)),
             to: beClose(within: 1),
             during: 4

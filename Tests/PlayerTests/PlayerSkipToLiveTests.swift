@@ -40,7 +40,7 @@ final class PlayerSkipToLiveTests: XCTestCase {
     func testCanSkipToLiveForDvrInPastConditions() {
         let item = PlayerItem(url: Stream.dvr.url)
         let player = Player(item: item)
-        expect(player.time).toEventuallyNot(equal(.zero))
+        expect(player.streamType).toEventually(equal(.dvr))
 
         waitUntil { done in
             player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero) { finished in
@@ -55,7 +55,7 @@ final class PlayerSkipToLiveTests: XCTestCase {
     func testCanSkipToLiveForDvrInPastConditionsAsync() async {
         let item = PlayerItem(url: Stream.dvr.url)
         let player = Player(item: item)
-        await expect(player.time).toEventuallyNot(equal(.zero))
+        await expect(player.streamType).toEventually(equal(.dvr))
         let seeked = await player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero)
         await expect(seeked).to(beTrue())
         await expect(player.canSkipToLive()).toAlways(beTrue())
@@ -100,7 +100,7 @@ final class PlayerSkipToLiveTests: XCTestCase {
     func testSkipToLiveForDvrInPastConditions() {
         let item = PlayerItem(url: Stream.dvr.url)
         let player = Player(item: item)
-        expect(player.time).toEventuallyNot(equal(.zero))
+        expect(player.streamType).toEventually(equal(.dvr))
 
         waitUntil { done in
             player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero) { finished in
@@ -124,7 +124,7 @@ final class PlayerSkipToLiveTests: XCTestCase {
     func testSkipToLiveForDvrInPastConditionsAsync() async {
         let item = PlayerItem(url: Stream.dvr.url)
         let player = Player(item: item)
-        await expect(player.time).toEventuallyNot(equal(.zero))
+        await expect(player.streamType).toEventually(equal(.dvr))
         let seeked = await player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero)
         await expect(seeked).to(beTrue())
         let skipped = await player.skipToLive()
