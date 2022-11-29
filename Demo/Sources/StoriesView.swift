@@ -11,6 +11,44 @@ import SwiftUI
 // MARK: View
 
 // Behavior: h-exp, v-exp
+private struct StoryView: View {
+    @ObservedObject var player: Player
+
+    var body: some View {
+        ZStack {
+            VideoView(player: player, gravity: .resizeAspectFill)
+                .ignoresSafeArea()
+            if player.isBuffering {
+                // Ensure the animation is applied by setting its zIndex
+                // See https://sarunw.com/posts/how-to-fix-zstack-transition-animation-in-swiftui/
+                ProgressView()
+                    .zIndex(1)
+            }
+            TimeProgress(player: player)
+        }
+        .tint(.white)
+        .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
+    }
+}
+
+// Behavior: h-exp, v-exp
+private struct TimeProgress: View {
+    @ObservedObject var player: Player
+    @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 10))
+
+    var body: some View {
+        ZStack {
+            if let progress = progressTracker.progress {
+                ProgressView(value: progress)
+                    .padding()
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .bind(progressTracker, to: player)
+    }
+}
+
+// Behavior: h-exp, v-exp
 struct StoriesView: View {
     @StateObject private var model = StoriesViewModel(stories: Story.stories(from: MediaURLPlaylist.videos))
 
@@ -24,46 +62,6 @@ struct StoriesView: View {
         .background(.black)
         .tabViewStyle(.page)
         .ignoresSafeArea()
-    }
-}
-
-private extension StoriesView {
-    // Behavior: h-exp, v-exp
-    struct StoryView: View {
-        @ObservedObject var player: Player
-
-        var body: some View {
-            ZStack {
-                VideoView(player: player, gravity: .resizeAspectFill)
-                    .ignoresSafeArea()
-                if player.isBuffering {
-                    // Ensure the animation is applied by setting its zIndex
-                    // See https://sarunw.com/posts/how-to-fix-zstack-transition-animation-in-swiftui/
-                    ProgressView()
-                        .zIndex(1)
-                }
-                TimeProgress(player: player)
-            }
-            .tint(.white)
-            .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
-        }
-    }
-
-    // Behavior: h-exp, v-exp
-    struct TimeProgress: View {
-        @ObservedObject var player: Player
-        @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 10))
-
-        var body: some View {
-            ZStack {
-                if let progress = progressTracker.progress {
-                    ProgressView(value: progress)
-                        .padding()
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .bind(progressTracker, to: player)
-        }
     }
 }
 
