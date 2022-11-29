@@ -6,6 +6,28 @@
 
 import SwiftUI
 
+// MARK: Cells
+
+// Behavior: h-hug, v-hug
+private struct Cell<Presented: View>: View {
+    let title: String
+
+    @ViewBuilder var presented: () -> Presented
+    @State private var isPresented = false
+
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .foregroundColor(.primary)
+        }
+        .sheet(isPresented: $isPresented, content: presented)
+    }
+
+    private func action() {
+        isPresented.toggle()
+    }
+}
+
 // MARK: View
 
 // Behavior: h-exp, v-exp
@@ -58,30 +80,6 @@ struct ShowcaseView: View {
             }
         }
         .navigationTitle("Showcase")
-    }
-}
-
-// MARK: View
-
-private extension ShowcaseView {
-    // Behavior: h-hug, v-hug
-    struct Cell<Presented: View>: View {
-        let title: String
-
-        @ViewBuilder var presented: () -> Presented
-        @State private var isPresented = false
-
-        var body: some View {
-            Button(action: action) {
-                Text(title)
-                    .foregroundColor(.primary)
-            }
-            .sheet(isPresented: $isPresented, content: presented)
-        }
-
-        private func action() {
-            isPresented.toggle()
-        }
     }
 }
 
