@@ -16,8 +16,7 @@ final class RawPlayer: AVQueuePlayer {
         seekCount += 1
         super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { finished in
             self.seekCount -= 1
-            if finished {
-                assert(self.seekCount == 0)
+            if self.seekCount == 0 {
                 NotificationCenter.default.post(name: .didSeek, object: self)
             }
             completionHandler(finished)
