@@ -54,8 +54,8 @@ private struct ControlsView: View {
                 ProgressView()
             }
         }
-        .tint(.white)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .tint(.white)
         .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
         .debugBodyCounter()
     }
