@@ -6,10 +6,10 @@
 
 import AVFoundation
 
-public final class RawPlayer: AVQueuePlayer {
+final class RawPlayer: AVQueuePlayer {
     private var seekCount = 0
 
-    override public func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
+    override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         if seekCount == 0 {
             NotificationCenter.default.post(name: .willSeek, object: self)
         }

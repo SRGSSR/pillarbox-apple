@@ -47,8 +47,8 @@ final class ContentKeySessionPlayerItem: AVPlayerItem {
 
 /// An item to be inserted into the player.
 public final class PlayerItem: Equatable {
-    @Published var playerItem = AVPlayerItem.loading
-    @Published var chunkDuration: CMTime = .invalid
+    @Published private(set) var playerItem = AVPlayerItem.loading
+    @Published private(set) var chunkDuration: CMTime = .invalid
 
     private let id = UUID()
 

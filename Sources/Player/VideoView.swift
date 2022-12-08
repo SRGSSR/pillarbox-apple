@@ -24,8 +24,8 @@ public final class VideoLayerView: UIView {
 }
 
 public struct VideoView: UIViewRepresentable {
-    @ObservedObject var player: Player
-    let gravity: AVLayerVideoGravity
+    @ObservedObject private(set) var player: Player
+    private let gravity: AVLayerVideoGravity
 
     public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect) {
         self.player = player

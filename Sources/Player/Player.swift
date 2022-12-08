@@ -17,16 +17,16 @@ public final class Player: ObservableObject, Equatable {
     @Published public private(set) var playbackState: PlaybackState = .idle
 
     /// Returns whether the player is currently buffering.
-    @Published public var isBuffering = false
+    @Published public private(set) var isBuffering = false
 
     /// Returns whether the player is currently seeking to another position.
-    @Published public var isSeeking = false
+    @Published public private(set) var isSeeking = false
 
     /// The current item in the queue.
-    @Published public var currentItem: PlayerItem?
+    @Published public private(set) var currentItem: PlayerItem?
 
     /// Available time range. `.invalid` when not known.
-    @Published public var timeRange: CMTimeRange = .invalid
+    @Published public private(set) var timeRange: CMTimeRange = .invalid
 
     @Published private var storedItems: Deque<PlayerItem>
     @Published private var itemDuration: CMTime = .indefinite
@@ -37,7 +37,7 @@ public final class Player: ObservableObject, Equatable {
     }
 
     /// Raw player used for playback.
-    public let rawPlayer: RawPlayer
+    let rawPlayer: RawPlayer
 
     private let configuration: PlayerConfiguration
     private var cancellables = Set<AnyCancellable>()
