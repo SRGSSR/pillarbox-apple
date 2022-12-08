@@ -98,7 +98,7 @@ public final class Player: ObservableObject, Equatable {
             }
             .removeDuplicates()
             .receiveOnMainThread()
-            .lane("player_item")
+            .lane("player_current_item")
             .assign(to: &$currentItem)
 
         $storedItems
