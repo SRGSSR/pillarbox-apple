@@ -24,6 +24,10 @@ private struct ContentView: View {
             .onTapGesture {
                 isUserInterfaceHidden.toggle()
             }
+            .overlay(alignment: .topLeading) {
+                RoutePickerView()
+                    .frame(width: 40, height: 40)
+            }
             .accessibilityAddTraits(.isButton)
             .ignoresSafeArea()
 #if os(iOS)
