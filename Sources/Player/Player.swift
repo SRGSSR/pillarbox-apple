@@ -63,7 +63,7 @@ public final class Player: ObservableObject, Equatable {
     ///   - items: The items to be queued initially.
     ///   - configuration: A closure in which the player can be configured.
     public init(items: [PlayerItem] = [], configuration: (inout PlayerConfiguration) -> Void = { _ in }) {
-        rawPlayer = RawPlayer(items: items.map(\.playerItem).removeDuplicates())
+        rawPlayer = RawPlayer(items: items.map { $0.source.playerItem() })
         self.configuration = Self.configure(with: configuration)
         storedItems = Deque(items)
 
@@ -94,7 +94,7 @@ public final class Player: ObservableObject, Equatable {
 
         Publishers.CombineLatest($storedItems, rawPlayer.publisher(for: \.currentItem))
             .map { storedItems, currentItem in
-                storedItems.first { $0.playerItem === currentItem }
+                storedItems.first { $0.matches(currentItem) }
             }
             .removeDuplicates()
             .receiveOnMainThread()
@@ -103,7 +103,9 @@ public final class Player: ObservableObject, Equatable {
 
         $storedItems
             .map { items in
-                Publishers.AccumulateLatestMany(items.map(\.$playerItem))
+                Publishers.AccumulateLatestMany(items.map { item in
+                    item.$source.map { $0.playerItem() }
+                })
             }
             .switchToLatest()
             .receiveOnMainThread()
@@ -136,7 +138,7 @@ public final class Player: ObservableObject, Equatable {
             update(player: player, with: items)
         }
         else if let currentItem = player.currentItem,
-                let currentItemIndex = items.firstIndex(where: { $0.id == currentItem.id }) {
+                let currentItemIndex = items.firstIndex(where: { $0.matches(currentItem) }) {
             update(player: player, with: Array(items.suffix(from: currentItemIndex)))
         }
         else {
@@ -154,7 +156,7 @@ public final class Player: ObservableObject, Equatable {
         // Replace the current item directly. Diffing namely applies removals first and removing the current
         // item would otherwise make `AVQueuePlayer` move to the next item automatically.
         if let currentItem = player.currentItem,
-            let updatedCurrentItem = items.first(where: { $0.id == currentItem.id }), updatedCurrentItem != currentItem {
+           let updatedCurrentItem = items.first(where: { $0.matches(currentItem) }), updatedCurrentItem != currentItem {
             player.replaceCurrentItem(with: updatedCurrentItem)
         }
 
@@ -233,9 +235,8 @@ public final class Player: ObservableObject, Equatable {
     /// - Parameter time: The time.
     /// - Returns: `true` if skipping to live conditions is possible.
     public func canSkipToLive(from time: CMTime) -> Bool {
-        guard streamType == .dvr, let currentItem, timeRange.isValid else { return false }
-        let chunkDuration = currentItem.chunkDuration
-        return chunkDuration.isValid && time < timeRange.end - chunkDuration
+        guard streamType == .dvr, timeRange.isValid else { return false }
+        return time < timeRange.end
     }
 
     /// Return the current item to live conditions. Does nothing if the current item is not a livestream or does not
@@ -308,8 +309,9 @@ public extension Player {
     /// Items before the current item (not included).
     /// - Returns: Items.
     var previousItems: [PlayerItem] {
-        guard let currentItem = rawPlayer.currentItem, let currentIndex = storedItems.firstIndex(where: { $0.playerItem == currentItem }) else {
-            return Array(storedItems)
+        guard let currentItem = rawPlayer.currentItem,
+              let currentIndex = storedItems.firstIndex(where: { $0.matches(currentItem) }) else {
+            return []
         }
         return Array(storedItems.prefix(upTo: currentIndex))
     }
@@ -317,7 +319,8 @@ public extension Player {
     /// Items past the current item (not included).
     /// - Returns: Items.
     var nextItems: [PlayerItem] {
-        guard let currentItem = rawPlayer.currentItem, let currentIndex = storedItems.firstIndex(where: { $0.playerItem == currentItem }) else {
+        guard let currentItem = rawPlayer.currentItem,
+              let currentIndex = storedItems.firstIndex(where: { $0.matches(currentItem) }) else {
             return Array(storedItems)
         }
         return Array(storedItems.suffix(from: currentIndex).dropFirst())
@@ -467,25 +470,19 @@ public extension Player {
     /// Check whether returning to the previous item in the deque is possible.`
     /// - Returns: `true` if possible.
     func canReturnToPreviousItem() -> Bool {
-        guard let currentItem else { return false }
-        return playablePreviousItem(before: currentItem) != nil
-    }
-
-    /// Return the previous playable item, i.e. skips items which failed, similarly to what `AVQueuePlayer` natively
-    /// does when advancing in the queue.
-    private func playablePreviousItem(before item: PlayerItem) -> PlayerItem? {
-        guard let index = storedItems.firstIndex(of: item) else { return nil }
-        let previousPlayableItems = storedItems.prefix(upTo: index).filter { $0.playerItem.status != .failed }
-        return previousPlayableItems.last
+        return !previousItems.isEmpty
     }
 
     /// Return to the previous item in the deque. Skips failed items.
     /// - Returns: `true` if not possible.
     @discardableResult
     func returnToPreviousItem() -> Bool {
-        guard let currentItem, let previousItem = playablePreviousItem(before: currentItem) else { return false }
-        rawPlayer.replaceCurrentItem(with: previousItem.playerItem)
-        rawPlayer.insert(currentItem.playerItem, after: previousItem.playerItem)
+        guard let currentItem = rawPlayer.currentItem,
+              let previousItem = previousItems.last?.source.playerItem() else {
+            return false
+        }
+        rawPlayer.replaceCurrentItem(with: previousItem)
+        rawPlayer.insert(currentItem, after: previousItem)
         return true
     }
 

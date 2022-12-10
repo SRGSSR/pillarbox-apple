@@ -143,10 +143,8 @@ enum Media: Hashable {
         case let .url(url):
             return PlayerItem(url: url)
         case let .unbufferedUrl(url):
-            let item = AVPlayerItem(url: url)
-            item.automaticallyPreservesTimeOffsetFromLive = true
-            item.preferredForwardBufferDuration = 1
-            return PlayerItem(item)
+            // TODO:
+            return PlayerItem(url: url)
         case let .urn(urn):
             return PlayerItem(urn: urn)
         }

@@ -9,205 +9,60 @@ import Combine
 
 private var kIdKey: Void?
 
-/// An item which stores its own custom resource loader delegate.
-final class ResourceLoadedPlayerItem: AVPlayerItem {
-    // swiftlint:disable:next weak_delegate
-    private let resourceLoaderDelegate: AVAssetResourceLoaderDelegate
-
-    init(url: URL, resourceLoaderDelegate: AVAssetResourceLoaderDelegate, automaticallyLoadedAssetKeys: [String]?) {
-        // swiftlint:disable:previous discouraged_optional_collection
-        self.resourceLoaderDelegate = resourceLoaderDelegate
-        let asset = AVURLAsset(url: url)
-        asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: .global(qos: .userInitiated))
-        super.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
-    }
-}
-
-final class ContentKeySessionPlayerItem: AVPlayerItem {
-    private let contentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
-
-    // swiftlint:disable:next weak_delegate
-    private let contentKeySessionDelegate: AVContentKeySessionDelegate
-
-    init(url: URL, contentKeySessionDelegate: AVContentKeySessionDelegate, automaticallyLoadedAssetKeys: [String]?) {
-        // swiftlint:disable:previous discouraged_optional_collection
-        self.contentKeySessionDelegate = contentKeySessionDelegate
-
-        let asset = AVURLAsset(url: url)
-        super.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
-
-        contentKeySession.setDelegate(
-            contentKeySessionDelegate,
-            queue: DispatchQueue(label: "ch.srgssr.player.content_key_session")
-        )
-        contentKeySession.addContentKeyRecipient(asset)
-        contentKeySession.processContentKeyRequest(withIdentifier: nil, initializationData: nil)
-    }
-}
-
 /// An item to be inserted into the player.
 public final class PlayerItem: Equatable {
-    @Published private(set) var playerItem = AVPlayerItem.loading
-    @Published private(set) var chunkDuration: CMTime = .invalid
+    @Published private(set) var source: Source
 
     private let id = UUID()
 
     /// Create the item from an `AVPlayerItem` publisher data source.
-    public init<P>(publisher: P) where P: Publisher, P.Output == AVPlayerItem {
+    public init<P>(publisher: P) where P: Publisher, P.Output == Asset {
+        source = Source(id: id, asset: .loading)
         publisher
             .catch { error in
-                Just(AVPlayerItem.failing(error: error))
+                Just(.failed(error: error))
             }
-            .prepend(AVPlayerItem.loading)
-            .map { [id] item in
-                item.withId(id)
+            .map { [id] asset in
+                Source(id: id, asset: asset)
             }
-            .assign(to: &$playerItem)
-        $playerItem
-            .map { item in
-                item.asset.propertyPublisher(.minimumTimeOffsetFromLive)
-                    .map { CMTimeMultiplyByRatio($0, multiplier: 1, divisor: 3) }       // The minimum offset represents 3 chunks
-                    .replaceError(with: .invalid)
-                    .prepend(.invalid)
-            }
-            .switchToLatest()
-            .removeDuplicates()
-            .assign(to: &$chunkDuration)
+            .assign(to: &$source)
     }
 
-    /// Compare two items for equality.
+    /// Create a player item from a URL.
+    /// - Parameters:
+    ///   - urn: The URL to play.
+    public convenience init(url: URL) {
+        self.init(publisher: Just(.simple(url: url)))
+    }
+
     public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
         lhs === rhs
     }
 
-    deinit {
-        playerItem.cancelPendingSeeks()
-        playerItem.asset.cancelLoading()
+    func matches(_ playerItem: AVPlayerItem?) -> Bool {
+        guard let playerItem else { return false }
+        return playerItem.id == id
     }
 }
 
-public extension AVPlayerItem {
-    /// An item which never finishes loading.
-    static var loading: AVPlayerItem {
-        // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-        let url = URL(string: "pillarbox://loading.m3u8")!
-        return ResourceLoadedPlayerItem(url: url, resourceLoaderDelegate: LoadingResourceLoaderDelegate(), automaticallyLoadedAssetKeys: nil)
-    }
+extension PlayerItem {
+    struct Source {
+        let id: UUID
+        let asset: Asset
 
-    /// Create a player item from a URL.
-    /// - Parameters:
-    ///   - url: The URL to play.
-    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play.
-    convenience init(url: URL, automaticallyLoadedAssetKeys: [String]) {
-        let asset = AVURLAsset(url: url)
-        self.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
-    }
-
-    /// An item which immediately fails with a specific error.
-    static func failing(error: Error) -> AVPlayerItem {
-        // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-        let url = URL(string: "pillarbox://failing.m3u8")!
-        return ResourceLoadedPlayerItem(url: url, resourceLoaderDelegate: FailingResourceLoaderDelegate(error: error), automaticallyLoadedAssetKeys: nil)
-    }
-
-    /// Create a player item from a URL.
-    /// - Parameters:
-    ///   - url: The URL to play.
-    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play.
-    static func loading(
-        url: URL,
-        automaticallyLoadedAssetKeys: [String]? = nil
-        // swiftlint:disable:previous discouraged_optional_collection
-    ) -> AVPlayerItem {
-        if let automaticallyLoadedAssetKeys {
-            return AVPlayerItem(url: url, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
-        }
-        else {
-            return AVPlayerItem(url: url)
-        }
-    }
-
-    /// An item which loads the specified URL (with an optionally associated resource loader delegate).
-    /// - Parameters:
-    ///   - url: The URL to play.
-    ///   - resourceLoaderDelegate: The resource loader delegate to use (automatically retained).
-    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play.
-    static func loading(
-        url: URL,
-        resourceLoaderDelegate: AVAssetResourceLoaderDelegate,
-        automaticallyLoadedAssetKeys: [String]? = nil
-        // swiftlint:disable:previous discouraged_optional_collection
-    ) -> AVPlayerItem {
-        ResourceLoadedPlayerItem(
-            url: url,
-            resourceLoaderDelegate: resourceLoaderDelegate,
-            automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys
-        )
-    }
-
-    /// An item which loads the specified URL (with an optionally associated content key session delegate).
-    /// - Parameters:
-    ///   - url: The URL to play.
-    ///   - contentKeySessionDelegate: The content key session delegate (automatically retained).
-    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play.
-    static func loading(
-        url: URL,
-        contentKeySessionDelegate: AVContentKeySessionDelegate,
-        automaticallyLoadedAssetKeys: [String]? = nil
-        // swiftlint:disable:previous discouraged_optional_collection
-    ) -> AVPlayerItem {
-        ContentKeySessionPlayerItem(
-            url: url,
-            contentKeySessionDelegate: contentKeySessionDelegate,
-            automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys
-        )
-    }
-}
-
-public extension PlayerItem {
-    /// Create a player item from a URL.
-    /// - Parameters:
-    ///   - urn: The URL to play.
-    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play. If `nil` default
-    ///     keys are loaded.
-    convenience init(url: URL, automaticallyLoadedAssetKeys: [String]? = nil) {
-        // swiftlint:disable:previous discouraged_optional_collection
-        let item = Self.item(url: url, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
-        self.init(item)
-    }
-
-    /// Create a player item from an asset.
-    /// - Parameters:
-    ///   - asset: The asset to play.
-    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play. If `nil` default
-    ///     keys are loaded.
-    convenience init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]? = nil) {
-        // swiftlint:disable:previous discouraged_optional_collection
-        let item = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
-        self.init(item)
-    }
-
-    /// Create a player item from a raw `AVFoundation` item.
-    /// - Parameters:
-    ///   - asset: The asset to play.
-    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play. If `nil` default
-    ///     keys are loaded.
-    convenience init(_ item: AVPlayerItem) {
-        self.init(publisher: Just(item))
-    }
-
-    private static func item(url: URL, automaticallyLoadedAssetKeys: [String]?) -> AVPlayerItem {
-        // swiftlint:disable:previous discouraged_optional_collection
-        if let automaticallyLoadedAssetKeys {
-            return AVPlayerItem(url: url, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
-        }
-        else {
-            return AVPlayerItem(url: url)
+        func playerItem() -> AVPlayerItem {
+            asset.playerItem().withId(id)
         }
     }
 }
 
 extension AVPlayerItem {
+    func matches(_ playerItem: AVPlayerItem) -> Bool {
+        id == playerItem.id
+    }
+}
+
+private extension AVPlayerItem {
     /// An identifier to identify player items delivered by the same pipeline.
     var id: UUID? {
         get {
