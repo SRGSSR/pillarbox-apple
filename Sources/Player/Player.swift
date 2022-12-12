@@ -475,8 +475,7 @@ public extension Player {
     @discardableResult
     func advanceToNextItem() -> Bool {
         guard canAdvanceToNextItem() else { return false }
-        let playerItems = advancingItems.map { $0.source.playerItem() }
-        rawPlayer.replaceItems(with: playerItems)
+        rawPlayer.advanceToNextItem()
         return true
     }
 }
