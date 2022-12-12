@@ -29,8 +29,7 @@ final class PlayerTests: XCTestCase {
         let item2 = PlayerItem(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         expectAtLeastEqualPublished(
-            // `nil` initially not expected but is an artifact of `replaceCurrentItem(with:)`.
-            values: [item1, nil, item2],
+            values: [item1, item2],
             from: player.$currentItem
         ) {
             player.play()
