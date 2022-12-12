@@ -83,6 +83,9 @@ struct ShowcaseView: View {
                 Cell(title: "Playlist (URNs, DRM-protected)") {
                     PlaylistView(medias: MediaURNPlaylist.drmProtectedVideos)
                 }
+                Cell(title: "Audio playlist (URNs)") {
+                    PlaylistView(medias: MediaURNPlaylist.audios)
+                }
                 Cell(title: "Playlist (with errors)") {
                     PlaylistView(medias: MediaURNPlaylist.videosWithErrors)
                 }

@@ -160,6 +160,12 @@ enum MediaURNPlaylist {
         .urn("urn:rts:video:13556278"),
         .urn("urn:rts:video:13556106")
     ]
+    static let audios: [Media] = [
+        .urn("urn:rts:audio:13605286"),
+        .urn("urn:rts:audio:13598743"),
+        .urn("urn:rts:audio:13579611"),
+        .urn("urn:rts:audio:13605216")
+    ]
 }
 
 // MARK: Types
