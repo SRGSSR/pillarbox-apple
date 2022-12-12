@@ -22,6 +22,27 @@ final class RawPlayer: AVQueuePlayer {
             completionHandler(finished)
         }
     }
+
+    func replaceItems(with items: [AVPlayerItem]) {
+        if let firstItem = items.first {
+            if firstItem != currentItem {
+                replaceCurrentItem(with: firstItem)
+            }
+            if self.items().count > 1 {
+                self.items().suffix(from: 1).forEach { item in
+                    remove(item)
+                }
+            }
+            if items.count > 1 {
+                items.suffix(from: 1).forEach { item in
+                    insert(item, after: nil)
+                }
+            }
+        }
+        else {
+            removeAllItems()
+        }
+    }
 }
 
 extension Notification.Name {

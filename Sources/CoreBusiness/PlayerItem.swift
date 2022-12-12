@@ -18,7 +18,6 @@ public extension PlayerItem {
         self.init(publisher: publisher)
     }
 
-
     private static func asset(for resource: Resource) -> Asset {
         if let certificateUrl = resource.drms?.first(where: { $0.type == .fairPlay })?.certificateUrl {
             return .encrypted(url: resource.url, delegate: ContentKeySessionDelegate(certificateUrl: certificateUrl))

@@ -110,7 +110,7 @@ public final class Player: ObservableObject, Equatable {
             .switchToLatest()
             .receiveOnMainThread()
             .sink { [rawPlayer] playerItems in
-                Self.update(with: playerItems, player: rawPlayer)
+                Self.update(player: rawPlayer, with: playerItems)
             }
             .store(in: &cancellables)
     }
@@ -133,44 +133,13 @@ public final class Player: ObservableObject, Equatable {
         return playerConfiguration
     }
 
-    private static func update(with items: [AVPlayerItem], player: AVQueuePlayer) {
-        if player.items().isEmpty {
-            update(player: player, with: items)
-        }
-        else if let currentItem = player.currentItem,
-                let currentItemIndex = items.firstIndex(where: { $0.matches(currentItem) }) {
-            update(player: player, with: Array(items.suffix(from: currentItemIndex)))
+    static func update(player: RawPlayer, with playerItems: [AVPlayerItem]) {
+        if let currentItem = player.currentItem, let currentIndex = playerItems.firstIndex(where: { $0.matches(currentItem) }) {
+            let playerItems = Array(playerItems.suffix(from: currentIndex))
+            player.replaceItems(with: playerItems)
         }
         else {
-            for item in player.items() {
-                if items.contains(item) {
-                    break
-                }
-                player.remove(item)
-            }
-            update(with: items, player: player)
-        }
-    }
-
-    private static func update(player: AVQueuePlayer, with items: [AVPlayerItem]) {
-        // Replace the current item directly. Diffing namely applies removals first and removing the current
-        // item would otherwise make `AVQueuePlayer` move to the next item automatically.
-        if let currentItem = player.currentItem,
-           let updatedCurrentItem = items.first(where: { $0.matches(currentItem) }), updatedCurrentItem != currentItem {
-            player.replaceCurrentItem(with: updatedCurrentItem)
-        }
-
-        // Apply diffing. `associatedWith` parameters are ignored (and are `nil` without using `.inferringMoves()`).
-        let diff = items.difference(from: player.items())
-        diff.forEach { change in
-            switch change {
-            case let .insert(offset: offset, element: element, associatedWith: _):
-                let beforeIndex = player.items().index(before: offset)
-                let afterItem = player.items()[safeIndex: beforeIndex]
-                player.insert(element, after: afterItem)
-            case let .remove(offset: _, element: element, associatedWith: _):
-                player.remove(element)
-            }
+            player.replaceItems(with: playerItems)
         }
     }
 
@@ -309,21 +278,33 @@ public extension Player {
     /// Items before the current item (not included).
     /// - Returns: Items.
     var previousItems: [PlayerItem] {
-        guard let currentItem = rawPlayer.currentItem,
-              let currentIndex = storedItems.firstIndex(where: { $0.matches(currentItem) }) else {
-            return []
-        }
+        guard let currentItem, let currentIndex = storedItems.firstIndex(of: currentItem) else { return [] }
         return Array(storedItems.prefix(upTo: currentIndex))
+    }
+
+    /// Return the list of items to be loaded to return to the previous (playable) item.
+    private var returningItems: [PlayerItem] {
+        guard let currentItem, let currentIndex = storedItems.firstIndex(of: currentItem) else { return [] }
+        let previousIndex = storedItems.index(before: currentIndex)
+        guard previousIndex >= 0 else { return [] }
+        return Array(storedItems.suffix(from: previousIndex))
     }
 
     /// Items past the current item (not included).
     /// - Returns: Items.
     var nextItems: [PlayerItem] {
-        guard let currentItem = rawPlayer.currentItem,
-              let currentIndex = storedItems.firstIndex(where: { $0.matches(currentItem) }) else {
+        guard let currentItem, let currentIndex = storedItems.firstIndex(of: currentItem) else {
             return Array(storedItems)
         }
         return Array(storedItems.suffix(from: currentIndex).dropFirst())
+    }
+
+    /// Return the list of items to be loaded to advance to the next (playable) item.
+    private var advancingItems: [PlayerItem] {
+        guard let currentItem, let currentIndex = storedItems.firstIndex(of: currentItem) else { return [] }
+        let nextIndex = storedItems.index(after: currentIndex)
+        guard nextIndex < storedItems.count else { return [] }
+        return Array(storedItems.suffix(from: nextIndex))
     }
 
     private func canInsert(_ item: PlayerItem, before beforeItem: PlayerItem?) -> Bool {
@@ -470,27 +451,23 @@ public extension Player {
     /// Check whether returning to the previous item in the deque is possible.`
     /// - Returns: `true` if possible.
     func canReturnToPreviousItem() -> Bool {
-        return !previousItems.isEmpty
+        !returningItems.isEmpty
     }
 
     /// Return to the previous item in the deque. Skips failed items.
     /// - Returns: `true` if not possible.
     @discardableResult
     func returnToPreviousItem() -> Bool {
-        guard let currentItem = rawPlayer.currentItem,
-              let previousItem = previousItems.last?.source.playerItem() else {
-            return false
-        }
-        rawPlayer.replaceCurrentItem(with: previousItem)
-        rawPlayer.insert(currentItem, after: previousItem)
+        guard canReturnToPreviousItem() else { return false}
+        let playerItems = returningItems.map { $0.source.playerItem() }
+        rawPlayer.replaceItems(with: playerItems)
         return true
     }
 
     /// Check whether moving to the next item in the deque is possible.`
     /// - Returns: `true` if possible.
     func canAdvanceToNextItem() -> Bool {
-        guard let currentItem else { return false }
-        return currentItem !== storedItems.last
+        !advancingItems.isEmpty
     }
 
     /// Move to the next item in the deque.
@@ -498,7 +475,8 @@ public extension Player {
     @discardableResult
     func advanceToNextItem() -> Bool {
         guard canAdvanceToNextItem() else { return false }
-        rawPlayer.advanceToNextItem()
+        let playerItems = advancingItems.map { $0.source.playerItem() }
+        rawPlayer.replaceItems(with: playerItems)
         return true
     }
 }
