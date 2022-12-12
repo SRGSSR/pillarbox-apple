@@ -9,38 +9,11 @@ import AVFoundation
 final class AkamaiResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
     private static let tokenServiceUrl = URL(string: "https://tp.srgssr.ch/akahd/token")!
     private static let session = URLSession(configuration: .default)
-    
+
     private let id: UUID
 
     init(id: UUID) {
         self.id = id
-    }
-
-    func resourceLoader(
-        _ resourceLoader: AVAssetResourceLoader,
-        shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest
-    ) -> Bool {
-        processRequest(loadingRequest)
-    }
-
-    func resourceLoader(
-        _ resourceLoader: AVAssetResourceLoader,
-        shouldWaitForRenewalOfRequestedResource renewalRequest: AVAssetResourceRenewalRequest
-    ) -> Bool {
-        processRequest(renewalRequest)
-    }
-
-    private func processRequest(_ loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
-        guard let requestUrl = loadingRequest.request.url, let url = AkamaiURLCoding.decodeUrl(requestUrl, id: id) else {
-            return false
-        }
-        Task {
-            let tokenizedUrl = await Self.safeTokenizeUrl(url)
-            try await Task.sleep(for: .seconds(0.5))
-            loadingRequest.redirect(to: tokenizedUrl)
-            loadingRequest.finishLoading()
-        }
-        return true
     }
 
     private static func acl(for url: URL) -> String {
@@ -81,5 +54,32 @@ final class AkamaiResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegat
             throw TokenError.malformedParameters
         }
         return tokenizedUrl
+    }
+
+    func resourceLoader(
+        _ resourceLoader: AVAssetResourceLoader,
+        shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest
+    ) -> Bool {
+        processRequest(loadingRequest)
+    }
+
+    func resourceLoader(
+        _ resourceLoader: AVAssetResourceLoader,
+        shouldWaitForRenewalOfRequestedResource renewalRequest: AVAssetResourceRenewalRequest
+    ) -> Bool {
+        processRequest(renewalRequest)
+    }
+
+    private func processRequest(_ loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
+        guard let requestUrl = loadingRequest.request.url, let url = AkamaiURLCoding.decodeUrl(requestUrl, id: id) else {
+            return false
+        }
+        Task {
+            let tokenizedUrl = await Self.safeTokenizeUrl(url)
+            try await Task.sleep(for: .seconds(0.5))
+            loadingRequest.redirect(to: tokenizedUrl)
+            loadingRequest.finishLoading()
+        }
+        return true
     }
 }

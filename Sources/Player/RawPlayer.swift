@@ -43,7 +43,8 @@ final class RawPlayer: AVQueuePlayer {
         }
     }
 
-    @objc private func append(_ items: [AVPlayerItem]) {
+    @objc
+    private func append(_ items: [AVPlayerItem]) {
         items.forEach { item in
             insert(item, after: nil)
         }
