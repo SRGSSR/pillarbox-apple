@@ -74,6 +74,15 @@ struct ShowcaseView: View {
                 Cell(title: "Playlist (URNs)") {
                     PlaylistView(medias: MediaURNPlaylist.videos)
                 }
+                Cell(title: "Playlist (URNs, long)") {
+                    PlaylistView(medias: MediaURNPlaylist.longVideos)
+                }
+                Cell(title: "Playlist (URNs, token-protected)") {
+                    PlaylistView(medias: MediaURNPlaylist.tokenProtectedVideos)
+                }
+                Cell(title: "Playlist (URNs, DRM-protected)") {
+                    PlaylistView(medias: MediaURNPlaylist.drmProtectedVideos)
+                }
                 Cell(title: "Playlist (with errors)") {
                     PlaylistView(medias: MediaURNPlaylist.videosWithErrors)
                 }
