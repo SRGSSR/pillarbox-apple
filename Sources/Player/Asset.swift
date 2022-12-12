@@ -6,10 +6,10 @@
 
 import AVFoundation
 
-private let contentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
+private let kContentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
 
-private let resourceLoaderQueue = DispatchQueue(label: "ch.srgssr.player.resource_loader")
-private let contentKeySessionQueue = DispatchQueue(label: "ch.srgssr.player.content_key_session")
+private let kResourceLoaderQueue = DispatchQueue(label: "ch.srgssr.player.resource_loader")
+private let kContentKeySessionQueue = DispatchQueue(label: "ch.srgssr.player.content_key_session")
 
 /// An item which stores its own custom resource loader delegate.
 final class ResourceLoadedPlayerItem: AVPlayerItem {
@@ -19,7 +19,7 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
     init(url: URL, resourceLoaderDelegate: AVAssetResourceLoaderDelegate) {
         self.resourceLoaderDelegate = resourceLoaderDelegate
         let asset = AVURLAsset(url: url)
-        asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: .global(qos: .userInitiated))
+        asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: kResourceLoaderQueue)
         super.init(asset: asset, automaticallyLoadedAssetKeys: nil)
     }
 }
@@ -41,9 +41,9 @@ public enum Asset {
             return ResourceLoadedPlayerItem(url: url, resourceLoaderDelegate: delegate)
         case let .encrypted(url: url, delegate: delegate):
             let asset = AVURLAsset(url: url)
-            contentKeySession.setDelegate(delegate, queue: contentKeySessionQueue)
-            contentKeySession.addContentKeyRecipient(asset)
-            contentKeySession.processContentKeyRequest(withIdentifier: nil, initializationData: nil)
+            kContentKeySession.setDelegate(delegate, queue: kContentKeySessionQueue)
+            kContentKeySession.addContentKeyRecipient(asset)
+            kContentKeySession.processContentKeyRequest(withIdentifier: nil, initializationData: nil)
             return AVPlayerItem(asset: asset)
         }
     }
