@@ -24,9 +24,10 @@ final class RawPlayer: AVQueuePlayer {
     }
 
     func replaceItems(with items: [AVPlayerItem]) {
-        if let currentItem {
-            if currentItem !== items.first {
-                replaceCurrentItem(with: items.first)
+        RunLoop.cancelPreviousPerformRequests(withTarget: self)
+        if let firstItem = items.first {
+            if firstItem !== self.items().first {
+                replaceCurrentItem(with: firstItem)
             }
             if self.items().count > 1 {
                 self.items().suffix(from: 1).forEach { item in
@@ -34,17 +35,22 @@ final class RawPlayer: AVQueuePlayer {
                 }
             }
             if items.count > 1 {
-                items.suffix(from: 1).forEach { item in
-                    insert(item, after: nil)
-                }
+                perform(#selector(append(_:)), with: Array(items.suffix(from: 1)), afterDelay: 0.5, inModes: [.common])
             }
         }
         else {
             removeAllItems()
-            items.forEach { item in
-                insert(item, after: nil)
-            }
         }
+    }
+
+    @objc private func append(_ items: [AVPlayerItem]) {
+        items.forEach { item in
+            insert(item, after: nil)
+        }
+    }
+
+    deinit {
+        RunLoop.cancelPreviousPerformRequests(withTarget: self)
     }
 }
 
