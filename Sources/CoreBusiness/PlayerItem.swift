@@ -25,7 +25,11 @@ public extension PlayerItem {
         else {
             switch resource.tokenType {
             case .akamai:
-                return .custom(url: AkamaiURLCoding.encodeUrl(resource.url), delegate: AkamaiResourceLoaderDelegate())
+                let id = UUID()
+                return .custom(
+                    url: AkamaiURLCoding.encodeUrl(resource.url, id: id),
+                    delegate: AkamaiResourceLoaderDelegate(id: id)
+                )
             default:
                 return .simple(url: resource.url)
             }
