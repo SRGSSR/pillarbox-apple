@@ -45,6 +45,12 @@ public final class PlayerItem: Equatable {
     }
 }
 
+extension PlayerItem: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        "\(source)"
+    }
+}
+
 extension PlayerItem {
     struct Source {
         let id: UUID
