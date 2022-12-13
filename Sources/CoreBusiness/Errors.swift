@@ -8,7 +8,7 @@ import Foundation
 
 struct DRMError: LocalizedError {
     static var missingContentKeyContext: Self {
-        .init(errorDescription: "Could not retrieve DRM license")
+        .init(errorDescription: "The DRM license could not be retrieved")
     }
 
     let errorDescription: String?
