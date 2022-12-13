@@ -125,7 +125,7 @@ final class ProgressTrackerTests: XCTestCase {
         let item = PlayerItem(url: Stream.onDemand.url)
         let player = Player(item: item)
         progressTracker.player = player
-        expect(progressTracker.range).toEventually(equal(0...1))
+        expect(progressTracker.range).toEventually(equal(0...1), timeout: .seconds(2))
 
         expectEqualPublished(
             values: [false, true, false],
@@ -146,7 +146,7 @@ final class ProgressTrackerTests: XCTestCase {
         let item = PlayerItem(url: Stream.onDemand.url)
         let player = Player(item: item)
         progressTracker.player = player
-        expect(progressTracker.range).toEventually(equal(0...1))
+        expect(progressTracker.range).toEventually(equal(0...1), timeout: .seconds(2))
 
         expectEqualPublished(
             values: [false],
@@ -173,7 +173,7 @@ final class ProgressTrackerTests: XCTestCase {
         let player = Player(item: item)
         progressTracker.player = player
         player.play()
-        expect(progressTracker.progress).toEventuallyNot(equal(0))
+        expect(progressTracker.progress).toEventuallyNot(equal(0), timeout: .seconds(2))
 
         let progress = progressTracker.progress
         expectEqualPublished(
@@ -192,7 +192,7 @@ final class ProgressTrackerTests: XCTestCase {
         let player = Player(item: item)
         progressTracker.player = player
         player.play()
-        expect(progressTracker.progress).toEventuallyNot(equal(0))
+        expect(progressTracker.progress).toEventuallyNot(equal(0), timeout: .seconds(2))
 
         expectEqualPublished(
             values: [0...1, 0...0],
@@ -210,7 +210,7 @@ final class ProgressTrackerTests: XCTestCase {
         let player = Player(item: item)
         progressTracker.player = player
         player.play()
-        expect(progressTracker.progress).toEventuallyNot(equal(0))
+        expect(progressTracker.progress).toEventuallyNot(equal(0), timeout: .seconds(2))
 
         let progress = progressTracker.progress
         expectEqualPublished(
