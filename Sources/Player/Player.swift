@@ -102,15 +102,17 @@ public final class Player: ObservableObject, Equatable {
             .assign(to: &$currentItem)
 
         $storedItems
-            .map { items in
-                Publishers.AccumulateLatestMany(items.map { item in
+            .withPrevious()
+            .map { [rawPlayer] items in
+                let queueItems = Self.queuePlayerItems(items.current, from: items.previous, in: rawPlayer)
+                return Publishers.AccumulateLatestMany(queueItems.map { item in
                     item.$source.map { $0.playerItem() }
                 })
             }
             .switchToLatest()
             .receiveOnMainThread()
             .sink { [rawPlayer] playerItems in
-                Self.update(player: rawPlayer, with: playerItems)
+                rawPlayer.replaceItems(with: playerItems)
             }
             .store(in: &cancellables)
     }
@@ -133,13 +135,33 @@ public final class Player: ObservableObject, Equatable {
         return playerConfiguration
     }
 
-    static func update(player: RawPlayer, with playerItems: [AVPlayerItem]) {
-        if let currentItem = player.currentItem, let currentIndex = playerItems.firstIndex(where: { $0.matches(currentItem) }) {
-            let playerItems = Array(playerItems.suffix(from: currentIndex))
-            player.replaceItems(with: playerItems)
+    /// Return the player items with which the queue player must be filled.
+    /// - Parameters:
+    ///   - items: The updated item list.
+    ///   - previousItems: The previous item list, if any.
+    ///   - player: The queue player.
+    private static func queuePlayerItems(
+        _ items: Deque<PlayerItem>,
+        from previousItems: Deque<PlayerItem>?,
+        in player: RawPlayer
+    ) -> [PlayerItem] {
+        guard let currentItem = player.currentItem else { return Array(items) }
+
+        // Current item found in the updated list. Return updated items from there.
+        if let currentIndex = items.firstIndex(where: { $0.matches(currentItem) }) {
+            return Array(items.suffix(from: currentIndex))
+        }
+        // Current item not found in the updated list. Locate a common item which was previously located after the
+        // current item and, if any is found, return updated items from there.
+        else if let previousItems {
+            let previousQueueItems = queuePlayerItems(previousItems, from: nil, in: player)
+            guard let commonIndex = items.firstIndex(where: { previousQueueItems.contains($0) }) else {
+                return Array(items)
+            }
+            return Array(items.suffix(from: commonIndex))
         }
         else {
-            player.replaceItems(with: playerItems)
+            return Array(items)
         }
     }
 
