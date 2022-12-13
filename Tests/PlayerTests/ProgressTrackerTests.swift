@@ -229,7 +229,7 @@ final class ProgressTrackerTests: XCTestCase {
         let player = Player(item: item)
         progressTracker.player = player
         player.play()
-        expect(progressTracker.progress).toEventuallyNot(equal(0))
+        expect(progressTracker.progress).toEventuallyNot(equal(0), timeout: .seconds(2))
 
         expectEqualPublished(
             values: [0...1, 0...0],
