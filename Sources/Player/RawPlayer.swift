@@ -35,7 +35,7 @@ final class RawPlayer: AVQueuePlayer {
                 }
             }
             if items.count > 1 {
-                perform(#selector(append(_:)), with: Array(items.suffix(from: 1)), afterDelay: 0.5, inModes: [.common])
+                perform(#selector(append(_:)), with: Array(items.suffix(from: 1)), afterDelay: 1, inModes: [.common])
             }
         }
         else {
