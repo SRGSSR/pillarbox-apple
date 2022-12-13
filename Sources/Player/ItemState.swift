@@ -110,9 +110,9 @@ enum ItemState: Equatable {
             return localizedError
         }
         else {
-            let intrinsic = intrinsicError(for: item)
-            item.cachedError = intrinsic
-            return intrinsic
+            let intrinsicError = intrinsicError(for: item)
+            item.cachedError = intrinsicError
+            return intrinsicError
         }
     }
 }
