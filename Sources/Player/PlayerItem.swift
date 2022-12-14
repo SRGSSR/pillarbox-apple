@@ -30,9 +30,10 @@ public final class PlayerItem: Equatable {
 
     /// Create a player item from a URL.
     /// - Parameters:
-    ///   - urn: The URL to play.
-    public convenience init(url: URL) {
-        self.init(publisher: Just(.simple(url: url)))
+    ///   - url: The URL to play.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    public convenience init(url: URL, configuration: @escaping (AVPlayerItem) -> Void = { _ in }) {
+        self.init(publisher: Just(.simple(url: url, configuration: configuration)))
     }
 
     public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {

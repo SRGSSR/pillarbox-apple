@@ -12,14 +12,11 @@ import CoreMedia
 
 extension Asset: Similar {
     public static func ~= (lhs: Asset, rhs: Asset) -> Bool {
-        switch (lhs, rhs) {
-        case let (.simple(url: lhsUrl), .simple(url: rhsUrl)):
-            return lhsUrl == rhsUrl
-        case let (.custom(url: lhsUrl, delegate: _), .custom(url: rhsUrl, delegate: _)):
-            return lhsUrl == rhsUrl
-        case let (.encrypted(url: lhsUrl, delegate: _), .encrypted(url: rhsUrl, delegate: _)):
-            return lhsUrl == rhsUrl
-        default:
+        if let lhsUrlAsset = lhs.playerItem().asset as? AVURLAsset,
+           let rhsUrlAsset = rhs.playerItem().asset as? AVURLAsset {
+            return lhsUrlAsset.url == rhsUrlAsset.url
+        }
+        else {
             return false
         }
     }

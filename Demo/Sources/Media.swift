@@ -183,8 +183,10 @@ enum Media: Hashable {
         case let .url(url):
             return PlayerItem(url: url)
         case let .unbufferedUrl(url):
-            // TODO:
-            return PlayerItem(url: url)
+            return PlayerItem(url: url) { item in
+                item.automaticallyPreservesTimeOffsetFromLive = true
+                item.preferredForwardBufferDuration = 1
+            }
         case let .urn(urn):
             return PlayerItem(urn: urn)
         }

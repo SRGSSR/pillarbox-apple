@@ -19,8 +19,20 @@ public extension PlayerItem {
     }
 
     private static func asset(for resource: Resource) -> Asset {
+        let configuration: (AVPlayerItem) -> Void = { item in
+            if resource.streamType == .live {
+                // Limit buffering and force the player to return to the live edge when re-buffering. This ensures
+                // livestreams cannot be paused and resumed in the past, as requested by business people.
+                item.automaticallyPreservesTimeOffsetFromLive = true
+                item.preferredForwardBufferDuration = 1
+            }
+        }
         if let certificateUrl = resource.drms?.first(where: { $0.type == .fairPlay })?.certificateUrl {
-            return .encrypted(url: resource.url, delegate: ContentKeySessionDelegate(certificateUrl: certificateUrl))
+            return .encrypted(
+                url: resource.url,
+                delegate: ContentKeySessionDelegate(certificateUrl: certificateUrl),
+                configuration: configuration
+            )
         }
         else {
             switch resource.tokenType {
@@ -28,10 +40,11 @@ public extension PlayerItem {
                 let id = UUID()
                 return .custom(
                     url: AkamaiURLCoding.encodeUrl(resource.url, id: id),
-                    delegate: AkamaiResourceLoaderDelegate(id: id)
+                    delegate: AkamaiResourceLoaderDelegate(id: id),
+                    configuration: configuration
                 )
             default:
-                return .simple(url: resource.url)
+                return .simple(url: resource.url, configuration: configuration)
             }
         }
     }
