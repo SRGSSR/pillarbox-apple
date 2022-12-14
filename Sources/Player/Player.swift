@@ -70,69 +70,14 @@ public final class Player: ObservableObject, Equatable {
         self.configuration = Self.configure(with: configuration)
         storedItems = Deque(items)
 
-        rawPlayer.playbackStatePublisher()
-            .receiveOnMainThread()
-            .lane("player_state")
-            .assign(to: &$playbackState)
-
-        rawPlayer.currentItemTimeRangePublisher()
-            .receiveOnMainThread()
-            .lane("player_time_range")
-            .assign(to: &$timeRange)
-
-        rawPlayer.currentItemDurationPublisher()
-            .receiveOnMainThread()
-            .lane("player_item_duration")
-            .assign(to: &$itemDuration)
-
-        rawPlayer.publisher(for: \.currentItem)
-            .map { item -> AnyPublisher<CMTime, Never> in
-                guard let item else { return Just(.invalid).eraseToAnyPublisher() }
-                return item.asset.propertyPublisher(.minimumTimeOffsetFromLive)
-                    .map { CMTimeMultiplyByRatio($0, multiplier: 1, divisor: 3) }       // The minimum offset represents 3 chunks
-                    .replaceError(with: .invalid)
-                    .prepend(.invalid)
-                    .eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .removeDuplicates()
-            .receiveOnMainThread()
-            .lane("player_chunk_duration")
-            .assign(to: &$chunkDuration)
-
-        rawPlayer.seekingPublisher()
-            .receiveOnMainThread()
-            .lane("player_seeking")
-            .assign(to: &$isSeeking)
-
-        rawPlayer.bufferingPublisher()
-            .receiveOnMainThread()
-            .lane("player_buffering")
-            .assign(to: &$isBuffering)
-
-        Publishers.CombineLatest($storedItems, rawPlayer.publisher(for: \.currentItem))
-            .map { storedItems, currentItem in
-                storedItems.first { $0.matches(currentItem) }
-            }
-            .removeDuplicates()
-            .receiveOnMainThread()
-            .lane("player_current_item")
-            .assign(to: &$currentItem)
-
-        $storedItems
-            .withPrevious()
-            .map { [rawPlayer] items in
-                let queueItems = Self.queuePlayerItems(items.current, from: items.previous, in: rawPlayer)
-                return Publishers.AccumulateLatestMany(queueItems.map { item in
-                    item.$source.map { $0.playerItem() }
-                })
-            }
-            .switchToLatest()
-            .receiveOnMainThread()
-            .sink { [rawPlayer] playerItems in
-                rawPlayer.replaceItems(with: playerItems)
-            }
-            .store(in: &cancellables)
+        configurePlaybackStatePublisher()
+        configureCurrentItemTimeRangePublisher()
+        configureCurrentItemDurationPublisher()
+        configureChunkDurationPublisher()
+        configureSeekingPublisher()
+        configureBufferingPublisher()
+        configureCurrentItemPublisher()
+        configureRawPlayerUpdatePublisher()
     }
 
     /// Create a player with a single item in its queue.
@@ -518,5 +463,87 @@ public extension Player {
         let playerItems = advancingItems.map { $0.source.playerItem() }
         rawPlayer.replaceItems(with: playerItems)
         return true
+    }
+}
+
+private extension Player {
+    private func configurePlaybackStatePublisher() {
+        rawPlayer.playbackStatePublisher()
+            .receiveOnMainThread()
+            .lane("player_state")
+            .assign(to: &$playbackState)
+    }
+
+    private func configureCurrentItemTimeRangePublisher() {
+        rawPlayer.currentItemTimeRangePublisher()
+            .receiveOnMainThread()
+            .lane("player_time_range")
+            .assign(to: &$timeRange)
+    }
+
+    private func configureCurrentItemDurationPublisher() {
+        rawPlayer.currentItemDurationPublisher()
+            .receiveOnMainThread()
+            .lane("player_item_duration")
+            .assign(to: &$itemDuration)
+    }
+
+    private func configureChunkDurationPublisher() {
+        rawPlayer.publisher(for: \.currentItem)
+            .map { item -> AnyPublisher<CMTime, Never> in
+                guard let item else { return Just(.invalid).eraseToAnyPublisher() }
+                return item.asset.propertyPublisher(.minimumTimeOffsetFromLive)
+                    .map { CMTimeMultiplyByRatio($0, multiplier: 1, divisor: 3) }       // The minimum offset represents 3 chunks
+                    .replaceError(with: .invalid)
+                    .prepend(.invalid)
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .removeDuplicates()
+            .receiveOnMainThread()
+            .lane("player_chunk_duration")
+            .assign(to: &$chunkDuration)
+    }
+
+    private func configureSeekingPublisher() {
+        rawPlayer.seekingPublisher()
+            .receiveOnMainThread()
+            .lane("player_seeking")
+            .assign(to: &$isSeeking)
+    }
+
+    private func configureBufferingPublisher() {
+        rawPlayer.bufferingPublisher()
+            .receiveOnMainThread()
+            .lane("player_buffering")
+            .assign(to: &$isBuffering)
+    }
+
+    private func configureCurrentItemPublisher() {
+        Publishers.CombineLatest($storedItems, rawPlayer.publisher(for: \.currentItem))
+            .map { storedItems, currentItem in
+                storedItems.first { $0.matches(currentItem) }
+            }
+            .removeDuplicates()
+            .receiveOnMainThread()
+            .lane("player_current_item")
+            .assign(to: &$currentItem)
+    }
+
+    private func configureRawPlayerUpdatePublisher() {
+        $storedItems
+            .withPrevious()
+            .map { [rawPlayer] items in
+                let queueItems = Self.queuePlayerItems(items.current, from: items.previous, in: rawPlayer)
+                return Publishers.AccumulateLatestMany(queueItems.map { item in
+                    item.$source.map { $0.playerItem() }
+                })
+            }
+            .switchToLatest()
+            .receiveOnMainThread()
+            .sink { [rawPlayer] playerItems in
+                rawPlayer.replaceItems(with: playerItems)
+            }
+            .store(in: &cancellables)
     }
 }
