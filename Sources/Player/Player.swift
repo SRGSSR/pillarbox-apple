@@ -28,6 +28,9 @@ public final class Player: ObservableObject, Equatable {
     /// Available time range. `.invalid` when not known.
     @Published public private(set) var timeRange: CMTimeRange = .invalid
 
+    /// Duration of a chunk for the currently played item.
+    @Published public private(set) var chunkDuration: CMTime = .invalid
+
     @Published private var storedItems: Deque<PlayerItem>
     @Published private var itemDuration: CMTime = .indefinite
 
@@ -81,6 +84,21 @@ public final class Player: ObservableObject, Equatable {
             .receiveOnMainThread()
             .lane("player_item_duration")
             .assign(to: &$itemDuration)
+
+        rawPlayer.publisher(for: \.currentItem)
+            .map { item -> AnyPublisher<CMTime, Never> in
+                guard let item else { return Just(.invalid).eraseToAnyPublisher() }
+                return item.asset.propertyPublisher(.minimumTimeOffsetFromLive)
+                    .map { CMTimeMultiplyByRatio($0, multiplier: 1, divisor: 3) }       // The minimum offset represents 3 chunks
+                    .replaceError(with: .invalid)
+                    .prepend(.invalid)
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .removeDuplicates()
+            .receiveOnMainThread()
+            .lane("player_chunk_duration")
+            .assign(to: &$chunkDuration)
 
         rawPlayer.seekingPublisher()
             .receiveOnMainThread()
@@ -227,7 +245,7 @@ public final class Player: ObservableObject, Equatable {
     /// - Returns: `true` if skipping to live conditions is possible.
     public func canSkipToLive(from time: CMTime) -> Bool {
         guard streamType == .dvr, timeRange.isValid else { return false }
-        return time < timeRange.end
+        return chunkDuration.isValid && time < timeRange.end - chunkDuration
     }
 
     /// Return the current item to live conditions. Does nothing if the current item is not a livestream or does not
