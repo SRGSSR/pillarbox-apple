@@ -69,7 +69,7 @@ extension AVPlayerItem {
 }
 
 private extension AVPlayerItem {
-    /// An identifier to identify player items delivered by the data source.
+    /// An identifier to identify player items delivered by the same data source.
     private(set) var id: UUID? {
         get {
             objc_getAssociatedObject(self, &kIdKey) as? UUID
@@ -79,7 +79,7 @@ private extension AVPlayerItem {
         }
     }
 
-    /// Assign an identifier to help track items delivered by the same pipeline.
+    /// Assign an identifier to identify player items delivered by the same data source.
     /// - Parameter id: The id to assign.
     /// - Returns: The receiver with the id assigned to it.
     func withId(_ id: UUID) -> AVPlayerItem {
