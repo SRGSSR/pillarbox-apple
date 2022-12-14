@@ -15,7 +15,7 @@ public final class PlayerItem: Equatable {
 
     private let id = UUID()
 
-    /// Create the item from an `AVPlayerItem` publisher data source.
+    /// Create the item from an `Asset` publisher data source.
     public init<P>(publisher: P) where P: Publisher, P.Output == Asset {
         source = Source(id: id, asset: .loading)
         publisher
@@ -69,8 +69,8 @@ extension AVPlayerItem {
 }
 
 private extension AVPlayerItem {
-    /// An identifier to identify player items delivered by the same pipeline.
-    var id: UUID? {
+    /// An identifier to identify player items delivered by the data source.
+    private(set) var id: UUID? {
         get {
             objc_getAssociatedObject(self, &kIdKey) as? UUID
         }
