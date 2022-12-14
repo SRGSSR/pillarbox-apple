@@ -35,6 +35,7 @@ public final class PlayerItem: Equatable {
     ///   - configuration: A closure to configure player items created from the receiver.
     public convenience init(
         url: URL,
+        // swiftlint:disable:next discouraged_optional_collection
         automaticallyLoadedKeys: [String]? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) {

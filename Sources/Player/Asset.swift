@@ -17,6 +17,7 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
     private let resourceLoaderDelegate: AVAssetResourceLoaderDelegate
 
     init(url: URL, resourceLoaderDelegate: AVAssetResourceLoaderDelegate, automaticallyLoadedAssetKeys: [String]?) {
+        // swiftlint:disable:previous discouraged_optional_collection
         self.resourceLoaderDelegate = resourceLoaderDelegate
         let asset = AVURLAsset(url: url)
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: kResourceLoaderQueue)
@@ -32,6 +33,7 @@ public struct Asset {
         case encrypted(url: URL, delegate: AVContentKeySessionDelegate)
 
         func playerItem(automaticallyLoadedAssetKeys: [String]?) -> AVPlayerItem {
+            // swiftlint:disable:previous discouraged_optional_collection
             switch self {
             case let .simple(url: url):
                 let asset = AVURLAsset(url: url)
@@ -53,6 +55,7 @@ public struct Asset {
     }
 
     private let type: `Type`
+    // swiftlint:disable:next discouraged_optional_collection
     private let automaticallyLoadedKeys: [String]?
     private let configuration: (AVPlayerItem) -> Void
 
@@ -63,6 +66,7 @@ public struct Asset {
     ///   - configuration: A closure to configure player items created from the receiver.
     public static func simple(
         url: URL,
+        // swiftlint:disable:next discouraged_optional_collection
         automaticallyLoadedKeys: [String]? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
@@ -83,6 +87,7 @@ public struct Asset {
     public static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
+        // swiftlint:disable:next discouraged_optional_collection
         automaticallyLoadedKeys: [String]? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
@@ -102,6 +107,7 @@ public struct Asset {
     public static func encrypted(
         url: URL,
         delegate: AVContentKeySessionDelegate,
+        // swiftlint:disable:next discouraged_optional_collection
         automaticallyLoadedKeys: [String]? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
