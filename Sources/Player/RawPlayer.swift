@@ -24,7 +24,7 @@ final class RawPlayer: AVQueuePlayer {
     }
 
     func replaceItems(with items: [AVPlayerItem]) {
-        RunLoop.cancelPreviousPerformRequests(withTarget: self)
+        cancelPendingReplacements()
         if let firstItem = items.first {
             if firstItem !== self.items().first {
                 replaceCurrentItem(with: firstItem)
@@ -50,7 +50,7 @@ final class RawPlayer: AVQueuePlayer {
         }
     }
 
-    deinit {
+    func cancelPendingReplacements() {
         RunLoop.cancelPreviousPerformRequests(withTarget: self)
     }
 }

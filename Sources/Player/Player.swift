@@ -92,6 +92,10 @@ public final class Player: ObservableObject, Equatable {
         lhs === rhs
     }
 
+    deinit {
+        rawPlayer.cancelPendingReplacements()
+    }
+
     private static func configure(with configuration: (inout PlayerConfiguration) -> Void) -> PlayerConfiguration {
         var playerConfiguration = PlayerConfiguration()
         configuration(&playerConfiguration)
