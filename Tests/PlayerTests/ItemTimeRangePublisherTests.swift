@@ -69,4 +69,15 @@ final class ItemTimeRangePublisherTests: XCTestCase {
             player.play()
         }
     }
+
+    func testWithoutAutomaticallyLoadedAssetKeys() {
+        let asset = AVURLAsset(url: Stream.onDemand.url)
+        let item = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: [])
+        let player = AVPlayer(playerItem: item)
+        expectAtLeastPublished(
+            values: [CMTimeRange(start: .zero, duration: Stream.onDemand.duration)],
+            from: player.currentItemTimeRangePublisher(),
+            to: beClose(within: 1)
+        )
+    }
 }
