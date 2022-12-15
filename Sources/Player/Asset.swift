@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import OSLog
 
 private let kContentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
 
@@ -32,6 +33,8 @@ public struct Asset {
         case custom(url: URL, delegate: AVAssetResourceLoaderDelegate)
         case encrypted(url: URL, delegate: AVContentKeySessionDelegate)
 
+        private static var logger = Logger(category: "Asset")
+
         func playerItem() -> AVPlayerItem {
             switch self {
             case let .simple(url: url):
@@ -42,11 +45,16 @@ public struct Asset {
                     resourceLoaderDelegate: delegate
                 )
             case let .encrypted(url: url, delegate: delegate):
+#if targetEnvironment(simulator)
+                Self.logger.error("FairPlay-encrypted assets cannot be played in the simulator")
+                return AVPlayerItem(url: url)
+#else
                 let asset = AVURLAsset(url: url)
                 kContentKeySession.setDelegate(delegate, queue: kContentKeySessionQueue)
                 kContentKeySession.addContentKeyRecipient(asset)
                 kContentKeySession.processContentKeyRequest(withIdentifier: nil, initializationData: nil)
                 return AVPlayerItem(asset: asset)
+#endif
             }
         }
     }
