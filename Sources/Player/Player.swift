@@ -525,6 +525,11 @@ private extension Player {
 
     private func configureCurrentItemPublisher() {
         Publishers.CombineLatest($storedItems, rawPlayer.publisher(for: \.currentItem))
+            .filter { storedItems, currentItem in
+                // The current item is automatically set to `nil` when a failure is encountered. If this is the case
+                // preserve the previous value, provided the player is loaded with items.
+                storedItems.count == 0 || currentItem != nil
+            }
             .map { storedItems, currentItem in
                 storedItems.first { $0.matches(currentItem) }
             }
