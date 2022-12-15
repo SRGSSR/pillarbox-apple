@@ -16,12 +16,12 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
     // swiftlint:disable:next weak_delegate
     private let resourceLoaderDelegate: AVAssetResourceLoaderDelegate
 
-    init(url: URL, resourceLoaderDelegate: AVAssetResourceLoaderDelegate, automaticallyLoadedAssetKeys: [String]?) {
-        // swiftlint:disable:previous discouraged_optional_collection
+    init(url: URL, resourceLoaderDelegate: AVAssetResourceLoaderDelegate) {
         self.resourceLoaderDelegate = resourceLoaderDelegate
         let asset = AVURLAsset(url: url)
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: kResourceLoaderQueue)
-        super.init(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+        // Provide same key as for a standard asset, as documented for `AVPlayerItem.init(asset:)`.
+        super.init(asset: asset, automaticallyLoadedAssetKeys: ["duration"])
     }
 }
 
@@ -32,47 +32,38 @@ public struct Asset {
         case custom(url: URL, delegate: AVAssetResourceLoaderDelegate)
         case encrypted(url: URL, delegate: AVContentKeySessionDelegate)
 
-        func playerItem(automaticallyLoadedAssetKeys: [String]?) -> AVPlayerItem {
-            // swiftlint:disable:previous discouraged_optional_collection
+        func playerItem() -> AVPlayerItem {
             switch self {
             case let .simple(url: url):
-                let asset = AVURLAsset(url: url)
-                return AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+                return AVPlayerItem(url: url)
             case let .custom(url: url, delegate: delegate):
                 return ResourceLoadedPlayerItem(
                     url: url,
-                    resourceLoaderDelegate: delegate,
-                    automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys
+                    resourceLoaderDelegate: delegate
                 )
             case let .encrypted(url: url, delegate: delegate):
                 let asset = AVURLAsset(url: url)
                 kContentKeySession.setDelegate(delegate, queue: kContentKeySessionQueue)
                 kContentKeySession.addContentKeyRecipient(asset)
                 kContentKeySession.processContentKeyRequest(withIdentifier: nil, initializationData: nil)
-                return AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
+                return AVPlayerItem(asset: asset)
             }
         }
     }
 
     private let type: `Type`
-    // swiftlint:disable:next discouraged_optional_collection
-    private let automaticallyLoadedKeys: [String]?
     private let configuration: (AVPlayerItem) -> Void
 
     /// A simple asset playable from a URL.
     /// - Parameters:
     ///   - url: The URL to be played.
-    ///   - automaticallyLoadedKeys: Keys to be loaded before the item generated from the asset is ready to play.
     ///   - configuration: A closure to configure player items created from the receiver.
     public static func simple(
         url: URL,
-        // swiftlint:disable:next discouraged_optional_collection
-        automaticallyLoadedKeys: [String]? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
             type: .simple(url: url),
-            automaticallyLoadedKeys: automaticallyLoadedKeys,
             configuration: configuration
         )
     }
@@ -82,18 +73,14 @@ public struct Asset {
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - delegate: The custom resource loader to use.
-    ///   - automaticallyLoadedKeys: Keys to be loaded before the item generated from the asset is ready to play.
     ///   - configuration: A closure to configure player items created from the receiver.
     public static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
-        // swiftlint:disable:next discouraged_optional_collection
-        automaticallyLoadedKeys: [String]? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
             type: .custom(url: url, delegate: delegate),
-            automaticallyLoadedKeys: automaticallyLoadedKeys,
             configuration: configuration
         )
     }
@@ -102,24 +89,20 @@ public struct Asset {
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - delegate: The content key session delegate to use.
-    ///   - automaticallyLoadedKeys: Keys to be loaded before the item generated from the asset is ready to play.
     ///   - configuration: A closure to configure player items created from the receiver.
     public static func encrypted(
         url: URL,
         delegate: AVContentKeySessionDelegate,
-        // swiftlint:disable:next discouraged_optional_collection
-        automaticallyLoadedKeys: [String]? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
             type: .encrypted(url: url, delegate: delegate),
-            automaticallyLoadedKeys: automaticallyLoadedKeys,
             configuration: configuration
         )
     }
 
     func playerItem() -> AVPlayerItem {
-        let item = type.playerItem(automaticallyLoadedAssetKeys: automaticallyLoadedKeys)
+        let item = type.playerItem()
         configuration(item)
         return item
     }

@@ -31,17 +31,14 @@ public final class PlayerItem: Equatable {
     /// Create a player item from a URL.
     /// - Parameters:
     ///   - url: The URL to play.
-    ///   - automaticallyLoadedKeys: Keys to be loaded before the item generated from the asset is ready to play.
     ///   - configuration: A closure to configure player items created from the receiver.
     public convenience init(
         url: URL,
-        // swiftlint:disable:next discouraged_optional_collection
-        automaticallyLoadedKeys: [String]? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) {
         self.init(
             publisher: Just(
-                .simple(url: url, automaticallyLoadedKeys: automaticallyLoadedKeys, configuration: configuration)
+                .simple(url: url, configuration: configuration)
             )
         )
     }
