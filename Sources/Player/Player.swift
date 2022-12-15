@@ -92,10 +92,6 @@ public final class Player: ObservableObject, Equatable {
         lhs === rhs
     }
 
-    deinit {
-        rawPlayer.cancelPendingReplacements()
-    }
-
     private static func configure(with configuration: (inout PlayerConfiguration) -> Void) -> PlayerConfiguration {
         var playerConfiguration = PlayerConfiguration()
         configuration(&playerConfiguration)
@@ -249,6 +245,10 @@ public final class Player: ObservableObject, Equatable {
     /// - Returns: The publisher.
     public func boundaryTimePublisher(for times: [CMTime], queue: DispatchQueue = .main) -> AnyPublisher<Void, Never> {
         Publishers.BoundaryTimePublisher(for: rawPlayer, times: times, queue: queue)
+    }
+
+    deinit {
+        rawPlayer.cancelPendingReplacements()
     }
 }
 
@@ -528,7 +528,7 @@ private extension Player {
             .filter { storedItems, currentItem in
                 // The current item is automatically set to `nil` when a failure is encountered. If this is the case
                 // preserve the previous value, provided the player is loaded with items.
-                storedItems.count == 0 || currentItem != nil
+                storedItems.isEmpty || currentItem != nil
             }
             .map { storedItems, currentItem in
                 storedItems.first { $0.matches(currentItem) }

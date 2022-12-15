@@ -8,7 +8,7 @@ import AVKit
 import SwiftUI
 
 /// A button to pick a playback route.
-// Behavior: h-exp, v-exp
+/// Behavior: h-exp, v-exp
 public struct RoutePickerView: UIViewRepresentable {
     public init() {}
 
