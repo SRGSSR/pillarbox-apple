@@ -11,6 +11,10 @@ import Combine
 import XCTest
 
 final class WithPreviousPublisherTests: XCTestCase {
+    func testEmpty() {
+        expectNothingPublished(from: Empty<Int, Never>().withPrevious(), during: 1)
+    }
+
     func testPreviousValues() {
         expectEqualPublished(
             values: [nil, 1, 2, 3, 4],
