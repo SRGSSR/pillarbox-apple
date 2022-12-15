@@ -24,10 +24,6 @@ private struct ContentView: View {
             .onTapGesture {
                 isUserInterfaceHidden.toggle()
             }
-            .overlay(alignment: .topLeading) {
-                RoutePickerView()
-                    .frame(width: 40, height: 40)
-            }
             .accessibilityAddTraits(.isButton)
             .ignoresSafeArea()
 #if os(iOS)
@@ -48,18 +44,13 @@ private struct ControlsView: View {
         ZStack {
             if !isUserInterfaceHidden {
                 Color(white: 0, opacity: 0.3)
-                HStack(spacing: 40) {
-                    PreviousButton(player: player)
-                    PlaybackButton(player: player)
-                    NextButton(player: player)
-                }
+                PlaybackButton(player: player)
             }
             if player.isBuffering {
                 ProgressView()
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .tint(.white)
         .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
         .debugBodyCounter()
     }
@@ -88,6 +79,7 @@ private struct NextButton: View {
                 Button(action: { player.advanceToNextItem() }) {
                     Image(systemName: "arrow.right.circle.fill")
                         .resizable()
+                        .tint(.white)
                 }
             }
             else {
@@ -115,6 +107,7 @@ private struct PlaybackButton: View {
         Button(action: { player.togglePlayPause() }) {
             Image(systemName: playbackButtonImageName)
                 .resizable()
+                .tint(.white)
         }
         .opacity(player.isBuffering ? 0 : 1)
         .frame(width: 90, height: 90)
@@ -132,6 +125,7 @@ private struct PreviousButton: View {
                 Button(action: { player.returnToPreviousItem() }) {
                     Image(systemName: "arrow.left.circle.fill")
                         .resizable()
+                        .tint(.white)
                 }
             }
             else {
@@ -289,6 +283,17 @@ struct PlayerView: View {
             }
         }
         .background(.black)
+        .overlay(alignment: .top) {
+            HStack {
+                PreviousButton(player: player)
+                Spacer()
+                RoutePickerView()
+                    .frame(width: 45, height: 45)
+                Spacer()
+                NextButton(player: player)
+            }
+            .padding()
+        }
         .onAppear {
             play()
         }
