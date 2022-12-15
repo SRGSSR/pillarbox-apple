@@ -76,7 +76,6 @@ final class AkamaiResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegat
         }
         Task {
             let tokenizedUrl = await Self.safeTokenizeUrl(url)
-            try await Task.sleep(for: .seconds(0.5))
             loadingRequest.redirect(to: tokenizedUrl)
             loadingRequest.finishLoading()
         }
