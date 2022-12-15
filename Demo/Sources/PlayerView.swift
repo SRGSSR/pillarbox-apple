@@ -284,12 +284,10 @@ struct PlayerView: View {
         }
         .background(.black)
         .overlay(alignment: .top) {
-            HStack {
+            HStack(spacing: 49) {
                 PreviousButton(player: player)
-                Spacer()
                 RoutePickerView()
                     .frame(width: 45, height: 45)
-                Spacer()
                 NextButton(player: player)
             }
             .padding()
