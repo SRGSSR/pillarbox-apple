@@ -192,3 +192,16 @@ enum Media: Hashable {
         }
     }
 }
+
+extension Media: Identifiable {
+    var id: String {
+        switch self {
+        case .empty:
+            return ""
+        case .url(let url), .unbufferedUrl(let url):
+            return url.absoluteString
+        case .urn(let urn):
+            return urn
+        }
+    }
+}
