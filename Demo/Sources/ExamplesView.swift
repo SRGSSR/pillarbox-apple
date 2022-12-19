@@ -111,6 +111,21 @@ private struct Example: Identifiable {
             media: MediaURL.appleAdvanced_16_9_HEVC_h264_HLS
         ),
         .init(
+            title: "VOD, token protection - HLS (URN)",
+            description: "Football",
+            media: MediaURN.tokenProtectedVideo
+        ),
+        .init(
+            title: "VOD, superfluous token protection - HLS (URN)",
+            description: "Ul stralüsc",
+            media: MediaURN.superfluousTokenProtectedVideo
+        ),
+        .init(
+            title: "VOD, DRM protection - HLS (URN)",
+            description: "Top Models",
+            media: MediaURN.drmProtectedVideo
+        ),
+        .init(
             title: "Expired content",
             description: "This content is not available anymore",
             media: MediaURN.expired

@@ -12,7 +12,7 @@ import Foundation
 
 extension PlayerItem {
     convenience init(url: URL, delay: TimeInterval) {
-        let publisher = Just(AVPlayerItem(url: url))
+        let publisher = Just(Asset.simple(url: url))
             .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
         self.init(publisher: publisher)
     }

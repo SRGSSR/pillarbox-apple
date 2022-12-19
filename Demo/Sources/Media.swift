@@ -71,6 +71,10 @@ enum MediaURN {
     static let onDemandSquareVideo = Media.urn("urn:rts:video:8393241")
     static let onDemandVerticalVideo = Media.urn("urn:rts:video:8412286")
 
+    static let tokenProtectedVideo = Media.urn("urn:swisstxt:video:srf:1718849")
+    static let superfluousTokenProtectedVideo = Media.urn("urn:rsi:video:15838291")
+    static let drmProtectedVideo = Media.urn("urn:rts:video:13584080")
+
     static let liveVideo = Media.urn("urn:srf:video:c4927fcf-e1a0-0001-7edd-1ef01d441651")
     static let dvrVideo = Media.urn("urn:rts:video:3608506")
 
@@ -121,10 +125,46 @@ enum MediaURNPlaylist {
         .urn("urn:rts:video:13444371"),
         .urn("urn:rts:video:13444428")
     ]
+    static let longVideos: [Media] = [
+        .urn("urn:rts:video:13588169"),
+        .urn("urn:rts:video:13555428"),
+        .urn("urn:rts:video:13529000"),
+        .urn("urn:rts:video:13471319"),
+        .urn("urn:rts:video:13446843"),
+        .urn("urn:rts:video:13403392"),
+        .urn("urn:rts:video:13387184"),
+        .urn("urn:rts:video:13296253")
+    ]
     static let videosWithErrors: [Media] = [
         .urn("urn:rts:video:13444390"),
         .urn("urn:rts:video:unknown"),
         .urn("urn:rts:video:13444466")
+    ]
+    static let tokenProtectedVideos: [Media] = [
+        .urn("urn:swisstxt:video:srf:1718849"),
+        .urn("urn:swisstxt:video:srf:1718855"),
+        .urn("urn:swisstxt:video:srf:1718848"),
+        .urn("urn:swisstxt:video:srf:1718854"),
+        .urn("urn:swisstxt:video:srf:1718861"),
+        .urn("urn:swisstxt:video:srf:1718866"),
+        .urn("urn:swisstxt:video:srf:1718860"),
+        .urn("urn:swisstxt:video:srf:1718867")
+    ]
+    static let drmProtectedVideos: [Media] = [
+        .urn("urn:rts:video:13584080"),
+        .urn("urn:rts:video:13574265"),
+        .urn("urn:rts:video:13574256"),
+        .urn("urn:rts:video:13564934"),
+        .urn("urn:rts:video:13556916"),
+        .urn("urn:rts:video:13556347"),
+        .urn("urn:rts:video:13556278"),
+        .urn("urn:rts:video:13556106")
+    ]
+    static let audios: [Media] = [
+        .urn("urn:rts:audio:13605286"),
+        .urn("urn:rts:audio:13598743"),
+        .urn("urn:rts:audio:13579611"),
+        .urn("urn:rts:audio:13605216")
     ]
 }
 
@@ -143,10 +183,10 @@ enum Media: Hashable {
         case let .url(url):
             return PlayerItem(url: url)
         case let .unbufferedUrl(url):
-            let item = AVPlayerItem(url: url)
-            item.automaticallyPreservesTimeOffsetFromLive = true
-            item.preferredForwardBufferDuration = 1
-            return PlayerItem(item)
+            return PlayerItem(url: url) { item in
+                item.automaticallyPreservesTimeOffsetFromLive = true
+                item.preferredForwardBufferDuration = 1
+            }
         case let .urn(urn):
             return PlayerItem(urn: urn)
         }

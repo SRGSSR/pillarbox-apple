@@ -12,9 +12,9 @@ extension Publishers {
         typealias Output = CMTime
         typealias Failure = Never
 
-        let player: AVPlayer
-        let interval: CMTime
-        let queue: DispatchQueue
+        private let player: AVPlayer
+        private let interval: CMTime
+        private let queue: DispatchQueue
 
         init(player: AVPlayer, interval: CMTime, queue: DispatchQueue) {
             self.player = player

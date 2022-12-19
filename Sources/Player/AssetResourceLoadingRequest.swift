@@ -18,4 +18,13 @@ public extension AVAssetResourceLoadingRequest {
         }
         finishLoading(with: nsError)
     }
+
+    /// Redirect the receiver to another URL.
+    /// - Parameter url: The URL to redirect the receiver to.
+    func redirect(to url: URL) {
+        var redirectRequest = request
+        redirectRequest.url = url
+        redirect = redirectRequest
+        response = HTTPURLResponse(url: url, statusCode: 302, httpVersion: nil, headerFields: nil)
+    }
 }

@@ -10,25 +10,27 @@ enum AkamaiURLCoding {
     private static let schemePrefix = "akamai"
     private static let separator = "+"
 
-    static func encodeUrl(_ url: URL) -> URL {
+    static func encodeUrl(_ url: URL, id: UUID) -> URL {
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false),
               let scheme = components.scheme else {
             return url
         }
-        components.scheme = "\(schemePrefix)\(separator)\(scheme)"
+        components.scheme = "\(schemePrefix)\(separator)\(id.uuidString)\(separator)\(scheme)"
         return components.url ?? url
     }
 
-    static func decodeUrl(_ url: URL) -> URL? {
+    static func decodeUrl(_ url: URL, id: UUID) -> URL? {
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false),
               let scheme = components.scheme else {
             return nil
         }
         let schemeComponents = scheme.components(separatedBy: separator)
-        guard schemeComponents.count == 2 && schemeComponents[0] == schemePrefix else {
+        guard schemeComponents.count == 3
+                && schemeComponents[0] == schemePrefix
+                && schemeComponents[1] == id.uuidString else {
             return nil
         }
-        components.scheme = schemeComponents[1]
+        components.scheme = schemeComponents[2]
         return components.url
     }
 }
