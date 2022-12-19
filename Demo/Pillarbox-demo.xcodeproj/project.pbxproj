@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0EEB324C29506969002E49DC /* DynamicPlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB324B29506969002E49DC /* DynamicPlaylistView.swift */; };
 		6F36C62D28910538000DD160 /* CoreBusiness in Frameworks */ = {isa = PBXBuildFile; productRef = 6F36C62C28910538000DD160 /* CoreBusiness */; };
 		6F3F15A728CEEC6900CA2BD1 /* ShowcaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3F15A628CEEC6900CA2BD1 /* ShowcaseView.swift */; };
 		6F48A5DD2932673A00B80393 /* DeveloperTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F48A5DC2932673A00B80393 /* DeveloperTools.swift */; };
@@ -38,6 +39,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0EEB324B29506969002E49DC /* DynamicPlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicPlaylistView.swift; sourceTree = "<group>"; };
 		6F010340289946220021BA76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pillarbox-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F3F15A628CEEC6900CA2BD1 /* ShowcaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowcaseView.swift; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 				6F65FA2028D0CE8A0081ACD1 /* PlaybackView.swift */,
 				6FCD6A1828AD158E00FCE4EA /* PlayerView.swift */,
 				6F4FACBC2903169F0048576B /* PlaylistView.swift */,
+				0EEB324B29506969002E49DC /* DynamicPlaylistView.swift */,
 				6FCA4748292CC101008C2812 /* SettingsView.swift */,
 				6F3F15A628CEEC6900CA2BD1 /* ShowcaseView.swift */,
 				6FB553B128C3AF020067CFC4 /* StoriesView.swift */,
@@ -293,6 +296,7 @@
 				6FB553B228C3AF020067CFC4 /* StoriesView.swift in Sources */,
 				6FD1F3A728D0646200DF8CF1 /* Navigation.swift in Sources */,
 				6FCD6A1928AD158E00FCE4EA /* PlayerView.swift in Sources */,
+				0EEB324C29506969002E49DC /* DynamicPlaylistView.swift in Sources */,
 				6FCD6A1B28AD1B9200FCE4EA /* ExamplesView.swift in Sources */,
 				6F917C0F2887EA8E004113BA /* DemoApp.swift in Sources */,
 				6F7750D628EABD5100E80196 /* BasicPlayerView.swift in Sources */,

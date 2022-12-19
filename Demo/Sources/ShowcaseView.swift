@@ -89,6 +89,9 @@ struct ShowcaseView: View {
                 Cell(title: "Playlist (with errors)") {
                     PlaylistView(medias: MediaURNPlaylist.videosWithErrors)
                 }
+                Cell(title: "Dynamic Playlist") {
+                    DynamicPlaylistView(medias: MediaURLPlaylist.videos)
+                }
             }
         }
         .navigationTitle("Showcase")
