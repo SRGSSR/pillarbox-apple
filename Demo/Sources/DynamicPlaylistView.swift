@@ -10,22 +10,32 @@ import SwiftUI
 
 // Behavior: h-exp, v-exp
 struct DynamicPlaylistView: View {
-    let medias: [Media]
+    @State var medias: [Media]
 
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             PlayerView(medias: medias)
-            DynamicListView()
+            DynamicListView(medias: medias)
         }
     }
 }
 
 // Behavior: h-exp, v-exp
 private struct DynamicListView: View {
+    let medias: [Media]
+    
     var body: some View {
-        List {
-            Text("azerty")
+        List(medias) { media in
+            switch media {
+            case .empty:
+                EmptyView()
+            case .url(let url), .unbufferedUrl(let url):
+                Text(url.absoluteString)
+            case .urn(let urn):
+                Text(urn)
+            }
         }
+        .listStyle(.plain)
     }
 }
 
@@ -33,6 +43,9 @@ private struct DynamicListView: View {
 
 struct DynamicPlaylistView_Previews: PreviewProvider {
     static var previews: some View {
-        DynamicPlaylistView(medias: [MediaURL.onDemandVideoLocalHLS])
+        DynamicPlaylistView(medias: [
+            MediaURL.onDemandVideoLocalHLS,
+            MediaURL.onDemandVideoLocalHLS,
+        ])
     }
 }
