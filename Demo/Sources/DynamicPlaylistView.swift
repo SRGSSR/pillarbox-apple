@@ -30,8 +30,9 @@ private struct DynamicListView: View {
     
     var body: some View {
         List {
-            ForEach(mutableMedias) { media in
+            ForEach(Array(mutableMedias.enumerated()), id: \.offset) { index, media in
                 MediaView(media: media)
+                    .bold(index == indexOfCurrentPlayingItem())
             }
             .onMove(perform: move)
             .onDelete(perform: delete)
@@ -61,6 +62,13 @@ private struct DynamicListView: View {
             player.remove(player.items[at])
         }
         mutableMedias.remove(atOffsets: at)
+    }
+    
+    private func indexOfCurrentPlayingItem() -> Int? {
+        if let item = player.currentItem {
+            return player.items.firstIndex(of: item)
+        }
+        return nil
     }
 }
 
