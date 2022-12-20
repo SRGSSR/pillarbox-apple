@@ -26,16 +26,25 @@ private struct DynamicListView: View {
     
     var body: some View {
         List(medias) { media in
-            switch media {
-            case .empty:
-                EmptyView()
-            case .url(let url), .unbufferedUrl(let url):
-                Text(url.absoluteString)
-            case .urn(let urn):
-                Text(urn)
-            }
+            MediaView(media: media)
         }
         .listStyle(.plain)
+    }
+}
+
+// Behavior: h-hug, v-hug
+private struct MediaView: View {
+    let media: Media
+    
+    var body: some View {
+        switch media {
+        case .empty:
+            EmptyView()
+        case .url(let url), .unbufferedUrl(let url):
+            Text(url.absoluteString)
+        case .urn(let urn):
+            Text(urn)
+        }
     }
 }
 
