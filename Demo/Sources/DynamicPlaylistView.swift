@@ -34,6 +34,7 @@ private struct DynamicListView: View {
                 MediaView(media: media)
             }
             .onMove(perform: move)
+            .onDelete(perform: delete)
         }
         .listStyle(.automatic)
         .onAppear {
@@ -53,6 +54,13 @@ private struct DynamicListView: View {
             }
         }
         mutableMedias.move(fromOffsets: from, toOffset: to)
+    }
+    
+    private func delete(at: IndexSet) {
+        if let at = at.map({$0}).first {
+            player.remove(player.items[at])
+        }
+        mutableMedias.remove(atOffsets: at)
     }
 }
 
