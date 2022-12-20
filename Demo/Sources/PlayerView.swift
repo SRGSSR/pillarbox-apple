@@ -266,7 +266,7 @@ private struct TimeSlider: View {
 struct PlayerView: View {
     private let medias: [Media]
 
-    @StateObject private var player = Player()
+    @ObservedObject private var player: Player
 
     var body: some View {
         ZStack {
@@ -296,9 +296,14 @@ struct PlayerView: View {
             play()
         }
     }
-
-    init(medias: [Media]) {
+    
+    init(medias: [Media], player: Player) {
         self.medias = medias
+        self.player = player
+    }
+    
+    init(medias: [Media]) {
+        self.init(medias: medias, player: Player())
     }
 
     init(media: Media) {
