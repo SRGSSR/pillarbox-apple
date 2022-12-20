@@ -30,9 +30,10 @@ private struct DynamicListView: View {
     
     var body: some View {
         List {
-            ForEach(Array(mutableMedias.enumerated()), id: \.offset) { index, media in
-                MediaView(media: media)
-                    .bold(index == indexOfCurrentPlayingItem())
+            ForEach($mutableMedias, id: \.self, editActions: [.move, .delete]) { media in
+                let indexOfCurrentMedia = mutableMedias.firstIndex(of: media.wrappedValue)
+                MediaView(media: media.wrappedValue)
+                    .bold(indexOfCurrentMedia == indexOfCurrentPlayingItem())
             }
             .onMove(perform: move)
             .onDelete(perform: delete)
