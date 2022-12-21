@@ -32,11 +32,11 @@ private struct DynamicListView: View {
         List {
             ForEach($mutableMedias, id: \.self, editActions: [.move, .delete]) { media in
                 let indexOfCurrentMedia = mutableMedias.firstIndex(of: media.wrappedValue)
-                MediaView(media: media.wrappedValue)
-                    .bold(indexOfCurrentMedia == indexOfCurrentPlayingItem())
-                    .onTapGesture {
-                        select(media.wrappedValue)
-                    }
+                PlaylistCellView(
+                    media: media.wrappedValue,
+                    isPlaying: indexOfCurrentMedia == indexOfCurrentPlayingItem(),
+                    select: select
+                )
             }
             .onMove(perform: move)
             .onDelete(perform: delete)
@@ -103,6 +103,38 @@ private struct MediaView: View {
             Text(url.absoluteString)
         case .urn(let urn):
             Text(urn)
+        }
+    }
+}
+
+// Behavior: h-hug, v-hug
+private struct PlayingIndicatorView: View {
+    let isVisible: Bool
+    
+    var body: some View {
+        Group {
+            if isVisible {
+                Image(systemName: "play.circle")
+            } else {
+                Color.clear
+            }
+        }
+        .frame(maxWidth: 30, maxHeight: 30)
+    }
+}
+
+// Behavior: h-exp, v-exp
+private struct PlaylistCellView: View {
+    let media: Media
+    let isPlaying: Bool
+    let select: (Media) -> Void
+    
+    var body: some View {
+        HStack {
+            MediaView(media: media)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                .onTapGesture { select(media) }
+            PlayingIndicatorView(isVisible: isPlaying)
         }
     }
 }
