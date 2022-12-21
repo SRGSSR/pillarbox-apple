@@ -37,6 +37,55 @@ final class ItemNavigationTests: XCTestCase {
         let player = Player(items: [item1, item2])
         expect(player.canAdvanceToNextItem()).to(beTrue())
     }
+    
+    func testCanGoBackToNextItemFailed() {
+        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = PlayerItem(url: Stream.item(numbered: 3).url)
+        let item4 = PlayerItem(url: Stream.item(numbered: 4).url)
+        let player = Player(items: [item1, item2, item3, item4])
+        expect(player.canGoBackToPreviousItem()).to(beFalse())
+    }
+    
+    func testCanGoBackToNextItem() {
+        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = PlayerItem(url: Stream.item(numbered: 3).url)
+        let item4 = PlayerItem(url: Stream.item(numbered: 4).url)
+        let player = Player(items: [item1, item2, item3, item4])
+        player.advanceToNextItem()
+        expect(player.canGoBackToPreviousItem()).to(beTrue())
+    }
+    
+    func testGoBackToNextItemFailed() {
+        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = PlayerItem(url: Stream.item(numbered: 3).url)
+        let item4 = PlayerItem(url: Stream.item(numbered: 4).url)
+        let player = Player(items: [item1, item2, item3, item4])
+        expect(player.goBackToPreviousItem()).to(beFalse())
+    }
+    
+    func testGoBackToNextItem() {
+        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = PlayerItem(url: Stream.item(numbered: 3).url)
+        let item4 = PlayerItem(url: Stream.item(numbered: 4).url)
+        let player = Player(items: [item1, item2, item3, item4])
+        
+        (0..<3).forEach { _ in player.advanceToNextItem() }
+        
+        if case let .simple(url) = player.currentItem?.source.asset.type {
+            expect(url).toAlways(equal(Stream.item(numbered: 4).url))
+        } else { fail() }
+        expect(player.goBackToPreviousItem()).to(beTrue())
+        if case let .simple(url) = player.currentItem?.source.asset.type {
+            expect(url).toAlways(equal(Stream.item(numbered: 3).url))
+        } else { fail() }
+        expect(player.goBackToPreviousItem()).to(beTrue())
+        expect(player.goBackToPreviousItem()).to(beTrue())
+        expect(player.goBackToPreviousItem()).to(beFalse())
+    }
 
     func testCannotAdvanceToNextItemAtBack() {
         let item1 = PlayerItem(url: Stream.item(numbered: 1).url)

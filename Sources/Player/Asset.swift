@@ -28,7 +28,7 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
 
 /// An asset representing content to be played.
 public struct Asset {
-    private enum `Type` {
+    enum `Type` {
         case simple(url: URL)
         case custom(url: URL, delegate: AVAssetResourceLoaderDelegate)
         case encrypted(url: URL, delegate: AVContentKeySessionDelegate)
@@ -59,7 +59,7 @@ public struct Asset {
         }
     }
 
-    private let type: `Type`
+    let type: `Type`
     private let configuration: (AVPlayerItem) -> Void
 
     /// A simple asset playable from a URL.
