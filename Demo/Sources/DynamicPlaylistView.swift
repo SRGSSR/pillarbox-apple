@@ -34,6 +34,9 @@ private struct DynamicListView: View {
                 let indexOfCurrentMedia = mutableMedias.firstIndex(of: media.wrappedValue)
                 MediaView(media: media.wrappedValue)
                     .bold(indexOfCurrentMedia == indexOfCurrentPlayingItem())
+                    .onTapGesture {
+                        select(media.wrappedValue)
+                    }
             }
             .onMove(perform: move)
             .onDelete(perform: delete)
@@ -71,6 +74,21 @@ private struct DynamicListView: View {
         }
         return nil
     }
+    
+    private func select(_ media: Media) {
+        guard
+            let playerCurrentItem = player.currentItem,
+            let indexOfCurrentPlayingItem = player.items.firstIndex(of: playerCurrentItem),
+            let selectIndex = mutableMedias.firstIndex(of: media)
+        else { return }
+        
+        let shiftCount = abs(selectIndex - indexOfCurrentPlayingItem)
+        let isMovingForward = selectIndex > indexOfCurrentPlayingItem
+        
+        (0..<shiftCount).forEach { _ in
+            _ = isMovingForward ? player.advanceToNextItem() : player.goBackToPreviousItem()
+        }
+    }
 }
 
 // Behavior: h-hug, v-hug
@@ -95,7 +113,8 @@ struct DynamicPlaylistView_Previews: PreviewProvider {
     static var previews: some View {
         DynamicPlaylistView(medias: [
             MediaURL.onDemandVideoLocalHLS,
-            MediaURL.onDemandVideoLocalHLS,
+            MediaURL.shortOnDemandVideoHLS,
+            MediaURL.dvrVideoHLS,
         ])
     }
 }
