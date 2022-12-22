@@ -40,6 +40,7 @@ private struct DynamicListView: View {
             }
             .onMove(perform: move)
             .onDelete(perform: delete)
+            AddMediaButton()
         }
         .listStyle(.automatic)
         .onAppear {
@@ -135,6 +136,26 @@ private struct PlaylistCellView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                 .onTapGesture { select(media) }
             PlayingIndicatorView(isVisible: isPlaying)
+        }
+    }
+}
+
+// Behavior: h-exp, v-exp
+private struct AddMediaButton: View {
+    @State var isSelectionPlaylistPresented = false
+    
+    var body: some View {
+        HStack {
+            Spacer()
+            Button {
+                isSelectionPlaylistPresented.toggle()
+            } label: {
+                Image(systemName: "plus")
+            }
+            .frame(width: 30, height: 30)
+            .foregroundColor(.accentColor)
+            .sheet(isPresented: $isSelectionPlaylistPresented) {}
+            Spacer()
         }
     }
 }
