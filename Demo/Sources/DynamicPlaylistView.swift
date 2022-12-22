@@ -40,7 +40,7 @@ private struct DynamicListView: View {
             }
             .onMove(perform: move)
             .onDelete(perform: delete)
-            AddMediaButton()
+            AddMediaButton(medias: medias, mutableMedias: mutableMedias, completion: add)
         }
         .listStyle(.automatic)
         .onAppear {
@@ -67,6 +67,16 @@ private struct DynamicListView: View {
             player.remove(player.items[at])
         }
         mutableMedias.remove(atOffsets: at)
+    }
+    
+    private func add(_ mediasToAdd: [Media]) {
+        let mediasToAdd = mediasToAdd.filter { mutableMedias.contains($0) == false } // Remove item if it's already present into the playlist
+        mutableMedias += mediasToAdd
+        mediasToAdd.map(\.playerItem).forEach { item in
+            if let item {
+                player.append(item)
+            }
+        }
     }
     
     private func indexOfCurrentPlayingItem() -> Int? {
@@ -142,7 +152,12 @@ private struct PlaylistCellView: View {
 
 // Behavior: h-exp, v-exp
 private struct AddMediaButton: View {
+    let medias: [Media]
+    let mutableMedias: [Media]
+    let completion: ([Media]) -> Void
     @State var isSelectionPlaylistPresented = false
+    @State var mediasSelected: Set<Media> = []
+    
     
     var body: some View {
         HStack {
@@ -154,9 +169,30 @@ private struct AddMediaButton: View {
             }
             .frame(width: 30, height: 30)
             .foregroundColor(.accentColor)
-            .sheet(isPresented: $isSelectionPlaylistPresented) {}
+            .sheet(isPresented: $isSelectionPlaylistPresented, onDismiss: {
+                if mediasSelected.isEmpty == false {
+                    completion(Array(mediasSelected))
+                }
+            }, content: {
+                PlaylistSelectionView(medias: medias, mutableMedia: mutableMedias, mediasSelected: $mediasSelected)
+            })
             Spacer()
         }
+    }
+}
+
+// Behavior: h-exp, v-exp
+private struct PlaylistSelectionView: View {
+    let medias: [Media]
+    var mutableMedia: [Media]
+    @Binding var mediasSelected: Set<Media>
+    @State var editMode = EditMode.active
+    
+    var body: some View {
+        List(medias, id: \.self, selection: $mediasSelected) { media in
+            MediaView(media: media)
+        }
+        .environment(\.editMode, $editMode)
     }
 }
 
