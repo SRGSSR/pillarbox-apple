@@ -111,10 +111,8 @@ private struct MediaView: View {
         switch media {
         case .empty:
             EmptyView()
-        case .url(let url), .unbufferedUrl(let url):
-            Text(url.absoluteString)
-        case .urn(let urn):
-            Text(urn)
+        case .url(_, let description), .unbufferedUrl(_, let description), .urn(_, let description):
+            Text(description ?? "")
         }
     }
 }
