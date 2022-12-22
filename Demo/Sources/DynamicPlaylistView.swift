@@ -30,6 +30,7 @@ private struct DynamicListView: View {
     
     var body: some View {
         List {
+            ShufflePlaylistButton(mutableMedias: $mutableMedias, player: player)
             ForEach($mutableMedias, id: \.self, editActions: [.move, .delete]) { media in
                 let indexOfCurrentMedia = mutableMedias.firstIndex(of: media.wrappedValue)
                 PlaylistCellView(
@@ -193,6 +194,26 @@ private struct PlaylistSelectionView: View {
             MediaView(media: media)
         }
         .environment(\.editMode, $editMode)
+    }
+}
+
+// Behavior: h-exp, v-exp
+private struct ShufflePlaylistButton: View {
+    @Binding var mutableMedias: [Media]
+    @ObservedObject var player: Player
+    
+    var body: some View {
+        HStack {
+            Spacer()
+            Button(action: shuffle) { Image(systemName: "shuffle") }
+            Spacer()
+        }
+    }
+    
+    private func shuffle() {
+        mutableMedias.shuffle()
+        player.removeAllItems()
+        mutableMedias.compactMap(\.playerItem).forEach { player.append($0) }
     }
 }
 
