@@ -172,36 +172,36 @@ enum MediaURNPlaylist {
 
 enum Media: Hashable {
     case empty
-    case url(URL)
-    case unbufferedUrl(URL)
-    case urn(String)
+    case url(URL, String? = nil)
+    case unbufferedUrl(URL, String? = nil)
+    case urn(String, String? = nil)
 
     var playerItem: PlayerItem? {
         switch self {
         case .empty:
             return nil
-        case let .url(url):
+        case let .url(url, _):
             return PlayerItem(url: url)
-        case let .unbufferedUrl(url):
+        case let .unbufferedUrl(url, _):
             return PlayerItem(url: url) { item in
                 item.automaticallyPreservesTimeOffsetFromLive = true
                 item.preferredForwardBufferDuration = 1
             }
-        case let .urn(urn):
+        case let .urn(urn, _):
             return PlayerItem(urn: urn)
+        }
+    }
+    
+    var description: String? {
+        switch self {
+        case .empty:
+            return "Empty media"
+        case .url(_, let description), .unbufferedUrl(_, let description), .urn(_, let description):
+            return description
         }
     }
 }
 
 extension Media: Identifiable {
-    var id: String {
-        switch self {
-        case .empty:
-            return ""
-        case .url(let url), .unbufferedUrl(let url):
-            return url.absoluteString
-        case .urn(let urn):
-            return urn
-        }
-    }
+    var id: String { description ?? "" }
 }
