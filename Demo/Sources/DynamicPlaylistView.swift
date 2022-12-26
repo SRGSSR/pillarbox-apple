@@ -158,6 +158,7 @@ private struct AddMediaButton: View {
     let mutableMedias: [Media]
     let completion: ([Media]) -> Void
     @State var isSelectionPlaylistPresented = false
+    @State var isMediaAdded = false
     @State var mediasSelected: Set<Media> = []
     
     
@@ -172,14 +173,25 @@ private struct AddMediaButton: View {
             .frame(width: 30, height: 30)
             .foregroundColor(.accentColor)
             .sheet(isPresented: $isSelectionPlaylistPresented, onDismiss: {
-                if mediasSelected.isEmpty == false {
+                if isMediaAdded && mediasSelected.isEmpty == false {
                     completion(Array(mediasSelected))
                 }
+                reset()
             }, content: {
-                PlaylistSelectionView(medias: medias, mutableMedia: mutableMedias, mediasSelected: $mediasSelected)
+                PlaylistSelectionView(
+                    medias: medias,
+                    mutableMedia: mutableMedias,
+                    mediasSelected: $mediasSelected,
+                    isMediaAdded: $isMediaAdded
+                )
             })
             Spacer()
         }
+    }
+
+    private func reset() {
+        mediasSelected = []
+        isMediaAdded = false
     }
 }
 
@@ -188,13 +200,28 @@ private struct PlaylistSelectionView: View {
     let medias: [Media]
     var mutableMedia: [Media]
     @Binding var mediasSelected: Set<Media>
+    @Binding var isMediaAdded: Bool
     @State var editMode = EditMode.active
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        List(medias, id: \.self, selection: $mediasSelected) { media in
-            MediaView(media: media)
+        NavigationView {
+            List(medias, id: \.self, selection: $mediasSelected) { media in
+                MediaView(media: media)
+            }
+            .environment(\.editMode, $editMode)
+            .navigationBarTitle("Add a stream to the playlist")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(leading: Button("Cancel") {
+                isMediaAdded = false
+                dismiss()
+            })
+            .navigationBarItems(trailing: Button("Add") {
+                isMediaAdded = true
+                dismiss()
+            })
+
         }
-        .environment(\.editMode, $editMode)
     }
 }
 
