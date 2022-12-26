@@ -142,9 +142,12 @@ private struct PlaylistCellView: View {
     var body: some View {
         HStack {
             MediaView(media: media)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                .onTapGesture { select(media) }
+            Spacer()
             PlayingIndicatorView(isVisible: isPlaying)
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            select(media)
         }
     }
 }
