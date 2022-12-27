@@ -12,7 +12,7 @@ import SwiftUI
 // Behavior: h-exp, v-exp
 struct DynamicPlaylistView: View {
     @State var medias: [Media]
-    @StateObject var player = Player()
+    @StateObject private var player = Player()
 
     var body: some View {
         VStack(spacing: 0) {
@@ -159,7 +159,7 @@ private struct PlaylistCellView: View {
 private struct AddMediaButton: View {
     let medias: [Media]
     let operation: ([Media]) -> Void
-    @State var isSelectionPlaylistPresented = false
+    @State private var isSelectionPlaylistPresented = false
 
     var body: some View {
         HStack {
@@ -183,8 +183,8 @@ private struct AddMediaButton: View {
 private struct PlaylistSelectionView: View {
     let medias: [Media]
     let operation: ([Media]) -> Void
-    @State var mediasSelected: Set<Media> = []
-    @State var editMode = EditMode.active
+    @State private var mediasSelected: Set<Media> = []
+    @State private var editMode = EditMode.active
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
