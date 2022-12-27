@@ -43,7 +43,7 @@ private struct DynamicListView: View {
                 }
                 .onMove(perform: move)
                 .onDelete(perform: delete)
-                AddMediaButton(medias: medias, mutableMedias: mutableMedias, completion: add)
+                AddMediaButton(medias: medias, operation: add)
             }
             .listStyle(.automatic)
             .onAppear {
@@ -158,13 +158,9 @@ private struct PlaylistCellView: View {
 // Behavior: h-exp, v-exp
 private struct AddMediaButton: View {
     let medias: [Media]
-    let mutableMedias: [Media]
-    let completion: ([Media]) -> Void
+    let operation: ([Media]) -> Void
     @State var isSelectionPlaylistPresented = false
-    @State var isMediaAdded = false
-    @State var mediasSelected: Set<Media> = []
-    
-    
+
     var body: some View {
         HStack {
             Spacer()
@@ -175,35 +171,19 @@ private struct AddMediaButton: View {
             }
             .frame(width: 30, height: 30)
             .foregroundColor(.accentColor)
-            .sheet(isPresented: $isSelectionPlaylistPresented, onDismiss: {
-                if isMediaAdded && mediasSelected.isEmpty == false {
-                    completion(Array(mediasSelected))
-                }
-                reset()
-            }, content: {
-                PlaylistSelectionView(
-                    medias: medias,
-                    mutableMedia: mutableMedias,
-                    mediasSelected: $mediasSelected,
-                    isMediaAdded: $isMediaAdded
-                )
+            .sheet(isPresented: $isSelectionPlaylistPresented, onDismiss: nil, content: {
+                PlaylistSelectionView(medias: medias, operation: operation)
             })
             Spacer()
         }
-    }
-
-    private func reset() {
-        mediasSelected = []
-        isMediaAdded = false
     }
 }
 
 // Behavior: h-exp, v-exp
 private struct PlaylistSelectionView: View {
     let medias: [Media]
-    var mutableMedia: [Media]
-    @Binding var mediasSelected: Set<Media>
-    @Binding var isMediaAdded: Bool
+    let operation: ([Media]) -> Void
+    @State var mediasSelected: Set<Media> = []
     @State var editMode = EditMode.active
     @Environment(\.dismiss) private var dismiss
     
@@ -215,16 +195,19 @@ private struct PlaylistSelectionView: View {
             .environment(\.editMode, $editMode)
             .navigationBarTitle("Add a stream to the playlist")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(leading: Button("Cancel") {
-                isMediaAdded = false
-                dismiss()
-            })
-            .navigationBarItems(trailing: Button("Add") {
-                isMediaAdded = true
-                dismiss()
-            })
-
+            .navigationBarItems(leading: Button("Cancel", action: cancel))
+            .navigationBarItems(trailing: Button("Add", action: add))
         }
+    }
+
+    private func cancel() {
+        mediasSelected = []
+        dismiss()
+    }
+
+    private func add() {
+        operation(Array(mediasSelected))
+        cancel()
     }
 }
 
