@@ -188,6 +188,38 @@ enum MediaURNPlaylist {
     ]
 }
 
+enum MediaMixturePlaylist {
+    static let mix1: [Media] = [
+        .url(MediaURLPlaylist.url1, "URL 1"),
+        .urn("urn:rts:video:13444390", "Short URN 1"),
+        .urn("urn:rts:video:13588169", "Long URN 1"),
+        .urn("urn:rts:video:13444390", "Error URN 1"),
+        .urn("urn:swisstxt:video:srf:1718849", "Token protected 1"),
+        .urn("urn:rts:video:13584080", "DRM 1"),
+        .urn("urn:rts:audio:13605286", "Audio 1"),
+    ]
+
+    static let mix2: [Media] = [
+        .url(MediaURLPlaylist.url2, "URL 2"),
+        .urn("urn:rts:video:13444333", "Short URN 2"),
+        .urn("urn:rts:video:13555428", "Long URN 2"),
+        .urn("urn:rts:video:unknown", "Error URN 2"),
+        .urn("urn:swisstxt:video:srf:1718855", "Token protected 2"),
+        .urn("urn:rts:video:13574265", "DRM 2"),
+        .urn("urn:rts:audio:13598743", "Audio 2"),
+    ]
+
+    static let mix3: [Media] = [
+        .url(MediaURLPlaylist.url3, "URL 3"),
+        .urn("urn:rts:video:13444466", "Short URN 3"),
+        .urn("urn:rts:video:13529000", "Long URN 3"),
+        .urn("urn:rts:video:13444466", "Error URN 3"),
+        .urn("urn:swisstxt:video:srf:1718848", "Token protected 3"),
+        .urn("urn:rts:video:13574256", "DRM 3"),
+        .urn("urn:rts:audio:13579611", "Audio 3"),
+    ]
+}
+
 // MARK: Types
 
 enum Media: Hashable {
