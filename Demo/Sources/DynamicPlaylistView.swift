@@ -29,23 +29,26 @@ private struct DynamicListView: View {
     @ObservedObject var player: Player
     
     var body: some View {
-        List {
-            ShufflePlaylistButton(mutableMedias: $mutableMedias, player: player)
-            ForEach($mutableMedias, id: \.self, editActions: [.move, .delete]) { media in
-                let indexOfCurrentMedia = mutableMedias.firstIndex(of: media.wrappedValue)
-                PlaylistCellView(
-                    media: media.wrappedValue,
-                    isPlaying: indexOfCurrentMedia == indexOfCurrentPlayingItem(),
-                    select: select
-                )
+        VStack(spacing: 0) {
+            LoadNewPlaylistButton(mutableMedias: $mutableMedias, player: player)
+            List {
+                ShufflePlaylistButton(mutableMedias: $mutableMedias, player: player)
+                ForEach($mutableMedias, id: \.self, editActions: [.move, .delete]) { media in
+                    let indexOfCurrentMedia = mutableMedias.firstIndex(of: media.wrappedValue)
+                    PlaylistCellView(
+                        media: media.wrappedValue,
+                        isPlaying: indexOfCurrentMedia == indexOfCurrentPlayingItem(),
+                        select: select
+                    )
+                }
+                .onMove(perform: move)
+                .onDelete(perform: delete)
+                AddMediaButton(medias: medias, mutableMedias: mutableMedias, completion: add)
             }
-            .onMove(perform: move)
-            .onDelete(perform: delete)
-            AddMediaButton(medias: medias, mutableMedias: mutableMedias, completion: add)
-        }
-        .listStyle(.automatic)
-        .onAppear {
-            self.mutableMedias = medias
+            .listStyle(.automatic)
+            .onAppear {
+                self.mutableMedias = medias
+            }
         }
     }
     
@@ -240,6 +243,34 @@ private struct ShufflePlaylistButton: View {
     
     private func shuffle() {
         mutableMedias.shuffle()
+        player.removeAllItems()
+        mutableMedias.compactMap(\.playerItem).forEach { player.append($0) }
+    }
+}
+
+// Behavior: h-exp, v-exp
+private struct LoadNewPlaylistButton: View {
+    @Binding var mutableMedias: [Media]
+    @ObservedObject var player: Player
+
+    var body: some View {
+        HStack {
+            Spacer()
+            Button(action: getNewPlaylist) { Image(systemName: "arrow.triangle.2.circlepath") }
+            Spacer()
+        }
+        .padding(10)
+        .background(.black)
+    }
+
+    private func getNewPlaylist() {
+        mutableMedias = [
+            MediaURLPlaylist.videosWithDescription,
+            MediaMixturePlaylist.mix1,
+            MediaMixturePlaylist.mix2,
+            MediaMixturePlaylist.mix3,
+        ][Int(arc4random() % 4)]
+
         player.removeAllItems()
         mutableMedias.compactMap(\.playerItem).forEach { player.append($0) }
     }
