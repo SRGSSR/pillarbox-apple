@@ -90,7 +90,7 @@ struct ShowcaseView: View {
                     PlaylistView(medias: MediaURNPlaylist.videosWithErrors)
                 }
                 Cell(title: "Dynamic Playlist") {
-                    DynamicPlaylistView(medias: MediaURLPlaylist.videosWithDescription)
+                    PlaylistView(medias: MediaURLPlaylist.videosWithDescription)
                 }
             }
         }
