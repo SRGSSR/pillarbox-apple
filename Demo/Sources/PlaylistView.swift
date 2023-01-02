@@ -16,7 +16,7 @@ struct PlaylistView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            PlayerView(medias: medias, player: model.player)
+            PlayerViewImp(player: model.player)
             ListView(model: model)
         }
         .onAppear { model.medias = medias }

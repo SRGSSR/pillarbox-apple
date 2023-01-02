@@ -265,8 +265,31 @@ private struct TimeSlider: View {
 // Behavior: h-exp, v-exp
 struct PlayerView: View {
     private let medias: [Media]
+    @StateObject private var player = Player()
 
-    @ObservedObject private var player: Player
+    var body: some View {
+        PlayerViewImp(player: player)
+            .onAppear {
+                load()
+            }
+    }
+
+    init(medias: [Media]) {
+        self.medias = medias
+    }
+
+    init(media: Media) {
+        self.init(medias: [media])
+    }
+
+    private func load() {
+        player.items = medias.compactMap(\.playerItem)
+    }
+}
+
+// Behavior: h-exp, v-exp
+struct PlayerViewImp: View {
+    @ObservedObject var player: Player
 
     var body: some View {
         ZStack {
@@ -293,28 +316,11 @@ struct PlayerView: View {
             .padding()
         }
         .onAppear {
-            play()
+            player.play()
         }
     }
-    
-    init(medias: [Media], player: Player) {
-        self.medias = medias
-        self.player = player
-    }
-    
-    init(medias: [Media]) {
-        self.init(medias: medias, player: Player())
-    }
-
-    init(media: Media) {
-        self.init(medias: [media])
-    }
-
-    private func play() {
-        player.items = medias.compactMap(\.playerItem)
-        player.play()
-    }
 }
+
 
 // MARK: Preview
 
