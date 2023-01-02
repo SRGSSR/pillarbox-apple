@@ -17,16 +17,19 @@ public final class Player: ObservableObject, Equatable {
     @Published public private(set) var playbackState: PlaybackState = .idle
 
     /// Returns whether the player is currently buffering.
-    @Published public var isBuffering = false
+    @Published public private(set) var isBuffering = false
 
     /// Returns whether the player is currently seeking to another position.
-    @Published public var isSeeking = false
+    @Published public private(set) var isSeeking = false
 
     /// The current item in the queue.
-    @Published public var currentItem: PlayerItem?
+    @Published public private(set) var currentItem: PlayerItem?
 
     /// Available time range. `.invalid` when not known.
-    @Published public var timeRange: CMTimeRange = .invalid
+    @Published public private(set) var timeRange: CMTimeRange = .invalid
+
+    /// Duration of a chunk for the currently played item.
+    @Published public private(set) var chunkDuration: CMTime = .invalid
 
     @Published private var storedItems: Deque<PlayerItem>
     @Published private var itemDuration: CMTime = .indefinite
@@ -37,7 +40,7 @@ public final class Player: ObservableObject, Equatable {
     }
 
     /// Raw player used for playback.
-    public let rawPlayer: RawPlayer
+    let rawPlayer: RawPlayer
 
     private let configuration: PlayerConfiguration
     private var cancellables = Set<AnyCancellable>()
@@ -63,54 +66,18 @@ public final class Player: ObservableObject, Equatable {
     ///   - items: The items to be queued initially.
     ///   - configuration: A closure in which the player can be configured.
     public init(items: [PlayerItem] = [], configuration: (inout PlayerConfiguration) -> Void = { _ in }) {
-        rawPlayer = RawPlayer(items: items.map(\.playerItem).removeDuplicates())
+        rawPlayer = RawPlayer(items: items.map { $0.source.playerItem() })
         self.configuration = Self.configure(with: configuration)
         storedItems = Deque(items)
 
-        rawPlayer.playbackStatePublisher()
-            .receiveOnMainThread()
-            .lane("player_state")
-            .assign(to: &$playbackState)
-
-        rawPlayer.currentItemTimeRangePublisher()
-            .receiveOnMainThread()
-            .lane("player_time_range")
-            .assign(to: &$timeRange)
-
-        rawPlayer.currentItemDurationPublisher()
-            .receiveOnMainThread()
-            .lane("player_item_duration")
-            .assign(to: &$itemDuration)
-
-        rawPlayer.seekingPublisher()
-            .receiveOnMainThread()
-            .lane("player_seeking")
-            .assign(to: &$isSeeking)
-
-        rawPlayer.bufferingPublisher()
-            .receiveOnMainThread()
-            .lane("player_buffering")
-            .assign(to: &$isBuffering)
-
-        Publishers.CombineLatest($storedItems, rawPlayer.publisher(for: \.currentItem))
-            .map { storedItems, currentItem in
-                storedItems.first { $0.playerItem === currentItem }
-            }
-            .removeDuplicates()
-            .receiveOnMainThread()
-            .lane("player_item")
-            .assign(to: &$currentItem)
-
-        $storedItems
-            .map { items in
-                Publishers.AccumulateLatestMany(items.map(\.$playerItem))
-            }
-            .switchToLatest()
-            .receiveOnMainThread()
-            .sink { [rawPlayer] playerItems in
-                Self.update(with: playerItems, player: rawPlayer)
-            }
-            .store(in: &cancellables)
+        configurePlaybackStatePublisher()
+        configureCurrentItemTimeRangePublisher()
+        configureCurrentItemDurationPublisher()
+        configureChunkDurationPublisher()
+        configureSeekingPublisher()
+        configureBufferingPublisher()
+        configureCurrentItemPublisher()
+        configureRawPlayerUpdatePublisher()
     }
 
     /// Create a player with a single item in its queue.
@@ -131,44 +98,33 @@ public final class Player: ObservableObject, Equatable {
         return playerConfiguration
     }
 
-    private static func update(with items: [AVPlayerItem], player: AVQueuePlayer) {
-        if player.items().isEmpty {
-            update(player: player, with: items)
+    /// Return the player items with which the queue player must be filled.
+    /// - Parameters:
+    ///   - items: The updated item list.
+    ///   - previousItems: The previous item list, if any.
+    ///   - player: The queue player.
+    private static func queuePlayerItems(
+        _ items: Deque<PlayerItem>,
+        from previousItems: Deque<PlayerItem>?,
+        in player: RawPlayer
+    ) -> [PlayerItem] {
+        guard let currentItem = player.currentItem else { return Array(items) }
+
+        // Current item found in the updated list. Return updated items from there.
+        if let currentIndex = items.firstIndex(where: { $0.matches(currentItem) }) {
+            return Array(items.suffix(from: currentIndex))
         }
-        else if let currentItem = player.currentItem,
-                let currentItemIndex = items.firstIndex(where: { $0.id == currentItem.id }) {
-            update(player: player, with: Array(items.suffix(from: currentItemIndex)))
+        // Current item not found in the updated list. Locate a common item which was previously located after the
+        // current item and, if any is found, return updated items from there.
+        else if let previousItems {
+            let previousQueueItems = queuePlayerItems(previousItems, from: nil, in: player)
+            guard let commonIndex = items.firstIndex(where: { previousQueueItems.contains($0) }) else {
+                return Array(items)
+            }
+            return Array(items.suffix(from: commonIndex))
         }
         else {
-            for item in player.items() {
-                if items.contains(item) {
-                    break
-                }
-                player.remove(item)
-            }
-            update(with: items, player: player)
-        }
-    }
-
-    private static func update(player: AVQueuePlayer, with items: [AVPlayerItem]) {
-        // Replace the current item directly. Diffing namely applies removals first and removing the current
-        // item would otherwise make `AVQueuePlayer` move to the next item automatically.
-        if let currentItem = player.currentItem,
-            let updatedCurrentItem = items.first(where: { $0.id == currentItem.id }), updatedCurrentItem != currentItem {
-            player.replaceCurrentItem(with: updatedCurrentItem)
-        }
-
-        // Apply diffing. `associatedWith` parameters are ignored (and are `nil` without using `.inferringMoves()`).
-        let diff = items.difference(from: player.items())
-        diff.forEach { change in
-            switch change {
-            case let .insert(offset: offset, element: element, associatedWith: _):
-                let beforeIndex = player.items().index(before: offset)
-                let afterItem = player.items()[safeIndex: beforeIndex]
-                player.insert(element, after: afterItem)
-            case let .remove(offset: _, element: element, associatedWith: _):
-                player.remove(element)
-            }
+            return Array(items)
         }
     }
 
@@ -233,8 +189,7 @@ public final class Player: ObservableObject, Equatable {
     /// - Parameter time: The time.
     /// - Returns: `true` if skipping to live conditions is possible.
     public func canSkipToLive(from time: CMTime) -> Bool {
-        guard streamType == .dvr, let currentItem, timeRange.isValid else { return false }
-        let chunkDuration = currentItem.chunkDuration
+        guard streamType == .dvr, timeRange.isValid else { return false }
         return chunkDuration.isValid && time < timeRange.end - chunkDuration
     }
 
@@ -291,6 +246,10 @@ public final class Player: ObservableObject, Equatable {
     public func boundaryTimePublisher(for times: [CMTime], queue: DispatchQueue = .main) -> AnyPublisher<Void, Never> {
         Publishers.BoundaryTimePublisher(for: rawPlayer, times: times, queue: queue)
     }
+
+    deinit {
+        rawPlayer.cancelPendingReplacements()
+    }
 }
 
 public extension Player {
@@ -308,19 +267,33 @@ public extension Player {
     /// Items before the current item (not included).
     /// - Returns: Items.
     var previousItems: [PlayerItem] {
-        guard let currentItem = rawPlayer.currentItem, let currentIndex = storedItems.firstIndex(where: { $0.playerItem == currentItem }) else {
-            return Array(storedItems)
-        }
+        guard let currentItem, let currentIndex = storedItems.firstIndex(of: currentItem) else { return [] }
         return Array(storedItems.prefix(upTo: currentIndex))
+    }
+
+    /// Return the list of items to be loaded to return to the previous (playable) item.
+    private var returningItems: [PlayerItem] {
+        guard let currentItem, let currentIndex = storedItems.firstIndex(of: currentItem) else { return [] }
+        let previousIndex = storedItems.index(before: currentIndex)
+        guard previousIndex >= 0 else { return [] }
+        return Array(storedItems.suffix(from: previousIndex))
     }
 
     /// Items past the current item (not included).
     /// - Returns: Items.
     var nextItems: [PlayerItem] {
-        guard let currentItem = rawPlayer.currentItem, let currentIndex = storedItems.firstIndex(where: { $0.playerItem == currentItem }) else {
+        guard let currentItem, let currentIndex = storedItems.firstIndex(of: currentItem) else {
             return Array(storedItems)
         }
         return Array(storedItems.suffix(from: currentIndex).dropFirst())
+    }
+
+    /// Return the list of items to be loaded to advance to the next (playable) item.
+    private var advancingItems: [PlayerItem] {
+        guard let currentItem, let currentIndex = storedItems.firstIndex(of: currentItem) else { return [] }
+        let nextIndex = storedItems.index(after: currentIndex)
+        guard nextIndex < storedItems.count else { return [] }
+        return Array(storedItems.suffix(from: nextIndex))
     }
 
     private func canInsert(_ item: PlayerItem, before beforeItem: PlayerItem?) -> Bool {
@@ -467,33 +440,23 @@ public extension Player {
     /// Check whether returning to the previous item in the deque is possible.`
     /// - Returns: `true` if possible.
     func canReturnToPreviousItem() -> Bool {
-        guard let currentItem else { return false }
-        return playablePreviousItem(before: currentItem) != nil
-    }
-
-    /// Return the previous playable item, i.e. skips items which failed, similarly to what `AVQueuePlayer` natively
-    /// does when advancing in the queue.
-    private func playablePreviousItem(before item: PlayerItem) -> PlayerItem? {
-        guard let index = storedItems.firstIndex(of: item) else { return nil }
-        let previousPlayableItems = storedItems.prefix(upTo: index).filter { $0.playerItem.status != .failed }
-        return previousPlayableItems.last
+        !returningItems.isEmpty
     }
 
     /// Return to the previous item in the deque. Skips failed items.
     /// - Returns: `true` if not possible.
     @discardableResult
     func returnToPreviousItem() -> Bool {
-        guard let currentItem, let previousItem = playablePreviousItem(before: currentItem) else { return false }
-        rawPlayer.replaceCurrentItem(with: previousItem.playerItem)
-        rawPlayer.insert(currentItem.playerItem, after: previousItem.playerItem)
+        guard canReturnToPreviousItem() else { return false}
+        let playerItems = returningItems.map { $0.source.playerItem() }
+        rawPlayer.replaceItems(with: playerItems)
         return true
     }
 
     /// Check whether moving to the next item in the deque is possible.`
     /// - Returns: `true` if possible.
     func canAdvanceToNextItem() -> Bool {
-        guard let currentItem else { return false }
-        return currentItem !== storedItems.last
+        !advancingItems.isEmpty
     }
 
     /// Move to the next item in the deque.
@@ -501,7 +464,95 @@ public extension Player {
     @discardableResult
     func advanceToNextItem() -> Bool {
         guard canAdvanceToNextItem() else { return false }
-        rawPlayer.advanceToNextItem()
+        let playerItems = advancingItems.map { $0.source.playerItem() }
+        rawPlayer.replaceItems(with: playerItems)
         return true
+    }
+}
+
+private extension Player {
+    private func configurePlaybackStatePublisher() {
+        rawPlayer.playbackStatePublisher()
+            .receiveOnMainThread()
+            .lane("player_state")
+            .assign(to: &$playbackState)
+    }
+
+    private func configureCurrentItemTimeRangePublisher() {
+        rawPlayer.currentItemTimeRangePublisher()
+            .receiveOnMainThread()
+            .lane("player_time_range")
+            .assign(to: &$timeRange)
+    }
+
+    private func configureCurrentItemDurationPublisher() {
+        rawPlayer.currentItemDurationPublisher()
+            .receiveOnMainThread()
+            .lane("player_item_duration")
+            .assign(to: &$itemDuration)
+    }
+
+    private func configureChunkDurationPublisher() {
+        rawPlayer.publisher(for: \.currentItem)
+            .map { item -> AnyPublisher<CMTime, Never> in
+                guard let item else { return Just(.invalid).eraseToAnyPublisher() }
+                return item.asset.propertyPublisher(.minimumTimeOffsetFromLive)
+                    .map { CMTimeMultiplyByRatio($0, multiplier: 1, divisor: 3) }       // The minimum offset represents 3 chunks
+                    .replaceError(with: .invalid)
+                    .prepend(.invalid)
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .removeDuplicates()
+            .receiveOnMainThread()
+            .lane("player_chunk_duration")
+            .assign(to: &$chunkDuration)
+    }
+
+    private func configureSeekingPublisher() {
+        rawPlayer.seekingPublisher()
+            .receiveOnMainThread()
+            .lane("player_seeking")
+            .assign(to: &$isSeeking)
+    }
+
+    private func configureBufferingPublisher() {
+        rawPlayer.bufferingPublisher()
+            .receiveOnMainThread()
+            .lane("player_buffering")
+            .assign(to: &$isBuffering)
+    }
+
+    private func configureCurrentItemPublisher() {
+        Publishers.CombineLatest($storedItems, rawPlayer.publisher(for: \.currentItem))
+            .filter { storedItems, currentItem in
+                // The current item is automatically set to `nil` when a failure is encountered. If this is the case
+                // preserve the previous value, provided the player is loaded with items.
+                storedItems.isEmpty || currentItem != nil
+            }
+            .map { storedItems, currentItem in
+                storedItems.first { $0.matches(currentItem) }
+            }
+            .removeDuplicates()
+            .receiveOnMainThread()
+            .lane("player_current_item")
+            .assign(to: &$currentItem)
+    }
+
+    private func configureRawPlayerUpdatePublisher() {
+        $storedItems
+            .withPrevious()
+            .map { [rawPlayer] items in
+                let queueItems = Self.queuePlayerItems(items.current, from: items.previous, in: rawPlayer)
+                return Publishers.AccumulateLatestMany(queueItems.map { item in
+                    item.$source.map { $0.playerItem() }
+                })
+            }
+            .switchToLatest()
+            .receiveOnMainThread()
+            .sink { [rawPlayer] playerItems in
+                rawPlayer.replaceItems(with: playerItems)
+            }
+            .store(in: &cancellables)
     }
 }

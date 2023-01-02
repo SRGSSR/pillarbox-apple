@@ -11,45 +11,40 @@ public extension PlayerItem {
     /// Create a player item from a URN played in the specified environment.
     /// - Parameters:
     ///   - urn: The URN to play.
-    ///   - automaticallyLoadedAssetKeys: The asset keys to load before the item is ready to play. If `nil` default
-    ///     keys are loaded.
     ///   - environment: The environment which the URN is played from.
-    convenience init(urn: String, automaticallyLoadedAssetKeys: [String]? = nil, environment: Environment = .production) {
-        // swiftlint:disable:previous discouraged_optional_collection
+    convenience init(urn: String, environment: Environment = .production) {
         let publisher = DataProvider(environment: environment).recommendedPlayableResource(forUrn: urn)
-            .map { Self.configuredPlayerItem(for: $0, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys) }
+            .map { Self.asset(for: $0) }
         self.init(publisher: publisher)
     }
 
-    private static func configuredPlayerItem(for resource: Resource, automaticallyLoadedAssetKeys: [String]?) -> AVPlayerItem {
-        // swiftlint:disable:previous discouraged_optional_collection
-        let item = playerItem(for: resource, automaticallyLoadedAssetKeys: automaticallyLoadedAssetKeys)
-        if resource.streamType == .live {
-            // Limit buffering and force the player to return to the live edge when re-buffering. This ensures
-            // livestreams cannot be paused and resumed in the past, as requested by business people.
-            item.automaticallyPreservesTimeOffsetFromLive = true
-            item.preferredForwardBufferDuration = 1
+    private static func asset(for resource: Resource) -> Asset {
+        let configuration: (AVPlayerItem) -> Void = { item in
+            if resource.streamType == .live {
+                // Limit buffering and force the player to return to the live edge when re-buffering. This ensures
+                // livestreams cannot be paused and resumed in the past, as requested by business people.
+                item.automaticallyPreservesTimeOffsetFromLive = true
+                item.preferredForwardBufferDuration = 1
+            }
         }
-        return item
-    }
-
-    private static func playerItem(for resource: Resource, automaticallyLoadedAssetKeys: [String]?) -> AVPlayerItem {
-        // swiftlint:disable:previous discouraged_optional_collection
         if let certificateUrl = resource.drms?.first(where: { $0.type == .fairPlay })?.certificateUrl {
-            return AVPlayerItem.loading(
+            return .encrypted(
                 url: resource.url,
-                contentKeySessionDelegate: ContentKeySessionDelegate(certificateUrl: certificateUrl)
+                delegate: ContentKeySessionDelegate(certificateUrl: certificateUrl),
+                configuration: configuration
             )
         }
         else {
             switch resource.tokenType {
             case .akamai:
-                return AVPlayerItem.loading(
-                    url: AkamaiURLCoding.encodeUrl(resource.url),
-                    resourceLoaderDelegate: AkamaiResourceLoaderDelegate()
+                let id = UUID()
+                return .custom(
+                    url: AkamaiURLCoding.encodeUrl(resource.url, id: id),
+                    delegate: AkamaiResourceLoaderDelegate(id: id),
+                    configuration: configuration
                 )
             default:
-                return AVPlayerItem(url: resource.url)
+                return .simple(url: resource.url, configuration: configuration)
             }
         }
     }

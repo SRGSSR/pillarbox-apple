@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-final class FailingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
+final class FailedResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
     private let error: Error
 
     init(error: Error) {

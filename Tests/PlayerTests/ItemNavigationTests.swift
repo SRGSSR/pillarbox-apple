@@ -26,64 +26,9 @@ final class ItemNavigationTests: XCTestCase {
         expect(player.canReturnToPreviousItem()).to(beFalse())
     }
 
-    func testCanReturnToPreviousFailingItem() {
-        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
-        let failingItem = PlayerItem(url: Stream.unavailable.url)
-        let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
-        let player = Player(items: [item1, failingItem, item2])
-        expect(player.advanceToNextItem()).to(beTrue())
-        expect(player.currentItem).toEventually(equal(item2))
-        expect(player.canReturnToPreviousItem()).to(beTrue())
-    }
-
-    func testCannotReturnToPreviousFailingItemAtFront() {
-        let failingItem = PlayerItem(url: Stream.unavailable.url)
-        let item = PlayerItem(url: Stream.item.url)
-        let player = Player(items: [failingItem, item])
-        expect(player.currentItem).toEventually(equal(item))
-        expect(player.canReturnToPreviousItem()).to(beFalse())
-    }
-
     func testCannotReturnToPreviousItemWhenEmpty() {
         let player = Player()
         expect(player.canReturnToPreviousItem()).to(beFalse())
-    }
-
-    func testReturnToPreviousItem() {
-        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
-        let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
-        let player = Player(items: [item1, item2])
-        expect(player.advanceToNextItem()).to(beTrue())
-        expect(player.returnToPreviousItem()).to(beTrue())
-        expect(player.currentItem).to(equal(item1))
-    }
-
-    func testReturnToPreviousItemAtFront() {
-        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
-        let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
-        let player = Player(items: [item1, item2])
-        expect(player.returnToPreviousItem()).to(beFalse())
-        expect(player.currentItem).to(equal(item1))
-    }
-
-    func testReturnToPreviousFailingItem() {
-        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
-        let failingItem = PlayerItem(url: Stream.unavailable.url)
-        let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
-        let player = Player(items: [item1, failingItem, item2])
-        expect(player.advanceToNextItem()).to(beTrue())
-        expect(player.currentItem).toEventually(equal(item2))
-        expect(player.returnToPreviousItem()).to(beTrue())
-        expect(player.currentItem).toEventually(equal(item1))
-    }
-
-    func testReturnToPreviousFailingItemAtFront() {
-        let failingItem = PlayerItem(url: Stream.unavailable.url)
-        let item = PlayerItem(url: Stream.item.url)
-        let player = Player(items: [failingItem, item])
-        expect(player.currentItem).toEventually(equal(item))
-        expect(player.returnToPreviousItem()).to(beFalse())
-        expect(player.currentItem).toEventually(equal(item))
     }
 
     func testCanAdvanceToNextItem() {
@@ -101,24 +46,27 @@ final class ItemNavigationTests: XCTestCase {
         expect(player.canAdvanceToNextItem()).to(beFalse())
     }
 
-    func testCanAdvanceToNextFailingItem() {
-        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
-        let failingItem = PlayerItem(url: Stream.unavailable.url)
-        let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
-        let player = Player(items: [item1, failingItem, item2])
-        expect(player.canAdvanceToNextItem()).to(beTrue())
-    }
-
-    func testCanAdvanceToNextFailingItemAtBack() {
-        let item = PlayerItem(url: Stream.item.url)
-        let failingItem = PlayerItem(url: Stream.unavailable.url)
-        let player = Player(items: [item, failingItem])
-        expect(player.canAdvanceToNextItem()).to(beTrue())
-    }
-
     func testCannotAdvanceToNextItemWhenEmpty() {
         let player = Player()
         expect(player.canAdvanceToNextItem()).to(beFalse())
+    }
+
+    func testCanAdvanceToNextItemOnFailedItem() {
+        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = PlayerItem(url: Stream.unavailable.url)
+        let item3 = PlayerItem(url: Stream.item(numbered: 3).url)
+        let player = Player(items: [item1, item2, item3])
+        expect(player.advanceToNextItem()).to(beTrue())
+        expect(player.canReturnToPreviousItem()).toAlways(beTrue(), until: .milliseconds(500))
+    }
+
+    func testCanReturnToPreviousItemOnFailedItem() {
+        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = PlayerItem(url: Stream.unavailable.url)
+        let item3 = PlayerItem(url: Stream.item(numbered: 3).url)
+        let player = Player(items: [item1, item2, item3])
+        expect(player.advanceToNextItem()).to(beTrue())
+        expect(player.canAdvanceToNextItem()).toAlways(beTrue(), until: .milliseconds(500))
     }
 
     func testAdvanceToNextItem() {
@@ -138,20 +86,40 @@ final class ItemNavigationTests: XCTestCase {
         expect(player.currentItem).to(equal(item2))
     }
 
-    func testAdvanceToNextFailingItem() {
+    func testReturnToPreviousItem() {
         let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
-        let failingItem = PlayerItem(url: Stream.unavailable.url)
         let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
-        let player = Player(items: [item1, failingItem, item2])
+        let player = Player(items: [item1, item2])
         expect(player.advanceToNextItem()).to(beTrue())
-        expect(player.currentItem).toEventually(equal(item2))
+        expect(player.returnToPreviousItem()).to(beTrue())
+        expect(player.currentItem).to(equal(item1))
     }
 
-    func testAdvanceToNextFailingItemAtBack() {
-        let item = PlayerItem(url: Stream.item.url)
-        let failingItem = PlayerItem(url: Stream.unavailable.url)
-        let player = Player(items: [item, failingItem])
+    func testReturnToPreviousItemAtFront() {
+        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
+        let player = Player(items: [item1, item2])
+        expect(player.returnToPreviousItem()).to(beFalse())
+        expect(player.currentItem).to(equal(item1))
+    }
+
+    func testReturnToPreviousItemOnFailedItem() {
+        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = PlayerItem(url: Stream.unavailable.url)
+        let item3 = PlayerItem(url: Stream.item(numbered: 3).url)
+        let player = Player(items: [item1, item2, item3])
         expect(player.advanceToNextItem()).to(beTrue())
-        expect(player.currentItem).toEventually(equal(failingItem))
+        expect(player.returnToPreviousItem()).to(beTrue())
+        expect(player.currentItem).to(equal(item1))
+    }
+
+    func testAdvanceToNextItemOnFailedItem() {
+        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = PlayerItem(url: Stream.unavailable.url)
+        let item3 = PlayerItem(url: Stream.item(numbered: 3).url)
+        let player = Player(items: [item1, item2, item3])
+        expect(player.advanceToNextItem()).to(beTrue())
+        expect(player.advanceToNextItem()).to(beTrue())
+        expect(player.currentItem).to(equal(item3))
     }
 }

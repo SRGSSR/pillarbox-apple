@@ -10,13 +10,14 @@ import AVFoundation
 import Circumspect
 import CoreMedia
 
-extension AVPlayerItem: Similar {
-    public static func ~= (lhs: AVPlayerItem, rhs: AVPlayerItem) -> Bool {
-        if let lhsUrlAsset = lhs.asset as? AVURLAsset, let rhsUrlAsset = rhs.asset as? AVURLAsset {
+extension Asset: Similar {
+    public static func ~= (lhs: Asset, rhs: Asset) -> Bool {
+        if let lhsUrlAsset = lhs.playerItem().asset as? AVURLAsset,
+           let rhsUrlAsset = rhs.playerItem().asset as? AVURLAsset {
             return lhsUrlAsset.url == rhsUrlAsset.url
         }
         else {
-            return lhs == rhs
+            return false
         }
     }
 }
