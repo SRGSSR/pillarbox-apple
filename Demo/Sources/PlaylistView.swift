@@ -17,7 +17,7 @@ struct PlaylistView: View {
     var body: some View {
         VStack(spacing: 0) {
             PlayerView(medias: medias, player: model.player)
-            ListView(medias: medias, model: model)
+            ListView(model: model)
         }
         .onAppear { model.medias = medias }
         .onChange(of: medias) { newValue in
@@ -28,17 +28,15 @@ struct PlaylistView: View {
 
 // Behavior: h-exp, v-exp
 private struct ListView: View {
-    let medias: [Media]
-    @State private var mutableMedias: [Media] = []
     @ObservedObject var model: PlaylistViewModel
     
     var body: some View {
         VStack(spacing: 0) {
-            LoadNewPlaylistButton(mutableMedias: $mutableMedias, model: model)
+            LoadNewPlaylistButton(mutableMedias: $model.mutableMedias, model: model)
             List {
-                ShufflePlaylistButton(mutableMedias: $mutableMedias, model: model)
-                ForEach($mutableMedias, id: \.self, editActions: [.move, .delete]) { media in
-                    let indexOfCurrentMedia = mutableMedias.firstIndex(of: media.wrappedValue)
+                ShufflePlaylistButton(mutableMedias: $model.mutableMedias, model: model)
+                ForEach($model.mutableMedias, id: \.self, editActions: [.move, .delete]) { media in
+                    let indexOfCurrentMedia = model.mutableMedias.firstIndex(of: media.wrappedValue)
                     PlaylistCell(
                         media: media.wrappedValue,
                         isPlaying: indexOfCurrentMedia == indexOfCurrentPlayingItem(),
@@ -47,12 +45,9 @@ private struct ListView: View {
                 }
                 .onMove(perform: move)
                 .onDelete(perform: delete)
-                AddMediaButton(medias: medias, operation: add)
+                AddMediaButton(medias: model.medias, operation: add)
             }
             .listStyle(.automatic)
-            .onAppear {
-                self.mutableMedias = medias
-            }
         }
     }
     
@@ -67,19 +62,19 @@ private struct ListView: View {
                 model.player.move(itemToMove, before: model.player.items[to])
             }
         }
-        mutableMedias.move(fromOffsets: from, toOffset: to)
+        model.mutableMedias.move(fromOffsets: from, toOffset: to)
     }
     
     private func delete(at: IndexSet) {
         if let at = at.map({$0}).first {
             model.player.remove(model.player.items[at])
         }
-        mutableMedias.remove(atOffsets: at)
+        model.mutableMedias.remove(atOffsets: at)
     }
     
     private func add(_ mediasToAdd: [Media]) {
-        let mediasToAdd = mediasToAdd.filter { mutableMedias.contains($0) == false } // Remove item if it's already present into the playlist
-        mutableMedias += mediasToAdd
+        let mediasToAdd = mediasToAdd.filter { model.mutableMedias.contains($0) == false } // Remove item if it's already present into the playlist
+        model.mutableMedias += mediasToAdd
         mediasToAdd.map(\.playerItem).forEach { item in
             if let item {
                 model.player.append(item)
@@ -98,7 +93,7 @@ private struct ListView: View {
         guard
             let playerCurrentItem = model.player.currentItem,
             let indexOfCurrentPlayingItem = model.player.items.firstIndex(of: playerCurrentItem),
-            let selectIndex = mutableMedias.firstIndex(of: media)
+            let selectIndex = model.mutableMedias.firstIndex(of: media)
         else { return }
         
         let shiftCount = abs(selectIndex - indexOfCurrentPlayingItem)
