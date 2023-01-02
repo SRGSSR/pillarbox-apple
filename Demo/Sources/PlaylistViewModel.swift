@@ -12,7 +12,11 @@ class PlaylistViewModel: ObservableObject {
     let player = Player()
     var currentMedia: Media?
 
-    var mutableMedias: [Media] = []
+    var mutableMedias: [Media] = [] {
+        didSet {
+            player.items = mutableMedias.compactMap(\.playerItem)
+        }
+    }
     @Published var medias: [Media] {
         didSet {
             mutableMedias = medias
@@ -26,27 +30,6 @@ class PlaylistViewModel: ObservableObject {
     }
 
     // MARK: Internal methods
-
-    func move(from: IndexSet, to: Int) {
-        if let from = from.map({$0}).first {
-            let isMovingDown = from < to
-            let isMovingUp = from > to
-            let itemToMove = player.items[from]
-            if isMovingDown {
-                player.move(itemToMove, after: player.items[to-1])
-            } else if isMovingUp {
-                player.move(itemToMove, before: player.items[to])
-            }
-        }
-        mutableMedias.move(fromOffsets: from, toOffset: to)
-    }
-
-    func delete(at: IndexSet) {
-        if let at = at.map({$0}).first {
-            player.remove(player.items[at])
-        }
-        mutableMedias.remove(atOffsets: at)
-    }
 
     func add(_ mediasToAdd: [Media]) {
         let mediasToAdd = mediasToAdd.filter { mutableMedias.contains($0) == false } // Remove item if it's already present into the playlist
