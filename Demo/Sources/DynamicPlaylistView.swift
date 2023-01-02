@@ -254,7 +254,7 @@ private struct LoadNewPlaylistButton: View {
             MediaMixturePlaylist.mix1,
             MediaMixturePlaylist.mix2,
             MediaMixturePlaylist.mix3,
-        ][Int(arc4random() % 4)]
+        ][Int.random(in: 0...3)]
 
         player.removeAllItems()
         mutableMedias.compactMap(\.playerItem).forEach { player.append($0) }
