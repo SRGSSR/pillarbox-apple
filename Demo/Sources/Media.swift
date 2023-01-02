@@ -253,7 +253,3 @@ enum Media: Hashable {
         }
     }
 }
-
-extension Media: Identifiable {
-    var id: String { description ?? "" }
-}
