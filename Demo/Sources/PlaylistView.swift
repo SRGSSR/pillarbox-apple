@@ -33,27 +33,14 @@ private struct ListView: View {
     var body: some View {
         VStack(spacing: 0) {
             LoadNewPlaylistButton(model: model)
-            List {
-                ShufflePlaylistButton(model: model)
-                ForEach($model.mutableMedias, id: \.self, editActions: [.move, .delete]) { media in
-                    let indexOfCurrentMedia = model.mutableMedias.firstIndex(of: media.wrappedValue)
-                    PlaylistCell(
-                        media: media.wrappedValue,
-                        isPlaying: indexOfCurrentMedia == model.indexOfCurrentPlayingItem()) { media in
-                            model.select(media)
-                        }
-                }
-                .onMove { indexSet, index in
-                    model.move(from: indexSet, to: index)
-                }
-                .onDelete { indexSet in
-                    model.delete(at: indexSet)
-                }
-                AddMediaButton(medias: model.medias) { medias in
-                    model.add(medias)
-                }
+            List($model.mutableMedias, id: \.self, editActions: [.all]) { media in
+                let indexOfCurrentMedia = model.mutableMedias.firstIndex(of: media.wrappedValue)
+                PlaylistCell(
+                    media: media.wrappedValue,
+                    isPlaying: indexOfCurrentMedia == model.indexOfCurrentPlayingItem()) { media in
+                        model.select(media)
+                    }
             }
-            .listStyle(.automatic)
         }
     }
 }

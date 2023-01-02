@@ -10,6 +10,8 @@ import SwiftUI
 @MainActor
 class PlaylistViewModel: ObservableObject {
     let player = Player()
+    var currentMedia: Media?
+
     var mutableMedias: [Media] = []
     @Published var medias: [Media] {
         didSet {
