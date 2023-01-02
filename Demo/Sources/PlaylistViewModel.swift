@@ -4,13 +4,14 @@
 //  License information is available from the LICENSE file.
 //
 
+import Core
 import Player
 import SwiftUI
 
 @MainActor
 class PlaylistViewModel: ObservableObject {
     let player = Player()
-    var currentMedia: Media?
+    @Published var currentMedia: Media?
 
     var mutableMedias: [Media] = [] {
         didSet {
@@ -27,6 +28,7 @@ class PlaylistViewModel: ObservableObject {
 
     init(medias: [Media] = []) {
         self.medias = medias
+        configureCurrentItemPublisher()
     }
 
     // MARK: Internal methods
@@ -38,28 +40,6 @@ class PlaylistViewModel: ObservableObject {
             if let item {
                 player.append(item)
             }
-        }
-    }
-
-    func indexOfCurrentPlayingItem() -> Int? {
-        if let item = player.currentItem {
-            return player.items.firstIndex(of: item)
-        }
-        return nil
-    }
-
-    func select(_ media: Media) {
-        guard
-            let playerCurrentItem = player.currentItem,
-            let indexOfCurrentPlayingItem = player.items.firstIndex(of: playerCurrentItem),
-            let selectIndex = mutableMedias.firstIndex(of: media)
-        else { return }
-
-        let shiftCount = abs(selectIndex - indexOfCurrentPlayingItem)
-        let isMovingForward = selectIndex > indexOfCurrentPlayingItem
-
-        (0..<shiftCount).forEach { _ in
-            _ = isMovingForward ? player.advanceToNextItem() : player.returnToPreviousItem()
         }
     }
 
@@ -79,5 +59,19 @@ class PlaylistViewModel: ObservableObject {
 
         player.removeAllItems()
         mutableMedias.compactMap(\.playerItem).forEach { player.append($0) }
+    }
+
+    // MARK: Private methods
+
+    func configureCurrentItemPublisher() {
+        player.$currentItem
+            .map { [weak self] item in
+                guard
+                    let self,
+                    let item,
+                    let index = self.player.items.firstIndex(of: item) else { return nil }
+                return self.mutableMedias[safeIndex: index]
+            }
+            .assign(to: &$currentMedia)
     }
 }

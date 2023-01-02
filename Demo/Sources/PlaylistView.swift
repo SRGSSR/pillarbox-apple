@@ -33,13 +33,8 @@ private struct ListView: View {
     var body: some View {
         VStack(spacing: 0) {
             LoadNewPlaylistButton(model: model)
-            List($model.mutableMedias, id: \.self, editActions: [.all]) { media in
-                let indexOfCurrentMedia = model.mutableMedias.firstIndex(of: media.wrappedValue)
-                PlaylistCell(
-                    media: media.wrappedValue,
-                    isPlaying: indexOfCurrentMedia == model.indexOfCurrentPlayingItem()) { media in
-                        model.select(media)
-                    }
+            List($model.mutableMedias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
+                PlaylistCell(media: media, isPlaying: media == model.currentMedia)
             }
         }
     }
@@ -79,17 +74,12 @@ private struct PlayingIndicatorView: View {
 private struct PlaylistCell: View {
     let media: Media
     let isPlaying: Bool
-    let select: (Media) -> Void
     
     var body: some View {
         HStack {
             MediaView(media: media)
             Spacer()
             PlayingIndicatorView(isVisible: isPlaying)
-        }
-        .contentShape(Rectangle())
-        .onTapGesture {
-            select(media)
         }
     }
 }
