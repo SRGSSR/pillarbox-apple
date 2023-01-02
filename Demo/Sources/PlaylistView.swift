@@ -39,68 +39,21 @@ private struct ListView: View {
                     let indexOfCurrentMedia = model.mutableMedias.firstIndex(of: media.wrappedValue)
                     PlaylistCell(
                         media: media.wrappedValue,
-                        isPlaying: indexOfCurrentMedia == indexOfCurrentPlayingItem(),
-                        select: select
-                    )
+                        isPlaying: indexOfCurrentMedia == model.indexOfCurrentPlayingItem()) { media in
+                            model.select(media)
+                        }
                 }
-                .onMove(perform: move)
-                .onDelete(perform: delete)
-                AddMediaButton(medias: model.medias, operation: add)
+                .onMove { indexSet, index in
+                    model.move(from: indexSet, to: index)
+                }
+                .onDelete { indexSet in
+                    model.delete(at: indexSet)
+                }
+                AddMediaButton(medias: model.medias) { medias in
+                    model.add(medias)
+                }
             }
             .listStyle(.automatic)
-        }
-    }
-    
-    private func move(from: IndexSet, to: Int) {
-        if let from = from.map({$0}).first {
-            let isMovingDown = from < to
-            let isMovingUp = from > to
-            let itemToMove = model.player.items[from]
-            if isMovingDown {
-                model.player.move(itemToMove, after: model.player.items[to-1])
-            } else if isMovingUp {
-                model.player.move(itemToMove, before: model.player.items[to])
-            }
-        }
-        model.mutableMedias.move(fromOffsets: from, toOffset: to)
-    }
-    
-    private func delete(at: IndexSet) {
-        if let at = at.map({$0}).first {
-            model.player.remove(model.player.items[at])
-        }
-        model.mutableMedias.remove(atOffsets: at)
-    }
-    
-    private func add(_ mediasToAdd: [Media]) {
-        let mediasToAdd = mediasToAdd.filter { model.mutableMedias.contains($0) == false } // Remove item if it's already present into the playlist
-        model.mutableMedias += mediasToAdd
-        mediasToAdd.map(\.playerItem).forEach { item in
-            if let item {
-                model.player.append(item)
-            }
-        }
-    }
-    
-    private func indexOfCurrentPlayingItem() -> Int? {
-        if let item = model.player.currentItem {
-            return model.player.items.firstIndex(of: item)
-        }
-        return nil
-    }
-    
-    private func select(_ media: Media) {
-        guard
-            let playerCurrentItem = model.player.currentItem,
-            let indexOfCurrentPlayingItem = model.player.items.firstIndex(of: playerCurrentItem),
-            let selectIndex = model.mutableMedias.firstIndex(of: media)
-        else { return }
-        
-        let shiftCount = abs(selectIndex - indexOfCurrentPlayingItem)
-        let isMovingForward = selectIndex > indexOfCurrentPlayingItem
-        
-        (0..<shiftCount).forEach { _ in
-            _ = isMovingForward ? model.player.advanceToNextItem() : model.player.returnToPreviousItem()
         }
     }
 }
@@ -219,15 +172,13 @@ private struct ShufflePlaylistButton: View {
     var body: some View {
         HStack {
             Spacer()
-            Button(action: shuffle) { Image(systemName: "shuffle") }
+            Button(action: {
+                model.shuffle()
+            }) {
+                Image(systemName: "shuffle")
+            }
             Spacer()
         }
-    }
-    
-    private func shuffle() {
-        model.mutableMedias.shuffle()
-        model.player.removeAllItems()
-        model.mutableMedias.compactMap(\.playerItem).forEach { model.player.append($0) }
     }
 }
 
@@ -238,23 +189,13 @@ private struct LoadNewPlaylistButton: View {
     var body: some View {
         HStack {
             Spacer()
-            Button(action: getNewPlaylist) { Image(systemName: "arrow.triangle.2.circlepath") }
+            Button(action: {
+                model.reload()
+            }) { Image(systemName: "arrow.triangle.2.circlepath") }
             Spacer()
         }
         .padding(10)
         .background(.black)
-    }
-
-    private func getNewPlaylist() {
-        model.mutableMedias = [
-            MediaURLPlaylist.videosWithDescription,
-            MediaMixturePlaylist.mix1,
-            MediaMixturePlaylist.mix2,
-            MediaMixturePlaylist.mix3,
-        ][Int.random(in: 0...3)]
-
-        model.player.removeAllItems()
-        model.mutableMedias.compactMap(\.playerItem).forEach { model.player.append($0) }
     }
 }
 
