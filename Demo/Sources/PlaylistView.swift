@@ -17,7 +17,7 @@ struct PlaylistView: View {
     var body: some View {
         VStack(spacing: 0) {
             PlayerView(medias: medias, player: model.player)
-            ListView(medias: medias, player: model.player)
+            ListView(medias: medias, model: model)
         }
         .onAppear { model.medias = medias }
         .onChange(of: medias) { newValue in
@@ -30,13 +30,13 @@ struct PlaylistView: View {
 private struct ListView: View {
     let medias: [Media]
     @State private var mutableMedias: [Media] = []
-    @ObservedObject var player: Player
+    @ObservedObject var model: PlaylistViewModel
     
     var body: some View {
         VStack(spacing: 0) {
-            LoadNewPlaylistButton(mutableMedias: $mutableMedias, player: player)
+            LoadNewPlaylistButton(mutableMedias: $mutableMedias, model: model)
             List {
-                ShufflePlaylistButton(mutableMedias: $mutableMedias, player: player)
+                ShufflePlaylistButton(mutableMedias: $mutableMedias, model: model)
                 ForEach($mutableMedias, id: \.self, editActions: [.move, .delete]) { media in
                     let indexOfCurrentMedia = mutableMedias.firstIndex(of: media.wrappedValue)
                     PlaylistCell(
@@ -60,11 +60,11 @@ private struct ListView: View {
         if let from = from.map({$0}).first {
             let isMovingDown = from < to
             let isMovingUp = from > to
-            let itemToMove = player.items[from]
+            let itemToMove = model.player.items[from]
             if isMovingDown {
-                player.move(itemToMove, after: player.items[to-1])
+                model.player.move(itemToMove, after: model.player.items[to-1])
             } else if isMovingUp {
-                player.move(itemToMove, before: player.items[to])
+                model.player.move(itemToMove, before: model.player.items[to])
             }
         }
         mutableMedias.move(fromOffsets: from, toOffset: to)
@@ -72,7 +72,7 @@ private struct ListView: View {
     
     private func delete(at: IndexSet) {
         if let at = at.map({$0}).first {
-            player.remove(player.items[at])
+            model.player.remove(model.player.items[at])
         }
         mutableMedias.remove(atOffsets: at)
     }
@@ -82,22 +82,22 @@ private struct ListView: View {
         mutableMedias += mediasToAdd
         mediasToAdd.map(\.playerItem).forEach { item in
             if let item {
-                player.append(item)
+                model.player.append(item)
             }
         }
     }
     
     private func indexOfCurrentPlayingItem() -> Int? {
-        if let item = player.currentItem {
-            return player.items.firstIndex(of: item)
+        if let item = model.player.currentItem {
+            return model.player.items.firstIndex(of: item)
         }
         return nil
     }
     
     private func select(_ media: Media) {
         guard
-            let playerCurrentItem = player.currentItem,
-            let indexOfCurrentPlayingItem = player.items.firstIndex(of: playerCurrentItem),
+            let playerCurrentItem = model.player.currentItem,
+            let indexOfCurrentPlayingItem = model.player.items.firstIndex(of: playerCurrentItem),
             let selectIndex = mutableMedias.firstIndex(of: media)
         else { return }
         
@@ -105,7 +105,7 @@ private struct ListView: View {
         let isMovingForward = selectIndex > indexOfCurrentPlayingItem
         
         (0..<shiftCount).forEach { _ in
-            _ = isMovingForward ? player.advanceToNextItem() : player.returnToPreviousItem()
+            _ = isMovingForward ? model.player.advanceToNextItem() : model.player.returnToPreviousItem()
         }
     }
 }
@@ -220,7 +220,7 @@ private struct PlaylistSelectionView: View {
 // Behavior: h-exp, v-exp
 private struct ShufflePlaylistButton: View {
     @Binding var mutableMedias: [Media]
-    @ObservedObject var player: Player
+    @ObservedObject var model: PlaylistViewModel
     
     var body: some View {
         HStack {
@@ -232,15 +232,15 @@ private struct ShufflePlaylistButton: View {
     
     private func shuffle() {
         mutableMedias.shuffle()
-        player.removeAllItems()
-        mutableMedias.compactMap(\.playerItem).forEach { player.append($0) }
+        model.player.removeAllItems()
+        mutableMedias.compactMap(\.playerItem).forEach { model.player.append($0) }
     }
 }
 
 // Behavior: h-exp, v-exp
 private struct LoadNewPlaylistButton: View {
     @Binding var mutableMedias: [Media]
-    @ObservedObject var player: Player
+    @ObservedObject var model: PlaylistViewModel
 
     var body: some View {
         HStack {
@@ -260,8 +260,8 @@ private struct LoadNewPlaylistButton: View {
             MediaMixturePlaylist.mix3,
         ][Int.random(in: 0...3)]
 
-        player.removeAllItems()
-        mutableMedias.compactMap(\.playerItem).forEach { player.append($0) }
+        model.player.removeAllItems()
+        mutableMedias.compactMap(\.playerItem).forEach { model.player.append($0) }
     }
 }
 
