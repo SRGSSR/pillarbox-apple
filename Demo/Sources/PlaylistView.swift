@@ -11,13 +11,17 @@ import SwiftUI
 
 // Behavior: h-exp, v-exp
 struct PlaylistView: View {
+    @StateObject private var model = PlaylistViewModel()
     @State var medias: [Media]
-    @StateObject private var player = Player()
 
     var body: some View {
         VStack(spacing: 0) {
-            PlayerView(medias: medias, player: player)
-            ListView(medias: medias, player: player)
+            PlayerView(medias: medias, player: model.player)
+            ListView(medias: medias, player: model.player)
+        }
+        .onAppear { model.medias = medias }
+        .onChange(of: medias) { newValue in
+            model.medias = newValue
         }
     }
 }
