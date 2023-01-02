@@ -101,7 +101,7 @@ private struct DynamicListView: View {
         let isMovingForward = selectIndex > indexOfCurrentPlayingItem
         
         (0..<shiftCount).forEach { _ in
-            _ = isMovingForward ? player.advanceToNextItem() : player.goBackToPreviousItem()
+            _ = isMovingForward ? player.advanceToNextItem() : player.returnToPreviousItem()
         }
     }
 }
