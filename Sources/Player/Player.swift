@@ -437,7 +437,7 @@ public extension Player {
         storedItems.removeAll()
     }
 
-    /// Check whether returning to the previous item in the deque is possible.
+    /// Check whether returning to the previous item in the deque is possible.`
     /// - Returns: `true` if possible.
     func canReturnToPreviousItem() -> Bool {
         !returningItems.isEmpty
@@ -453,7 +453,7 @@ public extension Player {
         return true
     }
 
-    /// Check whether moving to the next item in the deque is possible.
+    /// Check whether moving to the next item in the deque is possible.`
     /// - Returns: `true` if possible.
     func canAdvanceToNextItem() -> Bool {
         !advancingItems.isEmpty
@@ -465,22 +465,6 @@ public extension Player {
     func advanceToNextItem() -> Bool {
         guard canAdvanceToNextItem() else { return false }
         let playerItems = advancingItems.map { $0.source.playerItem() }
-        rawPlayer.replaceItems(with: playerItems)
-        return true
-    }
-    
-    /// Check whether moving to the previous item in the deque is possible.
-    /// - Returns: `true` if possible.
-    func canGoBackToPreviousItem() -> Bool {
-        !returningItems.isEmpty
-    }
-
-    /// Move to the previous item in the deque.
-    /// - Returns: `true` if not possible.
-    @discardableResult
-    func goBackToPreviousItem() -> Bool {
-        guard canGoBackToPreviousItem() else { return false }
-        let playerItems = returningItems.map { $0.source.playerItem() }
         rawPlayer.replaceItems(with: playerItems)
         return true
     }
