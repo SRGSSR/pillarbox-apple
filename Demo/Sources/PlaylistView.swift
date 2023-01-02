@@ -32,9 +32,9 @@ private struct ListView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            LoadNewPlaylistButton(mutableMedias: $model.mutableMedias, model: model)
+            LoadNewPlaylistButton(model: model)
             List {
-                ShufflePlaylistButton(mutableMedias: $model.mutableMedias, model: model)
+                ShufflePlaylistButton(model: model)
                 ForEach($model.mutableMedias, id: \.self, editActions: [.move, .delete]) { media in
                     let indexOfCurrentMedia = model.mutableMedias.firstIndex(of: media.wrappedValue)
                     PlaylistCell(
@@ -214,7 +214,6 @@ private struct PlaylistSelectionView: View {
 
 // Behavior: h-exp, v-exp
 private struct ShufflePlaylistButton: View {
-    @Binding var mutableMedias: [Media]
     @ObservedObject var model: PlaylistViewModel
     
     var body: some View {
@@ -226,15 +225,14 @@ private struct ShufflePlaylistButton: View {
     }
     
     private func shuffle() {
-        mutableMedias.shuffle()
+        model.mutableMedias.shuffle()
         model.player.removeAllItems()
-        mutableMedias.compactMap(\.playerItem).forEach { model.player.append($0) }
+        model.mutableMedias.compactMap(\.playerItem).forEach { model.player.append($0) }
     }
 }
 
 // Behavior: h-exp, v-exp
 private struct LoadNewPlaylistButton: View {
-    @Binding var mutableMedias: [Media]
     @ObservedObject var model: PlaylistViewModel
 
     var body: some View {
@@ -248,7 +246,7 @@ private struct LoadNewPlaylistButton: View {
     }
 
     private func getNewPlaylist() {
-        mutableMedias = [
+        model.mutableMedias = [
             MediaURLPlaylist.videosWithDescription,
             MediaMixturePlaylist.mix1,
             MediaMixturePlaylist.mix2,
@@ -256,7 +254,7 @@ private struct LoadNewPlaylistButton: View {
         ][Int.random(in: 0...3)]
 
         model.player.removeAllItems()
-        mutableMedias.compactMap(\.playerItem).forEach { model.player.append($0) }
+        model.mutableMedias.compactMap(\.playerItem).forEach { model.player.append($0) }
     }
 }
 
