@@ -194,7 +194,9 @@ private struct PlaylistSelectionView: View {
             }
             .environment(\.editMode, $editMode)
             .navigationBarTitle("Add a stream to the playlist")
+#if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+#endif
             .navigationBarItems(leading: Button("Cancel", action: cancel))
             .navigationBarItems(trailing: Button("Add", action: add))
         }
