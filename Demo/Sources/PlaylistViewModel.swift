@@ -5,6 +5,7 @@
 //
 
 import Core
+import OrderedCollections
 import Player
 import SwiftUI
 
@@ -15,68 +16,66 @@ class PlaylistViewModel: ObservableObject {
         didSet {
             guard
                 let currentMedia,
-                let index = mutableMedias.firstIndex(of: currentMedia)
+                let index = items.keys.firstIndex(of: currentMedia)
             else { return }
             try? player.setCurrentIndex(index)
         }
     }
 
-    var mutableMedias: [Media] = [] {
+    @Published var items = OrderedDictionary<Media, PlayerItem>()
+
+    var medias: [Media] = [] {
         didSet {
-            player.items = mutableMedias.compactMap(\.playerItem)
-        }
-    }
-    @Published var medias: [Media] {
-        didSet {
-            mutableMedias = medias
+            items = Self.updated(initialItems: items, with: medias)
+            player.items = items.values.elements
         }
     }
 
     // MARK: Init
 
-    init(medias: [Media] = []) {
-        self.medias = medias
+    init() {
         configureCurrentItemPublisher()
     }
 
     // MARK: Internal methods
 
-    func add(_ mediasToAdd: [Media]) {
-        let mediasToAdd = mediasToAdd.filter { mutableMedias.contains($0) == false } // Remove item if it's already present into the playlist
-        mutableMedias += mediasToAdd
-        mediasToAdd.map(\.playerItem).forEach { item in
-            if let item {
-                player.append(item)
-            }
-        }
-    }
+    func add(_ mediasToAdd: [Media]) {}
 
     func shuffle() {
-        mutableMedias.shuffle()
-        player.removeAllItems()
-        mutableMedias.compactMap(\.playerItem).forEach { player.append($0) }
+        items.shuffle()
     }
 
-    func reload() {
-        mutableMedias = [
-            MediaURLPlaylist.videosWithDescription,
-            MediaMixturePlaylist.mix1,
-            MediaMixturePlaylist.mix2,
-            MediaMixturePlaylist.mix3,
-        ][Int.random(in: 0...3)]
-
-        player.removeAllItems()
-        mutableMedias.compactMap(\.playerItem).forEach { player.append($0) }
-    }
+    func reload() {}
 
     // MARK: Private methods
 
-    func configureCurrentItemPublisher() {
+    private func configureCurrentItemPublisher() {
         player.$currentIndex
             .map { [weak self] index in
                 guard let self, let index else { return nil }
-                return self.mutableMedias[safeIndex: index]
+                // TODO: Improve the subscript (with `safeIndex:`)
+                return self.items.keys[index]
             }
             .assign(to: &$currentMedia)
+    }
+
+    private static func updated(initialItems: OrderedDictionary<Media, PlayerItem>, with medias: [Media]) -> OrderedDictionary<Media, PlayerItem> {
+        var items = initialItems
+        let changes = medias.difference(from: initialItems.keys).inferringMoves()
+        changes.forEach { change in
+            switch change {
+            case .insert(offset: let offset, element: let element, associatedWith: let associatedWith):
+                guard let playerItem = element.playerItem else { return }
+                if let associatedWith { // move
+                    let previousPlayerItem = initialItems.elements[associatedWith].value
+                    items.updateValue(previousPlayerItem, forKey: element, insertingAt: offset)
+                } else { // insert
+                    items.updateValue(playerItem, forKey: element, insertingAt: offset)
+                }
+            case .remove(offset: let offset, element: _, associatedWith: _):
+                items.remove(at: offset)
+            }
+        }
+        return items
     }
 }

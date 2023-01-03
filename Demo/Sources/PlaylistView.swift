@@ -33,7 +33,7 @@ private struct ListView: View {
     var body: some View {
         VStack(spacing: 0) {
             LoadNewPlaylistButton(model: model)
-            List($model.mutableMedias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
+            List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
                 PlaylistCell(media: media, isPlaying: media == model.currentMedia)
             }
         }
