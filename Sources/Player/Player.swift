@@ -80,6 +80,7 @@ public final class Player: ObservableObject, Equatable {
         configureSeekingPublisher()
         configureBufferingPublisher()
         configureCurrentItemPublisher()
+        configureCurrentIndexPublisher()
         configureRawPlayerUpdatePublisher()
     }
 
@@ -540,6 +541,17 @@ private extension Player {
             .receiveOnMainThread()
             .lane("player_current_item")
             .assign(to: &$currentItem)
+    }
+
+    private func configureCurrentIndexPublisher() {
+        Publishers.CombineLatest($storedItems, rawPlayer.publisher(for: \.currentItem))
+            .map { storedItems, currentItem in
+                storedItems.firstIndex(where: { $0.matches(currentItem) })
+            }
+            .removeDuplicates()
+            .receiveOnMainThread()
+            .lane("player_current_index")
+            .assign(to: &$currentIndex)
     }
 
     private func configureRawPlayerUpdatePublisher() {
