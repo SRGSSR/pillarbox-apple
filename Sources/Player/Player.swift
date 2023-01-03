@@ -22,9 +22,6 @@ public final class Player: ObservableObject, Equatable {
     /// Returns whether the player is currently seeking to another position.
     @Published public private(set) var isSeeking = false
 
-    /// The current item in the queue.
-    @Published public private(set) var currentItem: PlayerItem?
-
     /// The index of the current item in the queue.
     @Published public private(set) var currentIndex: Int?
 
@@ -79,7 +76,6 @@ public final class Player: ObservableObject, Equatable {
         configureChunkDurationPublisher()
         configureSeekingPublisher()
         configureBufferingPublisher()
-        configureCurrentItemPublisher()
         configureCurrentIndexPublisher()
         configureRawPlayerUpdatePublisher()
     }
@@ -271,13 +267,13 @@ public extension Player {
     /// Items before the current item (not included).
     /// - Returns: Items.
     var previousItems: [PlayerItem] {
-        guard let currentItem, let currentIndex = storedItems.firstIndex(of: currentItem) else { return [] }
+        guard let currentIndex else { return [] }
         return Array(storedItems.prefix(upTo: currentIndex))
     }
 
     /// Return the list of items to be loaded to return to the previous (playable) item.
     private var returningItems: [PlayerItem] {
-        guard let currentItem, let currentIndex = storedItems.firstIndex(of: currentItem) else { return [] }
+        guard let currentIndex else { return [] }
         let previousIndex = storedItems.index(before: currentIndex)
         guard previousIndex >= 0 else { return [] }
         return Array(storedItems.suffix(from: previousIndex))
@@ -286,7 +282,7 @@ public extension Player {
     /// Items past the current item (not included).
     /// - Returns: Items.
     var nextItems: [PlayerItem] {
-        guard let currentItem, let currentIndex = storedItems.firstIndex(of: currentItem) else {
+        guard let currentIndex else {
             return Array(storedItems)
         }
         return Array(storedItems.suffix(from: currentIndex).dropFirst())
@@ -294,7 +290,7 @@ public extension Player {
 
     /// Return the list of items to be loaded to advance to the next (playable) item.
     private var advancingItems: [PlayerItem] {
-        guard let currentItem, let currentIndex = storedItems.firstIndex(of: currentItem) else { return [] }
+        guard let currentIndex else { return [] }
         let nextIndex = storedItems.index(after: currentIndex)
         guard nextIndex < storedItems.count else { return [] }
         return Array(storedItems.suffix(from: nextIndex))
@@ -525,22 +521,6 @@ private extension Player {
             .receiveOnMainThread()
             .lane("player_buffering")
             .assign(to: &$isBuffering)
-    }
-
-    private func configureCurrentItemPublisher() {
-        Publishers.CombineLatest($storedItems, rawPlayer.publisher(for: \.currentItem))
-            .filter { storedItems, currentItem in
-                // The current item is automatically set to `nil` when a failure is encountered. If this is the case
-                // preserve the previous value, provided the player is loaded with items.
-                storedItems.isEmpty || currentItem != nil
-            }
-            .map { storedItems, currentItem in
-                storedItems.first { $0.matches(currentItem) }
-            }
-            .removeDuplicates()
-            .receiveOnMainThread()
-            .lane("player_current_item")
-            .assign(to: &$currentItem)
     }
 
     private func configureCurrentIndexPublisher() {

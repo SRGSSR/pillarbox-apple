@@ -64,12 +64,9 @@ class PlaylistViewModel: ObservableObject {
     // MARK: Private methods
 
     func configureCurrentItemPublisher() {
-        player.$currentItem
-            .map { [weak self] item in
-                guard
-                    let self,
-                    let item,
-                    let index = self.player.items.firstIndex(of: item) else { return nil }
+        player.$currentIndex
+            .map { [weak self] index in
+                guard let self, let index else { return nil }
                 return self.mutableMedias[safeIndex: index]
             }
             .assign(to: &$currentMedia)

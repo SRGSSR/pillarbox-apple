@@ -74,7 +74,7 @@ final class ItemNavigationTests: XCTestCase {
         let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
         let player = Player(items: [item1, item2])
         expect(player.advanceToNextItem()).to(beTrue())
-        expect(player.currentItem).to(equal(item2))
+        expect(player.currentIndex).to(equal(1))
     }
 
     func testAdvanceToNextItemAtBack() {
@@ -83,7 +83,7 @@ final class ItemNavigationTests: XCTestCase {
         let player = Player(items: [item1, item2])
         expect(player.advanceToNextItem()).to(beTrue())
         expect(player.advanceToNextItem()).to(beFalse())
-        expect(player.currentItem).to(equal(item2))
+        expect(player.currentIndex).to(equal(1))
     }
 
     func testReturnToPreviousItem() {
@@ -92,7 +92,7 @@ final class ItemNavigationTests: XCTestCase {
         let player = Player(items: [item1, item2])
         expect(player.advanceToNextItem()).to(beTrue())
         expect(player.returnToPreviousItem()).to(beTrue())
-        expect(player.currentItem).to(equal(item1))
+        expect(player.currentIndex).to(equal(0))
     }
 
     func testReturnToPreviousItemAtFront() {
@@ -100,7 +100,7 @@ final class ItemNavigationTests: XCTestCase {
         let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
         let player = Player(items: [item1, item2])
         expect(player.returnToPreviousItem()).to(beFalse())
-        expect(player.currentItem).to(equal(item1))
+        expect(player.currentIndex).to(equal(0))
     }
 
     func testReturnToPreviousItemOnFailedItem() {
@@ -110,7 +110,7 @@ final class ItemNavigationTests: XCTestCase {
         let player = Player(items: [item1, item2, item3])
         expect(player.advanceToNextItem()).to(beTrue())
         expect(player.returnToPreviousItem()).to(beTrue())
-        expect(player.currentItem).to(equal(item1))
+        expect(player.currentIndex).to(equal(0))
     }
 
     func testAdvanceToNextItemOnFailedItem() {
@@ -120,6 +120,6 @@ final class ItemNavigationTests: XCTestCase {
         let player = Player(items: [item1, item2, item3])
         expect(player.advanceToNextItem()).to(beTrue())
         expect(player.advanceToNextItem()).to(beTrue())
-        expect(player.currentItem).to(equal(item3))
+        expect(player.currentIndex).to(equal(2))
     }
 }

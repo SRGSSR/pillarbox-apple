@@ -47,7 +47,7 @@ final class ItemTests: XCTestCase {
 
     func testEmpty() {
         let player = Player()
-        expect(player.currentItem).to(beNil())
+        expect(player.currentIndex).to(beNil())
         expect(player.items).to(beEmpty())
         expect(player.nextItems).to(beEmpty())
         expect(player.previousItems).to(beEmpty())
