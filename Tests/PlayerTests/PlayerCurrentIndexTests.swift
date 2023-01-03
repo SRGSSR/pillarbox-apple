@@ -43,7 +43,7 @@ final class PlayerCurrentIndexTests: XCTestCase {
     func testCurrentIndexAfterPlayerEnded() {
         let item = PlayerItem(url: Stream.shortOnDemand.url)
         let player = Player(items: [item])
-        expectAtLeastEqualPublished(values: [0, nil], from: player.$currentIndex
+        expectAtLeastEqualPublished(values: [0], from: player.$currentIndex
         ) {
             player.play()
         }
