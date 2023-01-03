@@ -25,6 +25,9 @@ public final class Player: ObservableObject, Equatable {
     /// The current item in the queue.
     @Published public private(set) var currentItem: PlayerItem?
 
+    /// The index of the current item in the queue.
+    @Published public private(set) var currentIndex: Int?
+
     /// Available time range. `.invalid` when not known.
     @Published public private(set) var timeRange: CMTimeRange = .invalid
 
