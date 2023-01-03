@@ -11,7 +11,15 @@ import SwiftUI
 @MainActor
 class PlaylistViewModel: ObservableObject {
     let player = Player()
-    @Published var currentMedia: Media?
+    @Published var currentMedia: Media? {
+        didSet {
+            guard
+                let currentMedia,
+                let index = mutableMedias.firstIndex(of: currentMedia)
+            else { return }
+            try? player.setCurrentIndex(index)
+        }
+    }
 
     var mutableMedias: [Media] = [] {
         didSet {
