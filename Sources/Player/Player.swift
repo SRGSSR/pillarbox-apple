@@ -468,6 +468,15 @@ public extension Player {
         rawPlayer.replaceItems(with: playerItems)
         return true
     }
+
+    /// Set the index of the current item.
+    /// - Parameter index: The index to set.
+    func setCurrentIndex(_ index: Int) throws {
+        guard index != currentIndex else { return }
+        guard (0..<storedItems.count).contains(index) else { throw PlaybackError.itemOutOfBounds }
+        let playerItems = storedItems.suffix(from: index).map { $0.source.playerItem() }
+        rawPlayer.replaceItems(with: playerItems)
+    }
 }
 
 private extension Player {
