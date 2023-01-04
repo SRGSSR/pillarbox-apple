@@ -70,6 +70,12 @@ extension PlayerItem {
     }
 }
 
+extension PlayerItem.Source: Equatable {
+    static func == (lhs: PlayerItem.Source, rhs: PlayerItem.Source) -> Bool {
+        lhs.id == rhs.id && lhs.asset == rhs.asset
+    }
+}
+
 extension AVPlayerItem {
     func matches(_ playerItem: AVPlayerItem) -> Bool {
         id == playerItem.id

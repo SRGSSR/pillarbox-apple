@@ -23,6 +23,17 @@ final class ItemUpdateTests: XCTestCase {
         expect(player.currentIndex).to(equal(2))
     }
 
+    func testUpdateWithCurrentItemMustNotInterruptPlayback() {
+        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = PlayerItem(url: Stream.item(numbered: 3).url)
+        let item4 = PlayerItem(url: Stream.item(numbered: 4).url)
+        let player = Player(items: [item1, item2, item3])
+        expectNothingPublishedNext(from: player.rawPlayer.publisher(for: \.currentItem), during: 2) {
+            player.items = [item4, item3, item1]
+        }
+    }
+
     func testUpdateWithoutCurrentItem() {
         let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
         let item2 = PlayerItem(url: Stream.item(numbered: 2).url)

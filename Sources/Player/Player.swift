@@ -553,8 +553,20 @@ private extension Player {
             .withPrevious()
             .map { [rawPlayer] items in
                 let queueItems = Self.queuePlayerItems(items.current, from: items.previous, in: rawPlayer)
-                return Publishers.AccumulateLatestMany(queueItems.map { item in
-                    item.$source.map { $0.playerItem() }
+                return Publishers.AccumulateLatestMany(queueItems.enumerated().map { index, item in
+                    if index == 0 {
+                        return item.$source
+                            .withPrevious()
+                            .map { source in
+                                if source.current == source.previous {
+                                    return source.current.playerItem()
+                                }
+                                return rawPlayer.currentItem ?? source.current.playerItem()
+                            }
+                            .eraseToAnyPublisher()
+                    } else {
+                        return item.$source.map { $0.playerItem() }.eraseToAnyPublisher()
+                    }
                 })
             }
             .switchToLatest()
