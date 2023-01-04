@@ -98,36 +98,6 @@ public final class Player: ObservableObject, Equatable {
         return playerConfiguration
     }
 
-    /// Return the player items with which the queue player must be filled.
-    /// - Parameters:
-    ///   - items: The updated item list.
-    ///   - previousItems: The previous item list, if any.
-    ///   - player: The queue player.
-    private static func queuePlayerItems(
-        _ items: Deque<PlayerItem>,
-        from previousItems: Deque<PlayerItem>?,
-        in player: RawPlayer
-    ) -> [PlayerItem] {
-        guard let currentItem = player.currentItem else { return Array(items) }
-
-        // Current item found in the updated list. Return updated items from there.
-        if let currentIndex = items.firstIndex(where: { $0.matches(currentItem) }) {
-            return Array(items.suffix(from: currentIndex))
-        }
-        // Current item not found in the updated list. Locate a common item which was previously located after the
-        // current item and, if any is found, return updated items from there.
-        else if let previousItems {
-            let previousQueueItems = queuePlayerItems(previousItems, from: nil, in: player)
-            guard let commonIndex = items.firstIndex(where: { previousQueueItems.contains($0) }) else {
-                return Array(items)
-            }
-            return Array(items.suffix(from: commonIndex))
-        }
-        else {
-            return Array(items)
-        }
-    }
-
     /// Resume playback.
     public func play() {
         rawPlayer.play()
@@ -540,7 +510,7 @@ private extension Player {
                 storedItems.isEmpty || currentItem != nil
             }
             .map { storedItems, currentItem in
-                storedItems.firstIndex(where: { $0.matches(currentItem) })
+                storedItems.firstIndex(where: { $0.id == currentItem?.id })
             }
             .removeDuplicates()
             .receiveOnMainThread()
@@ -549,31 +519,62 @@ private extension Player {
     }
 
     private func configureRawPlayerUpdatePublisher() {
-        $storedItems
+        sourcesPublisher()
             .withPrevious()
-            .map { [rawPlayer] items in
-                let queueItems = Self.queuePlayerItems(items.current, from: items.previous, in: rawPlayer)
-                return Publishers.AccumulateLatestMany(queueItems.enumerated().map { index, item in
-                    if index == 0 {
-                        return item.$source
-                            .withPrevious()
-                            .map { source in
-                                if source.current == source.previous {
-                                    return source.current.playerItem()
-                                }
-                                return rawPlayer.currentItem ?? source.current.playerItem()
-                            }
-                            .eraseToAnyPublisher()
-                    } else {
-                        return item.$source.map { $0.playerItem() }.eraseToAnyPublisher()
+            .map { [rawPlayer] sources in
+                Self.difference(previous: sources.previous ?? [], current: sources.current, pivot: rawPlayer.currentItem)
+            }
+            .receiveOnMainThread()
+            .sink { [rawPlayer] changes in
+                var items = rawPlayer.items()
+                changes.forEach { change in
+                    switch change {
+                    case let .insert(offset: offset, element: element, associatedWith: _):
+                        items.insert(element.playerItem(), at: offset)
+                    case let .remove(offset: offset, element: _, associatedWith: _):
+                        items.remove(at: offset)
                     }
+                }
+                rawPlayer.replaceItems(with: items)
+            }
+            .store(in: &cancellables)
+    }
+
+    private func sourcesPublisher() -> AnyPublisher<[PlayerItem.Source], Never> {
+        $storedItems
+            .map { items in
+                return Publishers.AccumulateLatestMany(items.map { item in
+                    return item.$source
                 })
             }
             .switchToLatest()
-            .receiveOnMainThread()
-            .sink { [rawPlayer] playerItems in
-                rawPlayer.replaceItems(with: playerItems)
+            .eraseToAnyPublisher()
+    }
+
+    private static func difference(previous: [PlayerItem.Source], current: [PlayerItem.Source], pivot: AVPlayerItem?) -> CollectionDifference<PlayerItem.Source> {
+        guard
+            let pivot,
+            let previousPivotIndex = previous.firstIndex(where: { $0.id == pivot.id })
+        else { return current.difference(from: []) }
+
+        let previousQueue = previous.suffix(from: previousPivotIndex)
+        if let currentPivotIndex = current.firstIndex(where: { $0.id == pivot.id }) {
+            return current.suffix(from: currentPivotIndex)
+                .difference(from: previousQueue)
+        } else {
+            if let commonPreviousItemIndex = previousQueue.firstIndex(where: { source in
+                current.contains(where: { $0.id == source.id })
+            }) {
+                let previousCommonSource = previousQueue[commonPreviousItemIndex]
+                if let currentCommonSourceIndex = current.firstIndex(where: { $0.id == previousCommonSource.id }) {
+                    return current.suffix(from: currentCommonSourceIndex)
+                        .difference(from: previousQueue)
+                } else {
+                    return current.difference(from: previousQueue)
+                }
+            } else {
+                return current.difference(from: previousQueue)
             }
-            .store(in: &cancellables)
+        }
     }
 }
