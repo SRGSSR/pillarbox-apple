@@ -526,7 +526,7 @@ private extension Player {
             }
             .receiveOnMainThread()
             .sink { [rawPlayer] changes in
-                var items = rawPlayer.items()
+                var items = rawPlayer.allItems
                 changes.forEach { change in
                     switch change {
                     case let .insert(offset: offset, element: element, associatedWith: _):

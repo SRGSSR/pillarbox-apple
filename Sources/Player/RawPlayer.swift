@@ -9,6 +9,13 @@ import AVFoundation
 final class RawPlayer: AVQueuePlayer {
     private var seekCount = 0
 
+    private(set) var allItems = [AVPlayerItem]()
+
+    @available(*, unavailable)
+    override func items() -> [AVPlayerItem] {
+        super.items()
+    }
+
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         if seekCount == 0 {
             NotificationCenter.default.post(name: .willSeek, object: self)
@@ -24,13 +31,14 @@ final class RawPlayer: AVQueuePlayer {
     }
 
     func replaceItems(with items: [AVPlayerItem]) {
+        allItems = items
         cancelPendingReplacements()
         if let firstItem = items.first {
-            if firstItem !== self.items().first {
+            if firstItem !== super.items().first {
                 removeAllItems()
                 replaceCurrentItem(with: firstItem)
-            } else if self.items().count > 1 {
-                self.items().suffix(from: 1).forEach { item in
+            } else if super.items().count > 1 {
+                super.items().suffix(from: 1).forEach { item in
                     remove(item)
                 }
             }
