@@ -29,8 +29,7 @@ struct BasicPlayerView: View {
     }
 
     private func play() {
-        guard let item = media.playerItem else { return }
-        player.append(item)
+        player.append(media.playerItem)
         player.play()
     }
 }

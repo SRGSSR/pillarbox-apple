@@ -283,7 +283,7 @@ struct PlayerView: View {
     }
 
     private func load() {
-        player.items = medias.compactMap(\.playerItem)
+        player.items = medias.map(\.playerItem)
     }
 }
 

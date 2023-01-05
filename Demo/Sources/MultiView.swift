@@ -33,8 +33,7 @@ struct MultiView: View {
     }
 
     private static func play(media: Media, in player: Player) {
-        guard let item = media.playerItem else { return }
-        player.append(item)
+        player.append(media.playerItem)
         player.play()
     }
 }

@@ -36,8 +36,7 @@ struct WrappedView: View {
     }
 
     private func play() {
-        guard let item = media.playerItem else { return }
-        let player = Player(item: item)
+        let player = Player(item: media.playerItem)
         model.player = player
         player.play()
     }

@@ -65,8 +65,7 @@ struct ExamplesView: View {
         MediaURN.superfluousTokenProtectedVideo,
         MediaURN.drmProtectedVideo,
         MediaURN.expired,
-        MediaURN.unknown,
-        Media.empty
+        MediaURN.unknown
     ]
 
     var body: some View {

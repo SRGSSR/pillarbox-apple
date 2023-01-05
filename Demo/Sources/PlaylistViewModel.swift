@@ -37,8 +37,7 @@ class PlaylistViewModel: ObservableObject {
         MediaURN.superfluousTokenProtectedVideo,
         MediaURN.drmProtectedVideo,
         MediaURN.expired,
-        MediaURN.unknown,
-        Media.empty
+        MediaURN.unknown
     ]
     var initialMedias: [Media] = []
     var availableMedias: [Media] {
@@ -111,12 +110,11 @@ class PlaylistViewModel: ObservableObject {
         changes.forEach { change in
             switch change {
             case .insert(offset: let offset, element: let element, associatedWith: let associatedWith):
-                guard let playerItem = element.playerItem else { return }
                 if let associatedWith { // move
                     let previousPlayerItem = initialItems.elements[associatedWith].value
                     items.updateValue(previousPlayerItem, forKey: element, insertingAt: offset)
                 } else { // insert
-                    items.updateValue(playerItem, forKey: element, insertingAt: offset)
+                    items.updateValue(element.playerItem, forKey: element, insertingAt: offset)
                 }
             case .remove(offset: let offset, element: _, associatedWith: _):
                 items.remove(at: offset)

@@ -11,14 +11,6 @@ import Player
 
 // MARK: URL-based medias
 
-extension Media {
-    static let empty = Media(
-        title: "Empty",
-        description: "Empty",
-        type: .empty
-    )
-}
-
 enum MediaURL {
     static let onDemandVideoHLS = Media(
         title: "Switzerland says sorry! The fondue invasion",
@@ -423,7 +415,6 @@ enum URNPlaylist {
 
 struct Media: Hashable {
     enum `Type`: Hashable {
-        case empty
         case url(URL)
         case unbufferedUrl(URL)
         case urn(String)
@@ -439,10 +430,8 @@ struct Media: Hashable {
         self.type = type
     }
 
-    var playerItem: PlayerItem? {
+    var playerItem: PlayerItem {
         switch type {
-        case .empty:
-            return nil
         case let .url(url):
             return PlayerItem(url: url)
         case let .unbufferedUrl(url):
