@@ -34,6 +34,7 @@ private struct ListView: View {
         VStack(spacing: 0) {
             HStack {
                 ShufflePlaylistButton(model: model)
+                AddMediaButton(model: model)
                 LoadNewPlaylistButton(model: model)
             }
             List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
@@ -75,8 +76,7 @@ private struct PlaylistCell: View {
 
 // Behavior: h-exp, v-exp
 private struct AddMediaButton: View {
-    let medias: [Media]
-    let operation: ([Media]) -> Void
+    let model: PlaylistViewModel
     @State private var isSelectionPlaylistPresented = false
 
     var body: some View {
@@ -90,7 +90,7 @@ private struct AddMediaButton: View {
             .frame(width: 30, height: 30)
             .foregroundColor(.accentColor)
             .sheet(isPresented: $isSelectionPlaylistPresented, onDismiss: nil, content: {
-                PlaylistSelectionView(medias: medias, operation: operation)
+                PlaylistSelectionView(model: model)
             })
             Spacer()
         }
@@ -99,15 +99,14 @@ private struct AddMediaButton: View {
 
 // Behavior: h-exp, v-exp
 private struct PlaylistSelectionView: View {
-    let medias: [Media]
-    let operation: ([Media]) -> Void
+    let model: PlaylistViewModel
     @State private var mediasSelected: Set<Media> = []
     @State private var editMode = EditMode.active
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationView {
-            List(medias, id: \.self, selection: $mediasSelected) { media in
+            List(model.selectionMedias, id: \.self, selection: $mediasSelected) { media in
                 Text(media.title)
             }
             .environment(\.editMode, $editMode)
@@ -116,7 +115,7 @@ private struct PlaylistSelectionView: View {
             .navigationBarTitleDisplayMode(.inline)
 #endif
             .navigationBarItems(leading: Button("Cancel", action: cancel))
-            .navigationBarItems(trailing: Button("Add", action: add))
+            .navigationBarItems(trailing: Button("Add", action: { add() }))
         }
     }
 
@@ -125,8 +124,9 @@ private struct PlaylistSelectionView: View {
         dismiss()
     }
 
+    @MainActor
     private func add() {
-        operation(Array(mediasSelected))
+        model.add(Array(mediasSelected))
         cancel()
     }
 }

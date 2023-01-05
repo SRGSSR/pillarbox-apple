@@ -11,6 +11,35 @@ import SwiftUI
 
 @MainActor
 class PlaylistViewModel: ObservableObject {
+    let selectionMedias = [
+        MediaURL.onDemandVideoHLS,
+        MediaURL.shortOnDemandVideoHLS,
+        MediaURL.onDemandVideoMP4,
+        MediaURL.liveVideoHLS,
+        MediaURL.dvrVideoHLS,
+        MediaURL.liveTimestampVideoHLS,
+        MediaURL.onDemandAudioMP3,
+        MediaURL.liveAudioMP3,
+        MediaURN.onDemandHorizontalVideo,
+        MediaURN.onDemandSquareVideo,
+        MediaURN.onDemandVerticalVideo,
+        MediaURN.liveVideo,
+        MediaURN.dvrVideo,
+        MediaURN.dvrAudio,
+        MediaURN.onDemandAudio,
+        MediaURL.appleBasic_4_3_HLS,
+        MediaURL.appleBasic_16_9_TS_HLS,
+        MediaURL.appleAdvanced_16_9_TS_HLS,
+        MediaURL.appleAdvanced_16_9_fMP4_HLS,
+        MediaURL.appleAdvanced_16_9_HEVC_h264_HLS,
+        MediaURN.tokenProtectedVideo,
+        MediaURN.superfluousTokenProtectedVideo,
+        MediaURN.drmProtectedVideo,
+        MediaURN.expired,
+        MediaURN.unknown,
+        Media.empty
+    ]
+
     let player = Player()
     @Published var currentMedia: Media? {
         didSet {
@@ -44,7 +73,9 @@ class PlaylistViewModel: ObservableObject {
 
     // MARK: Internal methods
 
-    func add(_ mediasToAdd: [Media]) {}
+    func add(_ mediasToAdd: [Media]) {
+        medias += mediasToAdd
+    }
 
     func shuffle() {
         items.shuffle()
