@@ -138,7 +138,7 @@ private struct Example: Identifiable {
         .init(
             title: "Empty",
             description: "No content is provided",
-            media: .empty
+            media: Media.empty
         )
     ]
 

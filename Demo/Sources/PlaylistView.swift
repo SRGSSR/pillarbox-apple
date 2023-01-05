@@ -41,20 +41,6 @@ private struct ListView: View {
 }
 
 // Behavior: h-hug, v-hug
-private struct MediaView: View {
-    let media: Media
-    
-    var body: some View {
-        switch media {
-        case .empty:
-            EmptyView()
-        case .url(_, let description), .unbufferedUrl(_, let description), .urn(_, let description):
-            Text(description ?? "")
-        }
-    }
-}
-
-// Behavior: h-hug, v-hug
 private struct PlayingIndicatorView: View {
     let isVisible: Bool
     
@@ -77,7 +63,7 @@ private struct PlaylistCell: View {
     
     var body: some View {
         HStack {
-            MediaView(media: media)
+            Text(media.title)
             Spacer()
             PlayingIndicatorView(isVisible: isPlaying)
         }
@@ -119,7 +105,7 @@ private struct PlaylistSelectionView: View {
     var body: some View {
         NavigationView {
             List(medias, id: \.self, selection: $mediasSelected) { media in
-                MediaView(media: media)
+                Text(media.title)
             }
             .environment(\.editMode, $editMode)
             .navigationBarTitle("Add a stream to the playlist")

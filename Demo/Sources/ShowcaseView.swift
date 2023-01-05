@@ -68,29 +68,34 @@ struct ShowcaseView: View {
                 Cell(title: "Wrapped") {
                     WrappedView(media: MediaURL.appleBasic_16_9_TS_HLS)
                 }
+            }
+            Group {
                 Cell(title: "Playlist (URLs)") {
-                    PlaylistView(medias: MediaURLPlaylist.videos)
+                    PlaylistView(medias: URLPlaylist.videos)
                 }
                 Cell(title: "Playlist (URNs)") {
-                    PlaylistView(medias: MediaURNPlaylist.videos)
+                    PlaylistView(medias: URNPlaylist.videos)
                 }
                 Cell(title: "Playlist (URNs, long)") {
-                    PlaylistView(medias: MediaURNPlaylist.longVideos)
+                    PlaylistView(medias: URNPlaylist.longVideos)
                 }
                 Cell(title: "Playlist (URNs, token-protected)") {
-                    PlaylistView(medias: MediaURNPlaylist.tokenProtectedVideos)
+                    PlaylistView(medias: URNPlaylist.tokenProtectedVideos)
                 }
                 Cell(title: "Playlist (URNs, DRM-protected)") {
-                    PlaylistView(medias: MediaURNPlaylist.drmProtectedVideos)
+                    PlaylistView(medias: URNPlaylist.drmProtectedVideos)
                 }
                 Cell(title: "Audio playlist (URNs)") {
-                    PlaylistView(medias: MediaURNPlaylist.audios)
+                    PlaylistView(medias: URNPlaylist.audios)
+                }
+                Cell(title: "Playlist (with one error)") {
+                    PlaylistView(medias: URNPlaylist.videosWithOneError)
                 }
                 Cell(title: "Playlist (with errors)") {
-                    PlaylistView(medias: MediaURNPlaylist.videosWithErrors)
+                    PlaylistView(medias: URNPlaylist.videosWithErrors)
                 }
-                Cell(title: "Dynamic Playlist") {
-                    PlaylistView(medias: MediaURLPlaylist.videosWithDescription)
+                Cell(title: "Playlist (Empty)") {
+                    PlaylistView(medias: [])
                 }
             }
         }
