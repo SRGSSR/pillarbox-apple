@@ -145,17 +145,17 @@ enum MediaURN {
     )
     static let tokenProtectedVideo = Media(
         title: "Ski alpin, Slalom Messieurs",
-        description: "Token protected video",
+        description: "Token-protected video",
         type: .urn("urn:swisstxt:video:rts:1749666")
     )
     static let superfluousTokenProtectedVideo = Media(
         title: "Ul stralüsc",
-        description: "Superfluously token protected video",
+        description: "Superfluously token-protected video",
         type: .urn("urn:rsi:video:15838291")
     )
     static let drmProtectedVideo = Media(
         title: "Top Models 8870",
-        description: "DRM protected video",
+        description: "DRM-protected video",
         type: .urn("urn:rts:video:13639837")
     )
     static let liveVideo = Media(
@@ -165,17 +165,17 @@ enum MediaURN {
     )
     static let dvrVideo = Media(
         title: "RTS 1 en direct",
-        description: "DVR video live stream",
+        description: "DVR video livestream",
         type: .urn("urn:rts:video:3608506")
     )
     static let dvrAudio = Media(
         title: "Couleur 3 en direct",
-        description: "DVR audio live stream",
+        description: "DVR audio livestream",
         type: .urn("urn:rts:audio:3262363")
     )
     static let onDemandAudio = Media(
         title: "Il lavoro di TerraProject per una fotografia documentaria",
-        description: "On demand audio stream",
+        description: "On-demand audio stream",
         type: .urn("urn:rsi:audio:8833144")
     )
     static let expired = Media(
@@ -185,7 +185,7 @@ enum MediaURN {
     )
     static let unknown = Media(
         title: "Unknown URN",
-        description: "Not found",
+        description: "Content that does not exist",
         type: .urn("urn:srf:video:unknown")
     )
 }
@@ -202,14 +202,14 @@ enum UnbufferedMediaURL {
     )
     static let onDemandAudio = Media(
         title: "Forum",
-        description: "On demand audio stream",
+        description: "On-demand audio stream",
         type: .unbufferedUrl(
             URL(string: "https://rts-aod-dd.akamaized.net/ww/13432709/2be967ad-e8a5-33c3-8560-83702436fb2e.mp3")!
         )
     )
     static let liveAudio = Media(
         title: "Couleur 3 en direct",
-        description: "Audio live stream",
+        description: "Audio livestream",
         type: .unbufferedUrl(
             URL(string: "http://stream.srg-ssr.ch/m/couleur3/mp3_128")!
         )
@@ -226,7 +226,7 @@ enum URLPlaylist {
             type: .url(
                 URL(string: "https://rts-vod-amd.akamaized.net/ww/13444390/f1b478f7-2ae9-3166-94b9-c5d5fe9610df/master.m3u8")!
             )
-        ),/*
+        ),
         Media(
             title: "Le R. - Production de légumes bio",
             description: "Playlist item 2",
@@ -242,7 +242,7 @@ enum URLPlaylist {
             )
         ),
         Media(
-            title: "Le R. - Prix nobel de littérature 2022",
+            title: "Le R. - Prix Nobel de littérature 2022",
             description: "Playlist item 4",
             type: .url(
                 URL(string: "https://rts-vod-amd.akamaized.net/ww/13444447/c1d17174-ad2f-31c2-a084-846a9247fd35/master.m3u8")!
@@ -256,21 +256,21 @@ enum URLPlaylist {
             )
         ),
         Media(
-            title: "Le R. - Attaque en Thailande",
+            title: "Le R. - Attaque en Thaïlande",
             description: "Playlist item 6",
             type: .url(
                 URL(string: "https://rts-vod-amd.akamaized.net/ww/13444409/23f808a4-b14a-3d3e-b2ed-fa1279f6cf01/master.m3u8")!
             )
-        ),*/
+        ),
         Media(
-            title: "Le R. - Douches et vestinaires non genrées",
+            title: "Le R. - Douches et vestiaires non genrés",
             description: "Playlist item 7",
             type: .url(
                 URL(string: "https://rts-vod-amd.akamaized.net/ww/13444371/3f26467f-cd97-35f4-916f-ba3927445920/master.m3u8")!
             )
         ),
         Media(
-            title: "Le R. - Prend soin de toi des autres et à demain",
+            title: "Le R. - Prends soin de toi, des autres et à demain",
             description: "Playlist item 8",
             type: .url(
                 URL(string: "https://rts-vod-amd.akamaized.net/ww/13444428/857d97ef-0b8e-306e-bf79-3b13e8c901e4/master.m3u8")!
@@ -297,7 +297,7 @@ enum URNPlaylist {
             type: .urn("urn:rts:video:13444466")
         ),
         Media(
-            title: "Le R. - Prix nobel de littérature 2022",
+            title: "Le R. - Prix Nobel de littérature 2022",
             description: "Playlist item 4",
             type: .urn("urn:rts:video:13444447")
         ),
@@ -312,7 +312,7 @@ enum URNPlaylist {
             type: .urn("urn:rts:video:13444409")
         ),
         Media(
-            title: "Le R. - Douches et vestinaires non genrées",
+            title: "Le R. - Douches et vestinaires non genrés",
             description: "Playlist item 7",
             type: .urn("urn:rts:video:13444371")
         ),
@@ -325,42 +325,42 @@ enum URNPlaylist {
 
     static let longVideos: [Media] = [
         Media(
-            title: "J'ai pas l'air malade mais ... (number 1)",
+            title: "J'ai pas l'air malade mais… (#1)",
             description: "Playlist item 1",
             type: .urn("urn:rts:video:13588169")
         ),
         Media(
-            title: "J'ai pas l'air malade mais ... (number 2)",
+            title: "J'ai pas l'air malade mais… (#2)",
             description: "Playlist item 2",
             type: .urn("urn:rts:video:13555428")
         ),
         Media(
-            title: "J'ai pas l'air malade mais ... (number 3)",
+            title: "J'ai pas l'air malade mais… (#3)",
             description: "Playlist item 3",
             type: .urn("urn:rts:video:13529000")
         ),
         Media(
-            title: "J'ai pas l'air malade mais ... (number 4)",
+            title: "J'ai pas l'air malade mais… (#4)",
             description: "Playlist item 4",
             type: .urn("urn:rts:video:13471319")
         ),
         Media(
-            title: "J'ai pas l'air malade mais ... (number 5)",
+            title: "J'ai pas l'air malade mais… (#5)",
             description: "Playlist item 5",
             type: .urn("urn:rts:video:13446843")
         ),
         Media(
-            title: "J'ai pas l'air malade mais ... (number 6)",
+            title: "J'ai pas l'air malade mais… (#6)",
             description: "Playlist item 6",
             type: .urn("urn:rts:video:13403392")
         ),
         Media(
-            title: "J'ai pas l'air malade mais ... (number 7)",
+            title: "J'ai pas l'air malade mais… (#7)",
             description: "Playlist item 7",
             type: .urn("urn:rts:video:13387184")
         ),
         Media(
-            title: "J'ai pas l'air malade mais ... (number 8)",
+            title: "J'ai pas l'air malade mais… (#8)",
             description: "Playlist item 8",
             type: .urn("urn:rts:video:13296253")
         )
@@ -380,12 +380,12 @@ enum URNPlaylist {
     static let tokenProtectedVideos: [Media] = [
         Media(
             title: "Ski alpin, Slalom Messieurs",
-            description: "Token protected video 1",
+            description: "Token-protected video 1",
             type: .urn("urn:swisstxt:video:rts:1749666")
         ),
         Media(
             title: "Ski alpin, Slalom Dames",
-            description: "Token protected video 2",
+            description: "Token-protected video 2",
             type: .urn("urn:swisstxt:video:rts:1749741")
         ),
     ]
@@ -393,12 +393,12 @@ enum URNPlaylist {
     static let drmProtectedVideos: [Media] = [
         Media(
             title: "Top Models 8870",
-            description: "DRM protected video 1",
+            description: "DRM-protected video 1",
             type: .urn("urn:rts:video:13639837")
         ),
         Media(
             title: "Top Models 8869",
-            description: "DRM protected video 2",
+            description: "DRM-protected video 2",
             type: .urn("urn:rts:video:13639830")
         )
     ]
