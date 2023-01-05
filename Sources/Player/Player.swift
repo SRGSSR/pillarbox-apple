@@ -544,33 +544,57 @@ private extension Player {
 }
 
 extension Player {
+    private static func matchingIndex(for item: AVPlayerItem, in sources: [PlayerItem.Source]) -> Int? {
+        sources.firstIndex(where: { $0.matches(item) })
+    }
+
+    private static func matchingSource(for item: AVPlayerItem, in sources: [PlayerItem.Source]) -> PlayerItem.Source? {
+        sources.first(where: { $0.matches(item) })
+    }
+
+    private static func matchingIndex(for candidates: [PlayerItem.Source], in sources: [PlayerItem.Source]) -> Int? {
+        guard let match = candidates.first(where: { candidate in
+            sources.contains(where: { $0.id == candidate.id })
+        }) else {
+            return nil
+        }
+        return matchingIndex(for: match, in: sources)
+    }
+
+    private static func matchingIndex(for source: PlayerItem.Source, in sources: [PlayerItem.Source]) -> Int? {
+        sources.firstIndex(where: { $0.id == source.id })
+    }
+
+    private static func containsSource(for item: AVPlayerItem, in sources: [PlayerItem.Source], equalTo other: PlayerItem.Source) -> Bool {
+        guard let match = matchingSource(for: item, in: sources) else { return false }
+        return match == other
+    }
+
+    private static func items(from sources: [PlayerItem.Source]) -> [AVPlayerItem] {
+        sources.map { $0.playerItem() }
+    }
+
+    private static func commonIndex(after item: AVPlayerItem, of initial: [PlayerItem.Source], in final: [PlayerItem.Source]) -> Int? {
+        guard let matchIndex = matchingIndex(for: item, in: initial) else { return nil }
+        let nextSources = Array(initial.suffix(from: matchIndex + 1))
+        return matchingIndex(for: nextSources, in: final)
+    }
+
     static func items(initial: [PlayerItem.Source], final: [PlayerItem.Source], currentItem: AVPlayerItem?) -> [AVPlayerItem] {
-        guard let currentItem else { return final.map { $0.playerItem() } }
-        if let finalCurrentItemIndex = final.firstIndex(where: { $0.matches(currentItem) }) {
-            if let initialCurrentItem = initial.first(where: { $0.matches(currentItem) }), final[finalCurrentItemIndex] == initialCurrentItem {
-                let rest = final.suffix(from: finalCurrentItemIndex + 1)
-                return [currentItem] + rest.map { $0.playerItem() }
-            } else {
-                return final.suffix(from: finalCurrentItemIndex).map { $0.playerItem() }
+        guard let currentItem else { return items(from: final) }
+        if let finalCurrentItemIndex = matchingIndex(for: currentItem, in: final) {
+            if containsSource(for: currentItem, in: initial, equalTo: final[finalCurrentItemIndex]) {
+                return [currentItem] + items(from: Array(final.suffix(from: finalCurrentItemIndex + 1)))
             }
-        } else {
-            if let initialCurrentItemIndex = initial.firstIndex(where: { $0.matches(currentItem) }) {
-                let initialCandidates = initial.suffix(from: initialCurrentItemIndex + 1)
-                if let candidateIndex = initialCandidates.firstIndex(where: { candidate in
-                    final.contains(where: { $0.id == candidate.id })
-                }) {
-                    let candidate = initialCandidates[candidateIndex]
-                    if let finalCandidateIndex = final.firstIndex(where: { $0.id == candidate.id }) {
-                        return final.suffix(from: finalCandidateIndex).map { $0.playerItem() }
-                    } else {
-                        return final.map { $0.playerItem() }
-                    }
-                } else {
-                    return final.map { $0.playerItem() }
-                }
-            } else {
-                return final.map { $0.playerItem() }
+            else {
+                return items(from: Array(final.suffix(from: finalCurrentItemIndex)))
             }
+        }
+        else if let commonIndex = commonIndex(after: currentItem, of: initial, in: final) {
+            return items(from: Array(final.suffix(from: commonIndex)))
+        }
+        else {
+            return items(from: final)
         }
     }
 }
