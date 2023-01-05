@@ -66,7 +66,7 @@ public final class Player: ObservableObject, Equatable {
     ///   - items: The items to be queued initially.
     ///   - configuration: A closure in which the player can be configured.
     public init(items: [PlayerItem] = [], configuration: (inout PlayerConfiguration) -> Void = { _ in }) {
-        rawPlayer = RawPlayer(items: items.map { $0.source.playerItem() })
+        rawPlayer = RawPlayer(items: PlayerItem.playerItems(from: items))
         self.configuration = Self.configure(with: configuration)
         storedItems = Deque(items)
 
@@ -418,8 +418,7 @@ public extension Player {
     @discardableResult
     func returnToPreviousItem() -> Bool {
         guard canReturnToPreviousItem() else { return false}
-        let playerItems = returningItems.map { $0.source.playerItem() }
-        rawPlayer.replaceItems(with: playerItems)
+        rawPlayer.replaceItems(with: PlayerItem.playerItems(from: returningItems))
         return true
     }
 
@@ -434,8 +433,7 @@ public extension Player {
     @discardableResult
     func advanceToNextItem() -> Bool {
         guard canAdvanceToNextItem() else { return false }
-        let playerItems = advancingItems.map { $0.source.playerItem() }
-        rawPlayer.replaceItems(with: playerItems)
+        rawPlayer.replaceItems(with: PlayerItem.playerItems(from: advancingItems))
         return true
     }
 
@@ -444,7 +442,7 @@ public extension Player {
     func setCurrentIndex(_ index: Int) throws {
         guard index != currentIndex else { return }
         guard (0..<storedItems.count).contains(index) else { throw PlaybackError.itemOutOfBounds }
-        let playerItems = storedItems.suffix(from: index).map { $0.source.playerItem() }
+        let playerItems = PlayerItem.playerItems(from: Array(storedItems.suffix(from: index)))
         rawPlayer.replaceItems(with: playerItems)
     }
 }
@@ -542,5 +540,3 @@ private extension Player {
             .eraseToAnyPublisher()
     }
 }
-
-

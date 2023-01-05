@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-/// A source to generate `AVPlayerItem` from.
+/// A source to generate an `AVPlayerItem` from.
 struct Source: Identifiable, Equatable {
     let id: UUID
     let asset: Asset
@@ -37,21 +37,25 @@ extension Source {
         replacing previousSources: [Source],
         currentItem: AVPlayerItem?
     ) -> [AVPlayerItem] {
-        guard let currentItem else { return items(from: currentSources) }
+        guard let currentItem else { return playerItems(from: currentSources) }
         if let currentIndex = matchingIndex(for: currentItem, in: currentSources) {
             if findSource(for: currentItem, in: previousSources, equalTo: currentSources[currentIndex]) {
-                return [currentItem] + items(from: Array(currentSources.suffix(from: currentIndex + 1)))
+                return [currentItem] + playerItems(from: Array(currentSources.suffix(from: currentIndex + 1)))
             }
             else {
-                return items(from: Array(currentSources.suffix(from: currentIndex)))
+                return playerItems(from: Array(currentSources.suffix(from: currentIndex)))
             }
         }
         else if let commonIndex = firstCommonIndex(in: currentSources, matching: previousSources, after: currentItem) {
-            return items(from: Array(currentSources.suffix(from: commonIndex)))
+            return playerItems(from: Array(currentSources.suffix(from: commonIndex)))
         }
         else {
-            return items(from: currentSources)
+            return playerItems(from: currentSources)
         }
+    }
+
+    static func playerItems(from sources: [Source]) -> [AVPlayerItem] {
+        sources.map { $0.playerItem() }
     }
 
     private static func matchingIndex(for item: AVPlayerItem, in sources: [Source]) -> Int? {
@@ -78,10 +82,6 @@ extension Source {
     private static func findSource(for item: AVPlayerItem, in sources: [Source], equalTo other: Source) -> Bool {
         guard let match = matchingSource(for: item, in: sources) else { return false }
         return match == other
-    }
-
-    private static func items(from sources: [Source]) -> [AVPlayerItem] {
-        sources.map { $0.playerItem() }
     }
 
     private static func firstCommonIndex(in sources: [Source], matching other: [Source], after item: AVPlayerItem) -> Int? {

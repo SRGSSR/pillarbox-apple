@@ -47,6 +47,10 @@ public final class PlayerItem: Equatable {
         lhs === rhs
     }
 
+    static func playerItems(from items: [PlayerItem]) -> [AVPlayerItem] {
+        Source.playerItems(from: items.map(\.source))
+    }
+
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
         playerItem?.id == id
     }
