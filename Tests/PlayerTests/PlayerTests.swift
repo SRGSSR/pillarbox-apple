@@ -207,9 +207,3 @@ final class PlayerTests: XCTestCase {
         expect(result.first).notTo(equal(currentItem))
     }
 }
-
-extension UUID {
-    init(_ char: Character) {
-        self.init(uuidString: "\(String(repeating: char, count: 8))-\(String(repeating: char, count: 4))-\(String(repeating: char, count: 4))-\(String(repeating: char, count: 4))-\(String(repeating: char, count: 12))")!
-    }
-}
