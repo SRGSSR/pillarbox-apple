@@ -234,7 +234,7 @@ enum URLPlaylist {
             type: .url(
                 URL(string: "https://rts-vod-amd.akamaized.net/ww/13444390/f1b478f7-2ae9-3166-94b9-c5d5fe9610df/master.m3u8")!
             )
-        ),
+        ),/*
         Media(
             title: "Le R. - Production de légumes bio",
             description: "Playlist item 2",
@@ -269,7 +269,7 @@ enum URLPlaylist {
             type: .url(
                 URL(string: "https://rts-vod-amd.akamaized.net/ww/13444409/23f808a4-b14a-3d3e-b2ed-fa1279f6cf01/master.m3u8")!
             )
-        ),
+        ),*/
         Media(
             title: "Le R. - Douches et vestinaires non genrées",
             description: "Playlist item 7",

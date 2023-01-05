@@ -106,7 +106,7 @@ private struct PlaylistSelectionView: View {
     
     var body: some View {
         NavigationView {
-            List(model.selectionMedias, id: \.self, selection: $mediasSelected) { media in
+            List(model.availableMedias, id: \.self, selection: $mediasSelected) { media in
                 Text(media.title)
             }
             .environment(\.editMode, $editMode)

@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Combine
 import Core
 import OrderedCollections
 import Player
@@ -11,7 +12,7 @@ import SwiftUI
 
 @MainActor
 class PlaylistViewModel: ObservableObject {
-    let selectionMedias = [
+    static let standardMedias = [
         MediaURL.onDemandVideoHLS,
         MediaURL.shortOnDemandVideoHLS,
         MediaURL.onDemandVideoMP4,
@@ -39,6 +40,10 @@ class PlaylistViewModel: ObservableObject {
         MediaURN.unknown,
         Media.empty
     ]
+    var initialMedias: [Media] = []
+    var availableMedias: [Media] {
+        initialMedias + Self.standardMedias
+    }
 
     let player = Player()
     @Published var currentMedia: Media? {
@@ -61,6 +66,9 @@ class PlaylistViewModel: ObservableObject {
         get {
             Array(items.keys)
         } set {
+            if initialMedias.isEmpty {
+                initialMedias = newValue
+            }
             items = Self.updated(initialItems: items, with: newValue)
         }
     }
@@ -81,16 +89,18 @@ class PlaylistViewModel: ObservableObject {
         items.shuffle()
     }
 
-    func reload() {}
+    func reload() {
+        medias = initialMedias
+    }
 
     // MARK: Private methods
 
     private func configureCurrentItemPublisher() {
-        player.$currentIndex
-            .map { [weak self] index in
-                guard let self, let index else { return nil }
+        Publishers.CombineLatest(player.$currentIndex, $items)
+            .map { index, items in
+                guard let index, index < items.count else { return nil }
                 // TODO: Improve the subscript (with `safeIndex:`)
-                return self.items.keys[index]
+                return items.keys[index]
             }
             .assign(to: &$currentMedia)
     }
