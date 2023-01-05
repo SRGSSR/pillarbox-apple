@@ -522,19 +522,10 @@ private extension Player {
         sourcesPublisher()
             .withPrevious()
             .map { [rawPlayer] sources in
-                Self.difference(previous: sources.previous ?? [], current: sources.current, pivot: rawPlayer.currentItem)
+                Self.items(previous: sources.previous ?? [], current: sources.current, currentItem: rawPlayer.currentItem)
             }
             .receiveOnMainThread()
-            .sink { [rawPlayer] changes in
-                var items = rawPlayer.allItems
-                changes.forEach { change in
-                    switch change {
-                    case let .insert(offset: offset, element: element, associatedWith: _):
-                        items.insert(element.playerItem(), at: offset)
-                    case let .remove(offset: offset, element: _, associatedWith: _):
-                        items.remove(at: offset)
-                    }
-                }
+            .sink { [rawPlayer] items in
                 rawPlayer.replaceItems(with: items)
             }
             .store(in: &cancellables)
@@ -551,30 +542,7 @@ private extension Player {
             .eraseToAnyPublisher()
     }
 
-    private static func difference(previous: [PlayerItem.Source], current: [PlayerItem.Source], pivot: AVPlayerItem?) -> CollectionDifference<PlayerItem.Source> {
-        guard
-            let pivot,
-            let previousPivotIndex = previous.firstIndex(where: { $0.id == pivot.id })
-        else { return current.difference(from: []) }
-
-        let previousQueue = previous.suffix(from: previousPivotIndex)
-        if let currentPivotIndex = current.firstIndex(where: { $0.id == pivot.id }) {
-            return current.suffix(from: currentPivotIndex)
-                .difference(from: previousQueue)
-        } else {
-            if let commonPreviousItemIndex = previousQueue.firstIndex(where: { source in
-                current.contains(where: { $0.id == source.id })
-            }) {
-                let previousCommonSource = previousQueue[commonPreviousItemIndex]
-                if let currentCommonSourceIndex = current.firstIndex(where: { $0.id == previousCommonSource.id }) {
-                    return current.suffix(from: currentCommonSourceIndex)
-                        .difference(from: previousQueue)
-                } else {
-                    return current.difference(from: previousQueue)
-                }
-            } else {
-                return current.difference(from: previousQueue)
-            }
-        }
+    private static func items(previous: [PlayerItem.Source], current: [PlayerItem.Source], currentItem: AVPlayerItem?) -> [AVPlayerItem] {
+        return []
     }
 }
