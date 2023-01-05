@@ -522,7 +522,7 @@ private extension Player {
         sourcesPublisher()
             .withPrevious()
             .map { [rawPlayer] sources in
-                Self.items(previous: sources.previous ?? [], current: sources.current, currentItem: rawPlayer.currentItem)
+                Self.items(initial: sources.previous ?? [], final: sources.current, currentItem: rawPlayer.currentItem)
             }
             .receiveOnMainThread()
             .sink { [rawPlayer] items in
@@ -541,8 +541,11 @@ private extension Player {
             .switchToLatest()
             .eraseToAnyPublisher()
     }
+}
 
-    private static func items(previous: [PlayerItem.Source], current: [PlayerItem.Source], currentItem: AVPlayerItem?) -> [AVPlayerItem] {
+extension Player {
+    static func items(initial: [PlayerItem.Source], final: [PlayerItem.Source], currentItem: AVPlayerItem?) -> [AVPlayerItem] {
+        guard let currentItem else { return final.map { $0.playerItem() } }
         return []
     }
 }

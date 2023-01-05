@@ -62,4 +62,33 @@ final class PlayerTests: XCTestCase {
         }
         expect(weakPlayer).to(beNil())
     }
+
+    func testItemsWithoutCurrentItem() {
+        // Given
+        let initial = [
+            PlayerItem.Source(id: UUID("1"), asset: .loading),
+            PlayerItem.Source(id: UUID("2"), asset: .loading),
+            PlayerItem.Source(id: UUID("3"), asset: .loading),
+            PlayerItem.Source(id: UUID("4"), asset: .loading),
+            PlayerItem.Source(id: UUID("5"), asset: .loading),
+        ]
+        let final = [
+            PlayerItem.Source(id: UUID("A"), asset: .loading),
+            PlayerItem.Source(id: UUID("B"), asset: .loading),
+            PlayerItem.Source(id: UUID("C"), asset: .loading),
+        ]
+
+        // When
+        let result = Player.items(initial: initial, final: final, currentItem: nil)
+
+        // Then
+        expect(result.map(\.id)).to(equalDiff([UUID("A"), UUID("B"), UUID("C")]))
+        expect(result.first?.id).to(equal(UUID("A")))
+    }
+}
+
+extension UUID {
+    init(_ char: Character) {
+        self.init(uuidString: "\(String(repeating: char, count: 8))-\(String(repeating: char, count: 4))-\(String(repeating: char, count: 4))-\(String(repeating: char, count: 4))-\(String(repeating: char, count: 12))")!
+    }
 }
