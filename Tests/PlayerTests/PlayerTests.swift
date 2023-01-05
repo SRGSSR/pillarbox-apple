@@ -184,16 +184,27 @@ final class PlayerTests: XCTestCase {
         expect(result.first?.id).to(equal(candidateSource.id))
     }
 
-    func testItemsWithCurrentItemOnlyInInitialWithoutGoodCandidate() {
-
-    }
-
     func testItemsWithUpdatedCurrentItem() {
+        // Given
+        let currentSource = PlayerItem.Source(id: UUID("1"), asset: .simple(url: Stream.item.url))
+        let initial = [
+            PlayerItem.Source(id: UUID("1"), asset: .loading),
+            PlayerItem.Source(id: UUID("2"), asset: .loading),
+            PlayerItem.Source(id: UUID("3"), asset: .loading),
+        ]
+        let final = [
+            currentSource,
+            PlayerItem.Source(id: UUID("2"), asset: .loading),
+            PlayerItem.Source(id: UUID("3"), asset: .loading),
+        ]
+        let currentItem = currentSource.playerItem()
 
-    }
+        // When
+        let result = Player.items(initial: initial, final: final, currentItem: currentItem)
 
-    func testItemsWithUpdatedOtherItem() {
-
+        // Then
+        expect(result.map(\.id)).to(equalDiff([UUID("1"), UUID("2"), UUID("3")]))
+        expect(result.first).notTo(equal(currentItem))
     }
 }
 
