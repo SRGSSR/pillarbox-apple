@@ -40,8 +40,9 @@ class PlaylistViewModel: ObservableObject {
         MediaURN.unknown
     ]
     var initialMedias: [Media] = []
-    var availableMedias: [Media] {
-        Array(OrderedSet(initialMedias + Self.standardMedias))
+    
+    var otherStandardMedias: [Media] {
+        Array(OrderedSet(Self.standardMedias).subtracting(OrderedSet(initialMedias)))
     }
 
     let player = Player()

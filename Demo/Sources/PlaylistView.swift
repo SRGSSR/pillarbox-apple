@@ -106,8 +106,9 @@ private struct PlaylistSelectionView: View {
     
     var body: some View {
         NavigationView {
-            List(model.availableMedias, id: \.self, selection: $mediasSelected) { media in
-                Text(media.title)
+            List(selection: $mediasSelected) {
+                section(name: "Original items", medias: model.initialMedias)
+                section(name: "Standard items", medias: model.otherStandardMedias)
             }
             .environment(\.editMode, $editMode)
             .navigationBarTitle("Add a stream to the playlist")
@@ -116,6 +117,20 @@ private struct PlaylistSelectionView: View {
 #endif
             .navigationBarItems(leading: Button("Cancel", action: cancel))
             .navigationBarItems(trailing: Button("Add", action: { add() }))
+        }
+    }
+
+    private func section(name: String, medias: [Media]) -> some View {
+        Group {
+            if !medias.isEmpty {
+                Section(name) {
+                    ForEach(medias, id: \.self) { media in
+                        Text(media.title)
+                    }
+                }
+            } else {
+                EmptyView()
+            }
         }
     }
 
