@@ -22,12 +22,17 @@ class PlaylistViewModel: ObservableObject {
         }
     }
 
-    @Published var items = OrderedDictionary<Media, PlayerItem>()
-
-    var medias: [Media] = [] {
+    @Published var items = OrderedDictionary<Media, PlayerItem>() {
         didSet {
-            items = Self.updated(initialItems: items, with: medias)
             player.items = items.values.elements
+        }
+    }
+
+    var medias: [Media] {
+        get {
+            Array(items.keys)
+        } set {
+            items = Self.updated(initialItems: items, with: newValue)
         }
     }
 

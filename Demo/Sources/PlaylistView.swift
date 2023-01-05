@@ -32,7 +32,10 @@ private struct ListView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            LoadNewPlaylistButton(model: model)
+            HStack {
+                ShufflePlaylistButton(model: model)
+                LoadNewPlaylistButton(model: model)
+            }
             List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
                 PlaylistCell(media: media, isPlaying: media == model.currentMedia)
             }
@@ -158,7 +161,6 @@ private struct LoadNewPlaylistButton: View {
             Spacer()
         }
         .padding(10)
-        .background(.black)
     }
 }
 
