@@ -546,6 +546,11 @@ private extension Player {
 extension Player {
     static func items(initial: [PlayerItem.Source], final: [PlayerItem.Source], currentItem: AVPlayerItem?) -> [AVPlayerItem] {
         guard let currentItem else { return final.map { $0.playerItem() } }
-        return []
+        if let finalCurrentItemIndex = final.firstIndex(where: { $0.id == currentItem.id }) {
+            let rest = final.suffix(from: finalCurrentItemIndex + 1)
+            return [currentItem] + rest.map { $0.playerItem() }
+        } else {
+            return []
+        }
     }
 }

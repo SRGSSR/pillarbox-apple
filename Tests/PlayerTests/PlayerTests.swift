@@ -85,6 +85,78 @@ final class PlayerTests: XCTestCase {
         expect(result.map(\.id)).to(equalDiff([UUID("A"), UUID("B"), UUID("C")]))
         expect(result.first?.id).to(equal(UUID("A")))
     }
+
+    func testItemsWithCurrentItemInInitialAndFinal() {
+        // Given
+        let currentSource = PlayerItem.Source(id: UUID("3"), asset: .loading)
+        let initial = [
+            PlayerItem.Source(id: UUID("1"), asset: .loading),
+            PlayerItem.Source(id: UUID("2"), asset: .loading),
+            currentSource,
+            PlayerItem.Source(id: UUID("4"), asset: .loading),
+            PlayerItem.Source(id: UUID("5"), asset: .loading),
+        ]
+        let final = [
+            PlayerItem.Source(id: UUID("A"), asset: .loading),
+            currentSource,
+            PlayerItem.Source(id: UUID("B"), asset: .loading),
+            PlayerItem.Source(id: UUID("C"), asset: .loading),
+        ]
+        let currentItem = currentSource.playerItem()
+
+        // When
+        let result = Player.items(initial: initial, final: final, currentItem: currentItem)
+
+        // Then
+        expect(result.map(\.id)).to(equalDiff([UUID("3"), UUID("B"), UUID("C")]))
+        expect(result.first).to(equal(currentItem))
+    }
+
+    func testItemsWithCurrentItemInInitialAndFinalAtEnd() {
+        // Given
+        let currentSource = PlayerItem.Source(id: UUID("3"), asset: .loading)
+        let initial = [
+            PlayerItem.Source(id: UUID("1"), asset: .loading),
+            PlayerItem.Source(id: UUID("2"), asset: .loading),
+            currentSource,
+            PlayerItem.Source(id: UUID("4"), asset: .loading),
+            PlayerItem.Source(id: UUID("5"), asset: .loading),
+        ]
+        let final = [
+            PlayerItem.Source(id: UUID("A"), asset: .loading),
+            PlayerItem.Source(id: UUID("B"), asset: .loading),
+            PlayerItem.Source(id: UUID("C"), asset: .loading),
+            currentSource,
+        ]
+        let currentItem = currentSource.playerItem()
+
+        // When
+        let result = Player.items(initial: initial, final: final, currentItem: currentItem)
+
+        // Then
+        expect(result.map(\.id)).to(equalDiff([UUID("3")]))
+        expect(result.first).to(equal(currentItem))
+    }
+
+    func testItemsWithUnknownCurrentItem() {
+
+    }
+
+    func testItemsWithCurrentItemOnlyInInitialWithGoodCandidate() {
+
+    }
+
+    func testItemsWithCurrentItemOnlyInInitialWithoutGoodCandidate() {
+
+    }
+
+    func testItemsWithUpdatedCurrentItem() {
+
+    }
+
+    func testItemsWithUpdatedOtherItem() {
+
+    }
 }
 
 extension UUID {
