@@ -159,7 +159,29 @@ final class PlayerTests: XCTestCase {
     }
 
     func testItemsWithCurrentItemOnlyInInitialWithGoodCandidate() {
+        // Given
+        let currentSource = PlayerItem.Source(id: UUID("1"), asset: .loading)
+        let candidateSource = PlayerItem.Source(id: UUID("2"), asset: .loading)
 
+        let initial = [
+            currentSource,
+            candidateSource,
+            PlayerItem.Source(id: UUID("3"), asset: .loading),
+        ]
+        let final = [
+            PlayerItem.Source(id: UUID("3"), asset: .loading),
+            candidateSource,
+            PlayerItem.Source(id: UUID("C"), asset: .loading),
+        ]
+
+        let currentItem = currentSource.playerItem()
+
+        // When
+        let result = Player.items(initial: initial, final: final, currentItem: currentItem)
+
+        // Then
+        expect(result.map(\.id)).to(equalDiff([UUID("2"), UUID("C")]))
+        expect(result.first?.id).to(equal(candidateSource.id))
     }
 
     func testItemsWithCurrentItemOnlyInInitialWithoutGoodCandidate() {

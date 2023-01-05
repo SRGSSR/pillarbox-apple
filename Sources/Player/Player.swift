@@ -550,7 +550,23 @@ extension Player {
             let rest = final.suffix(from: finalCurrentItemIndex + 1)
             return [currentItem] + rest.map { $0.playerItem() }
         } else {
-            return final.map { $0.playerItem() }
+            if let initialCurrentItemIndex = initial.firstIndex(where: { $0.id == currentItem.id }) {
+                let initialCandidates = initial.suffix(from: initialCurrentItemIndex + 1)
+                if let candidateIndex = initialCandidates.firstIndex(where: { candidate in
+                    final.contains(where: { $0.id == candidate.id })
+                }) {
+                    let candidate = initialCandidates[candidateIndex]
+                    if let finalCandidateIndex = final.firstIndex(where: { $0.id == candidate.id }) {
+                        return final.suffix(from: finalCandidateIndex).map { $0.playerItem() }
+                    } else {
+                        return final.map { $0.playerItem() }
+                    }
+                } else {
+                    return final.map { $0.playerItem() }
+                }
+            } else {
+                return final.map { $0.playerItem() }
+            }
         }
     }
 }
