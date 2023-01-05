@@ -510,7 +510,7 @@ private extension Player {
                 storedItems.isEmpty || currentItem != nil
             }
             .map { storedItems, currentItem in
-                storedItems.firstIndex(where: { $0.id == currentItem?.id })
+                storedItems.firstIndex(where: { $0.matches(currentItem) })
             }
             .removeDuplicates()
             .receiveOnMainThread()
@@ -546,15 +546,15 @@ private extension Player {
 extension Player {
     static func items(initial: [PlayerItem.Source], final: [PlayerItem.Source], currentItem: AVPlayerItem?) -> [AVPlayerItem] {
         guard let currentItem else { return final.map { $0.playerItem() } }
-        if let finalCurrentItemIndex = final.firstIndex(where: { $0.id == currentItem.id }) {
-            if let initialCurrentItem = initial.first(where: { $0.id == currentItem.id }), final[finalCurrentItemIndex] == initialCurrentItem {
+        if let finalCurrentItemIndex = final.firstIndex(where: { $0.matches(currentItem) }) {
+            if let initialCurrentItem = initial.first(where: { $0.matches(currentItem) }), final[finalCurrentItemIndex] == initialCurrentItem {
                 let rest = final.suffix(from: finalCurrentItemIndex + 1)
                 return [currentItem] + rest.map { $0.playerItem() }
             } else {
                 return final.suffix(from: finalCurrentItemIndex).map { $0.playerItem() }
             }
         } else {
-            if let initialCurrentItemIndex = initial.firstIndex(where: { $0.id == currentItem.id }) {
+            if let initialCurrentItemIndex = initial.firstIndex(where: { $0.matches(currentItem) }) {
                 let initialCandidates = initial.suffix(from: initialCurrentItemIndex + 1)
                 if let candidateIndex = initialCandidates.firstIndex(where: { candidate in
                     final.contains(where: { $0.id == candidate.id })

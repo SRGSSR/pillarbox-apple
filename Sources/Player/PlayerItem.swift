@@ -13,7 +13,7 @@ private var kIdKey: Void?
 public final class PlayerItem: Equatable {
     @Published private(set) var source: Source
 
-    let id = UUID()
+    private let id = UUID()
 
     /// Create the item from an `Asset` publisher data source.
     public init<P>(publisher: P) where P: Publisher, P.Output == Asset {
@@ -46,6 +46,11 @@ public final class PlayerItem: Equatable {
     public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
         lhs === rhs
     }
+
+    func matches(_ playerItem: AVPlayerItem?) -> Bool {
+        guard let playerItem else { return false }
+        return playerItem.id == id
+    }
 }
 
 extension PlayerItem: CustomDebugStringConvertible {
@@ -62,6 +67,10 @@ extension PlayerItem {
         func playerItem() -> AVPlayerItem {
             asset.playerItem().withId(id)
         }
+
+        func matches(_ item: AVPlayerItem?) -> Bool {
+            id == item?.id
+        }
     }
 }
 
@@ -71,7 +80,7 @@ extension PlayerItem.Source: Equatable {
     }
 }
 
-extension AVPlayerItem {
+private extension AVPlayerItem {
     /// An identifier to identify player items delivered by the same data source.
     private(set) var id: UUID? {
         get {
@@ -85,7 +94,7 @@ extension AVPlayerItem {
     /// Assign an identifier to identify player items delivered by the same data source.
     /// - Parameter id: The id to assign.
     /// - Returns: The receiver with the id assigned to it.
-    fileprivate func withId(_ id: UUID) -> AVPlayerItem {
+    func withId(_ id: UUID) -> AVPlayerItem {
         self.id = id
         return self
     }
