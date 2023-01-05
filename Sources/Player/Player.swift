@@ -522,7 +522,7 @@ private extension Player {
         sourcesPublisher()
             .withPrevious()
             .map { [rawPlayer] sources in
-                Self.items(initial: sources.previous ?? [], final: sources.current, currentItem: rawPlayer.currentItem)
+                Source.playerItems(for: sources.current, replacing: sources.previous ?? [], currentItem: rawPlayer.currentItem)
             }
             .receiveOnMainThread()
             .sink { [rawPlayer] items in
@@ -531,7 +531,7 @@ private extension Player {
             .store(in: &cancellables)
     }
 
-    private func sourcesPublisher() -> AnyPublisher<[PlayerItem.Source], Never> {
+    private func sourcesPublisher() -> AnyPublisher<[Source], Never> {
         $storedItems
             .map { items in
                 return Publishers.AccumulateLatestMany(items.map { item in
@@ -543,58 +543,4 @@ private extension Player {
     }
 }
 
-extension Player {
-    private static func matchingIndex(for item: AVPlayerItem, in sources: [PlayerItem.Source]) -> Int? {
-        sources.firstIndex(where: { $0.matches(item) })
-    }
 
-    private static func matchingSource(for item: AVPlayerItem, in sources: [PlayerItem.Source]) -> PlayerItem.Source? {
-        sources.first(where: { $0.matches(item) })
-    }
-
-    private static func matchingIndex(for candidates: [PlayerItem.Source], in sources: [PlayerItem.Source]) -> Int? {
-        guard let match = candidates.first(where: { candidate in
-            sources.contains(where: { $0.id == candidate.id })
-        }) else {
-            return nil
-        }
-        return matchingIndex(for: match, in: sources)
-    }
-
-    private static func matchingIndex(for source: PlayerItem.Source, in sources: [PlayerItem.Source]) -> Int? {
-        sources.firstIndex(where: { $0.id == source.id })
-    }
-
-    private static func containsSource(for item: AVPlayerItem, in sources: [PlayerItem.Source], equalTo other: PlayerItem.Source) -> Bool {
-        guard let match = matchingSource(for: item, in: sources) else { return false }
-        return match == other
-    }
-
-    private static func items(from sources: [PlayerItem.Source]) -> [AVPlayerItem] {
-        sources.map { $0.playerItem() }
-    }
-
-    private static func commonIndex(after item: AVPlayerItem, of initial: [PlayerItem.Source], in final: [PlayerItem.Source]) -> Int? {
-        guard let matchIndex = matchingIndex(for: item, in: initial) else { return nil }
-        let nextSources = Array(initial.suffix(from: matchIndex + 1))
-        return matchingIndex(for: nextSources, in: final)
-    }
-
-    static func items(initial: [PlayerItem.Source], final: [PlayerItem.Source], currentItem: AVPlayerItem?) -> [AVPlayerItem] {
-        guard let currentItem else { return items(from: final) }
-        if let finalCurrentItemIndex = matchingIndex(for: currentItem, in: final) {
-            if containsSource(for: currentItem, in: initial, equalTo: final[finalCurrentItemIndex]) {
-                return [currentItem] + items(from: Array(final.suffix(from: finalCurrentItemIndex + 1)))
-            }
-            else {
-                return items(from: Array(final.suffix(from: finalCurrentItemIndex)))
-            }
-        }
-        else if let commonIndex = commonIndex(after: currentItem, of: initial, in: final) {
-            return items(from: Array(final.suffix(from: commonIndex)))
-        }
-        else {
-            return items(from: final)
-        }
-    }
-}
