@@ -12,7 +12,7 @@ import XCTest
 
 @MainActor
 final class SourceTests: XCTestCase {
-    func testItemsWithoutCurrentItem() {
+    func testPlayerItemsWithoutCurrentItem() {
         // Given
         let previousSources = [
             Source(id: UUID("1"), asset: .loading),
@@ -37,7 +37,7 @@ final class SourceTests: XCTestCase {
         }))
     }
 
-    func testItemsWithCurrentItemInInitialAndFinal() {
+    func testPlayerItemsWithPreservedCurrentItem() {
         // Given
         let currentItemSource = Source(id: UUID("3"), asset: .loading)
         let previousSources = [
@@ -71,7 +71,7 @@ final class SourceTests: XCTestCase {
         expect(result.first).to(equal(currentItem))
     }
 
-    func testItemsWithCurrentItemInInitialAndFinalAtEnd() {
+    func testPlayerItemsWithPreservedCurrentItemPreservedAtEnd() {
         // Given
         let currentItemSource = Source(id: UUID("3"), asset: .loading)
         let previousSources = [
@@ -103,7 +103,7 @@ final class SourceTests: XCTestCase {
         expect(result.first).to(equal(currentItem))
     }
 
-    func testItemsWithUnknownCurrentItem() {
+    func testPlayerItemsWithUnknownCurrentItem() {
         // Given
         let previousSources = [
             Source(id: UUID("1"), asset: .loading),
@@ -125,19 +125,19 @@ final class SourceTests: XCTestCase {
         }))
     }
 
-    func testItemsWithCurrentItemOnlyInInitialWithGoodCandidate() {
+    func testPlayerItemsWithCurrentItemReplacedByNextItem() {
         // Given
         let currentItemSource = Source(id: UUID("1"), asset: .loading)
-        let candidateSource = Source(id: UUID("2"), asset: .loading)
+        let nextSource = Source(id: UUID("2"), asset: .loading)
 
         let previousSources = [
             currentItemSource,
-            candidateSource,
+            nextSource,
             Source(id: UUID("3"), asset: .loading)
         ]
         let currentSources = [
             Source(id: UUID("3"), asset: .loading),
-            candidateSource,
+            nextSource,
             Source(id: UUID("C"), asset: .loading)
         ]
 
@@ -148,7 +148,7 @@ final class SourceTests: XCTestCase {
 
         // Then
         let expected = [
-            candidateSource,
+            nextSource,
             Source(id: UUID("C"), asset: .loading)
         ]
         expect(result.count).to(equal(expected.count))
@@ -157,7 +157,7 @@ final class SourceTests: XCTestCase {
         }))
     }
 
-    func testItemsWithUpdatedCurrentItem() {
+    func testPlayerItemsWithUpdatedCurrentItem() {
         // Given
         let currentItemSource = Source(id: UUID("1"), asset: .simple(url: Stream.item.url))
         let previousSources = [

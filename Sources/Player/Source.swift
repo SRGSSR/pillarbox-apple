@@ -32,17 +32,21 @@ extension Source {
     ///   - previousSources: The previous list of sources.
     ///   - currentItem: The item currently being played by the player.
     /// - Returns: The list of player items to load into the player.
-    static func playerItems(for currentSources: [Source], replacing previousSources: [Source], currentItem: AVPlayerItem?) -> [AVPlayerItem] {
+    static func playerItems(
+        for currentSources: [Source],
+        replacing previousSources: [Source],
+        currentItem: AVPlayerItem?
+    ) -> [AVPlayerItem] {
         guard let currentItem else { return items(from: currentSources) }
-        if let currentItemIndex = matchingIndex(for: currentItem, in: currentSources) {
-            if containsSource(for: currentItem, in: previousSources, equalTo: currentSources[currentItemIndex]) {
-                return [currentItem] + items(from: Array(currentSources.suffix(from: currentItemIndex + 1)))
+        if let currentIndex = matchingIndex(for: currentItem, in: currentSources) {
+            if findSource(for: currentItem, in: previousSources, equalTo: currentSources[currentIndex]) {
+                return [currentItem] + items(from: Array(currentSources.suffix(from: currentIndex + 1)))
             }
             else {
-                return items(from: Array(currentSources.suffix(from: currentItemIndex)))
+                return items(from: Array(currentSources.suffix(from: currentIndex)))
             }
         }
-        else if let commonIndex = commonIndex(after: currentItem, of: previousSources, in: currentSources) {
+        else if let commonIndex = firstCommonIndex(in: currentSources, matching: previousSources, after: currentItem) {
             return items(from: Array(currentSources.suffix(from: commonIndex)))
         }
         else {
@@ -54,24 +58,24 @@ extension Source {
         sources.firstIndex(where: { $0.matches(item) })
     }
 
-    private static func matchingSource(for item: AVPlayerItem, in sources: [Source]) -> Source? {
-        sources.first(where: { $0.matches(item) })
-    }
-
-    private static func matchingIndex(for candidates: [Source], in sources: [Source]) -> Int? {
-        guard let match = candidates.first(where: { candidate in
-            sources.contains(where: { $0.id == candidate.id })
+    private static func firstMatchingIndex(for sources: [Source], in other: [Source]) -> Int? {
+        guard let match = sources.first(where: { source in
+            other.contains(where: { $0.id == source.id })
         }) else {
             return nil
         }
-        return matchingIndex(for: match, in: sources)
+        return matchingIndex(for: match, in: other)
+    }
+
+    private static func matchingSource(for item: AVPlayerItem, in sources: [Source]) -> Source? {
+        sources.first(where: { $0.matches(item) })
     }
 
     private static func matchingIndex(for source: Source, in sources: [Source]) -> Int? {
         sources.firstIndex(where: { $0.id == source.id })
     }
 
-    private static func containsSource(for item: AVPlayerItem, in sources: [Source], equalTo other: Source) -> Bool {
+    private static func findSource(for item: AVPlayerItem, in sources: [Source], equalTo other: Source) -> Bool {
         guard let match = matchingSource(for: item, in: sources) else { return false }
         return match == other
     }
@@ -80,9 +84,8 @@ extension Source {
         sources.map { $0.playerItem() }
     }
 
-    private static func commonIndex(after item: AVPlayerItem, of initial: [Source], in final: [Source]) -> Int? {
-        guard let matchIndex = matchingIndex(for: item, in: initial) else { return nil }
-        let nextSources = Array(initial.suffix(from: matchIndex + 1))
-        return matchingIndex(for: nextSources, in: final)
+    private static func firstCommonIndex(in sources: [Source], matching other: [Source], after item: AVPlayerItem) -> Int? {
+        guard let matchIndex = matchingIndex(for: item, in: other) else { return nil }
+        return firstMatchingIndex(for: Array(other.suffix(from: matchIndex + 1)), in: sources)
     }
 }
