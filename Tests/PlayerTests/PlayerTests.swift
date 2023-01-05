@@ -139,7 +139,23 @@ final class PlayerTests: XCTestCase {
     }
 
     func testItemsWithUnknownCurrentItem() {
+        // Given
+        let initial = [
+            PlayerItem.Source(id: UUID("1"), asset: .loading),
+            PlayerItem.Source(id: UUID("2"), asset: .loading),
+        ]
+        let final = [
+            PlayerItem.Source(id: UUID("A"), asset: .loading),
+            PlayerItem.Source(id: UUID("B"), asset: .loading),
+        ]
+        let unknownItem = PlayerItem.Source(id: UUID("1"), asset: .loading).playerItem()
 
+        // When
+        let result = Player.items(initial: initial, final: final, currentItem: unknownItem)
+
+        // Then
+        expect(result.map(\.id)).to(equalDiff([UUID("A"), UUID("B")]))
+        expect(result.first?.id).to(equal(UUID("A")))
     }
 
     func testItemsWithCurrentItemOnlyInInitialWithGoodCandidate() {

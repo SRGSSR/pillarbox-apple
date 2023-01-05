@@ -550,7 +550,7 @@ extension Player {
             let rest = final.suffix(from: finalCurrentItemIndex + 1)
             return [currentItem] + rest.map { $0.playerItem() }
         } else {
-            return []
+            return final.map { $0.playerItem() }
         }
     }
 }
