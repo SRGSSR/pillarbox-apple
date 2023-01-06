@@ -69,7 +69,7 @@ struct ExamplesView: View {
     ])
 
     var body: some View {
-        List(medias, id: \.self) { media in
+        List(medias) { media in
             MediaCell(media: media)
         }
         .navigationTitle("Examples")
