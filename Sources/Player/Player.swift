@@ -66,7 +66,7 @@ public final class Player: ObservableObject, Equatable {
     ///   - items: The items to be queued initially.
     ///   - configuration: A closure in which the player can be configured.
     public init(items: [PlayerItem] = [], configuration: (inout PlayerConfiguration) -> Void = { _ in }) {
-        rawPlayer = RawPlayer(items: PlayerItem.playerItems(from: items))
+        rawPlayer = RawPlayer()
         self.configuration = Self.configure(with: configuration)
         storedItems = Deque(items)
 
