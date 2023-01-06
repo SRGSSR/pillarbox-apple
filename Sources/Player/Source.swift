@@ -59,7 +59,7 @@ extension Source {
     }
 
     private static func matchingIndex(for item: AVPlayerItem, in sources: [Source]) -> Int? {
-        sources.firstIndex(where: { $0.matches(item) })
+        sources.firstIndex { $0.matches(item) }
     }
 
     private static func firstMatchingIndex(for sources: [Source], in other: [Source]) -> Int? {
@@ -72,11 +72,11 @@ extension Source {
     }
 
     private static func matchingSource(for item: AVPlayerItem, in sources: [Source]) -> Source? {
-        sources.first(where: { $0.matches(item) })
+        sources.first { $0.matches(item) }
     }
 
     private static func matchingIndex(for source: Source, in sources: [Source]) -> Int? {
-        sources.firstIndex(where: { $0.id == source.id })
+        sources.firstIndex { $0.id == source.id }
     }
 
     private static func findSource(for item: AVPlayerItem, in sources: [Source], equalTo other: Source) -> Bool {
