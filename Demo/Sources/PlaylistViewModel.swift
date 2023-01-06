@@ -63,6 +63,10 @@ class PlaylistViewModel: ObservableObject {
         medias.isEmpty
     }
 
+    var canReload: Bool {
+        !templates.isEmpty
+    }
+
     @Published var currentMedia: Media? {
         didSet {
             guard

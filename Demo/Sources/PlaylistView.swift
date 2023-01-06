@@ -122,6 +122,7 @@ private struct Toolbar: View {
             Button(action: model.reload) {
                 Image(systemName: "arrow.triangle.2.circlepath")
             }
+            .disabled(!model.canReload)
             Button(action: model.trash) {
                 Image(systemName: "trash")
             }
