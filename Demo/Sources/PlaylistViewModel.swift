@@ -46,7 +46,7 @@ class PlaylistViewModel: ObservableObject {
 
     var templates: [Template] = [] {
         didSet {
-            medias = templates.map { $0.media() }
+            medias = Template.medias(from: templates)
         }
     }
 
@@ -105,7 +105,7 @@ class PlaylistViewModel: ObservableObject {
     }
 
     func add(from templates: [Template]) {
-        medias += templates.map { $0.media() }
+        medias += Template.medias(from: templates)
     }
 
     func shuffle() {
@@ -113,7 +113,7 @@ class PlaylistViewModel: ObservableObject {
     }
 
     func reload() {
-        medias = templates.map { $0.media() }
+        medias = Template.medias(from: templates)
     }
 
     func trash() {

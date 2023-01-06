@@ -37,36 +37,36 @@ struct ShowcaseView: View {
         List {
             Group {
                 Cell(title: "Simplest player") {
-                    SimplePlayerView(media: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS.media())
+                    SimplePlayerView(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
                 }
                 Cell(title: "Unbuffered video livestream") {
-                    PlayerView(media: UnbufferedURLTemplate.liveVideo.media())
+                    PlayerView(media: Media(from: UnbufferedURLTemplate.liveVideo))
                 }
                 Cell(title: "Unbuffered on-demand audio") {
-                    PlayerView(media: UnbufferedURLTemplate.onDemandAudio.media())
+                    PlayerView(media: Media(from: UnbufferedURLTemplate.onDemandAudio))
                 }
                 Cell(title: "Unbuffered audio livestream") {
-                    PlayerView(media: UnbufferedURLTemplate.liveAudio.media())
+                    PlayerView(media: Media(from: UnbufferedURLTemplate.liveAudio))
                 }
                 Cell(title: "Stories") {
                     StoriesView()
                 }
                 Cell(title: "Twins") {
-                    TwinsView(media: URLTemplate.appleBasic_16_9_TS_HLS.media())
+                    TwinsView(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
                 }
                 Cell(title: "Multi") {
                     MultiView(
-                        media1: URLTemplate.appleBasic_16_9_TS_HLS.media(),
-                        media2: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS.media()
+                        media1: Media(from: URLTemplate.appleBasic_16_9_TS_HLS),
+                        media2: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS)
                     )
                 }
             }
             Group {
                 Cell(title: "Link") {
-                    LinkView(media: URLTemplate.appleAdvanced_16_9_fMP4_HLS.media())
+                    LinkView(media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS))
                 }
                 Cell(title: "Wrapped") {
-                    WrappedView(media: URLTemplate.appleBasic_16_9_TS_HLS.media())
+                    WrappedView(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
                 }
             }
             Group {

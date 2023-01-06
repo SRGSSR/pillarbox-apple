@@ -40,7 +40,7 @@ private struct MediaCell: View {
 
 // Behavior: h-exp, v-exp
 struct ExamplesView: View {
-    private let medias = [
+    private let medias = Template.medias(from: [
         URLTemplate.onDemandVideoHLS,
         URLTemplate.shortOnDemandVideoHLS,
         URLTemplate.onDemandVideoMP4,
@@ -66,7 +66,7 @@ struct ExamplesView: View {
         URNTemplate.drmProtectedVideo,
         URNTemplate.expired,
         URNTemplate.unknown
-    ].map { $0.media() }
+    ])
 
     var body: some View {
         List(medias, id: \.self) { media in

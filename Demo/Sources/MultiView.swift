@@ -43,8 +43,8 @@ struct MultiView: View {
 struct MultiView_Previews: PreviewProvider {
     static var previews: some View {
         MultiView(
-            media1: URLTemplate.appleBasic_16_9_TS_HLS.media(),
-            media2: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS.media()
+            media1: Media(from: URLTemplate.appleBasic_16_9_TS_HLS),
+            media2: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS)
         )
     }
 }

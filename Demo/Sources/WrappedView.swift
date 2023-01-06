@@ -50,6 +50,6 @@ struct WrappedView: View {
 
 struct WrappedView_Previews: PreviewProvider {
     static var previews: some View {
-        WrappedView(media: URLTemplate.onDemandVideoLocalHLS.media())
+        WrappedView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
     }
 }

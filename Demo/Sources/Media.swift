@@ -26,6 +26,14 @@ struct Media: Hashable, Identifiable {
         self.type = type
     }
 
+    init(from template: Template) {
+        self.init(
+            title: template.title,
+            description: template.description,
+            type: template.type
+        )
+    }
+
     func playerItem() -> PlayerItem {
         switch type {
         case let .url(url):

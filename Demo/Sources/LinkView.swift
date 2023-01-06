@@ -43,6 +43,6 @@ struct LinkView: View {
 
 struct LinkView_Previews: PreviewProvider {
     static var previews: some View {
-        LinkView(media: URLTemplate.onDemandVideoLocalHLS.media())
+        LinkView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
     }
 }
