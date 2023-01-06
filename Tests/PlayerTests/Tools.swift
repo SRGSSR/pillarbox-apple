@@ -113,11 +113,12 @@ struct Stream {
 extension UUID {
     init(_ char: Character) {
         self.init(uuidString: """
-            \(String(repeating: char, count: 8)) \
-            -\(String(repeating: char, count: 4)) \
-            -\(String(repeating: char, count: 4)) \
-            -\(String(repeating: char, count: 4)) \
+            \(String(repeating: char, count: 8))\
+            -\(String(repeating: char, count: 4))\
+            -\(String(repeating: char, count: 4))\
+            -\(String(repeating: char, count: 4))\
             -\(String(repeating: char, count: 12))
-        """)!
+            """
+        )!
     }
 }
