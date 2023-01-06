@@ -9,7 +9,7 @@ import SwiftUI
 // MARK: Cells
 
 // Behavior: h-hug, v-hug
-private struct ExampleCell: View {
+private struct MediaCell: View {
     let media: Media
 
     @State var isPlayerPresented = false
@@ -70,7 +70,7 @@ struct ExamplesView: View {
 
     var body: some View {
         List(medias, id: \.self) { media in
-            ExampleCell(media: media)
+            MediaCell(media: media)
         }
         .navigationTitle("Examples")
     }
