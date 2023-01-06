@@ -19,7 +19,7 @@ struct WrappedView: View {
 
     var body: some View {
         VStack(spacing: 10) {
-            PlaybackView(player: model.player)
+            BasicPlaybackView(player: model.player)
             HStack {
                 Button(action: { play() }) {
                     Text("Play")

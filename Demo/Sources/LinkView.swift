@@ -20,7 +20,7 @@ struct LinkView: View {
     var body: some View {
         VStack(spacing: 10) {
             ZStack {
-                PlaybackView(player: isDisplayed ? player : Player())
+                BasicPlaybackView(player: isDisplayed ? player : Player())
                 if player.isBuffering {
                     ProgressView()
                 }

@@ -11,7 +11,7 @@ import SwiftUI
 // MARK: View
 
 // Behavior: h-exp, v-exp
-struct BasicPlayerView: View {
+struct SimplePlayerView: View {
     let media: Media
 
     @StateObject private var player = Player()
@@ -36,8 +36,8 @@ struct BasicPlayerView: View {
 
 // MARK: Preview
 
-struct BasicPlayerView_Previews: PreviewProvider {
+struct SimplestPlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        BasicPlayerView(media: URLTemplate.onDemandVideoLocalHLS.media())
+        SimplePlayerView(media: URLTemplate.onDemandVideoLocalHLS.media())
     }
 }

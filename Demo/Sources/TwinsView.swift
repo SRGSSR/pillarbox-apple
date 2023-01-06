@@ -28,8 +28,8 @@ struct TwinsView: View {
     var body: some View {
         VStack(spacing: 10) {
             Group {
-                PlaybackView(player: topPlayer)
-                PlaybackView(player: bottomPlayer)
+                BasicPlaybackView(player: topPlayer)
+                BasicPlaybackView(player: bottomPlayer)
             }
             .background(.black)
 

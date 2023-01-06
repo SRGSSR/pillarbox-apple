@@ -193,7 +193,7 @@ struct PlaylistView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            PlayerViewImp(player: model.player)
+            PlaybackView(player: model.player)
             ListView(model: model)
         }
         .onAppear { model.templates = templates }

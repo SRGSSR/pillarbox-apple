@@ -36,8 +36,8 @@ struct ShowcaseView: View {
         // swiftlint:disable:next closure_body_length
         List {
             Group {
-                Cell(title: "Basic") {
-                    BasicPlayerView(media: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS.media())
+                Cell(title: "Simplest player") {
+                    SimplePlayerView(media: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS.media())
                 }
                 Cell(title: "Unbuffered video livestream") {
                     PlayerView(media: UnbufferedURLTemplate.liveVideo.media())
