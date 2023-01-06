@@ -94,6 +94,10 @@ class PlaylistViewModel: ObservableObject {
         medias = templates.map { $0.media() }
     }
 
+    func trash() {
+        medias = []
+    }
+
     // MARK: Private methods
 
     private func configureCurrentItemPublisher() {

@@ -36,6 +36,7 @@ private struct ListView: View {
                 ShufflePlaylistButton(model: model)
                 AddMediaButton(model: model)
                 LoadNewPlaylistButton(model: model)
+                TrashPlaylistButton(model: model)
             }
             List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
                 MediaCell(media: media, isPlaying: media == model.currentMedia)
@@ -172,6 +173,22 @@ private struct LoadNewPlaylistButton: View {
             Button(action: {
                 model.reload()
             }) { Image(systemName: "arrow.triangle.2.circlepath") }
+            Spacer()
+        }
+        .padding(10)
+    }
+}
+
+// Behavior: h-exp, v-exp
+private struct TrashPlaylistButton: View {
+    @ObservedObject var model: PlaylistViewModel
+
+    var body: some View {
+        HStack {
+            Spacer()
+            Button(action: {
+                model.trash()
+            }) { Image(systemName: "trash") }
             Spacer()
         }
         .padding(10)
