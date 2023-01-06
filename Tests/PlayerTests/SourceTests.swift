@@ -6,6 +6,7 @@
 
 @testable import Player
 
+import AVFoundation
 import Circumspect
 import Nimble
 import XCTest
@@ -28,7 +29,7 @@ final class SourceTests: XCTestCase {
         ]
 
         // When
-        let result = Source.playerItems(for: currentSources, replacing: previousSources, currentItem: nil)
+        let result = AVPlayerItem.playerItems(for: currentSources, replacing: previousSources, currentItem: nil)
 
         // Then
         expect(result.count).to(equal(currentSources.count))
@@ -56,7 +57,7 @@ final class SourceTests: XCTestCase {
         let currentItem = currentItemSource.playerItem()
 
         // When
-        let result = Source.playerItems(for: currentSources, replacing: previousSources, currentItem: currentItem)
+        let result = AVPlayerItem.playerItems(for: currentSources, replacing: previousSources, currentItem: currentItem)
 
         // Then
         let expected = [
@@ -90,7 +91,7 @@ final class SourceTests: XCTestCase {
         let currentItem = currentItemSource.playerItem()
 
         // When
-        let result = Source.playerItems(for: currentSources, replacing: previousSources, currentItem: currentItem)
+        let result = AVPlayerItem.playerItems(for: currentSources, replacing: previousSources, currentItem: currentItem)
 
         // Then
         let expected = [
@@ -116,7 +117,7 @@ final class SourceTests: XCTestCase {
         let unknownItem = Source(id: UUID("1"), asset: .loading).playerItem()
 
         // When
-        let result = Source.playerItems(for: currentSources, replacing: previousSources, currentItem: unknownItem)
+        let result = AVPlayerItem.playerItems(for: currentSources, replacing: previousSources, currentItem: unknownItem)
 
         // Then
         expect(result.count).to(equal(currentSources.count))
@@ -144,7 +145,7 @@ final class SourceTests: XCTestCase {
         let currentItem = currentItemSource.playerItem()
 
         // When
-        let result = Source.playerItems(for: currentSources, replacing: previousSources, currentItem: currentItem)
+        let result = AVPlayerItem.playerItems(for: currentSources, replacing: previousSources, currentItem: currentItem)
 
         // Then
         let expected = [
@@ -173,7 +174,7 @@ final class SourceTests: XCTestCase {
         let currentItem = currentItemSource.playerItem()
 
         // When
-        let result = Source.playerItems(for: currentSources, replacing: previousSources, currentItem: currentItem)
+        let result = AVPlayerItem.playerItems(for: currentSources, replacing: previousSources, currentItem: currentItem)
 
         // Then
         expect(result.count).to(equal(currentSources.count))

@@ -418,7 +418,7 @@ public extension Player {
     @discardableResult
     func returnToPreviousItem() -> Bool {
         guard canReturnToPreviousItem() else { return false}
-        rawPlayer.replaceItems(with: PlayerItem.playerItems(from: returningItems))
+        rawPlayer.replaceItems(with: AVPlayerItem.playerItems(from: returningItems))
         return true
     }
 
@@ -433,7 +433,7 @@ public extension Player {
     @discardableResult
     func advanceToNextItem() -> Bool {
         guard canAdvanceToNextItem() else { return false }
-        rawPlayer.replaceItems(with: PlayerItem.playerItems(from: advancingItems))
+        rawPlayer.replaceItems(with: AVPlayerItem.playerItems(from: advancingItems))
         return true
     }
 
@@ -442,7 +442,7 @@ public extension Player {
     func setCurrentIndex(_ index: Int) throws {
         guard index != currentIndex else { return }
         guard (0..<storedItems.count).contains(index) else { throw PlaybackError.itemOutOfBounds }
-        let playerItems = PlayerItem.playerItems(from: Array(storedItems.suffix(from: index)))
+        let playerItems = AVPlayerItem.playerItems(from: Array(storedItems.suffix(from: index)))
         rawPlayer.replaceItems(with: playerItems)
     }
 }
@@ -520,7 +520,7 @@ private extension Player {
         sourcesPublisher()
             .withPrevious()
             .map { [rawPlayer] sources in
-                Source.playerItems(for: sources.current, replacing: sources.previous ?? [], currentItem: rawPlayer.currentItem)
+                AVPlayerItem.playerItems(for: sources.current, replacing: sources.previous ?? [], currentItem: rawPlayer.currentItem)
             }
             .receiveOnMainThread()
             .sink { [rawPlayer] items in

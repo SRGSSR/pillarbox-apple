@@ -24,7 +24,7 @@ struct Source: Identifiable, Equatable {
     }
 }
 
-extension Source {
+extension AVPlayerItem {
     /// Return the list of `AVPlayerItems` to load into an `AVQueuePlayer` when a list of sources replaces a previous
     /// one.
     /// - Parameters:
