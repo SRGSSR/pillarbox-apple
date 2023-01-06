@@ -12,16 +12,16 @@ import SwiftUI
 // Behavior: h-exp, v-exp
 struct PlaylistView: View {
     @StateObject private var model = PlaylistViewModel()
-    @State var medias: [Media]
+    @State var templates: [Template]
 
     var body: some View {
         VStack(spacing: 0) {
             PlayerViewImp(player: model.player)
             ListView(model: model)
         }
-        .onAppear { model.medias = medias }
-        .onChange(of: medias) { newValue in
-            model.medias = newValue
+        .onAppear { model.templates = templates }
+        .onChange(of: templates) { newValue in
+            model.templates = newValue
         }
     }
 }
@@ -38,7 +38,7 @@ private struct ListView: View {
                 LoadNewPlaylistButton(model: model)
             }
             List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
-                PlaylistCell(media: media, isPlaying: media == model.currentMedia)
+                MediaCell(media: media, isPlaying: media == model.currentMedia)
             }
         }
     }
@@ -61,7 +61,7 @@ private struct PlayingIndicatorView: View {
 }
 
 // Behavior: h-exp, v-exp
-private struct PlaylistCell: View {
+private struct MediaCell: View {
     let media: Media
     let isPlaying: Bool
     
@@ -100,14 +100,14 @@ private struct AddMediaButton: View {
 // Behavior: h-exp, v-exp
 private struct PlaylistSelectionView: View {
     let model: PlaylistViewModel
-    @State private var mediasSelected: Set<Media> = []
+    @State private var selectedTemplates: Set<Template> = []
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationView {
-            List(selection: $mediasSelected) {
-                section(name: "Original items", medias: model.initialMedias)
-                section(name: "Standard items", medias: model.otherStandardMedias)
+            List(selection: $selectedTemplates) {
+                section(name: "Original items", templates: model.templates)
+                section(name: "Standard items", templates: model.otherStandardTemplates)
             }
             .environment(\.editMode, .constant(.active))
             .navigationBarTitle("Add a stream to the playlist")
@@ -119,11 +119,11 @@ private struct PlaylistSelectionView: View {
         }
     }
 
-    private func section(name: String, medias: [Media]) -> some View {
+    private func section(name: String, templates: [Template]) -> some View {
         Group {
-            if !medias.isEmpty {
+            if !templates.isEmpty {
                 Section(name) {
-                    ForEach(medias, id: \.self) { media in
+                    ForEach(templates, id: \.self) { media in
                         Text(media.title)
                     }
                 }
@@ -134,13 +134,13 @@ private struct PlaylistSelectionView: View {
     }
 
     private func cancel() {
-        mediasSelected = []
+        selectedTemplates = []
         dismiss()
     }
 
     @MainActor
     private func add() {
-        model.add(Array(mediasSelected))
+        model.add(from: Array(selectedTemplates))
         cancel()
     }
 }
@@ -182,10 +182,10 @@ private struct LoadNewPlaylistButton: View {
 
 struct PlaylistView_Previews: PreviewProvider {
     static var previews: some View {
-        PlaylistView(medias: [
-            MediaURL.onDemandVideoLocalHLS,
-            MediaURL.shortOnDemandVideoHLS,
-            MediaURL.dvrVideoHLS,
+        PlaylistView(templates: [
+            URLTemplate.onDemandVideoLocalHLS,
+            URLTemplate.shortOnDemandVideoHLS,
+            URLTemplate.dvrVideoHLS,
         ])
     }
 }

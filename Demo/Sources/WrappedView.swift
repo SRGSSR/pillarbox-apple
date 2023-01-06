@@ -36,7 +36,7 @@ struct WrappedView: View {
     }
 
     private func play() {
-        let player = Player(item: media.playerItem)
+        let player = Player(item: media.playerItem())
         model.player = player
         player.play()
     }
@@ -50,6 +50,6 @@ struct WrappedView: View {
 
 struct WrappedView_Previews: PreviewProvider {
     static var previews: some View {
-        WrappedView(media: MediaURL.onDemandVideoLocalHLS)
+        WrappedView(media: URLTemplate.onDemandVideoLocalHLS.media())
     }
 }

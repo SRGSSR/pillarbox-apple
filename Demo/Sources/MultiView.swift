@@ -33,7 +33,7 @@ struct MultiView: View {
     }
 
     private static func play(media: Media, in player: Player) {
-        player.append(media.playerItem)
+        player.append(media.playerItem())
         player.play()
     }
 }
@@ -43,8 +43,8 @@ struct MultiView: View {
 struct MultiView_Previews: PreviewProvider {
     static var previews: some View {
         MultiView(
-            media1: MediaURL.appleBasic_16_9_TS_HLS,
-            media2: MediaURL.appleAdvanced_16_9_HEVC_h264_HLS
+            media1: URLTemplate.appleBasic_16_9_TS_HLS.media(),
+            media2: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS.media()
         )
     }
 }

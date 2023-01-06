@@ -283,7 +283,7 @@ struct PlayerView: View {
     }
 
     private func load() {
-        player.items = medias.map(\.playerItem)
+        player.items = medias.map { $0.playerItem() }
     }
 }
 
@@ -326,6 +326,6 @@ struct PlayerViewImp: View {
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        PlayerView(media: MediaURL.onDemandVideoLocalHLS)
+        PlayerView(media: URLTemplate.onDemandVideoLocalHLS.media())
     }
 }

@@ -29,7 +29,7 @@ struct BasicPlayerView: View {
     }
 
     private func play() {
-        player.append(media.playerItem)
+        player.append(media.playerItem())
         player.play()
     }
 }
@@ -38,6 +38,6 @@ struct BasicPlayerView: View {
 
 struct BasicPlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        BasicPlayerView(media: MediaURL.onDemandVideoLocalHLS)
+        BasicPlayerView(media: URLTemplate.onDemandVideoLocalHLS.media())
     }
 }

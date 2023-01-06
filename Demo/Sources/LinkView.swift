@@ -34,7 +34,7 @@ struct LinkView: View {
     }
 
     private func play() {
-        player.append(media.playerItem)
+        player.append(media.playerItem())
         player.play()
     }
 }
@@ -43,6 +43,6 @@ struct LinkView: View {
 
 struct LinkView_Previews: PreviewProvider {
     static var previews: some View {
-        LinkView(media: MediaURL.onDemandVideoLocalHLS)
+        LinkView(media: URLTemplate.onDemandVideoLocalHLS.media())
     }
 }

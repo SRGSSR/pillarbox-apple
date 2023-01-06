@@ -41,32 +41,32 @@ private struct ExampleCell: View {
 // Behavior: h-exp, v-exp
 struct ExamplesView: View {
     private let medias = [
-        MediaURL.onDemandVideoHLS,
-        MediaURL.shortOnDemandVideoHLS,
-        MediaURL.onDemandVideoMP4,
-        MediaURL.liveVideoHLS,
-        MediaURL.dvrVideoHLS,
-        MediaURL.liveTimestampVideoHLS,
-        MediaURL.onDemandAudioMP3,
-        MediaURL.liveAudioMP3,
-        MediaURN.onDemandHorizontalVideo,
-        MediaURN.onDemandSquareVideo,
-        MediaURN.onDemandVerticalVideo,
-        MediaURN.liveVideo,
-        MediaURN.dvrVideo,
-        MediaURN.dvrAudio,
-        MediaURN.onDemandAudio,
-        MediaURL.appleBasic_4_3_HLS,
-        MediaURL.appleBasic_16_9_TS_HLS,
-        MediaURL.appleAdvanced_16_9_TS_HLS,
-        MediaURL.appleAdvanced_16_9_fMP4_HLS,
-        MediaURL.appleAdvanced_16_9_HEVC_h264_HLS,
-        MediaURN.tokenProtectedVideo,
-        MediaURN.superfluousTokenProtectedVideo,
-        MediaURN.drmProtectedVideo,
-        MediaURN.expired,
-        MediaURN.unknown
-    ]
+        URLTemplate.onDemandVideoHLS,
+        URLTemplate.shortOnDemandVideoHLS,
+        URLTemplate.onDemandVideoMP4,
+        URLTemplate.liveVideoHLS,
+        URLTemplate.dvrVideoHLS,
+        URLTemplate.liveTimestampVideoHLS,
+        URLTemplate.onDemandAudioMP3,
+        URLTemplate.liveAudioMP3,
+        URNTemplate.onDemandHorizontalVideo,
+        URNTemplate.onDemandSquareVideo,
+        URNTemplate.onDemandVerticalVideo,
+        URNTemplate.liveVideo,
+        URNTemplate.dvrVideo,
+        URNTemplate.dvrAudio,
+        URNTemplate.onDemandAudio,
+        URLTemplate.appleBasic_4_3_HLS,
+        URLTemplate.appleBasic_16_9_TS_HLS,
+        URLTemplate.appleAdvanced_16_9_TS_HLS,
+        URLTemplate.appleAdvanced_16_9_fMP4_HLS,
+        URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS,
+        URNTemplate.tokenProtectedVideo,
+        URNTemplate.superfluousTokenProtectedVideo,
+        URNTemplate.drmProtectedVideo,
+        URNTemplate.expired,
+        URNTemplate.unknown
+    ].map { $0.media() }
 
     var body: some View {
         List(medias, id: \.self) { media in

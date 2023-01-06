@@ -37,65 +37,65 @@ struct ShowcaseView: View {
         List {
             Group {
                 Cell(title: "Basic") {
-                    BasicPlayerView(media: MediaURL.appleAdvanced_16_9_HEVC_h264_HLS)
+                    BasicPlayerView(media: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS.media())
                 }
                 Cell(title: "Unbuffered video livestream") {
-                    PlayerView(media: UnbufferedMediaURL.liveVideo)
+                    PlayerView(media: UnbufferedURLTemplate.liveVideo.media())
                 }
                 Cell(title: "Unbuffered on-demand audio") {
-                    PlayerView(media: UnbufferedMediaURL.onDemandAudio)
+                    PlayerView(media: UnbufferedURLTemplate.onDemandAudio.media())
                 }
                 Cell(title: "Unbuffered audio livestream") {
-                    PlayerView(media: UnbufferedMediaURL.liveAudio)
+                    PlayerView(media: UnbufferedURLTemplate.liveAudio.media())
                 }
                 Cell(title: "Stories") {
                     StoriesView()
                 }
                 Cell(title: "Twins") {
-                    TwinsView(media: MediaURL.appleBasic_16_9_TS_HLS)
+                    TwinsView(media: URLTemplate.appleBasic_16_9_TS_HLS.media())
                 }
                 Cell(title: "Multi") {
                     MultiView(
-                        media1: MediaURL.appleBasic_16_9_TS_HLS,
-                        media2: MediaURL.appleAdvanced_16_9_HEVC_h264_HLS
+                        media1: URLTemplate.appleBasic_16_9_TS_HLS.media(),
+                        media2: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS.media()
                     )
                 }
             }
             Group {
                 Cell(title: "Link") {
-                    LinkView(media: MediaURL.appleAdvanced_16_9_fMP4_HLS)
+                    LinkView(media: URLTemplate.appleAdvanced_16_9_fMP4_HLS.media())
                 }
                 Cell(title: "Wrapped") {
-                    WrappedView(media: MediaURL.appleBasic_16_9_TS_HLS)
+                    WrappedView(media: URLTemplate.appleBasic_16_9_TS_HLS.media())
                 }
             }
             Group {
                 Cell(title: "Playlist (URLs)") {
-                    PlaylistView(medias: URLPlaylist.videos)
+                    PlaylistView(templates: URLPlaylist.videos)
                 }
                 Cell(title: "Playlist (URNs)") {
-                    PlaylistView(medias: URNPlaylist.videos)
+                    PlaylistView(templates: URNPlaylist.videos)
                 }
                 Cell(title: "Playlist (URNs, long)") {
-                    PlaylistView(medias: URNPlaylist.longVideos)
+                    PlaylistView(templates: URNPlaylist.longVideos)
                 }
                 Cell(title: "Playlist (URNs, token-protected)") {
-                    PlaylistView(medias: URNPlaylist.tokenProtectedVideos)
+                    PlaylistView(templates: URNPlaylist.tokenProtectedVideos)
                 }
                 Cell(title: "Playlist (URNs, DRM-protected)") {
-                    PlaylistView(medias: URNPlaylist.drmProtectedVideos)
+                    PlaylistView(templates: URNPlaylist.drmProtectedVideos)
                 }
                 Cell(title: "Audio playlist (URNs)") {
-                    PlaylistView(medias: URNPlaylist.audios)
+                    PlaylistView(templates: URNPlaylist.audios)
                 }
                 Cell(title: "Playlist (with one error)") {
-                    PlaylistView(medias: URNPlaylist.videosWithOneError)
+                    PlaylistView(templates: URNPlaylist.videosWithOneError)
                 }
                 Cell(title: "Playlist (with errors)") {
-                    PlaylistView(medias: URNPlaylist.videosWithErrors)
+                    PlaylistView(templates: URNPlaylist.videosWithErrors)
                 }
                 Cell(title: "Playlist (Empty)") {
-                    PlaylistView(medias: [])
+                    PlaylistView(templates: [])
                 }
             }
         }

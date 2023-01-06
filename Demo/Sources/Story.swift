@@ -10,9 +10,9 @@ import Foundation
 
 struct Story: Identifiable, Hashable {
     let id: Int
-    let source: Media
+    let template: Template
 
-    static func stories(from medias: [Media]) -> [Self] {
-        medias.enumerated().map { .init(id: $0, source: $1) }
+    static func stories(from medias: [Template]) -> [Self] {
+        medias.enumerated().map { .init(id: $0, template: $1) }
     }
 }

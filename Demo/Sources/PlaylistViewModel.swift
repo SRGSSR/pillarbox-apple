@@ -12,37 +12,41 @@ import SwiftUI
 
 @MainActor
 class PlaylistViewModel: ObservableObject {
-    static let standardMedias = [
-        MediaURL.onDemandVideoHLS,
-        MediaURL.shortOnDemandVideoHLS,
-        MediaURL.onDemandVideoMP4,
-        MediaURL.liveVideoHLS,
-        MediaURL.dvrVideoHLS,
-        MediaURL.liveTimestampVideoHLS,
-        MediaURL.onDemandAudioMP3,
-        MediaURL.liveAudioMP3,
-        MediaURN.onDemandHorizontalVideo,
-        MediaURN.onDemandSquareVideo,
-        MediaURN.onDemandVerticalVideo,
-        MediaURN.liveVideo,
-        MediaURN.dvrVideo,
-        MediaURN.dvrAudio,
-        MediaURN.onDemandAudio,
-        MediaURL.appleBasic_4_3_HLS,
-        MediaURL.appleBasic_16_9_TS_HLS,
-        MediaURL.appleAdvanced_16_9_TS_HLS,
-        MediaURL.appleAdvanced_16_9_fMP4_HLS,
-        MediaURL.appleAdvanced_16_9_HEVC_h264_HLS,
-        MediaURN.tokenProtectedVideo,
-        MediaURN.superfluousTokenProtectedVideo,
-        MediaURN.drmProtectedVideo,
-        MediaURN.expired,
-        MediaURN.unknown
+    static let standardTemplates = [
+        URLTemplate.onDemandVideoHLS,
+        URLTemplate.shortOnDemandVideoHLS,
+        URLTemplate.onDemandVideoMP4,
+        URLTemplate.liveVideoHLS,
+        URLTemplate.dvrVideoHLS,
+        URLTemplate.liveTimestampVideoHLS,
+        URLTemplate.onDemandAudioMP3,
+        URLTemplate.liveAudioMP3,
+        URNTemplate.onDemandHorizontalVideo,
+        URNTemplate.onDemandSquareVideo,
+        URNTemplate.onDemandVerticalVideo,
+        URNTemplate.liveVideo,
+        URNTemplate.dvrVideo,
+        URNTemplate.dvrAudio,
+        URNTemplate.onDemandAudio,
+        URLTemplate.appleBasic_4_3_HLS,
+        URLTemplate.appleBasic_16_9_TS_HLS,
+        URLTemplate.appleAdvanced_16_9_TS_HLS,
+        URLTemplate.appleAdvanced_16_9_fMP4_HLS,
+        URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS,
+        URNTemplate.tokenProtectedVideo,
+        URNTemplate.superfluousTokenProtectedVideo,
+        URNTemplate.drmProtectedVideo,
+        URNTemplate.expired,
+        URNTemplate.unknown
     ]
-    var initialMedias: [Media] = []
-    
-    var otherStandardMedias: [Media] {
-        Array(OrderedSet(Self.standardMedias).subtracting(OrderedSet(initialMedias)))
+    var otherStandardTemplates: [Template] {
+        Array(OrderedSet(Self.standardTemplates).subtracting(OrderedSet(templates)))
+    }
+
+    var templates: [Template] = [] {
+        didSet {
+            medias = templates.map { $0.media() }
+        }
     }
 
     let player = Player()
@@ -66,9 +70,6 @@ class PlaylistViewModel: ObservableObject {
         get {
             Array(items.keys)
         } set {
-            if initialMedias.isEmpty {
-                initialMedias = newValue
-            }
             items = Self.updated(initialItems: items, with: newValue)
         }
     }
@@ -81,8 +82,8 @@ class PlaylistViewModel: ObservableObject {
 
     // MARK: Internal methods
 
-    func add(_ mediasToAdd: [Media]) {
-        medias += mediasToAdd
+    func add(from templates: [Template]) {
+        medias += templates.map { $0.media() }
     }
 
     func shuffle() {
@@ -90,7 +91,7 @@ class PlaylistViewModel: ObservableObject {
     }
 
     func reload() {
-        medias = initialMedias
+        medias = templates.map { $0.media() }
     }
 
     // MARK: Private methods
@@ -115,7 +116,7 @@ class PlaylistViewModel: ObservableObject {
                     let previousPlayerItem = initialItems.elements[associatedWith].value
                     items.updateValue(previousPlayerItem, forKey: element, insertingAt: offset)
                 } else { // insert
-                    items.updateValue(element.playerItem, forKey: element, insertingAt: offset)
+                    items.updateValue(element.playerItem(), forKey: element, insertingAt: offset)
                 }
             case .remove(offset: let offset, element: _, associatedWith: _):
                 items.remove(at: offset)

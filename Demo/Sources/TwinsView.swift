@@ -47,7 +47,7 @@ struct TwinsView: View {
     }
 
     private func play() {
-        player.append(media.playerItem)
+        player.append(media.playerItem())
         player.play()
     }
 }
@@ -66,6 +66,6 @@ private extension TwinsView {
 
 struct TwinsView_Previews: PreviewProvider {
     static var previews: some View {
-        TwinsView(media: MediaURL.onDemandVideoLocalHLS)
+        TwinsView(media: URLTemplate.onDemandVideoLocalHLS.media())
     }
 }

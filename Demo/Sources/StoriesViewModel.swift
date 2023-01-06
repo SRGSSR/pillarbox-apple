@@ -37,7 +37,7 @@ final class StoriesViewModel: ObservableObject {
     }
 
     private static func player(for story: Story) -> Player {
-        Player(item: story.source.playerItem)
+        Player(item: story.template.media().playerItem())
     }
 
     private static func players(
