@@ -91,42 +91,41 @@ private struct Toolbar: View {
 
     var body: some View {
         HStack {
-            Group {
-                Button(action: model.returnToPreviousItem) {
-                    Image(systemName: "arrow.left")
-                }
-                .disabled(!model.canReturnToPreviousItem())
-                Spacer()
-                Button(action: model.shuffle) {
-                    Image(systemName: "shuffle")
-                }
-                .disabled(model.isEmpty)
-                Spacer()
-                Button(action: add) {
-                    Image(systemName: "plus")
-                }
-                Spacer()
+            Button(action: model.returnToPreviousItem) {
+                Image(systemName: "arrow.left")
             }
-            Group {
-                Button(action: model.reload) {
-                    Image(systemName: "arrow.triangle.2.circlepath")
-                }
-                Spacer()
-                Button(action: model.trash) {
-                    Image(systemName: "trash")
-                }
-                .disabled(model.isEmpty)
-                Spacer()
-                Button(action: model.advanceToNextItem) {
-                    Image(systemName: "arrow.right")
-                }
-                .disabled(!model.canAdvanceToNextItem())
+            .disabled(!model.canReturnToPreviousItem())
+            Spacer()
+            managementButtons()
+            Spacer()
+            Button(action: model.advanceToNextItem) {
+                Image(systemName: "arrow.right")
             }
+            .disabled(!model.canAdvanceToNextItem())
         }
         .padding()
         .frame(maxWidth: .infinity)
         .sheet(isPresented: $isSelectionPlaylistPresented, onDismiss: nil) {
             PlaylistSelectionView(model: model)
+        }
+    }
+
+    private func managementButtons() -> some View {
+        HStack(spacing: 30) {
+            Button(action: model.shuffle) {
+                Image(systemName: "shuffle")
+            }
+            .disabled(model.isEmpty)
+            Button(action: add) {
+                Image(systemName: "plus")
+            }
+            Button(action: model.reload) {
+                Image(systemName: "arrow.triangle.2.circlepath")
+            }
+            Button(action: model.trash) {
+                Image(systemName: "trash")
+            }
+            .disabled(model.isEmpty)
         }
     }
 
