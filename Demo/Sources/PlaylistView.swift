@@ -101,7 +101,6 @@ private struct AddMediaButton: View {
 private struct PlaylistSelectionView: View {
     let model: PlaylistViewModel
     @State private var mediasSelected: Set<Media> = []
-    @State private var editMode = EditMode.active
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -110,7 +109,7 @@ private struct PlaylistSelectionView: View {
                 section(name: "Original items", medias: model.initialMedias)
                 section(name: "Standard items", medias: model.otherStandardMedias)
             }
-            .environment(\.editMode, $editMode)
+            .environment(\.editMode, .constant(.active))
             .navigationBarTitle("Add a stream to the playlist")
 #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
