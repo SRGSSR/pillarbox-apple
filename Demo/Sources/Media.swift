@@ -374,7 +374,7 @@ enum URNPlaylist {
 
     static let videosWithErrors: [Template] = [
         URLTemplate.unknown,
-        URNTemplate.unknown,
+        URNTemplate.unknown
     ]
 
     static let tokenProtectedVideos: [Template] = [
@@ -387,7 +387,7 @@ enum URNPlaylist {
             title: "Ski alpin, Slalom Dames",
             description: "Token-protected video 2",
             type: .urn("urn:swisstxt:video:rts:1749741")
-        ),
+        )
     ]
 
     static let drmProtectedVideos: [Template] = [

@@ -321,7 +321,6 @@ struct PlayerViewImp: View {
     }
 }
 
-
 // MARK: Preview
 
 struct PlayerView_Previews: PreviewProvider {

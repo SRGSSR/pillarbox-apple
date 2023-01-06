@@ -532,8 +532,8 @@ private extension Player {
     private func sourcesPublisher() -> AnyPublisher<[Source], Never> {
         $storedItems
             .map { items in
-                return Publishers.AccumulateLatestMany(items.map { item in
-                    return item.$source
+                Publishers.AccumulateLatestMany(items.map { item in
+                    item.$source
                 })
             }
             .switchToLatest()

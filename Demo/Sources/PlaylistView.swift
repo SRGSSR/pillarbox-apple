@@ -29,7 +29,7 @@ struct PlaylistView: View {
 // Behavior: h-exp, v-exp
 private struct ListView: View {
     @ObservedObject var model: PlaylistViewModel
-    
+
     var body: some View {
         VStack(spacing: 0) {
             HStack {
@@ -48,7 +48,7 @@ private struct ListView: View {
 // Behavior: h-hug, v-hug
 private struct PlayingIndicatorView: View {
     let isVisible: Bool
-    
+
     var body: some View {
         Group {
             if isVisible {
@@ -65,7 +65,7 @@ private struct PlayingIndicatorView: View {
 private struct MediaCell: View {
     let media: Media
     let isPlaying: Bool
-    
+
     var body: some View {
         HStack {
             Text(media.title)
@@ -103,7 +103,7 @@ private struct PlaylistSelectionView: View {
     let model: PlaylistViewModel
     @State private var selectedTemplates: Set<Template> = []
     @Environment(\.dismiss) private var dismiss
-    
+
     var body: some View {
         NavigationView {
             List(selection: $selectedTemplates) {
@@ -149,7 +149,7 @@ private struct PlaylistSelectionView: View {
 // Behavior: h-exp, v-exp
 private struct ShufflePlaylistButton: View {
     @ObservedObject var model: PlaylistViewModel
-    
+
     var body: some View {
         HStack {
             Spacer()
@@ -172,7 +172,9 @@ private struct LoadNewPlaylistButton: View {
             Spacer()
             Button(action: {
                 model.reload()
-            }) { Image(systemName: "arrow.triangle.2.circlepath") }
+            }) {
+                Image(systemName: "arrow.triangle.2.circlepath")
+            }
             Spacer()
         }
         .padding(10)
@@ -188,7 +190,9 @@ private struct TrashPlaylistButton: View {
             Spacer()
             Button(action: {
                 model.trash()
-            }) { Image(systemName: "trash") }
+            }) {
+                Image(systemName: "trash")
+            }
             Spacer()
         }
         .padding(10)
@@ -202,7 +206,7 @@ struct PlaylistView_Previews: PreviewProvider {
         PlaylistView(templates: [
             URLTemplate.onDemandVideoLocalHLS,
             URLTemplate.shortOnDemandVideoHLS,
-            URLTemplate.dvrVideoHLS,
+            URLTemplate.dvrVideoHLS
         ])
     }
 }

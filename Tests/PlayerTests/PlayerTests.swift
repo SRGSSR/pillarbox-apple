@@ -22,7 +22,7 @@ final class PlayerTests: XCTestCase {
             during: 3
         )
     }
-    
+
     func testChunkDurationDuringEntirePlayback() {
         let item = PlayerItem(url: Stream.shortOnDemand.url)
         let player = Player(item: item)
@@ -33,7 +33,7 @@ final class PlayerTests: XCTestCase {
             player.play()
         }
     }
-    
+
     func testCheckDurationsDuringItemChange() {
         let item1 = PlayerItem(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem(url: Stream.onDemand.url)
@@ -51,11 +51,11 @@ final class PlayerTests: XCTestCase {
             player.play()
         }
     }
-    
+
     func testDeallocation() {
         let item = PlayerItem(url: Stream.onDemand.url)
         var player: Player? = Player(item: item)
-        
+
         weak var weakPlayer = player
         autoreleasepool {
             player = nil
