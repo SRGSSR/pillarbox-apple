@@ -21,7 +21,7 @@ private struct ListView: View {
                 LoadNewPlaylistButton(model: model)
                 TrashPlaylistButton(model: model)
             }
-            List($model.medias, editActions: .all, selection: $model.currentMedia) { $media in
+            List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
                 MediaCell(media: media, isPlaying: media == model.currentMedia)
             }
         }
