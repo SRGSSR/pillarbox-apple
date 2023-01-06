@@ -12,6 +12,12 @@ import Nimble
 import XCTest
 
 final class SourceTests: XCTestCase {
+    func testSourceEquality() {
+        expect(Source(id: UUID("1"), asset: .simple(url: Stream.dvr.url))).to(equal(Source(id: UUID("1"), asset: .simple(url: Stream.dvr.url))))
+        expect(Source(id: UUID("1"), asset: .simple(url: Stream.live.url))).notTo(equal(Source(id: UUID("1"), asset: .simple(url: Stream.dvr.url))))
+        expect(Source(id: UUID("1"), asset: .simple(url: Stream.dvr.url))).notTo(equal(Source(id: UUID("2"), asset: .simple(url: Stream.dvr.url))))
+    }
+
     func testPlayerItemsWithoutCurrentItem() {
         // Given
         let previousSources = [
