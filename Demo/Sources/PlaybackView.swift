@@ -76,7 +76,7 @@ private struct NextButton: View {
     var body: some View {
         Group {
             if player.canAdvanceToNextItem() {
-                Button(action: { player.advanceToNextItem() } ) {
+                Button(action: player.advanceToNextItem) {
                     Image(systemName: "arrow.right.circle.fill")
                         .resizable()
                         .tint(.white)
@@ -122,7 +122,7 @@ private struct PreviousButton: View {
     var body: some View {
         Group {
             if player.canReturnToPreviousItem() {
-                Button(action: { player.returnToPreviousItem() }) {
+                Button(action: player.returnToPreviousItem) {
                     Image(systemName: "arrow.left.circle.fill")
                         .resizable()
                         .tint(.white)
@@ -147,7 +147,7 @@ private struct LiveLabel: View {
 
     var body: some View {
         if player.streamType == .dvr || player.streamType == .live {
-            Button(action: { player.skipToLive() } ) {
+            Button(action: skipToLive) {
                 Text("LIVE")
                     .foregroundColor(.white)
                     .padding(.vertical, 4)
@@ -157,6 +157,10 @@ private struct LiveLabel: View {
             }
             .disabled(!canSkipToLive)
         }
+    }
+
+    private func skipToLive() {
+        player.skipToLive()
     }
 }
 

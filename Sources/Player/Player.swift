@@ -165,10 +165,8 @@ public final class Player: ObservableObject, Equatable {
     /// Return the current item to live conditions. Does nothing if the current item is not a livestream or does not
     /// support DVR.
     /// - Parameter completionHandler: A completion handler called when skipping ends.
-    /// - Returns: `true` if skipping to live conditions is possible.
-    @discardableResult
-    public func skipToLive(completionHandler: @escaping (Bool) -> Void = { _ in }) -> Bool {
-        guard canSkipToLive(), timeRange.isValid else { return false }
+    public func skipToLive(completionHandler: @escaping (Bool) -> Void = { _ in }) {
+        guard canSkipToLive(), timeRange.isValid else { return }
         rawPlayer.seek(
             to: timeRange.end,
             toleranceBefore: .positiveInfinity,
@@ -177,24 +175,18 @@ public final class Player: ObservableObject, Equatable {
             self?.play()
             completionHandler(finished)
         }
-        return true
     }
 
     /// Return the current item to live conditions, resuming playback if needed. Does nothing if the current item is
     ///  not a livestream or does not support DVR.
-    /// - Returns: `true` if skipping to live conditions is possible.
-    @discardableResult
-    public func skipToLive() async -> Bool {
-        guard canSkipToLive(), timeRange.isValid else {
-            return false
-        }
-        let seeked = await rawPlayer.seek(
+    public func skipToLive() async {
+        guard canSkipToLive(), timeRange.isValid else { return }
+        await rawPlayer.seek(
             to: timeRange.end,
             toleranceBefore: .positiveInfinity,
             toleranceAfter: .positiveInfinity
         )
         rawPlayer.play()
-        return seeked
     }
 
     /// Return a publisher periodically emitting the current time while the player is active. Emits the current time
@@ -413,12 +405,9 @@ public extension Player {
     }
 
     /// Return to the previous item in the deque. Skips failed items.
-    /// - Returns: `true` if not possible.
-    @discardableResult
-    func returnToPreviousItem() -> Bool {
-        guard canReturnToPreviousItem() else { return false}
+    func returnToPreviousItem() {
+        guard canReturnToPreviousItem() else { return }
         rawPlayer.replaceItems(with: AVPlayerItem.playerItems(from: returningItems))
-        return true
     }
 
     /// Check whether moving to the next item in the deque is possible.`
@@ -428,12 +417,9 @@ public extension Player {
     }
 
     /// Move to the next item in the deque.
-    /// - Returns: `true` if not possible.
-    @discardableResult
-    func advanceToNextItem() -> Bool {
-        guard canAdvanceToNextItem() else { return false }
+    func advanceToNextItem() {
+        guard canAdvanceToNextItem() else { return }
         rawPlayer.replaceItems(with: AVPlayerItem.playerItems(from: advancingItems))
-        return true
     }
 
     /// Set the index of the current item.
