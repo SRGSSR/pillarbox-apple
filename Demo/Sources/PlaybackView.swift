@@ -19,7 +19,16 @@ private struct ContentView: View {
         ZStack {
             Group {
                 VideoView(player: player)
-                ControlsView(player: player, isUserInterfaceHidden: isUserInterfaceHidden)
+                Group {
+                    Color(white: 0, opacity: 0.3)
+                    PlaybackButton(player: player)
+                }
+                .opacity(isUserInterfaceHidden ? 0 : 1)
+
+                ProgressView()
+                    .tint(Color.white)
+                    .opacity(player.isBuffering ? 1 : 0)
+                    .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
             }
             .onTapGesture {
                 isUserInterfaceHidden.toggle()
@@ -27,31 +36,11 @@ private struct ContentView: View {
             .accessibilityAddTraits(.isButton)
             .ignoresSafeArea()
 #if os(iOS)
-            TimeBar(player: player, isUserInterfaceHidden: isUserInterfaceHidden)
+            TimeBar(player: player)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
 #endif
         }
         .animation(.easeInOut(duration: 0.2), value: isUserInterfaceHidden)
-    }
-}
-
-// Behavior: h-exp, v-exp
-private struct ControlsView: View {
-    @ObservedObject var player: Player
-    let isUserInterfaceHidden: Bool
-
-    var body: some View {
-        ZStack {
-            if !isUserInterfaceHidden {
-                Color(white: 0, opacity: 0.3)
-                PlaybackButton(player: player)
-            }
-            if player.isBuffering {
-                ProgressView()
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
         .debugBodyCounter()
     }
 }
@@ -66,27 +55,6 @@ private struct MessageView: View {
             .foregroundColor(.white)
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-}
-
-// Behavior: h-hug, v-hug
-private struct NextButton: View {
-    @ObservedObject var player: Player
-
-    var body: some View {
-        Group {
-            if player.canAdvanceToNextItem() {
-                Button(action: player.advanceToNextItem) {
-                    Image(systemName: "arrow.right.circle.fill")
-                        .resizable()
-                        .tint(.white)
-                }
-            }
-            else {
-                Color.clear
-            }
-        }
-        .frame(width: 45, height: 45)
     }
 }
 
@@ -112,27 +80,6 @@ private struct PlaybackButton: View {
         .opacity(player.isBuffering ? 0 : 1)
         .frame(width: 90, height: 90)
         .debugBodyCounter(color: .green)
-    }
-}
-
-// Behavior: h-hug, v-hug
-private struct PreviousButton: View {
-    @ObservedObject var player: Player
-
-    var body: some View {
-        Group {
-            if player.canReturnToPreviousItem() {
-                Button(action: player.returnToPreviousItem) {
-                    Image(systemName: "arrow.left.circle.fill")
-                        .resizable()
-                        .tint(.white)
-                }
-            }
-            else {
-                Color.clear
-            }
-        }
-        .frame(width: 45, height: 45)
     }
 }
 
@@ -168,7 +115,6 @@ private struct LiveLabel: View {
 @available(tvOS, unavailable)
 private struct TimeBar: View {
     @ObservedObject var player: Player
-    let isUserInterfaceHidden: Bool
 
     @StateObject private var progressTracker = ProgressTracker(
         interval: CMTime(value: 1, timescale: 10),
@@ -177,10 +123,11 @@ private struct TimeBar: View {
 
     var body: some View {
         HStack(spacing: 0) {
+            RoutePickerView()
+                .frame(width: 45, height: 45)
             TimeSlider(player: player, progressTracker: progressTracker)
             LiveLabel(player: player, progressTracker: progressTracker)
         }
-        .opacity(isUserInterfaceHidden ? 0 : 1)
         .padding(.horizontal, 6)
         .bind(progressTracker, to: player)
     }
@@ -241,9 +188,8 @@ private struct TimeSlider: View {
                     }
                 )
             case .unknown:
-                // `EmptyView` has h-hug, v-hug behavior.
-                EmptyView()
-                    .frame(maxWidth: .infinity)
+                Slider(value: .constant(0))
+                    .hidden()
             default:
                 Slider(progressTracker: progressTracker) {
                     Text("Progress")
@@ -285,15 +231,6 @@ struct PlaybackView: View {
             }
         }
         .background(.black)
-        .overlay(alignment: .top) {
-            HStack(spacing: 49) {
-                PreviousButton(player: player)
-                RoutePickerView()
-                    .frame(width: 45, height: 45)
-                NextButton(player: player)
-            }
-            .padding()
-        }
         .onAppear {
             player.play()
         }

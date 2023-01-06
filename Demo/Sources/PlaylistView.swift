@@ -15,12 +15,7 @@ private struct ListView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
-                ShufflePlaylistButton(model: model)
-                AddMediaButton(model: model)
-                LoadNewPlaylistButton(model: model)
-                TrashPlaylistButton(model: model)
-            }
+            Toolbar(model: model)
             List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
                 MediaCell(media: media, isPlaying: media == model.currentMedia)
             }
@@ -132,50 +127,36 @@ private struct PlaylistSelectionView: View {
     }
 }
 
-// Behavior: h-exp, v-exp
-private struct ShufflePlaylistButton: View {
+// Behavior: h-exp, v-hug
+private struct Toolbar: View {
     @ObservedObject var model: PlaylistViewModel
 
     var body: some View {
         HStack {
+            Button(action: model.returnToPreviousItem) {
+                Image(systemName: "arrow.left")
+            }
+            .disabled(!model.canReturnToPreviousItem())
             Spacer()
             Button(action: model.shuffle) {
                 Image(systemName: "shuffle")
             }
             Spacer()
-        }
-    }
-}
-
-// Behavior: h-exp, v-exp
-private struct LoadNewPlaylistButton: View {
-    @ObservedObject var model: PlaylistViewModel
-
-    var body: some View {
-        HStack {
-            Spacer()
             Button(action: model.reload) {
                 Image(systemName: "arrow.triangle.2.circlepath")
             }
-            Spacer()
-        }
-        .padding(10)
-    }
-}
-
-// Behavior: h-exp, v-exp
-private struct TrashPlaylistButton: View {
-    @ObservedObject var model: PlaylistViewModel
-
-    var body: some View {
-        HStack {
             Spacer()
             Button(action: model.trash) {
                 Image(systemName: "trash")
             }
             Spacer()
+            Button(action: model.advanceToNextItem) {
+                Image(systemName: "arrow.right")
+            }
+            .disabled(!model.canAdvanceToNextItem())
         }
-        .padding(10)
+        .padding()
+        .frame(maxWidth: .infinity)
     }
 }
 
