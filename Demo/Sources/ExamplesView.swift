@@ -62,7 +62,7 @@ struct ExamplesView: View {
         URLTemplate.appleAdvanced_16_9_fMP4_HLS,
         URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS,
         URNTemplate.tokenProtectedVideo,
-        URNTemplate.superfluousTokenProtectedVideo,
+        URNTemplate.superfluouslyTokenProtectedVideo,
         URNTemplate.drmProtectedVideo,
         URNTemplate.expired,
         URNTemplate.unknown
