@@ -214,7 +214,7 @@ private struct TimeSlider: View {
 }
 
 /// A playback view with standard controls. Requires an ancestor view to own the player to be used.
-// Behavior: h-exp, v-exp
+/// Behavior: h-exp, v-exp
 struct PlaybackView: View {
     @ObservedObject var player: Player
 
