@@ -29,7 +29,8 @@ final class RawPlayer: AVQueuePlayer {
             if firstItem !== self.items().first {
                 removeAllItems()
                 replaceCurrentItem(with: firstItem)
-            } else if self.items().count > 1 {
+            }
+            else if self.items().count > 1 {
                 self.items().suffix(from: 1).forEach { item in
                     remove(item)
                 }

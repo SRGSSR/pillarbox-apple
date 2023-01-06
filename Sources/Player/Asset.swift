@@ -137,11 +137,11 @@ extension Asset {
 extension Asset: Equatable {
     public static func == (lhs: Asset, rhs: Asset) -> Bool {
         switch (lhs.type, rhs.type) {
-        case (.simple(url: let lhsUrl), .simple(url: let rhsUrl)):
+        case let (.simple(url: lhsUrl), .simple(url: rhsUrl)):
             return lhsUrl == rhsUrl
-        case (.custom(url: let lhsUrl, delegate: let lhsDelegate), .custom(url: let rhsUrl, delegate: let rhsDelegate)):
+        case let (.custom(url: lhsUrl, delegate: lhsDelegate), .custom(url: rhsUrl, delegate: rhsDelegate)):
             return lhsUrl == rhsUrl && lhsDelegate === rhsDelegate
-        case (.encrypted(url: let lhsUrl, delegate: let lhsDelegate), .encrypted(url: let rhsUrl, delegate: let rhsDelegate)):
+        case let (.encrypted(url: lhsUrl, delegate: lhsDelegate), .encrypted(url: rhsUrl, delegate: rhsDelegate)):
             return lhsUrl == rhsUrl && lhsDelegate === rhsDelegate
         default:
             return false

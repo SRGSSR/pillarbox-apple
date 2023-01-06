@@ -33,9 +33,9 @@ final class SourceTests: XCTestCase {
 
         // Then
         expect(result.count).to(equal(currentSources.count))
-        expect(zip(result, currentSources)).to(allPass({ item, source in
+        expect(zip(result, currentSources)).to(allPass { item, source in
             source.matches(item)
-        }))
+        })
     }
 
     func testPlayerItemsWithPreservedCurrentItem() {
@@ -66,9 +66,9 @@ final class SourceTests: XCTestCase {
             Source(id: UUID("C"), asset: .loading)
         ]
         expect(result.count).to(equal(expected.count))
-        expect(zip(result, expected)).to(allPass({ item, source in
+        expect(zip(result, expected)).to(allPass { item, source in
             source.matches(item)
-        }))
+        })
         expect(result.first).to(equal(currentItem))
     }
 
@@ -98,9 +98,9 @@ final class SourceTests: XCTestCase {
             currentItemSource
         ]
         expect(result.count).to(equal(expected.count))
-        expect(zip(result, expected)).to(allPass({ item, source in
+        expect(zip(result, expected)).to(allPass { item, source in
             source.matches(item)
-        }))
+        })
         expect(result.first).to(equal(currentItem))
     }
 
@@ -121,9 +121,9 @@ final class SourceTests: XCTestCase {
 
         // Then
         expect(result.count).to(equal(currentSources.count))
-        expect(zip(result, currentSources)).to(allPass({ item, source in
+        expect(zip(result, currentSources)).to(allPass { item, source in
             source.matches(item)
-        }))
+        })
     }
 
     func testPlayerItemsWithCurrentItemReplacedByAnotherItem() {
@@ -153,9 +153,9 @@ final class SourceTests: XCTestCase {
             Source(id: UUID("C"), asset: .loading)
         ]
         expect(result.count).to(equal(expected.count))
-        expect(zip(result, expected)).to(allPass({ item, source in
+        expect(zip(result, expected)).to(allPass { item, source in
             source.matches(item)
-        }))
+        })
     }
 
     func testPlayerItemsWithUpdatedCurrentItem() {
@@ -178,9 +178,9 @@ final class SourceTests: XCTestCase {
 
         // Then
         expect(result.count).to(equal(currentSources.count))
-        expect(zip(result, currentSources)).to(allPass({ item, source in
+        expect(zip(result, currentSources)).to(allPass { item, source in
             source.matches(item)
-        }))
+        })
         expect(result.first).notTo(equal(currentItem))
     }
 }

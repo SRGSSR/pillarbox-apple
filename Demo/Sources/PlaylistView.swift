@@ -10,23 +10,6 @@ import SwiftUI
 // MARK: View
 
 // Behavior: h-exp, v-exp
-struct PlaylistView: View {
-    @StateObject private var model = PlaylistViewModel()
-    @State var templates: [Template]
-
-    var body: some View {
-        VStack(spacing: 0) {
-            PlayerViewImp(player: model.player)
-            ListView(model: model)
-        }
-        .onAppear { model.templates = templates }
-        .onChange(of: templates) { newValue in
-            model.templates = newValue
-        }
-    }
-}
-
-// Behavior: h-exp, v-exp
 private struct ListView: View {
     @ObservedObject var model: PlaylistViewModel
 
@@ -53,7 +36,8 @@ private struct PlayingIndicatorView: View {
         Group {
             if isVisible {
                 Image(systemName: "play.circle")
-            } else {
+            }
+            else {
                 Color.clear
             }
         }
@@ -83,18 +67,20 @@ private struct AddMediaButton: View {
     var body: some View {
         HStack {
             Spacer()
-            Button {
-                isSelectionPlaylistPresented.toggle()
-            } label: {
+            Button(action: add) {
                 Image(systemName: "plus")
             }
             .frame(width: 30, height: 30)
             .foregroundColor(.accentColor)
-            .sheet(isPresented: $isSelectionPlaylistPresented, onDismiss: nil, content: {
+            .sheet(isPresented: $isSelectionPlaylistPresented, onDismiss: nil) {
                 PlaylistSelectionView(model: model)
-            })
+            }
             Spacer()
         }
+    }
+
+    private func add() {
+        isSelectionPlaylistPresented.toggle()
     }
 }
 
@@ -116,7 +102,7 @@ private struct PlaylistSelectionView: View {
             .navigationBarTitleDisplayMode(.inline)
 #endif
             .navigationBarItems(leading: Button("Cancel", action: cancel))
-            .navigationBarItems(trailing: Button("Add", action: { add() }))
+            .navigationBarItems(trailing: Button("Add") { add() })
         }
     }
 
@@ -128,7 +114,8 @@ private struct PlaylistSelectionView: View {
                         Text(media.title)
                     }
                 }
-            } else {
+            }
+            else {
                 EmptyView()
             }
         }
@@ -196,6 +183,23 @@ private struct TrashPlaylistButton: View {
             Spacer()
         }
         .padding(10)
+    }
+}
+
+// Behavior: h-exp, v-exp
+struct PlaylistView: View {
+    @StateObject private var model = PlaylistViewModel()
+    @State var templates: [Template]
+
+    var body: some View {
+        VStack(spacing: 0) {
+            PlayerViewImp(player: model.player)
+            ListView(model: model)
+        }
+        .onAppear { model.templates = templates }
+        .onChange(of: templates) { newValue in
+            model.templates = newValue
+        }
     }
 }
 

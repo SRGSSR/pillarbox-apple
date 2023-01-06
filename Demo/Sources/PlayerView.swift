@@ -263,31 +263,6 @@ private struct TimeSlider: View {
 }
 
 // Behavior: h-exp, v-exp
-struct PlayerView: View {
-    private let medias: [Media]
-    @StateObject private var player = Player()
-
-    var body: some View {
-        PlayerViewImp(player: player)
-            .onAppear {
-                load()
-            }
-    }
-
-    init(medias: [Media]) {
-        self.medias = medias
-    }
-
-    init(media: Media) {
-        self.init(medias: [media])
-    }
-
-    private func load() {
-        player.items = medias.map { $0.playerItem() }
-    }
-}
-
-// Behavior: h-exp, v-exp
 struct PlayerViewImp: View {
     @ObservedObject var player: Player
 
@@ -318,6 +293,31 @@ struct PlayerViewImp: View {
         .onAppear {
             player.play()
         }
+    }
+}
+
+// Behavior: h-exp, v-exp
+struct PlayerView: View {
+    private let medias: [Media]
+    @StateObject private var player = Player()
+
+    var body: some View {
+        PlayerViewImp(player: player)
+            .onAppear {
+                load()
+            }
+    }
+
+    init(medias: [Media]) {
+        self.medias = medias
+    }
+
+    init(media: Media) {
+        self.init(medias: [media])
+    }
+
+    private func load() {
+        player.items = medias.map { $0.playerItem() }
     }
 }
 

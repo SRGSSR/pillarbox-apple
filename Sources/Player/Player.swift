@@ -508,7 +508,7 @@ private extension Player {
                 storedItems.isEmpty || currentItem != nil
             }
             .map { storedItems, currentItem in
-                storedItems.firstIndex(where: { $0.matches(currentItem) })
+                storedItems.firstIndex { $0.matches(currentItem) }
             }
             .removeDuplicates()
             .receiveOnMainThread()
