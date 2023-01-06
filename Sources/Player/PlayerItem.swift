@@ -58,13 +58,25 @@ extension PlayerItem: CustomDebugStringConvertible {
     }
 }
 
+extension Source {
+    func matches(_ item: AVPlayerItem?) -> Bool {
+        id == item?.id
+    }
+
+    func playerItem() -> AVPlayerItem {
+        asset.playerItem().withId(id)
+    }
+}
+
 extension AVPlayerItem {
     static func playerItems(from items: [PlayerItem]) -> [AVPlayerItem] {
         playerItems(from: items.map(\.source))
     }
+}
 
+private extension AVPlayerItem {
     /// An identifier to identify player items delivered by the same data source.
-    private(set) var id: UUID? {
+    var id: UUID? {
         get {
             objc_getAssociatedObject(self, &kIdKey) as? UUID
         }

@@ -72,7 +72,7 @@ final class SourceTests: XCTestCase {
         expect(result.first).to(equal(currentItem))
     }
 
-    func testPlayerItemsWithPreservedCurrentItemPreservedAtEnd() {
+    func testPlayerItemsWithPreservedCurrentItemAtEnd() {
         // Given
         let currentItemSource = Source(id: UUID("3"), asset: .loading)
         let previousSources = [
@@ -126,19 +126,19 @@ final class SourceTests: XCTestCase {
         }))
     }
 
-    func testPlayerItemsWithCurrentItemReplacedByNextItem() {
+    func testPlayerItemsWithCurrentItemReplacedByAnotherItem() {
         // Given
         let currentItemSource = Source(id: UUID("1"), asset: .loading)
-        let nextSource = Source(id: UUID("2"), asset: .loading)
+        let otherSource = Source(id: UUID("2"), asset: .loading)
 
         let previousSources = [
             currentItemSource,
-            nextSource,
+            otherSource,
             Source(id: UUID("3"), asset: .loading)
         ]
         let currentSources = [
             Source(id: UUID("3"), asset: .loading),
-            nextSource,
+            otherSource,
             Source(id: UUID("C"), asset: .loading)
         ]
 
@@ -149,7 +149,7 @@ final class SourceTests: XCTestCase {
 
         // Then
         let expected = [
-            nextSource,
+            otherSource,
             Source(id: UUID("C"), asset: .loading)
         ]
         expect(result.count).to(equal(expected.count))

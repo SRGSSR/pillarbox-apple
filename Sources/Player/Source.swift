@@ -14,14 +14,6 @@ struct Source: Identifiable, Equatable {
     static func == (lhs: Source, rhs: Source) -> Bool {
         lhs.id == rhs.id && lhs.asset == rhs.asset
     }
-
-    func playerItem() -> AVPlayerItem {
-        asset.playerItem().withId(id)
-    }
-
-    func matches(_ item: AVPlayerItem?) -> Bool {
-        id == item?.id
-    }
 }
 
 extension AVPlayerItem {
