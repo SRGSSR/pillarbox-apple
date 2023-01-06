@@ -102,7 +102,7 @@ private struct PlaylistSelectionView: View {
             .navigationBarTitleDisplayMode(.inline)
 #endif
             .navigationBarItems(leading: Button("Cancel", action: cancel))
-            .navigationBarItems(trailing: Button("Add") { add() })
+            .navigationBarItems(trailing: Button("Add", action: add))
         }
     }
 
@@ -126,7 +126,6 @@ private struct PlaylistSelectionView: View {
         dismiss()
     }
 
-    @MainActor
     private func add() {
         model.add(from: Array(selectedTemplates))
         cancel()
@@ -140,9 +139,7 @@ private struct ShufflePlaylistButton: View {
     var body: some View {
         HStack {
             Spacer()
-            Button(action: {
-                model.shuffle()
-            }) {
+            Button(action: model.shuffle) {
                 Image(systemName: "shuffle")
             }
             Spacer()
@@ -157,9 +154,7 @@ private struct LoadNewPlaylistButton: View {
     var body: some View {
         HStack {
             Spacer()
-            Button(action: {
-                model.reload()
-            }) {
+            Button(action: model.reload) {
                 Image(systemName: "arrow.triangle.2.circlepath")
             }
             Spacer()
@@ -175,9 +170,7 @@ private struct TrashPlaylistButton: View {
     var body: some View {
         HStack {
             Spacer()
-            Button(action: {
-                model.trash()
-            }) {
+            Button(action: model.trash) {
                 Image(systemName: "trash")
             }
             Spacer()

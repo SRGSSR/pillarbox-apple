@@ -11,7 +11,6 @@ import CoreMedia
 import Nimble
 import XCTest
 
-@MainActor
 final class PlayerSkipToLiveTests: XCTestCase {
     func testCannotSkipToLiveWhenEmpty() {
         let player = Player()

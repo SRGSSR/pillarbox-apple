@@ -11,7 +11,6 @@ import CoreMedia
 import Nimble
 import XCTest
 
-@MainActor
 final class PlayerTests: XCTestCase {
     func testChunkDuration() {
         let item = PlayerItem(url: Stream.shortOnDemand.url)

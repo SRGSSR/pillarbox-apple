@@ -11,7 +11,6 @@ import DequeModule
 import TimelaneCombine
 
 /// An audio / video player maintaining its items as a double-ended queue (deque).
-@MainActor
 public final class Player: ObservableObject, Equatable {
     /// Current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle

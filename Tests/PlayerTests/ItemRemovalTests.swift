@@ -10,7 +10,6 @@ import Circumspect
 import Nimble
 import XCTest
 
-@MainActor
 final class ItemRemovalTests: XCTestCase {
     func testRemovePreviousItem() {
         let item1 = PlayerItem(url: Stream.item(numbered: 1).url)

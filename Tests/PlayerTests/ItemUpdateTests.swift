@@ -10,7 +10,6 @@ import Circumspect
 import Nimble
 import XCTest
 
-@MainActor
 final class ItemUpdateTests: XCTestCase {
     func testUpdateWithCurrentItem() {
         let item1 = PlayerItem(url: Stream.item(numbered: 1).url)

@@ -10,7 +10,6 @@ import OrderedCollections
 import Player
 import SwiftUI
 
-@MainActor
 class PlaylistViewModel: ObservableObject {
     static let standardTemplates = [
         URLTemplate.onDemandVideoHLS,

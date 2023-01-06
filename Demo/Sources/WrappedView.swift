@@ -11,7 +11,6 @@ import SwiftUI
 // MARK: View
 
 // Behavior: h-exp, v-exp
-@MainActor
 struct WrappedView: View {
     let media: Media
 
@@ -21,10 +20,10 @@ struct WrappedView: View {
         VStack(spacing: 10) {
             BasicPlaybackView(player: model.player)
             HStack {
-                Button(action: { play() }) {
+                Button(action: play) {
                     Text("Play")
                 }
-                Button(action: { stop() }) {
+                Button(action: stop) {
                     Text("Stop")
                 }
             }

@@ -11,7 +11,6 @@ import SwiftUI
 /// Tracks playback progress. Progress trackers can be locally instantiated in a SwiftUI view hierarchy to trigger
 /// view updates at a specific pace, avoiding unnecessary refreshes in other parts of the view hierarchy that do
 /// not need to be periodically refreshed.
-@MainActor
 public final class ProgressTracker: ObservableObject {
     private struct State {
         let time: CMTime
@@ -128,7 +127,6 @@ public extension View {
     /// - Parameters:
     ///   - progressTracker: The progress tracker to bind.
     ///   - player: The player to observe.
-    @MainActor
     func bind(_ progressTracker: ProgressTracker, to player: Player?) -> some View {
         onAppear {
             progressTracker.player = player

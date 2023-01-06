@@ -9,7 +9,6 @@
 import Nimble
 import XCTest
 
-@MainActor
 final class PlayerStreamTypeTests: XCTestCase {
     func testEmpty() {
         let player = Player()

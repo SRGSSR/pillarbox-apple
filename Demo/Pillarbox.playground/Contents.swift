@@ -52,7 +52,7 @@ struct PlayerView: View {
         ZStack {
             VideoView(player: player)
             if let playbackButtonImage {
-                Button(action: { player.togglePlayPause() }) {
+                Button(action: player.togglePlayPause) {
                     Image(systemName: playbackButtonImage)
                         .resizable()
                         .frame(width: 44, height: 44)

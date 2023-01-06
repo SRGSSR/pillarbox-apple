@@ -11,7 +11,6 @@ import Circumspect
 import Nimble
 import XCTest
 
-@MainActor
 final class SourceTests: XCTestCase {
     func testPlayerItemsWithoutCurrentItem() {
         // Given

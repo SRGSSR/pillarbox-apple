@@ -11,7 +11,6 @@ import Nimble
 import Player
 import XCTest
 
-@MainActor
 final class PlayerItemTests: XCTestCase {
     func testURNPlaybackHLS() {
         let item = PlayerItem(urn: "urn:rts:video:6820736")

@@ -12,7 +12,6 @@ import CoreMedia
 import Nimble
 import XCTest
 
-@MainActor
 final class PlayerCurrentIndexTests: XCTestCase {
     func testCurrentIndex() {
         let item1 = PlayerItem(url: Stream.shortOnDemand.url)
