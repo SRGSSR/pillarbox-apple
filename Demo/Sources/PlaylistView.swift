@@ -100,6 +100,7 @@ private struct Toolbar: View {
                 Button(action: model.shuffle) {
                     Image(systemName: "shuffle")
                 }
+                .disabled(model.isEmpty)
                 Spacer()
                 Button(action: add) {
                     Image(systemName: "plus")
@@ -114,6 +115,7 @@ private struct Toolbar: View {
                 Button(action: model.trash) {
                     Image(systemName: "trash")
                 }
+                .disabled(model.isEmpty)
                 Spacer()
                 Button(action: model.advanceToNextItem) {
                     Image(systemName: "arrow.right")

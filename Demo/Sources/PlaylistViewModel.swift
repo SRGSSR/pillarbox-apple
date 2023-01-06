@@ -59,6 +59,10 @@ class PlaylistViewModel: ObservableObject {
         }
     }
 
+    var isEmpty: Bool {
+        medias.isEmpty
+    }
+
     @Published var currentMedia: Media? {
         didSet {
             guard
