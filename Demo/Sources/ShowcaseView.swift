@@ -71,28 +71,28 @@ struct ShowcaseView: View {
             }
             Group {
                 Cell(title: "Playlist (URLs)") {
-                    PlaylistView(templates: URLPlaylist.videos)
+                    PlaylistView(templates: URLTemplates.videos)
                 }
                 Cell(title: "Playlist (URNs)") {
-                    PlaylistView(templates: URNPlaylist.videos)
+                    PlaylistView(templates: URNTemplates.videos)
                 }
                 Cell(title: "Playlist (URNs, long)") {
-                    PlaylistView(templates: URNPlaylist.longVideos)
+                    PlaylistView(templates: URNTemplates.longVideos)
                 }
                 Cell(title: "Playlist (URNs, token-protected)") {
-                    PlaylistView(templates: URNPlaylist.tokenProtectedVideos)
+                    PlaylistView(templates: URNTemplates.tokenProtectedVideos)
                 }
                 Cell(title: "Playlist (URNs, DRM-protected)") {
-                    PlaylistView(templates: URNPlaylist.drmProtectedVideos)
+                    PlaylistView(templates: URNTemplates.drmProtectedVideos)
                 }
                 Cell(title: "Audio playlist (URNs)") {
-                    PlaylistView(templates: URNPlaylist.audios)
+                    PlaylistView(templates: URNTemplates.audios)
                 }
                 Cell(title: "Playlist (with one error)") {
-                    PlaylistView(templates: URNPlaylist.videosWithOneError)
+                    PlaylistView(templates: URNTemplates.videosWithOneError)
                 }
                 Cell(title: "Playlist (with errors)") {
-                    PlaylistView(templates: URNPlaylist.videosWithErrors)
+                    PlaylistView(templates: URNTemplates.videosWithErrors)
                 }
                 Cell(title: "Playlist (Empty)") {
                     PlaylistView(templates: [])
