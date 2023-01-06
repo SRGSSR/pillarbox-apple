@@ -28,7 +28,6 @@ private struct ContentView: View {
                 ProgressView()
                     .tint(Color.white)
                     .opacity(player.isBuffering ? 1 : 0)
-                    .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
             }
             .onTapGesture {
                 isUserInterfaceHidden.toggle()
@@ -37,9 +36,11 @@ private struct ContentView: View {
             .ignoresSafeArea()
 #if os(iOS)
             TimeBar(player: player)
+                .opacity(isUserInterfaceHidden ? 0 : 1)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
 #endif
         }
+        .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
         .animation(.easeInOut(duration: 0.2), value: isUserInterfaceHidden)
         .debugBodyCounter()
     }
@@ -212,6 +213,7 @@ private struct TimeSlider: View {
     }
 }
 
+/// A playback view with standard controls. Requires an ancestor view to own the player to be used.
 // Behavior: h-exp, v-exp
 struct PlaybackView: View {
     @ObservedObject var player: Player

@@ -23,23 +23,6 @@ private struct ListView: View {
     }
 }
 
-// Behavior: h-hug, v-hug
-private struct PlayingIndicatorView: View {
-    let isVisible: Bool
-
-    var body: some View {
-        Group {
-            if isVisible {
-                Image(systemName: "play.circle")
-            }
-            else {
-                Color.clear
-            }
-        }
-        .frame(maxWidth: 30, maxHeight: 30)
-    }
-}
-
 // Behavior: h-exp, v-exp
 private struct MediaCell: View {
     let media: Media
@@ -49,33 +32,10 @@ private struct MediaCell: View {
         HStack {
             Text(media.title)
             Spacer()
-            PlayingIndicatorView(isVisible: isPlaying)
+            Image(systemName: "play.circle")
+                .frame(maxWidth: 30, maxHeight: 30)
+                .opacity(isPlaying ? 1 : 0)
         }
-    }
-}
-
-// Behavior: h-exp, v-exp
-private struct AddMediaButton: View {
-    let model: PlaylistViewModel
-    @State private var isSelectionPlaylistPresented = false
-
-    var body: some View {
-        HStack {
-            Spacer()
-            Button(action: add) {
-                Image(systemName: "plus")
-            }
-            .frame(width: 30, height: 30)
-            .foregroundColor(.accentColor)
-            .sheet(isPresented: $isSelectionPlaylistPresented, onDismiss: nil) {
-                PlaylistSelectionView(model: model)
-            }
-            Spacer()
-        }
-    }
-
-    private func add() {
-        isSelectionPlaylistPresented.toggle()
     }
 }
 
@@ -110,9 +70,6 @@ private struct PlaylistSelectionView: View {
                     }
                 }
             }
-            else {
-                EmptyView()
-            }
         }
     }
 
@@ -130,33 +87,49 @@ private struct PlaylistSelectionView: View {
 // Behavior: h-exp, v-hug
 private struct Toolbar: View {
     @ObservedObject var model: PlaylistViewModel
+    @State private var isSelectionPlaylistPresented = false
 
     var body: some View {
         HStack {
-            Button(action: model.returnToPreviousItem) {
-                Image(systemName: "arrow.left")
+            Group {
+                Button(action: model.returnToPreviousItem) {
+                    Image(systemName: "arrow.left")
+                }
+                .disabled(!model.canReturnToPreviousItem())
+                Spacer()
+                Button(action: model.shuffle) {
+                    Image(systemName: "shuffle")
+                }
+                Spacer()
+                Button(action: add) {
+                    Image(systemName: "plus")
+                }
+                Spacer()
             }
-            .disabled(!model.canReturnToPreviousItem())
-            Spacer()
-            Button(action: model.shuffle) {
-                Image(systemName: "shuffle")
+            Group {
+                Button(action: model.reload) {
+                    Image(systemName: "arrow.triangle.2.circlepath")
+                }
+                Spacer()
+                Button(action: model.trash) {
+                    Image(systemName: "trash")
+                }
+                Spacer()
+                Button(action: model.advanceToNextItem) {
+                    Image(systemName: "arrow.right")
+                }
+                .disabled(!model.canAdvanceToNextItem())
             }
-            Spacer()
-            Button(action: model.reload) {
-                Image(systemName: "arrow.triangle.2.circlepath")
-            }
-            Spacer()
-            Button(action: model.trash) {
-                Image(systemName: "trash")
-            }
-            Spacer()
-            Button(action: model.advanceToNextItem) {
-                Image(systemName: "arrow.right")
-            }
-            .disabled(!model.canAdvanceToNextItem())
         }
         .padding()
         .frame(maxWidth: .infinity)
+        .sheet(isPresented: $isSelectionPlaylistPresented, onDismiss: nil) {
+            PlaylistSelectionView(model: model)
+        }
+    }
+
+    private func add() {
+        isSelectionPlaylistPresented.toggle()
     }
 }
 

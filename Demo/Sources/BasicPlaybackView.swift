@@ -26,6 +26,7 @@ private struct TimeSlider: View {
     }
 }
 
+/// A playback view with basic controls. Requires an ancestor view to own the player to be used.
 // Behavior: h-exp, v-exp
 struct BasicPlaybackView: View {
     @ObservedObject var player: Player
@@ -38,9 +39,8 @@ struct BasicPlaybackView: View {
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
 #endif
-            if player.isBuffering {
-                ProgressView()
-            }
+            ProgressView()
+                .opacity(player.isBuffering ? 1 : 0)
         }
     }
 }

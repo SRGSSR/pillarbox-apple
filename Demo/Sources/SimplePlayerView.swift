@@ -19,9 +19,8 @@ struct SimplePlayerView: View {
     var body: some View {
         ZStack {
             VideoView(player: player)
-            if player.isBuffering {
-                ProgressView()
-            }
+            ProgressView()
+                .opacity(player.isBuffering ? 1 : 0)
         }
         .onAppear {
             play()

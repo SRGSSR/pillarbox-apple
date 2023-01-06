@@ -18,12 +18,8 @@ private struct StoryView: View {
         ZStack {
             VideoView(player: player, gravity: .resizeAspectFill)
                 .ignoresSafeArea()
-            if player.isBuffering {
-                // Ensure the animation is applied by setting its zIndex
-                // See https://sarunw.com/posts/how-to-fix-zstack-transition-animation-in-swiftui/
-                ProgressView()
-                    .zIndex(1)
-            }
+            ProgressView()
+                .opacity(player.isBuffering ? 1 : 0)
             TimeProgress(player: player)
         }
         .tint(.white)

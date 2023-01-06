@@ -21,9 +21,8 @@ struct LinkView: View {
         VStack(spacing: 10) {
             ZStack {
                 BasicPlaybackView(player: isDisplayed ? player : Player())
-                if player.isBuffering {
-                    ProgressView()
-                }
+                ProgressView()
+                    .opacity(player.isBuffering ? 1 : 0)
             }
             Toggle("Content displayed", isOn: $isDisplayed)
                 .padding()

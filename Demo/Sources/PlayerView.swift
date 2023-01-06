@@ -10,6 +10,7 @@ import SwiftUI
 
 // MARK: View
 
+/// A standalone player view with standard controls.
 // Behavior: h-exp, v-exp
 struct PlayerView: View {
     private let medias: [Media]
