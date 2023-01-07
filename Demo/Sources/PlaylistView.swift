@@ -71,7 +71,6 @@ private struct PlaylistSelectionView: View {
     }
 
     private func cancel() {
-        selectedTemplates = []
         dismiss()
     }
 
