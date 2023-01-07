@@ -9,8 +9,6 @@ import Foundation
 import OrderedCollections
 import Player
 
-// MARK: View model
-
 final class StoriesViewModel: ObservableObject {
     private static let preloadDistance = 1
     private var players = OrderedDictionary<Story, Player?>()

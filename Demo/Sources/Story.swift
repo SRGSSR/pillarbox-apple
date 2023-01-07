@@ -6,8 +6,6 @@
 
 import Foundation
 
-// MARK: Types
-
 struct Story: Identifiable, Hashable {
     let id: Int
     let template: Template

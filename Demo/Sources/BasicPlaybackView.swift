@@ -8,8 +8,6 @@ import CoreMedia
 import Player
 import SwiftUI
 
-// MARK: View
-
 // Behavior: h-exp, v-hug
 @available(tvOS, unavailable)
 private struct TimeSlider: View {
@@ -44,8 +42,6 @@ struct BasicPlaybackView: View {
         }
     }
 }
-
-// MARK: Preview
 
 struct BasicPlaybackView_Previews: PreviewProvider {
     static var previews: some View {

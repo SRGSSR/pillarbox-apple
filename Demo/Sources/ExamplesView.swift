@@ -6,8 +6,6 @@
 
 import SwiftUI
 
-// MARK: Cells
-
 // Behavior: h-hug, v-hug
 private struct MediaCell: View {
     let media: Media
@@ -35,8 +33,6 @@ private struct MediaCell: View {
         isPlayerPresented.toggle()
     }
 }
-
-// MARK: View
 
 // Behavior: h-exp, v-exp
 struct ExamplesView: View {
@@ -106,8 +102,6 @@ struct ExamplesView: View {
         }
     }
 }
-
-// MARK: Preview
 
 struct ExamplesView_Previews: PreviewProvider {
     static var previews: some View {

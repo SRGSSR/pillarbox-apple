@@ -7,8 +7,6 @@
 import Combine
 import Player
 
-// MARK: View model
-
 final class WrappedViewModel: ObservableObject {
     @Published var player = Player()
 }

@@ -6,8 +6,6 @@
 
 import SwiftUI
 
-// MARK: Cells
-
 // Behavior: h-hug, v-hug
 private struct Cell<Presented: View>: View {
     let title: String
@@ -27,8 +25,6 @@ private struct Cell<Presented: View>: View {
         isPresented.toggle()
     }
 }
-
-// MARK: View
 
 // Behavior: h-exp, v-exp
 struct ShowcaseView: View {
@@ -107,8 +103,6 @@ struct ShowcaseView: View {
         }
     }
 }
-
-// MARK: Preview
 
 struct ShowcaseView_Previews: PreviewProvider {
     static var previews: some View {

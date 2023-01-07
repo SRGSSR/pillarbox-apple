@@ -8,8 +8,6 @@ import AVFoundation
 import Player
 import SwiftUI
 
-// MARK: View
-
 // Behavior: h-exp, v-exp
 private struct ContentView: View {
     @ObservedObject var player: Player
@@ -238,8 +236,6 @@ struct PlaybackView: View {
         }
     }
 }
-
-// MARK: Preview
 
 struct PlaybackView_Previews: PreviewProvider {
     static var previews: some View {

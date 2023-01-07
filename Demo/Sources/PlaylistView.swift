@@ -7,8 +7,6 @@
 import Player
 import SwiftUI
 
-// MARK: View
-
 // Behavior: h-exp, v-exp
 private struct ListView: View {
     @ObservedObject var model: PlaylistViewModel
@@ -150,8 +148,6 @@ struct PlaylistView: View {
         }
     }
 }
-
-// MARK: Previews
 
 struct PlaylistView_Previews: PreviewProvider {
     static var previews: some View {

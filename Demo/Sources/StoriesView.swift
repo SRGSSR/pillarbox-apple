@@ -8,8 +8,6 @@ import AVFoundation
 import Player
 import SwiftUI
 
-// MARK: View
-
 // Behavior: h-exp, v-exp
 private struct StoryView: View {
     @ObservedObject var player: Player
@@ -60,8 +58,6 @@ struct StoriesView: View {
         .ignoresSafeArea()
     }
 }
-
-// MARK: Preview
 
 struct StoriesView_Previews: PreviewProvider {
     static var previews: some View {

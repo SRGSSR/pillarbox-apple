@@ -8,8 +8,6 @@ import AVFoundation
 import Player
 import SwiftUI
 
-// MARK: View
-
 // Behavior: h-exp, v-exp
 struct LinkView: View {
     let media: Media
@@ -37,8 +35,6 @@ struct LinkView: View {
         player.play()
     }
 }
-
-// MARK: Preview
 
 struct LinkView_Previews: PreviewProvider {
     static var previews: some View {

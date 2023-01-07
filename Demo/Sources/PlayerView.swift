@@ -8,8 +8,6 @@ import AVFoundation
 import Player
 import SwiftUI
 
-// MARK: View
-
 /// A standalone player view with standard controls.
 /// Behavior: h-exp, v-exp
 struct PlayerView: View {
@@ -35,8 +33,6 @@ struct PlayerView: View {
         player.items = medias.map { $0.playerItem() }
     }
 }
-
-// MARK: Preview
 
 struct PlayerView_Previews: PreviewProvider {
     static var previews: some View {

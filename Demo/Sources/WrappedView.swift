@@ -8,8 +8,6 @@ import AVFoundation
 import Player
 import SwiftUI
 
-// MARK: View
-
 // Behavior: h-exp, v-exp
 struct WrappedView: View {
     let media: Media
@@ -44,8 +42,6 @@ struct WrappedView: View {
         model.player = Player()
     }
 }
-
-// MARK: Preview
 
 struct WrappedView_Previews: PreviewProvider {
     static var previews: some View {

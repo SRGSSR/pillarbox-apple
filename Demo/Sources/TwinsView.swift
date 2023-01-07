@@ -8,8 +8,6 @@ import AVFoundation
 import Player
 import SwiftUI
 
-// MARK: View
-
 // Behavior: h-exp, v-exp
 struct TwinsView: View {
     let media: Media
@@ -52,8 +50,6 @@ struct TwinsView: View {
     }
 }
 
-// MARK: Types
-
 private extension TwinsView {
     enum Mode {
         case both
@@ -61,8 +57,6 @@ private extension TwinsView {
         case bottom
     }
 }
-
-// MARK: Preview
 
 struct TwinsView_Previews: PreviewProvider {
     static var previews: some View {
