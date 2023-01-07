@@ -18,9 +18,9 @@ struct Media: Hashable, Identifiable {
     let id = UUID()
     let title: String
     let description: String?
-    let type: Media.`Type`
+    let type: `Type`
 
-    init(title: String, description: String? = nil, type: Media.`Type`) {
+    init(title: String, description: String? = nil, type: `Type`) {
         self.title = title
         self.description = description
         self.type = type
