@@ -39,34 +39,6 @@ class PlaylistViewModel: ObservableObject {
         URNTemplate.unknown
     ]
 
-    var otherStandardTemplates: [Template] {
-        Array(OrderedSet(Self.standardTemplates).subtracting(OrderedSet(templates)))
-    }
-
-    var templates: [Template] = [] {
-        didSet {
-            medias = Template.medias(from: templates)
-        }
-    }
-
-    let player = Player()
-
-    var medias: [Media] {
-        get {
-            Array(items.keys)
-        } set {
-            items = Self.updated(initialItems: items, with: newValue)
-        }
-    }
-
-    var isEmpty: Bool {
-        medias.isEmpty
-    }
-
-    var canReload: Bool {
-        !templates.isEmpty
-    }
-
     @Published var currentMedia: Media? {
         didSet {
             guard
@@ -83,13 +55,37 @@ class PlaylistViewModel: ObservableObject {
         }
     }
 
-    // MARK: Init
+    let player = Player()
+
+    var medias: [Media] {
+        get {
+            Array(items.keys)
+        } set {
+            items = Self.updated(initialItems: items, with: newValue)
+        }
+    }
+
+    var otherStandardTemplates: [Template] {
+        Array(OrderedSet(Self.standardTemplates).subtracting(OrderedSet(templates)))
+    }
+
+    var templates: [Template] = [] {
+        didSet {
+            medias = Template.medias(from: templates)
+        }
+    }
+
+    var isEmpty: Bool {
+        medias.isEmpty
+    }
+
+    var canReload: Bool {
+        !templates.isEmpty
+    }
 
     init() {
         configureCurrentItemPublisher()
     }
-
-    // MARK: Internal methods
 
     private static func updated(initialItems: OrderedDictionary<Media, PlayerItem>, with medias: [Media]) -> OrderedDictionary<Media, PlayerItem> {
         var items = initialItems
@@ -142,8 +138,6 @@ class PlaylistViewModel: ObservableObject {
     func advanceToNextItem() {
         player.advanceToNextItem()
     }
-
-    // MARK: Private methods
 
     private func configureCurrentItemPublisher() {
         Publishers.CombineLatest(player.$currentIndex, $items)
