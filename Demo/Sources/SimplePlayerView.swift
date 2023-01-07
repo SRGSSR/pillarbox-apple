@@ -35,7 +35,7 @@ struct SimplePlayerView: View {
 
 // MARK: Preview
 
-struct SimplestPlayerView_Previews: PreviewProvider {
+struct SimplePlayerView_Previews: PreviewProvider {
     static var previews: some View {
         SimplePlayerView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
     }
