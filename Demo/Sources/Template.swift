@@ -33,36 +33,36 @@ enum URLTemplate {
     )
 
     static let liveVideoHLS = Template(
-        title: "Couleur 3 en vidéo",
+        title: "Couleur 3 en vidéo (live)",
         description: "Video livestream - HLS",
         type: .url(
             URL(string: "https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8?dw=0")!
         )
     )
     static let dvrVideoHLS = Template(
-        title: "Couleur 3 en vidéo",
+        title: "Couleur 3 en vidéo (DVR)",
         description: "Video livestream with DVR - HLS",
         type: .url(
             URL(string: "https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8")!
         )
     )
     static let liveTimestampVideoHLS = Template(
-        title: "Video livestream with DVR and timestamps - HLS",
-        description: "Tageschau",
+        title: "Tageschau",
+        description: "Video livestream with DVR and timestamps - HLS",
         type: .url(
             URL(string: "https://tagesschau.akamaized.net/hls/live/2020115/tagesschau/tagesschau_1/master.m3u8")!
         )
     )
 
     static let onDemandAudioMP3 = Template(
-        title: "AOD - MP3",
-        description: "On en parle",
+        title: "On en parle",
+        description: "AOD - MP3",
         type: .url(
             URL(string: "https://rts-aod-dd.akamaized.net/ww/13306839/63cc2653-8305-3894-a448-108810b553ef.mp3")!
         )
     )
     static let liveAudioMP3 = Template(
-        title: "Couleur 3",
+        title: "Couleur 3 (live)",
         description: "Audio livestream - MP3",
         type: .url(
             URL(string: "http://stream.srg-ssr.ch/m/couleur3/mp3_128")!
@@ -70,7 +70,7 @@ enum URLTemplate {
     )
 
     static let dvrAudioHLS = Template(
-        title: "Couleur 3",
+        title: "Couleur 3 (DVR)",
         description: "Audio livestream - HLS",
         type: .url(
             URL(string: "https://lsaplus.swisstxt.ch/audio/couleur3_96.stream/playlist.m3u8")!
@@ -154,17 +154,17 @@ enum URNTemplate {
         type: .urn("urn:rts:video:13639837")
     )
     static let liveVideo = Template(
-        title: "SRF 1 Live",
+        title: "SRF 1",
         description: "Live video",
         type: .urn("urn:srf:video:c4927fcf-e1a0-0001-7edd-1ef01d441651")
     )
     static let dvrVideo = Template(
-        title: "RTS 1 en direct",
+        title: "RTS 1",
         description: "DVR video livestream",
         type: .urn("urn:rts:video:3608506")
     )
     static let dvrAudio = Template(
-        title: "Couleur 3 en direct",
+        title: "Couleur 3 (DVR)",
         description: "DVR audio livestream",
         type: .urn("urn:rts:audio:3262363")
     )
