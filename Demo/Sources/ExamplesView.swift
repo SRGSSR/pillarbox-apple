@@ -66,6 +66,12 @@ struct ExamplesView: View {
         URNTemplate.onDemandVerticalVideo
     ])
 
+    private let unbufferedMedias = Template.medias(from: [
+        UnbufferedURLTemplate.liveVideo,
+        UnbufferedURLTemplate.onDemandAudio,
+        UnbufferedURLTemplate.liveAudio
+    ])
+
     private let appleMedias = Template.medias(from: [
         URLTemplate.appleBasic_4_3_HLS,
         URLTemplate.appleBasic_16_9_TS_HLS,
@@ -85,6 +91,7 @@ struct ExamplesView: View {
             section(title: "SRG streams (URNs)", medias: urnMedias)
             section(title: "Apple streams", medias: appleMedias)
             section(title: "Aspect ratios", medias: aspectRatioMedias)
+            section(title: "Unbuffered streams", medias: unbufferedMedias)
             section(title: "Corner cases", medias: cornerCaseMedias)
         }
         .navigationTitle("Examples")
