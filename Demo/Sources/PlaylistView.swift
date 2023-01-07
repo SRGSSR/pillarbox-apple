@@ -88,17 +88,11 @@ private struct Toolbar: View {
 
     var body: some View {
         HStack {
-            Button(action: model.returnToPreviousItem) {
-                Image(systemName: "arrow.left")
-            }
-            .disabled(!model.canReturnToPreviousItem())
+            previousButton()
             Spacer()
             managementButtons()
             Spacer()
-            Button(action: model.advanceToNextItem) {
-                Image(systemName: "arrow.right")
-            }
-            .disabled(!model.canAdvanceToNextItem())
+            nextButton()
         }
         .padding()
         .frame(maxWidth: .infinity)
@@ -107,6 +101,15 @@ private struct Toolbar: View {
         }
     }
 
+    @ViewBuilder
+    private func previousButton() -> some View {
+        Button(action: model.returnToPreviousItem) {
+            Image(systemName: "arrow.left")
+        }
+        .disabled(!model.canReturnToPreviousItem())
+    }
+
+    @ViewBuilder
     private func managementButtons() -> some View {
         HStack(spacing: 30) {
             Button(action: model.shuffle) {
@@ -125,6 +128,14 @@ private struct Toolbar: View {
             }
             .disabled(model.isEmpty)
         }
+    }
+
+    @ViewBuilder
+    private func nextButton() -> some View {
+        Button(action: model.advanceToNextItem) {
+            Image(systemName: "arrow.right")
+        }
+        .disabled(!model.canAdvanceToNextItem())
     }
 
     private func add() {
