@@ -143,7 +143,6 @@ class PlaylistViewModel: ObservableObject {
         Publishers.CombineLatest(player.$currentIndex, $items)
             .map { index, items in
                 guard let index, index < items.count else { return nil }
-                // TODO: Improve the subscript (with `safeIndex:`)
                 return items.keys[index]
             }
             .assign(to: &$currentMedia)
