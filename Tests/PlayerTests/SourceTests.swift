@@ -19,7 +19,6 @@ final class SourceTests: XCTestCase {
     }
 
     func testPlayerItemsWithoutCurrentItem() {
-        // Given
         let previousSources = [
             Source(id: UUID("1"), asset: .loading),
             Source(id: UUID("2"), asset: .loading),
@@ -32,11 +31,7 @@ final class SourceTests: XCTestCase {
             Source(id: UUID("B"), asset: .loading),
             Source(id: UUID("C"), asset: .loading)
         ]
-
-        // When
         let result = AVPlayerItem.playerItems(for: currentSources, replacing: previousSources, currentItem: nil)
-
-        // Then
         expect(result.count).to(equal(currentSources.count))
         expect(zip(result, currentSources)).to(allPass { item, source in
             source.matches(item)
@@ -44,7 +39,6 @@ final class SourceTests: XCTestCase {
     }
 
     func testPlayerItemsWithPreservedCurrentItem() {
-        // Given
         let currentItemSource = Source(id: UUID("3"), asset: .loading)
         let previousSources = [
             Source(id: UUID("1"), asset: .loading),
@@ -60,11 +54,7 @@ final class SourceTests: XCTestCase {
             Source(id: UUID("C"), asset: .loading)
         ]
         let currentItem = currentItemSource.playerItem()
-
-        // When
         let result = AVPlayerItem.playerItems(for: currentSources, replacing: previousSources, currentItem: currentItem)
-
-        // Then
         let expected = [
             currentItemSource,
             Source(id: UUID("B"), asset: .loading),
@@ -78,7 +68,6 @@ final class SourceTests: XCTestCase {
     }
 
     func testPlayerItemsWithPreservedCurrentItemAtEnd() {
-        // Given
         let currentItemSource = Source(id: UUID("3"), asset: .loading)
         let previousSources = [
             Source(id: UUID("1"), asset: .loading),
@@ -94,11 +83,7 @@ final class SourceTests: XCTestCase {
             currentItemSource
         ]
         let currentItem = currentItemSource.playerItem()
-
-        // When
         let result = AVPlayerItem.playerItems(for: currentSources, replacing: previousSources, currentItem: currentItem)
-
-        // Then
         let expected = [
             currentItemSource
         ]
@@ -110,7 +95,6 @@ final class SourceTests: XCTestCase {
     }
 
     func testPlayerItemsWithUnknownCurrentItem() {
-        // Given
         let previousSources = [
             Source(id: UUID("1"), asset: .loading),
             Source(id: UUID("2"), asset: .loading)
@@ -120,11 +104,7 @@ final class SourceTests: XCTestCase {
             Source(id: UUID("B"), asset: .loading)
         ]
         let unknownItem = Source(id: UUID("1"), asset: .loading).playerItem()
-
-        // When
         let result = AVPlayerItem.playerItems(for: currentSources, replacing: previousSources, currentItem: unknownItem)
-
-        // Then
         expect(result.count).to(equal(currentSources.count))
         expect(zip(result, currentSources)).to(allPass { item, source in
             source.matches(item)
@@ -132,10 +112,8 @@ final class SourceTests: XCTestCase {
     }
 
     func testPlayerItemsWithCurrentItemReplacedByAnotherItem() {
-        // Given
         let currentItemSource = Source(id: UUID("1"), asset: .loading)
         let otherSource = Source(id: UUID("2"), asset: .loading)
-
         let previousSources = [
             currentItemSource,
             otherSource,
@@ -146,13 +124,8 @@ final class SourceTests: XCTestCase {
             otherSource,
             Source(id: UUID("C"), asset: .loading)
         ]
-
         let currentItem = currentItemSource.playerItem()
-
-        // When
         let result = AVPlayerItem.playerItems(for: currentSources, replacing: previousSources, currentItem: currentItem)
-
-        // Then
         let expected = [
             otherSource,
             Source(id: UUID("C"), asset: .loading)
@@ -164,7 +137,6 @@ final class SourceTests: XCTestCase {
     }
 
     func testPlayerItemsWithUpdatedCurrentItem() {
-        // Given
         let currentItemSource = Source(id: UUID("1"), asset: .simple(url: Stream.item.url))
         let previousSources = [
             Source(id: UUID("1"), asset: .loading),
@@ -177,11 +149,7 @@ final class SourceTests: XCTestCase {
             Source(id: UUID("3"), asset: .loading)
         ]
         let currentItem = currentItemSource.playerItem()
-
-        // When
         let result = AVPlayerItem.playerItems(for: currentSources, replacing: previousSources, currentItem: currentItem)
-
-        // Then
         expect(result.count).to(equal(currentSources.count))
         expect(zip(result, currentSources)).to(allPass { item, source in
             source.matches(item)
