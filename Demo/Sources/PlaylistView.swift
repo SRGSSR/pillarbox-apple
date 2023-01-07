@@ -48,8 +48,8 @@ private struct PlaylistSelectionView: View {
     var body: some View {
         NavigationView {
             List(selection: $selectedTemplates) {
-                section(name: "Original items", templates: model.templates)
-                section(name: "Standard items", templates: model.otherStandardTemplates)
+                section(title: "Original items", templates: model.templates)
+                section(title: "Standard items", templates: model.otherStandardTemplates)
             }
             .environment(\.editMode, .constant(.active))
             .navigationBarTitle("Add a stream to the playlist")
@@ -61,13 +61,12 @@ private struct PlaylistSelectionView: View {
         }
     }
 
-    private func section(name: String, templates: [Template]) -> some View {
-        Group {
-            if !templates.isEmpty {
-                Section(name) {
-                    ForEach(templates, id: \.self) { media in
-                        Text(media.title)
-                    }
+    @ViewBuilder
+    private func section(title: String, templates: [Template]) -> some View {
+        if !templates.isEmpty {
+            Section(title) {
+                ForEach(templates, id: \.self) { media in
+                    Text(media.title)
                 }
             }
         }

@@ -174,7 +174,7 @@ enum URNTemplate {
         type: .urn("urn:rsi:audio:8833144")
     )
     static let expired = Template(
-        title: "Film (expired)",
+        title: "Expired URN",
         description: "Content that is not available anymore",
         type: .urn("urn:rts:video:13382911")
     )
