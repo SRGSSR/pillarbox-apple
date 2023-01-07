@@ -54,8 +54,15 @@ private struct PlaylistSelectionView: View {
 #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
 #endif
-            .navigationBarItems(leading: Button("Cancel", action: cancel))
-            .navigationBarItems(trailing: Button("Add", action: add))
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel", action: cancel)
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Add", action: add)
+                        .disabled(selectedTemplates.isEmpty)
+                }
+            }
         }
     }
 
