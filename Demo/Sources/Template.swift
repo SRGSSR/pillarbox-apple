@@ -8,6 +8,7 @@ import CoreBusiness
 import Foundation
 import Player
 
+// Apple streams are found at https://developer.apple.com/streaming/examples/
 enum URLTemplate {
     static let onDemandVideoHLS = Template(
         title: "Switzerland says sorry! The fondue invasion",
@@ -23,7 +24,6 @@ enum URLTemplate {
             URL(string: "https://rts-vod-amd.akamaized.net/ww/13317145/f1d49f18-f302-37ce-866c-1c1c9b76a824/master.m3u8")!
         )
     )
-
     static let onDemandVideoMP4 = Template(
         title: "The dig",
         description: "VOD - MP4",
@@ -31,7 +31,6 @@ enum URLTemplate {
             URL(string: "https://media.swissinfo.ch/media/video/dddaff93-c2cd-4b6e-bdad-55f75a519480/rendition/154a844b-de1d-4854-93c1-5c61cd07e98c.mp4")!
         )
     )
-
     static let liveVideoHLS = Template(
         title: "Couleur 3 en vidéo (live)",
         description: "Video livestream - HLS",
@@ -53,7 +52,6 @@ enum URLTemplate {
             URL(string: "https://tagesschau.akamaized.net/hls/live/2020115/tagesschau/tagesschau_1/master.m3u8")!
         )
     )
-
     static let onDemandAudioMP3 = Template(
         title: "On en parle",
         description: "AOD - MP3",
@@ -68,7 +66,6 @@ enum URLTemplate {
             URL(string: "http://stream.srg-ssr.ch/m/couleur3/mp3_128")!
         )
     )
-
     static let dvrAudioHLS = Template(
         title: "Couleur 3 (DVR)",
         description: "Audio livestream - HLS",
@@ -76,8 +73,6 @@ enum URLTemplate {
             URL(string: "https://lsaplus.swisstxt.ch/audio/couleur3_96.stream/playlist.m3u8")!
         )
     )
-
-    // Apple streams from https://developer.apple.com/streaming/examples/
     static let appleBasic_4_3_HLS = Template(
         title: "Apple Basic 4:3",
         description: "4x3 aspect ratio, H.264 @ 30Hz",
@@ -113,7 +108,6 @@ enum URLTemplate {
             URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_adv_example_hevc/master.m3u8")!
         )
     )
-
     static let onDemandVideoLocalHLS = Template(
         title: "Nyan cat",
         description: "Stream served locally",
@@ -121,8 +115,10 @@ enum URLTemplate {
             URL(string: "http://localhost:8123/on_demand/master.m3u8")!
         )
     )
-
-    static let unknown = Template(title: "Unknown URL", type: .url(URL(string: "http://localhost:8123/unavailable/master.m3u8")!))
+    static let unknown = Template(
+        title: "Unknown URL",
+        type: .url(URL(string: "http://localhost:8123/unavailable/master.m3u8")!)
+    )
 }
 
 enum URNTemplate {
