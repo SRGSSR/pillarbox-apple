@@ -43,6 +43,9 @@ struct ShowcaseView: View {
             Cell(title: "Simple") {
                 SimplePlayerView(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
             }
+            Cell(title: "System") {
+                SystemPlayerView(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
+            }
             Cell(title: "Stories") {
                 StoriesView()
             }
