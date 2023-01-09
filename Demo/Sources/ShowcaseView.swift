@@ -33,6 +33,8 @@ struct ShowcaseView: View {
             layoutsSection()
             playlistsSection()
             embeddingsSection()
+            systemPlayerSection()
+            systemRawPlayerSection()
         }
         .navigationTitle("Showcase")
     }
@@ -43,11 +45,50 @@ struct ShowcaseView: View {
             Cell(title: "Simple") {
                 SimplePlayerView(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
             }
-            Cell(title: "System") {
-                SystemPlayerView(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
-            }
             Cell(title: "Stories") {
                 StoriesView()
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func systemPlayerSection() -> some View {
+        Section("System") {
+            Cell(title: "Video URL") {
+                SystemPlayerView(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
+            }
+            Cell(title: "Video URN") {
+                SystemPlayerView(media: Media(from: URNTemplate.onDemandHorizontalVideo))
+            }
+            Cell(title: "Unknown") {
+                SystemPlayerView(media: Media(from: URNTemplate.unknown))
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func systemSection() -> some View {
+        Section("System player") {
+            Cell(title: "Video URL") {
+                SystemPlayerView(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
+            }
+            Cell(title: "Video URN") {
+                SystemPlayerView(media: Media(from: URNTemplate.dvrVideo))
+            }
+            Cell(title: "Unknown") {
+                SystemPlayerView(media: Media(from: URNTemplate.unknown))
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func systemRawPlayerSection() -> some View {
+        Section("Raw system player") {
+            Cell(title: "Video URL") {
+                SystemRawPlayerView(item: Template.playerItem(from: URLTemplate.appleAdvanced_16_9_TS_HLS)!)
+            }
+            Cell(title: "Unknown") {
+                SystemRawPlayerView(item: Template.playerItem(from: URLTemplate.unknown)!)
             }
         }
     }

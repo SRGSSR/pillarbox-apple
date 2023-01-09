@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0EEB324C29506969002E49DC /* PlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB324B29506969002E49DC /* PlaylistView.swift */; };
 		0EEB324F29630130002E49DC /* PlaylistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB324E29630130002E49DC /* PlaylistViewModel.swift */; };
+		6F016D9B296C960000C4148E /* SystemRawPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F016D9A296C960000C4148E /* SystemRawPlayerView.swift */; };
 		6F36C62D28910538000DD160 /* CoreBusiness in Frameworks */ = {isa = PBXBuildFile; productRef = 6F36C62C28910538000DD160 /* CoreBusiness */; };
 		6F3F15A728CEEC6900CA2BD1 /* ShowcaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3F15A628CEEC6900CA2BD1 /* ShowcaseView.swift */; };
 		6F48A5DD2932673A00B80393 /* DeveloperTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F48A5DC2932673A00B80393 /* DeveloperTools.swift */; };
@@ -46,6 +47,7 @@
 		0EEB324B29506969002E49DC /* PlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistView.swift; sourceTree = "<group>"; };
 		0EEB324E29630130002E49DC /* PlaylistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViewModel.swift; sourceTree = "<group>"; };
 		6F010340289946220021BA76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6F016D9A296C960000C4148E /* SystemRawPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemRawPlayerView.swift; sourceTree = "<group>"; };
 		6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pillarbox-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F3F15A628CEEC6900CA2BD1 /* ShowcaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowcaseView.swift; sourceTree = "<group>"; };
 		6F45DB9A2893B773008ACCE6 /* Application.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 				6F5FEDCF28CF328600B88EC0 /* StoriesViewModel.swift */,
 				6FD6CE91291D36F70015FC03 /* Story.swift */,
 				6FBD8F1A296C2A6E0051ABEB /* SystemPlayerView.swift */,
+				6F016D9A296C960000C4148E /* SystemRawPlayerView.swift */,
 				6FA83B7F296834F8001578DB /* Template.swift */,
 				6F9B5BCA28D03E1E0074B9E0 /* TwinsView.swift */,
 				6FCA474A292CC2AA008C2812 /* UserDefaults.swift */,
@@ -314,6 +317,7 @@
 				6F7750D628EABD5100E80196 /* SimplePlayerView.swift in Sources */,
 				0EEB324F29630130002E49DC /* PlaylistViewModel.swift in Sources */,
 				6F9B5BCB28D03E1E0074B9E0 /* TwinsView.swift in Sources */,
+				6F016D9B296C960000C4148E /* SystemRawPlayerView.swift in Sources */,
 				6FD1F3A128D0490200DF8CF1 /* MultiView.swift in Sources */,
 				6F3F15A728CEEC6900CA2BD1 /* ShowcaseView.swift in Sources */,
 				6F65FA2128D0CE8A0081ACD1 /* PlaybackView.swift in Sources */,
