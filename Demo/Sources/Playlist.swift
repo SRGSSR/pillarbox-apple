@@ -6,7 +6,6 @@
 
 import CoreBusiness
 import Foundation
-import Player
 
 enum URLTemplates {
     static let videos: [Template] = [

@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
+import CoreMedia
 import Player
 import SwiftUI
 
@@ -167,7 +167,7 @@ private struct TimeSlider: View {
 
     private var formattedTotalTime: String {
         guard timeRange.isValid else { return Self.blankFormattedTime }
-        return Self.formattedDuration((timeRange.duration).seconds)
+        return Self.formattedDuration(timeRange.duration.seconds)
     }
 
     var body: some View {

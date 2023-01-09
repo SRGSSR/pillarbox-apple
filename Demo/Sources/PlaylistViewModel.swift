@@ -5,10 +5,8 @@
 //
 
 import Combine
-import Core
 import OrderedCollections
 import Player
-import SwiftUI
 
 class PlaylistViewModel: ObservableObject {
     static let standardTemplates = [
