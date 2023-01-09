@@ -10,6 +10,7 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.presenterModeEnabledKey) private var isPresentedModeEnabled = false
     @AppStorage(UserDefaults.bodyCountersEnabledKey) private var areBodyCountersEnabled = false
     @AppStorage(UserDefaults.seekBehaviorSettingKey) private var seekBehaviorSetting: SeekBehaviorSetting = .immediate
+    @AppStorage(UserDefaults.allowsExternalPlaybackSettingKey) private var allowsExternalPlaybackSetting = true
 
     var body: some View {
         List {
@@ -19,6 +20,7 @@ struct SettingsView: View {
                 Text("Immediate").tag(SeekBehaviorSetting.immediate)
                 Text("Deferred").tag(SeekBehaviorSetting.deferred)
             }
+            Toggle("Allows external playback", isOn: $allowsExternalPlaybackSetting)
 #if os(tvOS)
             .pickerStyle(.inline)
 #else
