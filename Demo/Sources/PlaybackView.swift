@@ -122,13 +122,20 @@ private struct TimeBar: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            RoutePickerView()
-                .frame(width: 45, height: 45)
+            routePickerView()
             TimeSlider(player: player, progressTracker: progressTracker)
             LiveLabel(player: player, progressTracker: progressTracker)
         }
         .padding(.horizontal, 6)
         .bind(progressTracker, to: player)
+    }
+
+    @ViewBuilder
+    private func routePickerView() -> some View {
+        if player.configuration.allowsExternalPlayback {
+            RoutePickerView()
+                .frame(width: 45, height: 45)
+        }
     }
 }
 

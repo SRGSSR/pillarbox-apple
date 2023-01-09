@@ -41,7 +41,7 @@ public final class Player: ObservableObject, Equatable {
     /// Raw player used for playback.
     let rawPlayer: RawPlayer
 
-    let configuration: PlayerConfiguration
+    public let configuration: PlayerConfiguration
     private var cancellables = Set<AnyCancellable>()
 
     /// The type of stream currently played.

@@ -5,6 +5,7 @@
 //
 
 import Combine
+import Foundation
 import OrderedCollections
 import Player
 
@@ -50,7 +51,7 @@ final class PlaylistViewModel: ObservableObject {
         }
     }
 
-    let player = Player()
+    let player = Player(configuration: .init(allowsExternalPlayback: UserDefaults.standard.allowsExternalPlaybackEnabled))
 
     var medias: [Media] {
         get {
