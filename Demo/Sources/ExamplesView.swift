@@ -10,7 +10,7 @@ import SwiftUI
 private struct MediaCell: View {
     let media: Media
 
-    @State var isPlayerPresented = false
+    @State private var isPlayerPresented = false
 
     var body: some View {
         Button(action: play) {
