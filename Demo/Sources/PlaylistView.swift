@@ -7,7 +7,7 @@
 import SwiftUI
 
 // Behavior: h-exp, v-exp
-private struct ListView: View {
+private struct MediaList: View {
     @ObservedObject var model: PlaylistViewModel
 
     var body: some View {
@@ -82,7 +82,7 @@ private struct PlaylistSelectionView: View {
 
     private func add() {
         model.add(from: Array(selectedTemplates))
-        cancel()
+        dismiss()
     }
 }
 
@@ -101,7 +101,7 @@ private struct Toolbar: View {
         }
         .padding()
         .frame(maxWidth: .infinity)
-        .sheet(isPresented: $isSelectionPlaylistPresented, onDismiss: nil) {
+        .sheet(isPresented: $isSelectionPlaylistPresented) {
             PlaylistSelectionView(model: model)
         }
     }
@@ -150,13 +150,13 @@ private struct Toolbar: View {
 
 // Behavior: h-exp, v-exp
 struct PlaylistView: View {
-    @StateObject private var model = PlaylistViewModel()
     @State var templates: [Template]
+    @StateObject private var model = PlaylistViewModel()
 
     var body: some View {
         VStack(spacing: 0) {
             PlaybackView(player: model.player)
-            ListView(model: model)
+            MediaList(model: model)
         }
         .onAppear { model.templates = templates }
         .onChange(of: templates) { newValue in
