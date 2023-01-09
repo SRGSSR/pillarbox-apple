@@ -4,14 +4,10 @@
 //  License information is available from the LICENSE file.
 //
 
-import Combine
 import Foundation
 import OrderedCollections
 import Player
 
-// MARK: View model
-
-@MainActor
 final class StoriesViewModel: ObservableObject {
     private static let preloadDistance = 1
     private var players = OrderedDictionary<Story, Player?>()
@@ -37,12 +33,7 @@ final class StoriesViewModel: ObservableObject {
     }
 
     private static func player(for story: Story) -> Player {
-        if let item = story.source.playerItem {
-            return Player(item: item)
-        }
-        else {
-            return Player()
-        }
+        Player(item: Media(from: story.template).playerItem())
     }
 
     private static func players(

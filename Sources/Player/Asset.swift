@@ -21,7 +21,7 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
         self.resourceLoaderDelegate = resourceLoaderDelegate
         let asset = AVURLAsset(url: url)
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: kResourceLoaderQueue)
-        // Provide same key as for a standard asset, as documented for `AVPlayerItem.init(asset:)`.
+        // Provide same key as for a standard asset, see `AVPlayerItem.init(asset:)` documentation.
         super.init(asset: asset, automaticallyLoadedAssetKeys: ["duration"])
     }
 }
@@ -131,5 +131,20 @@ extension Asset {
             url: URL(string: "pillarbox://failing.m3u8")!,
             delegate: FailedResourceLoaderDelegate(error: error)
         )
+    }
+}
+
+extension Asset: Equatable {
+    public static func == (lhs: Asset, rhs: Asset) -> Bool {
+        switch (lhs.type, rhs.type) {
+        case let (.simple(url: lhsUrl), .simple(url: rhsUrl)):
+            return lhsUrl == rhsUrl
+        case let (.custom(url: lhsUrl, delegate: lhsDelegate), .custom(url: rhsUrl, delegate: rhsDelegate)):
+            return lhsUrl == rhsUrl && lhsDelegate === rhsDelegate
+        case let (.encrypted(url: lhsUrl, delegate: lhsDelegate), .encrypted(url: rhsUrl, delegate: rhsDelegate)):
+            return lhsUrl == rhsUrl && lhsDelegate === rhsDelegate
+        default:
+            return false
+        }
     }
 }

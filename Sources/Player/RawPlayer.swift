@@ -25,11 +25,15 @@ final class RawPlayer: AVQueuePlayer {
 
     func replaceItems(with items: [AVPlayerItem]) {
         cancelPendingReplacements()
+
+        guard self.items() != items else { return }
+
         if let firstItem = items.first {
             if firstItem !== self.items().first {
+                removeAllItems()
                 replaceCurrentItem(with: firstItem)
             }
-            if self.items().count > 1 {
+            else if self.items().count > 1 {
                 self.items().suffix(from: 1).forEach { item in
                     remove(item)
                 }

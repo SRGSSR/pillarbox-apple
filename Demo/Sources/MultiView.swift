@@ -4,11 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
 import Player
 import SwiftUI
-
-// MARK: View
 
 // Behavior: h-exp, v-exp
 struct MultiView: View {
@@ -21,8 +18,8 @@ struct MultiView: View {
     var body: some View {
         VStack(spacing: 10) {
             Group {
-                PlaybackView(player: topPlayer)
-                PlaybackView(player: bottomPlayer)
+                BasicPlaybackView(player: topPlayer)
+                BasicPlaybackView(player: bottomPlayer)
             }
             .background(.black)
         }
@@ -33,19 +30,16 @@ struct MultiView: View {
     }
 
     private static func play(media: Media, in player: Player) {
-        guard let item = media.playerItem else { return }
-        player.append(item)
+        player.append(media.playerItem())
         player.play()
     }
 }
 
-// MARK: Preview
-
 struct MultiView_Previews: PreviewProvider {
     static var previews: some View {
         MultiView(
-            media1: MediaURL.appleBasic_16_9_TS_HLS,
-            media2: MediaURL.appleAdvanced_16_9_HEVC_h264_HLS
+            media1: Media(from: URLTemplate.appleBasic_16_9_TS_HLS),
+            media2: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS)
         )
     }
 }

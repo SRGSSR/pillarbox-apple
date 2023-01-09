@@ -10,7 +10,6 @@ import Circumspect
 import Nimble
 import XCTest
 
-@MainActor
 final class ItemUpdateTests: XCTestCase {
     func testUpdateWithCurrentItem() {
         let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
@@ -20,7 +19,18 @@ final class ItemUpdateTests: XCTestCase {
         let player = Player(items: [item1, item2, item3])
         player.items = [item4, item3, item1]
         expect(player.items).to(equalDiff([item4, item3, item1]))
-        expect(player.currentItem).to(equal(item1))
+        expect(player.currentIndex).to(equal(2))
+    }
+
+    func testUpdateWithCurrentItemMustNotInterruptPlayback() {
+        let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
+        let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
+        let item3 = PlayerItem(url: Stream.item(numbered: 3).url)
+        let item4 = PlayerItem(url: Stream.item(numbered: 4).url)
+        let player = Player(items: [item1, item2, item3])
+        expectNothingPublishedNext(from: player.rawPlayer.publisher(for: \.currentItem), during: 2) {
+            player.items = [item4, item3, item1]
+        }
     }
 
     func testUpdateWithoutCurrentItem() {
@@ -33,6 +43,6 @@ final class ItemUpdateTests: XCTestCase {
         let player = Player(items: [item1, item2, item3])
         player.items = [item4, item5, item6]
         expect(player.items).to(equalDiff([item4, item5, item6]))
-        expect(player.currentItem).to(equal(item4))
+        expect(player.currentIndex).to(equal(0))
     }
 }

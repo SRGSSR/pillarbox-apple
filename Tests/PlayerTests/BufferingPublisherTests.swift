@@ -67,8 +67,7 @@ final class BufferingPublisherTests: XCTestCase {
                 to: CMTime(value: 10, timescale: 1),
                 toleranceBefore: .zero,
                 toleranceAfter: .zero
-            ) { _ in
-            }
+            ) { _ in }
         }
     }
 }

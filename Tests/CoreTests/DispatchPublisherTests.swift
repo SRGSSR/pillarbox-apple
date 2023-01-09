@@ -13,7 +13,6 @@ import XCTest
 final class DispatchPublisherTests: XCTestCase {
     private var cancellables = Set<AnyCancellable>()
 
-    @MainActor
     func testReceiveOnMainThreadFromMainThread() {
         var value = 0
         Just(3)
@@ -26,7 +25,6 @@ final class DispatchPublisherTests: XCTestCase {
         expect(value).to(equal(3))
     }
 
-    @MainActor
     func testReceiveOnMainThreadFromBackgroundThread() {
         var value = 0
         Just(3)
@@ -40,7 +38,6 @@ final class DispatchPublisherTests: XCTestCase {
         expect(value).to(equal(0))
     }
 
-    @MainActor
     func testStandardReceiveOnMainThreadFromMainThread() {
         var value = 0
         Just(3)
@@ -53,7 +50,6 @@ final class DispatchPublisherTests: XCTestCase {
         expect(value).to(equal(0))
     }
 
-    @MainActor
     func testStandardReceiveOnMainThreadFromBackgroundThread() {
         var value = 0
         Just(3)

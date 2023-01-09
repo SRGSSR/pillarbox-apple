@@ -48,8 +48,7 @@ public final class PlayerItem: Equatable {
     }
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
-        guard let playerItem else { return false }
-        return playerItem.id == id
+        playerItem?.id == id
     }
 }
 
@@ -59,26 +58,25 @@ extension PlayerItem: CustomDebugStringConvertible {
     }
 }
 
-extension PlayerItem {
-    struct Source {
-        let id: UUID
-        let asset: Asset
+extension Source {
+    func matches(_ item: AVPlayerItem?) -> Bool {
+        id == item?.id
+    }
 
-        func playerItem() -> AVPlayerItem {
-            asset.playerItem().withId(id)
-        }
+    func playerItem() -> AVPlayerItem {
+        asset.playerItem().withId(id)
     }
 }
 
 extension AVPlayerItem {
-    func matches(_ playerItem: AVPlayerItem) -> Bool {
-        id == playerItem.id
+    static func playerItems(from items: [PlayerItem]) -> [AVPlayerItem] {
+        playerItems(from: items.map(\.source))
     }
 }
 
 private extension AVPlayerItem {
     /// An identifier to identify player items delivered by the same data source.
-    private(set) var id: UUID? {
+    var id: UUID? {
         get {
             objc_getAssociatedObject(self, &kIdKey) as? UUID
         }

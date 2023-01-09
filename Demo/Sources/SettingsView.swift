@@ -6,8 +6,6 @@
 
 import SwiftUI
 
-// MARK: View
-
 struct SettingsView: View {
     @AppStorage(UserDefaults.presenterModeEnabledKey) private var isPresentedModeEnabled = false
     @AppStorage(UserDefaults.bodyCountersEnabledKey) private var areBodyCountersEnabled = false
@@ -30,8 +28,6 @@ struct SettingsView: View {
         .navigationTitle("Settings")
     }
 }
-
-// MARK: Preview
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {

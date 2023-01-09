@@ -8,8 +8,6 @@ import AVFoundation
 import Player
 import SwiftUI
 
-// MARK: View
-
 // Behavior: h-exp, v-exp
 private struct StoryView: View {
     @ObservedObject var player: Player
@@ -18,12 +16,8 @@ private struct StoryView: View {
         ZStack {
             VideoView(player: player, gravity: .resizeAspectFill)
                 .ignoresSafeArea()
-            if player.isBuffering {
-                // Ensure the animation is applied by setting its zIndex
-                // See https://sarunw.com/posts/how-to-fix-zstack-transition-animation-in-swiftui/
-                ProgressView()
-                    .zIndex(1)
-            }
+            ProgressView()
+                .opacity(player.isBuffering ? 1 : 0)
             TimeProgress(player: player)
         }
         .tint(.white)
@@ -50,7 +44,7 @@ private struct TimeProgress: View {
 
 // Behavior: h-exp, v-exp
 struct StoriesView: View {
-    @StateObject private var model = StoriesViewModel(stories: Story.stories(from: MediaURLPlaylist.videos))
+    @StateObject private var model = StoriesViewModel(stories: Story.stories(from: URLTemplates.videos))
 
     var body: some View {
         TabView(selection: $model.currentStory) {
@@ -64,8 +58,6 @@ struct StoriesView: View {
         .ignoresSafeArea()
     }
 }
-
-// MARK: Preview
 
 struct StoriesView_Previews: PreviewProvider {
     static var previews: some View {

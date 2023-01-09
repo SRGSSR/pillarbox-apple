@@ -10,7 +10,6 @@ import Circumspect
 import Nimble
 import XCTest
 
-@MainActor
 final class ItemTests: XCTestCase {
     func testItemsOnFirstItem() {
         let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
@@ -27,7 +26,7 @@ final class ItemTests: XCTestCase {
         let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
         let item3 = PlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
-        expect(player.advanceToNextItem()).to(beTrue())
+        player.advanceToNextItem()
         expect(player.items).to(equalDiff([item1, item2, item3]))
         expect(player.previousItems).to(equalDiff([item1]))
         expect(player.nextItems).to(equalDiff([item3]))
@@ -38,8 +37,8 @@ final class ItemTests: XCTestCase {
         let item2 = PlayerItem(url: Stream.item(numbered: 2).url)
         let item3 = PlayerItem(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
-        expect(player.advanceToNextItem()).to(beTrue())
-        expect(player.advanceToNextItem()).to(beTrue())
+        player.advanceToNextItem()
+        player.advanceToNextItem()
         expect(player.items).to(equalDiff([item1, item2, item3]))
         expect(player.previousItems).to(equalDiff([item1, item2]))
         expect(player.nextItems).to(beEmpty())
@@ -47,7 +46,7 @@ final class ItemTests: XCTestCase {
 
     func testEmpty() {
         let player = Player()
-        expect(player.currentItem).to(beNil())
+        expect(player.currentIndex).to(beNil())
         expect(player.items).to(beEmpty())
         expect(player.nextItems).to(beEmpty())
         expect(player.previousItems).to(beEmpty())

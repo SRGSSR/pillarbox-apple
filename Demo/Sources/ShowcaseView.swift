@@ -6,8 +6,6 @@
 
 import SwiftUI
 
-// MARK: Cells
-
 // Behavior: h-hug, v-hug
 private struct Cell<Presented: View>: View {
     let title: String
@@ -28,74 +26,83 @@ private struct Cell<Presented: View>: View {
     }
 }
 
-// MARK: View
-
 // Behavior: h-exp, v-exp
 struct ShowcaseView: View {
     var body: some View {
-        // swiftlint:disable:next closure_body_length
         List {
-            Group {
-                Cell(title: "Basic") {
-                    BasicPlayerView(media: MediaURL.appleAdvanced_16_9_HEVC_h264_HLS)
-                }
-                Cell(title: "Unbuffered video livestream") {
-                    PlayerView(media: UnbufferedMediaURL.liveVideo)
-                }
-                Cell(title: "Unbuffered on-demand audio") {
-                    PlayerView(media: UnbufferedMediaURL.onDemandAudio)
-                }
-                Cell(title: "Unbuffered audio livestream") {
-                    PlayerView(media: UnbufferedMediaURL.liveAudio)
-                }
-                Cell(title: "Stories") {
-                    StoriesView()
-                }
-                Cell(title: "Twins") {
-                    TwinsView(media: MediaURL.appleBasic_16_9_TS_HLS)
-                }
-                Cell(title: "Multi") {
-                    MultiView(
-                        media1: MediaURL.appleBasic_16_9_TS_HLS,
-                        media2: MediaURL.appleAdvanced_16_9_HEVC_h264_HLS
-                    )
-                }
-            }
-            Group {
-                Cell(title: "Link") {
-                    LinkView(media: MediaURL.appleAdvanced_16_9_fMP4_HLS)
-                }
-                Cell(title: "Wrapped") {
-                    WrappedView(media: MediaURL.appleBasic_16_9_TS_HLS)
-                }
-                Cell(title: "Playlist (URLs)") {
-                    PlaylistView(medias: MediaURLPlaylist.videos)
-                }
-                Cell(title: "Playlist (URNs)") {
-                    PlaylistView(medias: MediaURNPlaylist.videos)
-                }
-                Cell(title: "Playlist (URNs, long)") {
-                    PlaylistView(medias: MediaURNPlaylist.longVideos)
-                }
-                Cell(title: "Playlist (URNs, token-protected)") {
-                    PlaylistView(medias: MediaURNPlaylist.tokenProtectedVideos)
-                }
-                Cell(title: "Playlist (URNs, DRM-protected)") {
-                    PlaylistView(medias: MediaURNPlaylist.drmProtectedVideos)
-                }
-                Cell(title: "Audio playlist (URNs)") {
-                    PlaylistView(medias: MediaURNPlaylist.audios)
-                }
-                Cell(title: "Playlist (with errors)") {
-                    PlaylistView(medias: MediaURNPlaylist.videosWithErrors)
-                }
-            }
+            layoutsSection()
+            playlistsSection()
+            embeddingsSection()
         }
         .navigationTitle("Showcase")
     }
-}
 
-// MARK: Preview
+    @ViewBuilder
+    private func layoutsSection() -> some View {
+        Section("Layouts") {
+            Cell(title: "Simple") {
+                SimplePlayerView(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
+            }
+            Cell(title: "Stories") {
+                StoriesView()
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func playlistsSection() -> some View {
+        Section("Playlists") {
+            Cell(title: "Video URLs") {
+                PlaylistView(templates: URLTemplates.videos)
+            }
+            Cell(title: "Video URNs") {
+                PlaylistView(templates: URNTemplates.videos)
+            }
+            Cell(title: "Long video URNs") {
+                PlaylistView(templates: URNTemplates.longVideos)
+            }
+            Cell(title: "Token-protected video URNs") {
+                PlaylistView(templates: URNTemplates.tokenProtectedVideos)
+            }
+            Cell(title: "DRM-protected video URNs") {
+                PlaylistView(templates: URNTemplates.drmProtectedVideos)
+            }
+            Cell(title: "Audios") {
+                PlaylistView(templates: URNTemplates.audios)
+            }
+            Cell(title: "Videos (one failed item)") {
+                PlaylistView(templates: URNTemplates.videosWithOneError)
+            }
+            Cell(title: "Videos (all failing)") {
+                PlaylistView(templates: URNTemplates.videosWithErrors)
+            }
+            Cell(title: "Empty") {
+                PlaylistView(templates: [])
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func embeddingsSection() -> some View {
+        Section("Embeddings") {
+            Cell(title: "Twins") {
+                TwinsView(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
+            }
+            Cell(title: "Multi") {
+                MultiView(
+                    media1: Media(from: URLTemplate.appleBasic_16_9_TS_HLS),
+                    media2: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS)
+                )
+            }
+            Cell(title: "Link") {
+                LinkView(media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS))
+            }
+            Cell(title: "Wrapped") {
+                WrappedView(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
+            }
+        }
+    }
+}
 
 struct ShowcaseView_Previews: PreviewProvider {
     static var previews: some View {

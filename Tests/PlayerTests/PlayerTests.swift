@@ -11,32 +11,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-@MainActor
 final class PlayerTests: XCTestCase {
-    func testCurrentItem() {
-        let item1 = PlayerItem(url: Stream.shortOnDemand.url)
-        let item2 = PlayerItem(url: Stream.onDemand.url)
-        let player = Player(items: [item1, item2])
-        expectAtLeastEqualPublished(
-            values: [item1, item2],
-            from: player.$currentItem
-        ) {
-            player.play()
-        }
-    }
-
-    func testSlowFirstCurrentItem() {
-        let item1 = PlayerItem(url: Stream.shortOnDemand.url, delay: 2)
-        let item2 = PlayerItem(url: Stream.onDemand.url)
-        let player = Player(items: [item1, item2])
-        expectAtLeastEqualPublished(
-            values: [item1, item2],
-            from: player.$currentItem
-        ) {
-            player.play()
-        }
-    }
-
     func testChunkDuration() {
         let item = PlayerItem(url: Stream.shortOnDemand.url)
         let player = Player(item: item)

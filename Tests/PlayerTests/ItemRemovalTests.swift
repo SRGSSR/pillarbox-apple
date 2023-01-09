@@ -10,7 +10,6 @@ import Circumspect
 import Nimble
 import XCTest
 
-@MainActor
 final class ItemRemovalTests: XCTestCase {
     func testRemovePreviousItem() {
         let item1 = PlayerItem(url: Stream.item(numbered: 1).url)
@@ -29,7 +28,7 @@ final class ItemRemovalTests: XCTestCase {
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
         player.remove(item2)
-        expect(player.currentItem).to(equal(item3))
+        expect(player.currentIndex).to(equal(1))
         expect(player.items).to(equalDiff([item1, item3]))
     }
 
@@ -58,6 +57,6 @@ final class ItemRemovalTests: XCTestCase {
         let player = Player(items: [item1, item2, item3])
         player.removeAllItems()
         expect(player.items).to(beEmpty())
-        expect(player.currentItem).to(beNil())
+        expect(player.currentIndex).to(beNil())
     }
 }

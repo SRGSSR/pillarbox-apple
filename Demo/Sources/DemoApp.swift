@@ -6,8 +6,6 @@
 
 import SwiftUI
 
-// MARK: Tabs
-
 private struct MediasTab: View {
     var body: some View {
         Navigation {
@@ -40,8 +38,6 @@ private struct ShowcaseTab: View {
         }
     }
 }
-
-// MARK: Application
 
 @main
 struct DemoApp: App {

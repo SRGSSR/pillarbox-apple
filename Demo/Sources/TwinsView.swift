@@ -4,17 +4,14 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
 import Player
 import SwiftUI
-
-// MARK: View
 
 // Behavior: h-exp, v-exp
 struct TwinsView: View {
     let media: Media
 
-    @StateObject var player = Player()
+    @StateObject private var player = Player()
     @State private var mode: Mode = .both
 
     private var topPlayer: Player {
@@ -28,8 +25,8 @@ struct TwinsView: View {
     var body: some View {
         VStack(spacing: 10) {
             Group {
-                PlaybackView(player: topPlayer)
-                PlaybackView(player: bottomPlayer)
+                BasicPlaybackView(player: topPlayer)
+                BasicPlaybackView(player: bottomPlayer)
             }
             .background(.black)
 
@@ -47,13 +44,10 @@ struct TwinsView: View {
     }
 
     private func play() {
-        guard let item = media.playerItem else { return }
-        player.append(item)
+        player.append(media.playerItem())
         player.play()
     }
 }
-
-// MARK: Types
 
 private extension TwinsView {
     enum Mode {
@@ -63,10 +57,8 @@ private extension TwinsView {
     }
 }
 
-// MARK: Preview
-
 struct TwinsView_Previews: PreviewProvider {
     static var previews: some View {
-        TwinsView(media: MediaURL.onDemandVideoLocalHLS)
+        TwinsView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
     }
 }

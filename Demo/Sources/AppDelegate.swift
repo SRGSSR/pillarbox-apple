@@ -10,8 +10,6 @@ import Core
 import ShowTime
 import UIKit
 
-// MARK: Application delegate
-
 class AppDelegate: NSObject, UIApplicationDelegate {
     private var cancellables = Set<AnyCancellable>()
 

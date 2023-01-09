@@ -4,11 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
 import Player
 import SwiftUI
-
-// MARK: View
 
 // Behavior: h-exp, v-exp
 struct LinkView: View {
@@ -20,10 +17,9 @@ struct LinkView: View {
     var body: some View {
         VStack(spacing: 10) {
             ZStack {
-                PlaybackView(player: isDisplayed ? player : Player())
-                if player.isBuffering {
-                    ProgressView()
-                }
+                BasicPlaybackView(player: isDisplayed ? player : Player())
+                ProgressView()
+                    .opacity(player.isBuffering ? 1 : 0)
             }
             Toggle("Content displayed", isOn: $isDisplayed)
                 .padding()
@@ -34,16 +30,13 @@ struct LinkView: View {
     }
 
     private func play() {
-        guard let item = media.playerItem else { return }
-        player.append(item)
+        player.append(media.playerItem())
         player.play()
     }
 }
 
-// MARK: Preview
-
 struct LinkView_Previews: PreviewProvider {
     static var previews: some View {
-        LinkView(media: MediaURL.onDemandVideoLocalHLS)
+        LinkView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
     }
 }

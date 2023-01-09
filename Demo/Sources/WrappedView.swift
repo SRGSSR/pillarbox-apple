@@ -8,10 +8,7 @@ import AVFoundation
 import Player
 import SwiftUI
 
-// MARK: View
-
 // Behavior: h-exp, v-exp
-@MainActor
 struct WrappedView: View {
     let media: Media
 
@@ -19,12 +16,12 @@ struct WrappedView: View {
 
     var body: some View {
         VStack(spacing: 10) {
-            PlaybackView(player: model.player)
+            BasicPlaybackView(player: model.player)
             HStack {
-                Button(action: { play() }) {
+                Button(action: play) {
                     Text("Play")
                 }
-                Button(action: { stop() }) {
+                Button(action: stop) {
                     Text("Stop")
                 }
             }
@@ -36,8 +33,7 @@ struct WrappedView: View {
     }
 
     private func play() {
-        guard let item = media.playerItem else { return }
-        let player = Player(item: item)
+        let player = Player(item: media.playerItem())
         model.player = player
         player.play()
     }
@@ -47,10 +43,8 @@ struct WrappedView: View {
     }
 }
 
-// MARK: Preview
-
 struct WrappedView_Previews: PreviewProvider {
     static var previews: some View {
-        WrappedView(media: MediaURL.onDemandVideoLocalHLS)
+        WrappedView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
     }
 }

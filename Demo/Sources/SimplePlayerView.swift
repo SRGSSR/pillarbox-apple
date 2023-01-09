@@ -8,10 +8,8 @@ import AVFoundation
 import Player
 import SwiftUI
 
-// MARK: View
-
 // Behavior: h-exp, v-exp
-struct BasicPlayerView: View {
+struct SimplePlayerView: View {
     let media: Media
 
     @StateObject private var player = Player()
@@ -19,9 +17,8 @@ struct BasicPlayerView: View {
     var body: some View {
         ZStack {
             VideoView(player: player)
-            if player.isBuffering {
-                ProgressView()
-            }
+            ProgressView()
+                .opacity(player.isBuffering ? 1 : 0)
         }
         .onAppear {
             play()
@@ -29,16 +26,13 @@ struct BasicPlayerView: View {
     }
 
     private func play() {
-        guard let item = media.playerItem else { return }
-        player.append(item)
+        player.append(media.playerItem())
         player.play()
     }
 }
 
-// MARK: Preview
-
-struct BasicPlayerView_Previews: PreviewProvider {
+struct SimplePlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        BasicPlayerView(media: MediaURL.onDemandVideoLocalHLS)
+        SimplePlayerView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
     }
 }

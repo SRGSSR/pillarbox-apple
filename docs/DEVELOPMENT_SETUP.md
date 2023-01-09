@@ -61,6 +61,15 @@ This ensures that Swift files, scripts and documentation conform to common best 
 
 An [editor configuration file](../.editorconfig) and several linter configuration files are provided to ensure common styling and best practices. Editors can usually be configured to apply some of these rules automatically and consistently.
 
+### Xcode
+
+Xcode _Text Editing_ settings should be configured as follows:
+
+- Enable _Automatically trim trailing whitespaces_ with _Including whitespace-only lines_ enabled as well.
+- Set _Default Text Encoding_ to _UTF-8_.
+- Set _Default Line Endings_ to _macOS / Unix (LF)_.
+- Use _Spaces_ for identation (with 4 spaces both for _Tab Width_ and _Indent Width_).
+
 ### Visual Studio Code
 
 - [EditorConfig extension](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
