@@ -11,7 +11,7 @@ import SwiftUI
 /// A standalone player view with standard controls.
 /// Behavior: h-exp, v-exp
 struct PlayerView: View {
-    private let medias: [Media]
+    let media: Media
     @StateObject private var player = Player()
 
     var body: some View {
@@ -21,16 +21,8 @@ struct PlayerView: View {
             }
     }
 
-    init(medias: [Media]) {
-        self.medias = medias
-    }
-
-    init(media: Media) {
-        self.init(medias: [media])
-    }
-
     private func load() {
-        player.items = medias.map { $0.playerItem() }
+        player.append(media.playerItem())
     }
 }
 
