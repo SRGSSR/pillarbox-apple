@@ -83,8 +83,8 @@ struct ExamplesView: View {
 
     var body: some View {
         List {
-            section(title: "SRG streams (URLs)", medias: urlMedias)
-            section(title: "SRG streams (URNs)", medias: urnMedias)
+            section(title: "SRG SSR streams (URLs)", medias: urlMedias)
+            section(title: "SRG SSR streams (URNs)", medias: urnMedias)
             section(title: "Apple streams", medias: appleMedias)
             section(title: "Aspect ratios", medias: aspectRatioMedias)
             section(title: "Unbuffered streams", medias: unbufferedMedias)
