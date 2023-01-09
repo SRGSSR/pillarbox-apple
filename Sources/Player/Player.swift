@@ -97,18 +97,24 @@ public final class Player: ObservableObject, Equatable {
         return playerConfiguration
     }
 
+    deinit {
+        rawPlayer.cancelPendingReplacements()
+    }
+}
+
+public extension Player {
     /// Resume playback.
-    public func play() {
+    func play() {
         rawPlayer.play()
     }
 
     /// Pause playback.
-    public func pause() {
+    func pause() {
         rawPlayer.pause()
     }
 
     /// Toggle playback between play and pause.
-    public func togglePlayPause() {
+    func togglePlayPause() {
         if rawPlayer.rate != 0 {
             rawPlayer.pause()
         }
@@ -123,7 +129,7 @@ public final class Player: ObservableObject, Equatable {
     ///   - toleranceBefore: Tolerance before the desired position.
     ///   - toleranceAfter: Tolerance after the desired position.
     ///   - completionHandler: A completion handler called when seeking ends.
-    public func seek(
+    func seek(
         to time: CMTime,
         toleranceBefore: CMTime = .positiveInfinity,
         toleranceAfter: CMTime = .positiveInfinity,
@@ -139,7 +145,7 @@ public final class Player: ObservableObject, Equatable {
     ///   - toleranceAfter: Tolerance after the desired position.
     /// - Returns: `true` if seeking was successful.
     @discardableResult
-    public func seek(
+    func seek(
         to time: CMTime,
         toleranceBefore: CMTime = .positiveInfinity,
         toleranceAfter: CMTime = .positiveInfinity
@@ -149,7 +155,7 @@ public final class Player: ObservableObject, Equatable {
 
     /// Return whether the current player item player can be returned to live conditions.
     /// - Returns: `true` if skipping to live conditions is possible.
-    public func canSkipToLive() -> Bool {
+    func canSkipToLive() -> Bool {
         canSkipToLive(from: time)
     }
 
@@ -157,7 +163,7 @@ public final class Player: ObservableObject, Equatable {
     /// time.
     /// - Parameter time: The time.
     /// - Returns: `true` if skipping to live conditions is possible.
-    public func canSkipToLive(from time: CMTime) -> Bool {
+    func canSkipToLive(from time: CMTime) -> Bool {
         guard streamType == .dvr, timeRange.isValid else { return false }
         return chunkDuration.isValid && time < timeRange.end - chunkDuration
     }
@@ -165,7 +171,7 @@ public final class Player: ObservableObject, Equatable {
     /// Return the current item to live conditions. Does nothing if the current item is not a livestream or does not
     /// support DVR.
     /// - Parameter completionHandler: A completion handler called when skipping ends.
-    public func skipToLive(completionHandler: @escaping (Bool) -> Void = { _ in }) {
+    func skipToLive(completionHandler: @escaping (Bool) -> Void = { _ in }) {
         guard canSkipToLive(), timeRange.isValid else { return }
         rawPlayer.seek(
             to: timeRange.end,
@@ -179,7 +185,7 @@ public final class Player: ObservableObject, Equatable {
 
     /// Return the current item to live conditions, resuming playback if needed. Does nothing if the current item is
     ///  not a livestream or does not support DVR.
-    public func skipToLive() async {
+    func skipToLive() async {
         guard canSkipToLive(), timeRange.isValid else { return }
         await rawPlayer.seek(
             to: timeRange.end,
@@ -188,14 +194,16 @@ public final class Player: ObservableObject, Equatable {
         )
         rawPlayer.play()
     }
+}
 
+public extension Player {
     /// Return a publisher periodically emitting the current time while the player is active. Emits the current time
     /// also on subscription.
     /// - Parameters:
     ///   - interval: The interval at which events must be emitted.
     ///   - queue: The queue on which values are published.
     /// - Returns: The publisher.
-    public func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
+    func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
         Publishers.PeriodicTimePublisher(for: rawPlayer, interval: interval, queue: queue)
     }
 
@@ -204,12 +212,8 @@ public final class Player: ObservableObject, Equatable {
     ///   - times: The times to observe.
     ///   - queue: The queue on which values are published.
     /// - Returns: The publisher.
-    public func boundaryTimePublisher(for times: [CMTime], queue: DispatchQueue = .main) -> AnyPublisher<Void, Never> {
+    func boundaryTimePublisher(for times: [CMTime], queue: DispatchQueue = .main) -> AnyPublisher<Void, Never> {
         Publishers.BoundaryTimePublisher(for: rawPlayer, times: times, queue: queue)
-    }
-
-    deinit {
-        rawPlayer.cancelPendingReplacements()
     }
 }
 
@@ -432,7 +436,7 @@ public extension Player {
     }
 }
 
-private extension Player {
+extension Player {
     private func configurePlaybackStatePublisher() {
         rawPlayer.playbackStatePublisher()
             .receiveOnMainThread()
