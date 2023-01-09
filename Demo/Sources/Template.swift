@@ -6,7 +6,6 @@
 
 import CoreBusiness
 import Foundation
-import Player
 
 // Apple streams are found at https://developer.apple.com/streaming/examples/
 enum URLTemplate {
@@ -184,21 +183,14 @@ enum URNTemplate {
 enum UnbufferedURLTemplate {
     static let liveVideo = Template(
         title: "Couleur 3 en direct",
-        description: "Live video (Unbuffered)",
+        description: "Live video (unbuffered)",
         type: .unbufferedUrl(
             URL(string: "https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8?dw=0")!
         )
     )
-    static let onDemandAudio = Template(
-        title: "Forum",
-        description: "On-demand audio stream (Unbuffered)",
-        type: .unbufferedUrl(
-            URL(string: "https://rts-aod-dd.akamaized.net/ww/13432709/2be967ad-e8a5-33c3-8560-83702436fb2e.mp3")!
-        )
-    )
     static let liveAudio = Template(
         title: "Couleur 3 en direct",
-        description: "Audio livestream (Unbuffered)",
+        description: "Audio livestream (unbuffered)",
         type: .unbufferedUrl(
             URL(string: "http://stream.srg-ssr.ch/m/couleur3/mp3_128")!
         )

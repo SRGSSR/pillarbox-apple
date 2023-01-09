@@ -39,10 +39,7 @@ final class PlaylistViewModel: ObservableObject {
 
     @Published var currentMedia: Media? {
         didSet {
-            guard
-                let currentMedia,
-                let index = items.keys.firstIndex(of: currentMedia)
-            else { return }
+            guard let currentMedia, let index = items.keys.firstIndex(of: currentMedia) else { return }
             try? player.setCurrentIndex(index)
         }
     }
@@ -58,7 +55,8 @@ final class PlaylistViewModel: ObservableObject {
     var medias: [Media] {
         get {
             Array(items.keys)
-        } set {
+        }
+        set {
             items = Self.updated(initialItems: items, with: newValue)
         }
     }
@@ -85,17 +83,20 @@ final class PlaylistViewModel: ObservableObject {
         configureCurrentItemPublisher()
     }
 
-    private static func updated(initialItems: OrderedDictionary<Media, PlayerItem>, with medias: [Media]) -> OrderedDictionary<Media, PlayerItem> {
+    private static func updated(
+        initialItems: OrderedDictionary<Media, PlayerItem>,
+        with medias: [Media]
+    ) -> OrderedDictionary<Media, PlayerItem> {
         var items = initialItems
         let changes = medias.difference(from: initialItems.keys).inferringMoves()
         changes.forEach { change in
             switch change {
             case let .insert(offset: offset, element: element, associatedWith: associatedWith):
-                if let associatedWith { // move
+                if let associatedWith {
                     let previousPlayerItem = initialItems.elements[associatedWith].value
                     items.updateValue(previousPlayerItem, forKey: element, insertingAt: offset)
                 }
-                else { // insert
+                else {
                     items.updateValue(element.playerItem(), forKey: element, insertingAt: offset)
                 }
             case let .remove(offset: offset, element: _, associatedWith: _):

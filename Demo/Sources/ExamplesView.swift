@@ -64,7 +64,6 @@ struct ExamplesView: View {
 
     private let unbufferedMedias = Template.medias(from: [
         UnbufferedURLTemplate.liveVideo,
-        UnbufferedURLTemplate.onDemandAudio,
         UnbufferedURLTemplate.liveAudio
     ])
 

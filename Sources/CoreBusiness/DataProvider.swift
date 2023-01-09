@@ -9,7 +9,7 @@ import Foundation
 
 final class DataProvider {
     let environment: Environment
-    let session: URLSession
+    private let session: URLSession
 
     init(environment: Environment = .production) {
         self.environment = environment

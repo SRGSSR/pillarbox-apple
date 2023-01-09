@@ -21,7 +21,7 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
         self.resourceLoaderDelegate = resourceLoaderDelegate
         let asset = AVURLAsset(url: url)
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: kResourceLoaderQueue)
-        // Provide same key as for a standard asset, as documented for `AVPlayerItem.init(asset:)`.
+        // Provide same key as for a standard asset, see `AVPlayerItem.init(asset:)` documentation.
         super.init(asset: asset, automaticallyLoadedAssetKeys: ["duration"])
     }
 }

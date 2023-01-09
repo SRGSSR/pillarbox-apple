@@ -163,8 +163,7 @@ public extension XCTestCase {
 
         let expectation = expectation(description: "Collecting publisher output for \(interval) seconds")
         let cancellable = publisher.sink(
-            receiveCompletion: { _ in
-            },
+            receiveCompletion: { _ in },
             receiveValue: { value in
                 values.append(value)
             }

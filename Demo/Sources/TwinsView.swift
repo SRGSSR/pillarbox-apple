@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
 import Player
 import SwiftUI
 
@@ -12,7 +11,7 @@ import SwiftUI
 struct TwinsView: View {
     let media: Media
 
-    @StateObject var player = Player()
+    @StateObject private var player = Player()
     @State private var mode: Mode = .both
 
     private var topPlayer: Player {
