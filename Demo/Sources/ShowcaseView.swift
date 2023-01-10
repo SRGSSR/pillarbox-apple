@@ -68,7 +68,7 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func systemSection() -> some View {
-        Section("System player") {
+        Section("System player (using Pillarbox)") {
             Cell(title: "Video URL") {
                 SystemPlayerView(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
             }
@@ -83,7 +83,7 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func vanillaPlayerSection() -> some View {
-        Section("Vanilla player") {
+        Section("System player (using AVPlayer)") {
             Cell(title: "Video URL") {
                 VanillaPlayerView(item: Template.playerItem(from: URLTemplate.appleAdvanced_16_9_TS_HLS)!)
             }
