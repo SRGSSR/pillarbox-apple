@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import CoreBusiness
 import Foundation
 
@@ -210,5 +211,21 @@ struct Template: Hashable {
 
     static func medias(from templates: [Template]) -> [Media] {
         templates.map { Media(from: $0) }
+    }
+}
+
+extension Template {
+    static func playerItem(from template: Template) -> AVPlayerItem? {
+        switch template.type {
+        case let .url(url):
+            return AVPlayerItem(url: url)
+        case let .unbufferedUrl(url):
+            let item = AVPlayerItem(url: url)
+            item.automaticallyPreservesTimeOffsetFromLive = true
+            item.preferredForwardBufferDuration = 1
+            return item
+        case .urn:
+            return nil
+        }
     }
 }

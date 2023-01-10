@@ -33,6 +33,8 @@ struct ShowcaseView: View {
             layoutsSection()
             playlistsSection()
             embeddingsSection()
+            systemPlayerSection()
+            vanillaPlayerSection()
         }
         .navigationTitle("Showcase")
     }
@@ -45,6 +47,33 @@ struct ShowcaseView: View {
             }
             Cell(title: "Stories") {
                 StoriesView()
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func systemPlayerSection() -> some View {
+        Section("System player (using Pillarbox)") {
+            Cell(title: "Video URL") {
+                SystemPlayerView(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
+            }
+            Cell(title: "Video URN") {
+                SystemPlayerView(media: Media(from: URNTemplate.dvrVideo))
+            }
+            Cell(title: "Unknown") {
+                SystemPlayerView(media: Media(from: URNTemplate.unknown))
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func vanillaPlayerSection() -> some View {
+        Section("System player (using AVPlayer)") {
+            Cell(title: "Video URL") {
+                VanillaPlayerView(item: Template.playerItem(from: URLTemplate.appleAdvanced_16_9_TS_HLS)!)
+            }
+            Cell(title: "Unknown") {
+                VanillaPlayerView(item: Template.playerItem(from: URLTemplate.unknown)!)
             }
         }
     }
