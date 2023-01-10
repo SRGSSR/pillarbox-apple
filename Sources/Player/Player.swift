@@ -526,5 +526,6 @@ extension Player {
 
     private func configurePlayerConfiguration() {
         rawPlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
+        rawPlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileExternalScreenIsActive
     }
 }
