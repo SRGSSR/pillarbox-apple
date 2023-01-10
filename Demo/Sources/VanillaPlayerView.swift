@@ -8,7 +8,7 @@ import AVKit
 import SwiftUI
 
 // Behavior: h-exp, v-exp
-struct SystemRawPlayerView: View {
+struct VanillaPlayerView: View {
     let item: AVPlayerItem
 
     @State private var player = AVQueuePlayer()
@@ -27,8 +27,8 @@ struct SystemRawPlayerView: View {
     }
 }
 
-struct SystemRawPlayerView_Previews: PreviewProvider {
+struct VanillaPlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        SystemRawPlayerView(item: Template.playerItem(from: URLTemplate.appleAdvanced_16_9_TS_HLS)!)
+        VanillaPlayerView(item: Template.playerItem(from: URLTemplate.appleAdvanced_16_9_TS_HLS)!)
     }
 }

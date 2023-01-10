@@ -34,7 +34,7 @@ struct ShowcaseView: View {
             playlistsSection()
             embeddingsSection()
             systemPlayerSection()
-            systemRawPlayerSection()
+            vanillaPlayerSection()
         }
         .navigationTitle("Showcase")
     }
@@ -82,13 +82,13 @@ struct ShowcaseView: View {
     }
 
     @ViewBuilder
-    private func systemRawPlayerSection() -> some View {
-        Section("Raw system player") {
+    private func vanillaPlayerSection() -> some View {
+        Section("Vanilla player") {
             Cell(title: "Video URL") {
-                SystemRawPlayerView(item: Template.playerItem(from: URLTemplate.appleAdvanced_16_9_TS_HLS)!)
+                VanillaPlayerView(item: Template.playerItem(from: URLTemplate.appleAdvanced_16_9_TS_HLS)!)
             }
             Cell(title: "Unknown") {
-                SystemRawPlayerView(item: Template.playerItem(from: URLTemplate.unknown)!)
+                VanillaPlayerView(item: Template.playerItem(from: URLTemplate.unknown)!)
             }
         }
     }
