@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E8C362A296DB14600707FA5 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8C3629296DB14600707FA5 /* Settings.swift */; };
 		0EEB324C29506969002E49DC /* PlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB324B29506969002E49DC /* PlaylistView.swift */; };
 		0EEB324F29630130002E49DC /* PlaylistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB324E29630130002E49DC /* PlaylistViewModel.swift */; };
 		6F016D9B296C960000C4148E /* VanillaPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F016D9A296C960000C4148E /* VanillaPlayerView.swift */; };
@@ -44,6 +45,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E8C3629296DB14600707FA5 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		0EEB324B29506969002E49DC /* PlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistView.swift; sourceTree = "<group>"; };
 		0EEB324E29630130002E49DC /* PlaylistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViewModel.swift; sourceTree = "<group>"; };
 		6F010340289946220021BA76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -185,6 +187,7 @@
 				0EEB324B29506969002E49DC /* PlaylistView.swift */,
 				0EEB324E29630130002E49DC /* PlaylistViewModel.swift */,
 				6FCA4748292CC101008C2812 /* SettingsView.swift */,
+				0E8C3629296DB14600707FA5 /* Settings.swift */,
 				6F3F15A628CEEC6900CA2BD1 /* ShowcaseView.swift */,
 				6F7750D528EABD5100E80196 /* SimplePlayerView.swift */,
 				6FB553B128C3AF020067CFC4 /* StoriesView.swift */,
@@ -307,6 +310,7 @@
 			files = (
 				6F48A5DD2932673A00B80393 /* DeveloperTools.swift in Sources */,
 				6FCA8D7C28AD2AB900CF75FB /* AppDelegate.swift in Sources */,
+				0E8C362A296DB14600707FA5 /* Settings.swift in Sources */,
 				6FD1F3A328D04AE200DF8CF1 /* LinkView.swift in Sources */,
 				6FB553B228C3AF020067CFC4 /* StoriesView.swift in Sources */,
 				6FD1F3A728D0646200DF8CF1 /* Navigation.swift in Sources */,

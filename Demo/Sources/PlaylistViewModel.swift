@@ -51,10 +51,7 @@ final class PlaylistViewModel: ObservableObject {
         }
     }
 
-    let player = Player(configuration: .init(
-        allowsExternalPlayback: UserDefaults.standard.allowsExternalPlaybackEnabled,
-        usesExternalPlaybackWhileMirroring: !UserDefaults.standard.presenterModeEnabled
-    ))
+    let player = Player(configuration: Settings.playerConfiguration())
 
     var medias: [Media] {
         get {

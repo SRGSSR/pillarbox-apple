@@ -12,8 +12,8 @@ struct MultiView: View {
     let media1: Media
     let media2: Media
 
-    @StateObject private var topPlayer = Player()
-    @StateObject private var bottomPlayer = Player()
+    @StateObject private var topPlayer = Player(configuration: Settings.playerConfigurationWithAirplayDisabled())
+    @StateObject private var bottomPlayer = Player(configuration: Settings.playerConfigurationWithAirplayDisabled())
 
     var body: some View {
         VStack(spacing: 10) {
