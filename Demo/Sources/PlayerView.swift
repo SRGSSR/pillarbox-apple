@@ -12,7 +12,10 @@ import SwiftUI
 /// Behavior: h-exp, v-exp
 struct PlayerView: View {
     let media: Media
-    @StateObject private var player = Player(configuration: .init(allowsExternalPlayback: UserDefaults.standard.allowsExternalPlaybackEnabled))
+    @StateObject private var player = Player(configuration: .init(
+        allowsExternalPlayback: UserDefaults.standard.allowsExternalPlaybackEnabled,
+        usesExternalPlaybackWhileExternalScreenIsActive: !UserDefaults.standard.presenterModeEnabled
+    ))
 
     var body: some View {
         PlaybackView(player: player)
