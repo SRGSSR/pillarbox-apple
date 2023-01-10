@@ -52,7 +52,9 @@ Our current workflow is based on pull requests, which TeamCity is able to automa
 Proper integration with GitHub requires the use of a dedicated continuous integration user (a bot) with write access to the repository. We already have a dedicated [RTS devops](https://github.com/rts-devops) user, we therefore only need a few additional configuration steps:
 
 1. Ensure the bot has write access to the GitHub repository.
-2. Integration with GitHub requires the creation of a dedicated [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) with minimal permissions (_public_repo_ is sufficient for a public repository).
+2. Create a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) with the following minimal permissions:
+  - _public_repo_ since our repository is public.
+  - _read:org_ so that the pull request feature is able to read members of the organization so that only PRs emerging from members trigger jobs (this is namely the default for the GitHub [pull request build feature](https://www.jetbrains.com/help/teamcity/pull-requests.html#Bitbucket+Cloud+Pull+Requests)).
 
 Of course a proper SSH setup is also required so that main and configuration repositories can be properly pulled by the continuous integration server.
 
