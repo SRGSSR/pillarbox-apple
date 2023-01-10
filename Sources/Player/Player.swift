@@ -77,7 +77,7 @@ public final class Player: ObservableObject, Equatable {
         configureBufferingPublisher()
         configureCurrentIndexPublisher()
         configureRawPlayerUpdatePublisher()
-        configurePlayerConfiguration()
+        configurePlayer()
     }
 
     /// Create a player with a single item in its queue.
@@ -524,8 +524,8 @@ extension Player {
             .eraseToAnyPublisher()
     }
 
-    private func configurePlayerConfiguration() {
+    private func configurePlayer() {
         rawPlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
-        rawPlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileExternalScreenIsActive
+        rawPlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
     }
 }

@@ -14,7 +14,7 @@ struct PlayerView: View {
     let media: Media
     @StateObject private var player = Player(configuration: .init(
         allowsExternalPlayback: UserDefaults.standard.allowsExternalPlaybackEnabled,
-        usesExternalPlaybackWhileExternalScreenIsActive: !UserDefaults.standard.presenterModeEnabled
+        usesExternalPlaybackWhileMirroring: !UserDefaults.standard.presenterModeEnabled
     ))
 
     var body: some View {

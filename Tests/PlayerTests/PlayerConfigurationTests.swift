@@ -14,16 +14,16 @@ final class PlayerConfigurationTests: XCTestCase {
         let configuration = PlayerConfiguration()
         let player = Player(configuration: configuration)
         expect(player.configuration.allowsExternalPlayback).to(beTrue())
-        expect(player.configuration.usesExternalPlaybackWhileExternalScreenIsActive).to(beFalse())
+        expect(player.configuration.usesExternalPlaybackWhileMirroring).to(beFalse())
     }
 
     func testPlayerConfigurationInit() {
         let configuration = PlayerConfiguration(
             allowsExternalPlayback: false,
-            usesExternalPlaybackWhileExternalScreenIsActive: true
+            usesExternalPlaybackWhileMirroring: true
         )
         let player = Player(configuration: configuration)
         expect(player.configuration.allowsExternalPlayback).to(beFalse())
-        expect(player.configuration.usesExternalPlaybackWhileExternalScreenIsActive).to(beTrue())
+        expect(player.configuration.usesExternalPlaybackWhileMirroring).to(beTrue())
     }
 }
