@@ -214,9 +214,11 @@ private struct TimeSlider: View {
                     },
                     minimumValueLabel: {
                         Text(formattedElapsedTime)
+                            .monospacedDigit()
                     },
                     maximumValueLabel: {
                         Text(formattedTotalTime)
+                            .monospacedDigit()
                     }
                 )
             case .unknown:
