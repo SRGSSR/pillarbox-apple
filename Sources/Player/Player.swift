@@ -30,6 +30,9 @@ public final class Player: ObservableObject, Equatable {
     /// Duration of a chunk for the currently played item.
     @Published public private(set) var chunkDuration: CMTime = .invalid
 
+    /// Indicates whether the player is currently playing video in external playback mode.
+    @Published public private(set) var isExternalPlaybackActive = false
+
     @Published private var storedItems: Deque<PlayerItem>
     @Published private var itemDuration: CMTime = .indefinite
 
@@ -77,6 +80,8 @@ public final class Player: ObservableObject, Equatable {
         configureBufferingPublisher()
         configureCurrentIndexPublisher()
         configureRawPlayerUpdatePublisher()
+        configureExternalPlaybackPublisher()
+
         configurePlayer()
     }
 
@@ -522,6 +527,12 @@ extension Player {
             }
             .switchToLatest()
             .eraseToAnyPublisher()
+    }
+
+    private func configureExternalPlaybackPublisher() {
+        rawPlayer.publisher(for: \.isExternalPlaybackActive)
+            .receiveOnMainThread()
+            .assign(to: &$isExternalPlaybackActive)
     }
 
     private func configurePlayer() {
