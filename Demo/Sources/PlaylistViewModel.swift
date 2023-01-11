@@ -50,7 +50,7 @@ final class PlaylistViewModel: ObservableObject {
         }
     }
 
-    let player = Player()
+    let player = Player(configuration: .standard)
 
     var medias: [Media] {
         get {

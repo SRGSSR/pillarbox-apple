@@ -33,13 +33,13 @@ struct WrappedView: View {
     }
 
     private func play() {
-        let player = Player(item: media.playerItem())
+        let player = Player(item: media.playerItem(), configuration: .externalPlaybackDisabled)
         model.player = player
         player.play()
     }
 
     private func stop() {
-        model.player = Player()
+        model.player = Player(configuration: .externalPlaybackDisabled)
     }
 }
 

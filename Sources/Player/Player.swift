@@ -41,7 +41,7 @@ public final class Player: ObservableObject, Equatable {
     /// Raw player used for playback.
     let rawPlayer: RawPlayer
 
-    private let configuration: PlayerConfiguration
+    public let configuration: PlayerConfiguration
     private var cancellables = Set<AnyCancellable>()
 
     /// The type of stream currently played.
@@ -63,11 +63,11 @@ public final class Player: ObservableObject, Equatable {
     /// Create a player with a given item queue.
     /// - Parameters:
     ///   - items: The items to be queued initially.
-    ///   - configuration: A closure in which the player can be configured.
-    public init(items: [PlayerItem] = [], configuration: (inout PlayerConfiguration) -> Void = { _ in }) {
+    ///   - configuration: The configuration to apply to the player.
+    public init(items: [PlayerItem] = [], configuration: PlayerConfiguration = .init()) {
         rawPlayer = RawPlayer()
-        self.configuration = Self.configure(with: configuration)
         storedItems = Deque(items)
+        self.configuration = configuration
 
         configurePlaybackStatePublisher()
         configureCurrentItemTimeRangePublisher()
@@ -77,24 +77,19 @@ public final class Player: ObservableObject, Equatable {
         configureBufferingPublisher()
         configureCurrentIndexPublisher()
         configureRawPlayerUpdatePublisher()
+        configurePlayer()
     }
 
     /// Create a player with a single item in its queue.
     /// - Parameters:
     ///   - item: The item to queue.
-    ///   - configuration: A closure in which the player can be configured.
-    public convenience init(item: PlayerItem, configuration: (inout PlayerConfiguration) -> Void = { _  in }) {
+    ///   - configuration: The configuration to apply to the player.
+    public convenience init(item: PlayerItem, configuration: PlayerConfiguration = .init()) {
         self.init(items: [item], configuration: configuration)
     }
 
     public nonisolated static func == (lhs: Player, rhs: Player) -> Bool {
         lhs === rhs
-    }
-
-    private static func configure(with configuration: (inout PlayerConfiguration) -> Void) -> PlayerConfiguration {
-        var playerConfiguration = PlayerConfiguration()
-        configuration(&playerConfiguration)
-        return playerConfiguration
     }
 
     deinit {
@@ -527,5 +522,10 @@ extension Player {
             }
             .switchToLatest()
             .eraseToAnyPublisher()
+    }
+
+    private func configurePlayer() {
+        rawPlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
+        rawPlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
     }
 }

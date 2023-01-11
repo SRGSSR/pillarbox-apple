@@ -8,5 +8,5 @@ import Combine
 import Player
 
 final class WrappedViewModel: ObservableObject {
-    @Published var player = Player()
+    @Published var player = Player(configuration: .externalPlaybackDisabled)
 }

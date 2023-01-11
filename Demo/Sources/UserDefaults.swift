@@ -21,6 +21,7 @@ extension UserDefaults {
     static let presenterModeEnabledKey = "presenterModeEnabled"
     static let bodyCountersEnabledKey = "bodyCountersEnabled"
     static let seekBehaviorSettingKey = "seekBehaviorSetting"
+    static let allowsExternalPlaybackSettingKey = "allowsExternalPlaybackSetting"
 
     @objc dynamic var presenterModeEnabled: Bool {
         bool(forKey: Self.presenterModeEnabledKey)
@@ -41,5 +42,9 @@ extension UserDefaults {
 
     @objc dynamic var seekBehaviorSetting: SeekBehaviorSetting {
         SeekBehaviorSetting(rawValue: integer(forKey: Self.seekBehaviorSettingKey)) ?? .immediate
+    }
+
+    @objc dynamic var allowsExternalPlaybackEnabled: Bool {
+        bool(forKey: Self.allowsExternalPlaybackSettingKey)
     }
 }

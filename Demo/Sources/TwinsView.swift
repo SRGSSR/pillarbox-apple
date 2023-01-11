@@ -11,15 +11,15 @@ import SwiftUI
 struct TwinsView: View {
     let media: Media
 
-    @StateObject private var player = Player()
+    @StateObject private var player = Player(configuration: .externalPlaybackDisabled)
     @State private var mode: Mode = .both
 
     private var topPlayer: Player {
-        mode != .bottom ? player : Player()
+        mode != .bottom ? player : Player(configuration: .externalPlaybackDisabled)
     }
 
     private var bottomPlayer: Player {
-        mode != .top ? player : Player()
+        mode != .top ? player : Player(configuration: .externalPlaybackDisabled)
     }
 
     var body: some View {

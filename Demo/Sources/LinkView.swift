@@ -11,7 +11,7 @@ import SwiftUI
 struct LinkView: View {
     let media: Media
 
-    @StateObject private var player = Player()
+    @StateObject private var player = Player(configuration: .externalPlaybackDisabled)
     @State private var isDisplayed = true
 
     var body: some View {
