@@ -16,27 +16,9 @@ private struct ContentView: View {
     var body: some View {
         ZStack {
             Group {
-                if player.isExternalPlaybackActive {
-                    Image(systemName: "airplayvideo")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        // https://www.hackingwithswift.com/quick-start/swiftui/how-to-control-the-tappable-area-of-a-view-using-contentshape
-                        .contentShape(Rectangle())
-                        .foregroundColor(.white)
-                        .padding()
-                } else {
-                    VideoView(player: player)
-                }
-                Group {
-                    Color(white: 0, opacity: 0.3)
-                    PlaybackButton(player: player)
-                }
-                .opacity(isUserInterfaceHidden ? 0 : 1)
-
-                ProgressView()
-                    .tint(.white)
-                    .opacity(player.isBuffering ? 1 : 0)
+                main()
+                controls()
+                loadingIndicator()
             }
             .onTapGesture {
                 isUserInterfaceHidden.toggle()
@@ -52,6 +34,39 @@ private struct ContentView: View {
         .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
         .animation(.easeInOut(duration: 0.2), value: isUserInterfaceHidden)
         .debugBodyCounter()
+    }
+
+    @ViewBuilder
+    private func main() -> some View {
+        if player.isExternalPlaybackActive {
+            Image(systemName: "airplayvideo")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                // https://www.hackingwithswift.com/quick-start/swiftui/how-to-control-the-tappable-area-of-a-view-using-contentshape
+                .contentShape(Rectangle())
+                .foregroundColor(.white)
+                .padding()
+        }
+        else {
+            VideoView(player: player)
+        }
+    }
+
+    @ViewBuilder
+    private func controls() -> some View {
+        Group {
+            Color(white: 0, opacity: 0.3)
+            PlaybackButton(player: player)
+        }
+        .opacity(isUserInterfaceHidden ? 0 : 1)
+    }
+
+    @ViewBuilder
+    private func loadingIndicator() -> some View {
+        ProgressView()
+            .tint(.white)
+            .opacity(player.isBuffering ? 1 : 0)
     }
 }
 
