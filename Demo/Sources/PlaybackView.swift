@@ -16,7 +16,18 @@ private struct ContentView: View {
     var body: some View {
         ZStack {
             Group {
-                VideoView(player: player)
+                if player.isExternalPlaybackActive {
+                    Image(systemName: "airplayvideo")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        // https://www.hackingwithswift.com/quick-start/swiftui/how-to-control-the-tappable-area-of-a-view-using-contentshape
+                        .contentShape(Rectangle())
+                        .foregroundColor(.white)
+                        .padding()
+                } else {
+                    VideoView(player: player)
+                }
                 Group {
                     Color(white: 0, opacity: 0.3)
                     PlaybackButton(player: player)
@@ -24,7 +35,7 @@ private struct ContentView: View {
                 .opacity(isUserInterfaceHidden ? 0 : 1)
 
                 ProgressView()
-                    .tint(Color.white)
+                    .tint(.white)
                     .opacity(player.isBuffering ? 1 : 0)
             }
             .onTapGesture {
