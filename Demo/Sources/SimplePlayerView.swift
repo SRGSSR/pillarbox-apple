@@ -12,7 +12,7 @@ import SwiftUI
 struct SimplePlayerView: View {
     let media: Media
 
-    @StateObject private var player = Player(configuration: Settings.playerConfigurationWithAirplayDisabled())
+    @StateObject private var player = Player(configuration: .externalPlaybackDisabled)
 
     var body: some View {
         ZStack {

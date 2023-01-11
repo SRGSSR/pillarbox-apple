@@ -12,7 +12,7 @@ import SwiftUI
 /// Behavior: h-exp, v-exp
 struct PlayerView: View {
     let media: Media
-    @StateObject private var player = Player(configuration: Settings.playerConfiguration())
+    @StateObject private var player = Player(configuration: .standard)
 
     var body: some View {
         PlaybackView(player: player)

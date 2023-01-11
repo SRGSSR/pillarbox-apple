@@ -7,15 +7,15 @@
 import Foundation
 import Player
 
-enum Settings {
-    static func playerConfiguration() -> PlayerConfiguration {
+extension PlayerConfiguration {
+    static var standard: Self {
         PlayerConfiguration(
             allowsExternalPlayback: UserDefaults.standard.allowsExternalPlaybackEnabled,
             usesExternalPlaybackWhileMirroring: !UserDefaults.standard.presenterModeEnabled
         )
     }
 
-    static func playerConfigurationWithAirplayDisabled() -> PlayerConfiguration {
+    static var externalPlaybackDisabled: Self {
         PlayerConfiguration(
             allowsExternalPlayback: false
         )
