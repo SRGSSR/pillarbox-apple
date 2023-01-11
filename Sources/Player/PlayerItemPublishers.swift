@@ -26,13 +26,7 @@ extension AVPlayerItem {
             publisher(for: \.loadedTimeRanges),
             publisher(for: \.seekableTimeRanges)
         )
-        .compactMap { loadedTimeRanges, seekableTimeRanges in
-            guard let firstRange = seekableTimeRanges.first?.timeRangeValue, !firstRange.isIndefinite,
-                  let lastRange = seekableTimeRanges.last?.timeRangeValue, !lastRange.isIndefinite else {
-                return !loadedTimeRanges.isEmpty ? .zero : nil
-            }
-            return CMTimeRangeFromTimeToTime(start: firstRange.start, end: lastRange.end)
-        }
+        .compactMap { Self.timeRange(loadedTimeRanges: $0, seekableTimeRanges: $1) }
         .eraseToAnyPublisher()
     }
 }
