@@ -86,7 +86,7 @@ check-quality: setup
 	@echo "... checking Ruby scripts..."
 	@bundle exec rubocop --format quiet
 	@echo "... checking Shell scripts..."
-	@shellcheck Scripts/*.sh
+	@shellcheck Scripts/*.sh hooks/*
 	@echo "... checking Markdown documentation..."
 	@bundle exec mdl --style markdown_style.rb docs .github Sources/**/*.docc
 	@echo "... checking YAML files..."
