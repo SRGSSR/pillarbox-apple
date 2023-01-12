@@ -11,13 +11,15 @@ extension PlayerConfiguration {
     static var standard: Self {
         PlayerConfiguration(
             allowsExternalPlayback: UserDefaults.standard.allowsExternalPlaybackEnabled,
-            usesExternalPlaybackWhileMirroring: !UserDefaults.standard.presenterModeEnabled
+            usesExternalPlaybackWhileMirroring: !UserDefaults.standard.presenterModeEnabled,
+            audiovisualBackgroundPlaybackPolicy: UserDefaults.standard.audiovisualBackgroundPlaybackPolicy
         )
     }
 
     static var externalPlaybackDisabled: Self {
         PlayerConfiguration(
-            allowsExternalPlayback: false
+            allowsExternalPlayback: false,
+            audiovisualBackgroundPlaybackPolicy: UserDefaults.standard.audiovisualBackgroundPlaybackPolicy
         )
     }
 }

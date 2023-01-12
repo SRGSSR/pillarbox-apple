@@ -538,5 +538,6 @@ extension Player {
     private func configurePlayer() {
         rawPlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
         rawPlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
+        rawPlayer.audiovisualBackgroundPlaybackPolicy = configuration.audiovisualBackgroundPlaybackPolicy
     }
 }

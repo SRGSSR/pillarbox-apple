@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import Foundation
 import Player
 
@@ -22,6 +23,7 @@ extension UserDefaults {
     static let bodyCountersEnabledKey = "bodyCountersEnabled"
     static let seekBehaviorSettingKey = "seekBehaviorSetting"
     static let allowsExternalPlaybackSettingKey = "allowsExternalPlaybackSetting"
+    static let audiovisualBackgroundPlaybackPolicySettingKey = "audiovisualBackgroundPlaybackPolicySetting"
 
     @objc dynamic var presenterModeEnabled: Bool {
         bool(forKey: Self.presenterModeEnabledKey)
@@ -41,10 +43,14 @@ extension UserDefaults {
     }
 
     @objc dynamic var seekBehaviorSetting: SeekBehaviorSetting {
-        SeekBehaviorSetting(rawValue: integer(forKey: Self.seekBehaviorSettingKey)) ?? .immediate
+        .init(rawValue: integer(forKey: Self.seekBehaviorSettingKey)) ?? .immediate
     }
 
     @objc dynamic var allowsExternalPlaybackEnabled: Bool {
         bool(forKey: Self.allowsExternalPlaybackSettingKey)
+    }
+
+    @objc dynamic var audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy {
+        .init(rawValue: integer(forKey: Self.audiovisualBackgroundPlaybackPolicySettingKey)) ?? .automatic
     }
 }
