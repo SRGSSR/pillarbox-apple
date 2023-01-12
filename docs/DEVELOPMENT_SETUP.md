@@ -57,6 +57,10 @@ make check-quality
 
 This ensures that Swift files, scripts and documentation conform to common best practices.
 
+## Git hooks
+
+Git hooks are automatically installed when `make setup` is run.
+
 ## Editor configuration
 
 An [editor configuration file](../.editorconfig) and several linter configuration files are provided to ensure common styling and best practices. Editors can usually be configured to apply some of these rules automatically and consistently.
