@@ -14,7 +14,8 @@ final class RawPlayer: AVQueuePlayer {
             NotificationCenter.default.post(name: .willSeek, object: self)
         }
         seekCount += 1
-        super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { finished in
+        super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
+            guard let self else { return }
             self.seekCount -= 1
             if self.seekCount == 0 {
                 NotificationCenter.default.post(name: .didSeek, object: self)
