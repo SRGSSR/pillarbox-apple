@@ -80,6 +80,10 @@ test-tvos: setup
 
 .PHONY: check-quality
 check-quality: setup
+	pre-commit
+
+.PHONY: pre-commit
+pre-commit:
 	@echo "Checking quality..."
 	@echo "... checking Swift code..."
 	@swiftlint --quiet --strict

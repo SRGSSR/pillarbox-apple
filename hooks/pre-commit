@@ -4,9 +4,9 @@
 # Quality check
 #================================================================
 
-PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+PATH="/opt/homebrew/bin:/opt/homebrew/opt/ruby/bin:$PATH"
 
-if make check-quality; then
+if make pre-commit; then
   echo "✅ Quality checked"
 else
   echo "❌ Quality check failed"
