@@ -11,6 +11,7 @@ setup:
 	@echo "Setting up the project..."
 	@bundle install > /dev/null
 	@Scripts/checkout-configuration.sh "${CONFIGURATION_REPOSITORY_URL}" "${CONFIGURATION_COMMIT_SHA1}" Configuration
+	@git config core.hooksPath hooks
 	@echo "... done.\n"
 
 .PHONY: fastlane
