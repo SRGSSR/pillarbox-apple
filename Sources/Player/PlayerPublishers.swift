@@ -96,4 +96,19 @@ extension AVPlayer {
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
+
+    func chunkDurationPublisher() -> AnyPublisher<CMTime, Never> {
+        publisher(for: \.currentItem)
+            .map { item -> AnyPublisher<CMTime, Never> in
+                guard let item else { return Just(.invalid).eraseToAnyPublisher() }
+                return item.asset.propertyPublisher(.minimumTimeOffsetFromLive)
+                    .map { CMTimeMultiplyByRatio($0, multiplier: 1, divisor: 3) }       // The minimum offset represents 3 chunks
+                    .replaceError(with: .invalid)
+                    .prepend(.invalid)
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
 }
