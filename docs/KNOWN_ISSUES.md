@@ -36,3 +36,29 @@ Seeks are currently prevented in the last 12 seconds of an on-demand stream to m
 ### Workaround
 
 No workaround is available yet.
+
+## Very fast playlist navigation during AirPlay playback might confuse the player
+
+When seeking between items very fast the receiver might get confused, not being able to cope with the number of demands and the associated network activity. As a result the receiver might get stuck.
+
+### Workaround
+
+We have mitigated AirPlay instabilities as much as possible so that fast navigation is possible in almost all practical cases. If an issue is encountered, though, closing and reopening the player should make playback possible again.
+
+In some extreme cases it might happen that the AirPlay receiver is unable to recover from heavy usage. If this happens restarting the receiver will make it usable again.
+
+## DRM playback is sometimes not possible anymore
+
+It might happen that attempting to play DRM streams always ends with an error. The reason is likely an issue with key session management.
+
+### Workaround
+
+Kill and restart the application.
+
+## Token-protected content is not playable on Apple TV 3rd generation devices
+
+Token-protected content cannot be played on old Apple TV 3rd generation devices. An error is returned when attempting to play such content.
+
+### Workaround
+
+No workaround is available yet.
