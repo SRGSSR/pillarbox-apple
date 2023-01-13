@@ -8,7 +8,7 @@ import AVFoundation
 import Combine
 
 final class RawPlayer: AVQueuePlayer {
-    @Published private var chunkDuration: CMTime = .invalid
+    @Published private(set) var chunkDuration: CMTime = .invalid
 
     private var seekCount = 0
 

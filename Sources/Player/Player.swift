@@ -27,9 +27,6 @@ public final class Player: ObservableObject, Equatable {
     /// Available time range. `.invalid` when not known.
     @Published public private(set) var timeRange: CMTimeRange = .invalid
 
-    /// Duration of a chunk for the currently played item.
-    @Published public private(set) var chunkDuration: CMTime = .invalid
-
     /// Indicates whether the player is currently playing video in external playback mode.
     @Published public private(set) var isExternalPlaybackActive = false
 
@@ -74,7 +71,6 @@ public final class Player: ObservableObject, Equatable {
         configurePlaybackStatePublisher()
         configureCurrentItemTimeRangePublisher()
         configureCurrentItemDurationPublisher()
-        configureChunkDurationPublisher()
         configureSeekingPublisher()
         configureBufferingPublisher()
         configureCurrentIndexPublisher()
@@ -164,6 +160,7 @@ public extension Player {
     /// - Returns: `true` if skipping to live conditions is possible.
     func canSkipToLive(from time: CMTime) -> Bool {
         guard streamType == .dvr, timeRange.isValid else { return false }
+        let chunkDuration = rawPlayer.chunkDuration
         return chunkDuration.isValid && time < timeRange.end - chunkDuration
     }
 
@@ -455,13 +452,6 @@ extension Player {
             .receiveOnMainThread()
             .lane("player_item_duration")
             .assign(to: &$itemDuration)
-    }
-
-    private func configureChunkDurationPublisher() {
-        rawPlayer.chunkDurationPublisher()
-            .receiveOnMainThread()
-            .lane("player_chunk_duration")
-            .assign(to: &$chunkDuration)
     }
 
     private func configureSeekingPublisher() {
