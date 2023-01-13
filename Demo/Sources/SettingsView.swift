@@ -17,16 +17,16 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.seekBehaviorSettingKey)
     private var seekBehaviorSetting: SeekBehaviorSetting = .immediate
 
-    @AppStorage(UserDefaults.allowsExternalPlaybackSettingKey)
-    private var allowsExternalPlaybackSetting = true
+    @AppStorage(UserDefaults.allowsExternalPlaybackKey)
+    private var allowsExternalPlayback = true
 
-    @AppStorage(UserDefaults.audiovisualBackgroundPlaybackPolicySettingKey)
-    private var audiovisualBackgroundPlaybackPolicySettingKey: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic
+    @AppStorage(UserDefaults.audiovisualBackgroundPlaybackPolicyKey)
+    private var audiovisualBackgroundPlaybackPolicyKey: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic
 
     var body: some View {
         List {
             Toggle("Presenter mode", isOn: $isPresentedModeEnabled)
-            Toggle("Allows external playback", isOn: $allowsExternalPlaybackSetting)
+            Toggle("Allows external playback", isOn: $allowsExternalPlayback)
             seekBehaviorPicker()
             audiovisualBackgroundPlaybackPolicyPicker()
             Toggle("Body counters", isOn: $areBodyCountersEnabled)
@@ -49,7 +49,7 @@ struct SettingsView: View {
 
     @ViewBuilder
     private func audiovisualBackgroundPlaybackPolicyPicker() -> some View {
-        Picker("Audiovisual background policy", selection: $audiovisualBackgroundPlaybackPolicySettingKey) {
+        Picker("Audiovisual background policy", selection: $audiovisualBackgroundPlaybackPolicyKey) {
             Text("Automatic").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.automatic)
             Text("Continues if possible").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.continuesIfPossible)
             Text("Pauses").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.pauses)

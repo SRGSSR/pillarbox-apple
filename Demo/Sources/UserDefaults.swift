@@ -22,8 +22,8 @@ extension UserDefaults {
     static let presenterModeEnabledKey = "presenterModeEnabled"
     static let bodyCountersEnabledKey = "bodyCountersEnabled"
     static let seekBehaviorSettingKey = "seekBehaviorSetting"
-    static let allowsExternalPlaybackSettingKey = "allowsExternalPlaybackSetting"
-    static let audiovisualBackgroundPlaybackPolicySettingKey = "audiovisualBackgroundPlaybackPolicySetting"
+    static let allowsExternalPlaybackKey = "allowsExternalPlayback"
+    static let audiovisualBackgroundPlaybackPolicyKey = "audiovisualBackgroundPlaybackPolicy"
 
     @objc dynamic var presenterModeEnabled: Bool {
         bool(forKey: Self.presenterModeEnabledKey)
@@ -47,11 +47,11 @@ extension UserDefaults {
     }
 
     @objc dynamic var allowsExternalPlaybackEnabled: Bool {
-        bool(forKey: Self.allowsExternalPlaybackSettingKey)
+        bool(forKey: Self.allowsExternalPlaybackKey)
     }
 
     @objc dynamic var audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy {
-        .init(rawValue: integer(forKey: Self.audiovisualBackgroundPlaybackPolicySettingKey)) ?? .automatic
+        .init(rawValue: integer(forKey: Self.audiovisualBackgroundPlaybackPolicyKey)) ?? .automatic
     }
 
     func registerDefaults() {
@@ -59,8 +59,8 @@ extension UserDefaults {
             Self.presenterModeEnabledKey: false,
             Self.bodyCountersEnabledKey: false,
             Self.seekBehaviorSettingKey: SeekBehaviorSetting.immediate.rawValue,
-            Self.allowsExternalPlaybackSettingKey: true,
-            Self.audiovisualBackgroundPlaybackPolicySettingKey: AVPlayerAudiovisualBackgroundPlaybackPolicy.automatic.rawValue
+            Self.allowsExternalPlaybackKey: true,
+            Self.audiovisualBackgroundPlaybackPolicyKey: AVPlayerAudiovisualBackgroundPlaybackPolicy.automatic.rawValue
         ])
     }
 }
