@@ -53,4 +53,14 @@ extension UserDefaults {
     @objc dynamic var audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy {
         .init(rawValue: integer(forKey: Self.audiovisualBackgroundPlaybackPolicySettingKey)) ?? .automatic
     }
+
+    func registerDefaults() {
+        register(defaults: [
+            Self.presenterModeEnabledKey: false,
+            Self.bodyCountersEnabledKey: false,
+            Self.seekBehaviorSettingKey: SeekBehaviorSetting.immediate.rawValue,
+            Self.allowsExternalPlaybackSettingKey: true,
+            Self.audiovisualBackgroundPlaybackPolicySettingKey: AVPlayerAudiovisualBackgroundPlaybackPolicy.automatic.rawValue
+        ])
+    }
 }
