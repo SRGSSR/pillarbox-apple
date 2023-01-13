@@ -32,6 +32,30 @@ final class ChunkDurationPublisherTests: XCTestCase {
         }
     }
 
+    func testChunkDurationDuringEntirePlaybackInQueuePlayerAdvancingAtItemEnd() {
+        let item = AVPlayerItem(url: Stream.shortOnDemand.url)
+        let player = AVQueuePlayer(playerItem: item)
+        player.actionAtItemEnd = .advance
+        expectAtLeastEqualPublished(
+            values: [.invalid, CMTime(value: 1, timescale: 1), .invalid],
+            from: player.chunkDurationPublisher()
+        ) {
+            player.play()
+        }
+    }
+
+    func testChunkDurationDuringEntirePlaybackInQueuePlayerPausingAtItemEnd() {
+        let item = AVPlayerItem(url: Stream.shortOnDemand.url)
+        let player = AVQueuePlayer(playerItem: item)
+        player.actionAtItemEnd = .pause
+        expectAtLeastEqualPublished(
+            values: [.invalid, CMTime(value: 1, timescale: 1)],
+            from: player.chunkDurationPublisher()
+        ) {
+            player.play()
+        }
+    }
+
     func testCheckDurationsDuringItemChange() {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.onDemand.url)
