@@ -5,16 +5,41 @@
 //
 
 import AVFoundation
+import Combine
 
 final class RawPlayer: AVQueuePlayer {
+    @Published private var chunkDuration: CMTime = .invalid
+
     private var seekCount = 0
+
+    override init() {
+        super.init()
+        configureChunkDurationPublisher()
+    }
+
+    override init(playerItem item: AVPlayerItem?) {
+        super.init(playerItem: item)
+        configureChunkDurationPublisher()
+    }
+
+    override init(items: [AVPlayerItem]) {
+        super.init(items: items)
+        configureChunkDurationPublisher()
+    }
+
+    private static func safeSeekTime(_ time: CMTime, for item: AVPlayerItem?, chunkDuration: CMTime) -> CMTime {
+        guard chunkDuration.isValid, let item, let timeRange = item.timeRange, !item.duration.isIndefinite else {
+            return time
+        }
+        return CMTimeMinimum(time, CMTimeMaximum(timeRange.end - chunkDuration, .zero))
+    }
 
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         if seekCount == 0 {
             NotificationCenter.default.post(name: .willSeek, object: self)
         }
         seekCount += 1
-        super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
+        super.seek(to: Self.safeSeekTime(time, for: currentItem, chunkDuration: chunkDuration), toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             guard let self else { return }
             self.seekCount -= 1
             if self.seekCount == 0 {
@@ -57,6 +82,11 @@ final class RawPlayer: AVQueuePlayer {
 
     func cancelPendingReplacements() {
         RunLoop.cancelPreviousPerformRequests(withTarget: self)
+    }
+
+    private func configureChunkDurationPublisher() {
+        chunkDurationPublisher()
+            .assign(to: &$chunkDuration)
     }
 }
 
