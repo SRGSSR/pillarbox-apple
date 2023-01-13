@@ -8,30 +8,13 @@ import AVFoundation
 import Combine
 
 final class RawPlayer: AVQueuePlayer {
-    @Published private(set) var chunkDuration: CMTime = .invalid
-
+    private static let offset = CMTime(value: 10, timescale: 1)
     private var seekCount = 0
 
-    override init() {
-        super.init()
-        configureChunkDurationPublisher()
-    }
-
-    override init(playerItem item: AVPlayerItem?) {
-        super.init(playerItem: item)
-        configureChunkDurationPublisher()
-    }
-
-    override init(items: [AVPlayerItem]) {
-        super.init(items: items)
-        configureChunkDurationPublisher()
-    }
-
-    private static func safeSeekTime(_ time: CMTime, for item: AVPlayerItem?, chunkDuration: CMTime) -> CMTime {
+    private static func safeSeekTime(_ time: CMTime, for item: AVPlayerItem?) -> CMTime {
         guard let item, let timeRange = item.timeRange, !item.duration.isIndefinite else {
             return time
         }
-        let offset = chunkDuration.isValid ? chunkDuration : CMTime(value: 8, timescale: 1)
         return CMTimeMinimum(time, CMTimeMaximum(timeRange.end - offset, .zero))
     }
 
@@ -41,7 +24,7 @@ final class RawPlayer: AVQueuePlayer {
         }
         seekCount += 1
         super.seek(
-            to: Self.safeSeekTime(time, for: currentItem, chunkDuration: chunkDuration),
+            to: Self.safeSeekTime(time, for: currentItem),
             toleranceBefore: toleranceBefore,
             toleranceAfter: toleranceAfter
         ) { [weak self] finished in
@@ -87,11 +70,6 @@ final class RawPlayer: AVQueuePlayer {
 
     func cancelPendingReplacements() {
         RunLoop.cancelPreviousPerformRequests(withTarget: self)
-    }
-
-    private func configureChunkDurationPublisher() {
-        chunkDurationPublisher()
-            .assign(to: &$chunkDuration)
     }
 }
 
