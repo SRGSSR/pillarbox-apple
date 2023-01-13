@@ -28,10 +28,11 @@ final class RawPlayer: AVQueuePlayer {
     }
 
     private static func safeSeekTime(_ time: CMTime, for item: AVPlayerItem?, chunkDuration: CMTime) -> CMTime {
-        guard chunkDuration.isValid, let item, let timeRange = item.timeRange, !item.duration.isIndefinite else {
+        guard let item, let timeRange = item.timeRange, !item.duration.isIndefinite else {
             return time
         }
-        return CMTimeMinimum(time, CMTimeMaximum(timeRange.end - chunkDuration, .zero))
+        let offset = chunkDuration.isValid ? chunkDuration : CMTime(value: 8, timescale: 1)
+        return CMTimeMinimum(time, CMTimeMaximum(timeRange.end - offset, .zero))
     }
 
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
