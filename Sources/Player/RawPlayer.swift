@@ -12,7 +12,7 @@ final class RawPlayer: AVQueuePlayer {
     private var seekCount = 0
 
     private static func safeSeekTime(_ time: CMTime, for item: AVPlayerItem?) -> CMTime {
-        guard let item, let timeRange = item.timeRange, !item.duration.isIndefinite else {
+        guard let item, let timeRange = item.timeRange, !item.duration.isIndefinite /* DVR stream */ else {
             return time
         }
         return CMTimeMinimum(time, CMTimeMaximum(timeRange.end - offset, .zero))
