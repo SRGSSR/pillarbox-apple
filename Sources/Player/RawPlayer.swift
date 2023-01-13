@@ -8,7 +8,7 @@ import AVFoundation
 import Combine
 
 final class RawPlayer: AVQueuePlayer {
-    private static let offset = CMTime(value: 10, timescale: 1)
+    private static let offset = CMTime(value: 12, timescale: 1)
     private var seekCount = 0
 
     private static func safeSeekTime(_ time: CMTime, for item: AVPlayerItem?) -> CMTime {
