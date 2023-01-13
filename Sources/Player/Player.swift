@@ -42,7 +42,7 @@ public final class Player: ObservableObject, Equatable {
     }
 
     /// Raw player used for playback.
-    let rawPlayer: RawPlayer
+    let rawPlayer = RawPlayer()
 
     public let configuration: PlayerConfiguration
     private var cancellables = Set<AnyCancellable>()
@@ -68,7 +68,6 @@ public final class Player: ObservableObject, Equatable {
     ///   - items: The items to be queued initially.
     ///   - configuration: The configuration to apply to the player.
     public init(items: [PlayerItem] = [], configuration: PlayerConfiguration = .init()) {
-        rawPlayer = RawPlayer()
         storedItems = Deque(items)
         self.configuration = configuration
 
