@@ -38,11 +38,11 @@ public final class Player: ObservableObject, Equatable {
 
     /// Current time.
     public var time: CMTime {
-        rawPlayer.currentTime()
+        queuePlayer.currentTime()
     }
 
-    /// Raw player used for playback.
-    let rawPlayer = RawPlayer()
+    /// Low-level player used for playback.
+    let queuePlayer = QueuePlayer()
 
     public let configuration: PlayerConfiguration
     private var cancellables = Set<AnyCancellable>()
@@ -78,7 +78,7 @@ public final class Player: ObservableObject, Equatable {
         configureSeekingPublisher()
         configureBufferingPublisher()
         configureCurrentIndexPublisher()
-        configureRawPlayerUpdatePublisher()
+        configureQueueUpdatePublisher()
         configureExternalPlaybackPublisher()
 
         configurePlayer()
@@ -97,28 +97,28 @@ public final class Player: ObservableObject, Equatable {
     }
 
     deinit {
-        rawPlayer.cancelPendingReplacements()
+        queuePlayer.cancelPendingReplacements()
     }
 }
 
 public extension Player {
     /// Resume playback.
     func play() {
-        rawPlayer.play()
+        queuePlayer.play()
     }
 
     /// Pause playback.
     func pause() {
-        rawPlayer.pause()
+        queuePlayer.pause()
     }
 
     /// Toggle playback between play and pause.
     func togglePlayPause() {
-        if rawPlayer.rate != 0 {
-            rawPlayer.pause()
+        if queuePlayer.rate != 0 {
+            queuePlayer.pause()
         }
         else {
-            rawPlayer.play()
+            queuePlayer.play()
         }
     }
 
@@ -134,7 +134,7 @@ public extension Player {
         toleranceAfter: CMTime = .positiveInfinity,
         completionHandler: @escaping (Bool) -> Void = { _ in }
     ) {
-        rawPlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
+        queuePlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
     }
 
     /// Seek to a given location.
@@ -149,7 +149,7 @@ public extension Player {
         toleranceBefore: CMTime = .positiveInfinity,
         toleranceAfter: CMTime = .positiveInfinity
     ) async -> Bool {
-        await rawPlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
+        await queuePlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
     }
 
     /// Return whether the current player item player can be returned to live conditions.
@@ -172,7 +172,7 @@ public extension Player {
     /// - Parameter completionHandler: A completion handler called when skipping ends.
     func skipToLive(completionHandler: @escaping (Bool) -> Void = { _ in }) {
         guard canSkipToLive(), timeRange.isValid else { return }
-        rawPlayer.seek(
+        queuePlayer.seek(
             to: timeRange.end,
             toleranceBefore: .positiveInfinity,
             toleranceAfter: .positiveInfinity
@@ -186,12 +186,12 @@ public extension Player {
     ///  not a livestream or does not support DVR.
     func skipToLive() async {
         guard canSkipToLive(), timeRange.isValid else { return }
-        await rawPlayer.seek(
+        await queuePlayer.seek(
             to: timeRange.end,
             toleranceBefore: .positiveInfinity,
             toleranceAfter: .positiveInfinity
         )
-        rawPlayer.play()
+        queuePlayer.play()
     }
 }
 
@@ -203,7 +203,7 @@ public extension Player {
     ///   - queue: The queue on which values are published.
     /// - Returns: The publisher.
     func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
-        Publishers.PeriodicTimePublisher(for: rawPlayer, interval: interval, queue: queue)
+        Publishers.PeriodicTimePublisher(for: queuePlayer, interval: interval, queue: queue)
     }
 
     /// Return a publisher emitting when traversing the specified times during normal playback.
@@ -212,7 +212,7 @@ public extension Player {
     ///   - queue: The queue on which values are published.
     /// - Returns: The publisher.
     func boundaryTimePublisher(for times: [CMTime], queue: DispatchQueue = .main) -> AnyPublisher<Void, Never> {
-        Publishers.BoundaryTimePublisher(for: rawPlayer, times: times, queue: queue)
+        Publishers.BoundaryTimePublisher(for: queuePlayer, times: times, queue: queue)
     }
 }
 
@@ -410,7 +410,7 @@ public extension Player {
     /// Return to the previous item in the deque. Skips failed items.
     func returnToPreviousItem() {
         guard canReturnToPreviousItem() else { return }
-        rawPlayer.replaceItems(with: AVPlayerItem.playerItems(from: returningItems))
+        queuePlayer.replaceItems(with: AVPlayerItem.playerItems(from: returningItems))
     }
 
     /// Check whether moving to the next item in the deque is possible.`
@@ -422,7 +422,7 @@ public extension Player {
     /// Move to the next item in the deque.
     func advanceToNextItem() {
         guard canAdvanceToNextItem() else { return }
-        rawPlayer.replaceItems(with: AVPlayerItem.playerItems(from: advancingItems))
+        queuePlayer.replaceItems(with: AVPlayerItem.playerItems(from: advancingItems))
     }
 
     /// Set the index of the current item.
@@ -431,55 +431,55 @@ public extension Player {
         guard index != currentIndex else { return }
         guard (0..<storedItems.count).contains(index) else { throw PlaybackError.itemOutOfBounds }
         let playerItems = AVPlayerItem.playerItems(from: Array(storedItems.suffix(from: index)))
-        rawPlayer.replaceItems(with: playerItems)
+        queuePlayer.replaceItems(with: playerItems)
     }
 }
 
 extension Player {
     private func configurePlaybackStatePublisher() {
-        rawPlayer.playbackStatePublisher()
+        queuePlayer.playbackStatePublisher()
             .receiveOnMainThread()
             .lane("player_state")
             .assign(to: &$playbackState)
     }
 
     private func configureCurrentItemTimeRangePublisher() {
-        rawPlayer.currentItemTimeRangePublisher()
+        queuePlayer.currentItemTimeRangePublisher()
             .receiveOnMainThread()
             .lane("player_time_range")
             .assign(to: &$timeRange)
     }
 
     private func configureCurrentItemDurationPublisher() {
-        rawPlayer.currentItemDurationPublisher()
+        queuePlayer.currentItemDurationPublisher()
             .receiveOnMainThread()
             .lane("player_item_duration")
             .assign(to: &$itemDuration)
     }
 
     private func configureChunkDurationPublisher() {
-        rawPlayer.chunkDurationPublisher()
+        queuePlayer.chunkDurationPublisher()
             .receiveOnMainThread()
             .lane("player_chunk_duration")
             .assign(to: &$chunkDuration)
     }
 
     private func configureSeekingPublisher() {
-        rawPlayer.seekingPublisher()
+        queuePlayer.seekingPublisher()
             .receiveOnMainThread()
             .lane("player_seeking")
             .assign(to: &$isSeeking)
     }
 
     private func configureBufferingPublisher() {
-        rawPlayer.bufferingPublisher()
+        queuePlayer.bufferingPublisher()
             .receiveOnMainThread()
             .lane("player_buffering")
             .assign(to: &$isBuffering)
     }
 
     private func configureCurrentIndexPublisher() {
-        Publishers.CombineLatest($storedItems, rawPlayer.publisher(for: \.currentItem))
+        Publishers.CombineLatest($storedItems, queuePlayer.publisher(for: \.currentItem))
             .filter { storedItems, currentItem in
                 // The current item is automatically set to `nil` when a failure is encountered. If this is the case
                 // preserve the previous value, provided the player is loaded with items.
@@ -494,15 +494,15 @@ extension Player {
             .assign(to: &$currentIndex)
     }
 
-    private func configureRawPlayerUpdatePublisher() {
+    private func configureQueueUpdatePublisher() {
         sourcesPublisher()
             .withPrevious()
-            .map { [rawPlayer] sources in
-                AVPlayerItem.playerItems(for: sources.current, replacing: sources.previous ?? [], currentItem: rawPlayer.currentItem)
+            .map { [queuePlayer] sources in
+                AVPlayerItem.playerItems(for: sources.current, replacing: sources.previous ?? [], currentItem: queuePlayer.currentItem)
             }
             .receiveOnMainThread()
-            .sink { [rawPlayer] items in
-                rawPlayer.replaceItems(with: items)
+            .sink { [queuePlayer] items in
+                queuePlayer.replaceItems(with: items)
             }
             .store(in: &cancellables)
     }
@@ -519,14 +519,14 @@ extension Player {
     }
 
     private func configureExternalPlaybackPublisher() {
-        rawPlayer.publisher(for: \.isExternalPlaybackActive)
+        queuePlayer.publisher(for: \.isExternalPlaybackActive)
             .receiveOnMainThread()
             .assign(to: &$isExternalPlaybackActive)
     }
 
     private func configurePlayer() {
-        rawPlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
-        rawPlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
-        rawPlayer.audiovisualBackgroundPlaybackPolicy = configuration.audiovisualBackgroundPlaybackPolicy
+        queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
+        queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
+        queuePlayer.audiovisualBackgroundPlaybackPolicy = configuration.audiovisualBackgroundPlaybackPolicy
     }
 }

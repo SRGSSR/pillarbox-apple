@@ -61,7 +61,7 @@ final class PlayerCurrentIndexTests: XCTestCase {
         let item1 = PlayerItem(url: Stream.onDemand.url)
         let item2 = PlayerItem(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2])
-        let publisher = player.rawPlayer.publisher(for: \.currentItem).compactMap { item -> URL? in
+        let publisher = player.queuePlayer.publisher(for: \.currentItem).compactMap { item -> URL? in
             guard let asset = item?.asset as? AVURLAsset else { return nil }
             return asset.url
         }
@@ -79,7 +79,7 @@ final class PlayerCurrentIndexTests: XCTestCase {
     func testSetCurrentIndexToSameValue() {
         let item = PlayerItem(url: Stream.onDemand.url)
         let player = Player(item: item)
-        let publisher = player.rawPlayer.publisher(for: \.currentItem)
+        let publisher = player.queuePlayer.publisher(for: \.currentItem)
 
         expectNothingPublishedNext(from: publisher, during: 1) {
             try! player.setCurrentIndex(0)

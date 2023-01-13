@@ -7,7 +7,7 @@
 import AVFoundation
 import Combine
 
-final class RawPlayer: AVQueuePlayer {
+final class QueuePlayer: AVQueuePlayer {
     private static let offset = CMTime(value: 12, timescale: 1)
     private var seekCount = 0
 
@@ -74,6 +74,6 @@ final class RawPlayer: AVQueuePlayer {
 }
 
 extension Notification.Name {
-    static let willSeek = Notification.Name("RawPlayerWillSeekNotification")
-    static let didSeek = Notification.Name("RawPlayerDidSeekNotification")
+    static let willSeek = Notification.Name("QueuePlayerWillSeekNotification")
+    static let didSeek = Notification.Name("QueuePlayerDidSeekNotification")
 }
