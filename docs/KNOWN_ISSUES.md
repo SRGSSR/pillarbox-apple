@@ -28,3 +28,11 @@ DRM-protected streams do not play in the simulator. This is expected behavior as
 ### Workaround
 
 Use a physical device.
+
+## Seeking to the end of an on-demand stream is limited
+
+Seeks are currently prevented in the last 12 seconds of an on-demand stream to mitigate known player instabilities. If seeking is made within this window playback will resume at the nearest safely reachable location.
+
+### Workaround
+
+No workaround is available yet.
