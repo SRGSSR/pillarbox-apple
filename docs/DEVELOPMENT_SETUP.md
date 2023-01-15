@@ -59,7 +59,21 @@ This ensures that Swift files, scripts and documentation conform to common best 
 
 ## Git hooks
 
-Git hooks are automatically installed when `make setup` is run.
+### Installation
+
+Git hooks can be installed by running the following command:
+
+```shell
+make git-hook-install
+```
+
+### Uninstallation
+
+Git hooks can be uninstalled by running the following command:
+
+```shell
+make git-hook-install
+```
 
 ## Editor configuration
 
