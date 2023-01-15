@@ -11,7 +11,6 @@ setup:
 	@echo "Setting up the project..."
 	@bundle install > /dev/null
 	@Scripts/checkout-configuration.sh "${CONFIGURATION_REPOSITORY_URL}" "${CONFIGURATION_COMMIT_SHA1}" Configuration
-	@git config core.hooksPath hooks
 	@echo "... done.\n"
 
 .PHONY: fastlane
@@ -78,12 +77,7 @@ test-tvos: setup
 	@Scripts/test-streams.sh -k
 	@echo "... done.\n"
 
-.PHONY: check-quality
-check-quality: setup
-	pre-commit
-
-.PHONY: pre-commit
-pre-commit:
+check-quality-without-setup: 
 	@echo "Checking quality..."
 	@echo "... checking Swift code..."
 	@swiftlint --quiet --strict
@@ -97,11 +91,26 @@ pre-commit:
 	@yamllint .*.yml .github
 	@echo "... done.\n"
 
+.PHONY: check-quality
+check-quality: setup check-quality-without-setup
+
 .PHONY: fix-quality
 fix-quality: setup
 	@echo "Fixing quality..."
 	@swiftlint --fix && swiftlint
 	@echo "... done.\n"
+
+git-hook-install:
+	@echo "Installing git hooks..."
+	@git config core.hooksPath hooks
+	@echo "... done.\n"
+
+git-hook-uninstall:
+	@echo "Uninstalling git hooks..."
+	@git config --unset core.hooksPath
+	@echo "... done.\n"
+
+git-hook-pre-commit: check-quality-without-setup
 
 .PHONY: doc
 doc: setup
@@ -135,6 +144,10 @@ help:
 	@echo ""
 	@echo "   check-quality                      Run quality checks"
 	@echo "   fix-quality                        Fix quality automatically (if possible)"
+	@echo ""
+	@echo "   git-hook-install                   Use the hooks located in ./hooks directory"
+	@echo "   git-hook-uninstall                 Use the default hooks located .git/hooks"
+	@echo "   git-hook-pre-commit                Checks done before a commit"
 	@echo ""
 	@echo "   doc                                Build the documentation"
 	@echo ""

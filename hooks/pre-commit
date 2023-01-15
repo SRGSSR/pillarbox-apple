@@ -6,7 +6,7 @@
 
 PATH="$(which swiftlint):$(which ruby):$PATH"
 
-if make pre-commit; then
+if make git-hook-pre-commit; then
   echo "✅ Quality checked"
 else
   echo "❌ Quality check failed"
