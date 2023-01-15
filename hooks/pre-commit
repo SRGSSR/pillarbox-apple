@@ -4,7 +4,7 @@
 # Quality check
 #================================================================
 
-PATH="/opt/homebrew/bin:/opt/homebrew/opt/ruby/bin:$PATH"
+PATH="$(which swiftlint):$(which ruby):$PATH"
 
 if make pre-commit; then
   echo "✅ Quality checked"
