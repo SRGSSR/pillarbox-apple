@@ -57,6 +57,24 @@ make check-quality
 
 This ensures that Swift files, scripts and documentation conform to common best practices.
 
+## Git hooks
+
+### Installation
+
+Git hooks can be installed by running the following command:
+
+```shell
+make git-hook-install
+```
+
+### Uninstallation
+
+Git hooks can be uninstalled by running the following command:
+
+```shell
+make git-hook-uninstall
+```
+
 ## Editor configuration
 
 An [editor configuration file](../.editorconfig) and several linter configuration files are provided to ensure common styling and best practices. Editors can usually be configured to apply some of these rules automatically and consistently.

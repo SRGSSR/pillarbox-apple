@@ -80,22 +80,25 @@ test-tvos: setup
 .PHONY: check-quality
 check-quality: setup
 	@echo "Checking quality..."
-	@echo "... checking Swift code..."
-	@swiftlint --quiet --strict
-	@echo "... checking Ruby scripts..."
-	@bundle exec rubocop --format quiet
-	@echo "... checking Shell scripts..."
-	@shellcheck Scripts/*.sh
-	@echo "... checking Markdown documentation..."
-	@bundle exec mdl --style markdown_style.rb docs .github Sources/**/*.docc
-	@echo "... checking YAML files..."
-	@yamllint .*.yml .github
+	@Scripts/check-quality.sh
 	@echo "... done.\n"
 
 .PHONY: fix-quality
 fix-quality: setup
 	@echo "Fixing quality..."
-	@swiftlint --fix && swiftlint
+	@Scripts/fix-quality.sh
+	@echo "... done.\n"
+
+.PHONY: git-hook-install
+git-hook-install:
+	@echo "Installing git hooks..."
+	@git config core.hooksPath hooks
+	@echo "... done.\n"
+
+.PHONY: git-hook-uninstall
+git-hook-uninstall:
+	@echo "Uninstalling git hooks..."
+	@git config --unset core.hooksPath
 	@echo "... done.\n"
 
 .PHONY: doc
@@ -130,6 +133,9 @@ help:
 	@echo ""
 	@echo "   check-quality                      Run quality checks"
 	@echo "   fix-quality                        Fix quality automatically (if possible)"
+	@echo ""
+	@echo "   git-hook-install                   Use hooks located in ./hooks"
+	@echo "   git-hook-uninstall                 Use default hooks located in .git/hooks"
 	@echo ""
 	@echo "   doc                                Build the documentation"
 	@echo ""
