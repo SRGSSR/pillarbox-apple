@@ -72,7 +72,7 @@ make git-hook-install
 Git hooks can be uninstalled by running the following command:
 
 ```shell
-make git-hook-install
+make git-hook-uninstall
 ```
 
 ## Editor configuration
