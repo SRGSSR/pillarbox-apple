@@ -12,45 +12,6 @@ import Nimble
 import XCTest
 
 final class PlayerTests: XCTestCase {
-    func testChunkDuration() {
-        let item = PlayerItem(url: Stream.shortOnDemand.url)
-        let player = Player(item: item)
-        expectEqualPublished(
-            values: [.invalid, CMTime(value: 1, timescale: 1)],
-            from: player.$chunkDuration,
-            during: 3
-        )
-    }
-
-    func testChunkDurationDuringEntirePlayback() {
-        let item = PlayerItem(url: Stream.shortOnDemand.url)
-        let player = Player(item: item)
-        expectAtLeastEqualPublished(
-            values: [.invalid, CMTime(value: 1, timescale: 1), .invalid],
-            from: player.$chunkDuration
-        ) {
-            player.play()
-        }
-    }
-
-    func testCheckDurationsDuringItemChange() {
-        let item1 = PlayerItem(url: Stream.shortOnDemand.url)
-        let item2 = PlayerItem(url: Stream.onDemand.url)
-        let player = Player(items: [item1, item2])
-        expectEqualPublished(
-            values: [
-                .invalid,
-                CMTime(value: 1, timescale: 1),
-                .invalid,
-                CMTime(value: 4, timescale: 1)
-            ],
-            from: player.$chunkDuration,
-            during: 3
-        ) {
-            player.play()
-        }
-    }
-
     func testDeallocation() {
         let item = PlayerItem(url: Stream.onDemand.url)
         var player: Player? = Player(item: item)

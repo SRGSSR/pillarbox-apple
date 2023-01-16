@@ -55,9 +55,6 @@ struct PlayerView: View {
 
 The system default playback user experience is provided as well. Just use `SystemVideoView` instead of `VideoView`.
 
-> **Warning**
-> A bug in AVKit currently makes `SystemVideoView` leak resources after having interacted with the playback button. This issue has been reported to Apple as FB11934227.
-
 ## Advanced view layouts
 
 Pillarbox currently does not provide any standard playback view you can use but you can build one yourself. Since `Player` is an `ObservableObject`, though, implementation of a playback view can be achieved in the same was as for any usual SwiftUI view.

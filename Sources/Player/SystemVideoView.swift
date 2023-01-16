@@ -15,7 +15,7 @@ public struct SystemVideoView: View {
     @ObservedObject private var player: Player
 
     public var body: some View {
-        VideoPlayer(player: player.rawPlayer)
+        VideoPlayer(player: player.queuePlayer)
     }
 
     public init(player: Player) {

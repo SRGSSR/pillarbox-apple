@@ -11,18 +11,18 @@ import Circumspect
 import Nimble
 import XCTest
 
-final class RawPlayerTests: XCTestCase {
+final class QueuePlayerTests: XCTestCase {
     func testReplaceItemsWithEmptyList() {
         let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
         let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
         let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
-        let player = RawPlayer(items: [item1, item2, item3])
+        let player = QueuePlayer(items: [item1, item2, item3])
         player.replaceItems(with: [])
         expect(player.items()).to(beEmpty())
     }
 
     func testReplaceItemsWhenEmpty() {
-        let player = RawPlayer()
+        let player = QueuePlayer()
         let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
         let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
         let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
@@ -35,7 +35,7 @@ final class RawPlayerTests: XCTestCase {
         let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
         let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
         let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
-        let player = RawPlayer(items: [item1, item2, item3])
+        let player = QueuePlayer(items: [item1, item2, item3])
         let item4 = AVPlayerItem(url: Stream.item(numbered: 4).url)
         let item5 = AVPlayerItem(url: Stream.item(numbered: 5).url)
         player.replaceItems(with: [item4, item5])
@@ -47,7 +47,7 @@ final class RawPlayerTests: XCTestCase {
         let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
         let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
         let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
-        let player = RawPlayer(items: [item1, item2, item3])
+        let player = QueuePlayer(items: [item1, item2, item3])
         let item4 = AVPlayerItem(url: Stream.item(numbered: 4).url)
         player.replaceItems(with: [item1, item4])
         expect(player.items()).to(equalDiff([item1]))
@@ -57,7 +57,7 @@ final class RawPlayerTests: XCTestCase {
     func testReplaceItemsWithIdenticalItems() {
         let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
         let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
-        let player = RawPlayer(items: [item1, item2])
+        let player = QueuePlayer(items: [item1, item2])
         player.replaceItems(with: [item1, item2])
         expect(player.items()).to(equalDiff([item1, item2]))
     }
@@ -66,7 +66,7 @@ final class RawPlayerTests: XCTestCase {
         let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
         let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
         let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
-        let player = RawPlayer(items: [item1, item2, item3])
+        let player = QueuePlayer(items: [item1, item2, item3])
         player.replaceItems(with: [item2, item3])
         expect(player.items()).to(equalDiff([item2]))
         expect(player.items()).toEventually(equalDiff([item2, item3]), timeout: .seconds(2))
@@ -75,7 +75,7 @@ final class RawPlayerTests: XCTestCase {
     func testReplaceItemsWithPreviousItems() {
         let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
         let item3 = AVPlayerItem(url: Stream.item(numbered: 3).url)
-        let player = RawPlayer(items: [item2, item3])
+        let player = QueuePlayer(items: [item2, item3])
         let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
         player.replaceItems(with: [item1, item2, item3])
         expect(player.items()).to(equalDiff([item1]))
@@ -83,7 +83,7 @@ final class RawPlayerTests: XCTestCase {
     }
 
     func testReplaceItemsLastReplacementWins() {
-        let player = RawPlayer()
+        let player = QueuePlayer()
         let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
         let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
         player.replaceItems(with: [item1, item2])

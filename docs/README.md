@@ -24,8 +24,9 @@ To learn more how integration of Pillarbox into your project please have a look 
 
 ## Documentation
 
-Follow the links below for further technical documentation:
+Follow the links below for further documentation:
 
+- [Known issues](KNOWN_ISSUES.md)
 - [Development setup](DEVELOPMENT_SETUP.md)
 - [Continuous integration](CONTINUOUS_INTEGRATION.md)
 - [Test streams](TEST_STREAMS.md)
