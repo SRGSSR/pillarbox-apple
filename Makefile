@@ -86,7 +86,7 @@ check-quality: setup
 .PHONY: fix-quality
 fix-quality: setup
 	@echo "Fixing quality..."
-	@swiftlint --fix && swiftlint
+	@Scripts/fix-quality.sh
 	@echo "... done.\n"
 
 .PHONY: git-hook-install
