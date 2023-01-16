@@ -77,22 +77,11 @@ test-tvos: setup
 	@Scripts/test-streams.sh -k
 	@echo "... done.\n"
 
-check-quality-without-setup: 
-	@echo "Checking quality..."
-	@echo "... checking Swift code..."
-	@swiftlint --quiet --strict
-	@echo "... checking Ruby scripts..."
-	@bundle exec rubocop --format quiet
-	@echo "... checking Shell scripts..."
-	@shellcheck Scripts/*.sh hooks/*
-	@echo "... checking Markdown documentation..."
-	@bundle exec mdl --style markdown_style.rb docs .github Sources/**/*.docc
-	@echo "... checking YAML files..."
-	@yamllint .*.yml .github
-	@echo "... done.\n"
-
 .PHONY: check-quality
-check-quality: setup check-quality-without-setup
+check-quality: setup
+	@echo "Checking quality..."
+	@Scripts/check-quality.sh
+	@echo "... done.\n"
 
 .PHONY: fix-quality
 fix-quality: setup
@@ -100,17 +89,17 @@ fix-quality: setup
 	@swiftlint --fix && swiftlint
 	@echo "... done.\n"
 
+.PHONY: git-hook-install
 git-hook-install:
 	@echo "Installing git hooks..."
 	@git config core.hooksPath hooks
 	@echo "... done.\n"
 
+.PHONY: git-hook-uninstall
 git-hook-uninstall:
 	@echo "Uninstalling git hooks..."
 	@git config --unset core.hooksPath
 	@echo "... done.\n"
-
-git-hook-pre-commit: check-quality-without-setup
 
 .PHONY: doc
 doc: setup
@@ -145,9 +134,8 @@ help:
 	@echo "   check-quality                      Run quality checks"
 	@echo "   fix-quality                        Fix quality automatically (if possible)"
 	@echo ""
-	@echo "   git-hook-install                   Use the hooks located in ./hooks directory"
-	@echo "   git-hook-uninstall                 Use the default hooks located .git/hooks"
-	@echo "   git-hook-pre-commit                Checks done before a commit"
+	@echo "   git-hook-install                   Use hooks located in ./hooks"
+	@echo "   git-hook-uninstall                 Use default hooks located in .git/hooks"
 	@echo ""
 	@echo "   doc                                Build the documentation"
 	@echo ""
