@@ -13,8 +13,8 @@ Commands are available to:
 We currently use TeamCity for continuous integration and GitHub for issue and pull request management. This document describes the steps required to fully integrate the tool suite with TeamCity and GitHub. We want to:
 
 - Execute status checks and post results to GitHub when a pull request is opened or updated.
-- Build nightly demo apps when a pull request is opened or updated.
-- Use draft pull requests for early preview of features in development (without on-commit status checks or deliveries, though).
+- Build nightly demo apps when merging a pull request to the main branch.
+- Avoid running status checks for draft pull requests.
 
 ## Required tools
 
@@ -34,7 +34,7 @@ ffmpeg, swiftlint, shellcheck and yamllint can easily be installed with [Homebre
 
 ## TeamCity configuration
 
-To avoid commits on draft pull requests triggering status checks and nightly deliveries we must use an [internal TeamCity setting](https://youtrack.jetbrains.com/issue/TW-64444) `teamcity.internal.pullRequests.github.ignoreDraft` [set](https://www.jetbrains.com/help/teamcity/server-startup-properties.html#TeamCity+Internal+Properties) to `true` as follows:
+To avoid commits on draft pull requests triggering status checks we must use an [internal TeamCity setting](https://youtrack.jetbrains.com/issue/TW-64444) `teamcity.internal.pullRequests.github.ignoreDraft` [set](https://www.jetbrains.com/help/teamcity/server-startup-properties.html#TeamCity+Internal+Properties) to `true` as follows:
 
 1. Go under _Administration | Server Administration | Diagnostics | Internal Properties_.
 2. Click _Edit internal properties_.
@@ -47,14 +47,14 @@ Use of archive and delivery commands requires access to a [private configuration
 
 ## Continuous integration user
 
-Our current workflow is based on pull requests, which TeamCity is able to automatically monitor with a dedicated [build feature](https://www.youtube.com/watch?v=4yFck9PvXI4). When a pull request is created TeamCity can automatically trigger various jobs which can post their result as pull request GitHub comments.
+Our current workflow is based on pull requests, which TeamCity is able to automatically monitor with a dedicated [build feature](https://www.youtube.com/watch?v=4yFck9PvXI4). When a pull request is created TeamCity can automatically trigger various status checks required for the pull request to be merged. After being merged to the main branch nightly builds are delivered for tests.
 
 Proper integration with GitHub requires the use of a dedicated continuous integration user (a bot) with write access to the repository. We already have a dedicated [RTS devops](https://github.com/rts-devops) user, we therefore only need a few additional configuration steps:
 
 1. Ensure the bot has write access to the GitHub repository.
 2. Create a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) with the following minimal permissions:
   - _public_repo_ since our repository is public.
-  - _read:org_ so that the pull request feature is able to read members of the organization so that only PRs emerging from members trigger jobs (this is namely the default for the GitHub [pull request build feature](https://www.jetbrains.com/help/teamcity/pull-requests.html#Bitbucket+Cloud+Pull+Requests)).
+  - _read:org_ so that the pull request feature is able to read members of the organization. This way only PRs emerging from members trigger jobs (this is namely the default for the GitHub [pull request build feature](https://www.jetbrains.com/help/teamcity/pull-requests.html#Bitbucket+Cloud+Pull+Requests)).
 
 Of course a proper SSH setup is also required so that main and configuration repositories can be properly pulled by the continuous integration server.
 
@@ -113,18 +113,13 @@ For comprehensive results a second _Tests tvOS_ configuration must be created fo
 
 ## Demo nightlies
 
-To have TeamCity deliver nightly builds of the demo application to TestFlight when pull requests are updated or merged back to `main`:
+To have TeamCity deliver nightly builds of the demo application to TestFlight when pull requests are merged to `main`:
 
 1. Create a TeamCity configuration called _Demo Nightly iOS_.
-2. Add a VCS _Trigger_ on `+:main` and `+pull/*`.
+2. Add a VCS _Trigger_ on `+:main`.
 3. Add a _Command Line_ build step which simply executes `make deliver-demo-nightly-ios`.
-4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
-5. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token).
-6. Add the following environment variable _Parameters_ to the configuration to provide GitHub contextual information to our delivery tools:
-    1. `env.GITHUB_API_TOKEN` with a valid personal access token.
-    2. `env.GITHUB_PULL_REQUEST_ID` with value `%teamcity.pullRequest.number%`.
-    3. `env.GITHUB_REPO_SLUG` with value `SRGSSR/pillarbox-apple` (organization/repository).
-7. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
+4. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token)
+5. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
 For comprehensive results a second _Demo Nightly tvOS_ configuration must be created for tvOS. This is easily achieved by copying the configuration you just created and editing the _Command Line_ build step to execute `make deliver-demo-nightly-tvos`.
 
@@ -138,11 +133,7 @@ To have TeamCity deliver release builds of the demo application to TestFlight ma
 
 1. Create a TeamCity configuration called _Demo Release iOS_.
 2. Add a _Command Line_ build step which simply executes `make deliver-demo-release-ios`.
-3. Add the following environment variable _Parameters_ to the configuration to provide GitHub contextual information to our delivery tools:
-    1. `env.GITHUB_API_TOKEN` with a valid personal access token.
-    2. `env.GITHUB_PULL_REQUEST_ID` with value `%teamcity.pullRequest.number%`.
-    3. `env.GITHUB_REPO_SLUG` with value `SRGSSR/pillarbox-apple` (organization/repository).
-4. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
+3. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
 For comprehensive results a second _Demo Release tvOS_ configuration must be created for tvOS. This is easily achieved by copying the configuration you just created and editing the _Command Line_ build step to execute `make deliver-demo-release-tvos`.
 
