@@ -4,7 +4,6 @@ source 'https://rubygems.org'
 
 gem 'fastlane'
 gem 'mdl'
-gem 'octokit'
 gem 'rubocop'
 gem 'xcode-install'
 
