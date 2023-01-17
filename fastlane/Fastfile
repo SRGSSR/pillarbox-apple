@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'octokit'
-
 default_platform(:ios)
 
 # -- Global constants
@@ -56,20 +54,8 @@ def valid_float?(string)
 rescue StandardError
   false
 end
+
 # -- External configuration
-
-def github_api_token
-  ENV.fetch('GITHUB_API_TOKEN', nil)
-end
-
-def github_repository
-  ENV.fetch('GITHUB_REPO_SLUG', nil)
-end
-
-def github_pull_request_id
-  id = ENV.fetch('GITHUB_PULL_REQUEST_ID', nil)
-  id if valid_float?(id)
-end
 
 def key_filepath
   File.expand_path('../Configuration/AppStoreConnect_API_Key.p8')
@@ -199,7 +185,6 @@ def deliver_demo_nightly(platform_id)
   reset_git_repo(skip_clean: true)
   upload_app_to_testflight
   distribute_app_to_testers(platform_id, :nightly, build_number)
-  update_github_nightly_availability(platform_id, "#{xcconfig_marketing_version} (#{build_number})")
 end
 
 def deliver_demo_release(platform_id)
@@ -229,104 +214,6 @@ end
 
 def run_all_tests(platform_id)
   run_package_tests(platform_id, 'Pillarbox-Package-NoDebug')
-end
-
-# -- GitHub comment builders
-
-# Insert data into a comment so that it can be retrieved when updating the comment
-def build_github_comment_body(identifier, text, data)
-  <<~MESSAGE
-    <!--PB_#{identifier}_BEGIN
-    #{data.map { |key, value| "#{key}: #{value}" }.join("\n")}
-    PB_END-->
-    #{text}
-  MESSAGE
-end
-
-# Extract data stored as a comment
-def parse_github_comment_data(comment)
-  regex = comment.body.match(/<!--PB_(.*)_BEGIN\n(.*)\nPB_END-->/m)
-  {
-    id: regex[1],
-    data: regex[2].split("\n").to_h { |component| component.split(': ') }
-  }
-rescue StandardError
-  nil
-end
-
-def comment_has_identifier(comment, identifier)
-  data = parse_github_comment_data(comment)
-  return if data.nil?
-
-  data[:id] == identifier
-end
-
-## -- GitHub issue comment management (can be used for PR comments as well)
-##      See https://docs.github.com/en/rest/issues/comments
-
-def find_issue_comment_with_identifier(client, identifier, issue_id)
-  comments = client.issue_comments(github_repository, issue_id)
-  comments.find { |comment| comment_has_identifier(comment, identifier) }
-end
-
-def add_github_issue_comment(client, identifier, issue_id, data, text_builder)
-  text = text_builder.call(data)
-  body = build_github_comment_body(identifier, text, data)
-  client.add_comment(github_repository, issue_id, body)
-end
-
-def update_github_issue_comment(client, identifier, comment, data, text_builder)
-  original_data = parse_github_comment_data(comment)[:data]
-  merged_data = original_data.merge(data)
-  text = text_builder.call(merged_data)
-  body = build_github_comment_body(identifier, text, merged_data)
-  client.update_comment(github_repository, comment.id, body)
-end
-
-def post_github_issue_comment(identifier, issue_id, data, &text_builder)
-  client = Octokit::Client.new(access_token: github_api_token)
-  client.auto_paginate = true
-  comment = find_issue_comment_with_identifier(client, identifier, issue_id)
-  if comment.nil?
-    add_github_issue_comment(client, identifier, issue_id, data, text_builder)
-  else
-    update_github_issue_comment(client, identifier, comment, data, text_builder)
-  end
-end
-
-## -- GitHub integration helpers
-
-def availability_data(platform_id, version)
-  case platform_id
-  when :tvos
-    { 'tvos' => version }
-  else
-    { 'ios' => version }
-  end
-end
-
-def update_github_nightly_availability(platform_id, version)
-  if github_api_token.nil? || github_repository.nil? || github_pull_request_id.nil?
-    UI.message \
-      'Not a pull request or missing GitHub environment information. Nightly availability will not be posted to GitHub.'
-    return
-  end
-
-  post_github_issue_comment('nightly', github_pull_request_id, availability_data(platform_id, version)) do |data|
-    ios = data['ios'] ||= '-'
-    tvos = data['tvos'] ||= '-'
-
-    <<~BODY
-      # 🌙 Available in TestFlight nightlies
-
-      The most recent state can be tested in the following builds:
-
-      | Platform | Version |
-      |:-- |:--:|
-      | iOS | #{ios} |
-      | tvOS | #{tvos} |
-    BODY
-  end
 end
 
 # -- Lanes
