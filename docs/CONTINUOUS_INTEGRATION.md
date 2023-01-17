@@ -71,7 +71,7 @@ To have TeamCity run quality checks for GitHub pull requests and post the corres
 3. Add a _Command Line_ build step which simply executes `make check-quality`.
 4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
 5. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token).
-6. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
+6. Add an _Agent Requirement_ ensuring that `tools.xcode.home` exists. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
 ## Demo archiving
 
@@ -82,7 +82,7 @@ To have TeamCity archive the demo (archive for all configurations without TestFl
 3. Add a _Command Line_ build step which simply executes `make archive-demo-ios`.
 4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
 5. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token).
-6. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
+6. Add an _Agent Requirement_ ensuring that `tools.xcode.home` exists. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
 For comprehensive results a second _Demo Archiving tvOS_ configuration must be created for tvOS. This is easily achieved by copying the configuration you just created and editing the _Command Line_ build step to execute `make archive-demo-tvos`.
 
@@ -95,7 +95,7 @@ To have TeamCity build and validate the documentation for GitHub pull requests a
 3. Add a _Command Line_ build step which simply executes `make doc`.
 4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
 5. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token).
-6. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
+6. Add an _Agent Requirement_ ensuring that `tools.xcode.home` exists. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
 ## Tests
 
@@ -107,7 +107,7 @@ To have TeamCity run tests for GitHub pull requests and post the corresponding s
 4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
 5. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token).
 6. Add an _XML report processing_ build feature formatting test output as _Ant JUnit_ and which monitors `+:fastlane/test_output/*.xml`.
-7. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
+7. Add an _Agent Requirement_ ensuring that `tools.xcode.home` exists. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
 For comprehensive results a second _Tests tvOS_ configuration must be created for tvOS. This is easily achieved by copying the configuration you just created and editing the _Command Line_ build step to execute `make test-tvos`.
 
@@ -119,7 +119,7 @@ To have TeamCity deliver nightly builds of the demo application to TestFlight wh
 2. Add a VCS _Trigger_ on `+:main`.
 3. Add a _Command Line_ build step which simply executes `make deliver-demo-nightly-ios`.
 4. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token)
-5. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
+5. Add an _Agent Requirement_ ensuring that `tools.xcode.home` exists. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
 For comprehensive results a second _Demo Nightly tvOS_ configuration must be created for tvOS. This is easily achieved by copying the configuration you just created and editing the _Command Line_ build step to execute `make deliver-demo-nightly-tvos`.
 
@@ -133,7 +133,7 @@ To have TeamCity deliver release builds of the demo application to TestFlight ma
 
 1. Create a TeamCity configuration called _Demo Release iOS_.
 2. Add a _Command Line_ build step which simply executes `make deliver-demo-release-ios`.
-3. Add two _Agent Requirements_ ensuring that `env.GEM_HOME` and `tools.xcode.home` exist. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
+3. Add an _Agent Requirement_ ensuring that `tools.xcode.home` exists. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
 For comprehensive results a second _Demo Release tvOS_ configuration must be created for tvOS. This is easily achieved by copying the configuration you just created and editing the _Command Line_ build step to execute `make deliver-demo-release-tvos`.
 
