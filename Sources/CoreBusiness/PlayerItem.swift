@@ -26,21 +26,8 @@ public extension PlayerItem {
         
         return .init(
             type: assetType(for: resource),
-            metadata: assetMetadata(for: mainChapter, of: mediaComposition.show)
-        ) { item in
-            guard resource.streamType == .live else { return }
-            // Limit buffering and force the player to return to the live edge when re-buffering. This ensures
-            // livestreams cannot be paused and resumed in the past, as requested by business people.
-            item.automaticallyPreservesTimeOffsetFromLive = true
-            item.preferredForwardBufferDuration = 1
-        }
-    }
-
-    private static func assetMetadata(for chapter: Chapter, of show: Show?) -> Asset.Metadata {
-        .init(
-            title: chapter.title,
-            subtitle: show?.title ?? "",
-            description: chapter.description ?? ""
+            metadata: assetMetadata(for: mainChapter, of: mediaComposition.show),
+            configuration: assetConfiguration(for: resource)
         )
     }
 
@@ -56,6 +43,24 @@ public extension PlayerItem {
             default:
                 return .simple(url: resource.url)
             }
+        }
+    }
+
+    private static func assetMetadata(for chapter: Chapter, of show: Show?) -> Asset.Metadata {
+        .init(
+            title: chapter.title,
+            subtitle: show?.title ?? "",
+            description: chapter.description ?? ""
+        )
+    }
+
+    private static func assetConfiguration(for resource: Resource) -> ((AVPlayerItem) -> Void) {
+        { item in
+            guard resource.streamType == .live else { return }
+            // Limit buffering and force the player to return to the live edge when re-buffering. This ensures
+            // livestreams cannot be paused and resumed in the past, as requested by business people.
+            item.automaticallyPreservesTimeOffsetFromLive = true
+            item.preferredForwardBufferDuration = 1
         }
     }
 }
