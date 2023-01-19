@@ -484,16 +484,8 @@ extension Player {
     }
 
     private func configureCurrentIndexPublisher() {
-        Publishers.CombineLatest($storedItems, queuePlayer.publisher(for: \.currentItem))
-            .filter { storedItems, currentItem in
-                // The current item is automatically set to `nil` when a failure is encountered. If this is the case
-                // preserve the previous value, provided the player is loaded with items.
-                storedItems.isEmpty || currentItem != nil
-            }
-            .map { storedItems, currentItem in
-                storedItems.firstIndex { $0.matches(currentItem) }
-            }
-            .removeDuplicates()
+        currentItemPublisher()
+            .map(\.?.index)
             .receiveOnMainThread()
             .lane("player_current_index")
             .assign(to: &$currentIndex)
