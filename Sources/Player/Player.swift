@@ -436,6 +436,11 @@ public extension Player {
 }
 
 extension Player {
+    private struct Current: Equatable {
+        let item: PlayerItem
+        let index: Int
+    }
+
     private func configurePlaybackStatePublisher() {
         queuePlayer.playbackStatePublisher()
             .receiveOnMainThread()
@@ -528,5 +533,20 @@ extension Player {
         queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
         queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
         queuePlayer.audiovisualBackgroundPlaybackPolicy = configuration.audiovisualBackgroundPlaybackPolicy
+    }
+
+    private func currentItemPublisher() -> AnyPublisher<Current?, Never> {
+        Publishers.CombineLatest($storedItems, queuePlayer.publisher(for: \.currentItem))
+            .filter { storedItems, currentItem in
+                // The current item is automatically set to `nil` when a failure is encountered. If this is the case
+                // preserve the previous value, provided the player is loaded with items.
+                storedItems.isEmpty || currentItem != nil
+            }
+            .map { storedItems, currentItem in
+                guard let currentIndex = storedItems.firstIndex(where: { $0.matches(currentItem) }) else { return nil }
+                return .init(item: storedItems[currentIndex], index: currentIndex)
+            }
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 }
