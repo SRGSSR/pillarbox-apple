@@ -41,16 +41,4 @@ final class DataProvider {
             }
             .eraseToAnyPublisher()
     }
-
-    func recommendedPlayableResource(forUrn urn: String) -> AnyPublisher<Resource, Error> {
-        playableMediaComposition(forUrn: urn)
-            .map(\.mainChapter.recommendedResource)
-            .tryMap { resource in
-                guard let resource else {
-                    throw DataError.noResourceAvailable
-                }
-                return resource
-            }
-            .eraseToAnyPublisher()
-    }
 }

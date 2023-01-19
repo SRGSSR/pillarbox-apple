@@ -9,6 +9,7 @@ import Foundation
 struct Chapter: Decodable {
     enum CodingKeys: String, CodingKey {
         case blockingReason = "blockReason"
+        case description
         case endDate = "validTo"
         case resources = "resourceList"
         case startDate = "validFrom"
@@ -20,6 +21,7 @@ struct Chapter: Decodable {
 
     let urn: String
     let title: String
+    let description: String?
     let resources: [Resource]
 
     let startDate: Date?

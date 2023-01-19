@@ -10,10 +10,12 @@ struct MediaComposition: Decodable {
     enum CodingKeys: String, CodingKey {
         case chapterUrn
         case chapters = "chapterList"
+        case show
     }
 
     let chapterUrn: String
     let chapters: [Chapter]
+    let show: Show
 }
 
 extension MediaComposition {

@@ -25,7 +25,7 @@ final class PlayerItemsTests: XCTestCase {
     }
 
     func testUrlItem() {
-        let item = PlayerItem(url: Stream.onDemand.url)
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
         expectAtLeastSimilarPublished(
             values: [
                 .simple(url: Stream.onDemand.url)

@@ -16,25 +16,25 @@ final class PlayerStreamTypeTests: XCTestCase {
     }
 
     func testOnDemand() {
-        let item = PlayerItem(url: Stream.onDemand.url)
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.onDemand))
     }
 
     func testLive() {
-        let item = PlayerItem(url: Stream.live.url)
+        let item = PlayerItem.simple(url: Stream.live.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.live))
     }
 
     func testDVR() {
-        let item = PlayerItem(url: Stream.dvr.url)
+        let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.dvr))
     }
 
     func testStabilityAtStart() {
-        let item = PlayerItem(url: Stream.onDemand.url)
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         expect(player.streamType).toNever(equal(.dvr), pollInterval: .microseconds(1))
     }

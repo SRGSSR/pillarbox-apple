@@ -35,11 +35,12 @@ struct Media: Hashable, Identifiable {
     }
 
     func playerItem() -> PlayerItem {
+        let metadata = Asset.Metadata(title: title, subtitle: description)
         switch type {
         case let .url(url):
-            return PlayerItem(url: url)
+            return .simple(url: url, metadata: metadata)
         case let .unbufferedUrl(url):
-            return PlayerItem(url: url) { item in
+            return .simple(url: url, metadata: metadata) { item in
                 item.automaticallyPreservesTimeOffsetFromLive = true
                 item.preferredForwardBufferDuration = 1
             }

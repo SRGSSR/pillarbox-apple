@@ -14,8 +14,8 @@ import XCTest
 
 final class PlayerCurrentIndexTests: XCTestCase {
     func testCurrentIndex() {
-        let item1 = PlayerItem(url: Stream.shortOnDemand.url)
-        let item2 = PlayerItem(url: Stream.onDemand.url)
+        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         expectAtLeastEqualPublished(values: [0, 1], from: player.$currentIndex) {
             player.play()
@@ -28,8 +28,8 @@ final class PlayerCurrentIndexTests: XCTestCase {
     }
 
     func testSlowFirstCurrentIndex() {
-        let item1 = PlayerItem(url: Stream.shortOnDemand.url, delay: 2)
-        let item2 = PlayerItem(url: Stream.onDemand.url)
+        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url, delay: 2)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         expectAtLeastEqualPublished(
             values: [0, 1],
@@ -40,7 +40,7 @@ final class PlayerCurrentIndexTests: XCTestCase {
     }
 
     func testCurrentIndexAfterPlayerEnded() {
-        let item = PlayerItem(url: Stream.shortOnDemand.url)
+        let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item])
         expectAtLeastEqualPublished(values: [0], from: player.$currentIndex) {
             player.play()
@@ -48,8 +48,8 @@ final class PlayerCurrentIndexTests: XCTestCase {
     }
 
     func testSetCurrentIndex() {
-        let item1 = PlayerItem(url: Stream.onDemand.url)
-        let item2 = PlayerItem(url: Stream.shortOnDemand.url)
+        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2])
 
         expectAtLeastEqualPublished(values: [0, 1], from: player.$currentIndex) {
@@ -58,8 +58,8 @@ final class PlayerCurrentIndexTests: XCTestCase {
     }
 
     func testSetCurrentIndexUpdatePlayerCurrentItem() {
-        let item1 = PlayerItem(url: Stream.onDemand.url)
-        let item2 = PlayerItem(url: Stream.shortOnDemand.url)
+        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2])
         let publisher = player.queuePlayer.publisher(for: \.currentItem).compactMap { item -> URL? in
             guard let asset = item?.asset as? AVURLAsset else { return nil }
@@ -77,7 +77,7 @@ final class PlayerCurrentIndexTests: XCTestCase {
     }
 
     func testSetCurrentIndexToSameValue() {
-        let item = PlayerItem(url: Stream.onDemand.url)
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         let publisher = player.queuePlayer.publisher(for: \.currentItem)
 

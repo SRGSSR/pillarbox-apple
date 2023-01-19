@@ -32,15 +32,8 @@ public final class PlayerItem: Equatable {
     /// - Parameters:
     ///   - url: The URL to play.
     ///   - configuration: A closure to configure player items created from the receiver.
-    public convenience init(
-        url: URL,
-        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) {
-        self.init(
-            publisher: Just(
-                .simple(url: url, configuration: configuration)
-            )
-        )
+    public convenience init(asset: Asset) {
+        self.init(publisher: Just(asset))
     }
 
     public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
@@ -49,6 +42,55 @@ public final class PlayerItem: Equatable {
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
         playerItem?.id == id
+    }
+}
+
+public extension PlayerItem {
+    /// A simple playable item.
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - metadata: The metadata associated with the item.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The item.
+    static func simple(
+        url: URL,
+        metadata: Asset.Metadata? = nil,
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+    ) -> Self {
+        self.init(asset: .simple(url: url, metadata: metadata, configuration: configuration))
+    }
+
+    /// An item loaded with custom resource loading. The scheme of the URL to be played has to be recognized by
+    /// the associated resource loader delegate.
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - delegate: The custom resource loader to use.
+    ///   - metadata: The metadata associated with the item.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The item.
+    static func custom(
+        url: URL,
+        delegate: AVAssetResourceLoaderDelegate,
+        metadata: Asset.Metadata? = nil,
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+    ) -> Self {
+        self.init(asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration))
+    }
+
+    /// An encrypted item loaded with a content key session.
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - delegate: The content key session delegate to use.
+    ///   - metadata: The metadata associated with the item.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The item.
+    static func encrypted(
+        url: URL,
+        delegate: AVContentKeySessionDelegate,
+        metadata: Asset.Metadata? = nil,
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+    ) -> Self {
+        self.init(asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration))
     }
 }
 
