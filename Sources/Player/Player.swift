@@ -8,6 +8,7 @@ import AVFoundation
 import Combine
 import Core
 import DequeModule
+import MediaPlayer
 import TimelaneCombine
 
 /// An audio / video player maintaining its items as a double-ended queue (deque).
@@ -41,8 +42,8 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.currentTime()
     }
 
-    /// Low-level player used for playback.
     let queuePlayer = QueuePlayer()
+    private let nowPlayingSession: MPNowPlayingSession
 
     public let configuration: PlayerConfiguration
     private var cancellables = Set<AnyCancellable>()
@@ -69,6 +70,7 @@ public final class Player: ObservableObject, Equatable {
     ///   - configuration: The configuration to apply to the player.
     public init(items: [PlayerItem] = [], configuration: PlayerConfiguration = .init()) {
         storedItems = Deque(items)
+        nowPlayingSession = MPNowPlayingSession(players: [queuePlayer])
         self.configuration = configuration
 
         configurePlaybackStatePublisher()
