@@ -78,6 +78,7 @@ public final class Player: ObservableObject, Equatable {
         configureSeekingPublisher()
         configureBufferingPublisher()
         configureCurrentIndexPublisher()
+        configureCurrentItemPublisher()
         configureQueueUpdatePublisher()
         configureExternalPlaybackPublisher()
 
@@ -489,6 +490,16 @@ extension Player {
             .receiveOnMainThread()
             .lane("player_current_index")
             .assign(to: &$currentIndex)
+    }
+
+    private func configureCurrentItemPublisher() {
+        currentItemPublisher()
+            .map(\.?.item)
+            .receiveOnMainThread()
+            .sink { item in
+                print(item)
+            }
+            .store(in: &cancellables)
     }
 
     private func configureQueueUpdatePublisher() {
