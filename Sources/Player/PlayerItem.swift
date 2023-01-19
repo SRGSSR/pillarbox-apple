@@ -51,7 +51,7 @@ public extension PlayerItem {
         metadata: Asset.Metadata? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        self.init(asset: .init(type: .simple(url: url), metadata: metadata, configuration: configuration))
+        self.init(asset: .simple(url: url, metadata: metadata, configuration: configuration))
     }
 
     static func custom(
@@ -60,7 +60,7 @@ public extension PlayerItem {
         metadata: Asset.Metadata? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        self.init(asset: .init(type: .custom(url: url, delegate: delegate), metadata: metadata, configuration: configuration))
+        self.init(asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration))
     }
 
     static func encrypted(
@@ -69,7 +69,7 @@ public extension PlayerItem {
         metadata: Asset.Metadata? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        self.init(asset: .init(type: .encrypted(url: url, delegate: delegate), metadata: metadata, configuration: configuration))
+        self.init(asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration))
     }
 }
 

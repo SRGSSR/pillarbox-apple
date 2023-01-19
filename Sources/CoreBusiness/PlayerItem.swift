@@ -23,25 +23,30 @@ public extension PlayerItem {
         guard let resource = mainChapter.recommendedResource else {
             throw DataError.noResourceAvailable
         }
-        
-        return .init(
-            type: assetType(for: resource),
-            metadata: assetMetadata(for: mainChapter, of: mediaComposition.show),
-            configuration: assetConfiguration(for: resource)
-        )
-    }
 
-    private static func assetType(for resource: Resource) -> Asset.`Type` {
+        let metadata = assetMetadata(for: mainChapter, of: mediaComposition.show)
+        let configuration = assetConfiguration(for: resource)
+
         if let certificateUrl = resource.drms?.first(where: { $0.type == .fairPlay })?.certificateUrl {
-            return .encrypted(url: resource.url, delegate: ContentKeySessionDelegate(certificateUrl: certificateUrl))
+            return .encrypted(
+                url: resource.url,
+                delegate: ContentKeySessionDelegate(certificateUrl: certificateUrl),
+                metadata: metadata,
+                configuration: configuration
+            )
         }
         else {
             switch resource.tokenType {
             case .akamai:
                 let id = UUID()
-                return .custom(url: AkamaiURLCoding.encodeUrl(resource.url, id: id), delegate: AkamaiResourceLoaderDelegate(id: id))
+                return .custom(
+                    url: AkamaiURLCoding.encodeUrl(resource.url, id: id),
+                    delegate: AkamaiResourceLoaderDelegate(id: id),
+                    metadata: metadata,
+                    configuration: configuration
+                )
             default:
-                return .simple(url: resource.url)
+                return .simple(url: resource.url, metadata: metadata, configuration: configuration)
             }
         }
     }

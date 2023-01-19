@@ -14,11 +14,12 @@ import XCTest
 
 final class PlayerItemsTests: XCTestCase {
     func testGenericItem() {
-        let asset = Asset(type: .simple(url: Stream.onDemand.url))
-        let publisher = Just(asset)
+        let publisher = Just(Asset.simple(url: Stream.onDemand.url))
         let item = PlayerItem(publisher: publisher)
-        expectAtLeastEqualPublished(
-            values: [asset],
+        expectAtLeastSimilarPublished(
+            values: [
+                .simple(url: Stream.onDemand.url)
+            ],
             from: item.$source.map(\.asset)
         )
     }
@@ -27,21 +28,20 @@ final class PlayerItemsTests: XCTestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         expectAtLeastSimilarPublished(
             values: [
-                Asset(type: .simple(url: Stream.onDemand.url))
+                .simple(url: Stream.onDemand.url)
             ],
             from: item.$source.map(\.asset)
         )
     }
 
     func testCustomItemSuccessAsync() {
-        let asset = Asset(type: .simple(url: Stream.onDemand.url))
-        let publisher = Just(asset)
+        let publisher = Just(Asset.simple(url: Stream.onDemand.url))
             .delay(for: 0.5, scheduler: DispatchQueue.main)
         let item = PlayerItem(publisher: publisher)
         expectAtLeastSimilarPublished(
             values: [
                 .loading,
-                asset
+                .simple(url: Stream.onDemand.url)
             ],
             from: item.$source.map(\.asset)
         )
