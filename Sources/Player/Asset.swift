@@ -50,6 +50,12 @@ public extension Asset {
         let title: String
         let subtitle: String
         let description: String
+
+        public init(title: String, subtitle: String, description: String) {
+            self.title = title
+            self.subtitle = subtitle
+            self.description = description
+        }
     }
 
     enum `Type` {
