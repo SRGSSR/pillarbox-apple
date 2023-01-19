@@ -83,6 +83,7 @@ public final class Player: ObservableObject, Equatable {
         configureCurrentItemPublisher()
         configureQueueUpdatePublisher()
         configureExternalPlaybackPublisher()
+        configureNowPlayingSession()
 
         configurePlayer()
     }
@@ -498,8 +499,8 @@ extension Player {
         currentItemPublisher()
             .map(\.?.item)
             .receiveOnMainThread()
-            .sink { item in
-                print(item)
+            .sink { [weak nowPlayingSession] item in
+                nowPlayingSession?.nowPlayingInfoCenter.nowPlayingInfo = item?.source.asset.nowPlayingInfo()
             }
             .store(in: &cancellables)
     }
@@ -534,12 +535,6 @@ extension Player {
             .assign(to: &$isExternalPlaybackActive)
     }
 
-    private func configurePlayer() {
-        queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
-        queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
-        queuePlayer.audiovisualBackgroundPlaybackPolicy = configuration.audiovisualBackgroundPlaybackPolicy
-    }
-
     private func currentItemPublisher() -> AnyPublisher<Current?, Never> {
         Publishers.CombineLatest($storedItems, queuePlayer.publisher(for: \.currentItem))
             .filter { storedItems, currentItem in
@@ -553,5 +548,28 @@ extension Player {
             }
             .removeDuplicates()
             .eraseToAnyPublisher()
+    }
+
+    private func configurePlayer() {
+        queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
+        queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
+        queuePlayer.audiovisualBackgroundPlaybackPolicy = configuration.audiovisualBackgroundPlaybackPolicy
+    }
+
+    private func configureNowPlayingSession() {
+        nowPlayingSession.remoteCommandCenter.playCommand.addTarget { [weak self] _ in
+            self?.play()
+            return .success
+        }
+
+        nowPlayingSession.remoteCommandCenter.pauseCommand.addTarget { [weak self] _ in
+            self?.pause()
+            return .success
+        }
+
+        nowPlayingSession.remoteCommandCenter.togglePlayPauseCommand.addTarget { [weak self] _ in
+            self?.togglePlayPause()
+            return .success
+        }
     }
 }
