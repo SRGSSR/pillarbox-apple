@@ -29,6 +29,8 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
 
 /// An asset representing content to be played.
 public struct Asset {
+    typealias NowPlayingInfo = [String: Any]
+
     private let type: `Type`
     private let metadata: Metadata?
     private let configuration: (AVPlayerItem) -> Void
@@ -98,12 +100,13 @@ public struct Asset {
         return item
     }
 
-    func nowPlayingInfo() -> [String: Any] {
-        guard let metadata else { return [:] }
-        var nowPlayingInfo: [String: Any] = [:]
-        nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
-        nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
-        nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
+    func nowPlayingInfo() -> NowPlayingInfo {
+        var nowPlayingInfo = NowPlayingInfo()
+        if let metadata {
+            nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
+            nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
+            nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
+        }
         return nowPlayingInfo
     }
 }

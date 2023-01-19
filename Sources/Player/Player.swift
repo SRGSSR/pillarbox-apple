@@ -497,16 +497,18 @@ extension Player {
 
     private func configureCurrentItemPublisher() {
         currentPublisher()
-            .map { current -> AnyPublisher<Source?, Never> in
-                guard let current else { return Just(nil).eraseToAnyPublisher() }
+            .map { current in
+                guard let current else {
+                    return Just(Optional<Asset.NowPlayingInfo>.none).eraseToAnyPublisher()
+                }
                 return current.item.$source
-                    .map { Optional($0) }
+                    .map { $0.asset.nowPlayingInfo() }
                     .eraseToAnyPublisher()
             }
             .switchToLatest()
             .receiveOnMainThread()
-            .sink { [weak nowPlayingSession] source in
-                nowPlayingSession?.nowPlayingInfoCenter.nowPlayingInfo = source?.asset.nowPlayingInfo()
+            .sink { [weak nowPlayingSession] nowPlayingInfo in
+                nowPlayingSession?.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
             }
             .store(in: &cancellables)
     }
