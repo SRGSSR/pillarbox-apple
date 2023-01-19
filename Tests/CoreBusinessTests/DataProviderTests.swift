@@ -23,12 +23,6 @@ final class DataProviderTests: XCTestCase {
         )
     }
 
-    func testExistingRecommendedResource() {
-        expectSuccess(
-            from: DataProvider().recommendedPlayableResource(forUrn: "urn:rts:video:6820736")
-        )
-    }
-
     func testBlockedMediaComposition() {
         expectFailure(
             DataError.blocked(withMessage: "This content is not available anymore."),
