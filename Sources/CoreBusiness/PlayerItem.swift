@@ -24,7 +24,7 @@ public extension PlayerItem {
             throw DataError.noResourceAvailable
         }
 
-        let metadata = assetMetadata(for: mainChapter, of: mediaComposition.show)
+        let metadata = assetMetadata(for: mainChapter, show: mediaComposition.show)
         let configuration = assetConfiguration(for: resource)
 
         if let certificateUrl = resource.drms?.first(where: { $0.type == .fairPlay })?.certificateUrl {
@@ -51,12 +51,8 @@ public extension PlayerItem {
         }
     }
 
-    private static func assetMetadata(for chapter: Chapter, of show: Show?) -> Asset.Metadata {
-        .init(
-            title: chapter.title,
-            subtitle: show?.title ?? "",
-            description: chapter.description ?? ""
-        )
+    private static func assetMetadata(for chapter: Chapter, show: Show?) -> Asset.Metadata {
+        .init(title: chapter.title, subtitle: show?.title, description: chapter.description)
     }
 
     private static func assetConfiguration(for resource: Resource) -> ((AVPlayerItem) -> Void) {

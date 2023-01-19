@@ -46,6 +46,12 @@ public final class PlayerItem: Equatable {
 }
 
 public extension PlayerItem {
+    /// A simple playable item.
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - metadata: The metadata associated with the item.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The item.
     static func simple(
         url: URL,
         metadata: Asset.Metadata? = nil,
@@ -54,6 +60,14 @@ public extension PlayerItem {
         self.init(asset: .simple(url: url, metadata: metadata, configuration: configuration))
     }
 
+    /// An item loaded with custom resource loading. The scheme of the URL to be played has to be recognized by
+    /// the associated resource loader delegate.
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - delegate: The custom resource loader to use.
+    ///   - metadata: The metadata associated with the item.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The item.
     static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
@@ -63,6 +77,13 @@ public extension PlayerItem {
         self.init(asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration))
     }
 
+    /// An encrypted item loaded with a content key session.
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - delegate: The content key session delegate to use.
+    ///   - metadata: The metadata associated with the item.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The item.
     static func encrypted(
         url: URL,
         delegate: AVContentKeySessionDelegate,

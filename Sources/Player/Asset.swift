@@ -32,16 +32,12 @@ public struct Asset {
     private let metadata: Metadata?
     private let configuration: (AVPlayerItem) -> Void
 
-    func playerItem() -> AVPlayerItem {
-        let item = type.playerItem()
-        configuration(item)
-        return item
-    }
-
     /// A simple asset playable from a URL.
     /// - Parameters:
     ///   - url: The URL to be played.
+    ///   - metadata: The metadata associated with the asset.
     ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The asset.
     public static func simple(
         url: URL,
         metadata: Metadata? = nil,
@@ -59,7 +55,9 @@ public struct Asset {
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - delegate: The custom resource loader to use.
+    ///   - metadata: The metadata associated with the asset.
     ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The asset.
     public static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
@@ -77,7 +75,9 @@ public struct Asset {
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - delegate: The content key session delegate to use.
+    ///   - metadata: The metadata associated with the asset.
     ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The asset.
     public static func encrypted(
         url: URL,
         delegate: AVContentKeySessionDelegate,
@@ -90,22 +90,33 @@ public struct Asset {
             configuration: configuration
         )
     }
+
+    func playerItem() -> AVPlayerItem {
+        let item = type.playerItem()
+        configuration(item)
+        return item
+    }
 }
 
 public extension Asset {
+    /// Metadata associated with an asset.
     struct Metadata {
-        let title: String
-        let subtitle: String
-        let description: String
+        /// Title.
+        let title: String?
+        /// Subtitle.
+        let subtitle: String?
+        /// Description.
+        let description: String?
 
-        public init(title: String, subtitle: String, description: String) {
+        /// Create an asset metadata.
+        public init(title: String? = nil, subtitle: String? = nil, description: String? = nil) {
             self.title = title
             self.subtitle = subtitle
             self.description = description
         }
     }
 
-    enum `Type` {
+    private enum `Type` {
         case simple(url: URL)
         case custom(url: URL, delegate: AVAssetResourceLoaderDelegate)
         case encrypted(url: URL, delegate: AVContentKeySessionDelegate)

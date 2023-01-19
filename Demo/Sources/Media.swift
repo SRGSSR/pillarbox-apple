@@ -35,7 +35,7 @@ struct Media: Hashable, Identifiable {
     }
 
     func playerItem() -> PlayerItem {
-        let metadata = Asset.Metadata(title: title, subtitle: description ?? "", description: "")
+        let metadata = Asset.Metadata(title: title, subtitle: description)
         switch type {
         case let .url(url):
             return .simple(url: url, metadata: metadata)
