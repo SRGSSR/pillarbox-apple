@@ -488,7 +488,7 @@ extension Player {
     }
 
     private func configureCurrentIndexPublisher() {
-        currentItemPublisher()
+        currentPublisher()
             .map(\.?.index)
             .receiveOnMainThread()
             .lane("player_current_index")
@@ -496,11 +496,17 @@ extension Player {
     }
 
     private func configureCurrentItemPublisher() {
-        currentItemPublisher()
-            .map(\.?.item)
+        currentPublisher()
+            .map { current -> AnyPublisher<Source?, Never> in
+                guard let current else { return Just(nil).eraseToAnyPublisher() }
+                return current.item.$source
+                    .map { Optional($0) }
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
             .receiveOnMainThread()
-            .sink { [weak nowPlayingSession] item in
-                nowPlayingSession?.nowPlayingInfoCenter.nowPlayingInfo = item?.source.asset.nowPlayingInfo()
+            .sink { [weak nowPlayingSession] source in
+                nowPlayingSession?.nowPlayingInfoCenter.nowPlayingInfo = source?.asset.nowPlayingInfo()
             }
             .store(in: &cancellables)
     }
@@ -535,7 +541,7 @@ extension Player {
             .assign(to: &$isExternalPlaybackActive)
     }
 
-    private func currentItemPublisher() -> AnyPublisher<Current?, Never> {
+    private func currentPublisher() -> AnyPublisher<Current?, Never> {
         Publishers.CombineLatest($storedItems, queuePlayer.publisher(for: \.currentItem))
             .filter { storedItems, currentItem in
                 // The current item is automatically set to `nil` when a failure is encountered. If this is the case
