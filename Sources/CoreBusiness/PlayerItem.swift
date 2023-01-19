@@ -28,9 +28,9 @@ public extension PlayerItem {
             }
         }
         if let certificateUrl = resource.drms?.first(where: { $0.type == .fairPlay })?.certificateUrl {
-            return .encrypted(
-                url: resource.url,
-                delegate: ContentKeySessionDelegate(certificateUrl: certificateUrl),
+            return .init(
+                type: .encrypted(url: resource.url, delegate: ContentKeySessionDelegate(certificateUrl: certificateUrl)),
+                metadata: nil /* TODO */,
                 configuration: configuration
             )
         }
@@ -38,13 +38,13 @@ public extension PlayerItem {
             switch resource.tokenType {
             case .akamai:
                 let id = UUID()
-                return .custom(
-                    url: AkamaiURLCoding.encodeUrl(resource.url, id: id),
-                    delegate: AkamaiResourceLoaderDelegate(id: id),
+                return .init(
+                    type: .custom(url: AkamaiURLCoding.encodeUrl(resource.url, id: id), delegate: AkamaiResourceLoaderDelegate(id: id)),
+                    metadata: nil /* TODO */,
                     configuration: configuration
                 )
             default:
-                return .simple(url: resource.url, configuration: configuration)
+                return .init(type: .simple(url: resource.url), metadata: nil /* TODO */, configuration: configuration)
             }
         }
     }

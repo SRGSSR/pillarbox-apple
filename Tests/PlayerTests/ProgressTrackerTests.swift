@@ -59,7 +59,7 @@ final class ProgressTrackerTests: XCTestCase {
 
     func testProgressForTrackerBoundToPausedPlayer() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        let item = PlayerItem(url: Stream.onDemand.url)
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         expectEqualPublished(
             values: [0],
@@ -73,7 +73,7 @@ final class ProgressTrackerTests: XCTestCase {
 
     func testRangeForTrackerBoundToPausedPlayer() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        let item = PlayerItem(url: Stream.onDemand.url)
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         expectEqualPublished(
             values: [0...0, 0...1],
@@ -87,7 +87,7 @@ final class ProgressTrackerTests: XCTestCase {
 
     func testProgressForTrackerDuringEntirePlayback() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        let item = PlayerItem(url: Stream.shortOnDemand.url)
+        let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(item: item)
         expectPublished(
             values: [0, 0.25, 0.5, 0.75, 1, 0],
@@ -103,7 +103,7 @@ final class ProgressTrackerTests: XCTestCase {
 
     func testRangeForTrackerDuringEntirePlayback() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        let item = PlayerItem(url: Stream.shortOnDemand.url)
+        let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(item: item)
         expectEqualPublished(
             values: [0...0, 0...1, 0...0],
@@ -121,7 +121,7 @@ final class ProgressTrackerTests: XCTestCase {
             interval: CMTime(value: 1, timescale: 4),
             seekBehavior: .immediate
         )
-        let item = PlayerItem(url: Stream.onDemand.url)
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         progressTracker.player = player
         expect(progressTracker.range).toEventually(equal(0...1), timeout: .seconds(2))
@@ -142,7 +142,7 @@ final class ProgressTrackerTests: XCTestCase {
             interval: CMTime(value: 1, timescale: 4),
             seekBehavior: .deferred
         )
-        let item = PlayerItem(url: Stream.onDemand.url)
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         progressTracker.player = player
         expect(progressTracker.range).toEventually(equal(0...1), timeout: .seconds(2))
@@ -168,7 +168,7 @@ final class ProgressTrackerTests: XCTestCase {
 
     func testProgressForTrackerRebinding() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        let item = PlayerItem(url: Stream.onDemand.url)
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         progressTracker.player = player
         player.play()
@@ -187,7 +187,7 @@ final class ProgressTrackerTests: XCTestCase {
 
     func testRangeForTrackerRebinding() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        let item = PlayerItem(url: Stream.onDemand.url)
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         progressTracker.player = player
         player.play()
@@ -205,7 +205,7 @@ final class ProgressTrackerTests: XCTestCase {
 
     func testProgressForTrackerUnbinding() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        let item = PlayerItem(url: Stream.onDemand.url)
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         progressTracker.player = player
         player.play()
@@ -224,7 +224,7 @@ final class ProgressTrackerTests: XCTestCase {
 
     func testRangeForTrackerUnbinding() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        let item = PlayerItem(url: Stream.onDemand.url)
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         progressTracker.player = player
         player.play()

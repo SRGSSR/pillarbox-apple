@@ -34,7 +34,7 @@ private struct TimeSlider: View {
 // Behavior: h-exp, v-exp
 struct PlayerView: View {
     @StateObject private var player = Player(
-        item: PlayerItem(url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!)
+        item: PlayerItem.simple(url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!)
     )
 
     private var playbackButtonImage: String? {

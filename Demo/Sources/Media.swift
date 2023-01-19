@@ -37,9 +37,9 @@ struct Media: Hashable, Identifiable {
     func playerItem() -> PlayerItem {
         switch type {
         case let .url(url):
-            return PlayerItem(url: url)
+            return .simple(url: url, metadata: nil /* TODO */)
         case let .unbufferedUrl(url):
-            return PlayerItem(url: url) { item in
+            return .simple(url: url, metadata: nil /* TODO */) { item in
                 item.automaticallyPreservesTimeOffsetFromLive = true
                 item.preferredForwardBufferDuration = 1
             }

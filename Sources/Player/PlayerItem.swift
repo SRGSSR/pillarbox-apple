@@ -32,15 +32,8 @@ public final class PlayerItem: Equatable {
     /// - Parameters:
     ///   - url: The URL to play.
     ///   - configuration: A closure to configure player items created from the receiver.
-    public convenience init(
-        url: URL,
-        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) {
-        self.init(
-            publisher: Just(
-                .simple(url: url, configuration: configuration)
-            )
-        )
+    public convenience init(asset: Asset) {
+        self.init(publisher: Just(asset))
     }
 
     public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
@@ -49,6 +42,34 @@ public final class PlayerItem: Equatable {
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
         playerItem?.id == id
+    }
+}
+
+public extension PlayerItem {
+    static func simple(
+        url: URL,
+        metadata: Asset.Metadata? = nil,
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+    ) -> Self {
+        self.init(asset: .init(type: .simple(url: url), metadata: metadata, configuration: configuration))
+    }
+
+    static func custom(
+        url: URL,
+        delegate: AVAssetResourceLoaderDelegate,
+        metadata: Asset.Metadata? = nil,
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+    ) -> Self {
+        self.init(asset: .init(type: .custom(url: url, delegate: delegate), metadata: metadata, configuration: configuration))
+    }
+
+    static func encrypted(
+        url: URL,
+        delegate: AVContentKeySessionDelegate,
+        metadata: Asset.Metadata? = nil,
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+    ) -> Self {
+        self.init(asset: .init(type: .encrypted(url: url, delegate: delegate), metadata: metadata, configuration: configuration))
     }
 }
 

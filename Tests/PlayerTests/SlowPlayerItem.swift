@@ -11,9 +11,9 @@ import Combine
 import Foundation
 
 extension PlayerItem {
-    convenience init(url: URL, delay: TimeInterval) {
-        let publisher = Just(Asset.simple(url: url))
+    static func simple(url: URL, delay: TimeInterval) -> Self {
+        let publisher = Just(Asset(type: .simple(url: url)))
             .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
-        self.init(publisher: publisher)
+        return .init(publisher: publisher)
     }
 }

@@ -25,7 +25,7 @@ In your SwiftUI view simply instantiate and store a `Player` as `@StateObject`. 
 ```swift
 struct PlayerView: View {
     @StateObject private var player = Player(
-        item: PlayerItem(url: URL(string: "https://server.com/stream.m38u")!)
+        item: PlayerItem.simple(url: URL(string: "https://server.com/stream.m38u")!)
     )
 
     // ...
@@ -41,7 +41,7 @@ Once you have a player you can display its contents in a `VideoView`, provided y
 ```swift
 struct PlayerView: View {
     @StateObject private var player = Player(
-        item: PlayerItem(url: URL(string: "https://server.com/stream.m38u")!)
+        item: PlayerItem.simple(url: URL(string: "https://server.com/stream.m38u")!)
     )
 
     var body: some View {

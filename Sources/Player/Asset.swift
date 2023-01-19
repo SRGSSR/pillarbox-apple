@@ -28,7 +28,31 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
 
 /// An asset representing content to be played.
 public struct Asset {
-    private enum `Type` {
+    private let type: `Type`
+    private let metadata: Metadata?
+    private let configuration: (AVPlayerItem) -> Void
+
+    public init(type: `Type`, metadata: Metadata? = nil, configuration: @escaping (AVPlayerItem) -> Void = { _ in }) {
+        self.type = type
+        self.metadata = metadata
+        self.configuration = configuration
+    }
+
+    func playerItem() -> AVPlayerItem {
+        let item = type.playerItem()
+        configuration(item)
+        return item
+    }
+}
+
+public extension Asset {
+    struct Metadata {
+        let title: String
+        let subtitle: String
+        let description: String
+    }
+
+    enum `Type` {
         case simple(url: URL)
         case custom(url: URL, delegate: AVAssetResourceLoaderDelegate)
         case encrypted(url: URL, delegate: AVContentKeySessionDelegate)
@@ -58,78 +82,20 @@ public struct Asset {
             }
         }
     }
-
-    private let type: `Type`
-    private let configuration: (AVPlayerItem) -> Void
-
-    /// A simple asset playable from a URL.
-    /// - Parameters:
-    ///   - url: The URL to be played.
-    ///   - configuration: A closure to configure player items created from the receiver.
-    public static func simple(
-        url: URL,
-        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self {
-        .init(
-            type: .simple(url: url),
-            configuration: configuration
-        )
-    }
-
-    /// An asset loaded with custom resource loading. The scheme of the URL to be played has to be recognized by
-    /// the associated resource loader delegate.
-    /// - Parameters:
-    ///   - url: The URL to be played.
-    ///   - delegate: The custom resource loader to use.
-    ///   - configuration: A closure to configure player items created from the receiver.
-    public static func custom(
-        url: URL,
-        delegate: AVAssetResourceLoaderDelegate,
-        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self {
-        .init(
-            type: .custom(url: url, delegate: delegate),
-            configuration: configuration
-        )
-    }
-
-    /// An encrypted asset loaded with a content key session.
-    /// - Parameters:
-    ///   - url: The URL to be played.
-    ///   - delegate: The content key session delegate to use.
-    ///   - configuration: A closure to configure player items created from the receiver.
-    public static func encrypted(
-        url: URL,
-        delegate: AVContentKeySessionDelegate,
-        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self {
-        .init(
-            type: .encrypted(url: url, delegate: delegate),
-            configuration: configuration
-        )
-    }
-
-    func playerItem() -> AVPlayerItem {
-        let item = type.playerItem()
-        configuration(item)
-        return item
-    }
 }
 
 extension Asset {
     static var loading: Self {
         // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-        .custom(
-            url: URL(string: "pillarbox://loading.m3u8")!,
-            delegate: LoadingResourceLoaderDelegate()
+        .init(
+            type: .custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate())
         )
     }
 
     static func failed(error: Error) -> Self {
         // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-        .custom(
-            url: URL(string: "pillarbox://failing.m3u8")!,
-            delegate: FailedResourceLoaderDelegate(error: error)
+        .init(
+            type: .custom(url: URL(string: "pillarbox://failing.m3u8")!, delegate: FailedResourceLoaderDelegate(error: error))
         )
     }
 }

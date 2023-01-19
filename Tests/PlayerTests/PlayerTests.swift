@@ -13,7 +13,7 @@ import XCTest
 
 final class PlayerTests: XCTestCase {
     func testDeallocation() {
-        let item = PlayerItem(url: Stream.onDemand.url)
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
         var player: Player? = Player(item: item)
 
         weak var weakPlayer = player

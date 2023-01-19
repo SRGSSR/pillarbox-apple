@@ -18,26 +18,26 @@ final class PlayerSkipToLiveTests: XCTestCase {
     }
 
     func testCannotSkipToLiveForOnDemand() {
-        let item = PlayerItem(url: Stream.onDemand.url)
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         expect(player.canSkipToLive()).toAlways(beFalse())
     }
 
     func testCannotSkipToLiveForLive() {
-        let item = PlayerItem(url: Stream.live.url)
+        let item = PlayerItem.simple(url: Stream.live.url)
         let player = Player(item: item)
         expect(player.canSkipToLive()).toAlways(beFalse())
     }
 
     func testCannotSkipToLiveForDvrInLiveConditions() {
-        let item = PlayerItem(url: Stream.dvr.url)
+        let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
         expect(player.time).toEventuallyNot(equal(.zero))
         expect(player.canSkipToLive()).toAlways(beFalse())
     }
 
     func testCanSkipToLiveForDvrInPastConditions() {
-        let item = PlayerItem(url: Stream.dvr.url)
+        let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.dvr))
 
@@ -52,7 +52,7 @@ final class PlayerSkipToLiveTests: XCTestCase {
     }
 
     func testCanSkipToLiveForDvrInPastConditionsAsync() async {
-        let item = PlayerItem(url: Stream.dvr.url)
+        let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
         await expect(player.streamType).toEventually(equal(.dvr))
         let seeked = await player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero)
@@ -68,7 +68,7 @@ final class PlayerSkipToLiveTests: XCTestCase {
     }
 
     func testSkipToLiveForOnDemand() {
-        let item = PlayerItem(url: Stream.onDemand.url)
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         player.skipToLive { _ in
             fail("Must not be called")
@@ -76,7 +76,7 @@ final class PlayerSkipToLiveTests: XCTestCase {
     }
 
     func testSkipToLiveForLive() {
-        let item = PlayerItem(url: Stream.live.url)
+        let item = PlayerItem.simple(url: Stream.live.url)
         let player = Player(item: item)
         player.skipToLive { _ in
             fail("Must not be called")
@@ -84,7 +84,7 @@ final class PlayerSkipToLiveTests: XCTestCase {
     }
 
     func testSkipToLiveForDvrInLiveConditions() {
-        let item = PlayerItem(url: Stream.dvr.url)
+        let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
         expect(player.time).toEventuallyNot(equal(.zero))
         player.skipToLive { _ in
@@ -93,7 +93,7 @@ final class PlayerSkipToLiveTests: XCTestCase {
     }
 
     func testSkipToLiveForDvrInPastConditions() {
-        let item = PlayerItem(url: Stream.dvr.url)
+        let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.dvr))
 
@@ -116,7 +116,7 @@ final class PlayerSkipToLiveTests: XCTestCase {
     }
 
     func testSkipToLiveForDvrInPastConditionsAsync() async {
-        let item = PlayerItem(url: Stream.dvr.url)
+        let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
         await expect(player.streamType).toEventually(equal(.dvr))
         let seeked = await player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero)

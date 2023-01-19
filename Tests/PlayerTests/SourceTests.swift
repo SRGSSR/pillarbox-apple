@@ -13,9 +13,12 @@ import XCTest
 
 final class SourceTests: XCTestCase {
     func testSourceEquality() {
-        expect(Source(id: UUID("1"), asset: .simple(url: Stream.dvr.url))).to(equal(Source(id: UUID("1"), asset: .simple(url: Stream.dvr.url))))
-        expect(Source(id: UUID("1"), asset: .simple(url: Stream.live.url))).notTo(equal(Source(id: UUID("1"), asset: .simple(url: Stream.dvr.url))))
-        expect(Source(id: UUID("1"), asset: .simple(url: Stream.dvr.url))).notTo(equal(Source(id: UUID("2"), asset: .simple(url: Stream.dvr.url))))
+        expect(Source(id: UUID("1"), asset: .init(type: .simple(url: Stream.dvr.url))))
+            .to(equal(Source(id: UUID("1"), asset: .init(type: .simple(url: Stream.dvr.url)))))
+        expect(Source(id: UUID("1"), asset: .init(type: .simple(url: Stream.live.url))))
+            .notTo(equal(Source(id: UUID("1"), asset: .init(type: .simple(url: Stream.dvr.url)))))
+        expect(Source(id: UUID("1"), asset: .init(type: .simple(url: Stream.dvr.url))))
+            .notTo(equal(Source(id: UUID("2"), asset: .init(type: .simple(url: Stream.dvr.url)))))
     }
 
     func testPlayerItemsWithoutCurrentItem() {
@@ -137,7 +140,7 @@ final class SourceTests: XCTestCase {
     }
 
     func testPlayerItemsWithUpdatedCurrentItem() {
-        let currentItemSource = Source(id: UUID("1"), asset: .simple(url: Stream.item.url))
+        let currentItemSource = Source(id: UUID("1"), asset: .init(type: .simple(url: Stream.item.url)))
         let previousSources = [
             Source(id: UUID("1"), asset: .loading),
             Source(id: UUID("2"), asset: .loading),
