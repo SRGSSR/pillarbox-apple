@@ -108,10 +108,10 @@ private struct Toolbar: View {
 
     @ViewBuilder
     private func previousButton() -> some View {
-        Button(action: model.returnToPreviousItem) {
+        Button(action: model.returnToPrevious) {
             Image(systemName: "arrow.left")
         }
-        .disabled(!model.canReturnToPreviousItem())
+        .disabled(!model.canReturnToPrevious())
     }
 
     @ViewBuilder
@@ -137,10 +137,10 @@ private struct Toolbar: View {
 
     @ViewBuilder
     private func nextButton() -> some View {
-        Button(action: model.advanceToNextItem) {
+        Button(action: model.advanceToNext) {
             Image(systemName: "arrow.right")
         }
-        .disabled(!model.canAdvanceToNextItem())
+        .disabled(!model.canAdvanceToNext())
     }
 
     private func add() {

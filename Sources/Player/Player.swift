@@ -406,7 +406,42 @@ public extension Player {
     func removeAllItems() {
         storedItems.removeAll()
     }
+}
 
+public extension Player {
+    /// Check whether returning to the previous content is possible.`
+    /// - Returns: `true` if possible.
+    func canReturnToPrevious() -> Bool {
+        false
+    }
+
+    /// Return to the previous content.
+    func returnToPrevious() {
+
+    }
+
+    /// Check whether moving to the next content is possible.`
+    /// - Returns: `true` if possible.
+    func canAdvanceToNext() -> Bool {
+        false
+    }
+
+    /// Move to the next content.
+    func advanceToNext() {
+        
+    }
+
+    /// Set the index of the current item.
+    /// - Parameter index: The index to set.
+    func setCurrentIndex(_ index: Int) throws {
+        guard index != currentIndex else { return }
+        guard (0..<storedItems.count).contains(index) else { throw PlaybackError.itemOutOfBounds }
+        let playerItems = AVPlayerItem.playerItems(from: Array(storedItems.suffix(from: index)))
+        queuePlayer.replaceItems(with: playerItems)
+    }
+}
+
+extension Player {
     /// Check whether returning to the previous item in the deque is possible.`
     /// - Returns: `true` if possible.
     func canReturnToPreviousItem() -> Bool {
@@ -429,15 +464,6 @@ public extension Player {
     func advanceToNextItem() {
         guard canAdvanceToNextItem() else { return }
         queuePlayer.replaceItems(with: AVPlayerItem.playerItems(from: advancingItems))
-    }
-
-    /// Set the index of the current item.
-    /// - Parameter index: The index to set.
-    func setCurrentIndex(_ index: Int) throws {
-        guard index != currentIndex else { return }
-        guard (0..<storedItems.count).contains(index) else { throw PlaybackError.itemOutOfBounds }
-        let playerItems = AVPlayerItem.playerItems(from: Array(storedItems.suffix(from: index)))
-        queuePlayer.replaceItems(with: playerItems)
     }
 }
 
