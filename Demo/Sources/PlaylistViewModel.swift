@@ -7,6 +7,7 @@
 import Combine
 import OrderedCollections
 import Player
+import Republished
 
 final class PlaylistViewModel: ObservableObject {
     static let standardTemplates = [
@@ -50,7 +51,7 @@ final class PlaylistViewModel: ObservableObject {
         }
     }
 
-    let player = Player(configuration: .standard)
+    @Republished var player = Player(configuration: .standard)
 
     var medias: [Media] {
         get {

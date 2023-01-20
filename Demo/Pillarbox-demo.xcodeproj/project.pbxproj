@@ -42,6 +42,7 @@
 		6FD1F3AD28D0657300DF8CF1 /* WrappedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1F3AC28D0657300DF8CF1 /* WrappedViewModel.swift */; };
 		6FD1F3AF28D070CA00DF8CF1 /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1F3AE28D070CA00DF8CF1 /* Media.swift */; };
 		6FD6CE92291D36F70015FC03 /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD6CE91291D36F70015FC03 /* Story.swift */; };
+		6FD97F39297B29F2000F82E6 /* Republished in Frameworks */ = {isa = PBXBuildFile; productRef = 6FD97F38297B29F2000F82E6 /* Republished */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -91,6 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FD97F39297B29F2000F82E6 /* Republished in Frameworks */,
 				6F36C62D28910538000DD160 /* CoreBusiness in Frameworks */,
 				6FCA4747292CBEC7008C2812 /* ShowTime in Frameworks */,
 				6F9DDB44288FE90E0069B687 /* Player in Frameworks */,
@@ -249,6 +251,7 @@
 				6FBEFCEA289132DB004BE625 /* UserInterface */,
 				6F9B5BC828CF8C530074B9E0 /* OrderedCollections */,
 				6FCA4746292CBEC7008C2812 /* ShowTime */,
+				6FD97F38297B29F2000F82E6 /* Republished */,
 			);
 			productName = PillarboxDemo;
 			productReference = 6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */;
@@ -281,6 +284,7 @@
 			packageReferences = (
 				6F9B5BC728CF8C530074B9E0 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				6FCA4745292CBEC7008C2812 /* XCRemoteSwiftPackageReference "ShowTime" */,
+				6FD97F37297B29F2000F82E6 /* XCRemoteSwiftPackageReference "Republished" */,
 			);
 			productRefGroup = 6F05B8D62887E934005D75E3 /* Products */;
 			projectDirPath = "";
@@ -623,6 +627,14 @@
 				minimumVersion = 2.5.3;
 			};
 		};
+		6FD97F37297B29F2000F82E6 /* XCRemoteSwiftPackageReference "Republished" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/adam-zethraeus/Republished.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -647,6 +659,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6FCA4745292CBEC7008C2812 /* XCRemoteSwiftPackageReference "ShowTime" */;
 			productName = ShowTime;
+		};
+		6FD97F38297B29F2000F82E6 /* Republished */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6FD97F37297B29F2000F82E6 /* XCRemoteSwiftPackageReference "Republished" */;
+			productName = Republished;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -80,6 +80,7 @@ private struct PlaylistSelectionView: View {
         dismiss()
     }
 
+    @MainActor
     private func add() {
         model.add(from: Array(selectedTemplates))
         dismiss()
