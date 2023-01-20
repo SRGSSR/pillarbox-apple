@@ -414,7 +414,7 @@ public extension Player {
     /// Check whether returning to the previous content is possible.`
     /// - Returns: `true` if possible.
     func canReturnToPrevious() -> Bool {
-        if streamType == .onDemand {
+        if configuration.isSmartNavigationEnabled && streamType == .onDemand {
             return true
         }
         else {
@@ -424,7 +424,8 @@ public extension Player {
 
     /// Return to the previous content.
     func returnToPrevious() {
-        if streamType == .onDemand, time.isValid, timeRange.isValid, (time - timeRange.start).seconds >= Self.beginningTimeThreshold {
+        if configuration.isSmartNavigationEnabled, streamType == .onDemand,
+           time.isValid, timeRange.isValid, (time - timeRange.start).seconds >= Self.beginningTimeThreshold {
             seek(to: .zero)
         }
         else {

@@ -11,22 +11,18 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class BackwardNavigationTests: XCTestCase {
-    private static func configuration() -> PlayerConfiguration {
-        .init(isSmartNavigationEnabled: false)
-    }
-
-    func testCannotReturnForOnDemandAtBeginningWithoutPreviousItem() {
+final class SmartBackwardNavigationTests: XCTestCase {
+    func testCanReturnForOnDemandAtBeginningWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
-        let player = Player(item: item, configuration: Self.configuration())
+        let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.canReturnToPrevious()).to(beFalse())
+        expect(player.canReturnToPrevious()).to(beTrue())
     }
 
     func testCanReturnForOnDemandAtBeginningWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
-        let player = Player(items: [item1, item2], configuration: Self.configuration())
+        let player = Player(items: [item1, item2])
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.onDemand))
         expect(player.canReturnToPrevious()).to(beTrue())
@@ -35,7 +31,7 @@ final class BackwardNavigationTests: XCTestCase {
     func testCanReturnForOnDemandNotAtBeginning() {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
-        let player = Player(items: [item1, item2], configuration: Self.configuration())
+        let player = Player(items: [item1, item2])
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.onDemand))
 
@@ -51,7 +47,7 @@ final class BackwardNavigationTests: XCTestCase {
     func testCanReturnForLiveWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.live.url)
-        let player = Player(items: [item1, item2], configuration: Self.configuration())
+        let player = Player(items: [item1, item2])
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.live))
         expect(player.canReturnToPrevious()).to(beTrue())
@@ -59,7 +55,7 @@ final class BackwardNavigationTests: XCTestCase {
 
     func testCannotReturnForLiveWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.live.url)
-        let player = Player(item: item, configuration: Self.configuration())
+        let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.live))
         expect(player.canReturnToPrevious()).to(beFalse())
     }
@@ -67,7 +63,7 @@ final class BackwardNavigationTests: XCTestCase {
     func testCanReturnForDvrWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.dvr.url)
-        let player = Player(items: [item1, item2], configuration: Self.configuration())
+        let player = Player(items: [item1, item2])
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.dvr))
         expect(player.canReturnToPrevious()).to(beTrue())
@@ -75,7 +71,7 @@ final class BackwardNavigationTests: XCTestCase {
 
     func testCannotReturnForDvrWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.dvr.url)
-        let player = Player(item: item, configuration: Self.configuration())
+        let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.dvr))
         expect(player.canReturnToPrevious()).to(beFalse())
     }
@@ -83,7 +79,7 @@ final class BackwardNavigationTests: XCTestCase {
     func testCanReturnForUnknownWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)
-        let player = Player(items: [item1, item2], configuration: Self.configuration())
+        let player = Player(items: [item1, item2])
         player.advanceToNextItem()
         expect(player.streamType).to(equal(.unknown))
         expect(player.canReturnToPrevious()).to(beTrue())
@@ -91,14 +87,14 @@ final class BackwardNavigationTests: XCTestCase {
 
     func testCannotReturnForUnknownWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.unavailable.url)
-        let player = Player(item: item, configuration: Self.configuration())
+        let player = Player(item: item)
         expect(player.streamType).to(equal(.unknown))
         expect(player.canReturnToPrevious()).to(beFalse())
     }
 
     func testReturnForOnDemandAtBeginningWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
-        let player = Player(item: item, configuration: Self.configuration())
+        let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.onDemand))
         player.returnToPrevious()
         expect(player.currentIndex).to(equal(0))
@@ -107,7 +103,7 @@ final class BackwardNavigationTests: XCTestCase {
     func testReturnForOnDemandAtBeginningWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
-        let player = Player(items: [item1, item2], configuration: Self.configuration())
+        let player = Player(items: [item1, item2])
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.onDemand))
         player.returnToPrevious()
@@ -117,7 +113,7 @@ final class BackwardNavigationTests: XCTestCase {
     func testReturnForOnDemandNotAtBeginning() {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
-        let player = Player(items: [item1, item2], configuration: Self.configuration())
+        let player = Player(items: [item1, item2])
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.onDemand))
 
@@ -127,14 +123,14 @@ final class BackwardNavigationTests: XCTestCase {
             }
         }
         player.returnToPrevious()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentIndex).to(equal(1))
         expect(player.time).toEventually(equal(.zero), timeout: .seconds(3))
     }
 
     func testReturnForLiveWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.live.url)
-        let player = Player(items: [item1, item2], configuration: Self.configuration())
+        let player = Player(items: [item1, item2])
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.live))
         player.returnToPreviousItem()
@@ -143,7 +139,7 @@ final class BackwardNavigationTests: XCTestCase {
 
     func testReturnForLiveWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.live.url)
-        let player = Player(item: item, configuration: Self.configuration())
+        let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.live))
         player.returnToPreviousItem()
         expect(player.currentIndex).to(equal(0))
@@ -152,7 +148,7 @@ final class BackwardNavigationTests: XCTestCase {
     func testReturnForDvrWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.dvr.url)
-        let player = Player(items: [item1, item2], configuration: Self.configuration())
+        let player = Player(items: [item1, item2])
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.dvr))
         player.returnToPreviousItem()
@@ -161,7 +157,7 @@ final class BackwardNavigationTests: XCTestCase {
 
     func testReturnForDvrWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.dvr.url)
-        let player = Player(item: item, configuration: Self.configuration())
+        let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.dvr))
         player.returnToPreviousItem()
         expect(player.currentIndex).to(equal(0))
@@ -170,7 +166,7 @@ final class BackwardNavigationTests: XCTestCase {
     func testReturnForUnknownWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)
-        let player = Player(items: [item1, item2], configuration: Self.configuration())
+        let player = Player(items: [item1, item2])
         player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.unknown))
         player.returnToPreviousItem()
@@ -179,7 +175,7 @@ final class BackwardNavigationTests: XCTestCase {
 
     func testReturnForUnknownWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.unavailable.url)
-        let player = Player(item: item, configuration: Self.configuration())
+        let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.unknown))
         player.returnToPreviousItem()
         expect(player.currentIndex).to(equal(0))
