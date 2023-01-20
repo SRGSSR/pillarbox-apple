@@ -19,6 +19,20 @@ final class SmartBackwardNavigationTests: XCTestCase {
         expect(player.canReturnToPrevious()).to(beTrue())
     }
 
+    func testCanReturnForOnDemandNearBeginningWithoutPreviousItem() {
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(item: item)
+        expect(player.streamType).toEventually(equal(.onDemand))
+
+        waitUntil { done in
+            player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero) { _ in
+                done()
+            }
+        }
+
+        expect(player.canReturnToPrevious()).to(beTrue())
+    }
+
     func testCanReturnForOnDemandAtBeginningWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -98,6 +112,22 @@ final class SmartBackwardNavigationTests: XCTestCase {
         expect(player.streamType).toEventually(equal(.onDemand))
         player.returnToPrevious()
         expect(player.currentIndex).to(equal(0))
+    }
+
+    func testReturnForOnDemandNearBeginningWithoutPreviousItem() {
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(item: item)
+        expect(player.streamType).toEventually(equal(.onDemand))
+
+        waitUntil { done in
+            player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero) { _ in
+                done()
+            }
+        }
+
+        player.returnToPrevious()
+        expect(player.currentIndex).to(equal(0))
+        expect(player.time).toEventually(equal(.zero), timeout: .seconds(3))
     }
 
     func testReturnForOnDemandAtBeginningWithPreviousItem() {

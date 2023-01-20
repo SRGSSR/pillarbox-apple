@@ -428,8 +428,11 @@ public extension Player {
            time.isValid, timeRange.isValid, (time - timeRange.start).seconds >= Self.beginningTimeThreshold {
             seek(to: .zero)
         }
-        else {
+        else if canReturnToPreviousItem() {
             returnToPreviousItem()
+        }
+        else if configuration.isSmartNavigationEnabled {
+            seek(to: .zero)
         }
     }
 
