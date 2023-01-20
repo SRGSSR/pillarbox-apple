@@ -599,12 +599,28 @@ extension Player {
         }
     }
 
+    private func previousTrackRegistration() -> RemoteCommandRegistration {
+        nowPlayingSession.remoteCommandCenter.register(command: \.previousTrackCommand) { [weak self] _ in
+            self?.returnToPreviousItem()
+            return .success
+        }
+    }
+
+    private func nextTrackRegistration() -> RemoteCommandRegistration {
+        nowPlayingSession.remoteCommandCenter.register(command: \.nextTrackCommand) { [weak self] _ in
+            self?.advanceToNextItem()
+            return .success
+        }
+    }
+
     private func installNowPlayingSessionCommands() {
         uninstallNowPlayingSessionCommands()
         commandRegistrations = [
             playRegistration(),
             pauseRegistration(),
-            togglePlayPauseRegistration()
+            togglePlayPauseRegistration(),
+            previousTrackRegistration(),
+            nextTrackRegistration()
         ]
     }
 
