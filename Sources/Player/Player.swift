@@ -48,6 +48,8 @@ public final class Player: ObservableObject, Equatable {
     public let configuration: PlayerConfiguration
     private var cancellables = Set<AnyCancellable>()
 
+    private var commandRegistrations: [RemoteCommandRegistration] = []
+
     /// The type of stream currently played.
     public var streamType: StreamType {
         guard timeRange.isValid, itemDuration.isValid else { return .unknown }
@@ -85,7 +87,6 @@ public final class Player: ObservableObject, Equatable {
         configureExternalPlaybackPublisher()
 
         configurePlayer()
-        configureNowPlayingSession()
     }
 
     /// Create a player with a single item in its queue.
@@ -102,6 +103,7 @@ public final class Player: ObservableObject, Equatable {
 
     deinit {
         queuePlayer.cancelPendingReplacements()
+        updateControlCenter(for: nil)
     }
 }
 
@@ -507,8 +509,8 @@ extension Player {
             }
             .switchToLatest()
             .receiveOnMainThread()
-            .sink { [weak nowPlayingSession] nowPlayingInfo in
-                nowPlayingSession?.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+            .sink { [weak self] nowPlayingInfo in
+                self?.updateControlCenter(for: nowPlayingInfo)
             }
             .store(in: &cancellables)
     }
@@ -566,20 +568,50 @@ extension Player {
         queuePlayer.audiovisualBackgroundPlaybackPolicy = configuration.audiovisualBackgroundPlaybackPolicy
     }
 
-    private func configureNowPlayingSession() {
-        nowPlayingSession.remoteCommandCenter.playCommand.addTarget { [weak self] _ in
+    private func updateControlCenter(for nowPlayingInfo: Asset.NowPlayingInfo?) {
+        nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+        if nowPlayingInfo != nil {
+            installNowPlayingSessionCommands()
+        }
+        else {
+            uninstallNowPlayingSessionCommands()
+        }
+    }
+
+    private func playRegistration() -> RemoteCommandRegistration {
+        nowPlayingSession.remoteCommandCenter.register(command: \.playCommand) { [weak self] _ in
             self?.play()
             return .success
         }
+    }
 
-        nowPlayingSession.remoteCommandCenter.pauseCommand.addTarget { [weak self] _ in
+    private func pauseRegistration() -> RemoteCommandRegistration {
+        nowPlayingSession.remoteCommandCenter.register(command: \.pauseCommand) { [weak self] _ in
             self?.pause()
             return .success
         }
+    }
 
-        nowPlayingSession.remoteCommandCenter.togglePlayPauseCommand.addTarget { [weak self] _ in
+    private func togglePlayPauseRegistration() -> RemoteCommandRegistration {
+        nowPlayingSession.remoteCommandCenter.register(command: \.togglePlayPauseCommand) { [weak self] _ in
             self?.togglePlayPause()
             return .success
         }
+    }
+
+    private func installNowPlayingSessionCommands() {
+        uninstallNowPlayingSessionCommands()
+        commandRegistrations = [
+            playRegistration(),
+            pauseRegistration(),
+            togglePlayPauseRegistration()
+        ]
+    }
+
+    private func uninstallNowPlayingSessionCommands() {
+        commandRegistrations.forEach { registration in
+            nowPlayingSession.remoteCommandCenter.unregister(registration)
+        }
+        commandRegistrations = []
     }
 }
