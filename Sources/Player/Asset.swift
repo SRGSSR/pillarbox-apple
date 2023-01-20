@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import MediaPlayer
 import OSLog
 
 private let kContentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
@@ -28,6 +29,8 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
 
 /// An asset representing content to be played.
 public struct Asset {
+    typealias NowPlayingInfo = [String: Any]
+
     private let type: `Type`
     private let metadata: Metadata?
     private let configuration: (AVPlayerItem) -> Void
@@ -95,6 +98,16 @@ public struct Asset {
         let item = type.playerItem()
         configuration(item)
         return item
+    }
+
+    func nowPlayingInfo() -> NowPlayingInfo {
+        var nowPlayingInfo = NowPlayingInfo()
+        if let metadata {
+            nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
+            nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
+            nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
+        }
+        return nowPlayingInfo
     }
 }
 

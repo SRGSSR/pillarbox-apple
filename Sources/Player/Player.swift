@@ -8,6 +8,7 @@ import AVFoundation
 import Combine
 import Core
 import DequeModule
+import MediaPlayer
 import TimelaneCombine
 
 /// An audio / video player maintaining its items as a double-ended queue (deque).
@@ -41,11 +42,13 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.currentTime()
     }
 
-    /// Low-level player used for playback.
     let queuePlayer = QueuePlayer()
+    private let nowPlayingSession: MPNowPlayingSession
 
     public let configuration: PlayerConfiguration
     private var cancellables = Set<AnyCancellable>()
+
+    private var commandRegistrations: [RemoteCommandRegistration] = []
 
     /// The type of stream currently played.
     public var streamType: StreamType {
@@ -69,6 +72,7 @@ public final class Player: ObservableObject, Equatable {
     ///   - configuration: The configuration to apply to the player.
     public init(items: [PlayerItem] = [], configuration: PlayerConfiguration = .init()) {
         storedItems = Deque(items)
+        nowPlayingSession = MPNowPlayingSession(players: [queuePlayer])
         self.configuration = configuration
 
         configurePlaybackStatePublisher()
@@ -78,6 +82,7 @@ public final class Player: ObservableObject, Equatable {
         configureSeekingPublisher()
         configureBufferingPublisher()
         configureCurrentIndexPublisher()
+        configureCurrentItemPublisher()
         configureQueueUpdatePublisher()
         configureExternalPlaybackPublisher()
 
@@ -98,6 +103,7 @@ public final class Player: ObservableObject, Equatable {
 
     deinit {
         queuePlayer.cancelPendingReplacements()
+        updateControlCenter(for: nil)
     }
 }
 
@@ -436,6 +442,11 @@ public extension Player {
 }
 
 extension Player {
+    private struct Current: Equatable {
+        let item: PlayerItem
+        let index: Int
+    }
+
     private func configurePlaybackStatePublisher() {
         queuePlayer.playbackStatePublisher()
             .receiveOnMainThread()
@@ -479,19 +490,29 @@ extension Player {
     }
 
     private func configureCurrentIndexPublisher() {
-        Publishers.CombineLatest($storedItems, queuePlayer.publisher(for: \.currentItem))
-            .filter { storedItems, currentItem in
-                // The current item is automatically set to `nil` when a failure is encountered. If this is the case
-                // preserve the previous value, provided the player is loaded with items.
-                storedItems.isEmpty || currentItem != nil
-            }
-            .map { storedItems, currentItem in
-                storedItems.firstIndex { $0.matches(currentItem) }
-            }
-            .removeDuplicates()
+        currentPublisher()
+            .map(\.?.index)
             .receiveOnMainThread()
             .lane("player_current_index")
             .assign(to: &$currentIndex)
+    }
+
+    private func configureCurrentItemPublisher() {
+        currentPublisher()
+            .map { current in
+                guard let current else {
+                    return Just(Optional<Asset.NowPlayingInfo>.none).eraseToAnyPublisher()
+                }
+                return current.item.$source
+                    .map { $0.asset.nowPlayingInfo() }
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .receiveOnMainThread()
+            .sink { [weak self] nowPlayingInfo in
+                self?.updateControlCenter(for: nowPlayingInfo)
+            }
+            .store(in: &cancellables)
     }
 
     private func configureQueueUpdatePublisher() {
@@ -524,9 +545,73 @@ extension Player {
             .assign(to: &$isExternalPlaybackActive)
     }
 
+    private func currentPublisher() -> AnyPublisher<Current?, Never> {
+        Publishers.CombineLatest($storedItems, queuePlayer.publisher(for: \.currentItem))
+            .filter { storedItems, currentItem in
+                // The current item is automatically set to `nil` when a failure is encountered. If this is the case
+                // preserve the previous value, provided the player is loaded with items.
+                storedItems.isEmpty || currentItem != nil
+            }
+            .map { storedItems, currentItem in
+                guard let currentIndex = storedItems.firstIndex(where: { $0.matches(currentItem) }) else { return nil }
+                return .init(item: storedItems[currentIndex], index: currentIndex)
+            }
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+}
+
+extension Player {
     private func configurePlayer() {
         queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
         queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
         queuePlayer.audiovisualBackgroundPlaybackPolicy = configuration.audiovisualBackgroundPlaybackPolicy
+    }
+
+    private func updateControlCenter(for nowPlayingInfo: Asset.NowPlayingInfo?) {
+        nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+        if nowPlayingInfo != nil {
+            installNowPlayingSessionCommands()
+        }
+        else {
+            uninstallNowPlayingSessionCommands()
+        }
+    }
+
+    private func playRegistration() -> RemoteCommandRegistration {
+        nowPlayingSession.remoteCommandCenter.register(command: \.playCommand) { [weak self] _ in
+            self?.play()
+            return .success
+        }
+    }
+
+    private func pauseRegistration() -> RemoteCommandRegistration {
+        nowPlayingSession.remoteCommandCenter.register(command: \.pauseCommand) { [weak self] _ in
+            self?.pause()
+            return .success
+        }
+    }
+
+    private func togglePlayPauseRegistration() -> RemoteCommandRegistration {
+        nowPlayingSession.remoteCommandCenter.register(command: \.togglePlayPauseCommand) { [weak self] _ in
+            self?.togglePlayPause()
+            return .success
+        }
+    }
+
+    private func installNowPlayingSessionCommands() {
+        uninstallNowPlayingSessionCommands()
+        commandRegistrations = [
+            playRegistration(),
+            pauseRegistration(),
+            togglePlayPauseRegistration()
+        ]
+    }
+
+    private func uninstallNowPlayingSessionCommands() {
+        commandRegistrations.forEach { registration in
+            nowPlayingSession.remoteCommandCenter.unregister(registration)
+        }
+        commandRegistrations = []
     }
 }
