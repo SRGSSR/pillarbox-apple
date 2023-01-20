@@ -409,26 +409,38 @@ public extension Player {
 }
 
 public extension Player {
+    private static let beginningTimeThreshold: TimeInterval = 3
+
     /// Check whether returning to the previous content is possible.`
     /// - Returns: `true` if possible.
     func canReturnToPrevious() -> Bool {
-        false
+        if streamType == .onDemand {
+            return true
+        }
+        else {
+            return canReturnToPreviousItem()
+        }
     }
 
     /// Return to the previous content.
     func returnToPrevious() {
-
+        if streamType == .onDemand, time.isValid, timeRange.isValid, (time - timeRange.start).seconds >= Self.beginningTimeThreshold {
+            seek(to: .zero)
+        }
+        else {
+            returnToPreviousItem()
+        }
     }
 
     /// Check whether moving to the next content is possible.`
     /// - Returns: `true` if possible.
     func canAdvanceToNext() -> Bool {
-        false
+        canAdvanceToNextItem()
     }
 
     /// Move to the next content.
     func advanceToNext() {
-        
+        advanceToNextItem()
     }
 
     /// Set the index of the current item.
@@ -627,14 +639,14 @@ extension Player {
 
     private func previousTrackRegistration() -> RemoteCommandRegistration {
         nowPlayingSession.remoteCommandCenter.register(command: \.previousTrackCommand) { [weak self] _ in
-            self?.returnToPreviousItem()
+            self?.returnToPrevious()
             return .success
         }
     }
 
     private func nextTrackRegistration() -> RemoteCommandRegistration {
         nowPlayingSession.remoteCommandCenter.register(command: \.nextTrackCommand) { [weak self] _ in
-            self?.advanceToNextItem()
+            self?.advanceToNext()
             return .success
         }
     }

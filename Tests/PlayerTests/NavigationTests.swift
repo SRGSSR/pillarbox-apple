@@ -6,14 +6,24 @@
 
 @testable import Player
 
+import Circumspect
 import CoreMedia
 import Nimble
 import XCTest
 
 final class NavigationTests: XCTestCase {
-    func testCanReturnForOnDemandAtBeginning() {
+    func testCanReturnForOnDemandAtBeginningWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
+        expect(player.streamType).toEventually(equal(.onDemand))
+        expect(player.canReturnToPrevious()).to(beTrue())
+    }
+
+    func testCanReturnForOnDemandAtBeginningWithPreviousItem() {
+        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2])
+        player.advanceToNextItem()
         expect(player.streamType).toEventually(equal(.onDemand))
         expect(player.canReturnToPrevious()).to(beTrue())
     }
@@ -64,12 +74,20 @@ final class NavigationTests: XCTestCase {
         expect(player.canReturnToPrevious()).to(beFalse())
     }
 
-    func testCanReturnForUnknownItemWithPreviousItem() {
-
+    func testCanReturnForUnknownWithPreviousItem() {
+        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.unavailable.url)
+        let player = Player(items: [item1, item2])
+        player.advanceToNextItem()
+        expect(player.streamType).to(equal(.unknown))
+        expect(player.canReturnToPrevious()).to(beTrue())
     }
 
-    func testCannotReturnForUnknownItemWithoutPreviousItem() {
-
+    func testCannotReturnForUnknownWithoutPreviousItem() {
+        let item = PlayerItem.simple(url: Stream.unavailable.url)
+        let player = Player(item: item)
+        expect(player.streamType).to(equal(.unknown))
+        expect(player.canReturnToPrevious()).to(beFalse())
     }
 
     func testCanAdvanceForOnDemandWithNextItem() {
@@ -117,75 +135,173 @@ final class NavigationTests: XCTestCase {
         expect(player.canAdvanceToNext()).to(beFalse())
     }
 
-    func testCanAdvanceForUnknownItemWithNextItem() {
-
+    func testCanAdvanceForUnknownWithNextItem() {
+        let item1 = PlayerItem.simple(url: Stream.unavailable.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2])
+        expect(player.streamType).to(equal(.unknown))
+        expect(player.canAdvanceToNext()).to(beTrue())
     }
 
-    func testCannotAdvanceForUnknownItemWithoutNextItem() {
-
+    func testCannotAdvanceForUnknownWithoutNextItem() {
+        let item = PlayerItem.simple(url: Stream.unavailable.url)
+        let player = Player(item: item)
+        expect(player.streamType).to(equal(.unknown))
+        expect(player.canAdvanceToNext()).to(beFalse())
     }
 
-    func testReturnForOnDemandAtBeginning() {
+    func testReturnForOnDemandAtBeginningWithoutPreviousItem() {
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(item: item)
+        expect(player.streamType).toEventually(equal(.onDemand))
+        player.returnToPrevious()
+        expect(player.currentIndex).to(equal(0))
+    }
 
+    func testReturnForOnDemandAtBeginningWithPreviousItem() {
+        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2])
+        player.advanceToNextItem()
+        expect(player.streamType).toEventually(equal(.onDemand))
+        player.returnToPrevious()
+        expect(player.currentIndex).to(equal(0))
     }
 
     func testReturnForOnDemandNotAtBeginning() {
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(item: item)
+        expect(player.streamType).toEventually(equal(.onDemand))
 
+        waitUntil { done in
+            player.seek(to: CMTime(value: 5, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero) { finished in
+                done()
+            }
+        }
+        player.returnToPrevious()
+        expect(player.currentIndex).to(equal(0))
+        expect(player.time).toEventually(equal(.zero), timeout: .seconds(3))
     }
 
     func testReturnForLiveWithPreviousItem() {
-
+        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.live.url)
+        let player = Player(items: [item1, item2])
+        player.advanceToNextItem()
+        expect(player.streamType).toEventually(equal(.live))
+        player.returnToPreviousItem()
+        expect(player.currentIndex).to(equal(0))
     }
 
     func testReturnForLiveWithoutPreviousItem() {
-
+        let item = PlayerItem.simple(url: Stream.live.url)
+        let player = Player(item: item)
+        expect(player.streamType).toEventually(equal(.live))
+        player.returnToPreviousItem()
+        expect(player.currentIndex).to(equal(0))
     }
 
     func testReturnForDvrWithPreviousItem() {
-
+        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.dvr.url)
+        let player = Player(items: [item1, item2])
+        player.advanceToNextItem()
+        expect(player.streamType).toEventually(equal(.dvr))
+        player.returnToPreviousItem()
+        expect(player.currentIndex).to(equal(0))
     }
 
     func testReturnForDvrWithoutPreviousItem() {
-
+        let item = PlayerItem.simple(url: Stream.dvr.url)
+        let player = Player(item: item)
+        expect(player.streamType).toEventually(equal(.dvr))
+        player.returnToPreviousItem()
+        expect(player.currentIndex).to(equal(0))
     }
 
-    func testReturnForUnknownItemWithPreviousItem() {
-
+    func testReturnForUnknownWithPreviousItem() {
+        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.unavailable.url)
+        let player = Player(items: [item1, item2])
+        player.advanceToNextItem()
+        expect(player.streamType).toEventually(equal(.unknown))
+        player.returnToPreviousItem()
+        expect(player.currentIndex).to(equal(0))
     }
 
-    func testReturnForUnknownItemWithoutPreviousItem() {
-
+    func testReturnForUnknownWithoutPreviousItem() {
+        let item = PlayerItem.simple(url: Stream.unavailable.url)
+        let player = Player(item: item)
+        expect(player.streamType).toEventually(equal(.unknown))
+        player.returnToPreviousItem()
+        expect(player.currentIndex).to(equal(0))
     }
 
     func testAdvanceForOnDemandWithNextItem() {
-
+        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.live.url)
+        let player = Player(items: [item1, item2])
+        expect(player.streamType).toEventually(equal(.onDemand))
+        player.advanceToNext()
+        expect(player.currentIndex).to(equal(1))
     }
 
     func testAdvanceForOnDemandWithoutNextItem() {
-
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(item: item)
+        expect(player.streamType).toEventually(equal(.onDemand))
+        player.advanceToNext()
+        expect(player.currentIndex).to(equal(0))
     }
 
     func testAdvanceForLiveWithNextItem() {
-
+        let item1 = PlayerItem.simple(url: Stream.live.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2])
+        expect(player.streamType).toEventually(equal(.live))
+        player.advanceToNext()
+        expect(player.currentIndex).to(equal(1))
     }
 
     func testAdvanceForLiveWithoutNextItem() {
-
+        let item = PlayerItem.simple(url: Stream.live.url)
+        let player = Player(item: item)
+        expect(player.streamType).toEventually(equal(.live))
+        player.advanceToNext()
+        expect(player.currentIndex).to(equal(0))
     }
 
     func testAdvanceForDvrWithNextItem() {
-
+        let item1 = PlayerItem.simple(url: Stream.dvr.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2])
+        expect(player.streamType).toEventually(equal(.dvr))
+        player.advanceToNext()
+        expect(player.currentIndex).to(equal(1))
     }
 
     func testAdvanceForDvrWithoutNextItem() {
-
+        let item = PlayerItem.simple(url: Stream.dvr.url)
+        let player = Player(item: item)
+        expect(player.streamType).toEventually(equal(.dvr))
+        player.advanceToNext()
+        expect(player.currentIndex).to(equal(0))
     }
 
-    func testAdvanceForUnknownItemWithNextItem() {
-
+    func testAdvanceForUnknownWithNextItem() {
+        let item1 = PlayerItem.simple(url: Stream.unavailable.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2])
+        expect(player.streamType).to(equal(.unknown))
+        player.advanceToNext()
+        expect(player.currentIndex).to(equal(1))
     }
 
-    func testAdvanceForUnknownItemWithoutNextItem() {
-
+    func testAdvanceForUnknownWithoutNextItem() {
+        let item = PlayerItem.simple(url: Stream.unavailable.url)
+        let player = Player(item: item)
+        expect(player.streamType).to(equal(.unknown))
+        player.advanceToNext()
+        expect(player.currentIndex).to(equal(0))
     }
 }
