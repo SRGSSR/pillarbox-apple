@@ -424,15 +424,19 @@ public extension Player {
 
     /// Return to the previous content.
     func returnToPrevious() {
-        if configuration.isSmartNavigationEnabled, streamType == .onDemand,
-           time.isValid, timeRange.isValid, (time - timeRange.start).seconds >= Self.beginningTimeThreshold {
-            seek(to: .zero)
+        if configuration.isSmartNavigationEnabled {
+            if streamType == .onDemand, time.isValid, timeRange.isValid, (time - timeRange.start).seconds >= Self.beginningTimeThreshold {
+                seek(to: .zero)
+            }
+            else if canReturnToPreviousItem() {
+                returnToPreviousItem()
+            }
+            else {
+                seek(to: .zero)
+            }
         }
-        else if canReturnToPreviousItem() {
+        else {
             returnToPreviousItem()
-        }
-        else if configuration.isSmartNavigationEnabled {
-            seek(to: .zero)
         }
     }
 
