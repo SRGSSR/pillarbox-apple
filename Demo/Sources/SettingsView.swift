@@ -20,6 +20,9 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.allowsExternalPlaybackKey)
     private var allowsExternalPlayback = true
 
+    @AppStorage(UserDefaults.smartNavigationEnabledKey)
+    private var isSmartNavigationEnabled = true
+
     @AppStorage(UserDefaults.audiovisualBackgroundPlaybackPolicyKey)
     private var audiovisualBackgroundPlaybackPolicyKey: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic
 
@@ -27,6 +30,7 @@ struct SettingsView: View {
         List {
             Toggle("Presenter mode", isOn: $isPresentedModeEnabled)
             Toggle("Allows external playback", isOn: $allowsExternalPlayback)
+            Toggle("Smart navigation", isOn: $isSmartNavigationEnabled)
             seekBehaviorPicker()
             audiovisualBackgroundPlaybackPolicyPicker()
             Toggle("Body counters", isOn: $areBodyCountersEnabled)
