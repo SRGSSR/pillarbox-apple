@@ -4,21 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+import Player
 import SwiftUI
-
-// Behavior: h-exp, v-exp
-private struct MediaList: View {
-    @ObservedObject var model: PlaylistViewModel
-
-    var body: some View {
-        VStack(spacing: 0) {
-            Toolbar(model: model)
-            List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
-                MediaCell(media: media, isPlaying: media == model.currentMedia)
-            }
-        }
-    }
-}
 
 // Behavior: h-exp, v-exp
 private struct MediaCell: View {
@@ -80,7 +67,6 @@ private struct PlaylistSelectionView: View {
         dismiss()
     }
 
-    @MainActor
     private func add() {
         model.add(from: Array(selectedTemplates))
         dismiss()
@@ -89,7 +75,9 @@ private struct PlaylistSelectionView: View {
 
 // Behavior: h-exp, v-hug
 private struct Toolbar: View {
+    @ObservedObject var player: Player
     @ObservedObject var model: PlaylistViewModel
+
     @State private var isSelectionPlaylistPresented = false
 
     var body: some View {
@@ -109,10 +97,10 @@ private struct Toolbar: View {
 
     @ViewBuilder
     private func previousButton() -> some View {
-        Button(action: model.returnToPrevious) {
+        Button(action: player.returnToPrevious) {
             Image(systemName: "arrow.left")
         }
-        .disabled(!model.canReturnToPrevious())
+        .disabled(!player.canReturnToPrevious())
     }
 
     @ViewBuilder
@@ -138,10 +126,10 @@ private struct Toolbar: View {
 
     @ViewBuilder
     private func nextButton() -> some View {
-        Button(action: model.advanceToNext) {
+        Button(action: player.advanceToNext) {
             Image(systemName: "arrow.right")
         }
-        .disabled(!model.canAdvanceToNext())
+        .disabled(!player.canAdvanceToNext())
     }
 
     private func add() {
@@ -157,7 +145,10 @@ struct PlaylistView: View {
     var body: some View {
         VStack(spacing: 0) {
             PlaybackView(player: model.player)
-            MediaList(model: model)
+            Toolbar(player: model.player, model: model)
+            List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
+                MediaCell(media: media, isPlaying: media == model.currentMedia)
+            }
         }
         .onAppear { model.templates = templates }
         .onChange(of: templates) { newValue in

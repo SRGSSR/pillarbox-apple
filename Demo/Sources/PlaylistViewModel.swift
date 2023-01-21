@@ -7,7 +7,6 @@
 import Combine
 import OrderedCollections
 import Player
-import Republished
 
 final class PlaylistViewModel: ObservableObject {
     static let standardTemplates = [
@@ -51,7 +50,7 @@ final class PlaylistViewModel: ObservableObject {
         }
     }
 
-    @Republished var player = Player(configuration: .standard)
+    let player = Player(configuration: .standard)
 
     var medias: [Media] {
         get {
@@ -111,14 +110,6 @@ final class PlaylistViewModel: ObservableObject {
         medias += Template.medias(from: templates)
     }
 
-    func canReturnToPrevious() -> Bool {
-        player.canReturnToPrevious()
-    }
-
-    func returnToPrevious() {
-        player.returnToPrevious()
-    }
-
     func shuffle() {
         items.shuffle()
     }
@@ -129,14 +120,6 @@ final class PlaylistViewModel: ObservableObject {
 
     func trash() {
         medias = []
-    }
-
-    func canAdvanceToNext() -> Bool {
-        player.canAdvanceToNext()
-    }
-
-    func advanceToNext() {
-        player.advanceToNext()
     }
 
     private func configureCurrentItemPublisher() {

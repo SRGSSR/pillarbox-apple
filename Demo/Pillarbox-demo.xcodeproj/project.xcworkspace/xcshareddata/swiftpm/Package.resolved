@@ -55,15 +55,6 @@
       }
     },
     {
-      "identity" : "republished",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/adam-zethraeus/Republished.git",
-      "state" : {
-        "revision" : "ea07b968a38481d34b2d97345b1b1c628f4a81f4",
-        "version" : "1.0.1"
-      }
-    },
-    {
       "identity" : "showtime",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/KaneCheshire/ShowTime.git",
