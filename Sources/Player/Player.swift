@@ -409,7 +409,7 @@ public extension Player {
 }
 
 public extension Player {
-    internal static let beginningTimeThreshold: TimeInterval = 3
+    internal static let startTimeThreshold: TimeInterval = 3
 
     /// Check whether returning to the previous content is possible.`
     /// - Returns: `true` if possible.
@@ -422,18 +422,19 @@ public extension Player {
         }
     }
 
+    private func isFarFromStartTime() -> Bool {
+        time.isValid && timeRange.isValid && (time - timeRange.start).seconds >= Self.startTimeThreshold
+    }
+
+    private func shouldSeekToStartTime() -> Bool {
+        guard configuration.isSmartNavigationEnabled else { return false }
+        return (streamType == .onDemand && isFarFromStartTime()) || !canReturnToPreviousItem()
+    }
+
     /// Return to the previous content.
     func returnToPrevious() {
-        if configuration.isSmartNavigationEnabled {
-            if streamType == .onDemand, time.isValid, timeRange.isValid, (time - timeRange.start).seconds >= Self.beginningTimeThreshold {
-                seek(to: .zero)
-            }
-            else if canReturnToPreviousItem() {
-                returnToPreviousItem()
-            }
-            else {
-                seek(to: .zero)
-            }
+        if shouldSeekToStartTime() {
+            seek(to: timeRange.start)
         }
         else {
             returnToPreviousItem()

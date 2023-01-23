@@ -13,7 +13,7 @@ import XCTest
 
 final class PlayerTests: XCTestCase {
     func testConstants() {
-        expect(Player.beginningTimeThreshold).to(equal(3))
+        expect(Player.startTimeThreshold).to(equal(3))
     }
 
     func testDeallocation() {
