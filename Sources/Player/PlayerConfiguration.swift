@@ -20,8 +20,8 @@ public struct PlayerConfiguration {
     /// to the background.
     public let audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy
 
-    /// A Boolean which, if set to `true`, makes the player always return to the previous playlist item when calling
-    /// `returnToPrevious()`.
+    /// Enables smart playlist navigation (calling `returnToPrevious()` returns to the previous item in a playlist
+    /// only within its first few seconds, otherwise resumes the current item at its beginning).
     public let isSmartNavigationEnabled: Bool
 
     /// Create a player configuration.
