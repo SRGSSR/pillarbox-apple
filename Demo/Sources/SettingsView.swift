@@ -28,14 +28,28 @@ struct SettingsView: View {
 
     var body: some View {
         List {
-            Toggle("Presenter mode", isOn: $isPresentedModeEnabled)
+            applicationSection()
+            playerSection()
+        }
+        .navigationTitle("Settings")
+    }
+
+    @ViewBuilder
+    private func playerSection() -> some View {
+        Section("Player") {
             Toggle("Allows external playback", isOn: $allowsExternalPlayback)
             Toggle("Smart navigation", isOn: $isSmartNavigationEnabled)
             seekBehaviorPicker()
             audiovisualBackgroundPlaybackPolicyPicker()
+        }
+    }
+
+    @ViewBuilder
+    private func applicationSection() -> some View {
+        Section("Application") {
+            Toggle("Presenter mode", isOn: $isPresentedModeEnabled)
             Toggle("Body counters", isOn: $areBodyCountersEnabled)
         }
-        .navigationTitle("Settings")
     }
 
     @ViewBuilder
