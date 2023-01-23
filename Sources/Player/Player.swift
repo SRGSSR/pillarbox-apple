@@ -409,7 +409,7 @@ public extension Player {
 }
 
 public extension Player {
-    private static let beginningTimeThreshold: TimeInterval = 3
+    static let beginningTimeThreshold: TimeInterval = 3
 
     /// Check whether returning to the previous content is possible.`
     /// - Returns: `true` if possible.
