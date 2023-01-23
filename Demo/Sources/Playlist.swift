@@ -168,27 +168,27 @@ enum URNTemplates {
 
     static let tokenProtectedVideos: [Template] = [
         Template(
-            title: "Ski alpin, Slalom Messieurs",
+            title: "Ski alpin, Descente Messieurs",
             description: "Token-protected video 1",
-            type: .urn("urn:swisstxt:video:rts:1749666")
+            type: .urn("urn:swisstxt:video:rts:1749636")
         ),
         Template(
-            title: "Ski alpin, Slalom Dames",
+            title: "Ski alpin, Descente Dames",
             description: "Token-protected video 2",
-            type: .urn("urn:swisstxt:video:rts:1749741")
+            type: .urn("urn:swisstxt:video:rts:1749697")
         )
     ]
 
     static let drmProtectedVideos: [Template] = [
         Template(
-            title: "Top Models 8870",
+            title: "Top Models 8881",
             description: "DRM-protected video 1",
-            type: .urn("urn:rts:video:13639837")
+            type: .urn("urn:rts:video:13702534")
         ),
         Template(
-            title: "Top Models 8869",
+            title: "Top Models 8880",
             description: "DRM-protected video 2",
-            type: .urn("urn:rts:video:13639830")
+            type: .urn("urn:rts:video:13701160")
         )
     ]
 
