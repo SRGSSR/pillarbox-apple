@@ -58,11 +58,6 @@ struct SettingsView: View {
             Text("Immediate").tag(SeekBehaviorSetting.immediate)
             Text("Deferred").tag(SeekBehaviorSetting.deferred)
         }
-#if os(tvOS)
-        .pickerStyle(.inline)
-#else
-        .pickerStyle(.menu)
-#endif
     }
 
     @ViewBuilder
@@ -72,11 +67,6 @@ struct SettingsView: View {
             Text("Continues if possible").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.continuesIfPossible)
             Text("Pauses").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.pauses)
         }
-#if os(tvOS)
-        .pickerStyle(.inline)
-#else
-        .pickerStyle(.menu)
-#endif
     }
 }
 
