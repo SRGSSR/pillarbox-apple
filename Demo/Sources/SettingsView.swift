@@ -20,18 +20,36 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.allowsExternalPlaybackKey)
     private var allowsExternalPlayback = true
 
+    @AppStorage(UserDefaults.smartNavigationEnabledKey)
+    private var isSmartNavigationEnabled = true
+
     @AppStorage(UserDefaults.audiovisualBackgroundPlaybackPolicyKey)
     private var audiovisualBackgroundPlaybackPolicyKey: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic
 
     var body: some View {
         List {
-            Toggle("Presenter mode", isOn: $isPresentedModeEnabled)
-            Toggle("Allows external playback", isOn: $allowsExternalPlayback)
-            seekBehaviorPicker()
-            audiovisualBackgroundPlaybackPolicyPicker()
-            Toggle("Body counters", isOn: $areBodyCountersEnabled)
+            applicationSection()
+            playerSection()
         }
         .navigationTitle("Settings")
+    }
+
+    @ViewBuilder
+    private func playerSection() -> some View {
+        Section("Player") {
+            Toggle("Allows external playback", isOn: $allowsExternalPlayback)
+            Toggle("Smart navigation", isOn: $isSmartNavigationEnabled)
+            seekBehaviorPicker()
+            audiovisualBackgroundPlaybackPolicyPicker()
+        }
+    }
+
+    @ViewBuilder
+    private func applicationSection() -> some View {
+        Section("Application") {
+            Toggle("Presenter mode", isOn: $isPresentedModeEnabled)
+            Toggle("Body counters", isOn: $areBodyCountersEnabled)
+        }
     }
 
     @ViewBuilder
@@ -40,11 +58,6 @@ struct SettingsView: View {
             Text("Immediate").tag(SeekBehaviorSetting.immediate)
             Text("Deferred").tag(SeekBehaviorSetting.deferred)
         }
-#if os(tvOS)
-        .pickerStyle(.inline)
-#else
-        .pickerStyle(.menu)
-#endif
     }
 
     @ViewBuilder
@@ -54,11 +67,6 @@ struct SettingsView: View {
             Text("Continues if possible").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.continuesIfPossible)
             Text("Pauses").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.pauses)
         }
-#if os(tvOS)
-        .pickerStyle(.inline)
-#else
-        .pickerStyle(.menu)
-#endif
     }
 }
 

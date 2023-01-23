@@ -135,9 +135,9 @@ enum URNTemplate {
         type: .urn("urn:rts:video:13444390")
     )
     static let tokenProtectedVideo = Template(
-        title: "Ski alpin, Slalom Messieurs",
+        title: "Ski alpin, Descente Messieurs",
         description: "Token-protected video",
-        type: .urn("urn:swisstxt:video:rts:1749666")
+        type: .urn("urn:swisstxt:video:rts:1749636")
     )
     static let superfluouslyTokenProtectedVideo = Template(
         title: "Telegiornale flash",
@@ -145,9 +145,9 @@ enum URNTemplate {
         type: .urn("urn:rsi:video:15916771")
     )
     static let drmProtectedVideo = Template(
-        title: "Top Models 8870",
+        title: "Top Models 8881",
         description: "DRM-protected video",
-        type: .urn("urn:rts:video:13639837")
+        type: .urn("urn:rts:video:13702534")
     )
     static let liveVideo = Template(
         title: "SRF 1",

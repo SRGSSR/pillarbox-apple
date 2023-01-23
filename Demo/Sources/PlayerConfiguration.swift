@@ -9,17 +9,21 @@ import Player
 
 extension PlayerConfiguration {
     static var standard: Self {
-        PlayerConfiguration(
-            allowsExternalPlayback: UserDefaults.standard.allowsExternalPlaybackEnabled,
-            usesExternalPlaybackWhileMirroring: !UserDefaults.standard.presenterModeEnabled,
-            audiovisualBackgroundPlaybackPolicy: UserDefaults.standard.audiovisualBackgroundPlaybackPolicy
+        let userDefaults = UserDefaults.standard
+        return .init(
+            allowsExternalPlayback: userDefaults.allowsExternalPlaybackEnabled,
+            usesExternalPlaybackWhileMirroring: !userDefaults.presenterModeEnabled,
+            audiovisualBackgroundPlaybackPolicy: userDefaults.audiovisualBackgroundPlaybackPolicy,
+            isSmartNavigationEnabled: userDefaults.smartNavigationEnabled
         )
     }
 
     static var externalPlaybackDisabled: Self {
-        PlayerConfiguration(
+        let userDefaults = UserDefaults.standard
+        return .init(
             allowsExternalPlayback: false,
-            audiovisualBackgroundPlaybackPolicy: UserDefaults.standard.audiovisualBackgroundPlaybackPolicy
+            audiovisualBackgroundPlaybackPolicy: userDefaults.audiovisualBackgroundPlaybackPolicy,
+            isSmartNavigationEnabled: userDefaults.smartNavigationEnabled
         )
     }
 }

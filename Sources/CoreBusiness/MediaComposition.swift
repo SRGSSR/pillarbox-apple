@@ -15,7 +15,7 @@ struct MediaComposition: Decodable {
 
     let chapterUrn: String
     let chapters: [Chapter]
-    let show: Show
+    let show: Show?
 }
 
 extension MediaComposition {

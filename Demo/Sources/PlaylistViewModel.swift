@@ -110,14 +110,6 @@ final class PlaylistViewModel: ObservableObject {
         medias += Template.medias(from: templates)
     }
 
-    func canReturnToPreviousItem() -> Bool {
-        player.canReturnToPreviousItem()
-    }
-
-    func returnToPreviousItem() {
-        player.returnToPreviousItem()
-    }
-
     func shuffle() {
         items.shuffle()
     }
@@ -128,14 +120,6 @@ final class PlaylistViewModel: ObservableObject {
 
     func trash() {
         medias = []
-    }
-
-    func canAdvanceToNextItem() -> Bool {
-        player.canAdvanceToNextItem()
-    }
-
-    func advanceToNextItem() {
-        player.advanceToNextItem()
     }
 
     private func configureCurrentItemPublisher() {

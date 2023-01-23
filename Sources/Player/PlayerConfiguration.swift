@@ -20,6 +20,10 @@ public struct PlayerConfiguration {
     /// to the background.
     public let audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy
 
+    /// Enables smart playlist navigation (calling `returnToPrevious()` returns to the previous item in a playlist
+    /// only within its first few seconds, otherwise resumes the current item at its beginning).
+    public let isSmartNavigationEnabled: Bool
+
     /// Create a player configuration.
     /// - Parameters:
     ///   - allowsExternalPlayback: Allows switching to external playback mode.
@@ -29,10 +33,12 @@ public struct PlayerConfiguration {
     public init(
         allowsExternalPlayback: Bool = true,
         usesExternalPlaybackWhileMirroring: Bool = false,
-        audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic
+        audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic,
+        isSmartNavigationEnabled: Bool = true
     ) {
         self.allowsExternalPlayback = allowsExternalPlayback
         self.usesExternalPlaybackWhileMirroring = usesExternalPlaybackWhileMirroring
         self.audiovisualBackgroundPlaybackPolicy = audiovisualBackgroundPlaybackPolicy
+        self.isSmartNavigationEnabled = isSmartNavigationEnabled
     }
 }
