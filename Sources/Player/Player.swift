@@ -82,7 +82,7 @@ public final class Player: ObservableObject, Equatable {
         configureSeekingPublisher()
         configureBufferingPublisher()
         configureCurrentIndexPublisher()
-        configureCurrentItemPublisher()
+        configureControlCenterPublisher()
         configureQueueUpdatePublisher()
         configureExternalPlaybackPublisher()
 
@@ -544,10 +544,13 @@ extension Player {
             .assign(to: &$currentIndex)
     }
 
-    private func configureCurrentItemPublisher() {
-        nowPlayingInfoPublisher()
+    private func configureControlCenterPublisher() {
+        Publishers.CombineLatest(nowPlayingInfoPublisher(), $timeRange)
             .receiveOnMainThread()
-            .sink { [weak self] nowPlayingInfo in
+            .sink { [weak self] nowPlayingInfo, timeRange in
+                var nowPlayingInfo = nowPlayingInfo ?? [:]
+                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = timeRange.start.seconds
+                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = timeRange.duration.seconds
                 self?.updateControlCenter(for: nowPlayingInfo)
             }
             .store(in: &cancellables)
