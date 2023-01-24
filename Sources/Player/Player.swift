@@ -72,7 +72,10 @@ public final class Player: ObservableObject, Equatable {
     ///   - configuration: The configuration to apply to the player.
     public init(items: [PlayerItem] = [], configuration: PlayerConfiguration = .init()) {
         storedItems = Deque(items)
+
         nowPlayingSession = MPNowPlayingSession(players: [queuePlayer])
+        nowPlayingSession.becomeActiveIfPossible()
+
         self.configuration = configuration
 
         configurePlaybackStatePublisher()
@@ -683,6 +686,7 @@ extension Player {
         isBuffering: Bool
     ) {
         if nowPlayingInfo.previous == nil {
+            uninstallRemoteCommands()
             installRemoteCommands()
         }
         else if nowPlayingInfo.current == nil {
