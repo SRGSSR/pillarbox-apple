@@ -545,14 +545,15 @@ extension Player {
     }
 
     private func configureControlCenterPublisher() {
-        Publishers.CombineLatest3(nowPlayingInfoPublisher(), $timeRange, $isBuffering)
+        Publishers.CombineLatest4(nowPlayingInfoPublisher(), $timeRange, $isBuffering, $isSeeking)
             .receiveOnMainThread()
-            .sink { [weak self] nowPlayingInfo, timeRange, isBuffering in
+            .sink { [weak self] nowPlayingInfo, timeRange, isBuffering, _ in
+                guard let self else { return }
                 var nowPlayingInfo = nowPlayingInfo ?? [:]
                 nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isBuffering ? 0 : 1
-                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = timeRange.start.seconds
+                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (self.queuePlayer.currentTime() - timeRange.start).seconds
                 nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = timeRange.duration.seconds
-                self?.updateControlCenter(for: nowPlayingInfo)
+                self.updateControlCenter(for: nowPlayingInfo)
             }
             .store(in: &cancellables)
     }
