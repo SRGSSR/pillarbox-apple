@@ -52,18 +52,7 @@ public final class Player: ObservableObject, Equatable {
 
     /// The type of stream currently played.
     public var streamType: StreamType {
-        guard timeRange.isValid, itemDuration.isValid else { return .unknown }
-        if timeRange.isEmpty {
-            return .live
-        }
-        else {
-            if itemDuration.isIndefinite {
-                return .dvr
-            }
-            else {
-                return itemDuration == .zero ? .live : .onDemand
-            }
-        }
+        Self.streamType(for: timeRange, itemDuration: itemDuration)
     }
 
     /// Create a player with a given item queue.
@@ -548,15 +537,13 @@ extension Player {
     }
 
     private func configureControlCenterPublisher() {
-        Publishers.CombineLatest4(
-            nowPlayingInfoPublisher(),
-            $timeRange,
-            $isBuffering,
-            $isSeeking
+        Publishers.CombineLatest(
+            nowPlayingInfoMetadataPublisher(),
+            nowPlayingInfoPlaybackPublisher()
         )
         .receiveOnMainThread()
-        .sink { [weak self] nowPlayingInfo, timeRange, isBuffering, _ in
-            self?.updateControlCenter(nowPlayingInfo: nowPlayingInfo, timeRange: timeRange, isBuffering: isBuffering)
+        .sink { [weak self] nowPlayingInfoMetadata, nowPlayingInfoPlayback in
+            self?.updateControlCenter(nowPlayingInfoMetadata: nowPlayingInfoMetadata, nowPlayingInfoPlayback: nowPlayingInfoPlayback)
         }
         .store(in: &cancellables)
     }
@@ -606,7 +593,7 @@ extension Player {
             .eraseToAnyPublisher()
     }
 
-    private func nowPlayingInfoPublisher() -> AnyPublisher<Asset.NowPlayingInfo?, Never> {
+    private func nowPlayingInfoMetadataPublisher() -> AnyPublisher<Asset.NowPlayingInfo?, Never> {
         currentPublisher()
             .map { current in
                 guard let current else {
@@ -619,9 +606,36 @@ extension Player {
             .switchToLatest()
             .eraseToAnyPublisher()
     }
+
+    private func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<Asset.NowPlayingInfo, Never> {
+        Publishers.CombineLatest4($timeRange, $itemDuration, $isBuffering, $isSeeking)
+            .map { [queuePlayer] timeRange, itemDuration, isBuffering, _ in
+                var nowPlayingInfo = Asset.NowPlayingInfo()
+                let isLive = Self.streamType(for: timeRange, itemDuration: itemDuration) == .live
+                nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLive
+                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isBuffering ? 0 : 1
+                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (queuePlayer.currentTime() - timeRange.start).seconds
+                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = timeRange.duration.seconds
+                return nowPlayingInfo
+            }
+            .eraseToAnyPublisher()
+    }
 }
 
 extension Player {
+    private static func streamType(for timeRange: CMTimeRange, itemDuration: CMTime) -> StreamType {
+        guard timeRange.isValid, itemDuration.isValid else { return .unknown }
+        if timeRange.isEmpty {
+            return .live
+        }
+        else if itemDuration.isIndefinite {
+            return .dvr
+        }
+        else {
+            return itemDuration == .zero ? .live : .onDemand
+        }
+    }
+
     private func configurePlayer() {
         queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
         queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
@@ -681,20 +695,16 @@ extension Player {
     }
 
     private func updateControlCenter(
-        nowPlayingInfo: Asset.NowPlayingInfo?,
-        timeRange: CMTimeRange,
-        isBuffering: Bool
+        nowPlayingInfoMetadata: Asset.NowPlayingInfo?,
+        nowPlayingInfoPlayback: Asset.NowPlayingInfo
     ) {
-        if var nowPlayingInfo {
+        if var nowPlayingInfoMetadata {
             if nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo == nil {
                 uninstallRemoteCommands()
                 installRemoteCommands()
             }
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isBuffering ? 0 : 1
-            nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (streamType == .live)
-            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (queuePlayer.currentTime() - timeRange.start).seconds
-            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = timeRange.duration.seconds
-            updateNowPlayingInfo(nowPlayingInfo)
+            nowPlayingInfoMetadata.merge(nowPlayingInfoPlayback) { _, new in new }
+            updateNowPlayingInfo(nowPlayingInfoMetadata)
         }
         else {
             resetControlCenter()
