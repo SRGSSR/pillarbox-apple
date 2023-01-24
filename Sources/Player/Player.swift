@@ -549,7 +549,7 @@ extension Player {
 
     private func configureControlCenterPublisher() {
         Publishers.CombineLatest4(
-            nowPlayingInfoPublisher().withPrevious(nil),
+            nowPlayingInfoPublisher(),
             $timeRange,
             $isBuffering,
             $isSeeking
@@ -681,21 +681,21 @@ extension Player {
     }
 
     private func updateControlCenter(
-        nowPlayingInfo: (previous: Asset.NowPlayingInfo?, current: Asset.NowPlayingInfo?),
+        nowPlayingInfo: Asset.NowPlayingInfo?,
         timeRange: CMTimeRange,
         isBuffering: Bool
     ) {
-        if nowPlayingInfo.previous == nil {
+        if nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo == nil && nowPlayingInfo != nil {
             uninstallRemoteCommands()
             installRemoteCommands()
         }
-        else if nowPlayingInfo.current == nil {
+        else if nowPlayingInfo == nil {
             uninstallRemoteCommands()
         }
-        var nowPlayingInfo = nowPlayingInfo.current ?? [:]
-        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isBuffering ? 0 : 1
-        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (queuePlayer.currentTime() - timeRange.start).seconds
-        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = timeRange.duration.seconds
+        var nowPlayingInfo = nowPlayingInfo
+        nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = isBuffering ? 0 : 1
+        nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (queuePlayer.currentTime() - timeRange.start).seconds
+        nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = timeRange.duration.seconds
         updateNowPlayingInfo(nowPlayingInfo)
     }
 
