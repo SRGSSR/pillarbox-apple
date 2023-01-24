@@ -545,17 +545,28 @@ extension Player {
     }
 
     private func configureControlCenterPublisher() {
-        Publishers.CombineLatest4(nowPlayingInfoPublisher(), $timeRange, $isBuffering, $isSeeking)
-            .receiveOnMainThread()
-            .sink { [weak self] nowPlayingInfo, timeRange, isBuffering, _ in
-                guard let self else { return }
-                var nowPlayingInfo = nowPlayingInfo ?? [:]
-                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isBuffering ? 0 : 1
-                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (self.queuePlayer.currentTime() - timeRange.start).seconds
-                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = timeRange.duration.seconds
-                self.updateControlCenter(for: nowPlayingInfo)
+        Publishers.CombineLatest4(
+            nowPlayingInfoPublisher().withPrevious(),
+            $timeRange,
+            $isBuffering,
+            $isSeeking
+        )
+        .receiveOnMainThread()
+        .sink { [weak self] nowPlayingInfo, timeRange, isBuffering, _ in
+            guard let self else { return }
+            if nowPlayingInfo.previous == nil {
+                self.installNowPlayingSessionCommands()
             }
-            .store(in: &cancellables)
+            else if nowPlayingInfo.current == nil {
+                self.uninstallNowPlayingSessionCommands()
+            }
+            var nowPlayingInfo = nowPlayingInfo.current ?? [:]
+            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isBuffering ? 0 : 1
+            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (self.queuePlayer.currentTime() - timeRange.start).seconds
+            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = timeRange.duration.seconds
+            self.updateControlCenter(for: nowPlayingInfo)
+        }
+        .store(in: &cancellables)
     }
 
     private func configureQueueUpdatePublisher() {
@@ -627,12 +638,6 @@ extension Player {
 
     private func updateControlCenter(for nowPlayingInfo: Asset.NowPlayingInfo?) {
         nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
-        if nowPlayingInfo != nil {
-            installNowPlayingSessionCommands()
-        }
-        else {
-            uninstallNowPlayingSessionCommands()
-        }
     }
 
     private func playRegistration() -> RemoteCommandRegistration {
@@ -671,7 +676,6 @@ extension Player {
     }
 
     private func installNowPlayingSessionCommands() {
-        uninstallNowPlayingSessionCommands()
         commandRegistrations = [
             playRegistration(),
             pauseRegistration(),
