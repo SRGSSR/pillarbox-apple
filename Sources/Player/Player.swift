@@ -685,18 +685,19 @@ extension Player {
         timeRange: CMTimeRange,
         isBuffering: Bool
     ) {
-        if nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo == nil && nowPlayingInfo != nil {
-            uninstallRemoteCommands()
-            installRemoteCommands()
+        if var nowPlayingInfo {
+            if nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo == nil {
+                uninstallRemoteCommands()
+                installRemoteCommands()
+            }
+            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isBuffering ? 0 : 1
+            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (queuePlayer.currentTime() - timeRange.start).seconds
+            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = timeRange.duration.seconds
+            updateNowPlayingInfo(nowPlayingInfo)
         }
-        else if nowPlayingInfo == nil {
-            uninstallRemoteCommands()
+        else {
+            resetControlCenter()
         }
-        var nowPlayingInfo = nowPlayingInfo
-        nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = isBuffering ? 0 : 1
-        nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (queuePlayer.currentTime() - timeRange.start).seconds
-        nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = timeRange.duration.seconds
-        updateNowPlayingInfo(nowPlayingInfo)
     }
 
     private func updateNowPlayingInfo(_ nowPlayingInfo: Asset.NowPlayingInfo?) {
