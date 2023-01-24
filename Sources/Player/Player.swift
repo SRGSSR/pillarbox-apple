@@ -103,8 +103,7 @@ public final class Player: ObservableObject, Equatable {
 
     deinit {
         queuePlayer.cancelPendingReplacements()
-        nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nil
-        uninstallNowPlayingSessionCommands()
+        resetControlCenter()
     }
 }
 
@@ -554,18 +553,7 @@ extension Player {
         )
         .receiveOnMainThread()
         .sink { [weak self] nowPlayingInfo, timeRange, isBuffering, _ in
-            guard let self else { return }
-            if nowPlayingInfo.previous == nil {
-                self.installNowPlayingSessionCommands()
-            }
-            else if nowPlayingInfo.current == nil {
-                self.uninstallNowPlayingSessionCommands()
-            }
-            var nowPlayingInfo = nowPlayingInfo.current ?? [:]
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isBuffering ? 0 : 1
-            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (self.queuePlayer.currentTime() - timeRange.start).seconds
-            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = timeRange.duration.seconds
-            self.nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+            self?.updateControlCenter(nowPlayingInfo: nowPlayingInfo, timeRange: timeRange, isBuffering: isBuffering)
         }
         .store(in: &cancellables)
     }
@@ -672,7 +660,7 @@ extension Player {
         }
     }
 
-    private func installNowPlayingSessionCommands() {
+    private func installRemoteCommands() {
         commandRegistrations = [
             playRegistration(),
             pauseRegistration(),
@@ -682,10 +670,37 @@ extension Player {
         ]
     }
 
-    private func uninstallNowPlayingSessionCommands() {
+    private func uninstallRemoteCommands() {
         commandRegistrations.forEach { registration in
             nowPlayingSession.remoteCommandCenter.unregister(registration)
         }
         commandRegistrations = []
+    }
+
+    private func updateControlCenter(
+        nowPlayingInfo: (previous: Asset.NowPlayingInfo??, current: Asset.NowPlayingInfo?),
+        timeRange: CMTimeRange,
+        isBuffering: Bool
+    ) {
+        if nowPlayingInfo.previous == nil {
+            installRemoteCommands()
+        }
+        else if nowPlayingInfo.current == nil {
+            uninstallRemoteCommands()
+        }
+        var nowPlayingInfo = nowPlayingInfo.current ?? [:]
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isBuffering ? 0 : 1
+        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (queuePlayer.currentTime() - timeRange.start).seconds
+        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = timeRange.duration.seconds
+        updateNowPlayingInfo(nowPlayingInfo)
+    }
+
+    private func updateNowPlayingInfo(_ nowPlayingInfo: Asset.NowPlayingInfo?) {
+        nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+    }
+
+    private func resetControlCenter() {
+        updateNowPlayingInfo(nil)
+        uninstallRemoteCommands()
     }
 }
