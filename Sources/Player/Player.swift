@@ -545,16 +545,7 @@ extension Player {
     }
 
     private func configureCurrentItemPublisher() {
-        currentPublisher()
-            .map { current in
-                guard let current else {
-                    return Just(Optional<Asset.NowPlayingInfo>.none).eraseToAnyPublisher()
-                }
-                return current.item.$source
-                    .map { $0.asset.nowPlayingInfo() }
-                    .eraseToAnyPublisher()
-            }
-            .switchToLatest()
+        nowPlayingInfoPublisher()
             .receiveOnMainThread()
             .sink { [weak self] nowPlayingInfo in
                 self?.updateControlCenter(for: nowPlayingInfo)
@@ -604,6 +595,20 @@ extension Player {
                 return .init(item: storedItems[currentIndex], index: currentIndex)
             }
             .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    private func nowPlayingInfoPublisher() -> AnyPublisher<Asset.NowPlayingInfo?, Never> {
+        currentPublisher()
+            .map { current in
+                guard let current else {
+                    return Just(Optional<Asset.NowPlayingInfo>.none).eraseToAnyPublisher()
+                }
+                return current.item.$source
+                    .map { $0.asset.nowPlayingInfo() }
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
             .eraseToAnyPublisher()
     }
 }
