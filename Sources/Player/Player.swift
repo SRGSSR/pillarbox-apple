@@ -691,6 +691,7 @@ extension Player {
                 installRemoteCommands()
             }
             nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isBuffering ? 0 : 1
+            nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (streamType == .live)
             nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (queuePlayer.currentTime() - timeRange.start).seconds
             nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = timeRange.duration.seconds
             updateNowPlayingInfo(nowPlayingInfo)
