@@ -48,7 +48,7 @@ public final class Player: ObservableObject, Equatable {
     public let configuration: PlayerConfiguration
     private var cancellables = Set<AnyCancellable>()
 
-    private var commandRegistrations: [RemoteCommandRegistration] = []
+    private var commandRegistrations: [any RemoteCommandRegistrable] = []
 
     /// The type of stream currently played.
     public var streamType: StreamType {
@@ -642,37 +642,45 @@ extension Player {
         queuePlayer.audiovisualBackgroundPlaybackPolicy = configuration.audiovisualBackgroundPlaybackPolicy
     }
 
-    private func playRegistration() -> RemoteCommandRegistration {
+    private func playRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.playCommand) { [weak self] _ in
             self?.play()
             return .success
         }
     }
 
-    private func pauseRegistration() -> RemoteCommandRegistration {
+    private func pauseRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.pauseCommand) { [weak self] _ in
             self?.pause()
             return .success
         }
     }
 
-    private func togglePlayPauseRegistration() -> RemoteCommandRegistration {
+    private func togglePlayPauseRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.togglePlayPauseCommand) { [weak self] _ in
             self?.togglePlayPause()
             return .success
         }
     }
 
-    private func previousTrackRegistration() -> RemoteCommandRegistration {
+    private func previousTrackRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.previousTrackCommand) { [weak self] _ in
             self?.returnToPrevious()
             return .success
         }
     }
 
-    private func nextTrackRegistration() -> RemoteCommandRegistration {
+    private func nextTrackRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.nextTrackCommand) { [weak self] _ in
             self?.advanceToNext()
+            return .success
+        }
+    }
+
+    private func changePlaybackPositionRegistration() -> some RemoteCommandRegistrable {
+        nowPlayingSession.remoteCommandCenter.register(command: \.changePlaybackPositionCommand) { [weak self] event in
+            guard let positionEvent = event as? MPChangePlaybackPositionCommandEvent else { return .commandFailed }
+            self?.seek(to: .init(seconds: positionEvent.positionTime, preferredTimescale: CMTimeScale(NSEC_PER_SEC)))
             return .success
         }
     }
@@ -683,7 +691,8 @@ extension Player {
             pauseRegistration(),
             togglePlayPauseRegistration(),
             previousTrackRegistration(),
-            nextTrackRegistration()
+            nextTrackRegistration(),
+            changePlaybackPositionRegistration()
         ]
     }
 
