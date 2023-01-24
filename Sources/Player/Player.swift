@@ -435,7 +435,7 @@ public extension Player {
     /// Return to the previous content.
     func returnToPrevious() {
         if shouldSeekToStartTime() {
-            seek(to: timeRange.start)
+            seek(to: .zero)
         }
         else {
             returnToPreviousItem()
