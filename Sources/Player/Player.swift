@@ -549,7 +549,7 @@ extension Player {
 
     private func configureControlCenterPublisher() {
         Publishers.CombineLatest4(
-            nowPlayingInfoPublisher().withPrevious(),
+            nowPlayingInfoPublisher().withPrevious(nil),
             $timeRange,
             $isBuffering,
             $isSeeking
@@ -681,7 +681,7 @@ extension Player {
     }
 
     private func updateControlCenter(
-        nowPlayingInfo: (previous: Asset.NowPlayingInfo??, current: Asset.NowPlayingInfo?),
+        nowPlayingInfo: (previous: Asset.NowPlayingInfo?, current: Asset.NowPlayingInfo?),
         timeRange: CMTimeRange,
         isBuffering: Bool
     ) {
