@@ -103,7 +103,8 @@ public final class Player: ObservableObject, Equatable {
 
     deinit {
         queuePlayer.cancelPendingReplacements()
-        updateControlCenter(for: nil)
+        nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nil
+        uninstallNowPlayingSessionCommands()
     }
 }
 
@@ -564,7 +565,7 @@ extension Player {
             nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isBuffering ? 0 : 1
             nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (self.queuePlayer.currentTime() - timeRange.start).seconds
             nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = timeRange.duration.seconds
-            self.updateControlCenter(for: nowPlayingInfo)
+            self.nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
         }
         .store(in: &cancellables)
     }
@@ -634,10 +635,6 @@ extension Player {
         queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
         queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
         queuePlayer.audiovisualBackgroundPlaybackPolicy = configuration.audiovisualBackgroundPlaybackPolicy
-    }
-
-    private func updateControlCenter(for nowPlayingInfo: Asset.NowPlayingInfo?) {
-        nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
     }
 
     private func playRegistration() -> RemoteCommandRegistration {
