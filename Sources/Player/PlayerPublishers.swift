@@ -69,22 +69,8 @@ extension AVPlayer {
 
     func bufferingPublisher() -> AnyPublisher<Bool, Never> {
         publisher(for: \.currentItem)
-            .compactMap { $0 }
-            .map { item in
-                Publishers.CombineLatest(
-                    item.publisher(for: \.isPlaybackLikelyToKeepUp),
-                    item.itemStatePublisher()
-                )
-            }
+            .compactMap { $0?.bufferingPublisher() }
             .switchToLatest()
-            .map { isPlaybackLikelyToKeepUp, itemState in
-                switch itemState {
-                case .failed:
-                    return false
-                default:
-                    return !isPlaybackLikelyToKeepUp
-                }
-            }
             .prepend(false)
             .removeDuplicates()
             .eraseToAnyPublisher()

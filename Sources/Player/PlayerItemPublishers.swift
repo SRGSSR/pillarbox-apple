@@ -40,4 +40,20 @@ extension AVPlayerItem {
         }
         .eraseToAnyPublisher()
     }
+
+    func bufferingPublisher() -> AnyPublisher<Bool, Never> {
+        Publishers.CombineLatest(
+            publisher(for: \.isPlaybackLikelyToKeepUp),
+            itemStatePublisher()
+        )
+        .map { isPlaybackLikelyToKeepUp, itemState in
+            switch itemState {
+            case .failed:
+                return false
+            default:
+                return !isPlaybackLikelyToKeepUp
+            }
+        }
+        .eraseToAnyPublisher()
+    }
 }
