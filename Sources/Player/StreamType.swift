@@ -19,14 +19,16 @@ public enum StreamType {
     case dvr
 
     init(for timeRange: CMTimeRange, itemDuration: CMTime) {
-        switch (timeRange, itemDuration) {
-        case (.invalid, _), (_, .invalid):
+        if !timeRange.isValid || !itemDuration.isValid {
             self = .unknown
-        case (let TimeRange, _) where TimeRange.isEmpty:
+        }
+        else if timeRange.isEmpty {
             self = .live
-        case (_, let ItemDuration) where ItemDuration.isIndefinite:
+        }
+        else if itemDuration.isIndefinite {
             self = .dvr
-        default:
+        }
+        else {
             self = .onDemand
         }
     }
