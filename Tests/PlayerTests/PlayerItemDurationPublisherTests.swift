@@ -10,13 +10,13 @@ import AVFoundation
 import Circumspect
 import XCTest
 
-final class ItemDurationPublisherTests: XCTestCase {
+final class PlayerItemDurationPublisherTests: XCTestCase {
     func testDuration() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
-        _ = AVPlayer(playerItem: item)
+        let player = AVPlayer(playerItem: item)
         expectAtLeastPublished(
             values: [.invalid, Stream.onDemand.duration],
-            from: item.durationPublisher(),
+            from: player.currentItemDurationPublisher(),
             to: beClose(within: 1),
             timeout: 2
         )

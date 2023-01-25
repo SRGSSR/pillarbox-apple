@@ -38,6 +38,7 @@ extension AVPlayerItem {
         .map { status, duration in
             status == .readyToPlay ? duration : .invalid
         }
+        .removeDuplicates()
         .eraseToAnyPublisher()
     }
 
