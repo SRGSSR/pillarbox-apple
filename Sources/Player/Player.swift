@@ -623,7 +623,7 @@ extension Player {
 }
 
 extension Player {
-    private static func streamType(for timeRange: CMTimeRange, itemDuration: CMTime) -> StreamType {
+    static func streamType(for timeRange: CMTimeRange, itemDuration: CMTime) -> StreamType {
         guard timeRange.isValid, itemDuration.isValid else { return .unknown }
         if timeRange.isEmpty {
             return .live
