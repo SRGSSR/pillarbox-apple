@@ -19,11 +19,10 @@ public enum StreamType {
     case dvr
 
     init(for timeRange: CMTimeRange, itemDuration: CMTime) {
-        guard timeRange.isValid, itemDuration.isValid else {
+        if !timeRange.isValid || !itemDuration.isValid {
             self = .unknown
-            return
         }
-        if timeRange.isEmpty {
+        else if timeRange.isEmpty {
             self = .live
         }
         else if itemDuration.isIndefinite {
