@@ -104,17 +104,13 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
+    func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info?, Never> {
         Publishers.CombineLatest(
             nowPlayingInfoPropertiesPublisher(),
             seekingPublisher()
         )
         .map { [weak self] properties, _ in
-            guard
-                let self,
-                let properties
-            else { return NowPlaying.Info() }
-
+            guard let self, let properties else { return nil }
             var nowPlayingInfo = NowPlaying.Info()
             let isLive = StreamType(for: properties.timeRange, itemDuration: properties.itemDuration) == .live
             nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLive

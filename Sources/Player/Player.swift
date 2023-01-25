@@ -543,7 +543,9 @@ extension Player {
         )
         .receiveOnMainThread()
         .sink { [weak self] nowPlayingInfoMetadata, nowPlayingInfoPlayback in
-            self?.updateControlCenter(nowPlayingInfoMetadata: nowPlayingInfoMetadata, nowPlayingInfoPlayback: nowPlayingInfoPlayback)
+            self?.updateControlCenter(
+                nowPlayingInfo: NowPlaying.Info.merge(nowPlayingInfoMetadata, nowPlayingInfoPlayback)
+            )
         }
         .store(in: &cancellables)
     }
@@ -552,7 +554,11 @@ extension Player {
         sourcesPublisher()
             .withPrevious()
             .map { [queuePlayer] sources in
-                AVPlayerItem.playerItems(for: sources.current, replacing: sources.previous ?? [], currentItem: queuePlayer.currentItem)
+                AVPlayerItem.playerItems(
+                    for: sources.current,
+                    replacing: sources.previous ?? [],
+                    currentItem: queuePlayer.currentItem
+                )
             }
             .receiveOnMainThread()
             .sink { [queuePlayer] items in
@@ -676,17 +682,13 @@ extension Player {
         commandRegistrations = []
     }
 
-    private func updateControlCenter(
-        nowPlayingInfoMetadata: NowPlaying.Info?,
-        nowPlayingInfoPlayback: NowPlaying.Info
-    ) {
-        if var nowPlayingInfoMetadata {
+    private func updateControlCenter(nowPlayingInfo: NowPlaying.Info?) {
+        if var nowPlayingInfo {
             if nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo == nil {
                 uninstallRemoteCommands()
                 installRemoteCommands()
             }
-            nowPlayingInfoMetadata.merge(nowPlayingInfoPlayback) { _, new in new }
-            updateNowPlayingInfo(nowPlayingInfoMetadata)
+            updateNowPlayingInfo(nowPlayingInfo)
         }
         else {
             resetControlCenter()
