@@ -683,7 +683,7 @@ extension Player {
     }
 
     private func updateControlCenter(nowPlayingInfo: NowPlaying.Info?) {
-        if var nowPlayingInfo {
+        if let nowPlayingInfo {
             if nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo == nil {
                 uninstallRemoteCommands()
                 installRemoteCommands()
