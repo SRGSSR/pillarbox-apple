@@ -593,11 +593,11 @@ extension Player {
             .eraseToAnyPublisher()
     }
 
-    private func nowPlayingInfoMetadataPublisher() -> AnyPublisher<Asset.NowPlayingInfo?, Never> {
+    private func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlaying.Info?, Never> {
         currentPublisher()
             .map { current in
                 guard let current else {
-                    return Just(Optional<Asset.NowPlayingInfo>.none).eraseToAnyPublisher()
+                    return Just(Optional<NowPlaying.Info>.none).eraseToAnyPublisher()
                 }
                 return current.item.$source
                     .map { $0.asset.nowPlayingInfo() }
@@ -607,18 +607,22 @@ extension Player {
             .eraseToAnyPublisher()
     }
 
-    private func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<Asset.NowPlayingInfo, Never> {
-        Publishers.CombineLatest4($timeRange, $itemDuration, $isBuffering, $isSeeking)
-            .map { [queuePlayer] timeRange, itemDuration, isBuffering, _ in
-                var nowPlayingInfo = Asset.NowPlayingInfo()
-                let isLive = StreamType(for: timeRange, itemDuration: itemDuration) == .live
-                nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLive
-                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isBuffering ? 0 : 1
-                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (queuePlayer.currentTime() - timeRange.start).seconds
-                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = timeRange.duration.seconds
-                return nowPlayingInfo
-            }
-            .eraseToAnyPublisher()
+    private func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
+        Publishers.CombineLatest(
+            queuePlayer.nowPlayingInfoPropertiesPublisher(),
+            queuePlayer.seekingPublisher()
+        )
+        .map { [queuePlayer] properties, _ in
+            guard let properties else { return NowPlaying.Info() }
+            var nowPlayingInfo = NowPlaying.Info()
+            let isLive = StreamType(for: properties.timeRange, itemDuration: properties.itemDuration) == .live
+            nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLive
+            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : 1
+            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (queuePlayer.currentTime() - properties.timeRange.start).seconds
+            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = properties.timeRange.duration.seconds
+            return nowPlayingInfo
+        }
+        .eraseToAnyPublisher()
     }
 }
 
@@ -691,8 +695,8 @@ extension Player {
     }
 
     private func updateControlCenter(
-        nowPlayingInfoMetadata: Asset.NowPlayingInfo?,
-        nowPlayingInfoPlayback: Asset.NowPlayingInfo
+        nowPlayingInfoMetadata: NowPlaying.Info?,
+        nowPlayingInfoPlayback: NowPlaying.Info
     ) {
         if var nowPlayingInfoMetadata {
             if nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo == nil {
@@ -707,7 +711,7 @@ extension Player {
         }
     }
 
-    private func updateNowPlayingInfo(_ nowPlayingInfo: Asset.NowPlayingInfo?) {
+    private func updateNowPlayingInfo(_ nowPlayingInfo: NowPlaying.Info?) {
         nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
     }
 

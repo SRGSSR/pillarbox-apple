@@ -90,4 +90,16 @@ extension AVPlayer {
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
+
+    func nowPlayingInfoPropertiesPublisher() -> AnyPublisher<NowPlaying.Properties?, Never> {
+        publisher(for: \.currentItem)
+            .map { item -> AnyPublisher<NowPlaying.Properties?, Never> in
+                guard let item else { return Just(nil).eraseToAnyPublisher() }
+                return item.nowPlayingInfoPropertiesPublisher()
+                    .map { Optional($0) }
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
 }

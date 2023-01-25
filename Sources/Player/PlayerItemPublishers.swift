@@ -56,4 +56,14 @@ extension AVPlayerItem {
         }
         .eraseToAnyPublisher()
     }
+
+    func nowPlayingInfoPropertiesPublisher() -> AnyPublisher<NowPlaying.Properties, Never> {
+        Publishers.CombineLatest3(
+            timeRangePublisher(),
+            durationPublisher(),
+            bufferingPublisher()
+        )
+        .map { NowPlaying.Properties(timeRange: $0, itemDuration: $1, isBuffering: $2) }
+        .eraseToAnyPublisher()
+    }
 }
