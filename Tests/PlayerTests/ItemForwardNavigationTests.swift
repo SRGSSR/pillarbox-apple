@@ -36,7 +36,7 @@ final class ItemForwardNavigationTests: XCTestCase {
         let item3 = PlayerItem.simple(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
-        expect(player.canAdvanceToNextItem()).toAlways(beTrue(), until: .milliseconds(500))
+        expect(player.canAdvanceToNextItem()).toAlways(beTrue(), until: .seconds(1))
     }
 
     func testAdvanceToNextItem() {
