@@ -23,7 +23,7 @@ final class NowPlayingInfoMetadataPublisherTests: XCTestCase {
     func testImmediatelyAvailableWithoutMetadata() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expectAtLeastSimilarPublished(
-            values: [[:]],
+            values: [nil],
             from: player.nowPlayingInfoMetadataPublisher()
         )
     }

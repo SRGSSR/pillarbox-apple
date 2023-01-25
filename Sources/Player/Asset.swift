@@ -100,13 +100,12 @@ public struct Asset {
         return item
     }
 
-    func nowPlayingInfo() -> NowPlayingInfo {
+    func nowPlayingInfo() -> NowPlayingInfo? {
+        guard let metadata else { return nil }
         var nowPlayingInfo = NowPlayingInfo()
-        if let metadata {
-            nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
-            nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
-            nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
-        }
+        nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
+        nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
+        nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
         return nowPlayingInfo
     }
 }
