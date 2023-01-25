@@ -539,7 +539,7 @@ extension Player {
     private func configureControlCenterPublisher() {
         Publishers.CombineLatest(
             nowPlayingInfoMetadataPublisher(),
-            nowPlayingInfoPlaybackPublisher()
+            queuePlayer.nowPlayingInfoPlaybackPublisher()
         )
         .receiveOnMainThread()
         .sink { [weak self] nowPlayingInfoMetadata, nowPlayingInfoPlayback in
@@ -605,24 +605,6 @@ extension Player {
             }
             .switchToLatest()
             .eraseToAnyPublisher()
-    }
-
-    private func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
-        Publishers.CombineLatest(
-            queuePlayer.nowPlayingInfoPropertiesPublisher(),
-            queuePlayer.seekingPublisher()
-        )
-        .map { [queuePlayer] properties, _ in
-            guard let properties else { return NowPlaying.Info() }
-            var nowPlayingInfo = NowPlaying.Info()
-            let isLive = StreamType(for: properties.timeRange, itemDuration: properties.itemDuration) == .live
-            nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLive
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : 1
-            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (queuePlayer.currentTime() - properties.timeRange.start).seconds
-            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = properties.timeRange.duration.seconds
-            return nowPlayingInfo
-        }
-        .eraseToAnyPublisher()
     }
 }
 

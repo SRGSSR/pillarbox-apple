@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import MediaPlayer
 import TimelaneCombine
 
 extension AVPlayer {
@@ -101,5 +102,27 @@ extension AVPlayer {
             }
             .switchToLatest()
             .eraseToAnyPublisher()
+    }
+
+    func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
+        Publishers.CombineLatest(
+            nowPlayingInfoPropertiesPublisher(),
+            seekingPublisher()
+        )
+        .map { [weak self] properties, _ in
+            guard
+                let self,
+                let properties
+            else { return NowPlaying.Info() }
+
+            var nowPlayingInfo = NowPlaying.Info()
+            let isLive = StreamType(for: properties.timeRange, itemDuration: properties.itemDuration) == .live
+            nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLive
+            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : 1
+            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (self.currentTime() - properties.timeRange.start).seconds
+            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = properties.timeRange.duration.seconds
+            return nowPlayingInfo
+        }
+        .eraseToAnyPublisher()
     }
 }
