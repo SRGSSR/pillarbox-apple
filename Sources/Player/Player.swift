@@ -593,7 +593,7 @@ extension Player {
             .eraseToAnyPublisher()
     }
 
-    private func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlaying.Info?, Never> {
+    func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlaying.Info?, Never> {
         currentPublisher()
             .map { current in
                 guard let current else {
