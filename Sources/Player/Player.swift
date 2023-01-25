@@ -52,7 +52,7 @@ public final class Player: ObservableObject, Equatable {
 
     /// The type of stream currently played.
     public var streamType: StreamType {
-        Self.streamType(for: timeRange, itemDuration: itemDuration)
+        StreamType(for: timeRange, itemDuration: itemDuration)
     }
 
     /// Create a player with a given item queue.
@@ -611,7 +611,7 @@ extension Player {
         Publishers.CombineLatest4($timeRange, $itemDuration, $isBuffering, $isSeeking)
             .map { [queuePlayer] timeRange, itemDuration, isBuffering, _ in
                 var nowPlayingInfo = Asset.NowPlayingInfo()
-                let isLive = Self.streamType(for: timeRange, itemDuration: itemDuration) == .live
+                let isLive = StreamType(for: timeRange, itemDuration: itemDuration) == .live
                 nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLive
                 nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isBuffering ? 0 : 1
                 nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (queuePlayer.currentTime() - timeRange.start).seconds
@@ -623,19 +623,6 @@ extension Player {
 }
 
 extension Player {
-    static func streamType(for timeRange: CMTimeRange, itemDuration: CMTime) -> StreamType {
-        guard timeRange.isValid, itemDuration.isValid else { return .unknown }
-        if timeRange.isEmpty {
-            return .live
-        }
-        else if itemDuration.isIndefinite {
-            return .dvr
-        }
-        else {
-            return itemDuration == .zero ? .live : .onDemand
-        }
-    }
-
     private func configurePlayer() {
         queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
         queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
