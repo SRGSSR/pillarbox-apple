@@ -29,4 +29,15 @@ extension AVPlayerItem {
         .compactMap { Self.timeRange(loadedTimeRanges: $0, seekableTimeRanges: $1) }
         .eraseToAnyPublisher()
     }
+
+    func durationPublisher() -> AnyPublisher<CMTime, Never> {
+        Publishers.CombineLatest(
+            publisher(for: \.status),
+            publisher(for: \.duration)
+        )
+        .map { status, duration in
+            status == .readyToPlay ? duration : .invalid
+        }
+        .eraseToAnyPublisher()
+    }
 }

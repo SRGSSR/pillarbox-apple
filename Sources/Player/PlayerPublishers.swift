@@ -38,14 +38,7 @@ extension AVPlayer {
                 guard let item else {
                     return Just(.invalid).eraseToAnyPublisher()
                 }
-                return Publishers.CombineLatest(
-                    item.publisher(for: \.status),
-                    item.publisher(for: \.duration)
-                )
-                .map { status, duration in
-                    status == .readyToPlay ? duration : .invalid
-                }
-                .eraseToAnyPublisher()
+                return item.durationPublisher()
             }
             .switchToLatest()
             .removeDuplicates()
