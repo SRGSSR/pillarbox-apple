@@ -54,6 +54,8 @@ extension AVPlayerItem {
                 return !isPlaybackLikelyToKeepUp
             }
         }
+        .prepend(false)
+        .removeDuplicates()
         .eraseToAnyPublisher()
     }
 
