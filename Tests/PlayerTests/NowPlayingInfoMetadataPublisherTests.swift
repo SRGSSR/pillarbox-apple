@@ -28,6 +28,16 @@ final class NowPlayingInfoMetadataPublisherTests: XCTestCase {
         )
     }
 
+    func testAvailableAfterDelay() {
+        let player = Player(
+            item: .simple(url: Stream.onDemand.url, metadata: .init(title: "title"), delay: 0.5)
+        )
+        expectAtLeastSimilarPublished(
+            values: [nil, [MPMediaItemPropertyTitle: "title"]],
+            from: player.nowPlayingInfoMetadataPublisher()
+        )
+    }
+
     func testImmediatelyAvailableWithMetadata() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,

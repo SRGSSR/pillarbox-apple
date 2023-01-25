@@ -11,8 +11,8 @@ import Combine
 import Foundation
 
 extension PlayerItem {
-    static func simple(url: URL, delay: TimeInterval) -> Self {
-        let publisher = Just(Asset.simple(url: url))
+    static func simple(url: URL, metadata: Asset.Metadata? = nil, delay: TimeInterval) -> Self {
+        let publisher = Just(Asset.simple(url: url, metadata: metadata))
             .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
         return .init(publisher: publisher)
     }
