@@ -30,7 +30,7 @@ public enum StreamType {
             self = .dvr
         }
         else {
-            self = itemDuration == .zero ? .live : .onDemand
+            self = .onDemand
         }
     }
 }

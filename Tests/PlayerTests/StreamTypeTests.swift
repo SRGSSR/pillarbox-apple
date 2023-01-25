@@ -11,31 +11,24 @@ import Nimble
 import XCTest
 
 final class StreamTypeTests: XCTestCase {
-    func testStreamTypeWhenTimeRangeAndItemDurationAreInvalid() {
+    func testUnknown() {
         let streamType = StreamType(for: .invalid, itemDuration: .invalid)
         expect(streamType).to(equal(.unknown))
     }
 
-    func testStreamTypeWhenTimeRangeIsEmpty() {
+    func testLive() {
         let streamType = StreamType(for: .zero, itemDuration: .indefinite)
         expect(streamType).to(equal(.live))
     }
 
-    func testStreamTypeWhenItemDurationIsIndefinite() {
+    func testDvr() {
         let start = CMTime(value: 0, timescale: 1)
         let end = CMTime(value: 1, timescale: 1)
         let streamType = StreamType(for: .init(start: start, end: end), itemDuration: .indefinite)
         expect(streamType).to(equal(.dvr))
     }
 
-    func testStreamTypeWhenTimeRangeIsNotEmptyAndItemDurationIsZero() {
-        let start = CMTime(value: 0, timescale: 1)
-        let end = CMTime(value: 1, timescale: 1)
-        let streamType = StreamType(for: .init(start: start, end: end), itemDuration: .zero)
-        expect(streamType).to(equal(.live))
-    }
-
-    func testStreamTypeWhenTimeRangeIsNotEmptyAndItemDurationIsDefinedAndNotZero() {
+    func testOnDemand() {
         let start = CMTime(value: 0, timescale: 1)
         let end = CMTime(value: 1, timescale: 1)
         let streamType = StreamType(for: .init(start: start, end: end), itemDuration: end)
