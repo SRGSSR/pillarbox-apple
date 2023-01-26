@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import Core
 
 private var kIdKey: Void?
 
@@ -25,6 +26,8 @@ public final class PlayerItem: Equatable {
             .map { [id] asset in
                 Source(id: id, asset: asset)
             }
+            // Mitigate instabilities arising when publisher involves `URLSession` publishers, see issue #206.
+            .receiveOnMainThread()
             .assign(to: &$source)
     }
 
