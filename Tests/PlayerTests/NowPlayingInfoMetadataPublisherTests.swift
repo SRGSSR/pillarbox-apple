@@ -15,7 +15,7 @@ final class NowPlayingInfoMetadataPublisherTests: XCTestCase {
     func testEmpty() {
         let player = Player()
         expectAtLeastSimilarPublished(
-            values: [nil],
+            values: [[:]],
             from: player.nowPlayingInfoMetadataPublisher()
         )
     }
@@ -23,7 +23,7 @@ final class NowPlayingInfoMetadataPublisherTests: XCTestCase {
     func testImmediatelyAvailableWithoutMetadata() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expectAtLeastSimilarPublished(
-            values: [nil],
+            values: [[:]],
             from: player.nowPlayingInfoMetadataPublisher()
         )
     }
@@ -33,7 +33,7 @@ final class NowPlayingInfoMetadataPublisherTests: XCTestCase {
             item: .simple(url: Stream.onDemand.url, metadata: .init(title: "title"), delay: 0.5)
         )
         expectAtLeastSimilarPublished(
-            values: [nil, [MPMediaItemPropertyTitle: "title"]],
+            values: [[:], [MPMediaItemPropertyTitle: "title"]],
             from: player.nowPlayingInfoMetadataPublisher()
         )
     }
@@ -60,7 +60,7 @@ final class NowPlayingInfoMetadataPublisherTests: XCTestCase {
     }
 
     func testUpdate() {
-        let player = Player(item: .metadataUpdate(url: Stream.onDemand.url, delay: 1))
+        let player = Player(item: .metadataUpdate(delay: 1))
         expectAtLeastSimilarPublished(
             values: [
                 [
@@ -76,5 +76,64 @@ final class NowPlayingInfoMetadataPublisherTests: XCTestCase {
             ],
             from: player.nowPlayingInfoMetadataPublisher()
         )
+    }
+
+    func testNetworkItemUpdate() {
+        let player = Player(item: .networkLoaded(metadata: .media1))
+        expectAtLeastSimilarPublished(
+            values: [
+                [:],
+                [
+                    MPMediaItemPropertyTitle: "Title 1",
+                    MPMediaItemPropertyArtist: "Subtitle 1",
+                    MPMediaItemPropertyComments: "Description 1"
+                ]
+            ],
+            from: player.nowPlayingInfoMetadataPublisher()
+        )
+
+        expectAtLeastSimilarPublishedNext(
+            values: [
+                [:],
+                [
+                    MPMediaItemPropertyTitle: "Title 2",
+                    MPMediaItemPropertyArtist: "Subtitle 2",
+                    MPMediaItemPropertyComments: "Description 2"
+                ]
+            ],
+            from: player.nowPlayingInfoMetadataPublisher()
+        ) {
+            player.removeAllItems()
+            player.append(.networkLoaded(metadata: .media2))
+        }
+    }
+
+    func testNetworkItemReloading() {
+        let player = Player(item: .networkLoaded(metadata: .media1))
+        expectAtLeastSimilarPublished(
+            values: [
+                [:],
+                [
+                    MPMediaItemPropertyTitle: "Title 1",
+                    MPMediaItemPropertyArtist: "Subtitle 1",
+                    MPMediaItemPropertyComments: "Description 1"
+                ]
+            ],
+            from: player.nowPlayingInfoMetadataPublisher()
+        )
+        expectAtLeastSimilarPublishedNext(
+            values: [
+                [:],
+                [
+                    MPMediaItemPropertyTitle: "Title 1",
+                    MPMediaItemPropertyArtist: "Subtitle 1",
+                    MPMediaItemPropertyComments: "Description 1"
+                ]
+            ],
+            from: player.nowPlayingInfoMetadataPublisher()
+        ) {
+            player.removeAllItems()
+            player.append(.networkLoaded(metadata: .media1))
+        }
     }
 }

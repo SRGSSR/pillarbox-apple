@@ -544,7 +544,7 @@ extension Player {
         .receiveOnMainThread()
         .sink { [weak self] nowPlayingInfoMetadata, nowPlayingInfoPlayback in
             self?.updateControlCenter(
-                nowPlayingInfo: NowPlaying.Info.merge(nowPlayingInfoMetadata, nowPlayingInfoPlayback)
+                nowPlayingInfo: nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new }
             )
         }
         .store(in: &cancellables)
@@ -599,17 +599,21 @@ extension Player {
             .eraseToAnyPublisher()
     }
 
-    func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlaying.Info?, Never> {
+    func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
         currentPublisher()
             .map { current in
                 guard let current else {
-                    return Just(Optional<NowPlaying.Info>.none).eraseToAnyPublisher()
+                    return Just(NowPlaying.Info()).eraseToAnyPublisher()
                 }
                 return current.item.$source
                     .map { $0.asset.nowPlayingInfo() }
                     .eraseToAnyPublisher()
             }
             .switchToLatest()
+            .removeDuplicates { lhs, rhs in
+                // swiftlint:disable:next legacy_objc_type
+                NSDictionary(dictionary: lhs).isEqual(to: rhs)
+            }
             .eraseToAnyPublisher()
     }
 }
@@ -682,8 +686,8 @@ extension Player {
         commandRegistrations = []
     }
 
-    private func updateControlCenter(nowPlayingInfo: NowPlaying.Info?) {
-        if let nowPlayingInfo {
+    private func updateControlCenter(nowPlayingInfo: NowPlaying.Info) {
+        if !nowPlayingInfo.isEmpty {
             if nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo == nil {
                 uninstallRemoteCommands()
                 installRemoteCommands()
