@@ -93,6 +93,12 @@ public final class Player: ObservableObject, Equatable {
         lhs === rhs
     }
 
+    private func configurePlayer() {
+        queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
+        queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
+        queuePlayer.audiovisualBackgroundPlaybackPolicy = configuration.audiovisualBackgroundPlaybackPolicy
+    }
+
     deinit {
         queuePlayer.cancelPendingReplacements()
         resetControlCenter()
@@ -619,12 +625,6 @@ extension Player {
 }
 
 extension Player {
-    private func configurePlayer() {
-        queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
-        queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
-        queuePlayer.audiovisualBackgroundPlaybackPolicy = configuration.audiovisualBackgroundPlaybackPolicy
-    }
-
     private func playRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.playCommand) { [weak self] _ in
             self?.play()
