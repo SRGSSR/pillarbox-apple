@@ -107,7 +107,7 @@ extension AVPlayer {
     func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
         Publishers.CombineLatest(
             nowPlayingInfoPropertiesPublisher(),
-            seekingPublisher()
+            seekingPublisher()          // Observe relevant time discontinuities to trigger elapsed time updates
         )
         .map { [weak self] properties, _ in
             var nowPlayingInfo = NowPlaying.Info()
