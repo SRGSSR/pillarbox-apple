@@ -101,7 +101,7 @@ public final class Player: ObservableObject, Equatable {
 
     deinit {
         queuePlayer.cancelPendingReplacements()
-        resetControlCenter()
+        uninstallRemoteCommands()
     }
 }
 
@@ -692,19 +692,11 @@ extension Player {
                 uninstallRemoteCommands()
                 installRemoteCommands()
             }
-            updateNowPlayingInfo(nowPlayingInfo)
+            nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
         }
         else {
-            resetControlCenter()
+            uninstallRemoteCommands()
+            nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nil
         }
-    }
-
-    private func updateNowPlayingInfo(_ nowPlayingInfo: NowPlaying.Info?) {
-        nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
-    }
-
-    private func resetControlCenter() {
-        updateNowPlayingInfo(nil)
-        uninstallRemoteCommands()
     }
 }
