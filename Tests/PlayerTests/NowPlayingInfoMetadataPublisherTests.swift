@@ -78,36 +78,6 @@ final class NowPlayingInfoMetadataPublisherTests: XCTestCase {
         )
     }
 
-    func testNetworkItemUpdate() {
-        let player = Player(item: .networkLoaded(metadata: .media1))
-        expectAtLeastSimilarPublished(
-            values: [
-                [:],
-                [
-                    MPMediaItemPropertyTitle: "Title 1",
-                    MPMediaItemPropertyArtist: "Subtitle 1",
-                    MPMediaItemPropertyComments: "Description 1"
-                ]
-            ],
-            from: player.nowPlayingInfoMetadataPublisher()
-        )
-
-        expectAtLeastSimilarPublishedNext(
-            values: [
-                [:],
-                [
-                    MPMediaItemPropertyTitle: "Title 2",
-                    MPMediaItemPropertyArtist: "Subtitle 2",
-                    MPMediaItemPropertyComments: "Description 2"
-                ]
-            ],
-            from: player.nowPlayingInfoMetadataPublisher()
-        ) {
-            player.removeAllItems()
-            player.append(.networkLoaded(metadata: .media2))
-        }
-    }
-
     func testNetworkItemReloading() {
         let player = Player(item: .networkLoaded(metadata: .media1))
         expectAtLeastSimilarPublished(

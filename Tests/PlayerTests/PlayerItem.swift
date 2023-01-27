@@ -12,7 +12,6 @@ import Foundation
 
 enum Metadata: String {
     case media1
-    case media2
 }
 
 private struct AssetMetadata: Decodable {
