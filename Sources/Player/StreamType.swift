@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import CoreMedia
 import Foundation
 
 /// Stream types.
@@ -16,4 +17,19 @@ public enum StreamType {
     case live
     /// Livestream with DVR.
     case dvr
+
+    init(for timeRange: CMTimeRange, itemDuration: CMTime) {
+        if !timeRange.isValid || !itemDuration.isValid {
+            self = .unknown
+        }
+        else if timeRange.isEmpty {
+            self = .live
+        }
+        else if itemDuration.isIndefinite {
+            self = .dvr
+        }
+        else {
+            self = .onDemand
+        }
+    }
 }

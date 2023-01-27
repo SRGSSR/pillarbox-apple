@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import MediaPlayer
 import TimelaneCombine
 
 extension AVPlayer {
@@ -38,14 +39,7 @@ extension AVPlayer {
                 guard let item else {
                     return Just(.invalid).eraseToAnyPublisher()
                 }
-                return Publishers.CombineLatest(
-                    item.publisher(for: \.status),
-                    item.publisher(for: \.duration)
-                )
-                .map { status, duration in
-                    status == .readyToPlay ? duration : .invalid
-                }
-                .eraseToAnyPublisher()
+                return item.durationPublisher()
             }
             .switchToLatest()
             .removeDuplicates()
@@ -76,22 +70,8 @@ extension AVPlayer {
 
     func bufferingPublisher() -> AnyPublisher<Bool, Never> {
         publisher(for: \.currentItem)
-            .compactMap { $0 }
-            .map { item in
-                Publishers.CombineLatest(
-                    item.publisher(for: \.isPlaybackLikelyToKeepUp),
-                    item.itemStatePublisher()
-                )
-            }
+            .compactMap { $0?.bufferingPublisher() }
             .switchToLatest()
-            .map { isPlaybackLikelyToKeepUp, itemState in
-                switch itemState {
-                case .failed:
-                    return false
-                default:
-                    return !isPlaybackLikelyToKeepUp
-                }
-            }
             .prepend(false)
             .removeDuplicates()
             .eraseToAnyPublisher()
@@ -110,5 +90,36 @@ extension AVPlayer {
             .switchToLatest()
             .removeDuplicates()
             .eraseToAnyPublisher()
+    }
+
+    func nowPlayingInfoPropertiesPublisher() -> AnyPublisher<NowPlaying.Properties?, Never> {
+        publisher(for: \.currentItem)
+            .map { item -> AnyPublisher<NowPlaying.Properties?, Never> in
+                guard let item else { return Just(nil).eraseToAnyPublisher() }
+                return item.nowPlayingInfoPropertiesPublisher()
+                    .map { Optional($0) }
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+
+    func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
+        Publishers.CombineLatest(
+            nowPlayingInfoPropertiesPublisher(),
+            seekingPublisher()          // Observe relevant time discontinuities to trigger elapsed time updates
+        )
+        .map { [weak self] properties, _ in
+            var nowPlayingInfo = NowPlaying.Info()
+            if let self, let properties {
+                let isLive = StreamType(for: properties.timeRange, itemDuration: properties.itemDuration) == .live
+                nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLive
+                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : 1
+                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (self.currentTime() - properties.timeRange.start).seconds
+                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = properties.timeRange.duration.seconds
+            }
+            return nowPlayingInfo
+        }
+        .eraseToAnyPublisher()
     }
 }

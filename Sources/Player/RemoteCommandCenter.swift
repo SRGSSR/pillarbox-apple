@@ -7,22 +7,28 @@
 import Foundation
 import MediaPlayer
 
-struct RemoteCommandRegistration {
-    fileprivate let command: KeyPath<MPRemoteCommandCenter, MPRemoteCommand>
-    fileprivate let target: Any?
+protocol RemoteCommandRegistrable {
+    associatedtype Command: MPRemoteCommand
+
+    var command: KeyPath<MPRemoteCommandCenter, Command> { get }
+    var target: Any? { get }
+}
+
+private struct RemoteCommandRegistration<Command: MPRemoteCommand>: RemoteCommandRegistrable {
+    let command: KeyPath<MPRemoteCommandCenter, Command>
+    let target: Any?
 }
 
 extension MPRemoteCommandCenter {
     func register(
-        command: KeyPath<MPRemoteCommandCenter, MPRemoteCommand>,
+        command: KeyPath<MPRemoteCommandCenter, some MPRemoteCommand>,
         handler: @escaping (MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus
-    ) -> RemoteCommandRegistration {
+    ) -> some RemoteCommandRegistrable {
         let target = self[keyPath: command].addTarget(handler: handler)
-        return .init(command: command, target: target)
+        return RemoteCommandRegistration(command: command, target: target)
     }
 
-    func unregister(_ registration: RemoteCommandRegistration?) {
-        guard let registration else { return }
+    func unregister(_ registration: some RemoteCommandRegistrable) {
         self[keyPath: registration.command].removeTarget(registration.target)
     }
 }

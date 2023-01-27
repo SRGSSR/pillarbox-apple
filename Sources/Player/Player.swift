@@ -48,22 +48,11 @@ public final class Player: ObservableObject, Equatable {
     public let configuration: PlayerConfiguration
     private var cancellables = Set<AnyCancellable>()
 
-    private var commandRegistrations: [RemoteCommandRegistration] = []
+    private var commandRegistrations: [any RemoteCommandRegistrable] = []
 
     /// The type of stream currently played.
     public var streamType: StreamType {
-        guard timeRange.isValid, itemDuration.isValid else { return .unknown }
-        if timeRange.isEmpty {
-            return .live
-        }
-        else {
-            if itemDuration.isIndefinite {
-                return .dvr
-            }
-            else {
-                return itemDuration == .zero ? .live : .onDemand
-            }
-        }
+        StreamType(for: timeRange, itemDuration: itemDuration)
     }
 
     /// Create a player with a given item queue.
@@ -72,7 +61,10 @@ public final class Player: ObservableObject, Equatable {
     ///   - configuration: The configuration to apply to the player.
     public init(items: [PlayerItem] = [], configuration: PlayerConfiguration = .init()) {
         storedItems = Deque(items)
+
         nowPlayingSession = MPNowPlayingSession(players: [queuePlayer])
+        nowPlayingSession.becomeActiveIfPossible()
+
         self.configuration = configuration
 
         configurePlaybackStatePublisher()
@@ -82,7 +74,7 @@ public final class Player: ObservableObject, Equatable {
         configureSeekingPublisher()
         configureBufferingPublisher()
         configureCurrentIndexPublisher()
-        configureCurrentItemPublisher()
+        configureControlCenterPublisher()
         configureQueueUpdatePublisher()
         configureExternalPlaybackPublisher()
 
@@ -101,9 +93,15 @@ public final class Player: ObservableObject, Equatable {
         lhs === rhs
     }
 
+    private func configurePlayer() {
+        queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
+        queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
+        queuePlayer.audiovisualBackgroundPlaybackPolicy = configuration.audiovisualBackgroundPlaybackPolicy
+    }
+
     deinit {
         queuePlayer.cancelPendingReplacements()
-        updateControlCenter(for: nil)
+        uninstallRemoteCommands()
     }
 }
 
@@ -434,7 +432,7 @@ public extension Player {
     /// Return to the previous content.
     func returnToPrevious() {
         if shouldSeekToStartTime() {
-            seek(to: timeRange.start)
+            seek(to: .zero)
         }
         else {
             returnToPreviousItem()
@@ -544,29 +542,29 @@ extension Player {
             .assign(to: &$currentIndex)
     }
 
-    private func configureCurrentItemPublisher() {
-        currentPublisher()
-            .map { current in
-                guard let current else {
-                    return Just(Optional<Asset.NowPlayingInfo>.none).eraseToAnyPublisher()
-                }
-                return current.item.$source
-                    .map { $0.asset.nowPlayingInfo() }
-                    .eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .receiveOnMainThread()
-            .sink { [weak self] nowPlayingInfo in
-                self?.updateControlCenter(for: nowPlayingInfo)
-            }
-            .store(in: &cancellables)
+    private func configureControlCenterPublisher() {
+        Publishers.CombineLatest(
+            nowPlayingInfoMetadataPublisher(),
+            queuePlayer.nowPlayingInfoPlaybackPublisher()
+        )
+        .receiveOnMainThread()
+        .sink { [weak self] nowPlayingInfoMetadata, nowPlayingInfoPlayback in
+            self?.updateControlCenter(
+                nowPlayingInfo: nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new }
+            )
+        }
+        .store(in: &cancellables)
     }
 
     private func configureQueueUpdatePublisher() {
         sourcesPublisher()
             .withPrevious()
             .map { [queuePlayer] sources in
-                AVPlayerItem.playerItems(for: sources.current, replacing: sources.previous ?? [], currentItem: queuePlayer.currentItem)
+                AVPlayerItem.playerItems(
+                    for: sources.current,
+                    replacing: sources.previous ?? [],
+                    currentItem: queuePlayer.currentItem
+                )
             }
             .receiveOnMainThread()
             .sink { [queuePlayer] items in
@@ -606,75 +604,99 @@ extension Player {
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
+
+    func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
+        currentPublisher()
+            .map { current in
+                guard let current else {
+                    return Just(NowPlaying.Info()).eraseToAnyPublisher()
+                }
+                return current.item.$source
+                    .map { $0.asset.nowPlayingInfo() }
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .removeDuplicates { lhs, rhs in
+                // swiftlint:disable:next legacy_objc_type
+                NSDictionary(dictionary: lhs).isEqual(to: rhs)
+            }
+            .eraseToAnyPublisher()
+    }
 }
 
 extension Player {
-    private func configurePlayer() {
-        queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
-        queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
-        queuePlayer.audiovisualBackgroundPlaybackPolicy = configuration.audiovisualBackgroundPlaybackPolicy
-    }
-
-    private func updateControlCenter(for nowPlayingInfo: Asset.NowPlayingInfo?) {
-        nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
-        if nowPlayingInfo != nil {
-            installNowPlayingSessionCommands()
-        }
-        else {
-            uninstallNowPlayingSessionCommands()
-        }
-    }
-
-    private func playRegistration() -> RemoteCommandRegistration {
+    private func playRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.playCommand) { [weak self] _ in
             self?.play()
             return .success
         }
     }
 
-    private func pauseRegistration() -> RemoteCommandRegistration {
+    private func pauseRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.pauseCommand) { [weak self] _ in
             self?.pause()
             return .success
         }
     }
 
-    private func togglePlayPauseRegistration() -> RemoteCommandRegistration {
+    private func togglePlayPauseRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.togglePlayPauseCommand) { [weak self] _ in
             self?.togglePlayPause()
             return .success
         }
     }
 
-    private func previousTrackRegistration() -> RemoteCommandRegistration {
+    private func previousTrackRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.previousTrackCommand) { [weak self] _ in
             self?.returnToPrevious()
             return .success
         }
     }
 
-    private func nextTrackRegistration() -> RemoteCommandRegistration {
+    private func nextTrackRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.nextTrackCommand) { [weak self] _ in
             self?.advanceToNext()
             return .success
         }
     }
 
-    private func installNowPlayingSessionCommands() {
-        uninstallNowPlayingSessionCommands()
+    private func changePlaybackPositionRegistration() -> some RemoteCommandRegistrable {
+        nowPlayingSession.remoteCommandCenter.register(command: \.changePlaybackPositionCommand) { [weak self] event in
+            guard let positionEvent = event as? MPChangePlaybackPositionCommandEvent else { return .commandFailed }
+            self?.seek(to: .init(seconds: positionEvent.positionTime, preferredTimescale: CMTimeScale(NSEC_PER_SEC)))
+            return .success
+        }
+    }
+
+    private func installRemoteCommands() {
         commandRegistrations = [
             playRegistration(),
             pauseRegistration(),
             togglePlayPauseRegistration(),
             previousTrackRegistration(),
-            nextTrackRegistration()
+            nextTrackRegistration(),
+            changePlaybackPositionRegistration()
         ]
     }
 
-    private func uninstallNowPlayingSessionCommands() {
+    private func uninstallRemoteCommands() {
         commandRegistrations.forEach { registration in
             nowPlayingSession.remoteCommandCenter.unregister(registration)
         }
         commandRegistrations = []
+    }
+
+    private func updateControlCenter(nowPlayingInfo: NowPlaying.Info) {
+        if !nowPlayingInfo.isEmpty {
+            if nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo == nil {
+                uninstallRemoteCommands()
+                installRemoteCommands()
+            }
+            nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+        }
+        else {
+            uninstallRemoteCommands()
+            nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nil
+        }
     }
 }

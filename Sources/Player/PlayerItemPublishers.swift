@@ -29,4 +29,44 @@ extension AVPlayerItem {
         .compactMap { Self.timeRange(loadedTimeRanges: $0, seekableTimeRanges: $1) }
         .eraseToAnyPublisher()
     }
+
+    func durationPublisher() -> AnyPublisher<CMTime, Never> {
+        Publishers.CombineLatest(
+            publisher(for: \.status),
+            publisher(for: \.duration)
+        )
+        .map { status, duration in
+            status == .readyToPlay ? duration : .invalid
+        }
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
+
+    func bufferingPublisher() -> AnyPublisher<Bool, Never> {
+        Publishers.CombineLatest(
+            publisher(for: \.isPlaybackLikelyToKeepUp),
+            itemStatePublisher()
+        )
+        .map { isPlaybackLikelyToKeepUp, itemState in
+            switch itemState {
+            case .failed:
+                return false
+            default:
+                return !isPlaybackLikelyToKeepUp
+            }
+        }
+        .prepend(false)
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
+
+    func nowPlayingInfoPropertiesPublisher() -> AnyPublisher<NowPlaying.Properties, Never> {
+        Publishers.CombineLatest3(
+            timeRangePublisher(),
+            durationPublisher(),
+            bufferingPublisher()
+        )
+        .map { NowPlaying.Properties(timeRange: $0, itemDuration: $1, isBuffering: $2) }
+        .eraseToAnyPublisher()
+    }
 }
