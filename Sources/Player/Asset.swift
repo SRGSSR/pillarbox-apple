@@ -120,12 +120,15 @@ public extension Asset {
         let subtitle: String?
         /// Description.
         let description: String?
+        /// Image.
+        let image: UIImage?
 
         /// Create an asset metadata.
-        public init(title: String? = nil, subtitle: String? = nil, description: String? = nil) {
+        public init(title: String? = nil, subtitle: String? = nil, description: String? = nil, image: UIImage? = nil) {
             self.title = title
             self.subtitle = subtitle
             self.description = description
+            self.image = image
         }
     }
 
