@@ -1,0 +1,12 @@
+name: Code Quality
+run-name: ${{ github.actor }} is checking code quality.
+on:
+  pull_request:
+    types: [synchronize, opened, reopened, ready_for_review]
+
+jobs:
+  check-code-quality:
+    if: github.event.pull_request.draft == false
+    runs-on: RTSEvents
+    steps:
+      - run: make check-quality
