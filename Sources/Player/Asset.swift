@@ -106,6 +106,9 @@ public struct Asset {
             nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
             nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
             nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
+            if let image = metadata.image {
+                nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+            }
         }
         return nowPlayingInfo
     }
