@@ -22,7 +22,7 @@ final class DataProvider {
         return decoder
     }
 
-    func mediaComposition(forUrn urn: String) -> AnyPublisher<MediaComposition, Error> {
+    func mediaCompositionPublisher(forUrn urn: String) -> AnyPublisher<MediaComposition, Error> {
         let url = environment.url.appending(path: "integrationlayer/2.1/mediaComposition/byUrn/\(urn)")
         return session.dataTaskPublisher(for: url)
             .mapHttpErrors()
@@ -31,8 +31,8 @@ final class DataProvider {
             .eraseToAnyPublisher()
     }
 
-    func playableMediaComposition(forUrn urn: String) -> AnyPublisher<MediaComposition, Error> {
-        mediaComposition(forUrn: urn)
+    func playableMediaCompositionPublisher(forUrn urn: String) -> AnyPublisher<MediaComposition, Error> {
+        mediaCompositionPublisher(forUrn: urn)
             .tryMap { mediaComposition in
                 if let blockingReason = mediaComposition.mainChapter.blockingReason() {
                     throw DataError.blocked(withMessage: blockingReason.description)
