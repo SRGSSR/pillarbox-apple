@@ -5,7 +5,9 @@
 //
 
 import AVFoundation
+import Combine
 import Player
+import UIKit
 
 public extension PlayerItem {
     /// Create a player item from a URN played in the specified environment.
@@ -13,18 +15,31 @@ public extension PlayerItem {
     ///   - urn: The URN to play.
     ///   - environment: The environment which the URN is played from.
     convenience init(urn: String, environment: Environment = .production) {
-        let publisher = DataProvider(environment: environment).playableMediaComposition(forUrn: urn)
-            .tryMap { try Self.asset(for: $0) }
+        let dataPublisher = DataProvider(environment: environment)
+            .playableMediaCompositionPublisher(forUrn: urn)
+            .eraseToAnyPublisher()
+
+        let imagePublisher = dataPublisher
+            .flatMap { mediaComposition in
+                UIImage.imagePublisher(from: mediaComposition.mainChapter.image ?? "")
+            }
+            .eraseToAnyPublisher()
+
+        let publisher = Publishers.CombineLatest(dataPublisher, imagePublisher)
+            .tryMap { mediaComposition, image in
+                try Self.asset(for: mediaComposition, image: image)
+            }
+
         self.init(publisher: publisher)
     }
 
-    private static func asset(for mediaComposition: MediaComposition) throws -> Asset {
+    private static func asset(for mediaComposition: MediaComposition, image: UIImage) throws -> Asset {
         let mainChapter = mediaComposition.mainChapter
         guard let resource = mainChapter.recommendedResource else {
             throw DataError.noResourceAvailable
         }
 
-        let metadata = assetMetadata(for: mainChapter, show: mediaComposition.show)
+        let metadata = assetMetadata(for: mainChapter, show: mediaComposition.show, image: image)
         let configuration = assetConfiguration(for: resource)
 
         if let certificateUrl = resource.drms?.first(where: { $0.type == .fairPlay })?.certificateUrl {
@@ -51,8 +66,8 @@ public extension PlayerItem {
         }
     }
 
-    private static func assetMetadata(for chapter: Chapter, show: Show?) -> Asset.Metadata {
-        .init(title: chapter.title, subtitle: show?.title, description: chapter.description)
+    private static func assetMetadata(for chapter: Chapter, show: Show?, image: UIImage) -> Asset.Metadata {
+        .init(title: chapter.title, subtitle: show?.title, description: chapter.description, image: image)
     }
 
     private static func assetConfiguration(for resource: Resource) -> ((AVPlayerItem) -> Void) {
