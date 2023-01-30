@@ -6,6 +6,7 @@
 
 import Combine
 import Foundation
+import UIKit
 
 final class DataProvider {
     let environment: Environment
@@ -38,6 +39,17 @@ final class DataProvider {
                     throw DataError.blocked(withMessage: blockingReason.description)
                 }
                 return mediaComposition
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func imagePublisher(for url: URL) -> AnyPublisher<UIImage, Error> {
+        session
+            .dataTaskPublisher(for: url)
+            .map(\.data)
+            .tryMap { data in
+                guard let image = UIImage(data: data) else { throw DataError.malformedData }
+                return image
             }
             .eraseToAnyPublisher()
     }

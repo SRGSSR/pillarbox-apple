@@ -10,8 +10,8 @@ struct Chapter: Decodable {
     enum CodingKeys: String, CodingKey {
         case blockingReason = "blockReason"
         case description
-        case image = "imageUrl"
         case endDate = "validTo"
+        case imageUrl
         case resources = "resourceList"
         case startDate = "validFrom"
         case title
@@ -23,7 +23,7 @@ struct Chapter: Decodable {
     let urn: String
     let title: String
     let description: String?
-    let image: String? // ⚠️ Ask Samuel (Not sure if we have to put an optional here!)
+    let imageUrl: URL
     let resources: [Resource]
 
     let startDate: Date?

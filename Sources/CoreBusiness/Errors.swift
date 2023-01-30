@@ -26,6 +26,13 @@ struct DataError: LocalizedError {
         ))
     }
 
+    static var malformedData: Self {
+        .init(errorDescription: NSLocalizedString(
+            "The data is invalid",
+            comment: "Generic error message returned when data is invalid"
+        ))
+    }
+
     let errorDescription: String?
 
     static func http(from response: URLResponse) -> Self? {
