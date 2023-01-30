@@ -16,14 +16,12 @@ public extension PlayerItem {
     ///   - environment: The environment which the URN is played from.
     convenience init(urn: String, environment: Environment = .production) {
         let dataProvider = DataProvider(environment: environment)
-        let publisher = dataProvider
-            .playableMediaCompositionPublisher(forUrn: urn)
+        let publisher = dataProvider.playableMediaCompositionPublisher(forUrn: urn)
             .tryMap { mediaComposition in
                 let mainChapter = mediaComposition.mainChapter
                 guard let resource = mainChapter.recommendedResource else {
                     throw DataError.noResourceAvailable
                 }
-
                 return dataProvider.imagePublisher(for: mediaComposition.mainChapter.imageUrl, width: .width480)
                     .map { Optional($0) }
                     .replaceError(with: nil)
