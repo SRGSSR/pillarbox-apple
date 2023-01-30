@@ -106,6 +106,9 @@ public struct Asset {
             nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
             nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
             nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
+            if let image = metadata.image {
+                nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+            }
         }
         return nowPlayingInfo
     }
@@ -120,12 +123,15 @@ public extension Asset {
         let subtitle: String?
         /// Description.
         let description: String?
+        /// Image.
+        let image: UIImage?
 
         /// Create an asset metadata.
-        public init(title: String? = nil, subtitle: String? = nil, description: String? = nil) {
+        public init(title: String? = nil, subtitle: String? = nil, description: String? = nil, image: UIImage? = nil) {
             self.title = title
             self.subtitle = subtitle
             self.description = description
+            self.image = image
         }
     }
 

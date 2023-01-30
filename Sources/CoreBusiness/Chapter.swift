@@ -11,6 +11,7 @@ struct Chapter: Decodable {
         case blockingReason = "blockReason"
         case description
         case endDate = "validTo"
+        case imageUrl
         case resources = "resourceList"
         case startDate = "validFrom"
         case title
@@ -22,6 +23,7 @@ struct Chapter: Decodable {
     let urn: String
     let title: String
     let description: String?
+    let imageUrl: URL
     let resources: [Resource]
 
     let startDate: Date?
