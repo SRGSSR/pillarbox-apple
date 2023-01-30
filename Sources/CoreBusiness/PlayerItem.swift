@@ -24,7 +24,7 @@ public extension PlayerItem {
                     throw DataError.noResourceAvailable
                 }
 
-                return dataProvider.imagePublisher(for: mediaComposition.mainChapter.imageUrl)
+                return dataProvider.imagePublisher(for: mediaComposition.mainChapter.imageUrl, width: .width480)
                     .map { Optional($0) }
                     .replaceError(with: nil)
                     .prepend(nil)

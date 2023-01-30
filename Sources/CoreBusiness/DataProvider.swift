@@ -9,6 +9,14 @@ import Foundation
 import UIKit
 
 final class DataProvider {
+    enum ImageWidth: Int {
+        case width240 = 240
+        case width320 = 320
+        case width480 = 480
+        case width960 = 960
+        case width1920 = 1920
+    }
+
     let environment: Environment
     private let session: URLSession
 
@@ -43,9 +51,9 @@ final class DataProvider {
             .eraseToAnyPublisher()
     }
 
-    func imagePublisher(for url: URL) -> AnyPublisher<UIImage, Error> {
+    func imagePublisher(for url: URL, width: ImageWidth) -> AnyPublisher<UIImage, Error> {
         session
-            .dataTaskPublisher(for: scaledImageUrl(url))
+            .dataTaskPublisher(for: scaledImageUrl(url, width: width))
             .map(\.data)
             .tryMap { data in
                 guard let image = UIImage(data: data) else { throw DataError.malformedData }
@@ -54,7 +62,7 @@ final class DataProvider {
             .eraseToAnyPublisher()
     }
 
-    private func scaledImageUrl(_ url: URL) -> URL {
+    private func scaledImageUrl(_ url: URL, width: ImageWidth) -> URL {
         guard var components = URLComponents(
             url: environment.url.appending(path: "images/"),
             resolvingAgainstBaseURL: false
@@ -64,7 +72,7 @@ final class DataProvider {
         components.queryItems = [
             URLQueryItem(name: "imageUrl", value: url.absoluteString),
             URLQueryItem(name: "format", value: "jpg"),
-            URLQueryItem(name: "width", value: "240")
+            URLQueryItem(name: "width", value: String(width.rawValue))
         ]
         if let scaledUrl = components.url {
             return scaledUrl
