@@ -45,12 +45,32 @@ final class DataProvider {
 
     func imagePublisher(for url: URL) -> AnyPublisher<UIImage, Error> {
         session
-            .dataTaskPublisher(for: url)
+            .dataTaskPublisher(for: scaledImageUrl(url))
             .map(\.data)
             .tryMap { data in
                 guard let image = UIImage(data: data) else { throw DataError.malformedData }
                 return image
             }
             .eraseToAnyPublisher()
+    }
+
+    private func scaledImageUrl(_ url: URL) -> URL {
+        guard var components = URLComponents(
+            url: environment.url.appending(path: "images/"),
+            resolvingAgainstBaseURL: false
+        ) else {
+            return url
+        }
+        components.queryItems = [
+            URLQueryItem(name: "imageUrl", value: url.absoluteString),
+            URLQueryItem(name: "format", value: "jpg"),
+            URLQueryItem(name: "width", value: "240")
+        ]
+        if let scaledUrl = components.url {
+            return scaledUrl
+        }
+        else {
+            return url
+        }
     }
 }
