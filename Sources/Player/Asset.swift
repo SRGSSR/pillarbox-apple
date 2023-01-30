@@ -94,6 +94,13 @@ public struct Asset {
         )
     }
 
+    private static func artwork(for image: UIImage?) -> MPMediaItemArtwork {
+        let placeholderConfig = UIImage.SymbolConfiguration(pointSize: 300)
+        let placeholder = UIImage(systemName: "photo", withConfiguration: placeholderConfig)!
+        let image = image ?? placeholder
+        return MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+    }
+
     func playerItem() -> AVPlayerItem {
         let item = type.playerItem()
         configuration(item)
@@ -106,9 +113,7 @@ public struct Asset {
             nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
             nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
             nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
-            if let image = metadata.image {
-                nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
-            }
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = Self.artwork(for: metadata.image)
         }
         return nowPlayingInfo
     }
