@@ -25,10 +25,10 @@ final class PlaybackStateTests: XCTestCase {
     }
 
     func testSimilarity() {
-        expect(PlaybackState.idle).to(equal(.idle, by: ~=))
-        expect(PlaybackState.playing).to(equal(.playing, by: ~=))
-        expect(PlaybackState.paused).to(equal(.paused, by: ~=))
-        expect(PlaybackState.ended).to(equal(.ended, by: ~=))
-        expect(ItemState.failed(error: StructError())).to(equal(.failed(error: StructError()), by: ~=))
+        expect(PlaybackState.idle).to(equal(.idle))
+        expect(PlaybackState.playing).to(equal(.playing))
+        expect(PlaybackState.paused).to(equal(.paused))
+        expect(PlaybackState.ended).to(equal(.ended))
+        expect(ItemState.failed(error: StructError())).to(equal(.failed(error: StructError())))
     }
 }

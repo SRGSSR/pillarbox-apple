@@ -24,10 +24,10 @@ final class ItemStateTests: XCTestCase {
     }
 
     func testSimilarity() {
-        expect(ItemState.unknown).to(equal(.unknown, by: ~=))
-        expect(ItemState.readyToPlay).to(equal(.readyToPlay, by: ~=))
-        expect(ItemState.ended).to(equal(.ended, by: ~=))
-        expect(ItemState.failed(error: StructError())).to(equal(.failed(error: StructError()), by: ~=))
+        expect(ItemState.unknown).to(equal(.unknown))
+        expect(ItemState.readyToPlay).to(equal(.readyToPlay))
+        expect(ItemState.ended).to(equal(.ended))
+        expect(ItemState.failed(error: StructError())).to(equal(.failed(error: StructError())))
     }
 
     func testNoInnerComment() {
