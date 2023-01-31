@@ -11,7 +11,7 @@ import Circumspect
 import CoreMedia
 
 extension Asset: Similar {
-    public static func ~= (lhs: Self, rhs: Self) -> Bool {
+    public static func ~~ (lhs: Self, rhs: Self) -> Bool {
         if let lhsUrlAsset = lhs.playerItem().asset as? AVURLAsset,
            let rhsUrlAsset = rhs.playerItem().asset as? AVURLAsset {
             return lhsUrlAsset.url == rhsUrlAsset.url
@@ -23,7 +23,7 @@ extension Asset: Similar {
 }
 
 extension NowPlaying.Info: Similar {
-    public static func ~= (lhs: Self, rhs: Self) -> Bool {
+    public static func ~~ (lhs: Self, rhs: Self) -> Bool {
         // swiftlint:disable:next legacy_objc_type
         NSDictionary(dictionary: lhs).isEqual(to: rhs)
     }

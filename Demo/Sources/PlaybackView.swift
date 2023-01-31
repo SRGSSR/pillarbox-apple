@@ -160,6 +160,7 @@ private struct TimeBar: View {
     private func routePickerView() -> some View {
         if player.configuration.allowsExternalPlayback {
             RoutePickerView()
+                .tint(.white)
                 .frame(width: 45, height: 45)
         }
     }
