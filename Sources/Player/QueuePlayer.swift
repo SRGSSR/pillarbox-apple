@@ -8,26 +8,14 @@ import AVFoundation
 import Combine
 
 final class QueuePlayer: AVQueuePlayer {
-    private static let offset = CMTime(value: 12, timescale: 1)
     private var seekCount = 0
-
-    private static func safeSeekTime(_ time: CMTime, for item: AVPlayerItem?) -> CMTime {
-        guard let item, let timeRange = item.timeRange, !item.duration.isIndefinite /* DVR stream */ else {
-            return time
-        }
-        return CMTimeMinimum(time, CMTimeMaximum(timeRange.end - offset, .zero))
-    }
 
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         if seekCount == 0 {
             NotificationCenter.default.post(name: .willSeek, object: self)
         }
         seekCount += 1
-        super.seek(
-            to: Self.safeSeekTime(time, for: currentItem),
-            toleranceBefore: toleranceBefore,
-            toleranceAfter: toleranceAfter
-        ) { [weak self] finished in
+        super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             guard let self else { return }
             self.seekCount -= 1
             if self.seekCount == 0 {
