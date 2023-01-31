@@ -11,14 +11,17 @@ final class QueuePlayer: AVQueuePlayer {
     private var seekCount = 0
 
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        if seekCount == 0 {
+        if seekCount == 0 && !items().isEmpty {
             NotificationCenter.default.post(name: .willSeek, object: self)
         }
         seekCount += 1
+        NotificationCenter.default.post(name: .seek, object: self, userInfo: [
+            SeekKey.time: time
+        ])
         super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             guard let self else { return }
             self.seekCount -= 1
-            if self.seekCount == 0 {
+            if self.seekCount == 0 && !self.items().isEmpty {
                 NotificationCenter.default.post(name: .didSeek, object: self)
             }
             completionHandler(finished)
@@ -63,10 +66,10 @@ final class QueuePlayer: AVQueuePlayer {
 
 extension Notification.Name {
     static let willSeek = Notification.Name("QueuePlayerWillSeekNotification")
-    static let updateSeek = Notification.Name("QueuePlayerUpdateSeekNotification")
+    static let seek = Notification.Name("QueuePlayerSeekNotification")
     static let didSeek = Notification.Name("QueuePlayerDidSeekNotification")
 }
 
-private enum SeekKey: String {
+enum SeekKey: String {
     case time
 }
