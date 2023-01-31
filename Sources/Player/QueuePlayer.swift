@@ -63,5 +63,10 @@ final class QueuePlayer: AVQueuePlayer {
 
 extension Notification.Name {
     static let willSeek = Notification.Name("QueuePlayerWillSeekNotification")
+    static let updateSeek = Notification.Name("QueuePlayerUpdateSeekNotification")
     static let didSeek = Notification.Name("QueuePlayerDidSeekNotification")
+}
+
+private enum SeekKey: String {
+    case time
 }
