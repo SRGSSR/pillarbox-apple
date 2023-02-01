@@ -121,6 +121,7 @@ extension AVPlayer {
                 return time
             }
         )
+        .filter { $0.isValid }
         .eraseToAnyPublisher()
     }
 

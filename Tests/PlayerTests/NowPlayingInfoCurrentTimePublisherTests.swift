@@ -14,8 +14,7 @@ import XCTest
 final class NowPlayingInfoCurrentTimePublisherTests: XCTestCase {
     func testEmpty() {
         let player = QueuePlayer()
-        expectEqualPublished(
-            values: [.invalid],
+        expectNothingPublished(
             from: player.nowPlayingInfoCurrentTimePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main),
             during: 2
         )
