@@ -66,6 +66,21 @@ final class PeriodicTimePublisherTests: XCTestCase {
         }
     }
 
+    func testInitialSeek() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = AVPlayer(playerItem: item)
+        expectAtLeastPublished(
+            values: [CMTimeMake(value: 5, timescale: 1)],
+            from: Publishers.PeriodicTimePublisher(
+                for: player,
+                interval: CMTimeMake(value: 1, timescale: 2)
+            ),
+            to: beClose(within: 0.5)
+        ) {
+            player.seek(to: CMTime(value: 5, timescale: 1))
+        }
+    }
+
     func testDeallocation() {
         var player: AVPlayer? = AVPlayer()
         _ = Publishers.PeriodicTimePublisher(

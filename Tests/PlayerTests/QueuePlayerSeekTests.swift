@@ -93,7 +93,6 @@ final class QueuePlayerSeekTests: XCTestCase {
     func testMultipleSeeksWithinTimeRange() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        player.play()
         expect(item.timeRange).toEventuallyNot(beNil())
 
         let time1 = CMTime(value: 1, timescale: 1)

@@ -104,6 +104,26 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
+    func nowPlayingInfoCurrentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
+        Publishers.Merge(
+            // TODO: Fix periodic time publisher likely incorrect implementation. Inverting the two following publishers
+            // namely makes testInitialSeek() fail, likely because of the time the initial value is emitted.
+            QueuePlayer.notificationCenter.publisher(for: .seek)
+                .compactMap { notification in
+                    notification.userInfo?[SeekKey.time] as? CMTime
+                },
+            Publishers.CombineLatest(
+                Publishers.PeriodicTimePublisher(for: self, interval: interval, queue: queue),
+                seekingPublisher()
+            )
+            .compactMap { time, isSeeking in
+                guard !isSeeking else { return nil }
+                return time
+            }
+        )
+        .eraseToAnyPublisher()
+    }
+
     func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
         Publishers.CombineLatest(
             nowPlayingInfoPropertiesPublisher(),
