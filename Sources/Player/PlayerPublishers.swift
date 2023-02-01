@@ -59,9 +59,9 @@ extension AVPlayer {
 
     func seekingPublisher() -> AnyPublisher<Bool, Never> {
         Publishers.Merge(
-            NotificationCenter.default.weakPublisher(for: .willSeek, object: self)
+            QueuePlayer.notificationCenter.weakPublisher(for: .willSeek, object: self)
                 .map { _ in true },
-            NotificationCenter.default.weakPublisher(for: .didSeek, object: self)
+            QueuePlayer.notificationCenter.weakPublisher(for: .didSeek, object: self)
                 .map { _ in false }
         )
         .prepend(false)
