@@ -8,21 +8,25 @@ import AVFoundation
 import Combine
 
 final class QueuePlayer: AVQueuePlayer {
+    static let notificationCenter = NotificationCenter()
+
     private var seekCount = 0
 
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         if seekCount == 0 && !items().isEmpty {
-            NotificationCenter.default.post(name: .willSeek, object: self)
+            Self.notificationCenter.post(name: .willSeek, object: self)
         }
         seekCount += 1
-        NotificationCenter.default.post(name: .seek, object: self, userInfo: [
-            SeekKey.time: time
-        ])
+        if !items().isEmpty {
+            Self.notificationCenter.post(name: .seek, object: self, userInfo: [
+                SeekKey.time: time
+            ])
+        }
         super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             guard let self else { return }
             self.seekCount -= 1
             if self.seekCount == 0 && !self.items().isEmpty {
-                NotificationCenter.default.post(name: .didSeek, object: self)
+                Self.notificationCenter.post(name: .didSeek, object: self)
             }
             completionHandler(finished)
         }

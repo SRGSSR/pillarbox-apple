@@ -13,20 +13,13 @@ import Nimble
 import XCTest
 
 final class QueuePlayerSeekTests: XCTestCase {
-    private static func notificationPublisher(for names: Set<Notification.Name>, object: AnyObject?, center: NotificationCenter = .default) -> AnyPublisher<Notification, Never> {
-        Publishers.MergeMany(names.map { name in
-            center.weakPublisher(for: name, object: object)
-        })
-        .eraseToAnyPublisher()
-    }
-
     func testSeekWithEmptyPlayer() {
         let player = QueuePlayer(items: [])
         expect {
             player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
                 expect(finished).to(beFalse())
             }
-        }.to(postNotifications(equalDiff([])))
+        }.to(postNotifications(equalDiff([]), from: QueuePlayer.notificationCenter))
     }
 
     func testSeek() {
@@ -43,7 +36,7 @@ final class QueuePlayerSeekTests: XCTestCase {
                 SeekKey.time: time
             ]),
             Notification(name: .didSeek, object: player)
-        ])))
+        ]), from: QueuePlayer.notificationCenter))
     }
 
     func testMultipleSeeks() {
@@ -70,10 +63,10 @@ final class QueuePlayerSeekTests: XCTestCase {
                 SeekKey.time: time2
             ]),
             Notification(name: .didSeek, object: player)
-        ])))
+        ]), from: QueuePlayer.notificationCenter))
     }
 
-    func testMultipleSeeksWhileReady() {
+    func testMultipleSeeksWithTimeRange() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         player.play()
@@ -81,27 +74,22 @@ final class QueuePlayerSeekTests: XCTestCase {
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
-        expectAtLeastEqualPublished(
-            values: [
-                Notification(name: .willSeek, object: player),
-                Notification(name: .seek, object: player, userInfo: [
-                    SeekKey.time: time1
-                ]),
-                Notification(name: .seek, object: player, userInfo: [
-                    SeekKey.time: time2
-                ]),
-                Notification(name: .didSeek, object: player)
-            ],
-            from: Self.notificationPublisher(for: [.willSeek, .seek, .didSeek], object: player)
-        ) {
+        expect {
             player.seek(to: time1, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
                 expect(finished).to(beFalse())
             }
             player.seek(to: time2, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
                 expect(finished).to(beTrue())
             }
-        }
+        }.toEventually(postNotifications(equalDiff([
+            Notification(name: .willSeek, object: player),
+            Notification(name: .seek, object: player, userInfo: [
+                SeekKey.time: time1
+            ]),
+            Notification(name: .seek, object: player, userInfo: [
+                SeekKey.time: time2
+            ]),
+            Notification(name: .didSeek, object: player)
+        ]), from: QueuePlayer.notificationCenter), timeout: .seconds(5))
     }
 }
-
-// Question: Should we have tests waiting for the player to be ready before seeking?
