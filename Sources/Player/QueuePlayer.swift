@@ -13,19 +13,20 @@ final class QueuePlayer: AVQueuePlayer {
     private var seekCount = 0
 
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        if seekCount == 0 && !items().isEmpty {
+        guard !items().isEmpty else {
+            return completionHandler(false)
+        }
+        if seekCount == 0 {
             Self.notificationCenter.post(name: .willSeek, object: self)
         }
         seekCount += 1
-        if !items().isEmpty {
-            Self.notificationCenter.post(name: .seek, object: self, userInfo: [
-                SeekKey.time: time
-            ])
-        }
+        Self.notificationCenter.post(name: .seek, object: self, userInfo: [
+            SeekKey.time: time
+        ])
         super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             guard let self else { return }
             self.seekCount -= 1
-            if self.seekCount == 0 && !self.items().isEmpty {
+            if self.seekCount == 0 {
                 Self.notificationCenter.post(name: .didSeek, object: self)
             }
             completionHandler(finished)
