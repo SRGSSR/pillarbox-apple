@@ -30,9 +30,40 @@ final class SeekingPublisherTests: XCTestCase {
             from: player.seekingPublisher(),
             during: 2
         ) {
-            player.seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
-                expect(finished).to(beTrue())
-            }
+            player.seek(to: time)
+        }
+    }
+
+    func testMultipleSeek() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayer(playerItem: item)
+        let time1 = CMTime(value: 1, timescale: 1)
+        let time2 = CMTime(value: 2, timescale: 1)
+        expectEqualPublished(
+            values: [false, true, false, true, false],
+            from: player.seekingPublisher(),
+            during: 2
+        ) {
+            player.seek(to: time1)
+            player.seek(to: time2)
+        }
+    }
+
+    func testMultipleSeeksWithinTimeRange() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayer(playerItem: item)
+        player.play()
+        expect(item.timeRange).toEventuallyNot(beNil())
+
+        let time1 = CMTime(value: 1, timescale: 1)
+        let time2 = CMTime(value: 2, timescale: 1)
+        expectEqualPublished(
+            values: [false, true, false],
+            from: player.seekingPublisher(),
+            during: 2
+        ) {
+            player.seek(to: time1)
+            player.seek(to: time2)
         }
     }
 }

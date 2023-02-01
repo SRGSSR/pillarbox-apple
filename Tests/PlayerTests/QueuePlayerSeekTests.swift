@@ -32,9 +32,37 @@ final class QueuePlayerSeekTests: XCTestCase {
             }
         }.to(postNotifications(equalDiff([
             Notification(name: .willSeek, object: player),
-            Notification(name: .seek, object: player, userInfo: [
-                SeekKey.time: time
-            ]),
+            Notification(name: .seek, object: player, userInfo: [SeekKey.time: time]),
+            Notification(name: .didSeek, object: player)
+        ]), from: QueuePlayer.notificationCenter))
+    }
+
+    func testSeekWithCompletion() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayer(playerItem: item)
+        let time = CMTime(value: 1, timescale: 1)
+        expect {
+            player.seek(to: time) { finished in
+                expect(finished).to(beTrue())
+            }
+        }.to(postNotifications(equalDiff([
+            Notification(name: .willSeek, object: player),
+            Notification(name: .seek, object: player, userInfo: [SeekKey.time: time]),
+            Notification(name: .didSeek, object: player)
+        ]), from: QueuePlayer.notificationCenter))
+    }
+
+    func testSeekWithCompletionAndTolerances() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayer(playerItem: item)
+        let time = CMTime(value: 1, timescale: 1)
+        expect {
+            player.seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
+                expect(finished).to(beTrue())
+            }
+        }.to(postNotifications(equalDiff([
+            Notification(name: .willSeek, object: player),
+            Notification(name: .seek, object: player, userInfo: [SeekKey.time: time]),
             Notification(name: .didSeek, object: player)
         ]), from: QueuePlayer.notificationCenter))
     }
@@ -53,20 +81,16 @@ final class QueuePlayerSeekTests: XCTestCase {
             }
         }.to(postNotifications(equalDiff([
             Notification(name: .willSeek, object: player),
-            Notification(name: .seek, object: player, userInfo: [
-                SeekKey.time: time1
-            ]),
+            Notification(name: .seek, object: player, userInfo: [SeekKey.time: time1]),
             Notification(name: .didSeek, object: player),
 
             Notification(name: .willSeek, object: player),
-            Notification(name: .seek, object: player, userInfo: [
-                SeekKey.time: time2
-            ]),
+            Notification(name: .seek, object: player, userInfo: [SeekKey.time: time2]),
             Notification(name: .didSeek, object: player)
         ]), from: QueuePlayer.notificationCenter))
     }
 
-    func testMultipleSeeksWithTimeRange() {
+    func testMultipleSeeksWithinTimeRange() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         player.play()
@@ -83,12 +107,8 @@ final class QueuePlayerSeekTests: XCTestCase {
             }
         }.toEventually(postNotifications(equalDiff([
             Notification(name: .willSeek, object: player),
-            Notification(name: .seek, object: player, userInfo: [
-                SeekKey.time: time1
-            ]),
-            Notification(name: .seek, object: player, userInfo: [
-                SeekKey.time: time2
-            ]),
+            Notification(name: .seek, object: player, userInfo: [SeekKey.time: time1]),
+            Notification(name: .seek, object: player, userInfo: [SeekKey.time: time2]),
             Notification(name: .didSeek, object: player)
         ]), from: QueuePlayer.notificationCenter), timeout: .seconds(5))
     }

@@ -33,6 +33,14 @@ final class QueuePlayer: AVQueuePlayer {
         }
     }
 
+    override func seek(to time: CMTime, completionHandler: @escaping (Bool) -> Void) {
+        self.seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity, completionHandler: completionHandler)
+    }
+
+    override func seek(to time: CMTime) {
+        self.seek(to: time, completionHandler: { _ in })
+    }
+
     func replaceItems(with items: [AVPlayerItem]) {
         cancelPendingReplacements()
 
