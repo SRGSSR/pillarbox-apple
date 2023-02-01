@@ -123,7 +123,8 @@ extension AVPlayer {
         .eraseToAnyPublisher()
     }
 
-    func nowPlayingInfoCurrentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
+    /// Publishes current time, taking into account seeks to smooth out emitted values.
+    func smoothCurrentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
         Publishers.CombineLatest(
             Publishers.PeriodicTimePublisher(for: self, interval: interval, queue: queue),
             seekTimePublisher()
@@ -137,7 +138,7 @@ extension AVPlayer {
     func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
         Publishers.CombineLatest(
             nowPlayingInfoPropertiesPublisher(),
-            nowPlayingInfoCurrentTimePublisher(interval: CMTime(value: 1, timescale: 1), queue: .global(qos: .default))
+            smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 1), queue: .global(qos: .default))
         )
         .map { properties, time in
             var nowPlayingInfo = NowPlaying.Info()

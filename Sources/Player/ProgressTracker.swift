@@ -85,7 +85,7 @@ public final class ProgressTracker: ObservableObject {
                     return Just(.invalid).eraseToAnyPublisher()
                 }
                 return Publishers.CombineLatest3(
-                    player.queuePlayer.nowPlayingInfoCurrentTimePublisher(interval: interval, queue: .global(qos: .default)),
+                    player.queuePlayer.smoothCurrentTimePublisher(interval: interval, queue: .global(qos: .default)),
                     player.queuePlayer.currentItemTimeRangePublisher(),
                     $isInteracting
                 )
