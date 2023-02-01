@@ -16,18 +16,17 @@ final class QueuePlayer: AVQueuePlayer {
         guard !items().isEmpty else {
             return completionHandler(false)
         }
-        if seekCount == 0 {
-            Self.notificationCenter.post(name: .willSeek, object: self)
-        }
-        seekCount += 1
-        Self.notificationCenter.post(name: .seek, object: self, userInfo: [
+        Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [
             SeekKey.time: time
         ])
+        seekCount += 1
         super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             guard let self else { return }
             self.seekCount -= 1
             if self.seekCount == 0 {
-                Self.notificationCenter.post(name: .didSeek, object: self)
+                Self.notificationCenter.post(name: .didSeek, object: self, userInfo: [
+                    SeekKey.time: time
+                ])
             }
             completionHandler(finished)
         }
@@ -79,7 +78,6 @@ final class QueuePlayer: AVQueuePlayer {
 
 extension Notification.Name {
     static let willSeek = Notification.Name("QueuePlayerWillSeekNotification")
-    static let seek = Notification.Name("QueuePlayerSeekNotification")
     static let didSeek = Notification.Name("QueuePlayerDidSeekNotification")
 }
 

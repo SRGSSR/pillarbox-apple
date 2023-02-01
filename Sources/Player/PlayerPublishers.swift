@@ -65,6 +65,7 @@ extension AVPlayer {
                 .map { _ in false }
         )
         .prepend(false)
+        .removeDuplicates()
         .eraseToAnyPublisher()
     }
 
@@ -104,24 +105,32 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    func nowPlayingInfoCurrentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
-        Publishers.Merge(
-            // TODO: Fix periodic time publisher likely incorrect implementation. Inverting the two following publishers
-            // namely makes testInitialSeek() fail, likely because of the time the initial value is emitted.
-            QueuePlayer.notificationCenter.publisher(for: .seek)
-                .compactMap { notification in
+    func seekTimePublisher() -> AnyPublisher<CMTime?, Never> {
+        let notificationCenter = QueuePlayer.notificationCenter
+        return Publishers.Merge(
+            notificationCenter.weakPublisher(for: .willSeek, object: self)
+                .map { notification in
                     notification.userInfo?[SeekKey.time] as? CMTime
                 },
-            Publishers.CombineLatest(
-                Publishers.PeriodicTimePublisher(for: self, interval: interval, queue: queue),
-                seekingPublisher()
-            )
-            .compactMap { time, isSeeking in
-                guard !isSeeking else { return nil }
-                return time
-            }
+            notificationCenter.weakPublisher(for: .didSeek, object: self)
+                .map { notification in
+                    Just(notification.userInfo?[SeekKey.time] as? CMTime)
+                        .append(nil)
+                }
+                .switchToLatest()
         )
-        .filter { $0.isValid }
+        .prepend(nil)
+        .eraseToAnyPublisher()
+    }
+
+    func nowPlayingInfoCurrentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
+        Publishers.CombineLatest(
+            Publishers.PeriodicTimePublisher(for: self, interval: interval, queue: queue),
+            seekTimePublisher()
+        )
+        .map { time, seekTime in
+            return seekTime ?? time
+        }
         .eraseToAnyPublisher()
     }
 
@@ -136,7 +145,9 @@ extension AVPlayer {
                 let isLive = StreamType(for: properties.timeRange, itemDuration: properties.itemDuration) == .live
                 nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLive
                 nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : 1
-                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - properties.timeRange.start).seconds
+                if time.isValid {
+                    nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - properties.timeRange.start).seconds
+                }
                 nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = properties.timeRange.duration.seconds
             }
             return nowPlayingInfo
