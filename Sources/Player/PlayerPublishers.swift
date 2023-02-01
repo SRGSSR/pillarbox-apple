@@ -137,7 +137,7 @@ extension AVPlayer {
     func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
         Publishers.CombineLatest(
             nowPlayingInfoPropertiesPublisher(),
-            nowPlayingInfoCurrentTimePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main)
+            nowPlayingInfoCurrentTimePublisher(interval: CMTime(value: 1, timescale: 1), queue: .global(qos: .default))
         )
         .map { properties, time in
             var nowPlayingInfo = NowPlaying.Info()
