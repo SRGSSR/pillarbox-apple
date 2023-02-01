@@ -127,15 +127,15 @@ extension AVPlayer {
     func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
         Publishers.CombineLatest(
             nowPlayingInfoPropertiesPublisher(),
-            seekingPublisher()          // Observe relevant time discontinuities to trigger elapsed time updates
+            nowPlayingInfoCurrentTimePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main)
         )
-        .map { [weak self] properties, _ in
+        .map { properties, time in
             var nowPlayingInfo = NowPlaying.Info()
-            if let self, let properties {
+            if let properties {
                 let isLive = StreamType(for: properties.timeRange, itemDuration: properties.itemDuration) == .live
                 nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLive
                 nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : 1
-                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (self.currentTime() - properties.timeRange.start).seconds
+                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - properties.timeRange.start).seconds
                 nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = properties.timeRange.duration.seconds
             }
             return nowPlayingInfo
