@@ -13,7 +13,7 @@ import XCTest
 
 final class PlayerItemTests: XCTestCase {
     func testURNPlaybackHLS() {
-        let item = PlayerItem(urn: "urn:rts:video:6820736")
+        let item = PlayerItem.urn("urn:rts:video:6820736")
         let player = Player(item: item)
         expectAtLeastEqualPublished(
             values: [
@@ -25,7 +25,7 @@ final class PlayerItemTests: XCTestCase {
     }
 
     func testURNPlaybackMP3() {
-        let item = PlayerItem(urn: "urn:rsi:audio:8833144")
+        let item = PlayerItem.urn("urn:rsi:audio:8833144")
         let player = Player(item: item)
         expectAtLeastEqualPublished(
             values: [
@@ -37,7 +37,7 @@ final class PlayerItemTests: XCTestCase {
     }
 
     func testURNPlaybackUnknown() {
-        let item = PlayerItem(urn: "urn:srf:video:unknown")
+        let item = PlayerItem.urn("urn:srf:video:unknown")
         let player = Player(item: item)
         expectAtLeastEqualPublished(
             values: [
@@ -55,7 +55,7 @@ final class PlayerItemTests: XCTestCase {
     }
 
     func testURNPlaybackNotAvailableAnymore() {
-        let item = PlayerItem(urn: "urn:rts:video:13382911")
+        let item = PlayerItem.urn("urn:rts:video:13382911")
         let player = Player(item: item)
         expectAtLeastEqualPublished(
             values: [

@@ -14,7 +14,7 @@ public extension PlayerItem {
     /// - Parameters:
     ///   - urn: The URN to play.
     ///   - environment: The environment which the URN is played from.
-    convenience init(urn: String, environment: Environment = .production) {
+    static func urn(_ urn: String, environment: Environment = .production) -> Self {
         let dataProvider = DataProvider(environment: environment)
         let publisher = dataProvider.playableMediaCompositionPublisher(forUrn: urn)
             .tryMap { mediaComposition in
@@ -33,8 +33,7 @@ public extension PlayerItem {
             }
             .switchToLatest()
             .eraseToAnyPublisher()
-
-        self.init(publisher: publisher)
+        return self.init(publisher: publisher)
     }
 
     private static func assetMetadata(for mediaComposition: MediaComposition, image: UIImage?) -> Asset.Metadata {
