@@ -50,7 +50,7 @@ extension QueuePlayer {
     func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
         Publishers.CombineLatest(
             nowPlayingInfoPropertiesPublisher(),
-            smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 1), queue: .global(qos: .default))
+            smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main)
         )
         .map { properties, time in
             var nowPlayingInfo = NowPlaying.Info()
