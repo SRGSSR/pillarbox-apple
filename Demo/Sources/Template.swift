@@ -150,9 +150,9 @@ enum URNTemplate {
         type: .urn("urn:rts:video:13702534")
     )
     static let liveVideo = Template(
-        title: "SRF 1",
+        title: "RSI 1",
         description: "Live video",
-        type: .urn("urn:srf:video:c4927fcf-e1a0-0001-7edd-1ef01d441651")
+        type: .urn("urn:rsi:video:livestream_La1")
     )
     static let dvrVideo = Template(
         title: "RTS 1",
