@@ -35,7 +35,7 @@ final class QueuePlayer: AVQueuePlayer {
     private func _seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             guard let self else { return }
-            let seekTime = self.seekTime!
+            guard let seekTime = self.seekTime else { return completionHandler(finished) }
             if seekTime != time {
                 self._seek(to: seekTime, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
             }
