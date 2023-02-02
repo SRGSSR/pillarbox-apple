@@ -94,7 +94,7 @@ final class QueuePlayerSeekTests: XCTestCase {
         let time2 = CMTime(value: 2, timescale: 1)
         expect {
             player.seek(to: time1, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
-                expect(finished).to(beFalse())
+                expect(finished).to(beTrue())
             }
             player.seek(to: time2, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
                 expect(finished).to(beTrue())
