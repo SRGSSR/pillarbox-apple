@@ -32,7 +32,7 @@ final class QueuePlayerSeekTests: XCTestCase {
             }
         }.to(postNotifications(equalDiff([
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time]),
-            Notification(name: .didSeek, object: player, userInfo: [SeekKey.time: time])
+            Notification(name: .didSeek, object: player)
         ]), from: QueuePlayer.notificationCenter))
     }
 
@@ -46,7 +46,7 @@ final class QueuePlayerSeekTests: XCTestCase {
             }
         }.to(postNotifications(equalDiff([
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time]),
-            Notification(name: .didSeek, object: player, userInfo: [SeekKey.time: time])
+            Notification(name: .didSeek, object: player)
         ]), from: QueuePlayer.notificationCenter))
     }
 
@@ -60,7 +60,7 @@ final class QueuePlayerSeekTests: XCTestCase {
             }
         }.to(postNotifications(equalDiff([
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time]),
-            Notification(name: .didSeek, object: player, userInfo: [SeekKey.time: time])
+            Notification(name: .didSeek, object: player)
         ]), from: QueuePlayer.notificationCenter))
     }
 
@@ -78,10 +78,10 @@ final class QueuePlayerSeekTests: XCTestCase {
             }
         }.to(postNotifications(equalDiff([
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time1]),
-            Notification(name: .didSeek, object: player, userInfo: [SeekKey.time: time1]),
+            Notification(name: .didSeek, object: player),
 
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time2]),
-            Notification(name: .didSeek, object: player, userInfo: [SeekKey.time: time2])
+            Notification(name: .didSeek, object: player)
         ]), from: QueuePlayer.notificationCenter))
     }
 
@@ -102,7 +102,7 @@ final class QueuePlayerSeekTests: XCTestCase {
         }.toEventually(postNotifications(equalDiff([
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time1]),
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time2]),
-            Notification(name: .didSeek, object: player, userInfo: [SeekKey.time: time2])
+            Notification(name: .didSeek, object: player)
         ]), from: QueuePlayer.notificationCenter), timeout: .seconds(5))
     }
 }

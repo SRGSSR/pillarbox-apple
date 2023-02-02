@@ -24,9 +24,7 @@ final class QueuePlayer: AVQueuePlayer {
             guard let self else { return }
             self.seekCount -= 1
             if self.seekCount == 0 {
-                Self.notificationCenter.post(name: .didSeek, object: self, userInfo: [
-                    SeekKey.time: time
-                ])
+                Self.notificationCenter.post(name: .didSeek, object: self)
             }
             completionHandler(finished)
         }

@@ -113,11 +113,7 @@ extension AVPlayer {
                     notification.userInfo?[SeekKey.time] as? CMTime
                 },
             notificationCenter.weakPublisher(for: .didSeek, object: self)
-                .map { notification in
-                    Just(notification.userInfo?[SeekKey.time] as? CMTime)
-                        .append(nil)
-                }
-                .switchToLatest()
+                .map { _ in nil }
         )
         .prepend(nil)
         .eraseToAnyPublisher()
