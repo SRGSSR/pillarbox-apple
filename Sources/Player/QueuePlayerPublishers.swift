@@ -42,7 +42,7 @@ extension QueuePlayer {
             seekTimePublisher()
         )
         .map { time, seekTime in
-            return seekTime ?? time
+            seekTime ?? time
         }
         .eraseToAnyPublisher()
     }

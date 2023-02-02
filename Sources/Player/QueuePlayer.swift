@@ -7,6 +7,10 @@
 import AVFoundation
 import Combine
 
+enum SeekKey: String {
+    case time
+}
+
 final class QueuePlayer: AVQueuePlayer {
     static let notificationCenter = NotificationCenter()
 
@@ -14,7 +18,8 @@ final class QueuePlayer: AVQueuePlayer {
 
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         guard !items().isEmpty else {
-            return completionHandler(false)
+            completionHandler(false)
+            return
         }
         Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [
             SeekKey.time: time
@@ -50,7 +55,7 @@ final class QueuePlayer: AVQueuePlayer {
     }
 
     override func seek(to time: CMTime) {
-        self.seek(to: time, completionHandler: { _ in })
+        self.seek(to: time) { _ in }
     }
 
     func replaceItems(with items: [AVPlayerItem]) {
@@ -92,8 +97,4 @@ final class QueuePlayer: AVQueuePlayer {
 extension Notification.Name {
     static let willSeek = Notification.Name("QueuePlayerWillSeekNotification")
     static let didSeek = Notification.Name("QueuePlayerDidSeekNotification")
-}
-
-enum SeekKey: String {
-    case time
 }

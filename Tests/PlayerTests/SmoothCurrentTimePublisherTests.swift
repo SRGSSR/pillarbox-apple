@@ -39,7 +39,7 @@ final class SmoothCurrentTimePublisherTests: XCTestCase {
         let player = QueuePlayer(playerItem: item)
         let publisher = player.smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 1000), queue: .main)
         let times = collectOutput(from: publisher, during: 3) {
-            player.seek(to: CMTime(value: 5, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero, completionHandler: { _ in })
+            player.seek(to: CMTime(value: 5, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero) { _ in }
         }
         expect(times.contains(CMTime(value: 5, timescale: 1))).to(beTrue())
     }
@@ -56,7 +56,7 @@ final class SmoothCurrentTimePublisherTests: XCTestCase {
             player.play()
         }
         let times = collectOutput(from: publisher, during: 3) {
-            player.seek(to: CMTime(value: 5, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero, completionHandler: { _ in })
+            player.seek(to: CMTime(value: 5, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero) { _ in }
         }
         expect(times.contains(CMTime(value: 5, timescale: 1))).to(beTrue())
         expect(times.sorted()).to(equal(times))
