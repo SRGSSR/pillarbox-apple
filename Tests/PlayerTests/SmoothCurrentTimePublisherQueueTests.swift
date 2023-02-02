@@ -15,7 +15,7 @@ final class SmoothCurrentTimePublisherQueueTests: XCTestCase {
     func testItems() {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let player = AVQueuePlayer(items: [item1, item2])
+        let player = QueuePlayer(items: [item1, item2])
         expectPublished(
             values: [
                 .zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1),
@@ -33,7 +33,7 @@ final class SmoothCurrentTimePublisherQueueTests: XCTestCase {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.unavailable.url)
         let item3 = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let player = AVQueuePlayer(items: [item1, item2, item3])
+        let player = QueuePlayer(items: [item1, item2, item3])
         expectPublished(
             values: [
                 .zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1),

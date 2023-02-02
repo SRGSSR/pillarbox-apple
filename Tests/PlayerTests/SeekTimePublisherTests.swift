@@ -13,7 +13,7 @@ import XCTest
 
 final class SeekTimePublisherTests: XCTestCase {
     func testEmpty() {
-        let player = AVPlayer()
+        let player = QueuePlayer()
         expectEqualPublished(
             values: [nil],
             from: player.seekTimePublisher(),

@@ -6,7 +6,6 @@
 
 import AVFoundation
 import Combine
-import MediaPlayer
 import TimelaneCombine
 
 extension AVPlayer {
@@ -57,18 +56,6 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    func seekingPublisher() -> AnyPublisher<Bool, Never> {
-        Publishers.Merge(
-            QueuePlayer.notificationCenter.weakPublisher(for: .willSeek, object: self)
-                .map { _ in true },
-            QueuePlayer.notificationCenter.weakPublisher(for: .didSeek, object: self)
-                .map { _ in false }
-        )
-        .prepend(false)
-        .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
-
     func bufferingPublisher() -> AnyPublisher<Bool, Never> {
         publisher(for: \.currentItem)
             .compactMap { $0?.bufferingPublisher() }
@@ -103,52 +90,5 @@ extension AVPlayer {
             }
             .switchToLatest()
             .eraseToAnyPublisher()
-    }
-
-    func seekTimePublisher() -> AnyPublisher<CMTime?, Never> {
-        let notificationCenter = QueuePlayer.notificationCenter
-        return Publishers.Merge(
-            notificationCenter.weakPublisher(for: .willSeek, object: self)
-                .map { notification in
-                    notification.userInfo?[SeekKey.time] as? CMTime
-                },
-            notificationCenter.weakPublisher(for: .didSeek, object: self)
-                .map { _ in nil }
-        )
-        .prepend(nil)
-        .eraseToAnyPublisher()
-    }
-
-    /// Publishes current time, taking into account seeks to smooth out emitted values.
-    func smoothCurrentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
-        Publishers.CombineLatest(
-            Publishers.PeriodicTimePublisher(for: self, interval: interval, queue: queue),
-            seekTimePublisher()
-        )
-        .map { time, seekTime in
-            return seekTime ?? time
-        }
-        .eraseToAnyPublisher()
-    }
-
-    func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
-        Publishers.CombineLatest(
-            nowPlayingInfoPropertiesPublisher(),
-            smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 1), queue: .global(qos: .default))
-        )
-        .map { properties, time in
-            var nowPlayingInfo = NowPlaying.Info()
-            if let properties {
-                let isLive = StreamType(for: properties.timeRange, itemDuration: properties.itemDuration) == .live
-                nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLive
-                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : 1
-                if time.isValid {
-                    nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - properties.timeRange.start).seconds
-                }
-                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = properties.timeRange.duration.seconds
-            }
-            return nowPlayingInfo
-        }
-        .eraseToAnyPublisher()
     }
 }
