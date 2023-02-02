@@ -33,7 +33,7 @@ public extension PlayerItem {
             }
             .switchToLatest()
             .eraseToAnyPublisher()
-        return self.init(publisher: publisher)
+        return .init(publisher: publisher)
     }
 
     private static func assetMetadata(for mediaComposition: MediaComposition, image: UIImage?) -> Asset.Metadata {
