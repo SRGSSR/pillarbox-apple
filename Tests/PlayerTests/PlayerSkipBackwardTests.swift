@@ -10,9 +10,11 @@ import Nimble
 import XCTest
 
 final class PlayerSkipForwardTests: XCTestCase {
-    func testCanSkip() {
-        expect(true).to(beTrue())
+    func testCannotSkipWhenEmpty() {
+        let player = Player()
+        expect(player.canSkipForward()).to(beFalse())
     }
+
     func testSkip() {
         expect(true).to(beTrue())
     }
