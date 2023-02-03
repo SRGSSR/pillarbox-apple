@@ -28,7 +28,9 @@ final class QueuePlayer: AVQueuePlayer {
         seekTime = time
         super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             guard let self else { return }
-            Self.notificationCenter.post(name: .didSeek, object: self)
+            if finished {
+                Self.notificationCenter.post(name: .didSeek, object: self)
+            }
             completionHandler(finished)
         }
     }
@@ -58,7 +60,7 @@ final class QueuePlayer: AVQueuePlayer {
         super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             guard let self else { return }
             guard let seekTime = self.seekTime else { return completionHandler(finished) }
-            if seekTime != time {
+            if seekTime != time, finished {
                 self._seek(to: seekTime, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
             }
             else {

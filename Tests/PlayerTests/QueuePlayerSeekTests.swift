@@ -105,4 +105,25 @@ final class QueuePlayerSeekTests: XCTestCase {
             Notification(name: .didSeek, object: player)
         ]), from: QueuePlayer.notificationCenter), timeout: .seconds(5))
     }
+
+    func testSeekAfterSmoothSeekWithinTimeRange() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayer(playerItem: item)
+        expect(item.timeRange).toEventuallyNot(beNil())
+
+        let time1 = CMTime(value: 1, timescale: 1)
+        let time2 = CMTime(value: 2, timescale: 1)
+        expect {
+            player.smoothSeek(to: time1, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
+                expect(finished).to(beFalse())
+            }
+            player.seek(to: time2, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
+                expect(finished).to(beTrue())
+            }
+        }.toEventually(postNotifications(equalDiff([
+            Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time1]),
+            Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time2]),
+            Notification(name: .didSeek, object: player)
+        ]), from: QueuePlayer.notificationCenter), timeout: .seconds(5))
+    }
 }
