@@ -15,6 +15,12 @@ final class PlayerSkipForwardTests: XCTestCase {
         expect(player.canSkipForward()).to(beFalse())
     }
 
+    func testCanSkipForOnDemand() {
+        let player = Player(item: .simple(url: Stream.onDemand.url))
+        expect(player.streamType).toEventually(equal(.onDemand))
+        expect(player.canSkipForward()).to(beTrue())
+    }
+
     func testSkip() {
         expect(true).to(beTrue())
     }

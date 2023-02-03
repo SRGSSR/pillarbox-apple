@@ -703,7 +703,16 @@ extension Player {
 
 extension Player {
     func canSkipBackward() -> Bool { false }
-    func canSkipForward() -> Bool { false }
+
+    func canSkipForward() -> Bool {
+        switch streamType {
+        case .onDemand:
+            return true
+        default:
+            return false
+        }
+    }
+
     func skipBackward(completionHandler: @escaping () -> Void = {}) {}
     func skipForward(completionHandler: @escaping () -> Void = {}) {}
     @discardableResult
