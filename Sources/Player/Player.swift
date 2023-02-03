@@ -700,3 +700,14 @@ extension Player {
         }
     }
 }
+
+extension Player {
+    func canSkipBackward() -> Bool { false }
+    func canSkipForward() -> Bool { false }
+    func skipBackward(completionHandler: @escaping () -> Void = {}) {}
+    func skipForward(completionHandler: @escaping () -> Void = {}) {}
+    @discardableResult
+    func skipBackward() async -> Bool { false }
+    @discardableResult
+    func skipForward() async -> Bool { false }
+}
