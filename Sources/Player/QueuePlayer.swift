@@ -25,6 +25,7 @@ final class QueuePlayer: AVQueuePlayer {
             SeekKey.time: time
         ])
 
+        seekTime = time
         super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             guard let self else { return }
             Self.notificationCenter.post(name: .didSeek, object: self)
