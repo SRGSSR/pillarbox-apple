@@ -65,13 +65,13 @@ A system default playback user experience is provided as well. Just use `SystemV
 
 Pillarbox currently does not provide any standard playback view you can use but you can build one yourself. Since `Player` is an `ObservableObject`, though, implementation of a playback view can be easily achieved in the same was as for any usual SwiftUI layout.
 
-When significant changes occur within the player (e.g. state or buffering updates) the body of any SwiftUI view observing the player is evaluated again. You can use states available from `Player` to display various UI elements in an appropriate state (e.g. displaying a playback button which can be used to pause or resume playback).
+When significant changes occur within the player (e.g. state or buffering updates) the body of any SwiftUI view observing the player is evaluated again. You can use states available from `Player` to update your user interface accordingly, e.g. to display a playback button with an appropriate icon depending on whether the player is playing or not.
 
 ### Optimizing layout refreshes
 
-Periodic time updates are therefore not published automatically by a `Player`. If you want to respond to time updates you must instantiate a `ProgressTracker`. This observable object both lets you observe time updates while allowing you to alter playback progress interactively, e.g. with a slider component for which progress tracker support is provided out of the box.
+Periodic time updates are not published automatically by a `Player`. If you want to respond to time updates you must instantiate a `ProgressTracker`. This observable object both lets you observe time updates while allowing you to alter playback progress interactively.
 
-Here is for example how you can create a `TimeSlider` view with a slider updated every 1/10th of a second:
+Here is for example how you can create a `TimeSlider` view with a native slider updated every 1/10th of a second:
 
 ```swift
 private struct TimeSlider: View {
@@ -87,7 +87,7 @@ private struct TimeSlider: View {
 }
 ```
 
-The progress tracker must be explicitly bound to a player using the dedicated `bind(_:to:)` modifier. This `TimeSlider` can then be inserted into the view hierarchy above:
+The progress tracker must be explicitly bound to a player using the dedicated `bind(_:to:)` modifier. This `TimeSlider` can then be inserted into your player view hierarchy:
 
 ```swift
 struct PlayerView: View {

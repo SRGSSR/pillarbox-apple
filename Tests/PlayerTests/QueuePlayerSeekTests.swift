@@ -14,7 +14,7 @@ import XCTest
 
 final class QueuePlayerSeekTests: XCTestCase {
     func testSeekWithEmptyPlayer() {
-        let player = QueuePlayer(items: [])
+        let player = QueuePlayer()
         expect {
             player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
                 expect(finished).to(beFalse())
