@@ -12,11 +12,11 @@ import Combine
 import Nimble
 import XCTest
 
-final class QueuePlayerSeekTests: XCTestCase {
+final class QueuePlayerSmoothSeekTests: XCTestCase {
     func testSeekWithEmptyPlayer() {
         let player = QueuePlayer()
         expect {
-            player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
+            player.smoothSeek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
                 expect(finished).to(beFalse())
             }
         }.to(postNotifications(equalDiff([]), from: QueuePlayer.notificationCenter))
@@ -27,7 +27,7 @@ final class QueuePlayerSeekTests: XCTestCase {
         let player = QueuePlayer(playerItem: item)
         let time = CMTime(value: 1, timescale: 1)
         expect {
-            player.seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
+            player.smoothSeek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
                 expect(finished).to(beTrue())
             }
         }.to(postNotifications(equalDiff([
@@ -41,7 +41,7 @@ final class QueuePlayerSeekTests: XCTestCase {
         let player = QueuePlayer(playerItem: item)
         let time = CMTime(value: 1, timescale: 1)
         expect {
-            player.seek(to: time) { finished in
+            player.smoothSeek(to: time) { finished in
                 expect(finished).to(beTrue())
             }
         }.to(postNotifications(equalDiff([
@@ -55,7 +55,7 @@ final class QueuePlayerSeekTests: XCTestCase {
         let player = QueuePlayer(playerItem: item)
         let time = CMTime(value: 1, timescale: 1)
         expect {
-            player.seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
+            player.smoothSeek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
                 expect(finished).to(beTrue())
             }
         }.to(postNotifications(equalDiff([
@@ -70,10 +70,10 @@ final class QueuePlayerSeekTests: XCTestCase {
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
         expect {
-            player.seek(to: time1, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
+            player.smoothSeek(to: time1, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
                 expect(finished).to(beTrue())
             }
-            player.seek(to: time2, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
+            player.smoothSeek(to: time2, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
                 expect(finished).to(beTrue())
             }
         }.to(postNotifications(equalDiff([
@@ -93,10 +93,10 @@ final class QueuePlayerSeekTests: XCTestCase {
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
         expect {
-            player.seek(to: time1, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
-                expect(finished).to(beFalse())
+            player.smoothSeek(to: time1, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
+                expect(finished).to(beTrue())
             }
-            player.seek(to: time2, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
+            player.smoothSeek(to: time2, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity) { finished in
                 expect(finished).to(beTrue())
             }
         }.toEventually(postNotifications(equalDiff([

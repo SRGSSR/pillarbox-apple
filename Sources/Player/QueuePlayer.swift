@@ -24,6 +24,22 @@ final class QueuePlayer: AVQueuePlayer {
         Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [
             SeekKey.time: time
         ])
+
+        super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
+            guard let self else { return }
+            Self.notificationCenter.post(name: .didSeek, object: self)
+            completionHandler(finished)
+        }
+    }
+
+    func smoothSeek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
+        guard !items().isEmpty else {
+            completionHandler(false)
+            return
+        }
+        Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [
+            SeekKey.time: time
+        ])
         guard seekTime == nil else {
             seekTime = time
             return
@@ -56,6 +72,14 @@ final class QueuePlayer: AVQueuePlayer {
 
     override func seek(to time: CMTime) {
         self.seek(to: time) { _ in }
+    }
+
+    func smoothSeek(to time: CMTime, completionHandler: @escaping (Bool) -> Void) {
+        self.smoothSeek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity, completionHandler: completionHandler)
+    }
+
+    func smoothSeek(to time: CMTime) {
+        self.smoothSeek(to: time) { _ in }
     }
 
     func replaceItems(with items: [AVPlayerItem]) {
