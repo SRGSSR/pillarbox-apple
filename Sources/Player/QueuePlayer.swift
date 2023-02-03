@@ -17,25 +17,14 @@ final class QueuePlayer: AVQueuePlayer {
     private var seekTime: CMTime?
 
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        guard !items().isEmpty else {
-            completionHandler(false)
-            return
-        }
-        Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [
-            SeekKey.time: time
-        ])
-
-        seekTime = time
-        super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
-            guard let self else { return }
-            if finished {
-                Self.notificationCenter.post(name: .didSeek, object: self)
-            }
-            completionHandler(finished)
-        }
+        seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, isSmooth: false, completionHandler: completionHandler)
     }
 
     func smoothSeek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
+        seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, isSmooth: true, completionHandler: completionHandler)
+    }
+
+    private func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, isSmooth: Bool, completionHandler: @escaping (Bool) -> Void) {
         guard !items().isEmpty else {
             completionHandler(false)
             return
@@ -43,7 +32,7 @@ final class QueuePlayer: AVQueuePlayer {
         Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [
             SeekKey.time: time
         ])
-        guard seekTime == nil else {
+        if isSmooth, seekTime != nil {
             seekTime = time
             return
         }
@@ -51,7 +40,9 @@ final class QueuePlayer: AVQueuePlayer {
         _seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             guard let self else { return }
             self.seekTime = nil
-            Self.notificationCenter.post(name: .didSeek, object: self)
+            if isSmooth || finished {
+                Self.notificationCenter.post(name: .didSeek, object: self)
+            }
             completionHandler(finished)
         }
     }
