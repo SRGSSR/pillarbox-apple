@@ -64,7 +64,7 @@ public extension CMTime {
             return true
         }
         else {
-            return CMTimeCompare(CMTimeAbsoluteValue(time1 - time2), tolerance) != 1
+            return CMTimeAbsoluteValue(time1 - time2) <= tolerance
         }
     }
 }

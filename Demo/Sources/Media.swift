@@ -45,7 +45,7 @@ struct Media: Hashable, Identifiable {
                 item.preferredForwardBufferDuration = 1
             }
         case let .urn(urn):
-            return PlayerItem(urn: urn)
+            return .urn(urn)
         }
     }
 }

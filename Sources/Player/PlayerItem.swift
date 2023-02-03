@@ -60,7 +60,7 @@ public extension PlayerItem {
         metadata: Asset.Metadata? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        self.init(asset: .simple(url: url, metadata: metadata, configuration: configuration))
+        .init(asset: .simple(url: url, metadata: metadata, configuration: configuration))
     }
 
     /// An item loaded with custom resource loading. The scheme of the URL to be played has to be recognized by
@@ -77,7 +77,7 @@ public extension PlayerItem {
         metadata: Asset.Metadata? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        self.init(asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration))
+        .init(asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration))
     }
 
     /// An encrypted item loaded with a content key session.
@@ -93,7 +93,7 @@ public extension PlayerItem {
         metadata: Asset.Metadata? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        self.init(asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration))
+        .init(asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration))
     }
 }
 

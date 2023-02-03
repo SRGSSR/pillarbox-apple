@@ -79,21 +79,18 @@ public final class ProgressTracker: ObservableObject {
     /// - Parameter interval: The interval at which progress must be updated.
     public init(interval: CMTime, seekBehavior: SeekBehavior = .immediate) {
         self.seekBehavior = seekBehavior
-        Publishers.CombineLatest($player, $isInteracting)
-            .map { player, isInteracting -> AnyPublisher<State, Never> in
+        $player
+            .map { [$isInteracting] player -> AnyPublisher<State, Never> in
                 guard let player else {
                     return Just(.invalid).eraseToAnyPublisher()
                 }
-                guard !isInteracting else {
-                    return Empty(completeImmediately: false).eraseToAnyPublisher()
-                }
                 return Publishers.CombineLatest3(
-                    player.periodicTimePublisher(forInterval: interval, queue: .global(qos: .default)),
-                    player.$timeRange,
-                    player.$isSeeking
+                    player.queuePlayer.smoothCurrentTimePublisher(interval: interval, queue: .main),
+                    player.queuePlayer.currentItemTimeRangePublisher(),
+                    $isInteracting
                 )
-                .compactMap { time, timeRange, isSeeking in
-                    guard !isSeeking else { return nil }
+                .compactMap { time, timeRange, isInteracting in
+                    guard !isInteracting else { return nil }
                     return State(time: time, timeRange: timeRange)
                 }
                 .eraseToAnyPublisher()

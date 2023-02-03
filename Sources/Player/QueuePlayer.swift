@@ -7,34 +7,55 @@
 import AVFoundation
 import Combine
 
-final class QueuePlayer: AVQueuePlayer {
-    private static let offset = CMTime(value: 12, timescale: 1)
-    private var seekCount = 0
+enum SeekKey: String {
+    case time
+}
 
-    private static func safeSeekTime(_ time: CMTime, for item: AVPlayerItem?) -> CMTime {
-        guard let item, let timeRange = item.timeRange, !item.duration.isIndefinite /* DVR stream */ else {
-            return time
-        }
-        return CMTimeMinimum(time, CMTimeMaximum(timeRange.end - offset, .zero))
-    }
+final class QueuePlayer: AVQueuePlayer {
+    static let notificationCenter = NotificationCenter()
+
+    private var seekTime: CMTime?
 
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        if seekCount == 0 {
-            NotificationCenter.default.post(name: .willSeek, object: self)
+        guard !items().isEmpty else {
+            completionHandler(false)
+            return
         }
-        seekCount += 1
-        super.seek(
-            to: Self.safeSeekTime(time, for: currentItem),
-            toleranceBefore: toleranceBefore,
-            toleranceAfter: toleranceAfter
-        ) { [weak self] finished in
+        Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [
+            SeekKey.time: time
+        ])
+        guard seekTime == nil else {
+            seekTime = time
+            return
+        }
+        seekTime = time
+        _seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             guard let self else { return }
-            self.seekCount -= 1
-            if self.seekCount == 0 {
-                NotificationCenter.default.post(name: .didSeek, object: self)
-            }
+            self.seekTime = nil
+            Self.notificationCenter.post(name: .didSeek, object: self)
             completionHandler(finished)
         }
+    }
+
+    private func _seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
+        super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
+            guard let self else { return }
+            guard let seekTime = self.seekTime else { return completionHandler(finished) }
+            if seekTime != time {
+                self._seek(to: seekTime, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
+            }
+            else {
+                completionHandler(finished)
+            }
+        }
+    }
+
+    override func seek(to time: CMTime, completionHandler: @escaping (Bool) -> Void) {
+        self.seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity, completionHandler: completionHandler)
+    }
+
+    override func seek(to time: CMTime) {
+        self.seek(to: time) { _ in }
     }
 
     func replaceItems(with items: [AVPlayerItem]) {

@@ -6,7 +6,6 @@
 
 import AVFoundation
 import Combine
-import MediaPlayer
 import TimelaneCombine
 
 extension AVPlayer {
@@ -57,17 +56,6 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    func seekingPublisher() -> AnyPublisher<Bool, Never> {
-        Publishers.Merge(
-            NotificationCenter.default.weakPublisher(for: .willSeek, object: self)
-                .map { _ in true },
-            NotificationCenter.default.weakPublisher(for: .didSeek, object: self)
-                .map { _ in false }
-        )
-        .prepend(false)
-        .eraseToAnyPublisher()
-    }
-
     func bufferingPublisher() -> AnyPublisher<Bool, Never> {
         publisher(for: \.currentItem)
             .compactMap { $0?.bufferingPublisher() }
@@ -102,24 +90,5 @@ extension AVPlayer {
             }
             .switchToLatest()
             .eraseToAnyPublisher()
-    }
-
-    func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
-        Publishers.CombineLatest(
-            nowPlayingInfoPropertiesPublisher(),
-            seekingPublisher()          // Observe relevant time discontinuities to trigger elapsed time updates
-        )
-        .map { [weak self] properties, _ in
-            var nowPlayingInfo = NowPlaying.Info()
-            if let self, let properties {
-                let isLive = StreamType(for: properties.timeRange, itemDuration: properties.itemDuration) == .live
-                nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLive
-                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : 1
-                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (self.currentTime() - properties.timeRange.start).seconds
-                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = properties.timeRange.duration.seconds
-            }
-            return nowPlayingInfo
-        }
-        .eraseToAnyPublisher()
     }
 }
