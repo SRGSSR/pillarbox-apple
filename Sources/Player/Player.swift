@@ -713,8 +713,10 @@ extension Player {
         }
     }
 
-    func skipBackward(completionHandler: @escaping () -> Void = {}) {}
-    func skipForward(completionHandler: @escaping () -> Void = {}) {}
+    func skipBackward(completionHandler: @escaping (Bool) -> Void = { _ in }) {}
+    func skipForward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
+        seek(to: CMTime(value: 10, timescale: 1), completionHandler: completionHandler)
+    }
     @discardableResult
     func skipBackward() async -> Bool { false }
     @discardableResult
