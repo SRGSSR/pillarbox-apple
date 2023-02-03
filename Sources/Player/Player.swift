@@ -136,9 +136,15 @@ public extension Player {
         to time: CMTime,
         toleranceBefore: CMTime = .positiveInfinity,
         toleranceAfter: CMTime = .positiveInfinity,
+        isSmooth: Bool = false,
         completionHandler: @escaping (Bool) -> Void = { _ in }
     ) {
-        queuePlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
+        if isSmooth {
+            queuePlayer.smoothSeek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
+        }
+        else {
+            queuePlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
+        }
     }
 
     /// Seek to a given location.

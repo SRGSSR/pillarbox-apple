@@ -115,7 +115,7 @@ public final class ProgressTracker: ObservableObject {
 
     private func seek(to state: State) {
         guard let player, state.isValid else { return }
-        player.seek(to: state.time)
+        player.seek(to: state.time, isSmooth: true)
     }
 }
 
