@@ -739,7 +739,11 @@ extension Player {
     }
 
     @discardableResult
-    func skipBackward() async -> Bool { false }
+    func skipBackward() async -> Bool {
+        guard canSkipBackward() else { return false }
+        let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
+        return await seek(to: max(currentTime - CMTime(value: 10, timescale: 1), timeRange.start))
+    }
 
     @discardableResult
     func skipForward() async -> Bool {
