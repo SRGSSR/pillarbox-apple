@@ -48,16 +48,17 @@ extension QueuePlayer {
     }
 
     func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
-        Publishers.CombineLatest(
+        Publishers.CombineLatest3(
             nowPlayingInfoPropertiesPublisher(),
-            smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main)
+            smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main),
+            publisher(for: \.rate)
         )
-        .map { properties, time in
+        .map { properties, time, rate in
             var nowPlayingInfo = NowPlaying.Info()
             if let properties {
                 let isLive = StreamType(for: properties.timeRange, itemDuration: properties.itemDuration) == .live
                 nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLive
-                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : 1
+                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : rate
                 if time.isValid {
                     nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - properties.timeRange.start).seconds
                 }
