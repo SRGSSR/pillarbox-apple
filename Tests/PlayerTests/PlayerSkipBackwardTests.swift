@@ -48,6 +48,24 @@ final class PlayerSkipForwardTests: XCTestCase {
         }
     }
 
+    func testMultipleSkipForOnDemand() {
+        let player = Player(item: .simple(url: Stream.onDemand.url))
+        expect(player.streamType).toEventually(equal(.onDemand))
+        expect(player.time).to(equal(.zero))
+
+        waitUntil { done in
+            player.skipForward { finished in
+                expect(finished).to(beFalse())
+            }
+
+            player.skipForward { finished in
+                expect(player.time).to(equal(CMTime(value: 20, timescale: 1), by: beClose(within: player.chunkDuration.seconds)))
+                expect(finished).to(beTrue())
+                done()
+            }
+        }
+    }
+
     func testSkipForLive() {
         expect(true).to(beTrue())
     }

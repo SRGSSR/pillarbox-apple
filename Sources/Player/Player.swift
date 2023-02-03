@@ -721,7 +721,8 @@ extension Player {
 
     func skipBackward(completionHandler: @escaping (Bool) -> Void = { _ in }) {}
     func skipForward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
-        seek(to: CMTime(value: 10, timescale: 1), completionHandler: completionHandler)
+        let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
+        seek(to: currentTime + CMTime(value: 10, timescale: 1), completionHandler: completionHandler)
     }
     @discardableResult
     func skipBackward() async -> Bool { false }

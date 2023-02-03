@@ -14,7 +14,7 @@ enum SeekKey: String {
 final class QueuePlayer: AVQueuePlayer {
     static let notificationCenter = NotificationCenter()
 
-    private var seekTime: CMTime?
+    private(set) var seekTime: CMTime?
 
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, isSmooth: false, completionHandler: completionHandler)
