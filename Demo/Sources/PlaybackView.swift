@@ -55,9 +55,14 @@ private struct ContentView: View {
 
     @ViewBuilder
     private func controls() -> some View {
-        Group {
+        ZStack {
             Color(white: 0, opacity: 0.3)
-            PlaybackButton(player: player)
+            HStack(spacing: 30) {
+                SkipBackwardButton(player: player)
+                PlaybackButton(player: player)
+                SkipForwardButton(player: player)
+            }
+            .debugBodyCounter(color: .green)
         }
         .opacity(isUserInterfaceHidden ? 0 : 1)
     }
@@ -103,8 +108,40 @@ private struct PlaybackButton: View {
                 .tint(.white)
         }
         .opacity(player.isBuffering ? 0 : 1)
-        .frame(width: 90, height: 90)
-        .debugBodyCounter(color: .green)
+        .aspectRatio(contentMode: .fit)
+        .frame(height: 90)
+    }
+}
+
+// Behavior: h-hug, v-hug
+private struct SkipBackwardButton: View {
+    @ObservedObject var player: Player
+
+    var body: some View {
+        Button(action: { player.skipBackward() }) {
+            Image(systemName: "gobackward")
+                .resizable()
+                .tint(.white)
+        }
+        .aspectRatio(contentMode: .fit)
+        .frame(height: 30)
+        .disabled(!player.canSkipBackward())
+    }
+}
+
+// Behavior: h-hug, v-hug
+private struct SkipForwardButton: View {
+    @ObservedObject var player: Player
+
+    var body: some View {
+        Button(action: { player.skipForward() }) {
+            Image(systemName: "goforward")
+                .resizable()
+                .tint(.white)
+        }
+        .aspectRatio(contentMode: .fit)
+        .frame(height: 30)
+        .disabled(!player.canSkipForward())
     }
 }
 

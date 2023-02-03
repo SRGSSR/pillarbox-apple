@@ -707,7 +707,9 @@ extension Player {
     }
 }
 
-extension Player {
+public extension Player {
+    /// Check whether skipping backward is possible.
+    /// - Returns: `true` if possible.
     func canSkipBackward() -> Bool {
         switch streamType {
         case .onDemand, .dvr:
@@ -717,6 +719,8 @@ extension Player {
         }
     }
 
+    /// Check whether skipping forward is possible.
+    /// - Returns: `true` if possible.
     func canSkipForward() -> Bool {
         switch streamType {
         case .onDemand, .dvr:
@@ -726,18 +730,24 @@ extension Player {
         }
     }
 
+    /// Skip backward.
+    /// - Parameter completionHandler: Called when the skip is done.
     func skipBackward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
         guard canSkipBackward() else { return }
         let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
         seek(to: currentTime - CMTime(value: 10, timescale: 1), completionHandler: completionHandler)
     }
 
+    /// Skip forward.
+    /// - Parameter completionHandler: Called when the skip is done.
     func skipForward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
         guard canSkipForward() else { return }
         let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
         seek(to: currentTime + CMTime(value: 10, timescale: 1), completionHandler: completionHandler)
     }
 
+    /// Skip backward.
+    /// - Returns: `true` if the skip finished successfully.
     @discardableResult
     func skipBackward() async -> Bool {
         guard canSkipBackward() else { return false }
@@ -745,6 +755,8 @@ extension Player {
         return await seek(to: max(currentTime - CMTime(value: 10, timescale: 1), timeRange.start))
     }
 
+    /// Skip forward.
+    /// - Returns: `true` if the skip finished successfully.
     @discardableResult
     func skipForward() async -> Bool {
         guard canSkipForward() else { return false }
