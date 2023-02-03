@@ -720,13 +720,20 @@ extension Player {
     }
 
     func skipBackward(completionHandler: @escaping (Bool) -> Void = { _ in }) {}
+
     func skipForward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
         guard canSkipForward() else { return }
         let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
         seek(to: currentTime + CMTime(value: 10, timescale: 1), completionHandler: completionHandler)
     }
+
     @discardableResult
     func skipBackward() async -> Bool { false }
+
     @discardableResult
-    func skipForward() async -> Bool { false }
+    func skipForward() async -> Bool {
+        guard canSkipForward() else { return false }
+        let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
+        return await seek(to: min(currentTime + CMTime(value: 10, timescale: 1), timeRange.end))
+    }
 }
