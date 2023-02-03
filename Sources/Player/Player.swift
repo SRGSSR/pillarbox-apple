@@ -706,7 +706,7 @@ extension Player {
 
     func canSkipForward() -> Bool {
         switch streamType {
-        case .onDemand:
+        case .onDemand, .dvr:
             return true
         default:
             return false
