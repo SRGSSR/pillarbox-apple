@@ -67,7 +67,11 @@ final class PlayerSkipForwardTests: XCTestCase {
     }
 
     func testSkipForLive() {
-        expect(true).to(beTrue())
+        let player = Player(item: .simple(url: Stream.live.url))
+        expect(player.streamType).toEventually(equal(.live))
+        player.skipForward { _ in
+            fail()
+        }
     }
 
     func testSkipForDvr() {
