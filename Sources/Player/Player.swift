@@ -708,7 +708,14 @@ extension Player {
 }
 
 extension Player {
-    func canSkipBackward() -> Bool { false }
+    func canSkipBackward() -> Bool {
+        switch streamType {
+        case .onDemand, .dvr:
+            return true
+        default:
+            return false
+        }
+    }
 
     func canSkipForward() -> Bool {
         switch streamType {
@@ -719,7 +726,11 @@ extension Player {
         }
     }
 
-    func skipBackward(completionHandler: @escaping (Bool) -> Void = { _ in }) {}
+    func skipBackward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
+        guard canSkipBackward() else { return }
+        let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
+        seek(to: currentTime - CMTime(value: 10, timescale: 1), completionHandler: completionHandler)
+    }
 
     func skipForward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
         guard canSkipForward() else { return }
