@@ -48,7 +48,7 @@ final class PlayerSkipBackwardTests: XCTestCase {
         }
     }
 
-    func testMultipleSkipForOnDemand() {
+    func testMultipleSkipsForOnDemand() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
         expect(player.time).to(equal(.zero))

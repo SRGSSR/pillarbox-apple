@@ -20,7 +20,7 @@ final class PlayerSkipForwardAsyncTests: XCTestCase {
         await expect(player.time).to(equal(CMTime(value: 10, timescale: 1), by: beClose(within: player.chunkDuration.seconds)))
     }
 
-    func testMultipleSkipForOnDemand() async {
+    func testMultipleSkipsForOnDemand() async {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         await expect(player.streamType).toEventually(equal(.onDemand))
         await expect(player.time).to(equal(.zero))
