@@ -554,6 +554,7 @@ extension Player {
             queuePlayer.nowPlayingInfoPlaybackPublisher()
         )
         .receiveOnMainThread()
+        .lane("control_center_update")
         .sink { [weak self] nowPlayingInfoMetadata, nowPlayingInfoPlayback in
             self?.updateControlCenter(
                 nowPlayingInfo: nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new }

@@ -27,6 +27,7 @@ extension AVPlayerItem {
             publisher(for: \.seekableTimeRanges)
         )
         .compactMap { Self.timeRange(loadedTimeRanges: $0, seekableTimeRanges: $1) }
+        .removeDuplicates()
         .eraseToAnyPublisher()
     }
 
