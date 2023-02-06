@@ -6,7 +6,7 @@
 
 PATH="$(which swiftlint):$(which ruby):$PATH"
 
-if Scripts/check-quality.sh; then
+if Scripts/check-quality.sh only-changes; then
 	echo "✅ Quality checked"
 else
 	echo "❌ Quality check failed"
