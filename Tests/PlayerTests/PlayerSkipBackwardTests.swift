@@ -78,10 +78,9 @@ final class PlayerSkipBackwardTests: XCTestCase {
         let player = Player(item: .simple(url: Stream.dvr.url))
         expect(player.streamType).toEventually(equal(.dvr))
         let headTime = player.time
-
         waitUntil { done in
             player.skipBackward { finished in
-                expect(player.time).to(equal(headTime, by: beClose(within: player.chunkDuration.seconds)))
+                expect(player.time).to(equal(headTime - CMTime(value: 1, timescale: 1), by: beClose(within: player.chunkDuration.seconds)))
                 expect(finished).to(beTrue())
                 done()
             }

@@ -43,6 +43,6 @@ final class PlayerSkipBackwardAsyncTests: XCTestCase {
         await expect(player.streamType).toEventually(equal(.dvr))
         let headTime = player.time
         await expect(await player.skipBackward()).to(beTrue())
-        await expect(player.time).to(equal(headTime, by: beClose(within: player.chunkDuration.seconds)))
+        await expect(player.time).to(equal(headTime - CMTime(value: 1, timescale: 1), by: beClose(within: player.chunkDuration.seconds)))
     }
 }

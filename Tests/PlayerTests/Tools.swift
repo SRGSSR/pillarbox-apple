@@ -71,7 +71,7 @@ struct Stream {
 
     static let dvr: Self = .init(
         url: URL(string: "http://localhost:8123/dvr/master.m3u8")!,
-        duration: CMTime(value: 20, timescale: 1)
+        duration: CMTime(value: 17 /* 20 - 3 * 1 (chunk) */, timescale: 1)
     )
 
     static let unavailable: Self = .init(

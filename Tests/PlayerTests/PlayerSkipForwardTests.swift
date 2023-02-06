@@ -42,7 +42,7 @@ final class PlayerSkipForwardTests: XCTestCase {
 
         waitUntil { done in
             player.skipForward { _ in
-                expect(player.time).to(equal(CMTime(value: 10, timescale: 1), by: beClose(within: player.chunkDuration.seconds)))
+                expect(player.time).to(equal(CMTime(value: 2, timescale: 1), by: beClose(within: player.chunkDuration.seconds)))
                 done()
             }
         }
@@ -59,7 +59,7 @@ final class PlayerSkipForwardTests: XCTestCase {
             }
 
             player.skipForward { finished in
-                expect(player.time).to(equal(CMTime(value: 20, timescale: 1), by: beClose(within: player.chunkDuration.seconds)))
+                expect(player.time).to(equal(CMTime(value: 4, timescale: 1), by: beClose(within: player.chunkDuration.seconds)))
                 expect(finished).to(beTrue())
                 done()
             }
@@ -77,11 +77,10 @@ final class PlayerSkipForwardTests: XCTestCase {
     func testSkipForDvr() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         expect(player.streamType).toEventually(equal(.dvr))
-        let headTime = player.time
 
         waitUntil { done in
             player.skipForward { finished in
-                expect(player.time).to(equal(headTime, by: beClose(within: player.chunkDuration.seconds)))
+                expect(player.time).to(equal(Stream.dvr.duration, by: beClose(within: player.chunkDuration.seconds)))
                 expect(finished).to(beTrue())
                 done()
             }

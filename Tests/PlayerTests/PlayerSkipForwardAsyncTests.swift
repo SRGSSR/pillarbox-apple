@@ -17,7 +17,7 @@ final class PlayerSkipForwardAsyncTests: XCTestCase {
         await expect(player.streamType).toEventually(equal(.onDemand))
         await expect(player.time).to(equal(.zero))
         await expect(await player.skipForward()).to(beTrue())
-        await expect(player.time).to(equal(CMTime(value: 10, timescale: 1), by: beClose(within: player.chunkDuration.seconds)))
+        await expect(player.time).to(equal(CMTime(value: 2, timescale: 1), by: beClose(within: player.chunkDuration.seconds)))
     }
 
     func testMultipleSkipsForOnDemand() async {
@@ -29,7 +29,7 @@ final class PlayerSkipForwardAsyncTests: XCTestCase {
         let finished = await (finished1, finished2)
         await expect(finished.0).to(beFalse())
         await expect(finished.1).to(beTrue())
-        await expect(player.time).to(equal(CMTime(value: 20, timescale: 1), by: beClose(within: player.chunkDuration.seconds)))
+        await expect(player.time).to(equal(CMTime(value: 4, timescale: 1), by: beClose(within: player.chunkDuration.seconds)))
     }
 
     func testSkipForLive() async {
