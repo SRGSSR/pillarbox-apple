@@ -736,7 +736,8 @@ public extension Player {
     func skipBackward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
         guard canSkipBackward() else { return }
         let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
-        seek(to: max(currentTime - CMTime(value: 2, timescale: 1), timeRange.start), completionHandler: completionHandler)
+        let time = currentTime - CMTime(value: 2, timescale: 1)
+        seek(to: CMTimeClampToRange(time, range: timeRange), completionHandler: completionHandler)
     }
 
     /// Skip forward.
@@ -744,7 +745,8 @@ public extension Player {
     func skipForward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
         guard canSkipForward() else { return }
         let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
-        seek(to: min(currentTime + CMTime(value: 2, timescale: 1), timeRange.end), completionHandler: completionHandler)
+        let time = currentTime - CMTime(value: 2, timescale: 1)
+        seek(to: CMTimeClampToRange(time, range: timeRange), completionHandler: completionHandler)
     }
 
     /// Skip backward.
@@ -753,7 +755,8 @@ public extension Player {
     func skipBackward() async -> Bool {
         guard canSkipBackward() else { return false }
         let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
-        return await seek(to: max(currentTime - CMTime(value: 2, timescale: 1), timeRange.start))
+        let time = currentTime - CMTime(value: 2, timescale: 1)
+        return await seek(to: CMTimeClampToRange(time, range: timeRange))
     }
 
     /// Skip forward.
@@ -762,6 +765,7 @@ public extension Player {
     func skipForward() async -> Bool {
         guard canSkipForward() else { return false }
         let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
-        return await seek(to: min(currentTime + CMTime(value: 2, timescale: 1), timeRange.end))
+        let time = currentTime + CMTime(value: 2, timescale: 1)
+        return await seek(to: CMTimeClampToRange(time, range: timeRange))
     }
 }
