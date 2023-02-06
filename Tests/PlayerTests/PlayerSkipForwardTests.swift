@@ -79,9 +79,12 @@ final class PlayerSkipForwardTests: XCTestCase {
         expect(player.streamType).toEventually(equal(.dvr))
         let headTime = player.time
 
-        player.skipForward { finished in
-            expect(player.time).to(equal(headTime, by: beClose(within: player.chunkDuration.seconds)))
-            expect(finished).to(beTrue())
+        waitUntil { done in
+            player.skipForward { finished in
+                expect(player.time).to(equal(headTime, by: beClose(within: player.chunkDuration.seconds)))
+                expect(finished).to(beTrue())
+                done()
+            }
         }
     }
 }
