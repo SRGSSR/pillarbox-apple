@@ -15,7 +15,7 @@ private struct ContentView: View {
 
     var body: some View {
         ZStack {
-            Group {
+            ZStack {
                 main()
                 controls()
                 loadingIndicator()
@@ -73,7 +73,7 @@ private struct ControlsView: View {
     @StateObject var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
 
     var body: some View {
-        Group {
+        ZStack {
             Color(white: 0, opacity: 0.3)
             HStack(spacing: 30) {
                 SkipBackwardButton(player: player, progressTracker: progressTracker)
