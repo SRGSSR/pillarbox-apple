@@ -255,7 +255,7 @@ private struct TimeSlider: View {
     }
 
     var body: some View {
-        Group {
+        ZStack {
             switch player.streamType {
             case .onDemand:
                 Slider(
