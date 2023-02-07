@@ -106,6 +106,11 @@ public final class Player: ObservableObject, Equatable {
 }
 
 public extension Player {
+    private static func clampedTime(_ time: CMTime, to range: CMTimeRange) -> CMTime {
+        guard !range.isEmpty else { return time }
+        return CMTimeClampToRange(time, range: range)
+    }
+
     /// Resume playback.
     func play() {
         queuePlayer.play()
@@ -126,6 +131,14 @@ public extension Player {
         }
     }
 
+    /// Check whether seeking to a specific time is possible.
+    /// - Parameter time: The time to seek to.
+    /// - Returns: `true` if possible.
+    func canSeek(to time: CMTime) -> Bool {
+        guard timeRange.isValid, !timeRange.isEmpty else { return false }
+        return timeRange.start <= time && time <= timeRange.end
+    }
+
     /// Seek to a given location.
     /// - Parameters:
     ///   - time: The time to seek to.
@@ -139,11 +152,12 @@ public extension Player {
         isSmooth: Bool = false,
         completionHandler: @escaping (Bool) -> Void = { _ in }
     ) {
+        let clampedTime = Self.clampedTime(time, to: timeRange)
         if isSmooth {
-            queuePlayer.smoothSeek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
+            queuePlayer.smoothSeek(to: clampedTime, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
         }
         else {
-            queuePlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
+            queuePlayer.seek(to: clampedTime, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
         }
     }
 
@@ -159,7 +173,8 @@ public extension Player {
         toleranceBefore: CMTime = .positiveInfinity,
         toleranceAfter: CMTime = .positiveInfinity
     ) async -> Bool {
-        await queuePlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
+        let clampedTime = Self.clampedTime(time, to: timeRange)
+        return await queuePlayer.seek(to: clampedTime, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
     }
 
     /// Return whether the current player item player can be returned to live conditions.
