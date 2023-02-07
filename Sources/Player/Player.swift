@@ -193,7 +193,7 @@ public extension Player {
     /// - Parameter time: The time.
     /// - Returns: `true` if skipping to live conditions is possible.
     func canSkipToLive(from time: CMTime) -> Bool {
-        guard streamType == .dvr, timeRange.isValid else { return false }
+        guard streamType == .dvr else { return false }
         return chunkDuration.isValid && time < timeRange.end - chunkDuration
     }
 
@@ -201,7 +201,7 @@ public extension Player {
     /// support DVR.
     /// - Parameter completionHandler: A completion handler called when skipping ends.
     func skipToLive(completionHandler: @escaping (Bool) -> Void = { _ in }) {
-        guard canSkipToLive(), timeRange.isValid else { return }
+        guard canSkipToLive() else { return }
         queuePlayer.seek(
             to: timeRange.end,
             toleranceBefore: .positiveInfinity,
