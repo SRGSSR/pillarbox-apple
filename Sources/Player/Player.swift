@@ -745,7 +745,7 @@ public extension Player {
     func skipForward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
         guard canSkipForward() else { return }
         let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
-        let time = currentTime - CMTime(value: 2, timescale: 1)
+        let time = currentTime + CMTime(value: 2, timescale: 1)
         seek(to: CMTimeClampToRange(time, range: timeRange), completionHandler: completionHandler)
     }
 
