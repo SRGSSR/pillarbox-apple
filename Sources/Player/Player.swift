@@ -732,23 +732,13 @@ public extension Player {
     /// Check whether skipping backward is possible.
     /// - Returns: `true` if possible.
     func canSkipBackward() -> Bool {
-        switch streamType {
-        case .onDemand, .dvr:
-            return true
-        default:
-            return false
-        }
+        canSkip(withInterval: CMTime(value: -2, timescale: 1))
     }
 
     /// Check whether skipping forward is possible.
     /// - Returns: `true` if possible.
     func canSkipForward() -> Bool {
-        switch streamType {
-        case .onDemand, .dvr:
-            return true
-        default:
-            return false
-        }
+        canSkip(withInterval: CMTime(value: 2, timescale: 1))
     }
 
     /// Skip backward.
@@ -775,6 +765,11 @@ public extension Player {
     @discardableResult
     func skipForward() async -> Bool {
         await skip(withInterval: CMTime(value: 2, timescale: 1))
+    }
+
+    private func canSkip(withInterval interval: CMTime) -> Bool {
+        let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
+        return canSeek(to: currentTime + interval)
     }
 
     private func skip(withInterval interval: CMTime, completionHandler: @escaping (Bool) -> Void = { _ in }) {
