@@ -35,7 +35,9 @@ final class PlayerSkipForwardAsyncTests: XCTestCase {
     func testSkipForLive() async {
         let player = Player(item: .simple(url: Stream.live.url))
         await expect(player.streamType).toEventually(equal(.live))
-        await expect(await player.skipForward()).to(beFalse())
+        let headTime = player.time
+        await expect(await player.skipForward()).to(beTrue())
+        await expect(player.time).to(equal(headTime, by: beClose(within: player.chunkDuration.seconds)))
     }
 
     func testSkipForDvr() async {

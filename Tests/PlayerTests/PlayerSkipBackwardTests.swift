@@ -69,8 +69,11 @@ final class PlayerSkipBackwardTests: XCTestCase {
     func testSkipForLive() {
         let player = Player(item: .simple(url: Stream.live.url))
         expect(player.streamType).toEventually(equal(.live))
-        player.skipBackward { _ in
-            fail()
+        waitUntil { done in
+            player.skipBackward { finished in
+                expect(finished).to(beTrue())
+                done()
+            }
         }
     }
 

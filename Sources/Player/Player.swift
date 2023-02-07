@@ -749,38 +749,36 @@ public extension Player {
     /// Skip backward.
     /// - Parameter completionHandler: Called when the skip is done.
     func skipBackward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
-        guard canSkipBackward() else { return }
-        let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
-        let time = currentTime - CMTime(value: 2, timescale: 1)
-        seek(to: CMTimeClampToRange(time, range: timeRange), completionHandler: completionHandler)
+        skip(withInterval: CMTime(value: -2, timescale: 1), completionHandler: completionHandler)
     }
 
     /// Skip forward.
     /// - Parameter completionHandler: Called when the skip is done.
     func skipForward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
-        guard canSkipForward() else { return }
-        let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
-        let time = currentTime + CMTime(value: 2, timescale: 1)
-        seek(to: CMTimeClampToRange(time, range: timeRange), completionHandler: completionHandler)
+        skip(withInterval: CMTime(value: 2, timescale: 1), completionHandler: completionHandler)
     }
 
     /// Skip backward.
     /// - Returns: `true` if the skip finished successfully.
     @discardableResult
     func skipBackward() async -> Bool {
-        guard canSkipBackward() else { return false }
-        let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
-        let time = currentTime - CMTime(value: 2, timescale: 1)
-        return await seek(to: CMTimeClampToRange(time, range: timeRange))
+        await skip(withInterval: CMTime(value: -2, timescale: 1))
     }
 
     /// Skip forward.
     /// - Returns: `true` if the skip finished successfully.
     @discardableResult
     func skipForward() async -> Bool {
-        guard canSkipForward() else { return false }
+        await skip(withInterval: CMTime(value: 2, timescale: 1))
+    }
+
+    private func skip(withInterval interval: CMTime, completionHandler: @escaping (Bool) -> Void = { _ in }) {
         let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
-        let time = currentTime + CMTime(value: 2, timescale: 1)
-        return await seek(to: CMTimeClampToRange(time, range: timeRange))
+        seek(to: currentTime + interval, completionHandler: completionHandler)
+    }
+
+    private func skip(withInterval interval: CMTime) async -> Bool {
+        let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
+        return await seek(to: currentTime + interval)
     }
 }
