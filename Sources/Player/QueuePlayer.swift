@@ -20,11 +20,7 @@ final class QueuePlayer: AVQueuePlayer {
         seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, isSmooth: false, completionHandler: completionHandler)
     }
 
-    func smoothSeek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, isSmooth: true, completionHandler: completionHandler)
-    }
-
-    private func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, isSmooth: Bool, completionHandler: @escaping (Bool) -> Void) {
+    func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, isSmooth: Bool, completionHandler: @escaping (Bool) -> Void) {
         guard !items().isEmpty else {
             completionHandler(false)
             return
@@ -66,14 +62,6 @@ final class QueuePlayer: AVQueuePlayer {
 
     override func seek(to time: CMTime) {
         self.seek(to: time) { _ in }
-    }
-
-    func smoothSeek(to time: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        self.smoothSeek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity, completionHandler: completionHandler)
-    }
-
-    func smoothSeek(to time: CMTime) {
-        self.smoothSeek(to: time) { _ in }
     }
 
     func replaceItems(with items: [AVPlayerItem]) {

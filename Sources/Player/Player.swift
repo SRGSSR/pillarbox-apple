@@ -152,13 +152,13 @@ public extension Player {
         isSmooth: Bool = false,
         completionHandler: @escaping (Bool) -> Void = { _ in }
     ) {
-        let clampedTime = Self.clampedTime(time, to: timeRange)
-        if isSmooth {
-            queuePlayer.smoothSeek(to: clampedTime, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
-        }
-        else {
-            queuePlayer.seek(to: clampedTime, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
-        }
+        queuePlayer.seek(
+            to: Self.clampedTime(time, to: timeRange),
+            toleranceBefore: toleranceBefore,
+            toleranceAfter: toleranceAfter,
+            isSmooth: isSmooth,
+            completionHandler: completionHandler
+        )
     }
 
     /// Seek to a given location.
