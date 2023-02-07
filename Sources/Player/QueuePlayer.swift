@@ -21,8 +21,8 @@ final class QueuePlayer: AVQueuePlayer {
     }
 
     func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, isSmooth: Bool, completionHandler: @escaping (Bool) -> Void) {
-        guard !items().isEmpty else {
-            completionHandler(false)
+        guard !items().isEmpty, time.isValid else {
+            completionHandler(true)
             return
         }
         Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [
