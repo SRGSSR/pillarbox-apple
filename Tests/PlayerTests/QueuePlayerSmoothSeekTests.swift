@@ -16,7 +16,7 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
         let player = QueuePlayer()
         expect {
             player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity, isSmooth: true) { finished in
-                expect(finished).to(beFalse())
+                expect(finished).to(beTrue())
             }
         }.to(postNotifications(equalDiff([]), from: QueuePlayer.notificationCenter))
     }

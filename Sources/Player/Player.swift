@@ -201,9 +201,8 @@ public extension Player {
     /// support DVR.
     /// - Parameter completionHandler: A completion handler called when skipping ends.
     func skipToLive(completionHandler: @escaping (Bool) -> Void = { _ in }) {
-        guard canSkipToLive() else { return }
         queuePlayer.seek(
-            to: timeRange.end,
+            to: Self.clampedTime(timeRange.end, to: timeRange),
             toleranceBefore: .positiveInfinity,
             toleranceAfter: .positiveInfinity
         ) { [weak self] finished in
@@ -215,9 +214,8 @@ public extension Player {
     /// Return the current item to live conditions, resuming playback if needed. Does nothing if the current item is
     ///  not a livestream or does not support DVR.
     func skipToLive() async {
-        guard canSkipToLive(), timeRange.isValid else { return }
         await queuePlayer.seek(
-            to: timeRange.end,
+            to: Self.clampedTime(timeRange.end, to: timeRange),
             toleranceBefore: .positiveInfinity,
             toleranceAfter: .positiveInfinity
         )

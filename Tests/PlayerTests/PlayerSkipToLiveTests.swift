@@ -20,19 +20,21 @@ final class PlayerSkipToLiveTests: XCTestCase {
     func testCannotSkipToLiveForOnDemand() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
+        expect(player.streamType).toEventually(equal(.onDemand))
         expect(player.canSkipToLive()).toAlways(beFalse())
     }
 
     func testCannotSkipToLiveForLive() {
         let item = PlayerItem.simple(url: Stream.live.url)
         let player = Player(item: item)
+        expect(player.streamType).toEventually(equal(.live))
         expect(player.canSkipToLive()).toAlways(beFalse())
     }
 
     func testCannotSkipToLiveForDvrInLiveConditions() {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
-        expect(player.time).toEventuallyNot(equal(.zero))
+        expect(player.streamType).toEventually(equal(.dvr))
         expect(player.canSkipToLive()).toAlways(beFalse())
     }
 
@@ -62,33 +64,47 @@ final class PlayerSkipToLiveTests: XCTestCase {
 
     func testSkipToLiveWhenEmpty() {
         let player = Player()
-        player.skipToLive { _ in
-            fail("Must not be called")
+        waitUntil { done in
+            player.skipToLive { finished in
+                expect(finished).to(beTrue())
+                done()
+            }
         }
     }
 
     func testSkipToLiveForOnDemand() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
-        player.skipToLive { _ in
-            fail("Must not be called")
+        expect(player.streamType).toEventually(equal(.onDemand))
+        waitUntil { done in
+            player.skipToLive { finished in
+                expect(finished).to(beTrue())
+                done()
+            }
         }
     }
 
     func testSkipToLiveForLive() {
         let item = PlayerItem.simple(url: Stream.live.url)
         let player = Player(item: item)
-        player.skipToLive { _ in
-            fail("Must not be called")
+        expect(player.streamType).toEventually(equal(.live))
+        waitUntil { done in
+            player.skipToLive { finished in
+                expect(finished).to(beTrue())
+                done()
+            }
         }
     }
 
     func testSkipToLiveForDvrInLiveConditions() {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
-        expect(player.time).toEventuallyNot(equal(.zero))
-        player.skipToLive { _ in
-            fail("Must not be called")
+        expect(player.streamType).toEventually(equal(.dvr))
+        waitUntil { done in
+            player.skipToLive { finished in
+                expect(finished).to(beTrue())
+                done()
+            }
         }
     }
 

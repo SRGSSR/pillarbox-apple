@@ -59,7 +59,7 @@ final class PlayerSeekTests: XCTestCase {
         let player = Player()
         waitUntil { done in
             player.seek(to: .zero) { finished in
-                expect(finished).to(beFalse())
+                expect(finished).to(beTrue())
                 done()
             }
         }
