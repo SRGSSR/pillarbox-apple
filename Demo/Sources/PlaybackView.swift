@@ -73,7 +73,7 @@ private struct ControlsView: View {
     @StateObject var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
 
     var body: some View {
-        ZStack {
+        Group {
             Color(white: 0, opacity: 0.3)
             HStack(spacing: 30) {
                 SkipBackwardButton(player: player, progressTracker: progressTracker)
