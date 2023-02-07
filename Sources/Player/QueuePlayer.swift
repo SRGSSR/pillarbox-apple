@@ -43,6 +43,14 @@ final class QueuePlayer: AVQueuePlayer {
         }
     }
 
+    func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, isSmooth: Bool) async -> Bool {
+        await withCheckedContinuation { continuation in
+            seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, isSmooth: isSmooth) { finished in
+                continuation.resume(returning: finished)
+            }
+        }
+    }
+
     private func _seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             guard let self else { return }

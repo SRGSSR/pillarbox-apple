@@ -171,10 +171,15 @@ public extension Player {
     func seek(
         to time: CMTime,
         toleranceBefore: CMTime = .positiveInfinity,
-        toleranceAfter: CMTime = .positiveInfinity
+        toleranceAfter: CMTime = .positiveInfinity,
+        isSmooth: Bool = false
     ) async -> Bool {
-        let clampedTime = Self.clampedTime(time, to: timeRange)
-        return await queuePlayer.seek(to: clampedTime, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
+        await queuePlayer.seek(
+            to: Self.clampedTime(time, to: timeRange),
+            toleranceBefore: toleranceBefore,
+            toleranceAfter: toleranceAfter,
+            isSmooth: isSmooth
+        )
     }
 
     /// Return whether the current player item player can be returned to live conditions.
