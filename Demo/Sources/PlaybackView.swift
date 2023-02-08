@@ -131,7 +131,7 @@ private struct SkipBackwardButton: View {
 
     var body: some View {
         Button(action: { player.skipBackward() }) {
-            Image(systemName: "gobackward")
+            Image(systemName: "gobackward.10")
                 .resizable()
                 .tint(.white)
         }
@@ -148,7 +148,7 @@ private struct SkipForwardButton: View {
 
     var body: some View {
         Button(action: { player.skipForward() }) {
-            Image(systemName: "goforward")
+            Image(systemName: "goforward.10")
                 .resizable()
                 .tint(.white)
         }
