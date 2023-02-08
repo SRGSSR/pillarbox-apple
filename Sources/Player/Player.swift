@@ -39,7 +39,7 @@ public final class Player: ObservableObject, Equatable {
 
     /// Current time.
     public var time: CMTime {
-        queuePlayer.currentTime()
+        Self.clampedTime(queuePlayer.currentTime(), to: timeRange)
     }
 
     let queuePlayer = QueuePlayer()
@@ -101,6 +101,11 @@ public final class Player: ObservableObject, Equatable {
         lhs === rhs
     }
 
+    private static func clampedTime(_ time: CMTime, to range: CMTimeRange) -> CMTime {
+        guard !range.isEmpty else { return range.start }
+        return CMTimeClampToRange(time, range: range)
+    }
+
     private func configurePlayer() {
         queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
         queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
@@ -136,11 +141,6 @@ public extension Player {
 }
 
 public extension Player {
-    private static func clampedTime(_ time: CMTime, to range: CMTimeRange) -> CMTime {
-        guard !range.isEmpty else { return range.start }
-        return CMTimeClampToRange(time, range: range)
-    }
-
     /// Check whether seeking to a specific time is possible.
     /// - Parameter time: The time to seek to.
     /// - Returns: `true` if possible.
