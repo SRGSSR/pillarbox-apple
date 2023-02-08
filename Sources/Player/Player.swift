@@ -154,7 +154,9 @@ public extension Player {
     ///   - time: The time to seek to.
     ///   - toleranceBefore: Tolerance before the desired position.
     ///   - toleranceAfter: Tolerance after the desired position.
-    ///   - completionHandler: A completion handler called when seeking ends.
+    ///   - isSmooth: Set to `true` to enable smooth seeking
+    ///   - completionHandler: A completion handler called when seeking ends. The provided Boolean informs
+    ///     whether the seek could finish without being cancelled.
     func seek(
         to time: CMTime,
         toleranceBefore: CMTime = .positiveInfinity,
@@ -176,7 +178,8 @@ public extension Player {
     ///   - time: The time to seek to.
     ///   - toleranceBefore: Tolerance before the desired position.
     ///   - toleranceAfter: Tolerance after the desired position.
-    /// - Returns: `true` if seeking was successful.
+    ///   - isSmooth: Set to `true` to enable smooth seeking, preventing unnecessary seek cancellation.
+    /// - Returns: `true` if seeking could finish without being cancelled.
     @discardableResult
     func seek(
         to time: CMTime,
@@ -211,7 +214,8 @@ public extension Player {
 
     /// Return the current item to live conditions. Does nothing if the current item is not a livestream or does not
     /// support DVR.
-    /// - Parameter completionHandler: A completion handler called when skipping ends.
+    /// - Parameter completionHandler: A completion handler called when skipping ends. The provided Boolean informs
+    ///   whether the skip could finish without being cancelled.
     func skipToLive(completionHandler: @escaping (Bool) -> Void = { _ in }) {
         queuePlayer.seek(
             to: Self.clampedTime(timeRange.end, to: timeRange),
@@ -224,7 +228,7 @@ public extension Player {
     }
 
     /// Return the current item to live conditions, resuming playback if needed. Does nothing if the current item is
-    ///  not a livestream or does not support DVR.
+    /// not a livestream or does not support DVR.
     func skipToLive() async {
         await queuePlayer.seek(
             to: Self.clampedTime(timeRange.end, to: timeRange),
@@ -249,26 +253,28 @@ public extension Player {
     }
 
     /// Skip backward.
-    /// - Parameter completionHandler: Called when the skip is done.
+    /// - Parameter completionHandler: A completion handler called when skipping ends. The provided Boolean informs
+    ///   whether the skip could finish without being cancelled.
     func skipBackward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
         skip(withInterval: backwardSkipTime, completionHandler: completionHandler)
     }
 
     /// Skip forward.
-    /// - Parameter completionHandler: Called when the skip is done.
+    /// - Parameter completionHandler: A completion handler called when skipping ends. The provided Boolean informs
+    ///   whether the skip could finish without being cancelled.
     func skipForward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
         skip(withInterval: forwardSkipTime, completionHandler: completionHandler)
     }
 
     /// Skip backward.
-    /// - Returns: `true` if the skip finished successfully.
+    /// - Returns: `true` if the skip finished without being cancelled.
     @discardableResult
     func skipBackward() async -> Bool {
         await skip(withInterval: backwardSkipTime)
     }
 
     /// Skip forward.
-    /// - Returns: `true` if the skip finished successfully.
+    /// - Returns: `true` if the skip finished without being cancelled.
     @discardableResult
     func skipForward() async -> Bool {
         await skip(withInterval: forwardSkipTime)
