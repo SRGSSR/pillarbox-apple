@@ -106,11 +106,6 @@ public final class Player: ObservableObject, Equatable {
 }
 
 public extension Player {
-    private static func clampedTime(_ time: CMTime, to range: CMTimeRange) -> CMTime {
-        guard !range.isEmpty else { return time }
-        return CMTimeClampToRange(time, range: range)
-    }
-
     /// Resume playback.
     func play() {
         queuePlayer.play()
@@ -129,6 +124,13 @@ public extension Player {
         else {
             queuePlayer.play()
         }
+    }
+}
+
+public extension Player {
+    private static func clampedTime(_ time: CMTime, to range: CMTimeRange) -> CMTime {
+        guard !range.isEmpty else { return time }
+        return CMTimeClampToRange(time, range: range)
     }
 
     /// Check whether seeking to a specific time is possible.
@@ -181,7 +183,9 @@ public extension Player {
             isSmooth: isSmooth
         )
     }
+}
 
+public extension Player {
     /// Return whether the current player item player can be returned to live conditions.
     /// - Returns: `true` if skipping to live conditions is possible.
     func canSkipToLive() -> Bool {
@@ -220,6 +224,61 @@ public extension Player {
             toleranceAfter: .positiveInfinity
         )
         queuePlayer.play()
+    }
+}
+
+public extension Player {
+    /// Check whether skipping backward is possible.
+    /// - Returns: `true` if possible.
+    func canSkipBackward() -> Bool {
+        canSkip(withInterval: CMTime(value: -2, timescale: 1))
+    }
+
+    /// Check whether skipping forward is possible.
+    /// - Returns: `true` if possible.
+    func canSkipForward() -> Bool {
+        canSkip(withInterval: CMTime(value: 2, timescale: 1))
+    }
+
+    /// Skip backward.
+    /// - Parameter completionHandler: Called when the skip is done.
+    func skipBackward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
+        skip(withInterval: CMTime(value: -2, timescale: 1), completionHandler: completionHandler)
+    }
+
+    /// Skip forward.
+    /// - Parameter completionHandler: Called when the skip is done.
+    func skipForward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
+        skip(withInterval: CMTime(value: 2, timescale: 1), completionHandler: completionHandler)
+    }
+
+    /// Skip backward.
+    /// - Returns: `true` if the skip finished successfully.
+    @discardableResult
+    func skipBackward() async -> Bool {
+        await skip(withInterval: CMTime(value: -2, timescale: 1))
+    }
+
+    /// Skip forward.
+    /// - Returns: `true` if the skip finished successfully.
+    @discardableResult
+    func skipForward() async -> Bool {
+        await skip(withInterval: CMTime(value: 2, timescale: 1))
+    }
+
+    private func canSkip(withInterval interval: CMTime) -> Bool {
+        let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
+        return canSeek(to: currentTime + interval)
+    }
+
+    private func skip(withInterval interval: CMTime, completionHandler: @escaping (Bool) -> Void = { _ in }) {
+        let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
+        seek(to: currentTime + interval, completionHandler: completionHandler)
+    }
+
+    private func skip(withInterval interval: CMTime) async -> Bool {
+        let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
+        return await seek(to: currentTime + interval)
     }
 }
 
@@ -723,60 +782,5 @@ extension Player {
             uninstallRemoteCommands()
             nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nil
         }
-    }
-}
-
-public extension Player {
-    /// Check whether skipping backward is possible.
-    /// - Returns: `true` if possible.
-    func canSkipBackward() -> Bool {
-        canSkip(withInterval: CMTime(value: -2, timescale: 1))
-    }
-
-    /// Check whether skipping forward is possible.
-    /// - Returns: `true` if possible.
-    func canSkipForward() -> Bool {
-        canSkip(withInterval: CMTime(value: 2, timescale: 1))
-    }
-
-    /// Skip backward.
-    /// - Parameter completionHandler: Called when the skip is done.
-    func skipBackward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
-        skip(withInterval: CMTime(value: -2, timescale: 1), completionHandler: completionHandler)
-    }
-
-    /// Skip forward.
-    /// - Parameter completionHandler: Called when the skip is done.
-    func skipForward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
-        skip(withInterval: CMTime(value: 2, timescale: 1), completionHandler: completionHandler)
-    }
-
-    /// Skip backward.
-    /// - Returns: `true` if the skip finished successfully.
-    @discardableResult
-    func skipBackward() async -> Bool {
-        await skip(withInterval: CMTime(value: -2, timescale: 1))
-    }
-
-    /// Skip forward.
-    /// - Returns: `true` if the skip finished successfully.
-    @discardableResult
-    func skipForward() async -> Bool {
-        await skip(withInterval: CMTime(value: 2, timescale: 1))
-    }
-
-    private func canSkip(withInterval interval: CMTime) -> Bool {
-        let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
-        return canSeek(to: currentTime + interval)
-    }
-
-    private func skip(withInterval interval: CMTime, completionHandler: @escaping (Bool) -> Void = { _ in }) {
-        let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
-        seek(to: currentTime + interval, completionHandler: completionHandler)
-    }
-
-    private func skip(withInterval interval: CMTime) async -> Bool {
-        let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
-        return await seek(to: currentTime + interval)
     }
 }
