@@ -275,17 +275,17 @@ public extension Player {
     }
 
     private func canSkip(withInterval interval: CMTime) -> Bool {
-        let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
+        let currentTime = queuePlayer.seekTime ?? time
         return canSeek(to: currentTime + interval)
     }
 
     private func skip(withInterval interval: CMTime, completionHandler: @escaping (Bool) -> Void = { _ in }) {
-        let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
+        let currentTime = queuePlayer.seekTime ?? time
         seek(to: currentTime + interval, completionHandler: completionHandler)
     }
 
     private func skip(withInterval interval: CMTime) async -> Bool {
-        let currentTime = queuePlayer.seekTime ?? queuePlayer.currentTime()
+        let currentTime = queuePlayer.seekTime ?? time
         return await seek(to: currentTime + interval)
     }
 }
