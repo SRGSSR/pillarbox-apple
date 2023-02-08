@@ -34,7 +34,7 @@ extension Publishers {
             player.currentItemTimeRangePublisher()
         )
         .map { time, timeRange in
-            CMTimeClampToRange(time, range: timeRange)
+            Player.clampedTime(time, to: timeRange)
         }
         .removeDuplicates(by: CMTime.close(within: interval.seconds / 2))
         .eraseToAnyPublisher()

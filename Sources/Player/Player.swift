@@ -101,7 +101,7 @@ public final class Player: ObservableObject, Equatable {
         lhs === rhs
     }
 
-    private static func clampedTime(_ time: CMTime, to range: CMTimeRange) -> CMTime {
+    static func clampedTime(_ time: CMTime, to range: CMTimeRange) -> CMTime {
         guard !range.isEmpty else { return range.start }
         return CMTimeClampToRange(time, range: range)
     }
