@@ -760,6 +760,22 @@ extension Player {
         }
     }
 
+    private func skipBackwardRegistration() -> some RemoteCommandRegistrable {
+        nowPlayingSession.remoteCommandCenter.skipBackwardCommand.preferredIntervals = [.init(value: configuration.backwardSkipInterval)]
+        return nowPlayingSession.remoteCommandCenter.register(command: \.skipBackwardCommand) { [weak self] _ in
+            self?.skipBackward()
+            return .success
+        }
+    }
+
+    private func skipForwardRegistration() -> some RemoteCommandRegistrable {
+        nowPlayingSession.remoteCommandCenter.skipForwardCommand.preferredIntervals = [.init(value: configuration.backwardSkipInterval)]
+        return nowPlayingSession.remoteCommandCenter.register(command: \.skipForwardCommand) { [weak self] _ in
+            self?.skipForward()
+            return .success
+        }
+    }
+
     private func installRemoteCommands() {
         commandRegistrations = [
             playRegistration(),
@@ -767,7 +783,9 @@ extension Player {
             togglePlayPauseRegistration(),
             previousTrackRegistration(),
             nextTrackRegistration(),
-            changePlaybackPositionRegistration()
+            changePlaybackPositionRegistration(),
+            skipBackwardRegistration(),
+            skipForwardRegistration()
         ]
     }
 
