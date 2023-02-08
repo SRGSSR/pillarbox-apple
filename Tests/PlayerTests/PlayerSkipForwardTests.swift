@@ -19,7 +19,7 @@ final class PlayerSkipForwardTests: XCTestCase {
 
         waitUntil { done in
             player.skipForward { _ in
-                expect(player.time).to(equal(CMTime(value: 2, timescale: 1), by: beClose(within: player.chunkDuration.seconds)))
+                expect(player.time).to(equal(player.forwardSkipTime, by: beClose(within: player.chunkDuration.seconds)))
                 done()
             }
         }
@@ -36,7 +36,7 @@ final class PlayerSkipForwardTests: XCTestCase {
             }
 
             player.skipForward { finished in
-                expect(player.time).to(equal(CMTime(value: 4, timescale: 1), by: beClose(within: player.chunkDuration.seconds)))
+                expect(player.time).to(equal(CMTimeMultiply(player.forwardSkipTime, multiplier: 2), by: beClose(within: player.chunkDuration.seconds)))
                 expect(finished).to(beTrue())
                 done()
             }

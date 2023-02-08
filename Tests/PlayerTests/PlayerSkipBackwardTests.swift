@@ -60,7 +60,7 @@ final class PlayerSkipBackwardTests: XCTestCase {
         let headTime = player.time
         waitUntil { done in
             player.skipBackward { finished in
-                expect(player.time).to(equal(headTime - CMTime(value: 1, timescale: 1), by: beClose(within: player.chunkDuration.seconds)))
+                expect(player.time).to(equal(headTime + player.backwardSkipTime, by: beClose(within: player.chunkDuration.seconds)))
                 expect(finished).to(beTrue())
                 done()
             }
