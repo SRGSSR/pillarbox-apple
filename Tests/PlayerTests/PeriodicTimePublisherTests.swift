@@ -28,6 +28,24 @@ final class PeriodicTimePublisherTests: XCTestCase {
         )
     }
 
+    func testTimesStayInRange() {
+        let player = AVPlayer(url: Stream.dvr.url)
+        expect(player.currentItem?.timeRange).toEventuallyNot(equal(.invalid))
+        player.play()
+        let publisher = Publishers.CombineLatest(
+            Publishers.PeriodicTimePublisher(
+                for: player,
+                interval: CMTimeMake(value: 1, timescale: 10)
+            ),
+            player.currentItemTimeRangePublisher()
+        )
+
+        let times = collectOutput(from: publisher, during: 2)
+        expect(times).to(allPass { time, timeRange in
+            timeRange.start <= time && time <= timeRange.end
+        })
+    }
+
     func testNoPlayback() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
