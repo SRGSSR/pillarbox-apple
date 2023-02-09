@@ -274,7 +274,7 @@ final class QueuePlayerSeekTests: XCTestCase {
             isSmooth: true,
             completionHandler: completion(index: 5)
         )
-        
+
         expect(results).toEventually(equalDiff([
             1: false,
             2: false,
