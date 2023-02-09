@@ -44,7 +44,8 @@ final class QueuePlayer: AVQueuePlayer {
             pendingSeeks.append(targetSeek)
             self.targetSeek = seek
             return
-        } else if let targetSeek {
+        }
+        else if let targetSeek {
             pendingSeeks.append(targetSeek)
         }
         targetSeek = seek
@@ -66,8 +67,10 @@ final class QueuePlayer: AVQueuePlayer {
         guard let seek else { return }
         super.seek(to: seek.time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             guard let self else { return }
+            while let pendingSeek = self.pendingSeeks.popFirst() {
+                pendingSeek.completionHandler(finished)
+            }
             if finished {
-                self.popPendingSeeks(until: seek.time, finished: finished)
                 if let targetSeek = self.targetSeek, targetSeek.time == seek.time {
                     targetSeek.completionHandler(true)
                     completionHandler(true)
@@ -81,20 +84,6 @@ final class QueuePlayer: AVQueuePlayer {
                         completionHandler: completionHandler
                     )
                 }
-            }
-            else {
-                while let pendingSeek = self.pendingSeeks.popFirst() {
-                    pendingSeek.completionHandler(finished)
-                }
-            }
-        }
-    }
-
-    private func popPendingSeeks(until time: CMTime, finished: Bool) {
-        while let pendingSeek = self.pendingSeeks.popFirst() {
-            pendingSeek.completionHandler(finished)
-            if time == pendingSeek.time {
-                break
             }
         }
     }
