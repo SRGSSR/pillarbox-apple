@@ -9,6 +9,7 @@
 import AVFoundation
 import Circumspect
 import Nimble
+import OrderedCollections
 import XCTest
 
 final class QueuePlayerSmoothSeekTests: XCTestCase {
@@ -124,5 +125,55 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time2]),
             Notification(name: .didSeek, object: player)
         ]), from: QueuePlayer.notificationCenter), timeout: .seconds(5))
+    }
+
+    func testSeekCancellation() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayer(playerItem: item)
+        expect(item.timeRange).toEventuallyNot(beNil())
+
+        let time1 = CMTime(value: 1, timescale: 1)
+        let time2 = CMTime(value: 2, timescale: 1)
+        let time3 = CMTime(value: 3, timescale: 1)
+
+        var results = OrderedDictionary<Int, Bool>()
+        waitUntil { done in
+            func completion(index: Int) -> ((Bool) -> Void) {
+                { finished in
+                    expect(results[index]).to(beNil())
+                    results[index] = finished
+                    if results.count == 3 {
+                        done()
+                    }
+                }
+            }
+
+            player.seek(
+                to: time1,
+                toleranceBefore: .positiveInfinity,
+                toleranceAfter: .positiveInfinity,
+                isSmooth: true,
+                completionHandler: completion(index: 1)
+            )
+            player.seek(
+                to: time2,
+                toleranceBefore: .positiveInfinity,
+                toleranceAfter: .positiveInfinity,
+                isSmooth: true,
+                completionHandler: completion(index: 2)
+            )
+            player.seek(
+                to: time3,
+                toleranceBefore: .positiveInfinity,
+                toleranceAfter: .positiveInfinity,
+                isSmooth: true,
+                completionHandler: completion(index: 3)
+            )
+        }
+        expect(results).to(equalDiff([
+            1: true,
+            2: true,
+            3: true
+        ]))
     }
 }

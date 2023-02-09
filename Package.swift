@@ -127,7 +127,8 @@ let package = Package(
             name: "PlayerTests",
             dependencies: [
                 .target(name: "Circumspect"),
-                .target(name: "Player")
+                .target(name: "Player"),
+                .product(name: "OrderedCollections", package: "swift-collections")
             ]
         ),
         .testTarget(
