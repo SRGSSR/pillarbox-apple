@@ -39,17 +39,16 @@ final class QueuePlayer: AVQueuePlayer {
 
         Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [SeekKey.time: time])
 
-        let seek = Seek(time: time, completionHandler: completionHandler)
-        if isSmooth, let targetSeek {
+        if let targetSeek {
             pendingSeeks.append(targetSeek)
-            self.targetSeek = seek
+        }
+        targetSeek = Seek(time: time, completionHandler: completionHandler)
+
+        guard !isSmooth || pendingSeeks.isEmpty else {
             return
         }
-        else if let targetSeek {
-            pendingSeeks.append(targetSeek)
-        }
-        targetSeek = seek
-        move(to: seek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] _ in
+
+        move(to: targetSeek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] _ in
             guard let self else { return }
             Self.notificationCenter.post(name: .didSeek, object: self)
         }
@@ -70,20 +69,19 @@ final class QueuePlayer: AVQueuePlayer {
             while let pendingSeek = self.pendingSeeks.popFirst() {
                 pendingSeek.completionHandler(finished)
             }
-            if finished {
-                if let targetSeek = self.targetSeek, targetSeek.time == seek.time {
-                    targetSeek.completionHandler(true)
-                    completionHandler(true)
-                    self.targetSeek = nil
-                }
-                else {
-                    self.move(
-                        to: self.targetSeek,
-                        toleranceBefore: toleranceBefore,
-                        toleranceAfter: toleranceAfter,
-                        completionHandler: completionHandler
-                    )
-                }
+            guard finished else { return }
+            if let targetSeek = self.targetSeek, targetSeek.time == seek.time {
+                targetSeek.completionHandler(true)
+                completionHandler(true)
+                self.targetSeek = nil
+            }
+            else {
+                self.move(
+                    to: self.targetSeek,
+                    toleranceBefore: toleranceBefore,
+                    toleranceAfter: toleranceAfter,
+                    completionHandler: completionHandler
+                )
             }
         }
     }
