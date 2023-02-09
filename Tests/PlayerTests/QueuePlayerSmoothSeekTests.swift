@@ -145,27 +145,9 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
             }
         }
 
-        player.seek(
-            to: time1,
-            toleranceBefore: .positiveInfinity,
-            toleranceAfter: .positiveInfinity,
-            isSmooth: true,
-            completionHandler: completion(index: 1)
-        )
-        player.seek(
-            to: time2,
-            toleranceBefore: .positiveInfinity,
-            toleranceAfter: .positiveInfinity,
-            isSmooth: true,
-            completionHandler: completion(index: 2)
-        )
-        player.seek(
-            to: time3,
-            toleranceBefore: .positiveInfinity,
-            toleranceAfter: .positiveInfinity,
-            isSmooth: true,
-            completionHandler: completion(index: 3)
-        )
+        player.seek(to: time1, isSmooth: true, completionHandler: completion(index: 1))
+        player.seek(to: time2, isSmooth: true, completionHandler: completion(index: 2))
+        player.seek(to: time3, isSmooth: true, completionHandler: completion(index: 3))
 
         expect(results).toEventually(equalDiff([
             1: true,

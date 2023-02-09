@@ -31,7 +31,13 @@ final class QueuePlayer: AVQueuePlayer {
         seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, isSmooth: false, completionHandler: completionHandler)
     }
 
-    func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, isSmooth: Bool, completionHandler: @escaping (Bool) -> Void) {
+    func seek(
+        to time: CMTime,
+        toleranceBefore: CMTime = .positiveInfinity,
+        toleranceAfter: CMTime = .positiveInfinity,
+        isSmooth: Bool,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
         guard !items().isEmpty, time.isValid else {
             completionHandler(true)
             return
