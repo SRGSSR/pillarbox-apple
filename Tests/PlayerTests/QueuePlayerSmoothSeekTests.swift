@@ -137,40 +137,37 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
         let time3 = CMTime(value: 3, timescale: 1)
 
         var results = OrderedDictionary<Int, Bool>()
-        waitUntil { done in
-            func completion(index: Int) -> ((Bool) -> Void) {
-                { finished in
-                    expect(results[index]).to(beNil())
-                    results[index] = finished
-                    if results.count == 3 {
-                        done()
-                    }
-                }
-            }
 
-            player.seek(
-                to: time1,
-                toleranceBefore: .positiveInfinity,
-                toleranceAfter: .positiveInfinity,
-                isSmooth: true,
-                completionHandler: completion(index: 1)
-            )
-            player.seek(
-                to: time2,
-                toleranceBefore: .positiveInfinity,
-                toleranceAfter: .positiveInfinity,
-                isSmooth: true,
-                completionHandler: completion(index: 2)
-            )
-            player.seek(
-                to: time3,
-                toleranceBefore: .positiveInfinity,
-                toleranceAfter: .positiveInfinity,
-                isSmooth: true,
-                completionHandler: completion(index: 3)
-            )
+        func completion(index: Int) -> ((Bool) -> Void) {
+            { finished in
+                expect(results[index]).to(beNil())
+                results[index] = finished
+            }
         }
-        expect(results).to(equalDiff([
+
+        player.seek(
+            to: time1,
+            toleranceBefore: .positiveInfinity,
+            toleranceAfter: .positiveInfinity,
+            isSmooth: true,
+            completionHandler: completion(index: 1)
+        )
+        player.seek(
+            to: time2,
+            toleranceBefore: .positiveInfinity,
+            toleranceAfter: .positiveInfinity,
+            isSmooth: true,
+            completionHandler: completion(index: 2)
+        )
+        player.seek(
+            to: time3,
+            toleranceBefore: .positiveInfinity,
+            toleranceAfter: .positiveInfinity,
+            isSmooth: true,
+            completionHandler: completion(index: 3)
+        )
+        
+        expect(results).toEventually(equalDiff([
             1: true,
             2: true,
             3: true
