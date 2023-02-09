@@ -12,14 +12,20 @@ enum SeekKey: String {
     case time
 }
 
+private struct Seek {
+    let time: CMTime
+    let completionHandler: (Bool) -> Void
+}
+
 final class QueuePlayer: AVQueuePlayer {
     static let notificationCenter = NotificationCenter()
 
-    var seekTime: CMTime? {
-        targetSeek?.time
-    }
     private var targetSeek: Seek?
     private var pendingSeeks = Deque<Seek>()
+
+    var targetSeekTime: CMTime? {
+        targetSeek?.time
+    }
 
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, isSmooth: false, completionHandler: completionHandler)
@@ -30,17 +36,19 @@ final class QueuePlayer: AVQueuePlayer {
             completionHandler(true)
             return
         }
-        Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [
-            SeekKey.time: time
-        ])
+
+        Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [SeekKey.time: time])
+
         let seek = Seek(time: time, completionHandler: completionHandler)
-        if let targetSeek, isSmooth {
+        if isSmooth, let targetSeek {
             pendingSeeks.append(targetSeek)
             self.targetSeek = seek
             return
+        } else if let targetSeek {
+            pendingSeeks.append(targetSeek)
         }
         targetSeek = seek
-        _seek(to: seek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
+        move(to: seek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] _ in
             guard let self else { return }
             Self.notificationCenter.post(name: .didSeek, object: self)
         }
@@ -54,33 +62,37 @@ final class QueuePlayer: AVQueuePlayer {
         }
     }
 
-    private func _seek(to seek: Seek?, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
+    private func move(to seek: Seek?, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         guard let seek else { return }
         super.seek(to: seek.time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             guard let self else { return }
-            if let targetSeek = self.targetSeek, targetSeek.time == seek.time, finished {
-                while let seek = self.pendingSeeks.popFirst() {
-                    seek.completionHandler(finished)
+            self.popPendingSeeks(until: seek.time, finished: finished)
+            if finished {
+                if let targetSeek = self.targetSeek, targetSeek.time == seek.time {
+                    targetSeek.completionHandler(true)
+                    completionHandler(true)
+                    self.targetSeek = nil
                 }
-                targetSeek.completionHandler(finished)
-                completionHandler(finished)
-                self.targetSeek = nil
+                else {
+                    self.move(
+                        to: self.targetSeek,
+                        toleranceBefore: toleranceBefore,
+                        toleranceAfter: toleranceAfter,
+                        completionHandler: completionHandler
+                    )
+                }
             }
-            else if finished {
-                while let pendingSeek = self.pendingSeeks.popFirst() {
-                    pendingSeek.completionHandler(true)
-                    if seek.time != pendingSeek.time {
-                        break
-                    }
-                }
-                self._seek(
-                    to: self.targetSeek,
-                    toleranceBefore: toleranceBefore,
-                    toleranceAfter: toleranceAfter,
-                    completionHandler: completionHandler
-                )
-            } else {
+            else {
                 seek.completionHandler(false)
+            }
+        }
+    }
+
+    private func popPendingSeeks(until time: CMTime, finished: Bool) {
+        while let pendingSeek = self.pendingSeeks.popFirst() {
+            pendingSeek.completionHandler(finished)
+            if time != pendingSeek.time {
+                break
             }
         }
     }
@@ -132,10 +144,4 @@ final class QueuePlayer: AVQueuePlayer {
 extension Notification.Name {
     static let willSeek = Notification.Name("QueuePlayerWillSeekNotification")
     static let didSeek = Notification.Name("QueuePlayerDidSeekNotification")
-}
-
-
-private struct Seek {
-    let time: CMTime
-    let completionHandler: (Bool) -> Void
 }
