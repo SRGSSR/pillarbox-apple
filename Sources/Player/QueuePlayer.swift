@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import DequeModule
 
 enum SeekKey: String {
     case time
@@ -14,7 +15,11 @@ enum SeekKey: String {
 final class QueuePlayer: AVQueuePlayer {
     static let notificationCenter = NotificationCenter()
 
-    private(set) var seekTime: CMTime?
+    var seekTime: CMTime? {
+        targetSeek?.time
+    }
+    private var targetSeek: Seek?
+    private var pendingSeeks = Deque<Seek>()
 
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, isSmooth: false, completionHandler: completionHandler)
@@ -28,18 +33,16 @@ final class QueuePlayer: AVQueuePlayer {
         Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [
             SeekKey.time: time
         ])
-        if isSmooth, seekTime != nil {
-            seekTime = time
+        let seek = Seek(time: time, completionHandler: completionHandler)
+        if let targetSeek, isSmooth {
+            pendingSeeks.append(targetSeek)
+            self.targetSeek = seek
             return
         }
-        seekTime = time
-        _seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
+        targetSeek = seek
+        _seek(to: seek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             guard let self else { return }
-            self.seekTime = nil
-            if isSmooth || finished {
-                Self.notificationCenter.post(name: .didSeek, object: self)
-            }
-            completionHandler(finished)
+            Self.notificationCenter.post(name: .didSeek, object: self)
         }
     }
 
@@ -51,15 +54,33 @@ final class QueuePlayer: AVQueuePlayer {
         }
     }
 
-    private func _seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
+    private func _seek(to seek: Seek?, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
+        guard let seek else { return }
+        super.seek(to: seek.time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             guard let self else { return }
-            guard let seekTime = self.seekTime else { return completionHandler(finished) }
-            if seekTime != time, finished {
-                self._seek(to: seekTime, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
-            }
-            else {
+            if let targetSeek = self.targetSeek, targetSeek.time == seek.time, finished {
+                while let seek = self.pendingSeeks.popFirst() {
+                    seek.completionHandler(finished)
+                }
+                targetSeek.completionHandler(finished)
                 completionHandler(finished)
+                self.targetSeek = nil
+            }
+            else if finished {
+                while let pendingSeek = self.pendingSeeks.popFirst() {
+                    pendingSeek.completionHandler(true)
+                    if seek.time != pendingSeek.time {
+                        break
+                    }
+                }
+                self._seek(
+                    to: self.targetSeek,
+                    toleranceBefore: toleranceBefore,
+                    toleranceAfter: toleranceAfter,
+                    completionHandler: completionHandler
+                )
+            } else {
+                seek.completionHandler(false)
             }
         }
     }
@@ -111,4 +132,10 @@ final class QueuePlayer: AVQueuePlayer {
 extension Notification.Name {
     static let willSeek = Notification.Name("QueuePlayerWillSeekNotification")
     static let didSeek = Notification.Name("QueuePlayerDidSeekNotification")
+}
+
+
+private struct Seek {
+    let time: CMTime
+    let completionHandler: (Bool) -> Void
 }
