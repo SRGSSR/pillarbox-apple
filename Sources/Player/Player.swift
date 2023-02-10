@@ -140,7 +140,7 @@ public extension Player {
     /// - Parameter time: The time to seek to.
     /// - Returns: `true` if possible.
     func canSeek(to time: CMTime) -> Bool {
-        guard timeRange.isValid, !timeRange.isEmpty else { return false }
+        guard timeRange.isValidAndNotEmpty else { return false }
         return timeRange.start <= time && time <= timeRange.end
     }
 
@@ -202,7 +202,7 @@ public extension Player {
     /// Return whether the current player item player can be returned to live conditions.
     /// - Returns: `true` if skipping to live conditions is possible.
     func canSkipToLive() -> Bool {
-        guard timeRange.isValid, !timeRange.isEmpty, itemDuration.isIndefinite else { return false }
+        guard timeRange.isValidAndNotEmpty, itemDuration.isIndefinite else { return false }
         return chunkDuration.isValid && time < timeRange.end - chunkDuration
     }
 
@@ -239,14 +239,14 @@ public extension Player {
     /// Check whether skipping backward is possible.
     /// - Returns: `true` if possible.
     func canSkipBackward() -> Bool {
-        guard timeRange.isValid, !timeRange.isEmpty else { return false }
+        guard timeRange.isValidAndNotEmpty else { return false }
         return true
     }
 
     /// Check whether skipping forward is possible.
     /// - Returns: `true` if possible.
     func canSkipForward() -> Bool {
-        guard timeRange.isValid, !timeRange.isEmpty else { return false }
+        guard timeRange.isValidAndNotEmpty else { return false }
         if itemDuration.isIndefinite {
             let currentTime = queuePlayer.targetSeekTime ?? time
             return canSeek(to: currentTime + forwardSkipTime)

@@ -10,7 +10,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class TimeCloseTests: XCTestCase {
+final class TimeTests: XCTestCase {
     func testCloseWithFiniteTimes() {
         expect(CMTime.close(within: 0)(CMTime.zero, .zero)).to(beTrue())
         expect(CMTime.close(within: 0.5)(CMTime.zero, .zero)).to(beTrue())
@@ -61,5 +61,18 @@ final class TimeCloseTests: XCTestCase {
         expect(CMTime.close(within: 10000)(CMTime.invalid, .positiveInfinity)).to(beFalse())
         expect(CMTime.close(within: 10000)(CMTime.invalid, .negativeInfinity)).to(beFalse())
         expect(CMTime.close(within: 10000)(CMTime.invalid, .indefinite)).to(beFalse())
+    }
+
+    func testTimeRangeIsValidAndNotEmpty() {
+        expect(CMTimeRange.invalid.isValidAndNotEmpty).to(beFalse())
+        expect(CMTimeRange.zero.isValidAndNotEmpty).to(beFalse())
+        expect(CMTimeRange(
+            start: CMTime(value: 1, timescale: 1),
+            end: CMTime(value: 1, timescale: 1)).isValidAndNotEmpty
+        ).to(beFalse())
+        expect(CMTimeRange(
+            start: CMTime(value: 0, timescale: 1),
+            end: CMTime(value: 1, timescale: 1)).isValidAndNotEmpty
+        ).to(beTrue())
     }
 }

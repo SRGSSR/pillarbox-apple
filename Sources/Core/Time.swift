@@ -27,6 +27,11 @@ public extension CMTimeRange {
     static func close(within tolerance: TimeInterval) -> ((CMTimeRange?, CMTimeRange?) -> Bool) {
         close(within: CMTimeMakeWithSeconds(tolerance, preferredTimescale: Int32(NSEC_PER_SEC)))
     }
+
+    /// A Boolean value that indicates whether the time range is valid and not empty.
+    var isValidAndNotEmpty: Bool {
+        isValid && !isEmpty
+    }
 }
 
 public extension CMTime {
