@@ -136,7 +136,7 @@ private struct SkipBackwardButton: View {
                 .tint(.white)
         }
         .aspectRatio(contentMode: .fit)
-        .frame(height: 30)
+        .frame(height: 45)
         .disabled(!player.canSkipBackward())
     }
 }
@@ -153,7 +153,7 @@ private struct SkipForwardButton: View {
                 .tint(.white)
         }
         .aspectRatio(contentMode: .fit)
-        .frame(height: 30)
+        .frame(height: 45)
         .disabled(!player.canSkipForward())
     }
 }
