@@ -28,7 +28,7 @@ final class PeriodicTimePublisherTests: XCTestCase {
         )
     }
 
-    func testTimesStayInEmptyRange() {
+    func testTimesInEmptyRange() {
         let player = AVPlayer(url: Stream.live.url)
         expect(player.currentItem?.timeRange).toEventuallyNot(equal(.invalid))
         player.play()

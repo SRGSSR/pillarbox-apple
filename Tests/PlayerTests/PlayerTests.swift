@@ -32,7 +32,7 @@ final class PlayerTests: XCTestCase {
         expect(player.time).to(equal(.invalid))
     }
 
-    func testTimesStayInEmptyRange() {
+    func testTimesInEmptyRange() {
         let player = Player(item: .simple(url: Stream.live.url))
         expect(player.timeRange).toEventuallyNot(equal(.invalid))
         player.play()
