@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import Core
 
 extension Publishers {
     fileprivate struct _PeriodicTimePublisher: Publisher {
@@ -34,7 +35,7 @@ extension Publishers {
             player.currentItemTimeRangePublisher()
         )
         .map { time, timeRange in
-            Player.clampedTime(time, to: timeRange)
+            time.clamped(to: timeRange)
         }
         .removeDuplicates(by: CMTime.close(within: interval.seconds / 2))
         .eraseToAnyPublisher()
