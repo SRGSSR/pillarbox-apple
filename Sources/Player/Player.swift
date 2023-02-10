@@ -774,7 +774,7 @@ extension Player {
     }
 
     private func skipForwardRegistration() -> some RemoteCommandRegistrable {
-        nowPlayingSession.remoteCommandCenter.skipForwardCommand.preferredIntervals = [.init(value: configuration.backwardSkipInterval)]
+        nowPlayingSession.remoteCommandCenter.skipForwardCommand.preferredIntervals = [.init(value: configuration.forwardSkipInterval)]
         return nowPlayingSession.remoteCommandCenter.register(command: \.skipForwardCommand) { [weak self] _ in
             self?.skipForward()
             return .success
