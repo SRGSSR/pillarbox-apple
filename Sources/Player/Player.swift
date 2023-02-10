@@ -238,8 +238,7 @@ public extension Player {
     /// Check whether skipping backward is possible.
     /// - Returns: `true` if possible.
     func canSkipBackward() -> Bool {
-        guard timeRange.isValidAndNotEmpty else { return false }
-        return true
+        timeRange.isValidAndNotEmpty
     }
 
     /// Check whether skipping forward is possible.
