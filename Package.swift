@@ -44,7 +44,7 @@ let package = Package(
         .package(url: "https://github.com/SRGSSR/TCCore-xcframework-apple.git", .upToNextMinor(from: "5.1.1")),
         .package(url: "https://github.com/SRGSSR/TCServerSide-xcframework-apple.git", .upToNextMinor(from: "5.1.2")),
         .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.3")),
-        .package(url: "https://github.com/krzysztofzablocki/Difference.git", .upToNextMajor(from: "1.0.1")),
+        .package(url: "https://github.com/krzysztofzablocki/Difference.git", exact: "1.0.1"),
         .package(url: "https://github.com/Quick/Nimble.git", .upToNextMajor(from: "11.1.1")),
         .package(url: "https://github.com/icanzilb/TimelaneCombine.git", .upToNextMajor(from: "2.0.0"))
     ],
