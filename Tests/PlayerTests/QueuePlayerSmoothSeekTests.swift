@@ -13,7 +13,7 @@ import OrderedCollections
 import XCTest
 
 final class QueuePlayerSmoothSeekTests: XCTestCase {
-    func testSeekWithEmptyPlayer() {
+    func testNotificationsForSeekWithEmptyPlayer() {
         let player = QueuePlayer()
         expect {
             player.seek(to: CMTime(value: 1, timescale: 1), isSmooth: true) { finished in
@@ -22,7 +22,7 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
         }.to(postNotifications(equalDiff([]), from: QueuePlayer.notificationCenter))
     }
 
-    func testSeek() {
+    func testNotificationsForSeek() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         let time = CMTime(value: 1, timescale: 1)
@@ -36,21 +36,7 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
         ]), from: QueuePlayer.notificationCenter))
     }
 
-    func testSeekWithCompletion() {
-        let item = AVPlayerItem(url: Stream.onDemand.url)
-        let player = QueuePlayer(playerItem: item)
-        let time = CMTime(value: 1, timescale: 1)
-        expect {
-            player.seek(to: time, isSmooth: true) { finished in
-                expect(finished).to(beTrue())
-            }
-        }.to(postNotifications(equalDiff([
-            Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time]),
-            Notification(name: .didSeek, object: player)
-        ]), from: QueuePlayer.notificationCenter))
-    }
-
-    func testMultipleSeeks() {
+    func testNotificationsForMultipleSeeks() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         let time1 = CMTime(value: 1, timescale: 1)
@@ -71,7 +57,7 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
         ]), from: QueuePlayer.notificationCenter))
     }
 
-    func testMultipleSeeksWithinTimeRange() {
+    func testNotificationsForMultipleSeeksWithinTimeRange() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         expect(item.timeRange).toEventuallyNot(beNil())
@@ -92,7 +78,7 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
         ]), from: QueuePlayer.notificationCenter), timeout: .seconds(5))
     }
 
-    func testSmoothSeekAfterSeekWithinTimeRange() {
+    func testNotificationsForSmoothSeekAfterSeekWithinTimeRange() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         expect(item.timeRange).toEventuallyNot(beNil())
@@ -113,7 +99,7 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
         ]), from: QueuePlayer.notificationCenter), timeout: .seconds(5))
     }
 
-    func testSeekCancellation() {
+    func testCompletionsForMultipleSeeks() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         expect(item.timeRange).toEventuallyNot(beNil())
@@ -137,6 +123,35 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
 
         expect(results).toEventually(equalDiff([
             1: true,
+            2: true,
+            3: true
+        ]))
+    }
+
+    func testCompletionsForMultipleSeeksEndingWithSmoothSeek() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayer(playerItem: item)
+        expect(item.timeRange).toEventuallyNot(beNil())
+
+        let time1 = CMTime(value: 1, timescale: 1)
+        let time2 = CMTime(value: 2, timescale: 1)
+        let time3 = CMTime(value: 3, timescale: 1)
+
+        var results = OrderedDictionary<Int, Bool>()
+
+        func completion(index: Int) -> ((Bool) -> Void) {
+            { finished in
+                expect(results[index]).to(beNil())
+                results[index] = finished
+            }
+        }
+
+        player.seek(to: time1, isSmooth: false, completionHandler: completion(index: 1))
+        player.seek(to: time2, isSmooth: false, completionHandler: completion(index: 2))
+        player.seek(to: time3, isSmooth: true, completionHandler: completion(index: 3))
+
+        expect(results).toEventually(equalDiff([
+            1: false,
             2: true,
             3: true
         ]))
