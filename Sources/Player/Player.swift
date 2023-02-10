@@ -149,14 +149,14 @@ public extension Player {
     ///   - time: The time to seek to.
     ///   - toleranceBefore: Tolerance before the desired position.
     ///   - toleranceAfter: Tolerance after the desired position.
-    ///   - isSmooth: Set to `true` to enable smooth seeking
+    ///   - smooth: Set to `true` to enable smooth seeking
     ///   - completion: A completion called when seeking ends. The provided Boolean informs
     ///     whether the seek could finish without being cancelled.
     func seek(
         to time: CMTime,
         toleranceBefore: CMTime = .positiveInfinity,
         toleranceAfter: CMTime = .positiveInfinity,
-        isSmooth: Bool = false,
+        smooth: Bool = false,
         completion: @escaping (Bool) -> Void = { _ in }
     ) {
         let time = time.clamped(to: timeRange)
@@ -168,7 +168,7 @@ public extension Player {
             to: time,
             toleranceBefore: toleranceBefore,
             toleranceAfter: toleranceAfter,
-            isSmooth: isSmooth,
+            smooth: smooth,
             completionHandler: completion
         )
     }
@@ -178,14 +178,14 @@ public extension Player {
     ///   - time: The time to seek to.
     ///   - toleranceBefore: Tolerance before the desired position.
     ///   - toleranceAfter: Tolerance after the desired position.
-    ///   - isSmooth: Set to `true` to enable smooth seeking, preventing unnecessary seek cancellation.
+    ///   - smooth: Set to `true` to enable smooth seeking, preventing unnecessary seek cancellation.
     /// - Returns: `true` if seeking could finish without being cancelled.
     @discardableResult
     func seek(
         to time: CMTime,
         toleranceBefore: CMTime = .positiveInfinity,
         toleranceAfter: CMTime = .positiveInfinity,
-        isSmooth: Bool = false
+        smooth: Bool = false
     ) async -> Bool {
         let time = time.clamped(to: timeRange)
         guard time.isValid else { return true }
@@ -193,7 +193,7 @@ public extension Player {
             to: time,
             toleranceBefore: toleranceBefore,
             toleranceAfter: toleranceAfter,
-            isSmooth: isSmooth
+            smooth: smooth
         )
     }
 }

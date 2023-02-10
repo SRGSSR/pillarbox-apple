@@ -28,14 +28,14 @@ final class QueuePlayer: AVQueuePlayer {
     }
 
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, isSmooth: false, completionHandler: completionHandler)
+        seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, smooth: false, completionHandler: completionHandler)
     }
 
     func seek(
         to time: CMTime,
         toleranceBefore: CMTime = .positiveInfinity,
         toleranceAfter: CMTime = .positiveInfinity,
-        isSmooth: Bool,
+        smooth: Bool,
         completionHandler: @escaping (Bool) -> Void
     ) {
         assert(time.isValid)
@@ -52,7 +52,7 @@ final class QueuePlayer: AVQueuePlayer {
         }
         targetSeek = Seek(time: time, completionHandler: completionHandler)
 
-        guard !isSmooth || pendingSeeks.isEmpty else {
+        guard !smooth || pendingSeeks.isEmpty else {
             return
         }
 
@@ -62,9 +62,9 @@ final class QueuePlayer: AVQueuePlayer {
         }
     }
 
-    func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, isSmooth: Bool) async -> Bool {
+    func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, smooth: Bool) async -> Bool {
         await withCheckedContinuation { continuation in
-            seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, isSmooth: isSmooth) { finished in
+            seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, smooth: smooth) { finished in
                 continuation.resume(returning: finished)
             }
         }

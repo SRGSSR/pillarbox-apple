@@ -93,7 +93,7 @@ final class QueuePlayerSeekTests: XCTestCase {
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
         expect {
-            player.seek(to: time1, isSmooth: true) { finished in
+            player.seek(to: time1, smooth: true) { finished in
                 expect(finished).to(beFalse())
             }
             player.seek(to: time2) { finished in
@@ -153,9 +153,9 @@ final class QueuePlayerSeekTests: XCTestCase {
             }
         }
 
-        player.seek(to: time1, isSmooth: true, completionHandler: completion(index: 1))
-        player.seek(to: time2, isSmooth: true, completionHandler: completion(index: 2))
-        player.seek(to: time3, isSmooth: false, completionHandler: completion(index: 3))
+        player.seek(to: time1, smooth: true, completionHandler: completion(index: 1))
+        player.seek(to: time2, smooth: true, completionHandler: completion(index: 2))
+        player.seek(to: time3, smooth: false, completionHandler: completion(index: 3))
 
         expect(results).toEventually(equalDiff([
             1: false,

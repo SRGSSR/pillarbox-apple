@@ -16,7 +16,7 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
     func testNotificationsForSeekWithEmptyPlayer() {
         let player = QueuePlayer()
         expect {
-            player.seek(to: CMTime(value: 1, timescale: 1), isSmooth: true) { finished in
+            player.seek(to: CMTime(value: 1, timescale: 1), smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
         }.to(postNotifications(equalDiff([]), from: QueuePlayer.notificationCenter))
@@ -27,7 +27,7 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
         let player = QueuePlayer(playerItem: item)
         let time = CMTime(value: 1, timescale: 1)
         expect {
-            player.seek(to: time, isSmooth: true) { finished in
+            player.seek(to: time, smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
         }.to(postNotifications(equalDiff([
@@ -42,10 +42,10 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
         expect {
-            player.seek(to: time1, isSmooth: true) { finished in
+            player.seek(to: time1, smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
-            player.seek(to: time2, isSmooth: true) { finished in
+            player.seek(to: time2, smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
         }.to(postNotifications(equalDiff([
@@ -65,10 +65,10 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
         expect {
-            player.seek(to: time1, isSmooth: true) { finished in
+            player.seek(to: time1, smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
-            player.seek(to: time2, isSmooth: true) { finished in
+            player.seek(to: time2, smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
         }.toEventually(postNotifications(equalDiff([
@@ -89,7 +89,7 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
             player.seek(to: time1) { finished in
                 expect(finished).to(beTrue())
             }
-            player.seek(to: time2, isSmooth: true) { finished in
+            player.seek(to: time2, smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
         }.toEventually(postNotifications(equalDiff([
@@ -117,9 +117,9 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
             }
         }
 
-        player.seek(to: time1, isSmooth: true, completionHandler: completion(index: 1))
-        player.seek(to: time2, isSmooth: true, completionHandler: completion(index: 2))
-        player.seek(to: time3, isSmooth: true, completionHandler: completion(index: 3))
+        player.seek(to: time1, smooth: true, completionHandler: completion(index: 1))
+        player.seek(to: time2, smooth: true, completionHandler: completion(index: 2))
+        player.seek(to: time3, smooth: true, completionHandler: completion(index: 3))
 
         expect(results).toEventually(equalDiff([
             1: true,
@@ -146,9 +146,9 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
             }
         }
 
-        player.seek(to: time1, isSmooth: false, completionHandler: completion(index: 1))
-        player.seek(to: time2, isSmooth: false, completionHandler: completion(index: 2))
-        player.seek(to: time3, isSmooth: true, completionHandler: completion(index: 3))
+        player.seek(to: time1, smooth: false, completionHandler: completion(index: 1))
+        player.seek(to: time2, smooth: false, completionHandler: completion(index: 2))
+        player.seek(to: time3, smooth: true, completionHandler: completion(index: 3))
 
         expect(results).toEventually(equalDiff([
             1: false,
