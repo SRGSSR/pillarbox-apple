@@ -13,6 +13,12 @@ import OrderedCollections
 import XCTest
 
 final class QueuePlayerSeekTests: XCTestCase {
+    func testNotificationsForSeekWithInvalidTime() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayer(playerItem: item)
+        expect { player.seek(to: .invalid) }.to(throwAssertion())
+    }
+
     func testNotificationsForSeekWithEmptyPlayer() {
         let player = QueuePlayer()
         expect {
