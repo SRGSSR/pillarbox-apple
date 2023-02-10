@@ -26,7 +26,7 @@ final class PlayerConfigurationTests: XCTestCase {
             allowsExternalPlayback: false,
             usesExternalPlaybackWhileMirroring: true,
             audiovisualBackgroundPlaybackPolicy: .pauses,
-            isSmartNavigationEnabled: false,
+            smartNavigationEnabled: false,
             backwardSkipInterval: 42,
             forwardSkipInterval: 47
         )

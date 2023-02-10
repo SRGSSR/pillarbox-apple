@@ -35,6 +35,7 @@ public struct PlayerConfiguration {
     ///   - allowsExternalPlayback: Allows switching to external playback mode.
     ///   - usesExternalPlaybackWhileMirroring: Allows switching to external playback when mirroring.
     ///   - audiovisualBackgroundPlaybackPolicy: Policy that determines how playback of audiovisual
+    ///   - smartNavigationEnabled: Enables smart playlist navigation (see `isSmartNavigationEnabled`).
     ///   - backwardSkipInterval: The forward skip interval in seconds.
     ///   - forwardSkipInterval: The backward skip interval in seconds.
     ///   media continues when the app transitions to the background.
@@ -42,7 +43,7 @@ public struct PlayerConfiguration {
         allowsExternalPlayback: Bool = true,
         usesExternalPlaybackWhileMirroring: Bool = false,
         audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic,
-        isSmartNavigationEnabled: Bool = true,
+        smartNavigationEnabled: Bool = true,
         backwardSkipInterval: TimeInterval = 10,
         forwardSkipInterval: TimeInterval = 10
     ) {
@@ -51,7 +52,7 @@ public struct PlayerConfiguration {
         self.allowsExternalPlayback = allowsExternalPlayback
         self.usesExternalPlaybackWhileMirroring = usesExternalPlaybackWhileMirroring
         self.audiovisualBackgroundPlaybackPolicy = audiovisualBackgroundPlaybackPolicy
-        self.isSmartNavigationEnabled = isSmartNavigationEnabled
+        self.isSmartNavigationEnabled = smartNavigationEnabled
         self.backwardSkipInterval = backwardSkipInterval
         self.forwardSkipInterval = forwardSkipInterval
     }

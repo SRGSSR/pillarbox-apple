@@ -14,7 +14,7 @@ extension PlayerConfiguration {
             allowsExternalPlayback: userDefaults.allowsExternalPlaybackEnabled,
             usesExternalPlaybackWhileMirroring: !userDefaults.presenterModeEnabled,
             audiovisualBackgroundPlaybackPolicy: userDefaults.audiovisualBackgroundPlaybackPolicy,
-            isSmartNavigationEnabled: userDefaults.smartNavigationEnabled
+            smartNavigationEnabled: userDefaults.smartNavigationEnabled
         )
     }
 
@@ -23,7 +23,7 @@ extension PlayerConfiguration {
         return .init(
             allowsExternalPlayback: false,
             audiovisualBackgroundPlaybackPolicy: userDefaults.audiovisualBackgroundPlaybackPolicy,
-            isSmartNavigationEnabled: userDefaults.smartNavigationEnabled
+            smartNavigationEnabled: userDefaults.smartNavigationEnabled
         )
     }
 }
