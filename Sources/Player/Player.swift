@@ -216,11 +216,7 @@ public extension Player {
             completion(true)
             return
         }
-        queuePlayer.seek(
-            to: time,
-            toleranceBefore: .positiveInfinity,
-            toleranceAfter: .positiveInfinity
-        ) { [weak self] finished in
+        queuePlayer.seek(to: time) { [weak self] finished in
             self?.play()
             completion(finished)
         }
@@ -233,11 +229,7 @@ public extension Player {
     func skipToLive() async -> Bool {
         let time = timeRange.end.clamped(to: timeRange)
         guard time.isValid else { return true }
-        let seeked = await queuePlayer.seek(
-            to: time,
-            toleranceBefore: .positiveInfinity,
-            toleranceAfter: .positiveInfinity
-        )
+        let seeked = await queuePlayer.seek(to: time)
         queuePlayer.play()
         return seeked
     }
