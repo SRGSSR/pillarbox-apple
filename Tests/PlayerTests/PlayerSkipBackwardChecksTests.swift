@@ -23,7 +23,7 @@ final class PlayerSkipBackwardChecksTests: XCTestCase {
         expect(player.canSkipBackward()).to(beTrue())
     }
 
-    func testCanSkipForLive() {
+    func testCannotSkipForLive() {
         let player = Player(item: .simple(url: Stream.live.url))
         expect(player.streamType).toEventually(equal(.live))
         expect(player.canSkipBackward()).to(beFalse())
