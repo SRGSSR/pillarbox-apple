@@ -150,18 +150,18 @@ public extension Player {
     ///   - toleranceBefore: Tolerance before the desired position.
     ///   - toleranceAfter: Tolerance after the desired position.
     ///   - isSmooth: Set to `true` to enable smooth seeking
-    ///   - completionHandler: A completion handler called when seeking ends. The provided Boolean informs
+    ///   - completion: A completion called when seeking ends. The provided Boolean informs
     ///     whether the seek could finish without being cancelled.
     func seek(
         to time: CMTime,
         toleranceBefore: CMTime = .positiveInfinity,
         toleranceAfter: CMTime = .positiveInfinity,
         isSmooth: Bool = false,
-        completionHandler: @escaping (Bool) -> Void = { _ in }
+        completion: @escaping (Bool) -> Void = { _ in }
     ) {
         let time = time.clamped(to: timeRange)
         guard time.isValid else {
-            completionHandler(true)
+            completion(true)
             return
         }
         queuePlayer.seek(
@@ -169,7 +169,7 @@ public extension Player {
             toleranceBefore: toleranceBefore,
             toleranceAfter: toleranceAfter,
             isSmooth: isSmooth,
-            completionHandler: completionHandler
+            completionHandler: completion
         )
     }
 
@@ -216,12 +216,12 @@ public extension Player {
 
     /// Return the current item to live conditions. Does nothing if the current item is not a livestream or does not
     /// support DVR.
-    /// - Parameter completionHandler: A completion handler called when skipping ends. The provided Boolean informs
+    /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
     ///   whether the skip could finish without being cancelled.
-    func skipToLive(completionHandler: @escaping (Bool) -> Void = { _ in }) {
+    func skipToLive(completion: @escaping (Bool) -> Void = { _ in }) {
         let time = timeRange.end.clamped(to: timeRange)
         guard time.isValid else {
-            completionHandler(true)
+            completion(true)
             return
         }
         queuePlayer.seek(
@@ -230,7 +230,7 @@ public extension Player {
             toleranceAfter: .positiveInfinity
         ) { [weak self] finished in
             self?.play()
-            completionHandler(finished)
+            completion(finished)
         }
     }
 
@@ -265,17 +265,17 @@ public extension Player {
     }
 
     /// Skip backward.
-    /// - Parameter completionHandler: A completion handler called when skipping ends. The provided Boolean informs
+    /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
     ///   whether the skip could finish without being cancelled.
-    func skipBackward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
-        skip(withInterval: backwardSkipTime, completionHandler: completionHandler)
+    func skipBackward(completion: @escaping (Bool) -> Void = { _ in }) {
+        skip(withInterval: backwardSkipTime, completion: completion)
     }
 
     /// Skip forward.
-    /// - Parameter completionHandler: A completion handler called when skipping ends. The provided Boolean informs
+    /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
     ///   whether the skip could finish without being cancelled.
-    func skipForward(completionHandler: @escaping (Bool) -> Void = { _ in }) {
-        skip(withInterval: forwardSkipTime, completionHandler: completionHandler)
+    func skipForward(completion: @escaping (Bool) -> Void = { _ in }) {
+        skip(withInterval: forwardSkipTime, completion: completion)
     }
 
     /// Skip backward.
@@ -297,9 +297,9 @@ public extension Player {
         return canSeek(to: currentTime + interval)
     }
 
-    private func skip(withInterval interval: CMTime, completionHandler: @escaping (Bool) -> Void = { _ in }) {
+    private func skip(withInterval interval: CMTime, completion: @escaping (Bool) -> Void = { _ in }) {
         let currentTime = queuePlayer.targetSeekTime ?? time
-        seek(to: currentTime + interval, completionHandler: completionHandler)
+        seek(to: currentTime + interval, completion: completion)
     }
 
     private func skip(withInterval interval: CMTime) async -> Bool {
