@@ -27,9 +27,9 @@ final class PlayerTests: XCTestCase {
         expect(weakPlayer).to(beNil())
     }
 
-    func testTimeWhenEmpty() {
+    func testTimesWhenEmpty() {
         let player = Player()
-        expect(player.time).to(equal(.invalid))
+        expect(player.time).toAlways(equal(.invalid))
     }
 
     func testTimesInEmptyRange() {
