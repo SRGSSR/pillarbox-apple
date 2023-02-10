@@ -24,7 +24,7 @@ final class PlayerSkipToLiveTests: XCTestCase {
 
     func testSkipToLiveWhenEmptyAsync() async {
         let player = Player()
-        await expect(await player.skipToLive()).to(beTrue())
+        await expect { await player.skipToLive() }.to(beTrue())
     }
 
     func testSkipToLiveForOnDemand() {
@@ -91,9 +91,9 @@ final class PlayerSkipToLiveTests: XCTestCase {
         let player = Player(item: item)
         await expect(player.streamType).toEventually(equal(.dvr))
         let seeked = await player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero)
-        await expect(seeked).to(beTrue())
-        await expect(await player.skipToLive()).to(beTrue())
+        expect(seeked).to(beTrue())
+        await expect { await player.skipToLive() }.to(beTrue())
         await expect(player.canSkipToLive()).toAlways(beFalse())
-        await expect(player.playbackState).to(equal(.playing))
+        expect(player.playbackState).to(equal(.playing))
     }
 }

@@ -24,7 +24,7 @@ final class PlayerSeekTests: XCTestCase {
 
     func testSeekWhenEmptyAsync() async {
         let player = Player()
-        await expect(await player.seek(to: .zero)).to(beTrue())
+        await expect { await player.seek(to: .zero) }.to(beTrue())
     }
 
     func testSeekInTimeRange() {
