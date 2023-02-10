@@ -12,7 +12,7 @@ import Nimble
 import XCTest
 
 final class PlayerSeekTests: XCTestCase {
-    func testSeekWithEmptyPlayer() {
+    func testSeekWhenEmpty() {
         let player = Player()
         waitUntil { done in
             player.seek(to: .zero) { finished in
@@ -20,6 +20,11 @@ final class PlayerSeekTests: XCTestCase {
                 done()
             }
         }
+    }
+
+    func testSeekWhenEmptyAsync() async {
+        let player = Player()
+        await expect(await player.seek(to: .zero)).to(beTrue())
     }
 
     func testSeekInTimeRange() {

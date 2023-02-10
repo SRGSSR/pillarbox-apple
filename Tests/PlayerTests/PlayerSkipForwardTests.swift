@@ -12,6 +12,16 @@ import Nimble
 import XCTest
 
 final class PlayerSkipForwardTests: XCTestCase {
+    func testSkipWhenEmpty() {
+        let player = Player()
+        waitUntil { done in
+            player.skipForward { finished in
+                expect(finished).to(beTrue())
+                done()
+            }
+        }
+    }
+
     func testSkipForOnDemand() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))

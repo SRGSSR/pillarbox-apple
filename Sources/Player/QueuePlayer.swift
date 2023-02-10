@@ -38,7 +38,9 @@ final class QueuePlayer: AVQueuePlayer {
         isSmooth: Bool,
         completionHandler: @escaping (Bool) -> Void
     ) {
-        guard !items().isEmpty, time.isValid else {
+        assert(time.isValid)
+
+        guard !items().isEmpty else {
             completionHandler(true)
             return
         }

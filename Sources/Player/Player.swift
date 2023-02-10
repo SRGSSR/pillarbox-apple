@@ -164,8 +164,13 @@ public extension Player {
         isSmooth: Bool = false,
         completionHandler: @escaping (Bool) -> Void = { _ in }
     ) {
+        let time = Self.clampedTime(time, to: timeRange)
+        guard time.isValid else {
+            completionHandler(true)
+            return
+        }
         queuePlayer.seek(
-            to: Self.clampedTime(time, to: timeRange),
+            to: time,
             toleranceBefore: toleranceBefore,
             toleranceAfter: toleranceAfter,
             isSmooth: isSmooth,
@@ -187,8 +192,10 @@ public extension Player {
         toleranceAfter: CMTime = .positiveInfinity,
         isSmooth: Bool = false
     ) async -> Bool {
-        await queuePlayer.seek(
-            to: Self.clampedTime(time, to: timeRange),
+        let time = Self.clampedTime(time, to: timeRange)
+        guard time.isValid else { return true }
+        return await queuePlayer.seek(
+            to: time,
             toleranceBefore: toleranceBefore,
             toleranceAfter: toleranceAfter,
             isSmooth: isSmooth
@@ -217,8 +224,13 @@ public extension Player {
     /// - Parameter completionHandler: A completion handler called when skipping ends. The provided Boolean informs
     ///   whether the skip could finish without being cancelled.
     func skipToLive(completionHandler: @escaping (Bool) -> Void = { _ in }) {
+        let time = Self.clampedTime(timeRange.end, to: timeRange)
+        guard time.isValid else {
+            completionHandler(true)
+            return
+        }
         queuePlayer.seek(
-            to: Self.clampedTime(timeRange.end, to: timeRange),
+            to: time,
             toleranceBefore: .positiveInfinity,
             toleranceAfter: .positiveInfinity
         ) { [weak self] finished in
@@ -229,13 +241,18 @@ public extension Player {
 
     /// Return the current item to live conditions, resuming playback if needed. Does nothing if the current item is
     /// not a livestream or does not support DVR.
-    func skipToLive() async {
-        await queuePlayer.seek(
-            to: Self.clampedTime(timeRange.end, to: timeRange),
+    /// - Returns: `true` if the skip finished without being cancelled.
+    @discardableResult
+    func skipToLive() async -> Bool {
+        let time = Self.clampedTime(timeRange.end, to: timeRange)
+        guard time.isValid else { return true }
+        let seeked = await queuePlayer.seek(
+            to: time,
             toleranceBefore: .positiveInfinity,
             toleranceAfter: .positiveInfinity
         )
         queuePlayer.play()
+        return seeked
     }
 }
 
