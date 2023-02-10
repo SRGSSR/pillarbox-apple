@@ -130,7 +130,7 @@ private struct SkipBackwardButton: View {
     @ObservedObject var progressTracker: ProgressTracker
 
     var body: some View {
-        Button(action: { player.skipBackward() }) {
+        Button(action: skipBackward) {
             Image(systemName: "gobackward.10")
                 .resizable()
                 .tint(.white)
@@ -138,6 +138,10 @@ private struct SkipBackwardButton: View {
         .aspectRatio(contentMode: .fit)
         .frame(height: 45)
         .disabled(!player.canSkipBackward())
+    }
+
+    private func skipBackward() {
+        player.skipBackward()
     }
 }
 
@@ -147,7 +151,7 @@ private struct SkipForwardButton: View {
     @ObservedObject var progressTracker: ProgressTracker
 
     var body: some View {
-        Button(action: { player.skipForward() }) {
+        Button(action: skipForward) {
             Image(systemName: "goforward.10")
                 .resizable()
                 .tint(.white)
@@ -155,6 +159,10 @@ private struct SkipForwardButton: View {
         .aspectRatio(contentMode: .fit)
         .frame(height: 45)
         .disabled(!player.canSkipForward())
+    }
+
+    private func skipForward() {
+        player.skipForward()
     }
 }
 
