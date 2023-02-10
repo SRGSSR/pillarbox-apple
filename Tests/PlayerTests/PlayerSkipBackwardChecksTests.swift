@@ -18,9 +18,9 @@ final class PlayerSkipBackwardChecksTests: XCTestCase {
     }
 
     func testCanSkipForOnDemand() {
-        let player = Player(item: .simple(url: Stream.onDemand.url))
+        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.canSkipBackward()).to(beFalse())
+        expect(player.canSkipBackward()).to(beTrue())
     }
 
     func testCanSkipForLive() {

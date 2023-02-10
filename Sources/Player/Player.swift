@@ -255,13 +255,21 @@ public extension Player {
     /// Check whether skipping backward is possible.
     /// - Returns: `true` if possible.
     func canSkipBackward() -> Bool {
-        canSkip(withInterval: backwardSkipTime)
+        guard timeRange.isValid, !timeRange.isEmpty else { return false }
+        return true
     }
 
     /// Check whether skipping forward is possible.
     /// - Returns: `true` if possible.
     func canSkipForward() -> Bool {
-        canSkip(withInterval: forwardSkipTime)
+        guard timeRange.isValid, !timeRange.isEmpty else { return false }
+        if itemDuration.isIndefinite {
+            let currentTime = queuePlayer.targetSeekTime ?? time
+            return canSeek(to: currentTime + forwardSkipTime)
+        }
+        else {
+            return true
+        }
     }
 
     /// Skip backward.
@@ -290,11 +298,6 @@ public extension Player {
     @discardableResult
     func skipForward() async -> Bool {
         await skip(withInterval: forwardSkipTime)
-    }
-
-    private func canSkip(withInterval interval: CMTime) -> Bool {
-        let currentTime = queuePlayer.targetSeekTime ?? time
-        return canSeek(to: currentTime + interval)
     }
 
     private func skip(withInterval interval: CMTime, completion: @escaping (Bool) -> Void = { _ in }) {
