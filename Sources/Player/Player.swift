@@ -50,7 +50,6 @@ public final class Player: ObservableObject, Equatable {
 
     private var commandRegistrations: [any RemoteCommandRegistrable] = []
 
-    // Skips
     var backwardSkipTime: CMTime {
         CMTime(seconds: -configuration.backwardSkipInterval, preferredTimescale: 1)
     }
@@ -149,7 +148,7 @@ public extension Player {
     ///   - time: The time to seek to.
     ///   - toleranceBefore: Tolerance before the desired position.
     ///   - toleranceAfter: Tolerance after the desired position.
-    ///   - smooth: Set to `true` to enable smooth seeking
+    ///   - smooth: Set to `true` to enable smooth seeking, preventing unnecessary seek cancellation.
     ///   - completion: A completion called when seeking ends. The provided Boolean informs
     ///     whether the seek could finish without being cancelled.
     func seek(
