@@ -52,7 +52,7 @@ final class QueuePlayer: AVQueuePlayer {
         }
         targetSeek = Seek(time: time, completionHandler: completionHandler)
 
-        guard !smooth || pendingSeeks.isEmpty else {
+        if smooth && !pendingSeeks.isEmpty {
             return
         }
 
