@@ -68,11 +68,11 @@ final class TimeTests: XCTestCase {
         expect(CMTimeRange.zero.isValidAndNotEmpty).to(beFalse())
         expect(CMTimeRange(
             start: CMTime(value: 1, timescale: 1),
-            end: CMTime(value: 1, timescale: 1)).isValidAndNotEmpty
-        ).to(beFalse())
+            end: CMTime(value: 1, timescale: 1)
+        ).isValidAndNotEmpty).to(beFalse())
         expect(CMTimeRange(
             start: CMTime(value: 0, timescale: 1),
-            end: CMTime(value: 1, timescale: 1)).isValidAndNotEmpty
-        ).to(beTrue())
+            end: CMTime(value: 1, timescale: 1)
+        ).isValidAndNotEmpty).to(beTrue())
     }
 }
