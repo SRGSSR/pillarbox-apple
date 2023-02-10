@@ -164,7 +164,7 @@ private struct LiveLabel: View {
     @ObservedObject var progressTracker: ProgressTracker
 
     private var canSkipToLive: Bool {
-        player.canSkipToLive(from: progressTracker.time ?? player.time)
+        player.canSkipToLive()
     }
 
     var body: some View {

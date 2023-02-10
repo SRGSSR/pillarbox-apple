@@ -202,14 +202,6 @@ public extension Player {
     /// Return whether the current player item player can be returned to live conditions.
     /// - Returns: `true` if skipping to live conditions is possible.
     func canSkipToLive() -> Bool {
-        canSkipToLive(from: time)
-    }
-
-    /// Return whether the current player item player can be returned to live conditions, starting from the specified
-    /// time.
-    /// - Parameter time: The time.
-    /// - Returns: `true` if skipping to live conditions is possible.
-    func canSkipToLive(from time: CMTime) -> Bool {
         guard streamType == .dvr else { return false }
         return chunkDuration.isValid && time < timeRange.end - chunkDuration
     }
