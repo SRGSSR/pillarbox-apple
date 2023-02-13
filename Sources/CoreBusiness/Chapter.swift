@@ -9,6 +9,8 @@ import Foundation
 struct Chapter: Decodable {
     enum CodingKeys: String, CodingKey {
         case blockingReason = "blockReason"
+        case contentType = "type"
+        case date
         case description
         case endDate = "validTo"
         case imageUrl
@@ -24,6 +26,8 @@ struct Chapter: Decodable {
     let title: String
     let description: String?
     let imageUrl: URL
+    let contentType: ContentType
+    let date: Date
     let resources: [Resource]
 
     let startDate: Date?
