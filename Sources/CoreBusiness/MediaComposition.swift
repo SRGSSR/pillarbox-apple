@@ -50,4 +50,8 @@ extension MediaComposition {
         guard mainChapter.contentType != .livestream else { return nil }
         return show?.title
     }
+
+    var description: String? {
+        mainChapter.description
+    }
 }
