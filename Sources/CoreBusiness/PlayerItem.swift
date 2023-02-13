@@ -37,7 +37,7 @@ public extension PlayerItem {
     }
 
     private static func assetMetadata(for mediaComposition: MediaComposition, image: UIImage?) -> Asset.Metadata {
-        return .init(
+        .init(
             title: mediaComposition.title,
             subtitle: mediaComposition.subtitle,
             description: mediaComposition.description,

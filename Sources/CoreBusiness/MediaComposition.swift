@@ -32,10 +32,6 @@ extension MediaComposition {
         chapters.first { $0.urn == chapterUrn }!
     }
 
-    private static func areRedundant(chapter: Chapter, show: Show) -> Bool {
-        return chapter.title.lowercased() == show.title.lowercased()
-    }
-
     var title: String {
         guard mainChapter.contentType != .livestream else { return mainChapter.title }
         if let show, Self.areRedundant(chapter: mainChapter, show: show) {
@@ -53,5 +49,9 @@ extension MediaComposition {
 
     var description: String? {
         mainChapter.description
+    }
+
+    private static func areRedundant(chapter: Chapter, show: Show) -> Bool {
+        chapter.title.lowercased() == show.title.lowercased()
     }
 }
