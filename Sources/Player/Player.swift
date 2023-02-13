@@ -171,30 +171,6 @@ public extension Player {
             completionHandler: completion
         )
     }
-
-    /// Seek to a given location.
-    /// - Parameters:
-    ///   - time: The time to seek to.
-    ///   - toleranceBefore: Tolerance before the desired position.
-    ///   - toleranceAfter: Tolerance after the desired position.
-    ///   - smooth: Set to `true` to enable smooth seeking, preventing unnecessary seek cancellation.
-    /// - Returns: `true` if seeking could finish without being cancelled.
-    @discardableResult
-    func seek(
-        to time: CMTime,
-        toleranceBefore: CMTime = .positiveInfinity,
-        toleranceAfter: CMTime = .positiveInfinity,
-        smooth: Bool = false
-    ) async -> Bool {
-        let time = time.clamped(to: timeRange)
-        guard time.isValid else { return true }
-        return await queuePlayer.seek(
-            to: time,
-            toleranceBefore: toleranceBefore,
-            toleranceAfter: toleranceAfter,
-            smooth: smooth
-        )
-    }
 }
 
 public extension Player {
@@ -219,18 +195,6 @@ public extension Player {
             self?.play()
             completion(finished)
         }
-    }
-
-    /// Return the current item to live conditions, resuming playback if needed. Does nothing if the current item is
-    /// not a livestream or does not support DVR.
-    /// - Returns: `true` if the skip finished without being cancelled.
-    @discardableResult
-    func skipToLive() async -> Bool {
-        let time = timeRange.end.clamped(to: timeRange)
-        guard time.isValid else { return true }
-        let seeked = await queuePlayer.seek(to: time)
-        queuePlayer.play()
-        return seeked
     }
 }
 
@@ -268,28 +232,9 @@ public extension Player {
         skip(withInterval: forwardSkipTime, completion: completion)
     }
 
-    /// Skip backward.
-    /// - Returns: `true` if the skip finished without being cancelled.
-    @discardableResult
-    func skipBackward() async -> Bool {
-        await skip(withInterval: backwardSkipTime)
-    }
-
-    /// Skip forward.
-    /// - Returns: `true` if the skip finished without being cancelled.
-    @discardableResult
-    func skipForward() async -> Bool {
-        await skip(withInterval: forwardSkipTime)
-    }
-
     private func skip(withInterval interval: CMTime, completion: @escaping (Bool) -> Void = { _ in }) {
         let currentTime = queuePlayer.targetSeekTime ?? time
         seek(to: currentTime + interval, completion: completion)
-    }
-
-    private func skip(withInterval interval: CMTime) async -> Bool {
-        let currentTime = queuePlayer.targetSeekTime ?? time
-        return await seek(to: currentTime + interval)
     }
 }
 

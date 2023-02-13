@@ -52,13 +52,4 @@ final class PlayerSkipToLiveChecksTests: XCTestCase {
 
         expect(player.canSkipToLive()).toAlways(beTrue())
     }
-
-    func testCanSkipToLiveForDvrInPastConditionsAsync() async {
-        let item = PlayerItem.simple(url: Stream.dvr.url)
-        let player = Player(item: item)
-        await expect(player.streamType).toEventually(equal(.dvr))
-        let seeked = await player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero)
-        expect(seeked).to(beTrue())
-        await expect(player.canSkipToLive()).toAlways(beTrue())
-    }
 }

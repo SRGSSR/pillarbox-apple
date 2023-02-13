@@ -22,11 +22,6 @@ final class PlayerSeekTests: XCTestCase {
         }
     }
 
-    func testSeekWhenEmptyAsync() async {
-        let player = Player()
-        await expect { await player.seek(to: .zero) }.to(beTrue())
-    }
-
     func testSeekInTimeRange() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
