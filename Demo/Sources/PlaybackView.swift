@@ -64,7 +64,9 @@ private struct ContentView: View {
         ProgressView()
             .tint(.white)
             .opacity(player.isBuffering ? 1 : 0)
+#if os(iOS)
             .controlSize(.large)
+#endif
     }
 }
 
