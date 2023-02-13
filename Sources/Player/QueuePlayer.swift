@@ -63,7 +63,7 @@ final class QueuePlayer: AVQueuePlayer {
     }
 
     func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, smooth: Bool) async -> Bool {
-        await withUnsafeContinuation { continuation in
+        await withCheckedContinuation { continuation in
             seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, smooth: smooth) { finished in
                 continuation.resume(returning: finished)
             }
