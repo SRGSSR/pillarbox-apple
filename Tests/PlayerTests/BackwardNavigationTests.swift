@@ -13,7 +13,7 @@ import XCTest
 
 final class BackwardNavigationTests: XCTestCase {
     private static func configuration() -> PlayerConfiguration {
-        .init(isSmartNavigationEnabled: false)
+        .init(smartNavigationEnabled: false)
     }
 
     func testCannotReturnForOnDemandAtBeginningWithoutPreviousItem() {

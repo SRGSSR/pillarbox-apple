@@ -39,7 +39,7 @@ public final class Player: ObservableObject, Equatable {
 
     /// Current time.
     public var time: CMTime {
-        queuePlayer.currentTime()
+        queuePlayer.currentTime().clamped(to: timeRange)
     }
 
     let queuePlayer = QueuePlayer()
@@ -49,6 +49,13 @@ public final class Player: ObservableObject, Equatable {
     private var cancellables = Set<AnyCancellable>()
 
     private var commandRegistrations: [any RemoteCommandRegistrable] = []
+
+    var backwardSkipTime: CMTime {
+        CMTime(seconds: -configuration.backwardSkipInterval, preferredTimescale: 1)
+    }
+    var forwardSkipTime: CMTime {
+        CMTime(seconds: configuration.forwardSkipInterval, preferredTimescale: 1)
+    }
 
     /// The type of stream currently played.
     public var streamType: StreamType {
@@ -125,77 +132,109 @@ public extension Player {
             queuePlayer.play()
         }
     }
+}
+
+public extension Player {
+    /// Check whether seeking to a specific time is possible.
+    /// - Parameter time: The time to seek to.
+    /// - Returns: `true` if possible.
+    func canSeek(to time: CMTime) -> Bool {
+        guard timeRange.isValidAndNotEmpty else { return false }
+        return timeRange.start <= time && time <= timeRange.end
+    }
 
     /// Seek to a given location.
     /// - Parameters:
     ///   - time: The time to seek to.
     ///   - toleranceBefore: Tolerance before the desired position.
     ///   - toleranceAfter: Tolerance after the desired position.
-    ///   - completionHandler: A completion handler called when seeking ends.
+    ///   - smooth: Set to `true` to enable smooth seeking, preventing unnecessary seek cancellation.
+    ///   - completion: A completion called when seeking ends. The provided Boolean informs
+    ///     whether the seek could finish without being cancelled.
     func seek(
         to time: CMTime,
         toleranceBefore: CMTime = .positiveInfinity,
         toleranceAfter: CMTime = .positiveInfinity,
-        completionHandler: @escaping (Bool) -> Void = { _ in }
+        smooth: Bool = false,
+        completion: @escaping (Bool) -> Void = { _ in }
     ) {
-        queuePlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
+        let time = time.clamped(to: timeRange)
+        guard time.isValid else {
+            completion(true)
+            return
+        }
+        queuePlayer.seek(
+            to: time,
+            toleranceBefore: toleranceBefore,
+            toleranceAfter: toleranceAfter,
+            smooth: smooth,
+            completionHandler: completion
+        )
     }
+}
 
-    /// Seek to a given location.
-    /// - Parameters:
-    ///   - time: The time to seek to.
-    ///   - toleranceBefore: Tolerance before the desired position.
-    ///   - toleranceAfter: Tolerance after the desired position.
-    /// - Returns: `true` if seeking was successful.
-    @discardableResult
-    func seek(
-        to time: CMTime,
-        toleranceBefore: CMTime = .positiveInfinity,
-        toleranceAfter: CMTime = .positiveInfinity
-    ) async -> Bool {
-        await queuePlayer.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
-    }
-
+public extension Player {
     /// Return whether the current player item player can be returned to live conditions.
     /// - Returns: `true` if skipping to live conditions is possible.
     func canSkipToLive() -> Bool {
-        canSkipToLive(from: time)
-    }
-
-    /// Return whether the current player item player can be returned to live conditions, starting from the specified
-    /// time.
-    /// - Parameter time: The time.
-    /// - Returns: `true` if skipping to live conditions is possible.
-    func canSkipToLive(from time: CMTime) -> Bool {
-        guard streamType == .dvr, timeRange.isValid else { return false }
+        guard timeRange.isValidAndNotEmpty, itemDuration.isIndefinite else { return false }
         return chunkDuration.isValid && time < timeRange.end - chunkDuration
     }
 
     /// Return the current item to live conditions. Does nothing if the current item is not a livestream or does not
     /// support DVR.
-    /// - Parameter completionHandler: A completion handler called when skipping ends.
-    func skipToLive(completionHandler: @escaping (Bool) -> Void = { _ in }) {
-        guard canSkipToLive(), timeRange.isValid else { return }
-        queuePlayer.seek(
-            to: timeRange.end,
-            toleranceBefore: .positiveInfinity,
-            toleranceAfter: .positiveInfinity
-        ) { [weak self] finished in
+    /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
+    ///   whether the skip could finish without being cancelled.
+    func skipToLive(completion: @escaping (Bool) -> Void = { _ in }) {
+        let time = timeRange.end.clamped(to: timeRange)
+        guard time.isValid else {
+            completion(true)
+            return
+        }
+        queuePlayer.seek(to: time) { [weak self] finished in
             self?.play()
-            completionHandler(finished)
+            completion(finished)
+        }
+    }
+}
+
+public extension Player {
+    /// Check whether skipping backward is possible.
+    /// - Returns: `true` if possible.
+    func canSkipBackward() -> Bool {
+        timeRange.isValidAndNotEmpty
+    }
+
+    /// Check whether skipping forward is possible.
+    /// - Returns: `true` if possible.
+    func canSkipForward() -> Bool {
+        guard timeRange.isValidAndNotEmpty else { return false }
+        if itemDuration.isIndefinite {
+            let currentTime = queuePlayer.targetSeekTime ?? time
+            return canSeek(to: currentTime + forwardSkipTime)
+        }
+        else {
+            return true
         }
     }
 
-    /// Return the current item to live conditions, resuming playback if needed. Does nothing if the current item is
-    ///  not a livestream or does not support DVR.
-    func skipToLive() async {
-        guard canSkipToLive(), timeRange.isValid else { return }
-        await queuePlayer.seek(
-            to: timeRange.end,
-            toleranceBefore: .positiveInfinity,
-            toleranceAfter: .positiveInfinity
-        )
-        queuePlayer.play()
+    /// Skip backward.
+    /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
+    ///   whether the skip could finish without being cancelled.
+    func skipBackward(completion: @escaping (Bool) -> Void = { _ in }) {
+        skip(withInterval: backwardSkipTime, completion: completion)
+    }
+
+    /// Skip forward.
+    /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
+    ///   whether the skip could finish without being cancelled.
+    func skipForward(completion: @escaping (Bool) -> Void = { _ in }) {
+        skip(withInterval: forwardSkipTime, completion: completion)
+    }
+
+    private func skip(withInterval interval: CMTime, completion: @escaping (Bool) -> Void = { _ in }) {
+        let currentTime = queuePlayer.targetSeekTime ?? time
+        seek(to: currentTime + interval, completion: completion)
     }
 }
 
@@ -548,6 +587,7 @@ extension Player {
             queuePlayer.nowPlayingInfoPlaybackPublisher()
         )
         .receiveOnMainThread()
+        .lane("control_center_update")
         .sink { [weak self] nowPlayingInfoMetadata, nowPlayingInfoPlayback in
             self?.updateControlCenter(
                 nowPlayingInfo: nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new }
@@ -668,6 +708,22 @@ extension Player {
         }
     }
 
+    private func skipBackwardRegistration() -> some RemoteCommandRegistrable {
+        nowPlayingSession.remoteCommandCenter.skipBackwardCommand.preferredIntervals = [.init(value: configuration.backwardSkipInterval)]
+        return nowPlayingSession.remoteCommandCenter.register(command: \.skipBackwardCommand) { [weak self] _ in
+            self?.skipBackward()
+            return .success
+        }
+    }
+
+    private func skipForwardRegistration() -> some RemoteCommandRegistrable {
+        nowPlayingSession.remoteCommandCenter.skipForwardCommand.preferredIntervals = [.init(value: configuration.forwardSkipInterval)]
+        return nowPlayingSession.remoteCommandCenter.register(command: \.skipForwardCommand) { [weak self] _ in
+            self?.skipForward()
+            return .success
+        }
+    }
+
     private func installRemoteCommands() {
         commandRegistrations = [
             playRegistration(),
@@ -675,7 +731,9 @@ extension Player {
             togglePlayPauseRegistration(),
             previousTrackRegistration(),
             nextTrackRegistration(),
-            changePlaybackPositionRegistration()
+            changePlaybackPositionRegistration(),
+            skipBackwardRegistration(),
+            skipForwardRegistration()
         ]
     }
 

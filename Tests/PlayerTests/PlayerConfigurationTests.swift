@@ -17,6 +17,8 @@ final class PlayerConfigurationTests: XCTestCase {
         expect(player.configuration.usesExternalPlaybackWhileMirroring).to(beFalse())
         expect(player.configuration.audiovisualBackgroundPlaybackPolicy).to(equal(.automatic))
         expect(player.configuration.isSmartNavigationEnabled).to(beTrue())
+        expect(player.configuration.backwardSkipInterval).to(equal(10))
+        expect(player.configuration.forwardSkipInterval).to(equal(10))
     }
 
     func testPlayerConfigurationInit() {
@@ -24,12 +26,16 @@ final class PlayerConfigurationTests: XCTestCase {
             allowsExternalPlayback: false,
             usesExternalPlaybackWhileMirroring: true,
             audiovisualBackgroundPlaybackPolicy: .pauses,
-            isSmartNavigationEnabled: false
+            smartNavigationEnabled: false,
+            backwardSkipInterval: 42,
+            forwardSkipInterval: 47
         )
         let player = Player(configuration: configuration)
         expect(player.configuration.allowsExternalPlayback).to(beFalse())
         expect(player.configuration.usesExternalPlaybackWhileMirroring).to(beTrue())
         expect(player.configuration.audiovisualBackgroundPlaybackPolicy).to(equal(.pauses))
         expect(player.configuration.isSmartNavigationEnabled).to(beFalse())
+        expect(player.configuration.backwardSkipInterval).to(equal(42))
+        expect(player.configuration.forwardSkipInterval).to(equal(47))
     }
 }

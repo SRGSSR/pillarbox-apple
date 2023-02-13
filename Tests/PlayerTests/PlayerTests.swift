@@ -26,4 +26,26 @@ final class PlayerTests: XCTestCase {
         }
         expect(weakPlayer).to(beNil())
     }
+
+    func testTimesWhenEmpty() {
+        let player = Player()
+        expect(player.time).toAlways(equal(.invalid))
+    }
+
+    func testTimesInEmptyRange() {
+        let player = Player(item: .simple(url: Stream.live.url))
+        expect(player.timeRange).toEventuallyNot(equal(.invalid))
+        player.play()
+        expect(player.time).toNever(equal(.invalid))
+    }
+
+    func testTimesStayInRange() {
+        let player = Player(item: .simple(url: Stream.dvr.url))
+        expect(player.timeRange).toEventuallyNot(equal(.invalid))
+        player.play()
+        expect {
+            player.timeRange.start <= player.time && player.time <= player.timeRange.end
+        }
+        .toAlways(beTrue(), until: .seconds(1))
+    }
 }

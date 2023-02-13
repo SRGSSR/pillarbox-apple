@@ -15,7 +15,7 @@ private struct ContentView: View {
 
     var body: some View {
         ZStack {
-            Group {
+            ZStack {
                 main()
                 controls()
                 loadingIndicator()
@@ -55,11 +55,8 @@ private struct ContentView: View {
 
     @ViewBuilder
     private func controls() -> some View {
-        Group {
-            Color(white: 0, opacity: 0.3)
-            PlaybackButton(player: player)
-        }
-        .opacity(isUserInterfaceHidden ? 0 : 1)
+        ControlsView(player: player)
+            .opacity(isUserInterfaceHidden ? 0 : 1)
     }
 
     @ViewBuilder
@@ -67,6 +64,27 @@ private struct ContentView: View {
         ProgressView()
             .tint(.white)
             .opacity(player.isBuffering ? 1 : 0)
+#if os(iOS)
+            .controlSize(.large)
+#endif
+    }
+}
+
+private struct ControlsView: View {
+    @ObservedObject var player: Player
+    @StateObject var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
+
+    var body: some View {
+        ZStack {
+            Color(white: 0, opacity: 0.3)
+            HStack(spacing: 30) {
+                SkipBackwardButton(player: player, progressTracker: progressTracker)
+                PlaybackButton(player: player)
+                SkipForwardButton(player: player, progressTracker: progressTracker)
+            }
+            .debugBodyCounter(color: .green)
+        }
+        .bind(progressTracker, to: player)
     }
 }
 
@@ -103,8 +121,50 @@ private struct PlaybackButton: View {
                 .tint(.white)
         }
         .opacity(player.isBuffering ? 0 : 1)
-        .frame(width: 90, height: 90)
-        .debugBodyCounter(color: .green)
+        .aspectRatio(contentMode: .fit)
+        .frame(height: 90)
+    }
+}
+
+// Behavior: h-hug, v-hug
+private struct SkipBackwardButton: View {
+    @ObservedObject var player: Player
+    @ObservedObject var progressTracker: ProgressTracker
+
+    var body: some View {
+        Button(action: skipBackward) {
+            Image(systemName: "gobackward.10")
+                .resizable()
+                .tint(.white)
+        }
+        .aspectRatio(contentMode: .fit)
+        .frame(height: 45)
+        .disabled(!player.canSkipBackward())
+    }
+
+    private func skipBackward() {
+        player.skipBackward()
+    }
+}
+
+// Behavior: h-hug, v-hug
+private struct SkipForwardButton: View {
+    @ObservedObject var player: Player
+    @ObservedObject var progressTracker: ProgressTracker
+
+    var body: some View {
+        Button(action: skipForward) {
+            Image(systemName: "goforward.10")
+                .resizable()
+                .tint(.white)
+        }
+        .aspectRatio(contentMode: .fit)
+        .frame(height: 45)
+        .disabled(!player.canSkipForward())
+    }
+
+    private func skipForward() {
+        player.skipForward()
     }
 }
 
@@ -114,7 +174,7 @@ private struct LiveLabel: View {
     @ObservedObject var progressTracker: ProgressTracker
 
     private var canSkipToLive: Bool {
-        player.canSkipToLive(from: progressTracker.time ?? player.time)
+        player.canSkipToLive()
     }
 
     var body: some View {
@@ -205,7 +265,7 @@ private struct TimeSlider: View {
     }
 
     var body: some View {
-        Group {
+        ZStack {
             switch player.streamType {
             case .onDemand:
                 Slider(

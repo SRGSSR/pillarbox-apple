@@ -6,46 +6,82 @@
 
 import AVFoundation
 import Combine
+import DequeModule
 
 enum SeekKey: String {
     case time
 }
 
+private struct Seek {
+    let time: CMTime
+    let completionHandler: (Bool) -> Void
+}
+
 final class QueuePlayer: AVQueuePlayer {
     static let notificationCenter = NotificationCenter()
 
-    private var seekTime: CMTime?
+    private var targetSeek: Seek?
+    private var pendingSeeks = Deque<Seek>()
+
+    var targetSeekTime: CMTime? {
+        targetSeek?.time
+    }
 
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
+        seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, smooth: false, completionHandler: completionHandler)
+    }
+
+    func seek(
+        to time: CMTime,
+        toleranceBefore: CMTime = .positiveInfinity,
+        toleranceAfter: CMTime = .positiveInfinity,
+        smooth: Bool,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
+        assert(time.isValid)
+
         guard !items().isEmpty else {
-            completionHandler(false)
+            completionHandler(true)
             return
         }
-        Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [
-            SeekKey.time: time
-        ])
-        guard seekTime == nil else {
-            seekTime = time
+
+        Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [SeekKey.time: time])
+
+        if let targetSeek {
+            pendingSeeks.append(targetSeek)
+        }
+        targetSeek = Seek(time: time, completionHandler: completionHandler)
+
+        if smooth && !pendingSeeks.isEmpty {
             return
         }
-        seekTime = time
-        _seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
+
+        move(to: targetSeek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] _ in
             guard let self else { return }
-            self.seekTime = nil
             Self.notificationCenter.post(name: .didSeek, object: self)
-            completionHandler(finished)
         }
     }
 
-    private func _seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
+    private func move(to seek: Seek?, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
+        guard let seek else { return }
+        super.seek(to: seek.time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             guard let self else { return }
-            guard let seekTime = self.seekTime else { return completionHandler(finished) }
-            if seekTime != time {
-                self._seek(to: seekTime, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
+            while let pendingSeek = self.pendingSeeks.popFirst() {
+                pendingSeek.completionHandler(finished)
+            }
+            guard finished else { return }
+            if let targetSeek = self.targetSeek, targetSeek.time == seek.time {
+                targetSeek.completionHandler(true)
+                completionHandler(true)
+                self.targetSeek = nil
             }
             else {
-                completionHandler(finished)
+                self.move(
+                    to: self.targetSeek,
+                    toleranceBefore: toleranceBefore,
+                    toleranceAfter: toleranceAfter,
+                    completionHandler: completionHandler
+                )
             }
         }
     }

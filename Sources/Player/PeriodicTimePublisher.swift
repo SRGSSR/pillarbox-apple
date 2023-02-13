@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import Core
 
 extension Publishers {
     fileprivate struct _PeriodicTimePublisher: Publisher {
@@ -29,9 +30,15 @@ extension Publishers {
     }
 
     static func PeriodicTimePublisher(for player: AVPlayer, interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
-        Publishers._PeriodicTimePublisher(player: player, interval: interval, queue: queue)
-            .removeDuplicates(by: CMTime.close(within: interval.seconds / 2))
-            .eraseToAnyPublisher()
+        Publishers.CombineLatest(
+            Publishers._PeriodicTimePublisher(player: player, interval: interval, queue: queue),
+            player.currentItemTimeRangePublisher()
+        )
+        .map { time, timeRange in
+            time.clamped(to: timeRange)
+        }
+        .removeDuplicates(by: CMTime.close(within: interval.seconds / 2))
+        .eraseToAnyPublisher()
     }
 }
 

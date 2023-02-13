@@ -12,18 +12,11 @@ import Nimble
 import OrderedCollections
 import XCTest
 
-final class QueuePlayerSeekTests: XCTestCase {
-    func testNotificationsForSeekWithInvalidTime() {
-        guard nimbleThrowAssertionsEnabled() else { return }
-        let item = AVPlayerItem(url: Stream.onDemand.url)
-        let player = QueuePlayer(playerItem: item)
-        expect { player.seek(to: .invalid) }.to(throwAssertion())
-    }
-
+final class QueuePlayerSmoothSeekTests: XCTestCase {
     func testNotificationsForSeekWithEmptyPlayer() {
         let player = QueuePlayer()
         expect {
-            player.seek(to: CMTime(value: 1, timescale: 1)) { finished in
+            player.seek(to: CMTime(value: 1, timescale: 1), smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
         }.to(postNotifications(equalDiff([]), from: QueuePlayer.notificationCenter))
@@ -34,7 +27,7 @@ final class QueuePlayerSeekTests: XCTestCase {
         let player = QueuePlayer(playerItem: item)
         let time = CMTime(value: 1, timescale: 1)
         expect {
-            player.seek(to: time) { finished in
+            player.seek(to: time, smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
         }.to(postNotifications(equalDiff([
@@ -49,10 +42,10 @@ final class QueuePlayerSeekTests: XCTestCase {
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
         expect {
-            player.seek(to: time1) { finished in
+            player.seek(to: time1, smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
-            player.seek(to: time2) { finished in
+            player.seek(to: time2, smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
         }.to(postNotifications(equalDiff([
@@ -72,10 +65,10 @@ final class QueuePlayerSeekTests: XCTestCase {
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
         expect {
-            player.seek(to: time1) { finished in
-                expect(finished).to(beFalse())
+            player.seek(to: time1, smooth: true) { finished in
+                expect(finished).to(beTrue())
             }
-            player.seek(to: time2) { finished in
+            player.seek(to: time2, smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
         }.toEventually(postNotifications(equalDiff([
@@ -85,7 +78,7 @@ final class QueuePlayerSeekTests: XCTestCase {
         ]), from: QueuePlayer.notificationCenter), timeout: .seconds(5))
     }
 
-    func testNotificationsForSeekAfterSmoothSeekWithinTimeRange() {
+    func testNotificationsForSmoothSeekAfterSeekWithinTimeRange() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         expect(item.timeRange).toEventuallyNot(beNil())
@@ -93,10 +86,10 @@ final class QueuePlayerSeekTests: XCTestCase {
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
         expect {
-            player.seek(to: time1, smooth: true) { finished in
-                expect(finished).to(beFalse())
+            player.seek(to: time1) { finished in
+                expect(finished).to(beTrue())
             }
-            player.seek(to: time2) { finished in
+            player.seek(to: time2, smooth: true) { finished in
                 expect(finished).to(beTrue())
             }
         }.toEventually(postNotifications(equalDiff([
@@ -124,18 +117,18 @@ final class QueuePlayerSeekTests: XCTestCase {
             }
         }
 
-        player.seek(to: time1, completionHandler: completion(index: 1))
-        player.seek(to: time2, completionHandler: completion(index: 2))
-        player.seek(to: time3, completionHandler: completion(index: 3))
+        player.seek(to: time1, smooth: true, completionHandler: completion(index: 1))
+        player.seek(to: time2, smooth: true, completionHandler: completion(index: 2))
+        player.seek(to: time3, smooth: true, completionHandler: completion(index: 3))
 
         expect(results).toEventually(equalDiff([
-            1: false,
-            2: false,
+            1: true,
+            2: true,
             3: true
         ]))
     }
 
-    func testCompletionsForMultipleSmoothSeeksEndingWithSeek() {
+    func testCompletionsForMultipleSeeksEndingWithSmoothSeek() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         expect(item.timeRange).toEventuallyNot(beNil())
@@ -153,13 +146,13 @@ final class QueuePlayerSeekTests: XCTestCase {
             }
         }
 
-        player.seek(to: time1, smooth: true, completionHandler: completion(index: 1))
-        player.seek(to: time2, smooth: true, completionHandler: completion(index: 2))
-        player.seek(to: time3, smooth: false, completionHandler: completion(index: 3))
+        player.seek(to: time1, smooth: false, completionHandler: completion(index: 1))
+        player.seek(to: time2, smooth: false, completionHandler: completion(index: 2))
+        player.seek(to: time3, smooth: true, completionHandler: completion(index: 3))
 
         expect(results).toEventually(equalDiff([
             1: false,
-            2: false,
+            2: true,
             3: true
         ]))
     }

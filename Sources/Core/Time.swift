@@ -7,6 +7,11 @@
 import AVFoundation
 
 public extension CMTimeRange {
+    /// A Boolean value that indicates whether the time range is valid and not empty.
+    var isValidAndNotEmpty: Bool {
+        isValid && !isEmpty
+    }
+
     /// Return a time range comparator having some tolerance.
     static func close(within tolerance: CMTime) -> ((CMTimeRange?, CMTimeRange?) -> Bool) {
         precondition(CMTimeCompare(tolerance, .zero) == 1)
@@ -66,5 +71,13 @@ public extension CMTime {
         else {
             return CMTimeAbsoluteValue(time1 - time2) <= tolerance
         }
+    }
+
+    /// Returns a copy of this time clamped to the given limiting range.
+    /// - Parameter range: The range to consider.
+    /// - Returns: A new time clamped to the range.
+    func clamped(to range: CMTimeRange) -> CMTime {
+        guard !range.isEmpty else { return range.start }
+        return CMTimeClampToRange(self, range: range)
     }
 }
