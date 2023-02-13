@@ -11,15 +11,16 @@ import UIKit
 
 enum Mock {
     enum ChapterKind: String {
-        case standard
         case geoblocked
+        case standard
         case timeLimited
     }
 
     enum MediaCompositionKind: String {
         case drm
-        case onDemand
         case live
+        case onDemand
+        case redundant
     }
 
     static func chapter(_ kind: ChapterKind = .standard) -> Chapter {
