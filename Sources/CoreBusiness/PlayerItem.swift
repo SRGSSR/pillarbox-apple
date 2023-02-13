@@ -37,11 +37,10 @@ public extension PlayerItem {
     }
 
     private static func assetMetadata(for mediaComposition: MediaComposition, image: UIImage?) -> Asset.Metadata {
-        let chapter = mediaComposition.mainChapter
-        return .init(
-            title: chapter.title,
-            subtitle: mediaComposition.show?.title,
-            description: chapter.description,
+        .init(
+            title: mediaComposition.title,
+            subtitle: mediaComposition.subtitle,
+            description: mediaComposition.description,
             image: image
         )
     }
