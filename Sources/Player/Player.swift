@@ -556,7 +556,7 @@ extension Player {
         let currentItem: AVPlayerItem?
 
         func currentIndex() -> Int? {
-            items.firstIndex(where: { $0.matches(currentItem) })
+            items.firstIndex { $0.matches(currentItem) }
         }
     }
 
@@ -689,7 +689,7 @@ extension Player {
             .receiveOnMainThread()
             .assign(to: &$isExternalPlaybackActive)
     }
-    
+
     private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
         Publishers.CombineLatest($storedItems, queuePlayer.publisher(for: \.currentItem))
             .filter { storedItems, currentItem in
