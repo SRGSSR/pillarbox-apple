@@ -81,7 +81,7 @@ public final class Player: ObservableObject, Equatable {
         configureSeekingPublisher()
         configureBufferingPublisher()
         configureCurrentIndexPublisher()
-        configureControlCenterPublisher()
+        configureControlCenterPublishers()
         configureQueueUpdatePublisher()
         configureExternalPlaybackPublisher()
 
@@ -280,10 +280,7 @@ public extension Player {
 
     /// Return the list of items to be loaded to return to the previous (playable) item.
     private var returningItems: [PlayerItem] {
-        guard let currentIndex else { return [] }
-        let previousIndex = storedItems.index(before: currentIndex)
-        guard previousIndex >= 0 else { return [] }
-        return Array(storedItems.suffix(from: previousIndex))
+        Self.items(before: currentIndex, in: storedItems)
     }
 
     /// Items past the current item (not included).
@@ -297,10 +294,7 @@ public extension Player {
 
     /// Return the list of items to be loaded to advance to the next (playable) item.
     private var advancingItems: [PlayerItem] {
-        guard let currentIndex else { return [] }
-        let nextIndex = storedItems.index(after: currentIndex)
-        guard nextIndex < storedItems.count else { return [] }
-        return Array(storedItems.suffix(from: nextIndex))
+        Self.items(after: currentIndex, in: storedItems)
     }
 
     private func canInsert(_ item: PlayerItem, before beforeItem: PlayerItem?) -> Bool {
@@ -448,15 +442,19 @@ public extension Player {
 public extension Player {
     internal static let startTimeThreshold: TimeInterval = 3
 
-    /// Check whether returning to the previous content is possible.`
-    /// - Returns: `true` if possible.
-    func canReturnToPrevious() -> Bool {
+    private func canReturn(before index: Int?, in items: Deque<PlayerItem>, streamType: StreamType) -> Bool {
         if configuration.isSmartNavigationEnabled && streamType == .onDemand {
             return true
         }
         else {
-            return canReturnToPreviousItem()
+            return Self.canReturnToItem(before: index, in: items)
         }
+    }
+
+    /// Check whether returning to the previous content is possible.`
+    /// - Returns: `true` if possible.
+    func canReturnToPrevious() -> Bool {
+        canReturn(before: currentIndex, in: storedItems, streamType: streamType)
     }
 
     private func isFarFromStartTime() -> Bool {
@@ -500,10 +498,32 @@ public extension Player {
 }
 
 extension Player {
+    private static func items(before index: Int?, in items: Deque<PlayerItem>) -> [PlayerItem] {
+        guard let index else { return [] }
+        let previousIndex = items.index(before: index)
+        guard previousIndex >= 0 else { return [] }
+        return Array(items.suffix(from: previousIndex))
+    }
+
+    private static func items(after index: Int?, in items: Deque<PlayerItem>) -> [PlayerItem] {
+        guard let index else { return [] }
+        let nextIndex = items.index(after: index)
+        guard nextIndex < items.count else { return [] }
+        return Array(items.suffix(from: nextIndex))
+    }
+
+    private static func canReturnToItem(before index: Int?, in items: Deque<PlayerItem>) -> Bool {
+        !Self.items(before: index, in: items).isEmpty
+    }
+
+    private static func canAdvanceToItem(after index: Int?, in items: Deque<PlayerItem>) -> Bool {
+        !Self.items(after: index, in: items).isEmpty
+    }
+
     /// Check whether returning to the previous item in the deque is possible.`
     /// - Returns: `true` if possible.
     func canReturnToPreviousItem() -> Bool {
-        !returningItems.isEmpty
+        Self.canReturnToItem(before: currentIndex, in: storedItems)
     }
 
     /// Return to the previous item in the deque. Skips failed items.
@@ -515,7 +535,7 @@ extension Player {
     /// Check whether moving to the next item in the deque is possible.`
     /// - Returns: `true` if possible.
     func canAdvanceToNextItem() -> Bool {
-        !advancingItems.isEmpty
+        Self.canAdvanceToItem(after: currentIndex, in: storedItems)
     }
 
     /// Move to the next item in the deque.
@@ -529,6 +549,20 @@ extension Player {
     private struct Current: Equatable {
         let item: PlayerItem
         let index: Int
+    }
+
+    private struct ItemUpdate {
+        let items: Deque<PlayerItem>
+        let currentItem: AVPlayerItem?
+
+        func currentIndex() -> Int? {
+            items.firstIndex { $0.matches(currentItem) }
+        }
+    }
+
+    static func streamTypePublisher(for item: AVPlayerItem?) -> AnyPublisher<StreamType, Never> {
+        guard let item else { return Just(.unknown).eraseToAnyPublisher() }
+        return item.streamTypePublisher().eraseToAnyPublisher()
     }
 
     private func configurePlaybackStatePublisher() {
@@ -581,6 +615,11 @@ extension Player {
             .assign(to: &$currentIndex)
     }
 
+    private func configureControlCenterPublishers() {
+        configureControlCenterPublisher()
+        configureControlCenterCommandAvailabilityPublisher()
+    }
+
     private func configureControlCenterPublisher() {
         Publishers.CombineLatest(
             nowPlayingInfoMetadataPublisher(),
@@ -594,6 +633,27 @@ extension Player {
             )
         }
         .store(in: &cancellables)
+    }
+
+    private func configureControlCenterCommandAvailabilityPublisher() {
+        itemUpdatePublisher()
+            .map { update in
+                Publishers.CombineLatest3(
+                    Just(update.items),
+                    Just(update.currentIndex()),
+                    Self.streamTypePublisher(for: update.currentItem)
+                )
+            }
+            .switchToLatest()
+            .sink { [weak self] items, index, streamType in
+                guard let self else { return }
+                let areSkipsEnabled = items.count <= 1 && streamType != .live
+                self.nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
+                self.nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
+                self.nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = self.canReturn(before: index, in: items, streamType: streamType)
+                self.nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = Self.canAdvanceToItem(after: index, in: items)
+            }
+            .store(in: &cancellables)
     }
 
     private func configureQueueUpdatePublisher() {
@@ -630,16 +690,22 @@ extension Player {
             .assign(to: &$isExternalPlaybackActive)
     }
 
-    private func currentPublisher() -> AnyPublisher<Current?, Never> {
+    private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
         Publishers.CombineLatest($storedItems, queuePlayer.publisher(for: \.currentItem))
             .filter { storedItems, currentItem in
                 // The current item is automatically set to `nil` when a failure is encountered. If this is the case
                 // preserve the previous value, provided the player is loaded with items.
                 storedItems.isEmpty || currentItem != nil
             }
-            .map { storedItems, currentItem in
-                guard let currentIndex = storedItems.firstIndex(where: { $0.matches(currentItem) }) else { return nil }
-                return .init(item: storedItems[currentIndex], index: currentIndex)
+            .map { ItemUpdate(items: $0, currentItem: $1) }
+            .eraseToAnyPublisher()
+    }
+
+    private func currentPublisher() -> AnyPublisher<Current?, Never> {
+        itemUpdatePublisher()
+            .map { update in
+                guard let currentIndex = update.currentIndex() else { return nil }
+                return .init(item: update.items[currentIndex], index: currentIndex)
             }
             .removeDuplicates()
             .eraseToAnyPublisher()
@@ -687,14 +753,16 @@ extension Player {
     }
 
     private func previousTrackRegistration() -> some RemoteCommandRegistrable {
-        nowPlayingSession.remoteCommandCenter.register(command: \.previousTrackCommand) { [weak self] _ in
+        nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = false
+        return nowPlayingSession.remoteCommandCenter.register(command: \.previousTrackCommand) { [weak self] _ in
             self?.returnToPrevious()
             return .success
         }
     }
 
     private func nextTrackRegistration() -> some RemoteCommandRegistrable {
-        nowPlayingSession.remoteCommandCenter.register(command: \.nextTrackCommand) { [weak self] _ in
+        nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = false
+        return nowPlayingSession.remoteCommandCenter.register(command: \.nextTrackCommand) { [weak self] _ in
             self?.advanceToNext()
             return .success
         }
@@ -709,6 +777,7 @@ extension Player {
     }
 
     private func skipBackwardRegistration() -> some RemoteCommandRegistrable {
+        nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = false
         nowPlayingSession.remoteCommandCenter.skipBackwardCommand.preferredIntervals = [.init(value: configuration.backwardSkipInterval)]
         return nowPlayingSession.remoteCommandCenter.register(command: \.skipBackwardCommand) { [weak self] _ in
             self?.skipBackward()
@@ -717,6 +786,7 @@ extension Player {
     }
 
     private func skipForwardRegistration() -> some RemoteCommandRegistrable {
+        nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = false
         nowPlayingSession.remoteCommandCenter.skipForwardCommand.preferredIntervals = [.init(value: configuration.forwardSkipInterval)]
         return nowPlayingSession.remoteCommandCenter.register(command: \.skipForwardCommand) { [weak self] _ in
             self?.skipForward()

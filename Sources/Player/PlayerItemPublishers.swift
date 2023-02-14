@@ -43,6 +43,17 @@ extension AVPlayerItem {
         .eraseToAnyPublisher()
     }
 
+    func streamTypePublisher() -> AnyPublisher<StreamType, Never> {
+        Publishers.CombineLatest(
+            timeRangePublisher(),
+            durationPublisher()
+        )
+        .map { timeRange, duration in
+            StreamType(for: timeRange, itemDuration: duration)
+        }
+        .eraseToAnyPublisher()
+    }
+
     func bufferingPublisher() -> AnyPublisher<Bool, Never> {
         Publishers.CombineLatest(
             publisher(for: \.isPlaybackLikelyToKeepUp),
