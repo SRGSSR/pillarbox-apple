@@ -551,11 +551,11 @@ extension Player {
         let index: Int
     }
 
-    struct ItemUpdate {
+    private struct ItemUpdate {
         let items: Deque<PlayerItem>
         let currentItem: AVPlayerItem?
 
-        func index() -> Int? {
+        func currentIndex() -> Int? {
             items.firstIndex(where: { $0.matches(currentItem) })
         }
     }
@@ -640,7 +640,7 @@ extension Player {
             .map { update in
                 Publishers.CombineLatest3(
                     Just(update.items),
-                    Just(update.index()),
+                    Just(update.currentIndex()),
                     Self.streamTypePublisher(for: update.currentItem)
                 )
             }
@@ -704,7 +704,7 @@ extension Player {
     private func currentPublisher() -> AnyPublisher<Current?, Never> {
         itemUpdatePublisher()
             .map { update in
-                guard let currentIndex = update.index() else { return nil }
+                guard let currentIndex = update.currentIndex() else { return nil }
                 return .init(item: update.items[currentIndex], index: currentIndex)
             }
             .removeDuplicates()
