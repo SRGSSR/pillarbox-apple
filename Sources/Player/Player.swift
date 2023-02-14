@@ -81,7 +81,7 @@ public final class Player: ObservableObject, Equatable {
         configureSeekingPublisher()
         configureBufferingPublisher()
         configureCurrentIndexPublisher()
-        configureControlCenterPublisher()
+        configureControlCenterPublishers()
         configureQueueUpdatePublisher()
         configureExternalPlaybackPublisher()
 
@@ -581,6 +581,11 @@ extension Player {
             .assign(to: &$currentIndex)
     }
 
+    private func configureControlCenterPublishers() {
+        configureControlCenterPublisher()
+        configureControlCenterAvailability()
+    }
+
     private func configureControlCenterPublisher() {
         Publishers.CombineLatest(
             nowPlayingInfoMetadataPublisher(),
@@ -594,6 +599,14 @@ extension Player {
             )
         }
         .store(in: &cancellables)
+    }
+
+    private func configureControlCenterAvailability() {
+        $storedItems.sink { [weak self] items in
+            let isEnabled = items.count <= 1
+            self?.nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = isEnabled
+            self?.nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = isEnabled
+        }.store(in: &cancellables)
     }
 
     private func configureQueueUpdatePublisher() {
