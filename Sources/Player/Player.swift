@@ -158,6 +158,7 @@ public extension Player {
         smooth: Bool = false,
         completion: @escaping (Bool) -> Void = { _ in }
     ) {
+        let timeRange = queuePlayer.currentItem?.timeRange ?? .invalid
         let time = time.clamped(to: timeRange)
         guard time.isValid else {
             completion(true)
@@ -186,6 +187,7 @@ public extension Player {
     /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
     ///   whether the skip could finish without being cancelled.
     func skipToLive(completion: @escaping (Bool) -> Void = { _ in }) {
+        let timeRange = queuePlayer.currentItem?.timeRange ?? .invalid
         let time = timeRange.end.clamped(to: timeRange)
         guard time.isValid else {
             completion(true)
