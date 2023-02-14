@@ -753,14 +753,16 @@ extension Player {
     }
 
     private func previousTrackRegistration() -> some RemoteCommandRegistrable {
-        nowPlayingSession.remoteCommandCenter.register(command: \.previousTrackCommand) { [weak self] _ in
+        nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = false
+        return nowPlayingSession.remoteCommandCenter.register(command: \.previousTrackCommand) { [weak self] _ in
             self?.returnToPrevious()
             return .success
         }
     }
 
     private func nextTrackRegistration() -> some RemoteCommandRegistrable {
-        nowPlayingSession.remoteCommandCenter.register(command: \.nextTrackCommand) { [weak self] _ in
+        nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = false
+        return nowPlayingSession.remoteCommandCenter.register(command: \.nextTrackCommand) { [weak self] _ in
             self?.advanceToNext()
             return .success
         }
@@ -775,6 +777,7 @@ extension Player {
     }
 
     private func skipBackwardRegistration() -> some RemoteCommandRegistrable {
+        nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = false
         nowPlayingSession.remoteCommandCenter.skipBackwardCommand.preferredIntervals = [.init(value: configuration.backwardSkipInterval)]
         return nowPlayingSession.remoteCommandCenter.register(command: \.skipBackwardCommand) { [weak self] _ in
             self?.skipBackward()
@@ -783,6 +786,7 @@ extension Player {
     }
 
     private func skipForwardRegistration() -> some RemoteCommandRegistrable {
+        nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = false
         nowPlayingSession.remoteCommandCenter.skipForwardCommand.preferredIntervals = [.init(value: configuration.forwardSkipInterval)]
         return nowPlayingSession.remoteCommandCenter.register(command: \.skipForwardCommand) { [weak self] _ in
             self?.skipForward()
