@@ -651,7 +651,7 @@ extension Player {
                 self.nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
                 self.nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
                 self.nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = self.canReturn(before: index, in: items, streamType: streamType)
-                self.nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = self.canAdvanceToNext()
+                self.nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = Self.canAdvanceToItem(after: index, in: items)
             }
             .store(in: &cancellables)
     }
