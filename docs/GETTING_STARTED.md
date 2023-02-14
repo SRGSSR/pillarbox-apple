@@ -127,4 +127,3 @@ The player is automatically integrated with the control center. Currently only t
 ## Have fun
 
 This is only a glimpse of what can be achieved with Pillarbox. Though the feature set is still limited you should already be able to implement pretty interesting playback experiences. Please have a look at the documentation (which can be built with Xcode _Product_ > _Build Documentation_) and check the demo and its various examples to better understand what is possible.
-
