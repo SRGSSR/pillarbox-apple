@@ -78,6 +78,7 @@ public extension CMTime {
     /// - Returns: A new time clamped to the range.
     func clamped(to range: CMTimeRange) -> CMTime {
         guard !range.isEmpty else { return range.start }
-        return CMTimeClampToRange(self, range: range)
+        let safeRange = CMTimeRange(start: range.start, duration: max(range.duration - CMTime(value: 1, timescale: 10), .zero))
+        return CMTimeClampToRange(self, range: safeRange)
     }
 }
