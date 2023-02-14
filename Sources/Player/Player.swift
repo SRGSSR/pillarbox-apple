@@ -445,15 +445,19 @@ public extension Player {
 public extension Player {
     internal static let startTimeThreshold: TimeInterval = 3
 
-    /// Check whether returning to the previous content is possible.`
-    /// - Returns: `true` if possible.
-    func canReturnToPrevious() -> Bool {
+    private func canReturn(before index: Int?, in items: Deque<PlayerItem>, streamType: StreamType) -> Bool {
         if configuration.isSmartNavigationEnabled && streamType == .onDemand {
             return true
         }
         else {
-            return canReturnToPreviousItem()
+            return Self.canReturnToItem(before: index, in: items)
         }
+    }
+
+    /// Check whether returning to the previous content is possible.`
+    /// - Returns: `true` if possible.
+    func canReturnToPrevious() -> Bool {
+        canReturn(before: currentIndex, in: storedItems, streamType: streamType)
     }
 
     private func isFarFromStartTime() -> Bool {
