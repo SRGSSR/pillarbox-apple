@@ -647,7 +647,7 @@ extension Player {
             .switchToLatest()
             .sink { [weak self] items, index, streamType in
                 guard let self else { return }
-                let areSkipsEnabled = items.count <= 1
+                let areSkipsEnabled = items.count <= 1 && streamType != .live
                 self.nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
                 self.nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
                 self.nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = self.canReturn(before: index, in: items, streamType: streamType)
