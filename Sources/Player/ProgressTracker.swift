@@ -84,14 +84,18 @@ public final class ProgressTracker: ObservableObject {
                 guard let player else {
                     return Just(.invalid).eraseToAnyPublisher()
                 }
-                return Publishers.CombineLatest3(
-                    player.queuePlayer.smoothCurrentTimePublisher(interval: interval, queue: .main),
-                    player.queuePlayer.currentItemTimeRangePublisher(),
-                    $isInteracting
+                return Publishers.CombineLatest(
+                    Publishers.CombineLatest(
+                        player.queuePlayer.smoothCurrentTimePublisher(interval: interval, queue: .main),
+                        $isInteracting
+                    )
+                    .compactMap { time, isInteracting in
+                        !isInteracting ? time : nil
+                    },
+                    player.queuePlayer.currentItemTimeRangePublisher()
                 )
-                .compactMap { time, timeRange, isInteracting in
-                    guard !isInteracting else { return nil }
-                    return State(time: time, timeRange: timeRange)
+                .compactMap { time, timeRange in
+                    State(time: time, timeRange: timeRange)
                 }
                 .eraseToAnyPublisher()
             }
