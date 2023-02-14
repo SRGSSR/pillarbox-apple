@@ -280,10 +280,7 @@ public extension Player {
 
     /// Return the list of items to be loaded to return to the previous (playable) item.
     private var returningItems: [PlayerItem] {
-        guard let currentIndex else { return [] }
-        let previousIndex = storedItems.index(before: currentIndex)
-        guard previousIndex >= 0 else { return [] }
-        return Array(storedItems.suffix(from: previousIndex))
+        Self.items(before: currentIndex, in: storedItems)
     }
 
     /// Items past the current item (not included).
@@ -500,10 +497,21 @@ public extension Player {
 }
 
 extension Player {
+    private static func items(before index: Int?, in items: Deque<PlayerItem>) -> [PlayerItem] {
+        guard let index else { return [] }
+        let previousIndex = items.index(before: index)
+        guard previousIndex >= 0 else { return [] }
+        return Array(items.suffix(from: previousIndex))
+    }
+
+    private static func canReturnToItem(before index: Int?, in items: Deque<PlayerItem>) -> Bool {
+        !Self.items(before: index, in: items).isEmpty
+    }
+
     /// Check whether returning to the previous item in the deque is possible.`
     /// - Returns: `true` if possible.
     func canReturnToPreviousItem() -> Bool {
-        !returningItems.isEmpty
+        Self.canReturnToItem(before: currentIndex, in: storedItems)
     }
 
     /// Return to the previous item in the deque. Skips failed items.
