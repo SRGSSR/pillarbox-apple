@@ -603,9 +603,11 @@ extension Player {
 
     private func configureControlCenterAvailability() {
         $storedItems.sink { [weak self] items in
-            let isEnabled = items.count <= 1
-            self?.nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = isEnabled
-            self?.nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = isEnabled
+            let areSkipsEnabled = items.count <= 1
+            self?.nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
+            self?.nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
+            self?.nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = self?.canReturnToPrevious() ?? true
+            self?.nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = self?.canAdvanceToNext() ?? true
         }.store(in: &cancellables)
     }
 
