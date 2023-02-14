@@ -294,10 +294,7 @@ public extension Player {
 
     /// Return the list of items to be loaded to advance to the next (playable) item.
     private var advancingItems: [PlayerItem] {
-        guard let currentIndex else { return [] }
-        let nextIndex = storedItems.index(after: currentIndex)
-        guard nextIndex < storedItems.count else { return [] }
-        return Array(storedItems.suffix(from: nextIndex))
+        Self.items(after: currentIndex, in: storedItems)
     }
 
     private func canInsert(_ item: PlayerItem, before beforeItem: PlayerItem?) -> Bool {
@@ -506,6 +503,13 @@ extension Player {
         let previousIndex = items.index(before: index)
         guard previousIndex >= 0 else { return [] }
         return Array(items.suffix(from: previousIndex))
+    }
+
+    private static func items(after index: Int?, in items: Deque<PlayerItem>) -> [PlayerItem] {
+        guard let index else { return [] }
+        let nextIndex = items.index(after: index)
+        guard nextIndex < items.count else { return [] }
+        return Array(items.suffix(from: nextIndex))
     }
 
     private static func canReturnToItem(before index: Int?, in items: Deque<PlayerItem>) -> Bool {
