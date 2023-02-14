@@ -57,7 +57,7 @@ end
 
 # -- External configuration
 
-def key_filepath
+def api_key_filepath
   File.expand_path('../Configuration/AppStoreConnect_API_Key.p8')
 end
 
@@ -97,7 +97,7 @@ def login_to_app_store_connect
   app_store_connect_api_key(
     key_id: ENV.fetch('KEY_ID'),
     issuer_id: ENV.fetch('KEY_ISSUER_ID'),
-    key_filepath: key_filepath
+    key_filepath: api_key_filepath
   )
 end
 
@@ -124,7 +124,7 @@ def build_and_sign_app(platform_id, configuration_id)
     export_team_id: ENV.fetch('TEAM_ID'),
     output_directory: 'Binaries',
     xcargs: "-authenticationKeyIssuerID #{ENV.fetch('KEY_ISSUER_ID')} -authenticationKeyID #{ENV.fetch('KEY_ID')} " \
-            "-authenticationKeyPath #{key_filepath} -allowProvisioningUpdates"
+            "-authenticationKeyPath #{api_key_filepath} -allowProvisioningUpdates"
   )
 end
 
@@ -138,7 +138,7 @@ def add_version_badge(platform_id, label, message, color)
   )
 end
 
-def changelog
+def commit_changelog
   # Same formatters as git-log: https://git-scm.com/docs/pretty-formats
   changelog_from_git_commits(
     commits_count: 10,
@@ -160,7 +160,7 @@ def distribute_app_to_testers(platform_id, configuration_id, build_number)
     app_platform: TESTFLIGHT_PLATFORMS[platform_id],
     build_number: build_number.to_s,
     distribute_external: true,
-    changelog: changelog,
+    changelog: commit_changelog,
     groups: ENV.fetch('TESTFLIGHT_GROUPS'),
     notify_external_testers: true,
     demo_account_required: false
