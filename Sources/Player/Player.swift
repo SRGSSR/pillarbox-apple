@@ -617,7 +617,7 @@ extension Player {
 
     private func configureControlCenterPublishers() {
         configureControlCenterPublisher()
-        configureControlCenterAvailability()
+        configureControlCenterCommandAvailabilityPublisher()
     }
 
     private func configureControlCenterPublisher() {
@@ -635,7 +635,7 @@ extension Player {
         .store(in: &cancellables)
     }
 
-    private func configureControlCenterAvailability() {
+    private func configureControlCenterCommandAvailabilityPublisher() {
         itemUpdatePublisher()
             .map { update in
                 Publishers.CombineLatest3(
