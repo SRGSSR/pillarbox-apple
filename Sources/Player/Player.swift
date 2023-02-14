@@ -516,6 +516,10 @@ extension Player {
         !Self.items(before: index, in: items).isEmpty
     }
 
+    private static func canAdvanceToItem(after index: Int?, in items: Deque<PlayerItem>) -> Bool {
+        !Self.items(after: index, in: items).isEmpty
+    }
+
     /// Check whether returning to the previous item in the deque is possible.`
     /// - Returns: `true` if possible.
     func canReturnToPreviousItem() -> Bool {
@@ -531,7 +535,7 @@ extension Player {
     /// Check whether moving to the next item in the deque is possible.`
     /// - Returns: `true` if possible.
     func canAdvanceToNextItem() -> Bool {
-        !advancingItems.isEmpty
+        Self.canAdvanceToItem(after: currentIndex, in: storedItems)
     }
 
     /// Move to the next item in the deque.
