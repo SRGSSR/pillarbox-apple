@@ -73,7 +73,6 @@ final class QueuePlayer: AVQueuePlayer {
             while let pendingSeek = self.pendingSeeks.popFirst() {
                 pendingSeek.completionHandler(finished)
             }
-            guard finished else { return }
             if let targetSeek = self.targetSeek, targetSeek.time == seek.time {
                 targetSeek.completionHandler(true)
                 completionHandler(true)
