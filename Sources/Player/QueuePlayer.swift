@@ -23,6 +23,10 @@ final class QueuePlayer: AVQueuePlayer {
     private var targetSeek: Seek?
     private var pendingSeeks = Deque<Seek>()
 
+    var timeRange: CMTimeRange {
+        currentItem?.timeRange ?? .invalid
+    }
+
     var targetSeekTime: CMTime? {
         targetSeek?.time
     }
