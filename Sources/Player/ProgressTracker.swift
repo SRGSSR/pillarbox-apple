@@ -14,18 +14,35 @@ import SwiftUI
 public final class ProgressTracker: ObservableObject {
     private struct State {
         let time: CMTime
-        let timeRange: CMTimeRange
+
+        // Intentionally kept private. Used for display only, seeks must rely on most recent player values.
+        private let timeRange: CMTimeRange
+
+        init(time: CMTime, timeRange: CMTimeRange) {
+            self.time = time
+            self.timeRange = timeRange
+        }
 
         static var invalid: Self {
             .init(time: .invalid, timeRange: .invalid)
         }
 
         var isValid: Bool {
-            time.isValid && Self.isValid(timeRange)
+            time.isValid && timeRange.isValidAndNotEmpty
         }
 
-        static func isValid(_ timeRange: CMTimeRange) -> Bool {
-            timeRange.isValid && !timeRange.isEmpty
+        var progress: Float? {
+            guard isValid else { return nil }
+            let elapsedTime = (time - timeRange.start).seconds
+            let duration = timeRange.duration.seconds
+            return Float(elapsedTime / duration).clamped(to: 0...1)
+        }
+
+        func withProgress(_ progress: Float) -> Self {
+            guard timeRange.isValidAndNotEmpty else { return .invalid }
+            let multiplier = Float64(progress.clamped(to: 0...1))
+            let time = timeRange.start + CMTimeMultiplyByFloat64(timeRange.duration, multiplier: multiplier)
+            return .init(time: time, timeRange: timeRange)
         }
     }
 
@@ -54,12 +71,10 @@ public final class ProgressTracker: ObservableObject {
     /// The current progress. Might be different from the player progress when interaction takes place.
     public var progress: Float {
         get {
-            Self.progress(for: state)
+            state.progress ?? 0
         }
         set {
-            let timeRange = state.timeRange
-            let time = Self.time(forProgress: newValue, in: timeRange)
-            state = State(time: time, timeRange: timeRange)
+            state = state.withProgress(newValue)
         }
     }
 
@@ -71,8 +86,7 @@ public final class ProgressTracker: ObservableObject {
 
     /// Range for progress values.
     public var range: ClosedRange<Float> {
-        let timeRange = state.timeRange
-        return (timeRange.isValid && !timeRange.isEmpty) ? 0...1 : 0...0
+        state.isValid ? 0...1 : 0...0
     }
 
     /// Create a tracker updating its progress at the specified interval.
@@ -104,22 +118,13 @@ public final class ProgressTracker: ObservableObject {
             .assign(to: &$state)
     }
 
-    private static func progress(for state: State) -> Float {
-        guard state.isValid else { return 0 }
-        let elapsedTime = (state.time - state.timeRange.start).seconds
-        let duration = state.timeRange.duration.seconds
-        return Float(elapsedTime / duration).clamped(to: 0...1)
-    }
-
-    private static func time(forProgress progress: Float, in timeRange: CMTimeRange) -> CMTime {
-        guard State.isValid(timeRange) else { return .invalid }
-        let multiplier = Float64(progress.clamped(to: 0...1))
-        return timeRange.start + CMTimeMultiplyByFloat64(timeRange.duration, multiplier: multiplier)
-    }
-
     private func seek(to state: State) {
-        guard let player, state.isValid else { return }
-        player.seek(to: state.time, smooth: true)
+        // Always calculate the target time based on the progress and most recent player range information
+        guard let progress = state.progress, let player else { return }
+        let timeRange = player.timeRange
+        guard timeRange.isValidAndNotEmpty else { return }
+        let time = timeRange.start + CMTimeMultiplyByFloat64(timeRange.duration, multiplier: Float64(progress))
+        player.seek(to: time, smooth: true)
     }
 }
 
