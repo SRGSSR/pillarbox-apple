@@ -55,20 +55,20 @@ final class QueuePlayer: AVQueuePlayer {
         if let targetSeek {
             pendingSeeks.append(targetSeek)
         }
-        targetSeek = Seek(time: time, isSmooth: smooth, completionHandler: completionHandler)
+        let seek = Seek(time: time, isSmooth: smooth, completionHandler: completionHandler)
+        targetSeek = seek
 
         if smooth && !pendingSeeks.isEmpty {
             return
         }
 
-        move(to: targetSeek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] _ in
+        move(to: seek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] _ in
             guard let self else { return }
             Self.notificationCenter.post(name: .didSeek, object: self)
         }
     }
 
-    private func move(to seek: Seek?, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        guard let seek else { return }
+    private func move(to seek: Seek, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         super.seek(to: seek.time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             guard let self else { return }
             while let pendingSeek = self.pendingSeeks.popFirst() {
