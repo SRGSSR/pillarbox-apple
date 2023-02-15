@@ -74,21 +74,22 @@ final class QueuePlayer: AVQueuePlayer {
             while let pendingSeek = self.pendingSeeks.popFirst() {
                 pendingSeek.completionHandler(finished)
             }
-            if let targetSeek = self.targetSeek, targetSeek.time == seek.time {
+            guard let targetSeek = self.targetSeek else {
+                completionHandler(finished)
+                return
+            }
+            if targetSeek.time == seek.time {
                 targetSeek.completionHandler(true)
                 completionHandler(true)
                 self.targetSeek = nil
             }
-            else if let targetSeek = self.targetSeek, targetSeek.isSmooth {
+            else if targetSeek.isSmooth {
                 self.move(
                     to: targetSeek,
                     toleranceBefore: toleranceBefore,
                     toleranceAfter: toleranceAfter,
                     completionHandler: completionHandler
                 )
-            }
-            else {
-                completionHandler(finished)
             }
         }
     }
