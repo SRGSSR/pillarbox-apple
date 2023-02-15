@@ -14,6 +14,7 @@ enum SeekKey: String {
 
 private struct Seek {
     let time: CMTime
+    let isSmooth: Bool
     let completionHandler: (Bool) -> Void
 }
 
@@ -54,7 +55,7 @@ final class QueuePlayer: AVQueuePlayer {
         if let targetSeek {
             pendingSeeks.append(targetSeek)
         }
-        targetSeek = Seek(time: time, completionHandler: completionHandler)
+        targetSeek = Seek(time: time, isSmooth: smooth, completionHandler: completionHandler)
 
         if smooth && !pendingSeeks.isEmpty {
             return
@@ -78,13 +79,16 @@ final class QueuePlayer: AVQueuePlayer {
                 completionHandler(true)
                 self.targetSeek = nil
             }
-            else {
+            else if let targetSeek = self.targetSeek, targetSeek.isSmooth {
                 self.move(
-                    to: self.targetSeek,
+                    to: targetSeek,
                     toleranceBefore: toleranceBefore,
                     toleranceAfter: toleranceAfter,
                     completionHandler: completionHandler
                 )
+            }
+            else {
+                completionHandler(finished)
             }
         }
     }
