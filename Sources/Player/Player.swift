@@ -158,7 +158,7 @@ public extension Player {
         smooth: Bool = false,
         completion: @escaping (Bool) -> Void = { _ in }
     ) {
-        let time = time.clamped(to: queuePlayer.timeRange)
+        let time = time.clamped(to: queuePlayer.timeRange, offset: CMTime(value: 1, timescale: 10))
         guard time.isValid else {
             completion(true)
             return
