@@ -28,12 +28,13 @@ public final class Player: ObservableObject, Equatable {
     /// Duration of a chunk for the currently played item.
     @Published public private(set) var chunkDuration: CMTime = .invalid
 
+    /// The type of stream currently played.
+    @Published public private(set) var streamType: StreamType = .unknown
+
     /// Indicates whether the player is currently playing video in external playback mode.
     @Published public private(set) var isExternalPlaybackActive = false
 
     @Published private var storedItems: Deque<PlayerItem>
-    @Published private var _timeRange: CMTimeRange = .invalid
-    @Published private var itemDuration: CMTime = .indefinite
 
     /// Current time.
     public var time: CMTime {
@@ -43,6 +44,10 @@ public final class Player: ObservableObject, Equatable {
     /// Available time range. `.invalid` when not known.
     public var timeRange: CMTimeRange {
         queuePlayer.timeRange
+    }
+
+    private var itemDuration: CMTime {
+        queuePlayer.currentItem?.duration ?? .indefinite
     }
 
     let queuePlayer = QueuePlayer()
@@ -60,11 +65,6 @@ public final class Player: ObservableObject, Equatable {
         CMTime(seconds: configuration.forwardSkipInterval, preferredTimescale: 1)
     }
 
-    /// The type of stream currently played.
-    public var streamType: StreamType {
-        StreamType(for: _timeRange, itemDuration: itemDuration)
-    }
-
     /// Create a player with a given item queue.
     /// - Parameters:
     ///   - items: The items to be queued initially.
@@ -78,8 +78,7 @@ public final class Player: ObservableObject, Equatable {
         self.configuration = configuration
 
         configurePlaybackStatePublisher()
-        configureCurrentItemTimeRangePublisher()
-        configureCurrentItemDurationPublisher()
+        configureStreamTypePublisher()
         configureChunkDurationPublisher()
         configureSeekingPublisher()
         configureBufferingPublisher()
@@ -575,18 +574,17 @@ extension Player {
             .assign(to: &$playbackState)
     }
 
-    private func configureCurrentItemTimeRangePublisher() {
-        queuePlayer.currentItemTimeRangePublisher()
-            .receiveOnMainThread()
-            .lane("player_time_range")
-            .assign(to: &$_timeRange)
-    }
-
-    private func configureCurrentItemDurationPublisher() {
-        queuePlayer.currentItemDurationPublisher()
-            .receiveOnMainThread()
-            .lane("player_item_duration")
-            .assign(to: &$itemDuration)
+    private func configureStreamTypePublisher() {
+        Publishers.CombineLatest(
+            queuePlayer.currentItemTimeRangePublisher(),
+            queuePlayer.currentItemDurationPublisher()
+        )
+        .map { timeRange, itemDuration in
+            StreamType(for: timeRange, itemDuration: itemDuration)
+        }
+        .receiveOnMainThread()
+        .lane("player_stream_type")
+        .assign(to: &$streamType)
     }
 
     private func configureChunkDurationPublisher() {
