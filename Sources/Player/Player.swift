@@ -179,8 +179,8 @@ public extension Player {
     /// Return whether the current player item player can be returned to live conditions.
     /// - Returns: `true` if skipping to live conditions is possible.
     func canSkipToLive() -> Bool {
-        guard timeRange.isValidAndNotEmpty, itemDuration.isIndefinite else { return false }
-        return chunkDuration.isValid && time < timeRange.end - chunkDuration
+        guard timeRange.isValidAndNotEmpty, itemDuration.isIndefinite, chunkDuration.isValid else { return false }
+        return time < timeRange.end - chunkDuration
     }
 
     /// Return the current item to live conditions. Does nothing if the current item is not a livestream or does not
