@@ -25,9 +25,6 @@ public final class Player: ObservableObject, Equatable {
     /// The index of the current item in the queue.
     @Published public private(set) var currentIndex: Int?
 
-    /// Available time range. `.invalid` when not known.
-    @Published public private(set) var timeRange: CMTimeRange = .invalid
-
     /// Duration of a chunk for the currently played item.
     @Published public private(set) var chunkDuration: CMTime = .invalid
 
@@ -35,11 +32,17 @@ public final class Player: ObservableObject, Equatable {
     @Published public private(set) var isExternalPlaybackActive = false
 
     @Published private var storedItems: Deque<PlayerItem>
+    @Published private var _timeRange: CMTimeRange = .invalid
     @Published private var itemDuration: CMTime = .indefinite
 
     /// Current time.
     public var time: CMTime {
         queuePlayer.currentTime().clamped(to: timeRange)
+    }
+
+    /// Available time range. `.invalid` when not known.
+    public var timeRange: CMTimeRange {
+        queuePlayer.timeRange
     }
 
     let queuePlayer = QueuePlayer()
@@ -59,7 +62,7 @@ public final class Player: ObservableObject, Equatable {
 
     /// The type of stream currently played.
     public var streamType: StreamType {
-        StreamType(for: timeRange, itemDuration: itemDuration)
+        StreamType(for: _timeRange, itemDuration: itemDuration)
     }
 
     /// Create a player with a given item queue.
@@ -158,7 +161,7 @@ public extension Player {
         smooth: Bool = false,
         completion: @escaping (Bool) -> Void = { _ in }
     ) {
-        let time = time.clamped(to: queuePlayer.timeRange, offset: CMTime(value: 1, timescale: 10))
+        let time = time.clamped(to: timeRange, offset: CMTime(value: 1, timescale: 10))
         guard time.isValid else {
             completion(true)
             return
@@ -186,7 +189,6 @@ public extension Player {
     /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
     ///   whether the skip could finish without being cancelled.
     func skipToLive(completion: @escaping (Bool) -> Void = { _ in }) {
-        let timeRange = queuePlayer.timeRange
         let time = timeRange.end.clamped(to: timeRange)
         guard time.isValid else {
             completion(true)
@@ -577,7 +579,7 @@ extension Player {
         queuePlayer.currentItemTimeRangePublisher()
             .receiveOnMainThread()
             .lane("player_time_range")
-            .assign(to: &$timeRange)
+            .assign(to: &$_timeRange)
     }
 
     private func configureCurrentItemDurationPublisher() {
