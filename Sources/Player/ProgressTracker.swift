@@ -99,13 +99,7 @@ public final class ProgressTracker: ObservableObject {
                     return Just(.invalid).eraseToAnyPublisher()
                 }
                 return Publishers.CombineLatest(
-                    Publishers.CombineLatest(
-                        player.queuePlayer.smoothCurrentTimePublisher(interval: interval, queue: .main),
-                        $isInteracting
-                    )
-                    .compactMap { time, isInteracting in
-                        !isInteracting ? time : nil
-                    },
+                    Self.currentTimePublisher(for: player, interval: interval, isInteracting: $isInteracting),
                     player.queuePlayer.currentItemTimeRangePublisher()
                 )
                 .compactMap { time, timeRange in
@@ -116,6 +110,21 @@ public final class ProgressTracker: ObservableObject {
             .switchToLatest()
             .receiveOnMainThread()
             .assign(to: &$state)
+    }
+
+    private static func currentTimePublisher(
+        for player: Player,
+        interval: CMTime,
+        isInteracting: Published<Bool>.Publisher
+    ) -> AnyPublisher<CMTime, Never> {
+        Publishers.CombineLatest(
+            player.queuePlayer.smoothCurrentTimePublisher(interval: interval, queue: .main),
+            isInteracting
+        )
+        .compactMap { time, isInteracting in
+            !isInteracting ? time : nil
+        }
+        .eraseToAnyPublisher()
     }
 
     private func seek(to state: State) {
