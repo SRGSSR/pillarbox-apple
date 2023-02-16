@@ -51,6 +51,7 @@ extension AVPlayerItem {
         .map { timeRange, duration in
             StreamType(for: timeRange, itemDuration: duration)
         }
+        .removeDuplicates()
         .eraseToAnyPublisher()
     }
 

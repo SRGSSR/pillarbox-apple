@@ -576,17 +576,10 @@ extension Player {
     }
 
     private func configureStreamTypePublisher() {
-        Publishers.CombineLatest(
-            queuePlayer.currentItemTimeRangePublisher(),
-            queuePlayer.currentItemDurationPublisher()
-        )
-        .map { timeRange, itemDuration in
-            StreamType(for: timeRange, itemDuration: itemDuration)
-        }
-        .removeDuplicates()
-        .receiveOnMainThread()
-        .lane("player_stream_type")
-        .assign(to: &$streamType)
+        queuePlayer.streamTypePublisher()
+            .receiveOnMainThread()
+            .lane("player_stream_type")
+            .assign(to: &$streamType)
     }
 
     private func configureChunkDurationPublisher() {
