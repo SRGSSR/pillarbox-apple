@@ -26,7 +26,7 @@ final class QueuePlayer: AVQueuePlayer {
 
     private var targetSeek: Seek?
     private var pendingSeeks = Deque<Seek>()
-    private var cancellable: AnyCancellable?
+    private var cancellables = Set<AnyCancellable>()
 
     var timeRange: CMTimeRange {
         currentItem?.timeRange ?? .invalid
@@ -54,7 +54,7 @@ final class QueuePlayer: AVQueuePlayer {
             return
         }
 
-        registerSeekCompletionSentinel()
+        registerSentinels()
         notifySeekStart(at: time)
 
         if let targetSeek {
@@ -121,24 +121,6 @@ final class QueuePlayer: AVQueuePlayer {
         self.seek(to: time) { _ in }
     }
 
-    /// Workaround for `AVQueuePlayer` bug which, in some cases, might never call a pending seek completion handler
-    /// when transitioning between two items. We can use a sentinel to fix this behavior and ensure we always can
-    /// reliably match a seek request with a completion.
-    private func registerSeekCompletionSentinel() {
-        guard cancellable == nil else { return }
-        cancellable = publisher(for: \.currentItem)
-            .sink { [weak self] _ in
-                guard let self, let targetSeek = self.targetSeek else { return }
-                while let pendingSeek = self.pendingSeeks.popFirst() {
-                    pendingSeek.completionHandler(true)
-                }
-                targetSeek.completionHandler(true)
-                self.targetSeek = nil
-                self.notifySeekEnd()
-                Self.logger.info("Sentinel detected unhandled completion and fixed it")
-            }
-    }
-
     private func notifySeekStart(at time: CMTime) {
         Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [SeekKey.time: time])
     }
@@ -182,6 +164,62 @@ extension AVQueuePlayer {
 
     func cancelPendingReplacements() {
         RunLoop.cancelPreviousPerformRequests(withTarget: self)
+    }
+}
+
+extension QueuePlayer {
+    /// Returns a publisher which emits a value when an incorrect start time is detected for the provided item.
+    private static func incorrectStartTimeDetectionPublisher(for item: AVPlayerItem) -> AnyPublisher<Void, Never> {
+        Publishers.CombineLatest(
+            Just(item.currentTime()),
+            item.durationPublisher()
+        )
+        .filter { currentTime, duration in
+            duration.isValid && !duration.isIndefinite && CMTimeAbsoluteValue(currentTime) > CMTime(value: 1, timescale: 1)
+        }
+        .map { _ in () }
+        .eraseToAnyPublisher()
+    }
+
+    private func registerSentinels() {
+        guard cancellables.isEmpty else { return }
+
+        // Workaround for `AVQueuePlayer` bug which, in some cases, might never call a pending seek completion handler
+        // when transitioning between two items. We can use a sentinel to fix this behavior and ensure we always can
+        // reliably match a seek request with a completion.
+        publisher(for: \.currentItem)
+            .sink { [weak self] _ in
+                self?.processPendingSeeks()
+            }
+            .store(in: &cancellables)
+
+        // Workaround for `AVQueuePlayer` bug which sometimes apply the previous current time to a newly loaded item.
+        publisher(for: \.currentItem)
+            .dropFirst()
+            .compactMap { $0 }
+            .map { Self.incorrectStartTimeDetectionPublisher(for: $0) }
+            .switchToLatest()
+            .sink { [weak self] _ in
+                self?.rawSeek(to: .zero)
+                Self.logger.info("Sentinel detected an incorrect start position and fixed it")
+            }
+            .store(in: &cancellables)
+    }
+
+    private func processPendingSeeks() {
+        guard let targetSeek = self.targetSeek else { return }
+        while let pendingSeek = self.pendingSeeks.popFirst() {
+            pendingSeek.completionHandler(true)
+        }
+        targetSeek.completionHandler(true)
+        self.targetSeek = nil
+        self.notifySeekEnd()
+        Self.logger.info("Sentinel detected unhandled completion and fixed it")
+    }
+
+    /// Perform a low-level seek without seek tracking.
+    private func rawSeek(to time: CMTime) {
+        super.seek(to: time)
     }
 }
 
