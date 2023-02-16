@@ -36,12 +36,12 @@ public final class Player: ObservableObject, Equatable {
 
     @Published private var storedItems: Deque<PlayerItem>
 
-    /// Current time.
+    /// The current time.
     public var time: CMTime {
         queuePlayer.currentTime().clamped(to: timeRange)
     }
 
-    /// Available time range. `.invalid` when not known.
+    /// The available time range or `.invalid` when not known.
     public var timeRange: CMTimeRange {
         queuePlayer.timeRange
     }
