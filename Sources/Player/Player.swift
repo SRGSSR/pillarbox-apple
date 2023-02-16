@@ -561,11 +561,11 @@ extension Player {
         func currentIndex() -> Int? {
             items.firstIndex { $0.matches(currentItem) }
         }
-    }
 
-    static func streamTypePublisher(for item: AVPlayerItem?) -> AnyPublisher<StreamType, Never> {
-        guard let item else { return Just(.unknown).eraseToAnyPublisher() }
-        return item.streamTypePublisher().eraseToAnyPublisher()
+        func streamTypePublisher() -> AnyPublisher<StreamType, Never> {
+            guard let currentItem else { return Just(.unknown).eraseToAnyPublisher() }
+            return currentItem.streamTypePublisher().eraseToAnyPublisher()
+        }
     }
 
     private func configurePlaybackStatePublisher() {
@@ -637,7 +637,7 @@ extension Player {
                 Publishers.CombineLatest3(
                     Just(update.items),
                     Just(update.currentIndex()),
-                    Self.streamTypePublisher(for: update.currentItem)
+                    update.streamTypePublisher()
                 )
             }
             .switchToLatest()
