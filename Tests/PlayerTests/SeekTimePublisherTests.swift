@@ -49,6 +49,20 @@ final class SeekTimePublisherTests: XCTestCase {
         }
     }
 
+    func testMultipleSeeksAtTheSameLocation() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayer(playerItem: item)
+        let time = CMTime(value: 1, timescale: 1)
+        expectEqualPublished(
+            values: [nil, time, nil, time, nil],
+            from: player.seekTimePublisher(),
+            during: 2
+        ) {
+            player.seek(to: time)
+            player.seek(to: time)
+        }
+    }
+
     func testMultipleSeeksWithinTimeRange() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
@@ -64,6 +78,23 @@ final class SeekTimePublisherTests: XCTestCase {
         ) {
             player.seek(to: time1)
             player.seek(to: time2)
+        }
+    }
+
+    func testMultipleSeeksAtTheSameLocationWithinTimeRange() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayer(playerItem: item)
+        player.play()
+        expect(item.timeRange).toEventuallyNot(beNil())
+
+        let time = CMTime(value: 1, timescale: 1)
+        expectEqualPublished(
+            values: [nil, time, nil],
+            from: player.seekTimePublisher(),
+            during: 2
+        ) {
+            player.seek(to: time)
+            player.seek(to: time)
         }
     }
 }
