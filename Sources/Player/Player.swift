@@ -583,6 +583,7 @@ extension Player {
         .map { timeRange, itemDuration in
             StreamType(for: timeRange, itemDuration: itemDuration)
         }
+        .removeDuplicates()
         .receiveOnMainThread()
         .lane("player_stream_type")
         .assign(to: &$streamType)
