@@ -43,7 +43,7 @@ public final class ProgressTracker: ObservableObject {
     /// The time corresponding to the current progress. Might be different from the player current time when
     /// interaction takes place. Guaranteed to be valid when returned.
     public var time: CMTime? {
-        time(forProgress: progress)
+        time(forProgress: _progress)
     }
 
     /// Range for progress values.
@@ -110,8 +110,8 @@ public final class ProgressTracker: ObservableObject {
         player.seek(to: time, smooth: true)
     }
 
-    private func time(forProgress progress: Float) -> CMTime? {
-        guard let timeRange else { return nil }
+    private func time(forProgress progress: Float?) -> CMTime? {
+        guard let timeRange, let progress else { return nil }
         return timeRange.start + CMTimeMultiplyByFloat64(timeRange.duration, multiplier: Float64(progress))
     }
 }
