@@ -252,47 +252,34 @@ private struct TimeSlider: View {
         player.timeRange
     }
 
-    private var formattedElapsedTime: String {
-        guard timeRange.isValid else { return Self.blankFormattedTime }
-        let time = progressTracker.time ?? player.time
-        guard time.isValid else { return Self.blankFormattedTime }
+    private var formattedElapsedTime: String? {
+        guard player.streamType == .onDemand else { return nil }
+        guard let time = progressTracker.time else { return Self.blankFormattedTime }
         return Self.formattedDuration((time - timeRange.start).seconds)
     }
 
-    private var formattedTotalTime: String {
-        guard timeRange.isValid else { return Self.blankFormattedTime }
+    private var formattedTotalTime: String? {
+        guard player.streamType == .onDemand else { return nil }
+        guard let timeRange = progressTracker.timeRange else { return Self.blankFormattedTime }
         return Self.formattedDuration(timeRange.duration.seconds)
     }
 
     var body: some View {
-        ZStack {
-            switch player.streamType {
-            case .onDemand:
-                Slider(
-                    progressTracker: progressTracker,
-                    label: {
-                        Text("Progress")
-                    },
-                    minimumValueLabel: {
-                        Text(formattedElapsedTime)
-                            .monospacedDigit()
-                    },
-                    maximumValueLabel: {
-                        Text(formattedTotalTime)
-                            .monospacedDigit()
-                    }
-                )
-            case .unknown:
-                Slider(value: .constant(0))
-                    .hidden()
-            default:
-                Slider(progressTracker: progressTracker) {
-                    Text("Progress")
-                }
+        Slider(
+            progressTracker: progressTracker,
+            label: {
+                Text("Progress")
+            },
+            minimumValueLabel: {
+                label(withText: formattedElapsedTime)
+            },
+            maximumValueLabel: {
+                label(withText: formattedTotalTime)
             }
-        }
+        )
         .foregroundColor(.white)
         .tint(.white)
+        .opacity(player.streamType != .unknown ? 1 : 0)
         .padding()
         .debugBodyCounter(color: .blue)
     }
@@ -303,6 +290,14 @@ private struct TimeSlider: View {
         }
         else {
             return longFormatter.string(from: duration)!
+        }
+    }
+
+    @ViewBuilder
+    private func label(withText text: String?) -> some View {
+        if let text {
+            Text(text)
+                .monospacedDigit()
         }
     }
 }

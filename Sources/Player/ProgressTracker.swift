@@ -40,7 +40,7 @@ public final class ProgressTracker: ObservableObject {
     }
 
     /// The time corresponding to the current progress. Might be different from the player current time when
-    /// interaction takes place.
+    /// interaction takes place. Guaranteed to be valid when returned.
     public var time: CMTime? {
         time(forProgress: progress)
     }
@@ -50,7 +50,8 @@ public final class ProgressTracker: ObservableObject {
         timeRange != nil ? 0...1 : 0...0
     }
 
-    private var timeRange: CMTimeRange? {
+    /// The current time range. Guaranteed to be valid when returned.
+    public var timeRange: CMTimeRange? {
         guard let timeRange = player?.timeRange, timeRange.isValidAndNotEmpty else { return nil }
         return timeRange
     }
