@@ -280,6 +280,9 @@ private struct TimeSlider: View {
         .foregroundColor(.white)
         .tint(.white)
         .opacity(player.streamType != .unknown ? 1 : 0)
+        .transaction { transaction in
+            transaction.animation = nil
+        }
         .padding()
         .debugBodyCounter(color: .blue)
     }
