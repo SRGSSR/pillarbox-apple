@@ -116,6 +116,21 @@ final class ProgressTrackerTests: XCTestCase {
         }
     }
 
+    func testProgressForTrackerForPausedDvrStream() {
+        let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
+        let item = PlayerItem.simple(url: Stream.dvr.url)
+        let player = Player(item: item)
+        expectPublished(
+            values: [0, 1, 0.95, 0.9, 0.85, 0.8],
+            from: progressTracker.changePublisher(at: \.progress)
+                .removeDuplicates(),
+            to: beClose(within: 0.1),
+            during: 5
+        ) {
+            progressTracker.player = player
+        }
+    }
+
     func testProgressForTrackerImmediateSeekBehavior() {
         let progressTracker = ProgressTracker(
             interval: CMTime(value: 1, timescale: 4),
