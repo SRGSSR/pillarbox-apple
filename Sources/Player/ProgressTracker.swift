@@ -12,84 +12,47 @@ import SwiftUI
 /// view updates at a specific pace, avoiding unnecessary refreshes in other parts of the view hierarchy that do
 /// not need to be periodically refreshed.
 public final class ProgressTracker: ObservableObject {
-    private struct State {
-        // Intentionally kept private. Used for display only, seeks must rely on most recent player values.
-        private let time: CMTime
-        private let timeRange: CMTimeRange
-
-        init(time: CMTime, timeRange: CMTimeRange) {
-            self.time = time
-            self.timeRange = timeRange
-        }
-
-        static var invalid: Self {
-            .init(time: .invalid, timeRange: .invalid)
-        }
-
-        var isValid: Bool {
-            time.isValid && timeRange.isValidAndNotEmpty
-        }
-
-        var progress: Float? {
-            guard isValid else { return nil }
-            let elapsedTime = (time - timeRange.start).seconds
-            let duration = timeRange.duration.seconds
-            return Float(elapsedTime / duration).clamped(to: 0...1)
-        }
-
-        func withProgress(_ progress: Float) -> Self {
-            guard timeRange.isValidAndNotEmpty else { return .invalid }
-            let multiplier = Float64(progress.clamped(to: 0...1))
-            let time = timeRange.start + CMTimeMultiplyByFloat64(timeRange.duration, multiplier: multiplier)
-            return .init(time: time, timeRange: timeRange)
-        }
-    }
-
     /// The player to attach. Use `View.bind(_:to:)` in SwiftUI code.
     @Published public var player: Player?
 
     /// Must be set to `true` to report user interaction to the progress tracker.
     @Published public var isInteracting = false {
-        // Not called when updated via $state. Seeks are therefore only triggered with external changes.
         willSet {
             guard seekBehavior == .deferred, !newValue else { return }
-            seek(to: state)
+            seek(to: progress)
         }
     }
 
-    @Published private var state: State = .invalid {
-        // Not called when updated via $state. Seeks are therefore only triggered with external changes.
-        willSet {
-            guard seekBehavior == .immediate else { return }
-            seek(to: newValue)
-        }
-    }
+    @Published private var _progress: Float?
 
     private let seekBehavior: SeekBehavior
 
     /// The current progress. Might be different from the player progress when interaction takes place.
     public var progress: Float {
         get {
-            state.progress ?? 0
+            (_progress ?? 0).clamped(to: range)
         }
         set {
-            state = state.withProgress(newValue)
+            _progress = newValue
+            guard seekBehavior == .immediate else { return }
+            seek(to: newValue)
         }
     }
 
     /// The time corresponding to the current progress. Might be different from the player current time when
     /// interaction takes place.
     public var time: CMTime? {
-        // Always calculate the target time based on the progress and most recent player range information
-        guard let progress = state.progress, let player else { return nil }
-        let timeRange = player.timeRange
-        guard timeRange.isValidAndNotEmpty else { return nil }
-        return timeRange.start + CMTimeMultiplyByFloat64(timeRange.duration, multiplier: Float64(progress))
+        time(forProgress: progress)
     }
 
     /// Range for progress values.
     public var range: ClosedRange<Float> {
-        state.isValid ? 0...1 : 0...0
+        timeRange != nil ? 0...1 : 0...0
+    }
+
+    private var timeRange: CMTimeRange? {
+        guard let timeRange = player?.timeRange, timeRange.isValidAndNotEmpty else { return nil }
+        return timeRange
     }
 
     /// Create a tracker updating its progress at the specified interval.
@@ -97,22 +60,23 @@ public final class ProgressTracker: ObservableObject {
     public init(interval: CMTime, seekBehavior: SeekBehavior = .immediate) {
         self.seekBehavior = seekBehavior
         $player
-            .map { [$isInteracting] player -> AnyPublisher<State, Never> in
+            .map { [$isInteracting] player -> AnyPublisher<Float?, Never> in
                 guard let player else {
-                    return Just(.invalid).eraseToAnyPublisher()
+                    return Just(nil).eraseToAnyPublisher()
                 }
                 return Publishers.CombineLatest(
                     Self.currentTimePublisher(for: player, interval: interval, isInteracting: $isInteracting),
                     player.queuePlayer.currentItemTimeRangePublisher()
                 )
-                .compactMap { time, timeRange in
-                    State(time: time, timeRange: timeRange)
+                .map { time, timeRange in
+                    Self.progress(for: time, in: timeRange)
                 }
                 .eraseToAnyPublisher()
             }
             .switchToLatest()
+            .removeDuplicates()
             .receiveOnMainThread()
-            .assign(to: &$state)
+            .assign(to: &$_progress)
     }
 
     private static func currentTimePublisher(
@@ -130,9 +94,19 @@ public final class ProgressTracker: ObservableObject {
         .eraseToAnyPublisher()
     }
 
-    private func seek(to state: State) {
-        guard let player, let time else { return }
+    private static func progress(for time: CMTime, in timeRange: CMTimeRange) -> Float? {
+        guard time.isValid, timeRange.isValidAndNotEmpty else { return nil }
+        return Float((time - timeRange.start).seconds / timeRange.duration.seconds).clamped(to: 0...1)
+    }
+
+    private func seek(to progress: Float) {
+        guard let player, let time = time(forProgress: progress) else { return }
         player.seek(to: time, smooth: true)
+    }
+
+    private func time(forProgress progress: Float) -> CMTime? {
+        guard let timeRange else { return nil }
+        return timeRange.start + CMTimeMultiplyByFloat64(timeRange.duration, multiplier: Float64(progress))
     }
 }
 
