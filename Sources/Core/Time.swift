@@ -72,13 +72,4 @@ public extension CMTime {
             return CMTimeAbsoluteValue(time1 - time2) <= tolerance
         }
     }
-
-    /// Returns a copy of this time clamped to the given limiting range.
-    /// - Parameter range: The range to consider.
-    /// - Returns: A new time clamped to the range.
-    func clamped(to range: CMTimeRange, offset: CMTime = .zero) -> CMTime {
-        guard !range.isEmpty else { return range.start }
-        let safeRange = CMTimeRange(start: range.start, duration: max(range.duration - offset, .zero))
-        return CMTimeClampToRange(self, range: safeRange)
-    }
 }
