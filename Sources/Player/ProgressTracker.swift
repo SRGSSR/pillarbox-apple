@@ -13,9 +13,8 @@ import SwiftUI
 /// not need to be periodically refreshed.
 public final class ProgressTracker: ObservableObject {
     private struct State {
-        let time: CMTime
-
         // Intentionally kept private. Used for display only, seeks must rely on most recent player values.
+        private let time: CMTime
         private let timeRange: CMTimeRange
 
         init(time: CMTime, timeRange: CMTimeRange) {
@@ -81,7 +80,11 @@ public final class ProgressTracker: ObservableObject {
     /// The time corresponding to the current progress. Might be different from the player current time when
     /// interaction takes place.
     public var time: CMTime? {
-        state.time
+        // Always calculate the target time based on the progress and most recent player range information
+        guard let progress = state.progress, let player else { return nil }
+        let timeRange = player.timeRange
+        guard timeRange.isValidAndNotEmpty else { return nil }
+        return timeRange.start + CMTimeMultiplyByFloat64(timeRange.duration, multiplier: Float64(progress))
     }
 
     /// Range for progress values.
@@ -128,11 +131,7 @@ public final class ProgressTracker: ObservableObject {
     }
 
     private func seek(to state: State) {
-        // Always calculate the target time based on the progress and most recent player range information
-        guard let progress = state.progress, let player else { return }
-        let timeRange = player.timeRange
-        guard timeRange.isValidAndNotEmpty else { return }
-        let time = timeRange.start + CMTimeMultiplyByFloat64(timeRange.duration, multiplier: Float64(progress))
+        guard let player, let time else { return }
         player.seek(to: time, smooth: true)
     }
 }
