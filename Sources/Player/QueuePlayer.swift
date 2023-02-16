@@ -7,6 +7,7 @@
 import AVFoundation
 import Combine
 import DequeModule
+import OSLog
 
 enum SeekKey: String {
     case time
@@ -21,8 +22,11 @@ private struct Seek {
 final class QueuePlayer: AVQueuePlayer {
     static let notificationCenter = NotificationCenter()
 
+    private static var logger = Logger(category: "QueuePlayer")
+
     private var targetSeek: Seek?
     private var pendingSeeks = Deque<Seek>()
+    private var cancellable: AnyCancellable?
 
     var timeRange: CMTimeRange {
         currentItem?.timeRange ?? .invalid
@@ -50,7 +54,8 @@ final class QueuePlayer: AVQueuePlayer {
             return
         }
 
-        Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [SeekKey.time: time])
+        registerSeekCompletionSentinel()
+        notifySeekStart(at: time)
 
         if let targetSeek {
             pendingSeeks.append(targetSeek)
@@ -63,34 +68,48 @@ final class QueuePlayer: AVQueuePlayer {
         }
 
         move(to: seek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] _ in
-            guard let self else { return }
-            Self.notificationCenter.post(name: .didSeek, object: self)
+            self?.notifySeekEnd()
         }
     }
 
     private func move(to seek: Seek, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         super.seek(to: seek.time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
-            guard let self else { return }
-            while let pendingSeek = self.pendingSeeks.popFirst() {
-                pendingSeek.completionHandler(finished)
-            }
-            guard let targetSeek = self.targetSeek else {
-                completionHandler(finished)
-                return
-            }
-            if targetSeek.time == seek.time {
-                targetSeek.completionHandler(true)
-                completionHandler(true)
-                self.targetSeek = nil
-            }
-            else if targetSeek.isSmooth {
-                self.move(
-                    to: targetSeek,
-                    toleranceBefore: toleranceBefore,
-                    toleranceAfter: toleranceAfter,
-                    completionHandler: completionHandler
-                )
-            }
+            self?.processSeek(
+                at: seek.time,
+                toleranceBefore: toleranceBefore,
+                toleranceAfter: toleranceAfter,
+                finished: finished,
+                completionHandler: completionHandler
+            )
+        }
+    }
+
+    private func processSeek(
+        at time: CMTime,
+        toleranceBefore: CMTime,
+        toleranceAfter: CMTime,
+        finished: Bool,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
+        while let pendingSeek = pendingSeeks.popFirst() {
+            pendingSeek.completionHandler(finished)
+        }
+        guard let targetSeek else {
+            completionHandler(finished)
+            return
+        }
+        if targetSeek.time == time {
+            targetSeek.completionHandler(true)
+            completionHandler(true)
+            self.targetSeek = nil
+        }
+        else if targetSeek.isSmooth {
+            move(
+                to: targetSeek,
+                toleranceBefore: toleranceBefore,
+                toleranceAfter: toleranceAfter,
+                completionHandler: completionHandler
+            )
         }
     }
 
@@ -102,6 +121,34 @@ final class QueuePlayer: AVQueuePlayer {
         self.seek(to: time) { _ in }
     }
 
+    /// Workaround for `AVQueuePlayer` bug which, in some cases, might never call a pending seek completion handler
+    /// when transitioning between two items. We can use a sentinel to fix this behavior and ensure we always can
+    /// reliably match a seek request with a completion.
+    private func registerSeekCompletionSentinel() {
+        guard cancellable == nil else { return }
+        cancellable = publisher(for: \.currentItem)
+            .sink { [weak self] _ in
+                guard let self, let targetSeek = self.targetSeek else { return }
+                while let pendingSeek = self.pendingSeeks.popFirst() {
+                    pendingSeek.completionHandler(true)
+                }
+                targetSeek.completionHandler(true)
+                self.targetSeek = nil
+                self.notifySeekEnd()
+                Self.logger.info("Sentinel detected unhandled completion and fixed it")
+            }
+    }
+
+    private func notifySeekStart(at time: CMTime) {
+        Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [SeekKey.time: time])
+    }
+
+    private func notifySeekEnd() {
+        Self.notificationCenter.post(name: .didSeek, object: self)
+    }
+}
+
+extension AVQueuePlayer {
     func replaceItems(with items: [AVPlayerItem]) {
         cancelPendingReplacements()
 
