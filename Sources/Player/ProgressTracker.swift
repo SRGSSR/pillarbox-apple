@@ -27,7 +27,8 @@ public final class ProgressTracker: ObservableObject {
 
     private let seekBehavior: SeekBehavior
 
-    /// The current progress. Might be different from the player progress when interaction takes place.
+    /// The current progress. Might be different from the player progress when interaction takes place. This property
+    /// returns 0 also when no progress information is available, which you can check using `isProgressAvailable`.
     public var progress: Float {
         get {
             (_progress ?? 0).clamped(to: range)
@@ -47,7 +48,11 @@ public final class ProgressTracker: ObservableObject {
 
     /// Range for progress values.
     public var range: ClosedRange<Float> {
-        timeRange != nil ? 0...1 : 0...0
+        _progress != nil ? 0...1 : 0...0
+    }
+
+    public var isProgressAvailable: Bool {
+        _progress != nil
     }
 
     /// The current time range. Guaranteed to be valid when returned.
@@ -72,6 +77,7 @@ public final class ProgressTracker: ObservableObject {
                 .map { time, timeRange in
                     Self.progress(for: time, in: timeRange)
                 }
+                .prepend(nil)
                 .eraseToAnyPublisher()
             }
             .switchToLatest()

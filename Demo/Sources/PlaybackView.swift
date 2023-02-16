@@ -229,8 +229,6 @@ private struct TimeBar: View {
 // Behavior: h-exp, v-hug
 @available(tvOS, unavailable)
 private struct TimeSlider: View {
-    private static let blankFormattedTime = "--:--"
-
     private static let shortFormatter: DateComponentsFormatter = {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.second, .minute]
@@ -248,20 +246,20 @@ private struct TimeSlider: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
 
-    private var timeRange: CMTimeRange {
-        player.timeRange
-    }
-
     private var formattedElapsedTime: String? {
-        guard player.streamType == .onDemand else { return nil }
-        guard let time = progressTracker.time else { return Self.blankFormattedTime }
+        guard player.streamType == .onDemand, let time = progressTracker.time, let timeRange = progressTracker.timeRange else {
+            return nil
+        }
         return Self.formattedDuration((time - timeRange.start).seconds)
     }
 
     private var formattedTotalTime: String? {
-        guard player.streamType == .onDemand else { return nil }
-        guard let timeRange = progressTracker.timeRange else { return Self.blankFormattedTime }
+        guard player.streamType == .onDemand, let timeRange = progressTracker.timeRange else { return nil }
         return Self.formattedDuration(timeRange.duration.seconds)
+    }
+
+    private var isVisible: Bool {
+        progressTracker.isProgressAvailable && player.streamType != .unknown
     }
 
     var body: some View {
@@ -279,7 +277,7 @@ private struct TimeSlider: View {
         )
         .foregroundColor(.white)
         .tint(.white)
-        .opacity(player.streamType != .unknown ? 1 : 0)
+        .opacity(isVisible ? 1 : 0)
         .transaction { transaction in
             transaction.animation = nil
         }
