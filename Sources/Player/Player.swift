@@ -160,6 +160,7 @@ public extension Player {
         smooth: Bool = false,
         completion: @escaping (Bool) -> Void = { _ in }
     ) {
+        // Mitigates issues arising when seeking to the very end of the range by introducing a small offset.
         let time = time.clamped(to: timeRange, offset: CMTime(value: 1, timescale: 10))
         guard time.isValid else {
             completion(true)
