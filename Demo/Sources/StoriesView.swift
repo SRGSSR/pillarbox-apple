@@ -33,6 +33,7 @@ private struct TimeProgress: View {
     var body: some View {
         ProgressView(value: progressTracker.progress)
             .padding()
+            .opacity(progressTracker.isProgressAvailable ? 1 : 0)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .bind(progressTracker, to: player)
     }
