@@ -23,6 +23,16 @@ final class ProgressTrackerTests: XCTestCase {
         )
     }
 
+    func testTimeForUnboundTracker() {
+        let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
+        expectEqualPublished(
+            values: [nil],
+            from: progressTracker.changePublisher(at: \.time)
+                .removeDuplicates(),
+            during: 1
+        )
+    }
+
     func testRangeForUnboundTracker() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         expectEqualPublished(
@@ -38,6 +48,18 @@ final class ProgressTrackerTests: XCTestCase {
         expectEqualPublished(
             values: [0],
             from: progressTracker.changePublisher(at: \.progress)
+                .removeDuplicates(),
+            during: 1
+        ) {
+            progressTracker.player = Player()
+        }
+    }
+
+    func testTimeForTrackerBoundToEmptyPlayer() {
+        let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
+        expectEqualPublished(
+            values: [nil],
+            from: progressTracker.changePublisher(at: \.time)
                 .removeDuplicates(),
             during: 1
         ) {
@@ -71,6 +93,20 @@ final class ProgressTrackerTests: XCTestCase {
         }
     }
 
+    func testTimeForTrackerBoundToPausedPlayer() {
+        let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(item: item)
+        expectEqualPublished(
+            values: [nil, .zero],
+            from: progressTracker.changePublisher(at: \.time)
+                .removeDuplicates(),
+            during: 1
+        ) {
+            progressTracker.player = player
+        }
+    }
+
     func testRangeForTrackerBoundToPausedPlayer() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
@@ -92,6 +128,30 @@ final class ProgressTrackerTests: XCTestCase {
         expectPublished(
             values: [0, 0.25, 0.5, 0.75, 1, 0],
             from: progressTracker.changePublisher(at: \.progress)
+                .removeDuplicates(),
+            to: beClose(within: 0.1),
+            during: 2
+        ) {
+            progressTracker.player = player
+            player.play()
+        }
+    }
+
+    func testTimeForTrackerDuringEntirePlayback() {
+        let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
+        let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let player = Player(item: item)
+        expectPublished(
+            values: [
+                nil,
+                .zero,
+                CMTime(value: 1, timescale: 4),
+                CMTime(value: 1, timescale: 2),
+                CMTime(value: 3, timescale: 4),
+                CMTime(value: 1, timescale: 1),
+                nil
+            ],
+            from: progressTracker.changePublisher(at: \.time)
                 .removeDuplicates(),
             to: beClose(within: 0.1),
             during: 2
