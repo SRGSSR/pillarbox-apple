@@ -31,14 +31,10 @@ private struct TimeProgress: View {
     @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 10))
 
     var body: some View {
-        ZStack {
-            if let progress = progressTracker.progress {
-                ProgressView(value: progress)
-                    .padding()
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .bind(progressTracker, to: player)
+        ProgressView(value: progressTracker.progress)
+            .padding()
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .bind(progressTracker, to: player)
     }
 }
 
