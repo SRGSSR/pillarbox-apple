@@ -31,10 +31,11 @@ public final class ProgressTracker: ObservableObject {
     /// returns 0 also when no progress information is available, which you can check using `isProgressAvailable`.
     public var progress: Float {
         get {
-            (_progress ?? 0).clamped(to: range)
+            _progress ?? 0
         }
         set {
-            _progress = newValue
+            guard _progress != nil else { return }
+            _progress = newValue.clamped(to: range)
             guard seekBehavior == .immediate else { return }
             seek(to: newValue)
         }
