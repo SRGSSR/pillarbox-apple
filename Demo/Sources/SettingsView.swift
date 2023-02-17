@@ -30,6 +30,7 @@ struct SettingsView: View {
         List {
             applicationSection()
             playerSection()
+            debuggingSection()
         }
         .navigationTitle("Settings")
     }
@@ -62,6 +63,13 @@ struct SettingsView: View {
     }
 
     @ViewBuilder
+    private func debuggingSection() -> some View {
+        Section("Debugging") {
+            Button("Simulate memory warning", action: simulateMemoryWarning)
+        }
+    }
+
+    @ViewBuilder
     private func seekBehaviorPicker() -> some View {
         Picker("Seek behavior", selection: $seekBehaviorSetting) {
             Text("Immediate").tag(SeekBehaviorSetting.immediate)
@@ -76,6 +84,10 @@ struct SettingsView: View {
             Text("Continues if possible").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.continuesIfPossible)
             Text("Pauses").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.pauses)
         }
+    }
+
+    private func simulateMemoryWarning() {
+        UIApplication.shared.perform(Selector(("_performMemoryWarning")))
     }
 }
 
