@@ -66,6 +66,7 @@ struct SettingsView: View {
     private func debuggingSection() -> some View {
         Section("Debugging") {
             Button("Simulate memory warning", action: simulateMemoryWarning)
+            Button("Clear URL cache", action: clearUrlCache)
         }
     }
 
@@ -88,6 +89,10 @@ struct SettingsView: View {
 
     private func simulateMemoryWarning() {
         UIApplication.shared.perform(Selector(("_performMemoryWarning")))
+    }
+
+    private func clearUrlCache() {
+        URLCache.shared.removeAllCachedResponses()
     }
 }
 
