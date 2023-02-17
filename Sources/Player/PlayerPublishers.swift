@@ -56,17 +56,6 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    func streamTypePublisher() -> AnyPublisher<StreamType, Never> {
-        publisher(for: \.currentItem)
-            .map { item in
-                guard let item else { return Just(StreamType.unknown).eraseToAnyPublisher() }
-                return item.streamTypePublisher()
-            }
-            .switchToLatest()
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-
     func bufferingPublisher() -> AnyPublisher<Bool, Never> {
         publisher(for: \.currentItem)
             .compactMap { $0?.bufferingPublisher() }

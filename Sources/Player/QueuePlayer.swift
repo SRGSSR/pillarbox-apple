@@ -28,10 +28,6 @@ final class QueuePlayer: AVQueuePlayer {
     private var pendingSeeks = Deque<Seek>()
     private var cancellables = Set<AnyCancellable>()
 
-    var timeRange: CMTimeRange {
-        currentItem?.timeRange ?? .invalid
-    }
-
     var targetSeekTime: CMTime? {
         targetSeek?.time
     }

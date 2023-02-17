@@ -28,13 +28,15 @@ public final class Player: ObservableObject, Equatable {
     /// Duration of a chunk for the currently played item.
     @Published public private(set) var chunkDuration: CMTime = .invalid
 
-    /// The type of stream currently played.
-    @Published public private(set) var streamType: StreamType = .unknown
-
     /// Indicates whether the player is currently playing video in external playback mode.
     @Published public private(set) var isExternalPlaybackActive = false
 
     @Published private var storedItems: Deque<PlayerItem>
+
+    /// The type of stream currently played.
+    public var streamType: StreamType {
+        StreamType(for: timeRange, itemDuration: itemDuration)
+    }
 
     /// The current time.
     public var time: CMTime {
@@ -46,8 +48,9 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.timeRange
     }
 
+    /// The current item duration or `.invalid` when not known.
     private var itemDuration: CMTime {
-        queuePlayer.currentItem?.duration ?? .indefinite
+        queuePlayer.itemDuration
     }
 
     let queuePlayer = QueuePlayer()
@@ -78,7 +81,6 @@ public final class Player: ObservableObject, Equatable {
         self.configuration = configuration
 
         configurePlaybackStatePublisher()
-        configureStreamTypePublisher()
         configureChunkDurationPublisher()
         configureSeekingPublisher()
         configureBufferingPublisher()
@@ -573,13 +575,6 @@ extension Player {
             .receiveOnMainThread()
             .lane("player_state")
             .assign(to: &$playbackState)
-    }
-
-    private func configureStreamTypePublisher() {
-        queuePlayer.streamTypePublisher()
-            .receiveOnMainThread()
-            .lane("player_stream_type")
-            .assign(to: &$streamType)
     }
 
     private func configureChunkDurationPublisher() {
