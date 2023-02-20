@@ -227,19 +227,24 @@ public extension Player {
     /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
     ///   whether the skip could finish without being cancelled.
     func skipBackward(completion: @escaping (Bool) -> Void = { _ in }) {
-        skip(withInterval: backwardSkipTime, completion: completion)
+        skip(withInterval: backwardSkipTime, toleranceBefore: .positiveInfinity, toleranceAfter: .zero, completion: completion)
     }
 
     /// Skip forward.
     /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
     ///   whether the skip could finish without being cancelled.
     func skipForward(completion: @escaping (Bool) -> Void = { _ in }) {
-        skip(withInterval: forwardSkipTime, completion: completion)
+        skip(withInterval: forwardSkipTime, toleranceBefore: .zero, toleranceAfter: .positiveInfinity, completion: completion)
     }
 
-    private func skip(withInterval interval: CMTime, completion: @escaping (Bool) -> Void = { _ in }) {
+    private func skip(
+        withInterval interval: CMTime,
+        toleranceBefore: CMTime,
+        toleranceAfter: CMTime,
+        completion: @escaping (Bool) -> Void = { _ in }
+    ) {
         let currentTime = queuePlayer.targetSeekTime ?? time
-        seek(to: currentTime + interval, completion: completion)
+        seek(to: currentTime + interval, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completion: completion)
     }
 }
 
