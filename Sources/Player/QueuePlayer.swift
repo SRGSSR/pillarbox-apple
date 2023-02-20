@@ -69,10 +69,9 @@ final class QueuePlayer: AVQueuePlayer {
         }
 
         move(to: seek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
-            if finished {
-                self?.notifySeekEnd()
-                self?.targetSeek = nil
-            }
+            guard let self, finished else { return }
+            self.notifySeekEnd()
+            self.targetSeek = nil
         }
     }
 
