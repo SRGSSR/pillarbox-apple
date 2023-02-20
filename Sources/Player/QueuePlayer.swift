@@ -13,10 +13,15 @@ enum SeekKey: String {
     case time
 }
 
-private struct Seek {
+private struct Seek: Equatable {
     let time: CMTime
     let isSmooth: Bool
     let completionHandler: (Bool) -> Void
+    private let id = UUID()
+
+    static func == (lhs: Seek, rhs: Seek) -> Bool {
+        lhs.id == rhs.id
+    }
 }
 
 final class QueuePlayer: AVQueuePlayer {
@@ -63,15 +68,18 @@ final class QueuePlayer: AVQueuePlayer {
             return
         }
 
-        move(to: seek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] _ in
-            self?.notifySeekEnd()
+        move(to: seek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
+            if finished {
+                self?.notifySeekEnd()
+                self?.targetSeek = nil
+            }
         }
     }
 
     private func move(to seek: Seek, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         super.seek(to: seek.time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
             self?.processSeek(
-                at: seek.time,
+                seek,
                 toleranceBefore: toleranceBefore,
                 toleranceAfter: toleranceAfter,
                 finished: finished,
@@ -81,31 +89,54 @@ final class QueuePlayer: AVQueuePlayer {
     }
 
     private func processSeek(
-        at time: CMTime,
+        _ seek: Seek,
         toleranceBefore: CMTime,
         toleranceAfter: CMTime,
         finished: Bool,
         completionHandler: @escaping (Bool) -> Void
     ) {
-        while let pendingSeek = pendingSeeks.popFirst() {
-            pendingSeek.completionHandler(finished)
-        }
         guard let targetSeek else {
             completionHandler(finished)
             return
         }
-        if targetSeek.time == time {
-            targetSeek.completionHandler(true)
-            completionHandler(true)
-            self.targetSeek = nil
+        if seek.isSmooth {
+            while let pendingSeek = pendingSeeks.popFirst() {
+                pendingSeek.completionHandler(finished)
+            }
+            if targetSeek == seek {
+                seek.completionHandler(finished)
+                completionHandler(finished)
+            }
+            else if finished {
+                move(
+                    to: targetSeek,
+                    toleranceBefore: toleranceBefore,
+                    toleranceAfter: toleranceAfter,
+                    completionHandler: completionHandler
+                )
+            }
         }
         else if targetSeek.isSmooth {
-            move(
-                to: targetSeek,
-                toleranceBefore: toleranceBefore,
-                toleranceAfter: toleranceAfter,
-                completionHandler: completionHandler
-            )
+            if targetSeek == seek {
+                completionHandler(finished)
+            }
+            else {
+                seek.completionHandler(finished)
+                pendingSeeks.removeAll()
+                move(
+                    to: targetSeek,
+                    toleranceBefore: toleranceBefore,
+                    toleranceAfter: toleranceAfter,
+                    completionHandler: completionHandler
+                )
+            }
+        }
+        else {
+            pendingSeeks.removeAll()
+            seek.completionHandler(finished)
+            if targetSeek == seek {
+                completionHandler(finished)
+            }
         }
     }
 
