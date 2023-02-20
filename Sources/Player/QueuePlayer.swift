@@ -103,8 +103,8 @@ final class QueuePlayer: AVQueuePlayer {
                 pendingSeek.completionHandler(finished)
             }
             if targetSeek == seek {
-                seek.completionHandler(finished)
-                completionHandler(finished)
+                seek.completionHandler(true)
+                completionHandler(true)
             }
             else if finished {
                 move(
@@ -117,7 +117,7 @@ final class QueuePlayer: AVQueuePlayer {
         }
         else if targetSeek.isSmooth {
             if targetSeek == seek {
-                completionHandler(finished)
+                completionHandler(true)
             }
             else {
                 seek.completionHandler(finished)
@@ -134,7 +134,7 @@ final class QueuePlayer: AVQueuePlayer {
             pendingSeeks.removeAll()
             seek.completionHandler(finished)
             if targetSeek == seek {
-                completionHandler(finished)
+                completionHandler(true)
             }
         }
     }
