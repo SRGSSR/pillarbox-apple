@@ -25,9 +25,6 @@ public final class Player: ObservableObject, Equatable {
     /// The index of the current item in the queue.
     @Published public private(set) var currentIndex: Int?
 
-    /// Available time range. `.invalid` when not known.
-    @Published public private(set) var timeRange: CMTimeRange = .invalid
-
     /// Duration of a chunk for the currently played item.
     @Published public private(set) var chunkDuration: CMTime = .invalid
 
@@ -35,11 +32,25 @@ public final class Player: ObservableObject, Equatable {
     @Published public private(set) var isExternalPlaybackActive = false
 
     @Published private var storedItems: Deque<PlayerItem>
-    @Published private var itemDuration: CMTime = .indefinite
 
-    /// Current time.
+    /// The type of stream currently played.
+    public var streamType: StreamType {
+        StreamType(for: timeRange, itemDuration: itemDuration)
+    }
+
+    /// The current time.
     public var time: CMTime {
         queuePlayer.currentTime().clamped(to: timeRange)
+    }
+
+    /// The available time range or `.invalid` when not known.
+    public var timeRange: CMTimeRange {
+        queuePlayer.timeRange
+    }
+
+    /// The current item duration or `.invalid` when not known.
+    private var itemDuration: CMTime {
+        queuePlayer.itemDuration
     }
 
     let queuePlayer = QueuePlayer()
@@ -57,11 +68,6 @@ public final class Player: ObservableObject, Equatable {
         CMTime(seconds: configuration.forwardSkipInterval, preferredTimescale: 1)
     }
 
-    /// The type of stream currently played.
-    public var streamType: StreamType {
-        StreamType(for: timeRange, itemDuration: itemDuration)
-    }
-
     /// Create a player with a given item queue.
     /// - Parameters:
     ///   - items: The items to be queued initially.
@@ -75,8 +81,6 @@ public final class Player: ObservableObject, Equatable {
         self.configuration = configuration
 
         configurePlaybackStatePublisher()
-        configureCurrentItemTimeRangePublisher()
-        configureCurrentItemDurationPublisher()
         configureChunkDurationPublisher()
         configureSeekingPublisher()
         configureBufferingPublisher()
@@ -158,7 +162,8 @@ public extension Player {
         smooth: Bool = false,
         completion: @escaping (Bool) -> Void = { _ in }
     ) {
-        let time = time.clamped(to: timeRange)
+        // Mitigates issues arising when seeking to the very end of the range by introducing a small offset.
+        let time = time.clamped(to: timeRange, offset: CMTime(value: 1, timescale: 10))
         guard time.isValid else {
             completion(true)
             return
@@ -177,8 +182,8 @@ public extension Player {
     /// Return whether the current player item player can be returned to live conditions.
     /// - Returns: `true` if skipping to live conditions is possible.
     func canSkipToLive() -> Bool {
-        guard timeRange.isValidAndNotEmpty, itemDuration.isIndefinite else { return false }
-        return chunkDuration.isValid && time < timeRange.end - chunkDuration
+        guard timeRange.isValidAndNotEmpty, itemDuration.isIndefinite, chunkDuration.isValid else { return false }
+        return time < timeRange.end - chunkDuration
     }
 
     /// Return the current item to live conditions. Does nothing if the current item is not a livestream or does not
@@ -558,11 +563,11 @@ extension Player {
         func currentIndex() -> Int? {
             items.firstIndex { $0.matches(currentItem) }
         }
-    }
 
-    static func streamTypePublisher(for item: AVPlayerItem?) -> AnyPublisher<StreamType, Never> {
-        guard let item else { return Just(.unknown).eraseToAnyPublisher() }
-        return item.streamTypePublisher().eraseToAnyPublisher()
+        func streamTypePublisher() -> AnyPublisher<StreamType, Never> {
+            guard let currentItem else { return Just(.unknown).eraseToAnyPublisher() }
+            return currentItem.streamTypePublisher().eraseToAnyPublisher()
+        }
     }
 
     private func configurePlaybackStatePublisher() {
@@ -570,20 +575,6 @@ extension Player {
             .receiveOnMainThread()
             .lane("player_state")
             .assign(to: &$playbackState)
-    }
-
-    private func configureCurrentItemTimeRangePublisher() {
-        queuePlayer.currentItemTimeRangePublisher()
-            .receiveOnMainThread()
-            .lane("player_time_range")
-            .assign(to: &$timeRange)
-    }
-
-    private func configureCurrentItemDurationPublisher() {
-        queuePlayer.currentItemDurationPublisher()
-            .receiveOnMainThread()
-            .lane("player_item_duration")
-            .assign(to: &$itemDuration)
     }
 
     private func configureChunkDurationPublisher() {
@@ -641,7 +632,7 @@ extension Player {
                 Publishers.CombineLatest3(
                     Just(update.items),
                     Just(update.currentIndex()),
-                    Self.streamTypePublisher(for: update.currentItem)
+                    update.streamTypePublisher()
                 )
             }
             .switchToLatest()

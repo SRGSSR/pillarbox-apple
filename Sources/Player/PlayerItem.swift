@@ -113,24 +113,6 @@ extension Source {
     }
 }
 
-extension AVPlayerItem {
-    var timeRange: CMTimeRange? {
-        Self.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
-    }
-
-    static func playerItems(from items: [PlayerItem]) -> [AVPlayerItem] {
-        playerItems(from: items.map(\.source))
-    }
-
-    static func timeRange(loadedTimeRanges: [NSValue], seekableTimeRanges: [NSValue]) -> CMTimeRange? {
-        guard let firstRange = seekableTimeRanges.first?.timeRangeValue, !firstRange.isIndefinite,
-              let lastRange = seekableTimeRanges.last?.timeRangeValue, !lastRange.isIndefinite else {
-            return !loadedTimeRanges.isEmpty ? .zero : nil
-        }
-        return CMTimeRangeFromTimeToTime(start: firstRange.start, end: lastRange.end)
-    }
-}
-
 private extension AVPlayerItem {
     /// An identifier to identify player items delivered by the same data source.
     var id: UUID? {

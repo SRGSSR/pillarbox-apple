@@ -108,7 +108,7 @@ final class PeriodicTimePublisherTests: XCTestCase {
             ),
             to: beClose(within: 0.5)
         ) {
-            player.seek(to: CMTime(value: 5, timescale: 1))
+            player.seek(to: CMTime(value: 5, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero)
         }
     }
 

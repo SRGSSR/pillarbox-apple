@@ -22,11 +22,15 @@ extension AVPlayerItem {
     }
 
     func timeRangePublisher() -> AnyPublisher<CMTimeRange, Never> {
-        Publishers.CombineLatest(
+        Publishers.CombineLatest3(
+            publisher(for: \.status),
             publisher(for: \.loadedTimeRanges),
             publisher(for: \.seekableTimeRanges)
         )
-        .compactMap { Self.timeRange(loadedTimeRanges: $0, seekableTimeRanges: $1) }
+        .filter { $0.0 == .readyToPlay }
+        .compactMap { _, loadedTimeRanges, seekableTimeRanges in
+            Self.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
+        }
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
@@ -51,6 +55,7 @@ extension AVPlayerItem {
         .map { timeRange, duration in
             StreamType(for: timeRange, itemDuration: duration)
         }
+        .removeDuplicates()
         .eraseToAnyPublisher()
     }
 

@@ -48,4 +48,10 @@ final class PlayerTests: XCTestCase {
         }
         .toAlways(beTrue(), until: .seconds(1))
     }
+
+    func testStabilityAtStart() {
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(item: item)
+        expect(player.streamType).toNever(equal(.dvr), pollInterval: .microseconds(1))
+    }
 }

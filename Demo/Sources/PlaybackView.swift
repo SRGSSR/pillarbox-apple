@@ -229,8 +229,6 @@ private struct TimeBar: View {
 // Behavior: h-exp, v-hug
 @available(tvOS, unavailable)
 private struct TimeSlider: View {
-    private static let blankFormattedTime = "--:--"
-
     private static let shortFormatter: DateComponentsFormatter = {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.second, .minute]
@@ -248,51 +246,41 @@ private struct TimeSlider: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
 
-    private var timeRange: CMTimeRange {
-        player.timeRange
-    }
-
-    private var formattedElapsedTime: String {
-        guard timeRange.isValid else { return Self.blankFormattedTime }
-        let time = progressTracker.time ?? player.time
-        guard time.isValid else { return Self.blankFormattedTime }
+    private var formattedElapsedTime: String? {
+        guard player.streamType == .onDemand, let time = progressTracker.time, let timeRange = progressTracker.timeRange else {
+            return nil
+        }
         return Self.formattedDuration((time - timeRange.start).seconds)
     }
 
-    private var formattedTotalTime: String {
-        guard timeRange.isValid else { return Self.blankFormattedTime }
+    private var formattedTotalTime: String? {
+        guard player.streamType == .onDemand, let timeRange = progressTracker.timeRange else { return nil }
         return Self.formattedDuration(timeRange.duration.seconds)
     }
 
+    private var isVisible: Bool {
+        progressTracker.isProgressAvailable && player.streamType != .unknown
+    }
+
     var body: some View {
-        ZStack {
-            switch player.streamType {
-            case .onDemand:
-                Slider(
-                    progressTracker: progressTracker,
-                    label: {
-                        Text("Progress")
-                    },
-                    minimumValueLabel: {
-                        Text(formattedElapsedTime)
-                            .monospacedDigit()
-                    },
-                    maximumValueLabel: {
-                        Text(formattedTotalTime)
-                            .monospacedDigit()
-                    }
-                )
-            case .unknown:
-                Slider(value: .constant(0))
-                    .hidden()
-            default:
-                Slider(progressTracker: progressTracker) {
-                    Text("Progress")
-                }
+        Slider(
+            progressTracker: progressTracker,
+            label: {
+                Text("Progress")
+            },
+            minimumValueLabel: {
+                label(withText: formattedElapsedTime)
+            },
+            maximumValueLabel: {
+                label(withText: formattedTotalTime)
             }
-        }
+        )
         .foregroundColor(.white)
         .tint(.white)
+        .opacity(isVisible ? 1 : 0)
+        .transaction { transaction in
+            transaction.animation = nil
+        }
         .padding()
         .debugBodyCounter(color: .blue)
     }
@@ -303,6 +291,14 @@ private struct TimeSlider: View {
         }
         else {
             return longFormatter.string(from: duration)!
+        }
+    }
+
+    @ViewBuilder
+    private func label(withText text: String?) -> some View {
+        if let text {
+            Text(text)
+                .monospacedDigit()
         }
     }
 }

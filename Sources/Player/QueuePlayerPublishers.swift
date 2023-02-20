@@ -32,6 +32,7 @@ extension QueuePlayer {
                 .map { _ in nil }
         )
         .prepend(nil)
+        .removeDuplicates()
         .eraseToAnyPublisher()
     }
 
