@@ -61,8 +61,9 @@ final class QueuePlayer: AVQueuePlayer {
         pendingSeeks.append(seek)
         
         if !smooth || pendingSeeks.count == 1 {
-            enqueue(seek: seek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] in
-                self?.notifySeekEnd()
+            enqueue(seek: seek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
+                guard let self, finished else { return }
+                self.notifySeekEnd()
             }
         }
     }
@@ -71,19 +72,19 @@ final class QueuePlayer: AVQueuePlayer {
         seek: Seek,
         toleranceBefore: CMTime,
         toleranceAfter: CMTime,
-        idle: @escaping () -> Void
+        completion: @escaping (Bool) -> Void
     ) {
         super.seek(to: seek.time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
-            self?.complete(seek: seek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, finished: finished, idle: idle)
+            self?.process(seek: seek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, finished: finished, completion: completion)
         }
     }
 
-    private func complete(
+    private func process(
         seek: Seek,
         toleranceBefore: CMTime,
         toleranceAfter: CMTime,
         finished: Bool,
-        idle: @escaping () -> Void
+        completion: @escaping (Bool)  -> Void
     ) {
         if let targetSeek = pendingSeeks.last, targetSeek != seek {
             seek.completionHandler(targetSeek.isSmooth)
@@ -92,13 +93,13 @@ final class QueuePlayer: AVQueuePlayer {
                 pendingSeek.completionHandler(finished)
             }
             if finished {
-                enqueue(seek: targetSeek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, idle: idle)
+                enqueue(seek: targetSeek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completion: completion)
             }
         }
         else {
             seek.completionHandler(finished)
             pendingSeeks.removeAll()
-            idle()
+            completion(finished)
         }
     }
 
