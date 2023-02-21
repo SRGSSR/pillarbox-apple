@@ -102,7 +102,7 @@ final class QueuePlayer: AVQueuePlayer {
         else {
             seek.completionHandler(finished)
             pendingSeeks.removeAll()
-            completion(finished)
+            completion(true)
         }
     }
 
