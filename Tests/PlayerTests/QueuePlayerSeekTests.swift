@@ -171,11 +171,11 @@ final class QueuePlayerSeekTests: XCTestCase {
         expect(item.timeRange).toEventuallyNot(beNil())
 
         let values = collectOutput(from: player.smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 10), queue: .main), during: 3) {
-            player.seek(to: CMTime(value: 8, timescale: 1)) { _ in
-                player.seek(to: CMTime(value: 10, timescale: 1)) { _ in
-                    player.seek(to: CMTime(value: 12, timescale: 1)) { _ in
-                        player.seek(to: CMTime(value: 100, timescale: 1)) { _ in
-                            player.seek(to: CMTime(value: 100, timescale: 1))
+            player.seek(to: CMTime(value: 8, timescale: 1), toleranceBefore: .zero, toleranceAfter: .positiveInfinity) { _ in
+                player.seek(to: CMTime(value: 10, timescale: 1), toleranceBefore: .zero, toleranceAfter: .positiveInfinity) { _ in
+                    player.seek(to: CMTime(value: 12, timescale: 1), toleranceBefore: .zero, toleranceAfter: .positiveInfinity) { _ in
+                        player.seek(to: CMTime(value: 100, timescale: 1), toleranceBefore: .zero, toleranceAfter: .positiveInfinity) { _ in
+                            player.seek(to: CMTime(value: 100, timescale: 1), toleranceBefore: .zero, toleranceAfter: .positiveInfinity)
                         }
                     }
                 }
