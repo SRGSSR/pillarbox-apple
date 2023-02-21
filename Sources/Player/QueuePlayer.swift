@@ -56,14 +56,18 @@ final class QueuePlayer: AVQueuePlayer {
         notifySeekStart(at: time)
 
         let seek = Seek(time: time, isSmooth: smooth, completionHandler: completionHandler)
-        targetSeekTime = time
         pendingSeeks.append(seek)
 
-        if !smooth || pendingSeeks.count == 1 {
-            enqueue(seek: seek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
-                guard let self, finished else { return }
-                self.notifySeekEnd()
-            }
+        if smooth && targetSeekTime != nil {
+            targetSeekTime = time
+            return
+        }
+
+        targetSeekTime = time
+        enqueue(seek: seek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
+            guard let self, finished else { return }
+            self.notifySeekEnd()
+            self.targetSeekTime = nil
         }
     }
 
@@ -98,7 +102,6 @@ final class QueuePlayer: AVQueuePlayer {
         else {
             seek.completionHandler(finished)
             pendingSeeks.removeAll()
-            targetSeekTime = nil
             completion(finished)
         }
     }
