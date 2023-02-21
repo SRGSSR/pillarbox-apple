@@ -32,9 +32,7 @@ final class QueuePlayer: AVQueuePlayer {
     private var pendingSeeks = Deque<Seek>()
     private var cancellables = Set<AnyCancellable>()
 
-    var targetSeekTime: CMTime? {
-        pendingSeeks.last?.time
-    }
+    var targetSeekTime: CMTime?
 
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, smooth: false, completionHandler: completionHandler)
@@ -58,8 +56,9 @@ final class QueuePlayer: AVQueuePlayer {
         notifySeekStart(at: time)
 
         let seek = Seek(time: time, isSmooth: smooth, completionHandler: completionHandler)
+        targetSeekTime = time
         pendingSeeks.append(seek)
-        
+
         if !smooth || pendingSeeks.count == 1 {
             enqueue(seek: seek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
                 guard let self, finished else { return }
@@ -84,7 +83,7 @@ final class QueuePlayer: AVQueuePlayer {
         toleranceBefore: CMTime,
         toleranceAfter: CMTime,
         finished: Bool,
-        completion: @escaping (Bool)  -> Void
+        completion: @escaping (Bool) -> Void
     ) {
         if let targetSeek = pendingSeeks.last, targetSeek != seek {
             seek.completionHandler(targetSeek.isSmooth)
@@ -99,6 +98,7 @@ final class QueuePlayer: AVQueuePlayer {
         else {
             seek.completionHandler(finished)
             pendingSeeks.removeAll()
+            targetSeekTime = nil
             completion(finished)
         }
     }
