@@ -197,14 +197,12 @@ extension QueuePlayer {
     }
 
     private func processPendingSeeks() {
-//        guard let targetSeek = self.targetSeek else { return }
-//        while let pendingSeek = self.pendingSeeks.popFirst() {
-//            pendingSeek.completionHandler(true)
-//        }
-//        targetSeek.completionHandler(true)
-//        self.targetSeek = nil
-//        self.notifySeekEnd()
-//        Self.logger.info("Sentinel detected unhandled completion and fixed it")
+        guard !pendingSeeks.isEmpty else { return }
+        while let pendingSeek = pendingSeeks.popFirst() {
+            pendingSeek.completionHandler(true)
+        }
+        self.notifySeekEnd()
+        Self.logger.info("Sentinel detected unhandled completion and fixed it")
     }
 
     /// Perform a low-level seek without seek tracking.
