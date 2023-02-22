@@ -246,7 +246,7 @@ public extension Player {
         completion: @escaping (Bool) -> Void = { _ in }
     ) {
         let currentTime = queuePlayer.targetSeekTime ?? time
-        seek(to: currentTime + interval, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completion: completion)
+        seek(to: currentTime + interval, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, smooth: true, completion: completion)
     }
 }
 

@@ -42,7 +42,7 @@ final class PlayerSkipForwardTests: XCTestCase {
 
         waitUntil { done in
             player.skipForward { finished in
-                expect(finished).to(beFalse())
+                expect(finished).to(beTrue())
             }
 
             player.skipForward { finished in
