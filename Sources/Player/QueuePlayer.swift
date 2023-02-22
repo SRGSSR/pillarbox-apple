@@ -91,12 +91,8 @@ final class QueuePlayer: AVQueuePlayer {
 
     private func process(seek: Seek, finished: Bool, completion: @escaping () -> Void) {
         if let targetSeek, seek != targetSeek {
-            // TODO: Could probably be written in a better way
-            while let pendingSeek = pendingSeeks.popFirst() {
-                guard pendingSeek != targetSeek else {
-                    pendingSeeks.insert(pendingSeek, at: 0)
-                    break
-                }
+            while let pendingSeek = pendingSeeks.first, pendingSeek != targetSeek {
+                pendingSeeks.removeFirst()
                 pendingSeek.completionHandler(targetSeek.isSmooth)
             }
             if finished {
