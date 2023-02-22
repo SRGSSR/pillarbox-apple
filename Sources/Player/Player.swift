@@ -152,7 +152,9 @@ public extension Player {
     ///   - time: The time to seek to.
     ///   - toleranceBefore: Tolerance before the desired position.
     ///   - toleranceAfter: Tolerance after the desired position.
-    ///   - smooth: Set to `true` to enable smooth seeking, preventing unnecessary seek cancellation.
+    ///   - smooth: Set to `true` to enable smooth seeking. This allows any currently pending seek to complete before
+    ///     the new seek is performed, preventing unnecessary cancellation so that the playhead position can move in
+    ///     a smoother way.
     ///   - completion: A completion called when seeking ends. The provided Boolean informs
     ///     whether the seek could finish without being cancelled.
     func seek(
