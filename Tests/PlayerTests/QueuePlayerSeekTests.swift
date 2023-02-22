@@ -185,4 +185,22 @@ final class QueuePlayerSeekTests: XCTestCase {
         }
         expect(values.sorted()).to(equal(values))
     }
+
+    func testNotificationCompletionOrder() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayer(playerItem: item)
+        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+
+        let time = CMTime(value: 1, timescale: 1)
+        let notificationName = Notification.Name("SeekCompleted")
+        expect {
+            player.seek(to: time) { _ in
+                QueuePlayer.notificationCenter.post(name: notificationName, object: self)
+            }
+        }.toEventually(postNotifications(equalDiff([
+            Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time]),
+            Notification(name: .didSeek, object: player),
+            Notification(name: notificationName, object: self)
+        ]), from: QueuePlayer.notificationCenter), timeout: .seconds(5))
+    }
 }
