@@ -33,9 +33,12 @@ final class QueuePlayer: AVQueuePlayer {
     private static var logger = Logger(category: "QueuePlayer")
 
     private var pendingSeeks = Deque<Seek>()
+    private var targetSeek: Seek?
     private var cancellables = Set<AnyCancellable>()
 
-    var targetSeekTime: CMTime?
+    var targetSeekTime: CMTime? {
+        targetSeek?.time
+    }
 
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, smooth: false, completionHandler: completionHandler)
@@ -67,15 +70,15 @@ final class QueuePlayer: AVQueuePlayer {
         )
         pendingSeeks.append(seek)
 
-        if smooth && targetSeekTime != nil {
-            targetSeekTime = time
+        if smooth && targetSeek != nil {
+            targetSeek = seek
             return
         }
 
-        targetSeekTime = time
+        targetSeek = seek
         enqueue(seek: seek) { [weak self] in
             guard let self else { return }
-            self.targetSeekTime = nil
+            self.targetSeek = nil
             self.notifySeekEnd()
         }
     }
@@ -87,10 +90,13 @@ final class QueuePlayer: AVQueuePlayer {
     }
 
     private func process(seek: Seek, finished: Bool, completion: @escaping () -> Void) {
-        if let targetSeek = pendingSeeks.last, seek != targetSeek {
-            seek.completionHandler(targetSeek.isSmooth)
-            while let pendingSeek = pendingSeeks.popFirst(), pendingSeek != targetSeek {
-                guard pendingSeek != seek else { continue }
+        if let targetSeek, seek != targetSeek {
+            // TODO: Could probably be written in a better way
+            while let pendingSeek = pendingSeeks.popFirst() {
+                guard pendingSeek != targetSeek else {
+                    pendingSeeks.insert(pendingSeek, at: 0)
+                    break
+                }
                 pendingSeek.completionHandler(targetSeek.isSmooth)
             }
             if finished {
