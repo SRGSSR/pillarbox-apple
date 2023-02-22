@@ -33,8 +33,11 @@ final class QueuePlayer: AVQueuePlayer {
     private static var logger = Logger(category: "QueuePlayer")
 
     private var pendingSeeks = Deque<Seek>()
-    private var targetSeek: Seek?
     private var cancellables = Set<AnyCancellable>()
+
+    private var targetSeek: Seek? {
+        pendingSeeks.last
+    }
 
     var targetSeekTime: CMTime? {
         targetSeek?.time
@@ -70,15 +73,12 @@ final class QueuePlayer: AVQueuePlayer {
         )
         pendingSeeks.append(seek)
 
-        if smooth && targetSeek != nil {
-            targetSeek = seek
+        if smooth && pendingSeeks.count != 1 {
             return
         }
 
-        targetSeek = seek
         enqueue(seek: seek) { [weak self] in
             guard let self else { return }
-            self.targetSeek = nil
             self.notifySeekEnd()
         }
     }
