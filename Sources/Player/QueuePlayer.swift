@@ -15,8 +15,11 @@ enum SeekKey: String {
 
 private struct Seek: Equatable {
     let time: CMTime
+    let toleranceBefore: CMTime
+    let toleranceAfter: CMTime
     let isSmooth: Bool
     let completionHandler: (Bool) -> Void
+    
     private let id = UUID()
 
     static func == (lhs: Seek, rhs: Seek) -> Bool {
@@ -55,7 +58,13 @@ final class QueuePlayer: AVQueuePlayer {
         registerSentinels()
         notifySeekStart(at: time)
 
-        let seek = Seek(time: time, isSmooth: smooth, completionHandler: completionHandler)
+        let seek = Seek(
+            time: time,
+            toleranceBefore: toleranceBefore,
+            toleranceAfter: toleranceAfter,
+            isSmooth: smooth,
+            completionHandler: completionHandler
+        )
         pendingSeeks.append(seek)
 
         if smooth && targetSeekTime != nil {
@@ -64,31 +73,20 @@ final class QueuePlayer: AVQueuePlayer {
         }
 
         targetSeekTime = time
-        enqueue(seek: seek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] in
+        enqueue(seek: seek) { [weak self] in
             guard let self else { return }
             self.notifySeekEnd()
             self.targetSeekTime = nil
         }
     }
 
-    private func enqueue(
-        seek: Seek,
-        toleranceBefore: CMTime,
-        toleranceAfter: CMTime,
-        completion: @escaping () -> Void
-    ) {
-        super.seek(to: seek.time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
-            self?.process(seek: seek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, finished: finished, completion: completion)
+    private func enqueue(seek: Seek, completion: @escaping () -> Void) {
+        super.seek(to: seek.time, toleranceBefore: seek.toleranceBefore, toleranceAfter: seek.toleranceAfter) { [weak self] finished in
+            self?.process(seek: seek, finished: finished, completion: completion)
         }
     }
 
-    private func process(
-        seek: Seek,
-        toleranceBefore: CMTime,
-        toleranceAfter: CMTime,
-        finished: Bool,
-        completion: @escaping () -> Void
-    ) {
+    private func process(seek: Seek, finished: Bool, completion: @escaping () -> Void) {
         if let targetSeek = pendingSeeks.last, targetSeek != seek {
             seek.completionHandler(targetSeek.isSmooth)
             while let pendingSeek = pendingSeeks.popFirst(), pendingSeek != targetSeek {
@@ -96,7 +94,7 @@ final class QueuePlayer: AVQueuePlayer {
                 pendingSeek.completionHandler(finished)
             }
             if finished {
-                enqueue(seek: targetSeek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completion: completion)
+                enqueue(seek: targetSeek, completion: completion)
             }
         }
         else {
