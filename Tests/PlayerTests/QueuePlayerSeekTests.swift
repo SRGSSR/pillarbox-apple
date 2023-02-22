@@ -164,7 +164,9 @@ final class QueuePlayerSeekTests: XCTestCase {
         ]))
     }
 
-    func testMultipleSeekStability() {
+    // Checks that time is not jumping back when seeking forward several times in a row (no tolerance before is allowed
+    // in this test as otherwise the player is allowed to pick a position before the desired position),
+    func testMultipleSeekMonotonicity() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         player.play()
