@@ -15,7 +15,7 @@ final class ItemStreamTypePublisherTests: XCTestCase {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         _ = AVPlayer(playerItem: item)
         expectEqualPublished(
-            values: [.onDemand],
+            values: [.unknown, .onDemand],
             from: item.streamTypePublisher(),
             during: 2
         )
@@ -25,7 +25,7 @@ final class ItemStreamTypePublisherTests: XCTestCase {
         let item = AVPlayerItem(url: Stream.live.url)
         _ = AVPlayer(playerItem: item)
         expectEqualPublished(
-            values: [.live],
+            values: [.unknown, .live],
             from: item.streamTypePublisher(),
             during: 2
         )
@@ -35,7 +35,7 @@ final class ItemStreamTypePublisherTests: XCTestCase {
         let item = AVPlayerItem(url: Stream.dvr.url)
         _ = AVPlayer(playerItem: item)
         expectEqualPublished(
-            values: [.dvr],
+            values: [.unknown, .dvr],
             from: item.streamTypePublisher(),
             during: 2
         )

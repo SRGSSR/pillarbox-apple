@@ -53,7 +53,7 @@ final class SeekingPublisherTests: XCTestCase {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         player.play()
-        expect(item.timeRange).toEventuallyNot(beNil())
+        expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)

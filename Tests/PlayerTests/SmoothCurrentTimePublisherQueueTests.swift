@@ -18,7 +18,7 @@ final class SmoothCurrentTimePublisherQueueTests: XCTestCase {
         let player = QueuePlayer(items: [item1, item2])
         expectPublished(
             values: [
-                .zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1),
+                .invalid, .zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1),
                 .zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1),
                 .invalid
             ],
@@ -37,8 +37,8 @@ final class SmoothCurrentTimePublisherQueueTests: XCTestCase {
         let player = QueuePlayer(items: [item1, item2, item3])
         expectPublished(
             values: [
-                .zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1),
-                .zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1),
+                .invalid, .zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1),
+                .invalid, .zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1),
                 .invalid
             ],
             from: player.smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 2), queue: .main),

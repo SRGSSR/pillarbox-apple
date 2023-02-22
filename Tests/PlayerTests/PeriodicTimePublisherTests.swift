@@ -55,7 +55,8 @@ final class PeriodicTimePublisherTests: XCTestCase {
 
         let times = collectOutput(from: publisher, during: 2)
         expect(times).to(allPass { time, timeRange in
-            timeRange.start <= time && time <= timeRange.end
+            guard time.isValid, timeRange.isValid else { return true }
+            return timeRange.start <= time && time <= timeRange.end
         })
     }
 
@@ -64,6 +65,7 @@ final class PeriodicTimePublisherTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         expectPublished(
             values: [
+                .invalid,
                 .zero
             ],
             from: Publishers.PeriodicTimePublisher(
@@ -80,6 +82,7 @@ final class PeriodicTimePublisherTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         expectAtLeastPublished(
             values: [
+                .invalid,
                 .zero,
                 CMTimeMake(value: 1, timescale: 2),
                 CMTimeMake(value: 2, timescale: 2),
@@ -101,7 +104,10 @@ final class PeriodicTimePublisherTests: XCTestCase {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastPublished(
-            values: [CMTimeMake(value: 5, timescale: 1)],
+            values: [
+                .invalid,
+                CMTimeMake(value: 5, timescale: 1)
+            ],
             from: Publishers.PeriodicTimePublisher(
                 for: player,
                 interval: CMTimeMake(value: 1, timescale: 2)

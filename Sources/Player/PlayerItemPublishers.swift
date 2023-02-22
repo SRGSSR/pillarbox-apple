@@ -27,9 +27,9 @@ extension AVPlayerItem {
             publisher(for: \.loadedTimeRanges),
             publisher(for: \.seekableTimeRanges)
         )
-        .filter { $0.0 == .readyToPlay }
-        .compactMap { _, loadedTimeRanges, seekableTimeRanges in
-            Self.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
+        .map { status, loadedTimeRanges, seekableTimeRanges in
+            guard status == .readyToPlay else { return .invalid }
+            return Self.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
         }
         .removeDuplicates()
         .eraseToAnyPublisher()

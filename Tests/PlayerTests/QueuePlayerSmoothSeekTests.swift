@@ -60,7 +60,7 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
     func testNotificationsForMultipleSeeksWithinTimeRange() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(beNil())
+        expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
@@ -81,7 +81,7 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
     func testNotificationsForSmoothSeekAfterSeekWithinTimeRange() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(beNil())
+        expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
@@ -102,7 +102,7 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
     func testCompletionsForMultipleSeeks() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(beNil())
+        expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
@@ -131,7 +131,7 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
     func testCompletionsForMultipleSeeksEndingWithSmoothSeek() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(beNil())
+        expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)

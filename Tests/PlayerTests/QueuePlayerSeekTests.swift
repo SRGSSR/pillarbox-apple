@@ -67,7 +67,7 @@ final class QueuePlayerSeekTests: XCTestCase {
     func testNotificationsForMultipleSeeksWithinTimeRange() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(beNil())
+        expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
@@ -88,7 +88,7 @@ final class QueuePlayerSeekTests: XCTestCase {
     func testNotificationsForSeekAfterSmoothSeekWithinTimeRange() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(beNil())
+        expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
@@ -109,7 +109,7 @@ final class QueuePlayerSeekTests: XCTestCase {
     func testCompletionsForMultipleSeeks() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(beNil())
+        expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
@@ -138,7 +138,7 @@ final class QueuePlayerSeekTests: XCTestCase {
     func testCompletionsForMultipleSmoothSeeksEndingWithSeek() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(beNil())
+        expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
@@ -170,7 +170,7 @@ final class QueuePlayerSeekTests: XCTestCase {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         player.play()
-        expect(item.timeRange).toEventuallyNot(beNil())
+        expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let values = collectOutput(from: player.smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 10), queue: .main), during: 3) {
             player.seek(to: CMTime(value: 8, timescale: 1), toleranceBefore: .zero, toleranceAfter: .positiveInfinity) { _ in

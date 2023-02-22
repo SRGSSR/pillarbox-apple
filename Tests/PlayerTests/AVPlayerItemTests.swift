@@ -14,13 +14,13 @@ import XCTest
 final class AVPlayerItemTests: XCTestCase {
     func testNonLoadedItem() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
-        expect(item.timeRange).toAlways(beNil())
+        expect(item.timeRange).toAlways(equal(.invalid))
     }
 
     func testOnDemand() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         _ = AVPlayer(playerItem: item)
-        expect(item.timeRange).toEventuallyNot(beNil())
+        expect(item.timeRange).toEventuallyNot(equal(.invalid))
     }
 
     func testPlayerItems() {
