@@ -19,7 +19,7 @@ private struct Seek: Equatable {
     let toleranceAfter: CMTime
     let isSmooth: Bool
     let completionHandler: (Bool) -> Void
-    
+
     private let id = UUID()
 
     static func == (lhs: Seek, rhs: Seek) -> Bool {
@@ -104,9 +104,9 @@ final class QueuePlayer: AVQueuePlayer {
             }
         }
         else {
+            completion()
             seek.completionHandler(finished)
             pendingSeeks.removeAll()
-            completion()
         }
     }
 
