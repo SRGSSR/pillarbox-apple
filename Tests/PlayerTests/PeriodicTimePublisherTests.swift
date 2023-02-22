@@ -16,9 +16,7 @@ final class PeriodicTimePublisherTests: XCTestCase {
     func testEmpty() {
         let player = AVPlayer()
         expectPublished(
-            values: [
-                .invalid
-            ],
+            values: [],
             from: Publishers.PeriodicTimePublisher(
                 for: player,
                 interval: CMTimeMake(value: 1, timescale: 2)
@@ -64,10 +62,7 @@ final class PeriodicTimePublisherTests: XCTestCase {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
         expectPublished(
-            values: [
-                .invalid,
-                .zero
-            ],
+            values: [.zero],
             from: Publishers.PeriodicTimePublisher(
                 for: player,
                 interval: CMTimeMake(value: 1, timescale: 2)
@@ -82,7 +77,6 @@ final class PeriodicTimePublisherTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         expectAtLeastPublished(
             values: [
-                .invalid,
                 .zero,
                 CMTimeMake(value: 1, timescale: 2),
                 CMTimeMake(value: 2, timescale: 2),
@@ -105,7 +99,6 @@ final class PeriodicTimePublisherTests: XCTestCase {
         let player = AVPlayer(playerItem: item)
         expectAtLeastPublished(
             values: [
-                .invalid,
                 CMTimeMake(value: 5, timescale: 1)
             ],
             from: Publishers.PeriodicTimePublisher(

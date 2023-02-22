@@ -251,8 +251,8 @@ public extension Player {
 }
 
 public extension Player {
-    /// Return a publisher periodically emitting the current time while the player is active. Emits the current time
-    /// also on subscription.
+    /// Return a publisher periodically emitting the current time while the player is playing content. Does not emit any
+    /// value on subscription and only emits valid times.
     /// - Parameters:
     ///   - interval: The interval at which events must be emitted.
     ///   - queue: The queue on which values are published.
