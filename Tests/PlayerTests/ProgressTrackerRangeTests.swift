@@ -113,4 +113,28 @@ final class ProgressTrackerRangeTests: XCTestCase {
             progressTracker.player = nil
         }
     }
+
+    func testForTrackerBoundToPlayerAtSomeTime() {
+        let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(item: item)
+
+        expect(player.timeRange).toEventuallyNot(equal(.invalid))
+        let time = CMTime(value: 20, timescale: 1)
+
+        waitUntil { done in
+            player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { _ in
+                done()
+            }
+        }
+
+        expectEqualPublished(
+            values: [0...0, 0...1],
+            from: progressTracker.changePublisher(at: \.range)
+                .removeDuplicates(),
+            during: 1
+        ) {
+            progressTracker.player = player
+        }
+    }
 }
