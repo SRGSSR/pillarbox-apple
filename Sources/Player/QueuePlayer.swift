@@ -75,8 +75,8 @@ final class QueuePlayer: AVQueuePlayer {
         targetSeekTime = time
         enqueue(seek: seek) { [weak self] in
             guard let self else { return }
-            self.notifySeekEnd()
             self.targetSeekTime = nil
+            self.notifySeekEnd()
         }
     }
 
@@ -87,11 +87,11 @@ final class QueuePlayer: AVQueuePlayer {
     }
 
     private func process(seek: Seek, finished: Bool, completion: @escaping () -> Void) {
-        if let targetSeek = pendingSeeks.last, targetSeek != seek {
+        if let targetSeek = pendingSeeks.last, seek != targetSeek {
             seek.completionHandler(targetSeek.isSmooth)
             while let pendingSeek = pendingSeeks.popFirst(), pendingSeek != targetSeek {
                 guard pendingSeek != seek else { continue }
-                pendingSeek.completionHandler(finished)
+                pendingSeek.completionHandler(targetSeek.isSmooth)
             }
             if finished {
                 enqueue(seek: targetSeek, completion: completion)
