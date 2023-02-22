@@ -107,11 +107,11 @@ final class QueuePlayer: AVQueuePlayer {
     }
 
     override func seek(to time: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        self.seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity, completionHandler: completionHandler)
+        seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity, completionHandler: completionHandler)
     }
 
     override func seek(to time: CMTime) {
-        self.seek(to: time) { _ in }
+        seek(to: time) { _ in }
     }
 
     private func notifySeekStart(at time: CMTime) {
@@ -204,7 +204,7 @@ extension QueuePlayer {
         while let pendingSeek = pendingSeeks.popFirst() {
             pendingSeek.completionHandler(true)
         }
-        self.notifySeekEnd()
+        notifySeekEnd()
         Self.logger.info("Sentinel detected unhandled completion and fixed it")
     }
 
