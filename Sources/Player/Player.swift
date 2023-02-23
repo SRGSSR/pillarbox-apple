@@ -186,6 +186,19 @@ public extension Player {
 }
 
 public extension Player {
+    /// Return whether the current player item player can be returned to default position thanks to the stream type.
+    /// - Returns: `true` if skipping to default position is possible.
+    func canSkipToDefault() -> Bool {
+        switch streamType {
+        case .onDemand:
+            return true
+        case .dvr where chunkDuration.isValid:
+            return time < timeRange.end - chunkDuration
+        default:
+            return false
+        }
+    }
+
     /// Return whether the current player item player can be returned to live conditions.
     /// - Returns: `true` if skipping to live conditions is possible.
     func canSkipToLive() -> Bool {
