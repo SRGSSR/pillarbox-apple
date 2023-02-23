@@ -48,6 +48,11 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.timeRange
     }
 
+    /// Returns whether the player is currently busy (buffering or seeking).
+    public var isBusy: Bool {
+        isBuffering || isSeeking
+    }
+
     /// The current item duration or `.invalid` when not known.
     private var itemDuration: CMTime {
         queuePlayer.itemDuration
