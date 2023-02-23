@@ -12,7 +12,7 @@ To instantiate the player you must import the associated package first:
 import Player
 ```
 
-This package also provides basic user components to build a player user interface. To play SRG SSR content you must in addition import our core business package:
+This package also provides basic user components to build a player user interface. To play SRG SSR content you must in addition import our `CoreBusiness` package:
 
 ```swift
 import CoreBusiness
@@ -123,6 +123,10 @@ The player supports AirPlay. Please ensure that your application audio session a
 ## Control center integration
 
 The player is automatically integrated with the control center. Currently only the most recent player instance is registered with the control center. This behavior will be further improved in the future, though.
+
+## Custom player items
+
+The `CoreBusiness` package provides standard player items for playing SRG SSR URN-based medias. The player item provided by the `Player` package is more general, though, and can be integrated with any kind of backend service. Please refer to the corresponding documentation for more information.
 
 ## Have fun
 
