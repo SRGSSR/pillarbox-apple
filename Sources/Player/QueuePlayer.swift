@@ -13,7 +13,7 @@ enum SeekKey: String {
     case time
 }
 
-private struct Seek: Equatable {
+struct Seek: Equatable {
     let time: CMTime
     let toleranceBefore: CMTime
     let toleranceAfter: CMTime
@@ -27,7 +27,7 @@ private struct Seek: Equatable {
     }
 }
 
-final class QueuePlayer: AVQueuePlayer {
+class QueuePlayer: AVQueuePlayer {
     static let notificationCenter = NotificationCenter()
 
     private static var logger = Logger(category: "QueuePlayer")
@@ -83,7 +83,7 @@ final class QueuePlayer: AVQueuePlayer {
         }
     }
 
-    private func enqueue(seek: Seek, completion: @escaping () -> Void) {
+    func enqueue(seek: Seek, completion: @escaping () -> Void) {
         super.seek(to: seek.time, toleranceBefore: seek.toleranceBefore, toleranceAfter: seek.toleranceAfter) { [weak self] finished in
             self?.process(seek: seek, finished: finished, completion: completion)
         }

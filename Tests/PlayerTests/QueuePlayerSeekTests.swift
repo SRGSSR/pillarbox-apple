@@ -12,6 +12,15 @@ import Nimble
 import OrderedCollections
 import XCTest
 
+private class QueuePlayerMock: QueuePlayer {
+    var seeks: Int = 0
+
+    override func enqueue(seek: Seek, completion: @escaping () -> Void) {
+        self.seeks += 1
+        super.enqueue(seek: seek, completion: completion)
+    }
+}
+
 final class QueuePlayerSeekTests: XCTestCase {
     func testNotificationsForSeekWithInvalidTime() {
         guard nimbleThrowAssertionsEnabled() else { return }
@@ -227,5 +236,37 @@ final class QueuePlayerSeekTests: XCTestCase {
             Notification(name: .didSeek, object: player),
             Notification(name: notificationName2, object: self)
         ]), from: QueuePlayer.notificationCenter), timeout: .seconds(5))
+    }
+
+    func testEnqueue() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayerMock(playerItem: item)
+        expect(player.timeRange).toEventuallyNot(equal(.invalid))
+        waitUntil { done in
+            player.seek(to: CMTime(value: 1, timescale: 1))
+            player.seek(to: CMTime(value: 2, timescale: 1))
+            player.seek(to: CMTime(value: 3, timescale: 1))
+            player.seek(to: CMTime(value: 4, timescale: 1))
+            player.seek(to: CMTime(value: 5, timescale: 1)) { _ in
+                done()
+            }
+        }
+        expect(player.seeks).to(equal(5))
+    }
+
+    func testEnqueueSmooth() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayerMock(playerItem: item)
+        expect(player.timeRange).toEventuallyNot(equal(.invalid))
+        waitUntil { done in
+            player.seek(to: CMTime(value: 1, timescale: 1), smooth: true) { _ in }
+            player.seek(to: CMTime(value: 2, timescale: 1), smooth: true) { _ in }
+            player.seek(to: CMTime(value: 3, timescale: 1), smooth: true) { _ in }
+            player.seek(to: CMTime(value: 4, timescale: 1), smooth: true) { _ in }
+            player.seek(to: CMTime(value: 5, timescale: 1), smooth: true) { _ in
+                done()
+            }
+        }
+        expect(player.seeks).to(equal(2))
     }
 }
