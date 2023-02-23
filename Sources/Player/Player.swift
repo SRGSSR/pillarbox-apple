@@ -199,6 +199,16 @@ public extension Player {
         }
     }
 
+    /// Return the current item to default position.
+    /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
+    ///   whether the skip could finish without being cancelled.
+    func skipToDefault(completion: @escaping (Bool) -> Void = { _ in }) {
+        let time: CMTime = streamType == .dvr ? timeRange.end.clamped(to: timeRange) : .zero
+        queuePlayer.seek(to: time) { finished in
+            completion(finished)
+        }
+    }
+
     /// Return whether the current player item player can be returned to live conditions.
     /// - Returns: `true` if skipping to live conditions is possible.
     func canSkipToLive() -> Bool {
