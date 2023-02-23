@@ -156,4 +156,18 @@ final class QueuePlayerSmoothSeekTests: XCTestCase {
             3: true
         ]))
     }
+
+    func testTargetSeekTimeWithMultipleSeeks() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayer(playerItem: item)
+        expect(player.timeRange).toEventuallyNot(equal(.invalid))
+
+        let time1 = CMTime(value: 1, timescale: 1)
+        player.seek(to: time1, smooth: true) { _ in }
+        expect(player.targetSeekTime).to(equal(time1))
+
+        let time2 = CMTime(value: 2, timescale: 1)
+        player.seek(to: time2, smooth: true) { _ in }
+        expect(player.targetSeekTime).to(equal(time2))
+    }
 }
