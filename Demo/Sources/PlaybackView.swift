@@ -122,7 +122,7 @@ private struct PlaybackButton: View {
         }
         .opacity(player.isBusy ? 0 : 1)
         .aspectRatio(contentMode: .fit)
-        .frame(height: 90)
+        .frame(height: constant(iOS: 90, tvOS: 150))
     }
 }
 
@@ -138,7 +138,7 @@ private struct SkipBackwardButton: View {
                 .tint(.white)
         }
         .aspectRatio(contentMode: .fit)
-        .frame(height: 45)
+        .frame(height: constant(iOS: 45, tvOS: 75))
         .disabled(!player.canSkipBackward())
     }
 
@@ -159,7 +159,7 @@ private struct SkipForwardButton: View {
                 .tint(.white)
         }
         .aspectRatio(contentMode: .fit)
-        .frame(height: 45)
+        .frame(height: constant(iOS: 45, tvOS: 75))
         .disabled(!player.canSkipForward())
     }
 
