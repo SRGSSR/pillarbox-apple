@@ -174,7 +174,7 @@ private struct LiveLabel: View {
     @ObservedObject var progressTracker: ProgressTracker
 
     private var canSkipToLive: Bool {
-        player.canSkipToLive()
+        player.canSkipToDefault()
     }
 
     var body: some View {
@@ -192,7 +192,7 @@ private struct LiveLabel: View {
     }
 
     private func skipToLive() {
-        player.skipToLive()
+        player.skipToDefault()
     }
 }
 

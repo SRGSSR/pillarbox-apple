@@ -208,29 +208,6 @@ public extension Player {
             completion(finished)
         }
     }
-
-    /// Return whether the current player item player can be returned to live conditions.
-    /// - Returns: `true` if skipping to live conditions is possible.
-    func canSkipToLive() -> Bool {
-        guard timeRange.isValidAndNotEmpty, itemDuration.isIndefinite, chunkDuration.isValid else { return false }
-        return time < timeRange.end - chunkDuration
-    }
-
-    /// Return the current item to live conditions. Does nothing if the current item is not a livestream or does not
-    /// support DVR.
-    /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
-    ///   whether the skip could finish without being cancelled.
-    func skipToLive(completion: @escaping (Bool) -> Void = { _ in }) {
-        let time = timeRange.end.clamped(to: timeRange)
-        guard time.isValid else {
-            completion(true)
-            return
-        }
-        queuePlayer.seek(to: time) { [weak self] finished in
-            self?.play()
-            completion(finished)
-        }
-    }
 }
 
 public extension Player {
