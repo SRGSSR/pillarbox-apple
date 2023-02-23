@@ -31,7 +31,7 @@ private struct ContentView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
 #endif
         }
-        .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
+        .animation(.easeInOut(duration: 0.2), value: player.isBusy)
         .animation(.easeInOut(duration: 0.2), value: isUserInterfaceHidden)
         .debugBodyCounter()
     }
@@ -63,7 +63,7 @@ private struct ContentView: View {
     private func loadingIndicator() -> some View {
         ProgressView()
             .tint(.white)
-            .opacity(player.isBuffering ? 1 : 0)
+            .opacity(player.isBusy ? 1 : 0)
 #if os(iOS)
             .controlSize(.large)
 #endif
@@ -120,9 +120,9 @@ private struct PlaybackButton: View {
                 .resizable()
                 .tint(.white)
         }
-        .opacity(player.isBuffering ? 0 : 1)
+        .opacity(player.isBusy ? 0 : 1)
         .aspectRatio(contentMode: .fit)
-        .frame(height: 90)
+        .frame(height: constant(iOS: 90, tvOS: 150))
     }
 }
 
@@ -138,7 +138,7 @@ private struct SkipBackwardButton: View {
                 .tint(.white)
         }
         .aspectRatio(contentMode: .fit)
-        .frame(height: 45)
+        .frame(height: constant(iOS: 45, tvOS: 75))
         .disabled(!player.canSkipBackward())
     }
 
@@ -159,7 +159,7 @@ private struct SkipForwardButton: View {
                 .tint(.white)
         }
         .aspectRatio(contentMode: .fit)
-        .frame(height: 45)
+        .frame(height: constant(iOS: 45, tvOS: 75))
         .disabled(!player.canSkipForward())
     }
 

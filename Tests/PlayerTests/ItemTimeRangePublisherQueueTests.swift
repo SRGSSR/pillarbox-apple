@@ -17,6 +17,7 @@ final class ItemTimeRangePublisherQueueTests: XCTestCase {
         let player = AVQueuePlayer(items: [item1, item2])
         expectPublished(
             values: [
+                .invalid,
                 CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration),
                 CMTimeRange(start: .zero, duration: Stream.onDemand.duration)
             ],
@@ -35,7 +36,9 @@ final class ItemTimeRangePublisherQueueTests: XCTestCase {
         let player = AVQueuePlayer(items: [item1, item2, item3])
         expectPublished(
             values: [
+                .invalid,
                 CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration),
+                .invalid,
                 CMTimeRange(start: .zero, duration: Stream.onDemand.duration)
             ],
             from: player.currentItemTimeRangePublisher(),

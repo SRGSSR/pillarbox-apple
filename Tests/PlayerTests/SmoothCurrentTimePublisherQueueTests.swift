@@ -19,8 +19,7 @@ final class SmoothCurrentTimePublisherQueueTests: XCTestCase {
         expectPublished(
             values: [
                 .zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1),
-                .zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1),
-                .invalid
+                .zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1)
             ],
             from: player.smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 2), queue: .main),
             to: beClose(within: 0.3),
@@ -38,8 +37,7 @@ final class SmoothCurrentTimePublisherQueueTests: XCTestCase {
         expectPublished(
             values: [
                 .zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1),
-                .zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1),
-                .invalid
+                .zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1)
             ],
             from: player.smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 2), queue: .main),
             to: beClose(within: 0.3),

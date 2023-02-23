@@ -78,6 +78,7 @@ public final class ProgressTracker: ObservableObject {
                 .map { time, timeRange in
                     Self.progress(for: time, in: timeRange)
                 }
+                .prepend(Self.progress(for: player.time, in: player.timeRange))
                 .eraseToAnyPublisher()
             }
             .switchToLatest()

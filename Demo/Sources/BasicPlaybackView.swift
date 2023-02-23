@@ -38,7 +38,7 @@ struct BasicPlaybackView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
 #endif
             ProgressView()
-                .opacity(player.isBuffering ? 1 : 0)
+                .opacity(player.isBusy ? 1 : 0)
         }
     }
 }

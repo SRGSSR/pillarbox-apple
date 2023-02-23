@@ -34,8 +34,9 @@ extension Publishers {
             Publishers._PeriodicTimePublisher(player: player, interval: interval, queue: queue),
             player.currentItemTimeRangePublisher()
         )
-        .map { time, timeRange in
-            time.clamped(to: timeRange)
+        .compactMap { time, timeRange in
+            let clampedTime = time.clamped(to: timeRange)
+            return clampedTime.isValid ? clampedTime : nil
         }
         .removeDuplicates(by: CMTime.close(within: interval.seconds / 2))
         .eraseToAnyPublisher()
@@ -62,7 +63,6 @@ private extension Publishers._PeriodicTimePublisher {
         private func processDemand(_ demand: Subscribers.Demand) {
             self.demand += demand
             guard timeObserver == nil else { return }
-            processTime(player.currentTime())
             timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: queue) { [weak self] time in
                 self?.processTime(time)
             }

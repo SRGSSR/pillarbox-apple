@@ -15,7 +15,7 @@ final class SmoothCurrentTimePublisherTests: XCTestCase {
     func testEmpty() {
         let player = QueuePlayer()
         expectEqualPublished(
-            values: [.invalid],
+            values: [],
             from: player.smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main),
             during: 2
         )
@@ -25,7 +25,7 @@ final class SmoothCurrentTimePublisherTests: XCTestCase {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = QueuePlayer(playerItem: item)
         expectPublished(
-            values: [.zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1), .invalid],
+            values: [.zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1)],
             from: player.smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 2), queue: .main),
             to: beClose(within: 0.1),
             during: 2

@@ -13,20 +13,31 @@ enum SeekKey: String {
     case time
 }
 
-private struct Seek {
+struct Seek: Equatable {
     let time: CMTime
+    let toleranceBefore: CMTime
+    let toleranceAfter: CMTime
     let isSmooth: Bool
     let completionHandler: (Bool) -> Void
+
+    private let id = UUID()
+
+    static func == (lhs: Seek, rhs: Seek) -> Bool {
+        lhs.id == rhs.id
+    }
 }
 
-final class QueuePlayer: AVQueuePlayer {
+class QueuePlayer: AVQueuePlayer {
     static let notificationCenter = NotificationCenter()
 
     private static var logger = Logger(category: "QueuePlayer")
 
-    private var targetSeek: Seek?
     private var pendingSeeks = Deque<Seek>()
     private var cancellables = Set<AnyCancellable>()
+
+    private var targetSeek: Seek? {
+        pendingSeeks.last
+    }
 
     var targetSeekTime: CMTime? {
         targetSeek?.time
@@ -53,68 +64,54 @@ final class QueuePlayer: AVQueuePlayer {
         registerSentinels()
         notifySeekStart(at: time)
 
-        if let targetSeek {
-            pendingSeeks.append(targetSeek)
-        }
-        let seek = Seek(time: time, isSmooth: smooth, completionHandler: completionHandler)
-        targetSeek = seek
+        let seek = Seek(
+            time: time,
+            toleranceBefore: toleranceBefore,
+            toleranceAfter: toleranceAfter,
+            isSmooth: smooth,
+            completionHandler: completionHandler
+        )
+        pendingSeeks.append(seek)
 
-        if smooth && !pendingSeeks.isEmpty {
+        if smooth && pendingSeeks.count != 1 {
             return
         }
 
-        move(to: seek, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] _ in
-            self?.notifySeekEnd()
+        enqueue(seek: seek) { [weak self] in
+            guard let self else { return }
+            self.notifySeekEnd()
         }
     }
 
-    private func move(to seek: Seek, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        super.seek(to: seek.time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
-            self?.processSeek(
-                at: seek.time,
-                toleranceBefore: toleranceBefore,
-                toleranceAfter: toleranceAfter,
-                finished: finished,
-                completionHandler: completionHandler
-            )
+    func enqueue(seek: Seek, completion: @escaping () -> Void) {
+        super.seek(to: seek.time, toleranceBefore: seek.toleranceBefore, toleranceAfter: seek.toleranceAfter) { [weak self] finished in
+            self?.process(seek: seek, finished: finished, completion: completion)
         }
     }
 
-    private func processSeek(
-        at time: CMTime,
-        toleranceBefore: CMTime,
-        toleranceAfter: CMTime,
-        finished: Bool,
-        completionHandler: @escaping (Bool) -> Void
-    ) {
-        while let pendingSeek = pendingSeeks.popFirst() {
-            pendingSeek.completionHandler(finished)
+    private func process(seek: Seek, finished: Bool, completion: @escaping () -> Void) {
+        if let targetSeek, seek != targetSeek {
+            while let pendingSeek = pendingSeeks.first, pendingSeek != targetSeek {
+                pendingSeeks.removeFirst()
+                pendingSeek.completionHandler(targetSeek.isSmooth)
+            }
+            if finished {
+                enqueue(seek: targetSeek, completion: completion)
+            }
         }
-        guard let targetSeek else {
-            completionHandler(finished)
-            return
-        }
-        if targetSeek.time == time {
-            targetSeek.completionHandler(true)
-            completionHandler(true)
-            self.targetSeek = nil
-        }
-        else if targetSeek.isSmooth {
-            move(
-                to: targetSeek,
-                toleranceBefore: toleranceBefore,
-                toleranceAfter: toleranceAfter,
-                completionHandler: completionHandler
-            )
+        else {
+            completion()
+            seek.completionHandler(finished)
+            pendingSeeks.removeAll()
         }
     }
 
     override func seek(to time: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        self.seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity, completionHandler: completionHandler)
+        seek(to: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity, completionHandler: completionHandler)
     }
 
     override func seek(to time: CMTime) {
-        self.seek(to: time) { _ in }
+        seek(to: time) { _ in }
     }
 
     private func notifySeekStart(at time: CMTime) {
@@ -203,13 +200,11 @@ extension QueuePlayer {
     }
 
     private func processPendingSeeks() {
-        guard let targetSeek = self.targetSeek else { return }
-        while let pendingSeek = self.pendingSeeks.popFirst() {
+        guard !pendingSeeks.isEmpty else { return }
+        while let pendingSeek = pendingSeeks.popFirst() {
             pendingSeek.completionHandler(true)
         }
-        targetSeek.completionHandler(true)
-        self.targetSeek = nil
-        self.notifySeekEnd()
+        notifySeekEnd()
         Self.logger.info("Sentinel detected unhandled completion and fixed it")
     }
 

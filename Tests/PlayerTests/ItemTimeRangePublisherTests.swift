@@ -24,7 +24,7 @@ final class ItemTimeRangePublisherTests: XCTestCase {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastPublished(
-            values: [CMTimeRange(start: .zero, duration: Stream.onDemand.duration)],
+            values: [.invalid, CMTimeRange(start: .zero, duration: Stream.onDemand.duration)],
             from: player.currentItemTimeRangePublisher(),
             to: beClose(within: 1)
         )
@@ -34,7 +34,7 @@ final class ItemTimeRangePublisherTests: XCTestCase {
         let item = AVPlayerItem(url: Stream.live.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
-            values: [.zero],
+            values: [.invalid, .zero],
             from: player.currentItemTimeRangePublisher()
         )
     }
@@ -45,6 +45,7 @@ final class ItemTimeRangePublisherTests: XCTestCase {
         player.actionAtItemEnd = .advance
         expectEqualPublished(
             values: [
+                .invalid,
                 CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration),
                 .invalid
             ],
@@ -61,6 +62,7 @@ final class ItemTimeRangePublisherTests: XCTestCase {
         player.actionAtItemEnd = .none
         expectEqualPublished(
             values: [
+                .invalid,
                 CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration)
             ],
             from: player.currentItemTimeRangePublisher(),
@@ -75,7 +77,10 @@ final class ItemTimeRangePublisherTests: XCTestCase {
         let item = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: [])
         let player = AVPlayer(playerItem: item)
         expectAtLeastPublished(
-            values: [CMTimeRange(start: .zero, duration: Stream.onDemand.duration)],
+            values: [
+                .invalid,
+                CMTimeRange(start: .zero, duration: Stream.onDemand.duration)
+            ],
             from: player.currentItemTimeRangePublisher(),
             to: beClose(within: 1)
         )

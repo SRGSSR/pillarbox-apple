@@ -19,7 +19,7 @@ struct LinkView: View {
             ZStack {
                 BasicPlaybackView(player: isDisplayed ? player : Player())
                 ProgressView()
-                    .opacity(player.isBuffering ? 1 : 0)
+                    .opacity(player.isBusy ? 1 : 0)
             }
             Toggle("Content displayed", isOn: $isDisplayed)
                 .padding()

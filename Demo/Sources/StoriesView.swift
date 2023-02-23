@@ -17,11 +17,11 @@ private struct StoryView: View {
             VideoView(player: player, gravity: .resizeAspectFill)
                 .ignoresSafeArea()
             ProgressView()
-                .opacity(player.isBuffering ? 1 : 0)
+                .opacity(player.isBusy ? 1 : 0)
             TimeProgress(player: player)
         }
         .tint(.white)
-        .animation(.easeInOut(duration: 0.2), value: player.isBuffering)
+        .animation(.easeInOut(duration: 0.2), value: player.isBusy)
     }
 }
 

@@ -48,6 +48,11 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.timeRange
     }
 
+    /// Returns whether the player is currently busy (buffering or seeking).
+    public var isBusy: Bool {
+        isBuffering || isSeeking
+    }
+
     /// The current item duration or `.invalid` when not known.
     private var itemDuration: CMTime {
         queuePlayer.itemDuration
@@ -152,7 +157,9 @@ public extension Player {
     ///   - time: The time to seek to.
     ///   - toleranceBefore: Tolerance before the desired position.
     ///   - toleranceAfter: Tolerance after the desired position.
-    ///   - smooth: Set to `true` to enable smooth seeking, preventing unnecessary seek cancellation.
+    ///   - smooth: Set to `true` to enable smooth seeking. This allows any currently pending seek to complete before
+    ///     any new seek is performed, preventing unnecessary cancellation. This makes it possible for the playhead
+    ///     position to be moved in a smoother way.
     ///   - completion: A completion called when seeking ends. The provided Boolean informs
     ///     whether the seek could finish without being cancelled.
     func seek(
@@ -227,25 +234,30 @@ public extension Player {
     /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
     ///   whether the skip could finish without being cancelled.
     func skipBackward(completion: @escaping (Bool) -> Void = { _ in }) {
-        skip(withInterval: backwardSkipTime, completion: completion)
+        skip(withInterval: backwardSkipTime, toleranceBefore: .positiveInfinity, toleranceAfter: .zero, completion: completion)
     }
 
     /// Skip forward.
     /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
     ///   whether the skip could finish without being cancelled.
     func skipForward(completion: @escaping (Bool) -> Void = { _ in }) {
-        skip(withInterval: forwardSkipTime, completion: completion)
+        skip(withInterval: forwardSkipTime, toleranceBefore: .zero, toleranceAfter: .positiveInfinity, completion: completion)
     }
 
-    private func skip(withInterval interval: CMTime, completion: @escaping (Bool) -> Void = { _ in }) {
+    private func skip(
+        withInterval interval: CMTime,
+        toleranceBefore: CMTime,
+        toleranceAfter: CMTime,
+        completion: @escaping (Bool) -> Void = { _ in }
+    ) {
         let currentTime = queuePlayer.targetSeekTime ?? time
-        seek(to: currentTime + interval, completion: completion)
+        seek(to: currentTime + interval, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, smooth: true, completion: completion)
     }
 }
 
 public extension Player {
-    /// Return a publisher periodically emitting the current time while the player is active. Emits the current time
-    /// also on subscription.
+    /// Return a publisher periodically emitting the current time while the player is playing content. Does not emit any
+    /// value on subscription and only emits valid times.
     /// - Parameters:
     ///   - interval: The interval at which events must be emitted.
     ///   - queue: The queue on which values are published.
