@@ -59,12 +59,12 @@ To support our worflow GitHub `main` branch protection settings must be configur
 
 1. Enable _Require a pull request before merging_ and _Require approvals_ with 1 approval.
 2. Enable _Require status checks to pass before merging_, _Require branches to be up to date before merging_ and the following required status checks:
-    - Demo Archiving iOS (Apple)
-    - Demo Archiving tvOS (Apple)
-    - Documentation (Apple)
-    - Quality (Apple)
-    - Tests iOS (Apple)
-    - Tests tvOS (Apple)
+  - Demo Archiving iOS (Apple)
+  - Demo Archiving tvOS (Apple)
+  - Documentation (Apple)
+  - Quality (Apple)
+  - Tests iOS (Apple)
+  - Tests tvOS (Apple)
 3. Enable _Require conversation resolution before merging_.
 4. Enable _Require signed commits_.
 5. Enable _Require linear history_.
