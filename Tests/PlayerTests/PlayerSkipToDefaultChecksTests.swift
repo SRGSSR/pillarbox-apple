@@ -12,30 +12,30 @@ import Nimble
 import XCTest
 
 final class PlayerSkipToDefaultChecksTests: XCTestCase {
-    func testCannotSkipToDefaultWhenEmpty() {
+    func testCannotSkipWhenEmpty() {
         let player = Player()
         expect(player.canSkipToDefault()).to(beFalse())
     }
 
-    func testCannotSkipToDefaultWhenUnknown() {
+    func testCannotSkipForUnknown() {
         let player = Player(item: .simple(url: Stream.unavailable.url))
         expect(player.streamType).toEventually(equal(.unknown))
         expect(player.canSkipToDefault()).to(beFalse())
     }
 
-    func testCanSkipToDefaultWhenOnDemand() {
+    func testCanSkipForOnDemand() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
         expect(player.canSkipToDefault()).to(beTrue())
     }
 
-    func testCannotSeekToDefaultForDvrInLiveConditions() {
+    func testCannotSkipForDvrInLiveConditions() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         expect(player.streamType).toEventually(equal(.dvr))
         expect(player.canSkipToDefault()).to(beFalse())
     }
 
-    func testCanSeekToDefaultForDvrInPastConditions() {
+    func testCanSkipForDvrInPastConditions() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         expect(player.streamType).toEventually(equal(.dvr))
 
@@ -48,7 +48,7 @@ final class PlayerSkipToDefaultChecksTests: XCTestCase {
         expect(player.canSkipToDefault()).to(beTrue())
     }
 
-    func testCanSkipToDefaultWhenLive() {
+    func testSkipForLive() {
         let player = Player(item: .simple(url: Stream.live.url))
         expect(player.streamType).toEventually(equal(.live))
         expect(player.canSkipToDefault()).to(beFalse())

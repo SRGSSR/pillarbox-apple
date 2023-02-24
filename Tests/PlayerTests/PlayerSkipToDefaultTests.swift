@@ -11,7 +11,7 @@ import Nimble
 import XCTest
 
 final class PlayerSkipToDefaultTests: XCTestCase {
-    func testSkipToDefaultWhenEmpty() {
+    func testSkipWhenEmpty() {
         let player = Player()
         waitUntil { done in
             player.skipToDefault { finished in
@@ -22,7 +22,7 @@ final class PlayerSkipToDefaultTests: XCTestCase {
         }
     }
 
-    func testSkipToDefaultForUnknown() {
+    func testSkipForUnknown() {
         let player = Player(item: .simple(url: Stream.unavailable.url))
         expect(player.streamType).toEventually(equal(.unknown))
         waitUntil { done in
@@ -34,7 +34,7 @@ final class PlayerSkipToDefaultTests: XCTestCase {
         }
     }
 
-    func testSkipToDefaultForOnDemand() {
+    func testSkipForOnDemand() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
         waitUntil { done in
@@ -46,7 +46,7 @@ final class PlayerSkipToDefaultTests: XCTestCase {
         }
     }
 
-    func testSkipToDefaultForLive() {
+    func testSkipForLive() {
         let player = Player(item: .simple(url: Stream.live.url))
         expect(player.streamType).toEventually(equal(.live))
         waitUntil { done in
@@ -58,7 +58,7 @@ final class PlayerSkipToDefaultTests: XCTestCase {
         }
     }
 
-    func testSkipToDefaultForDvrInLiveConditions() {
+    func testSkipForDvrInLiveConditions() {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.dvr))
@@ -70,7 +70,7 @@ final class PlayerSkipToDefaultTests: XCTestCase {
         }
     }
 
-    func testSkipToDefaultForDvrInPastConditions() {
+    func testSkipForDvrInPastConditions() {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.dvr))
