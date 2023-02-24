@@ -250,14 +250,13 @@ public extension Player {
         toleranceAfter: CMTime,
         completion: @escaping (Bool) -> Void = { _ in }
     ) {
+        assert(interval != .zero)
+        let endTolerance = CMTime(value: 1, timescale: 1)
         let currentTime = queuePlayer.targetSeekTime ?? time
-        let threshold = CMTime(value: 1, timescale: 1)
-        let isNearEnd = (currentTime >= timeRange.end - threshold)
-        let isIntervalLessThanThreshold = (threshold < interval)
-        let isWithinCriticalZone = (isNearEnd && isIntervalLessThanThreshold)
-        if !isWithinCriticalZone {
+        if interval < .zero || currentTime < timeRange.end - endTolerance {
             seek(to: currentTime + interval, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, smooth: true, completion: completion)
-        } else {
+        }
+        else {
             completion(true)
         }
     }
