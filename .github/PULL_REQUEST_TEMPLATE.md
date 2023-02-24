@@ -10,7 +10,6 @@
 
 ## Checklist
 
-- [ ] Your branch has been rebased onto the `main` branch.
 - [ ] APIs have been properly documented (if relevant).
 - [ ] The documentation has been updated (if relevant).
 - [ ] New unit tests have been written (if relevant).

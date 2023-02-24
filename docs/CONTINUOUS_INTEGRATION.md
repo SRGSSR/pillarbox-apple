@@ -12,9 +12,9 @@ Commands are available to:
 
 We currently use TeamCity for continuous integration and GitHub for issue and pull request management. This document describes the steps required to fully integrate the tool suite with TeamCity and GitHub. We want to:
 
-- Execute status checks and post results to GitHub when a pull request is opened or updated.
-- Build nightly demo apps when merging a pull request to the main branch.
+- Execute status checks and post results to GitHub when a pull request is opened, updated or [enqueued](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue).
 - Avoid running status checks for draft pull requests.
+- Build demo apps during the night if changes have been pushed to `main` during the day.
 
 ## Required tools
 
@@ -45,9 +45,42 @@ TeamCity also offers support for [GitHub hooks](https://github.com/JetBrains/tea
 
 Use of archive and delivery commands requires access to a [private configuration repository](https://github.com/SRGSSR/pillarbox-apple-configuration). This repository is transparently pulled before the commands are executed (provided the continuous integration server has access to it).
 
-## Continuous integration user
+## Workflow
 
-Our current workflow is based on pull requests, which TeamCity is able to automatically monitor with a dedicated [build feature](https://www.youtube.com/watch?v=4yFck9PvXI4). When a pull request is created TeamCity can automatically trigger various status checks required for the pull request to be merged. After being merged to the main branch nightly builds are delivered for tests.
+Our current workflow is based on pull requests and [merge queues](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue), which TeamCity is able to automatically monitor with dedicated build features and triggers.
+
+When a non-draft pull request is created or updated TeamCity triggers various status checks required for the pull request to be queued for merging. Pull request detection is performed using a dedicated build feature and results are posted to the GitHub pull request.
+
+Once all status checks are successful and the pull request reviewed it can be added to the merge queue. GitHub then automatically creates a temporary branch which is detected by a TeamCity branch trigger so that the status checks are automatically performed with the most recent changes from `main`. Once all status checks pass the pull request is merged automatically.
+
+## GitHub configuration
+
+To support our worflow GitHub `main` branch protection settings must be configured as follows:
+
+1. Enable _Require a pull request before merging_ and _Require approvals_ with 1 approval.
+2. Enable _Require status checks to pass before merging_, _Require branches to be up to date before merging_ and the following required status checks:
+  - Demo Archiving iOS (Apple)
+  - Demo Archiving tvOS (Apple)
+  - Documentation (Apple)
+  - Quality (Apple)
+  - Tests iOS (Apple)
+  - Tests tvOS (Apple)
+3. Enable _Require conversation resolution before merging_.
+4. Enable _Require signed commits_.
+5. Enable _Require linear history_.
+6. Enable _Require linear history_ with _Squash and merge_ as method and _Only merge non-failing pull requests_.
+7. Enable _Do not allow bypassing the above settings_.
+
+In the general project settings:
+
+1. Disable _Allow merge commits_.
+2. Disable _Allow rebase merging_.
+3. Enable _Allow squash merging_ with _Default to pull request title_.
+4. Enable _Always suggest updating pull request branches_.
+5. Enable _Allow auto-merge_.
+6. Enable _Automatically delete head branches_.
+
+## Continuous integration user
 
 Proper integration with GitHub requires the use of a dedicated continuous integration user (a bot) with write access to the repository. We already have a dedicated [RTS devops](https://github.com/rts-devops) user, we therefore only need a few additional configuration steps:
 
@@ -67,7 +100,7 @@ Nightly and release applications must be created with proper identifiers first o
 To have TeamCity run quality checks for GitHub pull requests and post the corresponding status back to GitHub:
 
 1. Create a TeamCity configuration called _Quality_.
-2. Add a VCS _Trigger_ on `+:pull/*`.
+2. Add a _VCS Trigger_ on `+:pull/*` and `+:gh-readonly-queue/*`.
 3. Add a _Command Line_ build step which simply executes `make check-quality`.
 4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
 5. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token).
@@ -78,7 +111,7 @@ To have TeamCity run quality checks for GitHub pull requests and post the corres
 To have TeamCity archive the demo (archive for all configurations without TestFlight submission) for GitHub pull requests and post the corresponding status back to GitHub:
 
 1. Create a TeamCity configuration called _Demo Archiving iOS_.
-2. Add a VCS _Trigger_ on `+:pull/*`.
+2. Add a _VCS Trigger_ on `+:pull/*` and `+:gh-readonly-queue/*`.
 3. Add a _Command Line_ build step which simply executes `make archive-demo-ios`.
 4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
 5. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token).
@@ -91,7 +124,7 @@ For comprehensive results a second _Demo Archiving tvOS_ configuration must be c
 To have TeamCity build and validate the documentation for GitHub pull requests and post the corresponding status back to GitHub:
 
 1. Create a TeamCity configuration called _Documentation_.
-2. Add a VCS _Trigger_ on `+:pull/*`.
+2. Add a _VCS Trigger_ on `+:gh-readonly-queue/*`.
 3. Add a _Command Line_ build step which simply executes `make doc`.
 4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
 5. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token).
@@ -102,7 +135,7 @@ To have TeamCity build and validate the documentation for GitHub pull requests a
 To have TeamCity run tests for GitHub pull requests and post the corresponding status back to GitHub:
 
 1. Create a TeamCity configuration called _Tests iOS_.
-2. Add a VCS _Trigger_ on `+:pull/*`.
+2. Add a _VCS Trigger_ on `+:gh-readonly-queue/*`.
 3. Add a _Command Line_ build step which simply executes `make test-ios`.
 4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
 5. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token).
@@ -113,19 +146,18 @@ For comprehensive results a second _Tests tvOS_ configuration must be created fo
 
 ## Demo nightlies
 
-To have TeamCity deliver nightly builds of the demo application to TestFlight when pull requests are merged to `main`:
+To have TeamCity deliver nightly builds of the demo application to TestFlight:
 
 1. Create a TeamCity configuration called _Demo Nightly iOS_.
-2. Add a VCS _Trigger_ on `+:main`.
+2. Add a _Schedule Trigger_ to deliver nightlies from `+:main` during the night.
 3. Add a _Command Line_ build step which simply executes `make deliver-demo-nightly-ios`.
-4. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token)
-5. Add an _Agent Requirement_ ensuring that `tools.xcode.home` exists. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
+4. Add an _Agent Requirement_ ensuring that `tools.xcode.home` exists. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
 For comprehensive results a second _Demo Nightly tvOS_ configuration must be created for tvOS. This is easily achieved by copying the configuration you just created and editing the _Command Line_ build step to execute `make deliver-demo-nightly-tvos`.
 
 ### Troubleshooting
 
-If submission to App Store Connect fails with a timeout, please check the [service status](https://developer.apple.com/system-status/) and, if status is all green, [login](https://appstoreconnect.apple.com) to check the binary status directly. A manual action (e.g. compliance) might namely sometimes be required.
+If submission to App Store Connect fails with a timeout, please check the [service status](https://developer.apple.com/system-status/) and, if status is all green, [login](https://appstoreconnect.apple.com) to check the binary status directly. A manual action (e.g. compliance) might be required.
 
 ## Demo releases
 
