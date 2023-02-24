@@ -6,59 +6,71 @@
 
 @testable import Player
 
-import Circumspect
 import CoreMedia
 import Nimble
 import XCTest
 
-final class PlayerSkipToLiveTests: XCTestCase {
-    func testSkipToLiveWhenEmpty() {
+final class PlayerSkipToDefaultTests: XCTestCase {
+    func testSkipWhenEmpty() {
         let player = Player()
         waitUntil { done in
-            player.skipToLive { finished in
+            player.skipToDefault { finished in
                 expect(finished).to(beTrue())
+                expect(player.time).to(equal(.invalid))
                 done()
             }
         }
     }
 
-    func testSkipToLiveForOnDemand() {
-        let item = PlayerItem.simple(url: Stream.onDemand.url)
-        let player = Player(item: item)
+    func testSkipForUnknown() {
+        let player = Player(item: .simple(url: Stream.unavailable.url))
+        expect(player.streamType).toEventually(equal(.unknown))
+        waitUntil { done in
+            player.skipToDefault { finished in
+                expect(finished).to(beTrue())
+                expect(player.time).to(equal(.invalid))
+                done()
+            }
+        }
+    }
+
+    func testSkipForOnDemand() {
+        let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
         waitUntil { done in
-            player.skipToLive { finished in
+            player.skipToDefault { finished in
                 expect(finished).to(beTrue())
+                expect(player.time).to(equal(.zero))
                 done()
             }
         }
     }
 
-    func testSkipToLiveForLive() {
-        let item = PlayerItem.simple(url: Stream.live.url)
-        let player = Player(item: item)
+    func testSkipForLive() {
+        let player = Player(item: .simple(url: Stream.live.url))
         expect(player.streamType).toEventually(equal(.live))
         waitUntil { done in
-            player.skipToLive { finished in
+            player.skipToDefault { finished in
                 expect(finished).to(beTrue())
+                expect(player.time).to(equal(Stream.live.duration))
                 done()
             }
         }
     }
 
-    func testSkipToLiveForDvrInLiveConditions() {
+    func testSkipForDvrInLiveConditions() {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.dvr))
         waitUntil { done in
-            player.skipToLive { finished in
+            player.skipToDefault { finished in
                 expect(finished).to(beTrue())
                 done()
             }
         }
     }
 
-    func testSkipToLiveForDvrInPastConditions() {
+    func testSkipForDvrInPastConditions() {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
         expect(player.streamType).toEventually(equal(.dvr))
@@ -71,13 +83,12 @@ final class PlayerSkipToLiveTests: XCTestCase {
         }
 
         waitUntil { done in
-            player.skipToLive { finished in
+            player.skipToDefault { finished in
                 expect(finished).to(beTrue())
                 done()
             }
         }
 
-        expect(player.canSkipToLive()).toAlways(beFalse())
-        expect(player.playbackState).to(equal(.playing))
+        expect(player.canSkipToDefault()).to(beFalse())
     }
 }

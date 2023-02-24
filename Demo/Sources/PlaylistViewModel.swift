@@ -40,7 +40,12 @@ final class PlaylistViewModel: ObservableObject {
     @Published var currentMedia: Media? {
         didSet {
             guard let currentMedia, let index = items.keys.firstIndex(of: currentMedia) else { return }
-            try? player.setCurrentIndex(index)
+            if player.currentIndex != index {
+                try? player.setCurrentIndex(index)
+            }
+            else {
+                player.skipToDefault()
+            }
         }
     }
 

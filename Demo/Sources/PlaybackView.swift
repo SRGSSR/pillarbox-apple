@@ -174,7 +174,11 @@ private struct LiveLabel: View {
     @ObservedObject var progressTracker: ProgressTracker
 
     private var canSkipToLive: Bool {
-        player.canSkipToLive()
+        player.canSkipToDefault()
+    }
+
+    private var liveButtonColor: Color {
+        canSkipToLive && player.streamType == .dvr ? .gray : .red
     }
 
     var body: some View {
@@ -184,7 +188,7 @@ private struct LiveLabel: View {
                     .foregroundColor(.white)
                     .padding(.vertical, 4)
                     .padding(.horizontal, 6)
-                    .background(canSkipToLive ? .gray : .red)
+                    .background(liveButtonColor)
                     .cornerRadius(4)
             }
             .disabled(!canSkipToLive)
@@ -192,7 +196,7 @@ private struct LiveLabel: View {
     }
 
     private func skipToLive() {
-        player.skipToLive()
+        player.skipToDefault()
     }
 }
 
