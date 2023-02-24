@@ -186,8 +186,8 @@ public extension Player {
 }
 
 public extension Player {
-    /// Return whether the current player item player can be returned to default position thanks to the stream type.
-    /// - Returns: `true` if skipping to default position is possible.
+    /// Return whether the current player item player can be returned to its default position.
+    /// - Returns: `true` if skipping to the default position is possible.
     func canSkipToDefault() -> Bool {
         switch streamType {
         case .onDemand, .live:
@@ -199,7 +199,7 @@ public extension Player {
         }
     }
 
-    /// Return the current item to default position.
+    /// Return the current item to its default position.
     /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
     ///   whether the skip could finish without being cancelled.
     func skipToDefault(completion: @escaping (Bool) -> Void = { _ in }) {
