@@ -84,7 +84,7 @@ final class PlayerSkipForwardTests: XCTestCase {
         let seekTo = Stream.onDemand.duration - CMTime(value: 1, timescale: 1)
 
         waitUntil { done in
-            player.seek(to: seekTo, toleranceBefore: .zero, toleranceAfter: .zero) { finished in
+            player.seek(at(seekTo)) { finished in
                 expect(finished).to(beTrue())
                 done()
             }
@@ -102,7 +102,7 @@ final class PlayerSkipForwardTests: XCTestCase {
         let seekTo = Stream.onDemand.duration - CMTime(value: 1, timescale: 1)
 
         waitUntil { done in
-            player.seek(to: seekTo, toleranceBefore: .zero, toleranceAfter: .zero) { finished in
+            player.seek(at(seekTo)) { finished in
                 expect(finished).to(beTrue())
                 done()
             }

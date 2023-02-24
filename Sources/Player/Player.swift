@@ -152,33 +152,29 @@ public extension Player {
         return timeRange.start <= time && time <= timeRange.end
     }
 
-    /// Seek to a given location.
+    /// Seek to a given position.
     /// - Parameters:
-    ///   - time: The time to seek to.
-    ///   - toleranceBefore: Tolerance before the desired position.
-    ///   - toleranceAfter: Tolerance after the desired position.
+    ///   - position: The position to seek to.
     ///   - smooth: Set to `true` to enable smooth seeking. This allows any currently pending seek to complete before
     ///     any new seek is performed, preventing unnecessary cancellation. This makes it possible for the playhead
     ///     position to be moved in a smoother way.
     ///   - completion: A completion called when seeking ends. The provided Boolean informs
     ///     whether the seek could finish without being cancelled.
     func seek(
-        to time: CMTime,
-        toleranceBefore: CMTime = .positiveInfinity,
-        toleranceAfter: CMTime = .positiveInfinity,
+        _ position: Position,
         smooth: Bool = true,
         completion: @escaping (Bool) -> Void = { _ in }
     ) {
         // Mitigates issues arising when seeking to the very end of the range by introducing a small offset.
-        let time = time.clamped(to: timeRange, offset: CMTime(value: 1, timescale: 10))
+        let time = position.time.clamped(to: timeRange, offset: CMTime(value: 1, timescale: 10))
         guard time.isValid else {
             completion(true)
             return
         }
         queuePlayer.seek(
             to: time,
-            toleranceBefore: toleranceBefore,
-            toleranceAfter: toleranceAfter,
+            toleranceBefore: position.toleranceBefore,
+            toleranceAfter: position.toleranceAfter,
             smooth: smooth,
             completionHandler: completion
         )
@@ -204,7 +200,7 @@ public extension Player {
     ///   whether the skip could finish without being cancelled.
     func skipToDefault(completion: @escaping (Bool) -> Void = { _ in }) {
         let time = (streamType == .dvr) ? timeRange.end : .zero
-        seek(to: time) { finished in
+        seek(near(time)) { finished in
             completion(finished)
         }
     }
@@ -254,7 +250,11 @@ public extension Player {
         let endTolerance = CMTime(value: 1, timescale: 1)
         let currentTime = queuePlayer.targetSeekTime ?? time
         if interval < .zero || currentTime < timeRange.end - endTolerance {
-            seek(to: currentTime + interval, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, smooth: true, completion: completion)
+            seek(
+                to(currentTime + interval, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter),
+                smooth: true,
+                completion: completion
+            )
         }
         else {
             completion(true)
@@ -493,7 +493,7 @@ public extension Player {
     /// Return to the previous content.
     func returnToPrevious() {
         if shouldSeekToStartTime() {
-            seek(to: .zero)
+            seek(near(.zero))
         }
         else {
             returnToPreviousItem()
@@ -781,7 +781,7 @@ extension Player {
     private func changePlaybackPositionRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.changePlaybackPositionCommand) { [weak self] event in
             guard let positionEvent = event as? MPChangePlaybackPositionCommandEvent else { return .commandFailed }
-            self?.seek(to: .init(seconds: positionEvent.positionTime, preferredTimescale: CMTimeScale(NSEC_PER_SEC)))
+            self?.seek(near(.init(seconds: positionEvent.positionTime, preferredTimescale: CMTimeScale(NSEC_PER_SEC))))
             return .success
         }
     }

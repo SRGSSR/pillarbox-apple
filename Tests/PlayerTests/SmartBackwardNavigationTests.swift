@@ -25,7 +25,7 @@ final class SmartBackwardNavigationTests: XCTestCase {
         expect(player.streamType).toEventually(equal(.onDemand))
 
         waitUntil { done in
-            player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero) { _ in
+            player.seek(at(CMTime(value: 1, timescale: 1))) { _ in
                 done()
             }
         }
@@ -50,7 +50,7 @@ final class SmartBackwardNavigationTests: XCTestCase {
         expect(player.streamType).toEventually(equal(.onDemand))
 
         waitUntil { done in
-            player.seek(to: CMTime(value: 5, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero) { _ in
+            player.seek(at(CMTime(value: 5, timescale: 1))) { _ in
                 done()
             }
         }
@@ -120,7 +120,7 @@ final class SmartBackwardNavigationTests: XCTestCase {
         expect(player.streamType).toEventually(equal(.onDemand))
 
         waitUntil { done in
-            player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero) { _ in
+            player.seek(at(CMTime(value: 1, timescale: 1))) { _ in
                 done()
             }
         }
@@ -148,7 +148,7 @@ final class SmartBackwardNavigationTests: XCTestCase {
         expect(player.streamType).toEventually(equal(.onDemand))
 
         waitUntil { done in
-            player.seek(to: CMTime(value: 5, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero) { _ in
+            player.seek(at(CMTime(value: 5, timescale: 1))) { _ in
                 done()
             }
         }

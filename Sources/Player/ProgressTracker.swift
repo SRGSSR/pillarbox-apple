@@ -109,7 +109,7 @@ public final class ProgressTracker: ObservableObject {
 
     private func seek(to progress: Float) {
         guard let player, let time = time(forProgress: progress) else { return }
-        player.seek(to: time, smooth: true)
+        player.seek(near(time), smooth: true)
     }
 
     private func time(forProgress progress: Float?) -> CMTime? {
