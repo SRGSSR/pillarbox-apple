@@ -166,7 +166,7 @@ public extension Player {
         to time: CMTime,
         toleranceBefore: CMTime = .positiveInfinity,
         toleranceAfter: CMTime = .positiveInfinity,
-        smooth: Bool = false,
+        smooth: Bool = true,
         completion: @escaping (Bool) -> Void = { _ in }
     ) {
         // Mitigates issues arising when seeking to the very end of the range by introducing a small offset.
