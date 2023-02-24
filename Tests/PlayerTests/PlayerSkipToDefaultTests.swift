@@ -89,6 +89,6 @@ final class PlayerSkipToDefaultTests: XCTestCase {
             }
         }
 
-        expect(player.canSkipToDefault()).toAlways(beFalse())
+        expect(player.canSkipToDefault()).to(beFalse())
     }
 }
