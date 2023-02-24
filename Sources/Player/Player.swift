@@ -251,7 +251,15 @@ public extension Player {
         completion: @escaping (Bool) -> Void = { _ in }
     ) {
         let currentTime = queuePlayer.targetSeekTime ?? time
-        seek(to: currentTime + interval, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, smooth: true, completion: completion)
+        let threshold = CMTime(value: 1, timescale: 1)
+        let isNearEnd = (currentTime >= timeRange.end - threshold)
+        let isIntervalLessThanThreshold = (threshold < interval)
+        let isWithinCriticalZone = (isNearEnd && isIntervalLessThanThreshold)
+        if !isWithinCriticalZone {
+            seek(to: currentTime + interval, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, smooth: true, completion: completion)
+        } else {
+            completion(true)
+        }
     }
 }
 

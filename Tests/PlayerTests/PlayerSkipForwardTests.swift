@@ -76,4 +76,41 @@ final class PlayerSkipForwardTests: XCTestCase {
             }
         }
     }
+
+    func testSkipForOnDemandInCriticalZone() {
+        let player = Player(item: .simple(url: Stream.onDemand.url))
+        expect(player.streamType).toEventually(equal(.onDemand))
+        expect(player.time).to(equal(.zero))
+        let seekTo = Stream.onDemand.duration - CMTime(value: 1, timescale: 1)
+
+        waitUntil { done in
+            player.seek(to: seekTo) { finished in
+                expect(finished).to(beTrue())
+            }
+
+            player.skipForward { _ in
+                expect(player.time).to(equal(seekTo, by: beClose(within: 0.1)))
+                done()
+            }
+        }
+    }
+
+    func testSkipForDvrInCriticalZone() {
+        let player = Player(item: .simple(url: Stream.dvr.url))
+        expect(player.streamType).toEventually(equal(.dvr))
+        let headTime = player.time
+        let seekTo = headTime - CMTime(value: 1, timescale: 1)
+
+        waitUntil { done in
+            player.seek(to: seekTo) { finished in
+                expect(finished).to(beTrue())
+            }
+
+            player.skipForward { finished in
+                expect(player.time).to(equal(seekTo, by: beClose(within: 0.1)))
+                expect(finished).to(beTrue())
+                done()
+            }
+        }
+    }
 }
