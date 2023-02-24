@@ -177,6 +177,10 @@ private struct LiveLabel: View {
         player.canSkipToDefault()
     }
 
+    private var liveButtonColor: Color {
+        canSkipToLive && player.streamType == .dvr ? .gray : .red
+    }
+
     var body: some View {
         if player.streamType == .dvr || player.streamType == .live {
             Button(action: skipToLive) {
@@ -184,7 +188,7 @@ private struct LiveLabel: View {
                     .foregroundColor(.white)
                     .padding(.vertical, 4)
                     .padding(.horizontal, 6)
-                    .background(canSkipToLive && player.streamType == .dvr ? .gray : .red)
+                    .background(liveButtonColor)
                     .cornerRadius(4)
             }
             .disabled(!canSkipToLive)
