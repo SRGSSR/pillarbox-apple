@@ -190,7 +190,7 @@ public extension Player {
     /// - Returns: `true` if skipping to default position is possible.
     func canSkipToDefault() -> Bool {
         switch streamType {
-        case .onDemand:
+        case .onDemand, .live:
             return true
         case .dvr where chunkDuration.isValid:
             return time < timeRange.end - chunkDuration

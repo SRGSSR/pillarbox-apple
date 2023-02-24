@@ -51,6 +51,6 @@ final class PlayerSkipToDefaultChecksTests: XCTestCase {
     func testSkipForLive() {
         let player = Player(item: .simple(url: Stream.live.url))
         expect(player.streamType).toEventually(equal(.live))
-        expect(player.canSkipToDefault()).to(beFalse())
+        expect(player.canSkipToDefault()).to(beTrue())
     }
 }

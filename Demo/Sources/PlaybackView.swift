@@ -184,7 +184,7 @@ private struct LiveLabel: View {
                     .foregroundColor(.white)
                     .padding(.vertical, 4)
                     .padding(.horizontal, 6)
-                    .background(canSkipToLive ? .gray : .red)
+                    .background(canSkipToLive && player.streamType == .dvr ? .gray : .red)
                     .cornerRadius(4)
             }
             .disabled(!canSkipToLive)
