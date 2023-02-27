@@ -99,10 +99,15 @@ class QueuePlayer: AVQueuePlayer {
                 enqueue(seek: targetSeek, completion: completion)
             }
         }
-        else {
+        else if finished {
             completion()
             seek.completionHandler(finished)
             pendingSeeks.removeAll()
+        }
+        else {
+            // Sometimes the target seek might fail for no reason, especially when seeking near the stream end.
+            // In such cases retry.
+            enqueue(seek: seek, completion: completion)
         }
     }
 
