@@ -10,7 +10,7 @@ import Circumspect
 import Nimble
 import XCTest
 
-final class ItemTests: XCTestCase {
+final class ItemTests: TestCase {
     func testItemsOnFirstItem() {
         let item1 = PlayerItem.simple(url: Stream.item(numbered: 1).url)
         let item2 = PlayerItem.simple(url: Stream.item(numbered: 2).url)

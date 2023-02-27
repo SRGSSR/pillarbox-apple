@@ -11,12 +11,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class SmartForwardNavigationTests: XCTestCase {
-    override class func setUp() {
-        AsyncDefaults.timeout = .seconds(10)
-        AsyncDefaults.pollInterval = .milliseconds(10)
-    }
-
+final class SmartForwardNavigationTests: TestCase {
     func testCanAdvanceForOnDemandWithNextItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.live.url)

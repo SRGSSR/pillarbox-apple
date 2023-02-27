@@ -11,7 +11,7 @@ import Circumspect
 import Nimble
 import XCTest
 
-final class AssetPublishersTests: XCTestCase {
+final class AssetPublishersTests: TestCase {
     func testFetch() throws {
         let asset = AVURLAsset(url: Stream.onDemand.url)
         let duration = try waitForSingleOutput(from: asset.propertyPublisher(.duration))

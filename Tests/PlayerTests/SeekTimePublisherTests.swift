@@ -11,7 +11,7 @@ import Circumspect
 import Nimble
 import XCTest
 
-final class SeekTimePublisherTests: XCTestCase {
+final class SeekTimePublisherTests: TestCase {
     func testEmpty() {
         let player = QueuePlayer()
         expectEqualPublished(

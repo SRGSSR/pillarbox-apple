@@ -11,12 +11,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class BackwardNavigationTests: XCTestCase {
-    override class func setUp() {
-        AsyncDefaults.timeout = .seconds(10)
-        AsyncDefaults.pollInterval = .milliseconds(10)
-    }
-
+final class BackwardNavigationTests: TestCase {
     private static func configuration() -> PlayerConfiguration {
         .init(smartNavigationEnabled: false)
     }

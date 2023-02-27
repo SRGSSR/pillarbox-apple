@@ -10,7 +10,7 @@ import AVFoundation
 import Circumspect
 import XCTest
 
-final class ItemStatePublisherQueueTests: XCTestCase {
+final class ItemStatePublisherQueueTests: TestCase {
     func testItems() {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.shortOnDemand.url)

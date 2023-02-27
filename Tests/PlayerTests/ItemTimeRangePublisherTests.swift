@@ -10,7 +10,7 @@ import AVFoundation
 import Circumspect
 import XCTest
 
-final class ItemTimeRangePublisherTests: XCTestCase {
+final class ItemTimeRangePublisherTests: TestCase {
     func testEmpty() {
         let player = AVPlayer()
         expectEqualPublished(

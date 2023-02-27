@@ -10,7 +10,7 @@ import AVFoundation
 import Circumspect
 import XCTest
 
-final class BufferingPublisherTests: XCTestCase {
+final class BufferingPublisherTests: TestCase {
     func testEmpty() {
         let player = AVPlayer()
         expectEqualPublished(

@@ -11,12 +11,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class PlayerSkipBackwardTests: XCTestCase {
-    override class func setUp() {
-        AsyncDefaults.timeout = .seconds(10)
-        AsyncDefaults.pollInterval = .milliseconds(10)
-    }
-
+final class PlayerSkipBackwardTests: TestCase {
     func testSkipWhenEmpty() {
         let player = Player()
         waitUntil { done in

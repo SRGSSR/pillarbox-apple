@@ -11,7 +11,7 @@ import Circumspect
 import Nimble
 import XCTest
 
-final class SmoothCurrentTimePublisherQueueTests: XCTestCase {
+final class SmoothCurrentTimePublisherQueueTests: TestCase {
     func testItems() {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.shortOnDemand.url)

@@ -10,7 +10,7 @@ import AVFoundation
 import Circumspect
 import XCTest
 
-final class PlaybackStatePublisherTests: XCTestCase {
+final class PlaybackStatePublisherTests: TestCase {
     func testEmpty() {
         let player = AVPlayer()
         expectEqualPublished(values: [.idle], from: player.playbackStatePublisher(), during: 2)

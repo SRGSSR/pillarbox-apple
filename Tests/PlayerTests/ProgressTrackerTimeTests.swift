@@ -12,7 +12,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class ProgressTrackerTimeTests: XCTestCase {
+final class ProgressTrackerTimeTests: TestCase {
     func testForUnboundTracker() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         expectEqualPublished(

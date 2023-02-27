@@ -11,7 +11,7 @@ import Circumspect
 import Nimble
 import XCTest
 
-final class AVPlayerTests: XCTestCase {
+final class AVPlayerTests: TestCase {
     func testTimeRangeWhenEmpty() {
         let player = AVPlayer()
         expect(player.timeRange).to(equal(.invalid))

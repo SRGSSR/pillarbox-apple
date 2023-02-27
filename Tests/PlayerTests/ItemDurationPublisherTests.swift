@@ -10,7 +10,7 @@ import AVFoundation
 import Circumspect
 import XCTest
 
-final class ItemDurationPublisherTests: XCTestCase {
+final class ItemDurationPublisherTests: TestCase {
     func testDuration() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         _ = AVPlayer(playerItem: item)

@@ -11,12 +11,7 @@ import Circumspect
 import Nimble
 import XCTest
 
-final class PlayerSeekTests: XCTestCase {
-    override class func setUp() {
-        AsyncDefaults.timeout = .seconds(10)
-        AsyncDefaults.pollInterval = .milliseconds(10)
-    }
-
+final class PlayerSeekTests: TestCase {
     func testSeekWhenEmpty() {
         let player = Player()
         waitUntil { done in

@@ -10,7 +10,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class TimeTests: XCTestCase {
+final class TimeTests: TestCase {
     func testClampedWithNonEmptyRange() {
         let range = CMTimeRange(start: CMTime(value: 1, timescale: 1), end: CMTime(value: 10, timescale: 1))
         expect(CMTime.zero.clamped(to: range)).to(equal(CMTime(value: 1, timescale: 1)))

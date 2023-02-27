@@ -11,7 +11,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class PlayerTests: XCTestCase {
+final class PlayerTests: TestCase {
     func testConstants() {
         expect(Player.startTimeThreshold).to(equal(3))
     }

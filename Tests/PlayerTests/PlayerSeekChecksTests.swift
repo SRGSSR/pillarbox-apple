@@ -10,12 +10,7 @@ import AVFoundation
 import Nimble
 import XCTest
 
-final class PlayerSeekChecksTests: XCTestCase {
-    override class func setUp() {
-        AsyncDefaults.timeout = .seconds(10)
-        AsyncDefaults.pollInterval = .milliseconds(10)
-    }
-
+final class PlayerSeekChecksTests: TestCase {
     func testCannotSeekWithEmptyPlayer() {
         let player = Player()
         expect(player.canSeek(to: .zero)).to(beFalse())

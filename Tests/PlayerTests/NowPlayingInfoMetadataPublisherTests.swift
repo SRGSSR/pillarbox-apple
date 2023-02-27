@@ -11,7 +11,7 @@ import Circumspect
 import MediaPlayer
 import XCTest
 
-final class NowPlayingInfoMetadataPublisherTests: XCTestCase {
+final class NowPlayingInfoMetadataPublisherTests: TestCase {
     func testEmpty() {
         let player = Player()
         expectAtLeastSimilarPublished(

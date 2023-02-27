@@ -11,12 +11,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class SmartBackwardNavigationTests: XCTestCase {
-    override class func setUp() {
-        AsyncDefaults.timeout = .seconds(10)
-        AsyncDefaults.pollInterval = .milliseconds(10)
-    }
-
+final class SmartBackwardNavigationTests: TestCase {
     func testCanReturnForOnDemandAtBeginningWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)

@@ -12,7 +12,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class ProgressTrackerSeekBehaviorTests: XCTestCase {
+final class ProgressTrackerSeekBehaviorTests: TestCase {
     func testImmediateSeek() {
         let progressTracker = ProgressTracker(
             interval: CMTime(value: 1, timescale: 4),

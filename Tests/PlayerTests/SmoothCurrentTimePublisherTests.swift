@@ -11,7 +11,7 @@ import Circumspect
 import Nimble
 import XCTest
 
-final class SmoothCurrentTimePublisherTests: XCTestCase {
+final class SmoothCurrentTimePublisherTests: TestCase {
     func testEmpty() {
         let player = QueuePlayer()
         expectEqualPublished(

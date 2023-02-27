@@ -11,7 +11,7 @@ import Circumspect
 import Nimble
 import XCTest
 
-final class QueuePlayerItemTests: XCTestCase {
+final class QueuePlayerItemTests: TestCase {
     func testReplaceItemsWithEmptyList() {
         let item1 = AVPlayerItem(url: Stream.item(numbered: 1).url)
         let item2 = AVPlayerItem(url: Stream.item(numbered: 2).url)
