@@ -123,7 +123,7 @@ final class ProgressTrackerProgressAvailabilityTests: XCTestCase {
         let time = CMTime(value: 20, timescale: 1)
 
         waitUntil { done in
-            player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { _ in
+            player.seek(at(time)) { _ in
                 done()
             }
         }

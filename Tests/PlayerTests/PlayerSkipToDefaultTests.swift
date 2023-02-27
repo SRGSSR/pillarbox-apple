@@ -76,7 +76,7 @@ final class PlayerSkipToDefaultTests: XCTestCase {
         expect(player.streamType).toEventually(equal(.dvr))
 
         waitUntil { done in
-            player.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero) { finished in
+            player.seek(at(CMTime(value: 1, timescale: 1))) { finished in
                 expect(finished).to(beTrue())
                 done()
             }
