@@ -58,7 +58,6 @@ public func before(_ time: CMTime) -> Position {
 /// An approximate position, but always located after the specified time.
 /// - Parameter time: The time to reach.
 /// - Returns: A position.
-
 public func after(_ time: CMTime) -> Position {
     .init(time: time, toleranceBefore: .zero, toleranceAfter: .positiveInfinity)
 }
