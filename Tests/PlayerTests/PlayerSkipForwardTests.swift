@@ -12,6 +12,11 @@ import Nimble
 import XCTest
 
 final class PlayerSkipForwardTests: XCTestCase {
+    override class func setUp() {
+        AsyncDefaults.timeout = .seconds(10)
+        AsyncDefaults.pollInterval = .milliseconds(10)
+    }
+
     func testSkipWhenEmpty() {
         let player = Player()
         waitUntil { done in

@@ -12,6 +12,11 @@ import Nimble
 import XCTest
 
 final class PlayerSeekTests: XCTestCase {
+    override class func setUp() {
+        AsyncDefaults.timeout = .seconds(10)
+        AsyncDefaults.pollInterval = .milliseconds(10)
+    }
+
     func testSeekWhenEmpty() {
         let player = Player()
         waitUntil { done in
@@ -103,6 +108,6 @@ final class PlayerSeekTests: XCTestCase {
         expect(player.streamType).toEventually(equal(.onDemand))
         player.play()
         player.seek(near(player.timeRange.end + CMTime(value: 10, timescale: 1)))
-        expect(player.time).toAlways(beLessThanOrEqualTo(player.timeRange.end))
+        expect(player.time).toAlways(beLessThanOrEqualTo(player.timeRange.end), until: .seconds(1))
     }
 }

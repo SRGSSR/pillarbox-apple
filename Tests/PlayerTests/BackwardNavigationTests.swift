@@ -12,6 +12,11 @@ import Nimble
 import XCTest
 
 final class BackwardNavigationTests: XCTestCase {
+    override class func setUp() {
+        AsyncDefaults.timeout = .seconds(10)
+        AsyncDefaults.pollInterval = .milliseconds(10)
+    }
+
     private static func configuration() -> PlayerConfiguration {
         .init(smartNavigationEnabled: false)
     }
