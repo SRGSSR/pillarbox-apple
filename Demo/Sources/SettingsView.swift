@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @AppStorage(UserDefaults.presenterModeEnabledKey)
-    private var isPresentedModeEnabled = false
+    private var isPresenterModeEnabled = false
 
     @AppStorage(UserDefaults.bodyCountersEnabledKey)
     private var areBodyCountersEnabled = false
@@ -36,6 +36,20 @@ struct SettingsView: View {
     }
 
     @ViewBuilder
+    private func applicationSection() -> some View {
+        Section("Application") {
+            Toggle(isOn: $isPresenterModeEnabled) {
+                Text("Presenter mode")
+                Text("Displays touches for presentation purposes.").font(.footnote)
+            }
+            Toggle(isOn: $areBodyCountersEnabled) {
+                Text("Body counters")
+                Text("Displays how often some views are refreshed.").font(.footnote)
+            }
+        }
+    }
+
+    @ViewBuilder
     private func playerSection() -> some View {
         Section("Player") {
             Toggle("Allows external playback", isOn: $allowsExternalPlayback)
@@ -45,20 +59,6 @@ struct SettingsView: View {
             }
             seekBehaviorPicker()
             audiovisualBackgroundPlaybackPolicyPicker()
-        }
-    }
-
-    @ViewBuilder
-    private func applicationSection() -> some View {
-        Section("Application") {
-            Toggle(isOn: $isPresentedModeEnabled) {
-                Text("Presenter mode")
-                Text("Displays touches for presentation purposes.").font(.footnote)
-            }
-            Toggle(isOn: $areBodyCountersEnabled) {
-                Text("Body counters")
-                Text("Displays how often some views are refreshed.").font(.footnote)
-            }
         }
     }
 
