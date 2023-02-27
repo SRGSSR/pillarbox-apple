@@ -100,7 +100,7 @@ final class PlayerSeekTests: XCTestCase {
         expect(player.streamType).toEventually(equal(.onDemand))
         player.play()
         player.seek(near(CMTime(value: -10, timescale: 1)))
-        expect(player.time).toAlways(beGreaterThanOrEqualTo(player.timeRange.start))
+        expect(player.time).toAlways(beGreaterThanOrEqualTo(player.timeRange.start), until: .seconds(1))
     }
 
     func testTimesDuringSeekAfterTimeRangeEnd() {

@@ -29,7 +29,7 @@ final class PlayerTests: XCTestCase {
 
     func testTimesWhenEmpty() {
         let player = Player()
-        expect(player.time).toAlways(equal(.invalid))
+        expect(player.time).toAlways(equal(.invalid), until: .seconds(1))
     }
 
     func testTimesInEmptyRange() {

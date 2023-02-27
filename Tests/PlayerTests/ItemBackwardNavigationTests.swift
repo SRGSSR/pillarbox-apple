@@ -36,7 +36,7 @@ final class ItemBackwardNavigationTests: XCTestCase {
         let item3 = PlayerItem.simple(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
-        expect(player.canReturnToPreviousItem()).toAlways(beTrue(), until: .milliseconds(500))
+        expect(player.canReturnToPreviousItem()).toAlways(beTrue(), until: .seconds(1))
     }
 
     func testReturnToPreviousItem() {
