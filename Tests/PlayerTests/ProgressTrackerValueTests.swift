@@ -10,7 +10,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class ProgressTrackerValueTests: XCTestCase {
+final class ProgressTrackerValueTests: TestCase {
     func testProgressValueInRange() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)

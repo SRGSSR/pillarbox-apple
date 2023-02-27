@@ -12,7 +12,7 @@ import Combine
 import Nimble
 import XCTest
 
-final class PeriodicTimePublisherTests: XCTestCase {
+final class PeriodicTimePublisherTests: TestCase {
     func testEmpty() {
         let player = AVPlayer()
         expectPublished(

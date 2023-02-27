@@ -11,7 +11,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class PlayerTests: XCTestCase {
+final class PlayerTests: TestCase {
     func testConstants() {
         expect(Player.startTimeThreshold).to(equal(3))
     }
@@ -29,14 +29,14 @@ final class PlayerTests: XCTestCase {
 
     func testTimesWhenEmpty() {
         let player = Player()
-        expect(player.time).toAlways(equal(.invalid))
+        expect(player.time).toAlways(equal(.invalid), until: .seconds(1))
     }
 
     func testTimesInEmptyRange() {
         let player = Player(item: .simple(url: Stream.live.url))
         expect(player.timeRange).toEventuallyNot(equal(.invalid))
         player.play()
-        expect(player.time).toNever(equal(.invalid))
+        expect(player.time).toNever(equal(.invalid), until: .seconds(1))
     }
 
     func testTimesStayInRange() {
@@ -52,6 +52,6 @@ final class PlayerTests: XCTestCase {
     func testStabilityAtStart() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
-        expect(player.streamType).toNever(equal(.dvr), pollInterval: .microseconds(1))
+        expect(player.streamType).toNever(equal(.dvr), until: .seconds(1), pollInterval: .microseconds(1))
     }
 }

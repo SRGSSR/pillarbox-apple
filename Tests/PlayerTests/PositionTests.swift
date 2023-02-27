@@ -10,7 +10,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class PositionTests: XCTestCase {
+final class PositionTests: TestCase {
     func testPositionTo() {
         let position = to(CMTime(value: 1, timescale: 1), toleranceBefore: CMTime(value: 2, timescale: 1), toleranceAfter: CMTime(value: 3, timescale: 1))
         expect(position.time).to(equal(CMTime(value: 1, timescale: 1)))

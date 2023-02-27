@@ -11,7 +11,7 @@ import Circumspect
 import Nimble
 import XCTest
 
-final class PlayerSeekTests: XCTestCase {
+final class PlayerSeekTests: TestCase {
     func testSeekWhenEmpty() {
         let player = Player()
         waitUntil { done in
@@ -95,7 +95,7 @@ final class PlayerSeekTests: XCTestCase {
         expect(player.streamType).toEventually(equal(.onDemand))
         player.play()
         player.seek(near(CMTime(value: -10, timescale: 1)))
-        expect(player.time).toAlways(beGreaterThanOrEqualTo(player.timeRange.start))
+        expect(player.time).toAlways(beGreaterThanOrEqualTo(player.timeRange.start), until: .seconds(1))
     }
 
     func testTimesDuringSeekAfterTimeRangeEnd() {
@@ -103,6 +103,6 @@ final class PlayerSeekTests: XCTestCase {
         expect(player.streamType).toEventually(equal(.onDemand))
         player.play()
         player.seek(near(player.timeRange.end + CMTime(value: 10, timescale: 1)))
-        expect(player.time).toAlways(beLessThanOrEqualTo(player.timeRange.end))
+        expect(player.time).toAlways(beLessThanOrEqualTo(player.timeRange.end), until: .seconds(1))
     }
 }

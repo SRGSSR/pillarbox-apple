@@ -11,7 +11,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class ForwardNavigationTests: XCTestCase {
+final class ForwardNavigationTests: TestCase {
     func testCanAdvanceForOnDemandWithNextItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.live.url)

@@ -9,7 +9,7 @@
 import Nimble
 import XCTest
 
-final class ItemForwardNavigationTests: XCTestCase {
+final class ItemForwardNavigationTests: TestCase {
     func testCanAdvanceToNextItem() {
         let item1 = PlayerItem.simple(url: Stream.item(numbered: 1).url)
         let item2 = PlayerItem.simple(url: Stream.item(numbered: 2).url)

@@ -11,7 +11,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class BackwardNavigationTests: XCTestCase {
+final class BackwardNavigationTests: TestCase {
     private static func configuration() -> PlayerConfiguration {
         .init(smartNavigationEnabled: false)
     }

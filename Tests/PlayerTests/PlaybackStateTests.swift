@@ -10,7 +10,7 @@ import Circumspect
 import Nimble
 import XCTest
 
-final class PlaybackStateTests: XCTestCase {
+final class PlaybackStateTests: TestCase {
     func testEquality() {
         expect(PlaybackState.idle).to(equal(.idle))
         expect(PlaybackState.playing).to(equal(.playing))

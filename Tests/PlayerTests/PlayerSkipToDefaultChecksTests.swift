@@ -11,7 +11,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class PlayerSkipToDefaultChecksTests: XCTestCase {
+final class PlayerSkipToDefaultChecksTests: TestCase {
     func testCannotSkipWhenEmpty() {
         let player = Player()
         expect(player.canSkipToDefault()).to(beFalse())

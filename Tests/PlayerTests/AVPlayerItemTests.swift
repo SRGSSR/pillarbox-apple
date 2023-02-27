@@ -11,10 +11,10 @@ import Circumspect
 import Nimble
 import XCTest
 
-final class AVPlayerItemTests: XCTestCase {
+final class AVPlayerItemTests: TestCase {
     func testNonLoadedItem() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
-        expect(item.timeRange).toAlways(equal(.invalid))
+        expect(item.timeRange).toAlways(equal(.invalid), until: .seconds(1))
     }
 
     func testOnDemand() {

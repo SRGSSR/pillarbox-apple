@@ -11,7 +11,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class SmartBackwardNavigationTests: XCTestCase {
+final class SmartBackwardNavigationTests: TestCase {
     func testCanReturnForOnDemandAtBeginningWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)

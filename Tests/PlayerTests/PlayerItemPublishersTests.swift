@@ -11,7 +11,7 @@ import Circumspect
 import Nimble
 import XCTest
 
-final class PlayerItemPublishersTests: XCTestCase {
+final class PlayerItemPublishersTests: TestCase {
     func testValidItemStateWithoutPlayback() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         _ = AVPlayer(playerItem: item)

@@ -9,7 +9,7 @@
 import Nimble
 import XCTest
 
-final class ItemBackwardNavigationTests: XCTestCase {
+final class ItemBackwardNavigationTests: TestCase {
     func testCanReturnToPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.item(numbered: 1).url)
         let item2 = PlayerItem.simple(url: Stream.item(numbered: 2).url)
@@ -36,7 +36,7 @@ final class ItemBackwardNavigationTests: XCTestCase {
         let item3 = PlayerItem.simple(url: Stream.item(numbered: 3).url)
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
-        expect(player.canReturnToPreviousItem()).toAlways(beTrue(), until: .milliseconds(500))
+        expect(player.canReturnToPreviousItem()).toAlways(beTrue(), until: .seconds(1))
     }
 
     func testReturnToPreviousItem() {

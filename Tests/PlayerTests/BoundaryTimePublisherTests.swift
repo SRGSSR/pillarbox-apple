@@ -12,7 +12,7 @@ import Combine
 import Nimble
 import XCTest
 
-final class BoundaryTimePublisherTests: XCTestCase {
+final class BoundaryTimePublisherTests: TestCase {
     func testEmpty() {
         let player = AVPlayer()
         expectNothingPublished(

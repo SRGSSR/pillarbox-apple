@@ -9,7 +9,7 @@
 import Nimble
 import XCTest
 
-final class PlayerConfigurationTests: XCTestCase {
+final class PlayerConfigurationTests: TestCase {
     func testPlayerConfigurationDefaultValues() {
         let configuration = PlayerConfiguration()
         let player = Player(configuration: configuration)

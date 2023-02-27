@@ -10,7 +10,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class StreamTypeTests: XCTestCase {
+final class StreamTypeTests: TestCase {
     func testUnknown() {
         let streamType = StreamType(for: .invalid, itemDuration: .invalid)
         expect(streamType).to(equal(.unknown))

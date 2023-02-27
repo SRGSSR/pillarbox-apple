@@ -11,7 +11,7 @@ import CoreMedia
 import Nimble
 import XCTest
 
-final class PlayerSkipForwardTests: XCTestCase {
+final class PlayerSkipForwardTests: TestCase {
     func testSkipWhenEmpty() {
         let player = Player()
         waitUntil { done in

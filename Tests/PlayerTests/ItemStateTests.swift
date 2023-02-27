@@ -10,7 +10,7 @@ import Circumspect
 import Nimble
 import XCTest
 
-final class ItemStateTests: XCTestCase {
+final class ItemStateTests: TestCase {
     func testEquality() {
         expect(ItemState.unknown).to(equal(.unknown))
         expect(ItemState.readyToPlay).to(equal(.readyToPlay))

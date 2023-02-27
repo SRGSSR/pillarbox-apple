@@ -21,7 +21,7 @@ private class QueuePlayerMock: QueuePlayer {
     }
 }
 
-final class QueuePlayerSeekTests: XCTestCase {
+final class QueuePlayerSeekTests: TestCase {
     func testNotificationsForSeekWithInvalidTime() {
         guard nimbleThrowAssertionsEnabled() else { return }
         let item = AVPlayerItem(url: Stream.onDemand.url)

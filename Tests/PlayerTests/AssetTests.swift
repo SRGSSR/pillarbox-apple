@@ -12,7 +12,7 @@ import Combine
 import Nimble
 import XCTest
 
-final class AssetTests: XCTestCase {
+final class AssetTests: TestCase {
     func testSimpleEquality() {
         expect(Asset.simple(url: Stream.dvr.url)).to(equal(.simple(url: Stream.dvr.url)))
         expect(Asset.simple(url: Stream.live.url)).notTo(equal(.simple(url: Stream.dvr.url)))

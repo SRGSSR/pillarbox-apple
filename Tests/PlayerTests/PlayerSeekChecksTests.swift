@@ -10,7 +10,7 @@ import AVFoundation
 import Nimble
 import XCTest
 
-final class PlayerSeekChecksTests: XCTestCase {
+final class PlayerSeekChecksTests: TestCase {
     func testCannotSeekWithEmptyPlayer() {
         let player = Player()
         expect(player.canSeek(to: .zero)).to(beFalse())

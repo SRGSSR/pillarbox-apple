@@ -12,7 +12,7 @@ import Nimble
 import OrderedCollections
 import XCTest
 
-final class QueuePlayerSmoothSeekTests: XCTestCase {
+final class QueuePlayerSmoothSeekTests: TestCase {
     func testNotificationsForSeekWithEmptyPlayer() {
         let player = QueuePlayer()
         expect {
