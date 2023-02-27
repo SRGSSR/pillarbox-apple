@@ -22,7 +22,7 @@ final class DataProvider {
 
     init(environment: Environment = .production) {
         self.environment = environment
-        session = URLSession(configuration: .default)
+        session = URLSession(configuration: .ephemeral)
     }
 
     static func decoder() -> JSONDecoder {
