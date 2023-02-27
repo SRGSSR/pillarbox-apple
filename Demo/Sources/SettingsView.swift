@@ -36,19 +36,6 @@ struct SettingsView: View {
     }
 
     @ViewBuilder
-    private func playerSection() -> some View {
-        Section("Player") {
-            Toggle("Allows external playback", isOn: $allowsExternalPlayback)
-            Toggle(isOn: $isSmartNavigationEnabled) {
-                Text("Smart navigation")
-                Text("Improves playlist navigation so that it feels more natural.").font(.footnote)
-            }
-            seekBehaviorPicker()
-            audiovisualBackgroundPlaybackPolicyPicker()
-        }
-    }
-
-    @ViewBuilder
     private func applicationSection() -> some View {
         Section("Application") {
             Toggle(isOn: $isPresenterModeEnabled) {
@@ -59,6 +46,19 @@ struct SettingsView: View {
                 Text("Body counters")
                 Text("Displays how often some views are refreshed.").font(.footnote)
             }
+        }
+    }
+
+    @ViewBuilder
+    private func playerSection() -> some View {
+        Section("Player") {
+            Toggle("Allows external playback", isOn: $allowsExternalPlayback)
+            Toggle(isOn: $isSmartNavigationEnabled) {
+                Text("Smart navigation")
+                Text("Improves playlist navigation so that it feels more natural.").font(.footnote)
+            }
+            seekBehaviorPicker()
+            audiovisualBackgroundPlaybackPolicyPicker()
         }
     }
 
