@@ -26,12 +26,19 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.audiovisualBackgroundPlaybackPolicyKey)
     private var audiovisualBackgroundPlaybackPolicyKey: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic
 
+    private var version: String {
+        Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
+    }
+
+    private var buildVersion: String {
+        Bundle.main.infoDictionary!["CFBundleVersion"] as! String
+    }
+
     var body: some View {
         List {
             applicationSection()
             playerSection()
             debuggingSection()
-            versionSection()
         }
         .navigationTitle("Settings")
     }
@@ -65,9 +72,13 @@ struct SettingsView: View {
 
     @ViewBuilder
     private func debuggingSection() -> some View {
-        Section("Debugging") {
+        Section {
             Button("Simulate memory warning", action: simulateMemoryWarning)
             Button("Clear URL cache", action: clearUrlCache)
+        } header: {
+            Text("Debugging")
+        } footer: {
+            debuggingFooter()
         }
     }
 
@@ -89,16 +100,11 @@ struct SettingsView: View {
     }
 
     @ViewBuilder
-    private func versionSection() -> some View {
-        Section {
-            EmptyView()
-        } footer: {
-            HStack {
-                Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
-                Text("Build \(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "")")
-            }
-            .frame(maxWidth: .infinity)
+    private func debuggingFooter() -> some View {
+        HStack {
+            Text("Version \(version) Build \(buildVersion)")
         }
+        .frame(maxWidth: .infinity)
     }
 
     private func simulateMemoryWarning() {
