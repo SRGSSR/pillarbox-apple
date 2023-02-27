@@ -36,7 +36,7 @@ final class PlayerTests: TestCase {
         let player = Player(item: .simple(url: Stream.live.url))
         expect(player.timeRange).toEventuallyNot(equal(.invalid))
         player.play()
-        expect(player.time).toNever(equal(.invalid))
+        expect(player.time).toNever(equal(.invalid), until: .seconds(1))
     }
 
     func testTimesStayInRange() {
@@ -52,6 +52,6 @@ final class PlayerTests: TestCase {
     func testStabilityAtStart() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
-        expect(player.streamType).toNever(equal(.dvr), pollInterval: .microseconds(1))
+        expect(player.streamType).toNever(equal(.dvr), until: .seconds(1), pollInterval: .microseconds(1))
     }
 }
