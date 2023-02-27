@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @AppStorage(UserDefaults.presenterModeEnabledKey)
-    private var isPresentedModeEnabled = false
+    private var isPresenterModeEnabled = false
 
     @AppStorage(UserDefaults.bodyCountersEnabledKey)
     private var areBodyCountersEnabled = false
@@ -51,7 +51,7 @@ struct SettingsView: View {
     @ViewBuilder
     private func applicationSection() -> some View {
         Section("Application") {
-            Toggle(isOn: $isPresentedModeEnabled) {
+            Toggle(isOn: $isPresenterModeEnabled) {
                 Text("Presenter mode")
                 Text("Displays touches for presentation purposes.").font(.footnote)
             }
