@@ -31,6 +31,7 @@ struct SettingsView: View {
             applicationSection()
             playerSection()
             debuggingSection()
+            versionSection()
         }
         .navigationTitle("Settings")
     }
@@ -84,6 +85,19 @@ struct SettingsView: View {
             Text("Automatic").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.automatic)
             Text("Continues if possible").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.continuesIfPossible)
             Text("Pauses").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.pauses)
+        }
+    }
+
+    @ViewBuilder
+    private func versionSection() -> some View {
+        Section {
+            EmptyView()
+        } footer: {
+            HStack {
+                Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
+                Text("Build \(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "")")
+            }
+            .frame(maxWidth: .infinity)
         }
     }
 
