@@ -11,6 +11,7 @@
 		0EEB324C29506969002E49DC /* PlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB324B29506969002E49DC /* PlaylistView.swift */; };
 		0EEB324F29630130002E49DC /* PlaylistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEB324E29630130002E49DC /* PlaylistViewModel.swift */; };
 		0EF42CB329AE2ADF00553165 /* ListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF42CB229AE2ADF00553165 /* ListsView.swift */; };
+		0EF42CB629AE513400553165 /* SRGDataProviderCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF42CB529AE513400553165 /* SRGDataProviderCombine */; };
 		6F016D9B296C960000C4148E /* VanillaPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F016D9A296C960000C4148E /* VanillaPlayerView.swift */; };
 		6F36C62D28910538000DD160 /* CoreBusiness in Frameworks */ = {isa = PBXBuildFile; productRef = 6F36C62C28910538000DD160 /* CoreBusiness */; };
 		6F3F15A728CEEC6900CA2BD1 /* ShowcaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3F15A628CEEC6900CA2BD1 /* ShowcaseView.swift */; };
@@ -97,6 +98,7 @@
 			files = (
 				6F36C62D28910538000DD160 /* CoreBusiness in Frameworks */,
 				6FCA4747292CBEC7008C2812 /* ShowTime in Frameworks */,
+				0EF42CB629AE513400553165 /* SRGDataProviderCombine in Frameworks */,
 				6F9DDB44288FE90E0069B687 /* Player in Frameworks */,
 				6F9B5BC928CF8C530074B9E0 /* OrderedCollections in Frameworks */,
 				6FBEFCEB289132DB004BE625 /* UserInterface in Frameworks */,
@@ -255,6 +257,7 @@
 				6FBEFCEA289132DB004BE625 /* UserInterface */,
 				6F9B5BC828CF8C530074B9E0 /* OrderedCollections */,
 				6FCA4746292CBEC7008C2812 /* ShowTime */,
+				0EF42CB529AE513400553165 /* SRGDataProviderCombine */,
 			);
 			productName = PillarboxDemo;
 			productReference = 6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */;
@@ -287,6 +290,7 @@
 			packageReferences = (
 				6F9B5BC728CF8C530074B9E0 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				6FCA4745292CBEC7008C2812 /* XCRemoteSwiftPackageReference "ShowTime" */,
+				0EF42CB429AE513400553165 /* XCRemoteSwiftPackageReference "srgdataprovider-apple" */,
 			);
 			productRefGroup = 6F05B8D62887E934005D75E3 /* Products */;
 			projectDirPath = "";
@@ -615,6 +619,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		0EF42CB429AE513400553165 /* XCRemoteSwiftPackageReference "srgdataprovider-apple" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SRGSSR/srgdataprovider-apple.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 17.0.0;
+			};
+		};
 		6F9B5BC728CF8C530074B9E0 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-collections.git";
@@ -634,6 +646,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0EF42CB529AE513400553165 /* SRGDataProviderCombine */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0EF42CB429AE513400553165 /* XCRemoteSwiftPackageReference "srgdataprovider-apple" */;
+			productName = SRGDataProviderCombine;
+		};
 		6F36C62C28910538000DD160 /* CoreBusiness */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CoreBusiness;
