@@ -12,7 +12,7 @@ private struct MediasTab: View {
             ExamplesView()
         }
         .tabItem {
-            Label("Examples", systemImage: "list.and.film")
+            Label("Examples", systemImage: "film")
         }
     }
 }
