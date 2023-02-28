@@ -7,6 +7,8 @@
 import SwiftUI
 
 struct ListsView: View {
+    @StateObject var listsViewModel = ListsViewModel()
+
     var body: some View {
         NavigationStack {
             List {
