@@ -8,18 +8,22 @@ import SwiftUI
 
 struct ListsView: View {
     var body: some View {
-        List {
-            section(title: "Topics TV", contents: ["Play MMF", "SRF", "RTS", "RSI", "RTR", "SWI"])
-            section(title: "Live TV", contents: ["SRF", "RTS", "RSI", "RTR"])
+        NavigationStack {
+            List {
+                section(title: "Topics TV", contents: ["Play MMF", "SRF", "RTS", "RSI", "RTR", "SWI"])
+                section(title: "Live TV", contents: ["SRF", "RTS", "RSI", "RTR"])
+            }
+            .navigationTitle("Lists")
         }
-        .navigationTitle("Lists")
     }
 
     @ViewBuilder
     private func section(title: String, contents: [String]) -> some View {
         Section(title) {
             ForEach(contents, id: \.self) { content in
-                Text(content)
+                NavigationLink(content) {
+                    EmptyView()
+                }
             }
         }
     }
