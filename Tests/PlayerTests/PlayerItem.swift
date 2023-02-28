@@ -50,7 +50,7 @@ extension PlayerItem {
 
     static func networkLoaded(metadata: Metadata) -> Self {
         let url = URL(string: "http://localhost:8123/\(metadata).json")!
-        let publisher = URLSession.shared.dataTaskPublisher(for: url)
+        let publisher = URLSession(configuration: .ephemeral).dataTaskPublisher(for: url)
             .map(\.data)
             .decode(type: AssetMetadata.self, decoder: JSONDecoder())
             .map { metadata in
