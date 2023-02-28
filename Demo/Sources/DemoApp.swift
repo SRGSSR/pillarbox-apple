@@ -17,6 +17,17 @@ private struct MediasTab: View {
     }
 }
 
+private struct ListsTab: View {
+    var body: some View {
+        Navigation {
+            EmptyView()
+        }
+        .tabItem {
+            Label("Lists", systemImage: "list.and.film")
+        }
+    }
+}
+
 private struct SettingsTab: View {
     var body: some View {
         Navigation {
@@ -47,6 +58,7 @@ struct DemoApp: App {
         WindowGroup {
             TabView {
                 MediasTab()
+                ListsTab()
                 ShowcaseTab()
                 SettingsTab()
             }
