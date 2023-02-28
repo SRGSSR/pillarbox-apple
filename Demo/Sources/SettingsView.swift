@@ -26,6 +26,14 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.audiovisualBackgroundPlaybackPolicyKey)
     private var audiovisualBackgroundPlaybackPolicyKey: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic
 
+    private var version: String {
+        Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
+    }
+
+    private var buildVersion: String {
+        Bundle.main.infoDictionary!["CFBundleVersion"] as! String
+    }
+
     var body: some View {
         List {
             applicationSection()
@@ -64,9 +72,13 @@ struct SettingsView: View {
 
     @ViewBuilder
     private func debuggingSection() -> some View {
-        Section("Debugging") {
+        Section {
             Button("Simulate memory warning", action: simulateMemoryWarning)
             Button("Clear URL cache", action: clearUrlCache)
+        } header: {
+            Text("Debugging")
+        } footer: {
+            debuggingFooter()
         }
     }
 
@@ -85,6 +97,14 @@ struct SettingsView: View {
             Text("Continues if possible").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.continuesIfPossible)
             Text("Pauses").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.pauses)
         }
+    }
+
+    @ViewBuilder
+    private func debuggingFooter() -> some View {
+        HStack {
+            Text("Version \(version) Build \(buildVersion)")
+        }
+        .frame(maxWidth: .infinity)
     }
 
     private func simulateMemoryWarning() {
