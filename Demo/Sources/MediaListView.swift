@@ -21,6 +21,8 @@ struct MediaListView: View {
                 }
             case let .failed(error):
                 Text(error.localizedDescription)
+                    .multilineTextAlignment(.center)
+                    .padding()
             }
         }
         .navigationTitle("Medias")
