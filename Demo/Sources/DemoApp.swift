@@ -20,7 +20,7 @@ private struct MediasTab: View {
 private struct ListsTab: View {
     var body: some View {
         Navigation {
-            ListsView()
+            MediaListView()
         }
         .tabItem {
             Label("Lists", systemImage: "list.and.film")
