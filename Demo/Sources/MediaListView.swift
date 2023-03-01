@@ -26,14 +26,14 @@ private struct LoadedView: View {
     }
 }
 
-private struct ErrorView: View {
+private struct MessageView: View {
     @ObservedObject var model: MediaListViewModel
-    let error: Error
+    let message: String
 
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
-                Text(error.localizedDescription)
+                Text(message)
                     .multilineTextAlignment(.center)
                     .padding()
                     .frame(width: geometry.size.width, height: geometry.size.height)
@@ -52,10 +52,12 @@ struct MediaListView: View {
             switch model.state {
             case .loading:
                 ProgressView()
+            case let .loaded(medias: medias) where medias.isEmpty:
+                MessageView(model: model, message: "No content.")
             case let .loaded(medias: medias):
                 LoadedView(model: model, medias: medias)
             case let .failed(error):
-                ErrorView(model: model, error: error)
+                MessageView(model: model, message: error.localizedDescription)
             }
         }
         .onAppear { model.configuration = configuration }

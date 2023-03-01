@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
+import SRGDataProviderModel
 
 enum RadioChannel: String {
     case SRF1 = "69e8ac16-4327-4af4-b873-fd5cd6e895a7"

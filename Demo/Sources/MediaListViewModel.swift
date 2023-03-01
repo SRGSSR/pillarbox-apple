@@ -20,13 +20,26 @@ final class MediaListViewModel: ObservableObject {
         case loadMore
     }
 
-    enum Kind {
+    enum Kind: Hashable {
         case tvLatestMedias
+        case radioLatestMedias(radioChannel: RadioChannel)
+
+        var radioChannel: RadioChannel? {
+            switch self {
+            case let .radioLatestMedias(radioChannel: radioChannel):
+                return radioChannel
+            default:
+                return nil
+            }
+        }
     }
 
-    struct Configuration {
+    struct Configuration: Hashable {
         let kind: Kind
         let vendor: SRGVendor
+        var name: String {
+            kind.radioChannel?.name ?? vendor.name
+        }
     }
 
     @Published var state: State = .loading
@@ -58,6 +71,15 @@ final class MediaListViewModel: ObservableObject {
         case .tvLatestMedias:
             return SRGDataProvider.current!.tvLatestMedias(
                 for: configuration.vendor,
+                pageSize: 50,
+                paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
+            )
+            .scan([], +)
+            .eraseToAnyPublisher()
+        case let .radioLatestMedias(radioChannel: radioChannel):
+            return SRGDataProvider.current!.radioLatestMedias(
+                for: configuration.vendor,
+                channelUid: radioChannel.rawValue,
                 pageSize: 50,
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
