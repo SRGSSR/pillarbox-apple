@@ -8,6 +8,7 @@ import AVFoundation
 import Combine
 import Core
 import ShowTime
+import SRGDataProvider
 import UIKit
 
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -18,6 +19,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         try? AVAudioSession.sharedInstance().setCategory(.playback)
         UserDefaults.standard.registerDefaults()
         configureShowTime()
+        SRGDataProvider.current = SRGDataProvider(serviceURL: SRGIntegrationLayerProductionServiceURL())
         return true
     }
 

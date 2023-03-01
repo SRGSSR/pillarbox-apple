@@ -8,5 +8,10 @@ import Combine
 import SRGDataProviderModel
 
 final class MediaListViewModel: ObservableObject {
+    private let dataProvider = DataPr
     @Published var medias: [SRGMedia] = []
+
+    init() {
+
+    }
 }
