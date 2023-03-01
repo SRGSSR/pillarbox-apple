@@ -44,6 +44,7 @@ private struct ErrorView: View {
 }
 
 struct MediaListView: View {
+    let kind: MediaListViewModel.Kind
     @StateObject private var model = MediaListViewModel()
 
     var body: some View {
@@ -57,7 +58,7 @@ struct MediaListView: View {
                 ErrorView(model: model, error: error)
             }
         }
-        .onAppear { model.kind = .tvLatestMedias(vendor: .RSI) }
+        .onAppear { model.kind = kind }
         .navigationTitle("Medias")
     }
 }
@@ -65,7 +66,7 @@ struct MediaListView: View {
 struct MediaListView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            MediaListView()
+            MediaListView(kind: .tvLatestMedias(vendor: .RTS))
         }
     }
 }
