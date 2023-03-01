@@ -5,13 +5,16 @@
 //
 
 import Combine
+import SRGDataProviderCombine
 import SRGDataProviderModel
 
 final class MediaListViewModel: ObservableObject {
-    private let dataProvider = DataPr
     @Published var medias: [SRGMedia] = []
 
     init() {
-
+        SRGDataProvider.current!.tvLatestMedias(for: .RTS)
+            .replaceError(with: [])
+            .receiveOnMainThread()
+            .assign(to: &$medias)
     }
 }

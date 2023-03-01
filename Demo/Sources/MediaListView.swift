@@ -8,11 +8,12 @@ import SRGDataProviderModel
 import SwiftUI
 
 struct MediaListView: View {
-    let model = MediaListViewModel()
+    @StateObject private var model = MediaListViewModel()
 
     var body: some View {
         List(model.medias, id: \.urn) { media in
             Text(media.title)
         }
+        .navigationTitle("Medias")
     }
 }
