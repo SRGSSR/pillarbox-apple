@@ -15,13 +15,25 @@ final class MediaListViewModel: ObservableObject {
         case failed(Error)
     }
 
+    enum TriggerId {
+        case reload
+    }
+
     @Published var state: State = .loading
+    private let trigger = Trigger()
 
     init() {
-        SRGDataProvider.current!.tvLatestMedias(for: .RTS)
-            .map { State.loaded(medias: $0) }
-            .catch { Just(State.failed($0)) }
-            .receiveOnMainThread()
-            .assign(to: &$state)
+        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) {
+            SRGDataProvider.current!.tvLatestMedias(for: .RTS)
+                .map { State.loaded(medias: $0) }
+                .catch { Just(State.failed($0)) }
+                .prepend(.loading)
+        }
+        .receiveOnMainThread()
+        .assign(to: &$state)
+    }
+
+    func refresh() {
+        trigger.activate(for: TriggerId.reload)
     }
 }
