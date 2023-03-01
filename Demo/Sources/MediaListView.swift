@@ -18,6 +18,11 @@ struct MediaListView: View {
             case let .loaded(medias: medias):
                 List(medias, id: \.urn) { media in
                     Text(media.title)
+                        .onAppear {
+                            if medias.last == media {
+                                model.loadMore()
+                            }
+                        }
                 }
                 .refreshable { await model.refresh() }
             case let .failed(error):

@@ -17,14 +17,16 @@ final class MediaListViewModel: ObservableObject {
 
     enum TriggerId {
         case reload
+        case loadMore
     }
 
     @Published var state: State = .loading
     private let trigger = Trigger()
 
     init() {
-        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) {
-            SRGDataProvider.current!.tvLatestMedias(for: .RTS)
+        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [trigger] in
+            SRGDataProvider.current!.tvLatestMedias(for: .SRF, pageSize: 50, paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore))
+                .scan([], +)
                 .map { State.loaded(medias: $0) }
                 .catch { Just(State.failed($0)) }
                 .prepend(.loading)
@@ -38,5 +40,9 @@ final class MediaListViewModel: ObservableObject {
             try await Task.sleep(for: .milliseconds(500))
             trigger.activate(for: TriggerId.reload)
         }
+    }
+
+    func loadMore() {
+        trigger.activate(for: TriggerId.loadMore)
     }
 }
