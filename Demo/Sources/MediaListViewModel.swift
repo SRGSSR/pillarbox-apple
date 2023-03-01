@@ -9,12 +9,19 @@ import SRGDataProviderCombine
 import SRGDataProviderModel
 
 final class MediaListViewModel: ObservableObject {
-    @Published var medias: [SRGMedia] = []
+    enum State {
+        case loading
+        case loaded(medias: [SRGMedia])
+        case failed(Error)
+    }
+
+    @Published var state: State = .loading
 
     init() {
         SRGDataProvider.current!.tvLatestMedias(for: .RTS)
-            .replaceError(with: [])
+            .map { State.loaded(medias: $0) }
+            .catch { Just(State.failed($0)) }
             .receiveOnMainThread()
-            .assign(to: &$medias)
+            .assign(to: &$state)
     }
 }

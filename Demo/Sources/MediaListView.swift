@@ -11,8 +11,17 @@ struct MediaListView: View {
     @StateObject private var model = MediaListViewModel()
 
     var body: some View {
-        List(model.medias, id: \.urn) { media in
-            Text(media.title)
+        ZStack {
+            switch model.state {
+            case .loading:
+                ProgressView()
+            case let .loaded(medias: medias):
+                List(medias, id: \.urn) { media in
+                    Text(media.title)
+                }
+            case let .failed(error):
+                Text(error.localizedDescription)
+            }
         }
         .navigationTitle("Medias")
     }
