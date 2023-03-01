@@ -19,14 +19,17 @@ struct MediaListView: View {
                 List(medias, id: \.urn) { media in
                     Text(media.title)
                 }
-                .refreshable { model.refresh() }
+                .refreshable { await model.refresh() }
             case let .failed(error):
-                ScrollView {
-                    Text(error.localizedDescription)
-                        .multilineTextAlignment(.center)
-                        .padding()
+                GeometryReader { geometry in
+                    ScrollView {
+                        Text(error.localizedDescription)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                    }
+                    .refreshable { await model.refresh() }
                 }
-                .refreshable { model.refresh() }
             }
         }
         .navigationTitle("Medias")

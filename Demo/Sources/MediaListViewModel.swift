@@ -33,7 +33,10 @@ final class MediaListViewModel: ObservableObject {
         .assign(to: &$state)
     }
 
-    func refresh() {
-        trigger.activate(for: TriggerId.reload)
+    func refresh() async {
+        Task {
+            try await Task.sleep(for: .milliseconds(500))
+            trigger.activate(for: TriggerId.reload)
+        }
     }
 }
