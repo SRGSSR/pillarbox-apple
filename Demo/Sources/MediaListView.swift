@@ -13,7 +13,7 @@ private struct LoadedView: View {
 
     var body: some View {
         List(medias, id: \.urn) { media in
-            Cell(title: media.title) {
+            Cell(title: media.title, subtitle: media.show?.title) {
                 PlayerView(media: Media(title: media.title, type: .urn(media.urn)))
             }
             .onAppear {
@@ -57,6 +57,7 @@ struct MediaListView: View {
                 ErrorView(model: model, error: error)
             }
         }
+        .onAppear { model.kind = .tvLatestMedias(vendor: .RSI) }
         .navigationTitle("Medias")
     }
 }

@@ -20,19 +20,41 @@ final class MediaListViewModel: ObservableObject {
         case loadMore
     }
 
+    enum Kind {
+        case tvLatestMedias(vendor: SRGVendor)
+    }
+
     @Published var state: State = .loading
+    @Published var kind: Kind?
     private let trigger = Trigger()
 
     init() {
-        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) { [trigger] in
-            SRGDataProvider.current!.tvLatestMedias(for: .SRF, pageSize: 50, paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore))
-                .scan([], +)
+        $kind
+            .compactMap { $0 }
+            .map { [trigger] kind in
+                Self.publisher(for: kind, trigger: trigger)
+            }
+            .switchToLatest()
+            .receiveOnMainThread()
+            .assign(to: &$state)
+    }
+
+    private static func publisher(for kind: Kind, trigger: Trigger) -> AnyPublisher<State, Never> {
+        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) {
+            mediaPublisher(for: kind, trigger: trigger)
                 .map { State.loaded(medias: $0) }
                 .catch { Just(State.failed($0)) }
                 .prepend(.loading)
         }
-        .receiveOnMainThread()
-        .assign(to: &$state)
+    }
+
+    private static func mediaPublisher(for kind: Kind, trigger: Trigger) -> AnyPublisher<[SRGMedia], Error> {
+        switch kind {
+        case let .tvLatestMedias(vendor: vendor):
+            return SRGDataProvider.current!.tvLatestMedias(for: vendor, pageSize: 50, paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore))
+                .scan([], +)
+                .eraseToAnyPublisher()
+        }
     }
 
     func refresh() async {
