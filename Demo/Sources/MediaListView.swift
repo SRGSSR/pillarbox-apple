@@ -13,12 +13,14 @@ private struct LoadedView: View {
 
     var body: some View {
         List(medias, id: \.urn) { media in
-            Text(media.title)
-                .onAppear {
-                    if medias.last == media {
-                        model.loadMore()
-                    }
+            Cell(title: media.title) {
+                PlayerView(media: Media(title: media.title, type: .urn(media.urn)))
+            }
+            .onAppear {
+                if medias.last == media {
+                    model.loadMore()
                 }
+            }
         }
         .refreshable { await model.refresh() }
     }
