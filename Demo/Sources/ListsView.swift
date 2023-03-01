@@ -12,8 +12,7 @@ struct ListsView: View {
     var body: some View {
         NavigationStack {
             List {
-                section(title: "Topics TV", contents: ["Play MMF", "SRF", "RTS", "RSI", "RTR", "SWI"])
-                section(title: "Live TV", contents: ["SRF", "RTS", "RSI", "RTR"])
+                section(title: "Latest Videos", contents: ["SRF", "RTS", "RSI", "RTR", "SWI"])
             }
             .navigationTitle("Lists")
         }
