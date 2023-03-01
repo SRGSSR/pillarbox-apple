@@ -22,6 +22,7 @@ final class MediaListViewModel: ObservableObject {
 
     enum Kind: Hashable {
         case tvLatestMedias
+        case tvLivestreams
         case radioLatestMedias(radioChannel: RadioChannel)
 
         var radioChannel: RadioChannel? {
@@ -76,6 +77,9 @@ final class MediaListViewModel: ObservableObject {
             )
             .scan([], +)
             .eraseToAnyPublisher()
+        case .tvLivestreams:
+            return SRGDataProvider.current!.tvLivestreams(for: configuration.vendor)
+                .eraseToAnyPublisher()
         case let .radioLatestMedias(radioChannel: radioChannel):
             return SRGDataProvider.current!.radioLatestMedias(
                 for: configuration.vendor,
