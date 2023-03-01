@@ -7,6 +7,40 @@
 import SRGDataProviderModel
 import SwiftUI
 
+private struct LoadedView: View {
+    @ObservedObject var model: MediaListViewModel
+    let medias: [SRGMedia]
+
+    var body: some View {
+        List(medias, id: \.urn) { media in
+            Text(media.title)
+                .onAppear {
+                    if medias.last == media {
+                        model.loadMore()
+                    }
+                }
+        }
+        .refreshable { await model.refresh() }
+    }
+}
+
+private struct ErrorView: View {
+    @ObservedObject var model: MediaListViewModel
+    let error: Error
+
+    var body: some View {
+        GeometryReader { geometry in
+            ScrollView {
+                Text(error.localizedDescription)
+                    .multilineTextAlignment(.center)
+                    .padding()
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+            }
+            .refreshable { await model.refresh() }
+        }
+    }
+}
+
 struct MediaListView: View {
     @StateObject private var model = MediaListViewModel()
 
@@ -16,27 +50,19 @@ struct MediaListView: View {
             case .loading:
                 ProgressView()
             case let .loaded(medias: medias):
-                List(medias, id: \.urn) { media in
-                    Text(media.title)
-                        .onAppear {
-                            if medias.last == media {
-                                model.loadMore()
-                            }
-                        }
-                }
-                .refreshable { await model.refresh() }
+                LoadedView(model: model, medias: medias)
             case let .failed(error):
-                GeometryReader { geometry in
-                    ScrollView {
-                        Text(error.localizedDescription)
-                            .multilineTextAlignment(.center)
-                            .padding()
-                            .frame(width: geometry.size.width, height: geometry.size.height)
-                    }
-                    .refreshable { await model.refresh() }
-                }
+                ErrorView(model: model, error: error)
             }
         }
         .navigationTitle("Medias")
+    }
+}
+
+struct MediaListView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            MediaListView()
+        }
     }
 }
