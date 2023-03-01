@@ -21,39 +21,48 @@ final class MediaListViewModel: ObservableObject {
     }
 
     enum Kind {
-        case tvLatestMedias(vendor: SRGVendor)
+        case tvLatestMedias
+    }
+
+    struct Configuration {
+        let kind: Kind
+        let vendor: SRGVendor
     }
 
     @Published var state: State = .loading
-    @Published var kind: Kind?
+    @Published var configuration: Configuration?
     private let trigger = Trigger()
 
     init() {
-        $kind
+        $configuration
             .compactMap { $0 }
-            .map { [trigger] kind in
-                Self.publisher(for: kind, trigger: trigger)
+            .map { [trigger] configuration in
+                Self.publisher(for: configuration, trigger: trigger)
             }
             .switchToLatest()
             .receiveOnMainThread()
             .assign(to: &$state)
     }
 
-    private static func publisher(for kind: Kind, trigger: Trigger) -> AnyPublisher<State, Never> {
+    private static func publisher(for configuration: Configuration, trigger: Trigger) -> AnyPublisher<State, Never> {
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) {
-            mediaPublisher(for: kind, trigger: trigger)
+            mediaPublisher(for: configuration, trigger: trigger)
                 .map { State.loaded(medias: $0) }
                 .catch { Just(State.failed($0)) }
                 .prepend(.loading)
         }
     }
 
-    private static func mediaPublisher(for kind: Kind, trigger: Trigger) -> AnyPublisher<[SRGMedia], Error> {
-        switch kind {
-        case let .tvLatestMedias(vendor: vendor):
-            return SRGDataProvider.current!.tvLatestMedias(for: vendor, pageSize: 50, paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore))
-                .scan([], +)
-                .eraseToAnyPublisher()
+    private static func mediaPublisher(for configuration: Configuration, trigger: Trigger) -> AnyPublisher<[SRGMedia], Error> {
+        switch configuration.kind {
+        case .tvLatestMedias:
+            return SRGDataProvider.current!.tvLatestMedias(
+                for: configuration.vendor,
+                pageSize: 50,
+                paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
+            )
+            .scan([], +)
+            .eraseToAnyPublisher()
         }
     }
 
