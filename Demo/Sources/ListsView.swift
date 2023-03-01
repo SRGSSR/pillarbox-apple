@@ -13,6 +13,7 @@ struct ListsView: View {
             List {
                 latestVideosSection()
                 liveTvSection()
+                liveRadioSection()
                 latestAudiosSection()
             }
             .navigationTitle("Lists")
@@ -48,6 +49,16 @@ struct ListsView: View {
             .init(kind: .tvLivestreams, vendor: .RTS),
             .init(kind: .tvLivestreams, vendor: .RSI),
             .init(kind: .tvLivestreams, vendor: .RTR)
+        ])
+    }
+
+    @ViewBuilder
+    private func liveRadioSection() -> some View {
+        section(title: "Live Radio", configurations: [
+            .init(kind: .radioLivestreams, vendor: .SRF),
+            .init(kind: .radioLivestreams, vendor: .RTS),
+            .init(kind: .radioLivestreams, vendor: .RSI),
+            .init(kind: .radioLivestreams, vendor: .RTR)
         ])
     }
 
