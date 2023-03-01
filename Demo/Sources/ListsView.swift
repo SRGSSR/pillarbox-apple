@@ -14,6 +14,7 @@ struct ListsView: View {
                 latestVideosSection()
                 liveTvSection()
                 liveCenterSection()
+                liveWebSection()
                 liveRadioSection()
                 latestAudiosSection()
             }
@@ -59,6 +60,16 @@ struct ListsView: View {
             .init(kind: .liveCenterVideos, vendor: .SRF),
             .init(kind: .liveCenterVideos, vendor: .RTS),
             .init(kind: .liveCenterVideos, vendor: .RSI)
+        ])
+    }
+
+    @ViewBuilder
+    private func liveWebSection() -> some View {
+        section(title: "Live Web", configurations: [
+            .init(kind: .tvScheduledLivestreams, vendor: .SRF),
+            .init(kind: .tvScheduledLivestreams, vendor: .RTS),
+            .init(kind: .tvScheduledLivestreams, vendor: .RSI),
+            .init(kind: .tvScheduledLivestreams, vendor: .RTR)
         ])
     }
 

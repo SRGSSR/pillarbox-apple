@@ -23,6 +23,7 @@ final class MediaListViewModel: ObservableObject {
     enum Kind: Hashable {
         case tvLatestMedias
         case tvLivestreams
+        case tvScheduledLivestreams
         case liveCenterVideos
         case radioLivestreams
         case radioLatestMedias(radioChannel: RadioChannel)
@@ -69,6 +70,7 @@ final class MediaListViewModel: ObservableObject {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private static func mediaPublisher(for configuration: Configuration, trigger: Trigger) -> AnyPublisher<[SRGMedia], Error> {
         switch configuration.kind {
         case .tvLatestMedias:
@@ -82,9 +84,22 @@ final class MediaListViewModel: ObservableObject {
         case .tvLivestreams:
             return SRGDataProvider.current!.tvLivestreams(for: configuration.vendor)
                 .eraseToAnyPublisher()
+        case .tvScheduledLivestreams:
+            return SRGDataProvider.current!.tvScheduledLivestreams(
+                for: configuration.vendor,
+                pageSize: 50,
+                paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
+            )
+            .scan([], +)
+            .eraseToAnyPublisher()
         case .liveCenterVideos:
-            return SRGDataProvider.current!.liveCenterVideos(for: configuration.vendor)
-                .eraseToAnyPublisher()
+            return SRGDataProvider.current!.liveCenterVideos(
+                for: configuration.vendor,
+                pageSize: 50,
+                paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
+            )
+            .scan([], +)
+            .eraseToAnyPublisher()
         case .radioLivestreams:
             return SRGDataProvider.current!.radioLivestreams(for: configuration.vendor)
                 .eraseToAnyPublisher()
