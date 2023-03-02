@@ -85,6 +85,8 @@ final class ContentListViewModel: ObservableObject {
         }
     }
 
+    static let pageSize: UInt = 50
+
     @Published var state: State = .loading
     @Published var configuration: Configuration?
     private let trigger = Trigger()
@@ -111,7 +113,6 @@ final class ContentListViewModel: ObservableObject {
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private static func contentPublisher(for configuration: Configuration, trigger: Trigger) -> AnyPublisher<[Content], Error> {
-        let pageSize: UInt = 50
         switch configuration.kind {
         case .tvTopics:
             return SRGDataProvider.current!.tvTopics(for: configuration.vendor)
