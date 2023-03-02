@@ -8,8 +8,8 @@ import SRGDataProviderModel
 import SwiftUI
 
 private struct LoadedView: View {
-    @ObservedObject var model: MediaListViewModel
-    let contents: [MediaListViewModel.Content]
+    @ObservedObject var model: ContentListViewModel
+    let contents: [ContentListViewModel.Content]
 
     var body: some View {
         List(contents, id: \.self) { content in
@@ -25,13 +25,13 @@ private struct LoadedView: View {
 }
 
 private struct ContentCell: View {
-    let content: MediaListViewModel.Content
+    let content: ContentListViewModel.Content
 
     var body: some View {
         switch content {
         case let .topic(topic):
             NavigationLink(topic.title) {
-                MediaListView(configuration: .init(kind: .latestMediasForTopic(topic), vendor: topic.vendor))
+                ContentListView(configuration: .init(kind: .latestMediasForTopic(topic), vendor: topic.vendor))
             }
         case let .media(media):
             Cell(title: media.title, subtitle: media.show?.title) {
@@ -42,7 +42,7 @@ private struct ContentCell: View {
 }
 
 private struct MessageView: View {
-    @ObservedObject var model: MediaListViewModel
+    @ObservedObject var model: ContentListViewModel
     let message: String
 
     var body: some View {
@@ -58,9 +58,9 @@ private struct MessageView: View {
     }
 }
 
-struct MediaListView: View {
-    let configuration: MediaListViewModel.Configuration
-    @StateObject private var model = MediaListViewModel()
+struct ContentListView: View {
+    let configuration: ContentListViewModel.Configuration
+    @StateObject private var model = ContentListViewModel()
 
     var body: some View {
         ZStack {
@@ -80,10 +80,10 @@ struct MediaListView: View {
     }
 }
 
-struct MediaListView_Previews: PreviewProvider {
+struct ContentListView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            MediaListView(configuration: .init(kind: .tvLatestMedias, vendor: .RTS))
+            ContentListView(configuration: .init(kind: .tvLatestMedias, vendor: .RTS))
         }
     }
 }

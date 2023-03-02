@@ -24,11 +24,11 @@ struct ListsView: View {
     }
 
     @ViewBuilder
-    private func section(title: String, configurations: [MediaListViewModel.Configuration]) -> some View {
+    private func section(title: String, configurations: [ContentListViewModel.Configuration]) -> some View {
         Section(title) {
             ForEach(configurations, id: \.self) { configuration in
                 NavigationLink(configuration.name) {
-                    MediaListView(configuration: configuration)
+                    ContentListView(configuration: configuration)
                 }
             }
         }
