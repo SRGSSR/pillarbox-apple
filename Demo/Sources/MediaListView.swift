@@ -9,20 +9,33 @@ import SwiftUI
 
 private struct LoadedView: View {
     @ObservedObject var model: MediaListViewModel
-    let medias: [SRGMedia]
+    let contents: [MediaListViewModel.Content]
 
     var body: some View {
-        List(medias, id: \.urn) { media in
+        List(contents, id: \.self) { content in
+            ContentCell(content: content)
+                .onAppear {
+                    if contents.last == content {
+                        model.loadMore()
+                    }
+                }
+        }
+        .refreshable { await model.refresh() }
+    }
+}
+
+private struct ContentCell: View {
+    let content: MediaListViewModel.Content
+
+    var body: some View {
+        switch content {
+        case let .topic(topic):
+            Text(topic.title)
+        case let .media(media):
             Cell(title: media.title, subtitle: media.show?.title) {
                 PlayerView(media: Media(title: media.title, type: .urn(media.urn)))
             }
-            .onAppear {
-                if medias.last == media {
-                    model.loadMore()
-                }
-            }
         }
-        .refreshable { await model.refresh() }
     }
 }
 
@@ -52,10 +65,10 @@ struct MediaListView: View {
             switch model.state {
             case .loading:
                 ProgressView()
-            case let .loaded(medias: medias) where medias.isEmpty:
+            case let .loaded(contents: contents) where contents.isEmpty:
                 MessageView(model: model, message: "No content.")
-            case let .loaded(medias: medias):
-                LoadedView(model: model, medias: medias)
+            case let .loaded(contents: contents):
+                LoadedView(model: model, contents: contents)
             case let .failed(error):
                 MessageView(model: model, message: error.localizedDescription)
             }

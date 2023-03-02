@@ -11,7 +11,7 @@ import SRGDataProviderModel
 final class MediaListViewModel: ObservableObject {
     enum State {
         case loading
-        case loaded(medias: [SRGMedia])
+        case loaded(contents: [Content])
         case failed(Error)
     }
 
@@ -21,6 +21,7 @@ final class MediaListViewModel: ObservableObject {
     }
 
     enum Kind: Hashable {
+        case tvTopics
         case tvLatestMedias
         case tvLivestreams
         case tvScheduledLivestreams
@@ -36,6 +37,11 @@ final class MediaListViewModel: ObservableObject {
                 return nil
             }
         }
+    }
+
+    enum Content: Hashable {
+        case media(_ media: SRGMedia)
+        case topic(_ topic: SRGTopic)
     }
 
     struct Configuration: Hashable {
@@ -63,26 +69,32 @@ final class MediaListViewModel: ObservableObject {
 
     private static func publisher(for configuration: Configuration, trigger: Trigger) -> AnyPublisher<State, Never> {
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) {
-            mediaPublisher(for: configuration, trigger: trigger)
-                .map { State.loaded(medias: $0) }
+            contentPublisher(for: configuration, trigger: trigger)
+                .map { State.loaded(contents: $0) }
                 .catch { Just(State.failed($0)) }
                 .prepend(.loading)
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
-    private static func mediaPublisher(for configuration: Configuration, trigger: Trigger) -> AnyPublisher<[SRGMedia], Error> {
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    private static func contentPublisher(for configuration: Configuration, trigger: Trigger) -> AnyPublisher<[Content], Error> {
         switch configuration.kind {
+        case .tvTopics:
+            return SRGDataProvider.current!.tvTopics(for: configuration.vendor)
+                .map { $0.map { .topic($0) } }
+                .eraseToAnyPublisher()
         case .tvLatestMedias:
             return SRGDataProvider.current!.tvLatestMedias(
                 for: configuration.vendor,
                 pageSize: 50,
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
+            .map { $0.map { .media($0) } }
             .scan([], +)
             .eraseToAnyPublisher()
         case .tvLivestreams:
             return SRGDataProvider.current!.tvLivestreams(for: configuration.vendor)
+                .map { $0.map { .media($0) } }
                 .eraseToAnyPublisher()
         case .tvScheduledLivestreams:
             return SRGDataProvider.current!.tvScheduledLivestreams(
@@ -90,6 +102,7 @@ final class MediaListViewModel: ObservableObject {
                 pageSize: 50,
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
+            .map { $0.map { .media($0) } }
             .scan([], +)
             .eraseToAnyPublisher()
         case .liveCenterVideos:
@@ -98,10 +111,12 @@ final class MediaListViewModel: ObservableObject {
                 pageSize: 50,
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
+            .map { $0.map { .media($0) } }
             .scan([], +)
             .eraseToAnyPublisher()
         case .radioLivestreams:
             return SRGDataProvider.current!.radioLivestreams(for: configuration.vendor)
+                .map { $0.map { .media($0) } }
                 .eraseToAnyPublisher()
         case let .radioLatestMedias(radioChannel: radioChannel):
             return SRGDataProvider.current!.radioLatestMedias(
@@ -110,6 +125,7 @@ final class MediaListViewModel: ObservableObject {
                 pageSize: 50,
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
+            .map { $0.map { .media($0) } }
             .scan([], +)
             .eraseToAnyPublisher()
         }

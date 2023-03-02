@@ -11,6 +11,7 @@ struct ListsView: View {
     var body: some View {
         NavigationStack {
             List {
+                tvTopicSection()
                 latestVideosSection()
                 liveTvSection()
                 liveCenterSection()
@@ -31,6 +32,17 @@ struct ListsView: View {
                 }
             }
         }
+    }
+
+    @ViewBuilder
+    private func tvTopicSection() -> some View {
+        section(title: "Topics TV", configurations: [
+            .init(kind: .tvTopics, vendor: .SRF),
+            .init(kind: .tvTopics, vendor: .RTS),
+            .init(kind: .tvTopics, vendor: .RSI),
+            .init(kind: .tvTopics, vendor: .RTR),
+            .init(kind: .tvTopics, vendor: .SWI)
+        ])
     }
 
     @ViewBuilder
