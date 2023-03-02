@@ -9,9 +9,9 @@ import SwiftUI
 
 // Behavior: h-exp, v-exp
 private struct LoadedView: View {
-    @State private var isPresented = false
     @ObservedObject var model: ContentListViewModel
     let contents: [ContentListViewModel.Content]
+    @State private var isPresented = false
 
     var body: some View {
         List(contents, id: \.self) { content in
@@ -77,7 +77,7 @@ private struct ContentCell: View {
     }
 
     @ViewBuilder
-    static func copyButton(text: String) -> some View {
+    private static func copyButton(text: String) -> some View {
         Button {
             UIPasteboard.general.string = text
         } label: {
@@ -86,7 +86,7 @@ private struct ContentCell: View {
         .tint(.accentColor)
     }
 
-    static func style(for media: SRGMedia) -> CellStyle {
+    private static func style(for media: SRGMedia) -> CellStyle {
         media.timeAvailability(at: Date()) == .available ? .standard : .disabled
     }
 }
