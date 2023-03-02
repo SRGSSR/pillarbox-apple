@@ -22,6 +22,7 @@ final class MediaListViewModel: ObservableObject {
 
     enum Kind: Hashable {
         case tvTopics
+        case latestMediasForTopic(SRGTopic)
         case tvLatestMedias
         case tvLivestreams
         case tvScheduledLivestreams
@@ -83,6 +84,15 @@ final class MediaListViewModel: ObservableObject {
             return SRGDataProvider.current!.tvTopics(for: configuration.vendor)
                 .map { $0.map { .topic($0) } }
                 .eraseToAnyPublisher()
+        case let .latestMediasForTopic(topic):
+            return SRGDataProvider.current!.latestMediasForTopic(
+                withUrn: topic.urn,
+                pageSize: 50,
+                paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
+            )
+            .map { $0.map { .media($0) } }
+            .scan([], +)
+            .eraseToAnyPublisher()
         case .tvLatestMedias:
             return SRGDataProvider.current!.tvLatestMedias(
                 for: configuration.vendor,

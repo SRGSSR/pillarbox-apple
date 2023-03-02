@@ -30,7 +30,9 @@ private struct ContentCell: View {
     var body: some View {
         switch content {
         case let .topic(topic):
-            Text(topic.title)
+            NavigationLink(topic.title) {
+                MediaListView(configuration: .init(kind: .latestMediasForTopic(topic), vendor: topic.vendor))
+            }
         case let .media(media):
             Cell(title: media.title, subtitle: media.show?.title) {
                 PlayerView(media: Media(title: media.title, type: .urn(media.urn)))
