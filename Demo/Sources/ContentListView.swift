@@ -8,6 +8,7 @@ import SRGDataProviderModel
 import SwiftUI
 
 private struct LoadedView: View {
+    @State private var isPresented = false
     @ObservedObject var model: ContentListViewModel
     let contents: [ContentListViewModel.Content]
 
@@ -20,7 +21,29 @@ private struct LoadedView: View {
                     }
                 }
         }
+        .toolbar(content: toolbar)
+        .sheet(isPresented: $isPresented, content: playlist)
         .refreshable { await model.refresh() }
+    }
+
+    private func openPlaylist() {
+        isPresented.toggle()
+    }
+
+    @ViewBuilder
+    private func playlist() -> some View {
+        let templates = contents.compactMap { content -> Template? in
+            guard case let .media(media) = content else { return nil }
+            return Template(title: media.title, type: .urn(media.urn))
+        }
+        PlaylistView(templates: templates)
+    }
+
+    @ViewBuilder
+    private func toolbar() -> some View {
+        Button(action: openPlaylist) {
+            Image(systemName: "rectangle.stack.badge.play")
+        }
     }
 }
 
