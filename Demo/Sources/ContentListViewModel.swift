@@ -24,6 +24,7 @@ final class ContentListViewModel: ObservableObject {
         case tvTopics
         case latestMediasForTopic(SRGTopic)
         case tvShows
+        case latestMediasForShow(SRGShow)
         case tvLatestMedias
         case tvLivestreams
         case tvScheduledLivestreams
@@ -101,6 +102,15 @@ final class ContentListViewModel: ObservableObject {
                 pageSize: SRGDataProviderUnlimitedPageSize
             )
             .map { $0.map { .show($0) } }
+            .eraseToAnyPublisher()
+        case let .latestMediasForShow(show):
+            return SRGDataProvider.current!.latestMediasForShow(
+                withUrn: show.urn,
+                pageSize: 50,
+                paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
+            )
+            .map { $0.map { .media($0) } }
+            .scan([], +)
             .eraseToAnyPublisher()
         case .tvLatestMedias:
             return SRGDataProvider.current!.tvLatestMedias(

@@ -38,7 +38,9 @@ private struct ContentCell: View {
                 PlayerView(media: Media(title: media.title, type: .urn(media.urn)))
             }
         case let .show(show):
-            Text(show.title)
+            NavigationLink(show.title) {
+                ContentListView(configuration: .init(kind: .latestMediasForShow(show), vendor: show.vendor))
+            }
         }
     }
 }
