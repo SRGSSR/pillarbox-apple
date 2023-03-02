@@ -62,7 +62,7 @@ private struct ContentCell: View {
             }
             .swipeActions { Self.copyButton(text: topic.urn) }
         case let .media(media):
-            Cell(title: media.title, subtitle: media.show?.title) {
+            Cell(title: media.title, subtitle: media.show?.title, style: Self.style(for: media)) {
                 PlayerView(media: Media(title: media.title, type: .urn(media.urn)))
             }
             .swipeActions { Self.copyButton(text: media.urn) }
@@ -82,6 +82,10 @@ private struct ContentCell: View {
             Image(systemName: "doc.on.doc")
         }
         .tint(.accentColor)
+    }
+
+    static func style(for media: SRGMedia) -> CellStyle {
+        media.timeAvailability(at: Date()) == .available ? .standard : .disabled
     }
 }
 
