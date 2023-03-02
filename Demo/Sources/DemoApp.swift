@@ -8,18 +8,29 @@ import SwiftUI
 
 private struct MediasTab: View {
     var body: some View {
-        Navigation {
+        NavigationStack {
             ExamplesView()
         }
         .tabItem {
-            Label("Examples", systemImage: "list.and.film")
+            Label("Examples", systemImage: "film")
+        }
+    }
+}
+
+private struct ListsTab: View {
+    var body: some View {
+        NavigationStack {
+            ListsView()
+        }
+        .tabItem {
+            Label("Lists", systemImage: "list.and.film")
         }
     }
 }
 
 private struct SettingsTab: View {
     var body: some View {
-        Navigation {
+        NavigationStack {
             SettingsView()
         }
         .tabItem {
@@ -30,7 +41,7 @@ private struct SettingsTab: View {
 
 private struct ShowcaseTab: View {
     var body: some View {
-        Navigation {
+        NavigationStack {
             ShowcaseView()
         }
         .tabItem {
@@ -47,6 +58,7 @@ struct DemoApp: App {
         WindowGroup {
             TabView {
                 MediasTab()
+                ListsTab()
                 ShowcaseTab()
                 SettingsTab()
             }

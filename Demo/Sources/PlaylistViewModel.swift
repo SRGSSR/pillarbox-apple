@@ -30,9 +30,6 @@ final class PlaylistViewModel: ObservableObject {
         URLTemplate.appleAdvanced_16_9_TS_HLS,
         URLTemplate.appleAdvanced_16_9_fMP4_HLS,
         URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS,
-        URNTemplate.tokenProtectedVideo,
-        URNTemplate.superfluouslyTokenProtectedVideo,
-        URNTemplate.drmProtectedVideo,
         URNTemplate.expired,
         URNTemplate.unknown
     ]

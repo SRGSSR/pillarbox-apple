@@ -166,32 +166,6 @@ enum URNTemplates {
         URNTemplate.unknown
     ]
 
-    static let tokenProtectedVideos: [Template] = [
-        Template(
-            title: "Ski alpin, Slalom Géant Messieurs",
-            description: "Token-protected video 1",
-            type: .urn("urn:swisstxt:video:rts:1749654")
-        ),
-        Template(
-            title: "Football, Zurich - Young Boys",
-            description: "Token-protected video 2",
-            type: .urn("urn:swisstxt:video:rts:1752263")
-        )
-    ]
-
-    static let drmProtectedVideos: [Template] = [
-        Template(
-            title: "Top Models 8906",
-            description: "DRM-protected video 1",
-            type: .urn("urn:rts:video:13797569")
-        ),
-        Template(
-            title: "Top Models 8905",
-            description: "DRM-protected video 2",
-            type: .urn("urn:rts:video:13796104")
-        )
-    ]
-
     static let audios: [Template] = [
         Template(title: "Le Journal horaire 1", type: .urn("urn:rts:audio:13605286")),
         Template(title: "Forum", type: .urn("urn:rts:audio:13598743")),

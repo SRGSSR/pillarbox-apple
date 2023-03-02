@@ -6,34 +6,6 @@
 
 import SwiftUI
 
-// Behavior: h-hug, v-hug
-private struct MediaCell: View {
-    let media: Media
-
-    @State private var isPlayerPresented = false
-
-    var body: some View {
-        Button(action: play) {
-            VStack(alignment: .leading) {
-                Text(media.title)
-                    .foregroundColor(.primary)
-                if let description = media.description {
-                    Text(description)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-            }
-        }
-        .sheet(isPresented: $isPlayerPresented) {
-            PlayerView(media: media)
-        }
-    }
-
-    private func play() {
-        isPlayerPresented.toggle()
-    }
-}
-
 // Behavior: h-exp, v-exp
 struct ExamplesView: View {
     private let urlMedias = Template.medias(from: [
@@ -50,10 +22,7 @@ struct ExamplesView: View {
     private let urnMedias = Template.medias(from: [
         URNTemplate.liveVideo,
         URNTemplate.dvrVideo,
-        URNTemplate.dvrAudio,
-        URNTemplate.tokenProtectedVideo,
-        URNTemplate.superfluouslyTokenProtectedVideo,
-        URNTemplate.drmProtectedVideo
+        URNTemplate.dvrAudio
     ])
 
     private let aspectRatioMedias = Template.medias(from: [
@@ -96,7 +65,9 @@ struct ExamplesView: View {
     private func section(title: String, medias: [Media]) -> some View {
         Section(title) {
             ForEach(medias) { media in
-                MediaCell(media: media)
+                Cell(title: media.title, subtitle: media.description) {
+                    PlayerView(media: media)
+                }
             }
         }
     }
