@@ -111,6 +111,7 @@ final class ContentListViewModel: ObservableObject {
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private static func contentPublisher(for configuration: Configuration, trigger: Trigger) -> AnyPublisher<[Content], Error> {
+        let pageSize: UInt = 50
         switch configuration.kind {
         case .tvTopics:
             return SRGDataProvider.current!.tvTopics(for: configuration.vendor)
@@ -119,7 +120,7 @@ final class ContentListViewModel: ObservableObject {
         case let .latestMediasForTopic(topic):
             return SRGDataProvider.current!.latestMediasForTopic(
                 withUrn: topic.urn,
-                pageSize: 50,
+                pageSize: pageSize,
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
             .map { $0.map { .media($0) } }
@@ -135,7 +136,7 @@ final class ContentListViewModel: ObservableObject {
         case let .latestMediasForShow(show):
             return SRGDataProvider.current!.latestMediasForShow(
                 withUrn: show.urn,
-                pageSize: 50,
+                pageSize: pageSize,
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
             .map { $0.map { .media($0) } }
@@ -144,7 +145,7 @@ final class ContentListViewModel: ObservableObject {
         case .tvLatestMedias:
             return SRGDataProvider.current!.tvLatestMedias(
                 for: configuration.vendor,
-                pageSize: 50,
+                pageSize: pageSize,
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
             .map { $0.map { .media($0) } }
@@ -157,7 +158,7 @@ final class ContentListViewModel: ObservableObject {
         case .tvScheduledLivestreams:
             return SRGDataProvider.current!.tvScheduledLivestreams(
                 for: configuration.vendor,
-                pageSize: 50,
+                pageSize: pageSize,
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
             .map { $0.map { .media($0) } }
@@ -166,7 +167,7 @@ final class ContentListViewModel: ObservableObject {
         case .liveCenterVideos:
             return SRGDataProvider.current!.liveCenterVideos(
                 for: configuration.vendor,
-                pageSize: 50,
+                pageSize: pageSize,
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
             .map { $0.map { .media($0) } }
@@ -188,7 +189,7 @@ final class ContentListViewModel: ObservableObject {
             return SRGDataProvider.current!.radioLatestMedias(
                 for: configuration.vendor,
                 channelUid: radioChannel.rawValue,
-                pageSize: 50,
+                pageSize: pageSize,
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
             .map { $0.map { .media($0) } }
