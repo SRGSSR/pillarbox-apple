@@ -10,7 +10,7 @@ import SwiftUI
 // Behavior: h-exp, v-exp
 struct ListsView: View {
     var body: some View {
-        NavigationStack {
+        Navigation {
             List {
                 Self.section(for: .tvTopics, vendors: [.SRF, .RTS, .RSI, .RTR, .SWI])
                 Self.section(for: .tvLatestMedias, vendors: [.SRF, .RTS, .RSI, .RTR, .SWI])

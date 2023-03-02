@@ -75,7 +75,7 @@ struct ExamplesView: View {
 
 struct ExamplesView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationStack {
+        Navigation {
             ExamplesView()
         }
     }
