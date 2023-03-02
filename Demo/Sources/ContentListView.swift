@@ -80,7 +80,7 @@ struct ContentListView: View {
             }
         }
         .onAppear { model.configuration = configuration }
-        .navigationTitle("Medias")
+        .navigationTitle(configuration.kind.name)
     }
 }
 

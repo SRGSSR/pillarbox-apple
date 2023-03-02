@@ -41,6 +41,33 @@ final class ContentListViewModel: ObservableObject {
                 return nil
             }
         }
+
+        var name: String {
+            switch self {
+            case .tvTopics:
+                 return "TV Topics"
+            case let .latestMediasForTopic(topic):
+                return topic.title
+            case .tvShows:
+                 return "TV Shows"
+            case let .latestMediasForShow(show):
+                return show.title
+            case .tvLatestMedias:
+                 return "TV Latest Videos"
+            case .tvLivestreams:
+                 return "TV Livestreams"
+            case .tvScheduledLivestreams:
+                 return "Live Web"
+            case .liveCenterVideos:
+                 return "Live Center"
+            case let .radioShows(radioChannel: radioChannel):
+                return radioChannel.name
+            case .radioLivestreams:
+                 return "Radio Livestreams"
+            case let .radioLatestMedias(radioChannel: radioChannel):
+                return radioChannel.name
+            }
+        }
     }
 
     enum Content: Hashable {
@@ -52,6 +79,7 @@ final class ContentListViewModel: ObservableObject {
     struct Configuration: Hashable {
         let kind: Kind
         let vendor: SRGVendor
+
         var name: String {
             kind.radioChannel?.name ?? vendor.name
         }

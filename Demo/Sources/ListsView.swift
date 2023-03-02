@@ -38,7 +38,7 @@ struct ListsView: View {
 
     @ViewBuilder
     private func tvTopicSection() -> some View {
-        section(title: "Topics TV", configurations: [
+        section(title: ContentListViewModel.Kind.tvTopics.name, configurations: [
             .init(kind: .tvTopics, vendor: .SRF),
             .init(kind: .tvTopics, vendor: .RTS),
             .init(kind: .tvTopics, vendor: .RSI),
