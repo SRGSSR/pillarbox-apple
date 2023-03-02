@@ -22,10 +22,7 @@ struct ExamplesView: View {
     private let urnMedias = Template.medias(from: [
         URNTemplate.liveVideo,
         URNTemplate.dvrVideo,
-        URNTemplate.dvrAudio,
-        URNTemplate.tokenProtectedVideo,
-        URNTemplate.superfluouslyTokenProtectedVideo,
-        URNTemplate.drmProtectedVideo
+        URNTemplate.dvrAudio
     ])
 
     private let aspectRatioMedias = Template.medias(from: [

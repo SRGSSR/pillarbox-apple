@@ -70,12 +70,6 @@ struct ShowcaseView: View {
             Cell(title: "Long video URNs") {
                 PlaylistView(templates: URNTemplates.longVideos)
             }
-            Cell(title: "Token-protected video URNs") {
-                PlaylistView(templates: URNTemplates.tokenProtectedVideos)
-            }
-            Cell(title: "DRM-protected video URNs") {
-                PlaylistView(templates: URNTemplates.drmProtectedVideos)
-            }
             Cell(title: "Audios") {
                 PlaylistView(templates: URNTemplates.audios)
             }
