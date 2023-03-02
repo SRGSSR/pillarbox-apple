@@ -7,6 +7,7 @@
 import SRGDataProviderModel
 import SwiftUI
 
+// Behavior: h-exp, v-exp
 struct ListsView: View {
     var body: some View {
         NavigationStack {
@@ -84,5 +85,11 @@ struct ListsView: View {
             ContentListViewModel.Configuration(kind: kind, vendor: vendor)
         }
         section(title: kind.name, configurations: configurations)
+    }
+}
+
+struct ListsView_Previews: PreviewProvider {
+    static var previews: some View {
+        ListsView()
     }
 }

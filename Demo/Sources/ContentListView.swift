@@ -7,6 +7,7 @@
 import SRGDataProviderModel
 import SwiftUI
 
+// Behavior: h-exp, v-exp
 private struct LoadedView: View {
     @State private var isPresented = false
     @ObservedObject var model: ContentListViewModel
@@ -51,6 +52,7 @@ private struct LoadedView: View {
     }
 }
 
+// Behavior: h-hug, v-exp
 private struct ContentCell: View {
     let content: ContentListViewModel.Content
 
@@ -89,6 +91,7 @@ private struct ContentCell: View {
     }
 }
 
+// Behavior: h-exp, v-exp
 private struct MessageView: View {
     @ObservedObject var model: ContentListViewModel
     let message: String
@@ -106,6 +109,7 @@ private struct MessageView: View {
     }
 }
 
+// Behavior: h-exp, v-exp
 struct ContentListView: View {
     let configuration: ContentListViewModel.Configuration
     @StateObject private var model = ContentListViewModel()
@@ -115,6 +119,7 @@ struct ContentListView: View {
             switch model.state {
             case .loading:
                 ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             case let .loaded(contents: contents) where contents.isEmpty:
                 MessageView(model: model, message: "No content.")
             case let .loaded(contents: contents):

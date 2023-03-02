@@ -11,7 +11,7 @@ enum CellStyle {
     case disabled
 }
 
-// Behavior: h-hug, v-hug
+// Behavior: h-exp, v-hug
 struct Cell<Content: View, Presented: View>: View {
     @ViewBuilder var content: () -> Content
     @ViewBuilder var presented: () -> Presented
@@ -19,6 +19,7 @@ struct Cell<Content: View, Presented: View>: View {
 
     var body: some View {
         Button(action: action, label: content)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .sheet(isPresented: $isPresented, content: presented)
     }
 
