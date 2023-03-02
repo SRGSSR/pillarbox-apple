@@ -36,7 +36,7 @@ private struct LoadedView: View {
             guard case let .media(media) = content else { return nil }
             return Template(title: media.title, type: .urn(media.urn))
         }
-        PlaylistView(templates: templates)
+        PlaylistView(templates: Array(templates.prefix(20)))
     }
 
     @ViewBuilder
