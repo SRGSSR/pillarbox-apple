@@ -30,13 +30,16 @@ private struct LoadedView: View {
         isPresented.toggle()
     }
 
-    @ViewBuilder
-    private func playlist() -> some View {
-        let templates = contents.compactMap { content -> Template? in
+    private func templates() -> [Template] {
+        contents.compactMap { content -> Template? in
             guard case let .media(media) = content else { return nil }
             return Template(title: media.title, type: .urn(media.urn))
         }
-        PlaylistView(templates: Array(templates.prefix(20)))
+    }
+
+    @ViewBuilder
+    private func playlist() -> some View {
+        PlaylistView(templates: Array(templates().prefix(20)))
     }
 
     @ViewBuilder
@@ -44,6 +47,7 @@ private struct LoadedView: View {
         Button(action: openPlaylist) {
             Image(systemName: "rectangle.stack.badge.play")
         }
+        .opacity(templates().isEmpty ? 0 : 1)
     }
 }
 
