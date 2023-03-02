@@ -33,15 +33,28 @@ private struct ContentCell: View {
             NavigationLink(topic.title) {
                 ContentListView(configuration: .init(kind: .latestMediasForTopic(topic), vendor: topic.vendor))
             }
+            .swipeActions { Self.copyButton(text: topic.urn) }
         case let .media(media):
             Cell(title: media.title, subtitle: media.show?.title) {
                 PlayerView(media: Media(title: media.title, type: .urn(media.urn)))
             }
+            .swipeActions { Self.copyButton(text: media.urn) }
         case let .show(show):
             NavigationLink(show.title) {
                 ContentListView(configuration: .init(kind: .latestMediasForShow(show), vendor: show.vendor))
             }
+            .swipeActions { Self.copyButton(text: show.urn) }
         }
+    }
+
+    @ViewBuilder
+    static func copyButton(text: String) -> some View {
+        Button {
+            UIPasteboard.general.string = text
+        } label: {
+            Image(systemName: "doc.on.doc")
+        }
+        .tint(.accentColor)
     }
 }
 
