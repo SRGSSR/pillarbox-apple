@@ -29,12 +29,13 @@ final class ContentListViewModel: ObservableObject {
         case tvLivestreams
         case tvScheduledLivestreams
         case liveCenterVideos
+        case radioShows(radioChannel: RadioChannel)
         case radioLivestreams
         case radioLatestMedias(radioChannel: RadioChannel)
 
         var radioChannel: RadioChannel? {
             switch self {
-            case let .radioLatestMedias(radioChannel: radioChannel):
+            case let .radioLatestMedias(radioChannel: radioChannel), let .radioShows(radioChannel: radioChannel):
                 return radioChannel
             default:
                 return nil
@@ -142,6 +143,14 @@ final class ContentListViewModel: ObservableObject {
             )
             .map { $0.map { .media($0) } }
             .scan([], +)
+            .eraseToAnyPublisher()
+        case let .radioShows(radioChannel: radioChannel):
+            return SRGDataProvider.current!.radioShows(
+                for: configuration.vendor,
+                channelUid: radioChannel.rawValue,
+                pageSize: SRGDataProviderUnlimitedPageSize
+            )
+            .map { $0.map { .show($0) } }
             .eraseToAnyPublisher()
         case .radioLivestreams:
             return SRGDataProvider.current!.radioLivestreams(for: configuration.vendor)
