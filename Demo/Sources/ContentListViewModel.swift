@@ -23,6 +23,7 @@ final class ContentListViewModel: ObservableObject {
     enum Kind: Hashable {
         case tvTopics
         case latestMediasForTopic(SRGTopic)
+        case tvShows
         case tvLatestMedias
         case tvLivestreams
         case tvScheduledLivestreams
@@ -43,6 +44,7 @@ final class ContentListViewModel: ObservableObject {
     enum Content: Hashable {
         case media(_ media: SRGMedia)
         case topic(_ topic: SRGTopic)
+        case show(_ show: SRGShow)
     }
 
     struct Configuration: Hashable {
@@ -92,6 +94,13 @@ final class ContentListViewModel: ObservableObject {
             )
             .map { $0.map { .media($0) } }
             .scan([], +)
+            .eraseToAnyPublisher()
+        case .tvShows:
+            return SRGDataProvider.current!.tvShows(
+                for: configuration.vendor,
+                pageSize: SRGDataProviderUnlimitedPageSize
+            )
+            .map { $0.map { .show($0) } }
             .eraseToAnyPublisher()
         case .tvLatestMedias:
             return SRGDataProvider.current!.tvLatestMedias(

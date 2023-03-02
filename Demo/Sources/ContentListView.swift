@@ -37,6 +37,8 @@ private struct ContentCell: View {
             Cell(title: media.title, subtitle: media.show?.title) {
                 PlayerView(media: Media(title: media.title, type: .urn(media.urn)))
             }
+        case let .show(show):
+            Text(show.title)
         }
     }
 }

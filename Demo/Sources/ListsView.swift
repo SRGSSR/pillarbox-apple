@@ -13,6 +13,7 @@ struct ListsView: View {
             List {
                 tvTopicSection()
                 latestVideosSection()
+                tvShows()
                 liveTvSection()
                 liveCenterSection()
                 liveWebSection()
@@ -47,12 +48,23 @@ struct ListsView: View {
 
     @ViewBuilder
     private func latestVideosSection() -> some View {
+        tvShows()
         section(title: "Latest Videos", configurations: [
             .init(kind: .tvLatestMedias, vendor: .SRF),
             .init(kind: .tvLatestMedias, vendor: .RTS),
             .init(kind: .tvLatestMedias, vendor: .RSI),
             .init(kind: .tvLatestMedias, vendor: .RTR),
             .init(kind: .tvLatestMedias, vendor: .SWI)
+        ])
+    }
+
+    @ViewBuilder
+    private func tvShows() -> some View {
+        section(title: "TV Shows", configurations: [
+            .init(kind: .tvShows, vendor: .SRF),
+            .init(kind: .tvShows, vendor: .RTS),
+            .init(kind: .tvShows, vendor: .RSI),
+            .init(kind: .tvShows, vendor: .RTR)
         ])
     }
 
