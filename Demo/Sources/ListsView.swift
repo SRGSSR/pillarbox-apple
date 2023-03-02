@@ -10,20 +10,18 @@ import SwiftUI
 // Behavior: h-exp, v-exp
 struct ListsView: View {
     var body: some View {
-        Navigation {
-            List {
-                Self.section(for: .tvTopics, vendors: [.SRF, .RTS, .RSI, .RTR, .SWI])
-                Self.section(for: .tvLatestMedias, vendors: [.SRF, .RTS, .RSI, .RTR, .SWI])
-                Self.section(for: .tvLivestreams, vendors: [.SRF, .RTS, .RSI, .RTR])
-                Self.section(for: .tvShows, vendors: [.SRF, .RTS, .RSI, .RTR])
-                Self.section(for: .liveCenterVideos, vendors: [.SRF, .RTS, .RSI])
-                Self.section(for: .tvScheduledLivestreams, vendors: [.SRF, .RTS, .RSI, .RTR])
-                Self.section(for: .radioLivestreams, vendors: [.SRF, .RTS, .RSI, .RTR])
-                Self.radioShows()
-                Self.latestAudiosSection()
-            }
-            .navigationTitle("Lists")
+        List {
+            Self.section(for: .tvTopics, vendors: [.SRF, .RTS, .RSI, .RTR, .SWI])
+            Self.section(for: .tvLatestMedias, vendors: [.SRF, .RTS, .RSI, .RTR, .SWI])
+            Self.section(for: .tvLivestreams, vendors: [.SRF, .RTS, .RSI, .RTR])
+            Self.section(for: .tvShows, vendors: [.SRF, .RTS, .RSI, .RTR])
+            Self.section(for: .liveCenterVideos, vendors: [.SRF, .RTS, .RSI])
+            Self.section(for: .tvScheduledLivestreams, vendors: [.SRF, .RTS, .RSI, .RTR])
+            Self.section(for: .radioLivestreams, vendors: [.SRF, .RTS, .RSI, .RTR])
+            Self.radioShows()
+            Self.latestAudiosSection()
         }
+        .navigationTitle("Lists")
     }
 
     @ViewBuilder
