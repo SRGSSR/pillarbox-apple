@@ -109,7 +109,7 @@ struct ShowcaseView: View {
 
 struct ShowcaseView_Previews: PreviewProvider {
     static var previews: some View {
-        Navigation {
+        NavigationStack {
             ShowcaseView()
         }
     }

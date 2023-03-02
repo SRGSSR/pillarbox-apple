@@ -8,7 +8,7 @@ import SwiftUI
 
 private struct MediasTab: View {
     var body: some View {
-        Navigation {
+        NavigationStack {
             ExamplesView()
         }
         .tabItem {
@@ -19,7 +19,7 @@ private struct MediasTab: View {
 
 private struct ListsTab: View {
     var body: some View {
-        Navigation {
+        NavigationStack {
             ListsView()
         }
         .tabItem {
@@ -30,7 +30,7 @@ private struct ListsTab: View {
 
 private struct SettingsTab: View {
     var body: some View {
-        Navigation {
+        NavigationStack {
             SettingsView()
         }
         .tabItem {
@@ -41,7 +41,7 @@ private struct SettingsTab: View {
 
 private struct ShowcaseTab: View {
     var body: some View {
-        Navigation {
+        NavigationStack {
             ShowcaseView()
         }
         .tabItem {

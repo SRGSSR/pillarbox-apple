@@ -143,7 +143,7 @@ struct ContentListView: View {
 
 struct ContentListView_Previews: PreviewProvider {
     static var previews: some View {
-        Navigation {
+        NavigationStack {
             ContentListView(configuration: .init(kind: .tvLatestMedias, vendor: .RTS))
         }
     }
