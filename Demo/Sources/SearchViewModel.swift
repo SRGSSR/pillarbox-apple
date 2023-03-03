@@ -63,7 +63,7 @@ final class SearchViewModel: ObservableObject {
             paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
         )
         .map { output in
-            SRGDataProvider.current!.medias(withUrns: output.mediaUrns)
+            SRGDataProvider.current!.medias(withUrns: output.mediaUrns, pageSize: kPageSize)
         }
         .switchToLatest()
         .scan([], +)

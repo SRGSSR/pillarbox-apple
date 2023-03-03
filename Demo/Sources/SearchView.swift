@@ -53,6 +53,9 @@ struct SearchView: View {
                         model.loadMore()
                     }
                 }
+#if os(iOS)
+                .swipeActions { CopyButton(text: media.urn) }
+#endif
             }
             .refreshable { await model.refresh() }
         }

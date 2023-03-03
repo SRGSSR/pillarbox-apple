@@ -63,36 +63,24 @@ private struct ContentCell: View {
                 ContentListView(configuration: .init(kind: .latestMediasForTopic(topic), vendor: topic.vendor))
             }
 #if os(iOS)
-            .swipeActions { Self.copyButton(text: topic.urn) }
+            .swipeActions { CopyButton(text: topic.urn) }
 #endif
         case let .media(media):
             Cell(title: media.title, subtitle: media.show?.title, style: Self.style(for: media)) {
                 PlayerView(media: Media(title: media.title, type: .urn(media.urn)))
             }
 #if os(iOS)
-            .swipeActions { Self.copyButton(text: media.urn) }
+            .swipeActions { CopyButton(text: media.urn) }
 #endif
         case let .show(show):
             NavigationLink(show.title) {
                 ContentListView(configuration: .init(kind: .latestMediasForShow(show), vendor: show.vendor))
             }
 #if os(iOS)
-            .swipeActions { Self.copyButton(text: show.urn) }
+            .swipeActions { CopyButton(text: show.urn) }
 #endif
         }
     }
-
-#if os(iOS)
-    @ViewBuilder
-    private static func copyButton(text: String) -> some View {
-        Button {
-            UIPasteboard.general.string = text
-        } label: {
-            Image(systemName: "doc.on.doc")
-        }
-        .tint(.accentColor)
-    }
-#endif
 
     private static func style(for media: SRGMedia) -> CellStyle {
         media.timeAvailability(at: Date()) == .available ? .standard : .disabled
