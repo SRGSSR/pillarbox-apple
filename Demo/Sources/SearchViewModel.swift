@@ -10,6 +10,12 @@ import SRGDataProvider
 import SRGDataProviderModel
 
 final class SearchViewModel: ObservableObject {
+    enum State {
+        case loading
+        case loaded(medias: [SRGMedia])
+        case failed(Error)
+    }
+
     private static var settings: SRGMediaSearchSettings = {
         let setting = SRGMediaSearchSettings()
         setting.aggregationsEnabled = false
