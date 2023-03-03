@@ -22,6 +22,7 @@ struct ExamplesView: View {
             section(title: "Unbuffered streams", medias: model.unbufferedMedias)
             section(title: "Corner cases", medias: model.cornerCaseMedias)
         }
+        .animation(.easeIn, value: model.protectedMedias)
         .navigationTitle("Examples")
     }
 
