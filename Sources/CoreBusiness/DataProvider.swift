@@ -32,12 +32,20 @@ final class DataProvider {
     }
 
     func mediaCompositionPublisher(forUrn urn: String) -> AnyPublisher<MediaComposition, Error> {
-        let url = environment.url.appending(path: "integrationlayer/2.1/mediaComposition/byUrn/\(urn)")
-        return session.dataTaskPublisher(for: url)
+        session.dataTaskPublisher(for: mediaCompositionUrl(for: urn))
             .mapHttpErrors()
             .map(\.data)
             .decode(type: MediaComposition.self, decoder: Self.decoder())
             .eraseToAnyPublisher()
+    }
+
+    func mediaCompositionUrl(for urn: String) -> URL {
+        let url = environment.url.appending(path: "integrationlayer/2.1/mediaComposition/byUrn/\(urn)")
+        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return url }
+        components.queryItems = [
+            URLQueryItem(name: "onlyChapters", value: "true")
+        ]
+        return components.url ?? url
     }
 
     func playableMediaCompositionPublisher(forUrn urn: String) -> AnyPublisher<MediaComposition, Error> {
