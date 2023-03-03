@@ -25,11 +25,13 @@ struct SearchView: View {
         }
         .navigationTitle("Search")
         .searchable(text: $model.text)
+#if os(iOS)
         .searchScopes($model.vendor) {
             ForEach([SRGVendor.RTS, .SRF, .RSI, .RTR, .SWI], id: \.self) { vendor in
                 Text(vendor.name).tag(vendor)
             }
         }
+#endif
     }
 
     @ViewBuilder
