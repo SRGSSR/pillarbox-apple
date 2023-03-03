@@ -36,7 +36,7 @@ final class SearchViewModel: ObservableObject, Refreshable {
 
     init() {
         Publishers.CombineLatest($text, $vendor)
-            .debounce(for: 0.5, scheduler: DispatchQueue.main)
+            .debounceAfterFirst(for: 0.5, scheduler: DispatchQueue.main)
             .map { [trigger] text, vendor in
                 Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) {
                     Self.mediasPublisher(text: text, vendor: vendor, trigger: trigger)
