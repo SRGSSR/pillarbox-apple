@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
+import SRGDataProviderCombine
 
 final class ExamplesViewModel: ObservableObject {
     let urlMedias = Template.medias(from: [
@@ -48,5 +48,22 @@ final class ExamplesViewModel: ObservableObject {
         URNTemplate.unknown
     ])
 
-    let protectedMedias = [Media]()
+    @Published private(set) var protectedMedias = [Media]()
+
+    init() {
+        let topModelsUrn = "urn:rts:show:tv:532539"
+        SRGDataProvider.current!.latestMediasForShow(withUrn: topModelsUrn, pageSize: 4)
+            .replaceError(with: [])
+            .map { medias in
+                medias.map { media in
+                    Media(
+                        title: media.title,
+                        description: "DRM-protected video",
+                        type: .urn(media.urn)
+                    )
+                }
+            }
+            .receiveOnMainThread()
+            .assign(to: &$protectedMedias)
+    }
 }
