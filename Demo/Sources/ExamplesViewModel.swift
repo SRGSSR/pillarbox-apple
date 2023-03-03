@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Core
 import SRGDataProviderCombine
 
 final class ExamplesViewModel: ObservableObject {
@@ -51,8 +52,14 @@ final class ExamplesViewModel: ObservableObject {
     @Published private(set) var protectedMedias = [Media]()
 
     init() {
+        Self.protectedStreamPublisher()
+            .receiveOnMainThread()
+            .assign(to: &$protectedMedias)
+    }
+
+    private static func protectedStreamPublisher() -> AnyPublisher<[Media], Never> {
         let topModelsUrn = "urn:rts:show:tv:532539"
-        SRGDataProvider.current!.latestMediasForShow(withUrn: topModelsUrn, pageSize: 4)
+        return SRGDataProvider.current!.latestMediasForShow(withUrn: topModelsUrn, pageSize: 4)
             .replaceError(with: [])
             .map { medias in
                 medias.map { media in
@@ -63,7 +70,6 @@ final class ExamplesViewModel: ObservableObject {
                     )
                 }
             }
-            .receiveOnMainThread()
-            .assign(to: &$protectedMedias)
+            .eraseToAnyPublisher()
     }
 }
