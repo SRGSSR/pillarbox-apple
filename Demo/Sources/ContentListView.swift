@@ -99,11 +99,11 @@ struct ContentListView: View {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             case let .loaded(contents: contents) where contents.isEmpty:
-                MessageView(model: model, message: "No content.", icon: .empty)
+                RefreshableMessageView(model: model, message: "No content.", icon: .empty)
             case let .loaded(contents: contents):
                 LoadedView(model: model, contents: contents)
             case let .failed(error):
-                MessageView(model: model, message: error.localizedDescription, icon: .error)
+                RefreshableMessageView(model: model, message: error.localizedDescription, icon: .error)
             }
         }
         .onAppear { model.configuration = configuration }

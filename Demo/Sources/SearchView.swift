@@ -7,39 +7,6 @@
 import SRGDataProviderModel
 import SwiftUI
 
-protocol Refreshable {
-    func refresh() async
-}
-
-struct MessageView<Model: Refreshable>: View {
-    enum Icon: String {
-        case error = "exclamationmark.bubble"
-        case empty = "circle.slash"
-    }
-
-    let model: Model
-    let message: String
-    let icon: Icon
-
-    var body: some View {
-        GeometryReader { geometry in
-            ScrollView {
-                VStack(spacing: 20) {
-                    Image(systemName: icon.rawValue)
-                        .resizable()
-                        .frame(width: 90, height: 90)
-                    Text(message)
-                        .multilineTextAlignment(.center)
-                        .padding()
-                }
-                .foregroundColor(.secondary)
-                .frame(width: geometry.size.width, height: geometry.size.height)
-            }
-            .refreshable { await model.refresh() }
-        }
-    }
-}
-
 struct SearchView: View {
     @StateObject private var model = SearchViewModel()
     var body: some View {
@@ -50,7 +17,7 @@ struct SearchView: View {
             case let .loaded(medias: medias):
                 loadedView(medias)
             case let .failed(error):
-                MessageView(model: model, message: error.localizedDescription, icon: .error)
+                RefreshableMessageView(model: model, message: error.localizedDescription, icon: .error)
             }
         }
         .navigationTitle("Search")
@@ -83,10 +50,10 @@ struct SearchView: View {
             .refreshable { await model.refresh() }
         }
         else if model.text.isEmpty {
-            Text("Enter something to search.")
+            MessageView(message: "Enter something to search.", icon: .search)
         }
         else {
-            MessageView(model: model, message: "No results.", icon: .empty)
+            RefreshableMessageView(model: model, message: "No results.", icon: .empty)
         }
     }
 }
