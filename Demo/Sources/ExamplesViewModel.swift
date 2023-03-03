@@ -8,6 +8,10 @@ import Core
 import SRGDataProviderCombine
 
 final class ExamplesViewModel: ObservableObject {
+    private enum TriggerId {
+        case reload
+    }
+
     let urlMedias = Template.medias(from: [
         URLTemplate.onDemandVideoHLS,
         URLTemplate.shortOnDemandVideoHLS,
@@ -50,11 +54,14 @@ final class ExamplesViewModel: ObservableObject {
     ])
 
     @Published private(set) var protectedMedias = [Media]()
+    private let trigger = Trigger()
 
     init() {
-        Self.protectedStreamPublisher()
-            .receiveOnMainThread()
-            .assign(to: &$protectedMedias)
+        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) {
+            Self.protectedStreamPublisher()
+        }
+        .receiveOnMainThread()
+        .assign(to: &$protectedMedias)
     }
 
     private static func protectedStreamPublisher() -> AnyPublisher<[Media], Never> {
@@ -104,6 +111,13 @@ final class ExamplesViewModel: ObservableObject {
         }
         else {
             return media.title
+        }
+    }
+
+    func refresh() async {
+        Task {
+            try await Task.sleep(for: .milliseconds(500))
+            trigger.activate(for: TriggerId.reload)
         }
     }
 }

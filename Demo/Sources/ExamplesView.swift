@@ -24,6 +24,7 @@ struct ExamplesView: View {
         }
         .animation(.easeIn, value: model.protectedMedias)
         .navigationTitle("Examples")
+        .refreshable { await model.refresh() }
     }
 
     @ViewBuilder
