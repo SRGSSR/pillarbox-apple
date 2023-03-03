@@ -7,14 +7,13 @@
 import SwiftUI
 
 struct SearchView: View {
-    @State private var text = ""
+    @StateObject private var model = SearchViewModel()
     var body: some View {
-        List {
-            Text("Test 1")
-            Text("Test 2")
+        List(model.medias, id: \.urn) { media in
+            Text(media.title)
         }
         .navigationTitle("Search")
-        .searchable(text: $text)
+        .searchable(text: $model.text)
     }
 }
 
