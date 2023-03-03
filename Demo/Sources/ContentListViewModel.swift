@@ -116,7 +116,7 @@ final class ContentListViewModel: ObservableObject, Refreshable {
     private static func publisher(for configuration: Configuration, trigger: Trigger) -> AnyPublisher<State, Never> {
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) {
             contentPublisher(for: configuration, trigger: trigger)
-                .map { State.loaded(contents: $0) }
+                .map { State.loaded(contents: $0.removeDuplicates()) }
                 .catch { Just(State.failed($0)) }
                 .prepend(.loading)
         }

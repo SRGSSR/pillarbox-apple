@@ -78,7 +78,7 @@ final class SearchViewModel: ObservableObject, Refreshable {
         }
         .switchToLatest()
         .scan([], +)
-        .map { State.loaded(medias: $0) }
+        .map { State.loaded(medias: $0.removeDuplicates()) }
         .catch { Just(State.failed($0)) }
         .prepend(.loading)
         .eraseToAnyPublisher()
