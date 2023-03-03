@@ -17,7 +17,7 @@ private struct LoadedView: View {
         List(contents, id: \.self) { content in
             ContentCell(content: content)
                 .onAppear {
-                    if let index = contents.firstIndex(of: content), contents.count - index < ContentListViewModel.pageSize {
+                    if let index = contents.firstIndex(of: content), contents.count - index < kPageSize {
                         model.loadMore()
                     }
                 }

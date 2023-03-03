@@ -19,6 +19,7 @@ final class SearchViewModel: ObservableObject {
 
     enum TriggerId {
         case reload
+        case loadMore
     }
 
     private static var settings: SRGMediaSearchSettings = {
@@ -37,7 +38,7 @@ final class SearchViewModel: ObservableObject {
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
             .map { [trigger] text in
                 Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) {
-                    Self.mediasPublisher(text: text)
+                    Self.mediasPublisher(text: text, trigger: trigger)
                         .map { State.loaded(medias: $0) }
                         .catch { Just(State.failed($0)) }
                         .prepend(.loading)
@@ -48,18 +49,25 @@ final class SearchViewModel: ObservableObject {
             .assign(to: &$state)
     }
 
-    private static func mediasPublisher(text: String) -> AnyPublisher<[SRGMedia], Error> {
+    private static func mediasPublisher(text: String, trigger: Trigger) -> AnyPublisher<[SRGMedia], Error> {
         guard !text.isEmpty else {
             return Just([])
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
         }
-        return SRGDataProvider.current!.medias(for: .RTS, matchingQuery: text, with: settings)
-            .map { output in
-                SRGDataProvider.current!.medias(withUrns: output.mediaUrns)
-            }
-            .switchToLatest()
-            .eraseToAnyPublisher()
+        return SRGDataProvider.current!.medias(
+            for: .RTS,
+            matchingQuery: text,
+            with: settings,
+            pageSize: kPageSize,
+            paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
+        )
+        .map { output in
+            SRGDataProvider.current!.medias(withUrns: output.mediaUrns)
+        }
+        .switchToLatest()
+        .scan([], +)
+        .eraseToAnyPublisher()
     }
 
     func refresh() async {
@@ -67,5 +75,9 @@ final class SearchViewModel: ObservableObject {
             try await Task.sleep(for: .seconds(1))
             trigger.activate(for: TriggerId.reload)
         }
+    }
+
+    func loadMore() {
+        trigger.activate(for: TriggerId.loadMore)
     }
 }

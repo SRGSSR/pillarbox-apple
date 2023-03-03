@@ -46,6 +46,11 @@ struct SearchView: View {
         if !medias.isEmpty {
             List(medias, id: \.urn) { media in
                 Text(media.title)
+                    .onAppear {
+                        if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {
+                            model.loadMore()
+                        }
+                    }
             }
             .refreshable { await model.refresh() }
         }
