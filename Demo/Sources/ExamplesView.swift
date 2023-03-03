@@ -14,7 +14,9 @@ struct ExamplesView: View {
         List {
             section(title: "SRG SSR streams (URLs)", medias: model.urlMedias)
             section(title: "SRG SSR streams (URNs)", medias: model.urnMedias)
-            section(title: "Protected streams (URNs)", medias: model.protectedMedias)
+            if !model.protectedMedias.isEmpty {
+                section(title: "Protected streams (URNs)", medias: model.protectedMedias)
+            }
             section(title: "Apple streams", medias: model.appleMedias)
             section(title: "Aspect ratios", medias: model.aspectRatioMedias)
             section(title: "Unbuffered streams", medias: model.unbufferedMedias)
