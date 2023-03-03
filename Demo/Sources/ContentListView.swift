@@ -106,6 +106,7 @@ struct ContentListView: View {
                 RefreshableMessageView(model: model, message: error.localizedDescription, icon: .error)
             }
         }
+        .animation(.easeIn, value: model.state)
         .onAppear { model.configuration = configuration }
         .navigationTitle(configuration.kind.name)
     }

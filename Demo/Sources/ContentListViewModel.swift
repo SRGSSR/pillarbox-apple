@@ -9,10 +9,23 @@ import SRGDataProviderCombine
 import SRGDataProviderModel
 
 final class ContentListViewModel: ObservableObject, Refreshable {
-    enum State {
+    enum State: Equatable {
         case loading
         case loaded(contents: [Content])
         case failed(Error)
+
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            switch (lhs, rhs) {
+            case (.loading, .loading):
+                return true
+            case let (.loaded(contents: lhsContents), .loaded(contents: rhsContents)):
+                return lhsContents == rhsContents
+            case let (.failed(lhsError), .failed(rhsError)):
+                return lhsError as NSError == rhsError as NSError
+            default:
+                return false
+            }
+        }
     }
 
     enum TriggerId {

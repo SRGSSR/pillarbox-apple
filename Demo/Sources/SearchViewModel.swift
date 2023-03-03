@@ -11,11 +11,24 @@ import SRGDataProviderCombine
 import SRGDataProviderModel
 
 final class SearchViewModel: ObservableObject, Refreshable {
-    enum State {
+    enum State: Equatable {
         case empty
         case loading
         case loaded(medias: [SRGMedia])
         case failed(Error)
+
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            switch (lhs, rhs) {
+            case (.empty, .empty), (.loading, .loading):
+                return true
+            case let (.loaded(medias: lhsMedias), .loaded(medias: rhsMedias)):
+                return lhsMedias == rhsMedias
+            case let (.failed(lhsError), .failed(rhsError)):
+                return lhsError as NSError == rhsError as NSError
+            default:
+                return false
+            }
+        }
     }
 
     enum TriggerId {
