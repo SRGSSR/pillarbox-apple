@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SearchView: View {
     @StateObject private var model = SearchViewModel()
+
     var body: some View {
         ZStack {
             switch model.state {
@@ -23,11 +24,9 @@ struct SearchView: View {
         .navigationTitle("Search")
         .searchable(text: $model.text)
         .searchScopes($model.vendor) {
-            Text(SRGVendor.RTS.name).tag(SRGVendor.RTS)
-            Text(SRGVendor.SRF.name).tag(SRGVendor.SRF)
-            Text(SRGVendor.RSI.name).tag(SRGVendor.RSI)
-            Text(SRGVendor.RTR.name).tag(SRGVendor.RTR)
-            Text(SRGVendor.SWI.name).tag(SRGVendor.SWI)
+            ForEach([SRGVendor.RTS, .SRF, .RSI, .RTR, .SWI], id: \.self) { vendor in
+                Text(vendor.name).tag(vendor)
+            }
         }
     }
 
