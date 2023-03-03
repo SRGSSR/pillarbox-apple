@@ -45,12 +45,14 @@ struct SearchView: View {
     func loadedView(_ medias: [SRGMedia]) -> some View {
         if !medias.isEmpty {
             List(medias, id: \.urn) { media in
-                Text(media.title)
-                    .onAppear {
-                        if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {
-                            model.loadMore()
-                        }
+                Cell(title: media.title, subtitle: media.show?.title) {
+                    PlayerView(media: Media(title: media.title, type: .urn(media.urn)))
+                }
+                .onAppear {
+                    if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {
+                        model.loadMore()
                     }
+                }
             }
             .refreshable { await model.refresh() }
         }
