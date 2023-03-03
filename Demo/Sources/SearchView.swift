@@ -13,6 +13,8 @@ struct SearchView: View {
     var body: some View {
         ZStack {
             switch model.state {
+            case .empty:
+                MessageView(message: "Enter something to search.", icon: .search)
             case .loading:
                 ProgressView()
             case let .loaded(medias: medias):
@@ -48,9 +50,6 @@ struct SearchView: View {
             }
             .scrollDismissesKeyboard(.immediately)
             .refreshable { await model.refresh() }
-        }
-        else if model.text.isEmpty {
-            MessageView(message: "Enter something to search.", icon: .search)
         }
         else {
             RefreshableMessageView(model: model, message: "No results.", icon: .empty)

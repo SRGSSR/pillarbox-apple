@@ -12,6 +12,7 @@ import SRGDataProviderModel
 
 final class SearchViewModel: ObservableObject, Refreshable {
     enum State {
+        case empty
         case loading
         case loaded(medias: [SRGMedia])
         case failed(Error)
@@ -31,7 +32,7 @@ final class SearchViewModel: ObservableObject, Refreshable {
     private let trigger = Trigger()
 
     @Published var text = ""
-    @Published var state: State = .loading
+    @Published var state: State = .empty
     @Published var vendor = SRGVendor.RTS
 
     init() {
@@ -40,9 +41,6 @@ final class SearchViewModel: ObservableObject, Refreshable {
             .map { [trigger] text, vendor in
                 Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) {
                     Self.mediasPublisher(text: text, vendor: vendor, trigger: trigger)
-                        .map { State.loaded(medias: $0) }
-                        .catch { Just(State.failed($0)) }
-                        .prepend(.loading)
                 }
             }
             .switchToLatest()
@@ -50,10 +48,9 @@ final class SearchViewModel: ObservableObject, Refreshable {
             .assign(to: &$state)
     }
 
-    private static func mediasPublisher(text: String, vendor: SRGVendor, trigger: Trigger) -> AnyPublisher<[SRGMedia], Error> {
+    private static func mediasPublisher(text: String, vendor: SRGVendor, trigger: Trigger) -> AnyPublisher<State, Never> {
         guard !text.isEmpty else {
-            return Just([])
-                .setFailureType(to: Error.self)
+            return Just(.empty)
                 .eraseToAnyPublisher()
         }
         return SRGDataProvider.current!.medias(
@@ -68,6 +65,9 @@ final class SearchViewModel: ObservableObject, Refreshable {
         }
         .switchToLatest()
         .scan([], +)
+        .map { State.loaded(medias: $0) }
+        .catch { Just(State.failed($0)) }
+        .prepend(.loading)
         .eraseToAnyPublisher()
     }
 
