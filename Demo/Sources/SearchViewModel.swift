@@ -7,6 +7,7 @@
 import Combine
 import Foundation
 import SRGDataProvider
+import SRGDataProviderCombine
 import SRGDataProviderModel
 
 final class SearchViewModel: ObservableObject {
@@ -16,11 +17,17 @@ final class SearchViewModel: ObservableObject {
         case failed(Error)
     }
 
+    enum TriggerId {
+        case reload
+    }
+
     private static var settings: SRGMediaSearchSettings = {
         let setting = SRGMediaSearchSettings()
         setting.aggregationsEnabled = false
         return setting
     }()
+
+    private let trigger = Trigger()
 
     @Published var text = ""
     @Published var state: State = .loading
@@ -28,11 +35,13 @@ final class SearchViewModel: ObservableObject {
     init() {
         $text
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
-            .map { text in
-                Self.mediasPublisher(text: text)
-                    .map { State.loaded(medias: $0) }
-                    .catch { Just(State.failed($0)) }
-                    .prepend(.loading)
+            .map { [trigger] text in
+                Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) {
+                    Self.mediasPublisher(text: text)
+                        .map { State.loaded(medias: $0) }
+                        .catch { Just(State.failed($0)) }
+                        .prepend(.loading)
+                }
             }
             .switchToLatest()
             .receiveOnMainThread()
@@ -51,5 +60,12 @@ final class SearchViewModel: ObservableObject {
             }
             .switchToLatest()
             .eraseToAnyPublisher()
+    }
+
+    func refresh() async {
+        Task {
+            try await Task.sleep(for: .seconds(1))
+            trigger.activate(for: TriggerId.reload)
+        }
     }
 }

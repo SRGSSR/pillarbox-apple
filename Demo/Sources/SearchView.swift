@@ -7,6 +7,23 @@
 import SRGDataProviderModel
 import SwiftUI
 
+private struct MessageView: View {
+    @ObservedObject var model: SearchViewModel
+    let message: String
+
+    var body: some View {
+        GeometryReader { geometry in
+            ScrollView {
+                Text(message)
+                    .multilineTextAlignment(.center)
+                    .padding()
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+            }
+            .refreshable { await model.refresh() }
+        }
+    }
+}
+
 struct SearchView: View {
     @StateObject private var model = SearchViewModel()
     var body: some View {
@@ -17,7 +34,7 @@ struct SearchView: View {
             case let .loaded(medias: medias):
                 loadedView(medias)
             case let .failed(error):
-                Text(error.localizedDescription)
+                MessageView(model: model, message: error.localizedDescription)
             }
         }
         .navigationTitle("Search")
@@ -30,12 +47,13 @@ struct SearchView: View {
             List(medias, id: \.urn) { media in
                 Text(media.title)
             }
+            .refreshable { await model.refresh() }
         }
         else if model.text.isEmpty {
             Text("Enter something to search.")
         }
         else {
-            Text("No results.")
+            MessageView(model: model, message: "No results.")
         }
     }
 }
