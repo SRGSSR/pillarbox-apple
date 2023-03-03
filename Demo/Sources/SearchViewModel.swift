@@ -22,22 +22,24 @@ final class SearchViewModel: ObservableObject {
     init() {
         $text
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
-            .map { text in
-                guard !text.isEmpty else {
-                    return Just([SRGMedia]())
-                        .setFailureType(to: Error.self)
-                        .eraseToAnyPublisher()
-                }
-                return SRGDataProvider.current!.medias(for: .RTS, matchingQuery: text, with: Self.settings)
-                    .map { output in
-                        SRGDataProvider.current!.medias(withUrns: output.mediaUrns)
-                    }
-                    .switchToLatest()
-                    .eraseToAnyPublisher()
-            }
+            .map { Self.mediasPublisher(text: $0) }
             .switchToLatest()
-            .replaceError(with: [SRGMedia]())
+            .replaceError(with: [])
             .receiveOnMainThread()
             .assign(to: &$medias)
+    }
+
+    private static func mediasPublisher(text: String) -> AnyPublisher<[SRGMedia], Error> {
+        guard !text.isEmpty else {
+            return Just([])
+                .setFailureType(to: Error.self)
+                .eraseToAnyPublisher()
+        }
+        return SRGDataProvider.current!.medias(for: .RTS, matchingQuery: text, with: settings)
+            .map { output in
+                SRGDataProvider.current!.medias(withUrns: output.mediaUrns)
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
     }
 }
