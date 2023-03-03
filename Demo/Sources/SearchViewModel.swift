@@ -23,16 +23,20 @@ final class SearchViewModel: ObservableObject {
     }()
 
     @Published var text = ""
-    @Published var medias: [SRGMedia] = []
+    @Published var state: State = .loading
 
     init() {
         $text
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
-            .map { Self.mediasPublisher(text: $0) }
+            .map { text in
+                Self.mediasPublisher(text: text)
+                    .map { State.loaded(medias: $0) }
+                    .catch { Just(State.failed($0)) }
+                    .prepend(.loading)
+            }
             .switchToLatest()
-            .replaceError(with: [])
             .receiveOnMainThread()
-            .assign(to: &$medias)
+            .assign(to: &$state)
     }
 
     private static func mediasPublisher(text: String) -> AnyPublisher<[SRGMedia], Error> {
