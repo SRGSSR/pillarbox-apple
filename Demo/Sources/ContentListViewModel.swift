@@ -201,7 +201,7 @@ final class ContentListViewModel: ObservableObject {
 
     func refresh() async {
         Task {
-            try await Task.sleep(for: .milliseconds(500))
+            try await Task.sleep(for: .seconds(1))
             trigger.activate(for: TriggerId.reload)
         }
     }
