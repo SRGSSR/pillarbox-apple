@@ -39,6 +39,13 @@ struct SearchView: View {
         }
         .navigationTitle("Search")
         .searchable(text: $model.text)
+        .searchScopes($model.vendor) {
+            Text(SRGVendor.RTS.name).tag(SRGVendor.RTS)
+            Text(SRGVendor.SRF.name).tag(SRGVendor.SRF)
+            Text(SRGVendor.RSI.name).tag(SRGVendor.RSI)
+            Text(SRGVendor.RTR.name).tag(SRGVendor.RTR)
+            Text(SRGVendor.SWI.name).tag(SRGVendor.SWI)
+        }
     }
 
     @ViewBuilder

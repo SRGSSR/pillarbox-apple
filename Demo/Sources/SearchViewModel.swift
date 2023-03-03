@@ -32,13 +32,14 @@ final class SearchViewModel: ObservableObject {
 
     @Published var text = ""
     @Published var state: State = .loading
+    @Published var vendor = SRGVendor.RTS
 
     init() {
-        $text
+        Publishers.CombineLatest($text, $vendor)
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
-            .map { [trigger] text in
+            .map { [trigger] text, vendor in
                 Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) {
-                    Self.mediasPublisher(text: text, trigger: trigger)
+                    Self.mediasPublisher(text: text, vendor: vendor, trigger: trigger)
                         .map { State.loaded(medias: $0) }
                         .catch { Just(State.failed($0)) }
                         .prepend(.loading)
@@ -49,14 +50,14 @@ final class SearchViewModel: ObservableObject {
             .assign(to: &$state)
     }
 
-    private static func mediasPublisher(text: String, trigger: Trigger) -> AnyPublisher<[SRGMedia], Error> {
+    private static func mediasPublisher(text: String, vendor: SRGVendor, trigger: Trigger) -> AnyPublisher<[SRGMedia], Error> {
         guard !text.isEmpty else {
             return Just([])
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
         }
         return SRGDataProvider.current!.medias(
-            for: .RTS,
+            for: vendor,
             matchingQuery: text,
             with: settings,
             pageSize: kPageSize,
