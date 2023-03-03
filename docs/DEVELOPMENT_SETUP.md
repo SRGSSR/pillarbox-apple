@@ -15,6 +15,7 @@ The following tools are required for the best possible development experience:
 - [ffmpeg](https://ffmpeg.org)
 - [swiftlint](https://github.com/realm/SwiftLint)
 - [shellcheck](https://www.shellcheck.net)
+- [xcodes](https://github.com/RobotsAndPencils/xcodes)
 - [yamllint](https://github.com/adrienverge/yamllint)
 
 ffmpeg, swiftlint, shellcheck and yamllint can easily be installed with [Homebrew](https://brew.sh).
