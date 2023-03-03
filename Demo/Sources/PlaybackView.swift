@@ -89,7 +89,7 @@ private struct ControlsView: View {
 }
 
 // Behavior: h-exp, v-exp
-private struct MessageView: View {
+private struct PlaybackMessageView: View {
     let message: String
 
     var body: some View {
@@ -317,13 +317,13 @@ struct PlaybackView: View {
             if !player.items.isEmpty {
                 switch player.playbackState {
                 case let .failed(error: error):
-                    MessageView(message: error.localizedDescription)
+                    PlaybackMessageView(message: error.localizedDescription)
                 default:
                     ContentView(player: player)
                 }
             }
             else {
-                MessageView(message: "No content")
+                PlaybackMessageView(message: "No content")
             }
         }
         .background(.black)

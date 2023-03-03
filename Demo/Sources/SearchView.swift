@@ -7,16 +7,25 @@
 import SRGDataProviderModel
 import SwiftUI
 
-private struct MessageView: View {
-    @ObservedObject var model: SearchViewModel
+protocol Refreshable {
+    func refresh() async
+}
+
+struct MessageView<Model: Refreshable>: View {
+    enum Icon: String {
+        case error = "exclamationmark.bubble"
+        case empty = "circle.slash"
+    }
+
+    let model: Model
     let message: String
-    let icon: String
+    let icon: Icon
 
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
                 VStack(spacing: 20) {
-                    Image(systemName: icon)
+                    Image(systemName: icon.rawValue)
                         .resizable()
                         .frame(width: 90, height: 90)
                     Text(message)
@@ -41,7 +50,7 @@ struct SearchView: View {
             case let .loaded(medias: medias):
                 loadedView(medias)
             case let .failed(error):
-                MessageView(model: model, message: error.localizedDescription, icon: "exclamationmark.bubble")
+                MessageView(model: model, message: error.localizedDescription, icon: .error)
             }
         }
         .navigationTitle("Search")
@@ -77,7 +86,7 @@ struct SearchView: View {
             Text("Enter something to search.")
         }
         else {
-            MessageView(model: model, message: "No results.", icon: "circle.slash")
+            MessageView(model: model, message: "No results.", icon: .empty)
         }
     }
 }

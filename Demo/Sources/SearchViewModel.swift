@@ -10,7 +10,7 @@ import SRGDataProvider
 import SRGDataProviderCombine
 import SRGDataProviderModel
 
-final class SearchViewModel: ObservableObject {
+final class SearchViewModel: ObservableObject, Refreshable {
     enum State {
         case loading
         case loaded(medias: [SRGMedia])

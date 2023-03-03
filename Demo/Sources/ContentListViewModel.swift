@@ -8,7 +8,7 @@ import Combine
 import SRGDataProviderCombine
 import SRGDataProviderModel
 
-final class ContentListViewModel: ObservableObject {
+final class ContentListViewModel: ObservableObject, Refreshable {
     enum State {
         case loading
         case loaded(contents: [Content])

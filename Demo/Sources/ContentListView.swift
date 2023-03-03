@@ -88,24 +88,6 @@ private struct ContentCell: View {
 }
 
 // Behavior: h-exp, v-exp
-private struct MessageView: View {
-    @ObservedObject var model: ContentListViewModel
-    let message: String
-
-    var body: some View {
-        GeometryReader { geometry in
-            ScrollView {
-                Text(message)
-                    .multilineTextAlignment(.center)
-                    .padding()
-                    .frame(width: geometry.size.width, height: geometry.size.height)
-            }
-            .refreshable { await model.refresh() }
-        }
-    }
-}
-
-// Behavior: h-exp, v-exp
 struct ContentListView: View {
     let configuration: ContentListViewModel.Configuration
     @StateObject private var model = ContentListViewModel()
@@ -117,11 +99,11 @@ struct ContentListView: View {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             case let .loaded(contents: contents) where contents.isEmpty:
-                MessageView(model: model, message: "No content.")
+                MessageView(model: model, message: "No content.", icon: .empty)
             case let .loaded(contents: contents):
                 LoadedView(model: model, contents: contents)
             case let .failed(error):
-                MessageView(model: model, message: error.localizedDescription)
+                MessageView(model: model, message: error.localizedDescription, icon: .error)
             }
         }
         .onAppear { model.configuration = configuration }
