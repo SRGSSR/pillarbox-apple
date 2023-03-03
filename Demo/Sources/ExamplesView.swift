@@ -22,7 +22,7 @@ struct ExamplesView: View {
             section(title: "Unbuffered streams", medias: model.unbufferedMedias)
             section(title: "Corner cases", medias: model.cornerCaseMedias)
         }
-        .animation(.easeIn, value: model.protectedMedias)
+        .animation(.linear(duration: 0.2), value: model.protectedMedias)
         .navigationTitle("Examples")
         .refreshable { await model.refresh() }
     }
