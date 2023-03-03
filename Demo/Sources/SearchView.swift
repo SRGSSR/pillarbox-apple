@@ -47,6 +47,7 @@ struct SearchView: View {
                 .swipeActions { CopyButton(text: media.urn) }
 #endif
             }
+            .scrollDismissesKeyboard(.immediately)
             .refreshable { await model.refresh() }
         }
         else if model.text.isEmpty {
