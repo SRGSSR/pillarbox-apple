@@ -59,7 +59,7 @@ final class SearchViewModel: ObservableObject {
         return SRGDataProvider.current!.medias(
             for: vendor,
             matchingQuery: text,
-            with: settings,
+            with: vendor == .SWI ? nil : settings,
             pageSize: kPageSize,
             paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
         )
