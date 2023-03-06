@@ -9,6 +9,15 @@ import SwiftUI
 // Behavior: h-exp, v-hug
 private struct TextFieldView: View {
     @State private var text: String = ""
+    @State private var isPresented = false
+    private var media: Media {
+        if !text.hasPrefix("urn"), let url = URL(string: text) {
+            return .init(title: "URL", type: .url(url))
+        }
+        else {
+            return .init(title: "URN", type: .urn(text))
+        }
+    }
 
     var body: some View {
         HStack {
@@ -16,10 +25,15 @@ private struct TextFieldView: View {
             Button(action: play) {
                 Image(systemName: "play.circle.fill")
             }
+            .sheet(isPresented: $isPresented) {
+                PlayerView(media: media)
+            }
         }
     }
 
-    private func play() {}
+    private func play() {
+        isPresented.toggle()
+    }
 }
 
 // Behavior: h-exp, v-exp
