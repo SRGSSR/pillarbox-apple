@@ -12,7 +12,7 @@ private struct TextFieldView: View {
 
     var body: some View {
         HStack {
-            TextField(text: $text) { Text("Enter URL or URN") }
+            TextField("Enter URL or URN", text: $text)
                 .keyboardType(.URL)
                 .autocapitalization(.none)
                 .autocorrectionDisabled()
