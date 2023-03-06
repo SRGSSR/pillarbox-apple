@@ -22,13 +22,22 @@ private struct TextFieldView: View {
     var body: some View {
         HStack {
             TextField(text: $text) { Text("Enter URL or URN") }
-            Button(action: play) {
-                Image(systemName: "play.circle.fill")
+                .keyboardType(.URL)
+                .autocapitalization(.none)
+                .autocorrectionDisabled()
+            Button(action: clear) {
+                Image(systemName: "xmark.circle.fill")
             }
+            .tint(.white)
+            .opacity(text.isEmpty ? 0 : 1)
             .sheet(isPresented: $isPresented) {
                 PlayerView(media: media)
             }
         }
+    }
+
+    private func clear() {
+        text = ""
     }
 
     private func play() {
