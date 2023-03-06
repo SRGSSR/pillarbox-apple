@@ -37,16 +37,16 @@ final class SearchViewModel: ObservableObject, Refreshable {
     }
 
     private static var settings: SRGMediaSearchSettings = {
-        let setting = SRGMediaSearchSettings()
-        setting.aggregationsEnabled = false
-        return setting
+        let settings = SRGMediaSearchSettings()
+        settings.aggregationsEnabled = false
+        return settings
     }()
-
-    private let trigger = Trigger()
 
     @Published var text = ""
     @Published var state: State = .empty
-    @Published var vendor = SRGVendor.RTS
+    @Published var vendor: SRGVendor = .RTS
+
+    private let trigger = Trigger()
 
     init() {
         Publishers.CombineLatest($text, $vendor)
