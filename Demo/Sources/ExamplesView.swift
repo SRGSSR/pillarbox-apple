@@ -45,12 +45,16 @@ private struct MediaEntryView: View {
     var body: some View {
         VStack {
             TextFieldView(text: $text)
-            Button(action: play) {
-                Text("Play")
+            if !text.isEmpty {
+                Button(action: play) {
+                    Text("Play")
+                }
+                .foregroundColor(Color.accentColor)
             }
-            .sheet(isPresented: $isPresented) {
-                PlayerView(media: media)
-            }
+        }
+        .buttonStyle(.plain)
+        .sheet(isPresented: $isPresented) {
+            PlayerView(media: media)
         }
     }
 
@@ -66,7 +70,6 @@ struct ExamplesView: View {
     var body: some View {
         List {
             MediaEntryView()
-                .buttonStyle(.plain)
             section(title: "SRG SSR streams (URLs)", medias: model.urlMedias)
             section(title: "SRG SSR streams (URNs)", medias: model.urnMedias)
             if !model.protectedMedias.isEmpty {
@@ -77,6 +80,7 @@ struct ExamplesView: View {
             section(title: "Unbuffered streams", medias: model.unbufferedMedias)
             section(title: "Corner cases", medias: model.cornerCaseMedias)
         }
+        .scrollDismissesKeyboard(.immediately)
         .animation(.linear(duration: 0.2), value: model.protectedMedias)
         .navigationTitle("Examples")
         .refreshable { await model.refresh() }
