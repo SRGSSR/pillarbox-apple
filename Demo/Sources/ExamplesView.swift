@@ -6,12 +6,29 @@
 
 import SwiftUI
 
+// Behavior: h-exp, v-hug
+private struct TextFieldView: View {
+    @State private var text: String = ""
+
+    var body: some View {
+        HStack {
+            TextField(text: $text) { Text("Enter URL or URN") }
+            Button(action: play) {
+                Image(systemName: "play.circle.fill")
+            }
+        }
+    }
+
+    private func play() {}
+}
+
 // Behavior: h-exp, v-exp
 struct ExamplesView: View {
     @StateObject private var model = ExamplesViewModel()
 
     var body: some View {
         List {
+            TextFieldView()
             section(title: "SRG SSR streams (URLs)", medias: model.urlMedias)
             section(title: "SRG SSR streams (URNs)", medias: model.urnMedias)
             if !model.protectedMedias.isEmpty {
