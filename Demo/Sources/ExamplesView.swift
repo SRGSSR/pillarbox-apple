@@ -66,6 +66,7 @@ struct ExamplesView: View {
     var body: some View {
         List {
             MediaEntryView()
+                .buttonStyle(.plain)
             section(title: "SRG SSR streams (URLs)", medias: model.urlMedias)
             section(title: "SRG SSR streams (URNs)", medias: model.urnMedias)
             if !model.protectedMedias.isEmpty {
