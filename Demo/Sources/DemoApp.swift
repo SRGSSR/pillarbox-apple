@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-private struct MediasTab: View {
+private struct ExamplesTab: View {
     var body: some View {
         NavigationStack {
             ExamplesView()
@@ -39,6 +39,17 @@ private struct SettingsTab: View {
     }
 }
 
+private struct SearchTab: View {
+    var body: some View {
+        NavigationStack {
+            SearchView()
+        }
+        .tabItem {
+            Label("Search", systemImage: "magnifyingglass")
+        }
+    }
+}
+
 private struct ShowcaseTab: View {
     var body: some View {
         NavigationStack {
@@ -57,9 +68,10 @@ struct DemoApp: App {
     var body: some Scene {
         WindowGroup {
             TabView {
-                MediasTab()
-                ListsTab()
+                ExamplesTab()
                 ShowcaseTab()
+                ListsTab()
+                SearchTab()
                 SettingsTab()
             }
         }

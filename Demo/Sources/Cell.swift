@@ -6,11 +6,6 @@
 
 import SwiftUI
 
-enum CellStyle {
-    case standard
-    case disabled
-}
-
 // Behavior: h-exp, v-hug
 struct Cell<Content: View, Presented: View>: View {
     @ViewBuilder var content: () -> Content
@@ -29,7 +24,12 @@ struct Cell<Content: View, Presented: View>: View {
 }
 
 extension Cell where Content == VStack<TupleView<(Text, Text?)>> {
-    init(title: String, subtitle: String? = nil, style: CellStyle = .standard, @ViewBuilder presented: @escaping () -> Presented) {
+    init(
+        title: String,
+        subtitle: String? = nil,
+        style: MediaDescription.Style = .standard,
+        @ViewBuilder presented: @escaping () -> Presented
+    ) {
         self.init(
             content: {
                 VStack(alignment: .leading) {
@@ -46,7 +46,7 @@ extension Cell where Content == VStack<TupleView<(Text, Text?)>> {
         )
     }
 
-    private static func foregroundColor(for style: CellStyle) -> Color {
+    private static func foregroundColor(for style: MediaDescription.Style) -> Color {
         style == .standard ? .primary : .secondary
     }
 }

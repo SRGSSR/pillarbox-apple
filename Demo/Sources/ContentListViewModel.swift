@@ -8,11 +8,24 @@ import Combine
 import SRGDataProviderCombine
 import SRGDataProviderModel
 
-final class ContentListViewModel: ObservableObject {
-    enum State {
+final class ContentListViewModel: ObservableObject, Refreshable {
+    enum State: Equatable {
         case loading
         case loaded(contents: [Content])
         case failed(Error)
+
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            switch (lhs, rhs) {
+            case (.loading, .loading):
+                return true
+            case let (.loaded(contents: lhsContents), .loaded(contents: rhsContents)):
+                return lhsContents == rhsContents
+            case let (.failed(lhsError), .failed(rhsError)):
+                return lhsError as NSError == rhsError as NSError
+            default:
+                return false
+            }
+        }
     }
 
     enum TriggerId {
@@ -85,8 +98,6 @@ final class ContentListViewModel: ObservableObject {
         }
     }
 
-    static let pageSize: UInt = 50
-
     @Published var state: State = .loading
     @Published var configuration: Configuration?
     private let trigger = Trigger()
@@ -105,7 +116,7 @@ final class ContentListViewModel: ObservableObject {
     private static func publisher(for configuration: Configuration, trigger: Trigger) -> AnyPublisher<State, Never> {
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) {
             contentPublisher(for: configuration, trigger: trigger)
-                .map { State.loaded(contents: $0) }
+                .map { State.loaded(contents: $0.removeDuplicates()) }
                 .catch { Just(State.failed($0)) }
                 .prepend(.loading)
         }
@@ -121,7 +132,7 @@ final class ContentListViewModel: ObservableObject {
         case let .latestMediasForTopic(topic):
             return SRGDataProvider.current!.latestMediasForTopic(
                 withUrn: topic.urn,
-                pageSize: pageSize,
+                pageSize: kPageSize,
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
             .map { $0.map { .media($0) } }
@@ -137,7 +148,7 @@ final class ContentListViewModel: ObservableObject {
         case let .latestMediasForShow(show):
             return SRGDataProvider.current!.latestMediasForShow(
                 withUrn: show.urn,
-                pageSize: pageSize,
+                pageSize: kPageSize,
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
             .map { $0.map { .media($0) } }
@@ -146,7 +157,7 @@ final class ContentListViewModel: ObservableObject {
         case .tvLatestMedias:
             return SRGDataProvider.current!.tvLatestMedias(
                 for: configuration.vendor,
-                pageSize: pageSize,
+                pageSize: kPageSize,
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
             .map { $0.map { .media($0) } }
@@ -159,7 +170,7 @@ final class ContentListViewModel: ObservableObject {
         case .tvScheduledLivestreams:
             return SRGDataProvider.current!.tvScheduledLivestreams(
                 for: configuration.vendor,
-                pageSize: pageSize,
+                pageSize: kPageSize,
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
             .map { $0.map { .media($0) } }
@@ -168,7 +179,7 @@ final class ContentListViewModel: ObservableObject {
         case .liveCenterVideos:
             return SRGDataProvider.current!.liveCenterVideos(
                 for: configuration.vendor,
-                pageSize: pageSize,
+                pageSize: kPageSize,
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
             .map { $0.map { .media($0) } }
@@ -190,7 +201,7 @@ final class ContentListViewModel: ObservableObject {
             return SRGDataProvider.current!.radioLatestMedias(
                 for: configuration.vendor,
                 channelUid: radioChannel.rawValue,
-                pageSize: pageSize,
+                pageSize: kPageSize,
                 paginatedBy: trigger.signal(activatedBy: TriggerId.loadMore)
             )
             .map { $0.map { .media($0) } }
