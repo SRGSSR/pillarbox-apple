@@ -6,12 +6,71 @@
 
 import SwiftUI
 
+// Behavior: h-exp, v-hug
+private struct TextFieldView: View {
+    @Binding var text: String
+
+    var body: some View {
+        HStack {
+            TextField("Enter URL or URN", text: $text)
+                .keyboardType(.URL)
+                .autocapitalization(.none)
+                .autocorrectionDisabled()
+            Button(action: clear) {
+                Image(systemName: "xmark.circle.fill")
+            }
+            .tint(.white)
+            .opacity(text.isEmpty ? 0 : 1)
+        }
+    }
+
+    private func clear() {
+        text = ""
+    }
+}
+
+private struct MediaEntryView: View {
+    @State private var text = ""
+    @State private var isPresented = false
+
+    private var media: Media {
+        let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedText.hasPrefix("urn"), let url = URL(string: trimmedText) {
+            return .init(title: "URL", type: .url(url))
+        }
+        else {
+            return .init(title: "URN", type: .urn(trimmedText))
+        }
+    }
+
+    var body: some View {
+        VStack {
+            TextFieldView(text: $text)
+            if !text.isEmpty {
+                Button(action: play) {
+                    Text("Play")
+                }
+                .foregroundColor(Color.accentColor)
+            }
+        }
+        .buttonStyle(.plain)
+        .sheet(isPresented: $isPresented) {
+            PlayerView(media: media)
+        }
+    }
+
+    private func play() {
+        isPresented.toggle()
+    }
+}
+
 // Behavior: h-exp, v-exp
 struct ExamplesView: View {
     @StateObject private var model = ExamplesViewModel()
 
     var body: some View {
         List {
+            MediaEntryView()
             section(title: "SRG SSR streams (URLs)", medias: model.urlMedias)
             section(title: "SRG SSR streams (URNs)", medias: model.urnMedias)
             if !model.protectedMedias.isEmpty {
@@ -22,6 +81,7 @@ struct ExamplesView: View {
             section(title: "Unbuffered streams", medias: model.unbufferedMedias)
             section(title: "Corner cases", medias: model.cornerCaseMedias)
         }
+        .scrollDismissesKeyboard(.immediately)
         .animation(.linear(duration: 0.2), value: model.protectedMedias)
         .navigationTitle("Examples")
         .refreshable { await model.refresh() }
