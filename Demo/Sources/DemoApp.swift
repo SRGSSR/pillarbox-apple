@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-private struct MediasTab: View {
+private struct ExamplesTab: View {
     var body: some View {
         NavigationStack {
             ExamplesView()
@@ -68,9 +68,9 @@ struct DemoApp: App {
     var body: some Scene {
         WindowGroup {
             TabView {
-                MediasTab()
-                ListsTab()
+                ExamplesTab()
                 ShowcaseTab()
+                ListsTab()
                 SearchTab()
                 SettingsTab()
             }
