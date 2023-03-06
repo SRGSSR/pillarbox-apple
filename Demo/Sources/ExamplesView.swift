@@ -8,16 +8,7 @@ import SwiftUI
 
 // Behavior: h-exp, v-hug
 private struct TextFieldView: View {
-    @State private var text: String = ""
-    @State private var isPresented = false
-    private var media: Media {
-        if !text.hasPrefix("urn"), let url = URL(string: text) {
-            return .init(title: "URL", type: .url(url))
-        }
-        else {
-            return .init(title: "URN", type: .urn(text))
-        }
-    }
+    @Binding var text: String
 
     var body: some View {
         HStack {
@@ -30,14 +21,37 @@ private struct TextFieldView: View {
             }
             .tint(.white)
             .opacity(text.isEmpty ? 0 : 1)
-            .sheet(isPresented: $isPresented) {
-                PlayerView(media: media)
-            }
         }
     }
 
     private func clear() {
         text = ""
+    }
+}
+
+private struct MediaEntryView: View {
+    @State private var text = ""
+    @State private var isPresented = false
+
+    private var media: Media {
+        if !text.hasPrefix("urn"), let url = URL(string: text) {
+            return .init(title: "URL", type: .url(url))
+        }
+        else {
+            return .init(title: "URN", type: .urn(text))
+        }
+    }
+
+    var body: some View {
+        VStack {
+            TextFieldView(text: $text)
+            Button(action: play) {
+                Text("Play")
+            }
+            .sheet(isPresented: $isPresented) {
+                PlayerView(media: media)
+            }
+        }
     }
 
     private func play() {
@@ -51,7 +65,7 @@ struct ExamplesView: View {
 
     var body: some View {
         List {
-            TextFieldView()
+            MediaEntryView()
             section(title: "SRG SSR streams (URLs)", medias: model.urlMedias)
             section(title: "SRG SSR streams (URNs)", medias: model.urnMedias)
             if !model.protectedMedias.isEmpty {
