@@ -66,8 +66,9 @@ private struct ContentCell: View {
             .swipeActions { CopyButton(text: topic.urn) }
 #endif
         case let .media(media):
-            Cell(title: media.title, subtitle: media.show?.title, style: Self.style(for: media)) {
-                PlayerView(media: Media(title: media.title, type: .urn(media.urn)))
+            let title = MediaDescription.title(for: media)
+            Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
+                PlayerView(media: Media(title: title, type: .urn(media.urn)))
             }
 #if os(iOS)
             .swipeActions { CopyButton(text: media.urn) }
@@ -80,10 +81,6 @@ private struct ContentCell: View {
             .swipeActions { CopyButton(text: show.urn) }
 #endif
         }
-    }
-
-    private static func style(for media: SRGMedia) -> CellStyle {
-        media.timeAvailability(at: Date()) == .available ? .standard : .disabled
     }
 }
 

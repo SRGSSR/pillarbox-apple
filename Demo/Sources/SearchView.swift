@@ -39,7 +39,8 @@ struct SearchView: View {
     func loadedView(_ medias: [SRGMedia]) -> some View {
         if !medias.isEmpty {
             List(medias, id: \.urn) { media in
-                Cell(title: media.title, subtitle: media.show?.title) {
+                let title = MediaDescription.title(for: media)
+                Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
                     PlayerView(media: Media(title: media.title, type: .urn(media.urn)))
                 }
                 .onAppear {
