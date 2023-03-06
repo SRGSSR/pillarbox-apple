@@ -48,6 +48,10 @@ final class ExamplesViewModel: ObservableObject {
         URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS
     ])
 
+    let thirdPartyMedias = Template.medias(from: [
+        URLTemplate.uhdVideoHLS
+    ])
+
     let cornerCaseMedias = Template.medias(from: [
         URNTemplate.expired,
         URNTemplate.unknown

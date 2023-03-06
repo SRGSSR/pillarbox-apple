@@ -34,7 +34,7 @@ private struct LoadedView: View {
     private func templates() -> [Template] {
         contents.compactMap { content -> Template? in
             guard case let .media(media) = content else { return nil }
-            return Template(title: media.title, type: .urn(media.urn))
+            return Template(title: media.title, description: MediaDescription.subtitle(for: media), type: .urn(media.urn))
         }
     }
 

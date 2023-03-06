@@ -77,6 +77,7 @@ struct ExamplesView: View {
                 section(title: "Protected streams (URNs)", medias: model.protectedMedias)
             }
             section(title: "Apple streams", medias: model.appleMedias)
+            section(title: "Third-party streams", medias: model.thirdPartyMedias)
             section(title: "Aspect ratios", medias: model.aspectRatioMedias)
             section(title: "Unbuffered streams", medias: model.unbufferedMedias)
             section(title: "Corner cases", medias: model.cornerCaseMedias)

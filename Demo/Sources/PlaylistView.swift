@@ -14,7 +14,14 @@ private struct MediaCell: View {
 
     var body: some View {
         HStack {
-            Text(media.title)
+            VStack(alignment: .leading) {
+                Text(media.title)
+                if let description = media.description {
+                    Text(description)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+            }
             Spacer()
             Image(systemName: "play.circle")
                 .frame(maxWidth: 30, maxHeight: 30)
@@ -56,8 +63,8 @@ private struct PlaylistSelectionView: View {
     private func section(title: String, templates: [Template]) -> some View {
         if !templates.isEmpty {
             Section(title) {
-                ForEach(templates, id: \.self) { media in
-                    Text(media.title)
+                ForEach(templates, id: \.self) { template in
+                    Text(template.title)
                 }
             }
         }

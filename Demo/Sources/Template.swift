@@ -108,6 +108,13 @@ enum URLTemplate {
             URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_adv_example_hevc/master.m3u8")!
         )
     )
+    static let uhdVideoHLS = Template(
+        title: "Brain Farm Skate Phantom Flex",
+        description: "4K video",
+        type: .url(
+            URL(string: "http://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8")!
+        )
+    )
     static let onDemandVideoLocalHLS = Template(
         title: "Nyan cat",
         description: "Stream served locally",
