@@ -34,11 +34,12 @@ private struct MediaEntryView: View {
     @State private var isPresented = false
 
     private var media: Media {
-        if !text.hasPrefix("urn"), let url = URL(string: text) {
+        let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedText.hasPrefix("urn"), let url = URL(string: trimmedText) {
             return .init(title: "URL", type: .url(url))
         }
         else {
-            return .init(title: "URN", type: .urn(text))
+            return .init(title: "URN", type: .urn(trimmedText))
         }
     }
 
