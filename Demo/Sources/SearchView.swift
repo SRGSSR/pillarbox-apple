@@ -36,7 +36,7 @@ struct SearchView: View {
     }
 
     @ViewBuilder
-    func loadedView(_ medias: [SRGMedia]) -> some View {
+    private func loadedView(_ medias: [SRGMedia]) -> some View {
         if !medias.isEmpty {
             List(medias, id: \.urn) { media in
                 let title = MediaDescription.title(for: media)
