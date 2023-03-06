@@ -26,12 +26,13 @@ enum MediaDescription {
     }
 
     static func subtitle(for media: SRGMedia) -> String {
-        let formattedDate = dateFormatter.string(from: media.date)
+        let icon = media.mediaType == .audio ? "🎧" : "🎬"
+        let description = "\(dateFormatter.string(from: media.date)) \(icon)"
         if let show = media.show {
-            return "\(show.title) - \(formattedDate)"
+            return "\(show.title) - \(description)"
         }
         else {
-            return formattedDate
+            return description
         }
     }
 
