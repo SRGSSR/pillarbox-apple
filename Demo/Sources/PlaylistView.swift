@@ -63,8 +63,8 @@ private struct PlaylistSelectionView: View {
     private func section(title: String, templates: [Template]) -> some View {
         if !templates.isEmpty {
             Section(title) {
-                ForEach(templates, id: \.self) { media in
-                    Text(media.title)
+                ForEach(templates, id: \.self) { template in
+                    Text(template.title)
                 }
             }
         }
