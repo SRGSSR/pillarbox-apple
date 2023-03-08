@@ -17,8 +17,8 @@ struct ListsView: View {
             Self.section(for: .tvShows, image: "rectangle.on.rectangle.angled", vendors: [.SRF, .RTS, .RSI, .RTR])
             Self.section(for: .liveCenterVideos, image: "sportscourt", vendors: [.SRF, .RTS, .RSI])
             Self.section(for: .tvScheduledLivestreams, image: "globe", vendors: [.SRF, .RTS, .RSI, .RTR])
-            Self.section(for: .radioLivestreams, image: "waveform", vendors: [.SRF, .RTS, .RSI, .RTR])
-            Self.radioShows(image: "antenna.radiowaves.left.and.right")
+            Self.section(for: .radioLivestreams, image: "antenna.radiowaves.left.and.right", vendors: [.SRF, .RTS, .RSI, .RTR])
+            Self.radioShows(image: "waveform")
             Self.latestAudiosSection(image: "music.note.list")
         }
         .navigationTitle("Lists")
