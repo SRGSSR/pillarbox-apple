@@ -199,9 +199,15 @@ public extension Player {
     /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
     ///   whether the skip could finish without being cancelled.
     func skipToDefault(completion: @escaping (Bool) -> Void = { _ in }) {
-        let time = (streamType == .dvr) ? timeRange.end : .zero
-        seek(near(time)) { finished in
-            completion(finished)
+        switch streamType {
+        case .dvr:
+            seek(after(timeRange.end)) { finished in
+                completion(finished)
+            }
+        default:
+            seek(near(.zero)) { finished in
+                completion(finished)
+            }
         }
     }
 }
