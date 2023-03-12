@@ -62,7 +62,10 @@ public extension Publishers {
     ///   - signal: The signal to listen to.
     ///   - publisher: The publisher to execute.
     /// - Returns: The resulting publisher.
-    static func Publish<S, P>(onOutputFrom signal: S?, _ publisher: @escaping () -> P) -> AnyPublisher<P.Output, P.Failure> where S: Publisher, P: Publisher, S.Failure == Never {
+    static func Publish<S, P>(
+        onOutputFrom signal: S?,
+        _ publisher: @escaping () -> P
+    ) -> AnyPublisher<P.Output, P.Failure> where S: Publisher, P: Publisher, S.Failure == Never {
         guard let signal else {
             return Empty<P.Output, P.Failure>().eraseToAnyPublisher()
         }
@@ -78,7 +81,10 @@ public extension Publishers {
     ///   - signal: The signal to listen to.
     ///   - publisher: The publisher to execute.
     /// - Returns: The resulting publisher.
-    static func PublishAndRepeat<S, P>(onOutputFrom signal: S?, _ publisher: @escaping () -> P) -> AnyPublisher<P.Output, P.Failure> where S: Publisher, P: Publisher, S.Failure == Never {
+    static func PublishAndRepeat<S, P>(
+        onOutputFrom signal: S?,
+        _ publisher: @escaping () -> P
+    ) -> AnyPublisher<P.Output, P.Failure> where S: Publisher, P: Publisher, S.Failure == Never {
         guard let signal else {
             return publisher().eraseToAnyPublisher()
         }

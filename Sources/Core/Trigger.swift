@@ -10,11 +10,14 @@ import Combine
 /// controlled by the trigger and which emit a void value when activated. Signal publishers never complete and thus
 /// can be activated as many times as needed.
 public struct Trigger {
+    /// The index type.
     public typealias Index = Int
+
+    /// The signal type.
     public typealias Signal = AnyPublisher<Void, Never>
-    
+
     private let sender = PassthroughSubject<Index, Never>()
-    
+
     /// Create a trigger.
     public init() {}
 
@@ -22,7 +25,7 @@ public struct Trigger {
     /// - Parameter index: The index used for activation.
     /// - Returns: The signal.
     public func signal(activatedBy index: Index) -> Signal {
-        return sender
+        sender
             .filter { $0 == index }
             .map { _ in }
             .eraseToAnyPublisher()
@@ -39,15 +42,14 @@ public struct Trigger {
  *  Extension for using hashable types as indices.
  */
 
-
 public extension Trigger {
     /// Create an associated signal activated by some hashable value.
     /// - Parameter t: The hashable value used for activation.
     /// - Returns: The signal.
     func signal<T>(activatedBy t: T) -> Signal where T: Hashable {
-        return signal(activatedBy: t.hashValue)
+        signal(activatedBy: t.hashValue)
     }
-    
+
     /// Activate associated signal publishers matching the provided hashable value, making them emit a single void value.
     /// - Parameter t: The hashable value used for activation.
     func activate<T>(for t: T) where T: Hashable {
