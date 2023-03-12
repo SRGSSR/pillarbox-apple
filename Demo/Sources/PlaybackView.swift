@@ -20,8 +20,8 @@ private struct MainView: View {
                 main()
                 timeBar()
             }
-            .animation(.easeInOut(duration: 0.2), value: player.isBusy)
-            .animation(.easeInOut(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
+            .animation(.linear(duration: 0.2), value: player.isBusy)
+            .animation(.linear(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
         }
         .bind(visibilityTracker, to: player)
         .debugBodyCounter()
