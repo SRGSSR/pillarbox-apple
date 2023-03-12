@@ -21,7 +21,7 @@ public extension Publishers {
     /// Accumulate the results of a list of publishers and deliver them as a stream of arrays containing the latest
     /// values in publisher order. The first array is emitted once all publishers have at least emitted a value once.
     /// - Parameter publishers: The publishers to accumulate.
-    /// - Returns: The resultingpublisher.
+    /// - Returns: The resulting publisher.
     static func AccumulateLatestMany<Upstream, S>(
         _ publishers: S
     ) -> AnyPublisher<[Upstream.Output], Upstream.Failure> where Upstream: Publisher, S: Swift.Sequence, S.Element == Upstream {
