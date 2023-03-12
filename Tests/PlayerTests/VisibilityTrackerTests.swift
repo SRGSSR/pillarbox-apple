@@ -10,6 +10,7 @@ import Circumspect
 import Nimble
 import XCTest
 
+@available(tvOS, unavailable)
 final class VisibilityTrackerTests: TestCase {
     func testInitiallyVisible() {
         let visibilityTracker = VisibilityTracker()
