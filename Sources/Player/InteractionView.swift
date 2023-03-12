@@ -66,8 +66,12 @@ public struct InteractionView<Content: View>: View {
 
     public var body: some View {
         // Ignore the safe area to have support for safe area insets similar to a `ZStack`.
-        _InteractionView(action: action, content: content)
-            .ignoresSafeArea()
+        _InteractionView(action: action) {
+            ZStack {
+                content()
+            }
+        }
+        .ignoresSafeArea()
     }
 
     /// Create the interaction view.
@@ -101,11 +105,13 @@ struct InteractionView_Previews: PreviewProvider {
 
         InteractionView(action: {}) {
             Color.red
+            Color.blue
         }
         .previewDisplayName("Simple InteractionView")
 
         ZStack {
             Color.red
+            Color.blue
         }
         .previewDisplayName("Simple ZStack")
     }
