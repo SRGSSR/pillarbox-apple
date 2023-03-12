@@ -9,10 +9,10 @@ import SwiftUI
 
 /// An internal host controller detecting user interaction in its content view.
 @available(tvOS, unavailable)
-public final class InteractionHostingController<Content: View>: UIHostingController<Content>, UIGestureRecognizerDelegate {
+private final class InteractionHostingController<Content: View>: UIHostingController<Content>, UIGestureRecognizerDelegate {
     var action: (() -> Void)?
 
-    override public func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
         let gestureRecognizer = ActivityGestureRecognizer(target: self, action: #selector(reportActivity(_:)))
@@ -20,7 +20,7 @@ public final class InteractionHostingController<Content: View>: UIHostingControl
         view.addGestureRecognizer(gestureRecognizer)
     }
 
-    public func gestureRecognizer(
+    func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWith otherGestureRecognizer:
         UIGestureRecognizer
