@@ -95,6 +95,10 @@ Xcode _Text Editing_ settings should be configured as follows:
 - [shellcheck extension](https://marketplace.visualstudio.com/items?itemName=timonwong.shellcheck)
 - [rubocop extension](https://marketplace.visualstudio.com/items?itemName=misogi.ruby-rubocop)
 
+## Xcode previews
+
+Please ensure that the target an Xcode preview belongs to is selected before attempting to render an Xcode preview (otherwise rendering will crash). Note that attempting to use the `Pillarbox-Package` umbrella target does not work.
+
 ## Code signing
 
 We are currently using [cloud signing](https://developer.apple.com/wwdc21/10204) with automatic provisioning updates. Code signing requires access to our [internal configuration repository](https://github.com/SRGSSR/pillarbox-apple-configuration) which is automatically pulled when running `make setup`, provided you have been granted access to it.
