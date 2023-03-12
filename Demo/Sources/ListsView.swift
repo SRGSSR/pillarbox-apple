@@ -22,6 +22,16 @@ struct ListsView: View {
             Self.latestAudiosSection(image: "music.note.list")
         }
         .navigationTitle("Lists")
+        .toolbarTitleMenu {
+            Self.titlesMenu()
+        }
+    }
+
+    @ViewBuilder
+    private static func titlesMenu() -> some View {
+        ForEach(ServiceUrl.allCases, id: \.self) { serviceUrl in
+            Button(serviceUrl.title) {}
+        }
     }
 
     @ViewBuilder
