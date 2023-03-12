@@ -6,7 +6,8 @@
 
 import SwiftUI
 
-/// A view triggering an action when any kind of touch interaction happens with its content.
+/// A view triggering an action when any kind of touch interaction happens with its content. The view layout its
+/// children like a `ZStack`.
 @available(tvOS, unavailable)
 public struct InteractionView<Content: View>: View {
     private let action: () -> Void

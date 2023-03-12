@@ -61,18 +61,18 @@ struct PlayerView: View {
 
 A system default playback user experience is provided as well. Just use `SystemVideoView` instead of `VideoView`.
 
-## User interface visibiltiy management
+## User interface visibility management
 
 A player usually responds to user interaction as follows:
 
-- When the user taps the screen controls are toggled on or off.
-- When the player is playing controls are automatically hidden after some delay. This must only occur if the user is not actively interacting with the player in some way.
+- Controls are toggled on or off when the user taps the screen.
+- Controls are automatically hidden after some delay during playback. Auto hide must only occur as long as the user is not actively interacting with the player in some way.
 
-To make implementing this behavior as straightforward as possible Pillarbox provides a `VisibilityTracker`. This observable object exposes a `isUserInterfaceHidden` property which advises whether a player user interface should be hidden or not.
+Pillarbox provides `VisibilityTracker` to make implementing this standard behavior as straightforward as possible. This observable object exposes a `isUserInterfaceHidden` read-only property which advises whether a player user interface should be hidden or not.
 
 ### Visibility tracking 
 
-We can expand the previous example by adding a play / pause button. We can use a visibility tracker to manage playback button visibility so that the button is automatically hidden after a while. Note that the visibility tracker must be explicitly bound to the player using the dedicated `bind(_:to:)` modifier:
+We want to expand our example by adding a playback button. We can use a visibility tracker to manage playback button visibility so that the button is automatically hidden after a while. Note that the visibility tracker must be explicitly bound to the player using the dedicated `bind(_:to:)` modifier:
 
 ```swift
 struct PlayerView: View {
@@ -86,22 +86,31 @@ struct PlayerView: View {
     var body: some View {
         ZStack {
             VideoView(player: player)
-            Button(action: player.togglePlayPause) {
-                Image(systemName: playbackButtonImageName)
-                   .resizable()
-                    .tint(.white)
-            }
-            .opacity(visibilityTracker.isUserInterfaceHidden ? 0 : 1)
-            .aspectRatio(contentMode: .fit)
-            .frame(height: 90)
+            controls()
         }
+        .animation(.linear(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
         .onTapGesture(perform: visibilityTracker.toggle)
         .onAppear {
             player.play()
         }
         .bind(visibilityTracker, to: player)
     }
-    
+
+    @ViewBuilder
+    private func controls() -> some View {
+        ZStack {
+            Color(white: 0, opacity: 0.3)
+            Button(action: player.togglePlayPause) {
+                Image(systemName: playbackButtonImageName)
+                    .resizable()
+                    .tint(.white)
+            }
+            .aspectRatio(contentMode: .fit)
+            .frame(height: 90)
+        }
+        .opacity(visibilityTracker.isUserInterfaceHidden ? 0 : 1)
+    }
+
     private var playbackButtonImageName: String {
         switch player.playbackState {
         case .playing:
@@ -125,15 +134,9 @@ struct PlayerView: View {
         InteractionView(action: visibilityTracker.reset) {
             ZStack {
                 VideoView(player: player)
-                Button(action: player.togglePlayPause) {
-                    Image(systemName: playbackButtonImageName)
-                        .resizable()
-                        .tint(.white)
-                }
-                .opacity(visibilityTracker.isUserInterfaceHidden ? 0 : 1)
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 90)
+                controls()
             }
+            .animation(.linear(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
             .onTapGesture(perform: visibilityTracker.toggle)
         }
         .onAppear {
