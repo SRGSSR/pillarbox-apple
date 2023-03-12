@@ -19,7 +19,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         try? AVAudioSession.sharedInstance().setCategory(.playback)
         UserDefaults.standard.registerDefaults()
         configureShowTime()
-        SRGDataProvider.current = SRGDataProvider(serviceURL: SRGIntegrationLayerProductionServiceURL())
+        configureDataProvider()
         return true
     }
 
@@ -28,6 +28,15 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             .receiveOnMainThread()
             .sink { isEnabled in
                 ShowTime.enabled = isEnabled ? .always : .never
+            }
+            .store(in: &cancellables)
+    }
+
+    private func configureDataProvider() {
+        UserDefaults.standard.publisher(for: \.serviceUrlEnvironment)
+            .receiveOnMainThread()
+            .sink { serviceUrl in
+                SRGDataProvider.current = SRGDataProvider(serviceURL: serviceUrl.url)
             }
             .store(in: &cancellables)
     }
