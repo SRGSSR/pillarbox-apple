@@ -52,9 +52,7 @@ struct PlayerView: View {
 
     var body: some View {
         VideoView(player: player)
-            .onAppear {
-                player.play()
-            }
+            .onAppear(perform: player.play)
     }
 }
 ```
@@ -90,9 +88,7 @@ struct PlayerView: View {
         }
         .animation(.linear(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
         .onTapGesture(perform: visibilityTracker.toggle)
-        .onAppear {
-            player.play()
-        }
+        .onAppear(perform: player.play)
         .bind(visibilityTracker, to: player)
     }
 
@@ -139,9 +135,7 @@ struct PlayerView: View {
             .animation(.linear(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
             .onTapGesture(perform: visibilityTracker.toggle)
         }
-        .onAppear {
-            player.play()
-        }
+        .onAppear(perform: player.play)
         .bind(visibilityTracker, to: player)
     }
 }
@@ -187,9 +181,7 @@ struct PlayerView: View {
             VideoView(player: player)
             TimeSlider(player: player)
         }
-        .onAppear {
-            player.play()
-        }
+        .onAppear(perform: player.play)
     }
 }
 ```

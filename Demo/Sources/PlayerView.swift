@@ -16,9 +16,7 @@ struct PlayerView: View {
 
     var body: some View {
         PlaybackView(player: player)
-            .onAppear {
-                load()
-            }
+            .onAppear(perform: load)
     }
 
     private func load() {

@@ -335,9 +335,7 @@ struct PlaybackView: View {
             }
         }
         .background(.black)
-        .onAppear {
-            player.play()
-        }
+        .onAppear(perform: player.play)
     }
 
     @ViewBuilder

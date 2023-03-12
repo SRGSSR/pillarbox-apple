@@ -27,9 +27,7 @@ struct WrappedView: View {
             }
             .padding()
         }
-        .onAppear {
-            play()
-        }
+        .onAppear(perform: play)
     }
 
     private func play() {
