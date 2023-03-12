@@ -33,6 +33,7 @@ private struct ContentView: View {
             .animation(.easeInOut(duration: 0.2), value: player.isBusy)
             .animation(.easeInOut(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
         }
+        .bind(visibilityTracker, to: player)
         .debugBodyCounter()
     }
 
