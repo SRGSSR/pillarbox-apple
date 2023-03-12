@@ -6,13 +6,21 @@
 
 import SRGDataProvider
 
-enum ServiceUrl: String, CaseIterable {
+@objc
+enum ServiceUrl: Int, CaseIterable {
     case production
     case staging
     case test
 
     var title: String {
-        self.rawValue.capitalized
+        switch self {
+        case .production:
+            return "Production"
+        case .staging:
+            return "Staging"
+        case .test:
+            return "Test"
+        }
     }
 
     var url: URL {

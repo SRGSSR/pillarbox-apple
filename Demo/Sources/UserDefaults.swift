@@ -25,6 +25,7 @@ extension UserDefaults {
     static let allowsExternalPlaybackKey = "allowsExternalPlayback"
     static let smartNavigationEnabledKey = "smartNavigationEnabled"
     static let audiovisualBackgroundPlaybackPolicyKey = "audiovisualBackgroundPlaybackPolicy"
+    static let serviceUrlEnvironmentKey = "serviceUrlEnvironment"
 
     @objc dynamic var presenterModeEnabled: Bool {
         bool(forKey: Self.presenterModeEnabledKey)
@@ -59,6 +60,10 @@ extension UserDefaults {
         .init(rawValue: integer(forKey: Self.audiovisualBackgroundPlaybackPolicyKey)) ?? .automatic
     }
 
+    @objc dynamic var serviceUrlEnvironment: ServiceUrl {
+        .init(rawValue: integer(forKey: Self.serviceUrlEnvironmentKey)) ?? .production
+    }
+
     func registerDefaults() {
         register(defaults: [
             Self.presenterModeEnabledKey: false,
@@ -66,7 +71,8 @@ extension UserDefaults {
             Self.seekBehaviorSettingKey: SeekBehaviorSetting.immediate.rawValue,
             Self.allowsExternalPlaybackKey: true,
             Self.smartNavigationEnabledKey: true,
-            Self.audiovisualBackgroundPlaybackPolicyKey: AVPlayerAudiovisualBackgroundPlaybackPolicy.automatic.rawValue
+            Self.audiovisualBackgroundPlaybackPolicyKey: AVPlayerAudiovisualBackgroundPlaybackPolicy.automatic.rawValue,
+            Self.serviceUrlEnvironmentKey: ServiceUrl.production.rawValue
         ])
     }
 }
