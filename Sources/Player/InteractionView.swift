@@ -9,22 +9,15 @@ import SwiftUI
 
 /// An internal host controller detecting user interaction in its content view.
 @available(tvOS, unavailable)
-public final class _InteractionHostingController<Content: View>: UIHostingController<Content>, UIGestureRecognizerDelegate {
+public final class InteractionHostingController<Content: View>: UIHostingController<Content>, UIGestureRecognizerDelegate {
     var action: (() -> Void)?
 
     override public func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .clear
         let gestureRecognizer = ActivityGestureRecognizer(target: self, action: #selector(reportActivity(_:)))
         gestureRecognizer.delegate = self
         view.addGestureRecognizer(gestureRecognizer)
-    }
-
-    override public func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        // Fix incorrect frame so that wrapped content can correctly extend beyond the safe area when required to.
-        if let superview = view.superview, let parent = superview.superview {
-            superview.frame = parent.bounds
-        }
     }
 
     public func gestureRecognizer(
@@ -41,11 +34,38 @@ public final class _InteractionHostingController<Content: View>: UIHostingContro
     }
 }
 
-/// A view detecting triggering an associated action when any kind of touch interaction happens with its content.
 @available(tvOS, unavailable)
-public struct InteractionView<Content: View>: UIViewRepresentable {
+private struct _InteractionView<Content: View>: UIViewControllerRepresentable {
     private let action: () -> Void
     @Binding private var content: () -> Content
+
+    init(action: @escaping () -> Void, @ViewBuilder content: @escaping () -> Content) {
+        self.action = action
+        _content = .constant(content)
+    }
+
+    // Return a `UIHostingController` directly to ensure correct safe area insets
+    func makeUIViewController(context: Context) -> InteractionHostingController<Content> {
+        InteractionHostingController(rootView: content())
+    }
+
+    func updateUIViewController(_ uiViewController: InteractionHostingController<Content>, context: Context) {
+        uiViewController.rootView = content()
+        uiViewController.action = action
+    }
+}
+
+/// A view detecting triggering an associated action when any kind of touch interaction happens with its content.
+@available(tvOS, unavailable)
+public struct InteractionView<Content: View>: View {
+    private let action: () -> Void
+    @Binding private var content: () -> Content
+
+    public var body: some View {
+        // Ignore the safe area to have support for safe area insets similar to a `ZStack`.
+        _InteractionView(action: action, content: content)
+            .ignoresSafeArea()
+    }
 
     /// Create the interaction view.
     /// - Parameters:
@@ -54,23 +74,6 @@ public struct InteractionView<Content: View>: UIViewRepresentable {
     public init(action: @escaping () -> Void, @ViewBuilder content: @escaping () -> Content) {
         self.action = action
         _content = .constant(content)
-    }
-
-    public func makeCoordinator() -> _InteractionHostingController<Content> {
-        _InteractionHostingController(rootView: content())
-    }
-
-    public func makeUIView(context: Context) -> UIView {
-        let hostView = context.coordinator.view!
-        hostView.backgroundColor = .clear
-        return hostView
-    }
-
-    public func updateUIView(_ uiView: UIView, context: Context) {
-        let hostController = context.coordinator
-        hostController.rootView = content()
-        hostController.action = action
-        uiView.applySizingBehavior(of: hostController)
     }
 }
 
@@ -84,13 +87,23 @@ struct InteractionView_Previews: PreviewProvider {
                 Color.blue
             }
         }
+        .previewDisplayName("Safe area ignored in InteractionView")
+
+        ZStack {
+            Color.red
+                .ignoresSafeArea()
+            Color.blue
+        }
+        .previewDisplayName("Safe area ignored in ZStack")
+
         InteractionView(action: {}) {
             Color.red
         }
-        InteractionView(action: {}) {
-            ZStack {
-                Color.red
-            }
+        .previewDisplayName("Simple InteractionView")
+
+        ZStack {
+            Color.red
         }
+        .previewDisplayName("Simple ZStack")
     }
 }

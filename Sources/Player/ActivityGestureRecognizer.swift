@@ -6,7 +6,6 @@
 
 import UIKit
 
-
 /// A gesture recognizer which detects all kinds of user activities and calls the associated action on its target if any
 /// activity is detected.
 @available(tvOS, unavailable)

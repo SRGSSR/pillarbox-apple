@@ -35,8 +35,8 @@ private struct MainView: View {
             loadingIndicator()
         }
         .accessibilityAddTraits(.isButton)
-        .ignoresSafeArea()
         .onTapGesture(perform: visibilityTracker.toggle)
+        .ignoresSafeArea()
     }
 
     @ViewBuilder
