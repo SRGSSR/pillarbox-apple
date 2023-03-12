@@ -59,7 +59,7 @@ struct PlayerView: View {
 
 A system default playback user experience is provided as well. Just use `SystemVideoView` instead of `VideoView`.
 
-## User interface visibility management
+## User interface visibility management (iOS)
 
 A player usually responds to user interaction in a standard way:
 
@@ -196,11 +196,11 @@ To make it easier to spot where user interface updates can be optimized our `Cor
 
 A player can be loaded with several items to create a playlist. The playlist can be mutated at any time by inserting, deleting or moving items. Please refer to our extended playlist demo to discover what can be readily achieved with our current playlist API.
 
-## AirPlay
+## AirPlay (iOS)
 
 The player supports AirPlay. Please ensure that your application audio session and background modes are configured appropriately.
 
-## Control center integration
+## Control center integration (iOS)
 
 The player is automatically integrated with the control center. Currently only the most recent player instance is registered with the control center. This behavior will be further improved in the future, though.
 
