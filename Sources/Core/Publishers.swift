@@ -10,8 +10,8 @@ import Foundation
 public extension Publishers {
     /// Accumulate the results of a list of publishers and deliver them as a stream of arrays containing the latest
     /// values in publisher order. The first array is emitted once all publishers have at least emitted a value once.
-    /// - Parameter publishers: The publishers to accumulate
-    /// - Returns: The publisher
+    /// - Parameter publishers: The publishers to accumulate.
+    /// - Returns: The resulting publisher.
     static func AccumulateLatestMany<Upstream>(
         _ publishers: Upstream...
     ) -> AnyPublisher<[Upstream.Output], Upstream.Failure> where Upstream: Publisher {
@@ -20,8 +20,8 @@ public extension Publishers {
 
     /// Accumulate the results of a list of publishers and deliver them as a stream of arrays containing the latest
     /// values in publisher order. The first array is emitted once all publishers have at least emitted a value once.
-    /// - Parameter publishers: The publishers to accumulate
-    /// - Returns: The publisher
+    /// - Parameter publishers: The publishers to accumulate.
+    /// - Returns: The resultingpublisher.
     static func AccumulateLatestMany<Upstream, S>(
         _ publishers: S
     ) -> AnyPublisher<[Upstream.Output], Upstream.Failure> where Upstream: Publisher, S: Swift.Sequence, S.Element == Upstream {
@@ -37,15 +37,11 @@ public extension Publishers {
                 .eraseToAnyPublisher()
         case 2:
             return Publishers.CombineLatest(publishersArray[0], publishersArray[1])
-                .map { t1, t2 in
-                    [t1, t2]
-                }
+                .map { [$0, $1] }
                 .eraseToAnyPublisher()
         case 3:
             return Publishers.CombineLatest3(publishersArray[0], publishersArray[1], publishersArray[2])
-                .map { t1, t2, t3 in
-                    [t1, t2, t3]
-                }
+                .map { [$0, $1, $2] }
                 .eraseToAnyPublisher()
         default:
             let half = publishersArray.count / 2
@@ -53,11 +49,48 @@ public extension Publishers {
                 AccumulateLatestMany(Array(publishersArray[0..<half])),
                 AccumulateLatestMany(Array(publishersArray[half..<publishersArray.count]))
             )
-            .map { array1, array2 in
-                array1 + array2
-            }
+            .map { $0 + $1 }
             .eraseToAnyPublisher()
         }
+    }
+}
+
+public extension Publishers {
+    /// Make the upstream publisher publish each time a second signal publisher emits some value. If no signal is provided
+    /// the publisher never executes.
+    /// - Parameters:
+    ///   - signal: The signal to listen to.
+    ///   - publisher: The publisher to execute.
+    /// - Returns: The resulting publisher.
+    static func Publish<S, P>(onOutputFrom signal: S?, _ publisher: @escaping () -> P) -> AnyPublisher<P.Output, P.Failure> where S: Publisher, P: Publisher, S.Failure == Never {
+        guard let signal else {
+            return Empty<P.Output, P.Failure>().eraseToAnyPublisher()
+        }
+        return signal
+            .map { _ in publisher() }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+
+    /// Make the upstream publisher execute once and repeat each time a second signal publisher emits some value. If no
+    /// signal is provided the publisher simply executes once and never repeats.
+    /// - Parameters:
+    ///   - signal: The signal to listen to.
+    ///   - publisher: The publisher to execute.
+    /// - Returns: The resulting publisher.
+    static func PublishAndRepeat<S, P>(onOutputFrom signal: S?, _ publisher: @escaping () -> P) -> AnyPublisher<P.Output, P.Failure> where S: Publisher, P: Publisher, S.Failure == Never {
+        guard let signal else {
+            return publisher().eraseToAnyPublisher()
+        }
+
+        // Use `prepend(_:)` to trigger an initial update
+        // Inspired from https://stackoverflow.com/questions/66075000/swift-combine-publishers-where-one-hasnt-sent-a-value-yet
+        return signal
+            .map { _ in }
+            .prepend(())
+            .map { _ in publisher() }
+            .switchToLatest()
+            .eraseToAnyPublisher()
     }
 }
 

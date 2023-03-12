@@ -11,28 +11,28 @@ import SwiftUI
 // Behavior: h-exp, v-exp
 private struct ContentView: View {
     @ObservedObject var player: Player
-    @State private var isUserInterfaceHidden = false
+    @StateObject private var visibilityTracker = VisibilityTracker()
 
     var body: some View {
-        ZStack {
+        InteractionView(action: visibilityTracker.reset) {
             ZStack {
-                main()
-                controls()
-                loadingIndicator()
-            }
-            .onTapGesture {
-                isUserInterfaceHidden.toggle()
-            }
-            .accessibilityAddTraits(.isButton)
-            .ignoresSafeArea()
+                ZStack {
+                    main()
+                    controls()
+                    loadingIndicator()
+                }
+                .onTapGesture(perform: visibilityTracker.toggle)
+                .accessibilityAddTraits(.isButton)
+                .ignoresSafeArea()
 #if os(iOS)
-            TimeBar(player: player)
-                .opacity(isUserInterfaceHidden ? 0 : 1)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                TimeBar(player: player)
+                    .opacity(visibilityTracker.isUserInterfaceHidden ? 0 : 1)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
 #endif
+            }
+            .animation(.easeInOut(duration: 0.2), value: player.isBusy)
+            .animation(.easeInOut(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
         }
-        .animation(.easeInOut(duration: 0.2), value: player.isBusy)
-        .animation(.easeInOut(duration: 0.2), value: isUserInterfaceHidden)
         .debugBodyCounter()
     }
 
@@ -56,7 +56,7 @@ private struct ContentView: View {
     @ViewBuilder
     private func controls() -> some View {
         ControlsView(player: player)
-            .opacity(isUserInterfaceHidden ? 0 : 1)
+            .opacity(visibilityTracker.isUserInterfaceHidden ? 0 : 1)
     }
 
     @ViewBuilder
