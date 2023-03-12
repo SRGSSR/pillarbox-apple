@@ -61,6 +61,89 @@ struct PlayerView: View {
 
 A system default playback user experience is provided as well. Just use `SystemVideoView` instead of `VideoView`.
 
+## User interface visibiltiy management
+
+A player usually responds to user interaction as follows:
+
+- When the user taps the screen controls are toggled on or off.
+- When the player is playing controls are automatically hidden after some delay. This must only occur if the user is not actively interacting with the player in some way.
+
+To make implementing this behavior as straightforward as possible Pillarbox provides a `VisibilityTracker`. This observable object exposes a `isUserInterfaceHidden` property which advises whether a player user interface should be hidden or not.
+
+### Visibility tracking 
+
+We can expand the previous example by adding a play / pause button. We can use a visibility tracker to manage playback button visibility so that the button is automatically hidden after a while. Note that the visibility tracker must be explicitly bound to the player using the dedicated `bind(_:to:)` modifier:
+
+```swift
+struct PlayerView: View {
+    @StateObject private var player = Player(items: [
+        .simple(url: URL(string: "https://server.com/stream.m3u8")!),
+        .urn("urn:rts:video:13444333")
+    ])
+    
+    @StateObject private var visibilityTracker = VisibilityTracker()
+
+    var body: some View {
+        ZStack {
+            VideoView(player: player)
+            Button(action: player.togglePlayPause) {
+                Image(systemName: playbackButtonImageName)
+                   .resizable()
+                    .tint(.white)
+            }
+            .opacity(visibilityTracker.isUserInterfaceHidden ? 0 : 1)
+            .aspectRatio(contentMode: .fit)
+            .frame(height: 90)
+        }
+        .onTapGesture(perform: visibilityTracker.toggle)
+        .onAppear {
+            player.play()
+        }
+        .bind(visibilityTracker, to: player)
+    }
+    
+    private var playbackButtonImageName: String {
+        switch player.playbackState {
+        case .playing:
+            return "pause.circle.fill"
+        default:
+            return "play.circle.fill"
+        }
+    }
+}
+```
+
+### Interaction tracking
+
+Usually you want to ensure that controls stay visible if the user is somehow interacting them. If a player layout namely provides a slider you usually don't want the slider to be animated away automatically while the user is still interacing with it. Such behaviors can simply be achieved by wrapping the area where user interaction must be tracked with an `InteractionView` which resets the visibility tracker delay:
+
+```swift
+struct PlayerView: View {
+    // ...
+
+    var body: some View {
+        InteractionView(action: visibilityTracker.reset) {
+            ZStack {
+                VideoView(player: player)
+                Button(action: player.togglePlayPause) {
+                    Image(systemName: playbackButtonImageName)
+                        .resizable()
+                        .tint(.white)
+                }
+                .opacity(visibilityTracker.isUserInterfaceHidden ? 0 : 1)
+                .aspectRatio(contentMode: .fit)
+                .frame(height: 90)
+            }
+            .onTapGesture(perform: visibilityTracker.toggle)
+        }
+        .onAppear {
+            player.play()
+        }
+        .bind(visibilityTracker, to: player)
+    }
+}
+```
+
 ## Advanced view layouts
 
 Pillarbox currently does not provide any standard playback view you can use but you can build one yourself. Since `Player` is an `ObservableObject`, though, implementation of a playback view can be easily achieved in the same was as for any usual SwiftUI layout.
@@ -71,7 +154,7 @@ When significant changes occur within the player (e.g. state or buffering update
 
 Periodic time updates are not published automatically by a `Player`. If you want to respond to time updates you must instantiate a `ProgressTracker`. This observable object both lets you observe time updates while allowing you to alter playback progress interactively.
 
-Here is for example how you can create a `TimeSlider` view with a native slider updated every 1/10th of a second:
+Here is for example how you can create a `TimeSlider` view with a native slider updated every 1/10th of a second by a progress tracker. Note that the progress tracker must be explicitly bound to the player using the dedicated `bind(_:to:)` modifier:
 
 ```swift
 private struct TimeSlider: View {
@@ -87,7 +170,7 @@ private struct TimeSlider: View {
 }
 ```
 
-The progress tracker must be explicitly bound to a player using the dedicated `bind(_:to:)` modifier. This `TimeSlider` can then be inserted into your player view hierarchy:
+This `TimeSlider` can then be inserted into your player view hierarchy:
 
 ```swift
 struct PlayerView: View {
