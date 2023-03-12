@@ -59,7 +59,7 @@ private struct _InteractionView<Content: View>: UIViewControllerRepresentable {
     }
 }
 
-/// A view detecting triggering an associated action when any kind of touch interaction happens with its content.
+/// A view triggering an action when any kind of touch interaction happens with its content.
 @available(tvOS, unavailable)
 public struct InteractionView<Content: View>: View {
     private let action: () -> Void
