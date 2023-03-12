@@ -7,7 +7,8 @@
 import Core
 import SwiftUI
 
-public final class InteractionHostingController<Content: View>: UIHostingController<Content>, UIGestureRecognizerDelegate {
+/// An internal host controller detecting user interaction in its content view.
+public final class _InteractionHostingController<Content: View>: UIHostingController<Content>, UIGestureRecognizerDelegate {
     var action: (() -> Void)?
 
     override public func viewDidLoad() {
@@ -19,6 +20,7 @@ public final class InteractionHostingController<Content: View>: UIHostingControl
 
     override public func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+        // Fix incorrect frame so that wrapped content can correctly extend beyond the safe area when required to.
         if let superview = view.superview, let parent = superview.superview {
             superview.frame = parent.bounds
         }
@@ -38,17 +40,22 @@ public final class InteractionHostingController<Content: View>: UIHostingControl
     }
 }
 
+/// A view detecting triggering an associated action when any kind of touch interaction happens with its content.
 public struct InteractionView<Content: View>: UIViewRepresentable {
     private let action: () -> Void
     @Binding private var content: () -> Content
 
+    /// Create the interaction view.
+    /// - Parameters:
+    ///   - action: The action to trigger when user interaction is detected.
+    ///   - content: The wrapped content.
     public init(action: @escaping () -> Void, @ViewBuilder content: @escaping () -> Content) {
         self.action = action
         _content = .constant(content)
     }
 
-    public func makeCoordinator() -> InteractionHostingController<Content> {
-        InteractionHostingController(rootView: content())
+    public func makeCoordinator() -> _InteractionHostingController<Content> {
+        _InteractionHostingController(rootView: content())
     }
 
     public func makeUIView(context: Context) -> UIView {

@@ -6,8 +6,11 @@
 
 import UIKit
 
-// Heavily inspired by MPActivityGestureRecognizer from the MediaPlayer framework
+
+/// A gesture recognizer which detects all kinds of user activities and calls the associated action on its target if any
+/// activity is detected.
 final class ActivityGestureRecognizer: UIGestureRecognizer {
+    // Heavily inspired by MPActivityGestureRecognizer from the MediaPlayer framework
     override init(target: Any?, action: Selector?) {
         super.init(target: target, action: action)
         cancelsTouchesInView = false
