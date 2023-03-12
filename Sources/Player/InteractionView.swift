@@ -6,59 +6,6 @@
 
 import SwiftUI
 
-/// An internal host controller detecting user interaction in its content view.
-/// TODO: Currently public for SwiftUI previews to work but likely an Xcode preview bug.
-@available(tvOS, unavailable)
-public final class InteractionHostingController<Content: View>: UIHostingController<Content>, UIGestureRecognizerDelegate {
-    var action: (() -> Void)?
-
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .clear
-        configureGestureRecognizer()
-    }
-
-    private func configureGestureRecognizer() {
-        let gestureRecognizer = ActivityGestureRecognizer(target: self, action: #selector(reportActivity(_:)))
-        gestureRecognizer.delegate = self
-        view.addGestureRecognizer(gestureRecognizer)
-    }
-
-    public func gestureRecognizer(
-        _ gestureRecognizer: UIGestureRecognizer,
-        shouldRecognizeSimultaneouslyWith otherGestureRecognizer:
-        UIGestureRecognizer
-    ) -> Bool {
-        true
-    }
-
-    @objc
-    private func reportActivity(_ gestureRecognizer: UIGestureRecognizer) {
-        action?()
-    }
-}
-
-@available(tvOS, unavailable)
-private struct _InteractionView<Content: View>: UIViewControllerRepresentable {
-    private let action: () -> Void
-    @Binding private var content: () -> Content
-
-    init(action: @escaping () -> Void, @ViewBuilder content: @escaping () -> Content) {
-        self.action = action
-        _content = .constant(content)
-    }
-
-    // Return a `UIHostingController` directly to ensure correct safe area insets
-    func makeUIViewController(context: Context) -> InteractionHostingController<Content> {
-        InteractionHostingController(rootView: content())
-    }
-
-    func updateUIViewController(_ uiViewController: InteractionHostingController<Content>, context: Context) {
-        uiViewController.rootView = content()
-        uiViewController.action = action
-    }
-}
-
 /// A view triggering an action when any kind of touch interaction happens with its content.
 @available(tvOS, unavailable)
 public struct InteractionView<Content: View>: View {
@@ -67,7 +14,7 @@ public struct InteractionView<Content: View>: View {
 
     public var body: some View {
         // Ignore the safe area to have support for safe area insets similar to a `ZStack`.
-        _InteractionView(action: action) {
+        InteractionHostView(action: action) {
             ZStack {
                 content()
             }
