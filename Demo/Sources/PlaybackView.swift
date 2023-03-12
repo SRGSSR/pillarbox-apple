@@ -9,26 +9,16 @@ import Player
 import SwiftUI
 
 // Behavior: h-exp, v-exp
-private struct ContentView: View {
+@available(tvOS, unavailable)
+private struct MainView: View {
     @ObservedObject var player: Player
     @StateObject private var visibilityTracker = VisibilityTracker()
 
     var body: some View {
         InteractionView(action: visibilityTracker.reset) {
             ZStack {
-                ZStack {
-                    main()
-                    controls()
-                    loadingIndicator()
-                }
-                .onTapGesture(perform: visibilityTracker.toggle)
-                .accessibilityAddTraits(.isButton)
-                .ignoresSafeArea()
-#if os(iOS)
-                TimeBar(player: player)
-                    .opacity(visibilityTracker.isUserInterfaceHidden ? 0 : 1)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-#endif
+                main()
+                timeBar()
             }
             .animation(.easeInOut(duration: 0.2), value: player.isBusy)
             .animation(.easeInOut(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
@@ -39,6 +29,25 @@ private struct ContentView: View {
 
     @ViewBuilder
     private func main() -> some View {
+        ZStack {
+            video()
+            controls()
+            loadingIndicator()
+        }
+        .accessibilityAddTraits(.isButton)
+        .ignoresSafeArea()
+        .onTapGesture(perform: visibilityTracker.toggle)
+    }
+
+    @ViewBuilder
+    private func timeBar() -> some View {
+        TimeBar(player: player)
+            .opacity(visibilityTracker.isUserInterfaceHidden ? 0 : 1)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+    }
+
+    @ViewBuilder
+    private func video() -> some View {
         if player.isExternalPlaybackActive {
             Image(systemName: "airplayvideo")
                 .resizable()
@@ -65,9 +74,7 @@ private struct ContentView: View {
         ProgressView()
             .tint(.white)
             .opacity(player.isBusy ? 1 : 0)
-#if os(iOS)
             .controlSize(.large)
-#endif
     }
 }
 
@@ -320,7 +327,7 @@ struct PlaybackView: View {
                 case let .failed(error: error):
                     PlaybackMessageView(message: error.localizedDescription)
                 default:
-                    ContentView(player: player)
+                    videoView()
                 }
             }
             else {
@@ -331,6 +338,15 @@ struct PlaybackView: View {
         .onAppear {
             player.play()
         }
+    }
+
+    @ViewBuilder
+    private func videoView() -> some View {
+#if os(iOS)
+        MainView(player: player)
+#else
+        VideoView(player: player)
+#endif
     }
 }
 

@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 
 /// Tracks user interface visibility.
+@available(tvOS, unavailable)
 public final class VisibilityTracker: ObservableObject {
     private enum TriggerId {
         case reload
@@ -74,6 +75,7 @@ public final class VisibilityTracker: ObservableObject {
     }
 }
 
+@available(tvOS, unavailable)
 public extension View {
     /// Bind a visibility tracker to a player.
     /// - Parameters:

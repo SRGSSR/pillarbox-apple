@@ -8,6 +8,7 @@ import Core
 import SwiftUI
 
 /// An internal host controller detecting user interaction in its content view.
+@available(tvOS, unavailable)
 public final class _InteractionHostingController<Content: View>: UIHostingController<Content>, UIGestureRecognizerDelegate {
     var action: (() -> Void)?
 
@@ -41,6 +42,7 @@ public final class _InteractionHostingController<Content: View>: UIHostingContro
 }
 
 /// A view detecting triggering an associated action when any kind of touch interaction happens with its content.
+@available(tvOS, unavailable)
 public struct InteractionView<Content: View>: UIViewRepresentable {
     private let action: () -> Void
     @Binding private var content: () -> Content
@@ -72,6 +74,7 @@ public struct InteractionView<Content: View>: UIViewRepresentable {
     }
 }
 
+@available(tvOS, unavailable)
 struct InteractionView_Previews: PreviewProvider {
     static var previews: some View {
         InteractionView(action: {}) {
