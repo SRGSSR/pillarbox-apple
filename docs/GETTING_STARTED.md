@@ -68,7 +68,7 @@ A player usually responds to user interaction as follows:
 
 Pillarbox provides `VisibilityTracker` to make implementing this standard behavior as straightforward as possible. This observable object exposes a `isUserInterfaceHidden` read-only property which advises whether a player user interface should be hidden or not.
 
-### Visibility tracking 
+### Visibility tracking
 
 We want to expand our example by adding a playback button. We can use a visibility tracker to manage playback button visibility so that the button is automatically hidden after a while. Note that the visibility tracker must be explicitly bound to the player using the dedicated `bind(_:to:)` modifier:
 
@@ -78,7 +78,7 @@ struct PlayerView: View {
         .simple(url: URL(string: "https://server.com/stream.m3u8")!),
         .urn("urn:rts:video:13444333")
     ])
-    
+
     @StateObject private var visibilityTracker = VisibilityTracker()
 
     var body: some View {
