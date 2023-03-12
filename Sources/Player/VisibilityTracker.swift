@@ -6,8 +6,7 @@
 
 import Combine
 import Core
-import Player
-import SwiftUI
+import Foundation
 
 // FIXME:
 //   - Should not trigger when the player is paused
