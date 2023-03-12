@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Core
 import SwiftUI
 
 /// An internal host controller detecting user interaction in its content view.
