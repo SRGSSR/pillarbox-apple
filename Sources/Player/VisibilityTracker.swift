@@ -9,7 +9,7 @@ import Core
 import Foundation
 import SwiftUI
 
-/// Tracks user interface visibility.
+/// Tracks user interface visibility, managing auto hide after a delay.
 @available(tvOS, unavailable)
 public final class VisibilityTracker: ObservableObject {
     private enum TriggerId {
@@ -30,11 +30,11 @@ public final class VisibilityTracker: ObservableObject {
     private let trigger = Trigger()
 
     /// Create a tracker managing user interface visibility and automatically setting visibility to hidden after
-    /// some timeout.
+    /// a delay.
     /// - Parameters:
-    ///   - timeout: The timeout after which `isUserInterfaceHidden` is automatically reset to `true`.
+    ///   - delay: The delay after which `isUserInterfaceHidden` is automatically reset to `true`.
     ///   - isUserInterfaceHidden: The initial value for `isUserInterfaceHidden`.
-    public init(timeout: TimeInterval = 4, isUserInterfaceHidden: Bool = false) {
+    public init(delay: TimeInterval = 4, isUserInterfaceHidden: Bool = false) {
         self.isUserInterfaceHidden = isUserInterfaceHidden
 
         $player
@@ -50,7 +50,7 @@ public final class VisibilityTracker: ObservableObject {
                     return Empty<Bool, Never>().eraseToAnyPublisher()
                 }
                 return Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) {
-                    Timer.publish(every: timeout, on: .main, in: .common)
+                    Timer.publish(every: delay, on: .main, in: .common)
                         .autoconnect()
                         .first()
                 }
@@ -67,11 +67,10 @@ public final class VisibilityTracker: ObservableObject {
         isUserInterfaceHidden.toggle()
     }
 
-    /// Reset user interface visibility timeout.
+    /// Reset user interface auto hide delay.
     public func reset() {
-        if !isUserInterfaceHidden {
-            trigger.activate(for: TriggerId.reload)
-        }
+        guard !isUserInterfaceHidden else { return }
+        trigger.activate(for: TriggerId.reload)
     }
 }
 
