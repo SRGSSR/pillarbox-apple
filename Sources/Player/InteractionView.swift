@@ -7,11 +7,12 @@
 import SwiftUI
 
 /// An internal host controller detecting user interaction in its content view.
+/// TODO: Currently public for SwiftUI previews to work but likely an Xcode preview bug.
 @available(tvOS, unavailable)
-private final class InteractionHostingController<Content: View>: UIHostingController<Content>, UIGestureRecognizerDelegate {
+public final class InteractionHostingController<Content: View>: UIHostingController<Content>, UIGestureRecognizerDelegate {
     var action: (() -> Void)?
 
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
         configureGestureRecognizer()
@@ -23,7 +24,7 @@ private final class InteractionHostingController<Content: View>: UIHostingContro
         view.addGestureRecognizer(gestureRecognizer)
     }
 
-    func gestureRecognizer(
+    public func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWith otherGestureRecognizer:
         UIGestureRecognizer
