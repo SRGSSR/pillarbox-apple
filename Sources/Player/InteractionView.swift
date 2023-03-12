@@ -15,6 +15,10 @@ private final class InteractionHostingController<Content: View>: UIHostingContro
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .clear
+        configureGestureRecognizer()
+    }
+
+    private func configureGestureRecognizer() {
         let gestureRecognizer = ActivityGestureRecognizer(target: self, action: #selector(reportActivity(_:)))
         gestureRecognizer.delegate = self
         view.addGestureRecognizer(gestureRecognizer)
