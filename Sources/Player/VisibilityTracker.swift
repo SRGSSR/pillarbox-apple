@@ -13,7 +13,7 @@ import SwiftUI
 @available(tvOS, unavailable)
 public final class VisibilityTracker: ObservableObject {
     private enum TriggerId {
-        case reload
+        case reset
     }
 
     /// The player to attach. Use `View.bind(_:to:)` in SwiftUI code.
@@ -23,7 +23,7 @@ public final class VisibilityTracker: ObservableObject {
     @Published public private(set) var isUserInterfaceHidden: Bool {
         didSet {
             guard !isUserInterfaceHidden else { return }
-            trigger.activate(for: TriggerId.reload)
+            trigger.activate(for: TriggerId.reset)
         }
     }
 
@@ -49,7 +49,7 @@ public final class VisibilityTracker: ObservableObject {
                 guard playbackState == .playing else {
                     return Empty<Bool, Never>().eraseToAnyPublisher()
                 }
-                return Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) {
+                return Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reset)) {
                     Timer.publish(every: delay, on: .main, in: .common)
                         .autoconnect()
                         .first()
@@ -70,7 +70,7 @@ public final class VisibilityTracker: ObservableObject {
     /// Reset user interface auto hide delay.
     public func reset() {
         guard !isUserInterfaceHidden else { return }
-        trigger.activate(for: TriggerId.reload)
+        trigger.activate(for: TriggerId.reset)
     }
 }
 
