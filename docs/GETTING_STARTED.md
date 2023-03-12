@@ -61,16 +61,16 @@ A system default playback user experience is provided as well. Just use `SystemV
 
 ## User interface visibility management
 
-A player usually responds to user interaction as follows:
+A player usually responds to user interaction in a standard way:
 
-- Controls are toggled on or off when the user taps the screen.
-- Controls are automatically hidden after some delay during playback. Auto hide must only occur as long as the user is not actively interacting with the player in some way.
+- Controls are toggled on or off when the user taps the player area.
+- Controls are automatically hidden after some delay during playback. Auto hide must only occur as long as the user is not actively interacting with the player, though, for example if controls contain a slider or buttons.
 
 Pillarbox provides `VisibilityTracker` to make implementing this standard behavior as straightforward as possible. This observable object exposes a `isUserInterfaceHidden` read-only property which advises whether a player user interface should be hidden or not.
 
 ### Visibility tracking
 
-We want to expand our example by adding a playback button. We can use a visibility tracker to manage playback button visibility so that the button is automatically hidden after a while. Note that the visibility tracker must be explicitly bound to the player using the dedicated `bind(_:to:)` modifier:
+We want to expand our above example by adding a controls overlay containing a playback button. We can use a visibility tracker to manage playback button visibility so that the button is automatically hidden after a while. Note that the visibility tracker must be explicitly bound to the player using the dedicated `bind(_:to:)` modifier:
 
 ```swift
 struct PlayerView: View {
@@ -118,9 +118,11 @@ struct PlayerView: View {
 }
 ```
 
+We also bound an animation to `visibilityTracker.isUserInterfaceHidden` changes so that controls fade in and out.
+
 ### Interaction tracking
 
-Usually you want to ensure that controls stay visible if the user is somehow interacting them. If a player layout namely provides a slider you usually don't want the slider to be animated away automatically while the user is still interacing with it. Such behaviors can simply be achieved by wrapping the area where user interaction must be tracked with an `InteractionView` which resets the visibility tracker delay:
+We want to ensure that controls stay visible if the user is somehow interacting with them. This behavior can simply be achieved by wrapping the player area where user interaction must be tracked with an `InteractionView`. The interaction view calls an action block when any touch is detected within its frame. In our case we simply reset the auto hide mechanism whenever this happens:
 
 ```swift
 struct PlayerView: View {
