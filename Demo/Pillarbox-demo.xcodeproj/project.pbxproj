@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E38099729BE2B6200EE0EB9 /* ServiceUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E38099629BE2B6200EE0EB9 /* ServiceUrl.swift */; };
 		0E8C362A296DB14600707FA5 /* PlayerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8C3629296DB14600707FA5 /* PlayerConfiguration.swift */; };
 		0EC085F129B1DF2800F154D1 /* ExamplesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC085F029B1DF2800F154D1 /* ExamplesViewModel.swift */; };
 		0EC085F529B1F90800F154D1 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC085F429B1F90800F154D1 /* SearchView.swift */; };
@@ -58,6 +59,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E38099629BE2B6200EE0EB9 /* ServiceUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceUrl.swift; sourceTree = "<group>"; };
 		0E8C3629296DB14600707FA5 /* PlayerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerConfiguration.swift; sourceTree = "<group>"; };
 		0EC085F029B1DF2800F154D1 /* ExamplesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamplesViewModel.swift; sourceTree = "<group>"; };
 		0EC085F429B1F90800F154D1 /* SearchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 				0EF42CBF29AF926B00553165 /* RadioChannel.swift */,
 				0EC085F429B1F90800F154D1 /* SearchView.swift */,
 				0EC085F629B1FB1300F154D1 /* SearchViewModel.swift */,
+				0E38099629BE2B6200EE0EB9 /* ServiceUrl.swift */,
 				6FCA4748292CC101008C2812 /* SettingsView.swift */,
 				6F3F15A628CEEC6900CA2BD1 /* ShowcaseView.swift */,
 				6F7750D528EABD5100E80196 /* SimplePlayerView.swift */,
@@ -358,6 +361,7 @@
 				6FB553B228C3AF020067CFC4 /* StoriesView.swift in Sources */,
 				6FCD6A1928AD158E00FCE4EA /* PlayerView.swift in Sources */,
 				0EC085F129B1DF2800F154D1 /* ExamplesViewModel.swift in Sources */,
+				0E38099729BE2B6200EE0EB9 /* ServiceUrl.swift in Sources */,
 				0EEB324C29506969002E49DC /* PlaylistView.swift in Sources */,
 				6FCD6A1B28AD1B9200FCE4EA /* ExamplesView.swift in Sources */,
 				6F917C0F2887EA8E004113BA /* DemoApp.swift in Sources */,

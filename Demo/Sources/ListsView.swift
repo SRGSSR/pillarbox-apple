@@ -9,6 +9,9 @@ import SwiftUI
 
 // Behavior: h-exp, v-exp
 struct ListsView: View {
+    @AppStorage(UserDefaults.serviceUrlKey)
+    private var serviceUrl: ServiceUrl = .production
+
     var body: some View {
         List {
             Self.section(for: .tvTopics, image: "tv", vendors: [.SRF, .RTS, .RSI, .RTR, .SWI])
@@ -21,7 +24,10 @@ struct ListsView: View {
             Self.radioShows(image: "waveform")
             Self.latestAudiosSection(image: "music.note.list")
         }
-        .navigationTitle("Lists")
+        .navigationTitle("Lists (\(serviceUrl.title))")
+        .toolbarTitleMenu {
+            titlesMenu()
+        }
     }
 
     @ViewBuilder
@@ -90,6 +96,22 @@ struct ListsView: View {
             .init(kind: .radioLatestMedias(radioChannel: .RSIReteTre), vendor: .RSI),
             .init(kind: .radioLatestMedias(radioChannel: .RTR), vendor: .RTR)
         ])
+    }
+
+    @ViewBuilder
+    private func titlesMenu() -> some View {
+        ForEach(ServiceUrl.allCases, id: \.self) { service in
+            Button {
+                serviceUrl = service
+            } label: {
+                HStack {
+                    Text(service.title)
+                    if serviceUrl == service {
+                        Image(systemName: "checkmark")
+                    }
+                }
+            }
+        }
     }
 }
 
