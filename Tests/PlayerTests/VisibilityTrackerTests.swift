@@ -53,7 +53,7 @@ final class VisibilityTrackerTests: TestCase {
         expect(visibilityTracker.isUserInterfaceHidden).toNever(beTrue(), until: .seconds(1))
     }
 
-    func testReset() {
+    func testResetAutoHide() {
         let visibilityTracker = VisibilityTracker(delay: 0.5)
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         player.play()
@@ -81,5 +81,34 @@ final class VisibilityTrackerTests: TestCase {
     func testInvalidDelay() {
         guard nimbleThrowAssertionsEnabled() else { return }
         expect(VisibilityTracker(delay: -5)).to(throwAssertion())
+    }
+
+    func testBindingDoesNotHideUserInterface() {
+        let visibilityTracker = VisibilityTracker()
+        visibilityTracker.player = Player()
+        expect(visibilityTracker.isUserInterfaceHidden).to(beFalse())
+    }
+
+    func testBindingDoesNotShowUserInterface() {
+        let visibilityTracker = VisibilityTracker(isUserInterfaceHidden: true)
+        visibilityTracker.player = Player()
+        expect(visibilityTracker.isUserInterfaceHidden).to(beTrue())
+    }
+
+    func testBindingDoesResetsAutoHide() {
+        let player1 = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
+        player1.play()
+        expect(player1.playbackState).toEventually(equal(.playing))
+
+        let player2 = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
+        player2.play()
+        expect(player2.playbackState).toEventually(equal(.playing))
+
+        let visibilityTracker = VisibilityTracker(delay: 0.5)
+        visibilityTracker.player = player1
+        expect(visibilityTracker.isUserInterfaceHidden).toAlways(beFalse(), until: .milliseconds(400))
+
+        visibilityTracker.player = player2
+        expect(visibilityTracker.isUserInterfaceHidden).toAlways(beFalse(), until: .milliseconds(400))
     }
 }
