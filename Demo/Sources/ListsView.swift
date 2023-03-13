@@ -24,7 +24,7 @@ struct ListsView: View {
             Self.radioShows(image: "waveform")
             Self.latestAudiosSection(image: "music.note.list")
         }
-        .navigationTitle("Lists")
+        .navigationTitle("Lists (\(serviceUrl.title))")
         .toolbarTitleMenu {
             titlesMenu()
         }
