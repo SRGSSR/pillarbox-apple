@@ -22,7 +22,7 @@ public enum StreamType {
         if !timeRange.isValid || !itemDuration.isValid {
             self = .unknown
         }
-        else if timeRange.isEmpty {
+        else if timeRange.isEmpty && !itemDuration.isNumeric {
             self = .live
         }
         else if itemDuration.isIndefinite {
