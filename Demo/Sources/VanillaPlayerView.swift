@@ -16,9 +16,7 @@ struct VanillaPlayerView: View {
     var body: some View {
         VideoPlayer(player: player)
             .ignoresSafeArea()
-            .onAppear {
-                play()
-            }
+            .onAppear(perform: play)
     }
 
     private func play() {

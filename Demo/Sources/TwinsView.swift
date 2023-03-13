@@ -38,9 +38,7 @@ struct TwinsView: View {
             .pickerStyle(.segmented)
             .padding()
         }
-        .onAppear {
-            play()
-        }
+        .onAppear(perform: play)
     }
 
     private func play() {

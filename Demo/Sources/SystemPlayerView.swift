@@ -17,9 +17,7 @@ struct SystemPlayerView: View {
     var body: some View {
         SystemVideoView(player: player)
             .ignoresSafeArea()
-            .onAppear {
-                play()
-            }
+            .onAppear(perform: play)
     }
 
     private func play() {

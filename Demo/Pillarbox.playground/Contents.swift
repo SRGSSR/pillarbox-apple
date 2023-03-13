@@ -60,9 +60,7 @@ struct PlayerView: View {
             }
             TimeSlider(player: player)
         }
-        .onAppear {
-            player.play()
-        }
+        .onAppear(perform: player.play)
     }
 }
 

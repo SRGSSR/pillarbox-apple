@@ -24,9 +24,7 @@ struct LinkView: View {
             Toggle("Content displayed", isOn: $isDisplayed)
                 .padding()
         }
-        .onAppear {
-            play()
-        }
+        .onAppear(perform: play)
     }
 
     private func play() {

@@ -20,9 +20,7 @@ struct SimplePlayerView: View {
             ProgressView()
                 .opacity(player.isBusy ? 1 : 0)
         }
-        .onAppear {
-            play()
-        }
+        .onAppear(perform: play)
     }
 
     private func play() {
