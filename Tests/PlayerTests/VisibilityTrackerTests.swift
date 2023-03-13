@@ -77,4 +77,9 @@ final class VisibilityTrackerTests: TestCase {
         visibilityTracker.toggle()
         expect(visibilityTracker.isUserInterfaceHidden).toEventually(beTrue(), timeout: .seconds(1))
     }
+
+    func testInvalidDelay() {
+        guard nimbleThrowAssertionsEnabled() else { return }
+        expect(VisibilityTracker(delay: -5)).to(throwAssertion())
+    }
 }

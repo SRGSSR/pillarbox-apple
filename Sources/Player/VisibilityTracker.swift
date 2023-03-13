@@ -35,6 +35,7 @@ public final class VisibilityTracker: ObservableObject {
     ///   - delay: The delay after which `isUserInterfaceHidden` is automatically reset to `true`.
     ///   - isUserInterfaceHidden: The initial value for `isUserInterfaceHidden`.
     public init(delay: TimeInterval = 4, isUserInterfaceHidden: Bool = false) {
+        assert(delay > 0)
         self.isUserInterfaceHidden = isUserInterfaceHidden
 
         $player
