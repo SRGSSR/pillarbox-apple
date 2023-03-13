@@ -6,16 +6,16 @@
 
 import SwiftUI
 
-/// A view triggering an action when any kind of touch interaction happens with its content. The view lays out its
-/// children like a `ZStack`.
+/// A view which is able to determine whether it is maximized in its parent context. The view lays out its children
+/// like a `ZStack`.
 @available(tvOS, unavailable)
-public struct InteractionView<Content: View>: View {
-    private let action: () -> Void
+public struct LayoutReader<Content: View>: View {
+    @Binding private var isMaximized: Bool
     @Binding private var content: () -> Content
 
     public var body: some View {
         // Ignore the safe area to have support for safe area insets similar to a `ZStack`.
-        InteractionHostView(action: action) {
+        LayoutReaderHost(isMaximized: _isMaximized) {
             ZStack {
                 content()
             }
@@ -23,27 +23,27 @@ public struct InteractionView<Content: View>: View {
         .ignoresSafeArea()
     }
 
-    /// Create the interaction view.
+    /// Create the layout reader.
     /// - Parameters:
-    ///   - action: The action to trigger when user interaction is detected.
+    ///   - isMaximized: A binding to a Boolean indicating whether the view is maximized in its context.
     ///   - content: The wrapped content.
-    public init(action: @escaping () -> Void, @ViewBuilder content: @escaping () -> Content) {
-        self.action = action
+    public init(isMaximized: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) {
+        _isMaximized = isMaximized
         _content = .constant(content)
     }
 }
 
 @available(tvOS, unavailable)
-struct InteractionView_Previews: PreviewProvider {
+struct LayoutReader_Previews: PreviewProvider {
     static var previews: some View {
-        InteractionView(action: {}) {
+        LayoutReader(isMaximized: .constant(true)) {
             ZStack {
                 Color.red
                     .ignoresSafeArea()
                 Color.blue
             }
         }
-        .previewDisplayName("Safe area ignored in InteractionView")
+        .previewDisplayName("Safe area ignored in LayoutReader")
 
         ZStack {
             Color.red
@@ -52,11 +52,11 @@ struct InteractionView_Previews: PreviewProvider {
         }
         .previewDisplayName("Safe area ignored in ZStack")
 
-        InteractionView(action: {}) {
+        LayoutReader(isMaximized: .constant(true)) {
             Color.red
             Color.blue
         }
-        .previewDisplayName("Simple InteractionView")
+        .previewDisplayName("Simple LayoutReader")
 
         ZStack {
             Color.red

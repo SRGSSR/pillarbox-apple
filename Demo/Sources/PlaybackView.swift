@@ -14,6 +14,8 @@ import SwiftUI
 private struct MainView: View {
     @ObservedObject var player: Player
     @StateObject private var visibilityTracker = VisibilityTracker()
+
+    @State private var isMaximized = false
     @State private var gravity: AVLayerVideoGravity = .resizeAspect
 
     var body: some View {
@@ -29,6 +31,10 @@ private struct MainView: View {
         .debugBodyCounter()
     }
 
+    private var magnificationGestureMask: GestureMask {
+        isMaximized ? .all : .subviews
+    }
+
     private func magnificationGesture() -> some Gesture {
         MagnificationGesture()
             .onChanged { scale in
@@ -38,15 +44,18 @@ private struct MainView: View {
 
     @ViewBuilder
     private func main() -> some View {
-        ZStack {
-            video()
-            controls()
-            loadingIndicator()
+        LayoutReader(isMaximized: $isMaximized) {
+            ZStack {
+                video()
+                controls()
+                loadingIndicator()
+            }
+            .animation(.linear(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
+            .accessibilityAddTraits(.isButton)
+            .onTapGesture(perform: visibilityTracker.toggle)
+            .gesture(magnificationGesture(), including: magnificationGestureMask)
+            .ignoresSafeArea()
         }
-        .accessibilityAddTraits(.isButton)
-        .onTapGesture(perform: visibilityTracker.toggle)
-        .gesture(magnificationGesture())
-        .ignoresSafeArea()
     }
 
     @ViewBuilder
