@@ -226,6 +226,7 @@
 				0EF42CBF29AF926B00553165 /* RadioChannel.swift */,
 				0EC085F429B1F90800F154D1 /* SearchView.swift */,
 				0EC085F629B1FB1300F154D1 /* SearchViewModel.swift */,
+				0E38099629BE2B6200EE0EB9 /* ServiceUrl.swift */,
 				6FCA4748292CC101008C2812 /* SettingsView.swift */,
 				6F3F15A628CEEC6900CA2BD1 /* ShowcaseView.swift */,
 				6F7750D528EABD5100E80196 /* SimplePlayerView.swift */,
@@ -240,7 +241,6 @@
 				0EF42CC129AF92DB00553165 /* Vendor.swift */,
 				6FD1F3AA28D0655800DF8CF1 /* WrappedView.swift */,
 				6FD1F3AC28D0657300DF8CF1 /* WrappedViewModel.swift */,
-				0E38099629BE2B6200EE0EB9 /* ServiceUrl.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
