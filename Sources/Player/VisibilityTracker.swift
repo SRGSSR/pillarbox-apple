@@ -41,14 +41,14 @@ public final class VisibilityTracker: ObservableObject {
         $player
             .map { player -> AnyPublisher<PlaybackState, Never> in
                 guard let player else {
-                    return Empty<PlaybackState, Never>().eraseToAnyPublisher()
+                    return Empty().eraseToAnyPublisher()
                 }
                 return player.$playbackState.eraseToAnyPublisher()
             }
             .switchToLatest()
             .map { [trigger] playbackState -> AnyPublisher<Bool, Never> in
                 guard playbackState == .playing else {
-                    return Empty<Bool, Never>().eraseToAnyPublisher()
+                    return Empty().eraseToAnyPublisher()
                 }
                 return Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reset)) {
                     Timer.publish(every: delay, on: .main, in: .common)
