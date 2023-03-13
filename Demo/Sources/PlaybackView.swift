@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import CoreMedia
 import Player
 import SwiftUI
@@ -13,6 +14,7 @@ import SwiftUI
 private struct MainView: View {
     @ObservedObject var player: Player
     @StateObject private var visibilityTracker = VisibilityTracker()
+    @State private var gravity: AVLayerVideoGravity = .resizeAspect
 
     var body: some View {
         InteractionView(action: visibilityTracker.reset) {
@@ -27,6 +29,13 @@ private struct MainView: View {
         .debugBodyCounter()
     }
 
+    private func magnificationGesture() -> some Gesture {
+        MagnificationGesture()
+            .onChanged { scale in
+                gravity = scale > 1.0 ? .resizeAspectFill : .resizeAspect
+            }
+    }
+
     @ViewBuilder
     private func main() -> some View {
         ZStack {
@@ -36,6 +45,7 @@ private struct MainView: View {
         }
         .accessibilityAddTraits(.isButton)
         .onTapGesture(perform: visibilityTracker.toggle)
+        .gesture(magnificationGesture())
         .ignoresSafeArea()
     }
 
@@ -59,7 +69,7 @@ private struct MainView: View {
                 .padding()
         }
         else {
-            VideoView(player: player)
+            VideoView(player: player, gravity: gravity)
         }
     }
 
