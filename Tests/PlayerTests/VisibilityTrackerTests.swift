@@ -104,19 +104,19 @@ final class VisibilityTrackerTests: TestCase {
         expect(VisibilityTracker(delay: -5)).to(throwAssertion())
     }
 
-    func testBindingDoesNotHideUserInterface() {
+    func testPlayerChangeDoesNotHideUserInterface() {
         let visibilityTracker = VisibilityTracker()
         visibilityTracker.player = Player()
         expect(visibilityTracker.isUserInterfaceHidden).to(beFalse())
     }
 
-    func testBindingDoesNotShowUserInterface() {
+    func testPlayerChangeDoesNotShowUserInterface() {
         let visibilityTracker = VisibilityTracker(isUserInterfaceHidden: true)
         visibilityTracker.player = Player()
         expect(visibilityTracker.isUserInterfaceHidden).to(beTrue())
     }
 
-    func testBindingDoesResetsAutoHide() {
+    func testPlayerChangeResetsAutoHide() {
         let player1 = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         player1.play()
         expect(player1.playbackState).toEventually(equal(.playing))

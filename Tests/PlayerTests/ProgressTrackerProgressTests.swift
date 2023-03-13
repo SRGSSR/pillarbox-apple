@@ -80,7 +80,7 @@ final class ProgressTrackerProgressTests: TestCase {
         }
     }
 
-    func testRebinding() {
+    func testPlayerChange() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
@@ -99,7 +99,7 @@ final class ProgressTrackerProgressTests: TestCase {
         }
     }
 
-    func testUnbinding() {
+    func testPlayerSetToNil() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
