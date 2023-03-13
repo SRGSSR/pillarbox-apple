@@ -9,7 +9,7 @@ import SwiftUI
 
 // Behavior: h-exp, v-exp
 struct ListsView: View {
-    @AppStorage(UserDefaults.serviceUrlEnvironmentKey)
+    @AppStorage(UserDefaults.serviceUrlKey)
     private var serviceUrl: ServiceUrl = .production
 
     var body: some View {

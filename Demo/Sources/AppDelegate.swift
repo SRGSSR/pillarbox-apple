@@ -33,7 +33,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
 
     private func configureDataProvider() {
-        UserDefaults.standard.publisher(for: \.serviceUrlEnvironment)
+        UserDefaults.standard.publisher(for: \.serviceUrl)
             .receiveOnMainThread()
             .sink { serviceUrl in
                 SRGDataProvider.current = SRGDataProvider(serviceURL: serviceUrl.url)
