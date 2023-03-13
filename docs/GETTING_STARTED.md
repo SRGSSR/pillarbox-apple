@@ -206,7 +206,7 @@ struct PlayerView: View {
         .simple(url: URL(string: "https://server.com/stream.m3u8")!),
         .urn("urn:rts:video:13444333")
     ])
-    
+
     @State private var isMaximized = false
     @State private var gravity: AVLayerVideoGravity = .resizeAspect
 
@@ -218,7 +218,7 @@ struct PlayerView: View {
         }
         .onAppear(perform: player.play)
     }
-    
+
     private var magnificationGestureMask: GestureMask {
         isMaximized ? .all : .subviews
     }
