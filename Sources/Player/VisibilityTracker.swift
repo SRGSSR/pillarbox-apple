@@ -39,6 +39,7 @@ public final class VisibilityTracker: ObservableObject {
         self.isUserInterfaceHidden = isUserInterfaceHidden
 
         $player
+            .removeDuplicates()
             .map { player -> AnyPublisher<PlaybackState, Never> in
                 guard let player else {
                     return Empty().eraseToAnyPublisher()

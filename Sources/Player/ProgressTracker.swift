@@ -67,6 +67,7 @@ public final class ProgressTracker: ObservableObject {
     public init(interval: CMTime, seekBehavior: SeekBehavior = .immediate) {
         self.seekBehavior = seekBehavior
         $player
+            .removeDuplicates()
             .map { [$isInteracting] player -> AnyPublisher<Float?, Never> in
                 guard let player else {
                     return Just(nil).eraseToAnyPublisher()
