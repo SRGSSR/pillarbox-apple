@@ -60,4 +60,19 @@ final class PlayerStreamTypeTests: TestCase {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toNever(equal(.dvr), until: .seconds(1), pollInterval: .microseconds(1))
     }
+
+    func testOnDemandMp3IsOnDemand() {
+        let player = Player(item: .simple(url: Stream.mp3.url))
+        expect(player.streamType).toEventually(equal(.onDemand))
+    }
+
+    func testOnDemandMp3IsNeverLive() {
+        let player = Player(item: .simple(url: Stream.mp3.url))
+        expect(player.streamType).toNever(equal(.live), until: .seconds(1), pollInterval: .microseconds(1))
+    }
+
+    func testOnDemandMp3IsNeverDvr() {
+        let player = Player(item: .simple(url: Stream.mp3.url))
+        expect(player.streamType).toNever(equal(.dvr), until: .seconds(1), pollInterval: .microseconds(1))
+    }
 }
