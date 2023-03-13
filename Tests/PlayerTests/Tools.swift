@@ -75,8 +75,8 @@ struct Stream {
     )
 
     static let mp3: Self = .init(
-        url: URL(string: "https://rts-aod-dd.akamaized.net/ww/13605286/4b41aaec-e159-35bd-a0c8-5e9f4d826f75.mp3")!,
-        duration: CMTime(value: 187, timescale: 1)
+        url: URL(string: "http://localhost:8123/mp3/silence.mp3")!,
+        duration: CMTime(value: 5, timescale: 1)
     )
 
     static let unavailable: Self = .init(
