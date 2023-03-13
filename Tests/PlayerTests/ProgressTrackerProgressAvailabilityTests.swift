@@ -13,7 +13,7 @@ import Nimble
 import XCTest
 
 final class ProgressTrackerProgressAvailabilityTests: TestCase {
-    func testForUnboundTracker() {
+    func testUnbound() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         expectEqualPublished(
             values: [false],
@@ -23,7 +23,7 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
         )
     }
 
-    func testForTrackerBoundToEmptyPlayer() {
+    func testEmptyPlayer() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         expectEqualPublished(
             values: [false],
@@ -35,7 +35,7 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
         }
     }
 
-    func testForTrackerBoundToPausedPlayer() {
+    func testPausedPlayer() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
@@ -49,7 +49,7 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
         }
     }
 
-    func testForTrackerDuringEntirePlayback() {
+    func testDuringEntirePlayback() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(item: item)
@@ -64,7 +64,7 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
         }
     }
 
-    func testForTrackerForPausedDvrStream() {
+    func testPausedDvrStream() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
@@ -78,7 +78,7 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
         }
     }
 
-    func testForTrackerRebinding() {
+    func testRebinding() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
@@ -96,7 +96,7 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
         }
     }
 
-    func testForTrackerUnbinding() {
+    func testUnbinding() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
@@ -114,7 +114,7 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
         }
     }
 
-    func testForTrackerBoundToPlayerAtSomeTime() {
+    func testBoundToPlayerAtSomeTime() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
