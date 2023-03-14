@@ -15,7 +15,7 @@ public struct LayoutReader<Content: View>: View {
 
     public var body: some View {
         // Ignore the safe area to have support for safe area insets similar to a `ZStack`.
-        LayoutReaderHost(isMaximized: _isMaximized) {
+        LayoutReaderHost(isMaximized: $isMaximized) {
             ZStack {
                 content()
             }
