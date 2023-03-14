@@ -6,16 +6,17 @@
 
 import SwiftUI
 
-/// A view triggering an action when any kind of touch interaction happens with its content. The view lays out its
-/// children like a `ZStack`.
+/// A view which is able to determine whether interaction occurs with its content. The view lays out its children
+/// like a `ZStack`.
 @available(tvOS, unavailable)
 public struct InteractionView<Content: View>: View {
+    @Binding private var isInteracting: Bool
     private let action: () -> Void
     @Binding private var content: () -> Content
 
     public var body: some View {
         // Ignore the safe area to have support for safe area insets similar to a `ZStack`.
-        InteractionHostView(action: action) {
+        InteractionHostView(isInteracting: _isInteracting, action: action) {
             ZStack {
                 content()
             }
@@ -25,9 +26,11 @@ public struct InteractionView<Content: View>: View {
 
     /// Create the interaction view.
     /// - Parameters:
+    ///   - isInteracting: A binding to a Boolean indicating whether the user is currently interacting with the view.
     ///   - action: The action to trigger when user interaction is detected.
     ///   - content: The wrapped content.
-    public init(action: @escaping () -> Void, @ViewBuilder content: @escaping () -> Content) {
+    public init(isInteracting: Binding<Bool> = .constant(false), action: @escaping () -> Void = {}, @ViewBuilder content: @escaping () -> Content) {
+        _isInteracting = isInteracting
         self.action = action
         _content = .constant(content)
     }
@@ -36,7 +39,7 @@ public struct InteractionView<Content: View>: View {
 @available(tvOS, unavailable)
 struct InteractionView_Previews: PreviewProvider {
     static var previews: some View {
-        InteractionView(action: {}) {
+        InteractionView(isInteracting: .constant(false)) {
             ZStack {
                 Color.red
                     .ignoresSafeArea()
@@ -52,7 +55,7 @@ struct InteractionView_Previews: PreviewProvider {
         }
         .previewDisplayName("Safe area ignored in ZStack")
 
-        InteractionView(action: {}) {
+        InteractionView(isInteracting: .constant(false)) {
             Color.red
             Color.blue
         }
