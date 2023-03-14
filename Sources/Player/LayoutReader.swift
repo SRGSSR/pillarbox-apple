@@ -100,6 +100,24 @@ struct LayoutReader_Previews: PreviewProvider {
         }
     }
 
+    private struct NonMaximizedLayoutReader: View {
+        var body: some View {
+            ZStack {
+                SafeAreaInLayoutReader()
+                    .frame(width: 400, height: 400)
+            }
+        }
+    }
+
+    private struct NonFullScreenLayoutReader: View {
+        var body: some View {
+            Color.yellow
+                .sheet(isPresented: .constant(true)) {
+                    SafeAreaInLayoutReader()
+                }
+        }
+    }
+
     static var previews: some View {
         IgnoredSafeAreaInLayoutReader()
             .previewDisplayName("Safe area ignored in LayoutReader")
@@ -109,10 +127,9 @@ struct LayoutReader_Previews: PreviewProvider {
             .previewDisplayName("Safe area in LayoutReader")
         SafeAreaInZStack()
             .previewDisplayName("Safe area in ZStack")
-        VStack {
-            SafeAreaInLayoutReader()
-                .frame(width: 400, height: 400)
-        }
-        .previewDisplayName("Non-maximized LayoutReader")
+        NonMaximizedLayoutReader()
+            .previewDisplayName("Non-maximized LayoutReader")
+        NonFullScreenLayoutReader()
+            .previewDisplayName("Non full-screen LayoutReader")
     }
 }
