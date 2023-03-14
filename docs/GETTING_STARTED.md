@@ -143,7 +143,7 @@ struct PlayerView: View {
 }
 ```
 
-## Advanced view layouts
+## Custom view layouts
 
 Pillarbox currently does not provide any standard playback view you can use but you can build one yourself. Since `Player` is an `ObservableObject`, though, implementation of a playback view can be easily achieved in the same was as for any usual SwiftUI layout.
 
@@ -191,6 +191,46 @@ struct PlayerView: View {
 By having the `ProgressTracker` stored in a nested view you ensure that only this part of the view hierarchy gets updated every 1/10th of a second. The main `PlayerView` itself is namely still only updated when the player state changes. This way you can avoid triggering frequent large view updates unnecessarily, which makes it possible to implement layouts in an energy-efficient way. Of course several progress trackers can be used should you want to have different parts of your user interface be updated at different rates.
 
 To make it easier to spot where user interface updates can be optimized our `Core` package provides a `_debugBodyCounter(color:)` modifier which surrounds any view you want to observe with a counter, showing how many times its body has been evaluated. This way you can observe how your layout behaves and visually detects where parts of your user interface could benefit from local progress tracking.
+
+## Maximized layout management (iOS)
+
+Sometimes you want to enable behaviors only when a player view fills its parent context, for example zoom gestures which control the `VideoView` gravity.
+
+Pillarbox does not implement such behaviors natively but instead provides a `LayoutReader` wrapper returning its maximization state in the parent context through a binding.
+
+Here is for example how you could implement a pinch gesture only available when the player view is maximized:
+
+```swift
+struct PlayerView: View {
+    @StateObject private var player = Player(items: [
+        .simple(url: URL(string: "https://server.com/stream.m3u8")!),
+        .urn("urn:rts:video:13444333")
+    ])
+
+    @State private var isMaximized = false
+    @State private var gravity: AVLayerVideoGravity = .resizeAspect
+
+    var body: some View {
+        LayoutReader(isMaximized: $isMaximized) {
+            VideoView(player: player, gravity: gravity)
+                .gesture(magnificationGesture(), including: magnificationGestureMask)
+                .ignoresSafeArea()
+        }
+        .onAppear(perform: player.play)
+    }
+
+    private var magnificationGestureMask: GestureMask {
+        isMaximized ? .all : .subviews
+    }
+
+    private func magnificationGesture() -> some Gesture {
+        MagnificationGesture()
+            .onChanged { scale in
+                gravity = scale > 1.0 ? .resizeAspectFill : .resizeAspect
+            }
+    }
+}
+```
 
 ## Playlists
 

@@ -38,11 +38,11 @@ public struct VideoView: UIViewRepresentable {
         let view = VideoLayerView()
         view.backgroundColor = .clear
         view.player = player.queuePlayer
-        view.playerLayer.videoGravity = gravity
         return view
     }
 
     public func updateUIView(_ uiView: VideoLayerView, context: Context) {
         uiView.player = player.queuePlayer
+        uiView.playerLayer.videoGravity = gravity
     }
 }
