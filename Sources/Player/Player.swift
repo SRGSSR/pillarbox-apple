@@ -625,7 +625,8 @@ extension Player {
 
     private func configureCurrentIndexPublisher() {
         currentPublisher()
-            .map(\.?.index)
+            .compactMap { $0 }
+            .map { $0.index }
             .receiveOnMainThread()
             .lane("player_current_index")
             .assign(to: &$currentIndex)
