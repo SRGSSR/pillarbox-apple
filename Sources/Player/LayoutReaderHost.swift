@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-/// An internal host controller which can determine if it is maximized in its parent context.
+/// An internal host controller which can determine whether it is maximized in its parent context or full screen.
 @available(tvOS, unavailable)
 final class LayoutReaderHostingController<Content: View>: UIHostingController<Content>, UIGestureRecognizerDelegate {
     var layoutInfo: Binding<LayoutInfo> = .constant(.none)
