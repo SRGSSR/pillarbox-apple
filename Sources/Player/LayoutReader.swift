@@ -114,6 +114,7 @@ struct LayoutReader_Previews: PreviewProvider {
             Color.yellow
                 .sheet(isPresented: .constant(true)) {
                     SafeAreaInLayoutReader()
+                        .interactiveDismissDisabled()
                 }
         }
     }
