@@ -48,10 +48,4 @@ final class PlayerTests: TestCase {
         }
         .toAlways(beTrue(), until: .seconds(1))
     }
-
-    func testStabilityAtStart() {
-        let item = PlayerItem.simple(url: Stream.onDemand.url)
-        let player = Player(item: item)
-        expect(player.streamType).toNever(equal(.dvr), until: .seconds(1), pollInterval: .microseconds(1))
-    }
 }

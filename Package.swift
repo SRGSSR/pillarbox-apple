@@ -129,6 +129,9 @@ let package = Package(
                 .target(name: "Circumspect"),
                 .target(name: "Player"),
                 .product(name: "OrderedCollections", package: "swift-collections")
+            ],
+            resources: [
+                .process("Resources")
             ]
         ),
         .testTarget(

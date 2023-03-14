@@ -74,6 +74,11 @@ struct Stream {
         duration: CMTime(value: 17 /* 20 - 3 * 1 (chunk) */, timescale: 1)
     )
 
+    static let mp3: Self = .init(
+        url: Bundle.test.url(forResource: "silence", withExtension: "mp3")!,
+        duration: CMTime(value: 5, timescale: 1)
+    )
+
     static let unavailable: Self = .init(
         url: URL(string: "http://localhost:8123/unavailable/master.m3u8")!,
         duration: .indefinite
