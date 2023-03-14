@@ -624,12 +624,23 @@ extension Player {
     }
 
     private func configureCurrentIndexPublisher() {
-        currentPublisher()
-            .compactMap { $0 }
-            .map { $0.index }
-            .receiveOnMainThread()
-            .lane("player_current_index")
-            .assign(to: &$currentIndex)
+        Publishers.CombineLatest3(
+            $storedItems,
+            $playbackState,
+            currentPublisher()
+                .compactMap { $0 }
+                .map { $0.index }
+        )
+        .map { items, state, currentIndex in
+            if state == .ended || items.isEmpty {
+                return nil
+            } else {
+                return currentIndex
+            }
+        }
+        .receiveOnMainThread()
+        .lane("player_current_index")
+        .assign(to: &$currentIndex)
     }
 
     private func configureControlCenterPublishers() {
