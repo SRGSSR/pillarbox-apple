@@ -64,8 +64,8 @@ struct InteractionHostView<Content: View>: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ uiViewController: InteractionHostingController<Content>, context: Context) {
-        uiViewController.rootView = content()
         uiViewController.isInteracting = _isInteracting
         uiViewController.action = action
+        uiViewController.rootView = content()
     }
 }

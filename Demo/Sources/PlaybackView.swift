@@ -15,7 +15,7 @@ private struct MainView: View {
     @ObservedObject var player: Player
     @StateObject private var visibilityTracker = VisibilityTracker()
 
-    @State private var isMaximized = false
+    @State private var layoutInfo: LayoutInfo = .none
     @State private var gravity: AVLayerVideoGravity = .resizeAspect
 
     var body: some View {
@@ -32,7 +32,7 @@ private struct MainView: View {
     }
 
     private var magnificationGestureMask: GestureMask {
-        isMaximized ? .all : .subviews
+        layoutInfo.isMaximized ? .all : .subviews
     }
 
     private func magnificationGesture() -> some Gesture {
@@ -44,7 +44,7 @@ private struct MainView: View {
 
     @ViewBuilder
     private func main() -> some View {
-        LayoutReader(isMaximized: $isMaximized) {
+        LayoutReader(layoutInfo: $layoutInfo) {
             ZStack {
                 video()
                 controls()

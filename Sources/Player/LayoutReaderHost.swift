@@ -9,7 +9,7 @@ import SwiftUI
 /// An internal host controller which can determine if it is maximized in its parent context.
 @available(tvOS, unavailable)
 final class LayoutReaderHostingController<Content: View>: UIHostingController<Content>, UIGestureRecognizerDelegate {
-    var isMaximized: Binding<Bool> = .constant(false)
+    var layoutInfo: Binding<LayoutInfo> = .constant(.none)
 
     private static func parent(for viewController: UIViewController) -> UIViewController {
         if let parentViewController = viewController.parent {
@@ -28,18 +28,24 @@ final class LayoutReaderHostingController<Content: View>: UIHostingController<Co
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         let frame = view.frame
+
         let parentFrame = Self.parent(for: self).view.frame
-        isMaximized.wrappedValue = frame == parentFrame
+        let screenFrame = view.window?.windowScene?.screen.bounds ?? .zero
+
+        layoutInfo.wrappedValue = .init(
+            isMaximized: frame == parentFrame,
+            isFullScreen: frame == screenFrame
+        )
     }
 }
 
 @available(tvOS, unavailable)
 struct LayoutReaderHost<Content: View>: UIViewControllerRepresentable {
-    @Binding private var isMaximized: Bool
+    @Binding private var layoutInfo: LayoutInfo
     @Binding private var content: () -> Content
 
-    init(isMaximized: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) {
-        _isMaximized = isMaximized
+    init(layoutInfo: Binding<LayoutInfo>, @ViewBuilder content: @escaping () -> Content) {
+        _layoutInfo = layoutInfo
         _content = .constant(content)
     }
 
@@ -49,7 +55,7 @@ struct LayoutReaderHost<Content: View>: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ uiViewController: LayoutReaderHostingController<Content>, context: Context) {
+        uiViewController.layoutInfo = _layoutInfo
         uiViewController.rootView = content()
-        uiViewController.isMaximized = _isMaximized
     }
 }
