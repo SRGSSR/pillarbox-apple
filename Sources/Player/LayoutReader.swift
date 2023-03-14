@@ -35,33 +35,65 @@ public struct LayoutReader<Content: View>: View {
 
 @available(tvOS, unavailable)
 struct LayoutReader_Previews: PreviewProvider {
-    static var previews: some View {
-        LayoutReader(isMaximized: .constant(true)) {
+    private struct IgnoredSafeAreaInLayoutReader: View {
+        @State private var isMaximized = false
+
+        var body: some View {
+            LayoutReader(isMaximized: $isMaximized) {
+                ZStack {
+                    Color.red
+                        .ignoresSafeArea()
+                    Color.blue
+                    Text(isMaximized ? "Maximized" : "Not maximized")
+                }
+            }
+        }
+    }
+
+    private struct IgnoredSafeAreaInZStack: View {
+        var body: some View {
             ZStack {
                 Color.red
                     .ignoresSafeArea()
                 Color.blue
             }
         }
-        .previewDisplayName("Safe area ignored in LayoutReader")
+    }
 
-        ZStack {
-            Color.red
-                .ignoresSafeArea()
-            Color.blue
-        }
-        .previewDisplayName("Safe area ignored in ZStack")
+    private struct SafeAreaInLayoutReader: View {
+        @State private var isMaximized = false
 
-        LayoutReader(isMaximized: .constant(true)) {
-            Color.red
-            Color.blue
+        var body: some View {
+            LayoutReader(isMaximized: $isMaximized) {
+                Color.red
+                Color.blue
+                Text(isMaximized ? "Maximized" : "Not maximized")
+            }
         }
-        .previewDisplayName("Simple LayoutReader")
+    }
 
-        ZStack {
-            Color.red
-            Color.blue
+    private struct SafeAreaInZStack: View {
+        var body: some View {
+            ZStack {
+                Color.red
+                Color.blue
+            }
         }
-        .previewDisplayName("Simple ZStack")
+    }
+
+    static var previews: some View {
+        IgnoredSafeAreaInLayoutReader()
+            .previewDisplayName("Safe area ignored in LayoutReader")
+        IgnoredSafeAreaInZStack()
+            .previewDisplayName("Safe area ignored in ZStack")
+        SafeAreaInLayoutReader()
+            .previewDisplayName("Safe area in LayoutReader")
+        SafeAreaInZStack()
+            .previewDisplayName("Safe area in ZStack")
+        VStack {
+            SafeAreaInLayoutReader()
+                .frame(width: 400, height: 400)
+        }
+        .previewDisplayName("Non-maximized LayoutReader")
     }
 }
