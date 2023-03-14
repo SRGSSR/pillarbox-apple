@@ -75,7 +75,7 @@ struct Stream {
     )
 
     static let mp3: Self = .init(
-        url: URL(string: "http://localhost:8123/mp3/silence.mp3")!,
+        url: Bundle.test.url(forResource: "silence", withExtension: "mp3")!,
         duration: CMTime(value: 5, timescale: 1)
     )
 

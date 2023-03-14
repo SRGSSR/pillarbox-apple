@@ -6,7 +6,6 @@ SCRIPT_DIR=$(dirname "$0")
 MEDIAS_DIR="$SCRIPT_DIR/../Medias"
 GENERATED_STREAMS_DIR="/tmp/Pillarbox/Streams"
 METADATA_DIR="$MEDIAS_DIR/Metadata"
-MP3_DIR="$MEDIAS_DIR/mp3"
 
 ON_DEMAND_DIR="$GENERATED_STREAMS_DIR/on_demand"
 ON_DEMAND_SHORT_DIR="$GENERATED_STREAMS_DIR/on_demand_short"
@@ -29,7 +28,6 @@ function serve_test_streams {
     fi
 
     cp -R "$METADATA_DIR" "$GENERATED_STREAMS_DIR"
-    cp -R "$MP3_DIR" "$GENERATED_STREAMS_DIR"
 
     mkdir -p "$ON_DEMAND_DIR"
     ffmpeg -stream_loop -1 -i "$MEDIAS_DIR/nyan_cat.mov" -t 120 -vcodec copy -acodec copy \
