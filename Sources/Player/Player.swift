@@ -708,11 +708,6 @@ extension Player {
 
     private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
         Publishers.CombineLatest($storedItems, queuePlayer.publisher(for: \.currentItem))
-            .filter { storedItems, currentItem in
-                // The current item is automatically set to `nil` when a failure is encountered. If this is the case
-                // preserve the previous value, provided the player is loaded with items.
-                storedItems.isEmpty || currentItem != nil
-            }
             .map { ItemUpdate(items: $0, currentItem: $1) }
             .eraseToAnyPublisher()
     }
