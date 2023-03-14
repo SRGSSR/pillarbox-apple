@@ -38,33 +38,60 @@ public struct InteractionView<Content: View>: View {
 
 @available(tvOS, unavailable)
 struct InteractionView_Previews: PreviewProvider {
-    static var previews: some View {
-        InteractionView(isInteracting: .constant(false)) {
+    private struct IgnoredSafeAreaInInteractionView: View {
+        @State private var isInteracting = false
+
+        var body: some View {
+            InteractionView(isInteracting: $isInteracting) {
+                ZStack {
+                    Color.red
+                        .ignoresSafeArea()
+                    Color.blue
+                    Text(isInteracting ? "Interacting" : "Not interacting")
+                }
+            }
+        }
+    }
+
+    private struct IgnoredSafeAreaInZStack: View {
+        var body: some View {
             ZStack {
                 Color.red
                     .ignoresSafeArea()
                 Color.blue
             }
         }
-        .previewDisplayName("Safe area ignored in InteractionView")
+    }
 
-        ZStack {
-            Color.red
-                .ignoresSafeArea()
-            Color.blue
-        }
-        .previewDisplayName("Safe area ignored in ZStack")
+    private struct SafeAreaInInteractionView: View {
+        @State private var isInteracting = false
 
-        InteractionView(isInteracting: .constant(false)) {
-            Color.red
-            Color.blue
+        var body: some View {
+            InteractionView(isInteracting: $isInteracting) {
+                Color.red
+                Color.blue
+                Text(isInteracting ? "Interacting" : "Not interacting")
+            }
         }
-        .previewDisplayName("Simple InteractionView")
+    }
 
-        ZStack {
-            Color.red
-            Color.blue
+    private struct SafeAreaInZStack: View {
+        var body: some View {
+            ZStack {
+                Color.red
+                Color.blue
+            }
         }
-        .previewDisplayName("Simple ZStack")
+    }
+
+    static var previews: some View {
+        IgnoredSafeAreaInInteractionView()
+            .previewDisplayName("Safe area ignored in InteractionView")
+        IgnoredSafeAreaInZStack()
+            .previewDisplayName("Safe area ignored in ZStack")
+        SafeAreaInInteractionView()
+            .previewDisplayName("Safe area in InteractionView")
+        SafeAreaInZStack()
+            .previewDisplayName("Safe area in ZStack")
     }
 }
