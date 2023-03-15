@@ -624,32 +624,11 @@ extension Player {
     }
 
     private func configureCurrentIndexPublisher() {
-        Publishers.CombineLatest3(
-            $storedItems,
-            $playbackState,
-            currentPublisher()
-                .withPrevious()
-        )
-        .map { items, state, previousAndCurrent -> Int? in
-            switch state {
-            case .ended:
-                if items.count - 1 == previousAndCurrent.previous??.index {
-                    return nil
-                }
-            case .failed:
-                if items.count - 1 == previousAndCurrent.previous??.index {
-                    return nil
-                }
-                return previousAndCurrent.previous??.index ?? previousAndCurrent.current?.index
-            default:
-                break
-            }
-            return previousAndCurrent.current?.index
-        }
-        .removeDuplicates()
-        .receiveOnMainThread()
-        .lane("player_current_index")
-        .assign(to: &$currentIndex)
+        currentPublisher()
+            .map(\.?.index)
+            .receiveOnMainThread()
+            .lane("player_current_index")
+            .assign(to: &$currentIndex)
     }
 
     private func configureControlCenterPublishers() {
@@ -728,7 +707,7 @@ extension Player {
     }
 
     private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
-        Publishers.CombineLatest($storedItems, queuePlayer.publisher(for: \.currentItem))
+        Publishers.CombineLatest($storedItems, queuePlayer.smoothCurrentItemPublisher())
             .map { ItemUpdate(items: $0, currentItem: $1) }
             .eraseToAnyPublisher()
     }
