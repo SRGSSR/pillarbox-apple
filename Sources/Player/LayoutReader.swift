@@ -58,8 +58,8 @@ struct LayoutReader_Previews: PreviewProvider {
                         .ignoresSafeArea()
                     Color.blue
                     VStack {
-                        Text(layoutInfo.isMaximized ? "Maximized" : "Not maximized")
-                        Text(layoutInfo.isFullScreen ? "Full screen" : "Not full screen")
+                        Text(layoutInfo.isMaximized ? "✅ Maximized" : "❌ Not maximized")
+                        Text(layoutInfo.isFullScreen ? "✅ Full screen" : "❌ Not full screen")
                     }
                 }
             }
@@ -84,8 +84,8 @@ struct LayoutReader_Previews: PreviewProvider {
                 Color.red
                 Color.blue
                 VStack {
-                    Text(layoutInfo.isMaximized ? "Maximized" : "Not maximized")
-                    Text(layoutInfo.isFullScreen ? "Full screen" : "Not full screen")
+                    Text(layoutInfo.isMaximized ? "✅ Maximized" : "❌ Not maximized")
+                    Text(layoutInfo.isFullScreen ? "✅ Full screen" : "❌ Not full screen")
                 }
             }
         }
@@ -101,20 +101,34 @@ struct LayoutReader_Previews: PreviewProvider {
     }
 
     private struct NonMaximizedLayoutReader: View {
+        @State private var layoutInfo: LayoutInfo = .none
+
         var body: some View {
-            ZStack {
-                SafeAreaInLayoutReader()
-                    .frame(width: 400, height: 400)
+            LayoutReader(layoutInfo: $layoutInfo) {
+                Color.blue
+                VStack {
+                    Text(layoutInfo.isMaximized ? "❌ Maximized" : "✅ Not maximized")
+                    Text(layoutInfo.isFullScreen ? "❌ Full screen" : "✅ Not full screen")
+                }
             }
+            .frame(width: 400, height: 400)
         }
     }
 
     private struct NonFullScreenLayoutReader: View {
+        @State private var layoutInfo: LayoutInfo = .none
+
         var body: some View {
             Color.yellow
                 .sheet(isPresented: .constant(true)) {
-                    SafeAreaInLayoutReader()
-                        .interactiveDismissDisabled()
+                    LayoutReader(layoutInfo: $layoutInfo) {
+                        Color.blue
+                        VStack {
+                            Text(layoutInfo.isMaximized ? "✅ Maximized" : "❌ Not maximized")
+                            Text(layoutInfo.isFullScreen ? "❌ Full screen" : "✅ Not full screen")
+                        }
+                    }
+                    .interactiveDismissDisabled()
                 }
         }
     }
