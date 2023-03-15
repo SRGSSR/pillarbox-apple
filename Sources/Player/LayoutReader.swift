@@ -38,7 +38,7 @@ public struct LayoutReader<Content: View>: View {
 
     /// Create the layout reader.
     /// - Parameters:
-    ///   - info: The layout information.
+    ///   - layoutInfo: The layout information.
     ///   - content: The wrapped content.
     public init(layoutInfo: Binding<LayoutInfo>, @ViewBuilder content: @escaping () -> Content) {
         _layoutInfo = layoutInfo
