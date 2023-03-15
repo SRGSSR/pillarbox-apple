@@ -628,18 +628,22 @@ extension Player {
             $storedItems,
             $playbackState,
             currentPublisher()
-                .compactMap { $0 }
-                .map { $0.index }
+                .withPrevious()
         )
-        .map { items, state, currentIndex in
-            if state == .ended {
-                return items.count - 1
+        .map { items, state, previousAndCurrent -> Int? in
+            switch state {
+            case .ended:
+                if items.count - 1 == previousAndCurrent.previous??.index {
+                    return nil
+                }
+            case .failed:
+                if previousAndCurrent.current == nil {
+                    return previousAndCurrent.previous??.index
+                }
+            default:
+                break
             }
-            else if items.isEmpty {
-                return nil
-            } else {
-                return currentIndex
-            }
+            return previousAndCurrent.current?.index
         }
         .removeDuplicates()
         .receiveOnMainThread()
