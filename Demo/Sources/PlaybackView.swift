@@ -136,20 +136,32 @@ private struct PlaybackMessageView: View {
 private struct PlaybackButton: View {
     @ObservedObject var player: Player
 
-    private var playbackButtonImageName: String {
-        switch player.playbackState {
-        case .playing:
-            return "pause.circle.fill"
-        default:
-            return "play.circle.fill"
+    private var imageName: String {
+        if isFinished {
+            return "arrow.counterclockwise"
         }
+        else {
+            switch player.playbackState {
+            case .playing:
+                return "pause.circle.fill"
+            default:
+                return "play.circle.fill"
+            }
+        }
+    }
+
+    private var isFinished: Bool {
+        player.currentIndex == nil
     }
 
     var body: some View {
         Button(action: play) {
-            Image(systemName: playbackButtonImageName)
+            Image(systemName: imageName)
                 .resizable()
                 .tint(.white)
+                .transaction { transaction in
+                    transaction.animation = nil
+                }
         }
         .opacity(player.isBusy ? 0 : 1)
         .aspectRatio(contentMode: .fit)
@@ -157,7 +169,7 @@ private struct PlaybackButton: View {
     }
 
     private func play() {
-        if player.currentIndex != nil {
+        if !isFinished {
             player.togglePlayPause()
         }
         else {
