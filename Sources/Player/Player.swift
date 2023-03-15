@@ -632,12 +632,16 @@ extension Player {
                 .map { $0.index }
         )
         .map { items, state, currentIndex in
-            if state == .ended || items.isEmpty {
+            if state == .ended {
+                return items.count - 1
+            }
+            else if items.isEmpty {
                 return nil
             } else {
                 return currentIndex
             }
         }
+        .removeDuplicates()
         .receiveOnMainThread()
         .lane("player_current_index")
         .assign(to: &$currentIndex)
