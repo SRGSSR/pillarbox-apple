@@ -578,17 +578,6 @@ extension Player {
 }
 
 public extension Player {
-    /// Check whether the player has finished playing its content and can be restarted.
-    /// - Returns: `true` if possible.
-    func canRestart() -> Bool {
-        Self.currentItem(for: itemResult, in: storedItems) == nil
-    }
-
-    /// Restart playback if possible.
-    func restart() {
-        try? setCurrentIndex(0)
-    }
-
     private static func currentItem(for itemResult: ItemResult, in items: Deque<PlayerItem>) -> AVPlayerItem? {
         switch itemResult {
         case let .failed(playerItem):
@@ -601,6 +590,17 @@ public extension Player {
         case let .finished(playerItem):
             return playerItem
         }
+    }
+
+    /// Check whether the player has finished playing its content and can be restarted.
+    /// - Returns: `true` if possible.
+    func canRestart() -> Bool {
+        Self.currentItem(for: itemResult, in: storedItems) == nil
+    }
+
+    /// Restart playback if possible.
+    func restart() {
+        try? setCurrentIndex(0)
     }
 }
 
