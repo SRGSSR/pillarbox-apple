@@ -356,9 +356,6 @@ struct PlaybackView: View {
             else {
                 PlaybackMessageView(message: "No content")
             }
-            Text("\(player.currentIndex ?? 99999)")
-                .foregroundColor(.pink)
-                .fontWidth(.expanded)
         }
         .background(.black)
         .onAppear(perform: player.play)
