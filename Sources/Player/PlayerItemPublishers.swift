@@ -12,11 +12,11 @@ extension AVPlayerItem {
         Publishers.Merge3(
             publisher(for: \.status)
                 .weakCapture(self)
-                .map { ItemState.itemState(for: $0.1) },
+                .map { ItemState(for: $0.1) },
             NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: self)
                 .map { _ in .ended },
             NotificationCenter.default.weakPublisher(for: .AVPlayerItemFailedToPlayToEndTime, object: self)
-                .compactMap { ItemState.itemState(for: $0) }
+                .compactMap { ItemState(for: $0) }
         )
         .eraseToAnyPublisher()
     }

@@ -20,7 +20,7 @@ extension AVPlayer {
             .compactMap { $0 }
             .map { $0.itemStatePublisher() }
             .switchToLatest()
-            .prepend(ItemState.itemState(for: currentItem))
+            .prepend(ItemState(for: currentItem))
             .removeDuplicates()
             .lane("player_item_state")
             .eraseToAnyPublisher()
@@ -106,7 +106,7 @@ extension AVPlayer {
                     return .finished(currentItem)
                 }
                 else if let previousItem {
-                    switch ItemState.itemState(for: previousItem) {
+                    switch ItemState(for: previousItem) {
                     case .failed:
                         return .failed(previousItem)
                     default:

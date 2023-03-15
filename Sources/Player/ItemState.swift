@@ -14,6 +14,34 @@ enum ItemState: Equatable {
     case ended
     case failed(error: Error)
 
+    init(for item: AVPlayerItem?) {
+        guard let item else {
+            self = .unknown
+            return
+        }
+        switch item.status {
+        case .readyToPlay:
+            self = .readyToPlay
+        case .failed:
+            self = .failed(error: Self.consolidatedError(for: item))
+        default:
+            self = .unknown
+        }
+    }
+
+    init?(for notification: Notification) {
+        switch notification.name {
+        case .AVPlayerItemFailedToPlayToEndTime:
+            guard let item = notification.object as? AVPlayerItem,
+                  let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error else {
+                return nil
+            }
+            self = .failed(error: Self.consolidatedError(for: item, error: error))
+        default:
+            return nil
+        }
+    }
+
     static func == (lhs: ItemState, rhs: ItemState) -> Bool {
         switch (lhs, rhs) {
         case (.unknown, .unknown), (.readyToPlay, .readyToPlay), (.ended, .ended):
@@ -22,31 +50,6 @@ enum ItemState: Equatable {
             return lhsError as NSError == rhsError as NSError
         default:
             return false
-        }
-    }
-
-    static func itemState(for item: AVPlayerItem?) -> ItemState {
-        guard let item else { return .unknown }
-        switch item.status {
-        case .readyToPlay:
-            return .readyToPlay
-        case .failed:
-            return .failed(error: consolidatedError(for: item))
-        default:
-            return .unknown
-        }
-    }
-
-    static func itemState(for notification: Notification) -> ItemState? {
-        switch notification.name {
-        case .AVPlayerItemFailedToPlayToEndTime:
-            guard let item = notification.object as? AVPlayerItem,
-                  let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error else {
-                return nil
-            }
-            return .failed(error: consolidatedError(for: item, error: error))
-        default:
-            return nil
         }
     }
 
