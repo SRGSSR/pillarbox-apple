@@ -146,7 +146,7 @@ private struct PlaybackButton: View {
     }
 
     var body: some View {
-        Button(action: player.togglePlayPause) {
+        Button(action: play) {
             Image(systemName: playbackButtonImageName)
                 .resizable()
                 .tint(.white)
@@ -154,6 +154,15 @@ private struct PlaybackButton: View {
         .opacity(player.isBusy ? 0 : 1)
         .aspectRatio(contentMode: .fit)
         .frame(height: constant(iOS: 90, tvOS: 150))
+    }
+
+    private func play() {
+        if player.currentIndex != nil {
+            player.togglePlayPause()
+        }
+        else {
+            try? player.setCurrentIndex(0)
+        }
     }
 }
 
