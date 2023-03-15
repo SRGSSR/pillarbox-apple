@@ -637,9 +637,10 @@ extension Player {
                     return nil
                 }
             case .failed:
-                if previousAndCurrent.current == nil {
-                    return previousAndCurrent.previous??.index
+                if items.count - 1 == previousAndCurrent.previous??.index {
+                    return nil
                 }
+                return previousAndCurrent.previous??.index
             default:
                 break
             }
