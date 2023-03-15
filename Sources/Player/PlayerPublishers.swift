@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import Core
 import TimelaneCombine
 
 extension AVPlayer {
@@ -89,6 +90,23 @@ extension AVPlayer {
                     .eraseToAnyPublisher()
             }
             .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+
+    func smoothCurrentItemPublisher() -> AnyPublisher<AVPlayerItem?, Never> {
+        publisher(for: \.currentItem)
+            .withPrevious()
+            .map { previousItem, currentItem -> AVPlayerItem? in
+                if let previousItem, currentItem == nil {
+                    switch ItemState.itemState(for: previousItem) {
+                    case .failed:
+                        return previousItem
+                    default:
+                        break
+                    }
+                }
+                return currentItem
+            }
             .eraseToAnyPublisher()
     }
 }
