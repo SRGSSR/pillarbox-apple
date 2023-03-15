@@ -640,7 +640,7 @@ extension Player {
                 if items.count - 1 == previousAndCurrent.previous??.index {
                     return nil
                 }
-                return previousAndCurrent.previous??.index
+                return previousAndCurrent.previous??.index ?? previousAndCurrent.current?.index
             default:
                 break
             }
