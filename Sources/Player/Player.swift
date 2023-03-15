@@ -584,9 +584,6 @@ extension Player {
     private struct ItemUpdate {
         let items: Deque<PlayerItem>
         let currentItem: AVPlayerItem?
-        var isLast: Bool {
-            items.last?.matches(currentItem) == true
-        }
 
         func currentIndex() -> Int? {
             items.firstIndex { $0.matches(currentItem) }
@@ -711,7 +708,19 @@ extension Player {
 
     private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
         Publishers.CombineLatest($storedItems, queuePlayer.smoothCurrentItemPublisher())
-            .map { ItemUpdate(items: $0, currentItem: $1) }
+            .map { items, itemResult in
+                switch itemResult {
+                case let .failed(playerItem):
+                    if let lastItem = items.last, lastItem.matches(playerItem) {
+                        return ItemUpdate(items: items, currentItem: nil)
+                    }
+                    else {
+                        return ItemUpdate(items: items, currentItem: playerItem)
+                    }
+                case let .finished(playerItem):
+                    return ItemUpdate(items: items, currentItem: playerItem)
+                }
+            }
             .eraseToAnyPublisher()
     }
 

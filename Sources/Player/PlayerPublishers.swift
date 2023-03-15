@@ -9,6 +9,11 @@ import Combine
 import Core
 import TimelaneCombine
 
+enum ItemResult {
+    case finished(AVPlayerItem?)
+    case failed(AVPlayerItem?)
+}
+
 extension AVPlayer {
     func currentItemStatePublisher() -> AnyPublisher<ItemState, Never> {
         publisher(for: \.currentItem)
@@ -93,19 +98,24 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    func smoothCurrentItemPublisher() -> AnyPublisher<AVPlayerItem?, Never> {
+    func smoothCurrentItemPublisher() -> AnyPublisher<ItemResult, Never> {
         publisher(for: \.currentItem)
             .withPrevious()
-            .map { previousItem, currentItem -> AVPlayerItem? in
-                if let previousItem, currentItem == nil {
+            .map { previousItem, currentItem in
+                if let currentItem {
+                    return .finished(currentItem)
+                }
+                else if let previousItem {
                     switch ItemState.itemState(for: previousItem) {
                     case .failed:
-                        return previousItem
+                        return .failed(previousItem)
                     default:
-                        break
+                        return .finished(currentItem)
                     }
                 }
-                return currentItem
+                else {
+                    return .finished(currentItem)
+                }
             }
             .eraseToAnyPublisher()
     }
