@@ -142,7 +142,7 @@ private struct PlaybackButton: View {
     @ObservedObject var player: Player
 
     private var imageName: String {
-        if player.canRestart() {
+        if canRestart {
             return "arrow.counterclockwise"
         }
         else {
@@ -155,6 +155,10 @@ private struct PlaybackButton: View {
         }
     }
 
+    private var canRestart: Bool {
+        player.canRestart()
+    }
+
     var body: some View {
         Button(action: play) {
             Image(systemName: imageName)
@@ -162,13 +166,14 @@ private struct PlaybackButton: View {
                 .tint(.white)
                 .opacity(player.isBusy ? 0 : 1)
                 .animation(.linear(duration: 0.2), value: player.playbackState)
+                .animation(.linear(duration: 0.2), value: canRestart)
         }
         .aspectRatio(contentMode: .fit)
         .frame(minWidth: 120, maxHeight: 90)
     }
 
     private func play() {
-        if player.canRestart() {
+        if canRestart {
             player.restart()
         }
         else {
@@ -190,7 +195,12 @@ private struct SkipBackwardButton: View {
         }
         .aspectRatio(contentMode: .fit)
         .frame(height: 45)
-        .opacity(player.canSkipBackward() ? 1 : 0)
+        .opacity(canSkipBackward ? 1 : 0)
+        .animation(.linear(duration: 0.2), value: canSkipBackward)
+    }
+
+    private var canSkipBackward: Bool {
+        player.canSkipBackward()
     }
 
     private func skipBackward() {
@@ -211,7 +221,12 @@ private struct SkipForwardButton: View {
         }
         .aspectRatio(contentMode: .fit)
         .frame(height: 45)
-        .opacity(player.canSkipForward() ? 1 : 0)
+        .opacity(canSkipForward ? 1 : 0)
+        .animation(.linear(duration: 0.2), value: canSkipForward)
+    }
+
+    private var canSkipForward: Bool {
+        player.canSkipForward()
     }
 
     private func skipForward() {
