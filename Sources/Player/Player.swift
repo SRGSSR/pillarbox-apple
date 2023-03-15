@@ -584,6 +584,9 @@ extension Player {
     private struct ItemUpdate {
         let items: Deque<PlayerItem>
         let currentItem: AVPlayerItem?
+        var isLast: Bool {
+            items.last?.matches(currentItem) == true
+        }
 
         func currentIndex() -> Int? {
             items.firstIndex { $0.matches(currentItem) }
