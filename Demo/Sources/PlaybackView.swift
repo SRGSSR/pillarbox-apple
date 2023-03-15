@@ -137,7 +137,7 @@ private struct PlaybackButton: View {
     @ObservedObject var player: Player
 
     private var imageName: String {
-        if isFinished {
+        if player.canRestart() {
             return "arrow.counterclockwise"
         }
         else {
@@ -148,10 +148,6 @@ private struct PlaybackButton: View {
                 return "play.circle.fill"
             }
         }
-    }
-
-    private var isFinished: Bool {
-        player.currentIndex == nil
     }
 
     var body: some View {
@@ -169,11 +165,11 @@ private struct PlaybackButton: View {
     }
 
     private func play() {
-        if !isFinished {
-            player.togglePlayPause()
+        if player.canRestart() {
+            try? player.restart()
         }
         else {
-            try? player.setCurrentIndex(0)
+            player.togglePlayPause()
         }
     }
 }

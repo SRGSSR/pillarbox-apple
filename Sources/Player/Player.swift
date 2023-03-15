@@ -575,6 +575,16 @@ extension Player {
     }
 }
 
+public extension Player {
+    func canRestart() -> Bool {
+        playbackState == .ended && currentIndex == nil
+    }
+
+    func restart() throws {
+        try setCurrentIndex(0)
+    }
+}
+
 extension Player {
     private struct Current: Equatable {
         let item: PlayerItem
