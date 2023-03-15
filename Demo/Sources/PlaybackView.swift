@@ -169,7 +169,7 @@ private struct PlaybackButton: View {
 
     private func play() {
         if player.canRestart() {
-            try? player.restart()
+            player.restart()
         }
         else {
             player.togglePlayPause()

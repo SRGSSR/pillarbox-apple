@@ -576,12 +576,15 @@ extension Player {
 }
 
 public extension Player {
+    /// Check whether the player has finished playing its content and can be restarted.
+    /// - Returns: `true` if possible.
     func canRestart() -> Bool {
         playbackState == .ended && currentIndex == nil
     }
 
-    func restart() throws {
-        try setCurrentIndex(0)
+    /// Restart playback if possible.
+    func restart() {
+        try? setCurrentIndex(0)
     }
 }
 
