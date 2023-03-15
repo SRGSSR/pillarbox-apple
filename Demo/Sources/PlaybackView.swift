@@ -25,7 +25,7 @@ private struct MainView: View {
                 timeBar()
             }
             .animation(.linear(duration: 0.2), value: player.isBusy)
-            .animation(.linear(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
+            .animation(.linear(duration: 0.2), value: isUserInterfaceHidden)
         }
         .bind(visibilityTracker, to: player)
         .debugBodyCounter()
@@ -37,6 +37,10 @@ private struct MainView: View {
 
     private var magnificationGestureMask: GestureMask {
         layoutInfo.isMaximized ? .all : .subviews
+    }
+
+    private var isUserInterfaceHidden: Bool {
+        visibilityTracker.isUserInterfaceHidden && !player.canRestart()
     }
 
     private func magnificationGesture() -> some Gesture {
@@ -54,7 +58,7 @@ private struct MainView: View {
                 controls()
                 loadingIndicator()
             }
-            .animation(.linear(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
+            .animation(.linear(duration: 0.2), value: isUserInterfaceHidden)
             .accessibilityAddTraits(.isButton)
             .onTapGesture(perform: visibilityTracker.toggle)
             .gesture(magnificationGesture(), including: magnificationGestureMask)
@@ -65,7 +69,7 @@ private struct MainView: View {
     @ViewBuilder
     private func timeBar() -> some View {
         TimeBar(player: player)
-            .opacity(visibilityTracker.isUserInterfaceHidden ? 0 : 1)
+            .opacity(isUserInterfaceHidden ? 0 : 1)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 
@@ -89,7 +93,7 @@ private struct MainView: View {
     @ViewBuilder
     private func controls() -> some View {
         ControlsView(player: player)
-            .opacity(visibilityTracker.isUserInterfaceHidden ? 0 : 1)
+            .opacity(isUserInterfaceHidden ? 0 : 1)
     }
 
     @ViewBuilder
