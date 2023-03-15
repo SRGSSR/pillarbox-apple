@@ -119,6 +119,7 @@ private struct ControlsView: View {
             }
             .debugBodyCounter(color: .green)
         }
+        .animation(.linear(duration: 0.2), value: player.playbackState)
         .bind(progressTracker, to: player)
     }
 }
@@ -159,14 +160,11 @@ private struct PlaybackButton: View {
             Image(systemName: imageName)
                 .resizable()
                 .tint(.white)
-                .transaction { transaction in
-                    transaction.animation = nil
-                }
+                .opacity(player.isBusy ? 0 : 1)
+                .animation(.linear(duration: 0.2), value: player.playbackState)
         }
-        .opacity(player.isBusy ? 0 : 1)
         .aspectRatio(contentMode: .fit)
-        .frame(height: 90)
-        .frame(minWidth: 120)
+        .frame(minWidth: 120, maxHeight: 90)
     }
 
     private func play() {
