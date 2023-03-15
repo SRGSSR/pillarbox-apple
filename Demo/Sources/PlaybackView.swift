@@ -16,7 +16,7 @@ private struct MainView: View {
     @StateObject private var visibilityTracker = VisibilityTracker()
 
     @State private var layoutInfo: LayoutInfo = .none
-    @State private var gravity: AVLayerVideoGravity = .resizeAspect
+    @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
 
     var body: some View {
         InteractionView(action: visibilityTracker.reset) {
@@ -31,6 +31,10 @@ private struct MainView: View {
         .debugBodyCounter()
     }
 
+    private var gravity: AVLayerVideoGravity {
+        layoutInfo.isMaximized ? selectedGravity : .resizeAspect
+    }
+
     private var magnificationGestureMask: GestureMask {
         layoutInfo.isMaximized ? .all : .subviews
     }
@@ -38,7 +42,7 @@ private struct MainView: View {
     private func magnificationGesture() -> some Gesture {
         MagnificationGesture()
             .onChanged { scale in
-                gravity = scale > 1.0 ? .resizeAspectFill : .resizeAspect
+                selectedGravity = scale > 1.0 ? .resizeAspectFill : .resizeAspect
             }
     }
 
