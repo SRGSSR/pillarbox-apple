@@ -106,4 +106,14 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
             player.append(.networkLoaded(metadata: .media1))
         }
     }
+
+    func testEntirePlayback() {
+        let player = Player(item: .simple(url: Stream.shortOnDemand.url, metadata: .init(title: "title")))
+        expectAtLeastSimilarPublished(
+            values: [[MPMediaItemPropertyTitle: "title"], [:]],
+            from: player.nowPlayingInfoMetadataPublisher()
+        ) {
+            player.play()
+        }
+    }
 }
