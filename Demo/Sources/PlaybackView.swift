@@ -166,6 +166,7 @@ private struct PlaybackButton: View {
         .opacity(player.isBusy ? 0 : 1)
         .aspectRatio(contentMode: .fit)
         .frame(height: 90)
+        .frame(minWidth: 120)
     }
 
     private func play() {
