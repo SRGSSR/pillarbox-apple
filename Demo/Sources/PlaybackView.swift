@@ -143,7 +143,7 @@ private struct PlaybackButton: View {
 
     private var imageName: String {
         if player.canRestart() {
-            return "arrow.counterclockwise"
+            return "arrow.counterclockwise.circle.fill"
         }
         else {
             switch player.playbackState {
