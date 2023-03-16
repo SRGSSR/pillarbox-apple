@@ -9,9 +9,9 @@ import Combine
 import Core
 import TimelaneCombine
 
-enum ItemResult: Equatable {
-    case finished(AVPlayerItem?)
-    case failed(AVPlayerItem?)
+enum CurrentItem: Equatable {
+    case good(AVPlayerItem?)
+    case bad(AVPlayerItem?)
 }
 
 extension AVPlayer {
@@ -98,23 +98,23 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    func smoothCurrentItemPublisher() -> AnyPublisher<ItemResult, Never> {
+    func smoothCurrentItemPublisher() -> AnyPublisher<CurrentItem, Never> {
         publisher(for: \.currentItem)
             .withPrevious()
             .map { previousItem, currentItem in
                 if let currentItem {
-                    return .finished(currentItem)
+                    return .good(currentItem)
                 }
                 else if let previousItem {
                     switch ItemState(for: previousItem) {
                     case .failed:
-                        return .failed(previousItem)
+                        return .bad(previousItem)
                     default:
-                        return .finished(currentItem)
+                        return .good(currentItem)
                     }
                 }
                 else {
-                    return .finished(currentItem)
+                    return .good(currentItem)
                 }
             }
             .eraseToAnyPublisher()

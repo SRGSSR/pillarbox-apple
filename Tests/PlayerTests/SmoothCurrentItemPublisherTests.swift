@@ -13,7 +13,7 @@ final class SmoothCurrentItemPublisherTests: TestCase {
     func testEmpty() {
         let player = QueuePlayer()
         expectEqualPublished(
-            values: [.finished(nil)],
+            values: [.good(nil)],
             from: player.smoothCurrentItemPublisher(),
             during: 2
         )
@@ -24,7 +24,7 @@ final class SmoothCurrentItemPublisherTests: TestCase {
         let player = QueuePlayer(playerItem: item)
 
         expectEqualPublished(
-            values: [.finished(item)],
+            values: [.good(item)],
             from: player.smoothCurrentItemPublisher(),
             during: 2
         ) {

@@ -31,7 +31,7 @@ public final class Player: ObservableObject, Equatable {
     /// Indicates whether the player is currently playing video in external playback mode.
     @Published public private(set) var isExternalPlaybackActive = false
 
-    @Published private var itemResult: ItemResult = .finished(nil)
+    @Published private var itemResult: CurrentItem = .good(nil)
     @Published private var storedItems: Deque<PlayerItem>
 
     /// The type of stream currently played.
@@ -578,16 +578,16 @@ extension Player {
 }
 
 public extension Player {
-    private static func smoothCurrentItem(for itemResult: ItemResult, in items: Deque<PlayerItem>) -> AVPlayerItem? {
+    private static func smoothCurrentItem(for itemResult: CurrentItem, in items: Deque<PlayerItem>) -> AVPlayerItem? {
         switch itemResult {
-        case let .failed(playerItem):
+        case let .bad(playerItem):
             if let lastItem = items.last, lastItem.matches(playerItem) {
                 return nil
             }
             else {
                 return playerItem
             }
-        case let .finished(playerItem):
+        case let .good(playerItem):
             return playerItem
         }
     }
