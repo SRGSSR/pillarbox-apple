@@ -600,6 +600,7 @@ public extension Player {
 
     /// Restart playback if possible.
     func restart() {
+        guard canRestart() else { return }
         try? setCurrentIndex(0)
     }
 }
