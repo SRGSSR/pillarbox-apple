@@ -9,7 +9,7 @@ import Combine
 import Core
 import TimelaneCombine
 
-enum ItemResult {
+enum ItemResult: Equatable {
     case finished(AVPlayerItem?)
     case failed(AVPlayerItem?)
 }
