@@ -142,7 +142,7 @@ private struct PlaybackButton: View {
     @ObservedObject var player: Player
 
     private var imageName: String {
-        if canRestart {
+        if player.canRestart() {
             return "arrow.counterclockwise"
         }
         else {
@@ -155,10 +155,6 @@ private struct PlaybackButton: View {
         }
     }
 
-    private var canRestart: Bool {
-        player.canRestart()
-    }
-
     var body: some View {
         Button(action: play) {
             Image(systemName: imageName)
@@ -166,14 +162,14 @@ private struct PlaybackButton: View {
                 .tint(.white)
                 .opacity(player.isBusy ? 0 : 1)
                 .animation(.linear(duration: 0.2), value: player.playbackState)
-                .animation(.linear(duration: 0.2), value: canRestart)
+                .animation(.linear(duration: 0.2), value: player.canRestart())
         }
         .aspectRatio(contentMode: .fit)
         .frame(minWidth: 120, maxHeight: 90)
     }
 
     private func play() {
-        if canRestart {
+        if player.canRestart() {
             player.restart()
         }
         else {
