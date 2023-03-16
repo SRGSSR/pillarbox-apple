@@ -191,12 +191,8 @@ private struct SkipBackwardButton: View {
         }
         .aspectRatio(contentMode: .fit)
         .frame(height: 45)
-        .opacity(canSkipBackward ? 1 : 0)
-        .animation(.linear(duration: 0.2), value: canSkipBackward)
-    }
-
-    private var canSkipBackward: Bool {
-        player.canSkipBackward()
+        .opacity(player.canSkipBackward() ? 1 : 0)
+        .animation(.linear(duration: 0.2), value: player.canSkipBackward())
     }
 
     private func skipBackward() {
@@ -217,12 +213,8 @@ private struct SkipForwardButton: View {
         }
         .aspectRatio(contentMode: .fit)
         .frame(height: 45)
-        .opacity(canSkipForward ? 1 : 0)
-        .animation(.linear(duration: 0.2), value: canSkipForward)
-    }
-
-    private var canSkipForward: Bool {
-        player.canSkipForward()
+        .opacity(player.canSkipForward() ? 1 : 0)
+        .animation(.linear(duration: 0.2), value: player.canSkipForward())
     }
 
     private func skipForward() {
