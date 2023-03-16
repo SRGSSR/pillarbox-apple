@@ -14,4 +14,9 @@ final class PlayerRestartChecksTests: TestCase {
         let player = Player()
         expect(player.canRestart()).to(beFalse())
     }
+
+    func testWithOneGoodItem() {
+        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
+        expect(player.canRestart()).to(beFalse())
+    }
 }
