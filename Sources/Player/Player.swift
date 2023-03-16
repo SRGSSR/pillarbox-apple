@@ -578,7 +578,7 @@ extension Player {
 }
 
 public extension Player {
-    private static func currentItem(for itemResult: ItemResult, in items: Deque<PlayerItem>) -> AVPlayerItem? {
+    private static func smoothCurrentItem(for itemResult: ItemResult, in items: Deque<PlayerItem>) -> AVPlayerItem? {
         switch itemResult {
         case let .failed(playerItem):
             if let lastItem = items.last, lastItem.matches(playerItem) {
@@ -595,7 +595,7 @@ public extension Player {
     /// Check whether the player has finished playing its content and can be restarted.
     /// - Returns: `true` if possible.
     func canRestart() -> Bool {
-        Self.currentItem(for: itemResult, in: storedItems) == nil
+        Self.smoothCurrentItem(for: itemResult, in: storedItems) == nil
     }
 
     /// Restart playback if possible.
@@ -744,7 +744,7 @@ extension Player {
     private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
         Publishers.CombineLatest($storedItems, $itemResult)
             .map { items, itemResult in
-                let playerItem = Self.currentItem(for: itemResult, in: items)
+                let playerItem = Self.smoothCurrentItem(for: itemResult, in: items)
                 return ItemUpdate(items: items, currentItem: playerItem)
             }
             .eraseToAnyPublisher()
