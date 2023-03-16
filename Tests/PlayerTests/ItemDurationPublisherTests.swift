@@ -18,7 +18,7 @@ final class ItemDurationPublisherTests: TestCase {
             values: [.invalid, Stream.onDemand.duration],
             from: item.durationPublisher(),
             to: beClose(within: 1),
-            timeout: 2
+            timeout: .seconds(2)
         )
     }
 }
