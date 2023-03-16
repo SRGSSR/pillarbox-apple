@@ -595,7 +595,8 @@ public extension Player {
     /// Check whether the player has finished playing its content and can be restarted.
     /// - Returns: `true` if possible.
     func canRestart() -> Bool {
-        Self.smoothCurrentItem(for: itemResult, in: storedItems) == nil
+        guard !storedItems.isEmpty else { return false }
+        return Self.smoothCurrentItem(for: itemResult, in: storedItems) == nil
     }
 
     /// Restart playback if possible.
