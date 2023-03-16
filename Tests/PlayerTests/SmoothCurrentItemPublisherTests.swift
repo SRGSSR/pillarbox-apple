@@ -42,4 +42,15 @@ final class SmoothCurrentItemPublisherTests: TestCase {
             player.play()
         }
     }
+
+    func testWithOneBadItem() {
+        let item = AVPlayerItem(url: Stream.unavailable.url)
+        let player = QueuePlayer(playerItem: item)
+
+        expectEqualPublished(
+            values: [.good(item), .bad(item)],
+            from: player.smoothCurrentItemPublisher(),
+            during: 2
+        )
+    }
 }
