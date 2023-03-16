@@ -136,17 +136,11 @@ extension AVQueuePlayer {
 
         if let firstItem = items.first {
             if firstItem !== self.items().first {
-                if self.items().count > 1 {
-                    self.items().suffix(from: 1).forEach { item in
-                        remove(item)
-                    }
-                }
+                removeAll(from: 1)
                 replaceCurrentItem(with: firstItem)
             }
-            else if self.items().count > 1 {
-                self.items().suffix(from: 1).forEach { item in
-                    remove(item)
-                }
+            else {
+                removeAll(from: 1)
             }
             if items.count > 1 {
                 perform(#selector(append(_:)), with: Array(items.suffix(from: 1)), afterDelay: 1, inModes: [.common])
@@ -154,6 +148,13 @@ extension AVQueuePlayer {
         }
         else {
             removeAllItems()
+        }
+    }
+
+    private func removeAll(from index: Int) {
+        guard items().count > index else { return }
+        items().suffix(from: index).forEach { item in
+            remove(item)
         }
     }
 
