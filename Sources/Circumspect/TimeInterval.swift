@@ -10,13 +10,13 @@ extension DispatchTimeInterval {
     func double() -> Double {
         switch self {
         case let .seconds(value):
-            return Double(value)
+            return .init(value)
         case let .milliseconds(value):
-            return Double(value) * 0.001
+            return .init(value) * 0.001
         case let .microseconds(value):
-            return Double(value) * 0.000001
+            return .init(value) * 0.000001
         case let .nanoseconds(value):
-            return Double(value) * 0.000000001
+            return .init(value) * 0.000000001
         default:
             return 0
         }
