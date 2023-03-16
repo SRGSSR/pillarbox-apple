@@ -53,4 +53,18 @@ final class SmoothCurrentItemPublisherTests: TestCase {
             during: 2
         )
     }
+
+    func testWithTwoGoodItems() {
+        let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
+        let item2 = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayer(items: [item1, item2])
+
+        expectEqualPublished(
+            values: [.good(item1), .good(item2)],
+            from: player.smoothCurrentItemPublisher(),
+            during: 2
+        ) {
+            player.play()
+        }
+    }
 }
