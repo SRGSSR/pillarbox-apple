@@ -91,7 +91,7 @@ final class QueuePlayerSeekTests: TestCase {
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time1]),
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time2]),
             Notification(name: .didSeek, object: player)
-        ]), from: QueuePlayer.notificationCenter), timeout: .seconds(5))
+        ]), from: QueuePlayer.notificationCenter))
     }
 
     func testNotificationsForSeekAfterSmoothSeekWithinTimeRange() {
@@ -112,7 +112,7 @@ final class QueuePlayerSeekTests: TestCase {
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time1]),
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time2]),
             Notification(name: .didSeek, object: player)
-        ]), from: QueuePlayer.notificationCenter), timeout: .seconds(5))
+        ]), from: QueuePlayer.notificationCenter))
     }
 
     func testCompletionsForMultipleSeeks() {
@@ -210,7 +210,7 @@ final class QueuePlayerSeekTests: TestCase {
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time]),
             Notification(name: .didSeek, object: player),
             Notification(name: notificationName, object: self)
-        ]), from: QueuePlayer.notificationCenter), timeout: .seconds(5))
+        ]), from: QueuePlayer.notificationCenter))
     }
 
     func testNotificationCompletionOrderWithMultipleSeeks() {
@@ -235,7 +235,7 @@ final class QueuePlayerSeekTests: TestCase {
             Notification(name: notificationName1, object: self),
             Notification(name: .didSeek, object: player),
             Notification(name: notificationName2, object: self)
-        ]), from: QueuePlayer.notificationCenter), timeout: .seconds(5))
+        ]), from: QueuePlayer.notificationCenter))
     }
 
     func testEnqueue() {

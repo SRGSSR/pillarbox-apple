@@ -21,7 +21,7 @@ final class ProgressTrackerSeekBehaviorTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         progressTracker.player = player
-        expect(progressTracker.range).toEventually(equal(0...1), timeout: .seconds(2))
+        expect(progressTracker.range).toEventually(equal(0...1))
 
         expectEqualPublished(
             values: [false, true, false],
@@ -42,7 +42,7 @@ final class ProgressTrackerSeekBehaviorTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         progressTracker.player = player
-        expect(progressTracker.range).toEventually(equal(0...1), timeout: .seconds(2))
+        expect(progressTracker.range).toEventually(equal(0...1))
 
         expectEqualPublished(
             values: [false],

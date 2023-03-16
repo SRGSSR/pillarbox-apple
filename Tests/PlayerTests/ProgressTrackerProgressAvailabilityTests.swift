@@ -84,7 +84,7 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
         let player = Player(item: item)
         progressTracker.player = player
         player.play()
-        expect(progressTracker.isProgressAvailable).toEventually(beTrue(), timeout: .seconds(2))
+        expect(progressTracker.isProgressAvailable).toEventually(beTrue())
 
         expectEqualPublished(
             values: [true, false],
@@ -102,7 +102,7 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
         let player = Player(item: item)
         progressTracker.player = player
         player.play()
-        expect(progressTracker.isProgressAvailable).toEventually(beTrue(), timeout: .seconds(2))
+        expect(progressTracker.isProgressAvailable).toEventually(beTrue())
 
         expectEqualPublished(
             values: [true, false],

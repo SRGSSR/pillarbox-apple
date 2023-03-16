@@ -23,8 +23,7 @@ final class ObservableObjectTests: XCTestCase {
         let object = TestObservableObject()
         expectAtLeastEqualPublished(
             values: [2],
-            from: object.changePublisher(at: \.nonPublishedProperty),
-            timeout: .seconds(2)
+            from: object.changePublisher(at: \.nonPublishedProperty)
         )
     }
 
@@ -32,8 +31,7 @@ final class ObservableObjectTests: XCTestCase {
         let object = TestObservableObject()
         expectAtLeastEqualPublished(
             values: [1],
-            from: object.changePublisher(at: \.publishedProperty1),
-            timeout: .seconds(2)
+            from: object.changePublisher(at: \.publishedProperty1)
         )
     }
 
@@ -41,8 +39,7 @@ final class ObservableObjectTests: XCTestCase {
         let object = TestObservableObject()
         expectAtLeastEqualPublished(
             values: [2, 8, 8],
-            from: object.changePublisher(at: \.nonPublishedProperty),
-            timeout: .seconds(2)
+            from: object.changePublisher(at: \.nonPublishedProperty)
         ) {
             object.publishedProperty1 = 4
             object.publishedProperty2 = "b"
@@ -53,8 +50,7 @@ final class ObservableObjectTests: XCTestCase {
         let object = TestObservableObject()
         expectAtLeastEqualPublished(
             values: [1, 3, 3, 3],
-            from: object.changePublisher(at: \.publishedProperty1),
-            timeout: .seconds(2)
+            from: object.changePublisher(at: \.publishedProperty1)
         ) {
             object.publishedProperty1 = 2
             object.publishedProperty1 = 3

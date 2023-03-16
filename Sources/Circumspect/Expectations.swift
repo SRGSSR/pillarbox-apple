@@ -14,7 +14,7 @@ public extension XCTestCase {
         values: [P.Output],
         from publisher: P,
         to satisfy: @escaping (P.Output, P.Output) -> Bool,
-        timeout: DispatchTimeInterval = .seconds(20),
+        timeout: DispatchTimeInterval = .seconds(10),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -35,7 +35,7 @@ public extension XCTestCase {
     func expectAtLeastEqualPublished<P: Publisher>(
         values: [P.Output],
         from publisher: P,
-        timeout: DispatchTimeInterval = .seconds(20),
+        timeout: DispatchTimeInterval = .seconds(10),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -55,7 +55,7 @@ public extension XCTestCase {
     func expectAtLeastSimilarPublished<P: Publisher>(
         values: [P.Output],
         from publisher: P,
-        timeout: DispatchTimeInterval = .seconds(20),
+        timeout: DispatchTimeInterval = .seconds(10),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -77,7 +77,7 @@ public extension XCTestCase {
         values: [P.Output],
         from publisher: P,
         to satisfy: @escaping (P.Output, P.Output) -> Bool,
-        timeout: DispatchTimeInterval = .seconds(20),
+        timeout: DispatchTimeInterval = .seconds(10),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -99,7 +99,7 @@ public extension XCTestCase {
     func expectAtLeastEqualPublishedNext<P: Publisher>(
         values: [P.Output],
         from publisher: P,
-        timeout: DispatchTimeInterval = .seconds(20),
+        timeout: DispatchTimeInterval = .seconds(10),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -121,7 +121,7 @@ public extension XCTestCase {
     func expectAtLeastSimilarPublishedNext<P: Publisher>(
         values: [P.Output],
         from publisher: P,
-        timeout: DispatchTimeInterval = .seconds(20),
+        timeout: DispatchTimeInterval = .seconds(10),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -180,7 +180,7 @@ public extension XCTestCase {
         values: [P.Output],
         from publisher: P,
         to satisfy: @escaping (P.Output, P.Output) -> Bool,
-        timeout: DispatchTimeInterval = .seconds(20),
+        timeout: DispatchTimeInterval = .seconds(10),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -201,7 +201,7 @@ public extension XCTestCase {
     func expectOnlyEqualPublished<P: Publisher>(
         values: [P.Output],
         from publisher: P,
-        timeout: DispatchTimeInterval = .seconds(20),
+        timeout: DispatchTimeInterval = .seconds(10),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -221,7 +221,7 @@ public extension XCTestCase {
     func expectOnlySimilarPublished<P: Publisher>(
         values: [P.Output],
         from publisher: P,
-        timeout: DispatchTimeInterval = .seconds(20),
+        timeout: DispatchTimeInterval = .seconds(10),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -243,7 +243,7 @@ public extension XCTestCase {
         values: [P.Output],
         from publisher: P,
         to satisfy: @escaping (P.Output, P.Output) -> Bool,
-        timeout: DispatchTimeInterval = .seconds(20),
+        timeout: DispatchTimeInterval = .seconds(10),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -265,7 +265,7 @@ public extension XCTestCase {
     func expectOnlyEqualPublishedNext<P: Publisher>(
         values: [P.Output],
         from publisher: P,
-        timeout: DispatchTimeInterval = .seconds(20),
+        timeout: DispatchTimeInterval = .seconds(10),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -287,7 +287,7 @@ public extension XCTestCase {
     func expectOnlySimilarPublishedNext<P: Publisher>(
         values: [P.Output],
         from publisher: P,
-        timeout: DispatchTimeInterval = .seconds(20),
+        timeout: DispatchTimeInterval = .seconds(10),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -566,7 +566,7 @@ public extension XCTestCase {
     /// Expect a publisher to complete successfully.
     func expectSuccess<P: Publisher>(
         from publisher: P,
-        timeout: DispatchTimeInterval = .seconds(20),
+        timeout: DispatchTimeInterval = .seconds(10),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -597,7 +597,7 @@ public extension XCTestCase {
     func expectFailure<P: Publisher>(
         _ error: Error? = nil,
         from publisher: P,
-        timeout: DispatchTimeInterval = .seconds(20),
+        timeout: DispatchTimeInterval = .seconds(10),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -637,7 +637,7 @@ public extension XCTestCase {
         for names: Set<Notification.Name>,
         object: AnyObject? = nil,
         center: NotificationCenter = .default,
-        timeout: DispatchTimeInterval = .seconds(20),
+        timeout: DispatchTimeInterval = .seconds(10),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil

@@ -17,7 +17,7 @@ final class ProgressTrackerValueTests: TestCase {
         let player = Player(item: item)
         progressTracker.player = player
         player.play()
-        expect(progressTracker.range).toEventuallyNot(equal(0...0), timeout: .seconds(2))
+        expect(progressTracker.range).toEventuallyNot(equal(0...0))
         progressTracker.progress = 0.5
         expect(progressTracker.progress).to(beCloseTo(0.5, within: 0.1))
     }
@@ -28,7 +28,7 @@ final class ProgressTrackerValueTests: TestCase {
         let player = Player(item: item)
         progressTracker.player = player
         player.play()
-        expect(progressTracker.range).toEventuallyNot(equal(0...0), timeout: .seconds(2))
+        expect(progressTracker.range).toEventuallyNot(equal(0...0))
         progressTracker.progress = -10
         expect(progressTracker.progress).to(beCloseTo(0, within: 0.1))
     }
@@ -39,7 +39,7 @@ final class ProgressTrackerValueTests: TestCase {
         let player = Player(item: item)
         progressTracker.player = player
         player.play()
-        expect(progressTracker.range).toEventuallyNot(equal(0...0), timeout: .seconds(2))
+        expect(progressTracker.range).toEventuallyNot(equal(0...0))
         progressTracker.progress = 10
         expect(progressTracker.progress).to(beCloseTo(1, within: 0.1))
     }
