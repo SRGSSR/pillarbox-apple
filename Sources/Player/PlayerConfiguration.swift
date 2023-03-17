@@ -16,6 +16,9 @@ public struct PlayerConfiguration {
     /// This property has no effect when `allowsExternalPlayback` is false.
     public let usesExternalPlaybackWhileMirroring: Bool
 
+    /// Indicates whether video playback prevents display and device sleep.
+    public let preventsDisplaySleepDuringVideoPlayback: Bool
+
     /// A policy that determines how playback of audiovisual media continues when the app transitions
     /// to the background.
     public let audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy
@@ -34,6 +37,7 @@ public struct PlayerConfiguration {
     /// - Parameters:
     ///   - allowsExternalPlayback: Allows switching to external playback mode.
     ///   - usesExternalPlaybackWhileMirroring: Allows switching to external playback when mirroring.
+    ///   - preventsDisplaySleepDuringVideoPlayback: Indicates whether video playback prevents display and device sleep.
     ///   - audiovisualBackgroundPlaybackPolicy: Policy that determines how playback of audiovisual media continues
     ///     when the app transitions to the background.
     ///   - smartNavigationEnabled: Enables smart playlist navigation (see `isSmartNavigationEnabled`).
@@ -42,6 +46,7 @@ public struct PlayerConfiguration {
     public init(
         allowsExternalPlayback: Bool = true,
         usesExternalPlaybackWhileMirroring: Bool = false,
+        preventsDisplaySleepDuringVideoPlayback: Bool = true,
         audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic,
         smartNavigationEnabled: Bool = true,
         backwardSkipInterval: TimeInterval = 10,
@@ -51,6 +56,7 @@ public struct PlayerConfiguration {
         assert(forwardSkipInterval > 0)
         self.allowsExternalPlayback = allowsExternalPlayback
         self.usesExternalPlaybackWhileMirroring = usesExternalPlaybackWhileMirroring
+        self.preventsDisplaySleepDuringVideoPlayback = preventsDisplaySleepDuringVideoPlayback
         self.audiovisualBackgroundPlaybackPolicy = audiovisualBackgroundPlaybackPolicy
         self.isSmartNavigationEnabled = smartNavigationEnabled
         self.backwardSkipInterval = backwardSkipInterval
