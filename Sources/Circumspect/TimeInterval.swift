@@ -12,11 +12,11 @@ extension DispatchTimeInterval {
         case let .seconds(value):
             return .init(value)
         case let .milliseconds(value):
-            return .init(value) * 0.001
+            return .init(value) * 1e-3
         case let .microseconds(value):
-            return .init(value) * 0.000001
+            return .init(value) * 1e-6
         case let .nanoseconds(value):
-            return .init(value) * 0.000000001
+            return .init(value) * 1e-9
         default:
             return 0
         }
