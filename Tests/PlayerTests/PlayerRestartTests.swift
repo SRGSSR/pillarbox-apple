@@ -16,7 +16,7 @@ final class PlayerRestartTests: TestCase {
         expect(player.currentIndex).to(equal(0))
     }
 
-    func testWithOneGoodItemEnded() {
+    func testWithOneGoodItemPlayedEntirely() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         player.play()
         expect(player.currentIndex).toEventually(beNil())
