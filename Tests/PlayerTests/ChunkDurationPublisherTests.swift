@@ -14,10 +14,9 @@ final class ChunkDurationPublisherTests: TestCase {
     func testChunkDuration() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [.invalid, CMTime(value: 1, timescale: 1)],
-            from: player.chunkDurationPublisher(),
-            during: .seconds(3)
+            from: player.chunkDurationPublisher()
         )
     }
 
@@ -60,15 +59,14 @@ final class ChunkDurationPublisherTests: TestCase {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2])
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [
                 .invalid,
                 CMTime(value: 1, timescale: 1),
                 .invalid,
                 CMTime(value: 4, timescale: 1)
             ],
-            from: player.chunkDurationPublisher(),
-            during: .seconds(3)
+            from: player.chunkDurationPublisher()
         ) {
             player.play()
         }

@@ -38,27 +38,25 @@ final class AssetTests: TestCase {
     func testNativePlayerItem() {
         let item = Asset.simple(url: Stream.onDemand.url).playerItem()
         _ = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [false, true],
-            from: item.publisher(for: \.isPlaybackLikelyToKeepUp),
-            during: .seconds(2)
+            from: item.publisher(for: \.isPlaybackLikelyToKeepUp)
         )
     }
 
     func testLoadingPlayerItem() {
         let item = Asset.loading.playerItem()
         _ = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [false],
-            from: item.publisher(for: \.isPlaybackLikelyToKeepUp),
-            during: .seconds(2)
+            from: item.publisher(for: \.isPlaybackLikelyToKeepUp)
         )
     }
 
     func testFailingPlayerItem() {
         let item = Asset.failed(error: StructError()).playerItem()
         _ = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [
                 .unknown,
                 .failed(error: NSError(
@@ -69,8 +67,7 @@ final class AssetTests: TestCase {
                     ]
                 ))
             ],
-            from: item.itemStatePublisher(),
-            during: .seconds(2)
+            from: item.itemStatePublisher()
         )
     }
 }

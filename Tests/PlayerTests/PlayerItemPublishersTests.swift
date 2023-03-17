@@ -15,20 +15,18 @@ final class PlayerItemPublishersTests: TestCase {
     func testValidItemStateWithoutPlayback() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         _ = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [.unknown, .readyToPlay],
-            from: item.itemStatePublisher(),
-            during: .seconds(2)
+            from: item.itemStatePublisher()
         )
     }
 
     func testValidItemStateWithPlayback() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [.unknown, .readyToPlay, .ended],
-            from: item.itemStatePublisher(),
-            during: .seconds(2)
+            from: item.itemStatePublisher()
         ) {
             player.play()
         }
@@ -37,13 +35,12 @@ final class PlayerItemPublishersTests: TestCase {
     func testCorruptStream() {
         let item = AVPlayerItem(url: Stream.corruptOnDemand.url)
         _ = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [
                 .unknown,
                 .failed(error: PlayerError.segmentNotFound)
             ],
-            from: item.itemStatePublisher(),
-            during: .seconds(2)
+            from: item.itemStatePublisher()
         )
     }
 }

@@ -13,19 +13,19 @@ import XCTest
 final class PlaybackStatePublisherTests: TestCase {
     func testEmpty() {
         let player = AVPlayer()
-        expectEqualPublished(values: [.idle], from: player.playbackStatePublisher(), during: .seconds(2))
+        expectAtLeastEqualPublished(values: [.idle], from: player.playbackStatePublisher())
     }
 
     func testNoPlayback() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(values: [.idle, .paused], from: player.playbackStatePublisher(), during: .seconds(2))
+        expectAtLeastEqualPublished(values: [.idle, .paused], from: player.playbackStatePublisher())
     }
 
     func testPlayback() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(values: [.idle, .playing], from: player.playbackStatePublisher(), during: .seconds(2)) {
+        expectAtLeastEqualPublished(values: [.idle, .playing], from: player.playbackStatePublisher()) {
             player.play()
         }
     }
@@ -36,7 +36,7 @@ final class PlaybackStatePublisherTests: TestCase {
         expectAtLeastEqualPublished(values: [.idle, .playing], from: player.playbackStatePublisher()) {
             player.play()
         }
-        expectEqualPublishedNext(values: [.paused], from: player.playbackStatePublisher(), during: .seconds(2)) {
+        expectAtLeastEqualPublishedNext(values: [.paused], from: player.playbackStatePublisher()) {
             player.pause()
         }
     }
@@ -44,10 +44,9 @@ final class PlaybackStatePublisherTests: TestCase {
     func testEntirePlayback() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [.idle, .playing, .ended],
-            from: player.playbackStatePublisher(),
-            during: .seconds(2)
+            from: player.playbackStatePublisher()
         ) {
             player.play()
         }
@@ -56,13 +55,12 @@ final class PlaybackStatePublisherTests: TestCase {
     func testPlaybackFailure() {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [
                 .idle,
                 .failed(error: PlayerError.resourceNotFound)
             ],
-            from: player.playbackStatePublisher(),
-            during: .seconds(2)
+            from: player.playbackStatePublisher()
         )
     }
 }

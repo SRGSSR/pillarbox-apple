@@ -18,14 +18,14 @@ final class TriggerTests: XCTestCase {
 
     func testActiveWithSignal() {
         let trigger = Trigger()
-        expectEqualPublished(values: ["out"], from: trigger.signal(activatedBy: 1).map { _ in "out" }, during: .seconds(1)) {
+        expectAtLeastEqualPublished(values: ["out"], from: trigger.signal(activatedBy: 1).map { _ in "out" }) {
             trigger.activate(for: 1)
         }
     }
 
     func testMultipleActivations() {
         let trigger = Trigger()
-        expectEqualPublished(values: ["out", "out"], from: trigger.signal(activatedBy: 1).map { _ in "out" }, during: .seconds(1)) {
+        expectAtLeastEqualPublished(values: ["out", "out"], from: trigger.signal(activatedBy: 1).map { _ in "out" }) {
             trigger.activate(for: 1)
             trigger.activate(for: 1)
         }

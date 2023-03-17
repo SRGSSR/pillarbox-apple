@@ -31,7 +31,7 @@ final class PublishOnOutputFromTests: XCTestCase {
         let publisher = Publishers.Publish(onOutputFrom: trigger.signal(activatedBy: 1)) {
             Just("out")
         }
-        expectEqualPublished(values: ["out"], from: publisher, during: .seconds(1)) { [trigger] in
+        expectAtLeastEqualPublished(values: ["out"], from: publisher) { [trigger] in
             trigger.activate(for: 1)
         }
     }

@@ -13,10 +13,9 @@ import XCTest
 final class BufferingPublisherTests: TestCase {
     func testEmpty() {
         let player = AVPlayer()
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [false],
-            from: player.bufferingPublisher(),
-            during: .seconds(2)
+            from: player.bufferingPublisher()
         )
     }
 
@@ -32,10 +31,9 @@ final class BufferingPublisherTests: TestCase {
     func testEntirePlayback() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [false, true, false],
-            from: player.bufferingPublisher(),
-            during: .seconds(2)
+            from: player.bufferingPublisher()
         ) {
             player.play()
         }

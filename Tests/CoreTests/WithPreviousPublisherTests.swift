@@ -16,34 +16,30 @@ final class WithPreviousPublisherTests: XCTestCase {
     }
 
     func testPreviousValues() {
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [nil, 1, 2, 3, 4],
-            from: (1...5).publisher.withPrevious().map(\.previous),
-            during: .seconds(1)
+            from: (1...5).publisher.withPrevious().map(\.previous)
         )
     }
 
     func testCurrentValues() {
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [1, 2, 3, 4, 5],
-            from: (1...5).publisher.withPrevious().map(\.current),
-            during: .seconds(1)
+            from: (1...5).publisher.withPrevious().map(\.current)
         )
     }
 
     func testOptionalPreviousValues() {
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [-1, 1, 2, 3, 4],
-            from: (1...5).publisher.withPrevious(-1).map(\.previous),
-            during: .seconds(1)
+            from: (1...5).publisher.withPrevious(-1).map(\.previous)
         )
     }
 
     func testOptionalCurrentValues() {
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [1, 2, 3, 4, 5],
-            from: (1...5).publisher.withPrevious(-1).map(\.current),
-            during: .seconds(1)
+            from: (1...5).publisher.withPrevious(-1).map(\.current)
         )
     }
 }

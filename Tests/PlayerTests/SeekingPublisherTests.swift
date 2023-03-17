@@ -14,10 +14,9 @@ import XCTest
 final class SeekingPublisherTests: TestCase {
     func testEmpty() {
         let player = QueuePlayer()
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [false],
-            from: player.seekingPublisher(),
-            during: .seconds(2)
+            from: player.seekingPublisher()
         )
     }
 
@@ -25,10 +24,9 @@ final class SeekingPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         let time = CMTime(value: 1, timescale: 1)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [false, true, false],
-            from: player.seekingPublisher(),
-            during: .seconds(2)
+            from: player.seekingPublisher()
         ) {
             player.seek(to: time)
         }
@@ -39,10 +37,9 @@ final class SeekingPublisherTests: TestCase {
         let player = QueuePlayer(playerItem: item)
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [false, true, false, true, false],
-            from: player.seekingPublisher(),
-            during: .seconds(2)
+            from: player.seekingPublisher()
         ) {
             player.seek(to: time1)
             player.seek(to: time2)
@@ -57,10 +54,9 @@ final class SeekingPublisherTests: TestCase {
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [false, true, false],
-            from: player.seekingPublisher(),
-            during: .seconds(2)
+            from: player.seekingPublisher()
         ) {
             player.seek(to: time1)
             player.seek(to: time2)

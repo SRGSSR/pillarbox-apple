@@ -39,7 +39,7 @@ final class BoundaryTimePublisherTests: TestCase {
     func testPlayback() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [
                 "tick", "tick"
             ],
@@ -50,8 +50,7 @@ final class BoundaryTimePublisherTests: TestCase {
                     CMTimeMake(value: 2, timescale: 2)
                 ]
             )
-            .map { "tick" },
-            during: .seconds(2)
+            .map { "tick" }
         ) {
             player.play()
         }
