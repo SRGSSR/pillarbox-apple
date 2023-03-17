@@ -75,7 +75,7 @@ final class QueuePlayerSmoothSeekTests: TestCase {
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time1]),
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time2]),
             Notification(name: .didSeek, object: player)
-        ]), from: QueuePlayer.notificationCenter), timeout: .seconds(5))
+        ]), from: QueuePlayer.notificationCenter))
     }
 
     func testNotificationsForSmoothSeekAfterSeekWithinTimeRange() {
@@ -96,7 +96,7 @@ final class QueuePlayerSmoothSeekTests: TestCase {
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time1]),
             Notification(name: .willSeek, object: player, userInfo: [SeekKey.time: time2]),
             Notification(name: .didSeek, object: player)
-        ]), from: QueuePlayer.notificationCenter), timeout: .seconds(5))
+        ]), from: QueuePlayer.notificationCenter))
     }
 
     func testCompletionsForMultipleSeeks() {

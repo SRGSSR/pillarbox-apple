@@ -196,9 +196,9 @@ To make it easier to spot where user interface updates can be optimized our `Cor
 
 Sometimes you want to enable behaviors only when a player view fills its parent context, for example zoom gestures which control the `VideoView` gravity.
 
-Pillarbox does not implement such behaviors natively but instead provides a `LayoutReader` wrapper returning its maximization state in the parent context through a binding.
+Pillarbox does not implement such behaviors natively but instead provides a `LayoutReader` wrapper returning its layout information through a binding.
 
-Here is for example how you could implement a pinch gesture only available when the player view is maximized:
+Here is for example how you could implement a pinch gesture only available when the player view is maximized in its parent context:
 
 ```swift
 struct PlayerView: View {
@@ -207,11 +207,11 @@ struct PlayerView: View {
         .urn("urn:rts:video:13444333")
     ])
 
-    @State private var isMaximized = false
+    @State private var layoutInfo: LayoutInfo = .none
     @State private var gravity: AVLayerVideoGravity = .resizeAspect
 
     var body: some View {
-        LayoutReader(isMaximized: $isMaximized) {
+        LayoutReader(layoutInfo: $layoutInfo) {
             VideoView(player: player, gravity: gravity)
                 .gesture(magnificationGesture(), including: magnificationGestureMask)
                 .ignoresSafeArea()
@@ -220,7 +220,7 @@ struct PlayerView: View {
     }
 
     private var magnificationGestureMask: GestureMask {
-        isMaximized ? .all : .subviews
+        layoutInfo.isMaximized ? .all : .subviews
     }
 
     private func magnificationGesture() -> some Gesture {
@@ -231,6 +231,8 @@ struct PlayerView: View {
     }
 }
 ```
+
+You can also use a layout reader to check whether the view covers the full screen.
 
 ## Playlists
 

@@ -15,8 +15,8 @@ private struct MainView: View {
     @ObservedObject var player: Player
     @StateObject private var visibilityTracker = VisibilityTracker()
 
-    @State private var isMaximized = false
-    @State private var gravity: AVLayerVideoGravity = .resizeAspect
+    @State private var layoutInfo: LayoutInfo = .none
+    @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
 
     var body: some View {
         InteractionView(action: visibilityTracker.reset) {
@@ -31,20 +31,24 @@ private struct MainView: View {
         .debugBodyCounter()
     }
 
+    private var gravity: AVLayerVideoGravity {
+        layoutInfo.isMaximized ? selectedGravity : .resizeAspect
+    }
+
     private var magnificationGestureMask: GestureMask {
-        isMaximized ? .all : .subviews
+        layoutInfo.isMaximized ? .all : .subviews
     }
 
     private func magnificationGesture() -> some Gesture {
         MagnificationGesture()
             .onChanged { scale in
-                gravity = scale > 1.0 ? .resizeAspectFill : .resizeAspect
+                selectedGravity = scale > 1.0 ? .resizeAspectFill : .resizeAspect
             }
     }
 
     @ViewBuilder
     private func main() -> some View {
-        LayoutReader(isMaximized: $isMaximized) {
+        LayoutReader(layoutInfo: $layoutInfo) {
             ZStack {
                 video()
                 controls()

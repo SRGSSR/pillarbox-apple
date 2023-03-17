@@ -86,7 +86,7 @@ final class ProgressTrackerProgressTests: TestCase {
         let player = Player(item: item)
         progressTracker.player = player
         player.play()
-        expect(progressTracker.progress).toEventuallyNot(equal(0), timeout: .seconds(2))
+        expect(progressTracker.progress).toEventuallyNot(equal(0))
 
         let progress = progressTracker.progress
         expectEqualPublished(
@@ -105,7 +105,7 @@ final class ProgressTrackerProgressTests: TestCase {
         let player = Player(item: item)
         progressTracker.player = player
         player.play()
-        expect(progressTracker.progress).toEventuallyNot(equal(0), timeout: .seconds(2))
+        expect(progressTracker.progress).toEventuallyNot(equal(0))
 
         let progress = progressTracker.progress
         expectEqualPublished(

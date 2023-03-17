@@ -17,8 +17,7 @@ final class ItemDurationPublisherTests: TestCase {
         expectAtLeastPublished(
             values: [.invalid, Stream.onDemand.duration],
             from: item.durationPublisher(),
-            to: beClose(within: 1),
-            timeout: 2
+            to: beClose(within: 1)
         )
     }
 }

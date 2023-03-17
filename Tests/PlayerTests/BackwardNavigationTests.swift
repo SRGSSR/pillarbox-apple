@@ -158,7 +158,7 @@ final class BackwardNavigationTests: TestCase {
         }
         player.returnToPrevious()
         expect(player.currentIndex).to(equal(0))
-        expect(player.time).toEventually(equal(.zero), timeout: .seconds(3))
+        expect(player.time).toEventually(equal(.zero))
     }
 
     func testReturnForLiveWithPreviousItem() {

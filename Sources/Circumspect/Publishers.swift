@@ -20,7 +20,7 @@ public extension XCTestCase {
     @discardableResult
     func waitForResult<P: Publisher>(
         from publisher: P,
-        timeout: TimeInterval = 10,
+        timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -52,7 +52,7 @@ public extension XCTestCase {
             executing()
         }
 
-        waitForExpectations(timeout: timeout)
+        waitForExpectations(timeout: timeout.double())
         return try XCTUnwrap(result, "The publisher did not produce any result", file: file, line: line)
     }
 
@@ -67,7 +67,7 @@ public extension XCTestCase {
     @discardableResult
     func waitForOutput<P: Publisher>(
         from publisher: P,
-        timeout: TimeInterval = 10,
+        timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -93,7 +93,7 @@ public extension XCTestCase {
     @discardableResult
     func waitForSingleOutput<P: Publisher>(
         from publisher: P,
-        timeout: TimeInterval = 10,
+        timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -123,7 +123,7 @@ public extension XCTestCase {
     @discardableResult
     func waitForFailure<P: Publisher>(
         from publisher: P,
-        timeout: TimeInterval = 10,
+        timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
