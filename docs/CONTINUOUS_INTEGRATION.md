@@ -77,8 +77,9 @@ In the general project settings:
 1. Disable _Allow merge commits_.
 2. Disable _Allow rebase merging_.
 3. Enable _Allow squash merging_ with _Default to pull request title_.
-4. Enable _Always suggest updating pull request branches_.
-5. Enable _Automatically delete head branches_.
+4. Enable _Allow auto-merge_.
+5. Enable _Always suggest updating pull request branches_.
+6. Enable _Automatically delete head branches_.
 
 ## Continuous integration user
 
