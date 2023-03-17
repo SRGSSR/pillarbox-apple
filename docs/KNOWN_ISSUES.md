@@ -62,3 +62,13 @@ Token-protected content cannot be played on old Apple TV 3rd generation devices.
 ### Workaround
 
 No workaround is available yet.
+
+## Media type is unknown when playback is started after an AirPlay session has been established
+
+The media type is `.unknown` if playback is started after an AirPlay session has been established. A correct value is delivered once the AirPlay receiver has been disconnected, though, or when AirPlay is enabled after playback has already been started.
+
+As a result some behaviors based on the media type might not always be reliable over AirPlay.
+
+### Workaround
+
+No workaround is available yet.
