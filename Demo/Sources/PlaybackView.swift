@@ -47,6 +47,10 @@ private struct MainView: View {
         visibilityTracker.isUserInterfaceHidden && !player.canRestart()
     }
 
+    private var airPlayIconName: String {
+        player.mediaType == .video ? "airplayvideo" : "airplayaudio"
+    }
+
     private func magnificationGesture() -> some Gesture {
         MagnificationGesture()
             .onChanged { scale in
@@ -80,7 +84,7 @@ private struct MainView: View {
     @ViewBuilder
     private func video() -> some View {
         if player.isExternalPlaybackActive {
-            image(name: "airplayvideo")
+            image(name: airPlayIconName)
         }
         else if player.mediaType == .audio {
             image(name: "music.note.tv.fill")
