@@ -76,14 +76,10 @@ private struct MainView: View {
     @ViewBuilder
     private func video() -> some View {
         if player.isExternalPlaybackActive {
-            Image(systemName: "airplayvideo")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                // https://www.hackingwithswift.com/quick-start/swiftui/how-to-control-the-tappable-area-of-a-view-using-contentshape
-                .contentShape(Rectangle())
-                .foregroundColor(.white)
-                .padding()
+            image(name: "airplayvideo")
+        }
+        else if player.mediaType == .audio {
+            image(name: "music.note.tv.fill")
         }
         else {
             VideoView(player: player, gravity: gravity)
@@ -102,6 +98,18 @@ private struct MainView: View {
             .tint(.white)
             .opacity(player.isBusy ? 1 : 0)
             .controlSize(.large)
+    }
+
+    @ViewBuilder
+    private func image(name: String) -> some View {
+        Image(systemName: name)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            // https://www.hackingwithswift.com/quick-start/swiftui/how-to-control-the-tappable-area-of-a-view-using-contentshape
+            .contentShape(Rectangle())
+            .foregroundColor(.white)
+            .padding()
     }
 }
 
