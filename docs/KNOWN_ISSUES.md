@@ -10,17 +10,6 @@ A bug in AVKit currently makes `SystemVideoView` leak resources after having int
 
 No workaround is available yet.
 
-## Stuck periodic time observers with audio playlists played over AirPlay
-
-A bug with AVKit and AirPlay prevents time observers from working properly in playlists. After transitioning to another audio item in a playlist no more periodic time observer updates will be received. Reported times remain stuck at zero, which means:
-
-- `ProgressTracker` does not report progress anymore.
-- Sliders found in user interface components are not updated anymore.
-
-### Workaround
-
-No workaround is available yet.
-
 ## DRM-protected streams do not play in the simulator
 
 DRM-protected streams do not play in the simulator. This is expected behavior as the required hardware features are not available in the simulator environment.
@@ -29,9 +18,9 @@ DRM-protected streams do not play in the simulator. This is expected behavior as
 
 Use a physical device.
 
-## Seeking to the end of an on-demand stream is limited
+## Seeking to the end of an on-demand might confuse the player (FB12020197, FB12019796, FB12019343, FB11970329)
 
-Seeks are currently prevented in the last 12 seconds of an on-demand stream to mitigate known player instabilities. If seeking is made within this window playback will resume at the nearest safely reachable location.
+Seeking near the end of a content might sometimes confuse the player (image stuck while sound is still playing, for example).
 
 ### Workaround
 
