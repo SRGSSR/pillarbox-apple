@@ -121,7 +121,26 @@ extension AVPlayer {
     }
 
     func mediaTypePublisher() -> AnyPublisher<MediaType, Never> {
-        Just(.unknown)
+        publisher(for: \.currentItem)
+            .map { item -> AnyPublisher<MediaType, Never> in
+                guard let item else {
+                    return Just(.unknown).eraseToAnyPublisher()
+                }
+                return item.publisher(for: \.status)
+                    .map { status -> AnyPublisher<MediaType, Never> in
+                        guard status == .readyToPlay else {
+                            return Just(.unknown).eraseToAnyPublisher()
+                        }
+                        return item.publisher(for: \.presentationSize)
+                            .map { size in
+                                size == .zero ? .audio : .video
+                            }
+                            .eraseToAnyPublisher()
+                    }
+                    .switchToLatest()
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
             .eraseToAnyPublisher()
     }
 }
