@@ -5,33 +5,46 @@
 Pillarbox is the modern SRG SSR player platform, providing most notably:
 
 - A player with all essential playback features.
+- First-class custom user interface implementation using SwiftUI.
 - Support for playlists, including bidirectional navigation.
 - Flexible data integration.
 - Support for custom resource loading.
-- AirPlay support.
+- AirPlay compatibility.
 - Control center integration.
-- First-class integration with SwiftUI.
 - Ability to play SRG SSR content.
 
-## Compatibility
+# Showcase
+
+Here are a few examples of layouts which can be achieved using Pillarbox and SwiftUI, directly borrowed from our demo project:
+
+[![Showcase](README-images/showcase.png)](https://github.com/SRGSSR/pillarbox-apple)
+
+From left to right:
+
+- Screenshots 1, 2 and 3: [Standard player interface](https://github.com/SRGSSR/pillarbox-apple/blob/main/Demo/Sources/PlaybackView.swift) showing on-demand video, video livestream and audio stream playback respectively.
+- Screenshot 4: [Player with associated playlist](https://github.com/SRGSSR/pillarbox-apple/blob/main/Demo/Sources/PlaylistView.swift).
+- Screenshot 5: [Stories](https://github.com/SRGSSR/pillarbox-apple/blob/main/Demo/Sources/StoriesView.swift).
+- Screenshot 6: [System AVKit user interface](https://github.com/SRGSSR/pillarbox-apple/blob/main/Demo/Sources/SystemPlayerView.swift).
+
+# Compatibility
 
 [![GitHub releases](https://img.shields.io/github/v/release/SRGSSR/pillarbox-apple)](https://github.com/SRGSSR/pillarbox-apple/releases) [![platform](https://img.shields.io/badge/platfom-ios%20%7C%20tvos-blue)](https://github.com/SRGSSR/pillarbox-apple) [![SPM compatible](https://img.shields.io/badge/SPM-compatible-4BC51D.svg?style=flat)](https://swift.org/package-manager) [![GitHub license](https://img.shields.io/github/license/SRGSSR/pillarbox-apple)](https://github.com/SRGSSR/pillarbox-apple/blob/main/LICENSE)
 
 The library is suitable for applications running on iOS 16, tvOS 16 and above. The project is meant to be compiled with the latest Xcode version.
 
-## Contributing
+# Contributing
 
 If you want to contribute to the project have a look at our [contributing guide](CONTRIBUTING.md).
 
-## Integration
+# Integration
 
 The library can be integrated using [Swift Package Manager](https://swift.org/package-manager) directly [within Xcode](https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app). You can also declare the library as a dependency of another one directly in the associated `Package.swift` manifest.
 
-## Getting started
+# Getting started
 
 To learn more how integration of Pillarbox into your project please have a look at our [getting started guide](GETTING_STARTED.md).
 
-## Documentation
+# Documentation
 
 Follow the links below for further documentation:
 
@@ -40,6 +53,6 @@ Follow the links below for further documentation:
 - [Continuous integration](CONTINUOUS_INTEGRATION.md)
 - [Test streams](TEST_STREAMS.md)
 
-## License
+# License
 
 See the [LICENSE](../LICENSE) file for more information.
