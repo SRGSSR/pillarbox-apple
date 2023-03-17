@@ -16,7 +16,7 @@ final class ItemTimeRangePublisherTests: TestCase {
         expectEqualPublished(
             values: [.invalid],
             from: player.currentItemTimeRangePublisher(),
-            during: 2
+            during: .seconds(2)
         )
     }
 
@@ -50,7 +50,7 @@ final class ItemTimeRangePublisherTests: TestCase {
                 .invalid
             ],
             from: player.currentItemTimeRangePublisher(),
-            during: 2
+            during: .seconds(2)
         ) {
             player.play()
         }
@@ -66,7 +66,7 @@ final class ItemTimeRangePublisherTests: TestCase {
                 CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration)
             ],
             from: player.currentItemTimeRangePublisher(),
-            during: 2
+            during: .seconds(2)
         ) {
             player.play()
         }

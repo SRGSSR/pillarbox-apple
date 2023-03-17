@@ -17,7 +17,7 @@ final class SeekTimePublisherTests: TestCase {
         expectEqualPublished(
             values: [nil],
             from: player.seekTimePublisher(),
-            during: 2
+            during: .seconds(2)
         )
     }
 
@@ -28,7 +28,7 @@ final class SeekTimePublisherTests: TestCase {
         expectEqualPublished(
             values: [nil, time, nil],
             from: player.seekTimePublisher(),
-            during: 2
+            during: .seconds(2)
         ) {
             player.seek(to: time)
         }
@@ -42,7 +42,7 @@ final class SeekTimePublisherTests: TestCase {
         expectEqualPublished(
             values: [nil, time1, nil, time2, nil],
             from: player.seekTimePublisher(),
-            during: 2
+            during: .seconds(2)
         ) {
             player.seek(to: time1)
             player.seek(to: time2)
@@ -56,7 +56,7 @@ final class SeekTimePublisherTests: TestCase {
         expectEqualPublished(
             values: [nil, time, nil, time, nil],
             from: player.seekTimePublisher(),
-            during: 2
+            during: .seconds(2)
         ) {
             player.seek(to: time)
             player.seek(to: time)
@@ -74,7 +74,7 @@ final class SeekTimePublisherTests: TestCase {
         expectEqualPublished(
             values: [nil, time1, time2, nil],
             from: player.seekTimePublisher(),
-            during: 2
+            during: .seconds(2)
         ) {
             player.seek(to: time1)
             player.seek(to: time2)
@@ -91,7 +91,7 @@ final class SeekTimePublisherTests: TestCase {
         expectEqualPublished(
             values: [nil, time, nil],
             from: player.seekTimePublisher(),
-            during: 2
+            during: .seconds(2)
         ) {
             player.seek(to: time)
             player.seek(to: time)

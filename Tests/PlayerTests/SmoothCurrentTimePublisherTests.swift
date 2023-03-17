@@ -17,7 +17,7 @@ final class SmoothCurrentTimePublisherTests: TestCase {
         expectEqualPublished(
             values: [],
             from: player.smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main),
-            during: 2
+            during: .seconds(2)
         )
     }
 
@@ -28,7 +28,7 @@ final class SmoothCurrentTimePublisherTests: TestCase {
             values: [.zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1)],
             from: player.smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 2), queue: .main),
             to: beClose(within: 0.1),
-            during: 2
+            during: .seconds(2)
         ) {
             player.play()
         }
@@ -38,7 +38,7 @@ final class SmoothCurrentTimePublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         let publisher = player.smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 1000), queue: .main)
-        let times = collectOutput(from: publisher, during: 3) {
+        let times = collectOutput(from: publisher, during: .seconds(3)) {
             player.seek(to: CMTime(value: 5, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero) { _ in }
         }
         expect(times.contains(CMTime(value: 5, timescale: 1))).to(beTrue())
@@ -55,7 +55,7 @@ final class SmoothCurrentTimePublisherTests: TestCase {
         ) {
             player.play()
         }
-        let times = collectOutput(from: publisher, during: 3) {
+        let times = collectOutput(from: publisher, during: .seconds(3)) {
             player.seek(to: CMTime(value: 5, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero) { _ in }
         }
         expect(times.contains(CMTime(value: 5, timescale: 1))).to(beTrue())

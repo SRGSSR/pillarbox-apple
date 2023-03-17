@@ -22,7 +22,7 @@ final class PeriodicTimePublisherTests: TestCase {
                 interval: CMTimeMake(value: 1, timescale: 2)
             ),
             to: beClose(within: 0.5),
-            during: 2
+            during: .seconds(2)
         )
     }
 
@@ -35,7 +35,7 @@ final class PeriodicTimePublisherTests: TestCase {
             interval: CMTimeMake(value: 1, timescale: 10)
         )
 
-        let times = collectOutput(from: publisher, during: 2)
+        let times = collectOutput(from: publisher, during: .seconds(2))
         expect(times).to(allPass { $0.isValid })
     }
 
@@ -51,7 +51,7 @@ final class PeriodicTimePublisherTests: TestCase {
             player.currentItemTimeRangePublisher()
         )
 
-        let times = collectOutput(from: publisher, during: 2)
+        let times = collectOutput(from: publisher, during: .seconds(2))
         expect(times).to(allPass { time, timeRange in
             guard time.isValid, timeRange.isValid else { return true }
             return timeRange.start <= time && time <= timeRange.end
@@ -68,7 +68,7 @@ final class PeriodicTimePublisherTests: TestCase {
                 interval: CMTimeMake(value: 1, timescale: 2)
             ),
             to: beClose(within: 0.5),
-            during: 2
+            during: .seconds(2)
         )
     }
 

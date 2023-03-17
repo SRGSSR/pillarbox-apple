@@ -41,7 +41,7 @@ final class AssetTests: TestCase {
         expectEqualPublished(
             values: [false, true],
             from: item.publisher(for: \.isPlaybackLikelyToKeepUp),
-            during: 2
+            during: .seconds(2)
         )
     }
 
@@ -51,7 +51,7 @@ final class AssetTests: TestCase {
         expectEqualPublished(
             values: [false],
             from: item.publisher(for: \.isPlaybackLikelyToKeepUp),
-            during: 2
+            during: .seconds(2)
         )
     }
 
@@ -70,7 +70,7 @@ final class AssetTests: TestCase {
                 ))
             ],
             from: item.itemStatePublisher(),
-            during: 2
+            during: .seconds(2)
         )
     }
 }

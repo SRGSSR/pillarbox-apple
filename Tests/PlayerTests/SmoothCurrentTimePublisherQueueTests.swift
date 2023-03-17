@@ -23,7 +23,7 @@ final class SmoothCurrentTimePublisherQueueTests: TestCase {
             ],
             from: player.smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 2), queue: .main),
             to: beClose(within: 0.3),
-            during: 4
+            during: .seconds(4)
         ) {
             player.play()
         }
@@ -41,7 +41,7 @@ final class SmoothCurrentTimePublisherQueueTests: TestCase {
             ],
             from: player.smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 2), queue: .main),
             to: beClose(within: 0.3),
-            during: 4
+            during: .seconds(4)
         ) {
             player.play()
         }

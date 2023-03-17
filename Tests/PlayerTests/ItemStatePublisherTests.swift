@@ -19,7 +19,7 @@ final class ItemStatePublisherTests: TestCase {
         expectEqualPublished(
             values: [.unknown],
             from: player.currentItemStatePublisher(),
-            during: 2
+            during: .seconds(2)
         )
     }
 
@@ -29,7 +29,7 @@ final class ItemStatePublisherTests: TestCase {
         expectEqualPublished(
             values: [.unknown, .readyToPlay],
             from: player.currentItemStatePublisher(),
-            during: 1
+            during: .seconds(1)
         )
     }
 
@@ -39,7 +39,7 @@ final class ItemStatePublisherTests: TestCase {
         expectEqualPublished(
             values: [.unknown, .readyToPlay, .ended],
             from: player.currentItemStatePublisher(),
-            during: 2
+            during: .seconds(2)
         ) {
             player.play()
         }
@@ -54,7 +54,7 @@ final class ItemStatePublisherTests: TestCase {
                 .failed(error: PlayerError.resourceNotFound)
             ],
             from: player.currentItemStatePublisher(),
-            during: 1
+            during: .seconds(1)
         )
     }
 
@@ -67,7 +67,7 @@ final class ItemStatePublisherTests: TestCase {
                 .failed(error: PlayerError.segmentNotFound)
             ],
             from: player.currentItemStatePublisher(),
-            during: 1
+            during: .seconds(1)
         )
     }
 
@@ -88,7 +88,7 @@ final class ItemStatePublisherTests: TestCase {
                 ))
             ],
             from: player.currentItemStatePublisher(),
-            during: 1
+            during: .seconds(1)
         )
     }
 }

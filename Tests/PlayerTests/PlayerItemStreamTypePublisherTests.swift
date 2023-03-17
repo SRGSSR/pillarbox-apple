@@ -17,7 +17,7 @@ final class ItemStreamTypePublisherTests: TestCase {
         expectEqualPublished(
             values: [.unknown, .onDemand],
             from: item.streamTypePublisher(),
-            during: 2
+            during: .seconds(2)
         )
     }
 
@@ -27,7 +27,7 @@ final class ItemStreamTypePublisherTests: TestCase {
         expectEqualPublished(
             values: [.unknown, .live],
             from: item.streamTypePublisher(),
-            during: 2
+            during: .seconds(2)
         )
     }
 
@@ -37,7 +37,7 @@ final class ItemStreamTypePublisherTests: TestCase {
         expectEqualPublished(
             values: [.unknown, .dvr],
             from: item.streamTypePublisher(),
-            during: 2
+            during: .seconds(2)
         )
     }
 }

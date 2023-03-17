@@ -17,7 +17,7 @@ final class SeekingPublisherTests: TestCase {
         expectEqualPublished(
             values: [false],
             from: player.seekingPublisher(),
-            during: 2
+            during: .seconds(2)
         )
     }
 
@@ -28,7 +28,7 @@ final class SeekingPublisherTests: TestCase {
         expectEqualPublished(
             values: [false, true, false],
             from: player.seekingPublisher(),
-            during: 2
+            during: .seconds(2)
         ) {
             player.seek(to: time)
         }
@@ -42,7 +42,7 @@ final class SeekingPublisherTests: TestCase {
         expectEqualPublished(
             values: [false, true, false, true, false],
             from: player.seekingPublisher(),
-            during: 2
+            during: .seconds(2)
         ) {
             player.seek(to: time1)
             player.seek(to: time2)
@@ -60,7 +60,7 @@ final class SeekingPublisherTests: TestCase {
         expectEqualPublished(
             values: [false, true, false],
             from: player.seekingPublisher(),
-            during: 2
+            during: .seconds(2)
         ) {
             player.seek(to: time1)
             player.seek(to: time2)

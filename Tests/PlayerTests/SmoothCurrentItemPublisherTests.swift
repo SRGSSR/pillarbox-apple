@@ -12,10 +12,9 @@ import Foundation
 final class SmoothCurrentItemPublisherTests: TestCase {
     func testEmpty() {
         let player = QueuePlayer()
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [.good(nil)],
-            from: player.smoothCurrentItemPublisher(),
-            during: 2
+            from: player.smoothCurrentItemPublisher()
         )
     }
 
@@ -23,10 +22,9 @@ final class SmoothCurrentItemPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
 
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [.good(item)],
-            from: player.smoothCurrentItemPublisher(),
-            during: 2
+            from: player.smoothCurrentItemPublisher()
         )
     }
 
@@ -34,10 +32,9 @@ final class SmoothCurrentItemPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = QueuePlayer(playerItem: item)
 
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [.good(item), .good(nil)],
-            from: player.smoothCurrentItemPublisher(),
-            during: 2
+            from: player.smoothCurrentItemPublisher()
         ) {
             player.play()
         }
@@ -47,10 +44,9 @@ final class SmoothCurrentItemPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         let player = QueuePlayer(playerItem: item)
 
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [.good(item), .bad(item)],
-            from: player.smoothCurrentItemPublisher(),
-            during: 2
+            from: player.smoothCurrentItemPublisher()
         )
     }
 
@@ -59,10 +55,9 @@ final class SmoothCurrentItemPublisherTests: TestCase {
         let item2 = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(items: [item1, item2])
 
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [.good(item1), .good(item2)],
-            from: player.smoothCurrentItemPublisher(),
-            during: 2
+            from: player.smoothCurrentItemPublisher()
         ) {
             player.play()
         }

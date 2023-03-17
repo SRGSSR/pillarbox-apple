@@ -17,21 +17,21 @@ final class PublishAndRepeatOnOutputFromTests: XCTestCase {
         let publisher = Publishers.PublishAndRepeat(onOutputFrom: Optional<AnyPublisher<Void, Never>>.none) {
             Just("out")
         }
-        expectEqualPublished(values: ["out"], from: publisher, during: 1)
+        expectEqualPublished(values: ["out"], from: publisher, during: .seconds(1))
     }
 
     func testInactiveSignal() {
         let publisher = Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: 1)) {
             Just("out")
         }
-        expectEqualPublished(values: ["out"], from: publisher, during: 1)
+        expectEqualPublished(values: ["out"], from: publisher, during: .seconds(1))
     }
 
     func testActiveSignal() {
         let publisher = Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: 1)) {
             Just("out")
         }
-        expectEqualPublished(values: ["out", "out"], from: publisher, during: 1) { [trigger] in
+        expectEqualPublished(values: ["out", "out"], from: publisher, during: .seconds(1)) { [trigger] in
             trigger.activate(for: 1)
         }
     }

@@ -26,7 +26,7 @@ final class ProgressTrackerSeekBehaviorTests: TestCase {
         expectEqualPublished(
             values: [false, true, false],
             from: player.$isSeeking,
-            during: 2
+            during: .seconds(2)
         ) {
             progressTracker.isInteracting = true
             progressTracker.progress = 0.5
@@ -47,7 +47,7 @@ final class ProgressTrackerSeekBehaviorTests: TestCase {
         expectEqualPublished(
             values: [false],
             from: player.$isSeeking,
-            during: 2
+            during: .seconds(2)
         ) {
             progressTracker.isInteracting = true
             progressTracker.progress = 0.5
@@ -56,7 +56,7 @@ final class ProgressTrackerSeekBehaviorTests: TestCase {
         expectEqualPublishedNext(
             values: [true, false],
             from: player.$isSeeking,
-            during: 2
+            during: .seconds(2)
         ) {
             progressTracker.isInteracting = false
         }

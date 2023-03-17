@@ -17,7 +17,7 @@ final class ChunkDurationPublisherTests: TestCase {
         expectEqualPublished(
             values: [.invalid, CMTime(value: 1, timescale: 1)],
             from: player.chunkDurationPublisher(),
-            during: 3
+            during: .seconds(3)
         )
     }
 
@@ -68,7 +68,7 @@ final class ChunkDurationPublisherTests: TestCase {
                 CMTime(value: 4, timescale: 1)
             ],
             from: player.chunkDurationPublisher(),
-            during: 3
+            during: .seconds(3)
         ) {
             player.play()
         }

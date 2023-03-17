@@ -13,19 +13,19 @@ import XCTest
 final class PlaybackStatePublisherTests: TestCase {
     func testEmpty() {
         let player = AVPlayer()
-        expectEqualPublished(values: [.idle], from: player.playbackStatePublisher(), during: 2)
+        expectEqualPublished(values: [.idle], from: player.playbackStatePublisher(), during: .seconds(2))
     }
 
     func testNoPlayback() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(values: [.idle, .paused], from: player.playbackStatePublisher(), during: 2)
+        expectEqualPublished(values: [.idle, .paused], from: player.playbackStatePublisher(), during: .seconds(2))
     }
 
     func testPlayback() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(values: [.idle, .playing], from: player.playbackStatePublisher(), during: 2) {
+        expectEqualPublished(values: [.idle, .playing], from: player.playbackStatePublisher(), during: .seconds(2)) {
             player.play()
         }
     }
@@ -36,7 +36,7 @@ final class PlaybackStatePublisherTests: TestCase {
         expectAtLeastEqualPublished(values: [.idle, .playing], from: player.playbackStatePublisher()) {
             player.play()
         }
-        expectEqualPublishedNext(values: [.paused], from: player.playbackStatePublisher(), during: 2) {
+        expectEqualPublishedNext(values: [.paused], from: player.playbackStatePublisher(), during: .seconds(2)) {
             player.pause()
         }
     }
@@ -47,7 +47,7 @@ final class PlaybackStatePublisherTests: TestCase {
         expectEqualPublished(
             values: [.idle, .playing, .ended],
             from: player.playbackStatePublisher(),
-            during: 2
+            during: .seconds(2)
         ) {
             player.play()
         }
@@ -62,7 +62,7 @@ final class PlaybackStatePublisherTests: TestCase {
                 .failed(error: PlayerError.resourceNotFound)
             ],
             from: player.playbackStatePublisher(),
-            during: 2
+            during: .seconds(2)
         )
     }
 }

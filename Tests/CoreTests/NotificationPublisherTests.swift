@@ -40,7 +40,7 @@ final class NotificationPublisherTests: XCTestCase {
 
         // We were interested in notifications from `object` only. After its release we should not receive other
         // notifications from any other source anymore.
-        expectNothingPublished(from: publisher, during: 1) {
+        expectNothingPublished(from: publisher, during: .seconds(1)) {
             notificationCenter.post(name: .testNotification, object: nil)
         }
     }

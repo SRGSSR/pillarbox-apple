@@ -105,7 +105,7 @@ final class PlayerCurrentIndexTests: TestCase {
         let player = Player(item: item)
         let publisher = player.queuePlayer.publisher(for: \.currentItem)
 
-        expectNothingPublishedNext(from: publisher, during: 1) {
+        expectNothingPublishedNext(from: publisher, during: .seconds(1)) {
             try! player.setCurrentIndex(0)
         }
     }

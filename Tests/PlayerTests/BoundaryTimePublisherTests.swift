@@ -20,7 +20,7 @@ final class BoundaryTimePublisherTests: TestCase {
                 for: player,
                 times: [CMTimeMake(value: 1, timescale: 2)]
             ),
-            during: 2
+            during: .seconds(2)
         )
     }
 
@@ -32,7 +32,7 @@ final class BoundaryTimePublisherTests: TestCase {
                 for: player,
                 times: [CMTimeMake(value: 1, timescale: 2)]
             ),
-            during: 2
+            during: .seconds(2)
         )
     }
 
@@ -51,7 +51,7 @@ final class BoundaryTimePublisherTests: TestCase {
                 ]
             )
             .map { "tick" },
-            during: 2
+            during: .seconds(2)
         ) {
             player.play()
         }

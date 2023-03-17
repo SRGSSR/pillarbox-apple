@@ -19,7 +19,7 @@ final class ProgressTrackerProgressTests: TestCase {
             values: [0],
             from: progressTracker.changePublisher(at: \.progress)
                 .removeDuplicates(),
-            during: 1
+            during: .seconds(1)
         )
     }
 
@@ -29,7 +29,7 @@ final class ProgressTrackerProgressTests: TestCase {
             values: [0],
             from: progressTracker.changePublisher(at: \.progress)
                 .removeDuplicates(),
-            during: 1
+            during: .seconds(1)
         ) {
             progressTracker.player = Player()
         }
@@ -43,7 +43,7 @@ final class ProgressTrackerProgressTests: TestCase {
             values: [0],
             from: progressTracker.changePublisher(at: \.progress)
                 .removeDuplicates(),
-            during: 1
+            during: .seconds(1)
         ) {
             progressTracker.player = player
         }
@@ -58,7 +58,7 @@ final class ProgressTrackerProgressTests: TestCase {
             from: progressTracker.changePublisher(at: \.progress)
                 .removeDuplicates(),
             to: beClose(within: 0.1),
-            during: 2
+            during: .seconds(2)
         ) {
             progressTracker.player = player
             player.play()
@@ -74,7 +74,7 @@ final class ProgressTrackerProgressTests: TestCase {
             from: progressTracker.changePublisher(at: \.progress)
                 .removeDuplicates(),
             to: beClose(within: 0.1),
-            during: 5
+            during: .seconds(5)
         ) {
             progressTracker.player = player
         }
@@ -93,7 +93,7 @@ final class ProgressTrackerProgressTests: TestCase {
             values: [progress, 0],
             from: progressTracker.changePublisher(at: \.progress)
                 .removeDuplicates(),
-            during: 1
+            during: .seconds(1)
         ) {
             progressTracker.player = Player()
         }
@@ -112,7 +112,7 @@ final class ProgressTrackerProgressTests: TestCase {
             values: [progress, 0],
             from: progressTracker.changePublisher(at: \.progress)
                 .removeDuplicates(),
-            during: 1
+            during: .seconds(1)
         ) {
             progressTracker.player = nil
         }
@@ -138,7 +138,7 @@ final class ProgressTrackerProgressTests: TestCase {
             from: progressTracker.changePublisher(at: \.progress)
                 .removeDuplicates(),
             to: beClose(within: 0.1),
-            during: 1
+            during: .seconds(1)
         ) {
             progressTracker.player = player
         }

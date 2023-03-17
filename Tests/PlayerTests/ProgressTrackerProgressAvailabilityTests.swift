@@ -19,7 +19,7 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
             values: [false],
             from: progressTracker.changePublisher(at: \.isProgressAvailable)
                 .removeDuplicates(),
-            during: 1
+            during: .seconds(1)
         )
     }
 
@@ -29,7 +29,7 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
             values: [false],
             from: progressTracker.changePublisher(at: \.isProgressAvailable)
                 .removeDuplicates(),
-            during: 1
+            during: .seconds(1)
         ) {
             progressTracker.player = Player()
         }
@@ -43,7 +43,7 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
             values: [false, true],
             from: progressTracker.changePublisher(at: \.isProgressAvailable)
                 .removeDuplicates(),
-            during: 1
+            during: .seconds(1)
         ) {
             progressTracker.player = player
         }
@@ -57,7 +57,7 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
             values: [false, true, false],
             from: progressTracker.changePublisher(at: \.isProgressAvailable)
                 .removeDuplicates(),
-            during: 2
+            during: .seconds(2)
         ) {
             progressTracker.player = player
             player.play()
@@ -72,7 +72,7 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
             values: [false, true],
             from: progressTracker.changePublisher(at: \.isProgressAvailable)
                 .removeDuplicates(),
-            during: 5
+            during: .seconds(5)
         ) {
             progressTracker.player = player
         }
@@ -90,7 +90,7 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
             values: [true, false],
             from: progressTracker.changePublisher(at: \.isProgressAvailable)
                 .removeDuplicates(),
-            during: 1
+            during: .seconds(1)
         ) {
             progressTracker.player = Player()
         }
@@ -108,7 +108,7 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
             values: [true, false],
             from: progressTracker.changePublisher(at: \.isProgressAvailable)
                 .removeDuplicates(),
-            during: 1
+            during: .seconds(1)
         ) {
             progressTracker.player = nil
         }
@@ -132,7 +132,7 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
             values: [false, true],
             from: progressTracker.changePublisher(at: \.isProgressAvailable)
                 .removeDuplicates(),
-            during: 1
+            during: .seconds(1)
         ) {
             progressTracker.player = player
         }

@@ -16,7 +16,7 @@ final class BufferingPublisherTests: TestCase {
         expectEqualPublished(
             values: [false],
             from: player.bufferingPublisher(),
-            during: 2
+            during: .seconds(2)
         )
     }
 
@@ -35,7 +35,7 @@ final class BufferingPublisherTests: TestCase {
         expectEqualPublished(
             values: [false, true, false],
             from: player.bufferingPublisher(),
-            during: 2
+            during: .seconds(2)
         ) {
             player.play()
         }

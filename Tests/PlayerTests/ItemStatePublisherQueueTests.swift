@@ -19,7 +19,7 @@ final class ItemStatePublisherQueueTests: TestCase {
             // The second item can be pre-buffered and is immediately ready
             values: [.unknown, .readyToPlay, .ended, .readyToPlay, .ended],
             from: player.currentItemStatePublisher(),
-            during: 4
+            during: .seconds(4)
         ) {
             player.play()
         }
@@ -38,7 +38,7 @@ final class ItemStatePublisherQueueTests: TestCase {
                 .unknown, .readyToPlay, .ended
             ],
             from: player.currentItemStatePublisher(),
-            during: 4
+            during: .seconds(4)
         ) {
             player.play()
         }

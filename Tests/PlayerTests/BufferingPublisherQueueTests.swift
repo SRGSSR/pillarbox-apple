@@ -19,7 +19,7 @@ final class BufferingPublisherQueueTests: TestCase {
             // Next media can be buffered in advance
             values: [false, true, false],
             from: player.bufferingPublisher(),
-            during: 4
+            during: .seconds(4)
         ) {
             player.play()
         }
@@ -34,7 +34,7 @@ final class BufferingPublisherQueueTests: TestCase {
             // Next media cannot be buffered in advance because of the failure
             values: [false, true, false, true, false],
             from: player.bufferingPublisher(),
-            during: 4
+            during: .seconds(4)
         ) {
             player.play()
         }

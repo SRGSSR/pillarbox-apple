@@ -26,7 +26,7 @@ final class ItemBufferingPublisherTests: TestCase {
         expectEqualPublished(
             values: [false, true, false],
             from: item.bufferingPublisher(),
-            during: 2
+            during: .seconds(2)
         ) {
             player.play()
         }

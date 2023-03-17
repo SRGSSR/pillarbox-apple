@@ -25,7 +25,7 @@ final class ItemDurationPublisherQueueTests: TestCase {
             from: player.currentItemDurationPublisher()
                 .removeDuplicates(by: CMTime.close(within: 1)),
             to: beClose(within: 1),
-            during: 4
+            during: .seconds(4)
         ) {
             player.play()
         }
@@ -47,7 +47,7 @@ final class ItemDurationPublisherQueueTests: TestCase {
             from: player.currentItemDurationPublisher()
                 .removeDuplicates(by: CMTime.close(within: 1)),
             to: beClose(within: 1),
-            during: 4
+            during: .seconds(4)
         ) {
             player.play()
         }

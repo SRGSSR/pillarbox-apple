@@ -154,7 +154,7 @@ public extension XCTestCase {
     /// - Returns: The collected output.
     func collectOutput<P: Publisher>(
         from publisher: P,
-        during interval: TimeInterval,
+        during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -176,7 +176,7 @@ public extension XCTestCase {
             executing()
         }
 
-        _ = XCTWaiter.wait(for: [expectation], timeout: interval)
+        _ = XCTWaiter.wait(for: [expectation], timeout: interval.double())
         return values
     }
 }

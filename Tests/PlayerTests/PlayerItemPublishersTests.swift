@@ -18,7 +18,7 @@ final class PlayerItemPublishersTests: TestCase {
         expectEqualPublished(
             values: [.unknown, .readyToPlay],
             from: item.itemStatePublisher(),
-            during: 2
+            during: .seconds(2)
         )
     }
 
@@ -28,7 +28,7 @@ final class PlayerItemPublishersTests: TestCase {
         expectEqualPublished(
             values: [.unknown, .readyToPlay, .ended],
             from: item.itemStatePublisher(),
-            during: 2
+            during: .seconds(2)
         ) {
             player.play()
         }
@@ -43,7 +43,7 @@ final class PlayerItemPublishersTests: TestCase {
                 .failed(error: PlayerError.segmentNotFound)
             ],
             from: item.itemStatePublisher(),
-            during: 2
+            during: .seconds(2)
         )
     }
 }

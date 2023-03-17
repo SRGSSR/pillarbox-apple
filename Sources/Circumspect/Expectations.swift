@@ -346,7 +346,7 @@ public extension XCTestCase {
         values: [P.Output],
         from publisher: P,
         to satisfy: @escaping (P.Output, P.Output) -> Bool,
-        during interval: TimeInterval,
+        during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -367,7 +367,7 @@ public extension XCTestCase {
     func expectEqualPublished<P: Publisher>(
         values: [P.Output],
         from publisher: P,
-        during interval: TimeInterval,
+        during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -388,7 +388,7 @@ public extension XCTestCase {
     func expectSimilarPublished<P: Publisher>(
         values: [P.Output],
         from publisher: P,
-        during interval: TimeInterval,
+        during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -412,7 +412,7 @@ public extension XCTestCase {
         values: [P.Output],
         from publisher: P,
         to satisfy: @escaping (P.Output, P.Output) -> Bool,
-        during interval: TimeInterval,
+        during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -435,7 +435,7 @@ public extension XCTestCase {
     func expectEqualPublishedNext<P: Publisher>(
         values: [P.Output],
         from publisher: P,
-        during interval: TimeInterval,
+        during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -458,7 +458,7 @@ public extension XCTestCase {
     func expectSimilarPublishedNext<P: Publisher>(
         values: [P.Output],
         from publisher: P,
-        during interval: TimeInterval,
+        during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -480,7 +480,7 @@ public extension XCTestCase {
         values: [P.Output],
         from publisher: P,
         to satisfy: @escaping (P.Output, P.Output) -> Bool,
-        during interval: TimeInterval,
+        during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -507,7 +507,7 @@ public extension XCTestCase {
     /// Ensure a publisher does not emit any value during some time interval.
     func expectNothingPublished<P: Publisher>(
         from publisher: P,
-        during interval: TimeInterval,
+        during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -525,7 +525,7 @@ public extension XCTestCase {
     /// Ensure a publisher does not emit any value during some time interval.
     func expectNothingPublishedNext<P: Publisher>(
         from publisher: P,
-        during interval: TimeInterval,
+        during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -543,7 +543,7 @@ public extension XCTestCase {
     private func expectNothingPublished<P: Publisher>(
         next: Bool,
         from publisher: P,
-        during interval: TimeInterval,
+        during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -632,7 +632,7 @@ public extension XCTestCase {
 ///         collection.
 public extension XCTestCase {
     /// Wait until a list of notifications has been received.
-    func expectReceived(
+    func expectAtLeastReceived(
         notifications: [Notification],
         for names: Set<Notification.Name>,
         object: AnyObject? = nil,
@@ -661,7 +661,7 @@ public extension XCTestCase {
         for names: Set<Notification.Name>,
         object: AnyObject? = nil,
         center: NotificationCenter = .default,
-        during interval: TimeInterval,
+        during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -684,7 +684,7 @@ public extension XCTestCase {
         for names: Set<Notification.Name>,
         object: AnyObject? = nil,
         center: NotificationCenter = .default,
-        during interval: TimeInterval,
+        during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil

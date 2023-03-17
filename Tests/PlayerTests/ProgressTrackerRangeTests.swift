@@ -19,7 +19,7 @@ final class ProgressTrackerRangeTests: TestCase {
             values: [0...0],
             from: progressTracker.changePublisher(at: \.range)
                 .removeDuplicates(),
-            during: 1
+            during: .seconds(1)
         )
     }
 
@@ -29,7 +29,7 @@ final class ProgressTrackerRangeTests: TestCase {
             values: [0...0],
             from: progressTracker.changePublisher(at: \.range)
                 .removeDuplicates(),
-            during: 1
+            during: .seconds(1)
         ) {
             progressTracker.player = Player()
         }
@@ -43,7 +43,7 @@ final class ProgressTrackerRangeTests: TestCase {
             values: [0...0, 0...1],
             from: progressTracker.changePublisher(at: \.range)
                 .removeDuplicates(),
-            during: 1
+            during: .seconds(1)
         ) {
             progressTracker.player = player
         }
@@ -57,7 +57,7 @@ final class ProgressTrackerRangeTests: TestCase {
             values: [0...0, 0...1, 0...0],
             from: progressTracker.changePublisher(at: \.range)
                 .removeDuplicates(),
-            during: 2
+            during: .seconds(2)
         ) {
             progressTracker.player = player
             player.play()
@@ -72,7 +72,7 @@ final class ProgressTrackerRangeTests: TestCase {
             values: [0...0, 0...1],
             from: progressTracker.changePublisher(at: \.range)
                 .removeDuplicates(),
-            during: 5
+            during: .seconds(5)
         ) {
             progressTracker.player = player
         }
@@ -90,7 +90,7 @@ final class ProgressTrackerRangeTests: TestCase {
             values: [0...1, 0...0],
             from: progressTracker.changePublisher(at: \.range)
                 .removeDuplicates(),
-            during: 1
+            during: .seconds(1)
         ) {
             progressTracker.player = Player()
         }
@@ -108,7 +108,7 @@ final class ProgressTrackerRangeTests: TestCase {
             values: [0...1, 0...0],
             from: progressTracker.changePublisher(at: \.range)
                 .removeDuplicates(),
-            during: 1
+            during: .seconds(1)
         ) {
             progressTracker.player = nil
         }
@@ -132,7 +132,7 @@ final class ProgressTrackerRangeTests: TestCase {
             values: [0...0, 0...1],
             from: progressTracker.changePublisher(at: \.range)
                 .removeDuplicates(),
-            during: 1
+            during: .seconds(1)
         ) {
             progressTracker.player = player
         }

@@ -23,7 +23,7 @@ final class ItemTimeRangePublisherQueueTests: TestCase {
             ],
             from: player.currentItemTimeRangePublisher(),
             to: beClose(within: 1),
-            during: 3
+            during: .seconds(3)
         ) {
             player.play()
         }
@@ -43,7 +43,7 @@ final class ItemTimeRangePublisherQueueTests: TestCase {
             ],
             from: player.currentItemTimeRangePublisher(),
             to: beClose(within: 1),
-            during: 3
+            during: .seconds(3)
         ) {
             player.play()
         }

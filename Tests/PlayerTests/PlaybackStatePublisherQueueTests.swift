@@ -19,7 +19,7 @@ final class PlaybackStatePublisherQueueTests: TestCase {
             // The second item can be pre-buffered and is immediately played
             values: [.idle, .playing, .ended, .playing, .ended],
             from: player.playbackStatePublisher(),
-            during: 4
+            during: .seconds(4)
         ) {
             player.play()
         }
@@ -38,7 +38,7 @@ final class PlaybackStatePublisherQueueTests: TestCase {
                 .idle, .playing, .ended
             ],
             from: player.playbackStatePublisher(),
-            during: 4
+            during: .seconds(4)
         ) {
             player.play()
         }
