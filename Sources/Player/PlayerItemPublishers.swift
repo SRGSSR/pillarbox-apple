@@ -102,6 +102,8 @@ extension AVPlayerItem {
                     .eraseToAnyPublisher()
             }
             .switchToLatest()
+            .dropFirst()
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 }
