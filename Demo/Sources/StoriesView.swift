@@ -21,7 +21,7 @@ private struct StoryView: View {
             TimeProgress(player: player)
         }
         .tint(.white)
-        .animation(.linear(duration: 0.2), value: player.isBusy)
+        .animation(.linear, value: player.isBusy)
     }
 }
 

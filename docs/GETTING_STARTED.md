@@ -86,7 +86,7 @@ struct PlayerView: View {
             VideoView(player: player)
             controls()
         }
-        .animation(.linear(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
+        .animation(.linear, value: visibilityTracker.isUserInterfaceHidden)
         .onTapGesture(perform: visibilityTracker.toggle)
         .onAppear(perform: player.play)
         .bind(visibilityTracker, to: player)
@@ -134,7 +134,7 @@ struct PlayerView: View {
                 VideoView(player: player)
                 controls()
             }
-            .animation(.linear(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
+            .animation(.linear, value: visibilityTracker.isUserInterfaceHidden)
             .onTapGesture(perform: visibilityTracker.toggle)
         }
         .onAppear(perform: player.play)
