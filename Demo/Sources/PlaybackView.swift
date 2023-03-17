@@ -18,6 +18,10 @@ private struct MainView: View {
     @State private var layoutInfo: LayoutInfo = .none
     @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
 
+    private var areControlsAlwaysVisible: Bool {
+        player.isExternalPlaybackActive || player.mediaType == .audio
+    }
+
     var body: some View {
         InteractionView(action: visibilityTracker.reset) {
             ZStack {
@@ -69,7 +73,7 @@ private struct MainView: View {
     @ViewBuilder
     private func timeBar() -> some View {
         TimeBar(player: player)
-            .opacity(isUserInterfaceHidden && !player.isExternalPlaybackActive ? 0 : 1)
+            .opacity(isUserInterfaceHidden && !areControlsAlwaysVisible ? 0 : 1)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 
@@ -89,7 +93,7 @@ private struct MainView: View {
     @ViewBuilder
     private func controls() -> some View {
         ControlsView(player: player)
-            .opacity(isUserInterfaceHidden && !player.isExternalPlaybackActive ? 0 : 1)
+            .opacity(isUserInterfaceHidden && !areControlsAlwaysVisible ? 0 : 1)
     }
 
     @ViewBuilder
