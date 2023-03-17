@@ -119,4 +119,9 @@ extension AVPlayer {
             }
             .eraseToAnyPublisher()
     }
+
+    func mediaTypePublisher() -> AnyPublisher<MediaType, Never> {
+        Just(.unknown)
+            .eraseToAnyPublisher()
+    }
 }
