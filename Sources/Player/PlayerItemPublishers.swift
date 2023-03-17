@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import Core
 
 extension AVPlayerItem {
     func itemStatePublisher() -> AnyPublisher<ItemState, Never> {
@@ -85,5 +86,22 @@ extension AVPlayerItem {
         )
         .map { NowPlaying.Properties(timeRange: $0, itemDuration: $1, isBuffering: $2) }
         .eraseToAnyPublisher()
+    }
+
+    func mediaTypePublisher() -> AnyPublisher<MediaType, Never> {
+        publisher(for: \.status)
+            .weakCapture(self)
+            .map { status, item -> AnyPublisher<MediaType, Never> in
+                guard status == .readyToPlay else {
+                    return Just(.unknown).eraseToAnyPublisher()
+                }
+                return item.publisher(for: \.presentationSize)
+                    .map { size in
+                        size == .zero ? .audio : .video
+                    }
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
     }
 }
