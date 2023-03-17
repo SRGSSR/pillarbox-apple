@@ -644,8 +644,10 @@ extension Player {
 
     private static func routeSharingPolicy(for mediaType: MediaType) -> AVAudioSession.RouteSharingPolicy {
         switch mediaType {
+#if os(iOS)
         case .video:
             return .longFormVideo
+#endif
         case .audio:
             return .longFormAudio
         default:
