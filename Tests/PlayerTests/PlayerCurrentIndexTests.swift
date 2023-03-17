@@ -15,11 +15,35 @@ import XCTest
 final class PlayerCurrentIndexTests: TestCase {
     func testCurrentIndex() {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
-        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2])
-        expectAtLeastEqualPublished(values: [0, 1], from: player.$currentIndex) {
+        expectAtLeastEqualPublished(values: [0, 1, nil], from: player.$currentIndex) {
             player.play()
         }
+    }
+
+    func testCurrentIndexWithFirstFailedItem() {
+        let item1 = PlayerItem.simple(url: Stream.unavailable.url)
+        let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let player = Player(items: [item1, item2])
+        expectAtLeastEqualPublished(values: [0, 1, nil], from: player.$currentIndex) {
+            player.play()
+        }
+    }
+
+    func testCurrentIndexWithLastFailedItem() {
+        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.unavailable.url)
+        let player = Player(items: [item1, item2])
+
+        expectAtLeastEqualPublished(values: [0, 1, nil], from: player.$currentIndex) {
+            player.play()
+        }
+    }
+
+    func testCurrentIndexWithFailedItem() {
+        let player = Player(item: .simple(url: Stream.unavailable.url))
+        expectAtLeastEqualPublished(values: [0, nil], from: player.$currentIndex)
     }
 
     func testCurrentIndexWithEmptyPlayer() {
@@ -81,7 +105,7 @@ final class PlayerCurrentIndexTests: TestCase {
         let player = Player(item: item)
         let publisher = player.queuePlayer.publisher(for: \.currentItem)
 
-        expectNothingPublishedNext(from: publisher, during: 1) {
+        expectNothingPublishedNext(from: publisher, during: .seconds(1)) {
             try! player.setCurrentIndex(0)
         }
     }

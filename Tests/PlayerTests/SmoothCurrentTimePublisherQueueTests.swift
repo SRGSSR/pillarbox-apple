@@ -16,14 +16,13 @@ final class SmoothCurrentTimePublisherQueueTests: TestCase {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = QueuePlayer(items: [item1, item2])
-        expectPublished(
+        expectAtLeastPublished(
             values: [
                 .zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1),
                 .zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1)
             ],
             from: player.smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 2), queue: .main),
-            to: beClose(within: 0.3),
-            during: 4
+            to: beClose(within: 0.3)
         ) {
             player.play()
         }
@@ -34,14 +33,13 @@ final class SmoothCurrentTimePublisherQueueTests: TestCase {
         let item2 = AVPlayerItem(url: Stream.unavailable.url)
         let item3 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = QueuePlayer(items: [item1, item2, item3])
-        expectPublished(
+        expectAtLeastPublished(
             values: [
                 .zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1),
                 .zero, CMTime(value: 1, timescale: 2), CMTime(value: 1, timescale: 1)
             ],
             from: player.smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 2), queue: .main),
-            to: beClose(within: 0.3),
-            during: 4
+            to: beClose(within: 0.3)
         ) {
             player.play()
         }

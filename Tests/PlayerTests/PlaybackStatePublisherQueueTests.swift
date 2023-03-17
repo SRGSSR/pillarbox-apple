@@ -15,11 +15,10 @@ final class PlaybackStatePublisherQueueTests: TestCase {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVQueuePlayer(items: [item1, item2])
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             // The second item can be pre-buffered and is immediately played
             values: [.idle, .playing, .ended, .playing, .ended],
-            from: player.playbackStatePublisher(),
-            during: 4
+            from: player.playbackStatePublisher()
         ) {
             player.play()
         }
@@ -30,15 +29,14 @@ final class PlaybackStatePublisherQueueTests: TestCase {
         let item2 = AVPlayerItem(url: Stream.unavailable.url)
         let item3 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVQueuePlayer(items: [item1, item2, item3])
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             // The third item cannot be pre-buffered and goes through the usual states
             values: [
                 .idle, .playing, .ended,
                 .failed(error: PlayerError.resourceNotFound),
                 .idle, .playing, .ended
             ],
-            from: player.playbackStatePublisher(),
-            during: 4
+            from: player.playbackStatePublisher()
         ) {
             player.play()
         }

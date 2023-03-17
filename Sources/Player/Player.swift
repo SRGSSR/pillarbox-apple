@@ -31,6 +31,7 @@ public final class Player: ObservableObject, Equatable {
     /// Indicates whether the player is currently playing video in external playback mode.
     @Published public private(set) var isExternalPlaybackActive = false
 
+    @Published private var currentItem: CurrentItem = .good(nil)
     @Published private var storedItems: Deque<PlayerItem>
 
     /// The type of stream currently played.
@@ -89,6 +90,7 @@ public final class Player: ObservableObject, Equatable {
         configureChunkDurationPublisher()
         configureSeekingPublisher()
         configureBufferingPublisher()
+        configureCurrentItemPublisher()
         configureCurrentIndexPublisher()
         configureControlCenterPublishers()
         configureQueueUpdatePublisher()
@@ -575,6 +577,35 @@ extension Player {
     }
 }
 
+public extension Player {
+    private static func smoothPlayerItem(for currentItem: CurrentItem, in items: Deque<PlayerItem>) -> AVPlayerItem? {
+        switch currentItem {
+        case let .bad(playerItem):
+            if let lastItem = items.last, lastItem.matches(playerItem) {
+                return nil
+            }
+            else {
+                return playerItem
+            }
+        case let .good(playerItem):
+            return playerItem
+        }
+    }
+
+    /// Check whether the player has finished playing its content and can be restarted.
+    /// - Returns: `true` if possible.
+    func canRestart() -> Bool {
+        guard !storedItems.isEmpty else { return false }
+        return Self.smoothPlayerItem(for: currentItem, in: storedItems) == nil
+    }
+
+    /// Restart playback if possible.
+    func restart() {
+        guard canRestart() else { return }
+        try? setCurrentIndex(0)
+    }
+}
+
 extension Player {
     private struct Current: Equatable {
         let item: PlayerItem
@@ -621,6 +652,12 @@ extension Player {
             .receiveOnMainThread()
             .lane("player_buffering")
             .assign(to: &$isBuffering)
+    }
+
+    private func configureCurrentItemPublisher() {
+        queuePlayer.smoothCurrentItemPublisher()
+            .receiveOnMainThread()
+            .assign(to: &$currentItem)
     }
 
     private func configureCurrentIndexPublisher() {
@@ -707,13 +744,11 @@ extension Player {
     }
 
     private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
-        Publishers.CombineLatest($storedItems, queuePlayer.publisher(for: \.currentItem))
-            .filter { storedItems, currentItem in
-                // The current item is automatically set to `nil` when a failure is encountered. If this is the case
-                // preserve the previous value, provided the player is loaded with items.
-                storedItems.isEmpty || currentItem != nil
+        Publishers.CombineLatest($storedItems, $currentItem)
+            .map { items, currentItem in
+                let playerItem = Self.smoothPlayerItem(for: currentItem, in: items)
+                return ItemUpdate(items: items, currentItem: playerItem)
             }
-            .map { ItemUpdate(items: $0, currentItem: $1) }
             .eraseToAnyPublisher()
     }
 

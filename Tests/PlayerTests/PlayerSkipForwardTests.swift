@@ -90,7 +90,7 @@ final class PlayerSkipForwardTests: TestCase {
             }
         }
 
-        expectNothingPublishedNext(from: player.$isSeeking, during: 2) {
+        expectNothingPublishedNext(from: player.$isSeeking, during: .seconds(2)) {
             player.skipForward()
         }
     }

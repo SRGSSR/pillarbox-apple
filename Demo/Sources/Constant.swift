@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 let kPageSize: UInt = 50
 
@@ -14,4 +15,10 @@ func constant<T>(iOS: T, tvOS: T) -> T {
 #else
     return iOS
 #endif
+}
+
+extension Animation {
+    static var linear: Animation {
+        .linear(duration: 0.2)
+    }
 }

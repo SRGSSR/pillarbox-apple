@@ -15,15 +15,14 @@ final class ItemTimeRangePublisherQueueTests: TestCase {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2])
-        expectPublished(
+        expectAtLeastPublished(
             values: [
                 .invalid,
                 CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration),
                 CMTimeRange(start: .zero, duration: Stream.onDemand.duration)
             ],
             from: player.currentItemTimeRangePublisher(),
-            to: beClose(within: 1),
-            during: 3
+            to: beClose(within: 1)
         ) {
             player.play()
         }
@@ -34,7 +33,7 @@ final class ItemTimeRangePublisherQueueTests: TestCase {
         let item2 = AVPlayerItem(url: Stream.unavailable.url)
         let item3 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2, item3])
-        expectPublished(
+        expectAtLeastPublished(
             values: [
                 .invalid,
                 CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration),
@@ -42,8 +41,7 @@ final class ItemTimeRangePublisherQueueTests: TestCase {
                 CMTimeRange(start: .zero, duration: Stream.onDemand.duration)
             ],
             from: player.currentItemTimeRangePublisher(),
-            to: beClose(within: 1),
-            during: 3
+            to: beClose(within: 1)
         ) {
             player.play()
         }

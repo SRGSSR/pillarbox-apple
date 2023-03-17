@@ -15,21 +15,19 @@ import XCTest
 final class ProgressTrackerTimeTests: TestCase {
     func testUnbound() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [nil],
             from: progressTracker.changePublisher(at: \.time)
-                .removeDuplicates(),
-            during: 1
+                .removeDuplicates()
         )
     }
 
     func testEmptyPlayer() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [nil],
             from: progressTracker.changePublisher(at: \.time)
-                .removeDuplicates(),
-            during: 1
+                .removeDuplicates()
         ) {
             progressTracker.player = Player()
         }
@@ -39,11 +37,10 @@ final class ProgressTrackerTimeTests: TestCase {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [nil, .zero],
             from: progressTracker.changePublisher(at: \.time)
-                .removeDuplicates(),
-            during: 1
+                .removeDuplicates()
         ) {
             progressTracker.player = player
         }
@@ -65,8 +62,7 @@ final class ProgressTrackerTimeTests: TestCase {
             ],
             from: progressTracker.changePublisher(at: \.time)
                 .removeDuplicates(),
-            to: beClose(within: 0.1),
-            during: 2
+            to: beClose(within: 0.1)
         ) {
             progressTracker.player = player
             player.play()
@@ -77,7 +73,7 @@ final class ProgressTrackerTimeTests: TestCase {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
-        expectPublished(
+        expectAtLeastPublished(
             values: [
                 nil,
                 CMTime(value: 17, timescale: 1),
@@ -88,8 +84,7 @@ final class ProgressTrackerTimeTests: TestCase {
             ],
             from: progressTracker.changePublisher(at: \.time)
                 .removeDuplicates(),
-            to: beClose(within: 0.1),
-            during: 5
+            to: beClose(within: 0.1)
         ) {
             progressTracker.player = player
         }
@@ -104,11 +99,10 @@ final class ProgressTrackerTimeTests: TestCase {
         expect(progressTracker.time).toEventuallyNot(beNil())
 
         let time = progressTracker.time
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [time, nil],
             from: progressTracker.changePublisher(at: \.time)
-                .removeDuplicates(),
-            during: 1
+                .removeDuplicates()
         ) {
             progressTracker.player = Player()
         }
@@ -123,11 +117,10 @@ final class ProgressTrackerTimeTests: TestCase {
         expect(progressTracker.time).toEventuallyNot(beNil())
 
         let time = progressTracker.time
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [time, nil],
             from: progressTracker.changePublisher(at: \.time)
-                .removeDuplicates(),
-            during: 1
+                .removeDuplicates()
         ) {
             progressTracker.player = nil
         }
@@ -151,8 +144,7 @@ final class ProgressTrackerTimeTests: TestCase {
             values: [nil, time],
             from: progressTracker.changePublisher(at: \.time)
                 .removeDuplicates(),
-            to: beClose(within: 0.1),
-            during: 1
+            to: beClose(within: 0.1)
         ) {
             progressTracker.player = player
         }

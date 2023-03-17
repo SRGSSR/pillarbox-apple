@@ -24,8 +24,8 @@ private struct MainView: View {
                 main()
                 timeBar()
             }
-            .animation(.linear(duration: 0.2), value: player.isBusy)
-            .animation(.linear(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
+            .animation(.linear, value: player.isBusy)
+            .animation(.linear, value: isUserInterfaceHidden)
         }
         .bind(visibilityTracker, to: player)
         .debugBodyCounter()
@@ -37,6 +37,10 @@ private struct MainView: View {
 
     private var magnificationGestureMask: GestureMask {
         layoutInfo.isMaximized ? .all : .subviews
+    }
+
+    private var isUserInterfaceHidden: Bool {
+        visibilityTracker.isUserInterfaceHidden && !player.canRestart()
     }
 
     private func magnificationGesture() -> some Gesture {
@@ -54,7 +58,7 @@ private struct MainView: View {
                 controls()
                 loadingIndicator()
             }
-            .animation(.linear(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
+            .animation(.linear, value: isUserInterfaceHidden)
             .accessibilityAddTraits(.isButton)
             .onTapGesture(perform: visibilityTracker.toggle)
             .gesture(magnificationGesture(), including: magnificationGestureMask)
@@ -65,7 +69,7 @@ private struct MainView: View {
     @ViewBuilder
     private func timeBar() -> some View {
         TimeBar(player: player)
-            .opacity(visibilityTracker.isUserInterfaceHidden ? 0 : 1)
+            .opacity(isUserInterfaceHidden ? 0 : 1)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 
@@ -89,7 +93,7 @@ private struct MainView: View {
     @ViewBuilder
     private func controls() -> some View {
         ControlsView(player: player)
-            .opacity(visibilityTracker.isUserInterfaceHidden ? 0 : 1)
+            .opacity(isUserInterfaceHidden ? 0 : 1)
     }
 
     @ViewBuilder
@@ -115,6 +119,7 @@ private struct ControlsView: View {
             }
             .debugBodyCounter(color: .green)
         }
+        .animation(.linear, value: player.playbackState)
         .bind(progressTracker, to: player)
     }
 }
@@ -136,24 +141,40 @@ private struct PlaybackMessageView: View {
 private struct PlaybackButton: View {
     @ObservedObject var player: Player
 
-    private var playbackButtonImageName: String {
-        switch player.playbackState {
-        case .playing:
-            return "pause.circle.fill"
-        default:
-            return "play.circle.fill"
+    private var imageName: String {
+        if player.canRestart() {
+            return "arrow.counterclockwise.circle.fill"
+        }
+        else {
+            switch player.playbackState {
+            case .playing:
+                return "pause.circle.fill"
+            default:
+                return "play.circle.fill"
+            }
         }
     }
 
     var body: some View {
-        Button(action: player.togglePlayPause) {
-            Image(systemName: playbackButtonImageName)
+        Button(action: play) {
+            Image(systemName: imageName)
                 .resizable()
                 .tint(.white)
+                .opacity(player.isBusy ? 0 : 1)
+                .animation(.linear, value: player.playbackState)
+                .animation(.linear, value: player.canRestart())
         }
-        .opacity(player.isBusy ? 0 : 1)
         .aspectRatio(contentMode: .fit)
-        .frame(height: constant(iOS: 90, tvOS: 150))
+        .frame(minWidth: 120, maxHeight: 90)
+    }
+
+    private func play() {
+        if player.canRestart() {
+            player.restart()
+        }
+        else {
+            player.togglePlayPause()
+        }
     }
 }
 
@@ -169,8 +190,9 @@ private struct SkipBackwardButton: View {
                 .tint(.white)
         }
         .aspectRatio(contentMode: .fit)
-        .frame(height: constant(iOS: 45, tvOS: 75))
-        .disabled(!player.canSkipBackward())
+        .frame(height: 45)
+        .opacity(player.canSkipBackward() ? 1 : 0)
+        .animation(.linear, value: player.canSkipBackward())
     }
 
     private func skipBackward() {
@@ -190,8 +212,9 @@ private struct SkipForwardButton: View {
                 .tint(.white)
         }
         .aspectRatio(contentMode: .fit)
-        .frame(height: constant(iOS: 45, tvOS: 75))
-        .disabled(!player.canSkipForward())
+        .frame(height: 45)
+        .opacity(player.canSkipForward() ? 1 : 0)
+        .animation(.linear, value: player.canSkipForward())
     }
 
     private func skipForward() {

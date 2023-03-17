@@ -57,7 +57,7 @@ final class ExpectationTests: XCTestCase {
         expectEqualPublished(
             values: [0, 1, 2],
             from: counter.$count,
-            during: 0.5
+            during: .milliseconds(500)
         )
     }
 
@@ -67,7 +67,7 @@ final class ExpectationTests: XCTestCase {
         expectEqualPublished(
             values: [4, 7, 8],
             from: subject,
-            during: 0.5
+            during: .milliseconds(500)
         ) {
             subject.send(4)
             subject.send(7)
@@ -80,7 +80,7 @@ final class ExpectationTests: XCTestCase {
         expectEqualPublishedNext(
             values: [1, 2],
             from: counter.$count,
-            during: 0.5
+            during: .milliseconds(500)
         )
     }
 
@@ -90,7 +90,7 @@ final class ExpectationTests: XCTestCase {
         expectEqualPublishedNext(
             values: [7, 8],
             from: subject,
-            during: 0.5
+            during: .milliseconds(500)
         ) {
             subject.send(4)
             subject.send(7)
@@ -101,13 +101,13 @@ final class ExpectationTests: XCTestCase {
     func testExpectNothingPublished() {
         // swiftlint:disable:next private_subject
         let subject = PassthroughSubject<Int, Never>()
-        expectNothingPublished(from: subject, during: 1)
+        expectNothingPublished(from: subject, during: .seconds(1))
     }
 
     func testExpectNothingPublishedNext() {
         // swiftlint:disable:next private_subject
         let subject = PassthroughSubject<Int, Never>()
-        expectNothingPublishedNext(from: subject, during: 1) {
+        expectNothingPublishedNext(from: subject, during: .seconds(1)) {
             subject.send(4)
         }
     }
@@ -124,8 +124,8 @@ final class ExpectationTests: XCTestCase {
         expectFailure(StructError(), from: Fail<Int, Error>(error: StructError()))
     }
 
-    func testExpectReceivedNotifications() {
-        expectReceived(
+    func testExpectAtLeastReceivedNotifications() {
+        expectAtLeastReceived(
             notifications: [
                 Notification(name: .testNotification, object: self)
             ],
@@ -141,7 +141,7 @@ final class ExpectationTests: XCTestCase {
                 Notification(name: .testNotification, object: self)
             ],
             for: [.testNotification],
-            during: 0.5
+            during: .milliseconds(500)
         ) {
             NotificationCenter.default.post(name: .testNotification, object: self)
         }

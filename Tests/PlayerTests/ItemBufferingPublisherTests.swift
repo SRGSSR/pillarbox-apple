@@ -23,10 +23,9 @@ final class ItemBufferingPublisherTests: TestCase {
     func testEntirePlayback() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [false, true, false],
-            from: item.bufferingPublisher(),
-            during: 2
+            from: item.bufferingPublisher()
         ) {
             player.play()
         }

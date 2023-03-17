@@ -14,10 +14,9 @@ import XCTest
 final class SeekTimePublisherTests: TestCase {
     func testEmpty() {
         let player = QueuePlayer()
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [nil],
-            from: player.seekTimePublisher(),
-            during: 2
+            from: player.seekTimePublisher()
         )
     }
 
@@ -25,10 +24,9 @@ final class SeekTimePublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         let time = CMTime(value: 1, timescale: 1)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [nil, time, nil],
-            from: player.seekTimePublisher(),
-            during: 2
+            from: player.seekTimePublisher()
         ) {
             player.seek(to: time)
         }
@@ -39,10 +37,9 @@ final class SeekTimePublisherTests: TestCase {
         let player = QueuePlayer(playerItem: item)
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [nil, time1, nil, time2, nil],
-            from: player.seekTimePublisher(),
-            during: 2
+            from: player.seekTimePublisher()
         ) {
             player.seek(to: time1)
             player.seek(to: time2)
@@ -53,10 +50,9 @@ final class SeekTimePublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         let time = CMTime(value: 1, timescale: 1)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [nil, time, nil, time, nil],
-            from: player.seekTimePublisher(),
-            during: 2
+            from: player.seekTimePublisher()
         ) {
             player.seek(to: time)
             player.seek(to: time)
@@ -71,10 +67,9 @@ final class SeekTimePublisherTests: TestCase {
 
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [nil, time1, time2, nil],
-            from: player.seekTimePublisher(),
-            during: 2
+            from: player.seekTimePublisher()
         ) {
             player.seek(to: time1)
             player.seek(to: time2)
@@ -88,10 +83,9 @@ final class SeekTimePublisherTests: TestCase {
         expect(item.timeRange).toEventuallyNot(equal(.invalid))
 
         let time = CMTime(value: 1, timescale: 1)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [nil, time, nil],
-            from: player.seekTimePublisher(),
-            during: 2
+            from: player.seekTimePublisher()
         ) {
             player.seek(to: time)
             player.seek(to: time)

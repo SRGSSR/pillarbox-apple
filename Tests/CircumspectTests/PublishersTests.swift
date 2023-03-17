@@ -81,14 +81,14 @@ final class PublisherTests: XCTestCase {
 
     func testCollectOutput() {
         let counter = Counter()
-        let values = collectOutput(from: counter.$count, during: 0.5)
+        let values = collectOutput(from: counter.$count, during: .milliseconds(500))
         expect(values).to(equal([0, 1, 2]))
     }
 
     func testCollectOutputWhileExecuting() {
         // swiftlint:disable:next private_subject
         let subject = PassthroughSubject<Int, Never>()
-        let values = collectOutput(from: subject, during: 0.5) {
+        let values = collectOutput(from: subject, during: .milliseconds(500)) {
             subject.send(4)
             subject.send(7)
         }
@@ -98,7 +98,7 @@ final class PublisherTests: XCTestCase {
     func testCollectOutputImmediately() {
         let values = collectOutput(
             from: [1, 2, 3, 4, 5].publisher,
-            during: 0
+            during: .never
         )
         expect(values).to(equal([1, 2, 3, 4, 5]))
     }

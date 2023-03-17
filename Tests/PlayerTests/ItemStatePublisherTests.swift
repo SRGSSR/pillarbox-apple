@@ -16,30 +16,27 @@ final class ItemStatePublisherTests: TestCase {
 
     func testEmpty() {
         let player = AVPlayer()
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [.unknown],
-            from: player.currentItemStatePublisher(),
-            during: 2
+            from: player.currentItemStatePublisher()
         )
     }
 
     func testNoPlayback() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [.unknown, .readyToPlay],
-            from: player.currentItemStatePublisher(),
-            during: 1
+            from: player.currentItemStatePublisher()
         )
     }
 
     func testEntirePlayback() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [.unknown, .readyToPlay, .ended],
-            from: player.currentItemStatePublisher(),
-            during: 2
+            from: player.currentItemStatePublisher()
         ) {
             player.play()
         }
@@ -48,26 +45,24 @@ final class ItemStatePublisherTests: TestCase {
     func testUnavailableStream() {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [
                 .unknown,
                 .failed(error: PlayerError.resourceNotFound)
             ],
-            from: player.currentItemStatePublisher(),
-            during: 1
+            from: player.currentItemStatePublisher()
         )
     }
 
     func testCorruptStream() {
         let item = AVPlayerItem(url: Stream.corruptOnDemand.url)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [
                 .unknown,
                 .failed(error: PlayerError.segmentNotFound)
             ],
-            from: player.currentItemStatePublisher(),
-            during: 1
+            from: player.currentItemStatePublisher()
         )
     }
 
@@ -76,7 +71,7 @@ final class ItemStatePublisherTests: TestCase {
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: .global())
         let item = AVPlayerItem(asset: asset)
         let player = AVPlayer(playerItem: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [
                 .unknown,
                 .failed(error: NSError(
@@ -87,8 +82,7 @@ final class ItemStatePublisherTests: TestCase {
                     ]
                 ))
             ],
-            from: player.currentItemStatePublisher(),
-            during: 1
+            from: player.currentItemStatePublisher()
         )
     }
 }

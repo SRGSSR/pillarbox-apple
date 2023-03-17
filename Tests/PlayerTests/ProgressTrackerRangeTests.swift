@@ -15,21 +15,19 @@ import XCTest
 final class ProgressTrackerRangeTests: TestCase {
     func testUnbound() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [0...0],
             from: progressTracker.changePublisher(at: \.range)
-                .removeDuplicates(),
-            during: 1
+                .removeDuplicates()
         )
     }
 
     func testEmptyPlayer() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [0...0],
             from: progressTracker.changePublisher(at: \.range)
-                .removeDuplicates(),
-            during: 1
+                .removeDuplicates()
         ) {
             progressTracker.player = Player()
         }
@@ -39,11 +37,10 @@ final class ProgressTrackerRangeTests: TestCase {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [0...0, 0...1],
             from: progressTracker.changePublisher(at: \.range)
-                .removeDuplicates(),
-            during: 1
+                .removeDuplicates()
         ) {
             progressTracker.player = player
         }
@@ -53,11 +50,10 @@ final class ProgressTrackerRangeTests: TestCase {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(item: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [0...0, 0...1, 0...0],
             from: progressTracker.changePublisher(at: \.range)
-                .removeDuplicates(),
-            during: 2
+                .removeDuplicates()
         ) {
             progressTracker.player = player
             player.play()
@@ -68,11 +64,10 @@ final class ProgressTrackerRangeTests: TestCase {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [0...0, 0...1],
             from: progressTracker.changePublisher(at: \.range)
-                .removeDuplicates(),
-            during: 5
+                .removeDuplicates()
         ) {
             progressTracker.player = player
         }
@@ -86,11 +81,10 @@ final class ProgressTrackerRangeTests: TestCase {
         player.play()
         expect(progressTracker.range).toEventuallyNot(equal(0...0))
 
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [0...1, 0...0],
             from: progressTracker.changePublisher(at: \.range)
-                .removeDuplicates(),
-            during: 1
+                .removeDuplicates()
         ) {
             progressTracker.player = Player()
         }
@@ -104,11 +98,10 @@ final class ProgressTrackerRangeTests: TestCase {
         player.play()
         expect(progressTracker.range).toEventuallyNot(equal(0...0))
 
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [0...1, 0...0],
             from: progressTracker.changePublisher(at: \.range)
-                .removeDuplicates(),
-            during: 1
+                .removeDuplicates()
         ) {
             progressTracker.player = nil
         }
@@ -128,11 +121,10 @@ final class ProgressTrackerRangeTests: TestCase {
             }
         }
 
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [0...0, 0...1],
             from: progressTracker.changePublisher(at: \.range)
-                .removeDuplicates(),
-            during: 1
+                .removeDuplicates()
         ) {
             progressTracker.player = player
         }

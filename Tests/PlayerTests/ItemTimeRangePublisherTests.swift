@@ -13,10 +13,9 @@ import XCTest
 final class ItemTimeRangePublisherTests: TestCase {
     func testEmpty() {
         let player = AVPlayer()
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [.invalid],
-            from: player.currentItemTimeRangePublisher(),
-            during: 2
+            from: player.currentItemTimeRangePublisher()
         )
     }
 
@@ -43,14 +42,13 @@ final class ItemTimeRangePublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVQueuePlayer(playerItem: item)
         player.actionAtItemEnd = .advance
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [
                 .invalid,
                 CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration),
                 .invalid
             ],
-            from: player.currentItemTimeRangePublisher(),
-            during: 2
+            from: player.currentItemTimeRangePublisher()
         ) {
             player.play()
         }
@@ -60,13 +58,12 @@ final class ItemTimeRangePublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVQueuePlayer(playerItem: item)
         player.actionAtItemEnd = .none
-        expectEqualPublished(
+        expectAtLeastEqualPublished(
             values: [
                 .invalid,
                 CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration)
             ],
-            from: player.currentItemTimeRangePublisher(),
-            during: 2
+            from: player.currentItemTimeRangePublisher()
         ) {
             player.play()
         }

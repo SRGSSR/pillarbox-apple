@@ -28,7 +28,7 @@ final class ItemUpdateTests: TestCase {
         let item3 = PlayerItem.simple(url: Stream.item(numbered: 3).url)
         let item4 = PlayerItem.simple(url: Stream.item(numbered: 4).url)
         let player = Player(items: [item1, item2, item3])
-        expectNothingPublishedNext(from: player.queuePlayer.publisher(for: \.currentItem), during: 2) {
+        expectNothingPublishedNext(from: player.queuePlayer.publisher(for: \.currentItem), during: .seconds(2)) {
             player.items = [item4, item3, item1]
         }
     }

@@ -6,7 +6,13 @@
 
 import AVFoundation
 import Combine
+import Core
 import TimelaneCombine
+
+enum CurrentItem: Equatable {
+    case good(AVPlayerItem?)
+    case bad(AVPlayerItem?)
+}
 
 extension AVPlayer {
     func currentItemStatePublisher() -> AnyPublisher<ItemState, Never> {
@@ -14,7 +20,7 @@ extension AVPlayer {
             .compactMap { $0 }
             .map { $0.itemStatePublisher() }
             .switchToLatest()
-            .prepend(ItemState.itemState(for: currentItem))
+            .prepend(ItemState(for: currentItem))
             .removeDuplicates()
             .lane("player_item_state")
             .eraseToAnyPublisher()
@@ -89,6 +95,28 @@ extension AVPlayer {
                     .eraseToAnyPublisher()
             }
             .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+
+    func smoothCurrentItemPublisher() -> AnyPublisher<CurrentItem, Never> {
+        publisher(for: \.currentItem)
+            .withPrevious()
+            .map { previousItem, currentItem in
+                if let currentItem {
+                    return .good(currentItem)
+                }
+                else if let previousItem {
+                    switch ItemState(for: previousItem) {
+                    case .failed:
+                        return .bad(previousItem)
+                    default:
+                        return .good(currentItem)
+                    }
+                }
+                else {
+                    return .good(currentItem)
+                }
+            }
             .eraseToAnyPublisher()
     }
 }

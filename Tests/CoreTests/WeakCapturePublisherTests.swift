@@ -22,7 +22,7 @@ final class WeakCapturePublisherTests: XCTestCase {
         }
         expect(weakObject).to(beNil())
 
-        expectNothingPublished(from: publisher, during: 1)
+        expectNothingPublished(from: publisher, during: .seconds(1))
     }
 
     func testDelivery() {
