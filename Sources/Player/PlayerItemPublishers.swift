@@ -102,6 +102,9 @@ extension AVPlayerItem {
                     .eraseToAnyPublisher()
             }
             .switchToLatest()
+            // Mitigate incorrect media types, most notably returned when disconnecting AirPlay while the media type
+            // is still unknown. This trick works in all cases, whether AirPlay is not enabled, enabled before
+            // playback or during playback. We therefore do not have to check that a route is enabled here.
             .dropFirst()
             .removeDuplicates()
             .eraseToAnyPublisher()
