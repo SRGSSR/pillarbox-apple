@@ -99,6 +99,7 @@ public final class Player: ObservableObject, Equatable {
         configureQueueUpdatePublisher()
         configureExternalPlaybackPublisher()
         configureMediaTypePublisher()
+        configureAudioSessionPublisher()
 
         configurePlayer()
     }
@@ -631,6 +632,27 @@ extension Player {
         }
     }
 
+    private static func updateAudioSessionConfiguration(for mediaType: MediaType) {
+        let audioSession = AVAudioSession.sharedInstance()
+        try? audioSession.setCategory(
+            audioSession.category,
+            mode: audioSession.mode,
+            policy: routeSharingPolicy(for: mediaType),
+            options: audioSession.categoryOptions
+        )
+    }
+
+    private static func routeSharingPolicy(for mediaType: MediaType) -> AVAudioSession.RouteSharingPolicy {
+        switch mediaType {
+        case .video:
+            return .longFormVideo
+        case .audio:
+            return .longFormAudio
+        default:
+            return .default
+        }
+    }
+
     private func configurePlaybackStatePublisher() {
         queuePlayer.playbackStatePublisher()
             .receiveOnMainThread()
@@ -752,6 +774,14 @@ extension Player {
         queuePlayer.mediaTypePublisher()
             .receiveOnMainThread()
             .assign(to: &$mediaType)
+    }
+
+    private func configureAudioSessionPublisher() {
+        $mediaType
+            .sink { mediaType in
+                Self.updateAudioSessionConfiguration(for: mediaType)
+            }
+            .store(in: &cancellables)
     }
 
     private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
