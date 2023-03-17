@@ -69,7 +69,7 @@ private struct MainView: View {
     @ViewBuilder
     private func timeBar() -> some View {
         TimeBar(player: player)
-            .opacity(isUserInterfaceHidden ? 0 : 1)
+            .opacity(isUserInterfaceHidden && !player.isExternalPlaybackActive ? 0 : 1)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 
@@ -93,7 +93,7 @@ private struct MainView: View {
     @ViewBuilder
     private func controls() -> some View {
         ControlsView(player: player)
-            .opacity(isUserInterfaceHidden ? 0 : 1)
+            .opacity(isUserInterfaceHidden && !player.isExternalPlaybackActive ? 0 : 1)
     }
 
     @ViewBuilder
