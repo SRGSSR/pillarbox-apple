@@ -31,7 +31,7 @@ public final class Player: ObservableObject, Equatable {
     /// Indicates whether the player is currently playing video in external playback mode.
     @Published public private(set) var isExternalPlaybackActive = false
 
-    @Published private var itemResult: CurrentItem = .good(nil)
+    @Published private var currentItem: CurrentItem = .good(nil)
     @Published private var storedItems: Deque<PlayerItem>
 
     /// The type of stream currently played.
@@ -90,7 +90,7 @@ public final class Player: ObservableObject, Equatable {
         configureChunkDurationPublisher()
         configureSeekingPublisher()
         configureBufferingPublisher()
-        configureItemResultPublisher()
+        configureCurrentItemPublisher()
         configureCurrentIndexPublisher()
         configureControlCenterPublishers()
         configureQueueUpdatePublisher()
@@ -578,8 +578,8 @@ extension Player {
 }
 
 public extension Player {
-    private static func smoothCurrentItem(for itemResult: CurrentItem, in items: Deque<PlayerItem>) -> AVPlayerItem? {
-        switch itemResult {
+    private static func smoothPlayerItem(for currentItem: CurrentItem, in items: Deque<PlayerItem>) -> AVPlayerItem? {
+        switch currentItem {
         case let .bad(playerItem):
             if let lastItem = items.last, lastItem.matches(playerItem) {
                 return nil
@@ -596,7 +596,7 @@ public extension Player {
     /// - Returns: `true` if possible.
     func canRestart() -> Bool {
         guard !storedItems.isEmpty else { return false }
-        return Self.smoothCurrentItem(for: itemResult, in: storedItems) == nil
+        return Self.smoothPlayerItem(for: currentItem, in: storedItems) == nil
     }
 
     /// Restart playback if possible.
@@ -654,10 +654,10 @@ extension Player {
             .assign(to: &$isBuffering)
     }
 
-    private func configureItemResultPublisher() {
+    private func configureCurrentItemPublisher() {
         queuePlayer.smoothCurrentItemPublisher()
             .receiveOnMainThread()
-            .assign(to: &$itemResult)
+            .assign(to: &$currentItem)
     }
 
     private func configureCurrentIndexPublisher() {
@@ -744,9 +744,9 @@ extension Player {
     }
 
     private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
-        Publishers.CombineLatest($storedItems, $itemResult)
-            .map { items, itemResult in
-                let playerItem = Self.smoothCurrentItem(for: itemResult, in: items)
+        Publishers.CombineLatest($storedItems, $currentItem)
+            .map { items, currentItem in
+                let playerItem = Self.smoothPlayerItem(for: currentItem, in: items)
                 return ItemUpdate(items: items, currentItem: playerItem)
             }
             .eraseToAnyPublisher()
