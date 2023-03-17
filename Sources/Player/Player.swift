@@ -114,6 +114,7 @@ public final class Player: ObservableObject, Equatable {
     private func configurePlayer() {
         queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
         queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
+        queuePlayer.preventsDisplaySleepDuringVideoPlayback = configuration.preventsDisplaySleepDuringVideoPlayback
         queuePlayer.audiovisualBackgroundPlaybackPolicy = configuration.audiovisualBackgroundPlaybackPolicy
     }
 
