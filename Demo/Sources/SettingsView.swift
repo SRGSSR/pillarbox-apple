@@ -13,8 +13,8 @@ struct SettingsView: View {
 
     @AppStorage(UserDefaults.bodyCountersEnabledKey)
     private var areBodyCountersEnabled = false
-    
-    @AppStorage(UserDefaults.playerLayoutKey)
+
+    @available(tvOS, unavailable) @AppStorage(UserDefaults.playerLayoutKey)
     private var playerLayout: PlayerLayout = .custom
 
     @AppStorage(UserDefaults.allowsExternalPlaybackKey)
@@ -63,7 +63,9 @@ struct SettingsView: View {
     @ViewBuilder
     private func playerSection() -> some View {
         Section("Player") {
+#if os(iOS)
             playerLayoutPicker()
+#endif
             Toggle("Allows external playback", isOn: $allowsExternalPlayback)
             Toggle(isOn: $isSmartNavigationEnabled) {
                 Text("Smart navigation")
@@ -74,7 +76,7 @@ struct SettingsView: View {
         }
     }
 
-    @ViewBuilder
+    @available(tvOS, unavailable) @ViewBuilder
     private func playerLayoutPicker() -> some View {
         Picker("Player layout", selection: $playerLayout) {
             Text("Custom").tag(PlayerLayout.custom)

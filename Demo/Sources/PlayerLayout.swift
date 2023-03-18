@@ -7,6 +7,7 @@
 import Foundation
 
 @objc
+@available(tvOS, unavailable)
 enum PlayerLayout: Int {
     case custom
     case system

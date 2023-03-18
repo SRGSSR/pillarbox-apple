@@ -21,7 +21,10 @@ enum SeekBehaviorSetting: Int {
 extension UserDefaults {
     static let presenterModeEnabledKey = "presenterModeEnabled"
     static let bodyCountersEnabledKey = "bodyCountersEnabled"
+
+    @available(tvOS, unavailable)
     static let playerLayoutKey = "playerLayout"
+
     static let allowsExternalPlaybackKey = "allowsExternalPlayback"
     static let smartNavigationEnabledKey = "smartNavigationEnabled"
     static let seekBehaviorSettingKey = "seekBehaviorSetting"
@@ -36,6 +39,7 @@ extension UserDefaults {
         bool(forKey: Self.bodyCountersEnabledKey)
     }
 
+    @available(tvOS, unavailable)
     @objc dynamic var playerLayout: PlayerLayout {
         .init(rawValue: integer(forKey: Self.playerLayoutKey)) ?? .custom
     }
