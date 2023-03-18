@@ -21,11 +21,12 @@ enum SeekBehaviorSetting: Int {
 extension UserDefaults {
     static let presenterModeEnabledKey = "presenterModeEnabled"
     static let bodyCountersEnabledKey = "bodyCountersEnabled"
-    static let seekBehaviorSettingKey = "seekBehaviorSetting"
+    static let playerLayoutKey = "playerLayout"
     static let allowsExternalPlaybackKey = "allowsExternalPlayback"
     static let smartNavigationEnabledKey = "smartNavigationEnabled"
+    static let seekBehaviorSettingKey = "seekBehaviorSetting"
     static let audiovisualBackgroundPlaybackPolicyKey = "audiovisualBackgroundPlaybackPolicy"
-    static let serviceUrlKey = "serviceUrlKey"
+    static let serviceUrlKey = "serviceUrl"
 
     @objc dynamic var presenterModeEnabled: Bool {
         bool(forKey: Self.presenterModeEnabledKey)
@@ -33,6 +34,18 @@ extension UserDefaults {
 
     @objc dynamic var bodyCountersEnabled: Bool {
         bool(forKey: Self.bodyCountersEnabledKey)
+    }
+
+    @objc dynamic var playerLayout: PlayerLayout {
+        .init(rawValue: integer(forKey: Self.playerLayoutKey)) ?? .custom
+    }
+
+    @objc dynamic var allowsExternalPlaybackEnabled: Bool {
+        bool(forKey: Self.allowsExternalPlaybackKey)
+    }
+
+    @objc dynamic var smartNavigationEnabled: Bool {
+        bool(forKey: Self.smartNavigationEnabledKey)
     }
 
     var seekBehavior: SeekBehavior {
@@ -46,14 +59,6 @@ extension UserDefaults {
 
     @objc dynamic var seekBehaviorSetting: SeekBehaviorSetting {
         .init(rawValue: integer(forKey: Self.seekBehaviorSettingKey)) ?? .immediate
-    }
-
-    @objc dynamic var allowsExternalPlaybackEnabled: Bool {
-        bool(forKey: Self.allowsExternalPlaybackKey)
-    }
-
-    @objc dynamic var smartNavigationEnabled: Bool {
-        bool(forKey: Self.smartNavigationEnabledKey)
     }
 
     @objc dynamic var audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy {

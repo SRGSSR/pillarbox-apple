@@ -24,6 +24,7 @@
 		0EF42CC029AF926B00553165 /* RadioChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF42CBF29AF926B00553165 /* RadioChannel.swift */; };
 		0EF42CC229AF92DB00553165 /* Vendor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF42CC129AF92DB00553165 /* Vendor.swift */; };
 		6F016D9B296C960000C4148E /* VanillaPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F016D9A296C960000C4148E /* VanillaPlayerView.swift */; };
+		6F12653F29C5B899004D2A66 /* PlayerLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F12653E29C5B899004D2A66 /* PlayerLayout.swift */; };
 		6F36C62D28910538000DD160 /* CoreBusiness in Frameworks */ = {isa = PBXBuildFile; productRef = 6F36C62C28910538000DD160 /* CoreBusiness */; };
 		6F3F15A728CEEC6900CA2BD1 /* ShowcaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3F15A628CEEC6900CA2BD1 /* ShowcaseView.swift */; };
 		6F48A5DD2932673A00B80393 /* DeveloperTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F48A5DC2932673A00B80393 /* DeveloperTools.swift */; };
@@ -77,6 +78,7 @@
 		6F010340289946220021BA76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F016D9A296C960000C4148E /* VanillaPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VanillaPlayerView.swift; sourceTree = "<group>"; };
 		6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pillarbox-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F12653E29C5B899004D2A66 /* PlayerLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerLayout.swift; sourceTree = "<group>"; };
 		6F3F15A628CEEC6900CA2BD1 /* ShowcaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowcaseView.swift; sourceTree = "<group>"; };
 		6F45DB9A2893B773008ACCE6 /* Application.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
 		6F45DB9B2893B773008ACCE6 /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
@@ -219,6 +221,7 @@
 				6FD1F3A028D0490200DF8CF1 /* MultiView.swift */,
 				6F65FA2028D0CE8A0081ACD1 /* PlaybackView.swift */,
 				0E8C3629296DB14600707FA5 /* PlayerConfiguration.swift */,
+				6F12653E29C5B899004D2A66 /* PlayerLayout.swift */,
 				6FCD6A1828AD158E00FCE4EA /* PlayerView.swift */,
 				6FA83B81296834FE001578DB /* Playlist.swift */,
 				0EEB324B29506969002E49DC /* PlaylistView.swift */,
@@ -365,6 +368,7 @@
 				0EEB324C29506969002E49DC /* PlaylistView.swift in Sources */,
 				6FCD6A1B28AD1B9200FCE4EA /* ExamplesView.swift in Sources */,
 				6F917C0F2887EA8E004113BA /* DemoApp.swift in Sources */,
+				6F12653F29C5B899004D2A66 /* PlayerLayout.swift in Sources */,
 				6FAB36BD29A754AA009E1F45 /* Constant.swift in Sources */,
 				0EC085F929B223B700F154D1 /* CopyButton.swift in Sources */,
 				6F7750D628EABD5100E80196 /* SimplePlayerView.swift in Sources */,
