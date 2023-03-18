@@ -16,11 +16,11 @@ final class MediaTypeTests: TestCase {
 
     func testAudio() {
         let player = AVPlayer(url: Stream.mp3.url)
-        expectAtLeastEqualPublished(values: [.unknown, .audio], from: player.mediaTypePublisher())
+        expectAtLeastEqualPublished(values: [.audio], from: player.mediaTypePublisher())
     }
 
     func testVideo() {
         let player = AVPlayer(url: Stream.shortOnDemand.url)
-        expectAtLeastEqualPublished(values: [.unknown, .video], from: player.mediaTypePublisher())
+        expectAtLeastEqualPublished(values: [.video], from: player.mediaTypePublisher())
     }
 }
