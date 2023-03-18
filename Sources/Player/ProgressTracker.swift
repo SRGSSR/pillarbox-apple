@@ -18,8 +18,8 @@ public final class ProgressTracker: ObservableObject {
     /// Must be set to `true` to report user interaction to the progress tracker.
     @Published public var isInteracting = false {
         willSet {
-            guard seekBehavior == .deferred, !newValue else { return }
-            seek(to: progress)
+            guard !newValue else { return }
+            seek(to: progress, smooth: false)
         }
     }
 
@@ -37,7 +37,7 @@ public final class ProgressTracker: ObservableObject {
             guard _progress != nil else { return }
             _progress = newValue.clamped(to: range)
             guard seekBehavior == .immediate else { return }
-            seek(to: newValue)
+            seek(to: newValue, smooth: true)
         }
     }
 
@@ -108,9 +108,9 @@ public final class ProgressTracker: ObservableObject {
         return Float((time - timeRange.start).seconds / timeRange.duration.seconds).clamped(to: 0...1)
     }
 
-    private func seek(to progress: Float) {
+    private func seek(to progress: Float, smooth: Bool) {
         guard let player, let time = time(forProgress: progress) else { return }
-        player.seek(near(time), smooth: true)
+        player.seek(near(time), smooth: smooth)
     }
 
     private func time(forProgress progress: Float?) -> CMTime? {
