@@ -387,7 +387,12 @@ struct PlaybackView: View {
     @ViewBuilder
     private func videoView() -> some View {
 #if os(iOS)
-        MainView(player: player)
+        switch UserDefaults.standard.playerLayout {
+        case .custom:
+            MainView(player: player)
+        case .system:
+            SystemVideoView(player: player)
+        }
 #else
         VideoView(player: player)
 #endif

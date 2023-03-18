@@ -13,7 +13,7 @@ struct SettingsView: View {
 
     @AppStorage(UserDefaults.bodyCountersEnabledKey)
     private var areBodyCountersEnabled = false
-
+    
     @AppStorage(UserDefaults.playerLayoutKey)
     private var playerLayout: PlayerLayout = .custom
 
