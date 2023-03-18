@@ -14,14 +14,17 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.bodyCountersEnabledKey)
     private var areBodyCountersEnabled = false
 
-    @AppStorage(UserDefaults.seekBehaviorSettingKey)
-    private var seekBehaviorSetting: SeekBehaviorSetting = .immediate
+    @available(tvOS, unavailable) @AppStorage(UserDefaults.playerLayoutKey)
+    private var playerLayout: PlayerLayout = .custom
 
     @AppStorage(UserDefaults.allowsExternalPlaybackKey)
     private var allowsExternalPlayback = true
 
     @AppStorage(UserDefaults.smartNavigationEnabledKey)
     private var isSmartNavigationEnabled = true
+
+    @AppStorage(UserDefaults.seekBehaviorSettingKey)
+    private var seekBehaviorSetting: SeekBehaviorSetting = .immediate
 
     @AppStorage(UserDefaults.audiovisualBackgroundPlaybackPolicyKey)
     private var audiovisualBackgroundPlaybackPolicyKey: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic
@@ -60,6 +63,9 @@ struct SettingsView: View {
     @ViewBuilder
     private func playerSection() -> some View {
         Section("Player") {
+#if os(iOS)
+            playerLayoutPicker()
+#endif
             Toggle("Allows external playback", isOn: $allowsExternalPlayback)
             Toggle(isOn: $isSmartNavigationEnabled) {
                 Text("Smart navigation")
@@ -70,15 +76,11 @@ struct SettingsView: View {
         }
     }
 
-    @ViewBuilder
-    private func debuggingSection() -> some View {
-        Section {
-            Button("Simulate memory warning", action: simulateMemoryWarning)
-            Button("Clear URL cache", action: clearUrlCache)
-        } header: {
-            Text("Debugging")
-        } footer: {
-            debuggingFooter()
+    @available(tvOS, unavailable) @ViewBuilder
+    private func playerLayoutPicker() -> some View {
+        Picker("Layout", selection: $playerLayout) {
+            Text("Custom").tag(PlayerLayout.custom)
+            Text("System").tag(PlayerLayout.system)
         }
     }
 
@@ -96,6 +98,18 @@ struct SettingsView: View {
             Text("Automatic").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.automatic)
             Text("Continues if possible").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.continuesIfPossible)
             Text("Pauses").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.pauses)
+        }
+    }
+
+    @ViewBuilder
+    private func debuggingSection() -> some View {
+        Section {
+            Button("Simulate memory warning", action: simulateMemoryWarning)
+            Button("Clear URL cache", action: clearUrlCache)
+        } header: {
+            Text("Debugging")
+        } footer: {
+            debuggingFooter()
         }
     }
 
