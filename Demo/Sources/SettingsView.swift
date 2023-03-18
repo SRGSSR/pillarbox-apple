@@ -78,7 +78,7 @@ struct SettingsView: View {
 
     @available(tvOS, unavailable) @ViewBuilder
     private func playerLayoutPicker() -> some View {
-        Picker("Player layout", selection: $playerLayout) {
+        Picker("Layout", selection: $playerLayout) {
             Text("Custom").tag(PlayerLayout.custom)
             Text("System").tag(PlayerLayout.system)
         }
