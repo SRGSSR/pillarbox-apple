@@ -95,6 +95,7 @@ public final class Player: ObservableObject, Equatable {
         configureControlCenterPublishers()
         configureQueueUpdatePublisher()
         configureExternalPlaybackPublisher()
+        configureInterruptionPublisher()
 
         configurePlayer()
     }
@@ -878,5 +879,20 @@ extension Player {
             uninstallRemoteCommands()
             nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nil
         }
+    }
+}
+
+private extension Player {
+    private func configureInterruptionPublisher() {
+        NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)
+            .sink { [weak self] notification in
+                guard let userInfo = notification.userInfo,
+                      let interruptionTypeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+                      let interruptionType = AVAudioSession.InterruptionType(rawValue: interruptionTypeValue) else { return }
+                if interruptionType == .ended {
+                    self?.play()
+                }
+            }
+            .store(in: &cancellables)
     }
 }
