@@ -887,6 +887,7 @@ private extension Player {
         NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)
             .sink { [weak self] notification in
                 guard let self,
+                      UIApplication.shared.applicationState == .active,
                       self.configuration.autoResumeAfterAnInterruption,
                       let userInfo = notification.userInfo,
                       let interruptionTypeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
