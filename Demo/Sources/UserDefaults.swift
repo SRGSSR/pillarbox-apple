@@ -30,6 +30,7 @@ extension UserDefaults {
     static let seekBehaviorSettingKey = "seekBehaviorSetting"
     static let audiovisualBackgroundPlaybackPolicyKey = "audiovisualBackgroundPlaybackPolicy"
     static let serviceUrlKey = "serviceUrl"
+    static let autoResumeAfterAnInterruptionKey = "autoResumeAfterAnInterruption"
 
     @objc dynamic var presenterModeEnabled: Bool {
         bool(forKey: Self.presenterModeEnabledKey)
@@ -73,6 +74,10 @@ extension UserDefaults {
         .init(rawValue: integer(forKey: Self.serviceUrlKey)) ?? .production
     }
 
+    @objc dynamic var autoResumeAfterAnInterruptionEnabled: Bool {
+        bool(forKey: Self.autoResumeAfterAnInterruptionKey)
+    }
+
     func registerDefaults() {
         register(defaults: [
             Self.presenterModeEnabledKey: false,
@@ -81,7 +86,8 @@ extension UserDefaults {
             Self.allowsExternalPlaybackKey: true,
             Self.smartNavigationEnabledKey: true,
             Self.audiovisualBackgroundPlaybackPolicyKey: AVPlayerAudiovisualBackgroundPlaybackPolicy.automatic.rawValue,
-            Self.serviceUrlKey: ServiceUrl.production.rawValue
+            Self.serviceUrlKey: ServiceUrl.production.rawValue,
+            Self.autoResumeAfterAnInterruptionKey: false
         ])
     }
 }

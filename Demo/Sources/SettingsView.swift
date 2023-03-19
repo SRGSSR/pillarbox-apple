@@ -29,6 +29,9 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.audiovisualBackgroundPlaybackPolicyKey)
     private var audiovisualBackgroundPlaybackPolicyKey: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic
 
+    @AppStorage(UserDefaults.autoResumeAfterAnInterruptionKey)
+    private var autoResumeAfterAnInterruption = false
+
     private var version: String {
         Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
     }
@@ -73,6 +76,7 @@ struct SettingsView: View {
             }
             seekBehaviorPicker()
             audiovisualBackgroundPlaybackPolicyPicker()
+            Toggle("Auto resume after an interruption", isOn: $autoResumeAfterAnInterruption)
         }
     }
 
