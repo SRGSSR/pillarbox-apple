@@ -101,6 +101,15 @@ git-hook-uninstall:
 	@git config --unset core.hooksPath
 	@echo "... done.\n"
 
+.PHONY: spm-reload
+spm-reload:
+	@echo "Remove dependencies..."
+	@swift package reset
+	@echo "... done.\n"
+	@echo "Reload dependencies..."
+	@swift package update
+	@echo "... done.\n"
+
 .PHONY: doc
 doc: setup
 	@echo "Generating documentation sets..."
@@ -136,6 +145,8 @@ help:
 	@echo ""
 	@echo "   git-hook-install                   Use hooks located in ./hooks"
 	@echo "   git-hook-uninstall                 Use default hooks located in .git/hooks"
+	@echo ""
+	@echo "   spm-reload                         Reload SPM dependencies"
 	@echo ""
 	@echo "   doc                                Build the documentation"
 	@echo ""
