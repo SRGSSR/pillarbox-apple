@@ -19,6 +19,9 @@ public struct PlayerConfiguration {
     /// Indicates whether video playback prevents display and device sleep.
     public let preventsDisplaySleepDuringVideoPlayback: Bool
 
+    /// A Boolean value that indicates whether the player should automatically resume playback after an interruption ends.
+    public let autoResumeAfterAnInterruption: Bool
+
     /// A policy that determines how playback of audiovisual media continues when the app transitions
     /// to the background.
     public let audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy
@@ -38,6 +41,8 @@ public struct PlayerConfiguration {
     ///   - allowsExternalPlayback: Allows switching to external playback mode.
     ///   - usesExternalPlaybackWhileMirroring: Allows switching to external playback when mirroring.
     ///   - preventsDisplaySleepDuringVideoPlayback: Indicates whether video playback prevents display and device sleep.
+    ///   - autoResumeAfterAnInterruption: A Boolean value that indicates whether the player should automatically resume playback
+    ///     after an interruption ends.
     ///   - audiovisualBackgroundPlaybackPolicy: Policy that determines how playback of audiovisual media continues
     ///     when the app transitions to the background.
     ///   - smartNavigationEnabled: Enables smart playlist navigation (see `isSmartNavigationEnabled`).
@@ -47,6 +52,7 @@ public struct PlayerConfiguration {
         allowsExternalPlayback: Bool = true,
         usesExternalPlaybackWhileMirroring: Bool = false,
         preventsDisplaySleepDuringVideoPlayback: Bool = true,
+        autoResumeAfterAnInterruption: Bool = false,
         audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic,
         smartNavigationEnabled: Bool = true,
         backwardSkipInterval: TimeInterval = 10,
@@ -57,6 +63,7 @@ public struct PlayerConfiguration {
         self.allowsExternalPlayback = allowsExternalPlayback
         self.usesExternalPlaybackWhileMirroring = usesExternalPlaybackWhileMirroring
         self.preventsDisplaySleepDuringVideoPlayback = preventsDisplaySleepDuringVideoPlayback
+        self.autoResumeAfterAnInterruption = autoResumeAfterAnInterruption
         self.audiovisualBackgroundPlaybackPolicy = audiovisualBackgroundPlaybackPolicy
         self.isSmartNavigationEnabled = smartNavigationEnabled
         self.backwardSkipInterval = backwardSkipInterval
