@@ -31,7 +31,7 @@ final class AVPlayerSmoothCurrentItemPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
-            values: [.good(item), .good(nil)],
+            values: [.good(item)],
             from: player.smoothCurrentItemPublisher()
         ) {
             player.play()
@@ -42,7 +42,7 @@ final class AVPlayerSmoothCurrentItemPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
-            values: [.good(item), .bad(item)],
+            values: [.good(item)],
             from: player.smoothCurrentItemPublisher()
         )
     }

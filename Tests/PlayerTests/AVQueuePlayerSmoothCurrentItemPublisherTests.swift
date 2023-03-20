@@ -10,6 +10,43 @@ import AVFoundation
 import Foundation
 
 final class AVQueuePlayerSmoothCurrentItemPublisherTests: TestCase {
+    func testEmpty() {
+        let player = AVQueuePlayer()
+        expectAtLeastEqualPublished(
+            values: [.good(nil)],
+            from: player.smoothCurrentItemPublisher()
+        )
+    }
+
+    func testGoodItem() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = AVQueuePlayer(playerItem: item)
+        expectAtLeastEqualPublished(
+            values: [.good(item)],
+            from: player.smoothCurrentItemPublisher()
+        )
+    }
+
+    func testGoodItemPlayedEntirely() {
+        let item = AVPlayerItem(url: Stream.shortOnDemand.url)
+        let player = AVQueuePlayer(playerItem: item)
+        expectAtLeastEqualPublished(
+            values: [.good(item), .good(nil)],
+            from: player.smoothCurrentItemPublisher()
+        ) {
+            player.play()
+        }
+    }
+
+    func testBadItem() {
+        let item = AVPlayerItem(url: Stream.unavailable.url)
+        let player = AVQueuePlayer(playerItem: item)
+        expectAtLeastEqualPublished(
+            values: [.good(item), .bad(item)],
+            from: player.smoothCurrentItemPublisher()
+        )
+    }
+
     func testGoodItems() {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.onDemand.url)
