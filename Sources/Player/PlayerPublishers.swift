@@ -98,12 +98,18 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func smoothCurrentItemPublisher() -> AnyPublisher<CurrentItem, Never> {
         publisher(for: \.currentItem)
             .withPrevious()
             .map { previousItem, currentItem in
                 if let currentItem {
-                    return .good(currentItem)
+                    switch ItemState(for: currentItem) {
+                    case .failed:
+                        return .bad(currentItem)
+                    default:
+                        return .good(currentItem)
+                    }
                 }
                 else if let previousItem {
                     switch ItemState(for: previousItem) {
@@ -118,5 +124,24 @@ extension AVPlayer {
                 }
             }
             .eraseToAnyPublisher()
+    }
+
+    func mediaTypePublisher() -> AnyPublisher<MediaType, Never> {
+        Publishers.CombineLatest(
+            publisher(for: \.currentItem),
+            publisher(for: \.isExternalPlaybackActive)
+        )
+        .map { currentItem, isExternalPlaybackActive -> AnyPublisher<MediaType, Never> in
+            guard !isExternalPlaybackActive else {
+                return Empty().eraseToAnyPublisher()
+            }
+            guard let currentItem else {
+                return Just(.unknown).eraseToAnyPublisher()
+            }
+            return currentItem.mediaTypePublisher()
+        }
+        .switchToLatest()
+        .removeDuplicates()
+        .eraseToAnyPublisher()
     }
 }

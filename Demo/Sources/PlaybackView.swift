@@ -18,6 +18,10 @@ private struct MainView: View {
     @State private var layoutInfo: LayoutInfo = .none
     @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
 
+    private var areControlsAlwaysVisible: Bool {
+        player.isExternalPlaybackActive || player.mediaType == .audio
+    }
+
     var body: some View {
         InteractionView(action: visibilityTracker.reset) {
             ZStack {
@@ -69,31 +73,29 @@ private struct MainView: View {
     @ViewBuilder
     private func timeBar() -> some View {
         TimeBar(player: player)
-            .opacity(isUserInterfaceHidden && !player.isExternalPlaybackActive ? 0 : 1)
+            .opacity(isUserInterfaceHidden && !areControlsAlwaysVisible ? 0 : 1)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 
     @ViewBuilder
     private func video() -> some View {
-        if player.isExternalPlaybackActive {
-            Image(systemName: "airplayvideo")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                // https://www.hackingwithswift.com/quick-start/swiftui/how-to-control-the-tappable-area-of-a-view-using-contentshape
-                .contentShape(Rectangle())
-                .foregroundColor(.white)
-                .padding()
-        }
-        else {
-            VideoView(player: player, gravity: gravity)
+        switch player.mediaType {
+        case .audio:
+            image(name: "music.note.tv.fill")
+        default:
+            if player.isExternalPlaybackActive {
+                image(name: "airplayvideo")
+            }
+            else {
+                VideoView(player: player, gravity: gravity)
+            }
         }
     }
 
     @ViewBuilder
     private func controls() -> some View {
         ControlsView(player: player)
-            .opacity(isUserInterfaceHidden && !player.isExternalPlaybackActive ? 0 : 1)
+            .opacity(isUserInterfaceHidden && !areControlsAlwaysVisible ? 0 : 1)
     }
 
     @ViewBuilder
@@ -102,6 +104,18 @@ private struct MainView: View {
             .tint(.white)
             .opacity(player.isBusy ? 1 : 0)
             .controlSize(.large)
+    }
+
+    @ViewBuilder
+    private func image(name: String) -> some View {
+        Image(systemName: name)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            // https://www.hackingwithswift.com/quick-start/swiftui/how-to-control-the-tappable-area-of-a-view-using-contentshape
+            .contentShape(Rectangle())
+            .foregroundColor(.white)
+            .padding()
     }
 }
 
@@ -264,6 +278,10 @@ private struct TimeBar: View {
         seekBehavior: UserDefaults.standard.seekBehavior
     )
 
+    private var prioritizesVideoDevices: Bool {
+        player.mediaType == .video
+    }
+
     var body: some View {
         HStack(spacing: 0) {
             routePickerView()
@@ -277,7 +295,7 @@ private struct TimeBar: View {
     @ViewBuilder
     private func routePickerView() -> some View {
         if player.configuration.allowsExternalPlayback {
-            RoutePickerView()
+            RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices)
                 .tint(.white)
                 .frame(width: 45, height: 45)
         }

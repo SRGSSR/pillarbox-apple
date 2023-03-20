@@ -10,17 +10,6 @@ A bug in AVKit currently makes `SystemVideoView` leak resources after having int
 
 No workaround is available yet.
 
-## Stuck periodic time observers with audio playlists played over AirPlay
-
-A bug with AVKit and AirPlay prevents time observers from working properly in playlists. After transitioning to another audio item in a playlist no more periodic time observer updates will be received. Reported times remain stuck at zero, which means:
-
-- `ProgressTracker` does not report progress anymore.
-- Sliders found in user interface components are not updated anymore.
-
-### Workaround
-
-No workaround is available yet.
-
 ## DRM-protected streams do not play in the simulator
 
 DRM-protected streams do not play in the simulator. This is expected behavior as the required hardware features are not available in the simulator environment.
@@ -29,9 +18,9 @@ DRM-protected streams do not play in the simulator. This is expected behavior as
 
 Use a physical device.
 
-## Seeking to the end of an on-demand stream is limited
+## Seeking to the end of an on-demand might confuse the player (FB12020197, FB12019796, FB12019343, FB11970329)
 
-Seeks are currently prevented in the last 12 seconds of an on-demand stream to mitigate known player instabilities. If seeking is made within this window playback will resume at the nearest safely reachable location.
+Seeking near the end of a content might sometimes confuse the player (image stuck while sound is still playing, for example).
 
 ### Workaround
 
@@ -58,6 +47,24 @@ Kill and restart the application.
 ## Token-protected content is not playable on Apple TV 3rd generation devices
 
 Token-protected content cannot be played on old Apple TV 3rd generation devices. An error is returned when attempting to play such content.
+
+### Workaround
+
+No workaround is available yet.
+
+## Media type is unknown when playback is started after an AirPlay session has been established
+
+The media type is `.unknown` if playback is started after an AirPlay session has been established. A correct value is delivered when AirPlay is enabled after playback has already been started, though.
+
+As a result some behaviors based on the media type might not always be reliable over AirPlay.
+
+### Workaround
+
+No workaround is available yet.
+
+## Media type is briefly incorrect when disabling AirPlay while the media type is still unknown
+
+The media type can be `.unknown` if an AirPlay session was established before playback started (see previous issue). In such cases closing the AirPlay session ensures a correct media type is delivered, though for video it might briefly be set to `.audio` first.
 
 ### Workaround
 

@@ -16,6 +16,9 @@ public final class Player: ObservableObject, Equatable {
     /// Current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle
 
+    /// Current media type.
+    @Published public private(set) var mediaType: MediaType = .unknown
+
     /// Returns whether the player is currently buffering.
     @Published public private(set) var isBuffering = false
 
@@ -95,6 +98,7 @@ public final class Player: ObservableObject, Equatable {
         configureControlCenterPublishers()
         configureQueueUpdatePublisher()
         configureExternalPlaybackPublisher()
+        configureMediaTypePublisher()
 
         configurePlayer()
     }
@@ -742,6 +746,12 @@ extension Player {
         queuePlayer.publisher(for: \.isExternalPlaybackActive)
             .receiveOnMainThread()
             .assign(to: &$isExternalPlaybackActive)
+    }
+
+    private func configureMediaTypePublisher() {
+        queuePlayer.mediaTypePublisher()
+            .receiveOnMainThread()
+            .assign(to: &$mediaType)
     }
 
     private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
