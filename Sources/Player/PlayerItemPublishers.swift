@@ -9,11 +9,6 @@ import Combine
 import Core
 
 extension AVPlayerItem {
-    private static func mediaType(for item: AVPlayerItem) -> MediaType {
-        guard item.status == .readyToPlay else { return .unknown }
-        return item.presentationSize == .zero ? .audio : .video
-    }
-
     func itemStatePublisher() -> AnyPublisher<ItemState, Never> {
         Publishers.Merge3(
             publisher(for: \.status)
@@ -107,11 +102,6 @@ extension AVPlayerItem {
                     .eraseToAnyPublisher()
             }
             .switchToLatest()
-            // Mitigate incorrect media types, most notably returned when disconnecting AirPlay while the media type
-            // is still unknown. This trick works in all cases, whether AirPlay is not enabled, enabled before
-            // playback or during playback. We therefore do not have to check that a route is enabled here.
-            .dropFirst()
-            .prepend(Self.mediaType(for: self))
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
