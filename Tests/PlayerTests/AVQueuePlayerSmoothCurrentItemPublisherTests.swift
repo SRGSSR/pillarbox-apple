@@ -9,6 +9,7 @@
 import AVFoundation
 import Foundation
 
+// swiftlint:disable:next type_name
 final class AVQueuePlayerSmoothCurrentItemPublisherTests: TestCase {
     func testEmpty() {
         let player = AVQueuePlayer()

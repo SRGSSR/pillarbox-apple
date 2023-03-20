@@ -10,6 +10,7 @@ import AVFoundation
 import Circumspect
 import XCTest
 
+// swiftlint:disable:next type_name
 final class AVPlayerCurrentItemDurationPublisherTests: TestCase {
     func testDuration() {
         let item = AVPlayerItem(url: Stream.onDemand.url)

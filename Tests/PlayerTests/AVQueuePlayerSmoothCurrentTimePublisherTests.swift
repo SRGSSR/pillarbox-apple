@@ -11,6 +11,7 @@ import Circumspect
 import Nimble
 import XCTest
 
+// swiftlint:disable:next type_name
 final class AVQueuePlayerSmoothCurrentTimePublisherTests: TestCase {
     func testItems() {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)

@@ -98,6 +98,7 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func smoothCurrentItemPublisher() -> AnyPublisher<CurrentItem, Never> {
         publisher(for: \.currentItem)
             .withPrevious()

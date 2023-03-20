@@ -278,6 +278,10 @@ private struct TimeBar: View {
         seekBehavior: UserDefaults.standard.seekBehavior
     )
 
+    private var prioritizesVideoDevices: Bool {
+        player.mediaType == .video
+    }
+
     var body: some View {
         HStack(spacing: 0) {
             routePickerView()
@@ -295,10 +299,6 @@ private struct TimeBar: View {
                 .tint(.white)
                 .frame(width: 45, height: 45)
         }
-    }
-
-    private var prioritizesVideoDevices: Bool {
-        player.mediaType == .video
     }
 }
 
