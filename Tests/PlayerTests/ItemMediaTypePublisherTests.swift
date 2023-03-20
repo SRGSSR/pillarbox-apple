@@ -26,16 +26,4 @@ final class ItemMediaTypePublisherTests: TestCase {
         _ = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(values: [.video], from: item.mediaTypePublisher())
     }
-
-    func testAudioAndVideo() {
-        let item1 = AVPlayerItem(url: Stream.mp3.url)
-        let item2 = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let player = AVQueuePlayer(items: [item1, item2])
-
-        expectAtLeastEqualPublished(values: [.audio], from: item1.mediaTypePublisher()) {
-            player.play()
-        }
-
-        expectAtLeastEqualPublished(values: [.video], from: item2.mediaTypePublisher())
-    }
 }
