@@ -18,12 +18,12 @@ final class PlayerItemMediaTypePublisherTests: TestCase {
     func testAudio() {
         let item = AVPlayerItem(url: Stream.mp3.url)
         _ = AVPlayer(playerItem: item)
-        expectAtLeastEqualPublished(values: [.audio], from: item.mediaTypePublisher())
+        expectAtLeastEqualPublished(values: [.unknown, .audio], from: item.mediaTypePublisher())
     }
 
     func testVideo() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         _ = AVPlayer(playerItem: item)
-        expectAtLeastEqualPublished(values: [.video], from: item.mediaTypePublisher())
+        expectAtLeastEqualPublished(values: [.unknown, .video], from: item.mediaTypePublisher())
     }
 }

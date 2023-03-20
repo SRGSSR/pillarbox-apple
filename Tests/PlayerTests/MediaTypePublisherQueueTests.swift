@@ -16,7 +16,7 @@ final class MediaTypePublisherQueueTests: TestCase {
         let item2 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVQueuePlayer(items: [item1, item2])
         expectAtLeastEqualPublished(
-            values: [.audio, .video],
+            values: [.unknown, .audio, .unknown, .video],
             from: player.mediaTypePublisher()
         ) {
             player.play()
@@ -29,7 +29,7 @@ final class MediaTypePublisherQueueTests: TestCase {
         let item3 = AVPlayerItem(url: Stream.mp3.url)
         let player = AVQueuePlayer(items: [item1, item2, item3])
         expectAtLeastEqualPublished(
-            values: [.video, .audio],
+            values: [.unknown, .video, .unknown, .audio],
             from: player.mediaTypePublisher()
         ) {
             player.play()
