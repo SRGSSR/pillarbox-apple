@@ -288,10 +288,6 @@ private struct TimeBar: View {
         .bind(progressTracker, to: player)
     }
 
-    private var prioritizesVideoDevices: Bool {
-        player.mediaType == .video
-    }
-
     @ViewBuilder
     private func routePickerView() -> some View {
         if player.configuration.allowsExternalPlayback {
@@ -299,6 +295,10 @@ private struct TimeBar: View {
                 .tint(.white)
                 .frame(width: 45, height: 45)
         }
+    }
+
+    private var prioritizesVideoDevices: Bool {
+        player.mediaType == .video
     }
 }
 
