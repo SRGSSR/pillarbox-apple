@@ -8,7 +8,7 @@
 
 import AVFoundation
 
-final class MediaTypeTests: TestCase {
+final class MediaTypePublisherTests: TestCase {
     func testUnknown() {
         let player = AVPlayer()
         expectAtLeastEqualPublished(values: [.unknown], from: player.mediaTypePublisher())

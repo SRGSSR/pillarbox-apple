@@ -8,7 +8,7 @@
 
 import AVFoundation
 
-final class ItemMediaTypePublisherTests: TestCase {
+final class PlayerItemMediaTypePublisherTests: TestCase {
     func testUnknown() {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         _ = AVPlayer(playerItem: item)
