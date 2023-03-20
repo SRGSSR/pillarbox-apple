@@ -54,9 +54,17 @@ No workaround is available yet.
 
 ## Media type is unknown when playback is started after an AirPlay session has been established
 
-The media type is `.unknown` if playback is started after an AirPlay session has been established. A correct value is delivered once the AirPlay receiver has been disconnected, though, or when AirPlay is enabled after playback has already been started.
+The media type is `.unknown` if playback is started after an AirPlay session has been established. A correct value is delivered when AirPlay is enabled after playback has already been started, though.
 
 As a result some behaviors based on the media type might not always be reliable over AirPlay.
+
+### Workaround
+
+No workaround is available yet.
+
+## Media type is briefly incorrect when disabling AirPlay while the media type is still unknown
+
+The media type can be `.unknown` if an AirPlay session was established before playback started (see previous issue). In such cases closing the AirPlay session ensures a correct media type is delivered, though for video it might briefly be set to `.audio` first.
 
 ### Workaround
 
