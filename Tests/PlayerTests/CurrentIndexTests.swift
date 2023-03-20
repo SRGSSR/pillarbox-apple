@@ -31,6 +31,16 @@ final class CurrentIndexTests: TestCase {
         }
     }
 
+    func testCurrentIndexWithMiddleFailedItem() {
+        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.unavailable.url)
+        let item3 = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let player = Player(items: [item1, item2, item3])
+        expectAtLeastEqualPublished(values: [0, 1, 2, nil], from: player.$currentIndex) {
+            player.play()
+        }
+    }
+
     func testCurrentIndexWithLastFailedItem() {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)
