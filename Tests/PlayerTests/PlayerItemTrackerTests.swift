@@ -26,10 +26,18 @@ final class PlayerItemTrackerTests: TestCase {
         }
     }
 
-    func testDeinit() {
+    func testPlayerDeinit() {
         var tracker: TrackerMock? = TrackerMock()
         expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: tracker!.$state) {
             _ = Player(item: .simple(url: Stream.shortOnDemand.url, trackers: [tracker!]))
+            tracker = nil
+        }
+    }
+
+    func testPlayerItemDeinit() {
+        var tracker: TrackerMock? = TrackerMock()
+        expectAtLeastEqualPublished(values: [.initialized, .deinitialized], from: tracker!.$state) {
+            _ = PlayerItem.simple(url: Stream.shortOnDemand.url, trackers: [tracker!])
             tracker = nil
         }
     }
