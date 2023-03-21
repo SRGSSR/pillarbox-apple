@@ -18,9 +18,9 @@ public final class PlayerItem: Equatable {
     private let id = UUID()
 
     /// Create the item from an `Asset` publisher data source.
-    public init<P>(publisher: P, trackers: [PlayerItemTracker] = []) where P: Publisher, P.Output == Asset {
+    public init<P>(publisher: P, trackers: [PlayerItemTracker.Type] = []) where P: Publisher, P.Output == Asset {
         source = Source(id: id, asset: .loading)
-        self.trackers = trackers
+        self.trackers = Self.trackers(trackers)
         publisher
             .catch { error in
                 Just(.failed(error: error))
@@ -37,7 +37,7 @@ public final class PlayerItem: Equatable {
     /// - Parameters:
     ///   - url: The URL to play.
     ///   - configuration: A closure to configure player items created from the receiver.
-    public convenience init(asset: Asset, trackers: [PlayerItemTracker] = []) {
+    public convenience init(asset: Asset, trackers: [PlayerItemTracker.Type] = []) {
         self.init(publisher: Just(asset), trackers: trackers)
     }
 
@@ -60,7 +60,7 @@ public extension PlayerItem {
     static func simple(
         url: URL,
         metadata: Asset.Metadata? = nil,
-        trackers: [PlayerItemTracker] = [],
+        trackers: [PlayerItemTracker.Type] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(asset: .simple(url: url, metadata: metadata, configuration: configuration), trackers: trackers)
@@ -78,7 +78,7 @@ public extension PlayerItem {
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
         metadata: Asset.Metadata? = nil,
-        trackers: [PlayerItemTracker] = [],
+        trackers: [PlayerItemTracker.Type] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration), trackers: trackers)
@@ -95,7 +95,7 @@ public extension PlayerItem {
         url: URL,
         delegate: AVContentKeySessionDelegate,
         metadata: Asset.Metadata? = nil,
-        trackers: [PlayerItemTracker] = [],
+        trackers: [PlayerItemTracker.Type] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration), trackers: trackers)
@@ -109,6 +109,12 @@ extension PlayerItem: CustomDebugStringConvertible {
 }
 
 extension PlayerItem {
+    static func trackers(_ trackers: [PlayerItemTracker.Type]) -> [PlayerItemTracker] {
+        trackers.map { type in
+            type.init()
+        }
+    }
+
     func enableTrackers(with player: Player) {
         trackers.forEach { $0.enable(for: player) }
     }

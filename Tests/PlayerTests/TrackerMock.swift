@@ -9,7 +9,7 @@
 import Combine
 import Foundation
 
-class TrackerMock: ObservableObject {
+class TrackerMock: ObservableObject, PlayerItemTracker {
     enum State {
         case initialized
         case enabled
@@ -17,19 +17,21 @@ class TrackerMock: ObservableObject {
         case deinitialized
     }
 
-    @Published var state: State = .initialized
+    static var state = PassthroughSubject<State, Never>()
 
-    deinit {
-        state = .deinitialized
+    required init() {
+        Self.state.send(.initialized)
     }
-}
 
-extension TrackerMock: PlayerItemTracker {
     func enable(for player: Player) {
-        state = .enabled
+        Self.state.send(.enabled)
     }
 
     func disable() {
-        state = .disabled
+        Self.state.send(.disabled)
+    }
+
+    deinit {
+        Self.state.send(.deinitialized)
     }
 }

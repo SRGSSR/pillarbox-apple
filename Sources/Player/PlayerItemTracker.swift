@@ -8,10 +8,13 @@ import Foundation
 
 /// A type that represents a tracker.
 public protocol PlayerItemTracker {
-  /// Called when a tracker is enabled for a player.
-  /// - Parameter player: The player to which the tracker must be attached.
-  func enable(for player: Player)
+    /// Initializes a tracker.
+    init()
 
-  /// Called when a tracker is disabled for a player.
-  func disable()
+    /// Called when a tracker is enabled for a player.
+    /// - Parameter player: The player to which the tracker must be enabled.
+    func enable(for player: Player)
+
+    /// Called when a tracker is disabled for a player.
+    func disable()
 }
