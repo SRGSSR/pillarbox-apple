@@ -34,6 +34,7 @@ public final class Player: ObservableObject, Equatable {
     /// Indicates whether the player is currently playing video in external playback mode.
     @Published public private(set) var isExternalPlaybackActive = false
 
+    @Published private var currentTracker: CurrentTracker?
     @Published private var currentItem: CurrentItem = .good(nil)
     @Published private var storedItems: Deque<PlayerItem>
 
@@ -95,6 +96,7 @@ public final class Player: ObservableObject, Equatable {
         configureBufferingPublisher()
         configureCurrentItemPublisher()
         configureCurrentIndexPublisher()
+        configureCurrentTrackerPublisher()
         configureControlCenterPublishers()
         configureQueueUpdatePublisher()
         configureExternalPlaybackPublisher()
@@ -613,10 +615,10 @@ public extension Player {
 
 extension Player {
     private final class CurrentTracker {
-        let current: Current
+        let item: PlayerItem
 
-        init(current: Current) {
-            self.current = current
+        init(item: PlayerItem) {
+            self.item = item
         }
     }
 
@@ -679,6 +681,16 @@ extension Player {
             .receiveOnMainThread()
             .lane("player_current_index")
             .assign(to: &$currentIndex)
+    }
+
+    private func configureCurrentTrackerPublisher() {
+        currentPublisher()
+            .map { current in
+                guard let current else { return nil }
+                return CurrentTracker(item: current.item)
+            }
+            .receiveOnMainThread()
+            .assign(to: &$currentTracker)
     }
 
     private func configureControlCenterPublishers() {
