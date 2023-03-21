@@ -619,11 +619,11 @@ extension Player {
 
         init(item: PlayerItem, player: Player) {
             self.item = item
-            item.trackers.forEach { $0.enable(for: player) }
+            item.enableTrackers(with: player)
         }
 
         deinit {
-            item.trackers.forEach { $0.disable() }
+            item.disableTrackers()
         }
     }
 

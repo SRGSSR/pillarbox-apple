@@ -13,8 +13,8 @@ private var kIdKey: Void?
 /// An item to be inserted into the player.
 public final class PlayerItem: Equatable {
     @Published private(set) var source: Source
-    let trackers: [PlayerItemTracker]
 
+    private let trackers: [PlayerItemTracker]
     private let id = UUID()
 
     /// Create the item from an `Asset` publisher data source.
@@ -105,6 +105,16 @@ public extension PlayerItem {
 extension PlayerItem: CustomDebugStringConvertible {
     public var debugDescription: String {
         "\(source)"
+    }
+}
+
+extension PlayerItem {
+    func enableTrackers(with player: Player) {
+        trackers.forEach { $0.enable(for: player) }
+    }
+
+    func disableTrackers() {
+        trackers.forEach { $0.disable() }
     }
 }
 
