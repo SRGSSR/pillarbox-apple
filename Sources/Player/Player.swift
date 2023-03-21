@@ -617,8 +617,13 @@ extension Player {
     private final class CurrentTracker {
         let item: PlayerItem
 
-        init(item: PlayerItem) {
+        init(item: PlayerItem, player: Player) {
             self.item = item
+            item.trackers.forEach { $0.enable(for: player) }
+        }
+
+        deinit {
+            item.trackers.forEach { $0.disable() }
         }
     }
 
@@ -685,9 +690,11 @@ extension Player {
 
     private func configureCurrentTrackerPublisher() {
         currentPublisher()
-            .map { current in
-                guard let current else { return nil }
-                return CurrentTracker(item: current.item)
+            .map { [weak self] current in
+                guard
+                    let self,
+                    let current else { return nil }
+                return CurrentTracker(item: current.item, player: self)
             }
             .receiveOnMainThread()
             .assign(to: &$currentTracker)
@@ -785,12 +792,9 @@ extension Player {
 
     private func currentPublisher() -> AnyPublisher<Current?, Never> {
         itemUpdatePublisher()
-            .map { [weak self] update in
-                guard let self,
-                      let currentIndex = update.currentIndex() else { return nil }
-                let currentItem = update.items[currentIndex]
-                currentItem.trackers.forEach { $0.enable(for: self) }
-                return .init(item: currentItem, index: currentIndex)
+            .map { update in
+                guard let currentIndex = update.currentIndex() else { return nil }
+                return .init(item: update.items[currentIndex], index: currentIndex)
             }
             .removeDuplicates()
             .eraseToAnyPublisher()
