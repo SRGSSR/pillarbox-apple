@@ -17,7 +17,7 @@ public final class PlayerItem: Equatable {
     private let id = UUID()
 
     /// Create the item from an `Asset` publisher data source.
-    public init<P>(publisher: P) where P: Publisher, P.Output == Asset {
+    public init<P>(publisher: P, trackers: [PlayerItemTracker] = []) where P: Publisher, P.Output == Asset {
         source = Source(id: id, asset: .loading)
         publisher
             .catch { error in
@@ -35,8 +35,8 @@ public final class PlayerItem: Equatable {
     /// - Parameters:
     ///   - url: The URL to play.
     ///   - configuration: A closure to configure player items created from the receiver.
-    public convenience init(asset: Asset) {
-        self.init(publisher: Just(asset))
+    public convenience init(asset: Asset, trackers: [PlayerItemTracker] = []) {
+        self.init(publisher: Just(asset), trackers: trackers)
     }
 
     public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
@@ -58,9 +58,10 @@ public extension PlayerItem {
     static func simple(
         url: URL,
         metadata: Asset.Metadata? = nil,
+        trackers: [PlayerItemTracker] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .init(asset: .simple(url: url, metadata: metadata, configuration: configuration))
+        .init(asset: .simple(url: url, metadata: metadata, configuration: configuration), trackers: trackers)
     }
 
     /// An item loaded with custom resource loading. The scheme of the URL to be played has to be recognized by
@@ -75,9 +76,10 @@ public extension PlayerItem {
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
         metadata: Asset.Metadata? = nil,
+        trackers: [PlayerItemTracker] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .init(asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration))
+        .init(asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration), trackers: trackers)
     }
 
     /// An encrypted item loaded with a content key session.
@@ -91,9 +93,10 @@ public extension PlayerItem {
         url: URL,
         delegate: AVContentKeySessionDelegate,
         metadata: Asset.Metadata? = nil,
+        trackers: [PlayerItemTracker] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .init(asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration))
+        .init(asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration), trackers: trackers)
     }
 }
 
