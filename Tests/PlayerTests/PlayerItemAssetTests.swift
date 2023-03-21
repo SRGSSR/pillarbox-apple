@@ -12,7 +12,7 @@ import Combine
 import Nimble
 import XCTest
 
-final class PlayerItemsAssetTests: TestCase {
+final class PlayerItemAssetTests: TestCase {
     func testGenericItem() {
         let publisher = Just(Asset.simple(url: Stream.onDemand.url))
         let item = PlayerItem(publisher: publisher)
