@@ -26,6 +26,14 @@ final class PlayerItemTrackerTests: TestCase {
         }
     }
 
+    func testWithFailedItem() {
+        let tracker = TrackerMock()
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled], from: tracker.$state) {
+            let player = Player(item: .simple(url: Stream.unavailable.url, trackers: [tracker]))
+            player.play()
+        }
+    }
+
     func testPlayerDeinit() {
         var tracker: TrackerMock? = TrackerMock()
         expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: tracker!.$state) {
