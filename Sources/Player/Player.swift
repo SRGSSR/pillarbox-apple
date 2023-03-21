@@ -612,6 +612,14 @@ public extension Player {
 }
 
 extension Player {
+    private final class CurrentTracker {
+        let current: Current
+
+        init(current: Current) {
+            self.current = current
+        }
+    }
+
     private struct Current: Equatable {
         let item: PlayerItem
         let index: Int
