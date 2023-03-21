@@ -765,9 +765,12 @@ extension Player {
 
     private func currentPublisher() -> AnyPublisher<Current?, Never> {
         itemUpdatePublisher()
-            .map { update in
-                guard let currentIndex = update.currentIndex() else { return nil }
-                return .init(item: update.items[currentIndex], index: currentIndex)
+            .map { [weak self] update in
+                guard let self,
+                      let currentIndex = update.currentIndex() else { return nil }
+                let currentItem = update.items[currentIndex]
+                currentItem.trackers.forEach { $0.enable(for: self) }
+                return .init(item: currentItem, index: currentIndex)
             }
             .removeDuplicates()
             .eraseToAnyPublisher()

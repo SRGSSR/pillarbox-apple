@@ -13,12 +13,14 @@ private var kIdKey: Void?
 /// An item to be inserted into the player.
 public final class PlayerItem: Equatable {
     @Published private(set) var source: Source
+    let trackers: [PlayerItemTracker]
 
     private let id = UUID()
 
     /// Create the item from an `Asset` publisher data source.
     public init<P>(publisher: P, trackers: [PlayerItemTracker] = []) where P: Publisher, P.Output == Asset {
         source = Source(id: id, asset: .loading)
+        self.trackers = trackers
         publisher
             .catch { error in
                 Just(.failed(error: error))
