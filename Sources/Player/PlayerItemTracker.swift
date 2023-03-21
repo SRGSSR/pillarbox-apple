@@ -15,6 +15,9 @@ public protocol PlayerItemTracker {
     /// - Parameter player: The player to which the tracker must be enabled.
     func enable(for player: Player)
 
+    /// Called when a tracker metadata is updated.
+    func update(with metadata: Any)
+
     /// Called when a tracker is disabled for a player.
     func disable()
 }
