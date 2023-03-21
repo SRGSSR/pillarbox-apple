@@ -11,17 +11,16 @@ import Foundation
 final class PlayerItemTrackerTests: TestCase {
     func testWithInitialItem() {
         let tracker = TrackerMock()
-        let player = Player(item: .simple(url: Stream.shortOnDemand.url, trackers: [tracker]))
-        expectAtLeastEqualPublished(values: [.enabled, .disabled], from: tracker.$state) {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled], from: tracker.$state) {
+            let player = Player(item: .simple(url: Stream.shortOnDemand.url, trackers: [tracker]))
             player.play()
         }
     }
 
     func testWithoutInitialItem() {
         let tracker = TrackerMock()
-        let player = Player()
-
-        expectAtLeastEqualPublished(values: [.unknown, .enabled, .disabled], from: tracker.$state) {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled], from: tracker.$state) {
+            let player = Player()
             player.append(.simple(url: Stream.shortOnDemand.url, trackers: [tracker]))
             player.play()
         }

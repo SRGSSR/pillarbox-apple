@@ -11,12 +11,17 @@ import Foundation
 
 class TrackerMock: ObservableObject {
     enum State {
-        case unknown
+        case initialized
         case enabled
         case disabled
+        case deinitialized
     }
 
-    @Published var state: State = .unknown
+    @Published var state: State = .initialized
+
+    deinit {
+        state = .deinitialized
+    }
 }
 
 extension TrackerMock: PlayerItemTracker {
