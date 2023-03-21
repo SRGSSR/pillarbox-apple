@@ -25,4 +25,12 @@ final class PlayerItemTrackerTests: TestCase {
             player.play()
         }
     }
+
+    func testDeinit() {
+        var tracker: TrackerMock? = TrackerMock()
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: tracker!.$state) {
+            _ = Player(item: .simple(url: Stream.shortOnDemand.url, trackers: [tracker!]))
+            tracker = nil
+        }
+    }
 }
