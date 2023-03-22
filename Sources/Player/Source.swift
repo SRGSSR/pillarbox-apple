@@ -6,13 +6,26 @@
 
 import AVFoundation
 
-/// A source to generate an `AVPlayerItem` from.
-struct Source: Identifiable, Equatable {
-    let id: UUID
-    let asset: Asset
+protocol Sourceable {
+    associatedtype M
+    var id: UUID { get }
+    var asset: Asset<M> { get }
+    func updateMetadata()
+    func nowPlayingInfo() -> NowPlayingInfo
+}
 
-    static func == (lhs: Source, rhs: Source) -> Bool {
-        lhs.id == rhs.id && lhs.asset == rhs.asset
+/// A source to generate an `AVPlayerItem` from.
+struct Source<T: PlayerItemTracker, M>: Sourceable {
+    let id: UUID
+    let asset: Asset<M>
+    let trackers: [TrackerAdapter<T, M>]
+
+    func updateMetadata() {
+        asset.update(trackers: trackers)
+    }
+
+    func nowPlayingInfo() -> NowPlayingInfo {
+        asset.nowPlayingInfo()
     }
 }
 
@@ -25,8 +38,8 @@ extension AVPlayerItem {
     ///   - currentItem: The item currently being played by the player.
     /// - Returns: The list of player items to load into the player.
     static func playerItems(
-        for currentSources: [Source],
-        replacing previousSources: [Source],
+        for currentSources: [any Sourceable],
+        replacing previousSources: [any Sourceable],
         currentItem: AVPlayerItem?
     ) -> [AVPlayerItem] {
         guard let currentItem else { return playerItems(from: currentSources) }
@@ -46,15 +59,15 @@ extension AVPlayerItem {
         }
     }
 
-    static func playerItems(from sources: [Source]) -> [AVPlayerItem] {
+    static func playerItems(from sources: [any Sourceable]) -> [AVPlayerItem] {
         sources.map { $0.playerItem() }
     }
 
-    private static func matchingIndex(for item: AVPlayerItem, in sources: [Source]) -> Int? {
+    private static func matchingIndex(for item: AVPlayerItem, in sources: [any Sourceable]) -> Int? {
         sources.firstIndex { $0.matches(item) }
     }
 
-    private static func firstMatchingIndex(for sources: [Source], in other: [Source]) -> Int? {
+    private static func firstMatchingIndex(for sources: [any Sourceable], in other: [any Sourceable]) -> Int? {
         guard let match = sources.first(where: { source in
             other.contains(where: { $0.id == source.id })
         }) else {
@@ -63,20 +76,21 @@ extension AVPlayerItem {
         return matchingIndex(for: match, in: other)
     }
 
-    private static func matchingSource(for item: AVPlayerItem, in sources: [Source]) -> Source? {
+    private static func matchingSource(for item: AVPlayerItem, in sources: [any Sourceable]) -> (any Sourceable)? {
         sources.first { $0.matches(item) }
     }
 
-    private static func matchingIndex(for source: Source, in sources: [Source]) -> Int? {
+    private static func matchingIndex(for source: any Sourceable, in sources: [any Sourceable]) -> Int? {
         sources.firstIndex { $0.id == source.id }
     }
 
-    private static func findSource(for item: AVPlayerItem, in sources: [Source], equalTo other: Source) -> Bool {
+    private static func findSource(for item: AVPlayerItem, in sources: [any Sourceable], equalTo other: any Sourceable) -> Bool {
         guard let match = matchingSource(for: item, in: sources) else { return false }
-        return match == other
+        // FIXME: Need to compare match and other directly
+        return match.id == other.id
     }
 
-    private static func firstCommonIndex(in sources: [Source], matching other: [Source], after item: AVPlayerItem) -> Int? {
+    private static func firstCommonIndex(in sources: [any Sourceable], matching other: [any Sourceable], after item: AVPlayerItem) -> Int? {
         guard let matchIndex = matchingIndex(for: item, in: other) else { return nil }
         return firstMatchingIndex(for: Array(other.suffix(from: matchIndex + 1)), in: sources)
     }

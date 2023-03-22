@@ -6,7 +6,7 @@
 
 import Foundation
 
-enum StreamingMethod: String, Decodable {
+public enum StreamingMethod: String, Decodable {
     case progressive = "PROGRESSIVE"
     case m3uPlaylist = "M3UPLAYLIST"
     case hls = "HLS"

@@ -6,7 +6,7 @@
 
 import Foundation
 
-enum TokenType: String, Decodable {
+public enum TokenType: String, Decodable {
     case none = "NONE"
     case akamai = "AKAMAI"
 }

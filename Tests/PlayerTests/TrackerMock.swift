@@ -9,13 +9,17 @@
 import Combine
 import Foundation
 
-class TrackerMock: ObservableObject, PlayerItemTracker {
+struct MetadataMock {}
+
+final class TrackerMock: ObservableObject, PlayerItemTracker {
     enum State {
         case initialized
         case enabled
         case disabled
         case deinitialized
     }
+
+    struct Metadata {}
 
     static var state = PassthroughSubject<State, Never>()
 
@@ -26,6 +30,8 @@ class TrackerMock: ObservableObject, PlayerItemTracker {
     func enable(for player: Player) {
         Self.state.send(.enabled)
     }
+
+    func update(with metadata: Metadata) {}
 
     func disable() {
         Self.state.send(.disabled)

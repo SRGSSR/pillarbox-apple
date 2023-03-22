@@ -6,7 +6,7 @@
 
 import Foundation
 
-enum BlockingReason: String, Decodable {
+public enum BlockingReason: String, Decodable {
     case ageRating12 = "AGERATING12"
     case ageRating18 = "AGERATING18"
     case commercial = "COMMERCIAL"
@@ -16,7 +16,7 @@ enum BlockingReason: String, Decodable {
     case startDate = "STARTDATE"
     case unknown = "UNKNOWN"
 
-    var description: String {
+    public var description: String {
         switch self {
         case .ageRating12:
             return NSLocalizedString(

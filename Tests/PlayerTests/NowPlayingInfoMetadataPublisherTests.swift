@@ -30,7 +30,7 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
 
     func testAvailableAfterDelay() {
         let player = Player(
-            item: .simple(url: Stream.onDemand.url, metadata: .init(title: "title"), delay: 0.5)
+            item: .simple(url: Stream.onDemand.url, metadata: AssetMetadata(title: "title"), delay: 0.5)
         )
         expectAtLeastSimilarPublished(
             values: [[:], [MPMediaItemPropertyTitle: "title"]],
@@ -41,7 +41,7 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
     func testImmediatelyAvailableWithMetadata() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: .init(
+            metadata: AssetMetadata(
                 title: "title",
                 subtitle: "subtitle",
                 description: "description"
@@ -108,7 +108,7 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
     }
 
     func testEntirePlayback() {
-        let player = Player(item: .simple(url: Stream.shortOnDemand.url, metadata: .init(title: "title")))
+        let player = Player(item: .simple(url: Stream.shortOnDemand.url, metadata: AssetMetadata(title: "title")))
         expectAtLeastSimilarPublished(
             values: [[MPMediaItemPropertyTitle: "title"], [:]],
             from: player.nowPlayingInfoMetadataPublisher()

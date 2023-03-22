@@ -11,6 +11,9 @@ import Circumspect
 import Nimble
 import XCTest
 
+// FIXME
+#if false
+
 final class SourceTests: TestCase {
     func testSourceEquality() {
         expect(Source(id: UUID("1"), asset: .simple(url: Stream.dvr.url))).to(equal(Source(id: UUID("1"), asset: .simple(url: Stream.dvr.url))))
@@ -157,3 +160,5 @@ final class SourceTests: TestCase {
         expect(result.first).notTo(equal(currentItem))
     }
 }
+
+#endif

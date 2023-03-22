@@ -7,9 +7,11 @@
 import Foundation
 import Player
 
-struct Resource: Decodable {
+public struct Resource: Decodable {
     enum CodingKeys: String, CodingKey {
-        case drms = "drmList"
+        case _analyticsData = "analyticsData"
+        case _analyticsMetadata = "analyticsMetadata"
+        case _drms = "drmList"
         case isDvr = "dvr"
         case isLive = "live"
         case streamingMethod = "streaming"
@@ -17,10 +19,18 @@ struct Resource: Decodable {
         case url
     }
 
-    let url: URL
-    let streamingMethod: StreamingMethod
+    public let url: URL
+    public let streamingMethod: StreamingMethod
 
-    var streamType: StreamType {
+    public var analyticsData: [String: String] {
+        _analyticsData ?? [:]
+    }
+
+    public var analyticsMetadata: [String: String] {
+        _analyticsMetadata ?? [:]
+    }
+
+    public var streamType: StreamType {
         if isDvr {
             return .dvr
         }
@@ -32,11 +42,18 @@ struct Resource: Decodable {
         }
     }
 
-    let tokenType: TokenType
+    public let tokenType: TokenType
 
-    // swiftlint:disable:next discouraged_optional_collection
-    let drms: [DRM]?
+    public var drms: [DRM] {
+        _drms ?? []
+    }
 
     private let isDvr: Bool
     private let isLive: Bool
+    // swiftlint:disable:next discouraged_optional_collection
+    private let _drms: [DRM]?
+    // swiftlint:disable:next discouraged_optional_collection
+    private let _analyticsData: [String: String]?
+    // swiftlint:disable:next discouraged_optional_collection
+    private let _analyticsMetadata: [String: String]?
 }

@@ -6,6 +6,6 @@
 
 import Foundation
 
-struct Show: Decodable {
-    let title: String
+public struct Show: Decodable {
+    public let title: String
 }

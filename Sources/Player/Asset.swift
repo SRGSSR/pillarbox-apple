@@ -8,6 +8,8 @@ import AVFoundation
 import MediaPlayer
 import OSLog
 
+private let kLogger = Logger(category: "Asset")
+
 private let kContentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
 
 private let kResourceLoaderQueue = DispatchQueue(label: "ch.srgssr.player.resource_loader")
@@ -27,12 +29,12 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
     }
 }
 
-/// An asset representing content to be played.
-public struct Asset {
-    typealias NowPlayingInfo = [String: Any]
+public typealias NowPlayingInfo = [String: Any]
 
+/// An asset representing content to be played.
+public struct Asset<M> {
     private let type: `Type`
-    private let metadata: Metadata?
+    private let metadata: M?
     private let configuration: (AVPlayerItem) -> Void
 
     /// A simple asset playable from a URL.
@@ -43,7 +45,7 @@ public struct Asset {
     /// - Returns: The asset.
     public static func simple(
         url: URL,
-        metadata: Metadata? = nil,
+        metadata: M? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
@@ -64,7 +66,7 @@ public struct Asset {
     public static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
-        metadata: Metadata? = nil,
+        metadata: M? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
@@ -84,7 +86,7 @@ public struct Asset {
     public static func encrypted(
         url: URL,
         delegate: AVContentKeySessionDelegate,
-        metadata: Metadata? = nil,
+        metadata: M? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
@@ -94,53 +96,64 @@ public struct Asset {
         )
     }
 
-    func playerItem() -> AVPlayerItem {
+    public func playerItem() -> AVPlayerItem {
         let item = type.playerItem()
         configuration(item)
         return item
     }
 
-    func nowPlayingInfo() -> NowPlayingInfo {
-        var nowPlayingInfo = NowPlayingInfo()
-        if let metadata {
-            nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
-            nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
-            nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
-            if let image = metadata.image {
-                nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
-            }
+    func update<T: PlayerItemTracker>(trackers: [TrackerAdapter<T, M>]) {
+        // FIXME: Deal with metadata nullability in contract
+        guard let metadata else { return }
+        trackers.forEach { adapter in
+            adapter.update(metadata: metadata)
         }
+    }
+
+    public func nowPlayingInfo() -> NowPlayingInfo {
+        var nowPlayingInfo = NowPlayingInfo()
+//        if let metadata {
+//            nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
+//            nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
+//            nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
+//            if let image = metadata.image {
+//                nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+//            }
+//        }
         return nowPlayingInfo
     }
 }
 
-public extension Asset {
-    /// Metadata associated with an asset.
-    struct Metadata {
-        /// Title.
-        let title: String?
-        /// Subtitle.
-        let subtitle: String?
-        /// Description.
-        let description: String?
-        /// Image.
-        let image: UIImage?
-
-        /// Create an asset metadata.
-        public init(title: String? = nil, subtitle: String? = nil, description: String? = nil, image: UIImage? = nil) {
-            self.title = title
-            self.subtitle = subtitle
-            self.description = description
-            self.image = image
-        }
+public extension Asset where M == Void {
+    static func simple(
+        url: URL,
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+    ) -> Self {
+        .simple(url: url, metadata: Void(), configuration: configuration)
     }
 
+    static func custom(
+        url: URL,
+        delegate: AVAssetResourceLoaderDelegate,
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+    ) -> Self {
+        .custom(url: url, delegate: delegate, metadata: Void(), configuration: configuration)
+    }
+
+    static func encrypted(
+        url: URL,
+        delegate: AVContentKeySessionDelegate,
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+    ) -> Self {
+        .encrypted(url: url, delegate: delegate, metadata: Void(), configuration: configuration)
+    }
+}
+
+public extension Asset {
     private enum `Type` {
         case simple(url: URL)
         case custom(url: URL, delegate: AVAssetResourceLoaderDelegate)
         case encrypted(url: URL, delegate: AVContentKeySessionDelegate)
-
-        private static var logger = Logger(category: "Asset")
 
         func playerItem() -> AVPlayerItem {
             switch self {
@@ -153,7 +166,7 @@ public extension Asset {
                 )
             case let .encrypted(url: url, delegate: delegate):
 #if targetEnvironment(simulator)
-                Self.logger.error("FairPlay-encrypted assets cannot be played in the simulator")
+                kLogger.error("FairPlay-encrypted assets cannot be played in the simulator")
                 return AVPlayerItem(url: url)
 #else
                 let asset = AVURLAsset(url: url)

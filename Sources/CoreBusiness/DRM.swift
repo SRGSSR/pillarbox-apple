@@ -6,7 +6,7 @@
 
 import Foundation
 
-struct DRM: Decodable {
+public struct DRM: Decodable {
     enum `Type`: String, Decodable {
         case fairPlay = "FAIRPLAY"
         case playReady = "PLAYREADY"

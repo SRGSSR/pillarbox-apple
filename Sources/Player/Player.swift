@@ -616,10 +616,16 @@ public extension Player {
 extension Player {
     private final class CurrentTracker {
         let item: PlayerItem
+        private var cancellables = Set<AnyCancellable>()
 
         init(item: PlayerItem, player: Player) {
             self.item = item
             item.enableTrackers(with: player)
+            item.$source
+                .sink { source in
+                    source.updateMetadata()
+                }
+                .store(in: &cancellables)
         }
 
         deinit {
@@ -758,7 +764,7 @@ extension Player {
             .store(in: &cancellables)
     }
 
-    private func sourcesPublisher() -> AnyPublisher<[Source], Never> {
+    private func sourcesPublisher() -> AnyPublisher<[any Sourceable], Never> {
         $storedItems
             .map { items in
                 Publishers.AccumulateLatestMany(items.map { item in
@@ -807,7 +813,7 @@ extension Player {
                     return Just(NowPlaying.Info()).eraseToAnyPublisher()
                 }
                 return current.item.$source
-                    .map { $0.asset.nowPlayingInfo() }
+                    .map { $0.nowPlayingInfo() }
                     .eraseToAnyPublisher()
             }
             .switchToLatest()

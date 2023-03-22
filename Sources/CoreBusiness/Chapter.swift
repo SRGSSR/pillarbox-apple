@@ -6,8 +6,10 @@
 
 import Foundation
 
-struct Chapter: Decodable {
+public struct Chapter: Decodable {
     enum CodingKeys: String, CodingKey {
+        case _analyticsData = "analyticsData"
+        case _analyticsMetadata = "analyticsMetadata"
         case blockingReason = "blockReason"
         case contentType = "type"
         case date
@@ -22,18 +24,30 @@ struct Chapter: Decodable {
 
     private let blockingReason: BlockingReason?
 
-    let urn: String
-    let title: String
-    let description: String?
-    let imageUrl: URL
-    let contentType: ContentType
-    let date: Date
-    let resources: [Resource]
+    public let urn: String
+    public let title: String
+    public let description: String?
+    public let imageUrl: URL
+    public let contentType: ContentType
+    public let date: Date
+    public let resources: [Resource]
+    public let startDate: Date?
+    public let endDate: Date?
 
-    let startDate: Date?
-    let endDate: Date?
+    public var analyticsData: [String: String] {
+        _analyticsData ?? [:]
+    }
 
-    func blockingReason(at date: Date = Date()) -> BlockingReason? {
+    public var analyticsMetadata: [String: String] {
+        _analyticsMetadata ?? [:]
+    }
+
+    // swiftlint:disable:next discouraged_optional_collection
+    private let _analyticsData: [String: String]?
+    // swiftlint:disable:next discouraged_optional_collection
+    private let _analyticsMetadata: [String: String]?
+
+    public func blockingReason(at date: Date = Date()) -> BlockingReason? {
         if blockingReason != .none {
             return blockingReason
         }

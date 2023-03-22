@@ -6,7 +6,7 @@
 
 import Foundation
 
-enum ContentType: String, Decodable {
+public enum ContentType: String, Decodable {
     case episode = "EPISODE"
     case extract = "EXTRACT"
     case trailer = "TRAILER"

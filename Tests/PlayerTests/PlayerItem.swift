@@ -14,14 +14,20 @@ enum Metadata: String {
     case media1
 }
 
-private struct AssetMetadata: Decodable {
+struct AssetMetadata: Decodable {
     let title: String
     let subtitle: String
     let description: String
+
+    init(title: String, subtitle: String = "", description: String = "") {
+        self.title = title
+        self.subtitle = subtitle
+        self.description = description
+    }
 }
 
 extension PlayerItem {
-    static func simple(url: URL, metadata: Asset.Metadata? = nil, delay: TimeInterval) -> Self {
+    static func simple(url: URL, metadata: AssetMetadata? = nil, delay: TimeInterval) -> Self {
         let publisher = Just(Asset.simple(url: url, metadata: metadata))
             .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
         return .init(publisher: publisher)
@@ -30,7 +36,7 @@ extension PlayerItem {
     static func metadataUpdate(delay: TimeInterval) -> Self {
         let publisher = Just(Asset.simple(
             url: Stream.onDemand.url,
-            metadata: .init(
+            metadata: AssetMetadata(
                 title: "title1",
                 subtitle: "subtitle1",
                 description: "description1"
@@ -56,11 +62,7 @@ extension PlayerItem {
             .map { metadata in
                 Asset.simple(
                     url: Stream.onDemand.url,
-                    metadata: .init(
-                        title: metadata.title,
-                        subtitle: metadata.subtitle,
-                        description: metadata.description
-                    )
+                    metadata: metadata
                 )
             }
         return .init(publisher: publisher)

@@ -11,7 +11,15 @@ import Foundation
 final class PlayerItemTrackerTests: TestCase {
     func testWithInitialItem() {
         expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: TrackerMock.state) {
-            let player = Player(item: .simple(url: Stream.shortOnDemand.url, trackers: [TrackerMock.self]))
+            let player = Player(item: .simple(
+                url: Stream.shortOnDemand.url,
+                metadata: MetadataMock(),
+                trackers: [
+                    .init(trackerType: TrackerMock.self, mapper: { _ in
+                            .init()
+                    })
+                ]
+            ))
             player.play()
         }
     }
@@ -19,27 +27,59 @@ final class PlayerItemTrackerTests: TestCase {
     func testWithoutInitialItem() {
         expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: TrackerMock.state) {
             let player = Player()
-            player.append(.simple(url: Stream.shortOnDemand.url, trackers: [TrackerMock.self]))
+            player.append(.simple(
+                url: Stream.shortOnDemand.url,
+                metadata: MetadataMock(),
+                trackers: [
+                    .init(trackerType: TrackerMock.self, mapper: { _ in
+                            .init()
+                    })
+                ]
+            ))
             player.play()
         }
     }
 
     func testWithFailedItem() {
         expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: TrackerMock.state) {
-            let player = Player(item: .simple(url: Stream.unavailable.url, trackers: [TrackerMock.self]))
+            let player = Player(item: .simple(
+                url: Stream.unavailable.url,
+                metadata: MetadataMock(),
+                trackers: [
+                    .init(trackerType: TrackerMock.self, mapper: { _ in
+                            .init()
+                    })
+                ])
+            )
             player.play()
         }
     }
 
     func testPlayerDeinit() {
         expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: TrackerMock.state) {
-            _ = Player(item: .simple(url: Stream.shortOnDemand.url, trackers: [TrackerMock.self]))
+            _ = Player(item: .simple(
+                url: Stream.shortOnDemand.url,
+                metadata: MetadataMock(),
+                trackers: [
+                    .init(trackerType: TrackerMock.self, mapper: { _ in
+                            .init()
+                    })
+                ]
+            ))
         }
     }
 
     func testPlayerItemDeinit() {
         expectAtLeastEqualPublished(values: [.initialized, .deinitialized], from: TrackerMock.state) {
-            _ = PlayerItem.simple(url: Stream.shortOnDemand.url, trackers: [TrackerMock.self])
+            _ = PlayerItem.simple(
+                url: Stream.shortOnDemand.url,
+                metadata: MetadataMock(),
+                trackers: [
+                    .init(trackerType: TrackerMock.self, mapper: { _ in
+                            .init()
+                    })
+                ]
+            )
         }
     }
 }
