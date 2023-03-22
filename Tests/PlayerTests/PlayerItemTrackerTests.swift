@@ -15,9 +15,9 @@ final class PlayerItemTrackerTests: TestCase {
                 url: Stream.shortOnDemand.url,
                 metadata: MetadataMock(),
                 trackers: [
-                    .init(trackerType: TrackerMock.self, mapper: { _ in
-                            .init()
-                    })
+                    .init(trackerType: TrackerMock.self) { _ in
+                        .init()
+                    }
                 ]
             ))
             player.play()
@@ -31,9 +31,9 @@ final class PlayerItemTrackerTests: TestCase {
                 url: Stream.shortOnDemand.url,
                 metadata: MetadataMock(),
                 trackers: [
-                    .init(trackerType: TrackerMock.self, mapper: { _ in
-                            .init()
-                    })
+                    .init(trackerType: TrackerMock.self) { _ in
+                        .init()
+                    }
                 ]
             ))
             player.play()
@@ -46,9 +46,9 @@ final class PlayerItemTrackerTests: TestCase {
                 url: Stream.unavailable.url,
                 metadata: MetadataMock(),
                 trackers: [
-                    .init(trackerType: TrackerMock.self, mapper: { _ in
-                            .init()
-                    })
+                    .init(trackerType: TrackerMock.self) { _ in
+                        .init()
+                    }
                 ])
             )
             player.play()
@@ -61,9 +61,9 @@ final class PlayerItemTrackerTests: TestCase {
                 url: Stream.shortOnDemand.url,
                 metadata: MetadataMock(),
                 trackers: [
-                    .init(trackerType: TrackerMock.self, mapper: { _ in
-                            .init()
-                    })
+                    .init(trackerType: TrackerMock.self) { _ in
+                        .init()
+                    }
                 ]
             ))
         }
@@ -75,9 +75,9 @@ final class PlayerItemTrackerTests: TestCase {
                 url: Stream.shortOnDemand.url,
                 metadata: MetadataMock(),
                 trackers: [
-                    .init(trackerType: TrackerMock.self, mapper: { _ in
-                            .init()
-                    })
+                    .init(trackerType: TrackerMock.self) { _ in
+                        .init()
+                    }
                 ]
             )
         }

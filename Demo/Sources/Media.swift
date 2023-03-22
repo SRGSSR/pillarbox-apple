@@ -38,9 +38,9 @@ struct Media: Hashable, Identifiable {
         switch type {
         case let .url(url):
             return .simple(url: url, metadata: self, trackers: [
-                .init(trackerType: DemoTracker.self, mapper: { media in
+                .init(trackerType: DemoTracker.self) { media in
                     DemoTracker.Metadata(title: media.title)
-                })
+                }
             ])
         case let .unbufferedUrl(url):
             return .simple(url: url) { item in
