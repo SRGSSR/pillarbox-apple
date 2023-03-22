@@ -9,8 +9,6 @@
 import Combine
 import Foundation
 
-struct MetadataMock {}
-
 final class TrackerMock: ObservableObject, PlayerItemTracker {
     enum State {
         case initialized
