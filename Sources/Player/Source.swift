@@ -7,7 +7,7 @@
 import AVFoundation
 
 protocol Sourceable {
-    associatedtype M
+    associatedtype M: AssetMetadata
     var id: UUID { get }
     var assetId: UUID { get }
     var asset: Asset<M> { get }
@@ -20,7 +20,7 @@ protocol Sourceable {
 }
 
 /// A source to generate an `AVPlayerItem` from.
-struct Source<T: PlayerItemTracker, M>: Sourceable {
+struct Source<T: PlayerItemTracker, M: AssetMetadata>: Sourceable {
     let id: UUID
     let asset: Asset<M>
     let trackers: [TrackerAdapter<T, M>]

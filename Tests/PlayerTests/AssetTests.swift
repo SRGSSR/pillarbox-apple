@@ -23,7 +23,7 @@ final class AssetTests: TestCase {
     }
 
     func testLoadingPlayerItem() {
-        let item = Asset<Void>.loading.playerItem()
+        let item = Asset<EmptyAssetMetadata>.loading.playerItem()
         _ = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false],
@@ -32,7 +32,7 @@ final class AssetTests: TestCase {
     }
 
     func testFailingPlayerItem() {
-        let item = Asset<Void>.failed(error: StructError()).playerItem()
+        let item = Asset<EmptyAssetMetadata>.failed(error: StructError()).playerItem()
         _ = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [

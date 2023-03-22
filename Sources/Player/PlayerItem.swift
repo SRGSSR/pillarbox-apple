@@ -15,7 +15,7 @@ public final class PlayerItem: Equatable {
     private let id = UUID()
 
     /// Create the item from an `Asset` publisher data source.
-    public init<P, T, M>(publisher: P, trackers: [TrackerAdapter<T, M>]) where P: Publisher, T: PlayerItemTracker, P.Output == Asset<M> {
+    public init<P, T, M>(publisher: P, trackers: [TrackerAdapter<T, M>]) where P: Publisher, M: AssetMetadata, T: PlayerItemTracker, P.Output == Asset<M> {
         source = Source(id: id, asset: .loading, trackers: trackers)
         publisher
             .catch { error in
@@ -29,7 +29,7 @@ public final class PlayerItem: Equatable {
             .assign(to: &$source)
     }
 
-    public convenience init<P, M>(publisher: P) where P: Publisher, P.Output == Asset<M> {
+    public convenience init<P, M>(publisher: P) where P: Publisher, M: AssetMetadata, P.Output == Asset<M> {
         self.init(publisher: publisher, trackers: [TrackerAdapter<EmptyTracker, M>]())
     }
 
@@ -37,11 +37,11 @@ public final class PlayerItem: Equatable {
     /// - Parameters:
     ///   - url: The URL to play.
     ///   - configuration: A closure to configure player items created from the receiver.
-    public convenience init<T, M>(asset: Asset<M>, trackers: [TrackerAdapter<T, M>]) where T: PlayerItemTracker {
+    public convenience init<T, M>(asset: Asset<M>, trackers: [TrackerAdapter<T, M>]) where T: PlayerItemTracker, M: AssetMetadata {
         self.init(publisher: Just(asset), trackers: trackers)
     }
 
-    public convenience init<M>(asset: Asset<M>) {
+    public convenience init<M>(asset: Asset<M>) where M: AssetMetadata {
         self.init(publisher: Just(asset), trackers: [TrackerAdapter<EmptyTracker, M>]())
     }
 
@@ -66,7 +66,7 @@ public extension PlayerItem {
         metadata: M? = nil,
         trackers: [TrackerAdapter<T, M>],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self where T: PlayerItemTracker {
+    ) -> Self where T: PlayerItemTracker, M: AssetMetadata {
         .init(asset: .simple(url: url, metadata: metadata, configuration: configuration), trackers: trackers)
     }
 
@@ -74,7 +74,7 @@ public extension PlayerItem {
         url: URL,
         metadata: M? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self {
+    ) -> Self where M: AssetMetadata {
         .init(asset: .simple(url: url, metadata: metadata, configuration: configuration))
     }
 
@@ -92,7 +92,7 @@ public extension PlayerItem {
         metadata: M? = nil,
         trackers: [TrackerAdapter<T, M>],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self where T: PlayerItemTracker {
+    ) -> Self where T: PlayerItemTracker, M: AssetMetadata {
         .init(asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration), trackers: trackers)
     }
 
@@ -101,7 +101,7 @@ public extension PlayerItem {
         delegate: AVAssetResourceLoaderDelegate,
         metadata: M? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self {
+    ) -> Self where M: AssetMetadata {
         .init(asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration))
     }
 
@@ -118,7 +118,7 @@ public extension PlayerItem {
         metadata: M? = nil,
         trackers: [TrackerAdapter<T, M>],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self where T: PlayerItemTracker {
+    ) -> Self where T: PlayerItemTracker, M: AssetMetadata {
         .init(asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration), trackers: trackers)
     }
 
@@ -127,7 +127,7 @@ public extension PlayerItem {
         delegate: AVContentKeySessionDelegate,
         metadata: M? = nil,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self {
+    ) -> Self where M: AssetMetadata {
         .init(asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration))
     }
 }
@@ -137,7 +137,7 @@ public extension PlayerItem {
         url: URL,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .init(asset: .simple(url: url, metadata: (), configuration: configuration))
+        .init(asset: .simple(url: url, metadata: EmptyAssetMetadata(), configuration: configuration))
     }
 
     static func custom(
@@ -145,7 +145,7 @@ public extension PlayerItem {
         delegate: AVAssetResourceLoaderDelegate,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .init(asset: .custom(url: url, delegate: delegate, metadata: (), configuration: configuration))
+        .init(asset: .custom(url: url, delegate: delegate, metadata: EmptyAssetMetadata(), configuration: configuration))
     }
 
     static func encrypted(
@@ -153,7 +153,7 @@ public extension PlayerItem {
         delegate: AVContentKeySessionDelegate,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .init(asset: .encrypted(url: url, delegate: delegate, metadata: (), configuration: configuration))
+        .init(asset: .encrypted(url: url, delegate: delegate, metadata: EmptyAssetMetadata(), configuration: configuration))
     }
 }
 

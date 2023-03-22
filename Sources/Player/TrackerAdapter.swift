@@ -8,7 +8,7 @@ import Foundation
 
 /// An adapter which instantiates and manages a tracker of a specified type, transforming metadata delivered by
 /// a player item into the format required by the tracker.
-public struct TrackerAdapter<T: PlayerItemTracker, M> {
+public struct TrackerAdapter<T: PlayerItemTracker, M: AssetMetadata> {
     private let tracker: T
     private let mapper: (M) -> T.Metadata
 

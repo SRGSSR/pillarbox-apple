@@ -52,3 +52,9 @@ struct Media: Hashable, Identifiable {
         }
     }
 }
+
+extension Media: AssetMetadata {
+    func nowPlayingMetadata() -> NowPlayingMetadata {
+        .init(title: title, subtitle: description)
+    }
+}

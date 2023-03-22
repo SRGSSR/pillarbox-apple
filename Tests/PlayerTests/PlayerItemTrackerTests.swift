@@ -13,7 +13,7 @@ final class PlayerItemTrackerTests: TestCase {
         expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: TrackerMock.state) {
             let player = Player(item: .simple(
                 url: Stream.shortOnDemand.url,
-                metadata: (),
+                metadata: EmptyAssetMetadata(),
                 trackers: [
                     .init(trackerType: TrackerMock.self) { _ in
                         .init()
@@ -29,7 +29,7 @@ final class PlayerItemTrackerTests: TestCase {
             let player = Player()
             player.append(.simple(
                 url: Stream.shortOnDemand.url,
-                metadata: (),
+                metadata: EmptyAssetMetadata(),
                 trackers: [
                     .init(trackerType: TrackerMock.self) { _ in
                         .init()
@@ -44,7 +44,7 @@ final class PlayerItemTrackerTests: TestCase {
         expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: TrackerMock.state) {
             let player = Player(item: .simple(
                 url: Stream.unavailable.url,
-                metadata: Void(),
+                metadata: EmptyAssetMetadata(),
                 trackers: [
                     .init(trackerType: TrackerMock.self) { _ in
                         .init()
@@ -59,7 +59,7 @@ final class PlayerItemTrackerTests: TestCase {
         expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: TrackerMock.state) {
             _ = Player(item: .simple(
                 url: Stream.shortOnDemand.url,
-                metadata: (),
+                metadata: EmptyAssetMetadata(),
                 trackers: [
                     .init(trackerType: TrackerMock.self) { _ in
                         .init()
@@ -73,7 +73,7 @@ final class PlayerItemTrackerTests: TestCase {
         expectAtLeastEqualPublished(values: [.initialized, .deinitialized], from: TrackerMock.state) {
             _ = PlayerItem.simple(
                 url: Stream.shortOnDemand.url,
-                metadata: (),
+                metadata: EmptyAssetMetadata(),
                 trackers: [
                     .init(trackerType: TrackerMock.self) { _ in
                         .init()

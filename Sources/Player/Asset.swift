@@ -31,10 +31,8 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
     }
 }
 
-public typealias NowPlayingInfo = [String: Any]
-
 /// An asset representing content to be played.
-public struct Asset<M> {
+public struct Asset<M: AssetMetadata> {
     let id = UUID()
 
     private let type: `Type`
@@ -127,14 +125,14 @@ public struct Asset<M> {
 
     public func nowPlayingInfo() -> NowPlayingInfo {
         var nowPlayingInfo = NowPlayingInfo()
-//        if let metadata {
-//            nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
-//            nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
-//            nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
-//            if let image = metadata.image {
-//                nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
-//            }
-//        }
+        if let metadata = metadata?.nowPlayingMetadata() {
+            nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
+            nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
+            nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
+            if let image = metadata.image {
+                nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+            }
+        }
         return nowPlayingInfo
     }
 
@@ -143,12 +141,12 @@ public struct Asset<M> {
     }
 }
 
-public extension Asset where M == Void {
+public extension Asset where M == EmptyAssetMetadata {
     static func simple(
         url: URL,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .simple(url: url, metadata: (), configuration: configuration)
+        .simple(url: url, metadata: .init(), configuration: configuration)
     }
 
     static func custom(
@@ -156,7 +154,7 @@ public extension Asset where M == Void {
         delegate: AVAssetResourceLoaderDelegate,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .custom(url: url, delegate: delegate, metadata: (), configuration: configuration)
+        .custom(url: url, delegate: delegate, metadata: .init(), configuration: configuration)
     }
 
     static func encrypted(
@@ -164,7 +162,7 @@ public extension Asset where M == Void {
         delegate: AVContentKeySessionDelegate,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .encrypted(url: url, delegate: delegate, metadata: (), configuration: configuration)
+        .encrypted(url: url, delegate: delegate, metadata: .init(), configuration: configuration)
     }
 }
 
