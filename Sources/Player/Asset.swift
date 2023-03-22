@@ -105,7 +105,7 @@ public struct Asset<M> {
     func enable<T: PlayerItemTracker>(trackers: [TrackerAdapter<T, M>], for player: Player) {
         guard let metadata else { return }
         trackers.forEach { adapter in
-            adapter.enable(with: player)
+            adapter.enable(for: player)
         }
     }
 

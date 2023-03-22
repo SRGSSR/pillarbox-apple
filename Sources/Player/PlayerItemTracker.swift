@@ -27,7 +27,7 @@ public protocol PlayerItemTracker {
 public protocol TrackerAdaptable {
     associatedtype M
     func update(metadata: M)
-    func enable(with player: Player)
+    func enable(for player: Player)
     func disable()
 }
 
@@ -40,7 +40,7 @@ public struct TrackerAdapter<T: PlayerItemTracker, M>: TrackerAdaptable {
         self.mapper = mapper
     }
 
-    public func enable(with player: Player) {
+    public func enable(for player: Player) {
         tracker.enable(for: player)
     }
 
