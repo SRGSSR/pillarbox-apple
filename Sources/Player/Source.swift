@@ -23,22 +23,22 @@ protocol Sourceable {
 struct Source<T: PlayerItemTracker, M: AssetMetadata>: Sourceable {
     let id: UUID
     let asset: Asset<M>
-    let trackers: [TrackerAdapter<T, M>]
+    let trackerAdapters: [TrackerAdapter<T, M>]
 
     var assetId: UUID {
         asset.id
     }
 
     func enable(for player: Player) {
-        asset.enable(trackers: trackers, for: player)
+        asset.enable(trackerAdapters: trackerAdapters, for: player)
     }
 
     func updateMetadata() {
-        asset.update(trackers: trackers)
+        asset.update(trackerAdapters: trackerAdapters)
     }
 
     func disable() {
-        asset.disable(trackers: trackers)
+        asset.disable(trackerAdapters: trackerAdapters)
     }
 
     func nowPlayingInfo() -> NowPlayingInfo {

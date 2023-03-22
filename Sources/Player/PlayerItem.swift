@@ -15,14 +15,14 @@ public final class PlayerItem: Equatable {
     private let id = UUID()
 
     /// Create the item from an `Asset` publisher data source.
-    public init<P, T, M>(publisher: P, trackers: [TrackerAdapter<T, M>]) where P: Publisher, M: AssetMetadata, T: PlayerItemTracker, P.Output == Asset<M> {
-        source = Source(id: id, asset: .loading, trackers: trackers)
+    public init<P, T, M>(publisher: P, trackerAdapters: [TrackerAdapter<T, M>]) where P: Publisher, M: AssetMetadata, T: PlayerItemTracker, P.Output == Asset<M> {
+        source = Source(id: id, asset: .loading, trackerAdapters: trackerAdapters)
         publisher
             .catch { error in
                 Just(.failed(error: error))
             }
             .map { [id] asset in
-                Source(id: id, asset: asset, trackers: trackers)
+                Source(id: id, asset: asset, trackerAdapters: trackerAdapters)
             }
             // Mitigate instabilities arising when publisher involves `URLSession` publishers, see issue #206.
             .receiveOnMainThread()
@@ -30,19 +30,19 @@ public final class PlayerItem: Equatable {
     }
 
     public convenience init<P, M>(publisher: P) where P: Publisher, M: AssetMetadata, P.Output == Asset<M> {
-        self.init(publisher: publisher, trackers: [TrackerAdapter<EmptyTracker, M>]())
+        self.init(publisher: publisher, trackerAdapters: [TrackerAdapter<EmptyTracker, M>]())
     }
 
     /// Create a player item from a URL.
     /// - Parameters:
     ///   - url: The URL to play.
     ///   - configuration: A closure to configure player items created from the receiver.
-    public convenience init<T, M>(asset: Asset<M>, trackers: [TrackerAdapter<T, M>]) where T: PlayerItemTracker, M: AssetMetadata {
-        self.init(publisher: Just(asset), trackers: trackers)
+    public convenience init<T, M>(asset: Asset<M>, trackerAdapters: [TrackerAdapter<T, M>]) where T: PlayerItemTracker, M: AssetMetadata {
+        self.init(publisher: Just(asset), trackerAdapters: trackerAdapters)
     }
 
     public convenience init<M>(asset: Asset<M>) where M: AssetMetadata {
-        self.init(publisher: Just(asset), trackers: [TrackerAdapter<EmptyTracker, M>]())
+        self.init(publisher: Just(asset), trackerAdapters: [TrackerAdapter<EmptyTracker, M>]())
     }
 
     public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
@@ -64,10 +64,10 @@ public extension PlayerItem {
     static func simple<T, M>(
         url: URL,
         metadata: M? = nil,
-        trackers: [TrackerAdapter<T, M>],
+        trackerAdapters: [TrackerAdapter<T, M>],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self where T: PlayerItemTracker, M: AssetMetadata {
-        .init(asset: .simple(url: url, metadata: metadata, configuration: configuration), trackers: trackers)
+        .init(asset: .simple(url: url, metadata: metadata, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 
     static func simple<M>(
@@ -90,10 +90,10 @@ public extension PlayerItem {
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
         metadata: M? = nil,
-        trackers: [TrackerAdapter<T, M>],
+        trackerAdapters: [TrackerAdapter<T, M>],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self where T: PlayerItemTracker, M: AssetMetadata {
-        .init(asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration), trackers: trackers)
+        .init(asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 
     static func custom<M>(
@@ -116,10 +116,10 @@ public extension PlayerItem {
         url: URL,
         delegate: AVContentKeySessionDelegate,
         metadata: M? = nil,
-        trackers: [TrackerAdapter<T, M>],
+        trackerAdapters: [TrackerAdapter<T, M>],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self where T: PlayerItemTracker, M: AssetMetadata {
-        .init(asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration), trackers: trackers)
+        .init(asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 
     static func encrypted<M>(

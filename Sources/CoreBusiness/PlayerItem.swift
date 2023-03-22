@@ -17,7 +17,7 @@ public extension PlayerItem {
     static func urn<T>(
         _ urn: String,
         environment: Environment = .production,
-        trackers: [TrackerAdapter<T, MediaMetadata>]
+        trackerAdapters: [TrackerAdapter<T, MediaMetadata>]
     ) -> Self where T: PlayerItemTracker {
         let dataProvider = DataProvider(environment: environment)
         let publisher = dataProvider.playableMediaCompositionPublisher(forUrn: urn)
@@ -37,14 +37,14 @@ public extension PlayerItem {
             }
             .switchToLatest()
             .eraseToAnyPublisher()
-        return .init(publisher: publisher, trackers: trackers)
+        return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
 
     static func urn(
         _ urn: String,
         environment: Environment = .production
     ) -> Self {
-        Self.urn(urn, environment: environment, trackers: [TrackerAdapter<EmptyTracker, MediaMetadata>]())
+        Self.urn(urn, environment: environment, trackerAdapters: [TrackerAdapter<EmptyTracker, MediaMetadata>]())
     }
 
     private static func asset(for metadata: MediaMetadata) -> Asset<MediaMetadata> {

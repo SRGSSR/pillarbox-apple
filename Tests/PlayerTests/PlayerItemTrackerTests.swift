@@ -14,7 +14,7 @@ final class PlayerItemTrackerTests: TestCase {
             let player = Player(item: .simple(
                 url: Stream.shortOnDemand.url,
                 metadata: EmptyAssetMetadata(),
-                trackers: [
+                trackerAdapters: [
                     .init(trackerType: TrackerMock.self) { _ in
                         .init()
                     }
@@ -30,7 +30,7 @@ final class PlayerItemTrackerTests: TestCase {
             player.append(.simple(
                 url: Stream.shortOnDemand.url,
                 metadata: EmptyAssetMetadata(),
-                trackers: [
+                trackerAdapters: [
                     .init(trackerType: TrackerMock.self) { _ in
                         .init()
                     }
@@ -45,7 +45,7 @@ final class PlayerItemTrackerTests: TestCase {
             let player = Player(item: .simple(
                 url: Stream.unavailable.url,
                 metadata: EmptyAssetMetadata(),
-                trackers: [
+                trackerAdapters: [
                     .init(trackerType: TrackerMock.self) { _ in
                         .init()
                     }
@@ -60,7 +60,7 @@ final class PlayerItemTrackerTests: TestCase {
             _ = Player(item: .simple(
                 url: Stream.shortOnDemand.url,
                 metadata: EmptyAssetMetadata(),
-                trackers: [
+                trackerAdapters: [
                     .init(trackerType: TrackerMock.self) { _ in
                         .init()
                     }
@@ -74,7 +74,7 @@ final class PlayerItemTrackerTests: TestCase {
             _ = PlayerItem.simple(
                 url: Stream.shortOnDemand.url,
                 metadata: EmptyAssetMetadata(),
-                trackers: [
+                trackerAdapters: [
                     .init(trackerType: TrackerMock.self) { _ in
                         .init()
                     }

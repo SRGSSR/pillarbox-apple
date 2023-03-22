@@ -37,13 +37,13 @@ struct Media: Hashable, Identifiable {
     func playerItem() -> PlayerItem {
         switch type {
         case let .url(url):
-            return .simple(url: url, metadata: self, trackers: [
+            return .simple(url: url, metadata: self, trackerAdapters: [
                 .init(trackerType: DemoTracker.self) { media in
                     .init(title: media.title)
                 }
             ])
         case let .unbufferedUrl(url):
-            return .simple(url: url, metadata: self, trackers: [
+            return .simple(url: url, metadata: self, trackerAdapters: [
                 .init(trackerType: DemoTracker.self) { media in
                     .init(title: media.title)
                 }
@@ -52,7 +52,7 @@ struct Media: Hashable, Identifiable {
                 item.preferredForwardBufferDuration = 1
             }
         case let .urn(urn):
-            return .urn(urn, trackers: [
+            return .urn(urn, trackerAdapters: [
                 .init(trackerType: DemoTracker.self) { metadata in
                     .init(title: metadata.title)
                 }
