@@ -7,6 +7,7 @@
 import Player
 import UIKit
 
+/// Metadata associated with content loaded from a URN.
 public struct MediaMetadata {
     private static var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
