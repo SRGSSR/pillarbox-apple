@@ -39,16 +39,24 @@ struct Media: Hashable, Identifiable {
         case let .url(url):
             return .simple(url: url, metadata: self, trackers: [
                 .init(trackerType: DemoTracker.self) { media in
-                    DemoTracker.Metadata(title: media.title)
+                    .init(title: media.title)
                 }
             ])
         case let .unbufferedUrl(url):
-            return .simple(url: url) { item in
+            return .simple(url: url, metadata: self, trackers: [
+                .init(trackerType: DemoTracker.self) { media in
+                    .init(title: media.title)
+                }
+            ]) { item in
                 item.automaticallyPreservesTimeOffsetFromLive = true
                 item.preferredForwardBufferDuration = 1
             }
         case let .urn(urn):
-            return .urn(urn)
+            return .urn(urn, trackers: [
+                .init(trackerType: DemoTracker.self) { metadata in
+                    .init(title: metadata.title)
+                }
+            ])
         }
     }
 }

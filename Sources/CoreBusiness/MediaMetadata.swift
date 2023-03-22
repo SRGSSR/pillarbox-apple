@@ -22,7 +22,7 @@ public struct MediaMetadata: AssetMetadata {
     public let resource: Resource
     public let image: UIImage?
 
-    public var title: String? {
+    public var title: String {
         let mainChapter = mediaComposition.mainChapter
         guard mainChapter.contentType != .livestream else { return mainChapter.title }
         if let show = mediaComposition.show, Self.areRedundant(chapter: mainChapter, show: show) {
