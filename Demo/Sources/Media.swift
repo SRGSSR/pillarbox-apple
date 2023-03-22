@@ -52,23 +52,3 @@ struct Media: Hashable, Identifiable {
         }
     }
 }
-
-struct DemoTracker: PlayerItemTracker {
-    struct Metadata {
-        let title: String
-    }
-
-    private let id = UUID()
-
-    func enable(for player: Player) {
-        print("--> enable for \(id)")
-    }
-
-    func disable() {
-        print("--> disable for \(id)")
-    }
-
-    func update(with metadata: Metadata) {
-        print("--> update metadata for \(id): \(metadata)")
-    }
-}

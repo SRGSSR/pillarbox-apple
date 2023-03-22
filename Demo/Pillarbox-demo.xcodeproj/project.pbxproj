@@ -57,6 +57,7 @@
 		6FD1F3AF28D070CA00DF8CF1 /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1F3AE28D070CA00DF8CF1 /* Media.swift */; };
 		6FD6CE92291D36F70015FC03 /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD6CE91291D36F70015FC03 /* Story.swift */; };
 		6FE153E529B5BE4B003E2D50 /* MediaDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE153E429B5BE4B003E2D50 /* MediaDescription.swift */; };
+		6FF7175129CBA8D200A2FFAF /* DemoTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF7175029CBA8D200A2FFAF /* DemoTracker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -113,6 +114,7 @@
 		6FD1F3AE28D070CA00DF8CF1 /* Media.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
 		6FD6CE91291D36F70015FC03 /* Story.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Story.swift; sourceTree = "<group>"; };
 		6FE153E429B5BE4B003E2D50 /* MediaDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDescription.swift; sourceTree = "<group>"; };
+		6FF7175029CBA8D200A2FFAF /* DemoTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoTracker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -210,6 +212,7 @@
 				0EF42CBB29AF27A200553165 /* ContentListViewModel.swift */,
 				0EC085F829B223B700F154D1 /* CopyButton.swift */,
 				6F917C0A2887EA8E004113BA /* DemoApp.swift */,
+				6FF7175029CBA8D200A2FFAF /* DemoTracker.swift */,
 				6F48A5DC2932673A00B80393 /* DeveloperTools.swift */,
 				6FCD6A1A28AD1B9200FCE4EA /* ExamplesView.swift */,
 				0EC085F029B1DF2800F154D1 /* ExamplesViewModel.swift */,
@@ -358,6 +361,7 @@
 				6FCA8D7C28AD2AB900CF75FB /* AppDelegate.swift in Sources */,
 				0E8C362A296DB14600707FA5 /* PlayerConfiguration.swift in Sources */,
 				6FD1F3A328D04AE200DF8CF1 /* LinkView.swift in Sources */,
+				6FF7175129CBA8D200A2FFAF /* DemoTracker.swift in Sources */,
 				0EC085F729B1FB1300F154D1 /* SearchViewModel.swift in Sources */,
 				0EF42CBE29AF5B0F00553165 /* Cell.swift in Sources */,
 				0EF42CBA29AF25D100553165 /* ContentListView.swift in Sources */,

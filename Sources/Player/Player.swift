@@ -698,9 +698,7 @@ extension Player {
     private func configureCurrentTrackerPublisher() {
         currentPublisher()
             .map { [weak self] current in
-                guard
-                    let self,
-                    let current else { return nil }
+                guard let self, let current else { return nil }
                 return CurrentTracker(item: current.item, player: self)
             }
             .receiveOnMainThread()
