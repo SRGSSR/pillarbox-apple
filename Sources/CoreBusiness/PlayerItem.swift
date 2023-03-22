@@ -86,7 +86,7 @@ public extension PlayerItem {
     }
 }
 
-private struct EmptyTracker: PlayerItemTracker {
+private final class EmptyTracker: PlayerItemTracker {
     func enable(for player: Player) {}
     func disable() {}
     func update(with metadata: Void) {}

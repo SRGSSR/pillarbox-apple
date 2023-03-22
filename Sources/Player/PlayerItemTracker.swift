@@ -7,7 +7,7 @@
 import Foundation
 
 /// Protocol for player item trackers.
-public protocol PlayerItemTracker {
+public protocol PlayerItemTracker: AnyObject {
     /// The type of metadata required by the tracker.
     associatedtype Metadata
 

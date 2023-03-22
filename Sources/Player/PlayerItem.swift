@@ -163,7 +163,8 @@ extension PlayerItem: CustomDebugStringConvertible {
     }
 }
 
-private struct EmptyTracker: PlayerItemTracker {
+private class EmptyTracker: PlayerItemTracker {
+    required init() {}
     func enable(for player: Player) {}
     func disable() {}
     func update(with metadata: Void) {}
