@@ -14,13 +14,11 @@ private var kIdKey: Void?
 public final class PlayerItem: Equatable {
     @Published private(set) var source: any Sourceable
 
-    private let trackers: [any TrackerAdaptable]
     private let id = UUID()
 
     /// Create the item from an `Asset` publisher data source.
     public init<P, T, M>(publisher: P, trackers: [TrackerAdapter<T, M>]) where P: Publisher, T: PlayerItemTracker, P.Output == Asset<M> {
         source = Source(id: id, asset: Asset<M>.loading, trackers: trackers)
-        self.trackers = trackers
         publisher
             .catch { error in
                 Just(.failed(error: error))
@@ -164,16 +162,6 @@ public extension PlayerItem {
 extension PlayerItem: CustomDebugStringConvertible {
     public var debugDescription: String {
         "\(source)"
-    }
-}
-
-extension PlayerItem {
-    func enableTrackers(with player: Player) {
-        trackers.forEach { $0.enable(with: player) }
-    }
-
-    func disableTrackers() {
-        trackers.forEach { $0.disable() }
     }
 }
 

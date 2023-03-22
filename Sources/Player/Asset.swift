@@ -96,17 +96,30 @@ public struct Asset<M> {
         )
     }
 
-    public func playerItem() -> AVPlayerItem {
+    func playerItem() -> AVPlayerItem {
         let item = type.playerItem()
         configuration(item)
         return item
     }
 
+    func enable<T: PlayerItemTracker>(trackers: [TrackerAdapter<T, M>], for player: Player) {
+        guard let metadata else { return }
+        trackers.forEach { adapter in
+            adapter.enable(with: player)
+        }
+    }
+
     func update<T: PlayerItemTracker>(trackers: [TrackerAdapter<T, M>]) {
-        // FIXME: Deal with metadata nullability in contract
         guard let metadata else { return }
         trackers.forEach { adapter in
             adapter.update(metadata: metadata)
+        }
+    }
+
+    func disable<T: PlayerItemTracker>(trackers: [TrackerAdapter<T, M>]) {
+        guard let metadata else { return }
+        trackers.forEach { adapter in
+            adapter.disable()
         }
     }
 
@@ -189,20 +202,5 @@ extension Asset {
     static func failed(error: Error) -> Self {
         // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
         .custom(url: URL(string: "pillarbox://failing.m3u8")!, delegate: FailedResourceLoaderDelegate(error: error))
-    }
-}
-
-extension Asset: Equatable {
-    public static func == (lhs: Asset, rhs: Asset) -> Bool {
-        switch (lhs.type, rhs.type) {
-        case let (.simple(url: lhsUrl), .simple(url: rhsUrl)):
-            return lhsUrl == rhsUrl
-        case let (.custom(url: lhsUrl, delegate: lhsDelegate), .custom(url: rhsUrl, delegate: rhsDelegate)):
-            return lhsUrl == rhsUrl && lhsDelegate === rhsDelegate
-        case let (.encrypted(url: lhsUrl, delegate: lhsDelegate), .encrypted(url: rhsUrl, delegate: rhsDelegate)):
-            return lhsUrl == rhsUrl && lhsDelegate === rhsDelegate
-        default:
-            return false
-        }
     }
 }

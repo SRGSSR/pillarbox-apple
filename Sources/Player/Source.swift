@@ -10,7 +10,9 @@ protocol Sourceable {
     associatedtype M
     var id: UUID { get }
     var asset: Asset<M> { get }
+    func enable(for player: Player)
     func updateMetadata()
+    func disable()
     func nowPlayingInfo() -> NowPlayingInfo
 }
 
@@ -20,8 +22,16 @@ struct Source<T: PlayerItemTracker, M>: Sourceable {
     let asset: Asset<M>
     let trackers: [TrackerAdapter<T, M>]
 
+    func enable(for player: Player) {
+        asset.enable(trackers: trackers, for: player)
+    }
+
     func updateMetadata() {
         asset.update(trackers: trackers)
+    }
+
+    func disable() {
+        asset.disable(trackers: trackers)
     }
 
     func nowPlayingInfo() -> NowPlayingInfo {

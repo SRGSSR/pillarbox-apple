@@ -620,7 +620,8 @@ extension Player {
 
         init(item: PlayerItem, player: Player) {
             self.item = item
-            item.enableTrackers(with: player)
+
+            item.source.enable(for: player)
             item.$source
                 .sink { source in
                     source.updateMetadata()
@@ -629,7 +630,7 @@ extension Player {
         }
 
         deinit {
-            item.disableTrackers()
+            item.source.disable()
         }
     }
 

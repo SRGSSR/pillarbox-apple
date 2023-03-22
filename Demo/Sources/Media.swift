@@ -58,15 +58,17 @@ struct DemoTracker: PlayerItemTracker {
         let title: String
     }
 
+    private let id = UUID()
+
     func enable(for player: Player) {
-        print("--> enable")
+        print("--> enable for \(id)")
     }
 
     func disable() {
-        print("--> disable")
+        print("--> disable for \(id)")
     }
 
     func update(with metadata: Metadata) {
-        print("--> \(metadata)")
+        print("--> update metadata for \(id): \(metadata)")
     }
 }
