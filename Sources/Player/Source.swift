@@ -9,11 +9,14 @@ import AVFoundation
 protocol Sourceable {
     associatedtype M
     var id: UUID { get }
+    var assetId: UUID { get }
     var asset: Asset<M> { get }
     func enable(for player: Player)
     func updateMetadata()
     func disable()
     func nowPlayingInfo() -> NowPlayingInfo
+
+    func matches(_ playerItem: AVPlayerItem?) -> Bool
 }
 
 /// A source to generate an `AVPlayerItem` from.
@@ -21,6 +24,10 @@ struct Source<T: PlayerItemTracker, M>: Sourceable {
     let id: UUID
     let asset: Asset<M>
     let trackers: [TrackerAdapter<T, M>]
+
+    var assetId: UUID {
+        asset.id
+    }
 
     func enable(for player: Player) {
         asset.enable(trackers: trackers, for: player)
@@ -96,8 +103,7 @@ extension AVPlayerItem {
 
     private static func findSource(for item: AVPlayerItem, in sources: [any Sourceable], equalTo other: any Sourceable) -> Bool {
         guard let match = matchingSource(for: item, in: sources) else { return false }
-        // FIXME: Need to compare match and other directly
-        return match.id == other.id
+        return match.assetId == other.assetId
     }
 
     private static func firstCommonIndex(in sources: [any Sourceable], matching other: [any Sourceable], after item: AVPlayerItem) -> Int? {

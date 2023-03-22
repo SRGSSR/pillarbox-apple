@@ -8,8 +8,6 @@ import AVFoundation
 import Combine
 import Core
 
-private var kIdKey: Void?
-
 /// An item to be inserted into the player.
 public final class PlayerItem: Equatable {
     @Published private(set) var source: any Sourceable
@@ -52,7 +50,7 @@ public final class PlayerItem: Equatable {
     }
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
-        playerItem?.id == id
+        source.matches(playerItem)
     }
 }
 
@@ -162,36 +160,6 @@ public extension PlayerItem {
 extension PlayerItem: CustomDebugStringConvertible {
     public var debugDescription: String {
         "\(source)"
-    }
-}
-
-extension Sourceable {
-    func matches(_ item: AVPlayerItem?) -> Bool {
-        id == item?.id
-    }
-
-    func playerItem() -> AVPlayerItem {
-        asset.playerItem().withId(id)
-    }
-}
-
-private extension AVPlayerItem {
-    /// An identifier to identify player items delivered by the same data source.
-    var id: UUID? {
-        get {
-            objc_getAssociatedObject(self, &kIdKey) as? UUID
-        }
-        set {
-            objc_setAssociatedObject(self, &kIdKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-    }
-
-    /// Assign an identifier to identify player items delivered by the same data source.
-    /// - Parameter id: The id to assign.
-    /// - Returns: The receiver with the id assigned to it.
-    func withId(_ id: UUID) -> AVPlayerItem {
-        self.id = id
-        return self
     }
 }
 

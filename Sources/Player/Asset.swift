@@ -8,6 +8,8 @@ import AVFoundation
 import MediaPlayer
 import OSLog
 
+private var kIdKey: Void?
+
 private let kLogger = Logger(category: "Asset")
 
 private let kContentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
@@ -33,6 +35,8 @@ public typealias NowPlayingInfo = [String: Any]
 
 /// An asset representing content to be played.
 public struct Asset<M> {
+    let id = UUID()
+
     private let type: `Type`
     private let metadata: M?
     private let configuration: (AVPlayerItem) -> Void
@@ -97,7 +101,7 @@ public struct Asset<M> {
     }
 
     func playerItem() -> AVPlayerItem {
-        let item = type.playerItem()
+        let item = type.playerItem().withId(id)
         configuration(item)
         return item
     }
@@ -132,6 +136,10 @@ public struct Asset<M> {
 //            }
 //        }
         return nowPlayingInfo
+    }
+
+    func matches(_ playerItem: AVPlayerItem?) -> Bool {
+        playerItem?.id == id
     }
 }
 
@@ -200,5 +208,35 @@ extension Asset {
     static func failed(error: Error) -> Self {
         // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
         .custom(url: URL(string: "pillarbox://failing.m3u8")!, delegate: FailedResourceLoaderDelegate(error: error))
+    }
+}
+
+extension Sourceable {
+    func matches(_ item: AVPlayerItem?) -> Bool {
+        id == item?.id
+    }
+
+    func playerItem() -> AVPlayerItem {
+        asset.playerItem().withId(id)
+    }
+}
+
+private extension AVPlayerItem {
+    /// An identifier to identify player items delivered by the same data source.
+    var id: UUID? {
+        get {
+            objc_getAssociatedObject(self, &kIdKey) as? UUID
+        }
+        set {
+            objc_setAssociatedObject(self, &kIdKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+
+    /// Assign an identifier to identify player items delivered by the same data source.
+    /// - Parameter id: The id to assign.
+    /// - Returns: The receiver with the id assigned to it.
+    func withId(_ id: UUID) -> AVPlayerItem {
+        self.id = id
+        return self
     }
 }
