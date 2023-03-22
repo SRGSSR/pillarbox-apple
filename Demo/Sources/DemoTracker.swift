@@ -7,12 +7,16 @@
 import Foundation
 import Player
 
-struct DemoTracker: PlayerItemTracker {
+final class DemoTracker: PlayerItemTracker {
     struct Metadata {
         let title: String
     }
 
     private let id = UUID()
+
+    init() {
+        print("--> init \(id)")
+    }
 
     func enable(for player: Player) {
         print("--> enable for \(id)")
@@ -24,5 +28,9 @@ struct DemoTracker: PlayerItemTracker {
 
     func update(with metadata: Metadata) {
         print("--> update metadata for \(id): \(metadata)")
+    }
+
+    deinit {
+        print("--> deinit \(id)")
     }
 }
