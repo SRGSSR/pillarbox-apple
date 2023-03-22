@@ -26,7 +26,7 @@ final class DemoTracker: PlayerItemTracker {
         print("--> disable for \(id)")
     }
 
-    func update(with metadata: Metadata) {
+    func update(metadata: Metadata) {
         print("--> update metadata for \(id): \(metadata)")
     }
 

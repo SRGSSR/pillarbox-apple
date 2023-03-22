@@ -89,5 +89,5 @@ public extension PlayerItem {
 private final class EmptyTracker: PlayerItemTracker {
     func enable(for player: Player) {}
     func disable() {}
-    func update(with metadata: Void) {}
+    func update(metadata: Void) {}
 }

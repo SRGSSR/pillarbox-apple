@@ -21,7 +21,7 @@ final class TrackerMock: ObservableObject, PlayerItemTracker {
 
     static var state = PassthroughSubject<State, Never>()
 
-    required init() {
+    init() {
         Self.state.send(.initialized)
     }
 
@@ -29,7 +29,7 @@ final class TrackerMock: ObservableObject, PlayerItemTracker {
         Self.state.send(.enabled)
     }
 
-    func update(with metadata: Metadata) {}
+    func update(metadata: Metadata) {}
 
     func disable() {
         Self.state.send(.disabled)

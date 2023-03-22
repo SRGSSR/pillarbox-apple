@@ -26,7 +26,7 @@ public struct TrackerAdapter<T: PlayerItemTracker, M: AssetMetadata> {
     }
 
     func update(metadata: M) {
-        tracker.update(with: mapper(metadata))
+        tracker.update(metadata: mapper(metadata))
     }
 
     func disable() {

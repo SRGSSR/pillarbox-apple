@@ -19,7 +19,7 @@ public protocol PlayerItemTracker: AnyObject {
     func enable(for player: Player)
 
     /// Called when the tracker metadata is updated.
-    func update(with metadata: Metadata)
+    func update(metadata: Metadata)
 
     /// Called when the tracker is disabled.
     func disable()
