@@ -17,7 +17,7 @@ public extension PlayerItem {
     static func urn(
         _ urn: String,
         environment: Environment = .production,
-        trackerAdapters: [TrackerAdapter<MediaMetadata>]
+        trackerAdapters: [TrackerAdapter<MediaMetadata>] = []
     ) -> Self {
         let dataProvider = DataProvider(environment: environment)
         let publisher = dataProvider.playableMediaCompositionPublisher(forUrn: urn)
@@ -45,13 +45,6 @@ public extension PlayerItem {
                 mediaMetadata.analyticsMetadata
             }
         ] + trackerAdapters)
-    }
-
-    static func urn(
-        _ urn: String,
-        environment: Environment = .production
-    ) -> Self {
-        Self.urn(urn, environment: environment, trackerAdapters: [TrackerAdapter<MediaMetadata>]())
     }
 
     private static func asset(for metadata: MediaMetadata) -> Asset<MediaMetadata> {

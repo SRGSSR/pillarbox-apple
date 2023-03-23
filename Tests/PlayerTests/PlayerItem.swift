@@ -33,7 +33,7 @@ extension PlayerItem {
         return .init(publisher: publisher)
     }
 
-    static func metadataUpdate(delay: TimeInterval) -> Self {
+    static func metadataUpdate(delay: TimeInterval, trackerAdapters: [TrackerAdapter<LocalMetadata>] = []) -> Self {
         let publisher = Just(Asset.simple(
             url: Stream.onDemand.url,
             metadata: LocalMetadata(
@@ -51,7 +51,8 @@ extension PlayerItem {
                 description: "description0"
             )
         ))
-        return .init(publisher: publisher)
+
+        return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
 
     static func networkLoaded(media: LocalMedia) -> Self {
