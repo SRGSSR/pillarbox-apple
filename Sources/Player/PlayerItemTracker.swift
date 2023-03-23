@@ -24,3 +24,9 @@ public protocol PlayerItemTracker: AnyObject {
     /// Called when the tracker is disabled.
     func disable()
 }
+
+public extension PlayerItemTracker {
+    static func adapter<M: AssetMetadata>(mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> {
+        TrackerAdapter(trackerType: Self.self, mapper: mapper)
+    }
+}

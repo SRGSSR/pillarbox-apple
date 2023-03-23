@@ -38,13 +38,13 @@ struct Media: Hashable, Identifiable {
         switch type {
         case let .url(url):
             return .simple(url: url, metadata: self, trackerAdapters: [
-                TrackerAdapter(trackerType: DemoTracker.self) { media in
+                DemoTracker.adapter { media in
                     DemoTracker.Metadata(title: media.title)
                 }
             ])
         case let .unbufferedUrl(url):
             return .simple(url: url, metadata: self, trackerAdapters: [
-                TrackerAdapter(trackerType: DemoTracker.self) { media in
+                DemoTracker.adapter { media in
                     DemoTracker.Metadata(title: media.title)
                 }
             ]) { item in
@@ -53,7 +53,7 @@ struct Media: Hashable, Identifiable {
             }
         case let .urn(urn):
             return .urn(urn, trackerAdapters: [
-                TrackerAdapter(trackerType: DemoTracker.self) { metadata in
+                DemoTracker.adapter { metadata in
                     DemoTracker.Metadata(title: metadata.title)
                 }
             ])

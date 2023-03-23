@@ -15,7 +15,7 @@ final class PlayerItemTrackerTests: TestCase {
                 url: Stream.shortOnDemand.url,
                 metadata: EmptyAssetMetadata(),
                 trackerAdapters: [
-                    TrackerAdapter(trackerType: TrackerMock.self) { _ in
+                    TrackerMock.adapter { _ in
                         .init()
                     }
                 ]
@@ -31,7 +31,7 @@ final class PlayerItemTrackerTests: TestCase {
                 url: Stream.shortOnDemand.url,
                 metadata: EmptyAssetMetadata(),
                 trackerAdapters: [
-                    TrackerAdapter(trackerType: TrackerMock.self) { _ in
+                    TrackerMock.adapter { _ in
                         TrackerMock.Metadata()
                     }
                 ]
@@ -46,7 +46,7 @@ final class PlayerItemTrackerTests: TestCase {
                 url: Stream.unavailable.url,
                 metadata: EmptyAssetMetadata(),
                 trackerAdapters: [
-                    TrackerAdapter(trackerType: TrackerMock.self) { _ in
+                    TrackerMock.adapter { _ in
                         TrackerMock.Metadata()
                     }
                 ])
@@ -61,7 +61,7 @@ final class PlayerItemTrackerTests: TestCase {
                 url: Stream.shortOnDemand.url,
                 metadata: EmptyAssetMetadata(),
                 trackerAdapters: [
-                    TrackerAdapter(trackerType: TrackerMock.self) { _ in
+                    TrackerMock.adapter { _ in
                         TrackerMock.Metadata()
                     }
                 ]
@@ -75,7 +75,7 @@ final class PlayerItemTrackerTests: TestCase {
                 url: Stream.shortOnDemand.url,
                 metadata: EmptyAssetMetadata(),
                 trackerAdapters: [
-                    TrackerAdapter(trackerType: TrackerMock.self) { _ in
+                    TrackerMock.adapter { _ in
                         TrackerMock.Metadata()
                     }
                 ]
