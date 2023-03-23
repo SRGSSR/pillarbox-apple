@@ -31,9 +31,7 @@ final class PlayerItemTrackerTests: TestCase {
                 url: Stream.shortOnDemand.url,
                 metadata: EmptyAssetMetadata(),
                 trackerAdapters: [
-                    TrackerMock.adapter { _ in
-                        TrackerMock.Metadata()
-                    }
+                    TrackerMock.adapter { _ in "" }
                 ]
             ))
             player.play()
@@ -46,9 +44,7 @@ final class PlayerItemTrackerTests: TestCase {
                 url: Stream.unavailable.url,
                 metadata: EmptyAssetMetadata(),
                 trackerAdapters: [
-                    TrackerMock.adapter { _ in
-                        TrackerMock.Metadata()
-                    }
+                    TrackerMock.adapter { _ in "" }
                 ]
             ))
             player.play()
@@ -61,9 +57,7 @@ final class PlayerItemTrackerTests: TestCase {
                 url: Stream.shortOnDemand.url,
                 metadata: EmptyAssetMetadata(),
                 trackerAdapters: [
-                    TrackerMock.adapter { _ in
-                        TrackerMock.Metadata()
-                    }
+                    TrackerMock.adapter { _ in "" }
                 ]
             ))
         }
@@ -75,11 +69,22 @@ final class PlayerItemTrackerTests: TestCase {
                 url: Stream.shortOnDemand.url,
                 metadata: EmptyAssetMetadata(),
                 trackerAdapters: [
-                    TrackerMock.adapter { _ in
-                        TrackerMock.Metadata()
-                    }
+                    TrackerMock.adapter { _ in "" }
                 ]
             )
+        }
+    }
+
+    func testMetadata() {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .update("metadata"), .disabled, .deinitialized], from: TrackerMock.state) {
+            let player = Player(item: .simple(
+                url: Stream.shortOnDemand.url,
+                metadata: EmptyAssetMetadata(),
+                trackerAdapters: [
+                    TrackerMock.adapter { _ in "metadata" }
+                ]
+            ))
+            player.play()
         }
     }
 }
