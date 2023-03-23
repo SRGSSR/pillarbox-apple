@@ -8,6 +8,12 @@ import AVFoundation
 import Combine
 import Core
 
+private final class EmptyTracker: PlayerItemTracker {
+    func enable(for player: Player) {}
+    func disable() {}
+    func update(metadata: Void) {}
+}
+
 /// An item to be inserted into the player.
 public final class PlayerItem: Equatable {
     @Published private(set) var source: any Sourceable
@@ -161,10 +167,4 @@ extension PlayerItem: CustomDebugStringConvertible {
     public var debugDescription: String {
         "\(source)"
     }
-}
-
-private final class EmptyTracker: PlayerItemTracker {
-    func enable(for player: Player) {}
-    func disable() {}
-    func update(metadata: Void) {}
 }

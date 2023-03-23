@@ -7,15 +7,16 @@
 import AVFoundation
 
 protocol Sourceable {
-    associatedtype M: AssetMetadata
+    associatedtype Metadata: AssetMetadata
+
     var id: UUID { get }
     var assetId: UUID { get }
-    var asset: Asset<M> { get }
+    var asset: Asset<Metadata> { get }
+
     func enable(for player: Player)
     func updateMetadata()
     func disable()
     func nowPlayingInfo() -> NowPlayingInfo
-
     func matches(_ playerItem: AVPlayerItem?) -> Bool
 }
 

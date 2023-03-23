@@ -49,8 +49,8 @@ final class PlayerItemTrackerTests: TestCase {
                     TrackerMock.adapter { _ in
                         TrackerMock.Metadata()
                     }
-                ])
-            )
+                ]
+            ))
             player.play()
         }
     }

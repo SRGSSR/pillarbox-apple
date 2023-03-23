@@ -43,11 +43,15 @@ struct Media: Hashable, Identifiable {
                 }
             ])
         case let .unbufferedUrl(url):
-            return .simple(url: url, metadata: self, trackerAdapters: [
-                DemoTracker.adapter { media in
-                    DemoTracker.Metadata(title: media.title)
-                }
-            ]) { item in
+            return .simple(
+                url: url,
+                metadata: self,
+                trackerAdapters: [
+                    DemoTracker.adapter { media in
+                        DemoTracker.Metadata(title: media.title)
+                    }
+                ]
+            ) { item in
                 item.automaticallyPreservesTimeOffsetFromLive = true
                 item.preferredForwardBufferDuration = 1
             }

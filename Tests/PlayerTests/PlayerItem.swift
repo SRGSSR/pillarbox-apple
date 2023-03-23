@@ -26,12 +26,6 @@ struct LocalMetadata: Decodable {
     }
 }
 
-extension LocalMetadata: AssetMetadata {
-    func nowPlayingMetadata() -> NowPlayingMetadata {
-        .init(title: title, subtitle: subtitle, description: description)
-    }
-}
-
 extension PlayerItem {
     static func simple(url: URL, metadata: LocalMetadata? = nil, delay: TimeInterval) -> Self {
         let publisher = Just(Asset.simple(url: url, metadata: metadata))
@@ -72,5 +66,11 @@ extension PlayerItem {
                 )
             }
         return .init(publisher: publisher)
+    }
+}
+
+extension LocalMetadata: AssetMetadata {
+    func nowPlayingMetadata() -> NowPlayingMetadata {
+        .init(title: title, subtitle: subtitle, description: description)
     }
 }
