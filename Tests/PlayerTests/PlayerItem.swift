@@ -51,7 +51,6 @@ extension PlayerItem {
                 description: "description0"
             )
         ))
-
         return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
 

@@ -89,10 +89,10 @@ final class PlayerItemTrackerTests: TestCase {
     }
 
     func testMetadataUpdate() {
-        let player = Player(item: .metadataUpdate(delay: 1, trackerAdapters: [
-            TrackerMock.adapter { $0.title ?? "" }
-        ]))
         expectAtLeastEqualPublished(values: [.initialized, .enabled, .update("title0"), .update("title1"), .disabled, .deinitialized], from: TrackerMock.state, timeout: .seconds(3)) {
+            let player = Player(item: .metadataUpdate(delay: 1, trackerAdapters: [
+                TrackerMock.adapter { $0.title ?? "" }
+            ]))
             player.play()
         }
     }
