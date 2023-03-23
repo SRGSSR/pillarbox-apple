@@ -15,7 +15,7 @@ final class PlayerItemTrackerTests: TestCase {
                 url: Stream.shortOnDemand.url,
                 metadata: EmptyAssetMetadata(),
                 trackerAdapters: [
-                    .init(trackerType: TrackerMock.self) { _ in
+                    TrackerAdapter(trackerType: TrackerMock.self) { _ in
                         .init()
                     }
                 ]
@@ -31,8 +31,8 @@ final class PlayerItemTrackerTests: TestCase {
                 url: Stream.shortOnDemand.url,
                 metadata: EmptyAssetMetadata(),
                 trackerAdapters: [
-                    .init(trackerType: TrackerMock.self) { _ in
-                        .init()
+                    TrackerAdapter(trackerType: TrackerMock.self) { _ in
+                        TrackerMock.Metadata()
                     }
                 ]
             ))
@@ -46,8 +46,8 @@ final class PlayerItemTrackerTests: TestCase {
                 url: Stream.unavailable.url,
                 metadata: EmptyAssetMetadata(),
                 trackerAdapters: [
-                    .init(trackerType: TrackerMock.self) { _ in
-                        .init()
+                    TrackerAdapter(trackerType: TrackerMock.self) { _ in
+                        TrackerMock.Metadata()
                     }
                 ])
             )
@@ -61,8 +61,8 @@ final class PlayerItemTrackerTests: TestCase {
                 url: Stream.shortOnDemand.url,
                 metadata: EmptyAssetMetadata(),
                 trackerAdapters: [
-                    .init(trackerType: TrackerMock.self) { _ in
-                        .init()
+                    TrackerAdapter(trackerType: TrackerMock.self) { _ in
+                        TrackerMock.Metadata()
                     }
                 ]
             ))
@@ -75,8 +75,8 @@ final class PlayerItemTrackerTests: TestCase {
                 url: Stream.shortOnDemand.url,
                 metadata: EmptyAssetMetadata(),
                 trackerAdapters: [
-                    .init(trackerType: TrackerMock.self) { _ in
-                        .init()
+                    TrackerAdapter(trackerType: TrackerMock.self) { _ in
+                        TrackerMock.Metadata()
                     }
                 ]
             )

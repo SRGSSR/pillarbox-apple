@@ -20,10 +20,10 @@ protocol Sourceable {
 }
 
 /// A source to generate an `AVPlayerItem` from.
-struct Source<T: PlayerItemTracker, M: AssetMetadata>: Sourceable {
+struct Source<M: AssetMetadata>: Sourceable {
     let id: UUID
     let asset: Asset<M>
-    let trackerAdapters: [TrackerAdapter<T, M>]
+    let trackerAdapters: [TrackerAdapter<M>]
 
     var assetId: UUID {
         asset.id

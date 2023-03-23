@@ -15,7 +15,7 @@ public final class PlayerItem: Equatable {
     private let id = UUID()
 
     /// Create the item from an `Asset` publisher data source.
-    public init<P, T, M>(publisher: P, trackerAdapters: [TrackerAdapter<T, M>]) where P: Publisher, M: AssetMetadata, T: PlayerItemTracker, P.Output == Asset<M> {
+    public init<P, M>(publisher: P, trackerAdapters: [TrackerAdapter<M>]) where P: Publisher, M: AssetMetadata, P.Output == Asset<M> {
         source = Source(id: id, asset: .loading, trackerAdapters: trackerAdapters)
         publisher
             .catch { error in
@@ -30,19 +30,19 @@ public final class PlayerItem: Equatable {
     }
 
     public convenience init<P, M>(publisher: P) where P: Publisher, M: AssetMetadata, P.Output == Asset<M> {
-        self.init(publisher: publisher, trackerAdapters: [TrackerAdapter<EmptyTracker, M>]())
+        self.init(publisher: publisher, trackerAdapters: [TrackerAdapter<M>]())
     }
 
     /// Create a player item from a URL.
     /// - Parameters:
     ///   - url: The URL to play.
     ///   - configuration: A closure to configure player items created from the receiver.
-    public convenience init<T, M>(asset: Asset<M>, trackerAdapters: [TrackerAdapter<T, M>]) where T: PlayerItemTracker, M: AssetMetadata {
+    public convenience init<M>(asset: Asset<M>, trackerAdapters: [TrackerAdapter<M>]) where M: AssetMetadata {
         self.init(publisher: Just(asset), trackerAdapters: trackerAdapters)
     }
 
     public convenience init<M>(asset: Asset<M>) where M: AssetMetadata {
-        self.init(publisher: Just(asset), trackerAdapters: [TrackerAdapter<EmptyTracker, M>]())
+        self.init(publisher: Just(asset), trackerAdapters: [TrackerAdapter<M>]())
     }
 
     public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
@@ -61,12 +61,12 @@ public extension PlayerItem {
     ///   - metadata: The metadata associated with the item.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The item.
-    static func simple<T, M>(
+    static func simple<M>(
         url: URL,
         metadata: M? = nil,
-        trackerAdapters: [TrackerAdapter<T, M>],
+        trackerAdapters: [TrackerAdapter<M>],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self where T: PlayerItemTracker, M: AssetMetadata {
+    ) -> Self where M: AssetMetadata {
         .init(asset: .simple(url: url, metadata: metadata, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 
@@ -86,13 +86,13 @@ public extension PlayerItem {
     ///   - metadata: The metadata associated with the item.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The item.
-    static func custom<T, M>(
+    static func custom<M>(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
         metadata: M? = nil,
-        trackerAdapters: [TrackerAdapter<T, M>],
+        trackerAdapters: [TrackerAdapter<M>],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self where T: PlayerItemTracker, M: AssetMetadata {
+    ) -> Self where M: AssetMetadata {
         .init(asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 
@@ -112,13 +112,13 @@ public extension PlayerItem {
     ///   - metadata: The metadata associated with the item.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The item.
-    static func encrypted<T, M>(
+    static func encrypted<M>(
         url: URL,
         delegate: AVContentKeySessionDelegate,
         metadata: M? = nil,
-        trackerAdapters: [TrackerAdapter<T, M>],
+        trackerAdapters: [TrackerAdapter<M>],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self where T: PlayerItemTracker, M: AssetMetadata {
+    ) -> Self where M: AssetMetadata {
         .init(asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 

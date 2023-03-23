@@ -15,22 +15,22 @@ final class DemoTracker: PlayerItemTracker {
     private let id = UUID()
 
     init() {
-        print("--> init \(id)")
+        print("--> init demo tracker \(id)")
     }
 
     func enable(for player: Player) {
-        print("--> enable for \(id)")
+        print("--> enable demo tracker for \(id)")
     }
 
     func disable() {
-        print("--> disable for \(id)")
+        print("--> disable demo tracker for \(id)")
     }
 
     func update(metadata: Metadata) {
-        print("--> update metadata for \(id): \(metadata)")
+        print("--> update demo tracker metadata for \(id): \(metadata)")
     }
 
     deinit {
-        print("--> deinit \(id)")
+        print("--> deinit demo tracker \(id)")
     }
 }

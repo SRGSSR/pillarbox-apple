@@ -104,20 +104,20 @@ public struct Asset<M: AssetMetadata> {
         return item
     }
 
-    func enable<T: PlayerItemTracker>(trackerAdapters: [TrackerAdapter<T, M>], for player: Player) {
+    func enable(trackerAdapters: [TrackerAdapter<M>], for player: Player) {
         trackerAdapters.forEach { adapter in
             adapter.enable(for: player)
         }
     }
 
-    func update<T: PlayerItemTracker>(trackerAdapters: [TrackerAdapter<T, M>]) {
+    func update(trackerAdapters: [TrackerAdapter<M>]) {
         guard let metadata else { return }
         trackerAdapters.forEach { adapter in
             adapter.update(metadata: metadata)
         }
     }
 
-    func disable<T: PlayerItemTracker>(trackerAdapters: [TrackerAdapter<T, M>]) {
+    func disable(trackerAdapters: [TrackerAdapter<M>]) {
         trackerAdapters.forEach { adapter in
             adapter.disable()
         }

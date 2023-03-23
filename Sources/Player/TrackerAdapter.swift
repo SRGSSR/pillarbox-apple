@@ -8,17 +8,20 @@ import Foundation
 
 /// An adapter which instantiates and manages a tracker of a specified type, transforming metadata delivered by
 /// a player item into the format required by the tracker.
-public struct TrackerAdapter<T: PlayerItemTracker, M: AssetMetadata> {
-    private let tracker: T
-    private let mapper: (M) -> T.Metadata
+public struct TrackerAdapter<M: AssetMetadata> {
+    private let tracker: any PlayerItemTracker
+    private let update: (M) -> Void
 
     /// Create an adapter for a type of tracker with the provided mapping to its metadata format.
     /// - Parameters:
     ///   - trackerType: The type of the tracker to manage.
     ///   - mapper: The metadata mapper.
-    public init(trackerType: T.Type, mapper: @escaping (M) -> T.Metadata) {
-        self.tracker = trackerType.init()
-        self.mapper = mapper
+    public init<T: PlayerItemTracker>(trackerType: T.Type, mapper: @escaping (M) -> T.Metadata) {
+        let tracker = trackerType.init()
+        update = { metadata in
+            tracker.update(metadata: mapper(metadata))
+        }
+        self.tracker = tracker
     }
 
     func enable(for player: Player) {
@@ -26,7 +29,7 @@ public struct TrackerAdapter<T: PlayerItemTracker, M: AssetMetadata> {
     }
 
     func update(metadata: M) {
-        tracker.update(metadata: mapper(metadata))
+        update(metadata)
     }
 
     func disable() {

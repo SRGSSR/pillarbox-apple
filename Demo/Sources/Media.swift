@@ -38,14 +38,14 @@ struct Media: Hashable, Identifiable {
         switch type {
         case let .url(url):
             return .simple(url: url, metadata: self, trackerAdapters: [
-                .init(trackerType: DemoTracker.self) { media in
-                    .init(title: media.title)
+                TrackerAdapter(trackerType: DemoTracker.self) { media in
+                    DemoTracker.Metadata(title: media.title)
                 }
             ])
         case let .unbufferedUrl(url):
             return .simple(url: url, metadata: self, trackerAdapters: [
-                .init(trackerType: DemoTracker.self) { media in
-                    .init(title: media.title)
+                TrackerAdapter(trackerType: DemoTracker.self) { media in
+                    DemoTracker.Metadata(title: media.title)
                 }
             ]) { item in
                 item.automaticallyPreservesTimeOffsetFromLive = true
@@ -53,8 +53,8 @@ struct Media: Hashable, Identifiable {
             }
         case let .urn(urn):
             return .urn(urn, trackerAdapters: [
-                .init(trackerType: DemoTracker.self) { metadata in
-                    .init(title: metadata.title)
+                TrackerAdapter(trackerType: DemoTracker.self) { metadata in
+                    DemoTracker.Metadata(title: metadata.title)
                 }
             ])
         }

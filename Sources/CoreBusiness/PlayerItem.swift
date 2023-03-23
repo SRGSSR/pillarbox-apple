@@ -14,11 +14,11 @@ public extension PlayerItem {
     /// - Parameters:
     ///   - urn: The URN to play.
     ///   - environment: The environment which the URN is played from.
-    static func urn<T>(
+    static func urn(
         _ urn: String,
         environment: Environment = .production,
-        trackerAdapters: [TrackerAdapter<T, MediaMetadata>]
-    ) -> Self where T: PlayerItemTracker {
+        trackerAdapters: [TrackerAdapter<MediaMetadata>]
+    ) -> Self {
         let dataProvider = DataProvider(environment: environment)
         let publisher = dataProvider.playableMediaCompositionPublisher(forUrn: urn)
             .tryMap { mediaComposition in
@@ -37,14 +37,21 @@ public extension PlayerItem {
             }
             .switchToLatest()
             .eraseToAnyPublisher()
-        return .init(publisher: publisher, trackerAdapters: trackerAdapters)
+        return .init(publisher: publisher, trackerAdapters: [
+            TrackerAdapter(trackerType: ComScoreTracker.self) { mediaMetadata in
+                mediaMetadata.analyticsData
+            },
+            TrackerAdapter(trackerType: CommandersActTracker.self) { mediaMetadata in
+                mediaMetadata.analyticsMetadata
+            }
+        ] + trackerAdapters)
     }
 
     static func urn(
         _ urn: String,
         environment: Environment = .production
     ) -> Self {
-        Self.urn(urn, environment: environment, trackerAdapters: [TrackerAdapter<EmptyTracker, MediaMetadata>]())
+        Self.urn(urn, environment: environment, trackerAdapters: [TrackerAdapter<MediaMetadata>]())
     }
 
     private static func asset(for metadata: MediaMetadata) -> Asset<MediaMetadata> {
@@ -84,10 +91,4 @@ public extension PlayerItem {
             item.preferredForwardBufferDuration = 1
         }
     }
-}
-
-private final class EmptyTracker: PlayerItemTracker {
-    func enable(for player: Player) {}
-    func disable() {}
-    func update(metadata: Void) {}
 }
