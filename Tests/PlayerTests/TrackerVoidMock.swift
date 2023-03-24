@@ -8,12 +8,11 @@
 
 import Combine
 
-final class TrackerMock: ObservableObject {
+final class TrackerVoidMock: ObservableObject, PlayerItemTracker {
     enum State: Equatable {
         case initialized
         case enabled
         case disabled
-        case update(String)
         case deinitialized
     }
 
@@ -27,9 +26,7 @@ final class TrackerMock: ObservableObject {
         Self.state.send(.enabled)
     }
 
-    func update(metadata: String) {
-        Self.state.send(.update(metadata))
-    }
+    func update(metadata: Void) {}
 
     func disable() {
         Self.state.send(.disabled)

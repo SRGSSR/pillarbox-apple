@@ -26,10 +26,12 @@ public struct NowPlayingMetadata {
         self.image = image
     }
 }
-
+/// An enumeration representing the current media playback state.
 public enum NowPlaying {
+    /// A dictionary of metadata.
     public typealias Info = [String: Any]
 
+    /// A struct representing properties of the currently playing media item.
     struct Properties {
         let timeRange: CMTimeRange
         let itemDuration: CMTime

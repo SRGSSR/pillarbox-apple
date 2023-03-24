@@ -51,6 +51,7 @@ public extension PlayerItem {
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - metadata: The metadata associated with the item.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The item.
     static func simple<M>(
@@ -68,6 +69,7 @@ public extension PlayerItem {
     ///   - url: The URL to be played.
     ///   - delegate: The custom resource loader to use.
     ///   - metadata: The metadata associated with the item.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The item.
     static func custom<M>(
@@ -85,6 +87,7 @@ public extension PlayerItem {
     ///   - url: The URL to be played.
     ///   - delegate: The content key session delegate to use.
     ///   - metadata: The metadata associated with the item.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The item.
     static func encrypted<M>(
@@ -99,6 +102,12 @@ public extension PlayerItem {
 }
 
 public extension PlayerItem {
+    /// A simple playable item.
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The item.
     static func simple(
         url: URL,
         trackerAdapters: [TrackerAdapter<EmptyAssetMetadata>] = [],
@@ -107,6 +116,14 @@ public extension PlayerItem {
         .init(asset: .simple(url: url, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 
+    /// An item loaded with custom resource loading. The scheme of the URL to be played has to be recognized by
+    /// the associated resource loader delegate.
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - delegate: The custom resource loader to use.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The item.
     static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
@@ -116,6 +133,13 @@ public extension PlayerItem {
         .init(asset: .custom(url: url, delegate: delegate, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 
+    /// An encrypted item loaded with a content key session.
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - delegate: The content key session delegate to use.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The item.
     static func encrypted(
         url: URL,
         delegate: AVContentKeySessionDelegate,

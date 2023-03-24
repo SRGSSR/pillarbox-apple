@@ -25,14 +25,21 @@ public protocol PlayerItemTracker: AnyObject {
     func disable()
 }
 
+/// Protocol for player item trackers.
 public extension PlayerItemTracker {
+    /// Creates a tracker adapter for the tracker that maps its metadata type to a different metadata.
+    /// - Parameter mapper: A closure that maps the tracker's metadata to another metadata.
+    /// - Returns: A `TrackerAdapter` instance that adapts the tracker to the new metadata.
     static func adapter<M: AssetMetadata>(mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> {
         TrackerAdapter(trackerType: Self.self, mapper: mapper)
     }
 }
 
+/// Protocol for player item trackers.
 public extension PlayerItemTracker where Metadata == Void {
+    /// Creates a tracker adapter for the tracker with Void metadata.
+    /// - Returns: A `TrackerAdapter` instance that adapts the tracker with Void metadata.
     static func adapter<M: AssetMetadata>() -> TrackerAdapter<M> {
-        TrackerAdapter(trackerType: Self.self, mapper: { _ in })
+        TrackerAdapter(trackerType: Self.self) { _ in }
     }
 }

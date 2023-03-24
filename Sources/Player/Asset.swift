@@ -123,6 +123,7 @@ public struct Asset<M: AssetMetadata> {
         }
     }
 
+    /// Returns metadata about the current asset to be displayed in the Control Center.
     public func nowPlayingInfo() -> NowPlaying.Info {
         var nowPlayingInfo = NowPlaying.Info()
         if let metadata = metadata?.nowPlayingMetadata() {
@@ -142,6 +143,11 @@ public struct Asset<M: AssetMetadata> {
 }
 
 public extension Asset where M == EmptyAssetMetadata {
+    /// A simple asset playable from a URL.
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The asset.
     static func simple(
         url: URL,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
@@ -153,6 +159,13 @@ public extension Asset where M == EmptyAssetMetadata {
         )
     }
 
+    /// An asset loaded with custom resource loading. The scheme of the URL to be played has to be recognized by
+    /// the associated resource loader delegate.
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - delegate: The custom resource loader to use.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The asset.
     static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
@@ -165,6 +178,12 @@ public extension Asset where M == EmptyAssetMetadata {
         )
     }
 
+    /// An encrypted asset loaded with a content key session.
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - delegate: The content key session delegate to use.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The asset.
     static func encrypted(
         url: URL,
         delegate: AVContentKeySessionDelegate,
@@ -214,18 +233,16 @@ extension Asset {
         // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
         .init(
             type: .custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate()),
-            metadata: nil,
-            configuration: { _ in }
-        )
+            metadata: nil
+        ) { _ in }
     }
 
     static func failed(error: Error) -> Self {
         // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
         .init(
             type: .custom(url: URL(string: "pillarbox://failing.m3u8")!, delegate: FailedResourceLoaderDelegate(error: error)),
-            metadata: nil,
-            configuration: { _ in }
-        )
+            metadata: nil
+        ) { _ in }
     }
 }
 

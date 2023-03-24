@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// The Chapter.
 public struct Chapter: Decodable {
     enum CodingKeys: String, CodingKey {
         case _analyticsData = "analyticsData"
@@ -47,6 +48,9 @@ public struct Chapter: Decodable {
     // swiftlint:disable:next discouraged_optional_collection
     private let _analyticsMetadata: [String: String]?
 
+    /// Returns a blocking reason.
+    /// - Parameter date: The comparison date.
+    /// - Returns: The blocking reason.
     public func blockingReason(at date: Date = Date()) -> BlockingReason? {
         if blockingReason != .none {
             return blockingReason
@@ -63,7 +67,9 @@ public struct Chapter: Decodable {
     }
 }
 
+/// The Chapter.
 public extension Chapter {
+    /// The resource.
     var recommendedResource: Resource? {
         resources.first { StreamingMethod.supportedMethods.contains($0.streamingMethod) }
     }
