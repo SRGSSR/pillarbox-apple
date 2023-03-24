@@ -11,7 +11,7 @@ import Player
 public final class CommandersActTracker: PlayerItemTracker {
     private let id = UUID()
 
-    public init() {}
+    public init(configuration: Void) {}
 
     public func enable(for player: Player) {
         print("--> enable CommandersAct \(id)")

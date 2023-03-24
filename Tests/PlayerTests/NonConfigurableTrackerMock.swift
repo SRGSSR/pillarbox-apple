@@ -8,9 +8,9 @@
 
 import Combine
 
-final class TrackerMock: ObservableObject, PlayerItemTracker {
+final class NonConfigurableTrackerMock: ObservableObject, PlayerItemTracker {
     enum State: Equatable {
-        case initialized(String)
+        case initialized
         case enabled
         case disabled
         case updated(String)
@@ -19,8 +19,8 @@ final class TrackerMock: ObservableObject, PlayerItemTracker {
 
     static var state = PassthroughSubject<State, Never>()
 
-    init(configuration: String) {
-        Self.state.send(.initialized(configuration))
+    init(configuration: Void) {
+        Self.state.send(.initialized)
     }
 
     func enable(for player: Player) {

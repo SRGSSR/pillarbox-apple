@@ -8,7 +8,7 @@
 
 import Combine
 
-final class TrackerVoidMock: ObservableObject, PlayerItemTracker {
+final class SimpleTrackerMock: ObservableObject, PlayerItemTracker {
     enum State: Equatable {
         case initialized
         case enabled
@@ -18,7 +18,7 @@ final class TrackerVoidMock: ObservableObject, PlayerItemTracker {
 
     static var state = PassthroughSubject<State, Never>()
 
-    init() {
+    init(configuration: Void) {
         Self.state.send(.initialized)
     }
 

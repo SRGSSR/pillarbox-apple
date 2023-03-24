@@ -15,9 +15,10 @@ public struct TrackerAdapter<M: AssetMetadata> {
     /// Create an adapter for a type of tracker with the provided mapping to its metadata format.
     /// - Parameters:
     ///   - trackerType: The type of the tracker to instantiate and manage.
+    ///   - configuration: The tracker configuration.
     ///   - mapper: The metadata mapper.
-    public init<T: PlayerItemTracker>(trackerType: T.Type, mapper: @escaping (M) -> T.Metadata) {
-        let tracker = trackerType.init()
+    public init<T>(trackerType: T.Type, configuration: T.Configuration, mapper: @escaping (M) -> T.Metadata) where T: PlayerItemTracker {
+        let tracker = trackerType.init(configuration: configuration)
         update = { metadata in
             tracker.update(metadata: mapper(metadata))
         }
