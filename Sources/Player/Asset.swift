@@ -28,7 +28,7 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
 /// An asset representing content to be played.
 public struct Asset<M: AssetMetadata>: Assetable {
     let id: UUID
-    let type: AssetType
+    let resource: Resource
     private let metadata: M?
     private let configuration: (AVPlayerItem) -> Void
     private let trackerAdapters: [TrackerAdapter<M>]
@@ -46,7 +46,7 @@ public struct Asset<M: AssetMetadata>: Assetable {
     ) -> Self {
         .init(
             id: UUID(),
-            type: .simple(url: url),
+            resource: .simple(url: url),
             metadata: metadata,
             configuration: configuration,
             trackerAdapters: []
@@ -69,7 +69,7 @@ public struct Asset<M: AssetMetadata>: Assetable {
     ) -> Self {
         .init(
             id: UUID(),
-            type: .custom(url: url, delegate: delegate),
+            resource: .custom(url: url, delegate: delegate),
             metadata: metadata,
             configuration: configuration,
             trackerAdapters: []
@@ -91,7 +91,7 @@ public struct Asset<M: AssetMetadata>: Assetable {
     ) -> Self {
         .init(
             id: UUID(),
-            type: .encrypted(url: url, delegate: delegate),
+            resource: .encrypted(url: url, delegate: delegate),
             metadata: metadata,
             configuration: configuration,
             trackerAdapters: []
@@ -99,11 +99,11 @@ public struct Asset<M: AssetMetadata>: Assetable {
     }
 
     func withTrackerAdapters(_ trackerAdapters: [TrackerAdapter<M>]) -> Self {
-        .init(id: id, type: type, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
+        .init(id: id, resource: resource, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
     }
 
     func withId(_ id: UUID) -> Self {
-        .init(id: id, type: type, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
+        .init(id: id, resource: resource, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
     }
 
     func enable(for player: Player) {
@@ -143,7 +143,7 @@ public struct Asset<M: AssetMetadata>: Assetable {
     }
 
     func playerItem() -> AVPlayerItem {
-        let item = type.playerItem().withId(id)
+        let item = resource.playerItem().withId(id)
         configuration(item)
         return item
     }
@@ -161,7 +161,7 @@ public extension Asset where M == EmptyAssetMetadata {
     ) -> Self {
         .init(
             id: UUID(),
-            type: .simple(url: url),
+            resource: .simple(url: url),
             metadata: nil,
             configuration: configuration,
             trackerAdapters: []
@@ -182,7 +182,7 @@ public extension Asset where M == EmptyAssetMetadata {
     ) -> Self {
         .init(
             id: UUID(),
-            type: .custom(url: url, delegate: delegate),
+            resource: .custom(url: url, delegate: delegate),
             metadata: nil,
             configuration: configuration,
             trackerAdapters: []
@@ -202,7 +202,7 @@ public extension Asset where M == EmptyAssetMetadata {
     ) -> Self {
         .init(
             id: UUID(),
-            type: .encrypted(url: url, delegate: delegate),
+            resource: .encrypted(url: url, delegate: delegate),
             metadata: nil,
             configuration: configuration,
             trackerAdapters: []
@@ -215,7 +215,7 @@ extension Asset {
         // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
         .init(
             id: UUID(),
-            type: .custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate()),
+            resource: .custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate()),
             metadata: nil,
             configuration: { _ in },
             trackerAdapters: []
@@ -226,7 +226,7 @@ extension Asset {
         // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
         .init(
             id: UUID(),
-            type: .custom(url: URL(string: "pillarbox://failing.m3u8")!, delegate: FailedResourceLoaderDelegate(error: error)),
+            resource: .custom(url: URL(string: "pillarbox://failing.m3u8")!, delegate: FailedResourceLoaderDelegate(error: error)),
             metadata: nil,
             configuration: { _ in },
             trackerAdapters: []

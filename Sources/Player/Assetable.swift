@@ -9,7 +9,7 @@ import AVFoundation
 /// Describes an asset in an opaque way.
 protocol Assetable {
     var id: UUID { get }
-    var type: AssetType { get }
+    var resource: Resource { get }
 
     func enable(for player: Player)
     func updateMetadata()
@@ -77,7 +77,7 @@ extension AVPlayerItem {
 
     private static func findAsset(for item: AVPlayerItem, in assets: [any Assetable], equalTo other: any Assetable) -> Bool {
         guard let match = matchingAsset(for: item, in: assets) else { return false }
-        return match.type == other.type
+        return match.resource == other.resource
     }
 
     private static func firstCommonIndex(in assets: [any Assetable], matching other: [any Assetable], after item: AVPlayerItem) -> Int? {

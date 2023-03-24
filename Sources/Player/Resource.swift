@@ -10,7 +10,7 @@ import OSLog
 private let kContentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
 private let kContentKeySessionQueue = DispatchQueue(label: "ch.srgssr.player.content_key_session")
 
-enum AssetType {
+enum Resource {
     case simple(url: URL)
     case custom(url: URL, delegate: AVAssetResourceLoaderDelegate)
     case encrypted(url: URL, delegate: AVContentKeySessionDelegate)
@@ -41,8 +41,8 @@ enum AssetType {
     }
 }
 
-extension AssetType: Equatable {
-    static func == (lhs: AssetType, rhs: AssetType) -> Bool {
+extension Resource: Equatable {
+    static func == (lhs: Resource, rhs: Resource) -> Bool {
         switch (lhs, rhs) {
         case let (.simple(url: lhsUrl), .simple(url: rhsUrl)):
             return lhsUrl == rhsUrl

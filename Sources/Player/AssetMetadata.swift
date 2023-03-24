@@ -11,7 +11,6 @@ public struct EmptyAssetMetadata: AssetMetadata {
     // Not meant to be instantiated, only exists as a type for function signatures and where clauses.
     private init() {}
 
-    /// Returns an empty metadata object for an asset.
     public func nowPlayingMetadata() -> NowPlayingMetadata {
         .init()
     }
@@ -19,6 +18,6 @@ public struct EmptyAssetMetadata: AssetMetadata {
 
 /// A protocol representing metadata associated with an asset.
 public protocol AssetMetadata {
-    /// Returns an empty metadata object for an asset.
+    /// Returns metadata used to display what is currently being played, most notably in the Control Center.
     func nowPlayingMetadata() -> NowPlayingMetadata
 }

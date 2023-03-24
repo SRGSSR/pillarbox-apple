@@ -7,14 +7,17 @@
 import CoreMedia
 import UIKit
 
-/// Metadata used to display what is currently being played.
+/// Metadata used to display what is currently being played, most notably in the Control Center.
 public struct NowPlayingMetadata {
     /// Title.
     let title: String?
+
     /// Subtitle.
     let subtitle: String?
+
     /// Description.
     let description: String?
+
     /// Image.
     let image: UIImage?
 
