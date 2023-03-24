@@ -10,39 +10,27 @@ import AVFoundation
 import Combine
 import Foundation
 
-enum LocalMedia: String {
+enum MediaMock: String {
     case media1
 }
 
-struct LocalMetadata: Decodable {
-    let title: String
-    let subtitle: String?
-    let description: String?
-
-    init(title: String, subtitle: String? = nil, description: String? = nil) {
-        self.title = title
-        self.subtitle = subtitle
-        self.description = description
-    }
-}
-
 extension PlayerItem {
-    static func asynchronous(url: URL, after delay: TimeInterval) -> Self {
+    static func mock(url: URL, loadedAfter delay: TimeInterval) -> Self {
         let publisher = Just(Asset.simple(url: url))
             .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
         return .init(publisher: publisher)
     }
 
-    static func asynchronous(url: URL, metadata: LocalMetadata, after delay: TimeInterval) -> Self {
-        let publisher = Just(Asset.simple(url: url, metadata: metadata))
+    static func mock(url: URL, loadedAfter delay: TimeInterval, withMetadata: AssetMetadataMock) -> Self {
+        let publisher = Just(Asset.simple(url: url, metadata: withMetadata))
             .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
         return .init(publisher: publisher)
     }
 
-    static func updated(url: URL, after delay: TimeInterval, trackerAdapters: [TrackerAdapter<LocalMetadata>] = []) -> Self {
+    static func mock(url: URL, withMetadataUpdateAfter delay: TimeInterval, trackerAdapters: [TrackerAdapter<AssetMetadataMock>] = []) -> Self {
         let publisher = Just(Asset.simple(
             url: url,
-            metadata: LocalMetadata(
+            metadata: AssetMetadataMock(
                 title: "title1",
                 subtitle: "subtitle1",
                 description: "description1"
@@ -51,7 +39,7 @@ extension PlayerItem {
         .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
         .prepend(Asset.simple(
             url: url,
-            metadata: LocalMetadata(
+            metadata: AssetMetadataMock(
                 title: "title0",
                 subtitle: "subtitle0",
                 description: "description0"
@@ -60,23 +48,14 @@ extension PlayerItem {
         return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
 
-    static func networkLoaded(url: URL, media: LocalMedia) -> Self {
+    static func mock(media: MediaMock) -> Self {
         let url = URL(string: "http://localhost:8123/\(media).json")!
         let publisher = URLSession(configuration: .ephemeral).dataTaskPublisher(for: url)
             .map(\.data)
-            .decode(type: LocalMetadata.self, decoder: JSONDecoder())
+            .decode(type: AssetMetadataMock.self, decoder: JSONDecoder())
             .map { metadata in
-                Asset.simple(
-                    url: url,
-                    metadata: metadata
-                )
+                Asset.simple(url: url, metadata: metadata)
             }
         return .init(publisher: publisher)
-    }
-}
-
-extension LocalMetadata: AssetMetadata {
-    func nowPlayingMetadata() -> NowPlayingMetadata {
-        .init(title: title, subtitle: subtitle, description: description)
     }
 }

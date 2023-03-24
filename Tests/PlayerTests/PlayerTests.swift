@@ -50,7 +50,7 @@ final class PlayerTests: TestCase {
     }
 
     func testMetadataUpdatesMustNotChangePlayerItem() {
-        let player = Player(item: .updated(url: Stream.onDemand.url, after: 1))
+        let player = Player(item: .mock(url: Stream.onDemand.url, withMetadataUpdateAfter: 1))
         expectNothingPublishedNext(from: player.queuePlayer.publisher(for: \.currentItem), during: .seconds(2))
     }
 }
