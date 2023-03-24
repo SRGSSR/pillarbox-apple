@@ -30,3 +30,9 @@ public extension PlayerItemTracker {
         TrackerAdapter(trackerType: Self.self, mapper: mapper)
     }
 }
+
+public extension PlayerItemTracker where Metadata == Void {
+    static func adapter<M: AssetMetadata>() -> TrackerAdapter<M> {
+        TrackerAdapter(trackerType: Self.self, mapper: { _ in })
+    }
+}

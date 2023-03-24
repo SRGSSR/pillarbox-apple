@@ -10,13 +10,11 @@ import Foundation
 
 final class PlayerItemTrackerTests: TestCase {
     func testWithInitialItem() {
-        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: TrackerMock.state) {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: TrackerVoidMock.state) {
             let player = Player(item: .simple(
                 url: Stream.shortOnDemand.url,
                 trackerAdapters: [
-                    TrackerMock.adapter { _ in
-                        .init()
-                    }
+                    TrackerVoidMock.adapter()
                 ]
             ))
             player.play()
@@ -24,12 +22,12 @@ final class PlayerItemTrackerTests: TestCase {
     }
 
     func testWithoutInitialItem() {
-        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: TrackerMock.state) {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: TrackerVoidMock.state) {
             let player = Player()
             player.append(.simple(
                 url: Stream.shortOnDemand.url,
                 trackerAdapters: [
-                    TrackerMock.adapter { _ in "" }
+                    TrackerVoidMock.adapter()
                 ]
             ))
             player.play()
@@ -37,11 +35,11 @@ final class PlayerItemTrackerTests: TestCase {
     }
 
     func testWithFailedItem() {
-        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: TrackerMock.state) {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: TrackerVoidMock.state) {
             let player = Player(item: .simple(
                 url: Stream.unavailable.url,
                 trackerAdapters: [
-                    TrackerMock.adapter { _ in "" }
+                    TrackerVoidMock.adapter()
                 ]
             ))
             player.play()
@@ -49,22 +47,22 @@ final class PlayerItemTrackerTests: TestCase {
     }
 
     func testPlayerDeinit() {
-        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: TrackerMock.state) {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: TrackerVoidMock.state) {
             _ = Player(item: .simple(
                 url: Stream.shortOnDemand.url,
                 trackerAdapters: [
-                    TrackerMock.adapter { _ in "" }
+                    TrackerVoidMock.adapter()
                 ]
             ))
         }
     }
 
     func testPlayerItemDeinit() {
-        expectAtLeastEqualPublished(values: [.initialized, .deinitialized], from: TrackerMock.state) {
+        expectAtLeastEqualPublished(values: [.initialized, .deinitialized], from: TrackerVoidMock.state) {
             _ = PlayerItem.simple(
                 url: Stream.shortOnDemand.url,
                 trackerAdapters: [
-                    TrackerMock.adapter { _ in "" }
+                    TrackerVoidMock.adapter()
                 ]
             )
         }
