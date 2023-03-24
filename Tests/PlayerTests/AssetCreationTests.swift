@@ -13,8 +13,9 @@ final class AssetCreationTests: TestCase {
     func testSimpleAsset() {
         let asset = Asset.simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(title: "title")) { item in
-                item.preferredForwardBufferDuration = 4
+            metadata: AssetMetadataMock(title: "title")
+        ) { item in
+            item.preferredForwardBufferDuration = 4
         }
         expect(asset.resource).to(equal(.simple(url: Stream.onDemand.url)))
         expect(asset.nowPlayingInfo()).notTo(beEmpty())
@@ -30,8 +31,9 @@ final class AssetCreationTests: TestCase {
 
     func testSimpleAssetWithoutMetadata() {
         let asset = Asset.simple(
-            url: Stream.onDemand.url) { item in
-                item.preferredForwardBufferDuration = 4
+            url: Stream.onDemand.url
+        ) { item in
+            item.preferredForwardBufferDuration = 4
         }
         expect(asset.resource).to(equal(.simple(url: Stream.onDemand.url)))
         expect(asset.nowPlayingInfo()).to(beEmpty())
@@ -50,8 +52,9 @@ final class AssetCreationTests: TestCase {
         let asset = Asset.custom(
             url: Stream.onDemand.url,
             delegate: delegate,
-            metadata: AssetMetadataMock(title: "title")) { item in
-                item.preferredForwardBufferDuration = 4
+            metadata: AssetMetadataMock(title: "title")
+        ) { item in
+            item.preferredForwardBufferDuration = 4
         }
         expect(asset.resource).to(equal(.custom(url: Stream.onDemand.url, delegate: delegate)))
         expect(asset.nowPlayingInfo()).notTo(beEmpty())
@@ -70,8 +73,9 @@ final class AssetCreationTests: TestCase {
         let delegate = ResourceLoaderDelegateMock()
         let asset = Asset.custom(
             url: Stream.onDemand.url,
-            delegate: delegate) { item in
-                item.preferredForwardBufferDuration = 4
+            delegate: delegate
+        ) { item in
+            item.preferredForwardBufferDuration = 4
         }
         expect(asset.resource).to(equal(.custom(url: Stream.onDemand.url, delegate: delegate)))
         expect(asset.nowPlayingInfo()).to(beEmpty())
@@ -91,8 +95,9 @@ final class AssetCreationTests: TestCase {
         let asset = Asset.encrypted(
             url: Stream.onDemand.url,
             delegate: delegate,
-            metadata: AssetMetadataMock(title: "title")) { item in
-                item.preferredForwardBufferDuration = 4
+            metadata: AssetMetadataMock(title: "title")
+        ) { item in
+            item.preferredForwardBufferDuration = 4
         }
         expect(asset.resource).to(equal(.encrypted(url: Stream.onDemand.url, delegate: delegate)))
         expect(asset.nowPlayingInfo()).notTo(beEmpty())
@@ -111,8 +116,9 @@ final class AssetCreationTests: TestCase {
         let delegate = ContentKeySessionDelegateMock()
         let asset = Asset.encrypted(
             url: Stream.onDemand.url,
-            delegate: delegate) { item in
-                item.preferredForwardBufferDuration = 4
+            delegate: delegate
+        ) { item in
+            item.preferredForwardBufferDuration = 4
         }
         expect(asset.resource).to(equal(.encrypted(url: Stream.onDemand.url, delegate: delegate)))
         expect(asset.nowPlayingInfo()).to(beEmpty())
