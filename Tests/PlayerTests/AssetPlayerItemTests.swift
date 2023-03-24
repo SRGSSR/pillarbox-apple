@@ -12,7 +12,7 @@ import Combine
 import Nimble
 import XCTest
 
-final class PlayerItemTests: TestCase {
+final class AssetPlayerItemTests: TestCase {
     func testNativePlayerItem() {
         let item = Asset.simple(url: Stream.onDemand.url).playerItem()
         _ = AVPlayer(playerItem: item)

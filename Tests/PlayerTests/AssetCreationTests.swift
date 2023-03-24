@@ -9,7 +9,7 @@
 import Nimble
 import XCTest
 
-final class AssetTests: TestCase {
+final class AssetCreationTests: TestCase {
     func testSimpleAsset() {
         let asset = Asset.simple(
             url: Stream.onDemand.url,
