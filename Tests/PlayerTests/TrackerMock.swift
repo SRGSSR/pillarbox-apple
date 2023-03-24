@@ -8,7 +8,7 @@
 
 import Combine
 
-final class TrackerMock: ObservableObject {
+final class TrackerMock: ObservableObject, PlayerItemTracker {
     enum State: Equatable {
         case initialized
         case enabled
