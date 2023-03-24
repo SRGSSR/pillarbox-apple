@@ -106,12 +106,6 @@ public struct Asset<M: AssetMetadata>: Assetable {
         .init(id: id, type: type, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
     }
 
-    func playerItem() -> AVPlayerItem {
-        let item = type.playerItem().withId(id)
-        configuration(item)
-        return item
-    }
-
     func enable(for player: Player) {
         trackerAdapters.forEach { adapter in
             adapter.enable(for: player)
@@ -131,8 +125,7 @@ public struct Asset<M: AssetMetadata>: Assetable {
         }
     }
 
-    /// Returns metadata about the current asset to be displayed in the Control Center.
-    public func nowPlayingInfo() -> NowPlaying.Info {
+    func nowPlayingInfo() -> NowPlaying.Info {
         var nowPlayingInfo = NowPlaying.Info()
         if let metadata = metadata?.nowPlayingMetadata() {
             nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
@@ -143,6 +136,16 @@ public struct Asset<M: AssetMetadata>: Assetable {
             }
         }
         return nowPlayingInfo
+    }
+
+    func matches(_ item: AVPlayerItem?) -> Bool {
+        id == item?.id
+    }
+
+    func playerItem() -> AVPlayerItem {
+        let item = type.playerItem().withId(id)
+        configuration(item)
+        return item
     }
 }
 
@@ -228,12 +231,6 @@ extension Asset {
             configuration: { _ in },
             trackerAdapters: []
         )
-    }
-}
-
-extension Assetable {
-    func matches(_ item: AVPlayerItem?) -> Bool {
-        id == item?.id
     }
 }
 
