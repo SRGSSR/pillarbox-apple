@@ -10,10 +10,22 @@ import Circumspect
 import Foundation
 
 final class PlayerItemTrackerTests: TestCase {
-    func testWithInitialItem() {
-        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: TrackerVoidMock.state) {
-            let player = Player(item: .simple(
+    func testPlayerItemLifecycle() {
+        expectAtLeastEqualPublished(values: [.initialized, .deinitialized], from: TrackerVoidMock.state) {
+            _ = PlayerItem.simple(
                 url: Stream.shortOnDemand.url,
+                trackerAdapters: [
+                    TrackerVoidMock.adapter()
+                ]
+            )
+        }
+    }
+
+    func testItemPlayback() {
+        let player = Player()
+        expectEqualPublished(values: [.initialized, .enabled], from: TrackerVoidMock.state, during: .seconds(2)) {
+            player.append(.simple(
+                url: Stream.onDemand.url,
                 trackerAdapters: [
                     TrackerVoidMock.adapter()
                 ]
@@ -22,9 +34,9 @@ final class PlayerItemTrackerTests: TestCase {
         }
     }
 
-    func testWithoutInitialItem() {
-        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: TrackerVoidMock.state) {
-            let player = Player()
+    func testItemEntirePlayback() {
+        let player = Player()
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled], from: TrackerVoidMock.state) {
             player.append(.simple(
                 url: Stream.shortOnDemand.url,
                 trackerAdapters: [
@@ -35,37 +47,16 @@ final class PlayerItemTrackerTests: TestCase {
         }
     }
 
-    func testWithFailedItem() {
-        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: TrackerVoidMock.state) {
-            let player = Player(item: .simple(
+    func testFailedItem() {
+        let player = Player()
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled], from: TrackerVoidMock.state) {
+            player.append(.simple(
                 url: Stream.unavailable.url,
                 trackerAdapters: [
                     TrackerVoidMock.adapter()
                 ]
             ))
             player.play()
-        }
-    }
-
-    func testPlayerDeinit() {
-        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled, .deinitialized], from: TrackerVoidMock.state) {
-            _ = Player(item: .simple(
-                url: Stream.shortOnDemand.url,
-                trackerAdapters: [
-                    TrackerVoidMock.adapter()
-                ]
-            ))
-        }
-    }
-
-    func testPlayerItemDeinit() {
-        expectAtLeastEqualPublished(values: [.initialized, .deinitialized], from: TrackerVoidMock.state) {
-            _ = PlayerItem.simple(
-                url: Stream.shortOnDemand.url,
-                trackerAdapters: [
-                    TrackerVoidMock.adapter()
-                ]
-            )
         }
     }
 
