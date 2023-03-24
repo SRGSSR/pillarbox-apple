@@ -14,16 +14,16 @@ import XCTest
 final class AssetableTests: TestCase {
     func testPlayerItemsWithoutCurrentItem() {
         let previousAssets: [EmptyAsset] = [
-            .loading.with(UUID("1")),
-            .loading.with(UUID("2")),
-            .loading.with(UUID("3")),
-            .loading.with(UUID("4")),
-            .loading.with(UUID("5"))
+            .loading.withId(UUID("1")),
+            .loading.withId(UUID("2")),
+            .loading.withId(UUID("3")),
+            .loading.withId(UUID("4")),
+            .loading.withId(UUID("5"))
         ]
         let currentAssets: [EmptyAsset] = [
-            .loading.with(UUID("A")),
-            .loading.with(UUID("B")),
-            .loading.with(UUID("C"))
+            .loading.withId(UUID("A")),
+            .loading.withId(UUID("B")),
+            .loading.withId(UUID("C"))
         ]
         let result = AVPlayerItem.playerItems(for: currentAssets, replacing: previousAssets, currentItem: nil)
         expect(result.count).to(equal(currentAssets.count))
@@ -33,26 +33,26 @@ final class AssetableTests: TestCase {
     }
 
     func testPlayerItemsWithPreservedCurrentItem() {
-        let currentItemAsset = EmptyAsset.loading.with(UUID("3"))
+        let currentItemAsset = EmptyAsset.loading.withId(UUID("3"))
         let previousAssets = [
-            .loading.with(UUID("1")),
-            .loading.with(UUID("2")),
+            .loading.withId(UUID("1")),
+            .loading.withId(UUID("2")),
             currentItemAsset,
-            .loading.with(UUID("4")),
-            .loading.with(UUID("5"))
+            .loading.withId(UUID("4")),
+            .loading.withId(UUID("5"))
         ]
         let currentAssets = [
-            .loading.with(UUID("A")),
+            .loading.withId(UUID("A")),
             currentItemAsset,
-            .loading.with(UUID("B")),
-            .loading.with(UUID("C"))
+            .loading.withId(UUID("B")),
+            .loading.withId(UUID("C"))
         ]
         let currentItem = currentItemAsset.playerItem()
         let result = AVPlayerItem.playerItems(for: currentAssets, replacing: previousAssets, currentItem: currentItem)
         let expected = [
             currentItemAsset,
-            .loading.with(UUID("B")),
-            .loading.with(UUID("C"))
+            .loading.withId(UUID("B")),
+            .loading.withId(UUID("C"))
         ]
         expect(result.count).to(equal(expected.count))
         expect(zip(result, expected)).to(allPass { item, asset in
@@ -62,18 +62,18 @@ final class AssetableTests: TestCase {
     }
 
     func testPlayerItemsWithPreservedCurrentItemAtEnd() {
-        let currentItemAsset = EmptyAsset.loading.with(UUID("3"))
+        let currentItemAsset = EmptyAsset.loading.withId(UUID("3"))
         let previousAssets = [
-            .loading.with(UUID("1")),
-            .loading.with(UUID("2")),
+            .loading.withId(UUID("1")),
+            .loading.withId(UUID("2")),
             currentItemAsset,
-            .loading.with(UUID("4")),
-            .loading.with(UUID("5"))
+            .loading.withId(UUID("4")),
+            .loading.withId(UUID("5"))
         ]
         let currentAssets = [
-            .loading.with(UUID("A")),
-            .loading.with(UUID("B")),
-            .loading.with(UUID("C")),
+            .loading.withId(UUID("A")),
+            .loading.withId(UUID("B")),
+            .loading.withId(UUID("C")),
             currentItemAsset
         ]
         let currentItem = currentItemAsset.playerItem()
@@ -90,14 +90,14 @@ final class AssetableTests: TestCase {
 
     func testPlayerItemsWithUnknownCurrentItem() {
         let previousAssets: [EmptyAsset] = [
-            .loading.with(UUID("1")),
-            .loading.with(UUID("2"))
+            .loading.withId(UUID("1")),
+            .loading.withId(UUID("2"))
         ]
         let currentAssets: [EmptyAsset] = [
-            .loading.with(UUID("A")),
-            .loading.with(UUID("B"))
+            .loading.withId(UUID("A")),
+            .loading.withId(UUID("B"))
         ]
-        let unknownItem = EmptyAsset.loading.with(UUID("1")).playerItem()
+        let unknownItem = EmptyAsset.loading.withId(UUID("1")).playerItem()
         let result = AVPlayerItem.playerItems(for: currentAssets, replacing: previousAssets, currentItem: unknownItem)
         expect(result.count).to(equal(currentAssets.count))
         expect(zip(result, currentAssets)).to(allPass { item, asset in
@@ -106,23 +106,23 @@ final class AssetableTests: TestCase {
     }
 
     func testPlayerItemsWithCurrentItemReplacedByAnotherItem() {
-        let currentItemAsset = EmptyAsset.loading.with(UUID("1"))
-        let otherAsset = EmptyAsset.loading.with(UUID("2"))
+        let currentItemAsset = EmptyAsset.loading.withId(UUID("1"))
+        let otherAsset = EmptyAsset.loading.withId(UUID("2"))
         let previousAssets = [
             currentItemAsset,
             otherAsset,
-            .loading.with(UUID("3"))
+            .loading.withId(UUID("3"))
         ]
         let currentAssets = [
-            .loading.with(UUID("3")),
+            .loading.withId(UUID("3")),
             otherAsset,
-            .loading.with(UUID("C"))
+            .loading.withId(UUID("C"))
         ]
         let currentItem = currentItemAsset.playerItem()
         let result = AVPlayerItem.playerItems(for: currentAssets, replacing: previousAssets, currentItem: currentItem)
         let expected = [
             otherAsset,
-            .loading.with(UUID("C"))
+            .loading.withId(UUID("C"))
         ]
         expect(result.count).to(equal(expected.count))
         expect(zip(result, expected)).to(allPass { item, asset in
@@ -131,16 +131,16 @@ final class AssetableTests: TestCase {
     }
 
     func testPlayerItemsWithUpdatedCurrentItem() {
-        let currentItemAsset = EmptyAsset.simple(url: Stream.item.url).with(UUID("1"))
+        let currentItemAsset = EmptyAsset.simple(url: Stream.item.url).withId(UUID("1"))
         let previousAssets: [EmptyAsset] = [
-            .loading.with(UUID("1")),
-            .loading.with(UUID("2")),
-            .loading.with(UUID("3"))
+            .loading.withId(UUID("1")),
+            .loading.withId(UUID("2")),
+            .loading.withId(UUID("3"))
         ]
         let currentAssets = [
             currentItemAsset,
-            .loading.with(UUID("2")),
-            .loading.with(UUID("3"))
+            .loading.withId(UUID("2")),
+            .loading.withId(UUID("3"))
         ]
         let currentItem = currentItemAsset.playerItem()
         let result = AVPlayerItem.playerItems(for: currentAssets, replacing: previousAssets, currentItem: currentItem)

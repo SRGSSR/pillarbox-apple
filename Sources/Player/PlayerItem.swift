@@ -16,16 +16,13 @@ public final class PlayerItem: Equatable {
 
     /// Create the item from an `Asset` publisher data source.
     public init<P, M>(publisher: P, trackerAdapters: [TrackerAdapter<M>] = []) where P: Publisher, M: AssetMetadata, P.Output == Asset<M> {
-        asset = Asset<M>.loading
-            .with(id)
+        asset = Asset<M>.loading.withId(id)
         publisher
             .catch { error in
                 Just(.failed(error: error))
             }
             .map { [id] asset in
-                asset
-                    .with(id)
-                    .with(trackerAdapters)
+                asset.withId(id).withTrackerAdapters(trackerAdapters)
             }
             // Mitigate instabilities arising when publisher involves `URLSession` publishers, see issue #206.
             .receiveOnMainThread()

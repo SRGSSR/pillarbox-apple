@@ -98,11 +98,11 @@ public struct Asset<M: AssetMetadata>: Assetable {
         )
     }
 
-    func with(_ trackerAdapters: [TrackerAdapter<M>]) -> Self {
+    func withTrackerAdapters(_ trackerAdapters: [TrackerAdapter<M>]) -> Self {
         .init(id: id, type: type, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
     }
 
-    func with(_ id: UUID) -> Self {
+    func withId(_ id: UUID) -> Self {
         .init(id: id, type: type, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
     }
 

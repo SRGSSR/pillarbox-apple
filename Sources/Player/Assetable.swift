@@ -6,6 +6,7 @@
 
 import AVFoundation
 
+/// Describes an asset in an opaque way.
 protocol Assetable {
     var id: UUID { get }
     var type: AssetType { get }
@@ -13,6 +14,7 @@ protocol Assetable {
     func enable(for player: Player)
     func updateMetadata()
     func disable()
+
     func nowPlayingInfo() -> NowPlaying.Info
     func matches(_ playerItem: AVPlayerItem?) -> Bool
     func playerItem() -> AVPlayerItem
