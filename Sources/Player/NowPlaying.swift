@@ -7,8 +7,6 @@
 import CoreMedia
 import UIKit
 
-public typealias NowPlayingInfo = [String: Any]
-
 /// Metadata used to display what is currently being played.
 public struct NowPlayingMetadata {
     /// Title.
@@ -29,8 +27,8 @@ public struct NowPlayingMetadata {
     }
 }
 
-enum NowPlaying {
-    typealias Info = [String: Any]
+public enum NowPlaying {
+    public typealias Info = [String: Any]
 
     struct Properties {
         let timeRange: CMTimeRange

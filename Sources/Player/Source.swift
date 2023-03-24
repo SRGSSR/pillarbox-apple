@@ -16,7 +16,7 @@ protocol Sourceable {
     func enable(for player: Player)
     func updateMetadata()
     func disable()
-    func nowPlayingInfo() -> NowPlayingInfo
+    func nowPlayingInfo() -> NowPlaying.Info
     func matches(_ playerItem: AVPlayerItem?) -> Bool
 }
 
@@ -42,7 +42,7 @@ struct Source<M: AssetMetadata>: Sourceable {
         asset.disable(trackerAdapters: trackerAdapters)
     }
 
-    func nowPlayingInfo() -> NowPlayingInfo {
+    func nowPlayingInfo() -> NowPlaying.Info {
         asset.nowPlayingInfo()
     }
 }

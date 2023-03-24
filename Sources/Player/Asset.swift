@@ -123,8 +123,8 @@ public struct Asset<M: AssetMetadata> {
         }
     }
 
-    public func nowPlayingInfo() -> NowPlayingInfo {
-        var nowPlayingInfo = NowPlayingInfo()
+    public func nowPlayingInfo() -> NowPlaying.Info {
+        var nowPlayingInfo = NowPlaying.Info()
         if let metadata = metadata?.nowPlayingMetadata() {
             nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
             nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
