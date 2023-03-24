@@ -248,7 +248,43 @@ The player is automatically integrated with the control center. Currently only t
 
 ## Custom player items
 
-The `CoreBusiness` package provides standard player items for playing SRG SSR URN-based medias. The player item provided by the `Player` package is more general, though, and can be integrated with any kind of backend service. Please refer to the corresponding documentation for more information.
+Pillarbox provides a way to retrieve a content URL and related metadata from any service:
+
+1. Write a publisher which retrieves the URL to be played as well as any required metadata you might need.
+2. Map the result of your publisher into an `Asset`. Three categories of assets are provided:
+   - Simple assets which can be played directly.
+   - Custom assets which require a custom resource loader delegate.
+   - Encrypted assets which require a FairPlay content key session delegate.
+3. If you want to provide asset metadata, most notably for tracker integration (see next section), just define a corresponding type and associate an instance with your asset.
+4. Create a `PlayerItem` with the corresponding initializer taking a publisher as argument.
+
+The resulting player item can then be played in a Pillarbox `Player` instance. It can also be shared so that other products can easily play content you provide.
+
+## Custom item tracking
+
+Pillarbox makes it possible to easily integrate any kind of tracker, mostly for analytics or QoS needs. Proceed as follows to implement your own tracker:
+
+1. Create a new tracker class and add conformance to the `PlayerItemTracker` protocol.
+2. The `PlayerItemTracker` protocol declares a `Configuration` associated type. If your tracker requires configuration just create a dedicated type which contains all required parameters. This type must be provided to the `init(configuration:)` method implemented in your tracker so that type inference correctly identifies it as configuration type. If no configuration is required just use `Void` instead.
+3. The `PlayerItemTracker` protocol declares a `Metadata` associated type. If your tracker requires metadata related to the item being tracked just create a dedicated type which contains all required information. This type must be provided to the `update(metadata:)` method implemented in your tracker so that type inference correctly identifies it as metadata type.
+4. Implement `PlayerItemTracker` methods as follows:
+  - Configure your tracker early in `init(configuration:)` or store the configuration for later use. You can also start early data collection if needed.
+  - Subscribe to player events which must be followed in `enable(for:)`. This method is called when the item to which the tracker is bound becomes the current one.
+  - Metadata updates are automatically received in `update(metadata:)`. You can for example store the metadata to use it at a later time in your tracker implementation.
+  - Cancel subscriptions in `disable()`. This method is called when the item to which the tracker is bound stops being the current one.
+  - You can stop any remaining data collection in `deinit`.
+
+Once you have a tracker you can attach it to any item. The only requirement is that metadata supplied as part of the asset retrieval process is transformed into metadata required by the tracker. This is achieved by using an adapter which you can create from a `CustomTracker` class as follows:
+
+```swift
+let item = PlayerItem.simple(url: url, metadata: CustomMetadata(), trackerAdapters: [
+    CustomTracker.adapter(configuration: configuration) { metadata in
+        // Convert metadata in tracker metadata
+    }
+]
+```
+
+Alternative adapter creation methods are available if your tracker has `Void` configuration and / or metadata.
 
 ## Have fun
 
