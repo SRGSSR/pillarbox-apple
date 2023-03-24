@@ -13,7 +13,7 @@ final class TrackerMock: ObservableObject, PlayerItemTracker {
         case initialized
         case enabled
         case disabled
-        case update(String)
+        case updated(String)
         case deinitialized
     }
 
@@ -28,7 +28,7 @@ final class TrackerMock: ObservableObject, PlayerItemTracker {
     }
 
     func update(metadata: String) {
-        Self.state.send(.update(metadata))
+        Self.state.send(.updated(metadata))
     }
 
     func disable() {

@@ -62,7 +62,7 @@ final class PlayerItemTrackerTests: TestCase {
 
     func testMetadata() {
         let player = Player()
-        expectAtLeastEqualPublished(values: [.initialized, .enabled, .update("title"), .disabled], from: TrackerMock.state) {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .updated("title"), .disabled], from: TrackerMock.state) {
             player.append(.simple(
                 url: Stream.shortOnDemand.url,
                 metadata: AssetMetadataMock(title: "title"),
@@ -76,7 +76,7 @@ final class PlayerItemTrackerTests: TestCase {
 
     func testMetadataUpdate() {
         let player = Player()
-        expectAtLeastEqualPublished(values: [.initialized, .enabled, .update("title0"), .update("title1"), .disabled], from: TrackerMock.state) {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .updated("title0"), .updated("title1"), .disabled], from: TrackerMock.state) {
             player.append(.mock(url: Stream.shortOnDemand.url, withMetadataUpdateAfter: 1, trackerAdapters: [
                 TrackerMock.adapter { $0.title }
             ]))
