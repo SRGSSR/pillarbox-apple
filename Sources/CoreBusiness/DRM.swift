@@ -12,8 +12,10 @@ public struct DRM: Decodable {
     public enum `Type`: String, Decodable {
         /// FairPlay.
         case fairPlay = "FAIRPLAY"
-        /// Playready.
+
+        /// PlayReady.
         case playReady = "PLAYREADY"
+
         /// Widevine.
         case widevine = "WIDEVINE"
     }

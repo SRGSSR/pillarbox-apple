@@ -10,18 +10,25 @@ import Foundation
 public enum BlockingReason: String, Decodable {
     /// Not suitable under the age of 12.
     case ageRating12 = "AGERATING12"
+
     /// Not suitable under the age of 18.
     case ageRating18 = "AGERATING18"
+
     /// Commercial reason.
     case commercial = "COMMERCIAL"
+
     /// Content is not available anymore.
     case endDate = "ENDDATE"
+
     /// Content is geoblocked.
     case geoblocked = "GEOBLOCK"
+
     /// Legal reason.
     case legal = "LEGAL"
+
     /// Content is not available yet.
     case startDate = "STARTDATE"
+
     /// Unknown reason.
     case unknown = "UNKNOWN"
 
