@@ -21,7 +21,7 @@ public struct NowPlayingMetadata {
     /// Image.
     let image: UIImage?
 
-    /// Create an asset metadata.
+    /// Create a now playing metadata.
     public init(title: String? = nil, subtitle: String? = nil, description: String? = nil, image: UIImage? = nil) {
         self.title = title
         self.subtitle = subtitle
@@ -29,12 +29,13 @@ public struct NowPlayingMetadata {
         self.image = image
     }
 }
-/// An enumeration representing the current media playback state.
+
+/// Types related to current metadata display in the control center.
 public enum NowPlaying {
-    /// A dictionary of metadata.
+    /// Now playing information.
     public typealias Info = [String: Any]
 
-    /// A struct representing properties of the currently playing media item.
+    /// Playback properties for the now playing item.
     struct Properties {
         let timeRange: CMTimeRange
         let itemDuration: CMTime

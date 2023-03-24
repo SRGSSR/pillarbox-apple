@@ -6,15 +6,15 @@
 
 import Foundation
 
-/// An adapter which instantiates and manages a tracker of a specified type, transforming metadata delivered by
-/// a player item into the format required by the tracker.
+/// An adapter which instantiates and manages a tracker of a specified type, transforming metadata delivered by the
+/// tracked player item into the metadata format required by the tracker.
 public struct TrackerAdapter<M: AssetMetadata> {
     private let tracker: any PlayerItemTracker
     private let update: (M) -> Void
 
     /// Create an adapter for a type of tracker with the provided mapping to its metadata format.
     /// - Parameters:
-    ///   - trackerType: The type of the tracker to manage.
+    ///   - trackerType: The type of the tracker to instantiate and manage.
     ///   - mapper: The metadata mapper.
     public init<T: PlayerItemTracker>(trackerType: T.Type, mapper: @escaping (M) -> T.Metadata) {
         let tracker = trackerType.init()

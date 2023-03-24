@@ -6,7 +6,8 @@
 
 import Foundation
 
-/// Protocol for player item trackers.
+/// Common contract for player item tracker implementation. Initialization and deinitialization methods can be used
+/// to track items even when they are not currently being played.
 public protocol PlayerItemTracker: AnyObject {
     /// The type of metadata required by the tracker.
     associatedtype Metadata
@@ -25,7 +26,6 @@ public protocol PlayerItemTracker: AnyObject {
     func disable()
 }
 
-/// Protocol for player item trackers.
 public extension PlayerItemTracker {
     /// Creates a tracker adapter for the tracker that maps its metadata type to a different metadata.
     /// - Parameter mapper: A closure that maps the tracker's metadata to another metadata.
@@ -35,7 +35,6 @@ public extension PlayerItemTracker {
     }
 }
 
-/// Protocol for player item trackers.
 public extension PlayerItemTracker where Metadata == Void {
     /// Creates a tracker adapter for the tracker with Void metadata.
     /// - Returns: A `TrackerAdapter` instance that adapts the tracker with Void metadata.
