@@ -7,6 +7,9 @@
 import AVFoundation
 import OSLog
 
+private let kContentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
+private let kContentKeySessionQueue = DispatchQueue(label: "ch.srgssr.player.content_key_session")
+
 enum AssetType {
     case simple(url: URL)
     case custom(url: URL, delegate: AVAssetResourceLoaderDelegate)

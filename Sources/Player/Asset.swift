@@ -9,10 +9,7 @@ import MediaPlayer
 
 private var kIdKey: Void?
 
-private let kContentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
-
 private let kResourceLoaderQueue = DispatchQueue(label: "ch.srgssr.player.resource_loader")
-private let kContentKeySessionQueue = DispatchQueue(label: "ch.srgssr.player.content_key_session")
 
 /// An item which stores its own custom resource loader delegate.
 final class ResourceLoadedPlayerItem: AVPlayerItem {
@@ -29,11 +26,12 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
 }
 
 /// An asset representing content to be played.
-public struct Asset<M: AssetMetadata> {
-    private let id = UUID()
+public struct Asset<M: AssetMetadata>: Assetable {
+    let id: UUID
     let type: AssetType
     private let metadata: M?
     private let configuration: (AVPlayerItem) -> Void
+    private let trackerAdapters: [TrackerAdapter<M>]
 
     /// A simple asset playable from a URL.
     /// - Parameters:
@@ -47,9 +45,11 @@ public struct Asset<M: AssetMetadata> {
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
+            id: UUID(),
             type: .simple(url: url),
             metadata: metadata,
-            configuration: configuration
+            configuration: configuration,
+            trackerAdapters: []
         )
     }
 
@@ -68,9 +68,11 @@ public struct Asset<M: AssetMetadata> {
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
+            id: UUID(),
             type: .custom(url: url, delegate: delegate),
             metadata: metadata,
-            configuration: configuration
+            configuration: configuration,
+            trackerAdapters: []
         )
     }
 
@@ -88,10 +90,20 @@ public struct Asset<M: AssetMetadata> {
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
+            id: UUID(),
             type: .encrypted(url: url, delegate: delegate),
             metadata: metadata,
-            configuration: configuration
+            configuration: configuration,
+            trackerAdapters: []
         )
+    }
+
+    func with(_ trackerAdapters: [TrackerAdapter<M>]) -> Self {
+        .init(id: id, type: type, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
+    }
+
+    func with(_ id: UUID) -> Self {
+        .init(id: id, type: type, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
     }
 
     func playerItem() -> AVPlayerItem {
@@ -132,9 +144,19 @@ public struct Asset<M: AssetMetadata> {
         }
         return nowPlayingInfo
     }
+}
 
-    func matches(_ playerItem: AVPlayerItem?) -> Bool {
-        playerItem?.id == id
+extension Asset {
+    func enable(for player: Player) {
+        enable(trackerAdapters: trackerAdapters, for: player)
+    }
+
+    func updateMetadata() {
+        update(trackerAdapters: trackerAdapters)
+    }
+
+    func disable() {
+        disable(trackerAdapters: trackerAdapters)
     }
 }
 
@@ -149,9 +171,11 @@ public extension Asset where M == EmptyAssetMetadata {
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
+            id: UUID(),
             type: .simple(url: url),
             metadata: nil,
-            configuration: configuration
+            configuration: configuration,
+            trackerAdapters: []
         )
     }
 
@@ -168,9 +192,11 @@ public extension Asset where M == EmptyAssetMetadata {
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
+            id: UUID(),
             type: .custom(url: url, delegate: delegate),
             metadata: nil,
-            configuration: configuration
+            configuration: configuration,
+            trackerAdapters: []
         )
     }
 
@@ -186,9 +212,11 @@ public extension Asset where M == EmptyAssetMetadata {
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
+            id: UUID(),
             type: .encrypted(url: url, delegate: delegate),
             metadata: nil,
-            configuration: configuration
+            configuration: configuration,
+            trackerAdapters: []
         )
     }
 }
@@ -197,27 +225,29 @@ extension Asset {
     static var loading: Self {
         // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
         .init(
+            id: UUID(),
             type: .custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate()),
-            metadata: nil
-        ) { _ in }
+            metadata: nil,
+            configuration: { _ in },
+            trackerAdapters: []
+        )
     }
 
     static func failed(error: Error) -> Self {
         // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
         .init(
+            id: UUID(),
             type: .custom(url: URL(string: "pillarbox://failing.m3u8")!, delegate: FailedResourceLoaderDelegate(error: error)),
-            metadata: nil
-        ) { _ in }
+            metadata: nil,
+            configuration: { _ in },
+            trackerAdapters: []
+        )
     }
 }
 
-extension Sourceable {
+extension Assetable {
     func matches(_ item: AVPlayerItem?) -> Bool {
         id == item?.id
-    }
-
-    func playerItem() -> AVPlayerItem {
-        asset.playerItem().withId(id)
     }
 }
 

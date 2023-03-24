@@ -621,16 +621,16 @@ extension Player {
         init(item: PlayerItem, player: Player) {
             self.item = item
 
-            item.source.enable(for: player)
-            item.$source
-                .sink { source in
-                    source.updateMetadata()
+            item.asset.enable(for: player)
+            item.$asset
+                .sink { asset in
+                    asset.updateMetadata()
                 }
                 .store(in: &cancellables)
         }
 
         deinit {
-            item.source.disable()
+            item.asset.disable()
         }
     }
 
@@ -747,7 +747,7 @@ extension Player {
     }
 
     private func configureQueueUpdatePublisher() {
-        sourcesPublisher()
+        assetsPublisher()
             .withPrevious()
             .map { [queuePlayer] sources in
                 AVPlayerItem.playerItems(
@@ -763,11 +763,11 @@ extension Player {
             .store(in: &cancellables)
     }
 
-    private func sourcesPublisher() -> AnyPublisher<[any Sourceable], Never> {
+    private func assetsPublisher() -> AnyPublisher<[any Assetable], Never> {
         $storedItems
             .map { items in
                 Publishers.AccumulateLatestMany(items.map { item in
-                    item.$source
+                    item.$asset
                 })
             }
             .switchToLatest()
@@ -811,7 +811,7 @@ extension Player {
                 guard let current else {
                     return Just(NowPlaying.Info()).eraseToAnyPublisher()
                 }
-                return current.item.$source
+                return current.item.$asset
                     .map { $0.nowPlayingInfo() }
                     .eraseToAnyPublisher()
             }

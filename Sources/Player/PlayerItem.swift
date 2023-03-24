@@ -10,23 +10,26 @@ import Core
 
 /// An item to be inserted into the player.
 public final class PlayerItem: Equatable {
-    @Published private(set) var source: any Sourceable
+    @Published private(set) var asset: any Assetable
 
     private let id = UUID()
 
     /// Create the item from an `Asset` publisher data source.
     public init<P, M>(publisher: P, trackerAdapters: [TrackerAdapter<M>] = []) where P: Publisher, M: AssetMetadata, P.Output == Asset<M> {
-        source = Source(id: id, asset: .loading, trackerAdapters: trackerAdapters)
+        asset = Asset<M>.loading
+            .with(id)
         publisher
             .catch { error in
                 Just(.failed(error: error))
             }
             .map { [id] asset in
-                Source(id: id, asset: asset, trackerAdapters: trackerAdapters)
+                asset
+                    .with(id)
+                    .with(trackerAdapters)
             }
             // Mitigate instabilities arising when publisher involves `URLSession` publishers, see issue #206.
             .receiveOnMainThread()
-            .assign(to: &$source)
+            .assign(to: &$asset)
     }
 
     /// Create a player item from a URL.
@@ -42,7 +45,7 @@ public final class PlayerItem: Equatable {
     }
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
-        source.matches(playerItem)
+        asset.matches(playerItem)
     }
 }
 
@@ -152,6 +155,6 @@ public extension PlayerItem {
 
 extension PlayerItem: CustomDebugStringConvertible {
     public var debugDescription: String {
-        "\(source)"
+        "\(asset)"
     }
 }

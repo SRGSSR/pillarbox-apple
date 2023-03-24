@@ -8,6 +8,8 @@
 
 import AVFoundation
 
+typealias EmptyAsset = Asset<EmptyAssetMetadata>
+
 struct StructError: LocalizedError {
     var errorDescription: String? {
         "Struct error description"
