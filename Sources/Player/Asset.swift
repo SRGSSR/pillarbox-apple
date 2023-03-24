@@ -112,20 +112,20 @@ public struct Asset<M: AssetMetadata>: Assetable {
         return item
     }
 
-    func enable(trackerAdapters: [TrackerAdapter<M>], for player: Player) {
+    func enable(for player: Player) {
         trackerAdapters.forEach { adapter in
             adapter.enable(for: player)
         }
     }
 
-    func update(trackerAdapters: [TrackerAdapter<M>]) {
+    func updateMetadata() {
         guard let metadata else { return }
         trackerAdapters.forEach { adapter in
             adapter.update(metadata: metadata)
         }
     }
 
-    func disable(trackerAdapters: [TrackerAdapter<M>]) {
+    func disable() {
         trackerAdapters.forEach { adapter in
             adapter.disable()
         }
@@ -143,20 +143,6 @@ public struct Asset<M: AssetMetadata>: Assetable {
             }
         }
         return nowPlayingInfo
-    }
-}
-
-extension Asset {
-    func enable(for player: Player) {
-        enable(trackerAdapters: trackerAdapters, for: player)
-    }
-
-    func updateMetadata() {
-        update(trackerAdapters: trackerAdapters)
-    }
-
-    func disable() {
-        disable(trackerAdapters: trackerAdapters)
     }
 }
 
