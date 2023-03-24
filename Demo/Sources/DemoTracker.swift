@@ -18,22 +18,22 @@ final class DemoTracker: PlayerItemTracker {
     private let id = UUID()
 
     init(configuration: Void) {
-        Self.logger.debug("--> init demo tracker \(self.id)")
+        Self.logger.debug("Init demo tracker \(self.id)")
     }
 
     func enable(for player: Player) {
-        Self.logger.debug("--> enable demo tracker for \(self.id)")
+        Self.logger.debug("Enable demo tracker for \(self.id)")
     }
 
     func disable() {
-        Self.logger.debug("--> disable demo tracker for \(self.id)")
+        Self.logger.debug("Disable demo tracker for \(self.id)")
     }
 
     func update(metadata: Metadata) {
-        Self.logger.debug("--> update demo tracker metadata for \(self.id): \(metadata.title)")
+        Self.logger.debug("Update demo tracker metadata for \(self.id): \(metadata.title)")
     }
 
     deinit {
-        Self.logger.debug("--> deinit demo tracker \(self.id)")
+        Self.logger.debug("Deinit demo tracker \(self.id)")
     }
 }
