@@ -18,10 +18,16 @@ public struct MediaMetadata: AssetMetadata {
         return dateFormatter
     }()
 
+    /// The playback context.
     public let mediaComposition: MediaComposition
+
+    /// The resource to be played.
     public let resource: Resource
+
+    /// An associated image suitable for artwork display.
     public let image: UIImage?
 
+    /// The title recommended for display.
     public var title: String {
         let mainChapter = mediaComposition.mainChapter
         guard mainChapter.contentType != .livestream else { return mainChapter.title }
@@ -33,15 +39,18 @@ public struct MediaMetadata: AssetMetadata {
         }
     }
 
+    /// The subtitle recommended for display.
     public var subtitle: String? {
         guard mediaComposition.mainChapter.contentType != .livestream else { return nil }
         return mediaComposition.show?.title
     }
 
+    /// The content description.
     public var description: String? {
         mediaComposition.mainChapter.description
     }
 
+    /// Consoldated comScore analytics data.
     var analyticsData: [String: String] {
         var analyticsData = mediaComposition.analyticsData
         analyticsData.merge(mediaComposition.mainChapter.analyticsData) { _, new in new }
@@ -49,6 +58,7 @@ public struct MediaMetadata: AssetMetadata {
         return analyticsData
     }
 
+    /// Consoldated CommandersAct analytics data.
     var analyticsMetadata: [String: String] {
         var analyticsMetadata = mediaComposition.analyticsMetadata
         analyticsMetadata.merge(mediaComposition.mainChapter.analyticsMetadata) { _, new in new }

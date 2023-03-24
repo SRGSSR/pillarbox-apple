@@ -7,6 +7,7 @@
 import Foundation
 import Player
 
+/// Tracker for CommandersAct stream tracking.
 public final class CommandersActTracker: PlayerItemTracker {
     private let id = UUID()
 

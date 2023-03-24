@@ -6,7 +6,7 @@
 
 import Foundation
 
-/// The Chapter.
+/// Content associated with a playback context and providing a playable resource.
 public struct Chapter: Decodable {
     enum CodingKeys: String, CodingKey {
         case _analyticsData = "analyticsData"
@@ -25,20 +25,39 @@ public struct Chapter: Decodable {
 
     private let blockingReason: BlockingReason?
 
+    /// The chapter URN.
     public let urn: String
+
+    /// The chapter title
     public let title: String
+
+    /// The chapter description.
     public let description: String?
+
+    /// The chapter image URL. Use `SRGDataProvider.imagePublisher(for:width:)` to obtain a scaled downloadable version.
     public let imageUrl: URL
+
+    /// The content type.
     public let contentType: ContentType
+
+    /// The publication date.
     public let date: Date
+
+    /// Available resources.
     public let resources: [Resource]
+
+    /// The date at which the content is made available.
     public let startDate: Date?
+
+    /// The date at which the content is removed.
     public let endDate: Date?
 
+    /// comScore analytics data.
     public var analyticsData: [String: String] {
         _analyticsData ?? [:]
     }
 
+    /// CommandersAct analytics data.
     public var analyticsMetadata: [String: String] {
         _analyticsMetadata ?? [:]
     }
@@ -48,8 +67,8 @@ public struct Chapter: Decodable {
     // swiftlint:disable:next discouraged_optional_collection
     private let _analyticsMetadata: [String: String]?
 
-    /// Returns a blocking reason.
-    /// - Parameter date: The comparison date.
+    /// Returns whether the content is blocked for some reason.
+    /// - Parameter date: The date at which the availability must be evaluated.
     /// - Returns: The blocking reason.
     public func blockingReason(at date: Date = Date()) -> BlockingReason? {
         if blockingReason != .none {
@@ -67,9 +86,8 @@ public struct Chapter: Decodable {
     }
 }
 
-/// The Chapter.
 public extension Chapter {
-    /// The resource.
+    /// The resource recommended for playback on Apple platforms.
     var recommendedResource: Resource? {
         resources.first { StreamingMethod.supportedMethods.contains($0.streamingMethod) }
     }

@@ -7,6 +7,7 @@
 import Foundation
 import Player
 
+/// Describes a playable resource.
 public struct Resource: Decodable {
     enum CodingKeys: String, CodingKey {
         case _analyticsData = "analyticsData"
@@ -19,17 +20,23 @@ public struct Resource: Decodable {
         case url
     }
 
+    /// The resource URL.
     public let url: URL
+
+    /// The streaming method.
     public let streamingMethod: StreamingMethod
 
+    /// comScore analytics data.
     public var analyticsData: [String: String] {
         _analyticsData ?? [:]
     }
 
+    /// CommandersAct analytics data.
     public var analyticsMetadata: [String: String] {
         _analyticsMetadata ?? [:]
     }
 
+    /// The stream type.
     public var streamType: StreamType {
         if isDvr {
             return .dvr
@@ -42,8 +49,10 @@ public struct Resource: Decodable {
         }
     }
 
+    /// The token type.
     public let tokenType: TokenType
 
+    /// The list of DRMs required to play the resource.
     public var drms: [DRM] {
         _drms ?? []
     }

@@ -6,7 +6,7 @@
 
 import Foundation
 
-/// The media composition.
+/// Describes a playback context.
 public struct MediaComposition: Decodable {
     enum CodingKeys: String, CodingKey {
         case _analyticsData = "analyticsData"
@@ -16,19 +16,21 @@ public struct MediaComposition: Decodable {
         case show
     }
 
-    /// The chapter urn.
+    /// The URN of the chapter to be played..
     public let chapterUrn: String
-    /// The chapters.
+
+    /// The available chapters.
     public let chapters: [Chapter]
-    /// The show.
+
+    /// The related show.
     public let show: Show?
 
-    /// The analytics data.
+    /// comScore analytics data.
     public var analyticsData: [String: String] {
         _analyticsData ?? [:]
     }
 
-    /// The analytics metadata.
+    /// CommandersAct analytics data.
     public var analyticsMetadata: [String: String] {
         _analyticsMetadata ?? [:]
     }
@@ -39,7 +41,6 @@ public struct MediaComposition: Decodable {
     private let _analyticsMetadata: [String: String]?
 }
 
-/// The media composition.
 public extension MediaComposition {
     /// The main chapter.
     var mainChapter: Chapter {

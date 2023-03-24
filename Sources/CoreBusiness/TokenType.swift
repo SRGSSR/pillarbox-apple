@@ -6,7 +6,11 @@
 
 import Foundation
 
+/// Token types.
 public enum TokenType: String, Decodable {
+    /// No token.
     case none = "NONE"
+
+    /// Akamai token.
     case akamai = "AKAMAI"
 }

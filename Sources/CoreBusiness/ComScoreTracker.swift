@@ -7,6 +7,7 @@
 import Foundation
 import Player
 
+/// Tracker for comScore stream tracking.
 public final class ComScoreTracker: PlayerItemTracker {
     private let id = UUID()
 
