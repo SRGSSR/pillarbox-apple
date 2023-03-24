@@ -30,8 +30,7 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
 
 /// An asset representing content to be played.
 public struct Asset<M: AssetMetadata> {
-    let id = UUID()
-
+    private let id = UUID()
     let type: AssetType
     private let metadata: M?
     private let configuration: (AVPlayerItem) -> Void

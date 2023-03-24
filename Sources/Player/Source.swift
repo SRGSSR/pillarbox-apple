@@ -10,7 +10,6 @@ protocol Sourceable {
     associatedtype Metadata: AssetMetadata
 
     var id: UUID { get }
-    var assetId: UUID { get }
     var asset: Asset<Metadata> { get }
     var type: AssetType { get }
 
@@ -26,10 +25,6 @@ struct Source<M: AssetMetadata>: Sourceable {
     let id: UUID
     let asset: Asset<M>
     let trackerAdapters: [TrackerAdapter<M>]
-
-    var assetId: UUID {
-        asset.id
-    }
 
     var type: AssetType {
         asset.type
