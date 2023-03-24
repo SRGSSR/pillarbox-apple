@@ -27,7 +27,13 @@ struct LocalMetadata: Decodable {
 }
 
 extension PlayerItem {
-    static func simple(url: URL, metadata: LocalMetadata? = nil, delay: TimeInterval) -> Self {
+    static func simple(url: URL, delay: TimeInterval) -> Self {
+        let publisher = Just(Asset.simple(url: url))
+            .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
+        return .init(publisher: publisher)
+    }
+
+    static func simple(url: URL, metadata: LocalMetadata, delay: TimeInterval) -> Self {
         let publisher = Just(Asset.simple(url: url, metadata: metadata))
             .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
         return .init(publisher: publisher)

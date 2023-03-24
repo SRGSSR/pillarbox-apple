@@ -47,7 +47,7 @@ public struct Asset<M: AssetMetadata> {
     /// - Returns: The asset.
     public static func simple(
         url: URL,
-        metadata: M? = nil,
+        metadata: M,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
@@ -68,7 +68,7 @@ public struct Asset<M: AssetMetadata> {
     public static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
-        metadata: M? = nil,
+        metadata: M,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
@@ -88,7 +88,7 @@ public struct Asset<M: AssetMetadata> {
     public static func encrypted(
         url: URL,
         delegate: AVContentKeySessionDelegate,
-        metadata: M? = nil,
+        metadata: M,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
@@ -146,7 +146,11 @@ public extension Asset where M == EmptyAssetMetadata {
         url: URL,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .simple(url: url, metadata: nil, configuration: configuration)
+        .init(
+            type: .simple(url: url),
+            metadata: nil,
+            configuration: configuration
+        )
     }
 
     static func custom(
@@ -154,7 +158,11 @@ public extension Asset where M == EmptyAssetMetadata {
         delegate: AVAssetResourceLoaderDelegate,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .custom(url: url, delegate: delegate, metadata: nil, configuration: configuration)
+        .init(
+            type: .custom(url: url, delegate: delegate),
+            metadata: nil,
+            configuration: configuration
+        )
     }
 
     static func encrypted(
@@ -162,7 +170,11 @@ public extension Asset where M == EmptyAssetMetadata {
         delegate: AVContentKeySessionDelegate,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .encrypted(url: url, delegate: delegate, metadata: nil, configuration: configuration)
+        .init(
+            type: .encrypted(url: url, delegate: delegate),
+            metadata: nil,
+            configuration: configuration
+        )
     }
 }
 
@@ -200,12 +212,20 @@ public extension Asset {
 extension Asset {
     static var loading: Self {
         // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-        .custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate())
+        .init(
+            type: .custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate()),
+            metadata: nil,
+            configuration: { _ in }
+        )
     }
 
     static func failed(error: Error) -> Self {
         // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-        .custom(url: URL(string: "pillarbox://failing.m3u8")!, delegate: FailedResourceLoaderDelegate(error: error))
+        .init(
+            type: .custom(url: URL(string: "pillarbox://failing.m3u8")!, delegate: FailedResourceLoaderDelegate(error: error)),
+            metadata: nil,
+            configuration: { _ in }
+        )
     }
 }
 
