@@ -58,6 +58,12 @@ public final class Player: ObservableObject, Equatable {
         isBuffering || isSeeking
     }
 
+    /// The low-level system player. Exposed for specific read-only needs like interfacing with `AVPlayer`-based
+    /// 3rd party APIs. Mutating the state of this player directly is not supported and leads to undefined behavior.
+    public var systemPlayer: AVPlayer {
+        queuePlayer
+    }
+
     /// The current item duration or `.invalid` when not known.
     private var itemDuration: CMTime {
         queuePlayer.itemDuration
