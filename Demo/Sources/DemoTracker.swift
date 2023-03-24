@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import OSLog
 import Player
 
 final class DemoTracker: PlayerItemTracker {
@@ -12,25 +13,27 @@ final class DemoTracker: PlayerItemTracker {
         let title: String
     }
 
+    private static let logger = Logger(category: "DemoTracker")
+
     private let id = UUID()
 
-    init() {
-        print("--> init demo tracker \(id)")
+    init(configuration: Void) {
+        Self.logger.debug("--> init demo tracker \(self.id)")
     }
 
     func enable(for player: Player) {
-        print("--> enable demo tracker for \(id)")
+        Self.logger.debug("--> enable demo tracker for \(self.id)")
     }
 
     func disable() {
-        print("--> disable demo tracker for \(id)")
+        Self.logger.debug("--> disable demo tracker for \(self.id)")
     }
 
     func update(metadata: Metadata) {
-        print("--> update demo tracker metadata for \(id): \(metadata)")
+        Self.logger.debug("--> update demo tracker metadata for \(self.id): \(metadata.title)")
     }
 
     deinit {
-        print("--> deinit demo tracker \(id)")
+        Self.logger.debug("--> deinit demo tracker \(self.id)")
     }
 }
