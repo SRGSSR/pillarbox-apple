@@ -27,19 +27,19 @@ struct LocalMetadata: Decodable {
 }
 
 extension PlayerItem {
-    static func simple(url: URL, delay: TimeInterval) -> Self {
+    static func asynchronous(url: URL, after delay: TimeInterval) -> Self {
         let publisher = Just(Asset.simple(url: url))
             .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
         return .init(publisher: publisher)
     }
 
-    static func simple(url: URL, metadata: LocalMetadata, delay: TimeInterval) -> Self {
+    static func asynchronous(url: URL, metadata: LocalMetadata, after delay: TimeInterval) -> Self {
         let publisher = Just(Asset.simple(url: url, metadata: metadata))
             .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
         return .init(publisher: publisher)
     }
 
-    static func metadataUpdate(delay: TimeInterval, trackerAdapters: [TrackerAdapter<LocalMetadata>] = []) -> Self {
+    static func updated(after delay: TimeInterval, trackerAdapters: [TrackerAdapter<LocalMetadata>] = []) -> Self {
         let publisher = Just(Asset.simple(
             url: Stream.onDemand.url,
             metadata: LocalMetadata(

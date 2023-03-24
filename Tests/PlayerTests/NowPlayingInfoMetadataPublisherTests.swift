@@ -30,7 +30,7 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
 
     func testAvailableAfterDelay() {
         let player = Player(
-            item: .simple(url: Stream.onDemand.url, metadata: LocalMetadata(title: "title"), delay: 0.5)
+            item: .asynchronous(url: Stream.onDemand.url, metadata: LocalMetadata(title: "title"), after: 0.5)
         )
         expectAtLeastSimilarPublished(
             values: [[:], [MPMediaItemPropertyTitle: "title"]],
@@ -60,7 +60,7 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
     }
 
     func testUpdate() {
-        let player = Player(item: .metadataUpdate(delay: 1))
+        let player = Player(item: .updated(after: 1))
         expectAtLeastSimilarPublished(
             values: [
                 [
