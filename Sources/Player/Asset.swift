@@ -138,10 +138,6 @@ public struct Asset<M: AssetMetadata>: Assetable {
         return nowPlayingInfo
     }
 
-    func matches(_ item: AVPlayerItem?) -> Bool {
-        id == item?.id
-    }
-
     func playerItem() -> AVPlayerItem {
         let item = resource.playerItem().withId(id)
         configuration(item)
@@ -234,7 +230,7 @@ extension Asset {
     }
 }
 
-private extension AVPlayerItem {
+extension AVPlayerItem {
     /// An identifier to identify player items delivered by the same data source.
     var id: UUID? {
         get {
@@ -248,7 +244,7 @@ private extension AVPlayerItem {
     /// Assign an identifier to identify player items delivered by the same data source.
     /// - Parameter id: The id to assign.
     /// - Returns: The receiver with the id assigned to it.
-    func withId(_ id: UUID) -> AVPlayerItem {
+    fileprivate func withId(_ id: UUID) -> AVPlayerItem {
         self.id = id
         return self
     }

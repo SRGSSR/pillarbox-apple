@@ -16,8 +16,13 @@ protocol Assetable {
     func disable()
 
     func nowPlayingInfo() -> NowPlaying.Info
-    func matches(_ playerItem: AVPlayerItem?) -> Bool
     func playerItem() -> AVPlayerItem
+}
+
+extension Assetable {
+    func matches(_ playerItem: AVPlayerItem?) -> Bool {
+        id == playerItem?.id
+    }
 }
 
 extension AVPlayerItem {
