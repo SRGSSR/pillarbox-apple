@@ -146,7 +146,7 @@ public extension Asset where M == EmptyAssetMetadata {
         url: URL,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .simple(url: url, metadata: .init(), configuration: configuration)
+        .simple(url: url, metadata: nil, configuration: configuration)
     }
 
     static func custom(
@@ -154,7 +154,7 @@ public extension Asset where M == EmptyAssetMetadata {
         delegate: AVAssetResourceLoaderDelegate,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .custom(url: url, delegate: delegate, metadata: .init(), configuration: configuration)
+        .custom(url: url, delegate: delegate, metadata: nil, configuration: configuration)
     }
 
     static func encrypted(
@@ -162,7 +162,7 @@ public extension Asset where M == EmptyAssetMetadata {
         delegate: AVContentKeySessionDelegate,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .encrypted(url: url, delegate: delegate, metadata: .init(), configuration: configuration)
+        .encrypted(url: url, delegate: delegate, metadata: nil, configuration: configuration)
     }
 }
 

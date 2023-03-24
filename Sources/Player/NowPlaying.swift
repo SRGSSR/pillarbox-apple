@@ -34,6 +34,9 @@ public protocol AssetMetadata {
 }
 
 public struct EmptyAssetMetadata: AssetMetadata {
+    // Cannot be instantiated. Only meant to be used as a type in signatures and where clauses.
+    private init() {}
+
     public func nowPlayingMetadata() -> NowPlayingMetadata {
         .init()
     }

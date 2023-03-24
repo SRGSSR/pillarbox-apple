@@ -8,12 +8,6 @@ import AVFoundation
 import Combine
 import Core
 
-private final class EmptyTracker: PlayerItemTracker {
-    func enable(for player: Player) {}
-    func disable() {}
-    func update(metadata: Void) {}
-}
-
 /// An item to be inserted into the player.
 public final class PlayerItem: Equatable {
     @Published private(set) var source: any Sourceable
@@ -61,7 +55,7 @@ public extension PlayerItem {
     /// - Returns: The item.
     static func simple<M>(
         url: URL,
-        metadata: M? = nil,
+        metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self where M: AssetMetadata {
@@ -79,7 +73,7 @@ public extension PlayerItem {
     static func custom<M>(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
-        metadata: M? = nil,
+        metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self where M: AssetMetadata {
@@ -96,7 +90,7 @@ public extension PlayerItem {
     static func encrypted<M>(
         url: URL,
         delegate: AVContentKeySessionDelegate,
-        metadata: M? = nil,
+        metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self where M: AssetMetadata {
@@ -107,25 +101,28 @@ public extension PlayerItem {
 public extension PlayerItem {
     static func simple(
         url: URL,
+        trackerAdapters: [TrackerAdapter<EmptyAssetMetadata>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .init(asset: .simple(url: url, metadata: EmptyAssetMetadata(), configuration: configuration))
+        .init(asset: .simple(url: url, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 
     static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
+        trackerAdapters: [TrackerAdapter<EmptyAssetMetadata>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .init(asset: .custom(url: url, delegate: delegate, metadata: EmptyAssetMetadata(), configuration: configuration))
+        .init(asset: .custom(url: url, delegate: delegate, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 
     static func encrypted(
         url: URL,
         delegate: AVContentKeySessionDelegate,
+        trackerAdapters: [TrackerAdapter<EmptyAssetMetadata>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .init(asset: .encrypted(url: url, delegate: delegate, metadata: EmptyAssetMetadata(), configuration: configuration))
+        .init(asset: .encrypted(url: url, delegate: delegate, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 }
 
