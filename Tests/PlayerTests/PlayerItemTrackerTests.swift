@@ -6,6 +6,7 @@
 
 @testable import Player
 
+import Circumspect
 import Foundation
 
 final class PlayerItemTrackerTests: TestCase {
@@ -69,11 +70,13 @@ final class PlayerItemTrackerTests: TestCase {
     }
 
     func testMetadata() {
-        expectAtLeastEqualPublished(values: [.initialized, .enabled, .update("metadata"), .disabled, .deinitialized], from: TrackerMock.state) {
-            let player = Player(item: .simple(
+        let player = Player()
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .update("title"), .disabled], from: TrackerMock.state) {
+            player.append(.simple(
                 url: Stream.shortOnDemand.url,
+                metadata: LocalMetadata(title: "title"),
                 trackerAdapters: [
-                    TrackerMock.adapter { _ in "metadata" }
+                    TrackerMock.adapter { $0.title }
                 ]
             ))
             player.play()
@@ -81,9 +84,10 @@ final class PlayerItemTrackerTests: TestCase {
     }
 
     func testMetadataUpdate() {
-        expectAtLeastEqualPublished(values: [.initialized, .enabled, .update("title0"), .update("title1"), .disabled, .deinitialized], from: TrackerMock.state, timeout: .seconds(3)) {
-            let player = Player(item: .updated(after: 1, trackerAdapters: [
-                TrackerMock.adapter { $0.title ?? "" }
+        let player = Player()
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .update("title0"), .update("title1"), .disabled], from: TrackerMock.state) {
+            player.append(.updated(url: Stream.shortOnDemand.url, after: 1, trackerAdapters: [
+                TrackerMock.adapter { $0.title }
             ]))
             player.play()
         }

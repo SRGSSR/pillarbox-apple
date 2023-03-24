@@ -60,7 +60,7 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
     }
 
     func testUpdate() {
-        let player = Player(item: .updated(after: 1))
+        let player = Player(item: .updated(url: Stream.onDemand.url, after: 1))
         expectAtLeastSimilarPublished(
             values: [
                 [
@@ -79,7 +79,7 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
     }
 
     func testNetworkItemReloading() {
-        let player = Player(item: .networkLoaded(media: .media1))
+        let player = Player(item: .networkLoaded(url: Stream.onDemand.url, media: .media1))
         expectAtLeastSimilarPublished(
             values: [
                 [:],
@@ -103,7 +103,7 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
             from: player.nowPlayingInfoMetadataPublisher()
         ) {
             player.removeAllItems()
-            player.append(.networkLoaded(media: .media1))
+            player.append(.networkLoaded(url: Stream.onDemand.url, media: .media1))
         }
     }
 
