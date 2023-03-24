@@ -12,6 +12,7 @@ protocol Sourceable {
     var id: UUID { get }
     var assetId: UUID { get }
     var asset: Asset<Metadata> { get }
+    var type: AssetType { get }
 
     func enable(for player: Player)
     func updateMetadata()
@@ -28,6 +29,10 @@ struct Source<M: AssetMetadata>: Sourceable {
 
     var assetId: UUID {
         asset.id
+    }
+
+    var type: AssetType {
+        asset.type
     }
 
     func enable(for player: Player) {
@@ -104,7 +109,7 @@ extension AVPlayerItem {
 
     private static func findSource(for item: AVPlayerItem, in sources: [any Sourceable], equalTo other: any Sourceable) -> Bool {
         guard let match = matchingSource(for: item, in: sources) else { return false }
-        return match.assetId == other.assetId
+        return match.type == other.type
     }
 
     private static func firstCommonIndex(in sources: [any Sourceable], matching other: [any Sourceable], after item: AVPlayerItem) -> Int? {

@@ -6,11 +6,8 @@
 
 import AVFoundation
 import MediaPlayer
-import OSLog
 
 private var kIdKey: Void?
-
-private let kLogger = Logger(category: "Asset")
 
 private let kContentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
 
@@ -35,7 +32,7 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
 public struct Asset<M: AssetMetadata> {
     let id = UUID()
 
-    private let type: `Type`
+    let type: AssetType
     private let metadata: M?
     private let configuration: (AVPlayerItem) -> Void
 
@@ -194,37 +191,6 @@ public extension Asset where M == EmptyAssetMetadata {
             metadata: nil,
             configuration: configuration
         )
-    }
-}
-
-public extension Asset {
-    private enum `Type` {
-        case simple(url: URL)
-        case custom(url: URL, delegate: AVAssetResourceLoaderDelegate)
-        case encrypted(url: URL, delegate: AVContentKeySessionDelegate)
-
-        func playerItem() -> AVPlayerItem {
-            switch self {
-            case let .simple(url: url):
-                return AVPlayerItem(url: url)
-            case let .custom(url: url, delegate: delegate):
-                return ResourceLoadedPlayerItem(
-                    url: url,
-                    resourceLoaderDelegate: delegate
-                )
-            case let .encrypted(url: url, delegate: delegate):
-#if targetEnvironment(simulator)
-                kLogger.error("FairPlay-encrypted assets cannot be played in the simulator")
-                return AVPlayerItem(url: url)
-#else
-                let asset = AVURLAsset(url: url)
-                kContentKeySession.setDelegate(delegate, queue: kContentKeySessionQueue)
-                kContentKeySession.addContentKeyRecipient(asset)
-                kContentKeySession.processContentKeyRequest(withIdentifier: nil, initializationData: nil)
-                return AVPlayerItem(asset: asset)
-#endif
-            }
-        }
     }
 }
 
