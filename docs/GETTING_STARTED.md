@@ -264,27 +264,31 @@ The resulting player item can then be played in a Pillarbox `Player` instance. I
 
 Pillarbox makes it possible to easily integrate any kind of tracker, mostly for analytics or QoS needs. Proceed as follows to implement your own tracker:
 
-1. Create a new tracker class and add conformance to the `PlayerItemTracker` protocol.
+1. Create a new tracker class, say `CustomTracker`, and add conformance to the `PlayerItemTracker` protocol.
 2. The `PlayerItemTracker` protocol declares a `Configuration` associated type. If your tracker requires configuration just create a dedicated type which contains all required parameters. This type must be provided to the `init(configuration:)` method implemented in your tracker so that type inference correctly identifies it as configuration type. If no configuration is required just use `Void` instead.
 3. The `PlayerItemTracker` protocol declares a `Metadata` associated type. If your tracker requires metadata related to the item being tracked just create a dedicated type which contains all required information. This type must be provided to the `update(metadata:)` method implemented in your tracker so that type inference correctly identifies it as metadata type.
-4. Implement `PlayerItemTracker` methods as follows:
-  - Configure your tracker early in `init(configuration:)` or store the configuration for later use. You can also start early data collection if needed.
-  - Subscribe to player events which must be followed in `enable(for:)`. This method is called when the item to which the tracker is bound becomes the current one.
+4. Trackers are automatically instantiated and managed by a player. You therefore never instantiate a tracker directly but rather achieve the behavior you need by implementing `PlayerItemTracker` lifecycle methods instead:
+  - Configure your tracker early in `init(configuration:)` and / or store the configuration for later use. You can also start early data collection if needed.
+  - Subscribe to player events which must be followed in `enable(for:)`. This method is called when the item to which the tracker is bound becomes the current one. Store the subscription tokens in your tracker and implement how the tracker should handle the events you subscribed to.
   - Metadata updates are automatically received in `update(metadata:)`. You can for example store the metadata to use it at a later time in your tracker implementation.
-  - Cancel subscriptions in `disable()`. This method is called when the item to which the tracker is bound stops being the current one.
+  - Cancel subscriptions in `disable()` by discarding the tokens you stored. This method is called when the item to which the tracker is bound stops being the current one.
   - You can stop any remaining data collection in `deinit`.
 
-Once you have a tracker you can attach it to any item. The only requirement is that metadata supplied as part of the asset retrieval process is transformed into metadata required by the tracker. This is achieved by using an adapter which you can create from a `CustomTracker` class as follows:
+Once you have a tracker you can attach it to any item. The only requirement is that metadata supplied as part of the asset retrieval process is transformed into metadata required by the tracker. This transformation requires the use of a dedicated adapter, simply created from your custom tracker type with the `adapter(configuration:mapper:)` method. The adapter is also where you can supply any configuration required by your tracker:
 
 ```swift
 let item = PlayerItem.simple(url: url, metadata: CustomMetadata(), trackerAdapters: [
     CustomTracker.adapter(configuration: configuration) { metadata in
-        // Convert metadata in tracker metadata
+        // Convert metadata into tracker metadata
     }
 ]
 ```
 
 Alternative adapter creation methods are available if your tracker has `Void` configuration and / or metadata.
+
+### Remark
+
+Some 3rd party trackers might require low-level access to the `AVPlayer` instance. The `Player` class exposes this player through the `systemPlayer` property. Even though the low-level player is therefore accessible you should never attempt to mutate its state directly. Changes might namely interfere with behavior expected by Pillarbox `Player` class, leading to undefined behavior.
 
 ## Have fun
 
