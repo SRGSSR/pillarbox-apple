@@ -15,19 +15,32 @@ enum MediaMock: String {
 }
 
 extension PlayerItem {
-    static func mock(url: URL, loadedAfter delay: TimeInterval) -> Self {
+    static func mock(
+        url: URL,
+        loadedAfter delay: TimeInterval,
+        trackerAdapters: [TrackerAdapter<EmptyAssetMetadata>] = []
+    ) -> Self {
         let publisher = Just(Asset.simple(url: url))
             .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
-        return .init(publisher: publisher)
+        return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
 
-    static func mock(url: URL, loadedAfter delay: TimeInterval, withMetadata: AssetMetadataMock) -> Self {
+    static func mock(
+        url: URL,
+        loadedAfter delay: TimeInterval,
+        withMetadata: AssetMetadataMock,
+        trackerAdapters: [TrackerAdapter<AssetMetadataMock>] = []
+    ) -> Self {
         let publisher = Just(Asset.simple(url: url, metadata: withMetadata))
             .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
-        return .init(publisher: publisher)
+        return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
 
-    static func mock(url: URL, withMetadataUpdateAfter delay: TimeInterval, trackerAdapters: [TrackerAdapter<AssetMetadataMock>] = []) -> Self {
+    static func mock(
+        url: URL,
+        withMetadataUpdateAfter delay: TimeInterval,
+        trackerAdapters: [TrackerAdapter<AssetMetadataMock>] = []
+    ) -> Self {
         let publisher = Just(Asset.simple(
             url: url,
             metadata: AssetMetadataMock(
@@ -48,7 +61,7 @@ extension PlayerItem {
         return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
 
-    static func webServiceMock(media: MediaMock) -> Self {
+    static func webServiceMock(media: MediaMock, trackerAdapters: [TrackerAdapter<AssetMetadataMock>] = []) -> Self {
         let url = URL(string: "http://localhost:8123/\(media).json")!
         let publisher = URLSession(configuration: .ephemeral).dataTaskPublisher(for: url)
             .map(\.data)
@@ -56,6 +69,6 @@ extension PlayerItem {
             .map { metadata in
                 Asset.simple(url: url, metadata: metadata)
             }
-        return .init(publisher: publisher)
+        return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
 }
