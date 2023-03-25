@@ -8,7 +8,7 @@
 
 import AVFoundation
 
-typealias EmptyAsset = Asset<EmptyAssetMetadata>
+typealias EmptyAsset = Asset<Never>
 
 struct StructError: LocalizedError {
     var errorDescription: String? {

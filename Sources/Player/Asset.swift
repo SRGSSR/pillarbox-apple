@@ -145,7 +145,7 @@ public struct Asset<M: AssetMetadata>: Assetable {
     }
 }
 
-public extension Asset where M == EmptyAssetMetadata {
+public extension Asset where M == Never {
     /// A simple asset playable from a URL.
     /// - Parameters:
     ///   - url: The URL to be played.

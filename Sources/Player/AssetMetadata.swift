@@ -6,18 +6,19 @@
 
 import Foundation
 
-/// A type representing empty metadata associated with an asset.
-public struct EmptyAssetMetadata: AssetMetadata {
-    // Not meant to be instantiated, only exists as a type for function signatures and where clauses.
-    private init() {}
-
-    public func nowPlayingMetadata() -> NowPlayingMetadata {
-        .init()
-    }
-}
-
 /// A protocol representing metadata associated with an asset.
 public protocol AssetMetadata {
     /// Returns metadata used to display what is currently being played, most notably in the Control Center.
     func nowPlayingMetadata() -> NowPlayingMetadata
 }
+
+/// An extension to provide a default implementation for the `nowPlayingMetadata()` method.
+public extension AssetMetadata {
+    /// Returns an instance of `NowPlayingMetadata` with default values.
+    func nowPlayingMetadata() -> NowPlayingMetadata {
+        .init()
+    }
+}
+
+/// An extension to conform the `Never` type to `AssetMetadata` protocol.
+extension Never: AssetMetadata {}

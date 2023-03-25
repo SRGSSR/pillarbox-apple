@@ -18,7 +18,7 @@ extension PlayerItem {
     static func mock(
         url: URL,
         loadedAfter delay: TimeInterval,
-        trackerAdapters: [TrackerAdapter<EmptyAssetMetadata>] = []
+        trackerAdapters: [TrackerAdapter<Never>] = []
     ) -> Self {
         let publisher = Just(Asset.simple(url: url))
             .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
