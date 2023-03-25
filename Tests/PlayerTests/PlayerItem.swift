@@ -48,7 +48,7 @@ extension PlayerItem {
         return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
 
-    static func mock(media: MediaMock) -> Self {
+    static func webServiceMock(media: MediaMock) -> Self {
         let url = URL(string: "http://localhost:8123/\(media).json")!
         let publisher = URLSession(configuration: .ephemeral).dataTaskPublisher(for: url)
             .map(\.data)

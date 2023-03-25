@@ -79,7 +79,7 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
     }
 
     func testNetworkItemReloading() {
-        let player = Player(item: .mock(media: .media1))
+        let player = Player(item: .webServiceMock(media: .media1))
         expectAtLeastSimilarPublished(
             values: [
                 [:],
@@ -103,7 +103,7 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
             from: player.nowPlayingInfoMetadataPublisher()
         ) {
             player.removeAllItems()
-            player.append(.mock(media: .media1))
+            player.append(.webServiceMock(media: .media1))
         }
     }
 
