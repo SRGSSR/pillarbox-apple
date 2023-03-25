@@ -41,6 +41,18 @@ final class PlayerItemTrackerTests: TestCase {
         }
     }
 
+    func testNetworkLoadedItemEntirePlayback() {
+        let player = Player()
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled], from: SimpleTrackerMock.state) {
+            player.append(.mock(
+                url: Stream.shortOnDemand.url,
+                loadedAfter: 1,
+                trackerAdapters: [SimpleTrackerMock.adapter()]
+            ))
+            player.play()
+        }
+    }
+
     func testFailedItem() {
         let player = Player()
         expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled], from: SimpleTrackerMock.state) {

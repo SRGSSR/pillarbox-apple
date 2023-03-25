@@ -16,7 +16,7 @@ public final class PlayerItem: Equatable {
 
     /// Create the item from an `Asset` publisher data source.
     public init<P, M>(publisher: P, trackerAdapters: [TrackerAdapter<M>] = []) where P: Publisher, M: AssetMetadata, P.Output == Asset<M> {
-        asset = Asset<M>.loading.withId(id)
+        asset = Asset<M>.loading.withId(id).withTrackerAdapters(trackerAdapters)
         publisher
             .catch { error in
                 Just(.failed(error: error))
