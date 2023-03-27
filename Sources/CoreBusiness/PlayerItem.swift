@@ -41,7 +41,7 @@ public extension PlayerItem {
             ComScoreTracker.adapter { mediaMetadata in
                 mediaMetadata.analyticsData
             },
-            ComScoreTracker.adapter { mediaMetadata in
+            CommandersActTracker.adapter { mediaMetadata in
                 mediaMetadata.analyticsMetadata
             }
         ] + trackerAdapters)
