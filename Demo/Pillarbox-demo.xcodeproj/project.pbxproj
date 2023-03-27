@@ -207,8 +207,8 @@
 		6F59E84229CF31E10093E6FB /* Application */ = {
 			isa = PBXGroup;
 			children = (
-				6F59E84329CF31E10093E6FB /* DemoApp.swift */,
 				6F59E84429CF31E10093E6FB /* AppDelegate.swift */,
+				6F59E84329CF31E10093E6FB /* DemoApp.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -216,13 +216,13 @@
 		6F59E84529CF31E10093E6FB /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				6F59E84629CF31E10093E6FB /* Vendor.swift */,
-				6F59E84729CF31E10093E6FB /* ServiceUrl.swift */,
-				6F59E84829CF31E10093E6FB /* Template.swift */,
-				6F59E84929CF31E10093E6FB /* RadioChannel.swift */,
-				6F59E84A29CF31E10093E6FB /* Playlist.swift */,
 				6F59E84B29CF31E10093E6FB /* Media.swift */,
 				6F59E84C29CF31E10093E6FB /* MediaDescription.swift */,
+				6F59E84A29CF31E10093E6FB /* Playlist.swift */,
+				6F59E84929CF31E10093E6FB /* RadioChannel.swift */,
+				6F59E84729CF31E10093E6FB /* ServiceUrl.swift */,
+				6F59E84829CF31E10093E6FB /* Template.swift */,
+				6F59E84629CF31E10093E6FB /* Vendor.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -230,9 +230,9 @@
 		6F59E84D29CF31E10093E6FB /* Lists */ = {
 			isa = PBXGroup;
 			children = (
+				6F59E85029CF31E10093E6FB /* ContentListView.swift */,
 				6F59E84E29CF31E10093E6FB /* ContentListViewModel.swift */,
 				6F59E84F29CF31E10093E6FB /* ListsView.swift */,
-				6F59E85029CF31E10093E6FB /* ContentListView.swift */,
 			);
 			path = Lists;
 			sourceTree = "<group>";
@@ -249,13 +249,13 @@
 		6F59E85429CF31E10093E6FB /* Showcase */ = {
 			isa = PBXGroup;
 			children = (
-				6F59E85529CF31E10093E6FB /* MultiView.swift */,
 				6F59E85629CF31E10093E6FB /* Playlist */,
-				6F59E85929CF31E10093E6FB /* TwinsView.swift */,
-				6F59E85A29CF31E10093E6FB /* ShowcaseView.swift */,
 				6F59E85B29CF31E10093E6FB /* Stories */,
 				6F59E85F29CF31E10093E6FB /* Wrapped */,
 				6F59E86229CF31E10093E6FB /* LinkView.swift */,
+				6F59E85529CF31E10093E6FB /* MultiView.swift */,
+				6F59E85A29CF31E10093E6FB /* ShowcaseView.swift */,
+				6F59E85929CF31E10093E6FB /* TwinsView.swift */,
 			);
 			path = Showcase;
 			sourceTree = "<group>";
@@ -299,8 +299,8 @@
 		6F59E86529CF31E10093E6FB /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				6F59E86629CF31E10093E6FB /* CopyButton.swift */,
 				6F59E86729CF31E10093E6FB /* Cell.swift */,
+				6F59E86629CF31E10093E6FB /* CopyButton.swift */,
 				6F59E86829CF31E10093E6FB /* MessageViews.swift */,
 			);
 			path = Views;
@@ -309,14 +309,14 @@
 		6F59E86929CF31E10093E6FB /* Players */ = {
 			isa = PBXGroup;
 			children = (
-				6F59E86A29CF31E10093E6FB /* PlayerConfiguration.swift */,
+				6F59E86E29CF31E10093E6FB /* BasicPlaybackView.swift */,
 				6F59E86B29CF31E10093E6FB /* PlaybackView.swift */,
+				6F59E86A29CF31E10093E6FB /* PlayerConfiguration.swift */,
+				6F59E87129CF31E10093E6FB /* PlayerLayout.swift */,
+				6F59E87029CF31E10093E6FB /* PlayerView.swift */,
 				6F59E86C29CF31E10093E6FB /* SimplePlayerView.swift */,
 				6F59E86D29CF31E10093E6FB /* SystemPlayerView.swift */,
-				6F59E86E29CF31E10093E6FB /* BasicPlaybackView.swift */,
 				6F59E86F29CF31E10093E6FB /* VanillaPlayerView.swift */,
-				6F59E87029CF31E10093E6FB /* PlayerView.swift */,
-				6F59E87129CF31E10093E6FB /* PlayerLayout.swift */,
 			);
 			path = Players;
 			sourceTree = "<group>";
