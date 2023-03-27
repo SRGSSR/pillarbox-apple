@@ -15,7 +15,7 @@ enum Resource {
     case custom(url: URL, delegate: AVAssetResourceLoaderDelegate)
     case encrypted(url: URL, delegate: AVContentKeySessionDelegate)
 
-    private static let logger = Logger(category: "Asset")
+    private static let logger = Logger(category: "Resource")
 
     func playerItem() -> AVPlayerItem {
         switch self {
