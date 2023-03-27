@@ -34,6 +34,7 @@ public final class Player: ObservableObject, Equatable {
     /// Indicates whether the player is currently playing video in external playback mode.
     @Published public private(set) var isExternalPlaybackActive = false
 
+    @Published private var currentTracker: CurrentTracker?
     @Published private var currentItem: CurrentItem = .good(nil)
     @Published private var storedItems: Deque<PlayerItem>
 
@@ -55,6 +56,12 @@ public final class Player: ObservableObject, Equatable {
     /// Returns whether the player is currently busy (buffering or seeking).
     public var isBusy: Bool {
         isBuffering || isSeeking
+    }
+
+    /// The low-level system player. Exposed for specific read-only needs like interfacing with `AVPlayer`-based
+    /// 3rd party APIs. Mutating the state of this player directly is not supported and leads to undefined behavior.
+    public var systemPlayer: AVPlayer {
+        queuePlayer
     }
 
     /// The current item duration or `.invalid` when not known.
@@ -95,6 +102,7 @@ public final class Player: ObservableObject, Equatable {
         configureBufferingPublisher()
         configureCurrentItemPublisher()
         configureCurrentIndexPublisher()
+        configureCurrentTrackerPublisher()
         configureControlCenterPublishers()
         configureQueueUpdatePublisher()
         configureExternalPlaybackPublisher()
@@ -612,6 +620,26 @@ public extension Player {
 }
 
 extension Player {
+    private final class CurrentTracker {
+        let item: PlayerItem
+        private var cancellables = Set<AnyCancellable>()
+
+        init(item: PlayerItem, player: Player) {
+            self.item = item
+
+            item.asset.enable(for: player)
+            item.$asset
+                .sink { asset in
+                    asset.updateMetadata()
+                }
+                .store(in: &cancellables)
+        }
+
+        deinit {
+            item.asset.disable()
+        }
+    }
+
     private struct Current: Equatable {
         let item: PlayerItem
         let index: Int
@@ -673,6 +701,16 @@ extension Player {
             .assign(to: &$currentIndex)
     }
 
+    private func configureCurrentTrackerPublisher() {
+        currentPublisher()
+            .map { [weak self] current in
+                guard let self, let current else { return nil }
+                return CurrentTracker(item: current.item, player: self)
+            }
+            .receiveOnMainThread()
+            .assign(to: &$currentTracker)
+    }
+
     private func configureControlCenterPublishers() {
         configureControlCenterPublisher()
         configureControlCenterCommandAvailabilityPublisher()
@@ -715,7 +753,7 @@ extension Player {
     }
 
     private func configureQueueUpdatePublisher() {
-        sourcesPublisher()
+        assetsPublisher()
             .withPrevious()
             .map { [queuePlayer] sources in
                 AVPlayerItem.playerItems(
@@ -731,11 +769,11 @@ extension Player {
             .store(in: &cancellables)
     }
 
-    private func sourcesPublisher() -> AnyPublisher<[Source], Never> {
+    private func assetsPublisher() -> AnyPublisher<[any Assetable], Never> {
         $storedItems
             .map { items in
                 Publishers.AccumulateLatestMany(items.map { item in
-                    item.$source
+                    item.$asset
                 })
             }
             .switchToLatest()
@@ -779,8 +817,8 @@ extension Player {
                 guard let current else {
                     return Just(NowPlaying.Info()).eraseToAnyPublisher()
                 }
-                return current.item.$source
-                    .map { $0.asset.nowPlayingInfo() }
+                return current.item.$asset
+                    .map { $0.nowPlayingInfo() }
                     .eraseToAnyPublisher()
             }
             .switchToLatest()

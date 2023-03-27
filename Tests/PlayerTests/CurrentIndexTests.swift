@@ -61,7 +61,7 @@ final class CurrentIndexTests: TestCase {
     }
 
     func testSlowFirstCurrentIndex() {
-        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url, delay: 2)
+        let item1 = PlayerItem.mock(url: Stream.shortOnDemand.url, loadedAfter: 2)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         expectAtLeastEqualPublished(

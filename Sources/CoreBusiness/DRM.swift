@@ -6,14 +6,26 @@
 
 import Foundation
 
-struct DRM: Decodable {
-    enum `Type`: String, Decodable {
+/// Describes DRM protection.
+public struct DRM: Decodable {
+    /// DRM types.
+    public enum `Type`: String, Decodable {
+        /// FairPlay.
         case fairPlay = "FAIRPLAY"
+
+        /// PlayReady.
         case playReady = "PLAYREADY"
+
+        /// Widevine.
         case widevine = "WIDEVINE"
     }
 
+    /// The DRM type.
     let type: `Type`
+
+    /// The certificate URL.
     let certificateUrl: URL?
+
+    /// The license URL.
     let licenseUrl: URL
 }

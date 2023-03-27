@@ -14,7 +14,11 @@ public extension PlayerItem {
     /// - Parameters:
     ///   - urn: The URN to play.
     ///   - environment: The environment which the URN is played from.
-    static func urn(_ urn: String, environment: Environment = .production) -> Self {
+    static func urn(
+        _ urn: String,
+        environment: Environment = .production,
+        trackerAdapters: [TrackerAdapter<MediaMetadata>] = []
+    ) -> Self {
         let dataProvider = DataProvider(environment: environment)
         let publisher = dataProvider.playableMediaCompositionPublisher(forUrn: urn)
             .tryMap { mediaComposition in
@@ -22,33 +26,32 @@ public extension PlayerItem {
                 guard let resource = mainChapter.recommendedResource else {
                     throw DataError.noResourceAvailable
                 }
-                return dataProvider.imagePublisher(for: mediaComposition.mainChapter.imageUrl, width: .width480)
+                return dataProvider.imagePublisher(for: mainChapter.imageUrl, width: .width480)
                     .map { Optional($0) }
                     .replaceError(with: nil)
                     .prepend(nil)
                     .map { image in
-                        let metadata = Self.assetMetadata(for: mediaComposition, image: image)
-                        return Self.asset(for: resource, metadata: metadata)
+                        let metadata = MediaMetadata(mediaComposition: mediaComposition, resource: resource, image: image)
+                        return Self.asset(for: metadata)
                     }
             }
             .switchToLatest()
             .eraseToAnyPublisher()
-        return .init(publisher: publisher)
+        return .init(publisher: publisher, trackerAdapters: [
+            ComScoreTracker.adapter { mediaMetadata in
+                mediaMetadata.analyticsData
+            },
+            CommandersActTracker.adapter { mediaMetadata in
+                mediaMetadata.analyticsMetadata
+            }
+        ] + trackerAdapters)
     }
 
-    private static func assetMetadata(for mediaComposition: MediaComposition, image: UIImage?) -> Asset.Metadata {
-        .init(
-            title: mediaComposition.title,
-            subtitle: mediaComposition.subtitle,
-            description: mediaComposition.description,
-            image: image
-        )
-    }
-
-    private static func asset(for resource: Resource, metadata: Asset.Metadata) -> Asset {
+    private static func asset(for metadata: MediaMetadata) -> Asset<MediaMetadata> {
+        let resource = metadata.resource
         let configuration = assetConfiguration(for: resource)
 
-        if let certificateUrl = resource.drms?.first(where: { $0.type == .fairPlay })?.certificateUrl {
+        if let certificateUrl = resource.drms.first(where: { $0.type == .fairPlay })?.certificateUrl {
             return .encrypted(
                 url: resource.url,
                 delegate: ContentKeySessionDelegate(certificateUrl: certificateUrl),

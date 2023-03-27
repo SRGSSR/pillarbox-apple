@@ -8,35 +8,33 @@ import AVFoundation
 import Combine
 import Core
 
-private var kIdKey: Void?
-
 /// An item to be inserted into the player.
 public final class PlayerItem: Equatable {
-    @Published private(set) var source: Source
+    @Published private(set) var asset: any Assetable
 
     private let id = UUID()
 
     /// Create the item from an `Asset` publisher data source.
-    public init<P>(publisher: P) where P: Publisher, P.Output == Asset {
-        source = Source(id: id, asset: .loading)
+    public init<P, M>(publisher: P, trackerAdapters: [TrackerAdapter<M>] = []) where P: Publisher, M: AssetMetadata, P.Output == Asset<M> {
+        asset = Asset<M>.loading.withId(id).withTrackerAdapters(trackerAdapters)
         publisher
             .catch { error in
                 Just(.failed(error: error))
             }
             .map { [id] asset in
-                Source(id: id, asset: asset)
+                asset.withId(id).withTrackerAdapters(trackerAdapters)
             }
             // Mitigate instabilities arising when publisher involves `URLSession` publishers, see issue #206.
             .receiveOnMainThread()
-            .assign(to: &$source)
+            .assign(to: &$asset)
     }
 
     /// Create a player item from a URL.
     /// - Parameters:
     ///   - url: The URL to play.
     ///   - configuration: A closure to configure player items created from the receiver.
-    public convenience init(asset: Asset) {
-        self.init(publisher: Just(asset))
+    public convenience init<M>(asset: Asset<M>, trackerAdapters: [TrackerAdapter<M>] = []) where M: AssetMetadata {
+        self.init(publisher: Just(asset), trackerAdapters: trackerAdapters)
     }
 
     public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
@@ -44,7 +42,7 @@ public final class PlayerItem: Equatable {
     }
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
-        playerItem?.id == id
+        asset.matches(playerItem)
     }
 }
 
@@ -53,14 +51,16 @@ public extension PlayerItem {
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - metadata: The metadata associated with the item.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The item.
-    static func simple(
+    static func simple<M>(
         url: URL,
-        metadata: Asset.Metadata? = nil,
+        metadata: M,
+        trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self {
-        .init(asset: .simple(url: url, metadata: metadata, configuration: configuration))
+    ) -> Self where M: AssetMetadata {
+        .init(asset: .simple(url: url, metadata: metadata, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 
     /// An item loaded with custom resource loading. The scheme of the URL to be played has to be recognized by
@@ -69,15 +69,17 @@ public extension PlayerItem {
     ///   - url: The URL to be played.
     ///   - delegate: The custom resource loader to use.
     ///   - metadata: The metadata associated with the item.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The item.
-    static func custom(
+    static func custom<M>(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
-        metadata: Asset.Metadata? = nil,
+        metadata: M,
+        trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self {
-        .init(asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration))
+    ) -> Self where M: AssetMetadata {
+        .init(asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 
     /// An encrypted item loaded with a content key session.
@@ -85,50 +87,71 @@ public extension PlayerItem {
     ///   - url: The URL to be played.
     ///   - delegate: The content key session delegate to use.
     ///   - metadata: The metadata associated with the item.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The item.
+    static func encrypted<M>(
+        url: URL,
+        delegate: AVContentKeySessionDelegate,
+        metadata: M,
+        trackerAdapters: [TrackerAdapter<M>] = [],
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+    ) -> Self where M: AssetMetadata {
+        .init(asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration), trackerAdapters: trackerAdapters)
+    }
+}
+
+public extension PlayerItem {
+    /// A simple playable item.
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The item.
+    static func simple(
+        url: URL,
+        trackerAdapters: [TrackerAdapter<Never>] = [],
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+    ) -> Self {
+        .init(asset: .simple(url: url, configuration: configuration), trackerAdapters: trackerAdapters)
+    }
+
+    /// An item loaded with custom resource loading. The scheme of the URL to be played has to be recognized by
+    /// the associated resource loader delegate.
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - delegate: The custom resource loader to use.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The item.
+    static func custom(
+        url: URL,
+        delegate: AVAssetResourceLoaderDelegate,
+        trackerAdapters: [TrackerAdapter<Never>] = [],
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+    ) -> Self {
+        .init(asset: .custom(url: url, delegate: delegate, configuration: configuration), trackerAdapters: trackerAdapters)
+    }
+
+    /// An encrypted item loaded with a content key session.
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - delegate: The content key session delegate to use.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The item.
     static func encrypted(
         url: URL,
         delegate: AVContentKeySessionDelegate,
-        metadata: Asset.Metadata? = nil,
+        trackerAdapters: [TrackerAdapter<Never>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .init(asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration))
+        .init(asset: .encrypted(url: url, delegate: delegate, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 }
 
 extension PlayerItem: CustomDebugStringConvertible {
     public var debugDescription: String {
-        "\(source)"
-    }
-}
-
-extension Source {
-    func matches(_ item: AVPlayerItem?) -> Bool {
-        id == item?.id
-    }
-
-    func playerItem() -> AVPlayerItem {
-        asset.playerItem().withId(id)
-    }
-}
-
-private extension AVPlayerItem {
-    /// An identifier to identify player items delivered by the same data source.
-    var id: UUID? {
-        get {
-            objc_getAssociatedObject(self, &kIdKey) as? UUID
-        }
-        set {
-            objc_setAssociatedObject(self, &kIdKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-    }
-
-    /// Assign an identifier to identify player items delivered by the same data source.
-    /// - Parameter id: The id to assign.
-    /// - Returns: The receiver with the id assigned to it.
-    func withId(_ id: UUID) -> AVPlayerItem {
-        self.id = id
-        return self
+        "\(asset)"
     }
 }

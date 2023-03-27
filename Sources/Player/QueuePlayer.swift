@@ -30,7 +30,7 @@ struct Seek: Equatable {
 class QueuePlayer: AVQueuePlayer {
     static let notificationCenter = NotificationCenter()
 
-    private static var logger = Logger(category: "QueuePlayer")
+    private static let logger = Logger(category: "QueuePlayer")
 
     private var pendingSeeks = Deque<Seek>()
     private var cancellables = Set<AnyCancellable>()

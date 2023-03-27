@@ -7,9 +7,12 @@
 import Foundation
 import Player
 
-struct Resource: Decodable {
+/// Describes a playable resource.
+public struct Resource: Decodable {
     enum CodingKeys: String, CodingKey {
-        case drms = "drmList"
+        case _analyticsData = "analyticsData"
+        case _analyticsMetadata = "analyticsMetadata"
+        case _drms = "drmList"
         case isDvr = "dvr"
         case isLive = "live"
         case streamingMethod = "streaming"
@@ -17,10 +20,24 @@ struct Resource: Decodable {
         case url
     }
 
-    let url: URL
-    let streamingMethod: StreamingMethod
+    /// The resource URL.
+    public let url: URL
 
-    var streamType: StreamType {
+    /// The streaming method.
+    public let streamingMethod: StreamingMethod
+
+    /// comScore analytics data.
+    public var analyticsData: [String: String] {
+        _analyticsData ?? [:]
+    }
+
+    /// CommandersAct analytics data.
+    public var analyticsMetadata: [String: String] {
+        _analyticsMetadata ?? [:]
+    }
+
+    /// The stream type.
+    public var streamType: StreamType {
         if isDvr {
             return .dvr
         }
@@ -32,11 +49,20 @@ struct Resource: Decodable {
         }
     }
 
-    let tokenType: TokenType
+    /// The token type.
+    public let tokenType: TokenType
 
-    // swiftlint:disable:next discouraged_optional_collection
-    let drms: [DRM]?
+    /// The list of DRMs required to play the resource.
+    public var drms: [DRM] {
+        _drms ?? []
+    }
 
     private let isDvr: Bool
     private let isLive: Bool
+    // swiftlint:disable:next discouraged_optional_collection
+    private let _drms: [DRM]?
+    // swiftlint:disable:next discouraged_optional_collection
+    private let _analyticsData: [String: String]?
+    // swiftlint:disable:next discouraged_optional_collection
+    private let _analyticsMetadata: [String: String]?
 }

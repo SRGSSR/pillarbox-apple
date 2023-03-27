@@ -6,52 +6,44 @@
 
 import Foundation
 
-struct MediaComposition: Decodable {
+/// Describes a playback context.
+public struct MediaComposition: Decodable {
     enum CodingKeys: String, CodingKey {
+        case _analyticsData = "analyticsData"
+        case _analyticsMetadata = "analyticsMetadata"
         case chapterUrn
         case chapters = "chapterList"
         case show
     }
 
-    let chapterUrn: String
-    let chapters: [Chapter]
-    let show: Show?
+    /// The URN of the chapter to be played..
+    public let chapterUrn: String
+
+    /// The available chapters.
+    public let chapters: [Chapter]
+
+    /// The related show.
+    public let show: Show?
+
+    /// comScore analytics data.
+    public var analyticsData: [String: String] {
+        _analyticsData ?? [:]
+    }
+
+    /// CommandersAct analytics data.
+    public var analyticsMetadata: [String: String] {
+        _analyticsMetadata ?? [:]
+    }
+
+    // swiftlint:disable:next discouraged_optional_collection
+    private let _analyticsData: [String: String]?
+    // swiftlint:disable:next discouraged_optional_collection
+    private let _analyticsMetadata: [String: String]?
 }
 
-extension MediaComposition {
-    private static var dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeZone = TimeZone(identifier: "Europe/Zurich")
-        dateFormatter.dateStyle = .long
-        dateFormatter.timeStyle = .none
-        dateFormatter.doesRelativeDateFormatting = true
-        return dateFormatter
-    }()
-
+public extension MediaComposition {
+    /// The main chapter.
     var mainChapter: Chapter {
         chapters.first { $0.urn == chapterUrn }!
-    }
-
-    var title: String {
-        guard mainChapter.contentType != .livestream else { return mainChapter.title }
-        if let show, Self.areRedundant(chapter: mainChapter, show: show) {
-            return Self.dateFormatter.string(from: mainChapter.date)
-        }
-        else {
-            return mainChapter.title
-        }
-    }
-
-    var subtitle: String? {
-        guard mainChapter.contentType != .livestream else { return nil }
-        return show?.title
-    }
-
-    var description: String? {
-        mainChapter.description
-    }
-
-    private static func areRedundant(chapter: Chapter, show: Show) -> Bool {
-        chapter.title.lowercased() == show.title.lowercased()
     }
 }

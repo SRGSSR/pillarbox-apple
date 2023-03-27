@@ -12,7 +12,7 @@ extension AVPlayerItem {
     }
 
     static func playerItems(from items: [PlayerItem]) -> [AVPlayerItem] {
-        playerItems(from: items.map(\.source))
+        playerItems(from: items.map(\.asset))
     }
 
     static func timeRange(loadedTimeRanges: [NSValue], seekableTimeRanges: [NSValue]) -> CMTimeRange {

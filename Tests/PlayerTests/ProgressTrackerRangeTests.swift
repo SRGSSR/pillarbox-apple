@@ -46,7 +46,7 @@ final class ProgressTrackerRangeTests: TestCase {
         }
     }
 
-    func testDuringEntirePlayback() {
+    func testEntirePlayback() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(item: item)

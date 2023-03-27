@@ -6,6 +6,6 @@
 
 import AVFoundation
 
-final class DummyContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
+final class ContentKeySessionDelegateMock: NSObject, AVContentKeySessionDelegate {
     func contentKeySession(_ session: AVContentKeySession, didProvide keyRequest: AVContentKeyRequest) {}
 }

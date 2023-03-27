@@ -35,17 +35,38 @@ struct Media: Hashable, Identifiable {
     }
 
     func playerItem() -> PlayerItem {
-        let metadata = Asset.Metadata(title: title, subtitle: description)
         switch type {
         case let .url(url):
-            return .simple(url: url, metadata: metadata)
+            return .simple(url: url, metadata: self, trackerAdapters: [
+                DemoTracker.adapter { media in
+                    DemoTracker.Metadata(title: media.title)
+                }
+            ])
         case let .unbufferedUrl(url):
-            return .simple(url: url, metadata: metadata) { item in
+            return .simple(
+                url: url,
+                metadata: self,
+                trackerAdapters: [
+                    DemoTracker.adapter { media in
+                        DemoTracker.Metadata(title: media.title)
+                    }
+                ]
+            ) { item in
                 item.automaticallyPreservesTimeOffsetFromLive = true
                 item.preferredForwardBufferDuration = 1
             }
         case let .urn(urn):
-            return .urn(urn)
+            return .urn(urn, trackerAdapters: [
+                DemoTracker.adapter { metadata in
+                    DemoTracker.Metadata(title: metadata.title)
+                }
+            ])
         }
+    }
+}
+
+extension Media: AssetMetadata {
+    func nowPlayingMetadata() -> NowPlayingMetadata {
+        .init(title: title, subtitle: description)
     }
 }

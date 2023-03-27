@@ -2,16 +2,21 @@
 
 # Overview
 
-Pillarbox is the modern SRG SSR player platform, providing most notably:
+Pillarbox is the modern SRG SSR player ecosystem implemented on top of AVFoundation and AVKit. Pillarbox was designed with flexibilty in mind, letting you fully customize:
 
-- A player with all essential playback features.
-- First-class custom user interface implementation using SwiftUI.
+- Metadata and asset URL retrieval.
+- Asset resource loading.
+- Analytics and QoS integration.
+- User interface layout in SwiftUI.
+
+Its robust reactive player provides all essential playback features, as well as:
+
 - Support for playlists, including bidirectional navigation.
-- Flexible data integration.
-- Support for custom resource loading.
+- First-class integration with SwiftUI.
 - AirPlay compatibility.
 - Control center integration.
-- Ability to play SRG SSR content.
+
+In addition Pillarbox provides the ability to play all SRG SSR content through a dedicated package.
 
 # Showcase
 

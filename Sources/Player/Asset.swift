@@ -6,12 +6,10 @@
 
 import AVFoundation
 import MediaPlayer
-import OSLog
 
-private let kContentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
+private var kIdKey: Void?
 
 private let kResourceLoaderQueue = DispatchQueue(label: "ch.srgssr.player.resource_loader")
-private let kContentKeySessionQueue = DispatchQueue(label: "ch.srgssr.player.content_key_session")
 
 /// An item which stores its own custom resource loader delegate.
 final class ResourceLoadedPlayerItem: AVPlayerItem {
@@ -28,12 +26,12 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
 }
 
 /// An asset representing content to be played.
-public struct Asset {
-    typealias NowPlayingInfo = [String: Any]
-
-    private let type: `Type`
-    private let metadata: Metadata?
+public struct Asset<M: AssetMetadata>: Assetable {
+    let id: UUID
+    let resource: Resource
+    private let metadata: M?
     private let configuration: (AVPlayerItem) -> Void
+    private let trackerAdapters: [TrackerAdapter<M>]
 
     /// A simple asset playable from a URL.
     /// - Parameters:
@@ -43,13 +41,15 @@ public struct Asset {
     /// - Returns: The asset.
     public static func simple(
         url: URL,
-        metadata: Metadata? = nil,
+        metadata: M,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
-            type: .simple(url: url),
+            id: UUID(),
+            resource: .simple(url: url),
             metadata: metadata,
-            configuration: configuration
+            configuration: configuration,
+            trackerAdapters: []
         )
     }
 
@@ -64,13 +64,15 @@ public struct Asset {
     public static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
-        metadata: Metadata? = nil,
+        metadata: M,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
-            type: .custom(url: url, delegate: delegate),
+            id: UUID(),
+            resource: .custom(url: url, delegate: delegate),
             metadata: metadata,
-            configuration: configuration
+            configuration: configuration,
+            trackerAdapters: []
         )
     }
 
@@ -84,25 +86,48 @@ public struct Asset {
     public static func encrypted(
         url: URL,
         delegate: AVContentKeySessionDelegate,
-        metadata: Metadata? = nil,
+        metadata: M,
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
-            type: .encrypted(url: url, delegate: delegate),
+            id: UUID(),
+            resource: .encrypted(url: url, delegate: delegate),
             metadata: metadata,
-            configuration: configuration
+            configuration: configuration,
+            trackerAdapters: []
         )
     }
 
-    func playerItem() -> AVPlayerItem {
-        let item = type.playerItem()
-        configuration(item)
-        return item
+    func withTrackerAdapters(_ trackerAdapters: [TrackerAdapter<M>]) -> Self {
+        .init(id: id, resource: resource, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
     }
 
-    func nowPlayingInfo() -> NowPlayingInfo {
-        var nowPlayingInfo = NowPlayingInfo()
-        if let metadata {
+    func withId(_ id: UUID) -> Self {
+        .init(id: id, resource: resource, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
+    }
+
+    func enable(for player: Player) {
+        trackerAdapters.forEach { adapter in
+            adapter.enable(for: player)
+        }
+    }
+
+    func updateMetadata() {
+        guard let metadata else { return }
+        trackerAdapters.forEach { adapter in
+            adapter.update(metadata: metadata)
+        }
+    }
+
+    func disable() {
+        trackerAdapters.forEach { adapter in
+            adapter.disable()
+        }
+    }
+
+    func nowPlayingInfo() -> NowPlaying.Info {
+        var nowPlayingInfo = NowPlaying.Info()
+        if let metadata = metadata?.nowPlayingMetadata() {
             nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
             nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
             nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
@@ -112,84 +137,115 @@ public struct Asset {
         }
         return nowPlayingInfo
     }
+
+    func playerItem() -> AVPlayerItem {
+        let item = resource.playerItem().withId(id)
+        configuration(item)
+        return item
+    }
 }
 
-public extension Asset {
-    /// Metadata associated with an asset.
-    struct Metadata {
-        /// Title.
-        let title: String?
-        /// Subtitle.
-        let subtitle: String?
-        /// Description.
-        let description: String?
-        /// Image.
-        let image: UIImage?
-
-        /// Create an asset metadata.
-        public init(title: String? = nil, subtitle: String? = nil, description: String? = nil, image: UIImage? = nil) {
-            self.title = title
-            self.subtitle = subtitle
-            self.description = description
-            self.image = image
-        }
+public extension Asset where M == Never {
+    /// A simple asset playable from a URL.
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The asset.
+    static func simple(
+        url: URL,
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+    ) -> Self {
+        .init(
+            id: UUID(),
+            resource: .simple(url: url),
+            metadata: nil,
+            configuration: configuration,
+            trackerAdapters: []
+        )
     }
 
-    private enum `Type` {
-        case simple(url: URL)
-        case custom(url: URL, delegate: AVAssetResourceLoaderDelegate)
-        case encrypted(url: URL, delegate: AVContentKeySessionDelegate)
+    /// An asset loaded with custom resource loading. The scheme of the URL to be played has to be recognized by
+    /// the associated resource loader delegate.
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - delegate: The custom resource loader to use.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The asset.
+    static func custom(
+        url: URL,
+        delegate: AVAssetResourceLoaderDelegate,
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+    ) -> Self {
+        .init(
+            id: UUID(),
+            resource: .custom(url: url, delegate: delegate),
+            metadata: nil,
+            configuration: configuration,
+            trackerAdapters: []
+        )
+    }
 
-        private static var logger = Logger(category: "Asset")
-
-        func playerItem() -> AVPlayerItem {
-            switch self {
-            case let .simple(url: url):
-                return AVPlayerItem(url: url)
-            case let .custom(url: url, delegate: delegate):
-                return ResourceLoadedPlayerItem(
-                    url: url,
-                    resourceLoaderDelegate: delegate
-                )
-            case let .encrypted(url: url, delegate: delegate):
-#if targetEnvironment(simulator)
-                Self.logger.error("FairPlay-encrypted assets cannot be played in the simulator")
-                return AVPlayerItem(url: url)
-#else
-                let asset = AVURLAsset(url: url)
-                kContentKeySession.setDelegate(delegate, queue: kContentKeySessionQueue)
-                kContentKeySession.addContentKeyRecipient(asset)
-                kContentKeySession.processContentKeyRequest(withIdentifier: nil, initializationData: nil)
-                return AVPlayerItem(asset: asset)
-#endif
-            }
-        }
+    /// An encrypted asset loaded with a content key session.
+    /// - Parameters:
+    ///   - url: The URL to be played.
+    ///   - delegate: The content key session delegate to use.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    /// - Returns: The asset.
+    static func encrypted(
+        url: URL,
+        delegate: AVContentKeySessionDelegate,
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+    ) -> Self {
+        .init(
+            id: UUID(),
+            resource: .encrypted(url: url, delegate: delegate),
+            metadata: nil,
+            configuration: configuration,
+            trackerAdapters: []
+        )
     }
 }
 
 extension Asset {
     static var loading: Self {
         // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-        .custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate())
+        .init(
+            id: UUID(),
+            resource: .custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate()),
+            metadata: nil,
+            configuration: { _ in },
+            trackerAdapters: []
+        )
     }
 
     static func failed(error: Error) -> Self {
         // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-        .custom(url: URL(string: "pillarbox://failing.m3u8")!, delegate: FailedResourceLoaderDelegate(error: error))
+        .init(
+            id: UUID(),
+            resource: .custom(url: URL(string: "pillarbox://failing.m3u8")!, delegate: FailedResourceLoaderDelegate(error: error)),
+            metadata: nil,
+            configuration: { _ in },
+            trackerAdapters: []
+        )
     }
 }
 
-extension Asset: Equatable {
-    public static func == (lhs: Asset, rhs: Asset) -> Bool {
-        switch (lhs.type, rhs.type) {
-        case let (.simple(url: lhsUrl), .simple(url: rhsUrl)):
-            return lhsUrl == rhsUrl
-        case let (.custom(url: lhsUrl, delegate: lhsDelegate), .custom(url: rhsUrl, delegate: rhsDelegate)):
-            return lhsUrl == rhsUrl && lhsDelegate === rhsDelegate
-        case let (.encrypted(url: lhsUrl, delegate: lhsDelegate), .encrypted(url: rhsUrl, delegate: rhsDelegate)):
-            return lhsUrl == rhsUrl && lhsDelegate === rhsDelegate
-        default:
-            return false
+extension AVPlayerItem {
+    /// An identifier to identify player items delivered by the same data source.
+    var id: UUID? {
+        get {
+            objc_getAssociatedObject(self, &kIdKey) as? UUID
         }
+        set {
+            objc_setAssociatedObject(self, &kIdKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+
+    /// Assign an identifier to identify player items delivered by the same data source.
+    /// - Parameter id: The id to assign.
+    /// - Returns: The receiver with the id assigned to it.
+    fileprivate func withId(_ id: UUID) -> AVPlayerItem {
+        self.id = id
+        return self
     }
 }
