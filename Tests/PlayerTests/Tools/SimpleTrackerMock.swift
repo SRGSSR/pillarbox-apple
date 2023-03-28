@@ -18,15 +18,13 @@ final class SimpleTrackerMock: ObservableObject, PlayerItemTracker {
 
     static var state = PassthroughSubject<State, Never>()
 
-    init(configuration: Void) {
+    init(configuration: Void, metadataPublisher: AnyPublisher<Void, Never>) {
         Self.state.send(.initialized)
     }
 
     func enable(for player: Player) {
         Self.state.send(.enabled)
     }
-
-    func update(metadata: Void) {}
 
     func disable() {
         Self.state.send(.disabled)

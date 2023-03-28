@@ -18,9 +18,16 @@ final class NonConfigurableTrackerMock: ObservableObject, PlayerItemTracker {
     }
 
     static var state = PassthroughSubject<State, Never>()
+    private var cancellables = Set<AnyCancellable>()
 
-    init(configuration: Void) {
+    init(configuration: Void, metadataPublisher: AnyPublisher<String, Never>) {
         Self.state.send(.initialized)
+
+        metadataPublisher
+            .sink { metadata in
+                Self.state.send(.updated(metadata))
+            }
+        .store(in: &cancellables)
     }
 
     func enable(for player: Player) {
@@ -37,5 +44,6 @@ final class NonConfigurableTrackerMock: ObservableObject, PlayerItemTracker {
 
     deinit {
         Self.state.send(.deinitialized)
+        cancellables = []
     }
 }
