@@ -630,19 +630,30 @@ extension Player {
 
         init(item: PlayerItem, player: Player) {
             self.item = item
+            configureTrackingPublisher(player: player)
+            configureAssetPublisher(for: item)
+        }
+
+        deinit {
+            disableAssetIfNeeded()
+        }
+
+        private func configureTrackingPublisher(player: Player) {
             player.$isTrackingEnabled
                 .sink { [weak self] enabled in
                     guard let self, self.isEnabled != enabled else { return }
                     self.isEnabled = enabled
                     if enabled {
-                        item.asset.enable(for: player)
+                        enableAsset(for: player)
                     }
                     else {
-                        item.asset.disable()
+                        disableAsset()
                     }
                 }
                 .store(in: &cancellables)
+        }
 
+        private func configureAssetPublisher(for item: PlayerItem) {
             item.$asset
                 .sink { asset in
                     asset.updateMetadata()
@@ -650,9 +661,17 @@ extension Player {
                 .store(in: &cancellables)
         }
 
-        deinit {
+        private func enableAsset(for player: Player) {
+            item.asset.enable(for: player)
+        }
+
+        private func disableAsset() {
+            item.asset.disable()
+        }
+
+        private func disableAssetIfNeeded() {
             if isEnabled {
-                item.asset.disable()
+                disableAsset()
             }
         }
     }
