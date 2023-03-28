@@ -624,7 +624,7 @@ public extension Player {
 
 extension Player {
     private final class CurrentTracker {
-        let item: PlayerItem // TODO: Try to put the item private.
+        private let item: PlayerItem
         private var isEnabled = false
         private var cancellables = Set<AnyCancellable>()
 
