@@ -21,8 +21,8 @@ final class DemoTracker: PlayerItemTracker {
     init(configuration: Void, metadataPublisher: AnyPublisher<Metadata, Never>) {
         Self.logger.debug("Init demo tracker \(self.id)")
 
-        metadataPublisher.sink { metadata in
-            Self.logger.debug("Update demo tracker metadata for \(self.id): \(metadata.title)")
+        metadataPublisher.sink { [id] metadata in
+            Self.logger.debug("Update demo tracker metadata for \(id): \(metadata.title)")
         }
         .store(in: &cancellables)
     }
