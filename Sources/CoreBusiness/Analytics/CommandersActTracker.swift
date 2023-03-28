@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Combine
 import Foundation
 import Player
 
@@ -11,14 +12,10 @@ import Player
 public final class CommandersActTracker: PlayerItemTracker {
     private let id = UUID()
 
-    public init(configuration: Void) {}
+    public init(configuration: Void, metadataPublisher: AnyPublisher<[String: String], Never>) {}
 
     public func enable(for player: Player) {
         print("--> enable CommandersAct \(id)")
-    }
-
-    public func update(metadata: [String: String]) {
-        print("--> update CommandersAct metadata: \(metadata)")
     }
 
     public func disable() {

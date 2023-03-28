@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Combine
 import Foundation
 
 /// An adapter which instantiates and manages a tracker of a specified type, transforming metadata delivered by the
@@ -18,9 +19,12 @@ public struct TrackerAdapter<M: AssetMetadata> {
     ///   - configuration: The tracker configuration.
     ///   - mapper: The metadata mapper.
     public init<T>(trackerType: T.Type, configuration: T.Configuration, mapper: @escaping (M) -> T.Metadata) where T: PlayerItemTracker {
-        let tracker = trackerType.init(configuration: configuration)
+        // swiftlint:disable:next private_subject
+        let metadataSubject = CurrentValueSubject<T.Metadata?, Never>(nil)
+        let metadataPublisher = metadataSubject.compactMap { $0 }.eraseToAnyPublisher()
+        let tracker = trackerType.init(configuration: configuration, metadataPublisher: metadataPublisher)
         update = { metadata in
-            tracker.update(metadata: mapper(metadata))
+            metadataSubject.send(mapper(metadata))
         }
         self.tracker = tracker
     }
