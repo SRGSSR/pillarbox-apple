@@ -265,14 +265,13 @@ The resulting player item can then be played in a Pillarbox `Player` instance. I
 Pillarbox makes it possible to easily integrate any kind of tracker, mostly for analytics or QoS needs. Proceed as follows to implement your own tracker:
 
 1. Create a new tracker class, say `CustomTracker`, and add conformance to the `PlayerItemTracker` protocol.
-2. The `PlayerItemTracker` protocol declares a `Configuration` associated type. If your tracker requires configuration just create a dedicated type which contains all required parameters. This type must be provided to the `init(configuration:)` method implemented in your tracker so that type inference correctly identifies it as configuration type. If no configuration is required just use `Void` instead.
-3. The `PlayerItemTracker` protocol declares a `Metadata` associated type. If your tracker requires metadata related to the item being tracked just create a dedicated type which contains all required information. This type must be provided to the `update(metadata:)` method implemented in your tracker so that type inference correctly identifies it as metadata type.
-4. Trackers are automatically instantiated and managed by a player. You therefore never instantiate a tracker directly but rather achieve the behavior you need by implementing `PlayerItemTracker` lifecycle methods instead:
-  - Configure your tracker early in `init(configuration:)` and / or store the configuration for later use. You can also start early data collection if needed.
+2. The `PlayerItemTracker` protocol declares `Configuration` and `Metadata` associated types. If your tracker requires a configuration or metadata related to the item being tracked just create dedicated types which contain all required parameters. Use `Void` for any type that is not required for your tracker.
+3. Trackers are automatically instantiated by the item they are associated with. You therefore never instantiate a tracker directly but rather achieve the behavior you need by implementing `PlayerItemTracker` lifecycle methods instead:
+  - When created `init(configuration:metadataPublisher:)` is called on your tracker with the configuration you provided as well as a publisher for the metadata type you chose. You can either use these values directly to setup your tracker or store them for later use.
   - Subscribe to player events which must be followed in `enable(for:)`. This method is called when the item to which the tracker is bound becomes the current one. Store the subscription tokens in your tracker and implement how the tracker should handle the events you subscribed to.
-  - Metadata updates are automatically received in `update(metadata:)`. You can for example store the metadata to use it at a later time in your tracker implementation.
+  - Metadata updates are automatically received from the `metadataPublisher`. You can combine this publisher with other publishers like `$playbackState` to achieve the behavior you need.
   - Cancel subscriptions in `disable()` by discarding the tokens you stored. This method is called when the item to which the tracker is bound stops being the current one.
-  - You can stop any remaining data collection in `deinit`.
+  - You can perform any necessary final cleanup in `deinit` which is called when the player item and its trackers are discarded.
 
 Once you have a tracker you can attach it to any item. The only requirement is that metadata supplied as part of the asset retrieval process is transformed into metadata required by the tracker. This transformation requires the use of a dedicated adapter, simply created from your custom tracker type with the `adapter(configuration:mapper:)` method. The adapter is also where you can supply any configuration required by your tracker:
 

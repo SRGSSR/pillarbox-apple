@@ -18,9 +18,15 @@ final class TrackerMock: ObservableObject, PlayerItemTracker {
     }
 
     static var state = PassthroughSubject<State, Never>()
+    private var cancellables = Set<AnyCancellable>()
 
-    init(configuration: String) {
+    init(configuration: String, metadataPublisher: AnyPublisher<String, Never>) {
         Self.state.send(.initialized(configuration))
+
+        metadataPublisher.sink { metadata in
+            Self.state.send(.updated(metadata))
+        }
+        .store(in: &cancellables)
     }
 
     func enable(for player: Player) {
@@ -37,5 +43,6 @@ final class TrackerMock: ObservableObject, PlayerItemTracker {
 
     deinit {
         Self.state.send(.deinitialized)
+        cancellables = []
     }
 }

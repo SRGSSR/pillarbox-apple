@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Combine
 import Foundation
 import OSLog
 import Player
@@ -14,11 +15,16 @@ final class DemoTracker: PlayerItemTracker {
     }
 
     private static let logger = Logger(category: "DemoTracker")
-
+    private var cancellables = Set<AnyCancellable>()
     private let id = UUID()
 
-    init(configuration: Void) {
+    init(configuration: Void, metadataPublisher: AnyPublisher<Metadata, Never>) {
         Self.logger.debug("Init demo tracker \(self.id)")
+
+        metadataPublisher.sink { [id] metadata in
+            Self.logger.debug("Update demo tracker metadata for \(id): \(metadata.title)")
+        }
+        .store(in: &cancellables)
     }
 
     func enable(for player: Player) {
@@ -27,10 +33,6 @@ final class DemoTracker: PlayerItemTracker {
 
     func disable() {
         Self.logger.debug("Disable demo tracker for \(self.id)")
-    }
-
-    func update(metadata: Metadata) {
-        Self.logger.debug("Update demo tracker metadata for \(self.id): \(metadata.title)")
     }
 
     deinit {

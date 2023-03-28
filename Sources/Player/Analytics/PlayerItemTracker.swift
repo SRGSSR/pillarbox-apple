@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Combine
 import Foundation
 
 /// Common contract for player item tracker implementation. Initialization and deinitialization methods can be used
@@ -16,14 +17,14 @@ public protocol PlayerItemTracker: AnyObject {
     associatedtype Metadata
 
     /// Initialize the tracker.
-    init(configuration: Configuration)
+    /// - Parameters:
+    ///   - configuration: The tracker configuration.
+    ///   - metadataPublisher: The publisher that provides metadata updates.
+    init(configuration: Configuration, metadataPublisher: AnyPublisher<Metadata, Never>)
 
     /// Called when the tracker is enabled for a player.
     /// - Parameter player: The player for which the tracker must be enabled.
     func enable(for player: Player)
-
-    /// Called when the tracker metadata is updated.
-    func update(metadata: Metadata)
 
     /// Called when the tracker is disabled.
     func disable()

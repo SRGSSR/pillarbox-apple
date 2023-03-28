@@ -18,15 +18,13 @@ final class MetadataFreeMock: ObservableObject, PlayerItemTracker {
 
     static var state = PassthroughSubject<State, Never>()
 
-    init(configuration: String) {
+    init(configuration: String, metadataPublisher: AnyPublisher<Void, Never>) {
         Self.state.send(.initialized(configuration))
     }
 
     func enable(for player: Player) {
         Self.state.send(.enabled)
     }
-
-    func update(metadata: Void) {}
 
     func disable() {
         Self.state.send(.disabled)
