@@ -187,4 +187,18 @@ final class ExpectationTests: XCTestCase {
             subject.send(completion: .finished)
         }
     }
+
+    func testExpectAtLeastEqualFollowingExpectEqual() {
+        // swiftlint:disable:next private_subject
+        let publisher = PassthroughSubject<Int, Never>()
+        expectEqualPublished(values: [1, 2], from: publisher, during: .milliseconds(100)) {
+            publisher.send(1)
+            publisher.send(2)
+        }
+        expectAtLeastEqualPublished(values: [3, 4, 5], from: publisher) {
+            publisher.send(3)
+            publisher.send(4)
+            publisher.send(5)
+        }
+    }
 }

@@ -392,6 +392,7 @@ struct PlaybackView: View {
                     PlaybackMessageView(message: error.localizedDescription)
                 default:
                     videoView()
+                        .persistentSystemOverlays(.hidden)
                 }
             }
             else {
@@ -404,16 +405,19 @@ struct PlaybackView: View {
 
     @ViewBuilder
     private func videoView() -> some View {
+        ZStack {
 #if os(iOS)
-        switch UserDefaults.standard.playerLayout {
-        case .custom:
-            MainView(player: player)
-        case .system:
-            SystemVideoView(player: player)
-        }
+            switch UserDefaults.standard.playerLayout {
+            case .custom:
+                MainView(player: player)
+            case .system:
+                SystemVideoView(player: player)
+            }
 #else
-        VideoView(player: player)
+            VideoView(player: player)
 #endif
+        }
+        .ignoresSafeArea()
     }
 }
 

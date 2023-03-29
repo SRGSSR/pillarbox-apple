@@ -160,8 +160,6 @@ public extension XCTestCase {
         while executing: (() -> Void)? = nil
     ) -> [P.Output] {
         var values: [P.Output] = []
-
-        let expectation = expectation(description: "Collecting publisher output for \(interval) seconds")
         let cancellable = publisher.sink(
             receiveCompletion: { _ in },
             receiveValue: { value in
@@ -176,7 +174,7 @@ public extension XCTestCase {
             executing()
         }
 
-        _ = XCTWaiter.wait(for: [expectation], timeout: interval.double())
+        _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: interval.double())
         return values
     }
 }

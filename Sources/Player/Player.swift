@@ -34,6 +34,9 @@ public final class Player: ObservableObject, Equatable {
     /// Indicates whether the player is currently playing video in external playback mode.
     @Published public private(set) var isExternalPlaybackActive = false
 
+    /// Set whether trackers are enabled or not.
+    @Published public var isTrackingEnabled = true
+
     @Published private var currentTracker: CurrentTracker?
     @Published private var currentItem: CurrentItem = .good(nil)
     @Published private var storedItems: Deque<PlayerItem>
@@ -620,26 +623,6 @@ public extension Player {
 }
 
 extension Player {
-    private final class CurrentTracker {
-        let item: PlayerItem
-        private var cancellables = Set<AnyCancellable>()
-
-        init(item: PlayerItem, player: Player) {
-            self.item = item
-
-            item.asset.enable(for: player)
-            item.$asset
-                .sink { asset in
-                    asset.updateMetadata()
-                }
-                .store(in: &cancellables)
-        }
-
-        deinit {
-            item.asset.disable()
-        }
-    }
-
     private struct Current: Equatable {
         let item: PlayerItem
         let index: Int

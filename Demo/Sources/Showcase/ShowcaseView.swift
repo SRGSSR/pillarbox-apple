@@ -15,6 +15,7 @@ struct ShowcaseView: View {
             embeddingsSection()
             systemPlayerSection()
             vanillaPlayerSection()
+            trackingSection()
         }
         .navigationTitle("Showcase")
     }
@@ -102,6 +103,18 @@ struct ShowcaseView: View {
             }
             Cell(title: "Wrapped") {
                 WrappedView(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func trackingSection() -> some View {
+        Section("Tracking") {
+            Cell(title: "Video URL") {
+                TrackingView(media: Media(from: URLTemplate.onDemandVideoMP4))
+            }
+            Cell(title: "Video URN") {
+                TrackingView(media: Media(from: URNTemplate.onDemandVerticalVideo))
             }
         }
     }

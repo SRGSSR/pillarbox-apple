@@ -262,7 +262,7 @@ The resulting player item can then be played in a Pillarbox `Player` instance. I
 
 ## Custom item tracking
 
-Pillarbox makes it possible to easily integrate any kind of tracker, mostly for analytics or QoS needs. Proceed as follows to implement your own tracker:
+Pillarbox makes it possible to easily integrate any kind of tracker, for example to gather analytics, QoS data or to save the current playback position into a history. Proceed as follows to implement your own tracker:
 
 1. Create a new tracker class, say `CustomTracker`, and add conformance to the `PlayerItemTracker` protocol.
 2. The `PlayerItemTracker` protocol declares `Configuration` and `Metadata` associated types. If your tracker requires a configuration or metadata related to the item being tracked just create dedicated types which contain all required parameters. Use `Void` for any type that is not required for your tracker.
