@@ -644,10 +644,10 @@ extension Player {
                     guard let self, self.isEnabled != enabled else { return }
                     self.isEnabled = enabled
                     if enabled {
-                        enableAsset(for: player)
+                        self.enableAsset(for: player)
                     }
                     else {
-                        disableAsset()
+                        self.disableAsset()
                     }
                 }
                 .store(in: &cancellables)
