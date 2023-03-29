@@ -640,8 +640,8 @@ extension Player {
 
         private func configureTrackingPublisher(player: Player) {
             player.$isTrackingEnabled
-                .sink { [weak self] enabled in
-                    guard let self, self.isEnabled != enabled else { return }
+                .sink { [weak self, weak player] enabled in
+                    guard let self, let player, self.isEnabled != enabled else { return }
                     self.isEnabled = enabled
                     if enabled {
                         self.enableAsset(for: player)
