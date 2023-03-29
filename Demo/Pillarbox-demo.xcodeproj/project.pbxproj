@@ -257,8 +257,8 @@
 				6F59E86229CF31E10093E6FB /* LinkView.swift */,
 				6F59E85529CF31E10093E6FB /* MultiView.swift */,
 				6F59E85A29CF31E10093E6FB /* ShowcaseView.swift */,
-				6F59E85929CF31E10093E6FB /* TwinsView.swift */,
 				0E6B995B29D43E4200D0276D /* TrackingView.swift */,
+				6F59E85929CF31E10093E6FB /* TwinsView.swift */,
 			);
 			path = Showcase;
 			sourceTree = "<group>";
