@@ -49,9 +49,8 @@ final class CurrentTracker {
     }
 
     private func disableAssetIfNeeded() {
-        if isEnabled {
-            disableAsset()
-        }
+        guard isEnabled else { return }
+        disableAsset()
     }
 
     deinit {
