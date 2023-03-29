@@ -17,7 +17,6 @@ final class PublisherTests: XCTestCase {
     }
 
     func testWaitForSuccessResultWhileExecuting() {
-        // swiftlint:disable:next private_subject
         let subject = PassthroughSubject<Int, Never>()
         let values = try? waitForResult(from: subject) {
             subject.send(4)
@@ -38,7 +37,6 @@ final class PublisherTests: XCTestCase {
     }
 
     func testWaitForOutputWhileExecuting() throws {
-        // swiftlint:disable:next private_subject
         let subject = PassthroughSubject<Int, Never>()
         let values = try waitForOutput(from: subject) {
             subject.send(4)
@@ -54,7 +52,6 @@ final class PublisherTests: XCTestCase {
     }
 
     func testWaitForSingleOutputWhileExecuting() throws {
-        // swiftlint:disable:next private_subject
         let subject = PassthroughSubject<Int, Never>()
         let value = try waitForSingleOutput(from: subject) {
             subject.send(4)
@@ -69,7 +66,6 @@ final class PublisherTests: XCTestCase {
     }
 
     func testWaitForFailureWhileExecuting() throws {
-        // swiftlint:disable:next private_subject
         let subject = PassthroughSubject<Int, Error>()
         let error = try waitForFailure(from: Fail<Int, Error>(error: StructError())) {
             subject.send(4)
@@ -86,7 +82,6 @@ final class PublisherTests: XCTestCase {
     }
 
     func testCollectOutputWhileExecuting() {
-        // swiftlint:disable:next private_subject
         let subject = PassthroughSubject<Int, Never>()
         let values = collectOutput(from: subject, during: .milliseconds(500)) {
             subject.send(4)

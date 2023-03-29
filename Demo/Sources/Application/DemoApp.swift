@@ -63,7 +63,8 @@ private struct ShowcaseTab: View {
 
 @main
 struct DemoApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    @UIApplicationDelegateAdaptor(AppDelegate.self)
+    private var appDelegate
 
     var body: some Scene {
         WindowGroup {
