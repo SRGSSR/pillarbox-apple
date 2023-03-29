@@ -411,6 +411,7 @@ struct PlaybackView: View {
             MainView(player: player)
         case .system:
             SystemVideoView(player: player)
+                .ignoresSafeArea()
         }
 #else
         VideoView(player: player)
