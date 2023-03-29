@@ -392,6 +392,7 @@ struct PlaybackView: View {
                     PlaybackMessageView(message: error.localizedDescription)
                 default:
                     videoView()
+                        .persistentSystemOverlays(.hidden)
                 }
             }
             else {
