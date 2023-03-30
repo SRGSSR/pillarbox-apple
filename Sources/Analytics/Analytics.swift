@@ -8,7 +8,9 @@ import Foundation
 
 public class Analytics {
     public struct Configuration {
-        
+        let vendor: Vendor
+        let sourceKey: String
+        let site: String
     }
 
     public static var shared: Analytics = {
