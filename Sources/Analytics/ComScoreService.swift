@@ -10,15 +10,14 @@ import Foundation
 struct ComScoreService: AnalyticsService {
     func start(with configuration: Analytics.Configuration) {
         let publisherConfiguration = SCORPublisherConfiguration { builder in
-            guard let builder else { return }
-            builder.publisherId = "6036016"
-            builder.secureTransmissionEnabled = true
+            builder!.publisherId = "6036016"
+            builder!.secureTransmissionEnabled = true
 
             // See https://confluence.srg.beecollaboration.com/display/INTFORSCHUNG/ComScore+-+Media+Metrix+Report
             // Coding Document for Video Players, page 16
-            builder.httpRedirectCachingEnabled = false
+            builder!.httpRedirectCachingEnabled = false
         }
-        guard let comScoreConfiguration = SCORAnalytics.configuration() else { return }
+        let comScoreConfiguration = SCORAnalytics.configuration()!
         comScoreConfiguration.addClient(with: publisherConfiguration)
 
         comScoreConfiguration.applicationVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
