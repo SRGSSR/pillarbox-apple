@@ -18,6 +18,7 @@ public class Analytics {
     }()
 
     private var configuration: Configuration?
+    private let services: [any AnalyticsService] = [ComScoreService(), CommandersActService()]
 
     private init() {}
 
@@ -25,5 +26,6 @@ public class Analytics {
         guard self.configuration == nil else {
             throw AnalyticsError.alreadyStarted
         }
+        services.forEach { $0.start(with: configuration) }
     }
 }
