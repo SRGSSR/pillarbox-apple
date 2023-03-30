@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import AVFoundation
 import Combine
 import Core
@@ -20,6 +21,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         UserDefaults.standard.registerDefaults()
         configureShowTime()
         configureDataProvider()
+        configureAnalytics()
         return true
     }
 
@@ -39,5 +41,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 SRGDataProvider.current = SRGDataProvider(serviceURL: serviceUrl.url)
             }
             .store(in: &cancellables)
+    }
+
+    private func configureAnalytics() {
+        let configuration = Analytics.Configuration(
+            vendor: .RTS,
+            sourceKey: "11111111-1111-1111-1111-111111111111",
+            site: "rts-app-test-v"
+        )
+        try? Analytics.shared.start(with: configuration)
     }
 }

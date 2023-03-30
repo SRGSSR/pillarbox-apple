@@ -11,6 +11,12 @@ public class Analytics {
         let vendor: Vendor
         let sourceKey: String
         let site: String
+
+        public init(vendor: Vendor, sourceKey: String, site: String) {
+            self.vendor = vendor
+            self.sourceKey = sourceKey
+            self.site = site
+        }
     }
 
     public static var shared: Analytics = {
