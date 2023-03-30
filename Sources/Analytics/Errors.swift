@@ -4,11 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Analytics
+import Foundation
 
-import Nimble
-import XCTest
-
-final class AnalyticsTests: XCTestCase {
-    
+enum AnalyticsError: Error {
+    case alreadyStarted
 }

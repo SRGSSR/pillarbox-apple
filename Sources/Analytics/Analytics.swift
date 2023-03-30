@@ -4,6 +4,24 @@
 //  License information is available from the LICENSE file.
 //
 
-/// Provide analytics API (page views, hidden events).
-public struct Analytics {
+import Foundation
+
+public class Analytics {
+    public struct Configuration {
+        
+    }
+
+    public static var shared: Analytics = {
+        .init()
+    }()
+
+    private var configuration: Configuration?
+
+    private init() {}
+
+    public func start(with configuration: Configuration) throws {
+        guard self.configuration == nil else {
+            throw AnalyticsError.alreadyStarted
+        }
+    }
 }
