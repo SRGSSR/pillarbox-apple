@@ -14,7 +14,8 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.bodyCountersEnabledKey)
     private var areBodyCountersEnabled = false
 
-    @available(tvOS, unavailable) @AppStorage(UserDefaults.playerLayoutKey)
+    @available(tvOS, unavailable)
+    @AppStorage(UserDefaults.playerLayoutKey)
     private var playerLayout: PlayerLayout = .custom
 
     @AppStorage(UserDefaults.allowsExternalPlaybackKey)
@@ -76,7 +77,8 @@ struct SettingsView: View {
         }
     }
 
-    @available(tvOS, unavailable) @ViewBuilder
+    @available(tvOS, unavailable)
+    @ViewBuilder
     private func playerLayoutPicker() -> some View {
         Picker("Layout", selection: $playerLayout) {
             Text("Custom").tag(PlayerLayout.custom)

@@ -19,7 +19,6 @@ final class ExpectationTests: XCTestCase {
     }
 
     func testExpectAtLeastEqualPublishedValuesWhileExecuting() {
-        // swiftlint:disable:next private_subject
         let subject = PassthroughSubject<Int, Never>()
         expectAtLeastEqualPublished(
             values: [4, 7],
@@ -39,7 +38,6 @@ final class ExpectationTests: XCTestCase {
     }
 
     func testExpectAtLeastEqualPublishedNextValuesWhileExecuting() {
-        // swiftlint:disable:next private_subject
         let subject = PassthroughSubject<Int, Never>()
         expectAtLeastEqualPublishedNext(
             values: [7, 8],
@@ -62,7 +60,6 @@ final class ExpectationTests: XCTestCase {
     }
 
     func testExpectEqualPublishedValuesDuringIntervalWhileExecuting() {
-        // swiftlint:disable:next private_subject
         let subject = PassthroughSubject<Int, Never>()
         expectEqualPublished(
             values: [4, 7, 8],
@@ -85,7 +82,6 @@ final class ExpectationTests: XCTestCase {
     }
 
     func testExpectEqualPublishedNextValuesDuringIntervalWhileExecuting() {
-        // swiftlint:disable:next private_subject
         let subject = PassthroughSubject<Int, Never>()
         expectEqualPublishedNext(
             values: [7, 8],
@@ -99,13 +95,11 @@ final class ExpectationTests: XCTestCase {
     }
 
     func testExpectNothingPublished() {
-        // swiftlint:disable:next private_subject
         let subject = PassthroughSubject<Int, Never>()
         expectNothingPublished(from: subject, during: .seconds(1))
     }
 
     func testExpectNothingPublishedNext() {
-        // swiftlint:disable:next private_subject
         let subject = PassthroughSubject<Int, Never>()
         expectNothingPublishedNext(from: subject, during: .seconds(1)) {
             subject.send(4)
@@ -155,7 +149,6 @@ final class ExpectationTests: XCTestCase {
     }
 
     func testExpectOnlyEqualPublishedValuesWhileExecuting() {
-        // swiftlint:disable:next private_subject
         let subject = PassthroughSubject<Int, Never>()
         expectOnlyEqualPublished(
             values: [4, 7],
@@ -175,7 +168,6 @@ final class ExpectationTests: XCTestCase {
     }
 
     func testExpectOnlyEqualPublishedNextValuesWhileExecuting() {
-        // swiftlint:disable:next private_subject
         let subject = PassthroughSubject<Int, Never>()
         expectOnlyEqualPublishedNext(
             values: [7, 8],
@@ -189,7 +181,6 @@ final class ExpectationTests: XCTestCase {
     }
 
     func testExpectAtLeastEqualFollowingExpectEqual() {
-        // swiftlint:disable:next private_subject
         let publisher = PassthroughSubject<Int, Never>()
         expectEqualPublished(values: [1, 2], from: publisher, during: .milliseconds(100)) {
             publisher.send(1)
