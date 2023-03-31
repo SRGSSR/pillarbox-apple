@@ -16,10 +16,10 @@ final class AnalyticsTests1: XCTestCase {
     }
 
     func test11() {
-        expect(values: ["6036016"], for: "c2", during: .seconds(10)) { sut in
+        expectEqual(values: ["6036016"], for: "c2", during: .seconds(10)) { sut in
             sut.trackPageView(title: "title")
         }
-        expect(values: ["6036016"], for: "c2", during: .seconds(4)) { sut in
+        expectEqual(values: ["6036016"], for: "c2", during: .seconds(4)) { sut in
             sut.trackPageView(title: "title")
         }
     }

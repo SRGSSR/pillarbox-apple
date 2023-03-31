@@ -8,7 +8,7 @@ import Circumspect
 import XCTest
 
 public extension XCTestCase {
-    func expect(
+    func expectEqual(
         values: [String],
         for key: String,
         during interval: DispatchTimeInterval = .seconds(20),
