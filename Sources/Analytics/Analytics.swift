@@ -32,6 +32,7 @@ public class Analytics {
         guard self.configuration == nil else {
             throw AnalyticsError.alreadyStarted
         }
+        self.configuration = configuration
         services.forEach { $0.start(with: configuration) }
     }
 }
