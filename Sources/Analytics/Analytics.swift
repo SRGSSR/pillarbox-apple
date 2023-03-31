@@ -37,6 +37,6 @@ public class Analytics {
     }
 
     public func trackPageView(title: String, levels: [String] = [], labels: [String: String] = [:]) {
-        services.forEach { $0.trackPageView(title: title, levels: levels) }
+        services.forEach { $0.trackPageView(title: title, levels: levels, labels: labels) }
     }
 }

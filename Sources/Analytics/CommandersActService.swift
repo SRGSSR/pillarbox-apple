@@ -11,7 +11,7 @@ struct CommandersActService: AnalyticsService {
 
     }
 
-    func trackPageView(title: String, levels: [String]) {
+    func trackPageView(title: String, levels: [String], labels: [String: String]) {
         
     }
 }

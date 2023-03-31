@@ -15,7 +15,9 @@ final class AnalyticsTests1: TestCase {
     }
 
     func test11() {
-        print("--> 11")
+        expect(events: ["6036016"]) {
+            self.trackTestPageView(title: "title")
+        }
     }
 
     func test12() {

@@ -10,15 +10,25 @@ import Player
 
 /// Tracker for comScore stream tracking.
 public final class ComScoreTracker: PlayerItemTracker {
-    private let id = UUID()
+    public struct Configuration {
+        let labels: [String: String]
 
-    public init(configuration: Void, metadataPublisher: AnyPublisher<[String: String], Never>) {}
+        public init(labels: [String: String] = [:]) {
+            self.labels = labels
+        }
+    }
+
+    private let configuration: Configuration
+
+    public init(configuration: Configuration, metadataPublisher: AnyPublisher<[String: String], Never>) {
+        self.configuration = configuration
+    }
 
     public func enable(for player: Player) {
-        print("--> enable comScore \(id)")
+        print("--> enable comScore \(configuration.labels)")
     }
 
     public func disable() {
-        print("--> disable comScore \(id)")
+        print("--> disable comScore \(configuration.labels)")
     }
 }

@@ -7,6 +7,8 @@
 
 import Foundation
 
+private var kIsInterceptorEnabled = false
+
 extension Notification.Name {
     static let didReceiveComScoreRequest = Notification.Name("URLSessionDidReceiveComScoreRequestNotification")
 }
@@ -17,10 +19,12 @@ enum ComScoreRequestInfoKey: String {
 
 extension URLSession {
     static func enableInterceptor() {
+        guard !kIsInterceptorEnabled else { return }
         method_exchangeImplementations(
             class_getInstanceMethod(URLSession.self, NSSelectorFromString("dataTaskWithRequest:completionHandler:"))!,
             class_getInstanceMethod(URLSession.self, #selector(swizzled_dataTask(with:completionHandler:)))!
         )
+        kIsInterceptorEnabled = true
     }
 
     @objc

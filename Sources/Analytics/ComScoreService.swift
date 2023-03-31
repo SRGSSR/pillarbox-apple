@@ -31,7 +31,8 @@ struct ComScoreService: AnalyticsService {
         SCORAnalytics.start()
     }
 
-    func trackPageView(title: String, levels: [String]) {
-        SCORAnalytics.notifyViewEvent(withLabels: ["name": title])
+    func trackPageView(title: String, levels: [String], labels: [String: String]) {
+        let allLabels = ["name": title].merging(labels, uniquingKeysWith: { _, new in new })
+        SCORAnalytics.notifyViewEvent(withLabels: allLabels)
     }
 }
