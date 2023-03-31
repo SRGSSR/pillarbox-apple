@@ -35,4 +35,8 @@ public class Analytics {
         self.configuration = configuration
         services.forEach { $0.start(with: configuration) }
     }
+
+    public func trackPageView(title: String, levels: [String] = [], labels: [String: String] = [:]) {
+        services.forEach { $0.trackPageView(title: title, levels: levels) }
+    }
 }

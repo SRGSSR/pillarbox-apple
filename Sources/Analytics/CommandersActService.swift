@@ -10,4 +10,8 @@ struct CommandersActService: AnalyticsService {
     func start(with configuration: Analytics.Configuration) {
 
     }
+
+    func trackPageView(title: String, levels: [String]) {
+        
+    }
 }

@@ -30,4 +30,8 @@ struct ComScoreService: AnalyticsService {
 
         SCORAnalytics.start()
     }
+
+    func trackPageView(title: String, levels: [String]) {
+        SCORAnalytics.notifyViewEvent(withLabels: ["name": title])
+    }
 }
