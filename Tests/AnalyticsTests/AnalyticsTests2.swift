@@ -9,7 +9,7 @@
 import Nimble
 import XCTest
 
-final class AnalyticsTests2: TestCase {
+final class AnalyticsTests2: XCTestCase {
     override func setUp() {
         print("--> instance setup 2")
     }

@@ -9,7 +9,7 @@
 import Nimble
 import XCTest
 
-final class ComScorePageViewTests1: TestCase {
+final class ComScorePageViewTests1: XCTestCase {
     func testPageView() {
         Analytics.shared.trackPageView(title: "title")
         let _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 10)

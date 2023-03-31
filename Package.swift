@@ -56,6 +56,13 @@ let package = Package(
                 .product(name: "TCServerSide_noIDFA", package: "iOSV5")
             ]
         ),
+        .target(
+            name: "AnalyticsTestHelpers",
+            dependencies: [
+                .target(name: "Analytics"),
+                .target(name: "Circumspect")
+            ]
+        ),
         .target(name: "Core"),
         .target(
             name: "CoreBusiness",
@@ -91,8 +98,7 @@ let package = Package(
         .testTarget(
             name: "AnalyticsTests",
             dependencies: [
-                .target(name: "Analytics"),
-                .target(name: "Circumspect")
+                .target(name: "AnalyticsTestHelpers")
             ]
         ),
         .testTarget(
@@ -111,7 +117,7 @@ let package = Package(
         .testTarget(
             name: "CoreBusinessTests",
             dependencies: [
-                .target(name: "Circumspect"),
+                .target(name: "AnalyticsTestHelpers"),
                 .target(name: "CoreBusiness")
             ]
         ),

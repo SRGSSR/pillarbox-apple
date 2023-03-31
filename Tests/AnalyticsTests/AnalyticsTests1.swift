@@ -6,10 +6,11 @@
 
 @testable import Analytics
 
+import AnalyticsTestHelpers
 import Nimble
 import XCTest
 
-final class AnalyticsTests1: TestCase {
+final class AnalyticsTests1: XCTestCase {
     override func setUp() {
         print("--> instance setup 1")
     }
