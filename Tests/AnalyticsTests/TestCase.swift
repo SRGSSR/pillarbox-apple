@@ -9,43 +9,52 @@ import Circumspect
 import XCTest
 
 class TestCase: XCTestCase {
-    private var testId = UUID().uuidString
-
     override class func setUp() {
         super.setUp()
-        URLSession.enableInterceptor()
         try? Analytics.shared.start(with: .init(vendor: .RTS, sourceKey: "source", site: "site"))
-    }
-
-    override func setUp() {
-        super.setUp()
-        testId = UUID().uuidString
     }
 }
 
-extension TestCase {
-    public func trackTestPageView(title: String, levels: [String] = [], labels: [String: String] = [:]) {
+struct AnalyticsSUT {
+    let id: String
+
+    init(id: String) {
+        self.id = id
+        URLSession.enableInterceptor()
+    }
+
+    public func trackPageView(title: String, levels: [String] = [], labels: [String: String] = [:]) {
         var allLabels = labels
-        allLabels["pillarbox_test_id"] = testId
+        allLabels["pillarbox_test_id"] = id
         Analytics.shared.trackPageView(title: title, levels: levels, labels: allLabels)
     }
 
-    public func expect(
-        events: [String],
+    // ... and for other events
+}
+
+extension XCTestCase {
+    func expect(
+        values: [String],
+        for key: String,
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
-        while executing: (() -> Void)? = nil
+        function: String = #function,
+        while executing: ((AnalyticsSUT) -> Void)? = nil
     ) {
+        let id = "\(Self.self).\(function)-\(UUID().uuidString)"
+        let sut = AnalyticsSUT(id: id)
         let publisher = NotificationCenter.default.publisher(for: .didReceiveComScoreRequest)
             .print()
             .compactMap {
                 $0.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String]
             }
             .filter {
-                $0["pillarbox_test_id"] == self.testId
+                $0["pillarbox_test_id"] == id
             }
-            .compactMap { $0["c2"] }
-        expectEqualPublished(values: events, from: publisher, during: interval, file: file, line: line, while: executing)
+            .compactMap { $0[key] }
+        expectEqualPublished(values: values, from: publisher, during: interval, file: file, line: line) {
+            executing?(sut)
+        }
     }
 }

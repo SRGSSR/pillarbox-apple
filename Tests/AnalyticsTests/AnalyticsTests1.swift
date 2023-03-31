@@ -15,8 +15,11 @@ final class AnalyticsTests1: TestCase {
     }
 
     func test11() {
-        expect(events: ["6036016"]) {
-            self.trackTestPageView(title: "title")
+        expect(values: ["6036016"], for: "c2", during: .seconds(10)) { sut in
+            sut.trackPageView(title: "title")
+        }
+        expect(values: ["6036016"], for: "c2", during: .seconds(4)) { sut in
+            sut.trackPageView(title: "title")
         }
     }
 
