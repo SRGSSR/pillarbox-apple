@@ -57,6 +57,12 @@ public extension PlayerItemTracker where Configuration == Void {
     static func adapter<M>(mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> where M: AssetMetadata {
         TrackerAdapter(trackerType: Self.self, configuration: (), mapper: mapper)
     }
+
+    /// Create an adapter for the receiver.
+    /// - Returns: The tracker adapter.
+    static func adapter() -> TrackerAdapter<Never> {
+        TrackerAdapter(trackerType: Self.self, configuration: (), mapper: nil)
+    }
 }
 
 public extension PlayerItemTracker where Metadata == Void, Configuration == Void {
