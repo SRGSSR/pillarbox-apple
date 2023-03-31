@@ -19,10 +19,7 @@ final class ComScoreTrackerTests: XCTestCase {
 
     func testPlay() {
         let player = Player(item: .simple(url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!, trackerAdapters: [
-            ComScoreTracker.adapter(configuration: .init(labels: ["pillarbox_test_id": "12345"])) { _ in
-                print("--> here")
-                return ["test": "value"]
-            }
+            ComScoreTracker.adapter(configuration: .init(labels: ["pillarbox_test_id": "12345"]))
         ]))
         player.play()
         let _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 10)
