@@ -17,6 +17,5 @@ open class CommandersActTestCase: XCTestCase {
         function: String = #function,
         while executing: ((AnalyticsTest) -> Void)? = nil
     ) {
-
     }
 }

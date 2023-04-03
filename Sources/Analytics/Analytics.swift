@@ -23,7 +23,7 @@ public class Analytics {
         let comScore: [String: String]
         let commandersAct: [String: String]
 
-        public init(comScore: [String : String], commandersAct: [String : String]) {
+        public init(comScore: [String: String], commandersAct: [String: String]) {
             self.comScore = comScore
             self.commandersAct = commandersAct
         }

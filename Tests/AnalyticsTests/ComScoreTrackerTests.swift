@@ -10,5 +10,4 @@ import AnalyticsTestBridge
 import XCTest
 
 final class AnalyticsTests: ComScoreTestCase {
-
 }

@@ -5,8 +5,8 @@
 //
 
 import Analytics
-import Combine
 import Circumspect
+import Combine
 import XCTest
 
 open class ComScoreTestCase: XCTestCase {
