@@ -6,21 +6,21 @@
 
 @testable import Analytics
 
-import AnalyticsTestHelpers
+import AnalyticsTestBridge
 import Nimble
 import XCTest
 
-final class AnalyticsTests1: XCTestCase {
+final class AnalyticsTests1: ComScoreTestCase {
     override func setUp() {
         print("--> instance setup 1")
     }
 
     func test11() {
-        expectEqual(values: ["6036016"], for: "c2", during: .seconds(10)) { sut in
-            sut.trackPageView(title: "title")
+        expectEqual(values: ["6036016"], for: "c2", during: .seconds(10)) { context in
+            context.trackPageView(title: "title")
         }
-        expectEqual(values: ["6036016"], for: "c2", during: .seconds(4)) { sut in
-            sut.trackPageView(title: "title")
+        expectEqual(values: ["6036016"], for: "c2", during: .seconds(4)) { test in
+            test.trackPageView(title: "title")
         }
     }
 

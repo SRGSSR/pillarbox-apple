@@ -57,9 +57,10 @@ let package = Package(
             ]
         ),
         .target(
-            name: "AnalyticsTestHelpers",
+            name: "AnalyticsTestBridge",
             dependencies: [
                 .target(name: "Analytics"),
+                .target(name: "CoreBusiness"),
                 .target(name: "Circumspect")
             ]
         ),
@@ -98,7 +99,7 @@ let package = Package(
         .testTarget(
             name: "AnalyticsTests",
             dependencies: [
-                .target(name: "AnalyticsTestHelpers")
+                .target(name: "AnalyticsTestBridge")
             ]
         ),
         .testTarget(
@@ -117,8 +118,7 @@ let package = Package(
         .testTarget(
             name: "CoreBusinessTests",
             dependencies: [
-                .target(name: "AnalyticsTestHelpers"),
-                .target(name: "CoreBusiness")
+                .target(name: "AnalyticsTestBridge")
             ]
         ),
         .testTarget(

@@ -6,7 +6,7 @@
 
 @testable import CoreBusiness
 
-import AnalyticsTestHelpers
+import AnalyticsTestBridge
 import Nimble
 import Player
 import XCTest
@@ -15,13 +15,13 @@ struct TestMetadata: AssetMetadata {
     let title: String
 }
 
-final class ComScoreTrackerTests: XCTestCase {
+final class ComScoreTrackerTests: ComScoreTestCase {
     var testId = UUID().uuidString
 
     func testPlay() {
-        expectEqual(values: ["6036016"], for: "c2", during: .seconds(10)) { sut in
+        expectEqual(values: ["6036016"], for: "c2", during: .seconds(10)) { test in
             let player = Player(item: .simple(url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!, trackerAdapters: [
-                ComScoreTracker.adapter(sut: sut)
+                ComScoreTracker.adapter(test: test)
             ]))
             player.play()
         }
