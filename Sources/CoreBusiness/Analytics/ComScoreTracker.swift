@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import Combine
 import Foundation
 import Player
@@ -11,9 +12,9 @@ import Player
 /// Tracker for comScore stream tracking.
 public final class ComScoreTracker: PlayerItemTracker {
     public struct Configuration {
-        let labels: [String: String]
+        let labels: Analytics.Labels?
 
-        public init(labels: [String: String] = [:]) {
+        public init(labels: Analytics.Labels? = nil) {
             self.labels = labels
         }
     }
@@ -25,10 +26,10 @@ public final class ComScoreTracker: PlayerItemTracker {
     }
 
     public func enable(for player: Player) {
-        print("--> enable comScore \(configuration.labels)")
+        print("--> enable comScore")
     }
 
     public func disable() {
-        print("--> disable comScore \(configuration.labels)")
+        print("--> disable comScore")
     }
 }

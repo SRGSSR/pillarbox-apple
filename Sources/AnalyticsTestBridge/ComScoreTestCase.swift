@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import Combine
 import Circumspect
 import XCTest
@@ -23,7 +24,7 @@ open class ComScoreTestCase: XCTestCase {
         let id = Self.identifier(for: function)
         let publisher = Self.publisher(for: id, key: key)
         expectEqualPublished(values: values, from: publisher, during: interval, file: file, line: line) {
-            executing?(AnalyticsTest(additionalLabels: [Self.identifierKey: id]))
+            executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
         }
     }
 
@@ -39,7 +40,7 @@ open class ComScoreTestCase: XCTestCase {
         let id = Self.identifier(for: function)
         let publisher = Self.publisher(for: id, key: key)
         expectAtLeastEqualPublished(values: values, from: publisher, timeout: timeout, file: file, line: line) {
-            executing?(AnalyticsTest(additionalLabels: [Self.identifierKey: id]))
+            executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
         }
     }
 
@@ -47,10 +48,14 @@ open class ComScoreTestCase: XCTestCase {
         "\(self).\(function)-\(UUID().uuidString)"
     }
 
+    private static func additionalLabels(for id: String) -> Analytics.Labels {
+        .init(comScore: [identifierKey: id], commandersAct: [:])
+    }
+
     private static func publisher(for id: String, key: String) -> AnyPublisher<String, Never> {
         NotificationCenter.default.publisher(for: .didReceiveComScoreRequest)
             .compactMap { $0.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String] }
-            .filter { $0[Self.identifierKey] == id }
+            .filter { $0[identifierKey] == id }
             .compactMap { $0[key] }
             .eraseToAnyPublisher()
     }

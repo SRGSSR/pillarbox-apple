@@ -16,8 +16,8 @@ final class AnalyticsTests1: ComScoreTestCase {
     }
 
     func test11() {
-        expectEqual(values: ["6036016"], for: "c2", during: .seconds(10)) { context in
-            context.trackPageView(title: "title")
+        expectEqual(values: ["6036016"], for: "c2", during: .seconds(10)) { test in
+            test.trackPageView(title: "title")
         }
         expectEqual(values: ["6036016"], for: "c2", during: .seconds(4)) { test in
             test.trackPageView(title: "title")
