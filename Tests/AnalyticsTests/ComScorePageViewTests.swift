@@ -6,12 +6,13 @@
 
 @testable import Analytics
 
-import Nimble
+import AnalyticsTestBridge
 import XCTest
 
-final class ComScorePageViewTests1: XCTestCase {
-    func testPageView() {
-        Analytics.shared.trackPageView(title: "title")
-        let _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 10)
+final class ComScorePageViewTests: ComScoreTestCase {
+    func testTitle() {
+        expectAtLeastEqual(values: ["title"], for: "name") { test in
+            test.trackPageView(title: "title")
+        }
     }
 }

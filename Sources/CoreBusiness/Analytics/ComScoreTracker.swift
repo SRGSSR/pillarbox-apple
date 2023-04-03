@@ -9,7 +9,7 @@ import Combine
 import Foundation
 import Player
 
-/// Tracker for comScore stream tracking.
+/// Stream tracker for comScore.
 public final class ComScoreTracker: PlayerItemTracker {
     public struct Configuration {
         let labels: Analytics.Labels?
