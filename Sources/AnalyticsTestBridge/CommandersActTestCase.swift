@@ -57,10 +57,12 @@ open class CommandersActTestCase: XCTestCase {
         NotificationCenter.default.publisher(for: Notification.Name(rawValue: kTCNotification_HTTPRequest))
             .compactMap { $0.userInfo?[kTCUserInfo_POSTData] as? String }
             .compactMap { $0.data(using: .utf8) }
-            .decode(type: [String: String].self, decoder: JSONDecoder())
-            .replaceError(with: [:])
-            .filter { $0[identifierKey] == id }
-            .compactMap { $0[key] }
+            .compactMap { try? JSONSerialization.jsonObject(with: $0, options: []) as? [String: Any] }
+            .filter { dictionary in
+                guard let identifier = dictionary[identifierKey] as? String else { return false }
+                return identifier == id
+            }
+            .compactMap { $0[key] as? String }
             .eraseToAnyPublisher()
     }
 }
