@@ -20,6 +20,4 @@ public struct AnalyticsTest {
         let allLabels = labels.merging(additionalLabels) { _, new in new }
         Analytics.shared.trackPageView(title: title, levels: levels, labels: allLabels)
     }
-
-    // ... and for other events
 }
