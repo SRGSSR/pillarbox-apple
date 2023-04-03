@@ -10,7 +10,7 @@ import Combine
 import XCTest
 
 open class ComScoreTestCase: XCTestCase {
-    private static let identifierKey = "cs_test_id"
+    private static let identifierKey = "com_score_test_id"
 
     public func expectEqual(
         values: [String],
