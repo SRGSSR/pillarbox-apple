@@ -30,8 +30,11 @@ public class Analytics {
 
     /// Information sent with analytics events.
     public struct Labels {
-        let comScore: [String: String]
-        let commandersAct: [String: String]
+        /// comScore-specific information.
+        public let comScore: [String: String]
+
+        /// Commanders Act-specific information.
+        public let commandersAct: [String: String]
 
         /// Create labels.
         /// - Parameters:

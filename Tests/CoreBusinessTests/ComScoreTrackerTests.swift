@@ -17,8 +17,9 @@ struct TestMetadata: AssetMetadata {
 
 final class ComScoreTrackerTests: ComScoreTestCase {
     func testPlay() {
-        expectEqual(values: ["6036016"], for: "c2", during: .seconds(10)) { test in
-            let player = Player(item: .simple(
+        let player = Player()
+        expectEqual(values: ["play"], for: "ns_st_ev", during: .seconds(10)) { test in
+            player.append(.simple(
                 url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!,
                 trackerAdapters: [
                     ComScoreTracker.adapter(test: test)
