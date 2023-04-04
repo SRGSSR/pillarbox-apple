@@ -8,12 +8,12 @@ import Foundation
 
 private var kIsInterceptorEnabled = false
 
-extension Notification.Name {
-    static let didReceiveComScoreRequest = Notification.Name("URLSessionDidReceiveComScoreRequestNotification")
-}
-
 enum ComScoreRequestInfoKey: String {
     case queryItems = "ComScoreRequestQueryItems"
+}
+
+extension Notification.Name {
+    static let didReceiveComScoreRequest = Notification.Name("URLSessionDidReceiveComScoreRequestNotification")
 }
 
 extension URLSession {
@@ -27,7 +27,10 @@ extension URLSession {
     }
 
     @objc
-    private func swizzled_dataTask(with request: URLRequest, completionHandler: @escaping @Sendable (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
+    private func swizzled_dataTask(
+        with request: URLRequest,
+        completionHandler: @escaping @Sendable (Data?, URLResponse?, Error?) -> Void
+    ) -> URLSessionDataTask {
         if let url = request.url, let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
            let host = components.host, host.contains("scorecardresearch") {
             let queryItems = components.queryItems ?? []

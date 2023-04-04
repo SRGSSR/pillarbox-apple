@@ -12,6 +12,22 @@ import XCTest
 open class ComScoreTestCase: XCTestCase {
     private static let identifierKey = "com_score_test_id"
 
+    private static func identifier(for function: String) -> String {
+        "\(self).\(function)-\(UUID().uuidString)"
+    }
+
+    private static func additionalLabels(for id: String) -> Analytics.Labels {
+        .init(comScore: [identifierKey: id], commandersAct: [:])
+    }
+
+    private static func publisher(for id: String, key: String) -> AnyPublisher<String, Never> {
+        NotificationCenter.default.publisher(for: .didReceiveComScoreRequest)
+            .compactMap { $0.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String] }
+            .filter { $0[identifierKey] == id }
+            .compactMap { $0[key] }
+            .eraseToAnyPublisher()
+    }
+
     public func expectEqual(
         values: [String],
         for key: String,
@@ -42,21 +58,5 @@ open class ComScoreTestCase: XCTestCase {
         expectAtLeastEqualPublished(values: values, from: publisher, timeout: timeout, file: file, line: line) {
             executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
         }
-    }
-
-    private static func identifier(for function: String) -> String {
-        "\(self).\(function)-\(UUID().uuidString)"
-    }
-
-    private static func additionalLabels(for id: String) -> Analytics.Labels {
-        .init(comScore: [identifierKey: id], commandersAct: [:])
-    }
-
-    private static func publisher(for id: String, key: String) -> AnyPublisher<String, Never> {
-        NotificationCenter.default.publisher(for: .didReceiveComScoreRequest)
-            .compactMap { $0.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String] }
-            .filter { $0[identifierKey] == id }
-            .compactMap { $0[key] }
-            .eraseToAnyPublisher()
     }
 }

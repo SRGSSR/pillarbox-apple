@@ -13,6 +13,27 @@ import XCTest
 open class CommandersActTestCase: XCTestCase {
     private static let identifierKey = "commanders_act_test_id"
 
+    private static func identifier(for function: String) -> String {
+        "\(self).\(function)-\(UUID().uuidString)"
+    }
+
+    private static func additionalLabels(for id: String) -> Analytics.Labels {
+        .init(comScore: [:], commandersAct: [identifierKey: id])
+    }
+
+    private static func publisher(for id: String, key: String) -> AnyPublisher<String, Never> {
+        NotificationCenter.default.publisher(for: Notification.Name(rawValue: kTCNotification_HTTPRequest))
+            .compactMap { $0.userInfo?[kTCUserInfo_POSTData] as? String }
+            .compactMap { $0.data(using: .utf8) }
+            .compactMap { try? JSONSerialization.jsonObject(with: $0, options: []) as? [String: Any] }
+            .filter { dictionary in
+                guard let identifier = dictionary[identifierKey] as? String else { return false }
+                return identifier == id
+            }
+            .compactMap { $0[key] as? String }
+            .eraseToAnyPublisher()
+    }
+
     public func expectEqual(
         values: [String],
         for key: String,
@@ -43,26 +64,5 @@ open class CommandersActTestCase: XCTestCase {
         expectAtLeastEqualPublished(values: values, from: publisher, timeout: timeout, file: file, line: line) {
             executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
         }
-    }
-
-    private static func identifier(for function: String) -> String {
-        "\(self).\(function)-\(UUID().uuidString)"
-    }
-
-    private static func additionalLabels(for id: String) -> Analytics.Labels {
-        .init(comScore: [:], commandersAct: [identifierKey: id])
-    }
-
-    private static func publisher(for id: String, key: String) -> AnyPublisher<String, Never> {
-        NotificationCenter.default.publisher(for: Notification.Name(rawValue: kTCNotification_HTTPRequest))
-            .compactMap { $0.userInfo?[kTCUserInfo_POSTData] as? String }
-            .compactMap { $0.data(using: .utf8) }
-            .compactMap { try? JSONSerialization.jsonObject(with: $0, options: []) as? [String: Any] }
-            .filter { dictionary in
-                guard let identifier = dictionary[identifierKey] as? String else { return false }
-                return identifier == id
-            }
-            .compactMap { $0[key] as? String }
-            .eraseToAnyPublisher()
     }
 }
