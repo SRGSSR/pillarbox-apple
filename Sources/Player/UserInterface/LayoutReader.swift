@@ -10,16 +10,17 @@ import SwiftUI
 public struct LayoutInfo {
     /// A placeholder for unfilled layout information.
     public static var none: Self {
-        .init(isMaximized: false, isFullScreen: false)
+        .init(isOverCurrentContext: false, isFullScreen: false)
     }
 
-    /// Return whether the view is maximized in its parent context.
-    public let isMaximized: Bool
+    /// Return whether the view covers its current context.
+    public let isOverCurrentContext: Bool
+
     /// Return whether the view covers the whole screen
     public let isFullScreen: Bool
 }
 
-/// A view which is able to determine whether it is maximized in its parent context or full screen. The view lays out
+/// A view which is able to determine whether it is covering its current context or full screen. The view lays out
 /// its children like a `ZStack`.
 @available(tvOS, unavailable)
 public struct LayoutReader<Content: View>: View {
@@ -58,7 +59,7 @@ struct LayoutReader_Previews: PreviewProvider {
                         .ignoresSafeArea()
                     Color.blue
                     VStack {
-                        Text(layoutInfo.isMaximized ? "✅ Maximized" : "❌ Not maximized")
+                        Text(layoutInfo.isOverCurrentContext ? "✅ Over current context" : "❌ Not over current context")
                         Text(layoutInfo.isFullScreen ? "✅ Full screen" : "❌ Not full screen")
                     }
                 }
@@ -84,7 +85,7 @@ struct LayoutReader_Previews: PreviewProvider {
                 Color.red
                 Color.blue
                 VStack {
-                    Text(layoutInfo.isMaximized ? "✅ Maximized" : "❌ Not maximized")
+                    Text(layoutInfo.isOverCurrentContext ? "✅ Over current context" : "❌ Not over current context")
                     Text(layoutInfo.isFullScreen ? "✅ Full screen" : "❌ Not full screen")
                 }
             }
@@ -100,14 +101,14 @@ struct LayoutReader_Previews: PreviewProvider {
         }
     }
 
-    private struct NonMaximizedLayoutReader: View {
+    private struct NotOverCurrentContextLayoutReader: View {
         @State private var layoutInfo: LayoutInfo = .none
 
         var body: some View {
             LayoutReader(layoutInfo: $layoutInfo) {
                 Color.blue
                 VStack {
-                    Text(layoutInfo.isMaximized ? "❌ Maximized" : "✅ Not maximized")
+                    Text(layoutInfo.isOverCurrentContext ? "❌ Over current context" : "✅ Not over current context")
                     Text(layoutInfo.isFullScreen ? "❌ Full screen" : "✅ Not full screen")
                 }
             }
@@ -124,7 +125,7 @@ struct LayoutReader_Previews: PreviewProvider {
                     LayoutReader(layoutInfo: $layoutInfo) {
                         Color.blue
                         VStack {
-                            Text(layoutInfo.isMaximized ? "✅ Maximized" : "❌ Not maximized")
+                            Text(layoutInfo.isOverCurrentContext ? "✅ Over current context" : "❌ Not over current context")
                             Text(layoutInfo.isFullScreen ? "❌ Full screen" : "✅ Not full screen")
                         }
                     }
@@ -142,8 +143,8 @@ struct LayoutReader_Previews: PreviewProvider {
             .previewDisplayName("Safe area in LayoutReader")
         SafeAreaInZStack()
             .previewDisplayName("Safe area in ZStack")
-        NonMaximizedLayoutReader()
-            .previewDisplayName("Non-maximized LayoutReader")
+        NotOverCurrentContextLayoutReader()
+            .previewDisplayName("Not over current context LayoutReader")
         NonFullScreenLayoutReader()
             .previewDisplayName("Non full-screen LayoutReader")
     }
