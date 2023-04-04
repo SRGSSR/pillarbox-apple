@@ -192,13 +192,13 @@ By having the `ProgressTracker` stored in a nested view you ensure that only thi
 
 To make it easier to spot where user interface updates can be optimized our `Core` package provides a `_debugBodyCounter(color:)` modifier which surrounds any view you want to observe with a counter, showing how many times its body has been evaluated. This way you can observe how your layout behaves and visually detects where parts of your user interface could benefit from local progress tracking.
 
-## Maximized layout management (iOS)
+## Over current context layout management (iOS)
 
 Sometimes you want to enable behaviors only when a player view fills its parent context, for example zoom gestures which control the `VideoView` gravity.
 
 Pillarbox does not implement such behaviors natively but instead provides a `LayoutReader` wrapper returning its layout information through a binding.
 
-Here is for example how you could implement a pinch gesture only available when the player view is maximized in its parent context:
+Here is for example how you could implement a pinch gesture only available when the player view is over its parent context:
 
 ```swift
 struct PlayerView: View {
@@ -220,7 +220,7 @@ struct PlayerView: View {
     }
 
     private var magnificationGestureMask: GestureMask {
-        layoutInfo.isMaximized ? .all : .subviews
+        layoutInfo.isOverCurrentContext ? .all : .subviews
     }
 
     private func magnificationGesture() -> some Gesture {

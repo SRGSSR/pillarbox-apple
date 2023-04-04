@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-/// An internal host controller which can determine whether it is maximized in its parent context or full screen.
+/// An internal host controller which can determine whether it is over its parent context or full screen.
 @available(tvOS, unavailable)
 final class LayoutReaderHostingController<Content: View>: UIHostingController<Content>, UIGestureRecognizerDelegate {
     var layoutInfo: Binding<LayoutInfo> = .constant(.none)
@@ -48,7 +48,7 @@ final class LayoutReaderHostingController<Content: View>: UIHostingController<Co
         let screenFrame = view.window?.windowScene?.screen.bounds ?? .zero
 
         layoutInfo.wrappedValue = .init(
-            isMaximized: frame == parentFrame,
+            isOverCurrentContext: frame == parentFrame,
             isFullScreen: frame == screenFrame
         )
     }

@@ -36,11 +36,11 @@ private struct MainView: View {
     }
 
     private var gravity: AVLayerVideoGravity {
-        layoutInfo.isMaximized ? selectedGravity : .resizeAspect
+        layoutInfo.isOverCurrentContext ? selectedGravity : .resizeAspect
     }
 
     private var magnificationGestureMask: GestureMask {
-        layoutInfo.isMaximized ? .all : .subviews
+        layoutInfo.isOverCurrentContext ? .all : .subviews
     }
 
     private var isUserInterfaceHidden: Bool {
