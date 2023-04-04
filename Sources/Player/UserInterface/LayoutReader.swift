@@ -13,14 +13,14 @@ public struct LayoutInfo {
         .init(isOverCurrentContext: false, isFullScreen: false)
     }
 
-    /// Return whether the view is in its parent context.
+    /// Return whether the view covers its current context.
     public let isOverCurrentContext: Bool
 
     /// Return whether the view covers the whole screen
     public let isFullScreen: Bool
 }
 
-/// A view which is able to determine whether it is over its parent context or full screen. The view lays out
+/// A view which is able to determine whether it is covering its current context or full screen. The view lays out
 /// its children like a `ZStack`.
 @available(tvOS, unavailable)
 public struct LayoutReader<Content: View>: View {
