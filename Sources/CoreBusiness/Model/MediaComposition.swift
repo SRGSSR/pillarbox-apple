@@ -30,7 +30,7 @@ public struct MediaComposition: Decodable {
         _analyticsData ?? [:]
     }
 
-    /// CommandersAct analytics data.
+    /// Commanders Act analytics data.
     public var analyticsMetadata: [String: String] {
         _analyticsMetadata ?? [:]
     }

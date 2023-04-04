@@ -58,7 +58,7 @@ public struct MediaMetadata: AssetMetadata {
         return analyticsData
     }
 
-    /// Consoldated CommandersAct analytics data.
+    /// Consoldated Commanders Act analytics data.
     var analyticsMetadata: [String: String] {
         var analyticsMetadata = mediaComposition.analyticsMetadata
         analyticsMetadata.merge(mediaComposition.mainChapter.analyticsMetadata) { _, new in new }

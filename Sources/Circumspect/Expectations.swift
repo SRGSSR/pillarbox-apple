@@ -9,7 +9,7 @@ import Difference
 import XCTest
 
 public extension XCTestCase {
-    /// Wait for a publisher to emit at least a list of expected values.
+    /// Expect a publisher to emit at least a list of expected values.
     func expectAtLeastPublished<P: Publisher>(
         values: [P.Output],
         from publisher: P,
@@ -31,7 +31,7 @@ public extension XCTestCase {
         )
     }
 
-    /// Wait for a publisher to emit at least a list of expected values.
+    /// Expect a publisher to emit at least a list of expected values.
     func expectAtLeastEqualPublished<P: Publisher>(
         values: [P.Output],
         from publisher: P,
@@ -51,7 +51,7 @@ public extension XCTestCase {
         )
     }
 
-    /// Wait for a publisher to emit at least a list of expected values.
+    /// Expect a publisher to emit at least a list of expected values.
     func expectAtLeastSimilarPublished<P: Publisher>(
         values: [P.Output],
         from publisher: P,
@@ -71,7 +71,7 @@ public extension XCTestCase {
         )
     }
 
-    /// Wait for a publisher to emit at least a list of expected values, ignoring the first value. Useful when testing
+    /// Expect a publisher to emit at least a list of expected values, ignoring the first value. Useful when testing
     /// publishers which automatically deliver a non-relevant stored value upon subscription.
     func expectAtLeastPublishedNext<P: Publisher>(
         values: [P.Output],
@@ -94,7 +94,7 @@ public extension XCTestCase {
         )
     }
 
-    /// Wait for a publisher to emit at least a list of expected values, ignoring the first value. Useful when testing
+    /// Expect a publisher to emit at least a list of expected values, ignoring the first value. Useful when testing
     /// publishers which automatically deliver a non-relevant stored value upon subscription.
     func expectAtLeastEqualPublishedNext<P: Publisher>(
         values: [P.Output],
@@ -116,7 +116,7 @@ public extension XCTestCase {
         )
     }
 
-    /// Wait for a publisher to emit at least a list of expected values, ignoring the first value. Useful when testing
+    /// Expect a publisher to emit at least a list of expected values, ignoring the first value. Useful when testing
     /// publishers which automatically deliver a non-relevant stored value upon subscription.
     func expectAtLeastSimilarPublishedNext<P: Publisher>(
         values: [P.Output],

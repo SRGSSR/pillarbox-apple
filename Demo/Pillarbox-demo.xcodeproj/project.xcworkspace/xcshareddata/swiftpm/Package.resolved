@@ -46,6 +46,15 @@
       }
     },
     {
+      "identity" : "iosv5",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/CommandersAct/iOSV5.git",
+      "state" : {
+        "revision" : "c18d3c3826d7c1c2d3ef2224202f1604080f6651",
+        "version" : "5.3.0"
+      }
+    },
+    {
       "identity" : "libextobjc",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SRGSSR/libextobjc.git",
@@ -124,24 +133,6 @@
       "state" : {
         "revision" : "937e904258d22af6e447a0b72c0bc67583ef64a2",
         "version" : "1.0.4"
-      }
-    },
-    {
-      "identity" : "tccore-xcframework-apple",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SRGSSR/TCCore-xcframework-apple.git",
-      "state" : {
-        "revision" : "6f5e24bed11558da8c1479157ec74a0485443834",
-        "version" : "5.1.1"
-      }
-    },
-    {
-      "identity" : "tcserverside-xcframework-apple",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SRGSSR/TCServerSide-xcframework-apple.git",
-      "state" : {
-        "revision" : "bb47eef2a14d486aa72896abc8d911fe9aed67d0",
-        "version" : "5.1.2"
       }
     },
     {
