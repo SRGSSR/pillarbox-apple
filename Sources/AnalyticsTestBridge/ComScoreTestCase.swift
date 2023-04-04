@@ -9,6 +9,7 @@ import Circumspect
 import Combine
 import XCTest
 
+/// Parent class for comScore test cases.
 open class ComScoreTestCase: XCTestCase {
     private static let identifierKey = "com_score_test_id"
 
@@ -27,8 +28,12 @@ open class ComScoreTestCase: XCTestCase {
             .compactMap { $0[key] }
             .eraseToAnyPublisher()
     }
+}
 
-    public func expectEqual(
+public extension ComScoreTestCase {
+    /// Collect values emitted by comScore under the specified key during some time interval and match them against
+    /// an expected result.
+    func expectEqual(
         values: [String],
         for key: String,
         during interval: DispatchTimeInterval = .seconds(20),
@@ -44,7 +49,8 @@ open class ComScoreTestCase: XCTestCase {
         }
     }
 
-    public func expectAtLeastEqual(
+    /// Expect comScore to emit at least a list of expected values for the specified key.
+    func expectAtLeastEqual(
         values: [String],
         for key: String,
         timeout: DispatchTimeInterval = .seconds(20),

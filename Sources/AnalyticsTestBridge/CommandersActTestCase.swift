@@ -10,6 +10,7 @@ import Combine
 import TCCore
 import XCTest
 
+/// Parent class for Commanders Act test cases.
 open class CommandersActTestCase: XCTestCase {
     private static let identifierKey = "commanders_act_test_id"
 
@@ -33,8 +34,12 @@ open class CommandersActTestCase: XCTestCase {
             .compactMap { $0[key] as? String }
             .eraseToAnyPublisher()
     }
+}
 
-    public func expectEqual(
+public extension CommandersActTestCase {
+    /// Collect values emitted by Commanders Act under the specified key during some time interval and match them against
+    /// an expected result.
+    func expectEqual(
         values: [String],
         for key: String,
         during interval: DispatchTimeInterval = .seconds(20),
@@ -50,7 +55,8 @@ open class CommandersActTestCase: XCTestCase {
         }
     }
 
-    public func expectAtLeastEqual(
+    /// Expect Commanders Act to emit at least a list of expected values for the specified key.
+    func expectAtLeastEqual(
         values: [String],
         for key: String,
         timeout: DispatchTimeInterval = .seconds(20),
