@@ -4,8 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
-import PackagePlugin
 import Foundation
+import PackagePlugin
 
 @main
 struct PackageInfoPlugin: BuildToolPlugin {
