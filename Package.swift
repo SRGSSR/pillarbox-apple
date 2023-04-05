@@ -54,6 +54,9 @@ let package = Package(
                 .product(name: "ComScore", package: "Comscore-Swift-Package-Manager"),
                 .product(name: "TCCore", package: "iOSV5"),
                 .product(name: "TCServerSide_noIDFA", package: "iOSV5")
+            ],
+            plugins: [
+                .plugin(name: "PackageInfoPlugin")
             ]
         ),
         .target(
@@ -87,6 +90,14 @@ let package = Package(
                 .target(name: "Core"),
                 .product(name: "DequeModule", package: "swift-collections"),
                 .product(name: "TimelaneCombine", package: "TimelaneCombine")
+            ]
+        ),
+        .binaryTarget(name: "PackageInfo", path: "Artifacts/PackageInfo.artifactbundle"),
+        .plugin(
+            name: "PackageInfoPlugin",
+            capability: .buildTool(),
+            dependencies: [
+                .target(name: "PackageInfo")
             ]
         ),
         .target(
