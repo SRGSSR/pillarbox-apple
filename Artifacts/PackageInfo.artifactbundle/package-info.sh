@@ -6,7 +6,7 @@ if [ "$#" -ne 2 ]; then
 fi
 
 if ! VERSION=$(git --git-dir "$1/.git" describe --tags 2> /dev/null); then
-    echo "No tag was found in the specified repository."
+    echo "No tag was found in the specified directory or the directory is not a valid git repository."
     exit 1
 fi
 
