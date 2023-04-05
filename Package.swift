@@ -54,9 +54,6 @@ let package = Package(
                 .product(name: "ComScore", package: "Comscore-Swift-Package-Manager"),
                 .product(name: "TCCore", package: "iOSV5"),
                 .product(name: "TCServerSide_noIDFA", package: "iOSV5")
-            ],
-            plugins: [
-                .plugin(name: "PackageInfoPlugin")
             ]
         ),
         .target(
@@ -74,6 +71,9 @@ let package = Package(
                 .target(name: "Analytics"),
                 .target(name: "Diagnostics"),
                 .target(name: "Player")
+            ],
+            plugins: [
+                .plugin(name: "PackageInfoPlugin")
             ]
         ),
         .target(

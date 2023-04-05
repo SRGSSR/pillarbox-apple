@@ -30,6 +30,8 @@ public final class ComScoreTracker: PlayerItemTracker {
     public func enable(for player: Player) {
         print("--> enable comScore")
         streamingAnalytics.createPlaybackSession()
+        streamingAnalytics.setMediaPlayerName("Pillarbox")
+        streamingAnalytics.setMediaPlayerVersion(PackageInfo.version)
 
         if let labels = configuration.labels?.comScore {
             let metadata = SCORStreamingContentMetadata { builder in
