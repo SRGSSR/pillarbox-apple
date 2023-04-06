@@ -61,6 +61,11 @@ struct Stream {
         duration: CMTime(value: 1, timescale: 1)
     )
 
+    static let croppedOnDemand: Self = .init(
+        url: URL(string: "http://localhost:8123/on_demand_cropped/master.m3u8")!,
+        duration: CMTime(value: 120, timescale: 1)
+    )
+
     static let corruptOnDemand: Self = .init(
         url: URL(string: "http://localhost:8123/on_demand_corrupt/master.m3u8")!,
         duration: CMTime(value: 2, timescale: 1)

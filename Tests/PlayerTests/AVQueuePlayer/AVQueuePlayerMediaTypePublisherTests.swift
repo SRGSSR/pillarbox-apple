@@ -11,7 +11,7 @@ import Circumspect
 import XCTest
 
 final class AVQueuePlayerPresentationSizePublisherTests: TestCase {
-    func testItemsWithDifferentSizes() {
+    func testVideoFollowedByAudio() {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.mp3.url)
         let player = AVQueuePlayer(items: [item1, item2])
@@ -23,7 +23,19 @@ final class AVQueuePlayerPresentationSizePublisherTests: TestCase {
         }
     }
 
-    func testItemsWithIdenticalSizes() {
+    func testVideosWithDifferentSizes() {
+        let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
+        let item2 = AVPlayerItem(url: Stream.croppedOnDemand.url)
+        let player = AVQueuePlayer(items: [item1, item2])
+        expectAtLeastEqualPublished(
+            values: [nil, CGSize(width: 640, height: 426), CGSize(width: 482, height: 426)],
+            from: player.presentationSizePublisher()
+        ) {
+            player.play()
+        }
+    }
+
+    func testVideosWithIdenticalSizes() {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2])

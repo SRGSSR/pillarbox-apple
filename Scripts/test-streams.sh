@@ -9,6 +9,7 @@ METADATA_DIR="$MEDIAS_DIR/Metadata"
 
 ON_DEMAND_DIR="$GENERATED_STREAMS_DIR/on_demand"
 ON_DEMAND_SHORT_DIR="$GENERATED_STREAMS_DIR/on_demand_short"
+ON_DEMAND_CROPPED_DIR="$GENERATED_STREAMS_DIR/on_demand_cropped"
 ON_DEMAND_CORRUPT_DIR="$GENERATED_STREAMS_DIR/on_demand_corrupt"
 
 LIVE_DIR="$GENERATED_STREAMS_DIR/live"
@@ -36,6 +37,10 @@ function serve_test_streams {
     mkdir -p "$ON_DEMAND_SHORT_DIR"
     ffmpeg -stream_loop -1 -i "$MEDIAS_DIR/nyan_cat.mov" -t 1 -vcodec copy -acodec copy \
         -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_SHORT_DIR/master.m3u8" > /dev/null 2>&1 &
+
+    mkdir -p "$ON_DEMAND_CROPPED_DIR"
+    ffmpeg -stream_loop -1 -i "$MEDIAS_DIR/nyan_cat_cropped.mp4" -t 120 -vcodec copy -acodec copy \
+        -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_CROPPED_DIR/master.m3u8" > /dev/null 2>&1 &
 
     mkdir -p "$ON_DEMAND_CORRUPT_DIR"
     ffmpeg -stream_loop -1 -i "$MEDIAS_DIR/nyan_cat.mov" -t 2 -vcodec copy -acodec copy \
