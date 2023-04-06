@@ -15,4 +15,10 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             test.trackPageView(title: "title")
         }
     }
+
+    func testAppVersion() {
+        expectAtLeastEqual(values: [PackageInfo.version], for: "app_library_version") { test in
+            test.trackPageView(title: "\(#function)")
+        }
+    }
 }
