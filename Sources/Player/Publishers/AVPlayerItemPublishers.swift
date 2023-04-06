@@ -96,7 +96,7 @@ extension AVPlayerItem {
                     return Just(nil).eraseToAnyPublisher()
                 }
                 return item.publisher(for: \.presentationSize)
-                    .map { $0 }
+                    .map { Optional($0) }
                     .eraseToAnyPublisher()
             }
             .switchToLatest()

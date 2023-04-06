@@ -8,6 +8,7 @@
 
 import AVFoundation
 
+// swiftlint:disable:next type_name
 final class AVPlayerItemPresentationSizePublisherTests: TestCase {
     func testUnknown() {
         let item = AVPlayerItem(url: Stream.unavailable.url)
