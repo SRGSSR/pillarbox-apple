@@ -9,8 +9,10 @@ import TCServerSide_noIDFA
 
 final class CommandersActService: AnalyticsService {
     private var serverSide: ServerSide?
+    private var vendor: Vendor?
 
     func start(with configuration: Analytics.Configuration) {
+        vendor = configuration.vendor
         serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey)
         serverSide?.addPermanentData("app_library_version", withValue: PackageInfo.version)
         serverSide?.addPermanentData("navigation_app_site_name", withValue: configuration.site)
@@ -24,6 +26,7 @@ final class CommandersActService: AnalyticsService {
         event?.addAdditionalProperty("event_id", withStringValue: "screen")
         event?.addAdditionalProperty("navigation_property_type", withStringValue: "app")
         event?.addAdditionalProperty("content_title", withStringValue: title)
+        event?.addAdditionalProperty("navigation_bu_distributer", withStringValue: vendor?.rawValue)
 
         labels?.commandersAct.forEach { label in
             event?.addAdditionalProperty(label.key, withStringValue: label.value)

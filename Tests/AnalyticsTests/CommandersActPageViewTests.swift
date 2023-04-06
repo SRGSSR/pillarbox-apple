@@ -51,4 +51,10 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             test.trackPageView(title: "\(#function)")
         }
     }
+
+    func testVendor() {
+        expectAtLeastEqual(values: ["RTS"], for: "navigation_bu_distributer") { test in
+            test.trackPageView(title: "\(#function)")
+        }
+    }
 }
