@@ -33,4 +33,10 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             test.trackPageView(title: "\(#function)")
         }
     }
+
+    func testEventId() {
+        expectAtLeastEqual(values: ["screen"], for: "event_id") { test in
+            test.trackPageView(title: "\(#function)")
+        }
+    }
 }

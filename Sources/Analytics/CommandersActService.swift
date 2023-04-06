@@ -20,6 +20,9 @@ final class CommandersActService: AnalyticsService {
 
     func trackPageView(title: String, levels: [String], labels: Analytics.Labels?) {
         let event = TCPageViewEvent(type: title)
+
+        event?.addAdditionalProperty("event_id", withStringValue: "screen")
+
         labels?.commandersAct.forEach { label in
             event?.addAdditionalProperty(label.key, withStringValue: label.value)
         }
