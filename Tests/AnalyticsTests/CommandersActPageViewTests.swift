@@ -21,4 +21,10 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             test.trackPageView(title: "\(#function)")
         }
     }
+
+    func testSite() {
+        expectAtLeastEqual(values: ["site"], for: "navigation_app_site_name") { test in
+            test.trackPageView(title: "\(#function)")
+        }
+    }
 }
