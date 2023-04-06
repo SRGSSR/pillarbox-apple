@@ -27,7 +27,10 @@ struct ComScoreService: AnalyticsService {
         comScoreConfiguration.applicationVersion = applicationVersion
         comScoreConfiguration.usagePropertiesAutoUpdateMode = .foregroundAndBackground
         comScoreConfiguration.preventAdSupportUsage = true
-        comScoreConfiguration.addPersistentLabels(["mp_brand": configuration.vendor.rawValue])
+        comScoreConfiguration.addPersistentLabels([
+            "mp_brand": configuration.vendor.rawValue,
+            "mp_v": applicationVersion
+        ])
 
         SCORAnalytics.start()
     }
