@@ -17,8 +17,8 @@ struct ComScoreService: AnalyticsService {
             builder!.publisherId = "6036016"
             builder!.secureTransmissionEnabled = true
 
-            // See https://confluence.srg.beecollaboration.com/display/INTFORSCHUNG/ComScore+-+Media+Metrix+Report
-            // Coding Document for Video Players, page 16
+            // See https://confluence.srg.beecollaboration.com/pages/viewpage.action?pageId=13188565
+            // Coding Document for Video Players, section 4.4
             builder!.httpRedirectCachingEnabled = false
         }
         let comScoreConfiguration = SCORAnalytics.configuration()!
