@@ -15,4 +15,10 @@ final class ComScorePageViewTests: ComScoreTestCase {
             test.trackPageView(title: "title")
         }
     }
+
+    func testBrand() {
+        expectAtLeastEqual(values: ["RTS"], for: "mp_brand") { test in
+            test.trackPageView(title: "\(#function)")
+        }
+    }
 }
