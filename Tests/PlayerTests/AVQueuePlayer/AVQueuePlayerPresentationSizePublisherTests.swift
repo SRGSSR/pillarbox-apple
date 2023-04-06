@@ -10,14 +10,14 @@ import AVFoundation
 import Circumspect
 import XCTest
 
-final class AVQueuePlayerPresentationSizePublisherTests: TestCase {
+final class AVQueuePlayerMediaTypePublisherTests: TestCase {
     func testItems() {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2])
         expectAtLeastEqualPublished(
-            values: [nil, CGSize(width: 640, height: 426)],
-            from: player.presentationSizePublisher()
+            values: [.unknown, .video],
+            from: player.mediaTypePublisher()
         ) {
             player.play()
         }
@@ -29,8 +29,8 @@ final class AVQueuePlayerPresentationSizePublisherTests: TestCase {
         let item3 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2, item3])
         expectAtLeastEqualPublished(
-            values: [nil, CGSize(width: 640, height: 426), nil, CGSize(width: 640, height: 426)],
-            from: player.presentationSizePublisher()
+            values: [.unknown, .video, .unknown, .video],
+            from: player.mediaTypePublisher()
         ) {
             player.play()
         }

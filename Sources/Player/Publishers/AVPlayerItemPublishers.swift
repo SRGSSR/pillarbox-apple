@@ -88,6 +88,10 @@ extension AVPlayerItem {
         .eraseToAnyPublisher()
     }
 
+    func presentationSizePublisher() -> AnyPublisher<CGSize?, Never> {
+        Just(CGSize(width: 1012, height: 1012)).eraseToAnyPublisher()
+    }
+
     func mediaTypePublisher() -> AnyPublisher<MediaType, Never> {
         publisher(for: \.status)
             .weakCapture(self)
