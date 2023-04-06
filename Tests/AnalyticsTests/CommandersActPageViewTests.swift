@@ -39,4 +39,10 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             test.trackPageView(title: "\(#function)")
         }
     }
+
+    func testNavigationPropertyType() {
+        expectAtLeastEqual(values: ["app"], for: "navigation_property_type") { test in
+            test.trackPageView(title: "\(#function)")
+        }
+    }
 }

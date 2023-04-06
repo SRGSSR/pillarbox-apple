@@ -22,6 +22,7 @@ final class CommandersActService: AnalyticsService {
         let event = TCPageViewEvent(type: title)
 
         event?.addAdditionalProperty("event_id", withStringValue: "screen")
+        event?.addAdditionalProperty("navigation_property_type", withStringValue: "app")
 
         labels?.commandersAct.forEach { label in
             event?.addAdditionalProperty(label.key, withStringValue: label.value)
