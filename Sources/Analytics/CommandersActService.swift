@@ -12,6 +12,7 @@ final class CommandersActService: AnalyticsService {
 
     func start(with configuration: Analytics.Configuration) {
         serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey)
+        serverSide?.addPermanentData("app_library_version", withValue: PackageInfo.version)
         serverSide?.enableRunningInBackground()
     }
 
