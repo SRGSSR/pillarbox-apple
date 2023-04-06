@@ -45,4 +45,10 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             test.trackPageView(title: "\(#function)")
         }
     }
+
+    func testContentTitle() {
+        expectAtLeastEqual(values: ["\(#function)"], for: "content_title") { test in
+            test.trackPageView(title: "\(#function)")
+        }
+    }
 }

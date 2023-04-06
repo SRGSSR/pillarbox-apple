@@ -23,6 +23,7 @@ final class CommandersActService: AnalyticsService {
 
         event?.addAdditionalProperty("event_id", withStringValue: "screen")
         event?.addAdditionalProperty("navigation_property_type", withStringValue: "app")
+        event?.addAdditionalProperty("content_title", withStringValue: title)
 
         labels?.commandersAct.forEach { label in
             event?.addAdditionalProperty(label.key, withStringValue: label.value)
