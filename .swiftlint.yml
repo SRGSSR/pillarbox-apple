@@ -1,6 +1,7 @@
 ---
 included:
   - Demo
+  - Plugins
   - Sources
   - Tests
 
