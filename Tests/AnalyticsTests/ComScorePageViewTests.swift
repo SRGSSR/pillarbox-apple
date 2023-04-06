@@ -11,7 +11,7 @@ import XCTest
 
 final class ComScorePageViewTests: ComScoreTestCase {
     func testTitle() {
-        expectAtLeastEqual(values: ["title"], for: "name") { test in
+        expectAtLeastEqual(values: ["title"], for: "ns_category") { test in
             test.trackPageView(title: "title")
         }
     }
