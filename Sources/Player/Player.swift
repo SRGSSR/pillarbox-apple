@@ -16,8 +16,8 @@ public final class Player: ObservableObject, Equatable {
     /// Current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle
 
-    /// Current media type.
-    @Published public private(set) var mediaType: MediaType = .unknown
+    /// Current presentation size. Might be zero for audio content or `nil` when unknown.
+    @Published public private(set) var presentationSize: CGSize?
 
     /// Returns whether the player is currently buffering.
     @Published public private(set) var isBuffering = false
@@ -44,6 +44,12 @@ public final class Player: ObservableObject, Equatable {
     /// The type of stream currently played.
     public var streamType: StreamType {
         StreamType(for: timeRange, itemDuration: itemDuration)
+    }
+
+    /// Current media type.
+    public var mediaType: MediaType {
+        guard let presentationSize else { return .unknown }
+        return presentationSize == .zero ? .audio : .video
     }
 
     /// The current time.
@@ -109,7 +115,7 @@ public final class Player: ObservableObject, Equatable {
         configureControlCenterPublishers()
         configureQueueUpdatePublisher()
         configureExternalPlaybackPublisher()
-        configureMediaTypePublisher()
+        configurePresentationSizePublisher()
 
         configurePlayer()
     }
@@ -769,10 +775,10 @@ extension Player {
             .assign(to: &$isExternalPlaybackActive)
     }
 
-    private func configureMediaTypePublisher() {
-        queuePlayer.mediaTypePublisher()
+    private func configurePresentationSizePublisher() {
+        queuePlayer.presentationSizePublisher()
             .receiveOnMainThread()
-            .assign(to: &$mediaType)
+            .assign(to: &$presentationSize)
     }
 
     private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
