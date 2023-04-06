@@ -14,6 +14,7 @@ final class CommandersActService: AnalyticsService {
         serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey)
         serverSide?.addPermanentData("app_library_version", withValue: PackageInfo.version)
         serverSide?.addPermanentData("navigation_app_site_name", withValue: configuration.site)
+        serverSide?.addPermanentData("navigation_device", withValue: UIDevice.current.model)
         serverSide?.enableRunningInBackground()
     }
 

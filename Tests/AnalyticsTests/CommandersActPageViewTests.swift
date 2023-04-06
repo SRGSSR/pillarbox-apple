@@ -27,4 +27,10 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             test.trackPageView(title: "\(#function)")
         }
     }
+
+    func testDevice() {
+        expectAtLeastEqual(values: [UIDevice.current.model], for: "navigation_device") { test in
+            test.trackPageView(title: "\(#function)")
+        }
+    }
 }
