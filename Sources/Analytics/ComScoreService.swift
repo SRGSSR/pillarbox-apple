@@ -8,6 +8,10 @@ import ComScore
 import Foundation
 
 struct ComScoreService: AnalyticsService {
+    private var applicationVersion: String {
+        Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
+    }
+
     func start(with configuration: Analytics.Configuration) {
         let publisherConfiguration = SCORPublisherConfiguration { builder in
             builder!.publisherId = "6036016"
@@ -20,7 +24,7 @@ struct ComScoreService: AnalyticsService {
         let comScoreConfiguration = SCORAnalytics.configuration()!
         comScoreConfiguration.addClient(with: publisherConfiguration)
 
-        comScoreConfiguration.applicationVersion = Version.gitTag
+        comScoreConfiguration.applicationVersion = applicationVersion
         comScoreConfiguration.usagePropertiesAutoUpdateMode = .foregroundAndBackground
         comScoreConfiguration.preventAdSupportUsage = true
 

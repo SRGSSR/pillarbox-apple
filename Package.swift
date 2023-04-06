@@ -54,20 +54,7 @@ let package = Package(
                 .product(name: "ComScore", package: "Comscore-Swift-Package-Manager"),
                 .product(name: "TCCore", package: "iOSV5"),
                 .product(name: "TCServerSide_noIDFA", package: "iOSV5")
-            ],
-            plugins: [
-                .plugin(name: "GitTagPlugin")
             ]
-        ),
-        .plugin(
-            name: "GitTagPlugin",
-            capability: .buildTool(),
-            dependencies: [
-                "GitTagPluginExec"
-            ]
-        ),
-        .executableTarget(
-            name: "GitTagPluginExec"
         ),
         .target(
             name: "AnalyticsTestBridge",
@@ -113,9 +100,6 @@ let package = Package(
             name: "AnalyticsTests",
             dependencies: [
                 .target(name: "AnalyticsTestBridge")
-            ],
-            plugins: [
-                .plugin(name: "GitTagPlugin")
             ]
         ),
         .testTarget(
