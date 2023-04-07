@@ -248,8 +248,7 @@ private struct FullScreenButton: View {
                     .tint(.white)
             }
             .aspectRatio(contentMode: .fit)
-            .frame(height: 45)
-            .padding()
+            .frame(width: 45, height: 45)
         }
     }
 
