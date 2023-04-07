@@ -13,6 +13,7 @@ import SwiftUI
 @available(tvOS, unavailable)
 private struct MainView: View {
     @ObservedObject var player: Player
+    @Binding var layout: PlaybackView.Layout
     @StateObject private var visibilityTracker = VisibilityTracker()
 
     @State private var layoutInfo: LayoutInfo = .none
@@ -72,7 +73,7 @@ private struct MainView: View {
 
     @ViewBuilder
     private func timeBar() -> some View {
-        TimeBar(player: player)
+        TimeBar(player: player, layout: $layout)
             .opacity(isUserInterfaceHidden && !areControlsAlwaysVisible ? 0 : 1)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
@@ -237,6 +238,45 @@ private struct SkipForwardButton: View {
 }
 
 // Behavior: h-hug, v-hug
+private struct FullScreenButton: View {
+    @Binding var layout: PlaybackView.Layout
+
+    var body: some View {
+        if let imageName {
+            Button(action: toggleFullScreen) {
+                Image(systemName: imageName)
+                    .tint(.white)
+            }
+            .aspectRatio(contentMode: .fit)
+            .frame(height: 45)
+            .padding()
+        }
+    }
+
+    private var imageName: String? {
+        switch layout {
+        case .inline:
+            return nil
+        case .minimized:
+            return "arrow.up.left.and.arrow.down.right"
+        case .maximized:
+            return "arrow.down.right.and.arrow.up.left"
+        }
+    }
+
+    private func toggleFullScreen() {
+        switch layout {
+        case .minimized:
+            layout = .maximized
+        case .maximized:
+            layout = .minimized
+        default:
+            break
+        }
+    }
+}
+
+// Behavior: h-hug, v-hug
 private struct LiveLabel: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
@@ -272,6 +312,7 @@ private struct LiveLabel: View {
 @available(tvOS, unavailable)
 private struct TimeBar: View {
     @ObservedObject var player: Player
+    @Binding var layout: PlaybackView.Layout
 
     @StateObject private var progressTracker = ProgressTracker(
         interval: CMTime(value: 1, timescale: 10),
@@ -287,7 +328,10 @@ private struct TimeBar: View {
             routePickerView()
             TimeSlider(player: player, progressTracker: progressTracker)
             LiveLabel(player: player, progressTracker: progressTracker)
+            FullScreenButton(layout: $layout)
         }
+        // Prevent taps from going through in transparent areas
+        .background(Color(white: 1, opacity: 0.0001))
         .padding(.horizontal, 6)
         .bind(progressTracker, to: player)
     }
@@ -382,7 +426,14 @@ private struct TimeSlider: View {
 /// A playback view with standard controls. Requires an ancestor view to own the player to be used.
 /// Behavior: h-exp, v-exp
 struct PlaybackView: View {
+    enum Layout {
+        case inline
+        case minimized
+        case maximized
+    }
+
     @ObservedObject var player: Player
+    @Binding var layout: Layout
 
     var body: some View {
         ZStack {
@@ -403,13 +454,18 @@ struct PlaybackView: View {
         .onAppear(perform: player.play)
     }
 
+    init(player: Player, layout: Binding<Layout> = .constant(.inline)) {
+        self.player = player
+        _layout = layout
+    }
+
     @ViewBuilder
     private func videoView() -> some View {
         ZStack {
 #if os(iOS)
             switch UserDefaults.standard.playerLayout {
             case .custom:
-                MainView(player: player)
+                MainView(player: player, layout: $layout)
             case .system:
                 SystemVideoView(player: player)
             }

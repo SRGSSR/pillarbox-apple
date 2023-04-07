@@ -148,15 +148,19 @@ private struct Toolbar: View {
 struct PlaylistView: View {
     @State var templates: [Template]
     @StateObject private var model = PlaylistViewModel()
+    @State private var layout: PlaybackView.Layout = .minimized
 
     var body: some View {
         VStack(spacing: 0) {
-            PlaybackView(player: model.player)
-            Toolbar(player: model.player, model: model)
-            List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
-                MediaCell(media: media, isPlaying: media == model.currentMedia)
+            PlaybackView(player: model.player, layout: $layout)
+            if layout != .maximized {
+                Toolbar(player: model.player, model: model)
+                List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
+                    MediaCell(media: media, isPlaying: media == model.currentMedia)
+                }
             }
         }
+        .animation(.linear, value: layout)
         .onAppear { model.templates = templates }
         .onChange(of: templates) { newValue in
             model.templates = newValue
