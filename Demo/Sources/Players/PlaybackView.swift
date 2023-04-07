@@ -116,7 +116,7 @@ private struct MainView: View {
             // https://www.hackingwithswift.com/quick-start/swiftui/how-to-control-the-tappable-area-of-a-view-using-contentshape
             .contentShape(Rectangle())
             .foregroundColor(.white)
-            .padding()
+            .padding(60)
     }
 }
 
