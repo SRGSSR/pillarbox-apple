@@ -160,7 +160,7 @@ struct PlaylistView: View {
                 }
             }
         }
-        .animation(.linear, value: layout)
+        .animation(.defaultLinear, value: layout)
         .onAppear { model.templates = templates }
         .onChange(of: templates) { newValue in
             model.templates = newValue

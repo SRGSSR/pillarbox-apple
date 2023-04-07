@@ -83,7 +83,7 @@ struct ExamplesView: View {
             section(title: "Corner cases", medias: model.cornerCaseMedias)
         }
         .scrollDismissesKeyboard(.immediately)
-        .animation(.linear, value: model.protectedMedias)
+        .animation(.defaultLinear, value: model.protectedMedias)
         .navigationTitle("Examples")
         .refreshable { await model.refresh() }
     }

@@ -29,8 +29,8 @@ private struct MainView: View {
                 main()
                 timeBar()
             }
-            .animation(.linear, value: player.isBusy)
-            .animation(.linear, value: isUserInterfaceHidden)
+            .animation(.defaultLinear, value: player.isBusy)
+            .animation(.defaultLinear, value: isUserInterfaceHidden)
         }
         .bind(visibilityTracker, to: player)
         .debugBodyCounter()
@@ -63,7 +63,7 @@ private struct MainView: View {
                 controls()
                 loadingIndicator()
             }
-            .animation(.linear, value: isUserInterfaceHidden)
+            .animation(.defaultLinear, value: isUserInterfaceHidden)
             .accessibilityAddTraits(.isButton)
             .onTapGesture(perform: visibilityTracker.toggle)
             .gesture(magnificationGesture(), including: magnificationGestureMask)
@@ -134,7 +134,7 @@ private struct ControlsView: View {
             }
             .debugBodyCounter(color: .green)
         }
-        .animation(.linear, value: player.playbackState)
+        .animation(.defaultLinear, value: player.playbackState)
         .bind(progressTracker, to: player)
     }
 }
@@ -176,8 +176,8 @@ private struct PlaybackButton: View {
                 .resizable()
                 .tint(.white)
                 .opacity(player.isBusy ? 0 : 1)
-                .animation(.linear, value: player.playbackState)
-                .animation(.linear, value: player.canRestart())
+                .animation(.defaultLinear, value: player.playbackState)
+                .animation(.defaultLinear, value: player.canRestart())
         }
         .aspectRatio(contentMode: .fit)
         .frame(minWidth: 120, maxHeight: 90)
@@ -207,7 +207,7 @@ private struct SkipBackwardButton: View {
         .aspectRatio(contentMode: .fit)
         .frame(height: 45)
         .opacity(player.canSkipBackward() ? 1 : 0)
-        .animation(.linear, value: player.canSkipBackward())
+        .animation(.defaultLinear, value: player.canSkipBackward())
     }
 
     private func skipBackward() {
@@ -229,7 +229,7 @@ private struct SkipForwardButton: View {
         .aspectRatio(contentMode: .fit)
         .frame(height: 45)
         .opacity(player.canSkipForward() ? 1 : 0)
-        .animation(.linear, value: player.canSkipForward())
+        .animation(.defaultLinear, value: player.canSkipForward())
     }
 
     private func skipForward() {
