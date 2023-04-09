@@ -27,6 +27,10 @@ final class CommandersActService: AnalyticsService {
         event?.addAdditionalProperty("navigation_property_type", withStringValue: "app")
         event?.addAdditionalProperty("content_title", withStringValue: title)
         event?.addAdditionalProperty("navigation_bu_distributer", withStringValue: vendor?.rawValue)
+        levels.enumerated().forEach { index, level in
+            guard index < 8 else { return }
+            event?.addAdditionalProperty("navigation_level_\(index + 1)", withStringValue: level)
+        }
 
         labels?.commandersAct.forEach { label in
             event?.addAdditionalProperty(label.key, withStringValue: label.value)

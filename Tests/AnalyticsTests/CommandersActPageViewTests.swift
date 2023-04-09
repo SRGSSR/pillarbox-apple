@@ -57,4 +57,28 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             test.trackPageView(title: "\(#function)")
         }
     }
+
+    func testLevel0() {
+        expectNothingPublished(values: ["nothing"], for: "navigation_level_0") { test in
+            test.trackPageView(title: "\(#function)", levels: [1, 2, 3, 4, 5, 6, 6, 8, 9, 10].map { "something_\($0)" })
+        }
+    }
+
+    func testLevel1() {
+        expectAtLeastEqual(values: ["something_1"], for: "navigation_level_1") { test in
+            test.trackPageView(title: "\(#function)", levels: [1, 2, 3, 4, 5, 6, 6, 8, 9, 10].map { "something_\($0)" })
+        }
+    }
+
+    func testLevel8() {
+        expectAtLeastEqual(values: ["something_8"], for: "navigation_level_8") { test in
+            test.trackPageView(title: "\(#function)", levels: [1, 2, 3, 4, 5, 6, 6, 8, 9, 10].map { "something_\($0)" })
+        }
+    }
+
+    func testLevel9() {
+        expectNothingPublished(values: ["nothing"], for: "navigation_level_9") { test in
+            test.trackPageView(title: "\(#function)", levels: [1, 2, 3, 4, 5, 6, 6, 8, 9, 10].map { "something_\($0)" })
+        }
+    }
 }

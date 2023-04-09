@@ -71,4 +71,21 @@ public extension CommandersActTestCase {
             executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
         }
     }
+
+    /// Ensure a publisher does not emit any value during some time interval.
+    func expectNothingPublished(
+        values: [String],
+        for key: String,
+        during interval: DispatchTimeInterval = .seconds(20),
+        file: StaticString = #file,
+        line: UInt = #line,
+        function: String = #function,
+        while executing: ((AnalyticsTest) -> Void)? = nil
+    ) {
+        let id = Self.identifier(for: function)
+        let publisher = Self.publisher(for: id, key: key)
+        expectNothingPublished(from: publisher, during: interval, file: file, line: line) {
+            executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
+        }
+    }
 }
