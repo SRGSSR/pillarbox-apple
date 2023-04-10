@@ -329,8 +329,7 @@ private struct TimeBar: View {
             LiveLabel(player: player, progressTracker: progressTracker)
             FullScreenButton(layout: $layout)
         }
-        // Prevent taps from going through in transparent areas
-        .background(Color(white: 1, opacity: 0.0001))
+        .preventsTouchPropagation()
         .padding(.horizontal, 6)
         .bind(progressTracker, to: player)
     }
