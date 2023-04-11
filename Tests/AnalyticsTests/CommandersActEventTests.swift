@@ -27,4 +27,34 @@ final class CommandersActEventTests: CommandersActTestCase {
             test.trackEvent(source: "my-event-source")
         }
     }
+
+    func testExtra1() {
+        expectAtLeastEqual(values: ["my-event-extra1"], for: "event_value_1") { test in
+            test.trackEvent(extra1: "my-event-extra1")
+        }
+    }
+
+    func testExtra2() {
+        expectAtLeastEqual(values: ["my-event-extra2"], for: "event_value_2") { test in
+            test.trackEvent(extra2: "my-event-extra2")
+        }
+    }
+
+    func testExtra3() {
+        expectAtLeastEqual(values: ["my-event-extra3"], for: "event_value_3") { test in
+            test.trackEvent(extra3: "my-event-extra3")
+        }
+    }
+
+    func testExtra4() {
+        expectAtLeastEqual(values: ["my-event-extra4"], for: "event_value_4") { test in
+            test.trackEvent(extra4: "my-event-extra4")
+        }
+    }
+
+    func testExtra5() {
+        expectAtLeastEqual(values: ["my-event-extra5"], for: "event_value_5") { test in
+            test.trackEvent(extra5: "my-event-extra5")
+        }
+    }
 }
