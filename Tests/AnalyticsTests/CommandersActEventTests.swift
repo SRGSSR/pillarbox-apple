@@ -21,4 +21,10 @@ final class CommandersActEventTests: CommandersActTestCase {
             test.trackEvent(type: "my-event-type")
         }
     }
+
+    func testSource() {
+        expectAtLeastEqual(values: ["my-event-source"], for: "event_source") { test in
+            test.trackEvent(source: "my-event-source")
+        }
+    }
 }
