@@ -87,4 +87,30 @@ public extension CommandersActTestCase {
             executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
         }
     }
+
+    /// Wait until the `kTCNotification_HTTPRequest` has been received.
+    func wait(
+        timeout: DispatchTimeInterval = .seconds(20),
+        function: String = #function,
+        while executing: (AnalyticsTest) -> Void,
+        received: @escaping ([String: Any]) -> Void
+    ) {
+        let id = Self.identifier(for: function)
+        expectation(forNotification: Notification.Name(rawValue: kTCNotification_HTTPRequest), object: nil) { notification in
+            guard
+                let body = notification.userInfo?[kTCUserInfo_POSTData] as? String,
+                let data = body.data(using: .utf8),
+                let labels = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+            else {
+                return false
+            }
+            guard labels[Self.identifierKey] as? String == id else {
+                return false
+            }
+            received(labels)
+            return true
+        }
+        executing(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
+        waitForExpectations(timeout: timeout.double())
+    }
 }

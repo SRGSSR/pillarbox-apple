@@ -65,4 +65,26 @@ public extension ComScoreTestCase {
             executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
         }
     }
+
+    /// Wait until the `didReceiveComScoreRequest` has been received.
+    func wait(
+        timeout: DispatchTimeInterval = .seconds(20),
+        function: String = #function,
+        while executing: (AnalyticsTest) -> Void,
+        received: @escaping ([String: String]) -> Void
+    ) {
+        let id = Self.identifier(for: function)
+        expectation(forNotification: .didReceiveComScoreRequest, object: nil) { notification in
+            guard let labels = notification.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String] else {
+                return false
+            }
+            guard labels[Self.identifierKey] == id else {
+                return false
+            }
+            received(labels)
+            return true
+        }
+        executing(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
+        waitForExpectations(timeout: timeout.double())
+    }
 }
