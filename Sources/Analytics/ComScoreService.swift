@@ -39,4 +39,18 @@ struct ComScoreService: AnalyticsService {
         let allLabels = ["ns_category": title].merging(labels?.comScore ?? [:]) { _, new in new }
         SCORAnalytics.notifyViewEvent(withLabels: allLabels)
     }
+
+    // swiftlint:disable:next function_parameter_count
+    func trackEvent(
+        name: String,
+        type: String,
+        value: String,
+        source: String,
+        extra1: String,
+        extra2: String,
+        extra3: String,
+        extra4: String,
+        extra5: String
+    ) {
+    }
 }
