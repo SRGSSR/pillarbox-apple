@@ -68,7 +68,7 @@ public class Analytics {
     ///   - extra4: The event extra4.
     ///   - extra5: The event extra5.
     public func sendEvent(
-        name: String = "",
+        name: String,
         type: String = "",
         value: String = "",
         source: String = "",
@@ -78,10 +78,6 @@ public class Analytics {
         extra4: String = "",
         extra5: String = ""
     ) {
-        // TODO: -
-        // Should we avoid to send an event with an empty name?
-        // Should we have some mandatory fields?
-
         sendEvent(
             name: name,
             type: type,
@@ -97,21 +93,24 @@ public class Analytics {
     }
 
     func sendPageView(title: String, levels: [String], labels: Labels?) {
+        assert(!title.isEmpty, "The title is required!")
         services.forEach { $0.sendPageView(title: title, levels: levels, labels: labels) }
     }
 
+    // swiftlint:disable:next function_parameter_count
     func sendEvent(
-        name: String = "",
-        type: String = "",
-        value: String = "",
-        source: String = "",
-        extra1: String = "",
-        extra2: String = "",
-        extra3: String = "",
-        extra4: String = "",
-        extra5: String = "",
+        name: String,
+        type: String,
+        value: String,
+        source: String,
+        extra1: String,
+        extra2: String,
+        extra3: String,
+        extra4: String,
+        extra5: String,
         labels: Labels?
     ) {
+        assert(!name.isEmpty, "The name is required!")
         services.forEach { service in
             service.sendEvent(
                 name: name,

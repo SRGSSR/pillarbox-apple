@@ -38,7 +38,7 @@ public struct AnalyticsTest {
     ///   - extra4: The event extra4.
     ///   - extra5: The event extra5.
     public func sendEvent(
-        name: String = "",
+        name: String = "name-test", // TODO: Should be removed!
         type: String = "",
         value: String = "",
         source: String = "",
