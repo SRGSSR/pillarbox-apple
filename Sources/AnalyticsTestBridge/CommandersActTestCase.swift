@@ -74,7 +74,6 @@ public extension CommandersActTestCase {
 
     /// Ensure a publisher does not emit any value during some time interval.
     func expectNothingPublished(
-        values: [String],
         for key: String,
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
