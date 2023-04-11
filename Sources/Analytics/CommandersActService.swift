@@ -11,6 +11,19 @@ final class CommandersActService: AnalyticsService {
     private var serverSide: ServerSide?
     private var vendor: Vendor?
 
+    static func device() -> String {
+        switch UIDevice.current.userInterfaceIdiom {
+        case .phone:
+            return "phone"
+        case .pad:
+            return "tablet"
+        case .tv:
+            return "tvbox"
+        default:
+            return "phone"
+        }
+    }
+
     func start(with configuration: Analytics.Configuration) {
         vendor = configuration.vendor
         serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey)
