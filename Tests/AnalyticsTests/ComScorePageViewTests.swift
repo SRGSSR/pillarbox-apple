@@ -7,18 +7,20 @@
 @testable import Analytics
 
 import AnalyticsTestBridge
+import Nimble
 import XCTest
 
 final class ComScorePageViewTests: ComScoreTestCase {
-    func testTitle() {
-        expectAtLeastEqual(values: ["title"], for: "ns_category") { test in
+    func testLabels() {
+        wait { test in
             test.sendPageView(title: "title")
-        }
-    }
-
-    func testBrand() {
-        expectAtLeastEqual(values: ["RTS"], for: "mp_brand") { test in
-            test.sendPageView(title: "\(#function)")
+        } received: { labels in
+            expect(labels["c2"]).to(equal("6036016"))
+            expect(labels["ns_ap_an"]).to(equal("xctest"))
+            expect(labels["ns_category"]).to(equal("title"))
+            expect(labels["ns_st_mp"]).to(beNil())
+            expect(labels["mp_brand"]).to(equal("RTS"))
+            expect(labels["mp_v"]).notTo(beNil())
         }
     }
 }
