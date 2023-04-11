@@ -18,7 +18,7 @@ func constant<T>(iOS: T, tvOS: T) -> T {
 }
 
 extension Animation {
-    static var linear: Animation {
+    static var defaultLinear: Animation {
         .linear(duration: 0.2)
     }
 }

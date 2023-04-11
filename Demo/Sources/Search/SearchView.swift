@@ -23,7 +23,7 @@ struct SearchView: View {
                 RefreshableMessageView(model: model, message: error.localizedDescription, icon: .error)
             }
         }
-        .animation(.linear, value: model.state)
+        .animation(.defaultLinear, value: model.state)
         .navigationTitle("Search")
         .searchable(text: $model.text)
 #if os(iOS)
