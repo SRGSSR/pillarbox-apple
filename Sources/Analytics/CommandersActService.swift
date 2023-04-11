@@ -20,7 +20,7 @@ final class CommandersActService: AnalyticsService {
         serverSide?.enableRunningInBackground()
     }
 
-    func trackPageView(title: String, levels: [String], labels: Analytics.Labels?) {
+    func trackPageView(title: String, levels: [String], labels: Labels?) {
         let event = TCPageViewEvent(type: title)
 
         event?.addAdditionalProperty("navigation_property_type", withStringValue: "app")
