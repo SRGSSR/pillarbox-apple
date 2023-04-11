@@ -37,7 +37,7 @@ public struct AnalyticsTest {
     ///   - extra3: The event extra3.
     ///   - extra4: The event extra4.
     ///   - extra5: The event extra5.
-    public func trackEvent(
+    public func sendEvent(
         name: String = "",
         type: String = "",
         value: String = "",
@@ -48,7 +48,7 @@ public struct AnalyticsTest {
         extra4: String = "",
         extra5: String = ""
     ) {
-        Analytics.shared.trackEvent(
+        Analytics.shared.sendEvent(
             name: name,
             type: type,
             value: value,

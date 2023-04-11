@@ -67,7 +67,7 @@ public class Analytics {
     ///   - extra3: The event extra3.
     ///   - extra4: The event extra4.
     ///   - extra5: The event extra5.
-    public func trackEvent(
+    public func sendEvent(
         name: String = "",
         type: String = "",
         value: String = "",
@@ -78,7 +78,7 @@ public class Analytics {
         extra4: String = "",
         extra5: String = ""
     ) {
-        trackEvent(
+        sendEvent(
             name: name,
             type: type,
             value: value,
@@ -96,7 +96,7 @@ public class Analytics {
         services.forEach { $0.trackPageView(title: title, levels: levels, labels: labels) }
     }
 
-    func trackEvent(
+    func sendEvent(
         name: String = "",
         type: String = "",
         value: String = "",
@@ -109,7 +109,7 @@ public class Analytics {
         labels: Labels?
     ) {
         services.forEach { service in
-            service.trackEvent(
+            service.sendEvent(
                 name: name,
                 type: type,
                 value: value,

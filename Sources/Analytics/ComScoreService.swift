@@ -41,7 +41,7 @@ struct ComScoreService: AnalyticsService {
     }
 
     // swiftlint:disable:next function_parameter_count
-    func trackEvent(
+    func sendEvent(
         name: String,
         type: String,
         value: String,
