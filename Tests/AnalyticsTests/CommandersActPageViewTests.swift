@@ -35,7 +35,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             expect(labels["navigation_level_7"] as? String).to(equal("level_7"))
             expect(labels["navigation_level_8"] as? String).to(equal("level_8"))
             expect(labels["navigation_level_9"]).to(beNil())
-            expect(labels["navigation_device"]).notTo(beNil())
+            expect(["phone", "tablet", "tvbox", "phone"]).to(contain([labels["navigation_device"] as? String]))
             expect(labels["app_library_version"] as? String).to(equal(PackageInfo.version))
             expect(labels["navigation_app_site_name"] as? String).to(equal("site"))
             expect(labels["navigation_property_type"] as? String).to(equal("app"))

@@ -29,8 +29,9 @@ final class CommandersActService: AnalyticsService {
         guard let serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey) else { return }
         serverSide.addPermanentData("app_library_version", withValue: PackageInfo.version)
         serverSide.addPermanentData("navigation_app_site_name", withValue: configuration.site)
-        serverSide.addPermanentData("navigation_device", withValue: UIDevice.current.model)
+        serverSide.addPermanentData("navigation_device", withValue: Self.device())
         serverSide.enableRunningInBackground()
+        self.serverSide = serverSide
     }
 
     func sendPageView(title: String, levels: [String], labels: Labels?) {
