@@ -34,20 +34,8 @@ final class CommandersActPageViewTests: CommandersActTestCase {
         }
     }
 
-    func testEventId() {
-        expectAtLeastEqual(values: ["screen"], for: "event_id") { test in
-            test.trackPageView(title: "\(#function)")
-        }
-    }
-
     func testNavigationPropertyType() {
         expectAtLeastEqual(values: ["app"], for: "navigation_property_type") { test in
-            test.trackPageView(title: "\(#function)")
-        }
-    }
-
-    func testContentTitle() {
-        expectAtLeastEqual(values: ["\(#function)"], for: "content_title") { test in
             test.trackPageView(title: "\(#function)")
         }
     }

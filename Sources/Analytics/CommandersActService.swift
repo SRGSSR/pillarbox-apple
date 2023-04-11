@@ -23,9 +23,7 @@ final class CommandersActService: AnalyticsService {
     func trackPageView(title: String, levels: [String], labels: Analytics.Labels?) {
         let event = TCPageViewEvent(type: title)
 
-        event?.addAdditionalProperty("event_id", withStringValue: "screen")
         event?.addAdditionalProperty("navigation_property_type", withStringValue: "app")
-        event?.addAdditionalProperty("content_title", withStringValue: title)
         event?.addAdditionalProperty("navigation_bu_distributer", withStringValue: vendor?.rawValue)
         levels.enumerated().forEach { index, level in
             guard index < 8 else { return }
