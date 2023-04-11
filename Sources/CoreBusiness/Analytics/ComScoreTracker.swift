@@ -13,9 +13,9 @@ import Player
 /// Stream tracker for comScore.
 public final class ComScoreTracker: PlayerItemTracker {
     public struct Configuration {
-        let labels: Analytics.Labels?
+        let labels: [String: String]
 
-        public init(labels: Analytics.Labels? = nil) {
+        public init(labels: [String: String] = [:]) {
             self.labels = labels
         }
     }
@@ -33,12 +33,11 @@ public final class ComScoreTracker: PlayerItemTracker {
         streamingAnalytics.setMediaPlayerName("Pillarbox")
         streamingAnalytics.setMediaPlayerVersion(PackageInfo.version)
 
-        if let labels = configuration.labels?.comScore {
-            let metadata = SCORStreamingContentMetadata { builder in
-                builder!.setCustomLabels(labels)
-            }
-            streamingAnalytics.setMetadata(metadata)
+        let metadata = SCORStreamingContentMetadata { [weak self] builder in
+            guard let self else { return }
+            builder!.setCustomLabels(self.configuration.labels)
         }
+        streamingAnalytics.setMetadata(metadata)
         streamingAnalytics.notifyPlay()
     }
 

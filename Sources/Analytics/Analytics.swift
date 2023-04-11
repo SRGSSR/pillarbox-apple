@@ -29,26 +29,17 @@ public class Analytics {
     }
 
     /// Information sent with analytics events.
-    public struct Labels {
+    struct Labels {
         /// comScore-specific information.
-        public let comScore: [String: String]
+        let comScore: [String: String]
 
         /// Commanders Act-specific information.
-        public let commandersAct: [String: String]
-
-        /// Create labels.
-        /// - Parameters:
-        ///   - comScore: comScore-specific information.
-        ///   - commandersAct: Commanders Act-specific information.
-        public init(comScore: [String: String], commandersAct: [String: String]) {
-            self.comScore = comScore
-            self.commandersAct = commandersAct
-        }
+        let commandersAct: [String: String]
 
         /// Merge labels together.
         /// - Parameter other: The other labels which must be merged into the receiver.
         /// - Returns: The merged labels.
-        public func merging(_ other: Self) -> Self {
+        func merging(_ other: Self) -> Self {
             .init(
                 comScore: comScore.merging(other.comScore) { _, new in new },
                 commandersAct: commandersAct.merging(other.commandersAct) { _, new in new }
@@ -80,8 +71,11 @@ public class Analytics {
     /// - Parameters:
     ///   - title: The page title.
     ///   - levels: The page levels.
-    ///   - labels: Labels associated with the event.
-    public func trackPageView(title: String, levels: [String] = [], labels: Labels? = nil) {
+    public func trackPageView(title: String, levels: [String] = []) {
+        trackPageView(title: title, levels: levels, labels: nil)
+    }
+
+    func trackPageView(title: String, levels: [String], labels: Labels?) {
         services.forEach { $0.trackPageView(title: title, levels: levels, labels: labels) }
     }
 }

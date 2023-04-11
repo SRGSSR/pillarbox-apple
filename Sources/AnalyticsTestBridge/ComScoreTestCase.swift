@@ -17,8 +17,8 @@ open class ComScoreTestCase: XCTestCase {
         "\(self).\(function)-\(UUID().uuidString)"
     }
 
-    private static func additionalLabels(for id: String) -> Analytics.Labels {
-        .init(comScore: [identifierKey: id], commandersAct: [:])
+    private static func additionalLabels(for id: String) -> [String: String] {
+        [identifierKey: id]
     }
 
     private static func publisher(for id: String, key: String) -> AnyPublisher<String, Never> {
