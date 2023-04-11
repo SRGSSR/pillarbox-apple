@@ -19,6 +19,7 @@ protocol AnalyticsService {
         extra2: String,
         extra3: String,
         extra4: String,
-        extra5: String
+        extra5: String,
+        labels: Labels?
     )
 }

@@ -78,6 +78,36 @@ public class Analytics {
         extra4: String = "",
         extra5: String = ""
     ) {
+        trackEvent(
+            name: name,
+            type: type,
+            value: value,
+            source: source,
+            extra1: extra1,
+            extra2: extra2,
+            extra3: extra3,
+            extra4: extra4,
+            extra5: extra5,
+            labels: nil
+        )
+    }
+
+    func trackPageView(title: String, levels: [String], labels: Labels?) {
+        services.forEach { $0.trackPageView(title: title, levels: levels, labels: labels) }
+    }
+
+    func trackEvent(
+        name: String = "",
+        type: String = "",
+        value: String = "",
+        source: String = "",
+        extra1: String = "",
+        extra2: String = "",
+        extra3: String = "",
+        extra4: String = "",
+        extra5: String = "",
+        labels: Labels?
+    ) {
         services.forEach { service in
             service.trackEvent(
                 name: name,
@@ -88,12 +118,9 @@ public class Analytics {
                 extra2: extra2,
                 extra3: extra3,
                 extra4: extra4,
-                extra5: extra5
+                extra5: extra5,
+                labels: labels
             )
         }
-    }
-
-    func trackPageView(title: String, levels: [String], labels: Labels?) {
-        services.forEach { $0.trackPageView(title: title, levels: levels, labels: labels) }
     }
 }

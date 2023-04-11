@@ -25,4 +25,40 @@ public struct AnalyticsTest {
     public func trackPageView(title: String, levels: [String] = []) {
         Analytics.shared.trackPageView(title: title, levels: levels, labels: .init(comScore: additionalLabels, commandersAct: additionalLabels))
     }
+
+    /// Record an event.
+    /// - Parameters:
+    ///   - name: The event name.
+    ///   - type: The event type.
+    ///   - value: The event value.
+    ///   - source: The event source.
+    ///   - extra1: The event extra1.
+    ///   - extra2: The event extra2.
+    ///   - extra3: The event extra3.
+    ///   - extra4: The event extra4.
+    ///   - extra5: The event extra5.
+    public func trackEvent(
+        name: String = "",
+        type: String = "",
+        value: String = "",
+        source: String = "",
+        extra1: String = "",
+        extra2: String = "",
+        extra3: String = "",
+        extra4: String = "",
+        extra5: String = ""
+    ) {
+        Analytics.shared.trackEvent(
+            name: name,
+            type: type,
+            value: value,
+            source: source,
+            extra1: extra1,
+            extra2: extra2,
+            extra3: extra3,
+            extra4: extra4,
+            extra5: extra5,
+            labels: .init(comScore: additionalLabels, commandersAct: additionalLabels)
+        )
+    }
 }

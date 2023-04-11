@@ -46,7 +46,23 @@ final class CommandersActService: AnalyticsService {
         extra2: String,
         extra3: String,
         extra4: String,
-        extra5: String
+        extra5: String,
+        labels: Labels?
     ) {
+        let event = TCCustomEvent(name: name)
+        event?.addAdditionalProperty("event_type", withStringValue: type)
+        event?.addAdditionalProperty("event_value", withStringValue: value)
+        event?.addAdditionalProperty("event_source", withStringValue: source)
+        event?.addAdditionalProperty("event_value_1", withStringValue: extra1)
+        event?.addAdditionalProperty("event_value_2", withStringValue: extra2)
+        event?.addAdditionalProperty("event_value_3", withStringValue: extra3)
+        event?.addAdditionalProperty("event_value_4", withStringValue: extra4)
+        event?.addAdditionalProperty("event_value_5", withStringValue: extra5)
+
+        labels?.commandersAct.forEach { label in
+            event?.addAdditionalProperty(label.key, withStringValue: label.value)
+        }
+
+        serverSide?.execute(event)
     }
 }
