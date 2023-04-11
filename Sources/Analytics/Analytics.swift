@@ -78,6 +78,10 @@ public class Analytics {
         extra4: String = "",
         extra5: String = ""
     ) {
+        // TODO: -
+        // Should we avoid to send an event with an empty name?
+        // Should we have some mandatory fields?
+
         sendEvent(
             name: name,
             type: type,
