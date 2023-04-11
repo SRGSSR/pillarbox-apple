@@ -62,11 +62,11 @@ public class Analytics {
     ///   - type: The event type.
     ///   - value: The event value.
     ///   - source: The event source.
-    ///   - extra1: The event extra1.
-    ///   - extra2: The event extra2.
-    ///   - extra3: The event extra3.
-    ///   - extra4: The event extra4.
-    ///   - extra5: The event extra5.
+    ///   - extra1: Extra information associated with the event.
+    ///   - extra2: Extra information associated with the event.
+    ///   - extra3: Extra information associated with the event.
+    ///   - extra4: Extra information associated with the event.
+    ///   - extra5: Extra information associated with the event.
     public func sendEvent(
         name: String,
         type: String = "",
