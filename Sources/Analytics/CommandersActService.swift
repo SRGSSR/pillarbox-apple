@@ -26,27 +26,27 @@ final class CommandersActService: AnalyticsService {
 
     func start(with configuration: Analytics.Configuration) {
         vendor = configuration.vendor
-        serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey)
-        serverSide?.addPermanentData("app_library_version", withValue: PackageInfo.version)
-        serverSide?.addPermanentData("navigation_app_site_name", withValue: configuration.site)
-        serverSide?.addPermanentData("navigation_device", withValue: UIDevice.current.model)
-        serverSide?.enableRunningInBackground()
+        guard let serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey) else { return }
+        serverSide.addPermanentData("app_library_version", withValue: PackageInfo.version)
+        serverSide.addPermanentData("navigation_app_site_name", withValue: configuration.site)
+        serverSide.addPermanentData("navigation_device", withValue: UIDevice.current.model)
+        serverSide.enableRunningInBackground()
     }
 
     func sendPageView(title: String, levels: [String], labels: Labels?) {
-        let event = TCPageViewEvent(type: title)
+        guard let serverSide, let event = TCPageViewEvent(type: title) else { return }
 
-        event?.addAdditionalProperty("navigation_property_type", withStringValue: "app")
-        event?.addAdditionalProperty("navigation_bu_distributer", withStringValue: vendor?.rawValue)
+        event.addAdditionalProperty("navigation_property_type", withStringValue: "app")
+        event.addAdditionalProperty("navigation_bu_distributer", withStringValue: vendor?.rawValue)
         levels.enumerated().forEach { index, level in
             guard index < 8 else { return }
-            event?.addAdditionalProperty("navigation_level_\(index + 1)", withStringValue: level)
+            event.addAdditionalProperty("navigation_level_\(index + 1)", withStringValue: level)
         }
 
         labels?.commandersAct.forEach { label in
-            event?.addAdditionalProperty(label.key, withStringValue: label.value)
+            event.addAdditionalProperty(label.key, withStringValue: label.value)
         }
-        serverSide?.execute(event)
+        serverSide.execute(event)
     }
 
     // swiftlint:disable:next function_parameter_count
@@ -62,20 +62,20 @@ final class CommandersActService: AnalyticsService {
         extra5: String,
         labels: Labels?
     ) {
-        let event = TCCustomEvent(name: name)
-        event?.addAdditionalProperty("event_type", withStringValue: type)
-        event?.addAdditionalProperty("event_value", withStringValue: value)
-        event?.addAdditionalProperty("event_source", withStringValue: source)
-        event?.addAdditionalProperty("event_value_1", withStringValue: extra1)
-        event?.addAdditionalProperty("event_value_2", withStringValue: extra2)
-        event?.addAdditionalProperty("event_value_3", withStringValue: extra3)
-        event?.addAdditionalProperty("event_value_4", withStringValue: extra4)
-        event?.addAdditionalProperty("event_value_5", withStringValue: extra5)
+        guard let serverSide, let event = TCCustomEvent(name: name) else { return }
+        event.addAdditionalProperty("event_type", withStringValue: type)
+        event.addAdditionalProperty("event_value", withStringValue: value)
+        event.addAdditionalProperty("event_source", withStringValue: source)
+        event.addAdditionalProperty("event_value_1", withStringValue: extra1)
+        event.addAdditionalProperty("event_value_2", withStringValue: extra2)
+        event.addAdditionalProperty("event_value_3", withStringValue: extra3)
+        event.addAdditionalProperty("event_value_4", withStringValue: extra4)
+        event.addAdditionalProperty("event_value_5", withStringValue: extra5)
 
         labels?.commandersAct.forEach { label in
-            event?.addAdditionalProperty(label.key, withStringValue: label.value)
+            event.addAdditionalProperty(label.key, withStringValue: label.value)
         }
 
-        serverSide?.execute(event)
+        serverSide.execute(event)
     }
 }

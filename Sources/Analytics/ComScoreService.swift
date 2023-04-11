@@ -14,12 +14,13 @@ struct ComScoreService: AnalyticsService {
 
     func start(with configuration: Analytics.Configuration) {
         let publisherConfiguration = SCORPublisherConfiguration { builder in
-            builder!.publisherId = "6036016"
-            builder!.secureTransmissionEnabled = true
+            guard let builder else { return }
+            builder.publisherId = "6036016"
+            builder.secureTransmissionEnabled = true
 
             // See https://confluence.srg.beecollaboration.com/pages/viewpage.action?pageId=13188565
             // Coding Document for Video Players, section 4.4
-            builder!.httpRedirectCachingEnabled = false
+            builder.httpRedirectCachingEnabled = false
         }
         let comScoreConfiguration = SCORAnalytics.configuration()!
         comScoreConfiguration.addClient(with: publisherConfiguration)
@@ -52,6 +53,5 @@ struct ComScoreService: AnalyticsService {
         extra4: String,
         extra5: String,
         labels: Labels?
-    ) {
-    }
+    ) {}
 }
