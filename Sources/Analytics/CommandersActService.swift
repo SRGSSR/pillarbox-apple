@@ -11,7 +11,7 @@ final class CommandersActService: AnalyticsService {
     private var serverSide: ServerSide?
     private var vendor: Vendor?
 
-    static func device() -> String {
+    private static func device() -> String {
         switch UIDevice.current.userInterfaceIdiom {
         case .phone:
             return "phone"
