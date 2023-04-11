@@ -22,8 +22,8 @@ public struct AnalyticsTest {
     ///   - title: The page title.
     ///   - levels: The page levels.
     ///   - labels: Labels associated with the event.
-    public func trackPageView(title: String, levels: [String] = []) {
-        Analytics.shared.trackPageView(title: title, levels: levels, labels: .init(comScore: additionalLabels, commandersAct: additionalLabels))
+    public func sendPageView(title: String, levels: [String] = []) {
+        Analytics.shared.sendPageView(title: title, levels: levels, labels: .init(comScore: additionalLabels, commandersAct: additionalLabels))
     }
 
     /// Record an event.

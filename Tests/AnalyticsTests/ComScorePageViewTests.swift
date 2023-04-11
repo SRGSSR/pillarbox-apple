@@ -12,13 +12,13 @@ import XCTest
 final class ComScorePageViewTests: ComScoreTestCase {
     func testTitle() {
         expectAtLeastEqual(values: ["title"], for: "ns_category") { test in
-            test.trackPageView(title: "title")
+            test.sendPageView(title: "title")
         }
     }
 
     func testBrand() {
         expectAtLeastEqual(values: ["RTS"], for: "mp_brand") { test in
-            test.trackPageView(title: "\(#function)")
+            test.sendPageView(title: "\(#function)")
         }
     }
 }

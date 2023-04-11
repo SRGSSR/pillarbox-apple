@@ -52,8 +52,8 @@ public class Analytics {
     /// - Parameters:
     ///   - title: The page title.
     ///   - levels: The page levels.
-    public func trackPageView(title: String, levels: [String] = []) {
-        trackPageView(title: title, levels: levels, labels: nil)
+    public func sendPageView(title: String, levels: [String] = []) {
+        sendPageView(title: title, levels: levels, labels: nil)
     }
 
     /// Record an event.
@@ -92,8 +92,8 @@ public class Analytics {
         )
     }
 
-    func trackPageView(title: String, levels: [String], labels: Labels?) {
-        services.forEach { $0.trackPageView(title: title, levels: levels, labels: labels) }
+    func sendPageView(title: String, levels: [String], labels: Labels?) {
+        services.forEach { $0.sendPageView(title: title, levels: levels, labels: labels) }
     }
 
     func sendEvent(

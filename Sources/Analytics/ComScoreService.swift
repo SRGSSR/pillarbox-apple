@@ -35,7 +35,7 @@ struct ComScoreService: AnalyticsService {
         SCORAnalytics.start()
     }
 
-    func trackPageView(title: String, levels: [String], labels: Labels?) {
+    func sendPageView(title: String, levels: [String], labels: Labels?) {
         let allLabels = ["ns_category": title].merging(labels?.comScore ?? [:]) { _, new in new }
         SCORAnalytics.notifyViewEvent(withLabels: allLabels)
     }
