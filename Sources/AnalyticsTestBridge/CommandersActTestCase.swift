@@ -24,9 +24,7 @@ open class CommandersActTestCase: XCTestCase {
 
     private static func publisher(for id: String, key: String) -> AnyPublisher<String, Never> {
         NotificationCenter.default.publisher(for: Notification.Name(rawValue: kTCNotification_HTTPRequest))
-            .compactMap { $0.userInfo?[kTCUserInfo_POSTData] as? String }
-            .compactMap { $0.data(using: .utf8) }
-            .compactMap { try? JSONSerialization.jsonObject(with: $0, options: []) as? [String: Any] }
+            .compactMap { Self.labels(from: $0) }
             .filter { dictionary in
                 guard let identifier = dictionary[identifierKey] as? String else { return false }
                 return identifier == id
@@ -37,6 +35,14 @@ open class CommandersActTestCase: XCTestCase {
 }
 
 public extension CommandersActTestCase {
+    private static func labels(from notification: Notification) -> [String: Any]? {
+        guard let body = notification.userInfo?[kTCUserInfo_POSTData] as? String,
+              let data = body.data(using: .utf8) else {
+            return nil
+        }
+        return try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+    }
+
     /// Collect values emitted by Commanders Act under the specified key during some time interval and match them against
     /// an expected result.
     func expectEqual(
@@ -97,14 +103,8 @@ public extension CommandersActTestCase {
     ) {
         let id = Self.identifier(for: function)
         expectation(forNotification: Notification.Name(rawValue: kTCNotification_HTTPRequest), object: nil) { notification in
-            guard
-                let body = notification.userInfo?[kTCUserInfo_POSTData] as? String,
-                let data = body.data(using: .utf8),
-                let labels = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
-            else {
-                return false
-            }
-            guard labels[Self.identifierKey] as? String == id else {
+            guard let labels = Self.labels(from: notification),
+                  labels[Self.identifierKey] as? String == id else {
                 return false
             }
             received(labels)
