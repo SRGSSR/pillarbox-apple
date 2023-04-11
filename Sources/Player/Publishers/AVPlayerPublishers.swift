@@ -126,19 +126,19 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    func mediaTypePublisher() -> AnyPublisher<MediaType, Never> {
+    func presentationSizePublisher() -> AnyPublisher<CGSize?, Never> {
         Publishers.CombineLatest(
             publisher(for: \.currentItem),
             publisher(for: \.isExternalPlaybackActive)
         )
-        .map { currentItem, isExternalPlaybackActive -> AnyPublisher<MediaType, Never> in
+        .map { currentItem, isExternalPlaybackActive -> AnyPublisher<CGSize?, Never> in
             guard !isExternalPlaybackActive else {
                 return Empty().eraseToAnyPublisher()
             }
             guard let currentItem else {
-                return Just(.unknown).eraseToAnyPublisher()
+                return Just(nil).eraseToAnyPublisher()
             }
-            return currentItem.mediaTypePublisher()
+            return currentItem.presentationSizePublisher()
         }
         .switchToLatest()
         .removeDuplicates()

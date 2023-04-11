@@ -8,22 +8,23 @@
 
 import AVFoundation
 
-final class AVPlayerItemMediaTypePublisherTests: TestCase {
+// swiftlint:disable:next type_name
+final class AVPlayerItemPresentationSizePublisherTests: TestCase {
     func testUnknown() {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         _ = AVPlayer(playerItem: item)
-        expectAtLeastEqualPublished(values: [.unknown], from: item.mediaTypePublisher())
+        expectAtLeastEqualPublished(values: [nil], from: item.presentationSizePublisher())
     }
 
     func testAudio() {
         let item = AVPlayerItem(url: Stream.mp3.url)
         _ = AVPlayer(playerItem: item)
-        expectAtLeastEqualPublished(values: [.unknown, .audio], from: item.mediaTypePublisher())
+        expectAtLeastEqualPublished(values: [nil, .zero], from: item.presentationSizePublisher())
     }
 
     func testVideo() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         _ = AVPlayer(playerItem: item)
-        expectAtLeastEqualPublished(values: [.unknown, .video], from: item.mediaTypePublisher())
+        expectAtLeastEqualPublished(values: [nil, CGSize(width: 640, height: 426)], from: item.presentationSizePublisher())
     }
 }

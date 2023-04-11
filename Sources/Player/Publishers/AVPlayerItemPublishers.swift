@@ -88,17 +88,15 @@ extension AVPlayerItem {
         .eraseToAnyPublisher()
     }
 
-    func mediaTypePublisher() -> AnyPublisher<MediaType, Never> {
+    func presentationSizePublisher() -> AnyPublisher<CGSize?, Never> {
         publisher(for: \.status)
             .weakCapture(self)
-            .map { status, item -> AnyPublisher<MediaType, Never> in
+            .map { status, item -> AnyPublisher<CGSize?, Never> in
                 guard status == .readyToPlay else {
-                    return Just(.unknown).eraseToAnyPublisher()
+                    return Just(nil).eraseToAnyPublisher()
                 }
                 return item.publisher(for: \.presentationSize)
-                    .map { size in
-                        size == .zero ? .audio : .video
-                    }
+                    .map { Optional($0) }
                     .eraseToAnyPublisher()
             }
             .switchToLatest()
