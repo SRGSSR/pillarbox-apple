@@ -94,7 +94,7 @@ public extension CommandersActTestCase {
         }
     }
 
-    /// Wait until the `kTCNotification_HTTPRequest` has been received.
+    /// Wait until a `kTCNotification_HTTPRequest ` notification has been received as a result of executing some code.
     func wait(
         timeout: DispatchTimeInterval = .seconds(20),
         function: String = #function,

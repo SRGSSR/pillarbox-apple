@@ -34,8 +34,8 @@ public final class ComScoreTracker: PlayerItemTracker {
         streamingAnalytics.setMediaPlayerVersion(PackageInfo.version)
 
         let metadata = SCORStreamingContentMetadata { [weak self] builder in
-            guard let self else { return }
-            builder!.setCustomLabels(self.configuration.labels)
+            guard let self, let builder else { return }
+            builder.setCustomLabels(self.configuration.labels)
         }
         streamingAnalytics.setMetadata(metadata)
         streamingAnalytics.notifyPlay()

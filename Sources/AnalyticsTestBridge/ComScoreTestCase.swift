@@ -66,7 +66,7 @@ public extension ComScoreTestCase {
         }
     }
 
-    /// Wait until the `didReceiveComScoreRequest` has been received.
+    /// Wait until a `didReceiveComScoreRequest` notification has been received as a result of executing some code.
     func wait(
         timeout: DispatchTimeInterval = .seconds(20),
         function: String = #function,
@@ -75,10 +75,8 @@ public extension ComScoreTestCase {
     ) {
         let id = Self.identifier(for: function)
         expectation(forNotification: .didReceiveComScoreRequest, object: nil) { notification in
-            guard let labels = notification.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String] else {
-                return false
-            }
-            guard labels[Self.identifierKey] == id else {
+            guard let labels = notification.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String],
+                       labels[Self.identifierKey] == id else {
                 return false
             }
             received(labels)
