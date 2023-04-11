@@ -17,8 +17,8 @@ open class ComScoreTestCase: XCTestCase {
         "\(self).\(function)-\(UUID().uuidString)"
     }
 
-    private static func additionalLabels(for id: String) -> Analytics.Labels {
-        .init(comScore: [identifierKey: id], commandersAct: [:])
+    private static func additionalLabels(for id: String) -> [String: String] {
+        [identifierKey: id]
     }
 
     private static func publisher(for id: String, key: String) -> AnyPublisher<String, Never> {
@@ -64,5 +64,25 @@ public extension ComScoreTestCase {
         expectAtLeastEqualPublished(values: values, from: publisher, timeout: timeout, file: file, line: line) {
             executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
         }
+    }
+
+    /// Wait until a `didReceiveComScoreRequest` notification has been received as a result of executing some code.
+    func wait(
+        timeout: DispatchTimeInterval = .seconds(20),
+        function: String = #function,
+        while executing: (AnalyticsTest) -> Void,
+        received: @escaping ([String: String]) -> Void
+    ) {
+        let id = Self.identifier(for: function)
+        expectation(forNotification: .didReceiveComScoreRequest, object: nil) { notification in
+            guard let labels = notification.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String],
+                       labels[Self.identifierKey] == id else {
+                return false
+            }
+            received(labels)
+            return true
+        }
+        executing(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
+        waitForExpectations(timeout: timeout.double())
     }
 }

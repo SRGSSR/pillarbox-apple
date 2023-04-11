@@ -6,7 +6,8 @@
 
 import Dispatch
 
-extension DispatchTimeInterval {
+public extension DispatchTimeInterval {
+    /// Transform the receiver into a double.
     func double() -> Double {
         switch self {
         case let .seconds(value):

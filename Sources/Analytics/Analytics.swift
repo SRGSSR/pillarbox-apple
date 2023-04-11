@@ -28,34 +28,6 @@ public class Analytics {
         }
     }
 
-    /// Information sent with analytics events.
-    public struct Labels {
-        /// comScore-specific information.
-        public let comScore: [String: String]
-
-        /// Commanders Act-specific information.
-        public let commandersAct: [String: String]
-
-        /// Create labels.
-        /// - Parameters:
-        ///   - comScore: comScore-specific information.
-        ///   - commandersAct: Commanders Act-specific information.
-        public init(comScore: [String: String], commandersAct: [String: String]) {
-            self.comScore = comScore
-            self.commandersAct = commandersAct
-        }
-
-        /// Merge labels together.
-        /// - Parameter other: The other labels which must be merged into the receiver.
-        /// - Returns: The merged labels.
-        public func merging(_ other: Self) -> Self {
-            .init(
-                comScore: comScore.merging(other.comScore) { _, new in new },
-                commandersAct: commandersAct.merging(other.commandersAct) { _, new in new }
-            )
-        }
-    }
-
     /// The singleton instance.
     public static var shared = Analytics()
 
@@ -80,8 +52,78 @@ public class Analytics {
     /// - Parameters:
     ///   - title: The page title.
     ///   - levels: The page levels.
-    ///   - labels: Labels associated with the event.
-    public func trackPageView(title: String, levels: [String] = [], labels: Labels? = nil) {
-        services.forEach { $0.trackPageView(title: title, levels: levels, labels: labels) }
+    public func sendPageView(title: String, levels: [String] = []) {
+        sendPageView(title: title, levels: levels, labels: nil)
+    }
+
+    /// Record an event.
+    /// - Parameters:
+    ///   - name: The event name.
+    ///   - type: The event type.
+    ///   - value: The event value.
+    ///   - source: The event source.
+    ///   - extra1: Extra information associated with the event.
+    ///   - extra2: Extra information associated with the event.
+    ///   - extra3: Extra information associated with the event.
+    ///   - extra4: Extra information associated with the event.
+    ///   - extra5: Extra information associated with the event.
+    public func sendEvent(
+        name: String,
+        type: String = "",
+        value: String = "",
+        source: String = "",
+        extra1: String = "",
+        extra2: String = "",
+        extra3: String = "",
+        extra4: String = "",
+        extra5: String = ""
+    ) {
+        sendEvent(
+            name: name,
+            type: type,
+            value: value,
+            source: source,
+            extra1: extra1,
+            extra2: extra2,
+            extra3: extra3,
+            extra4: extra4,
+            extra5: extra5,
+            labels: nil
+        )
+    }
+
+    func sendPageView(title: String, levels: [String], labels: Labels?) {
+        assert(!title.isEmpty, "The title is required!")
+        services.forEach { $0.sendPageView(title: title, levels: levels, labels: labels) }
+    }
+
+    // swiftlint:disable:next function_parameter_count
+    func sendEvent(
+        name: String,
+        type: String,
+        value: String,
+        source: String,
+        extra1: String,
+        extra2: String,
+        extra3: String,
+        extra4: String,
+        extra5: String,
+        labels: Labels?
+    ) {
+        assert(!name.isEmpty, "The name is required!")
+        services.forEach { service in
+            service.sendEvent(
+                name: name,
+                type: type,
+                value: value,
+                source: source,
+                extra1: extra1,
+                extra2: extra2,
+                extra3: extra3,
+                extra4: extra4,
+                extra5: extra5,
+                labels: labels
+            )
+        }
     }
 }

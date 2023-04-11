@@ -14,12 +14,13 @@ struct ComScoreService: AnalyticsService {
 
     func start(with configuration: Analytics.Configuration) {
         let publisherConfiguration = SCORPublisherConfiguration { builder in
-            builder!.publisherId = "6036016"
-            builder!.secureTransmissionEnabled = true
+            guard let builder else { return }
+            builder.publisherId = "6036016"
+            builder.secureTransmissionEnabled = true
 
-            // See https://confluence.srg.beecollaboration.com/display/INTFORSCHUNG/ComScore+-+Media+Metrix+Report
-            // Coding Document for Video Players, page 16
-            builder!.httpRedirectCachingEnabled = false
+            // See https://confluence.srg.beecollaboration.com/pages/viewpage.action?pageId=13188565
+            // Coding Document for Video Players, section 4.4
+            builder.httpRedirectCachingEnabled = false
         }
         let comScoreConfiguration = SCORAnalytics.configuration()!
         comScoreConfiguration.addClient(with: publisherConfiguration)
@@ -27,12 +28,30 @@ struct ComScoreService: AnalyticsService {
         comScoreConfiguration.applicationVersion = applicationVersion
         comScoreConfiguration.usagePropertiesAutoUpdateMode = .foregroundAndBackground
         comScoreConfiguration.preventAdSupportUsage = true
+        comScoreConfiguration.addPersistentLabels([
+            "mp_brand": configuration.vendor.rawValue,
+            "mp_v": applicationVersion
+        ])
 
         SCORAnalytics.start()
     }
 
-    func trackPageView(title: String, levels: [String], labels: Analytics.Labels?) {
-        let allLabels = ["name": title].merging(labels?.comScore ?? [:]) { _, new in new }
+    func sendPageView(title: String, levels: [String], labels: Labels?) {
+        let allLabels = ["ns_category": title].merging(labels?.comScore ?? [:]) { _, new in new }
         SCORAnalytics.notifyViewEvent(withLabels: allLabels)
     }
+
+    // swiftlint:disable:next function_parameter_count
+    func sendEvent(
+        name: String,
+        type: String,
+        value: String,
+        source: String,
+        extra1: String,
+        extra2: String,
+        extra3: String,
+        extra4: String,
+        extra5: String,
+        labels: Labels?
+    ) {}
 }

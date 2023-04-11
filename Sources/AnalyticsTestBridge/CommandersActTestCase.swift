@@ -18,15 +18,13 @@ open class CommandersActTestCase: XCTestCase {
         "\(self).\(function)-\(UUID().uuidString)"
     }
 
-    private static func additionalLabels(for id: String) -> Analytics.Labels {
-        .init(comScore: [:], commandersAct: [identifierKey: id])
+    private static func additionalLabels(for id: String) -> [String: String] {
+        [identifierKey: id]
     }
 
     private static func publisher(for id: String, key: String) -> AnyPublisher<String, Never> {
         NotificationCenter.default.publisher(for: Notification.Name(rawValue: kTCNotification_HTTPRequest))
-            .compactMap { $0.userInfo?[kTCUserInfo_POSTData] as? String }
-            .compactMap { $0.data(using: .utf8) }
-            .compactMap { try? JSONSerialization.jsonObject(with: $0, options: []) as? [String: Any] }
+            .compactMap { Self.labels(from: $0) }
             .filter { dictionary in
                 guard let identifier = dictionary[identifierKey] as? String else { return false }
                 return identifier == id
@@ -37,6 +35,14 @@ open class CommandersActTestCase: XCTestCase {
 }
 
 public extension CommandersActTestCase {
+    private static func labels(from notification: Notification) -> [String: Any]? {
+        guard let body = notification.userInfo?[kTCUserInfo_POSTData] as? String,
+              let data = body.data(using: .utf8) else {
+            return nil
+        }
+        return try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+    }
+
     /// Collect values emitted by Commanders Act under the specified key during some time interval and match them against
     /// an expected result.
     func expectEqual(
@@ -70,5 +76,41 @@ public extension CommandersActTestCase {
         expectAtLeastEqualPublished(values: values, from: publisher, timeout: timeout, file: file, line: line) {
             executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
         }
+    }
+
+    /// Ensure a publisher does not emit any value during some time interval.
+    func expectNothingPublished(
+        for key: String,
+        during interval: DispatchTimeInterval = .seconds(20),
+        file: StaticString = #file,
+        line: UInt = #line,
+        function: String = #function,
+        while executing: ((AnalyticsTest) -> Void)? = nil
+    ) {
+        let id = Self.identifier(for: function)
+        let publisher = Self.publisher(for: id, key: key)
+        expectNothingPublished(from: publisher, during: interval, file: file, line: line) {
+            executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
+        }
+    }
+
+    /// Wait until a `kTCNotification_HTTPRequest ` notification has been received as a result of executing some code.
+    func wait(
+        timeout: DispatchTimeInterval = .seconds(20),
+        function: String = #function,
+        while executing: (AnalyticsTest) -> Void,
+        received: @escaping ([String: Any]) -> Void
+    ) {
+        let id = Self.identifier(for: function)
+        expectation(forNotification: Notification.Name(rawValue: kTCNotification_HTTPRequest), object: nil) { notification in
+            guard let labels = Self.labels(from: notification),
+                  labels[Self.identifierKey] as? String == id else {
+                return false
+            }
+            received(labels)
+            return true
+        }
+        executing(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
+        waitForExpectations(timeout: timeout.double())
     }
 }
