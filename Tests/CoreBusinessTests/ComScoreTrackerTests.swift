@@ -18,13 +18,12 @@ struct TestMetadata: AssetMetadata {
 final class ComScoreTrackerTests: ComScoreTestCase {
     func testPlay() {
         let player = Player()
-        expectEvents(
+        expectAtLeastEvents(
             [
-                .play(fields: [
+                .play([
                     .ns_st_po(0)
                 ])
-            ],
-            during: .seconds(10)
+            ]
         ) { test in
             player.append(.simple(
                 url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!,

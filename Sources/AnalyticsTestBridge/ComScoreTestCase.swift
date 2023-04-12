@@ -11,46 +11,6 @@ import XCTest
 
 /// Parent class for comScore test cases.
 open class ComScoreTestCase: XCTestCase {
-    /// The event.
-    public enum Event: Equatable { // swiftlint:disable:this test_case_accessibility
-        /// The field related to the event.
-        public enum Field: Equatable {
-            case ns_st_id(String)
-            case ns_st_ldw(Int)
-            case ns_st_po(Int)
-        }
-
-        case play(fields: [Field])
-        case pause(fields: [Field])
-        case end(fields: [Field])
-
-        init?(from dictionary: [String: String]) {
-            guard let event = dictionary["ns_st_ev"] else { return nil }
-            switch event {
-            case "play":
-                self = .play(fields: [
-                    .ns_st_id(dictionary["ns_st_id"]!),
-                    .ns_st_ldw(Int(dictionary["ns_st_ldw"]!)!),
-                    .ns_st_po(Int(dictionary["ns_st_po"]!)!)
-                ])
-            case "pause":
-                self = .pause(fields: [
-                    .ns_st_id(dictionary["ns_st_id"]!),
-                    .ns_st_ldw(Int(dictionary["ns_st_ldw"]!)!),
-                    .ns_st_po(Int(dictionary["ns_st_po"]!)!)
-                ])
-            case "end":
-                self = .end(fields: [
-                    .ns_st_id(dictionary["ns_st_id"]!),
-                    .ns_st_ldw(Int(dictionary["ns_st_ldw"]!)!),
-                    .ns_st_po(Int(dictionary["ns_st_po"]!)!)
-                ])
-            default:
-                return nil
-            }
-        }
-    }
-
     private static let identifierKey = "com_score_test_id"
 
     private static func identifier(for function: String) -> String {
@@ -61,7 +21,7 @@ open class ComScoreTestCase: XCTestCase {
         [identifierKey: id]
     }
 
-    private static func eventPublisher(for id: String) -> AnyPublisher<Event, Never> {
+    private static func eventPublisher(for id: String) -> AnyPublisher<ComScoreEvent, Never> {
         NotificationCenter.default.publisher(for: .didReceiveComScoreRequest)
             .compactMap { $0.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String] }
             .filter { $0[identifierKey] == id }
@@ -74,7 +34,7 @@ public extension ComScoreTestCase {
     /// Collect events emitted by comScore under the specified key during some time interval and match them against
     /// an expected result.
     func expectEvents(
-        _ events: [Event],
+        _ events: [ComScoreEvent],
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
@@ -83,7 +43,7 @@ public extension ComScoreTestCase {
     ) {
         let id = Self.identifier(for: function)
         let publisher = Self.eventPublisher(for: id)
-        expectEqualPublished(values: events, from: publisher, during: interval, file: file, line: line) {
+        expectPublished(values: events, from: publisher, to: ComScoreEvent.isSubset, during: interval, file: file, line: line) {
             executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
         }
     }
@@ -91,13 +51,18 @@ public extension ComScoreTestCase {
     /// Collect events emitted by comScore under the specified key during some time interval and match them against
     /// an expected result.
     func expectAtLeastEvents(
-        _ events: [Event],
+        _ events: [ComScoreEvent],
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         function: String = #function,
         while executing: ((AnalyticsTest) -> Void)? = nil
     ) {
+        let id = Self.identifier(for: function)
+        let publisher = Self.eventPublisher(for: id)
+        expectAtLeastPublished(values: events, from: publisher, to: ComScoreEvent.isSubset, timeout: timeout, file: file, line: line) {
+            executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
+        }
     }
 }
 
