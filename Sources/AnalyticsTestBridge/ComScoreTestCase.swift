@@ -11,6 +11,18 @@ import XCTest
 
 /// Parent class for comScore test cases.
 open class ComScoreTestCase: XCTestCase {
+    public enum Event {
+        public enum Field {
+            case ns_st_id(String)
+            case ns_st_ldw(Int)
+            case ns_st_po(Int)
+        }
+
+        case play(fields: [Field])
+        case pause(fields: [Field])
+        case end(fields: [Field])
+    }
+
     private static let identifierKey = "com_score_test_id"
 
     private static func identifier(for function: String) -> String {
@@ -27,6 +39,19 @@ open class ComScoreTestCase: XCTestCase {
             .filter { $0[identifierKey] == id }
             .compactMap { $0[key] }
             .eraseToAnyPublisher()
+    }
+}
+
+public extension ComScoreTestCase {
+    func expectEvents(
+        _ events: [Event],
+        during interval: DispatchTimeInterval = .seconds(20),
+        file: StaticString = #file,
+        line: UInt = #line,
+        function: String = #function,
+        while executing: ((AnalyticsTest) -> Void)? = nil
+    ) {
+
     }
 }
 
