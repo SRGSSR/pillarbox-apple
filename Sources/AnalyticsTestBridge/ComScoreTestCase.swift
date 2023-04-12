@@ -12,9 +12,9 @@ import XCTest
 /// Parent class for comScore test cases.
 open class ComScoreTestCase: XCTestCase {
     /// The event.
-    public enum Event { // swiftlint:disable:this test_case_accessibility
+    public enum Event: Equatable { // swiftlint:disable:this test_case_accessibility
         /// The field related to the event.
-        public enum Field {
+        public enum Field: Equatable {
             case ns_st_id(String)
             case ns_st_ldw(Int)
             case ns_st_po(Int)
@@ -83,9 +83,9 @@ public extension ComScoreTestCase {
     ) {
         let id = Self.identifier(for: function)
         let publisher = Self.eventPublisher(for: id)
-//        expectEqualPublished(values: values, from: publisher, during: interval, file: file, line: line) {
-//            executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
-//        }
+        expectEqualPublished(values: [], from: publisher, during: interval, file: file, line: line) {
+            executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
+        }
     }
 
     /// Collect events emitted by comScore under the specified key during some time interval and match them against
