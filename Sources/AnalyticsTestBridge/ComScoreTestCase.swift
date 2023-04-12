@@ -83,7 +83,7 @@ public extension ComScoreTestCase {
     ) {
         let id = Self.identifier(for: function)
         let publisher = Self.eventPublisher(for: id)
-        expectEqualPublished(values: [], from: publisher, during: interval, file: file, line: line) {
+        expectEqualPublished(values: events, from: publisher, during: interval, file: file, line: line) {
             executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
         }
     }
