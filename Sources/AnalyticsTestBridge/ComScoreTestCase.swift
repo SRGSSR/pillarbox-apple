@@ -11,7 +11,9 @@ import XCTest
 
 /// Parent class for comScore test cases.
 open class ComScoreTestCase: XCTestCase {
-    public enum Event {
+    /// The event.
+    public enum Event { // swiftlint:disable:this test_case_accessibility
+        /// The field related to the event.
         public enum Field {
             case ns_st_id(String)
             case ns_st_ldw(Int)
@@ -23,7 +25,29 @@ open class ComScoreTestCase: XCTestCase {
         case end(fields: [Field])
 
         init?(from dictionary: [String: String]) {
-            self = .play(fields: [])
+            guard let event = dictionary["ns_st_ev"] else { return nil }
+            switch event {
+            case "play":
+                self = .play(fields: [
+                    .ns_st_id(dictionary["ns_st_id"]!),
+                    .ns_st_ldw(Int(dictionary["ns_st_ldw"]!)!),
+                    .ns_st_po(Int(dictionary["ns_st_po"]!)!)
+                ])
+            case "pause":
+                self = .pause(fields: [
+                    .ns_st_id(dictionary["ns_st_id"]!),
+                    .ns_st_ldw(Int(dictionary["ns_st_ldw"]!)!),
+                    .ns_st_po(Int(dictionary["ns_st_po"]!)!)
+                ])
+            case "end":
+                self = .end(fields: [
+                    .ns_st_id(dictionary["ns_st_id"]!),
+                    .ns_st_ldw(Int(dictionary["ns_st_ldw"]!)!),
+                    .ns_st_po(Int(dictionary["ns_st_po"]!)!)
+                ])
+            default:
+                return nil
+            }
         }
     }
 
@@ -47,6 +71,8 @@ open class ComScoreTestCase: XCTestCase {
 }
 
 public extension ComScoreTestCase {
+    /// Collect events emitted by comScore under the specified key during some time interval and match them against
+    /// an expected result.
     func expectEvents(
         _ events: [Event],
         during interval: DispatchTimeInterval = .seconds(20),
@@ -62,6 +88,8 @@ public extension ComScoreTestCase {
 //        }
     }
 
+    /// Collect events emitted by comScore under the specified key during some time interval and match them against
+    /// an expected result.
     func expectAtLeastEvents(
         _ events: [Event],
         timeout: DispatchTimeInterval = .seconds(20),
@@ -70,7 +98,6 @@ public extension ComScoreTestCase {
         function: String = #function,
         while executing: ((AnalyticsTest) -> Void)? = nil
     ) {
-
     }
 }
 
