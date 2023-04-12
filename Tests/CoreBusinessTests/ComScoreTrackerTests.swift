@@ -20,9 +20,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
         let player = Player()
         expectAtLeastEvents(
             [
-                .play([
-                    .ns_st_po(0)
-                ])
+                .play(.ns_st_po(0))
             ]
         ) { test in
             player.append(.simple(

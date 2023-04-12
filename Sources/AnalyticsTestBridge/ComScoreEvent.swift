@@ -44,17 +44,17 @@ public struct ComScoreEvent: Equatable {
     }
 
     /// Play.
-    public static func play(_ fields: [Field]) -> Self {
+    public static func play(_ fields: Field...) -> Self {
         .init(kind: .play, fields: fields)
     }
 
     /// Pause.
-    public static func pause(_ fields: [Field]) -> Self {
+    public static func pause(_ fields: Field...) -> Self {
         .init(kind: .pause, fields: fields)
     }
 
     /// End.
-    public static func end(_ fields: [Field]) -> Self {
+    public static func end(_ fields: Field...) -> Self {
         .init(kind: .end, fields: fields)
     }
 }
