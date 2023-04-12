@@ -20,7 +20,7 @@ public struct ComScoreLabels {
         extract(key: "ns_st_ldw") { Int($0) }
     }
 
-    func extract<T>(key: String, conversion: (String) -> T?) -> T? {
+    private func extract<T>(key: String, conversion: (String) -> T?) -> T? {
         guard let value = dictionary[key] else { return nil }
         return conversion(value)
     }
@@ -28,8 +28,14 @@ public struct ComScoreLabels {
 
 /// Describes a comScore event expectation.
 public struct ComScoreEventExpectation {
-    let name: String
-    let evaluate: (ComScoreLabels) -> Void
+    private let name: String
+    private let evaluate: (ComScoreLabels) -> Void
+
+    static func match(event: ComScoreEvent, with expectation: ComScoreEventExpectation) -> Bool {
+        guard event.name == expectation.name else { return false }
+        expectation.evaluate(event.labels)
+        return true
+    }
 
     /// Play.
     public static func play(evaluate: @escaping (ComScoreLabels) -> Void) -> Self {
@@ -68,10 +74,4 @@ extension ComScoreEvent: CustomDebugStringConvertible {
     var debugDescription: String {
         name
     }
-}
-
-func match(event: ComScoreEvent, with expectation: ComScoreEventExpectation) -> Bool {
-    guard event.name == expectation.name else { return false }
-    expectation.evaluate(event.labels)
-    return true
 }
