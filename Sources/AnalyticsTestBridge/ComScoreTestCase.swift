@@ -43,7 +43,14 @@ public extension ComScoreTestCase {
     ) {
         let id = Self.identifier(for: function)
         let publisher = Self.eventPublisher(for: id)
-        expectPublished(values: expectations, from: publisher, to: ComScoreEventExpectation.match(event:with:), during: interval, file: file, line: line) {
+        expectPublished(
+            values: expectations,
+            from: publisher,
+            to: ComScoreEventExpectation.match(event:with:),
+            during: interval,
+            file: file,
+            line: line
+        ) {
             executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
         }
     }
@@ -60,7 +67,14 @@ public extension ComScoreTestCase {
     ) {
         let id = Self.identifier(for: function)
         let publisher = Self.eventPublisher(for: id)
-        expectAtLeastPublished(values: expectations, from: publisher, to: ComScoreEventExpectation.match(event:with:), timeout: timeout, file: file, line: line) {
+        expectAtLeastPublished(
+            values: expectations,
+            from: publisher,
+            to: ComScoreEventExpectation.match(event:with:),
+            timeout: timeout,
+            file: file,
+            line: line
+        ) {
             executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
         }
     }
