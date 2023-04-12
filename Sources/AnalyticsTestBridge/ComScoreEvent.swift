@@ -11,19 +11,17 @@ public struct ComScoreEvent: Equatable {
     /// The field related to the event.
     public enum Field: Hashable, Equatable {
         case ns_st_id(String)
-        case ns_st_ldw(Int)
-        case ns_st_po(Int)
+        case ns_st_ldw(Int?)
+        case ns_st_po(Int?)
 
         init?(key: String, value: String) {
             switch key {
             case "ns_st_id":
                 self = .ns_st_id(value)
             case "ns_st_ldw":
-                // guard let value = Int(value) else { return nil }
-                self = .ns_st_ldw(Int(value)!)
+                self = .ns_st_ldw(Int(value))
             case "ns_st_po":
-                // guard let value = Int(value) else { return nil }
-                self = .ns_st_po(Int(value)!)
+                self = .ns_st_po(Int(value))
             default:
                 return nil
             }
