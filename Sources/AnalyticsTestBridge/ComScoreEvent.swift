@@ -13,6 +13,21 @@ public struct ComScoreEvent: Equatable {
         case ns_st_id(String)
         case ns_st_ldw(Int)
         case ns_st_po(Int)
+
+        init?(key: String, value: String) {
+            switch key {
+            case "ns_st_id":
+                self = .ns_st_id(value)
+            case "ns_st_ldw":
+                // guard let value = Int(value) else { return nil }
+                self = .ns_st_ldw(Int(value)!)
+            case "ns_st_po":
+                // guard let value = Int(value) else { return nil }
+                self = .ns_st_po(Int(value)!)
+            default:
+                return nil
+            }
+        }
     }
 
     /// The event kind.
@@ -49,21 +64,8 @@ public struct ComScoreEvent: Equatable {
 extension ComScoreEvent {
     init?(from dictionary: [String: String]) {
         guard let event = dictionary["ns_st_ev"], let kind = Kind(rawValue: event) else { return nil }
-        self.init(kind: kind, fields: Self.fields(from: dictionary))
-    }
-
-    private static func fields(from dictionary: [String: String]) -> [Field] {
-        var fields = [Field]()
-        if let value = dictionary["ns_st_id"] {
-            fields.append(.ns_st_id(value))
-        }
-        if let value = dictionary["ns_st_ldw"], let integer = Int(value) {
-            fields.append(.ns_st_ldw(integer))
-        }
-        if let value = dictionary["ns_st_po"], let integer = Int(value) {
-            fields.append(.ns_st_po(integer))
-        }
-        return fields
+        let fields = dictionary.compactMap { Field(key: $0, value: $1) }
+        self.init(kind: kind, fields: fields)
     }
 
     static func isSubset(receivedEvent: ComScoreEvent, expectedEvent: ComScoreEvent) -> Bool {
