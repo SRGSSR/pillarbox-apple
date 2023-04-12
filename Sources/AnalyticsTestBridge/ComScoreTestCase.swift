@@ -21,6 +21,10 @@ open class ComScoreTestCase: XCTestCase {
         case play(fields: [Field])
         case pause(fields: [Field])
         case end(fields: [Field])
+
+        init?(from dictionary: [String: String]) {
+            self = .play(fields: [])
+        }
     }
 
     private static let identifierKey = "com_score_test_id"
@@ -33,11 +37,11 @@ open class ComScoreTestCase: XCTestCase {
         [identifierKey: id]
     }
 
-    private static func publisher(for id: String, key: String) -> AnyPublisher<String, Never> {
+    private static func eventPublisher(for id: String) -> AnyPublisher<Event, Never> {
         NotificationCenter.default.publisher(for: .didReceiveComScoreRequest)
             .compactMap { $0.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String] }
             .filter { $0[identifierKey] == id }
-            .compactMap { $0[key] }
+            .compactMap { .init(from: $0) }
             .eraseToAnyPublisher()
     }
 }
@@ -51,46 +55,26 @@ public extension ComScoreTestCase {
         function: String = #function,
         while executing: ((AnalyticsTest) -> Void)? = nil
     ) {
-
-    }
-}
-
-public extension ComScoreTestCase {
-    /// Collect values emitted by comScore under the specified key during some time interval and match them against
-    /// an expected result.
-    func expectEqual(
-        values: [String],
-        for key: String,
-        during interval: DispatchTimeInterval = .seconds(20),
-        file: StaticString = #file,
-        line: UInt = #line,
-        function: String = #function,
-        while executing: ((AnalyticsTest) -> Void)? = nil
-    ) {
         let id = Self.identifier(for: function)
-        let publisher = Self.publisher(for: id, key: key)
-        expectEqualPublished(values: values, from: publisher, during: interval, file: file, line: line) {
-            executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
-        }
+        let publisher = Self.eventPublisher(for: id)
+//        expectEqualPublished(values: values, from: publisher, during: interval, file: file, line: line) {
+//            executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
+//        }
     }
 
-    /// Expect comScore to emit at least a list of expected values for the specified key.
-    func expectAtLeastEqual(
-        values: [String],
-        for key: String,
+    func expectAtLeastEvents(
+        _ events: [Event],
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         function: String = #function,
         while executing: ((AnalyticsTest) -> Void)? = nil
     ) {
-        let id = Self.identifier(for: function)
-        let publisher = Self.publisher(for: id, key: key)
-        expectAtLeastEqualPublished(values: values, from: publisher, timeout: timeout, file: file, line: line) {
-            executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
-        }
-    }
 
+    }
+}
+
+public extension ComScoreTestCase {
     /// Wait until a `didReceiveComScoreRequest` notification has been received as a result of executing some code.
     func wait(
         timeout: DispatchTimeInterval = .seconds(20),
