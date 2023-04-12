@@ -142,6 +142,7 @@ public extension XCTestCase {
         )
     }
 
+    // swiftlint:disable:next function_parameter_count
     private func expectAtLeastPublished<P: Publisher, T>(
         next: Bool,
         values: [T],
@@ -313,6 +314,7 @@ public extension XCTestCase {
         )
     }
 
+    // swiftlint:disable:next function_parameter_count
     private func expectOnlyPublished<P: Publisher, T>(
         next: Bool,
         values: [T],
