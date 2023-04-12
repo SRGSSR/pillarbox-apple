@@ -53,11 +53,17 @@ extension ComScoreEvent {
     }
 
     private static func fields(from dictionary: [String: String]) -> [Field] {
-        [
-            .ns_st_id(dictionary["ns_st_id"]!),
-            .ns_st_ldw(Int(dictionary["ns_st_ldw"]!)!),
-            .ns_st_po(Int(dictionary["ns_st_po"]!)!)
-        ]
+        var fields = [Field]()
+        if let value = dictionary["ns_st_id"] {
+            fields.append(.ns_st_id(value))
+        }
+        if let value = dictionary["ns_st_ldw"], let integer = Int(value) {
+            fields.append(.ns_st_ldw(integer))
+        }
+        if let value = dictionary["ns_st_po"], let integer = Int(value) {
+            fields.append(.ns_st_po(integer))
+        }
+        return fields
     }
 
     static func isSubset(receivedEvent: ComScoreEvent, expectedEvent: ComScoreEvent) -> Bool {
