@@ -38,17 +38,17 @@ public struct ComScoreEventExpectation {
     }
 
     /// Play.
-    public static func play(evaluate: @escaping (ComScoreLabels) -> Void) -> Self {
+    public static func play(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> Self {
         .init(name: "play", evaluate: evaluate)
     }
 
     /// Pause.
-    public static func pause(evaluate: @escaping (ComScoreLabels) -> Void) -> Self {
+    public static func pause(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> Self {
         .init(name: "pause", evaluate: evaluate)
     }
 
     /// End.
-    public static func end(evaluate: @escaping (ComScoreLabels) -> Void) -> Self {
+    public static func end(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> Self {
         .init(name: "end", evaluate: evaluate)
     }
 }
