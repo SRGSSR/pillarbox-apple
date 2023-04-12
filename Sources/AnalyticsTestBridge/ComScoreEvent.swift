@@ -47,6 +47,12 @@ public struct ComScoreEventExpectation {
     }
 }
 
+extension ComScoreEventExpectation: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        name
+    }
+}
+
 struct ComScoreEvent {
     let name: String
     let labels: ComScoreLabels
@@ -55,6 +61,12 @@ struct ComScoreEvent {
         guard let name = dictionary["ns_st_ev"] else { return nil }
         self.name = name
         self.labels = ComScoreLabels(dictionary: dictionary)
+    }
+}
+
+extension ComScoreEvent: CustomDebugStringConvertible {
+    var debugDescription: String {
+        name
     }
 }
 
