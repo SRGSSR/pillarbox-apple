@@ -34,7 +34,7 @@ public extension ComScoreTestCase {
     /// Collect events emitted by comScore under the specified key during some time interval and match them against
     /// an expected result.
     func expectEvents(
-        _ events: [ComScoreEvent],
+        _ expectations: [ComScoreEventExpectation],
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
@@ -43,7 +43,7 @@ public extension ComScoreTestCase {
     ) {
         let id = Self.identifier(for: function)
         let publisher = Self.eventPublisher(for: id)
-        expectPublished(values: events, from: publisher, to: ComScoreEvent.isSubset, during: interval, file: file, line: line) {
+        expectPublished(values: expectations, from: publisher, to: match(event:with:), during: interval, file: file, line: line) {
             executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
         }
     }
@@ -51,7 +51,7 @@ public extension ComScoreTestCase {
     /// Collect events emitted by comScore under the specified key during some time interval and match them against
     /// an expected result.
     func expectAtLeastEvents(
-        _ events: [ComScoreEvent],
+        _ expectations: [ComScoreEventExpectation],
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
@@ -60,7 +60,7 @@ public extension ComScoreTestCase {
     ) {
         let id = Self.identifier(for: function)
         let publisher = Self.eventPublisher(for: id)
-        expectAtLeastPublished(values: events, from: publisher, to: ComScoreEvent.isSubset, timeout: timeout, file: file, line: line) {
+        expectAtLeastPublished(values: expectations, from: publisher, to: match(event:with:), timeout: timeout, file: file, line: line) {
             executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
         }
     }

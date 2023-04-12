@@ -10,10 +10,10 @@ import XCTest
 
 public extension XCTestCase {
     /// Expect a publisher to emit at least a list of expected values.
-    func expectAtLeastPublished<P: Publisher>(
-        values: [P.Output],
+    func expectAtLeastPublished<P: Publisher, T>(
+        values: [T],
         from publisher: P,
-        to satisfy: @escaping (P.Output, P.Output) -> Bool,
+        to satisfy: @escaping (P.Output, T) -> Bool,
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
@@ -73,10 +73,10 @@ public extension XCTestCase {
 
     /// Expect a publisher to emit at least a list of expected values, ignoring the first value. Useful when testing
     /// publishers which automatically deliver a non-relevant stored value upon subscription.
-    func expectAtLeastPublishedNext<P: Publisher>(
-        values: [P.Output],
+    func expectAtLeastPublishedNext<P: Publisher, T>(
+        values: [T],
         from publisher: P,
-        to satisfy: @escaping (P.Output, P.Output) -> Bool,
+        to satisfy: @escaping (P.Output, T) -> Bool,
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
@@ -138,11 +138,11 @@ public extension XCTestCase {
         )
     }
 
-    private func expectAtLeastPublished<P: Publisher>(
+    private func expectAtLeastPublished<P: Publisher, T>(
         next: Bool,
-        values: [P.Output],
+        values: [T],
         from publisher: P,
-        to satisfy: @escaping (P.Output, P.Output) -> Bool,
+        to satisfy: @escaping (P.Output, T) -> Bool,
         timeout: DispatchTimeInterval,
         file: StaticString,
         line: UInt,
@@ -167,7 +167,7 @@ public extension XCTestCase {
         // swiftlint:disable:next prefer_nimble
         XCTAssert(
             assertExpression,
-            diff(values, actualValues).joined(separator: ", "),
+            "", // diff(values, actualValues).joined(separator: ", "),
             file: file,
             line: line
         )
@@ -176,10 +176,10 @@ public extension XCTestCase {
 
 public extension XCTestCase {
     /// Expect a publisher to emit a list of expected values and complete.
-    func expectOnlyPublished<P: Publisher>(
-        values: [P.Output],
+    func expectOnlyPublished<P: Publisher, T>(
+        values: [T],
         from publisher: P,
-        to satisfy: @escaping (P.Output, P.Output) -> Bool,
+        to satisfy: @escaping (P.Output, T) -> Bool,
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
@@ -239,10 +239,10 @@ public extension XCTestCase {
 
     /// Expect a publisher to emit a list of expected values and complete, ignoring the first value. Useful when testing
     /// publishers which automatically deliver a non-relevant stored value upon subscription.
-    func expectOnlyPublishedNext<P: Publisher>(
-        values: [P.Output],
+    func expectOnlyPublishedNext<P: Publisher, T>(
+        values: [T],
         from publisher: P,
-        to satisfy: @escaping (P.Output, P.Output) -> Bool,
+        to satisfy: @escaping (P.Output, T) -> Bool,
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
@@ -304,11 +304,11 @@ public extension XCTestCase {
         )
     }
 
-    private func expectOnlyPublished<P: Publisher>(
+    private func expectOnlyPublished<P: Publisher, T>(
         next: Bool,
-        values: [P.Output],
+        values: [T],
         from publisher: P,
-        to satisfy: @escaping (P.Output, P.Output) -> Bool,
+        to satisfy: @escaping (P.Output, T) -> Bool,
         timeout: DispatchTimeInterval,
         file: StaticString,
         line: UInt,
@@ -333,7 +333,7 @@ public extension XCTestCase {
         // swiftlint:disable:next prefer_nimble
         XCTAssert(
             assertExpression,
-            diff(values, actualValues).joined(separator: ", "),
+            "", // diff(values, actualValues).joined(separator: ", "),
             file: file,
             line: line
         )
@@ -342,10 +342,10 @@ public extension XCTestCase {
 
 public extension XCTestCase {
     /// Collect values emitted by a publisher during some time interval and match them against an expected result.
-    func expectPublished<P: Publisher>(
-        values: [P.Output],
+    func expectPublished<P: Publisher, T>(
+        values: [T],
         from publisher: P,
-        to satisfy: @escaping (P.Output, P.Output) -> Bool,
+        to satisfy: @escaping (P.Output, T) -> Bool,
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
@@ -408,10 +408,10 @@ public extension XCTestCase {
     /// Collect values emitted by a publisher during some time interval and match them against an expected result,
     /// ignoring the first value. Useful when testing publishers which automatically deliver a non-relevant stored
     /// value upon subscription.
-    func expectPublishedNext<P: Publisher>(
-        values: [P.Output],
+    func expectPublishedNext<P: Publisher, T>(
+        values: [T],
         from publisher: P,
-        to satisfy: @escaping (P.Output, P.Output) -> Bool,
+        to satisfy: @escaping (P.Output, T) -> Bool,
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
@@ -475,11 +475,11 @@ public extension XCTestCase {
         )
     }
 
-    private func expectPublished<P: Publisher>(
+    private func expectPublished<P: Publisher, T>(
         next: Bool,
-        values: [P.Output],
+        values: [T],
         from publisher: P,
-        to satisfy: @escaping (P.Output, P.Output) -> Bool,
+        to satisfy: @escaping (P.Output, T) -> Bool,
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
@@ -496,7 +496,7 @@ public extension XCTestCase {
         // swiftlint:disable:next prefer_nimble
         XCTAssert(
             assertExpression,
-            diff(values, actualValues).joined(separator: ", "),
+            "", // diff(values, actualValues).joined(separator: ", "),
             file: file,
             line: line
         )

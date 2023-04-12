@@ -6,67 +6,60 @@
 
 import Foundation
 
-/// A comScore event.
-public struct ComScoreEvent: Equatable {
-    /// The field related to the event.
-    public enum Field: Hashable, Equatable {
-        case ns_st_id(String)
-        case ns_st_ldw(Int?)
-        case ns_st_po(Int?)
+/// Labels associated with a ComScore event.
+public struct ComScoreLabels {
+    let dictionary: [String: String]
 
-        init?(key: String, value: String) {
-            switch key {
-            case "ns_st_id":
-                self = .ns_st_id(value)
-            case "ns_st_ldw":
-                self = .ns_st_ldw(Int(value))
-            case "ns_st_po":
-                self = .ns_st_po(Int(value))
-            default:
-                return nil
-            }
-        }
+    /// Value of `ns_st_po`.
+    public var ns_st_po: Int? {
+        extract(key: "ns_st_po") { Int($0) }
     }
 
-    /// The event kind.
-    public enum Kind: String {
-        case play
-        case pause
-        case end
+    /// Value of `ns_st_ldw`.
+    public var ns_st_ldw: Int? {
+        extract(key: "ns_st_ldw") { Int($0) }
     }
 
-    let kind: Kind
-    let fields: [Field]
-
-    private init(kind: Kind, fields: [Field]) {
-        self.kind = kind
-        self.fields = fields
-    }
-
-    /// Play.
-    public static func play(_ fields: Field...) -> Self {
-        .init(kind: .play, fields: fields)
-    }
-
-    /// Pause.
-    public static func pause(_ fields: Field...) -> Self {
-        .init(kind: .pause, fields: fields)
-    }
-
-    /// End.
-    public static func end(_ fields: Field...) -> Self {
-        .init(kind: .end, fields: fields)
+    func extract<T>(key: String, conversion: (String) -> T?) -> T? {
+        guard let value = dictionary[key] else { return nil }
+        return conversion(value)
     }
 }
 
-extension ComScoreEvent {
-    init?(from dictionary: [String: String]) {
-        guard let event = dictionary["ns_st_ev"], let kind = Kind(rawValue: event) else { return nil }
-        let fields = dictionary.compactMap { Field(key: $0, value: $1) }
-        self.init(kind: kind, fields: fields)
+/// A comScore event expectation.
+public struct ComScoreEventExpectation {
+    let name: String
+    let evaluate: (ComScoreLabels) -> Void
+
+    /// Play.
+    public static func play(evaluate: @escaping (ComScoreLabels) -> Void) -> Self {
+        .init(name: "play", evaluate: evaluate)
     }
 
-    static func isSubset(receivedEvent: ComScoreEvent, expectedEvent: ComScoreEvent) -> Bool {
-        receivedEvent.kind == expectedEvent.kind && Set(expectedEvent.fields).isSubset(of: receivedEvent.fields)
+    /// Pause.
+    public static func pause(evaluate: @escaping (ComScoreLabels) -> Void) -> Self {
+        .init(name: "pause", evaluate: evaluate)
     }
+
+    /// End.
+    public static func end(evaluate: @escaping (ComScoreLabels) -> Void) -> Self {
+        .init(name: "end", evaluate: evaluate)
+    }
+}
+
+struct ComScoreEvent {
+    let name: String
+    let labels: ComScoreLabels
+
+    init?(from dictionary: [String: String]) {
+        guard let name = dictionary["ns_st_ev"] else { return nil }
+        self.name = name
+        self.labels = ComScoreLabels(dictionary: dictionary)
+    }
+}
+
+func match(event: ComScoreEvent, with expectation: ComScoreEventExpectation) -> Bool {
+    guard event.name == expectation.name else { return false }
+    expectation.evaluate(event.labels)
+    return true
 }
