@@ -25,6 +25,7 @@ public extension XCTestCase {
             from: publisher,
             to: satisfy,
             timeout: timeout,
+            assertDescription: assertDescription(expectedValues:actualValues:),
             file: file,
             line: line,
             while: executing
@@ -88,6 +89,7 @@ public extension XCTestCase {
             from: publisher,
             to: satisfy,
             timeout: timeout,
+            assertDescription: assertDescription(expectedValues:actualValues:),
             file: file,
             line: line,
             while: executing
@@ -110,6 +112,7 @@ public extension XCTestCase {
             from: publisher,
             to: ==,
             timeout: timeout,
+            assertDescription: assertDescription(expectedValues:actualValues:),
             file: file,
             line: line,
             while: executing
@@ -132,6 +135,7 @@ public extension XCTestCase {
             from: publisher,
             to: ~~,
             timeout: timeout,
+            assertDescription: assertDescription(expectedValues:actualValues:),
             file: file,
             line: line,
             while: executing
@@ -144,6 +148,7 @@ public extension XCTestCase {
         from publisher: P,
         to satisfy: @escaping (P.Output, T) -> Bool,
         timeout: DispatchTimeInterval,
+        assertDescription: ([T], [P.Output]) -> String,
         file: StaticString,
         line: UInt,
         while executing: (() -> Void)?
@@ -167,7 +172,7 @@ public extension XCTestCase {
         // swiftlint:disable:next prefer_nimble
         XCTAssert(
             assertExpression,
-            "", // diff(values, actualValues).joined(separator: ", "),
+            assertDescription(values, actualValues),
             file: file,
             line: line
         )
@@ -191,6 +196,7 @@ public extension XCTestCase {
             from: publisher,
             to: satisfy,
             timeout: timeout,
+            assertDescription: assertDescription(expectedValues:actualValues:),
             file: file,
             line: line,
             while: executing
@@ -254,6 +260,7 @@ public extension XCTestCase {
             from: publisher,
             to: satisfy,
             timeout: timeout,
+            assertDescription: assertDescription(expectedValues:actualValues:),
             file: file,
             line: line,
             while: executing
@@ -276,6 +283,7 @@ public extension XCTestCase {
             from: publisher,
             to: ==,
             timeout: timeout,
+            assertDescription: assertDescription(expectedValues:actualValues:),
             file: file,
             line: line,
             while: executing
@@ -298,6 +306,7 @@ public extension XCTestCase {
             from: publisher,
             to: ~~,
             timeout: timeout,
+            assertDescription: assertDescription(expectedValues:actualValues:),
             file: file,
             line: line,
             while: executing
@@ -310,6 +319,7 @@ public extension XCTestCase {
         from publisher: P,
         to satisfy: @escaping (P.Output, T) -> Bool,
         timeout: DispatchTimeInterval,
+        assertDescription: ([T], [P.Output]) -> String,
         file: StaticString,
         line: UInt,
         while executing: (() -> Void)?
@@ -333,7 +343,7 @@ public extension XCTestCase {
         // swiftlint:disable:next prefer_nimble
         XCTAssert(
             assertExpression,
-            "", // diff(values, actualValues).joined(separator: ", "),
+            assertDescription(values, actualValues),
             file: file,
             line: line
         )
@@ -357,6 +367,7 @@ public extension XCTestCase {
             from: publisher,
             to: satisfy,
             during: interval,
+            assertDescription: assertDescription(expectedValues:actualValues:),
             file: file,
             line: line,
             while: executing
@@ -378,6 +389,7 @@ public extension XCTestCase {
             from: publisher,
             to: ==,
             during: interval,
+            assertDescription: assertDescription(expectedValues:actualValues:),
             file: file,
             line: line,
             while: executing
@@ -399,6 +411,7 @@ public extension XCTestCase {
             from: publisher,
             to: ~~,
             during: interval,
+            assertDescription: assertDescription(expectedValues:actualValues:),
             file: file,
             line: line,
             while: executing
@@ -423,6 +436,7 @@ public extension XCTestCase {
             from: publisher,
             to: satisfy,
             during: interval,
+            assertDescription: assertDescription(expectedValues:actualValues:),
             file: file,
             line: line,
             while: executing
@@ -446,6 +460,7 @@ public extension XCTestCase {
             from: publisher,
             to: ==,
             during: interval,
+            assertDescription: assertDescription(expectedValues:actualValues:),
             file: file,
             line: line,
             while: executing
@@ -469,6 +484,7 @@ public extension XCTestCase {
             from: publisher,
             to: ~~,
             during: interval,
+            assertDescription: assertDescription(expectedValues:actualValues:),
             file: file,
             line: line,
             while: executing
@@ -481,6 +497,7 @@ public extension XCTestCase {
         from publisher: P,
         to satisfy: @escaping (P.Output, T) -> Bool,
         during interval: DispatchTimeInterval = .seconds(20),
+        assertDescription: ([T], [P.Output]) -> String,
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
@@ -496,7 +513,7 @@ public extension XCTestCase {
         // swiftlint:disable:next prefer_nimble
         XCTAssert(
             assertExpression,
-            "", // diff(values, actualValues).joined(separator: ", "),
+            assertDescription(values, actualValues),
             file: file,
             line: line
         )
@@ -699,4 +716,12 @@ public extension XCTestCase {
             while: executing
         )
     }
+}
+
+private func assertDescription<T, U>(expectedValues: [T], actualValues: [U]) -> String {
+    "Expected: \(expectedValues), actual: \(actualValues)"
+}
+
+private func assertDescription<T>(expectedValues: [T], actualValues: [T]) -> String {
+    diff(expectedValues, actualValues).joined(separator: ", ")
 }
