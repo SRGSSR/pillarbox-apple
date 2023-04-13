@@ -40,7 +40,7 @@ struct ComScoreService: AnalyticsService {
     func sendPageView(title: String, levels: [String], labels: Labels?) {
         var allLabels = ["ns_category": title].merging(labels?.comScore ?? [:]) { _, new in new }
         if let testId = Analytics.shared.testId {
-            allLabels["test_id"] = testId
+            allLabels[Analytics.testIdentifierKey] = testId
         }
         SCORAnalytics.notifyViewEvent(withLabels: allLabels)
     }

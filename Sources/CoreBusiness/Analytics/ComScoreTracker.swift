@@ -36,7 +36,7 @@ public final class ComScoreTracker: PlayerItemTracker {
     private func notify(playbackState: PlaybackState) {
         let metadata = SCORStreamingContentMetadata { builder in
             guard let builder, let testId = Analytics.shared.testId else { return }
-            builder.setCustomLabels(["test_id": testId])
+            builder.setCustomLabels([Analytics.testIdentifierKey: testId])
         }
         streamingAnalytics.setMetadata(metadata)
 

@@ -11,10 +11,6 @@ import Nimble
 import Player
 import XCTest
 
-struct TestMetadata: AssetMetadata {
-    let title: String
-}
-
 final class ComScoreTrackerTests: ComScoreTestCase {
     func testPlay() {
         let player = Player(item: .simple(

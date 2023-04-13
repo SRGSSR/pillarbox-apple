@@ -11,20 +11,18 @@ import XCTest
 
 /// Parent class for comScore test cases.
 open class ComScoreTestCase: XCTestCase {
-    private static let identifierKey = "test_id"
-
     private static func identifier(for function: String) -> String {
         "\(self).\(function)-\(UUID().uuidString)"
     }
 
     private static func additionalLabels(for id: String) -> [String: String] {
-        [identifierKey: id]
+        [Analytics.testIdentifierKey: id]
     }
 
     private static func eventPublisher(for id: String) -> AnyPublisher<ComScoreEvent, Never> {
         NotificationCenter.default.publisher(for: .didReceiveComScoreRequest)
             .compactMap { $0.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String] }
-            .filter { $0[identifierKey] == id }
+            .filter { $0[Analytics.testIdentifierKey] == id }
             .compactMap { .init(from: $0) }
             .eraseToAnyPublisher()
     }
@@ -41,21 +39,18 @@ public extension ComScoreTestCase {
         function: String = #function,
         while executing: (() -> Void)? = nil
     ) {
-        setup()
         let id = Self.identifier(for: function)
-        let publisher = Self.eventPublisher(for: id)
-        Analytics.shared.testId = id
-        expectPublished(
-            values: expectations,
-            from: publisher,
-            to: ComScoreEventExpectation.match(event:with:),
-            during: interval,
-            file: file,
-            line: line
-        ) {
-            executing?()
+        executeTests(withId: id) {
+            expectPublished(
+                values: expectations,
+                from: Self.eventPublisher(for: id),
+                to: ComScoreEventExpectation.match(event:with:),
+                during: interval,
+                file: file,
+                line: line,
+                while: executing
+            )
         }
-        Analytics.shared.testId = nil
     }
 
     /// Collect events emitted by comScore under the specified key during some time interval and match them against
@@ -68,21 +63,18 @@ public extension ComScoreTestCase {
         function: String = #function,
         while executing: (() -> Void)? = nil
     ) {
-        setup()
         let id = Self.identifier(for: function)
-        let publisher = Self.eventPublisher(for: id)
-        Analytics.shared.testId = id
-        expectAtLeastPublished(
-            values: expectations,
-            from: publisher,
-            to: ComScoreEventExpectation.match(event:with:),
-            timeout: timeout,
-            file: file,
-            line: line
-        ) {
-            executing?()
+        executeTests(withId: id) {
+            expectAtLeastPublished(
+                values: expectations,
+                from: Self.eventPublisher(for: id),
+                to: ComScoreEventExpectation.match(event:with:),
+                timeout: timeout,
+                file: file,
+                line: line,
+                while: executing
+            )
         }
-        Analytics.shared.testId = nil
     }
 }
 
@@ -94,24 +86,24 @@ public extension ComScoreTestCase {
         while executing: () -> Void,
         received: @escaping ([String: String]) -> Void
     ) {
-        setup()
         let id = Self.identifier(for: function)
-        Analytics.shared.testId = id
-        expectation(forNotification: .didReceiveComScoreRequest, object: nil) { notification in
-            guard let labels = notification.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String],
-                  labels[Self.identifierKey] == id else {
-                return false
+        executeTests(withId: id) {
+            expectation(forNotification: .didReceiveComScoreRequest, object: nil) { notification in
+                guard let labels = notification.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String],
+                      labels[Analytics.testIdentifierKey] == id else {
+                    return false
+                }
+                received(labels)
+                return true
             }
-            received(labels)
-            return true
+            executing()
+            waitForExpectations(timeout: timeout.double())
         }
-        executing()
-        waitForExpectations(timeout: timeout.double())
-        Analytics.shared.testId = nil
     }
 
-    private func setup() {
+    private func executeTests(withId id: String, perform: () -> Void) {
         try? Analytics.shared.start(with: .init(vendor: .RTS, sourceKey: "source", site: "site"))
         URLSession.enableInterceptor()
+        Analytics.shared.executeTests(withId: id, perform: perform)
     }
 }

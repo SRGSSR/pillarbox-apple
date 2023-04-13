@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import Analytics
+@testable import Analytics
 import Circumspect
 import Combine
 import TCCore
@@ -12,21 +12,19 @@ import XCTest
 
 /// Parent class for Commanders Act test cases.
 open class CommandersActTestCase: XCTestCase {
-    private static let identifierKey = "test_id"
-
     private static func identifier(for function: String) -> String {
         "\(self).\(function)-\(UUID().uuidString)"
     }
 
     private static func additionalLabels(for id: String) -> [String: String] {
-        [identifierKey: id]
+        [Analytics.testIdentifierKey: id]
     }
 
     private static func publisher(for id: String, key: String) -> AnyPublisher<String, Never> {
         NotificationCenter.default.publisher(for: Notification.Name(rawValue: kTCNotification_HTTPRequest))
             .compactMap { Self.labels(from: $0) }
             .filter { dictionary in
-                guard let identifier = dictionary[identifierKey] as? String else { return false }
+                guard let identifier = dictionary[Analytics.testIdentifierKey] as? String else { return false }
                 return identifier == id
             }
             .compactMap { $0[key] as? String }
@@ -104,7 +102,7 @@ public extension CommandersActTestCase {
         let id = Self.identifier(for: function)
         expectation(forNotification: Notification.Name(rawValue: kTCNotification_HTTPRequest), object: nil) { notification in
             guard let labels = Self.labels(from: notification),
-                  labels[Self.identifierKey] as? String == id else {
+                  labels[Analytics.testIdentifierKey] as? String == id else {
                 return false
             }
             received(labels)

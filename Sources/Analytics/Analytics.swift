@@ -28,13 +28,15 @@ public class Analytics {
         }
     }
 
+    static let testIdentifierKey = "analytics_test_id"
+
     /// The singleton instance.
     public static var shared = Analytics()
 
+    private(set) var testId: String?
+
     private var configuration: Configuration?
     private let services: [any AnalyticsService] = [ComScoreService(), CommandersActService()]
-
-    var testId: String?
 
     private init() {}
 
@@ -127,5 +129,13 @@ public class Analytics {
                 labels: labels
             )
         }
+    }
+
+    /// Execute the provided closure in a test context identified with the provided identifier.
+    func executeTests(withId id: String, perform: () -> Void) {
+        assert(testId == nil, "Multiple test contexts are not supported")
+        testId = id
+        perform()
+        testId = nil
     }
 }
