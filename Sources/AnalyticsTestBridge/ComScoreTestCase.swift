@@ -4,14 +4,14 @@
 //  License information is available from the LICENSE file.
 //
 
-import Analytics
+@testable import Analytics
 import Circumspect
 import Combine
 import XCTest
 
 /// Parent class for comScore test cases.
 open class ComScoreTestCase: XCTestCase {
-    private static let identifierKey = "com_score_test_id"
+    private static let identifierKey = "test_id"
 
     private static func identifier(for function: String) -> String {
         "\(self).\(function)-\(UUID().uuidString)"
@@ -39,10 +39,12 @@ public extension ComScoreTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         function: String = #function,
-        while executing: ((AnalyticsTest) -> Void)? = nil
+        while executing: (() -> Void)? = nil
     ) {
+        setup()
         let id = Self.identifier(for: function)
         let publisher = Self.eventPublisher(for: id)
+        Analytics.shared.testId = id
         expectPublished(
             values: expectations,
             from: publisher,
@@ -51,8 +53,9 @@ public extension ComScoreTestCase {
             file: file,
             line: line
         ) {
-            executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
+            executing?()
         }
+        Analytics.shared.testId = nil
     }
 
     /// Collect events emitted by comScore under the specified key during some time interval and match them against
@@ -63,10 +66,12 @@ public extension ComScoreTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         function: String = #function,
-        while executing: ((AnalyticsTest) -> Void)? = nil
+        while executing: (() -> Void)? = nil
     ) {
+        setup()
         let id = Self.identifier(for: function)
         let publisher = Self.eventPublisher(for: id)
+        Analytics.shared.testId = id
         expectAtLeastPublished(
             values: expectations,
             from: publisher,
@@ -75,8 +80,9 @@ public extension ComScoreTestCase {
             file: file,
             line: line
         ) {
-            executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
+            executing?()
         }
+        Analytics.shared.testId = nil
     }
 }
 
@@ -85,19 +91,27 @@ public extension ComScoreTestCase {
     func wait(
         timeout: DispatchTimeInterval = .seconds(20),
         function: String = #function,
-        while executing: (AnalyticsTest) -> Void,
+        while executing: () -> Void,
         received: @escaping ([String: String]) -> Void
     ) {
+        setup()
         let id = Self.identifier(for: function)
+        Analytics.shared.testId = id
         expectation(forNotification: .didReceiveComScoreRequest, object: nil) { notification in
             guard let labels = notification.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String],
-                       labels[Self.identifierKey] == id else {
+                  labels[Self.identifierKey] == id else {
                 return false
             }
             received(labels)
             return true
         }
-        executing(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
+        executing()
         waitForExpectations(timeout: timeout.double())
+        Analytics.shared.testId = nil
+    }
+
+    private func setup() {
+        try? Analytics.shared.start(with: .init(vendor: .RTS, sourceKey: "source", site: "site"))
+        URLSession.enableInterceptor()
     }
 }

@@ -22,22 +22,26 @@ struct ComScoreService: AnalyticsService {
             // Coding Document for Video Players, section 4.4
             builder.httpRedirectCachingEnabled = false
         }
-        let comScoreConfiguration = SCORAnalytics.configuration()!
-        comScoreConfiguration.addClient(with: publisherConfiguration)
+        if let comScoreConfiguration = SCORAnalytics.configuration() {
+            comScoreConfiguration.addClient(with: publisherConfiguration)
 
-        comScoreConfiguration.applicationVersion = applicationVersion
-        comScoreConfiguration.usagePropertiesAutoUpdateMode = .foregroundAndBackground
-        comScoreConfiguration.preventAdSupportUsage = true
-        comScoreConfiguration.addPersistentLabels([
-            "mp_brand": configuration.vendor.rawValue,
-            "mp_v": applicationVersion
-        ])
+            comScoreConfiguration.applicationVersion = applicationVersion
+            comScoreConfiguration.usagePropertiesAutoUpdateMode = .foregroundAndBackground
+            comScoreConfiguration.preventAdSupportUsage = true
+            comScoreConfiguration.addPersistentLabels([
+                "mp_brand": configuration.vendor.rawValue,
+                "mp_v": applicationVersion
+            ])
+        }
 
         SCORAnalytics.start()
     }
 
     func sendPageView(title: String, levels: [String], labels: Labels?) {
-        let allLabels = ["ns_category": title].merging(labels?.comScore ?? [:]) { _, new in new }
+        var allLabels = ["ns_category": title].merging(labels?.comScore ?? [:]) { _, new in new }
+        if let testId = Analytics.shared.testId {
+            allLabels["test_id"] = testId
+        }
         SCORAnalytics.notifyViewEvent(withLabels: allLabels)
     }
 

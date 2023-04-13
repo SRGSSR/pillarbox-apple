@@ -12,8 +12,8 @@ import XCTest
 
 final class ComScorePageViewTests: ComScoreTestCase {
     func testLabels() {
-        wait { test in
-            test.sendPageView(title: "title")
+        wait {
+            Analytics.shared.sendPageView(title: "title")
         } received: { labels in
             expect(labels["c2"]).to(equal("6036016"))
             expect(labels["ns_ap_an"]).to(equal("xctest"))

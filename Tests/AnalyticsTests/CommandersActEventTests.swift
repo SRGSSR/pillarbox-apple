@@ -12,8 +12,8 @@ import XCTest
 
 final class CommandersActEventTests: CommandersActTestCase {
     func testLabels() {
-        wait { test in
-            test.sendEvent(
+        wait {
+            Analytics.shared.sendEvent(
                 name: "name",
                 type: "type",
                 value: "value",

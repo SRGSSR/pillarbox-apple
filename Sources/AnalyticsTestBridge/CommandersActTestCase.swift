@@ -12,7 +12,7 @@ import XCTest
 
 /// Parent class for Commanders Act test cases.
 open class CommandersActTestCase: XCTestCase {
-    private static let identifierKey = "commanders_act_test_id"
+    private static let identifierKey = "test_id"
 
     private static func identifier(for function: String) -> String {
         "\(self).\(function)-\(UUID().uuidString)"
@@ -52,12 +52,12 @@ public extension CommandersActTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         function: String = #function,
-        while executing: ((AnalyticsTest) -> Void)? = nil
+        while executing: (() -> Void)? = nil
     ) {
         let id = Self.identifier(for: function)
         let publisher = Self.publisher(for: id, key: key)
         expectEqualPublished(values: values, from: publisher, during: interval, file: file, line: line) {
-            executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
+            executing?()
         }
     }
 
@@ -69,12 +69,12 @@ public extension CommandersActTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         function: String = #function,
-        while executing: ((AnalyticsTest) -> Void)? = nil
+        while executing: (() -> Void)? = nil
     ) {
         let id = Self.identifier(for: function)
         let publisher = Self.publisher(for: id, key: key)
         expectAtLeastEqualPublished(values: values, from: publisher, timeout: timeout, file: file, line: line) {
-            executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
+            executing?()
         }
     }
 
@@ -85,12 +85,12 @@ public extension CommandersActTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         function: String = #function,
-        while executing: ((AnalyticsTest) -> Void)? = nil
+        while executing: (() -> Void)? = nil
     ) {
         let id = Self.identifier(for: function)
         let publisher = Self.publisher(for: id, key: key)
         expectNothingPublished(from: publisher, during: interval, file: file, line: line) {
-            executing?(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
+            executing?()
         }
     }
 
@@ -98,7 +98,7 @@ public extension CommandersActTestCase {
     func wait(
         timeout: DispatchTimeInterval = .seconds(20),
         function: String = #function,
-        while executing: (AnalyticsTest) -> Void,
+        while executing: () -> Void,
         received: @escaping ([String: Any]) -> Void
     ) {
         let id = Self.identifier(for: function)
@@ -110,7 +110,7 @@ public extension CommandersActTestCase {
             received(labels)
             return true
         }
-        executing(AnalyticsTest(additionalLabels: Self.additionalLabels(for: id)))
+        executing()
         waitForExpectations(timeout: timeout.double())
     }
 }

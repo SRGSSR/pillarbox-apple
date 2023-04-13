@@ -12,8 +12,8 @@ import XCTest
 
 final class CommandersActPageViewTests: CommandersActTestCase {
     func testLabels() {
-        wait { test in
-            test.sendPageView(title: "title", levels: [
+        wait {
+            Analytics.shared.sendPageView(title: "title", levels: [
                 "level_1",
                 "level_2",
                 "level_3",

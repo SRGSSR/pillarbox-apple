@@ -17,20 +17,33 @@ struct TestMetadata: AssetMetadata {
 
 final class ComScoreTrackerTests: ComScoreTestCase {
     func testPlay() {
-        let player = Player()
+        let player = Player(item: .simple(
+            url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!,
+            trackerAdapters: [
+                ComScoreTracker.adapter()
+            ]
+        ))
+
+        // no id
+
+        player.play()
+        expect(player.playbackState).toEventually(equal(.playing), timeout: .seconds(10))
+
+        // id 1
         expectAtLeastEvents(
             [
-                .play { labels in
-                    expect(labels.ns_st_po).to(equal(0))
-                }
+                .pause()
             ]
-        ) { test in
-            player.append(.simple(
-                url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!,
-                trackerAdapters: [
-                    ComScoreTracker.adapter(test: test)
-                ]
-            ))
+        ) {
+            player.pause()
+        }
+
+        // id 2
+        expectAtLeastEvents(
+            [
+                .play()
+            ]
+        ) {
             player.play()
         }
     }

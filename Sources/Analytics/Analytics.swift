@@ -34,6 +34,8 @@ public class Analytics {
     private var configuration: Configuration?
     private let services: [any AnalyticsService] = [ComScoreService(), CommandersActService()]
 
+    var testId: String?
+
     private init() {}
 
     /// Start analytics with the specified configuration. Must be called from your

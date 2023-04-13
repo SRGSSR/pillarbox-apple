@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import Analytics
+@testable import Analytics
 import Combine
 import ComScore
 import Foundation
@@ -12,36 +12,41 @@ import Player
 
 /// Stream tracker for comScore.
 public final class ComScoreTracker: PlayerItemTracker {
-    public struct Configuration {
-        let labels: [String: String]
-
-        public init(labels: [String: String] = [:]) {
-            self.labels = labels
-        }
-    }
-
-    private let configuration: Configuration
     private let streamingAnalytics = SCORStreamingAnalytics()
+    private var cancellables = Set<AnyCancellable>()
 
-    public init(configuration: Configuration, metadataPublisher: AnyPublisher<[String: String], Never>) {
-        self.configuration = configuration
-    }
+    public init(configuration: Void, metadataPublisher: AnyPublisher<[String: String], Never>) {}
 
     public func enable(for player: Player) {
-        print("--> enable comScore")
         streamingAnalytics.createPlaybackSession()
         streamingAnalytics.setMediaPlayerName("Pillarbox")
         streamingAnalytics.setMediaPlayerVersion(PackageInfo.version)
 
-        let metadata = SCORStreamingContentMetadata { [weak self] builder in
-            guard let self, let builder else { return }
-            builder.setCustomLabels(self.configuration.labels)
-        }
-        streamingAnalytics.setMetadata(metadata)
-        streamingAnalytics.notifyPlay()
+        player.$playbackState
+            .sink { [weak self] playbackState in
+                self?.notify(playbackState: playbackState)
+            }
+            .store(in: &cancellables)
     }
 
     public func disable() {
-        print("--> disable comScore")
+        cancellables = []
+    }
+
+    private func notify(playbackState: PlaybackState) {
+        let metadata = SCORStreamingContentMetadata { builder in
+            guard let builder, let testId = Analytics.shared.testId else { return }
+            builder.setCustomLabels(["test_id": testId])
+        }
+        streamingAnalytics.setMetadata(metadata)
+
+        switch playbackState {
+        case .playing:
+            streamingAnalytics.notifyPlay()
+        case .paused:
+            streamingAnalytics.notifyPause()
+        default:
+            break
+        }
     }
 }
