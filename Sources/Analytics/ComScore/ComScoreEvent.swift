@@ -17,10 +17,10 @@ public struct ComScoreEvent {
     public let name: Name
     public let labels: ComScoreLabels
 
-    init?(from dictionary: [String: String]) {
-        guard let name = Name(rawValue: dictionary["ns_st_ev"] ?? dictionary["ns_ap_ev"] ?? "") else { return nil }
+    init?(from labels: ComScoreLabels) {
+        guard let name = Name(rawValue: labels.ns_st_ev ?? labels.ns_ap_ev ?? "") else { return nil }
         self.name = name
-        self.labels = ComScoreLabels(dictionary: dictionary)
+        self.labels = labels
     }
 }
 

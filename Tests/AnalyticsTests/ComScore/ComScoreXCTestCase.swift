@@ -16,10 +16,9 @@ extension XCTestCase {
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
-        function: String = #function,
         while executing: (() -> Void)? = nil
     ) {
-        ComScoreRecorder.captureEvents { publisher in
+        AnalyticsRecorder.captureComScoreEvents { publisher in
             expectPublished(
                 values: expectations,
                 from: publisher,
@@ -38,10 +37,9 @@ extension XCTestCase {
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
-        function: String = #function,
         while executing: (() -> Void)? = nil
     ) {
-        ComScoreRecorder.captureEvents { publisher in
+        AnalyticsRecorder.captureComScoreEvents { publisher in
             expectAtLeastPublished(
                 values: expectations,
                 from: publisher,

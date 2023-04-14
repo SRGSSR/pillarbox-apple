@@ -25,8 +25,8 @@ final class CommandersActService: AnalyticsService {
     }
 
     private static func addCommonAdditionalProperties(to event: TCEvent) {
-        if let captureIdentifier = CommandersActRecorder.sessionIdentifier {
-            event.addAdditionalProperty(CommandersActRecorder.sessionIdentifierKey, withStringValue: captureIdentifier)
+        if let captureIdentifier = AnalyticsRecorder.sessionIdentifier {
+            event.addAdditionalProperty(AnalyticsRecorder.sessionIdentifierKey, withStringValue: captureIdentifier)
         }
     }
 

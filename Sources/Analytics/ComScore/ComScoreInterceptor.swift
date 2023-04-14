@@ -7,37 +7,6 @@
 import Combine
 import Foundation
 
-public enum ComScoreRecorder {
-    static let sessionIdentifierKey = "recorder_session_id"
-    private(set) static var sessionIdentifier: String?
-
-    /// Execute the provided closure in a test context identified with the provided identifier.
-    public static func captureEvents(perform: (AnyPublisher<ComScoreEvent, Never>) -> Void) {
-        assert(sessionIdentifier == nil, "Multiple captures are not supported")
-
-        try? Analytics.shared.start(with: .init(vendor: .RTS, sourceKey: "source", site: "site"))
-
-        let identifier = UUID().uuidString
-        URLSession.toggleInterceptor()
-        sessionIdentifier = identifier
-        defer {
-            URLSession.toggleInterceptor()
-            sessionIdentifier = nil
-        }
-
-        let publisher = eventPublisher(for: identifier)
-        perform(publisher)
-    }
-
-    private static func eventPublisher(for identifier: String) -> AnyPublisher<ComScoreEvent, Never> {
-        NotificationCenter.default.publisher(for: .didReceiveComScoreRequest)
-            .compactMap { $0.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String] }
-            .filter { $0[sessionIdentifierKey] == identifier }
-            .compactMap { .init(from: $0) }
-            .eraseToAnyPublisher()
-    }
-}
-
 private enum ComScoreRequestInfoKey: String {
     case queryItems = "ComScoreRequestQueryItems"
 }
@@ -70,5 +39,26 @@ private extension URLSession {
             ])
         }
         return swizzled_dataTask(with: request, completionHandler: completionHandler)
+    }
+}
+
+struct ComScoreInterceptor {
+    static func toggle() {
+        URLSession.toggleInterceptor()
+    }
+
+    static func eventPublisher(for identifier: String) -> AnyPublisher<ComScoreEvent, Never> {
+        NotificationCenter.default.publisher(for: .didReceiveComScoreRequest)
+            .compactMap { labels(from: $0) }
+            .filter { $0.recorder_session_id == identifier }
+            .compactMap { .init(from: $0) }
+            .eraseToAnyPublisher()
+    }
+
+    private static func labels(from notification: Notification) -> ComScoreLabels? {
+        guard let dictionary = notification.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String] else {
+            return nil
+        }
+        return .init(dictionary: dictionary)
     }
 }

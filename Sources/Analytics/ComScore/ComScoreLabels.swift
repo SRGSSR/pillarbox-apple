@@ -10,6 +10,18 @@ import Foundation
 public struct ComScoreLabels {
     let dictionary: [String: String]
 
+    var ns_st_ev: String? {
+        extract { $0 }
+    }
+
+    var ns_ap_ev: String? {
+        extract { $0 }
+    }
+
+    var recorder_session_id: String? {
+        extract { $0 }
+    }
+
     /// Value of `c2`.
     public var c2: String? {
         extract { $0 }

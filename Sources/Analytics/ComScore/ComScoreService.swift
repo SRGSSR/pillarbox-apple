@@ -39,8 +39,8 @@ struct ComScoreService: AnalyticsService {
 
     func sendPageView(title: String, levels: [String]) {
         var labels = ["ns_category": title]
-        if let captureIdentifier = ComScoreRecorder.sessionIdentifier {
-            labels[ComScoreRecorder.sessionIdentifierKey] = captureIdentifier
+        if let captureIdentifier = AnalyticsRecorder.sessionIdentifier {
+            labels[AnalyticsRecorder.sessionIdentifierKey] = captureIdentifier
         }
         SCORAnalytics.notifyViewEvent(withLabels: labels)
     }
