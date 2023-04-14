@@ -6,9 +6,6 @@
 
 import Foundation
 
-// TODO: Possible to have an even simpler implementation using Decodable?
-//       See https://forums.swift.org/t/converting-numbers-in-string-to-int/38566/2 for example.
-
 /// Labels associated with a ComScore event.
 public struct ComScoreLabels {
     let dictionary: [String: String]
