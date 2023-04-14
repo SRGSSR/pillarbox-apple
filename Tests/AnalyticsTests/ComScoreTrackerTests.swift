@@ -13,7 +13,7 @@ import XCTest
 final class ComScoreTrackerTests: XCTestCase {
     func testPlay() {
         let player = Player(item: .simple(
-            url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!,
+            url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!,
             trackerAdapters: [
                 ComScoreTracker.adapter()
             ]
