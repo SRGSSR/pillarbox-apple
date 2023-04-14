@@ -81,8 +81,15 @@ public class Analytics {
     ) {
         assert(!name.isEmpty, "A name is required")
         let event = Event(
-            name: name, type: type, value: value, source: source,
-            extra1: extra1, extra2: extra2, extra3: extra3, extra4: extra4, extra5: extra5
+            name: name,
+            type: type,
+            value: value,
+            source: source,
+            extra1: extra1,
+            extra2: extra2,
+            extra3: extra3,
+            extra4: extra4,
+            extra5: extra5
         )
         services.forEach { service in
             service.sendEvent(event)

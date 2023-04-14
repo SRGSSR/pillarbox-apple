@@ -6,7 +6,9 @@
 
 import Foundation
 
+/// A Commanders Act event.
 public struct CommandersActEvent {
+    /// Event names.
     public enum Name: String {
         case play
         case pause
@@ -15,7 +17,10 @@ public struct CommandersActEvent {
         case hidden_event
     }
 
+    /// The event name.
     public let name: Name
+
+    /// Labels associated with the event.
     public let labels: CommandersActLabels
 
     init?(from labels: CommandersActLabels) {

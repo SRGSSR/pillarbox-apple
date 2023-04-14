@@ -11,6 +11,27 @@ private enum ComScoreRequestInfoKey: String {
     case queryItems = "ComScoreRequestQueryItems"
 }
 
+enum ComScoreInterceptor {
+    static func toggle() {
+        URLSession.toggleInterceptor()
+    }
+
+    static func eventPublisher(for identifier: String) -> AnyPublisher<ComScoreEvent, Never> {
+        NotificationCenter.default.publisher(for: .didReceiveComScoreRequest)
+            .compactMap { labels(from: $0) }
+            .filter { $0.recorder_session_id == identifier }
+            .compactMap { .init(from: $0) }
+            .eraseToAnyPublisher()
+    }
+
+    private static func labels(from notification: Notification) -> ComScoreLabels? {
+        guard let dictionary = notification.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String] else {
+            return nil
+        }
+        return .init(dictionary: dictionary)
+    }
+}
+
 private extension Notification.Name {
     static let didReceiveComScoreRequest = Notification.Name("URLSessionDidReceiveComScoreRequestNotification")
 }
@@ -39,26 +60,5 @@ private extension URLSession {
             ])
         }
         return swizzled_dataTask(with: request, completionHandler: completionHandler)
-    }
-}
-
-struct ComScoreInterceptor {
-    static func toggle() {
-        URLSession.toggleInterceptor()
-    }
-
-    static func eventPublisher(for identifier: String) -> AnyPublisher<ComScoreEvent, Never> {
-        NotificationCenter.default.publisher(for: .didReceiveComScoreRequest)
-            .compactMap { labels(from: $0) }
-            .filter { $0.recorder_session_id == identifier }
-            .compactMap { .init(from: $0) }
-            .eraseToAnyPublisher()
-    }
-
-    private static func labels(from notification: Notification) -> ComScoreLabels? {
-        guard let dictionary = notification.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String] else {
-            return nil
-        }
-        return .init(dictionary: dictionary)
     }
 }

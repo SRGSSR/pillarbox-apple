@@ -6,7 +6,9 @@
 
 import Foundation
 
+/// A comScore event.
 public struct ComScoreEvent {
+    /// Event names.
     public enum Name: String {
         case play
         case pause
@@ -14,7 +16,10 @@ public struct ComScoreEvent {
         case view
     }
 
+    /// The event name.
     public let name: Name
+
+    /// Labels associated with the event.
     public let labels: ComScoreLabels
 
     init?(from labels: ComScoreLabels) {

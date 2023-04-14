@@ -4,11 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
 import Combine
+import Foundation
 import TCServerSide_noIDFA
 
-struct CommandersActInterceptor {
+enum CommandersActInterceptor {
     static func eventPublisher(for identifier: String) -> AnyPublisher<CommandersActEvent, Never> {
         NotificationCenter.default.publisher(for: .init(rawValue: kTCNotification_HTTPRequest))
             .compactMap { labels(from: $0) }

@@ -7,16 +7,24 @@
 import Combine
 import Foundation
 
+/// Provide a context in which analytics events can be recorded. Should never be used in production, only for
+/// development purposes (e.g. unit tests).
 public enum AnalyticsRecorder {
     static let sessionIdentifierKey = "recorder_session_id"
     private(set) static var sessionIdentifier: String?
 
+    /// Capture comScore events.
+    /// - Parameter perform: A closure to be executed. Receives a publisher which publishes the events received during
+    ///   the capture.
     public static func captureComScoreEvents(perform: (AnyPublisher<ComScoreEvent, Never>) -> Void) {
         captureEvents(perform: perform) { identifier in
             ComScoreInterceptor.eventPublisher(for: identifier)
         }
     }
 
+    /// Capture Commanders Act events.
+    /// - Parameter perform: A closure to be executed. Receives a publisher which publishes the events received during
+    ///   the capture.
     public static func captureCommandersActEvents(perform: (AnyPublisher<CommandersActEvent, Never>) -> Void) {
         captureEvents(perform: perform) { identifier in
             CommandersActInterceptor.eventPublisher(for: identifier)
