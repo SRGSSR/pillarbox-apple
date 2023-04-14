@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import Analytics
 import Combine
 import Player
 import UIKit

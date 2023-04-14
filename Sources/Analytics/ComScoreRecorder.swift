@@ -5,25 +5,51 @@
 //
 
 import Foundation
+import Combine
 
-private var kIsInterceptorEnabled = false
+public enum ComScoreRecorder {
+    static let sessionIdentifierKey = "recorder_session_id"
+    static private(set) var sessionIdentifier: String?
 
-enum ComScoreRequestInfoKey: String {
+    /// Execute the provided closure in a test context identified with the provided identifier.
+    public static func captureEvents(perform: (AnyPublisher<ComScoreEvent, Never>) -> Void) {
+        assert(sessionIdentifier == nil, "Multiple captures are not supported")
+        let identifier = UUID().uuidString
+
+        URLSession.toggleInterceptor()
+        sessionIdentifier = identifier
+        defer {
+            URLSession.toggleInterceptor()
+            sessionIdentifier = nil
+        }
+
+        let publisher = eventPublisher(for: identifier)
+        perform(publisher)
+    }
+
+    private static func eventPublisher(for identifier: String) -> AnyPublisher<ComScoreEvent, Never> {
+        NotificationCenter.default.publisher(for: .didReceiveComScoreRequest)
+            .compactMap { $0.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String] }
+            .filter { $0[sessionIdentifierKey] == identifier }
+            .compactMap { .init(from: $0) }
+            .eraseToAnyPublisher()
+    }
+}
+
+private enum ComScoreRequestInfoKey: String {
     case queryItems = "ComScoreRequestQueryItems"
 }
 
-extension Notification.Name {
+private extension Notification.Name {
     static let didReceiveComScoreRequest = Notification.Name("URLSessionDidReceiveComScoreRequestNotification")
 }
 
-extension URLSession {
-    static func enableInterceptor() {
-        guard !kIsInterceptorEnabled else { return }
+private extension URLSession {
+    static func toggleInterceptor() {
         method_exchangeImplementations(
             class_getInstanceMethod(URLSession.self, NSSelectorFromString("dataTaskWithRequest:completionHandler:"))!,
             class_getInstanceMethod(URLSession.self, #selector(swizzled_dataTask(with:completionHandler:)))!
         )
-        kIsInterceptorEnabled = true
     }
 
     @objc

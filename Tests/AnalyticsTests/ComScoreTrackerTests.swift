@@ -4,14 +4,13 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import CoreBusiness
+@testable import Analytics
 
-import AnalyticsTestBridge
 import Nimble
 import Player
 import XCTest
 
-final class ComScoreTrackerTests: ComScoreTestCase {
+final class ComScoreTrackerTests: XCTestCase {
     func testPlay() {
         let player = Player(item: .simple(
             url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!,
@@ -26,7 +25,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
         expect(player.playbackState).toEventually(equal(.playing), timeout: .seconds(10))
 
         // id 1
-        expectAtLeastEvents(
+        expectAtLeastComScoreEvents(
             [
                 .pause()
             ]
@@ -35,7 +34,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
         }
 
         // id 2
-        expectAtLeastEvents(
+        expectAtLeastComScoreEvents(
             [
                 .play()
             ]

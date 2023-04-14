@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Analytics
 import Combine
 import ComScore
 import Foundation
@@ -35,8 +34,12 @@ public final class ComScoreTracker: PlayerItemTracker {
 
     private func notify(playbackState: PlaybackState) {
         let metadata = SCORStreamingContentMetadata { builder in
-            guard let builder, let testId = Analytics.shared.testId else { return }
-            builder.setCustomLabels([Analytics.testIdentifierKey: testId])
+            guard let builder else { return }
+            var customLabels = [String: String]()
+            if let captureIdentifier = ComScoreRecorder.sessionIdentifier {
+                customLabels[ComScoreRecorder.sessionIdentifierKey] = captureIdentifier
+            }
+            builder.setCustomLabels(customLabels)
         }
         streamingAnalytics.setMetadata(metadata)
 

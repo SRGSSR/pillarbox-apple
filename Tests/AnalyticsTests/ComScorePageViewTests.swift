@@ -6,11 +6,10 @@
 
 @testable import Analytics
 
-import AnalyticsTestBridge
 import Nimble
 import XCTest
 
-final class ComScorePageViewTests: ComScoreTestCase {
+final class ComScorePageViewTests: XCTestCase {
     func testLabels() {
         wait {
             Analytics.shared.sendPageView(title: "title")

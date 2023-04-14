@@ -8,7 +8,7 @@ import Foundation
 
 protocol AnalyticsService {
     func start(with configuration: Analytics.Configuration)
-    func sendPageView(title: String, levels: [String], labels: Labels?)
+    func sendPageView(title: String, levels: [String])
     // swiftlint:disable:next function_parameter_count
     func sendEvent(
         name: String,
@@ -19,7 +19,6 @@ protocol AnalyticsService {
         extra2: String,
         extra3: String,
         extra4: String,
-        extra5: String,
-        labels: Labels?
+        extra5: String
     )
 }

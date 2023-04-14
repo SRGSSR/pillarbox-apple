@@ -34,7 +34,7 @@ final class CommandersActService: AnalyticsService {
         self.serverSide = serverSide
     }
 
-    func sendPageView(title: String, levels: [String], labels: Labels?) {
+    func sendPageView(title: String, levels: [String]) {
         guard let serverSide, let event = TCPageViewEvent(type: title) else { return }
 
         event.addAdditionalProperty("navigation_property_type", withStringValue: "app")
@@ -43,10 +43,10 @@ final class CommandersActService: AnalyticsService {
             guard index < 8 else { return }
             event.addAdditionalProperty("navigation_level_\(index + 1)", withStringValue: level)
         }
-
-        labels?.commandersAct.forEach { label in
-            event.addAdditionalProperty(label.key, withStringValue: label.value)
+        if let captureIdentifier = ComScoreRecorder.sessionIdentifier {
+            event.addAdditionalProperty(ComScoreRecorder.sessionIdentifierKey, withStringValue: captureIdentifier)
         }
+
         serverSide.execute(event)
     }
 
@@ -60,8 +60,7 @@ final class CommandersActService: AnalyticsService {
         extra2: String,
         extra3: String,
         extra4: String,
-        extra5: String,
-        labels: Labels?
+        extra5: String
     ) {
         guard let serverSide, let event = TCCustomEvent(name: name) else { return }
         event.addAdditionalProperty("event_type", withStringValue: type)
@@ -73,8 +72,8 @@ final class CommandersActService: AnalyticsService {
         event.addAdditionalProperty("event_value_4", withStringValue: extra4)
         event.addAdditionalProperty("event_value_5", withStringValue: extra5)
 
-        labels?.commandersAct.forEach { label in
-            event.addAdditionalProperty(label.key, withStringValue: label.value)
+        if let captureIdentifier = ComScoreRecorder.sessionIdentifier {
+            event.addAdditionalProperty(ComScoreRecorder.sessionIdentifierKey, withStringValue: captureIdentifier)
         }
 
         serverSide.execute(event)

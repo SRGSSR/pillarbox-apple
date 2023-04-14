@@ -28,12 +28,8 @@ public class Analytics {
         }
     }
 
-    static let testIdentifierKey = "analytics_test_id"
-
     /// The singleton instance.
     public static var shared = Analytics()
-
-    private(set) var testId: String?
 
     private var configuration: Configuration?
     private let services: [any AnalyticsService] = [ComScoreService(), CommandersActService()]
@@ -57,7 +53,8 @@ public class Analytics {
     ///   - title: The page title.
     ///   - levels: The page levels.
     public func sendPageView(title: String, levels: [String] = []) {
-        sendPageView(title: title, levels: levels, labels: nil)
+        assert(!title.isEmpty, "The title is required!")
+        services.forEach { $0.sendPageView(title: title, levels: levels) }
     }
 
     /// Record an event.
@@ -82,38 +79,6 @@ public class Analytics {
         extra4: String = "",
         extra5: String = ""
     ) {
-        sendEvent(
-            name: name,
-            type: type,
-            value: value,
-            source: source,
-            extra1: extra1,
-            extra2: extra2,
-            extra3: extra3,
-            extra4: extra4,
-            extra5: extra5,
-            labels: nil
-        )
-    }
-
-    func sendPageView(title: String, levels: [String], labels: Labels?) {
-        assert(!title.isEmpty, "The title is required!")
-        services.forEach { $0.sendPageView(title: title, levels: levels, labels: labels) }
-    }
-
-    // swiftlint:disable:next function_parameter_count
-    func sendEvent(
-        name: String,
-        type: String,
-        value: String,
-        source: String,
-        extra1: String,
-        extra2: String,
-        extra3: String,
-        extra4: String,
-        extra5: String,
-        labels: Labels?
-    ) {
         assert(!name.isEmpty, "The name is required!")
         services.forEach { service in
             service.sendEvent(
@@ -125,17 +90,8 @@ public class Analytics {
                 extra2: extra2,
                 extra3: extra3,
                 extra4: extra4,
-                extra5: extra5,
-                labels: labels
+                extra5: extra5
             )
         }
-    }
-
-    /// Execute the provided closure in a test context identified with the provided identifier.
-    func executeTests(withId id: String, perform: () -> Void) {
-        assert(testId == nil, "Multiple test contexts are not supported")
-        testId = id
-        perform()
-        testId = nil
     }
 }

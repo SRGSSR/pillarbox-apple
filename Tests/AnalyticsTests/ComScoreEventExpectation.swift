@@ -1,0 +1,41 @@
+//
+//  Copyright (c) SRG SSR. All rights reserved.
+//
+//  License information is available from the LICENSE file.
+//
+
+import Analytics
+import Foundation
+
+/// Describes a comScore event expectation.
+struct ComScoreEventExpectation {
+    private let name: String
+    private let evaluate: (ComScoreLabels) -> Void
+
+    static func match(event: ComScoreEvent, with expectation: ComScoreEventExpectation) -> Bool {
+        guard event.name == expectation.name else { return false }
+        expectation.evaluate(event.labels)
+        return true
+    }
+
+    /// Play.
+    static func play(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> Self {
+        .init(name: "play", evaluate: evaluate)
+    }
+
+    /// Pause.
+    static func pause(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> Self {
+        .init(name: "pause", evaluate: evaluate)
+    }
+
+    /// End.
+    static func end(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> Self {
+        .init(name: "end", evaluate: evaluate)
+    }
+}
+
+extension ComScoreEventExpectation: CustomDebugStringConvertible {
+    var debugDescription: String {
+        name
+    }
+}

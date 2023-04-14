@@ -37,12 +37,12 @@ struct ComScoreService: AnalyticsService {
         SCORAnalytics.start()
     }
 
-    func sendPageView(title: String, levels: [String], labels: Labels?) {
-        var allLabels = ["ns_category": title].merging(labels?.comScore ?? [:]) { _, new in new }
-        if let testId = Analytics.shared.testId {
-            allLabels[Analytics.testIdentifierKey] = testId
+    func sendPageView(title: String, levels: [String]) {
+        var labels = ["ns_category": title]
+        if let captureIdentifier = ComScoreRecorder.sessionIdentifier {
+            labels[ComScoreRecorder.sessionIdentifierKey] = captureIdentifier
         }
-        SCORAnalytics.notifyViewEvent(withLabels: allLabels)
+        SCORAnalytics.notifyViewEvent(withLabels: labels)
     }
 
     // swiftlint:disable:next function_parameter_count
@@ -55,7 +55,6 @@ struct ComScoreService: AnalyticsService {
         extra2: String,
         extra3: String,
         extra4: String,
-        extra5: String,
-        labels: Labels?
+        extra5: String
     ) {}
 }
