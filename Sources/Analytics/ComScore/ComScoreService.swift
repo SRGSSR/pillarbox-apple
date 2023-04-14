@@ -45,16 +45,5 @@ struct ComScoreService: AnalyticsService {
         SCORAnalytics.notifyViewEvent(withLabels: labels)
     }
 
-    // swiftlint:disable:next function_parameter_count
-    func sendEvent(
-        name: String,
-        type: String,
-        value: String,
-        source: String,
-        extra1: String,
-        extra2: String,
-        extra3: String,
-        extra4: String,
-        extra5: String
-    ) {}
+    func sendEvent(_ event: Event) {}
 }

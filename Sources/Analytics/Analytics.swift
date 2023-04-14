@@ -53,7 +53,7 @@ public class Analytics {
     ///   - title: The page title.
     ///   - levels: The page levels.
     public func sendPageView(title: String, levels: [String] = []) {
-        assert(!title.isEmpty, "The title is required!")
+        assert(!title.isEmpty, "A title is required")
         services.forEach { $0.sendPageView(title: title, levels: levels) }
     }
 
@@ -79,19 +79,13 @@ public class Analytics {
         extra4: String = "",
         extra5: String = ""
     ) {
-        assert(!name.isEmpty, "The name is required!")
+        assert(!name.isEmpty, "A name is required")
+        let event = Event(
+            name: name, type: type, value: value, source: source,
+            extra1: extra1, extra2: extra2, extra3: extra3, extra4: extra4, extra5: extra5
+        )
         services.forEach { service in
-            service.sendEvent(
-                name: name,
-                type: type,
-                value: value,
-                source: source,
-                extra1: extra1,
-                extra2: extra2,
-                extra3: extra3,
-                extra4: extra4,
-                extra5: extra5
-            )
+            service.sendEvent(event)
         }
     }
 }

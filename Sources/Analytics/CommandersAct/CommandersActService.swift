@@ -52,29 +52,18 @@ final class CommandersActService: AnalyticsService {
         serverSide.execute(event)
     }
 
-    // swiftlint:disable:next function_parameter_count
-    func sendEvent(
-        name: String,
-        type: String,
-        value: String,
-        source: String,
-        extra1: String,
-        extra2: String,
-        extra3: String,
-        extra4: String,
-        extra5: String
-    ) {
-        guard let serverSide, let event = TCCustomEvent(name: "hidden_event") else { return }
-        event.addAdditionalProperty("event_title", withStringValue: name)
-        event.addAdditionalProperty("event_type", withStringValue: type)
-        event.addAdditionalProperty("event_value", withStringValue: value)
-        event.addAdditionalProperty("event_source", withStringValue: source)
-        event.addAdditionalProperty("event_value_1", withStringValue: extra1)
-        event.addAdditionalProperty("event_value_2", withStringValue: extra2)
-        event.addAdditionalProperty("event_value_3", withStringValue: extra3)
-        event.addAdditionalProperty("event_value_4", withStringValue: extra4)
-        event.addAdditionalProperty("event_value_5", withStringValue: extra5)
-        Self.addCommonAdditionalProperties(to: event)
-        serverSide.execute(event)
+    func sendEvent(_ event: Event) {
+        guard let serverSide, let customEvent = TCCustomEvent(name: "hidden_event") else { return }
+        customEvent.addAdditionalProperty("event_title", withStringValue: event.name)
+        customEvent.addAdditionalProperty("event_type", withStringValue: event.type)
+        customEvent.addAdditionalProperty("event_value", withStringValue: event.value)
+        customEvent.addAdditionalProperty("event_source", withStringValue: event.source)
+        customEvent.addAdditionalProperty("event_value_1", withStringValue: event.extra1)
+        customEvent.addAdditionalProperty("event_value_2", withStringValue: event.extra2)
+        customEvent.addAdditionalProperty("event_value_3", withStringValue: event.extra3)
+        customEvent.addAdditionalProperty("event_value_4", withStringValue: event.extra4)
+        customEvent.addAdditionalProperty("event_value_5", withStringValue: event.extra5)
+        Self.addCommonAdditionalProperties(to: customEvent)
+        serverSide.execute(customEvent)
     }
 }
