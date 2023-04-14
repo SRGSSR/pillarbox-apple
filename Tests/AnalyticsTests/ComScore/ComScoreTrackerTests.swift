@@ -10,7 +10,7 @@ import Nimble
 import Player
 import XCTest
 
-final class ComScoreTrackerTests: XCTestCase {
+final class ComScoreTrackerTests: ComScoreTestCase {
     func testPlay() {
         let player = Player(item: .simple(
             url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!,
@@ -19,13 +19,10 @@ final class ComScoreTrackerTests: XCTestCase {
             ]
         ))
 
-        // no id
-
         player.play()
         expect(player.playbackState).toEventually(equal(.playing), timeout: .seconds(10))
 
-        // id 1
-        expectAtLeastComScoreEvents(
+        expectAtLeastEvents(
             [
                 .pause()
             ]
@@ -33,8 +30,7 @@ final class ComScoreTrackerTests: XCTestCase {
             player.pause()
         }
 
-        // id 2
-        expectAtLeastComScoreEvents(
+        expectAtLeastEvents(
             [
                 .play()
             ]

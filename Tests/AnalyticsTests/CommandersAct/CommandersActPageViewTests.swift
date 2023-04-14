@@ -9,9 +9,9 @@
 import Nimble
 import XCTest
 
-final class CommandersActPageViewTests: XCTestCase {
+final class CommandersActPageViewTests: CommandersActTestCase {
     func testLabels() {
-        expectAtLeastCommandersActEvents(
+        expectAtLeastEvents(
             [
                 .page_view { labels in
                     expect(labels.page_type).to(equal("title"))

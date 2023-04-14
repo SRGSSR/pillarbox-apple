@@ -9,9 +9,11 @@
 import Circumspect
 import XCTest
 
-extension XCTestCase {
+open class CommandersActTestCase: XCTestCase {}
+
+extension CommandersActTestCase {
     /// Collect events emitted by Commanders Act during some time interval and match them against expectations.
-    func expectCommandersActEvents(
+    func expectEvents(
         _ expectations: [CommandersActEventExpectation],
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
@@ -32,7 +34,7 @@ extension XCTestCase {
     }
 
     /// Expect events emitted by Commanders Act during some time interval and match them against expectations.
-    func expectAtLeastCommandersActEvents(
+    func expectAtLeastEvents(
         _ expectations: [CommandersActEventExpectation],
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,

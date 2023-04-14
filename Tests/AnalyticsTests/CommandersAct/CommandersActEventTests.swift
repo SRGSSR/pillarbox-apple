@@ -9,9 +9,9 @@
 import Nimble
 import XCTest
 
-final class CommandersActEventTests: XCTestCase {
+final class CommandersActEventTests: CommandersActTestCase {
     func testLabels() {
-        expectAtLeastCommandersActEvents(
+        expectAtLeastEvents(
             [
                 .hidden_event { labels in
                     expect(labels.event_title).to(equal("name"))

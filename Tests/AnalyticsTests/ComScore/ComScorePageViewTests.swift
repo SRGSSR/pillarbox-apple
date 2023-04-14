@@ -9,9 +9,9 @@
 import Nimble
 import XCTest
 
-final class ComScorePageViewTests: XCTestCase {
+final class ComScorePageViewTests: ComScoreTestCase {
     func testLabels() {
-        expectAtLeastComScoreEvents(
+        expectAtLeastEvents(
             [
                 .view { labels in
                     expect(labels.c2).to(equal("6036016"))
