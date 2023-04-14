@@ -8,7 +8,8 @@ import Foundation
 
 /// Labels associated with a Commanders Act event.
 public struct CommandersActLabels: Decodable {
-    let dictionary: [String: String]
+    var event_name: String?
+    var recorder_session_id: String?
 
     /// Value of `app_library_version`.
     public var app_library_version: String?
@@ -57,4 +58,32 @@ public struct CommandersActLabels: Decodable {
 
     /// Value of `page_type`.
     public var page_type: String?
+
+    /// Value of `event_title`.
+    /// FIXME: This field was introduced to avoid clashes with `event_name` but still needs to be discussed.
+    public var event_title: String?
+
+    /// Value of `event_type`.
+    public var event_type: String?
+
+    /// Value of `event_value`.
+    public var event_value: String?
+
+    /// Value of `event_source`.
+    public var event_source: String?
+
+    /// Value of `event_value_1`.
+    public var event_value_1: String?
+
+    /// Value of `event_value_2`.
+    public var event_value_2: String?
+
+    /// Value of `event_value_3`.
+    public var event_value_3: String?
+
+    /// Value of `event_value_4`.
+    public var event_value_4: String?
+
+    /// Value of `event_value_5`.
+    public var event_value_5: String?
 }

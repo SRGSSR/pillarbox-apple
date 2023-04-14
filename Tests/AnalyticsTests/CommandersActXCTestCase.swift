@@ -10,21 +10,20 @@ import Circumspect
 import XCTest
 
 extension XCTestCase {
-    /// Collect events emitted by comScore under the specified key during some time interval and match them against
-    /// an expected result.
-    func expectComScoreEvents(
-        _ expectations: [ComScoreEventExpectation],
+    /// Collect events emitted by Commanders Act during some time interval and match them against expectations.
+    func expectCommandersActEvents(
+        _ expectations: [CommandersActEventExpectation],
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         function: String = #function,
         while executing: (() -> Void)? = nil
     ) {
-        ComScoreRecorder.captureEvents { publisher in
+        CommandersActRecorder.captureEvents { publisher in
             expectPublished(
                 values: expectations,
                 from: publisher,
-                to: ComScoreEventExpectation.match(event:with:),
+                to: CommandersActEventExpectation.match(event:with:),
                 during: interval,
                 file: file,
                 line: line,
@@ -33,21 +32,20 @@ extension XCTestCase {
         }
     }
 
-    /// Collect events emitted by comScore under the specified key during some time interval and match them against
-    /// an expected result.
-    func expectAtLeastComScoreEvents(
-        _ expectations: [ComScoreEventExpectation],
+    /// Expect events emitted by Commanders Act during some time interval and match them against expectations.
+    func expectAtLeastCommandersActEvents(
+        _ expectations: [CommandersActEventExpectation],
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         function: String = #function,
         while executing: (() -> Void)? = nil
     ) {
-        ComScoreRecorder.captureEvents { publisher in
+        CommandersActRecorder.captureEvents { publisher in
             expectAtLeastPublished(
                 values: expectations,
                 from: publisher,
-                to: ComScoreEventExpectation.match(event:with:),
+                to: CommandersActEventExpectation.match(event:with:),
                 timeout: timeout,
                 file: file,
                 line: line,

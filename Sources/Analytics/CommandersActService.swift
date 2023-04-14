@@ -25,8 +25,8 @@ final class CommandersActService: AnalyticsService {
     }
 
     private static func addCommonAdditionalProperties(to event: TCEvent) {
-        if let captureIdentifier = ComScoreRecorder.sessionIdentifier {
-            event.addAdditionalProperty(ComScoreRecorder.sessionIdentifierKey, withStringValue: captureIdentifier)
+        if let captureIdentifier = CommandersActRecorder.sessionIdentifier {
+            event.addAdditionalProperty(CommandersActRecorder.sessionIdentifierKey, withStringValue: captureIdentifier)
         }
     }
 
@@ -64,7 +64,8 @@ final class CommandersActService: AnalyticsService {
         extra4: String,
         extra5: String
     ) {
-        guard let serverSide, let event = TCCustomEvent(name: name) else { return }
+        guard let serverSide, let event = TCCustomEvent(name: "hidden_event") else { return }
+        event.addAdditionalProperty("event_title", withStringValue: name)
         event.addAdditionalProperty("event_type", withStringValue: type)
         event.addAdditionalProperty("event_value", withStringValue: value)
         event.addAdditionalProperty("event_source", withStringValue: source)
