@@ -8,6 +8,7 @@ import Combine
 import Foundation
 import TCServerSide_noIDFA
 
+/// Intercepts Commanders Act requests and emits event information with a publisher.
 enum CommandersActInterceptor {
     static func eventPublisher(for identifier: String) -> AnyPublisher<CommandersActEvent, Never> {
         NotificationCenter.default.publisher(for: .init(rawValue: kTCNotification_HTTPRequest))

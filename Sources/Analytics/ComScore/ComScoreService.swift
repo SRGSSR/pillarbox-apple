@@ -33,7 +33,6 @@ struct ComScoreService {
                 "mp_v": applicationVersion
             ])
         }
-
         SCORAnalytics.start()
     }
 

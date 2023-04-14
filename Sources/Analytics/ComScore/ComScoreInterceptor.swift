@@ -11,6 +11,7 @@ private enum ComScoreRequestInfoKey: String {
     case queryItems = "ComScoreRequestQueryItems"
 }
 
+/// Intercepts comScore requests and emits event information with a publisher.
 enum ComScoreInterceptor {
     static func toggle() {
         URLSession.toggleInterceptor()

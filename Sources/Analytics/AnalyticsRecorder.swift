@@ -14,7 +14,7 @@ public enum AnalyticsRecorder {
     private(set) static var sessionIdentifier: String?
 
     /// Capture comScore events.
-    /// - Parameter perform: A closure to be executed. Receives a publisher which publishes the events received during
+    /// - Parameter perform: A closure to be executed. Receives a publisher which emits the events received during
     ///   the capture.
     public static func captureComScoreEvents(perform: (AnyPublisher<ComScoreEvent, Never>) -> Void) {
         captureEvents(perform: perform) { identifier in
@@ -23,7 +23,7 @@ public enum AnalyticsRecorder {
     }
 
     /// Capture Commanders Act events.
-    /// - Parameter perform: A closure to be executed. Receives a publisher which publishes the events received during
+    /// - Parameter perform: A closure to be executed. Receives a publisher which emits the events received during
     ///   the capture.
     public static func captureCommandersActEvents(perform: (AnyPublisher<CommandersActEvent, Never>) -> Void) {
         captureEvents(perform: perform) { identifier in
