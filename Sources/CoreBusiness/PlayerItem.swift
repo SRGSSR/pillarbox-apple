@@ -4,8 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
 import Analytics
+import AVFoundation
 import Combine
 import Player
 import UIKit

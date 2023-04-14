@@ -9,7 +9,7 @@ import Foundation
 
 /// Describes a comScore event expectation.
 struct ComScoreEventExpectation {
-    private let name: String
+    private let name: ComScoreEvent.Name
     private let evaluate: (ComScoreLabels) -> Void
 
     static func match(event: ComScoreEvent, with expectation: ComScoreEventExpectation) -> Bool {
@@ -20,22 +20,22 @@ struct ComScoreEventExpectation {
 
     /// Play.
     static func play(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> Self {
-        .init(name: "play", evaluate: evaluate)
+        .init(name: .play, evaluate: evaluate)
     }
 
     /// Pause.
     static func pause(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> Self {
-        .init(name: "pause", evaluate: evaluate)
+        .init(name: .pause, evaluate: evaluate)
     }
 
     /// End.
     static func end(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> Self {
-        .init(name: "end", evaluate: evaluate)
+        .init(name: .end, evaluate: evaluate)
     }
 }
 
 extension ComScoreEventExpectation: CustomDebugStringConvertible {
     var debugDescription: String {
-        name
+        name.rawValue
     }
 }

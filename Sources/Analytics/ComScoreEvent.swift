@@ -7,11 +7,17 @@
 import Foundation
 
 public struct ComScoreEvent {
-    public let name: String
+    public enum Name: String {
+        case play
+        case pause
+        case end
+    }
+
+    public let name: Name
     public let labels: ComScoreLabels
 
     init?(from dictionary: [String: String]) {
-        guard let name = dictionary["ns_st_ev"] else { return nil }
+        guard let name = Name(rawValue: dictionary["ns_st_ev"] ?? "") else { return nil }
         self.name = name
         self.labels = ComScoreLabels(dictionary: dictionary)
     }
@@ -19,6 +25,6 @@ public struct ComScoreEvent {
 
 extension ComScoreEvent: CustomDebugStringConvertible {
     public var debugDescription: String {
-        name
+        name.rawValue
     }
 }
