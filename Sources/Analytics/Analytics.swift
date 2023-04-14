@@ -95,7 +95,11 @@ public class Analytics {
             extra4: extra4,
             extra5: extra5
         )
-        comScoreService.sendEvent(event)
         commandersActService.sendEvent(event)
+    }
+
+    func sendCommandersActStreamingEvent(name: String) {
+        assert(!name.isEmpty, "A name is required")
+        commandersActService.sendStreamingEvent(name: name)
     }
 }

@@ -66,4 +66,10 @@ final class CommandersActService {
         Self.addCommonAdditionalProperties(to: customEvent)
         serverSide.execute(customEvent)
     }
+
+    func sendStreamingEvent(name: String) {
+        guard let serverSide, let customEvent = TCCustomEvent(name: name) else { return }
+        Self.addCommonAdditionalProperties(to: customEvent)
+        serverSide.execute(customEvent)
+    }
 }
