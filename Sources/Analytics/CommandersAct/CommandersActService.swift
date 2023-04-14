@@ -7,7 +7,7 @@
 import Foundation
 import TCServerSide_noIDFA
 
-final class CommandersActService: AnalyticsService {
+final class CommandersActService {
     private var serverSide: ServerSide?
     private var vendor: Vendor?
 

@@ -7,7 +7,7 @@
 import ComScore
 import Foundation
 
-struct ComScoreService: AnalyticsService {
+struct ComScoreService {
     private var applicationVersion: String {
         Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
     }
@@ -44,6 +44,4 @@ struct ComScoreService: AnalyticsService {
         }
         SCORAnalytics.notifyViewEvent(withLabels: labels)
     }
-
-    func sendEvent(_ event: Event) {}
 }

@@ -32,7 +32,9 @@ public class Analytics {
     public static var shared = Analytics()
 
     private var configuration: Configuration?
-    private let services: [any AnalyticsService] = [ComScoreService(), CommandersActService()]
+
+    private let comScoreService = ComScoreService()
+    private let commandersActService = CommandersActService()
 
     private init() {}
 
@@ -45,7 +47,8 @@ public class Analytics {
             throw AnalyticsError.alreadyStarted
         }
         self.configuration = configuration
-        services.forEach { $0.start(with: configuration) }
+        comScoreService.start(with: configuration)
+        commandersActService.start(with: configuration)
     }
 
     /// Record a page view event.
@@ -54,7 +57,8 @@ public class Analytics {
     ///   - levels: The page levels.
     public func sendPageView(title: String, levels: [String] = []) {
         assert(!title.isEmpty, "A title is required")
-        services.forEach { $0.sendPageView(title: title, levels: levels) }
+        comScoreService.sendPageView(title: title, levels: levels)
+        commandersActService.sendPageView(title: title, levels: levels)
     }
 
     /// Record an event.
@@ -91,8 +95,7 @@ public class Analytics {
             extra4: extra4,
             extra5: extra5
         )
-        services.forEach { service in
-            service.sendEvent(event)
-        }
+        comScoreService.sendEvent(event)
+        commandersActService.sendEvent(event)
     }
 }
