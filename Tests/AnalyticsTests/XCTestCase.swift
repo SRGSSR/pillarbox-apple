@@ -7,7 +7,6 @@
 @testable import Analytics
 
 import Circumspect
-import Combine
 import XCTest
 
 extension XCTestCase {

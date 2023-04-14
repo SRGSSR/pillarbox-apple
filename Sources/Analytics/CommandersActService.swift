@@ -24,6 +24,12 @@ final class CommandersActService: AnalyticsService {
         }
     }
 
+    private static func addCommonAdditionalProperties(to event: TCEvent) {
+        if let captureIdentifier = ComScoreRecorder.sessionIdentifier {
+            event.addAdditionalProperty(ComScoreRecorder.sessionIdentifierKey, withStringValue: captureIdentifier)
+        }
+    }
+
     func start(with configuration: Analytics.Configuration) {
         vendor = configuration.vendor
         guard let serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey) else { return }
@@ -36,17 +42,13 @@ final class CommandersActService: AnalyticsService {
 
     func sendPageView(title: String, levels: [String]) {
         guard let serverSide, let event = TCPageViewEvent(type: title) else { return }
-
         event.addAdditionalProperty("navigation_property_type", withStringValue: "app")
         event.addAdditionalProperty("navigation_bu_distributer", withStringValue: vendor?.rawValue)
         levels.enumerated().forEach { index, level in
             guard index < 8 else { return }
             event.addAdditionalProperty("navigation_level_\(index + 1)", withStringValue: level)
         }
-        if let captureIdentifier = ComScoreRecorder.sessionIdentifier {
-            event.addAdditionalProperty(ComScoreRecorder.sessionIdentifierKey, withStringValue: captureIdentifier)
-        }
-
+        Self.addCommonAdditionalProperties(to: event)
         serverSide.execute(event)
     }
 
@@ -71,11 +73,7 @@ final class CommandersActService: AnalyticsService {
         event.addAdditionalProperty("event_value_3", withStringValue: extra3)
         event.addAdditionalProperty("event_value_4", withStringValue: extra4)
         event.addAdditionalProperty("event_value_5", withStringValue: extra5)
-
-        if let captureIdentifier = ComScoreRecorder.sessionIdentifier {
-            event.addAdditionalProperty(ComScoreRecorder.sessionIdentifierKey, withStringValue: captureIdentifier)
-        }
-
+        Self.addCommonAdditionalProperties(to: event)
         serverSide.execute(event)
     }
 }
