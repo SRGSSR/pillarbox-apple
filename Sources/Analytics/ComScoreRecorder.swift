@@ -4,13 +4,13 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 public enum ComScoreRecorder {
     static let sessionIdentifierKey = "recorder_session_id"
-    static private(set) var sessionIdentifier: String?
-    
+    private(set) static var sessionIdentifier: String?
+
     /// Execute the provided closure in a test context identified with the provided identifier.
     public static func captureEvents(perform: (AnyPublisher<ComScoreEvent, Never>) -> Void) {
         assert(sessionIdentifier == nil, "Multiple captures are not supported")

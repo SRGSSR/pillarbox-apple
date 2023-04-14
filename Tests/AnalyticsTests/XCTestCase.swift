@@ -55,25 +55,4 @@ extension XCTestCase {
             )
         }
     }
-
-    /// Wait until a `didReceiveComScoreRequest` notification has been received as a result of executing some code.
-    func wait(
-        timeout: DispatchTimeInterval = .seconds(20),
-        function: String = #function,
-        while executing: () -> Void,
-        received: @escaping ([String: String]) -> Void
-    ) {
-        ComScoreRecorder.captureEvents { publisher in
-//            expectation(forNotification: .didReceiveComScoreRequest, object: nil) { notification in
-//                guard let labels = notification.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String],
-//                      labels[Analytics.testIdentifierKey] == id else {
-//                    return false
-//                }
-//                received(labels)
-//                return true
-//            }
-//            executing()
-//            waitForExpectations(timeout: timeout.double())
-        }
-    }
 }

@@ -11,13 +11,14 @@ public struct ComScoreEvent {
         case play
         case pause
         case end
+        case view
     }
 
     public let name: Name
     public let labels: ComScoreLabels
 
     init?(from dictionary: [String: String]) {
-        guard let name = Name(rawValue: dictionary["ns_st_ev"] ?? "") else { return nil }
+        guard let name = Name(rawValue: dictionary["ns_st_ev"] ?? dictionary["ns_ap_ev"] ?? "") else { return nil }
         self.name = name
         self.labels = ComScoreLabels(dictionary: dictionary)
     }

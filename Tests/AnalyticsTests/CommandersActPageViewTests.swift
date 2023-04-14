@@ -4,12 +4,12 @@
 ////  License information is available from the LICENSE file.
 ////
 //
-//@testable import Analytics
+// @testable import Analytics
 //
-//import Nimble
-//import XCTest
+// import Nimble
+// import XCTest
 //
-//final class CommandersActPageViewTests: CommandersActTestCase {
+// final class CommandersActPageViewTests: CommandersActTestCase {
 //    func testLabels() {
 //        wait {
 //            Analytics.shared.sendPageView(title: "title", levels: [
@@ -41,4 +41,4 @@
 //            expect(labels["navigation_bu_distributer"] as? String).to(equal("RTS"))
 //        }
 //    }
-//}
+// }

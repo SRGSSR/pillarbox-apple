@@ -4,13 +4,13 @@
 ////  License information is available from the LICENSE file.
 ////
 //
-//@testable import Analytics
+// @testable import Analytics
 //
-//import AnalyticsTestBridge
-//import Nimble
-//import XCTest
+// import AnalyticsTestBridge
+// import Nimble
+// import XCTest
 //
-//final class CommandersActEventTests: CommandersActTestCase {
+// final class CommandersActEventTests: CommandersActTestCase {
 //    func testLabels() {
 //        wait {
 //            Analytics.shared.sendEvent(
@@ -36,4 +36,4 @@
 //            expect(labels["event_value_5"] as? String).to(equal("extra5"))
 //        }
 //    }
-//}
+// }

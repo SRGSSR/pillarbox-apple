@@ -7,7 +7,7 @@
 import Analytics
 import Foundation
 
-/// Describes a comScore event expectation.
+/// Describes a comScore stream event expectation.
 struct ComScoreEventExpectation {
     private let name: ComScoreEvent.Name
     private let evaluate: (ComScoreLabels) -> Void
@@ -31,6 +31,11 @@ struct ComScoreEventExpectation {
     /// End.
     static func end(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> Self {
         .init(name: .end, evaluate: evaluate)
+    }
+
+    /// View.
+    static func view(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> Self {
+        .init(name: .view, evaluate: evaluate)
     }
 }
 

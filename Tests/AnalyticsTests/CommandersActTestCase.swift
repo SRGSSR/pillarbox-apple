@@ -4,14 +4,14 @@
 ////  License information is available from the LICENSE file.
 ////
 //
-//@testable import Analytics
-//import Circumspect
-//import Combine
-//import TCCore
-//import XCTest
+// @testable import Analytics
+// import Circumspect
+// import Combine
+// import TCCore
+// import XCTest
 //
 ///// Parent class for Commanders Act test cases.
-//open class CommandersActTestCase: XCTestCase {
+// open class CommandersActTestCase: XCTestCase {
 //    private static func identifier(for function: String) -> String {
 //        "\(self).\(function)-\(UUID().uuidString)"
 //    }
@@ -30,9 +30,9 @@
 //            .compactMap { $0[key] as? String }
 //            .eraseToAnyPublisher()
 //    }
-//}
+// }
 //
-//public extension CommandersActTestCase {
+// public extension CommandersActTestCase {
 //    private static func labels(from notification: Notification) -> [String: Any]? {
 //        guard let body = notification.userInfo?[kTCUserInfo_POSTData] as? String,
 //              let data = body.data(using: .utf8) else {
@@ -111,4 +111,4 @@
 //        executing()
 //        waitForExpectations(timeout: timeout.double())
 //    }
-//}
+// }
