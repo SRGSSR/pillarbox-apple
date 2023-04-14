@@ -20,7 +20,6 @@ extension XCTestCase {
         function: String = #function,
         while executing: (() -> Void)? = nil
     ) {
-        Self.setupAnalytics()
         ComScoreRecorder.captureEvents { publisher in
             expectPublished(
                 values: expectations,
@@ -44,7 +43,6 @@ extension XCTestCase {
         function: String = #function,
         while executing: (() -> Void)? = nil
     ) {
-        Self.setupAnalytics()
         ComScoreRecorder.captureEvents { publisher in
             expectAtLeastPublished(
                 values: expectations,
@@ -65,7 +63,6 @@ extension XCTestCase {
         while executing: () -> Void,
         received: @escaping ([String: String]) -> Void
     ) {
-        Self.setupAnalytics()
         ComScoreRecorder.captureEvents { publisher in
 //            expectation(forNotification: .didReceiveComScoreRequest, object: nil) { notification in
 //                guard let labels = notification.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String],
@@ -78,9 +75,5 @@ extension XCTestCase {
 //            executing()
 //            waitForExpectations(timeout: timeout.double())
         }
-    }
-
-    static func setupAnalytics() {
-        try? Analytics.shared.start(with: .init(vendor: .RTS, sourceKey: "source", site: "site"))
     }
 }

@@ -10,12 +10,14 @@ import Combine
 public enum ComScoreRecorder {
     static let sessionIdentifierKey = "recorder_session_id"
     static private(set) var sessionIdentifier: String?
-
+    
     /// Execute the provided closure in a test context identified with the provided identifier.
     public static func captureEvents(perform: (AnyPublisher<ComScoreEvent, Never>) -> Void) {
         assert(sessionIdentifier == nil, "Multiple captures are not supported")
-        let identifier = UUID().uuidString
 
+        try? Analytics.shared.start(with: .init(vendor: .RTS, sourceKey: "source", site: "site"))
+
+        let identifier = UUID().uuidString
         URLSession.toggleInterceptor()
         sessionIdentifier = identifier
         defer {
