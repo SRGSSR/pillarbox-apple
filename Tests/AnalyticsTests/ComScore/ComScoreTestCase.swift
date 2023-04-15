@@ -53,4 +53,22 @@ extension ComScoreTestCase {
             )
         }
     }
+
+    /// Expect no events emitted by comScore during some time interval.
+    func expectNoEvents(
+        during interval: DispatchTimeInterval = .seconds(20),
+        file: StaticString = #file,
+        line: UInt = #line,
+        while executing: (() -> Void)? = nil
+    ) {
+        AnalyticsRecorder.captureComScoreEvents { publisher in
+            expectNothingPublished(
+                from: publisher,
+                during: interval,
+                file: file,
+                line: line,
+                while: executing
+            )
+        }
+    }
 }

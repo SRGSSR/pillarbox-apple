@@ -11,7 +11,24 @@ import Player
 import XCTest
 
 final class CommandersActTrackerTests: CommandersActTestCase {
-    func testPlay() {
+    func testInitiallyPlaying() {
+        let player = Player(item: .simple(
+            url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!,
+            trackerAdapters: [
+                CommandersActTracker.adapter()
+            ]
+        ))
+
+        expectAtLeastEvents(
+            [
+                .play()
+            ]
+        ) {
+            player.play()
+        }
+    }
+
+    func testPauseDuringPlayback() {
         let player = Player(item: .simple(
             url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!,
             trackerAdapters: [
