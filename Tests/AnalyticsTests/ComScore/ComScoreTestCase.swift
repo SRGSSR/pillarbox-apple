@@ -24,7 +24,7 @@ extension ComScoreTestCase {
             expectPublished(
                 values: expectations,
                 from: publisher,
-                to: ComScoreEventExpectation.match(event:with:),
+                to: ComScoreEventExpectation.match,
                 during: interval,
                 file: file,
                 line: line,
@@ -45,7 +45,7 @@ extension ComScoreTestCase {
             expectAtLeastPublished(
                 values: expectations,
                 from: publisher,
-                to: ComScoreEventExpectation.match(event:with:),
+                to: ComScoreEventExpectation.match,
                 timeout: timeout,
                 file: file,
                 line: line,
