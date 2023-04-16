@@ -24,7 +24,7 @@ extension CommandersActTestCase {
             expectPublished(
                 values: expectations,
                 from: publisher,
-                to: CommandersActEventExpectation.match(event:with:),
+                to: CommandersActEventExpectation.match,
                 during: interval,
                 file: file,
                 line: line,
@@ -45,7 +45,7 @@ extension CommandersActTestCase {
             expectAtLeastPublished(
                 values: expectations,
                 from: publisher,
-                to: CommandersActEventExpectation.match(event:with:),
+                to: CommandersActEventExpectation.match,
                 timeout: timeout,
                 file: file,
                 line: line,
