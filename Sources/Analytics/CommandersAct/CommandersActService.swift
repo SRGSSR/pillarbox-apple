@@ -45,7 +45,7 @@ final class CommandersActService {
         event.addAdditionalProperty("navigation_property_type", withStringValue: "app")
         event.addAdditionalProperty("navigation_bu_distributer", withStringValue: vendor?.rawValue)
         levels.enumerated().forEach { index, level in
-            guard index < 8 else { return }
+            guard index < 8, !level.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
             event.addAdditionalProperty("navigation_level_\(index + 1)", withStringValue: level)
         }
         Self.addCommonAdditionalProperties(to: event)

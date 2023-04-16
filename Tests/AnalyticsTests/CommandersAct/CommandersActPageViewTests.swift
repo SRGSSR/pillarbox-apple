@@ -45,4 +45,33 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             ])
         }
     }
+
+    func testEmptyLevels() {
+        expectAtLeastEvents(
+            [
+                .page_view { labels in
+                    expect(labels.page_type).to(equal("title"))
+                    expect(labels.navigation_level_1).to(beNil())
+                    expect(labels.navigation_level_2).to(beNil())
+                    expect(labels.navigation_level_3).to(beNil())
+                    expect(labels.navigation_level_4).to(beNil())
+                    expect(labels.navigation_level_5).to(beNil())
+                    expect(labels.navigation_level_6).to(beNil())
+                    expect(labels.navigation_level_7).to(beNil())
+                    expect(labels.navigation_level_8).to(beNil())
+                }
+            ]
+        ) {
+            Analytics.shared.sendPageView(title: "title", levels: [
+                " ",
+                "",
+                " ",
+                "",
+                " ",
+                "",
+                " ",
+                " "
+            ])
+        }
+    }
 }
