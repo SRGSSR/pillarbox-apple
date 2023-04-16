@@ -45,7 +45,7 @@ final class CommandersActService {
         event.addAdditionalProperty("navigation_property_type", withStringValue: "app")
         event.addAdditionalProperty("navigation_bu_distributer", withStringValue: vendor?.rawValue)
         levels.enumerated().forEach { index, level in
-            guard index < 8, !level.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+            guard index < 8, level.isValid else { return }
             event.addAdditionalProperty("navigation_level_\(index + 1)", withStringValue: level)
         }
         Self.addCommonAdditionalProperties(to: event)
@@ -54,15 +54,23 @@ final class CommandersActService {
 
     func sendEvent(_ event: Event) {
         guard let serverSide, let customEvent = TCCustomEvent(name: "hidden_event") else { return }
-        customEvent.addAdditionalProperty("event_title", withStringValue: event.name)
-        customEvent.addAdditionalProperty("event_type", withStringValue: event.type)
-        customEvent.addAdditionalProperty("event_value", withStringValue: event.value)
-        customEvent.addAdditionalProperty("event_source", withStringValue: event.source)
-        customEvent.addAdditionalProperty("event_value_1", withStringValue: event.extra1)
-        customEvent.addAdditionalProperty("event_value_2", withStringValue: event.extra2)
-        customEvent.addAdditionalProperty("event_value_3", withStringValue: event.extra3)
-        customEvent.addAdditionalProperty("event_value_4", withStringValue: event.extra4)
-        customEvent.addAdditionalProperty("event_value_5", withStringValue: event.extra5)
+
+        let eventProperties = [
+            "event_title": event.name.isValid ? event.name : nil,
+            "event_type": event.type.isValid ? event.type : nil,
+            "event_value": event.value.isValid ? event.value : nil,
+            "event_source": event.source.isValid ? event.source : nil,
+            "event_value_1": event.extra1.isValid ? event.extra1 : nil,
+            "event_value_2": event.extra2.isValid ? event.extra2 : nil,
+            "event_value_3": event.extra3.isValid ? event.extra3 : nil,
+            "event_value_4": event.extra4.isValid ? event.extra4 : nil,
+            "event_value_5": event.extra5.isValid ? event.extra5 : nil
+        ]
+
+        eventProperties.forEach { key, value in
+            customEvent.addAdditionalProperty(key, withStringValue: value)
+        }
+
         Self.addCommonAdditionalProperties(to: customEvent)
         serverSide.execute(customEvent)
     }

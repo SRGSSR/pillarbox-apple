@@ -39,4 +39,34 @@ final class CommandersActEventTests: CommandersActTestCase {
             )
         }
     }
+
+    func testEmptyLabels() {
+        expectAtLeastEvents(
+            [
+                .hidden_event { labels in
+                    expect(labels.event_title).to(equal("name"))
+                    expect(labels.event_type).to(beNil())
+                    expect(labels.event_value).to(beNil())
+                    expect(labels.event_source).to(beNil())
+                    expect(labels.event_value_1).to(beNil())
+                    expect(labels.event_value_2).to(beNil())
+                    expect(labels.event_value_3).to(beNil())
+                    expect(labels.event_value_4).to(beNil())
+                    expect(labels.event_value_5).to(beNil())
+                }
+            ]
+        ) {
+            Analytics.shared.sendEvent(
+                name: "name",
+                type: " ",
+                value: " ",
+                source: " ",
+                extra1: " ",
+                extra2: " ",
+                extra3: " ",
+                extra4: " ",
+                extra5: " "
+            )
+        }
+    }
 }

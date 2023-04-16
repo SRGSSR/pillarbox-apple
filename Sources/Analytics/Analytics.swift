@@ -83,7 +83,7 @@ public class Analytics {
         extra4: String = "",
         extra5: String = ""
     ) {
-        assert(!name.isEmpty, "A name is required")
+        assert(name.isValid, "A name is required")
         let event = Event(
             name: name,
             type: type,
@@ -101,5 +101,11 @@ public class Analytics {
     func sendCommandersActStreamingEvent(name: String) {
         assert(!name.isEmpty, "A name is required")
         commandersActService.sendStreamingEvent(name: name)
+    }
+}
+
+extension String {
+    var isValid: Bool {
+        !trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }
