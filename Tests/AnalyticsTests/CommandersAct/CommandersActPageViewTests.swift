@@ -64,11 +64,11 @@ final class CommandersActPageViewTests: CommandersActTestCase {
         ) {
             Analytics.shared.sendPageView(title: "title", levels: [
                 " ",
-                "",
                 " ",
-                "",
                 " ",
-                "",
+                " ",
+                " ",
+                " ",
                 " ",
                 " "
             ])
