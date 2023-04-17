@@ -103,9 +103,3 @@ public class Analytics {
         commandersActService.sendStreamingEvent(name: name)
     }
 }
-
-extension String {
-    var isBlank: Bool {
-        trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-    }
-}
