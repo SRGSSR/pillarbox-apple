@@ -56,19 +56,21 @@ final class CommandersActService {
         guard let serverSide, let customEvent = TCCustomEvent(name: "hidden_event") else { return }
 
         let eventProperties = [
-            "event_title": event.name.isValid ? event.name : nil,
-            "event_type": event.type.isValid ? event.type : nil,
-            "event_value": event.value.isValid ? event.value : nil,
-            "event_source": event.source.isValid ? event.source : nil,
-            "event_value_1": event.extra1.isValid ? event.extra1 : nil,
-            "event_value_2": event.extra2.isValid ? event.extra2 : nil,
-            "event_value_3": event.extra3.isValid ? event.extra3 : nil,
-            "event_value_4": event.extra4.isValid ? event.extra4 : nil,
-            "event_value_5": event.extra5.isValid ? event.extra5 : nil
+            "event_title": event.name,
+            "event_type": event.type,
+            "event_value": event.value,
+            "event_source": event.source,
+            "event_value_1": event.extra1,
+            "event_value_2": event.extra2,
+            "event_value_3": event.extra3,
+            "event_value_4": event.extra4,
+            "event_value_5": event.extra5
         ]
 
         eventProperties.forEach { key, value in
-            customEvent.addAdditionalProperty(key, withStringValue: value)
+            if value.isValid {
+                customEvent.addAdditionalProperty(key, withStringValue: value)
+            }
         }
 
         Self.addCommonAdditionalProperties(to: customEvent)
