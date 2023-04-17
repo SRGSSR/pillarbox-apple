@@ -24,12 +24,6 @@ final class CommandersActService {
         }
     }
 
-    private static func addCommonAdditionalProperties(to event: TCEvent) {
-        if let captureIdentifier = AnalyticsRecorder.sessionIdentifier {
-            event.addNonBlankAdditionalProperty(AnalyticsRecorder.sessionIdentifierKey, withStringValue: captureIdentifier)
-        }
-    }
-
     func start(with configuration: Analytics.Configuration) {
         vendor = configuration.vendor
         guard let serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey) else { return }
@@ -48,7 +42,7 @@ final class CommandersActService {
             guard index < 8 else { return }
             event.addNonBlankAdditionalProperty("navigation_level_\(index + 1)", withStringValue: level)
         }
-        Self.addCommonAdditionalProperties(to: event)
+        AnalyticsRecorder.capture(event)
         serverSide.execute(event)
     }
 
@@ -71,13 +65,13 @@ final class CommandersActService {
             customEvent.addNonBlankAdditionalProperty(key, withStringValue: value)
         }
 
-        Self.addCommonAdditionalProperties(to: customEvent)
+        AnalyticsRecorder.capture(customEvent)
         serverSide.execute(customEvent)
     }
 
     func sendStreamingEvent(name: String) {
         guard let serverSide, let customEvent = TCCustomEvent(name: name) else { return }
-        Self.addCommonAdditionalProperties(to: customEvent)
+        AnalyticsRecorder.capture(customEvent)
         serverSide.execute(customEvent)
     }
 }

@@ -6,12 +6,13 @@
 
 import Combine
 import Foundation
+import TCServerSide_noIDFA
 
 /// Provide a context in which analytics events can be recorded. Should never be used in production, only for
 /// development purposes (e.g. unit tests).
 public enum AnalyticsRecorder {
-    static let sessionIdentifierKey = "recorder_session_id"
-    private(set) static var sessionIdentifier: String?
+    private static let sessionIdentifierKey = "recorder_session_id"
+    private static var sessionIdentifier: String?
 
     /// Capture comScore events.
     /// - Parameter perform: A closure to be executed. Receives a publisher which emits the events received during
@@ -45,5 +46,15 @@ public enum AnalyticsRecorder {
         }
 
         perform(publisher(identifier))
+    }
+
+    static func capture(_ labels: inout [String: String]) {
+        guard let sessionIdentifier else { return }
+        labels[sessionIdentifierKey] = sessionIdentifier
+    }
+
+    static func capture(_ event: TCEvent) {
+        guard let sessionIdentifier else { return }
+        event.addNonBlankAdditionalProperty(sessionIdentifierKey, withStringValue: sessionIdentifier)
     }
 }

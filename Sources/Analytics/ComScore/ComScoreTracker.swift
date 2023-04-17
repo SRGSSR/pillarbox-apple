@@ -36,9 +36,7 @@ public final class ComScoreTracker: PlayerItemTracker {
         let metadata = SCORStreamingContentMetadata { builder in
             guard let builder else { return }
             var customLabels = [String: String]()
-            if let captureIdentifier = AnalyticsRecorder.sessionIdentifier {
-                customLabels[AnalyticsRecorder.sessionIdentifierKey] = captureIdentifier
-            }
+            AnalyticsRecorder.capture(&customLabels)
             builder.setCustomLabels(customLabels)
         }
         streamingAnalytics.setMetadata(metadata)
