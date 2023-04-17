@@ -20,7 +20,7 @@ extension CommandersActTestCase {
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) {
-        AnalyticsRecorder.captureCommandersActEvents { publisher in
+        AnalyticsListener.captureCommandersActEvents { publisher in
             expectPublished(
                 values: expectations,
                 from: publisher,
@@ -41,7 +41,7 @@ extension CommandersActTestCase {
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) {
-        AnalyticsRecorder.captureCommandersActEvents { publisher in
+        AnalyticsListener.captureCommandersActEvents { publisher in
             expectAtLeastPublished(
                 values: expectations,
                 from: publisher,
@@ -61,7 +61,7 @@ extension CommandersActTestCase {
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) {
-        AnalyticsRecorder.captureCommandersActEvents { publisher in
+        AnalyticsListener.captureCommandersActEvents { publisher in
             expectNothingPublished(
                 from: publisher,
                 during: interval,

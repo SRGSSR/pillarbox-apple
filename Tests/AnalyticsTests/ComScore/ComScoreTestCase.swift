@@ -20,7 +20,7 @@ extension ComScoreTestCase {
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) {
-        AnalyticsRecorder.captureComScoreEvents { publisher in
+        AnalyticsListener.captureComScoreEvents { publisher in
             expectPublished(
                 values: expectations,
                 from: publisher,
@@ -41,7 +41,7 @@ extension ComScoreTestCase {
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) {
-        AnalyticsRecorder.captureComScoreEvents { publisher in
+        AnalyticsListener.captureComScoreEvents { publisher in
             expectAtLeastPublished(
                 values: expectations,
                 from: publisher,
@@ -61,7 +61,7 @@ extension ComScoreTestCase {
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) {
-        AnalyticsRecorder.captureComScoreEvents { publisher in
+        AnalyticsListener.captureComScoreEvents { publisher in
             expectNothingPublished(
                 from: publisher,
                 during: interval,

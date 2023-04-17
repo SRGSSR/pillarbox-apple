@@ -18,7 +18,7 @@ public struct ComScoreLabels {
         extract { $0 }
     }
 
-    var recorder_session_id: String? {
+    var listener_session_id: String? {
         extract { $0 }
     }
 

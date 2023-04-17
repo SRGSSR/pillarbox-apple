@@ -13,7 +13,7 @@ enum CommandersActInterceptor {
     static func eventPublisher(for identifier: String) -> AnyPublisher<CommandersActEvent, Never> {
         NotificationCenter.default.publisher(for: .init(rawValue: kTCNotification_HTTPRequest))
             .compactMap { labels(from: $0) }
-            .filter { $0.recorder_session_id == identifier }
+            .filter { $0.listener_session_id == identifier }
             .compactMap { .init(from: $0) }
             .eraseToAnyPublisher()
     }

@@ -20,7 +20,7 @@ enum ComScoreInterceptor {
     static func eventPublisher(for identifier: String) -> AnyPublisher<ComScoreEvent, Never> {
         NotificationCenter.default.publisher(for: .didReceiveComScoreRequest)
             .compactMap { labels(from: $0) }
-            .filter { $0.recorder_session_id == identifier }
+            .filter { $0.listener_session_id == identifier }
             .compactMap { .init(from: $0) }
             .eraseToAnyPublisher()
     }

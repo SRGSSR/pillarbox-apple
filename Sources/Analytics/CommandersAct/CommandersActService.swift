@@ -42,7 +42,7 @@ final class CommandersActService {
             guard index < 8 else { return }
             event.addNonBlankAdditionalProperty("navigation_level_\(index + 1)", withStringValue: level)
         }
-        AnalyticsRecorder.capture(event)
+        AnalyticsListener.capture(event)
         serverSide.execute(event)
     }
 
@@ -65,13 +65,13 @@ final class CommandersActService {
             customEvent.addNonBlankAdditionalProperty(key, withStringValue: value)
         }
 
-        AnalyticsRecorder.capture(customEvent)
+        AnalyticsListener.capture(customEvent)
         serverSide.execute(customEvent)
     }
 
     func sendStreamingEvent(name: String) {
         guard let serverSide, let customEvent = TCCustomEvent(name: name) else { return }
-        AnalyticsRecorder.capture(customEvent)
+        AnalyticsListener.capture(customEvent)
         serverSide.execute(customEvent)
     }
 }

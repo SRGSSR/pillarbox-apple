@@ -8,10 +8,10 @@ import Combine
 import Foundation
 import TCServerSide_noIDFA
 
-/// Provide a context in which analytics events can be recorded. Should never be used in production, only for
+/// Provide a context in which analytics events can be listen. Should never be used in production, only for
 /// development purposes (e.g. unit tests).
-public enum AnalyticsRecorder {
-    private static let sessionIdentifierKey = "recorder_session_id"
+public enum AnalyticsListener {
+    private static let sessionIdentifierKey = "listener_session_id"
     private static var sessionIdentifier: String?
 
     /// Capture comScore events.
@@ -32,7 +32,7 @@ public enum AnalyticsRecorder {
         }
     }
 
-    private static func captureEvents<P>( perform: (P) -> Void, using publisher: (String) -> P) where P: Publisher, P.Failure == Never {
+    private static func captureEvents<P>(perform: (P) -> Void, using publisher: (String) -> P) where P: Publisher, P.Failure == Never {
         assert(sessionIdentifier == nil, "Multiple captures are not supported")
 
         try? Analytics.shared.start(with: .init(vendor: .RTS, sourceKey: "source", site: "site"))

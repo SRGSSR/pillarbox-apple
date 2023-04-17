@@ -9,7 +9,7 @@ import Foundation
 /// Labels associated with a Commanders Act event.
 public struct CommandersActLabels: Decodable {
     var event_name: String?
-    var recorder_session_id: String?
+    var listener_session_id: String?
 
     /// Value of `app_library_version`.
     public var app_library_version: String?
