@@ -83,8 +83,8 @@ final class CommandersActService {
 }
 
 extension TCAdditionalProperties {
-    func addNonBlankAdditionalProperty(_ key: String, withStringValue value: String) {
-        guard !value.isBlank else { return }
+    func addNonBlankAdditionalProperty(_ key: String, withStringValue value: String?) {
+        guard let value, !value.isBlank else { return }
         addAdditionalProperty(key, withStringValue: value)
     }
 }
