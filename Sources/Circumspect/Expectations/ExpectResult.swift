@@ -25,8 +25,9 @@ public extension XCTestCase {
                 XCTFail("The publisher incorrectly failed with error: \(error)", file: file, line: line)
             }
             expectation.fulfill()
-        } receiveValue: { _ in }
-        
+        } receiveValue: { _ in
+        }
+
         defer {
             cancellable.cancel()
         }
@@ -59,7 +60,8 @@ public extension XCTestCase {
                 }
             }
             expectation.fulfill()
-        } receiveValue: { _ in }
+        } receiveValue: { _ in
+        }
 
         defer {
             cancellable.cancel()
