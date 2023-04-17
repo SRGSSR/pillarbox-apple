@@ -6,6 +6,7 @@
 
 @testable import Analytics
 
+import Circumspect
 import Nimble
 import XCTest
 

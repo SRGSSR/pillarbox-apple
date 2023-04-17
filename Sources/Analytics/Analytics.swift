@@ -56,7 +56,7 @@ public class Analytics {
     ///   - title: The page title.
     ///   - levels: The page levels.
     public func sendPageView(title: String, levels: [String] = []) {
-        assert(!title.isEmpty, "A title is required")
+        assert(title.isValid, "A title is required")
         comScoreService.sendPageView(title: title, levels: levels)
         commandersActService.sendPageView(title: title, levels: levels)
     }
