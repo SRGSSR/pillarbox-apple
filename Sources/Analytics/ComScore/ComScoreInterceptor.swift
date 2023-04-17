@@ -29,7 +29,7 @@ enum ComScoreInterceptor {
         guard let dictionary = notification.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String] else {
             return nil
         }
-        return try? JSONDecoder().decode(ComScoreLabels.self, from: JSONSerialization.data(withJSONObject: dictionary))
+        return .init(dictionary: dictionary)
     }
 }
 
