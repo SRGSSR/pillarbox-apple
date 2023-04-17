@@ -51,6 +51,7 @@ let package = Package(
         .target(
             name: "Analytics",
             dependencies: [
+                .target(name: "Player"),
                 .product(name: "ComScore", package: "Comscore-Swift-Package-Manager"),
                 .product(name: "TCCore", package: "iOSV5"),
                 .product(name: "TCServerSide_noIDFA", package: "iOSV5")
@@ -59,21 +60,12 @@ let package = Package(
                 .plugin(name: "PackageInfoPlugin")
             ]
         ),
-        .target(
-            name: "AnalyticsTestBridge",
-            dependencies: [
-                .target(name: "Analytics"),
-                .target(name: "CoreBusiness"),
-                .target(name: "Circumspect")
-            ]
-        ),
         .target(name: "Core"),
         .target(
             name: "CoreBusiness",
             dependencies: [
                 .target(name: "Analytics"),
-                .target(name: "Diagnostics"),
-                .target(name: "Player")
+                .target(name: "Diagnostics")
             ],
             plugins: [
                 .plugin(name: "PackageInfoPlugin")
@@ -113,7 +105,8 @@ let package = Package(
         .testTarget(
             name: "AnalyticsTests",
             dependencies: [
-                .target(name: "AnalyticsTestBridge")
+                .target(name: "Analytics"),
+                .target(name: "Circumspect")
             ]
         ),
         .testTarget(
@@ -132,7 +125,8 @@ let package = Package(
         .testTarget(
             name: "CoreBusinessTests",
             dependencies: [
-                .target(name: "AnalyticsTestBridge")
+                .target(name: "Circumspect"),
+                .target(name: "CoreBusiness")
             ]
         ),
         .testTarget(

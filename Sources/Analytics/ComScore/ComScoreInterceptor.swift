@@ -4,26 +4,45 @@
 //  License information is available from the LICENSE file.
 //
 
+import Combine
 import Foundation
 
-private var kIsInterceptorEnabled = false
-
-enum ComScoreRequestInfoKey: String {
+private enum ComScoreRequestInfoKey: String {
     case queryItems = "ComScoreRequestQueryItems"
 }
 
-extension Notification.Name {
+/// Intercepts comScore requests and emits event information with a publisher.
+enum ComScoreInterceptor {
+    static func toggle() {
+        URLSession.toggleInterceptor()
+    }
+
+    static func eventPublisher(for identifier: String) -> AnyPublisher<ComScoreEvent, Never> {
+        NotificationCenter.default.publisher(for: .didReceiveComScoreRequest)
+            .compactMap { labels(from: $0) }
+            .filter { $0.listener_session_id == identifier }
+            .compactMap { .init(from: $0) }
+            .eraseToAnyPublisher()
+    }
+
+    private static func labels(from notification: Notification) -> ComScoreLabels? {
+        guard let dictionary = notification.userInfo?[ComScoreRequestInfoKey.queryItems] as? [String: String] else {
+            return nil
+        }
+        return .init(dictionary: dictionary)
+    }
+}
+
+private extension Notification.Name {
     static let didReceiveComScoreRequest = Notification.Name("URLSessionDidReceiveComScoreRequestNotification")
 }
 
-extension URLSession {
-    static func enableInterceptor() {
-        guard !kIsInterceptorEnabled else { return }
+private extension URLSession {
+    static func toggleInterceptor() {
         method_exchangeImplementations(
             class_getInstanceMethod(URLSession.self, NSSelectorFromString("dataTaskWithRequest:completionHandler:"))!,
             class_getInstanceMethod(URLSession.self, #selector(swizzled_dataTask(with:completionHandler:)))!
         )
-        kIsInterceptorEnabled = true
     }
 
     @objc

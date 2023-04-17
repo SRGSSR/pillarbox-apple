@@ -32,7 +32,9 @@ public class Analytics {
     public static var shared = Analytics()
 
     private var configuration: Configuration?
-    private let services: [any AnalyticsService] = [ComScoreService(), CommandersActService()]
+
+    private let comScoreService = ComScoreService()
+    private let commandersActService = CommandersActService()
 
     private init() {}
 
@@ -45,7 +47,8 @@ public class Analytics {
             throw AnalyticsError.alreadyStarted
         }
         self.configuration = configuration
-        services.forEach { $0.start(with: configuration) }
+        comScoreService.start(with: configuration)
+        commandersActService.start(with: configuration)
     }
 
     /// Record a page view event.
@@ -53,7 +56,9 @@ public class Analytics {
     ///   - title: The page title.
     ///   - levels: The page levels.
     public func sendPageView(title: String, levels: [String] = []) {
-        sendPageView(title: title, levels: levels, labels: nil)
+        assert(!title.isBlank, "A title is required")
+        comScoreService.sendPageView(title: title, levels: levels)
+        commandersActService.sendPageView(title: title, levels: levels)
     }
 
     /// Record an event.
@@ -78,7 +83,8 @@ public class Analytics {
         extra4: String = "",
         extra5: String = ""
     ) {
-        sendEvent(
+        assert(!name.isBlank, "A name is required")
+        let event = Event(
             name: name,
             type: type,
             value: value,
@@ -87,43 +93,13 @@ public class Analytics {
             extra2: extra2,
             extra3: extra3,
             extra4: extra4,
-            extra5: extra5,
-            labels: nil
+            extra5: extra5
         )
+        commandersActService.sendEvent(event)
     }
 
-    func sendPageView(title: String, levels: [String], labels: Labels?) {
-        assert(!title.isEmpty, "The title is required!")
-        services.forEach { $0.sendPageView(title: title, levels: levels, labels: labels) }
-    }
-
-    // swiftlint:disable:next function_parameter_count
-    func sendEvent(
-        name: String,
-        type: String,
-        value: String,
-        source: String,
-        extra1: String,
-        extra2: String,
-        extra3: String,
-        extra4: String,
-        extra5: String,
-        labels: Labels?
-    ) {
-        assert(!name.isEmpty, "The name is required!")
-        services.forEach { service in
-            service.sendEvent(
-                name: name,
-                type: type,
-                value: value,
-                source: source,
-                extra1: extra1,
-                extra2: extra2,
-                extra3: extra3,
-                extra4: extra4,
-                extra5: extra5,
-                labels: labels
-            )
-        }
+    func sendCommandersActStreamingEvent(name: String) {
+        assert(!name.isEmpty, "A name is required")
+        commandersActService.sendStreamingEvent(name: name)
     }
 }
