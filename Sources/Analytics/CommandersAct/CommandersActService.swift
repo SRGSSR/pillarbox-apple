@@ -45,8 +45,8 @@ final class CommandersActService {
         event.addAdditionalProperty("navigation_property_type", withStringValue: "app")
         event.addAdditionalProperty("navigation_bu_distributer", withStringValue: vendor?.rawValue)
         levels.enumerated().forEach { index, level in
-            guard index < 8, level.isValid else { return }
-            event.addAdditionalProperty("navigation_level_\(index + 1)", withStringValue: level)
+            guard index < 8 else { return }
+            event.addNonBlankAdditionalProperty("navigation_level_\(index + 1)", withStringValue: level)
         }
         Self.addCommonAdditionalProperties(to: event)
         serverSide.execute(event)
@@ -68,9 +68,7 @@ final class CommandersActService {
         ]
 
         eventProperties.forEach { key, value in
-            if value.isValid {
-                customEvent.addAdditionalProperty(key, withStringValue: value)
-            }
+            customEvent.addNonBlankAdditionalProperty(key, withStringValue: value)
         }
 
         Self.addCommonAdditionalProperties(to: customEvent)
@@ -81,5 +79,12 @@ final class CommandersActService {
         guard let serverSide, let customEvent = TCCustomEvent(name: name) else { return }
         Self.addCommonAdditionalProperties(to: customEvent)
         serverSide.execute(customEvent)
+    }
+}
+
+extension TCAdditionalProperties {
+    func addNonBlankAdditionalProperty(_ key: String, withStringValue value: String) {
+        guard !value.isBlank else { return }
+        addAdditionalProperty(key, withStringValue: value)
     }
 }

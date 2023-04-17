@@ -56,7 +56,7 @@ public class Analytics {
     ///   - title: The page title.
     ///   - levels: The page levels.
     public func sendPageView(title: String, levels: [String] = []) {
-        assert(title.isValid, "A title is required")
+        assert(!title.isBlank, "A title is required")
         comScoreService.sendPageView(title: title, levels: levels)
         commandersActService.sendPageView(title: title, levels: levels)
     }
@@ -83,7 +83,7 @@ public class Analytics {
         extra4: String = "",
         extra5: String = ""
     ) {
-        assert(name.isValid, "A name is required")
+        assert(!name.isBlank, "A name is required")
         let event = Event(
             name: name,
             type: type,
@@ -105,7 +105,7 @@ public class Analytics {
 }
 
 extension String {
-    var isValid: Bool {
-        !trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    var isBlank: Bool {
+        trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }
