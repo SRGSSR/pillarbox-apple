@@ -20,7 +20,11 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             ]
         ))
 
-        expectAtLeastEvents(.play()) {
+        expectAtLeastEvents(
+            .play { labels in
+                expect(labels.ns_st_po).to(equal(0))
+            }
+        ) {
             player.play()
         }
     }
