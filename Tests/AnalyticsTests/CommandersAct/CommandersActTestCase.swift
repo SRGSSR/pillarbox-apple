@@ -14,7 +14,7 @@ class CommandersActTestCase: XCTestCase {}
 extension CommandersActTestCase {
     /// Collect events emitted by Commanders Act during some time interval and match them against expectations.
     func expectEvents(
-        _ expectations: [CommandersActEventExpectation],
+        _ expectations: CommandersActEventExpectation...,
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
@@ -35,7 +35,7 @@ extension CommandersActTestCase {
 
     /// Expect events emitted by Commanders Act during some time interval and match them against expectations.
     func expectAtLeastEvents(
-        _ expectations: [CommandersActEventExpectation],
+        _ expectations: CommandersActEventExpectation...,
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,

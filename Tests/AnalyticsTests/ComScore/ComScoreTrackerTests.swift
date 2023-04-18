@@ -19,11 +19,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             ]
         ))
 
-        expectAtLeastEvents(
-            [
-                .play()
-            ]
-        ) {
+        expectAtLeastEvents(.play()) {
             player.play()
         }
     }
@@ -52,11 +48,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
         player.play()
         expect(player.playbackState).toEventually(equal(.playing), timeout: .seconds(10))
 
-        expectAtLeastEvents(
-            [
-                .pause()
-            ]
-        ) {
+        expectAtLeastEvents(.pause()) {
             player.pause()
         }
     }

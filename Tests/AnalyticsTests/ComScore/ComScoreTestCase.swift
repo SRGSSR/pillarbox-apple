@@ -14,7 +14,7 @@ class ComScoreTestCase: XCTestCase {}
 extension ComScoreTestCase {
     /// Collect events emitted by comScore during some time interval and match them against expectations.
     func expectEvents(
-        _ expectations: [ComScoreEventExpectation],
+        _ expectations: ComScoreEventExpectation...,
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
@@ -35,7 +35,7 @@ extension ComScoreTestCase {
 
     /// Expect events emitted by comScore during some time interval and match them against expectations.
     func expectAtLeastEvents(
-        _ expectations: [ComScoreEventExpectation],
+        _ expectations: ComScoreEventExpectation...,
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
