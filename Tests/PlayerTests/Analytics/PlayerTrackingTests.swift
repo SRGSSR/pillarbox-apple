@@ -8,6 +8,7 @@
 
 import Circumspect
 import Combine
+import Streams
 
 final class PlayerTrackingTests: TestCase {
     func testTrackingDisabled() {

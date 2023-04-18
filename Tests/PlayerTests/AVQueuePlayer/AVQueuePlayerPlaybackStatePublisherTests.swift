@@ -8,6 +8,7 @@
 
 import AVFoundation
 import Circumspect
+import Streams
 import XCTest
 
 final class AVQueuePlayerPlaybackStatePublisherTests: TestCase {

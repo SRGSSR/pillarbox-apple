@@ -9,6 +9,7 @@
 import AVFoundation
 import Circumspect
 import MediaPlayer
+import Streams
 import XCTest
 
 final class NowPlayingInfoMetadataPublisherTests: TestCase {

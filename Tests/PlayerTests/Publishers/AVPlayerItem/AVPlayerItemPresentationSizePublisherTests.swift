@@ -7,6 +7,7 @@
 @testable import Player
 
 import AVFoundation
+import Streams
 
 // swiftlint:disable:next type_name
 final class AVPlayerItemPresentationSizePublisherTests: TestCase {

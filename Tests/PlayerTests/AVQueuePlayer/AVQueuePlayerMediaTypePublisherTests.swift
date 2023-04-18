@@ -8,6 +8,7 @@
 
 import AVFoundation
 import Circumspect
+import Streams
 import XCTest
 
 // swiftlint:disable:next type_name

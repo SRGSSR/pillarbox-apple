@@ -9,6 +9,7 @@
 import AVFoundation
 import Circumspect
 import Nimble
+import Streams
 import XCTest
 
 final class AVPlayerSmoothCurrentTimePublisherTests: TestCase {

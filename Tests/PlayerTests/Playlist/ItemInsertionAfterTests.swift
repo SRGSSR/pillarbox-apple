@@ -8,6 +8,7 @@
 
 import Circumspect
 import Nimble
+import Streams
 import XCTest
 
 final class ItemInsertionAfterTests: TestCase {

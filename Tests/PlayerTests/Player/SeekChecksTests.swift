@@ -8,6 +8,7 @@
 
 import AVFoundation
 import Nimble
+import Streams
 import XCTest
 
 final class SeekChecksTests: TestCase {
