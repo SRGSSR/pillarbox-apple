@@ -46,6 +46,8 @@ public final class ComScoreTracker: PlayerItemTracker {
             streamingAnalytics.notifyPlay()
         case .paused:
             streamingAnalytics.notifyPause()
+        case .ended:
+            streamingAnalytics.notifyEnd()
         default:
             break
         }
