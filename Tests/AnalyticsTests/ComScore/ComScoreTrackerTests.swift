@@ -51,9 +51,13 @@ final class ComScoreTrackerTests: ComScoreTestCase {
         ))
 
         player.play()
-        expect(player.playbackState).toEventually(equal(.playing), timeout: .seconds(10))
+        expect(player.time.seconds).toEventually(beGreaterThan(1))
 
-        expectAtLeastEvents(.pause()) {
+        expectAtLeastEvents(
+            .pause { labels in
+                expect(labels.ns_st_po).to(beCloseTo(1, within: 0.5))
+            }
+        ) {
             player.pause()
         }
     }

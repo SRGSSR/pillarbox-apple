@@ -9,7 +9,7 @@
 import Circumspect
 import XCTest
 
-class CommandersActTestCase: XCTestCase {}
+class CommandersActTestCase: TestCase {}
 
 extension CommandersActTestCase {
     /// Collect events emitted by Commanders Act during some time interval and match them against expectations.

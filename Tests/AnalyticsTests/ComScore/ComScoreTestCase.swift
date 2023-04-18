@@ -9,7 +9,7 @@
 import Circumspect
 import XCTest
 
-class ComScoreTestCase: XCTestCase {}
+class ComScoreTestCase: TestCase {}
 
 extension ComScoreTestCase {
     /// Collect events emitted by comScore during some time interval and match them against expectations.

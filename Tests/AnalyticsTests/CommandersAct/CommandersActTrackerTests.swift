@@ -34,7 +34,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         ))
 
         player.play()
-        expect(player.playbackState).toEventually(equal(.playing), timeout: .seconds(10))
+        expect(player.playbackState).toEventually(equal(.playing))
 
         expectAtLeastEvents(.pause()) {
             player.pause()
