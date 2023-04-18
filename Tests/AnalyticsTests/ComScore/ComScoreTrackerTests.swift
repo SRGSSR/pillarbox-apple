@@ -8,12 +8,13 @@
 
 import Nimble
 import Player
+import Streams
 import XCTest
 
 final class ComScoreTrackerTests: ComScoreTestCase {
     func testInitiallyPlaying() {
         let player = Player(item: .simple(
-            url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!,
+            url: Stream.onDemand.url,
             trackerAdapters: [
                 ComScoreTracker.adapter()
             ]
@@ -26,7 +27,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
 
     func testInitiallyPaused() {
         let player = Player(item: .simple(
-            url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!,
+            url: Stream.onDemand.url,
             trackerAdapters: [
                 ComScoreTracker.adapter()
             ]
@@ -39,7 +40,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
 
     func testPauseDuringPlayback() {
         let player = Player(item: .simple(
-            url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!,
+            url: Stream.onDemand.url,
             trackerAdapters: [
                 ComScoreTracker.adapter()
             ]

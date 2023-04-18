@@ -8,12 +8,13 @@
 
 import Nimble
 import Player
+import Streams
 import XCTest
 
 final class CommandersActTrackerTests: CommandersActTestCase {
     func testInitiallyPlaying() {
         let player = Player(item: .simple(
-            url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!,
+            url: Stream.onDemand.url,
             trackerAdapters: [
                 CommandersActTracker.adapter()
             ]
@@ -26,7 +27,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
 
     func testPauseDuringPlayback() {
         let player = Player(item: .simple(
-            url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!,
+            url: Stream.onDemand.url,
             trackerAdapters: [
                 CommandersActTracker.adapter()
             ]
