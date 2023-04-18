@@ -79,4 +79,24 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             player.play()
         }
     }
+
+    func testDestroyPlayerDuringPlayback() {
+        var player: Player? = Player(item: .simple(
+            url: Stream.onDemand.url,
+            trackerAdapters: [
+                ComScoreTracker.adapter()
+            ]
+        ))
+
+        player?.play()
+        expect(player?.time.seconds).toEventually(beGreaterThan(1))
+
+        expectAtLeastEvents(
+            .end { labels in
+                expect(labels.ns_st_po).to(beCloseTo(1, within: 0.1))
+            }
+        ) {
+            player = nil
+        }
+    }
 }
