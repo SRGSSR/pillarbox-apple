@@ -11,10 +11,10 @@ import XCTest
 /// in tests will use the same value by default and should likely always provide an explicit `until` parameter.
 class TestCase: XCTestCase {
     override class func setUp() {
-        AsyncDefaults.timeout = .seconds(20)
+        PollingDefaults.timeout = .seconds(20)
     }
 
     override class func tearDown() {
-        AsyncDefaults.timeout = .seconds(1)
+        PollingDefaults.timeout = .seconds(1)
     }
 }
