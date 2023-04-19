@@ -73,7 +73,14 @@ public extension ComScoreLabels {
     }
 
     /// Value of `ns_st_ldw`.
-    var ns_st_ldw: Int? {
-        extract { Int($0) }
+    var ns_st_ldw: Double? {
+        guard let value = extract(conversion: { Double($0) }) else { return nil }
+        return value / 1000
+    }
+
+    /// Value of `ns_st_ldo`.
+    var ns_st_ldo: Double? {
+        guard let value = extract(conversion: { Double($0) }) else { return nil }
+        return value / 1000
     }
 }

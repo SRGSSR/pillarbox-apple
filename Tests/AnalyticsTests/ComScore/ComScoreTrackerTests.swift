@@ -161,4 +161,22 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             player.play()
         }
     }
+
+    func testOnDemandDvrProperties() {
+        let player = Player(item: .simple(
+            url: Stream.onDemand.url,
+            trackerAdapters: [
+                ComScoreTracker.adapter()
+            ]
+        ))
+
+        expectAtLeastEvents(
+            .play { labels in
+                expect(labels.ns_st_ldw).to(equal(0))
+                expect(labels.ns_st_ldo).to(equal(0))
+            }
+        ) {
+            player.play()
+        }
+    }
 }
