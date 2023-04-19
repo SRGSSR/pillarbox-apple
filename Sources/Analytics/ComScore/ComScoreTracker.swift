@@ -16,14 +16,19 @@ public final class ComScoreTracker: PlayerItemTracker {
 
     public init(configuration: Void, metadataPublisher: AnyPublisher<[String: String], Never>) {}
 
+    private static func position(for player: Player) -> Int {
+        player.time.isValid ? Int(player.time.seconds * 1000) : 0
+    }
+
     public func enable(for player: Player) {
         streamingAnalytics.createPlaybackSession()
         streamingAnalytics.setMediaPlayerName("Pillarbox")
         streamingAnalytics.setMediaPlayerVersion(PackageInfo.version)
 
-        player.$playbackState
-            .sink { [weak self] playbackState in
-                self?.notify(playbackState: playbackState)
+        Publishers.CombineLatest(player.$playbackState, player.$isSeeking)
+            .weakCapture(player)
+            .sink { [weak self] state, player in
+                self?.notify(playbackState: state.0, isSeeking: state.1, player: player)
             }
             .store(in: &cancellables)
     }
@@ -32,21 +37,19 @@ public final class ComScoreTracker: PlayerItemTracker {
         cancellables = []
     }
 
-    private func notify(playbackState: PlaybackState) {
-        let metadata = SCORStreamingContentMetadata { builder in
-            guard let builder else { return }
-            var customLabels = [String: String]()
-            AnalyticsListener.capture(&customLabels)
-            builder.setCustomLabels(customLabels)
-        }
-        streamingAnalytics.setMetadata(metadata)
+    private func notify(playbackState: PlaybackState, isSeeking: Bool, player: Player) {
+        AnalyticsListener.capture(streamingAnalytics.configuration())
 
-        switch playbackState {
-        case .playing:
+        streamingAnalytics.start(fromPosition: Self.position(for: player))
+
+        switch (playbackState, isSeeking) {
+        case (_, true):
+            streamingAnalytics.notifySeekStart()
+        case (.playing, _):
             streamingAnalytics.notifyPlay()
-        case .paused:
+        case (.paused, _):
             streamingAnalytics.notifyPause()
-        case .ended:
+        case (.ended, _):
             streamingAnalytics.notifyEnd()
         default:
             break
