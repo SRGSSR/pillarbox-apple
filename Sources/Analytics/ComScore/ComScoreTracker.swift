@@ -12,7 +12,7 @@ import Player
 
 /// Stream tracker for comScore.
 public final class ComScoreTracker: PlayerItemTracker {
-    private let streamingAnalytics = SCORStreamingAnalytics()
+    private var streamingAnalytics = SCORStreamingAnalytics()
     private var cancellables = Set<AnyCancellable>()
     @Published private var metadata: [String: String] = [:]
 
@@ -44,6 +44,7 @@ public final class ComScoreTracker: PlayerItemTracker {
 
     public func disable() {
         cancellables = []
+        streamingAnalytics = SCORStreamingAnalytics()
     }
 
     private func notify(playbackState: PlaybackState, isSeeking: Bool, isBuffering: Bool, player: Player) {
@@ -82,7 +83,6 @@ private extension SCORStreamingAnalytics {
     }
 
     func notifyEvent(playbackState: PlaybackState, isSeeking: Bool, isBuffering: Bool) {
-
         switch (isBuffering, isSeeking) {
         case (true, true):
             notifySeekStart()

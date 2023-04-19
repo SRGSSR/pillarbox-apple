@@ -124,4 +124,25 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             player.play()
         }
     }
+
+    func testDisableTracking() {
+        let player = Player(item: .simple(
+            url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
+            trackerAdapters: [
+                ComScoreTracker.adapter { _ in ["meta": "data"] }
+            ]
+        ))
+
+        expectAtLeastEvents(
+            .play(),
+            .end()
+        ) {
+            // Ensure the listener identifier can be associated with the end event.
+            player.play()
+            // We have to wait at least 5 seconds due to comScore behavior.
+            expect(player.time.seconds).toEventually(beGreaterThan(5))
+            player.isTrackingEnabled = false
+        }
+    }
 }
