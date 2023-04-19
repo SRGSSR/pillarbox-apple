@@ -5,6 +5,7 @@
 //
 
 import Combine
+import ComScore
 import Foundation
 import TCServerSide_noIDFA
 
@@ -49,6 +50,11 @@ public enum AnalyticsListener {
     static func capture(_ labels: inout [String: String]) {
         guard let sessionIdentifier else { return }
         labels[sessionIdentifierKey] = sessionIdentifier
+    }
+
+    static func capture(_ configuration: SCORStreamingConfiguration) {
+        guard let sessionIdentifier else { return }
+        configuration.setLabelWithName(sessionIdentifierKey, value: sessionIdentifier)
     }
 
     static func capture(_ event: TCEvent) {
