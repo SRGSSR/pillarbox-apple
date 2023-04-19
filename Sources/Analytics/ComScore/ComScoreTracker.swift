@@ -6,6 +6,7 @@
 
 import Combine
 import ComScore
+import CoreMedia
 import Foundation
 import Player
 
@@ -62,9 +63,15 @@ private extension SCORStreamingAnalytics {
         player.time.isValid ? Int(player.time.seconds * 1000) : 0
     }
 
+    private static func offset(for player: Player) -> Int {
+        guard player.timeRange.isValid, player.time.isValid else { return 0 }
+        let offset = player.timeRange.end - player.time
+        return Int(offset.seconds * 1000)
+    }
+
     func setProperties(for player: Player) {
         if player.streamType == .dvr {
-            // streamingAnalytics.start(fromDvrWindowOffset: <#T##Int#>)
+            start(fromDvrWindowOffset: Self.offset(for: player))
             setDVRWindowLength(Self.duration(for: player))
         }
         else {

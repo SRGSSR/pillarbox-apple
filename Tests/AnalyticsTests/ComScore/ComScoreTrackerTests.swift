@@ -7,6 +7,7 @@
 @testable import Analytics
 
 import ComScore
+import CoreMedia
 import Nimble
 import Player
 import Streams
@@ -213,6 +214,31 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             }
         ) {
             player.play()
+        }
+    }
+
+    func testDvrPropertiesAwayFromLiveEdge() {
+        let player = Player(item: .simple(
+            url: Stream.dvr.url,
+            trackerAdapters: [
+                ComScoreTracker.adapter()
+            ]
+        ))
+
+        player.play()
+        expect(player.playbackState).toEventually(equal(.playing))
+
+        expectAtLeastEvents(
+            .pause { labels in
+                expect(labels.ns_st_ldo).to(equal(0))
+                expect(labels.ns_st_ldw).to(equal(Stream.dvr.duration.seconds))
+            },
+            .play { labels in
+                expect(labels.ns_st_ldo).to(equal(4))
+                expect(labels.ns_st_ldw).to(equal(Stream.dvr.duration.seconds))
+            }
+        ) {
+            player.seek(at(player.timeRange.end - CMTime(value: 4, timescale: 1)))
         }
     }
 }
