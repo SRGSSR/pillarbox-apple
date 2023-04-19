@@ -19,8 +19,9 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testInitiallyPlaying() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter()
+                ComScoreTracker.adapter { _ in ["meta": "data"] }
             ]
         ))
 
@@ -36,8 +37,9 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testInitiallyPaused() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter()
+                ComScoreTracker.adapter { _ in ["meta": "data"] }
             ]
         ))
 
@@ -49,8 +51,9 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testPauseDuringPlayback() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter()
+                ComScoreTracker.adapter { _ in ["meta": "data"] }
             ]
         ))
 
@@ -69,8 +72,9 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testPlaybackEnd() {
         let player = Player(item: .simple(
             url: Stream.shortOnDemand.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter()
+                ComScoreTracker.adapter { _ in ["meta": "data"] }
             ]
         ))
 
@@ -87,8 +91,9 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testDestroyPlayerDuringPlayback() {
         var player: Player? = Player(item: .simple(
             url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter()
+                ComScoreTracker.adapter { _ in ["meta": "data"] }
             ]
         ))
 
@@ -109,8 +114,9 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testSeekWhilePlaying() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter()
+                ComScoreTracker.adapter { _ in ["meta": "data"] }
             ]
         ))
 
@@ -132,8 +138,9 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testSeekWhilePause() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter()
+                ComScoreTracker.adapter { _ in ["meta": "data"] }
             ]
         ))
 
@@ -155,8 +162,9 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testFailure() {
         let player = Player(item: .simple(
             url: Stream.unavailable.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter()
+                ComScoreTracker.adapter { _ in ["meta": "data"] }
             ]
         ))
 
@@ -168,8 +176,9 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testOnDemandDvrProperties() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter()
+                ComScoreTracker.adapter { _ in ["meta": "data"] }
             ]
         ))
 
@@ -186,8 +195,9 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testLiveDvrProperties() {
         let player = Player(item: .simple(
             url: Stream.live.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter()
+                ComScoreTracker.adapter { _ in ["meta": "data"] }
             ]
         ))
 
@@ -204,8 +214,9 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testDvrPropertiesAtLiveEdge() {
         let player = Player(item: .simple(
             url: Stream.dvr.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter()
+                ComScoreTracker.adapter { _ in ["meta": "data"] }
             ]
         ))
 
@@ -222,8 +233,9 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testDvrPropertiesAwayFromLiveEdge() {
         let player = Player(item: .simple(
             url: Stream.dvr.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter()
+                ComScoreTracker.adapter { _ in ["meta": "data"] }
             ]
         ))
 
