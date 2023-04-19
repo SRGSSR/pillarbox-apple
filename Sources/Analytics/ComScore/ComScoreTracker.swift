@@ -34,10 +34,10 @@ public final class ComScoreTracker: PlayerItemTracker {
         }
         .store(in: &cancellables)
 
-        Publishers.CombineLatest(player.$playbackState, player.$isSeeking)
+        Publishers.CombineLatest3(player.$playbackState, player.$isSeeking, player.$isBuffering)
             .weakCapture(player)
             .sink { [weak self] state, player in
-                self?.notify(playbackState: state.0, isSeeking: state.1, player: player)
+                self?.notify(playbackState: state.0, isSeeking: state.1, isBuffering: state.2, player: player)
             }
             .store(in: &cancellables)
     }
@@ -46,13 +46,13 @@ public final class ComScoreTracker: PlayerItemTracker {
         cancellables = []
     }
 
-    private func notify(playbackState: PlaybackState, isSeeking: Bool, player: Player) {
+    private func notify(playbackState: PlaybackState, isSeeking: Bool, isBuffering: Bool, player: Player) {
         AnalyticsListener.capture(streamingAnalytics.configuration())
 
         guard !metadata.isEmpty else { return }
 
         streamingAnalytics.setProperties(for: player)
-        streamingAnalytics.notifyEvent(playbackState: playbackState, isSeeking: isSeeking)
+        streamingAnalytics.notifyEvent(playbackState: playbackState, isSeeking: isSeeking, isBuffering: isBuffering)
     }
 }
 
@@ -81,15 +81,30 @@ private extension SCORStreamingAnalytics {
         }
     }
 
-    func notifyEvent(playbackState: PlaybackState, isSeeking: Bool) {
-        switch (playbackState, isSeeking) {
-        case (_, true):
+    func notifyEvent(playbackState: PlaybackState, isSeeking: Bool, isBuffering: Bool) {
+
+        switch (isBuffering, isSeeking) {
+        case (true, true):
             notifySeekStart()
-        case (.playing, _):
+            notifyBufferStart()
+        case (true, false):
+            notifyBufferStart()
+        case (false, true):
+            notifySeekStart()
+            notifyBufferStop()
+        case (false, false):
+            notifyBufferStop()
+            notifyEvent(playbackState: playbackState)
+        }
+    }
+
+    func notifyEvent(playbackState: PlaybackState) {
+        switch playbackState {
+        case .playing:
             notifyPlay()
-        case (.paused, _):
+        case .paused:
             notifyPause()
-        case (.ended, _):
+        case .ended:
             notifyEnd()
         default:
             break
