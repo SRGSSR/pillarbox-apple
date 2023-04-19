@@ -6,6 +6,7 @@
 
 @testable import Analytics
 
+import ComScore
 import Nimble
 import Player
 import Streams
@@ -88,14 +89,16 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             ]
         ))
 
-        player?.play()
-        expect(player?.time.seconds).toEventually(beGreaterThan(1))
-
         expectAtLeastEvents(
+            .play(),
             .end { labels in
-                expect(labels.ns_st_po).to(beCloseTo(1, within: 0.1))
+                expect(labels.ns_st_po).to(beCloseTo(5, within: 0.1))
             }
         ) {
+            // Ensure the listener identifier can be associated with the end event.
+            player?.play()
+            // We have to wait at least 5 seconds due to comScore behavior.
+            expect(player?.time.seconds).toEventually(beGreaterThan(5))
             player = nil
         }
     }

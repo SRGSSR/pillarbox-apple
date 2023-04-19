@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import Foundation
 import Nimble
 import XCTest
@@ -13,6 +14,7 @@ import XCTest
 class TestCase: XCTestCase {
     override class func setUp() {
         PollingDefaults.timeout = .seconds(20)
+        try? Analytics.shared.start(with: .init(vendor: .RTS, sourceKey: "source", site: "site"))
     }
 
     override class func tearDown() {
