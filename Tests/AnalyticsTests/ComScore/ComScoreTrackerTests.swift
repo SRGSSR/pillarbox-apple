@@ -13,6 +13,8 @@ import Player
 import Streams
 import XCTest
 
+private struct AssetMetadataMock: AssetMetadata {}
+
 final class ComScoreTrackerTests: ComScoreTestCase {
     func testInitiallyPlaying() {
         let player = Player(item: .simple(
@@ -239,6 +241,30 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             }
         ) {
             player.seek(at(player.timeRange.end - CMTime(value: 4, timescale: 1)))
+        }
+    }
+
+    func testMetadata() {
+        let player = Player(item: .simple(
+            url: Stream.dvr.url,
+            metadata: AssetMetadataMock(),
+            trackerAdapters: [
+                ComScoreTracker.adapter { _ in
+                    [
+                        "meta_1": "custom-1",
+                        "meta_2": "42"
+                    ]
+                }
+            ]
+        ))
+
+        expectAtLeastEvents(
+            .play { labels in
+                expect(labels.metadata("meta_1")).to(equal("custom-1"))
+                expect(labels.metadata("meta_2")).to(equal(42))
+            }
+        ) {
+            player.play()
         }
     }
 }

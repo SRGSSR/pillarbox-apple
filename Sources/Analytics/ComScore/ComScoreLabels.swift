@@ -22,6 +22,18 @@ public struct ComScoreLabels {
         extract { $0 }
     }
 
+    /// Returns the metadata value for the given `key`, converted to the specified type.
+    func metadata<T: LosslessStringConvertible>(_ key: String) -> T? {
+        extract(key: key) { stringValue in
+            switch T.self {
+            case is String.Type:
+                return stringValue as? T
+            default:
+                return T(stringValue)
+            }
+        }
+    }
+
     private func extract<T>(key: String = #function, conversion: (String) -> T?) -> T? {
         guard let value = dictionary[key] else { return nil }
         return conversion(value)

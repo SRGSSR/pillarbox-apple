@@ -14,13 +14,25 @@ import Player
 public final class ComScoreTracker: PlayerItemTracker {
     private let streamingAnalytics = SCORStreamingAnalytics()
     private var cancellables = Set<AnyCancellable>()
+    @Published private var metadata: [String: String] = [:]
 
-    public init(configuration: Void, metadataPublisher: AnyPublisher<[String: String], Never>) {}
+    public init(configuration: Void, metadataPublisher: AnyPublisher<[String: String], Never>) {
+        metadataPublisher.assign(to: &$metadata)
+    }
 
     public func enable(for player: Player) {
         streamingAnalytics.createPlaybackSession()
         streamingAnalytics.setMediaPlayerName("Pillarbox")
         streamingAnalytics.setMediaPlayerVersion(PackageInfo.version)
+
+        $metadata.sink { [weak self] metadataReceived in
+            guard let self else { return }
+            let builder = SCORStreamingContentMetadataBuilder()
+            builder.setCustomLabels(metadataReceived)
+            let metadata = SCORStreamingContentMetadata(builder: builder)
+            self.streamingAnalytics.setMetadata(metadata)
+        }
+        .store(in: &cancellables)
 
         Publishers.CombineLatest(player.$playbackState, player.$isSeeking)
             .weakCapture(player)
@@ -37,20 +49,10 @@ public final class ComScoreTracker: PlayerItemTracker {
     private func notify(playbackState: PlaybackState, isSeeking: Bool, player: Player) {
         AnalyticsListener.capture(streamingAnalytics.configuration())
 
-        streamingAnalytics.setProperties(for: player)
+        guard !metadata.isEmpty else { return }
 
-        switch (playbackState, isSeeking) {
-        case (_, true):
-            streamingAnalytics.notifySeekStart()
-        case (.playing, _):
-            streamingAnalytics.notifyPlay()
-        case (.paused, _):
-            streamingAnalytics.notifyPause()
-        case (.ended, _):
-            streamingAnalytics.notifyEnd()
-        default:
-            break
-        }
+        streamingAnalytics.setProperties(for: player)
+        streamingAnalytics.notifyEvent(playbackState: playbackState, isSeeking: isSeeking)
     }
 }
 
@@ -76,6 +78,21 @@ private extension SCORStreamingAnalytics {
         }
         else {
             start(fromPosition: Self.position(for: player))
+        }
+    }
+
+    func notifyEvent(playbackState: PlaybackState, isSeeking: Bool) {
+        switch (playbackState, isSeeking) {
+        case (_, true):
+            notifySeekStart()
+        case (.playing, _):
+            notifyPlay()
+        case (.paused, _):
+            notifyPause()
+        case (.ended, _):
+            notifyEnd()
+        default:
+            break
         }
     }
 }
