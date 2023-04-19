@@ -16,10 +16,6 @@ public final class ComScoreTracker: PlayerItemTracker {
 
     public init(configuration: Void, metadataPublisher: AnyPublisher<[String: String], Never>) {}
 
-    private static func position(for player: Player) -> Int {
-        player.time.isValid ? Int(player.time.seconds * 1000) : 0
-    }
-
     public func enable(for player: Player) {
         streamingAnalytics.createPlaybackSession()
         streamingAnalytics.setMediaPlayerName("Pillarbox")
@@ -40,7 +36,7 @@ public final class ComScoreTracker: PlayerItemTracker {
     private func notify(playbackState: PlaybackState, isSeeking: Bool, player: Player) {
         AnalyticsListener.capture(streamingAnalytics.configuration())
 
-        streamingAnalytics.start(fromPosition: Self.position(for: player))
+        streamingAnalytics.setProperties(for: player)
 
         switch (playbackState, isSeeking) {
         case (_, true):
@@ -53,6 +49,26 @@ public final class ComScoreTracker: PlayerItemTracker {
             streamingAnalytics.notifyEnd()
         default:
             break
+        }
+    }
+}
+
+private extension SCORStreamingAnalytics {
+    private static func duration(for player: Player) -> Int {
+        player.timeRange.isValid ? Int(player.timeRange.duration.seconds * 1000) : 0
+    }
+
+    private static func position(for player: Player) -> Int {
+        player.time.isValid ? Int(player.time.seconds * 1000) : 0
+    }
+
+    func setProperties(for player: Player) {
+        if player.streamType == .dvr {
+            // streamingAnalytics.start(fromDvrWindowOffset: <#T##Int#>)
+            setDVRWindowLength(Self.duration(for: player))
+        }
+        else {
+            start(fromPosition: Self.position(for: player))
         }
     }
 }
