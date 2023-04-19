@@ -148,4 +148,17 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             player.play()
         }
     }
+
+    func testFailure() {
+        let player = Player(item: .simple(
+            url: Stream.unavailable.url,
+            trackerAdapters: [
+                ComScoreTracker.adapter()
+            ]
+        ))
+
+        expectNoEvents(during: .seconds(3)) {
+            player.play()
+        }
+    }
 }
