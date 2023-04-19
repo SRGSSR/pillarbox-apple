@@ -125,4 +125,27 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             player.seek(at(.init(value: 7, timescale: 1)))
         }
     }
+
+    func testSeekWhilePause() {
+        let player = Player(item: .simple(
+            url: Stream.onDemand.url,
+            trackerAdapters: [
+                ComScoreTracker.adapter()
+            ]
+        ))
+
+        expect(player.playbackState).toEventually(equal(.paused))
+
+        expectNoEvents(during: .seconds(2)) {
+            player.seek(at(.init(value: 7, timescale: 1)))
+        }
+
+        expectAtLeastEvents(
+            .play { labels in
+                expect(labels.ns_st_po).to(beCloseTo(7, within: 0.5))
+            }
+        ) {
+            player.play()
+        }
+    }
 }
