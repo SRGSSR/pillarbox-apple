@@ -18,11 +18,11 @@ private struct AssetMetadataMock: AssetMetadata {}
 // Testing comScore end events is a bit tricky:
 //   1. Apparently comScore will never emit events if a play event is followed by an end event within ~5 seconds. For
 //      this reason all tests checking end events must wait ~5 seconds after a play event.
-//   2. End events are emitted automatically to close a session if the `SCORStreamingAnalytics` is destroyed. In this
-//      case, and since we are not notifying the end event ourselves, we cannot customize its labels directly.
-//      Fortunately we can customize them indirectly since the end event inherits labels from a former event. Thus,
-//      to test end events resulting from tracker deallocation we need to have another event sent within the same
-//      expectation so that the end event is provided a listener identifier.
+//   2. End events are emitted automatically to close a session when the `SCORStreamingAnalytics` is destroyed. Since
+//      we are not notifying the end event ourselves in such cases we cannot customize the end event labels directly.
+//      Fortunately we can customize them indirectly, though, since the end event inherits labels from a former event.
+//      Thus, to test end events resulting from tracker deallocation we need to have another event sent within the same
+//      expectation first so that the end event is provided a listener identifier.
 final class ComScoreTrackerTests: ComScoreTestCase {
     func testInitiallyPlaying() {
         let player = Player(item: .simple(
