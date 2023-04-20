@@ -86,7 +86,8 @@ public struct Stream {
     /// Duration.
     public let duration: CMTime
 
-    /// A stream whose master playlist contains an index.
+    /// A stream whose master playlist contains an index. Not meant to be playable but useful for testing `AVPlayerItem`
+    /// identity.
     /// - Parameter index: The index.
     /// - Returns: The stream.
     public static func item(numbered index: Int) -> Self {
