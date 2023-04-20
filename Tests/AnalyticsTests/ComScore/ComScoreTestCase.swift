@@ -13,6 +13,7 @@ class ComScoreTestCase: TestCase {}
 
 extension ComScoreTestCase {
     /// Collect events emitted by comScore during some time interval and match them against expectations.
+    /// Note that a network connection is required by the comScore SDK to properly emit events.
     func expectEvents(
         _ expectations: ComScoreEventExpectation...,
         during interval: DispatchTimeInterval = .seconds(20),
@@ -34,6 +35,7 @@ extension ComScoreTestCase {
     }
 
     /// Expect events emitted by comScore during some time interval and match them against expectations.
+    /// Note that a network connection is required by the comScore SDK to properly emit events.
     func expectAtLeastEvents(
         _ expectations: ComScoreEventExpectation...,
         timeout: DispatchTimeInterval = .seconds(20),
