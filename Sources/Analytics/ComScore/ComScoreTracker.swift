@@ -25,12 +25,8 @@ public final class ComScoreTracker: PlayerItemTracker {
         streamingAnalytics.setMediaPlayerName("Pillarbox")
         streamingAnalytics.setMediaPlayerVersion(PackageInfo.version)
 
-        $metadata.sink { [weak self] metadataReceived in
-            guard let self else { return }
-            let builder = SCORStreamingContentMetadataBuilder()
-            builder.setCustomLabels(metadataReceived)
-            let metadata = SCORStreamingContentMetadata(builder: builder)
-            self.streamingAnalytics.setMetadata(metadata)
+        $metadata.sink { [weak self] metadata in
+            self?.updateMetadata(with: metadata)
         }
         .store(in: &cancellables)
 
@@ -54,6 +50,13 @@ public final class ComScoreTracker: PlayerItemTracker {
 
         streamingAnalytics.setProperties(for: player)
         streamingAnalytics.notifyEvent(playbackState: playbackState, isSeeking: isSeeking, isBuffering: isBuffering)
+    }
+
+    private func updateMetadata(with metadata: [String: String]) {
+        let builder = SCORStreamingContentMetadataBuilder()
+        builder.setCustomLabels(metadata)
+        let metadata = SCORStreamingContentMetadata(builder: builder)
+        streamingAnalytics.setMetadata(metadata)
     }
 }
 
