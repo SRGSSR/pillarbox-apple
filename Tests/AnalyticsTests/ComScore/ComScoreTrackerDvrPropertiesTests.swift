@@ -15,8 +15,8 @@ import XCTest
 
 private struct AssetMetadataMock: AssetMetadata {}
 
-final class ComScoreTrackerDvrTests: ComScoreTestCase {
-    func testOnDemandDvrProperties() {
+final class ComScoreTrackerDvrPropertiesTests: ComScoreTestCase {
+    func testOnDemand() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
@@ -35,7 +35,7 @@ final class ComScoreTrackerDvrTests: ComScoreTestCase {
         }
     }
 
-    func testLiveDvrProperties() {
+    func testLive() {
         let player = Player(item: .simple(
             url: Stream.live.url,
             metadata: AssetMetadataMock(),
@@ -54,7 +54,7 @@ final class ComScoreTrackerDvrTests: ComScoreTestCase {
         }
     }
 
-    func testDvrPropertiesAtLiveEdge() {
+    func testDvrAtLiveEdge() {
         let player = Player(item: .simple(
             url: Stream.dvr.url,
             metadata: AssetMetadataMock(),
@@ -73,7 +73,7 @@ final class ComScoreTrackerDvrTests: ComScoreTestCase {
         }
     }
 
-    func testDvrPropertiesAwayFromLiveEdge() {
+    func testDvrAwayFromLiveEdge() {
         let player = Player(item: .simple(
             url: Stream.dvr.url,
             metadata: AssetMetadataMock(),
