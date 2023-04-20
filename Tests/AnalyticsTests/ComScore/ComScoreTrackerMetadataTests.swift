@@ -32,8 +32,8 @@ final class ComScoreTrackerMetadataTests: ComScoreTestCase {
 
         expectAtLeastEvents(
             .play { labels in
-                expect(labels.metadata("meta_1")).to(equal("custom-1"))
-                expect(labels.metadata("meta_2")).to(equal(42))
+                expect(labels.extract("meta_1")).to(equal("custom-1"))
+                expect(labels.extract("meta_2")).to(equal(42))
             }
         ) {
             player.play()
