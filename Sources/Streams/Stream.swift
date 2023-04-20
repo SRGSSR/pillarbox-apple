@@ -20,6 +20,12 @@ public struct Stream {
         duration: CMTime(value: 1, timescale: 1)
     )
 
+    /// Medium on-demand.
+    public static let mediumOnDemand: Self = .init(
+        url: URL(string: "http://localhost:8123/on_demand_medium/master.m3u8")!,
+        duration: CMTime(value: 5, timescale: 1)
+    )
+
     /// Cropped on-demand.
     public static let croppedOnDemand: Self = .init(
         url: URL(string: "http://localhost:8123/on_demand_cropped/master.m3u8")!,

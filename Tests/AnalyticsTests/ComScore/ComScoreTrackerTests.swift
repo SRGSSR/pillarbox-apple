@@ -15,6 +15,14 @@ import XCTest
 
 private struct AssetMetadataMock: AssetMetadata {}
 
+// Testing comScore end events is a bit tricky:
+//   1. Apparently comScore will never emit events if a play event is followed by an end event within ~5 seconds. For
+//      this reason all tests checking end events must wait ~5 seconds after a play event.
+//   2. End events are emitted automatically to close a session if the `SCORStreamingAnalytics` is destroyed. In this
+//      case, and since we are not notifying the end event ourselves, we cannot customize its labels directly.
+//      Fortunately we can customize them indirectly since the end event inherits labels from a former event. Thus,
+//      to test end events resulting from tracker deallocation we need to have another event sent within the same
+//      expectation so that the end event is provided a listener identifier.
 final class ComScoreTrackerTests: ComScoreTestCase {
     func testInitiallyPlaying() {
         let player = Player(item: .simple(
@@ -71,7 +79,8 @@ final class ComScoreTrackerTests: ComScoreTestCase {
 
     func testPlaybackEnd() {
         let player = Player(item: .simple(
-            url: Stream.shortOnDemand.url,
+            // See 1. at the top of this file.
+            url: Stream.mediumOnDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in ["meta": "data"] }
@@ -81,7 +90,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
         expectAtLeastEvents(
             .play(),
             .end { labels in
-                expect(labels.ns_st_po).to(beCloseTo(1, within: 0.1))
+                expect(labels.ns_st_po).to(beCloseTo(Stream.mediumOnDemand.duration.seconds, within: 0.5))
             }
         ) {
             player.play()
@@ -103,9 +112,9 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 expect(labels.ns_st_po).to(beCloseTo(5, within: 0.1))
             }
         ) {
-            // Ensure the listener identifier can be associated with the end event.
+            // See 2. at the top of this file.
             player?.play()
-            // We have to wait at least 5 seconds due to comScore behavior.
+            // See 1. at the top of this file.
             expect(player?.time.seconds).toEventually(beGreaterThan(5))
             player = nil
         }
@@ -135,9 +144,9 @@ final class ComScoreTrackerTests: ComScoreTestCase {
         ))
 
         expectAtLeastEvents(.play(), .end()) {
-            // Ensure the listener identifier can be associated with the end event.
+            // See 2. at the top of this file.
             player.play()
-            // We have to wait at least 5 seconds due to comScore behavior.
+            // See 1. at the top of this file.
             expect(player.time.seconds).toEventually(beGreaterThan(5))
             player.isTrackingEnabled = false
         }
