@@ -45,9 +45,7 @@ public final class ComScoreTracker: PlayerItemTracker {
 
     private func notify(playbackState: PlaybackState, isSeeking: Bool, isBuffering: Bool, player: Player) {
         AnalyticsListener.capture(streamingAnalytics.configuration())
-
         guard !metadata.isEmpty else { return }
-
         streamingAnalytics.setProperties(for: player)
         streamingAnalytics.notifyEvent(playbackState: playbackState, isSeeking: isSeeking, isBuffering: isBuffering)
     }
@@ -75,6 +73,19 @@ private extension SCORStreamingAnalytics {
         return Int(offset.seconds * 1000)
     }
 
+    private func notifyEvent(playbackState: PlaybackState) {
+        switch playbackState {
+        case .playing:
+            notifyPlay()
+        case .paused:
+            notifyPause()
+        case .ended:
+            notifyEnd()
+        default:
+            break
+        }
+    }
+
     func setProperties(for player: Player) {
         if player.streamType == .dvr {
             start(fromDvrWindowOffset: Self.offset(for: player))
@@ -86,31 +97,18 @@ private extension SCORStreamingAnalytics {
     }
 
     func notifyEvent(playbackState: PlaybackState, isSeeking: Bool, isBuffering: Bool) {
-        switch (isBuffering, isSeeking) {
+        switch (isSeeking, isBuffering) {
         case (true, true):
             notifySeekStart()
             notifyBufferStart()
         case (true, false):
-            notifyBufferStart()
-        case (false, true):
             notifySeekStart()
             notifyBufferStop()
+        case (false, true):
+            notifyBufferStart()
         case (false, false):
             notifyBufferStop()
             notifyEvent(playbackState: playbackState)
-        }
-    }
-
-    func notifyEvent(playbackState: PlaybackState) {
-        switch playbackState {
-        case .playing:
-            notifyPlay()
-        case .paused:
-            notifyPause()
-        case .ended:
-            notifyEnd()
-        default:
-            break
         }
     }
 }
