@@ -50,18 +50,20 @@ public struct MediaMetadata: AssetMetadata {
         mediaComposition.mainChapter.description
     }
 
-    /// Consoldated comScore analytics data.
+    /// Consolidated comScore analytics data.
     var analyticsData: [String: String] {
-        var analyticsData = mediaComposition.analyticsData
-        analyticsData.merge(mediaComposition.mainChapter.analyticsData) { _, new in new }
+        var analyticsData = mediaComposition.mainChapter.analyticsData
+        guard !analyticsData.isEmpty else { return [:] }
+        analyticsData.merge(mediaComposition.analyticsData) { _, new in new }
         analyticsData.merge(resource.analyticsData) { _, new in new }
         return analyticsData
     }
 
-    /// Consoldated Commanders Act analytics data.
+    /// Consolidated Commanders Act analytics data.
     var analyticsMetadata: [String: String] {
-        var analyticsMetadata = mediaComposition.analyticsMetadata
-        analyticsMetadata.merge(mediaComposition.mainChapter.analyticsMetadata) { _, new in new }
+        var analyticsMetadata = mediaComposition.mainChapter.analyticsMetadata
+        guard !analyticsMetadata.isEmpty else { return [:] }
+        analyticsMetadata.merge(mediaComposition.analyticsMetadata) { _, new in new }
         analyticsMetadata.merge(resource.analyticsMetadata) { _, new in new }
         return analyticsMetadata
     }
