@@ -34,22 +34,25 @@ public struct ComScoreLabels {
 
 /// Common labels.
 public extension ComScoreLabels {
-    /// Value of `c2`.
+    /// Value of `c2` (comScore account).
     var c2: String? {
         extract()
     }
 
-    /// Value of `ns_ap_an`.
+    /// Value of `ns_ap_an` (application name).
     var ns_ap_an: String? {
         extract()
     }
+}
 
-    /// Value of `mp_brand`.
+/// Mediapulse labels.
+public extension ComScoreLabels {
+    /// Value of `mp_brand` (vendor).
     var mp_brand: String? {
         extract()
     }
 
-    /// Value of `mp_v`.
+    /// Value of `mp_v` (application version).
     var mp_v: String? {
         extract()
     }
@@ -57,7 +60,7 @@ public extension ComScoreLabels {
 
 /// Labels related to page views.
 public extension ComScoreLabels {
-    /// Value of `ns_category`.
+    /// Value of `ns_category` (name of the section).
     var ns_category: String? {
         extract()
     }
@@ -65,24 +68,24 @@ public extension ComScoreLabels {
 
 /// Labels related to streaming.
 public extension ComScoreLabels {
-    /// Value of `ns_st_mp`.
+    /// Value of `ns_st_mp` (media player name).
     var ns_st_mp: String? {
         extract()
     }
 
-    /// Value of `ns_st_po`.
+    /// Value of `ns_st_po` (playback position).
     var ns_st_po: Double? {
         guard let value: Double = extract() else { return nil }
         return value / 1000
     }
 
-    /// Value of `ns_st_ldw`.
+    /// Value of `ns_st_ldw` (DVR window length).
     var ns_st_ldw: Double? {
         guard let value: Double = extract() else { return nil }
         return value / 1000
     }
 
-    /// Value of `ns_st_ldo`.
+    /// Value of `ns_st_ldo` (DVR live edge offset).
     var ns_st_ldo: Double? {
         guard let value: Double = extract() else { return nil }
         return value / 1000
