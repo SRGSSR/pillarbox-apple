@@ -44,8 +44,8 @@ public final class ComScoreTracker: PlayerItemTracker {
     }
 
     private func notify(playbackState: PlaybackState, isSeeking: Bool, isBuffering: Bool, player: Player) {
-        AnalyticsListener.capture(streamingAnalytics.configuration())
         guard !metadata.isEmpty else { return }
+        AnalyticsListener.capture(streamingAnalytics.configuration())
         streamingAnalytics.setProperties(for: player)
         streamingAnalytics.notifyEvent(playbackState: playbackState, isSeeking: isSeeking, isBuffering: isBuffering)
     }
