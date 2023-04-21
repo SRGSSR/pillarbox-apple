@@ -7,9 +7,15 @@
 @testable import Analytics
 
 import Circumspect
+import ComScore
 import XCTest
 
-class ComScoreTestCase: TestCase {}
+class ComScoreTestCase: TestCase {
+    override class func tearDown() {
+        // Avoid test targets getting stuck forever after execution, see https://github.com/SRGSSR/pillarbox-apple/issues/353
+        SCORAnalytics.clearOfflineCache()
+    }
+}
 
 extension ComScoreTestCase {
     /// Collect events emitted by comScore during some time interval and match them against expectations.
