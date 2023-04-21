@@ -60,17 +60,17 @@ public final class ComScoreTracker: PlayerItemTracker {
 
 private extension SCORStreamingAnalytics {
     private static func duration(for player: Player) -> Int {
-        player.timeRange.isValid ? Int(player.timeRange.duration.seconds * 1000) : 0
+        player.timeRange.isValid ? Int(player.timeRange.duration.seconds.toMilliseconds) : 0
     }
 
     private static func position(for player: Player) -> Int {
-        player.time.isValid ? Int(player.time.seconds * 1000) : 0
+        player.time.isValid ? Int(player.time.seconds.toMilliseconds) : 0
     }
 
     private static func offset(for player: Player) -> Int {
         guard player.timeRange.isValid, player.time.isValid else { return 0 }
         let offset = player.timeRange.end - player.time
-        return Int(offset.seconds * 1000)
+        return Int(offset.seconds.toMilliseconds)
     }
 
     private func notifyEvent(playbackState: PlaybackState) {
