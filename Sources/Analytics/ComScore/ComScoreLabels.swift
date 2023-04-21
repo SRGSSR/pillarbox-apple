@@ -27,8 +27,8 @@ public struct ComScoreLabels {
         return .init(value)
     }
 
-    subscript<T: LosslessStringConvertible>(index: String) -> T? {
-        extract(index)
+    subscript<T: LosslessStringConvertible>(key: String) -> T? {
+        extract(key)
     }
 }
 
