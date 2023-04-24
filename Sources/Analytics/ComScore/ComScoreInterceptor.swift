@@ -7,14 +7,16 @@
 import Combine
 import Foundation
 
+private var kInterceptorEnabled = false
+
 private enum ComScoreRequestInfoKey: String {
     case queryItems = "ComScoreRequestQueryItems"
 }
 
 /// Intercepts comScore requests and emits event information with a publisher.
 enum ComScoreInterceptor {
-    static func toggle() {
-        URLSession.toggleInterceptor()
+    static func enable() {
+        URLSession.enableInterceptor()
     }
 
     static func eventPublisher(for identifier: String) -> AnyPublisher<ComScoreEvent, Never> {
@@ -38,11 +40,13 @@ private extension Notification.Name {
 }
 
 private extension URLSession {
-    static func toggleInterceptor() {
+    static func enableInterceptor() {
+        guard !kInterceptorEnabled else { return }
         method_exchangeImplementations(
             class_getInstanceMethod(URLSession.self, NSSelectorFromString("dataTaskWithRequest:completionHandler:"))!,
             class_getInstanceMethod(URLSession.self, #selector(swizzled_dataTask(with:completionHandler:)))!
         )
+        kInterceptorEnabled = true
     }
 
     @objc

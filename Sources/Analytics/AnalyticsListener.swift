@@ -19,6 +19,7 @@ public enum AnalyticsListener {
     /// - Parameter perform: A closure to be executed. Receives a publisher which emits the events received during
     ///   the capture.
     public static func captureComScoreEvents(perform: (AnyPublisher<ComScoreEvent, Never>) -> Void) {
+        ComScoreInterceptor.enable()
         captureEvents(perform: perform) { identifier in
             ComScoreInterceptor.eventPublisher(for: identifier)
         }
@@ -37,10 +38,8 @@ public enum AnalyticsListener {
         assert(sessionIdentifier == nil, "Multiple captures are not supported")
 
         let identifier = UUID().uuidString
-        ComScoreInterceptor.toggle()
         sessionIdentifier = identifier
         defer {
-            ComScoreInterceptor.toggle()
             sessionIdentifier = nil
         }
 
