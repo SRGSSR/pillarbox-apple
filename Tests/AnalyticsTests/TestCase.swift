@@ -20,4 +20,11 @@ class TestCase: XCTestCase {
     override class func tearDown() {
         PollingDefaults.timeout = .seconds(1)
     }
+
+    override func setUp() {
+        super.setUp()
+        waitUntil { done in
+            AnalyticsListener.start(completion: done)
+        }
+    }
 }

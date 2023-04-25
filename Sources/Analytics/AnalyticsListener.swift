@@ -10,16 +10,21 @@ import Foundation
 import TCServerSide_noIDFA
 
 /// Provide a context in which analytics events can be listen. Should never be used in production, only for
-/// development purposes (e.g. unit tests).
+/// development purposes (e.g. unit tests). Must be started first.
 public enum AnalyticsListener {
     private static let sessionIdentifierKey = "listener_session_id"
     private static var sessionIdentifier: String?
+
+    /// Start the listener.
+    /// - Parameter completion: A completion called when the listener has been started.
+    public static func start(completion: @escaping () -> Void) {
+        ComScoreInterceptor.start(completion: completion)
+    }
 
     /// Capture comScore events.
     /// - Parameter perform: A closure to be executed. Receives a publisher which emits the events received during
     ///   the capture.
     public static func captureComScoreEvents(perform: (AnyPublisher<ComScoreEvent, Never>) -> Void) {
-        ComScoreInterceptor.enable()
         captureEvents(perform: perform) { identifier in
             ComScoreInterceptor.eventPublisher(for: identifier)
         }

@@ -15,13 +15,33 @@ private enum ComScoreRequestInfoKey: String {
 
 /// Intercepts comScore requests and emits event information with a publisher.
 enum ComScoreInterceptor {
-    static func enable() {
+    private static var started = false
+    private static var cancellables = Set<AnyCancellable>()
+
+    static func start(completion: @escaping () -> Void) {
         URLSession.enableInterceptor()
+        guard !started else {
+            completion()
+            return
+        }
+
+        labelsPublisher()
+            .filter { $0.ns_ap_ev == "start" }
+            .sink { _ in
+                started = true
+                completion()
+            }
+            .store(in: &cancellables)
+    }
+
+    private static func labelsPublisher() -> AnyPublisher<ComScoreLabels, Never> {
+        NotificationCenter.default.publisher(for: .didReceiveComScoreRequest)
+            .compactMap { labels(from: $0) }
+            .eraseToAnyPublisher()
     }
 
     static func eventPublisher(for identifier: String) -> AnyPublisher<ComScoreEvent, Never> {
-        NotificationCenter.default.publisher(for: .didReceiveComScoreRequest)
-            .compactMap { labels(from: $0) }
+        labelsPublisher()
             .filter { $0.listener_session_id == identifier }
             .compactMap { .init(from: $0) }
             .eraseToAnyPublisher()
