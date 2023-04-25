@@ -10,7 +10,7 @@ import Circumspect
 import Nimble
 import XCTest
 
-final class AnalyticsTests: XCTestCase {
+final class AnalyticsTestsCase: TestCase {
     func testEmptyPageViewTitle() {
         guard nimbleThrowAssertionsEnabled() else { return }
         expect(Analytics.shared.sendPageView(title: " ")).to(throwAssertion())
