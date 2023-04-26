@@ -8,50 +8,39 @@
 
 import Nimble
 import Player
+import Streams
 import XCTest
 
 final class CommandersActTrackerTests: CommandersActTestCase {
     func testInitiallyPlaying() {
         let player = Player(item: .simple(
-            url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!,
+            url: Stream.onDemand.url,
             trackerAdapters: [
                 CommandersActTracker.adapter()
             ]
         ))
 
-        expectAtLeastEvents(
-            [
-                .play()
-            ]
-        ) {
+        expectAtLeastEvents(.play()) {
             player.play()
         }
     }
 
     func testPauseDuringPlayback() {
         let player = Player(item: .simple(
-            url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!,
+            url: Stream.onDemand.url,
             trackerAdapters: [
                 CommandersActTracker.adapter()
             ]
         ))
 
         player.play()
-        expect(player.playbackState).toEventually(equal(.playing), timeout: .seconds(10))
+        expect(player.playbackState).toEventually(equal(.playing))
 
-        expectAtLeastEvents(
-            [
-                .pause()
-            ]
-        ) {
+        expectAtLeastEvents(.pause()) {
             player.pause()
         }
 
-        expectAtLeastEvents(
-            [
-                .play()
-            ]
-        ) {
+        expectAtLeastEvents(.play()) {
             player.play()
         }
     }

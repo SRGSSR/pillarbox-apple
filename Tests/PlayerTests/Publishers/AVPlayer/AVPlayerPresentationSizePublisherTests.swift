@@ -7,6 +7,7 @@
 @testable import Player
 
 import AVFoundation
+import Streams
 
 final class AVPlayerPresentationSizePublisherTests: TestCase {
     func testUnknown() {

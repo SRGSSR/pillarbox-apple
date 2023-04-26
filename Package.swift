@@ -87,12 +87,10 @@ let package = Package(
                 .product(name: "TimelaneCombine", package: "TimelaneCombine")
             ]
         ),
-        .binaryTarget(name: "PackageInfo", path: "Artifacts/PackageInfo.artifactbundle"),
-        .plugin(
-            name: "PackageInfoPlugin",
-            capability: .buildTool(),
-            dependencies: [
-                .target(name: "PackageInfo")
+        .target(
+            name: "Streams",
+            resources: [
+                .process("Resources")
             ]
         ),
         .target(
@@ -102,11 +100,20 @@ let package = Package(
                 .product(name: "GoogleCastSDK-no-bluetooth", package: "GoogleCastSDK-no-bluetooth", condition: .when(platforms: [.iOS]))
             ]
         ),
+        .binaryTarget(name: "PackageInfo", path: "Artifacts/PackageInfo.artifactbundle"),
+        .plugin(
+            name: "PackageInfoPlugin",
+            capability: .buildTool(),
+            dependencies: [
+                .target(name: "PackageInfo")
+            ]
+        ),
         .testTarget(
             name: "AnalyticsTests",
             dependencies: [
                 .target(name: "Analytics"),
-                .target(name: "Circumspect")
+                .target(name: "Circumspect"),
+                .target(name: "Streams")
             ]
         ),
         .testTarget(
@@ -141,10 +148,8 @@ let package = Package(
             dependencies: [
                 .target(name: "Circumspect"),
                 .target(name: "Player"),
+                .target(name: "Streams"),
                 .product(name: "OrderedCollections", package: "swift-collections")
-            ],
-            resources: [
-                .process("Resources")
             ]
         ),
         .testTarget(

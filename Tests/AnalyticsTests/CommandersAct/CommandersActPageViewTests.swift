@@ -12,26 +12,24 @@ import XCTest
 final class CommandersActPageViewTests: CommandersActTestCase {
     func testLabels() {
         expectAtLeastEvents(
-            [
-                .page_view { labels in
-                    expect(labels.page_type).to(equal("title"))
-                    expect(labels.navigation_level_0).to(beNil())
-                    expect(labels.navigation_level_1).to(equal("level_1"))
-                    expect(labels.navigation_level_2).to(equal("level_2"))
-                    expect(labels.navigation_level_3).to(equal("level_3"))
-                    expect(labels.navigation_level_4).to(equal("level_4"))
-                    expect(labels.navigation_level_5).to(equal("level_5"))
-                    expect(labels.navigation_level_6).to(equal("level_6"))
-                    expect(labels.navigation_level_7).to(equal("level_7"))
-                    expect(labels.navigation_level_8).to(equal("level_8"))
-                    expect(labels.navigation_level_9).to(beNil())
-                    expect(["phone", "tablet", "tvbox", "phone"]).to(contain([labels.navigation_device]))
-                    expect(labels.app_library_version).to(equal(PackageInfo.version))
-                    expect(labels.navigation_app_site_name).to(equal("site"))
-                    expect(labels.navigation_property_type).to(equal("app"))
-                    expect(labels.navigation_bu_distributer).to(equal("RTS"))
-                }
-            ]
+            .page_view { labels in
+                expect(labels.page_type).to(equal("title"))
+                expect(labels.navigation_level_0).to(beNil())
+                expect(labels.navigation_level_1).to(equal("level_1"))
+                expect(labels.navigation_level_2).to(equal("level_2"))
+                expect(labels.navigation_level_3).to(equal("level_3"))
+                expect(labels.navigation_level_4).to(equal("level_4"))
+                expect(labels.navigation_level_5).to(equal("level_5"))
+                expect(labels.navigation_level_6).to(equal("level_6"))
+                expect(labels.navigation_level_7).to(equal("level_7"))
+                expect(labels.navigation_level_8).to(equal("level_8"))
+                expect(labels.navigation_level_9).to(beNil())
+                expect(["phone", "tablet", "tvbox", "phone"]).to(contain([labels.navigation_device]))
+                expect(labels.app_library_version).to(equal(PackageInfo.version))
+                expect(labels.navigation_app_site_name).to(equal("site"))
+                expect(labels.navigation_property_type).to(equal("app"))
+                expect(labels.navigation_bu_distributer).to(equal("RTS"))
+            }
         ) {
             Analytics.shared.sendPageView(title: "title", levels: [
                 "level_1",
@@ -48,19 +46,17 @@ final class CommandersActPageViewTests: CommandersActTestCase {
 
     func testEmptyLevels() {
         expectAtLeastEvents(
-            [
-                .page_view { labels in
-                    expect(labels.page_type).to(equal("title"))
-                    expect(labels.navigation_level_1).to(beNil())
-                    expect(labels.navigation_level_2).to(beNil())
-                    expect(labels.navigation_level_3).to(beNil())
-                    expect(labels.navigation_level_4).to(beNil())
-                    expect(labels.navigation_level_5).to(beNil())
-                    expect(labels.navigation_level_6).to(beNil())
-                    expect(labels.navigation_level_7).to(beNil())
-                    expect(labels.navigation_level_8).to(beNil())
-                }
-            ]
+            .page_view { labels in
+                expect(labels.page_type).to(equal("title"))
+                expect(labels.navigation_level_1).to(beNil())
+                expect(labels.navigation_level_2).to(beNil())
+                expect(labels.navigation_level_3).to(beNil())
+                expect(labels.navigation_level_4).to(beNil())
+                expect(labels.navigation_level_5).to(beNil())
+                expect(labels.navigation_level_6).to(beNil())
+                expect(labels.navigation_level_7).to(beNil())
+                expect(labels.navigation_level_8).to(beNil())
+            }
         ) {
             Analytics.shared.sendPageView(title: "title", levels: [
                 " ",

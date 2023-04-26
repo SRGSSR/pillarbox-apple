@@ -11,68 +11,83 @@ public struct ComScoreLabels {
     let dictionary: [String: String]
 
     var ns_st_ev: String? {
-        extract { $0 }
+        extract()
     }
 
     var ns_ap_ev: String? {
-        extract { $0 }
+        extract()
     }
 
     var listener_session_id: String? {
-        extract { $0 }
+        extract()
     }
 
-    private func extract<T>(key: String = #function, conversion: (String) -> T?) -> T? {
+    private func extract<T: LosslessStringConvertible>(_ key: String = #function) -> T? {
         guard let value = dictionary[key] else { return nil }
-        return conversion(value)
+        return .init(value)
+    }
+
+    subscript<T: LosslessStringConvertible>(key: String) -> T? {
+        extract(key)
     }
 }
 
 /// Common labels.
 public extension ComScoreLabels {
-    /// Value of `c2`.
+    /// Value of `c2` (comScore account).
     var c2: String? {
-        extract { $0 }
+        extract()
     }
 
-    /// Value of `ns_ap_an`.
+    /// Value of `ns_ap_an` (application name).
     var ns_ap_an: String? {
-        extract { $0 }
+        extract()
     }
+}
 
-    /// Value of `mp_brand`.
+/// Mediapulse labels.
+public extension ComScoreLabels {
+    /// Value of `mp_brand` (vendor).
     var mp_brand: String? {
-        extract { $0 }
+        extract()
     }
 
-    /// Value of `mp_v`.
+    /// Value of `mp_v` (application version).
     var mp_v: String? {
-        extract { $0 }
+        extract()
     }
 }
 
 /// Labels related to page views.
 public extension ComScoreLabels {
-    /// Value of `ns_category`.
+    /// Value of `ns_category` (name of the section).
     var ns_category: String? {
-        extract { $0 }
+        extract()
     }
 }
 
 /// Labels related to streaming.
 public extension ComScoreLabels {
-    /// Value of `ns_st_mp`.
+    /// Value of `ns_st_mp` (media player name).
     var ns_st_mp: String? {
-        extract { $0 }
+        extract()
     }
 
-    /// Value of `ns_st_po`.
-    var ns_st_po: Int? {
-        extract { Int($0) }
+    /// Value of `ns_st_po` (playback position).
+    var ns_st_po: Double? {
+        guard let value: Double = extract() else { return nil }
+        return value / 1000
     }
 
-    /// Value of `ns_st_ldw`.
-    var ns_st_ldw: Int? {
-        extract { Int($0) }
+    /// Value of `ns_st_ldw` (DVR window length).
+    var ns_st_ldw: Double? {
+        guard let value: Double = extract() else { return nil }
+        return value / 1000
+    }
+
+    /// Value of `ns_st_ldo` (DVR live edge offset).
+    var ns_st_ldo: Double? {
+        guard let value: Double = extract() else { return nil }
+        return value / 1000
     }
 }

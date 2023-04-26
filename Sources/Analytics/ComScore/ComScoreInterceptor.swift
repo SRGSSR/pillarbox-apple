@@ -7,19 +7,41 @@
 import Combine
 import Foundation
 
+private var kInterceptorEnabled = false
+
 private enum ComScoreRequestInfoKey: String {
     case queryItems = "ComScoreRequestQueryItems"
 }
 
 /// Intercepts comScore requests and emits event information with a publisher.
 enum ComScoreInterceptor {
-    static func toggle() {
-        URLSession.toggleInterceptor()
+    private static var started = false
+    private static var cancellables = Set<AnyCancellable>()
+
+    static func start(completion: @escaping () -> Void) {
+        URLSession.enableInterceptor()
+        guard !started else {
+            completion()
+            return
+        }
+
+        labelsPublisher()
+            .filter { $0.ns_ap_ev == "start" }
+            .sink { _ in
+                started = true
+                completion()
+            }
+            .store(in: &cancellables)
+    }
+
+    private static func labelsPublisher() -> AnyPublisher<ComScoreLabels, Never> {
+        NotificationCenter.default.publisher(for: .didReceiveComScoreRequest)
+            .compactMap { labels(from: $0) }
+            .eraseToAnyPublisher()
     }
 
     static func eventPublisher(for identifier: String) -> AnyPublisher<ComScoreEvent, Never> {
-        NotificationCenter.default.publisher(for: .didReceiveComScoreRequest)
-            .compactMap { labels(from: $0) }
+        labelsPublisher()
             .filter { $0.listener_session_id == identifier }
             .compactMap { .init(from: $0) }
             .eraseToAnyPublisher()
@@ -38,11 +60,13 @@ private extension Notification.Name {
 }
 
 private extension URLSession {
-    static func toggleInterceptor() {
+    static func enableInterceptor() {
+        guard !kInterceptorEnabled else { return }
         method_exchangeImplementations(
             class_getInstanceMethod(URLSession.self, NSSelectorFromString("dataTaskWithRequest:completionHandler:"))!,
             class_getInstanceMethod(URLSession.self, #selector(swizzled_dataTask(with:completionHandler:)))!
         )
+        kInterceptorEnabled = true
     }
 
     @objc

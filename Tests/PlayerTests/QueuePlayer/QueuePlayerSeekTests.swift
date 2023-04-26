@@ -10,6 +10,7 @@ import AVFoundation
 import Circumspect
 import Nimble
 import OrderedCollections
+import Streams
 import XCTest
 
 private class QueuePlayerMock: QueuePlayer {

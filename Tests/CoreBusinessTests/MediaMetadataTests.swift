@@ -48,4 +48,26 @@ final class MediaMetadataTests: XCTestCase {
         expect(metadata.subtitle).to(beNil())
         expect(metadata.description).to(beNil())
     }
+
+    func testAnalytics() {
+        let mediaComposition = Mock.mediaComposition(.onDemand)
+        let metadata = MediaMetadata(
+            mediaComposition: mediaComposition,
+            resource: mediaComposition.mainChapter.recommendedResource!,
+            image: nil
+        )
+        expect(metadata.analyticsData).notTo(beEmpty())
+        expect(metadata.analyticsMetadata).notTo(beEmpty())
+    }
+
+    func testMissingChapterAnalytics() {
+        let mediaComposition = Mock.mediaComposition(.missingAnalytics)
+        let metadata = MediaMetadata(
+            mediaComposition: mediaComposition,
+            resource: mediaComposition.mainChapter.recommendedResource!,
+            image: nil
+        )
+        expect(metadata.analyticsData).to(beEmpty())
+        expect(metadata.analyticsMetadata).to(beEmpty())
+    }
 }

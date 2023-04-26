@@ -7,6 +7,7 @@
 @testable import Player
 
 import Circumspect
+import Streams
 
 final class PlayerItemTrackerTests: TestCase {
     func testPlayerItemLifecycle() {

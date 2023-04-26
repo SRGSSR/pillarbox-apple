@@ -8,6 +8,7 @@
 
 import Foundation
 import Nimble
+import Streams
 
 final class RestartTests: TestCase {
     func testWithOneGoodItem() {

@@ -1,0 +1,179 @@
+{
+   "chapterUrn" : "urn:rts:video:13360574",
+   "episode" : {
+      "id" : "13360565",
+      "title" : "Yadebat",
+      "publishedDate" : "2022-09-05T16:30:00+02:00",
+      "imageUrl" : "https://www.rts.ch/2022/09/05/18/20/13360573.image/16x9",
+      "imageTitle" : "On réunit des ex après leur rupture [RTS]"
+   },
+   "show" : {
+      "id" : "10174267",
+      "vendor" : "RTS",
+      "transmission" : "TV",
+      "urn" : "urn:rts:show:tv:10174267",
+      "title" : "Yadebat",
+      "lead" : "Une série qui te donne la parole, pour laisser entendre ton avis sur les débats de société animée par Melissa.",
+      "description" : "Une série qui te donne la parole, pour laisser entendre ton avis sur les débats de société animée par Melissa.",
+      "imageUrl" : "https://www.rts.ch/2020/01/10/11/14/10520588.image/16x9",
+      "imageTitle" : "Yadebat - Tataki [RTS]",
+      "posterImageUrl" : "https://ws.srf.ch/asset/image/audio/e0322b37-5697-474d-93ac-19a4044a6a24/POSTER.jpg",
+      "posterImageIsFallbackUrl" : true,
+      "audioDescriptionAvailable" : false,
+      "subtitlesAvailable" : false,
+      "multiAudioLanguagesAvailable" : false,
+      "topicList" : [ {
+         "id" : "59952",
+         "vendor" : "RTS",
+         "transmission" : "TV",
+         "urn" : "urn:rts:topic:tv:59952",
+         "title" : "Yadebat"
+      }, {
+         "id" : "54537",
+         "vendor" : "RTS",
+         "transmission" : "TV",
+         "urn" : "urn:rts:topic:tv:54537",
+         "title" : "Tataki"
+      } ],
+      "allowIndexing" : false
+   },
+   "chapterList" : [ {
+      "id" : "13360574",
+      "mediaType" : "VIDEO",
+      "vendor" : "RTS",
+      "urn" : "urn:rts:video:13360574",
+      "title" : "On réunit des ex après leur rupture",
+      "description" : "Dans ce nouvel épisode de YADEBAT, Mélissa réunit 3 couples qui se sont séparés récemment. Elles les a questionné en face à face pour connaître leurs différents ressentis et réactions.",
+      "imageUrl" : "https://www.rts.ch/2022/09/05/18/20/13360573.image/16x9",
+      "imageTitle" : "On réunit des ex après leur rupture [RTS]",
+      "type" : "EPISODE",
+      "date" : "2022-09-05T16:30:00+02:00",
+      "duration" : 902360,
+      "validFrom" : "2022-09-05T16:30:00+02:00",
+      "validTo" : "2100-01-01T23:59:59+01:00",
+      "playableAbroad" : true,
+      "socialCountList" : [ {
+         "key" : "srgView",
+         "value" : 17
+      }, {
+         "key" : "srgLike",
+         "value" : 0
+      }, {
+         "key" : "fbShare",
+         "value" : 0
+      }, {
+         "key" : "twitterShare",
+         "value" : 0
+      }, {
+         "key" : "googleShare",
+         "value" : 0
+      }, {
+         "key" : "whatsAppShare",
+         "value" : 0
+      } ],
+      "displayable" : true,
+      "position" : 0,
+      "noEmbed" : false,
+            "eventData" : "$27549332a83ca6ac$64b181b51953d6ed48de11986513e2f93922eb3d4315e6d5ad8189e1fe38d933c011ba7ded29e3d757ba1e566e76d65d97c8f0cd0735cc47b1cb3e5cf091c89c8d6c18ff31e19e3d7509cbf826c0c156fd10b8908ebe481aaf7282de102e92342ffb36b52df58453b40d64883f720fb3eddd38b595ddf6961acc4bc33abb3f2c49b7d90b52a35239f0209caa3ebc532e6a95315bd382bc08f2b78af2ec23c3f7e7917de924cb7f85b8aedac2fdafd027fe3880e07f3a0ba05f43d0ce601a1d2c7b756012c8820e12eef32fb9c0e1f532cce31cf1be738a9d6c05555857700fc5e1f0e1bd9886f06c55f5e731a66daa09be035e5ef53a4da159a7d3943a67ebaa1ac1302ad3ff046739eb185d78737e1543e7788d4edd9858af0e6846460106e954e8f1176cf60876aad36646c11a3b3a824ab54433f99c4576accea86e2b853c",
+      "resourceList" : [ {
+         "url" : "https://rts-vod-amd.akamaized.net/ww/13360574/447e0958-42a8-3bdd-8365-95d54031e605/master.m3u8",
+         "quality" : "HD",
+         "protocol" : "HLS",
+         "encoding" : "H264",
+         "mimeType" : "application/x-mpegURL",
+         "presentation" : "DEFAULT",
+         "streaming" : "HLS",
+         "dvr" : false,
+         "live" : false,
+         "mediaContainer" : "FMP4",
+         "audioCodec" : "AAC",
+         "videoCodec" : "H264",
+         "tokenType" : "NONE",
+         "audioTrackList" : [ {
+            "locale" : "fr",
+            "language" : "Français",
+            "source" : "HLS"
+         } ],
+         "analyticsData" : {
+            "srg_mqual" : "HD",
+            "srg_mpres" : "DEFAULT"
+         },
+         "analyticsMetadata" : {
+            "media_streaming_quality" : "HD",
+            "media_special_format" : "DEFAULT",
+            "media_url" : "https://rts-vod-amd.akamaized.net/ww/13360574/447e0958-42a8-3bdd-8365-95d54031e605/master.m3u8"
+         }
+      } ],
+      "aspectRatio" : "16:9",
+      "spriteSheet" : {
+         "urn" : "urn:rts:video:13360574",
+         "rows" : 23,
+         "columns" : 20,
+         "thumbnailHeight" : 84,
+         "thumbnailWidth" : 150,
+         "interval" : 2000,
+         "url" : "https://il.srgssr.ch/spritesheet/urn/rts/video/13360574/sprite-13360574.jpeg"
+      }
+   } ],
+   "topicList" : [ {
+      "id" : "59952",
+      "vendor" : "RTS",
+      "transmission" : "TV",
+      "urn" : "urn:rts:topic:tv:59952",
+      "title" : "Yadebat"
+   }, {
+      "id" : "54537",
+      "vendor" : "RTS",
+      "transmission" : "TV",
+      "urn" : "urn:rts:topic:tv:54537",
+      "title" : "Tataki"
+   } ],
+   "analyticsData" : {
+      "srg_pr_id" : "13360565",
+      "srg_plid" : "10174267",
+      "ns_st_pl" : "Yadebat",
+      "ns_st_pr" : "Yadebat du 05.09.2022",
+      "ns_st_dt" : "2022-09-05",
+      "ns_st_ddt" : "2022-09-05",
+      "ns_st_tdt" : "*null",
+      "ns_st_tm" : "*null",
+      "ns_st_tep" : "500418168",
+      "ns_st_li" : "0",
+      "ns_st_stc" : "0867",
+      "ns_st_st" : "RTS Online",
+      "ns_st_tpr" : "10174267",
+      "ns_st_en" : "*null",
+      "ns_st_ge" : "*null",
+      "ns_st_ia" : "*null",
+      "ns_st_ce" : "1",
+      "ns_st_cdm" : "eo",
+      "ns_st_cmt" : "ec",
+      "srg_unit" : "RTS",
+      "srg_c1" : "full",
+      "srg_c2" : "video_tataki_yadebat",
+      "srg_c3" : "RTS.ch",
+      "srg_tv_id" : "500418168"
+   },
+   "analyticsMetadata" : {
+      "media_episode_id" : "13360565",
+      "media_show_id" : "10174267",
+      "media_show" : "Yadebat",
+      "media_episode" : "Yadebat du 05.09.2022",
+      "media_is_livestream" : "false",
+      "media_full_length" : "full",
+      "media_enterprise_units" : "RTS",
+      "media_joker1" : "full",
+      "media_joker2" : "video_tataki_yadebat",
+      "media_joker3" : "RTS.ch",
+      "media_is_web_only" : "true",
+      "media_production_source" : "produced.for.web",
+      "media_tv_id" : "500418168",
+      "media_thumbnail" : "https://www.rts.ch/2022/09/05/18/20/13360573.image/16x9/scale/width/344",
+      "media_publication_date" : "2022-09-05",
+      "media_publication_time" : "16:30:00",
+      "media_publication_datetime" : "2022-09-05T16:30:00+02:00",
+      "media_content_group" : "Yadebat,Tataki",
+      "media_since_publication_d" : "0",
+      "media_since_publication_h" : "19"
+   }
+}

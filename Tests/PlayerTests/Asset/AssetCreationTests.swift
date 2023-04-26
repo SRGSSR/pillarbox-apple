@@ -7,6 +7,7 @@
 @testable import Player
 
 import Nimble
+import Streams
 import XCTest
 
 final class AssetCreationTests: TestCase {

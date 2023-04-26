@@ -8,6 +8,7 @@
 
 import AVFoundation
 import Foundation
+import Streams
 
 final class AVPlayerSmoothCurrentItemPublisherTests: TestCase {
     func testEmpty() {

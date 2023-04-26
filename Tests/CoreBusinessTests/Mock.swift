@@ -17,6 +17,7 @@ enum Mock {
     }
 
     enum MediaCompositionKind: String {
+        case missingAnalytics
         case drm
         case live
         case onDemand

@@ -5,14 +5,21 @@
 //
 
 import Combine
+import ComScore
 import Foundation
 import TCServerSide_noIDFA
 
 /// Provide a context in which analytics events can be listen. Should never be used in production, only for
-/// development purposes (e.g. unit tests).
+/// development purposes (e.g. unit tests). Must be started first.
 public enum AnalyticsListener {
     private static let sessionIdentifierKey = "listener_session_id"
     private static var sessionIdentifier: String?
+
+    /// Start the listener.
+    /// - Parameter completion: A completion called when the listener has been started.
+    public static func start(completion: @escaping () -> Void) {
+        ComScoreInterceptor.start(completion: completion)
+    }
 
     /// Capture comScore events.
     /// - Parameter perform: A closure to be executed. Receives a publisher which emits the events received during
@@ -35,13 +42,9 @@ public enum AnalyticsListener {
     private static func captureEvents<P>(perform: (P) -> Void, using publisher: (String) -> P) where P: Publisher, P.Failure == Never {
         assert(sessionIdentifier == nil, "Multiple captures are not supported")
 
-        try? Analytics.shared.start(with: .init(vendor: .RTS, sourceKey: "source", site: "site"))
-
         let identifier = UUID().uuidString
-        ComScoreInterceptor.toggle()
         sessionIdentifier = identifier
         defer {
-            ComScoreInterceptor.toggle()
             sessionIdentifier = nil
         }
 
@@ -51,6 +54,11 @@ public enum AnalyticsListener {
     static func capture(_ labels: inout [String: String]) {
         guard let sessionIdentifier else { return }
         labels[sessionIdentifierKey] = sessionIdentifier
+    }
+
+    static func capture(_ configuration: SCORStreamingConfiguration) {
+        guard let sessionIdentifier else { return }
+        configuration.setLabelWithName(sessionIdentifierKey, value: sessionIdentifier)
     }
 
     static func capture(_ event: TCEvent) {

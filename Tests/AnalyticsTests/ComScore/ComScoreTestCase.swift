@@ -9,12 +9,13 @@
 import Circumspect
 import XCTest
 
-class ComScoreTestCase: XCTestCase {}
+class ComScoreTestCase: TestCase {}
 
 extension ComScoreTestCase {
     /// Collect events emitted by comScore during some time interval and match them against expectations.
+    /// Note that a network connection is required by the comScore SDK to properly emit events.
     func expectEvents(
-        _ expectations: [ComScoreEventExpectation],
+        _ expectations: ComScoreEventExpectation...,
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
@@ -34,8 +35,9 @@ extension ComScoreTestCase {
     }
 
     /// Expect events emitted by comScore during some time interval and match them against expectations.
+    /// Note that a network connection is required by the comScore SDK to properly emit events.
     func expectAtLeastEvents(
-        _ expectations: [ComScoreEventExpectation],
+        _ expectations: ComScoreEventExpectation...,
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
