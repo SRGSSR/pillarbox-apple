@@ -109,7 +109,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
             player = nil
         }
     }
-    
+
     func testDestroyPlayerWhileInitiallyPaused() {
         var player: Player? = Player(item: .simple(
             url: Stream.dvr.url,
@@ -118,7 +118,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
             ]
         ))
         expect(player?.playbackState).toEventually(equal(.paused))
-        
+
         expectNoEvents(during: .seconds(5)) {
             player = nil
         }
