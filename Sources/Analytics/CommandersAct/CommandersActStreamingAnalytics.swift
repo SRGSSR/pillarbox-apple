@@ -7,15 +7,22 @@
 import Foundation
 
 final class CommandersActStreamingAnalytics {
-    private var lastEvent: Event?
+    private var lastEvent: Event = .play
 
     init() {
-        Analytics.shared.sendCommandersActStreamingEvent(name: "play", labels: [:])
+        Analytics.shared.sendCommandersActStreamingEvent(name: Event.play.rawValue, labels: [:])
     }
 
     func notify(_ event: Event) {
-        guard event != .play, event != lastEvent else { return }
-        Analytics.shared.sendCommandersActStreamingEvent(name: event.rawValue, labels: [:])
+        guard event != lastEvent else { return }
+
+        switch (lastEvent, event) {
+        case (.pause, .seek), (.pause, .eof):
+            break
+        default:
+            Analytics.shared.sendCommandersActStreamingEvent(name: event.rawValue, labels: [:])
+        }
+
         lastEvent = event
     }
 
