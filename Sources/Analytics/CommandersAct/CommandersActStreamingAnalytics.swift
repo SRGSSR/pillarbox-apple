@@ -6,5 +6,12 @@
 
 import Foundation
 
-struct CommandersActStreamingAnalytics {
+final class CommandersActStreamingAnalytics {
+    init() {
+        Analytics.shared.sendCommandersActStreamingEvent(name: "play", labels: [:])
+    }
+
+    deinit {
+        Analytics.shared.sendCommandersActStreamingEvent(name: "stop", labels: [:])
+    }
 }

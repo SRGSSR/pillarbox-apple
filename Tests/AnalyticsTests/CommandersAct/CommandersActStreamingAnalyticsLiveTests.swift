@@ -6,5 +6,5 @@
 
 import Foundation
 
-private final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {
+final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {
 }

@@ -4,8 +4,13 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
+@testable import Analytics
 
 // swiftlint:disable:next type_name
-private final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase {
+final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase {
+    func testLifeCycle() {
+        expectAtLeastEvents(.play(), .stop()) {
+           _ = CommandersActStreamingAnalytics()
+        }
+    }
 }
