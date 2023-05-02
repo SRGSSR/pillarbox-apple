@@ -21,6 +21,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
         expect(analytics.lastEvent).to(equal(.play))
         expectNoEvents(during: .seconds(2)) {
             analytics.notify(.play)
+            expect(analytics.lastEvent).to(equal(.play))
         }
     }
 
@@ -29,6 +30,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
         expect(analytics.lastEvent).to(equal(.play))
         expectAtLeastEvents(.pause()) {
             analytics.notify(.pause)
+            expect(analytics.lastEvent).to(equal(.pause))
         }
     }
 
@@ -37,6 +39,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
         expect(analytics.lastEvent).to(equal(.play))
         expectAtLeastEvents(.seek()) {
             analytics.notify(.seek)
+            expect(analytics.lastEvent).to(equal(.seek))
         }
     }
 
@@ -45,6 +48,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
         expect(analytics.lastEvent).to(equal(.play))
         expectAtLeastEvents(.eof()) {
             analytics.notify(.eof)
+            expect(analytics.lastEvent).to(equal(.eof))
         }
     }
 
@@ -53,6 +57,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
         expect(analytics.lastEvent).to(equal(.play))
         expectAtLeastEvents(.stop()) {
             analytics.notify(.stop)
+            expect(analytics.lastEvent).to(equal(.stop))
         }
     }
 
@@ -61,6 +66,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
         analytics.notify(.pause)
         expectAtLeastEvents(.play()) {
             analytics.notify(.play)
+            expect(analytics.lastEvent).to(equal(.play))
         }
     }
 
@@ -69,6 +75,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
         analytics.notify(.pause)
         expectNoEvents(during: .seconds(2)) {
             analytics.notify(.pause)
+            expect(analytics.lastEvent).to(equal(.pause))
         }
     }
 
@@ -95,6 +102,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
         analytics.notify(.pause)
         expectAtLeastEvents(.stop()) {
             analytics.notify(.stop)
+            expect(analytics.lastEvent).to(equal(.stop))
         }
     }
 
@@ -103,6 +111,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
         analytics.notify(.seek)
         expectAtLeastEvents(.play()) {
             analytics.notify(.play)
+            expect(analytics.lastEvent).to(equal(.play))
         }
     }
 
@@ -120,6 +129,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
         analytics.notify(.seek)
         expectNoEvents(during: .seconds(2)) {
             analytics.notify(.seek)
+            expect(analytics.lastEvent).to(equal(.seek))
         }
     }
 
@@ -137,6 +147,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
         analytics.notify(.seek)
         expectAtLeastEvents(.stop()) {
             analytics.notify(.stop)
+            expect(analytics.lastEvent).to(equal(.stop))
         }
     }
 
@@ -172,6 +183,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
         analytics.notify(.eof)
         expectNoEvents(during: .seconds(2)) {
             analytics.notify(.eof)
+            expect(analytics.lastEvent).to(equal(.eof))
         }
     }
 
@@ -225,6 +237,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
         analytics.notify(.stop)
         expectNoEvents(during: .seconds(2)) {
             analytics.notify(.stop)
+            expect(analytics.lastEvent).to(equal(.stop))
         }
     }
 }
