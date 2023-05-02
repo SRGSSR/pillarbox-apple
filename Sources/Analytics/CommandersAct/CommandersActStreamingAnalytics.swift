@@ -21,6 +21,8 @@ final class CommandersActStreamingAnalytics {
             return
         case (.seek, .pause), (.seek, .eof):
             return
+        case (.eof, _):
+            return
         default:
             Analytics.shared.sendCommandersActStreamingEvent(name: event.rawValue, labels: [:])
         }
