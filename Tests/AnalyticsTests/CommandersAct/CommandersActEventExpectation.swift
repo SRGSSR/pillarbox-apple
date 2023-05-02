@@ -28,6 +28,16 @@ struct CommandersActEventExpectation {
         .init(name: .pause, evaluate: evaluate)
     }
 
+    /// Seek.
+    static func seek(evaluate: @escaping (CommandersActLabels) -> Void = { _ in }) -> Self {
+        .init(name: .seek, evaluate: evaluate)
+    }
+
+    /// Stop.
+    static func stop(evaluate: @escaping (CommandersActLabels) -> Void = { _ in }) -> Self {
+        .init(name: .stop, evaluate: evaluate)
+    }
+
     /// End.
     static func eof(evaluate: @escaping (CommandersActLabels) -> Void = { _ in }) -> Self {
         .init(name: .eof, evaluate: evaluate)

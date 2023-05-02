@@ -17,8 +17,9 @@ final class ComScorePageViewTests: ComScoreTestCase {
                 expect(labels.ns_ap_an).to(equal("xctest"))
                 expect(labels.ns_category).to(equal("title"))
                 expect(labels.ns_st_mp).to(beNil())
+                expect(labels.ns_st_mv).to(beNil())
                 expect(labels.mp_brand).to(equal("RTS"))
-                expect(labels.mp_v).notTo(beNil())
+                expect(labels.mp_v).notTo(beEmpty())
             }
         ) {
             Analytics.shared.sendPageView(title: "title")

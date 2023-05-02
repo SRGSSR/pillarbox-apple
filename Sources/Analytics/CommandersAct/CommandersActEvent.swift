@@ -12,6 +12,8 @@ public struct CommandersActEvent {
     public enum Name: String {
         case play
         case pause
+        case seek
+        case stop
         case eof
         case page_view
         case hidden_event

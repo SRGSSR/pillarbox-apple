@@ -35,7 +35,7 @@ public final class CommandersActTracker: PlayerItemTracker {
 
     private func notify(playbackState: PlaybackState) {
         guard let name = Self.eventName(for: playbackState) else { return }
-        Analytics.shared.sendCommandersActStreamingEvent(name: name)
+        Analytics.shared.sendCommandersActStreamingEvent(name: name, labels: [:])
     }
 
     public func disable() {

@@ -73,6 +73,11 @@ public extension ComScoreLabels {
         extract()
     }
 
+    /// Value of `ns_st_mv` (media player version).
+    var ns_st_mv: String? {
+        extract()
+    }
+
     /// Value of `ns_st_po` (playback position).
     var ns_st_po: Double? {
         guard let value: Double = extract() else { return nil }
