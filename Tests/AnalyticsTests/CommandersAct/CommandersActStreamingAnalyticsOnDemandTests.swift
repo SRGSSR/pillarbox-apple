@@ -6,6 +6,8 @@
 
 @testable import Analytics
 
+import Nimble
+
 // swiftlint:disable:next type_name
 final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase {
     func testLifeCycle() {
@@ -95,6 +97,7 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
         analytics.notify(.pause)
         expectNoEvents(during: .seconds(2)) {
             analytics.notify(.seek)
+            expect(analytics.lastEvent).to(equal(.pause))
         }
     }
 
@@ -103,6 +106,7 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
         analytics.notify(.pause)
         expectNoEvents(during: .seconds(2)) {
             analytics.notify(.eof)
+            expect(analytics.lastEvent).to(equal(.pause))
         }
     }
 

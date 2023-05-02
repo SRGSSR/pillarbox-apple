@@ -7,7 +7,7 @@
 import Foundation
 
 final class CommandersActStreamingAnalytics {
-    private var lastEvent: Event = .play
+    var lastEvent: Event = .play
 
     init() {
         Analytics.shared.sendCommandersActStreamingEvent(name: Event.play.rawValue, labels: [:])
@@ -18,7 +18,7 @@ final class CommandersActStreamingAnalytics {
 
         switch (lastEvent, event) {
         case (.pause, .seek), (.pause, .eof):
-            break
+            return
         default:
             Analytics.shared.sendCommandersActStreamingEvent(name: event.rawValue, labels: [:])
         }
