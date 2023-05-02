@@ -13,4 +13,11 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
            _ = CommandersActStreamingAnalytics()
         }
     }
+
+    func testDoublePlay() {
+        let analytics = CommandersActStreamingAnalytics()
+        expectNoEvents(during: .seconds(2)) {
+            analytics.notify(.play)
+        }
+    }
 }

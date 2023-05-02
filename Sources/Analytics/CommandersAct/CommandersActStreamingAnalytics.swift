@@ -7,8 +7,17 @@
 import Foundation
 
 final class CommandersActStreamingAnalytics {
+    enum Event: String {
+        case play
+    }
+
     init() {
         Analytics.shared.sendCommandersActStreamingEvent(name: "play", labels: [:])
+    }
+
+    func notify(_ event: Event) {
+        guard event != .play else { return }
+        Analytics.shared.sendCommandersActStreamingEvent(name: event.rawValue, labels: [:])
     }
 
     deinit {
