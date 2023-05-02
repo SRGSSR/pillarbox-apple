@@ -117,4 +117,38 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
             analytics.notify(.stop)
         }
     }
+
+    func testSeekPlay() {
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.seek)
+        expectAtLeastEvents(.play()) {
+            analytics.notify(.play)
+        }
+    }
+
+    func testSeekPause() {
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.seek)
+        expectNoEvents(during: .seconds(2)) {
+            analytics.notify(.pause)
+            expect(analytics.lastEvent).to(equal(.seek))
+        }
+    }
+
+    func testSeekEof() {
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.seek)
+        expectNoEvents(during: .seconds(2)) {
+            analytics.notify(.eof)
+            expect(analytics.lastEvent).to(equal(.seek))
+        }
+    }
+
+    func testSeekStop() {
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.seek)
+        expectAtLeastEvents(.stop()) {
+            analytics.notify(.stop)
+        }
+    }
 }
