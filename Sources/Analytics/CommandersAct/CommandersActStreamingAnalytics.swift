@@ -9,6 +9,10 @@ import Foundation
 final class CommandersActStreamingAnalytics {
     enum Event: String {
         case play
+        case pause
+        case seek
+        case eof
+        case stop
     }
 
     init() {
