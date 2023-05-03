@@ -37,19 +37,14 @@ final class CommandersActStreamingAnalytics {
         }
     }
 
-    func notify(isBuffering: Bool) {
+    func notify(isBuffering: Bool, time: CMTime, range: CMTimeRange) {
+        updateReferences(at: time, in: range)
         self.isBuffering = isBuffering
     }
 
     private func sendEvent(_ event: Event, at time: CMTime, in range: CMTimeRange) {
-        if lastEvent == .play, !isBuffering {
-            playbackDuration += Date().timeIntervalSince(lastEventDate)
-        }
-
+        updateReferences(at: time, in: range)
         lastEvent = event
-        lastEventTime = time
-        lastEventRange = range
-        lastEventDate = Date()
 
         Analytics.shared.sendCommandersActStreamingEvent(
             name: event.rawValue,
@@ -70,6 +65,16 @@ final class CommandersActStreamingAnalytics {
             labels["media_position"] = String(Int(time.seconds))
         }
         return labels
+    }
+
+    private func updateReferences(at time: CMTime, in range: CMTimeRange) {
+        if lastEvent == .play, !isBuffering {
+            playbackDuration += Date().timeIntervalSince(lastEventDate)
+        }
+
+        lastEventTime = time
+        lastEventRange = range
+        lastEventDate = Date()
     }
 
     private func eventTime(after interval: CMTime) -> CMTime {
