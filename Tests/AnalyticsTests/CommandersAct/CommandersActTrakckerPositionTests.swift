@@ -12,7 +12,7 @@ import Player
 import Streams
 import XCTest
 
-final class CommandersActPositionTests: CommandersActTestCase {
+final class CommandersActTrakckerPositionTests: CommandersActTestCase {
     func testLivePlayback() {
         let player = Player(item: .simple(
             url: Stream.live.url,
