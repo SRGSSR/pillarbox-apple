@@ -26,6 +26,7 @@ final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {
 
     func testPositionAfterPause() {
         let analytics = CommandersActStreamingAnalytics(at: CMTime(value: 15, timescale: 1), in: Self.range, isLive: true)
+        wait(for: .seconds(3))
         expectAtLeastEvents(
             .pause { labels in
                 expect(labels.media_position).to(equal(3))
@@ -53,6 +54,8 @@ final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {
 
     func testPositionWhenDestroyedAfterPause() {
         var analytics: CommandersActStreamingAnalytics? = .init(at: CMTime(value: 15, timescale: 1), in: Self.range, isLive: true)
+        wait(for: .seconds(3))
+
         let newRange = CMTimeRange(start: CMTime(value: 5, timescale: 1), end: CMTime(value: 23, timescale: 1))
         analytics?.notify(.pause, at: CMTime(value: 18, timescale: 1), in: newRange)
         wait(for: .seconds(1))

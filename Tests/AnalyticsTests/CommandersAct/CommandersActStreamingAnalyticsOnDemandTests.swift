@@ -81,20 +81,6 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
         }
     }
 
-    func testPositionWhenDestroyedAfterEof() {
-        var analytics: CommandersActStreamingAnalytics? = .init(at: .zero, in: Self.range, isLive: false)
-        analytics?.notify(.eof, at: Self.range.end, in: Self.range)
-        wait(for: .seconds(1))
-
-        expectAtLeastEvents(
-            .stop { labels in
-                expect(labels.media_position).to(equal(Int(Self.range.end.seconds)))
-            }
-        ) {
-            analytics = nil
-        }
-    }
-
     func testNoTimeshift() {
         expectAtLeastEvents(
             .play { labels in

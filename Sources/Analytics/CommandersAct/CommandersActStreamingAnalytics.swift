@@ -37,7 +37,9 @@ final class CommandersActStreamingAnalytics {
     }
 
     private func sendEvent(_ event: Event, at time: CMTime, in range: CMTimeRange) {
-        playbackDuration += Date().timeIntervalSince(lastEventDate)
+        if lastEvent == .play {
+            playbackDuration += Date().timeIntervalSince(lastEventDate)
+        }
 
         lastEvent = event
         lastEventTime = time
