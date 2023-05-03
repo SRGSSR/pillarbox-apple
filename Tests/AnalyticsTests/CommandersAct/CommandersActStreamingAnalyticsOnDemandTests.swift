@@ -83,12 +83,12 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
 
     func testPositionWhenDestroyedAfterEof() {
         var analytics: CommandersActStreamingAnalytics? = .init(at: .zero, in: Self.range, isLive: false)
-        analytics?.notify(.eof, at: CMTime(value: 2, timescale: 1), in: Self.range)
+        analytics?.notify(.eof, at: Self.range.end, in: Self.range)
         wait(for: .seconds(1))
 
         expectAtLeastEvents(
             .stop { labels in
-                expect(labels.media_position).to(equal(2))
+                expect(labels.media_position).to(equal(Int(Self.range.end.seconds)))
             }
         ) {
             analytics = nil
