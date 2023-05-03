@@ -11,6 +11,7 @@ final class CommandersActStreamingAnalytics {
     var lastEvent: Event = .play
 
     private var isLive: Bool
+    private var isBuffering = false
     private var playbackDuration: TimeInterval = 0
     private var lastEventTime: CMTime = .zero
     private var lastEventRange: CMTimeRange = .zero
@@ -36,8 +37,12 @@ final class CommandersActStreamingAnalytics {
         }
     }
 
+    func notify(isBuffering: Bool) {
+        self.isBuffering = isBuffering
+    }
+
     private func sendEvent(_ event: Event, at time: CMTime, in range: CMTimeRange) {
-        if lastEvent == .play {
+        if lastEvent == .play, !isBuffering {
             playbackDuration += Date().timeIntervalSince(lastEventDate)
         }
 
@@ -68,7 +73,7 @@ final class CommandersActStreamingAnalytics {
     }
 
     private func eventTime(after interval: CMTime) -> CMTime {
-        lastEvent == .play ? lastEventTime + interval : lastEventTime
+        lastEvent == .play && !isBuffering ? lastEventTime + interval : lastEventTime
     }
 
     private func eventRange(after interval: CMTime) -> CMTimeRange {

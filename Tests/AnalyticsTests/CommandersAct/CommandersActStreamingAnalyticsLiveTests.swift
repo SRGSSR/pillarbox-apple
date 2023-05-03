@@ -52,6 +52,21 @@ final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {
         }
     }
 
+    func testPositionWhenDestroyedAfterPlayWhileBuffering() {
+        var analytics: CommandersActStreamingAnalytics? = .init(at: CMTime(value: 15, timescale: 1), in: Self.range, isLive: true)
+        analytics?.notify(isBuffering: true)
+        wait(for: .seconds(1))
+
+        expectAtLeastEvents(
+            .stop { labels in
+                expect(labels.media_position).to(equal(0))
+                expect(labels.media_timeshift).to(equal(6))
+            }
+        ) {
+            analytics = nil
+        }
+    }
+
     func testPositionWhenDestroyedAfterPause() {
         var analytics: CommandersActStreamingAnalytics? = .init(at: CMTime(value: 15, timescale: 1), in: Self.range, isLive: true)
         wait(for: .seconds(3))

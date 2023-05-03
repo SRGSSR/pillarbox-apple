@@ -34,6 +34,11 @@ public final class CommandersActTracker: PlayerItemTracker {
                 self?.notify(playbackState: state.playbackState, isSeeking: state.isSeeking, player: player)
             }
             .store(in: &cancellables)
+
+        player.$isBuffering.sink { [weak self] isBuffering in
+            self?.streamingAnalytics?.notify(isBuffering: isBuffering)
+        }
+        .store(in: &cancellables)
     }
 
     // swiftlint:disable:next cyclomatic_complexity
