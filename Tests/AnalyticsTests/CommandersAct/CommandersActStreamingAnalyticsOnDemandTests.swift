@@ -12,29 +12,35 @@ import Nimble
 
 // swiftlint:disable:next type_name
 final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase {
+    private static let range = CMTimeRange(start: .zero, end: CMTime(value: 20, timescale: 1))
+
     func testInitialPosition() {
         expectAtLeastEvents(
             .play { labels in
-                expect(labels.media_position).to(equal(0))
+                expect(labels.media_position).to(equal(2))
             }
         ) {
-            _ = CommandersActStreamingAnalytics()
+            _ = CommandersActStreamingAnalytics(
+                at: CMTime(value: 2, timescale: 1),
+                in: Self.range,
+                isLive: false
+            )
         }
     }
 
     func testIntermediatePosition() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(at: .zero, in: Self.range, isLive: false)
         expectAtLeastEvents(
             .pause { labels in
                 expect(labels.media_position).to(equal(2))
             }
         ) {
-            analytics.notify(.pause, at: CMTime(value: 2, timescale: 1))
+            analytics.notify(.pause, at: CMTime(value: 2, timescale: 1), in: Self.range)
         }
     }
 
     func testPositionWhenDestroyedAfterPlay() {
-        var analytics: CommandersActStreamingAnalytics? = .init()
+        var analytics: CommandersActStreamingAnalytics? = .init(at: .zero, in: Self.range, isLive: false)
         _ = analytics       // Silences the "was written to, but never read" warning.
         wait(for: .seconds(1))
 
@@ -48,8 +54,8 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
     }
 
     func testPositionWhenDestroyedAfterPause() {
-        var analytics: CommandersActStreamingAnalytics? = .init()
-        analytics?.notify(.pause, at: CMTime(value: 2, timescale: 1))
+        var analytics: CommandersActStreamingAnalytics? = .init(at: .zero, in: Self.range, isLive: false)
+        analytics?.notify(.pause, at: CMTime(value: 2, timescale: 1), in: Self.range)
         wait(for: .seconds(1))
 
         expectAtLeastEvents(
@@ -62,8 +68,8 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
     }
 
     func testPositionWhenDestroyedAfterSeek() {
-        var analytics: CommandersActStreamingAnalytics? = .init()
-        analytics?.notify(.seek, at: CMTime(value: 2, timescale: 1))
+        var analytics: CommandersActStreamingAnalytics? = .init(at: .zero, in: Self.range, isLive: false)
+        analytics?.notify(.seek, at: CMTime(value: 2, timescale: 1), in: Self.range)
         wait(for: .seconds(1))
 
         expectAtLeastEvents(
@@ -76,8 +82,8 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
     }
 
     func testPositionWhenDestroyedAfterEof() {
-        var analytics: CommandersActStreamingAnalytics? = .init()
-        analytics?.notify(.eof, at: CMTime(value: 2, timescale: 1))
+        var analytics: CommandersActStreamingAnalytics? = .init(at: .zero, in: Self.range, isLive: false)
+        analytics?.notify(.eof, at: CMTime(value: 2, timescale: 1), in: Self.range)
         wait(for: .seconds(1))
 
         expectAtLeastEvents(
@@ -95,7 +101,7 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
                 expect(labels.media_timeshift).to(beNil())
             }
         ) {
-            _ = CommandersActStreamingAnalytics()
+            _ = CommandersActStreamingAnalytics(at: .zero, in: Self.range, isLive: false)
         }
     }
 }

@@ -101,7 +101,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
 
         player?.pause()
         wait(for: .seconds(2))
-        
+
         expectAtLeastEvents(
             .stop { labels in
                 expect(labels.media_timeshift).to(equal(2))

@@ -8,6 +8,7 @@
 
 import Nimble
 
+// swiftlint:disable:next type_name
 final class CommandersActStreamingAnalyticsLabelTests: CommandersActTestCase {
     func testMediaPlayerProperties() {
         expectAtLeastEvents(
@@ -20,7 +21,7 @@ final class CommandersActStreamingAnalyticsLabelTests: CommandersActTestCase {
                 expect(labels.media_player_version).notTo(beEmpty())
             }
         ) {
-            _ = CommandersActStreamingAnalytics()
+            _ = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
         }
     }
 }
