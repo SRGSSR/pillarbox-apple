@@ -61,6 +61,12 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
         }
     }
 
+    func testPlayDeinit() {
+        expectAtLeastEvents(.play(), .stop()) {
+            _ = CommandersActStreamingAnalytics()
+        }
+    }
+
     func testPausePlay() {
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.pause)
@@ -103,6 +109,14 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
         expectAtLeastEvents(.stop()) {
             analytics.notify(.stop)
             expect(analytics.lastEvent).to(equal(.stop))
+        }
+    }
+
+    func testPauseDeinit() {
+        var analytics: CommandersActStreamingAnalytics? = CommandersActStreamingAnalytics()
+        analytics?.notify(.pause)
+        expectAtLeastEvents(.stop()) {
+            analytics = nil
         }
     }
 
@@ -151,6 +165,14 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
         }
     }
 
+    func testSeekDeinit() {
+        var analytics: CommandersActStreamingAnalytics? = CommandersActStreamingAnalytics()
+        analytics?.notify(.seek)
+        expectAtLeastEvents(.stop()) {
+            analytics = nil
+        }
+    }
+
     func testEofPlay() {
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.eof)
@@ -196,6 +218,14 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
         }
     }
 
+    func testEofDeinit() {
+        var analytics: CommandersActStreamingAnalytics? = CommandersActStreamingAnalytics()
+        analytics?.notify(.eof)
+        expectNoEvents(during: .seconds(2)) {
+            analytics = nil
+        }
+    }
+
     func testStopPlay() {
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.stop)
@@ -238,6 +268,14 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
         expectNoEvents(during: .seconds(2)) {
             analytics.notify(.stop)
             expect(analytics.lastEvent).to(equal(.stop))
+        }
+    }
+
+    func testStopDeinit() {
+        var analytics: CommandersActStreamingAnalytics? = CommandersActStreamingAnalytics()
+        analytics?.notify(.stop)
+        expectNoEvents(during: .seconds(2)) {
+            analytics = nil
         }
     }
 }

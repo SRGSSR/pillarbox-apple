@@ -18,7 +18,7 @@ final class CommandersActStreamingAnalytics {
 
     init(at time: CMTime, in range: CMTimeRange, isLive: Bool) {
         self.isLive = isLive
-        sendEvent(.play, at: time, in: range, playbackDuration: playbackDuration)
+        sendEvent(.play, at: time, in: range)
     }
 
     func notify(_ event: Event, at time: CMTime, in range: CMTimeRange) {
@@ -32,12 +32,13 @@ final class CommandersActStreamingAnalytics {
         case (.eof, _), (.stop, _):
             return
         default:
-            playbackDuration += (time - lastEventTime).seconds
-            sendEvent(event, at: time, in: range, playbackDuration: playbackDuration)
+            sendEvent(event, at: time, in: range)
         }
     }
 
-    private func sendEvent(_ event: Event, at time: CMTime, in range: CMTimeRange, playbackDuration: TimeInterval) {
+    private func sendEvent(_ event: Event, at time: CMTime, in range: CMTimeRange) {
+        playbackDuration += Date().timeIntervalSince(lastEventDate)
+
         lastEvent = event
         lastEventTime = time
         lastEventRange = range
@@ -72,13 +73,9 @@ final class CommandersActStreamingAnalytics {
         .init(start: lastEventRange.start + interval, duration: lastEventRange.duration)
     }
 
-    private func playbackDuration(after interval: CMTime) -> TimeInterval {
-        lastEvent == .play ? playbackDuration + interval.seconds : playbackDuration
-    }
-
     deinit {
         let interval = CMTime(seconds: Date().timeIntervalSince(lastEventDate), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-        sendEvent(.stop, at: eventTime(after: interval), in: eventRange(after: interval), playbackDuration: playbackDuration(after: interval))
+        notify(.stop, at: eventTime(after: interval), in: eventRange(after: interval))
     }
 }
 
