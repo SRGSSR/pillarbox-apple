@@ -6,6 +6,7 @@
 
 @testable import Analytics
 
+import Circumspect
 import CoreMedia
 import Nimble
 import Player
@@ -23,8 +24,7 @@ final class CommandersActTrakckerPositionTests: CommandersActTestCase {
 
         player.play()
         expect(player.playbackState).toEventually(equal(.playing))
-
-        XCTWaiter().wait(for: [XCTestExpectation()], timeout: 2)
+        wait(for: .seconds(2))
 
         expectAtLeastEvents(
             .pause { labels in
@@ -45,8 +45,7 @@ final class CommandersActTrakckerPositionTests: CommandersActTestCase {
 
         player.play()
         expect(player.playbackState).toEventually(equal(.playing))
-
-        XCTWaiter().wait(for: [XCTestExpectation()], timeout: 2)
+        wait(for: .seconds(2))
 
         expectAtLeastEvents(
             .pause { labels in
@@ -90,8 +89,7 @@ final class CommandersActTrakckerPositionTests: CommandersActTestCase {
 
         player?.play()
         expect(player?.playbackState).toEventually(equal(.playing))
-
-        XCTWaiter().wait(for: [XCTestExpectation()], timeout: 2)
+        wait(for: .seconds(2))
 
         expectAtLeastEvents(
             .stop { labels in
@@ -112,8 +110,7 @@ final class CommandersActTrakckerPositionTests: CommandersActTestCase {
 
         player?.play()
         expect(player?.playbackState).toEventually(equal(.playing))
-
-        XCTWaiter().wait(for: [XCTestExpectation()], timeout: 2)
+        wait(for: .seconds(2))
 
         expectAtLeastEvents(
             .stop { labels in

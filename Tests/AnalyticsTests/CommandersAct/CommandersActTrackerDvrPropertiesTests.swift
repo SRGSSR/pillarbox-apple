@@ -6,6 +6,7 @@
 
 @testable import Analytics
 
+import Circumspect
 import CoreMedia
 import Nimble
 import Player
@@ -99,8 +100,8 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
         expect(player?.playbackState).toEventually(equal(.playing))
 
         player?.pause()
-        XCTWaiter().wait(for: [XCTestExpectation()], timeout: 2)
-
+        wait(for: .seconds(2))
+        
         expectAtLeastEvents(
             .stop { labels in
                 expect(labels.media_timeshift).to(equal(2))
