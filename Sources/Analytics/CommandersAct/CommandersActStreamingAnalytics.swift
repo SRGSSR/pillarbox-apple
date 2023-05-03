@@ -4,16 +4,17 @@
 //  License information is available from the LICENSE file.
 //
 
+import CoreMedia
 import Foundation
 
 final class CommandersActStreamingAnalytics {
     var lastEvent: Event = .play
 
     init() {
-        sendEvent(.play)
+        sendEvent(.play, at: .zero)
     }
 
-    func notify(_ event: Event) {
+    func notify(_ event: Event, at time: CMTime) {
         guard event != lastEvent else { return }
 
         switch (lastEvent, event) {
@@ -24,21 +25,22 @@ final class CommandersActStreamingAnalytics {
         case (.eof, _), (.stop, _):
             return
         default:
-            sendEvent(event)
+            sendEvent(event, at: time)
         }
 
         lastEvent = event
     }
 
-    private func sendEvent(_ event: Event) {
+    private func sendEvent(_ event: Event, at time: CMTime) {
         Analytics.shared.sendCommandersActStreamingEvent(name: event.rawValue, labels: [
             "media_player_display": "Pillarbox",
-            "media_player_version": PackageInfo.version
+            "media_player_version": PackageInfo.version,
+            "media_position": String(Int(time.seconds))
         ])
     }
 
     deinit {
-        sendEvent(.stop)
+        sendEvent(.stop, at: .zero)
     }
 }
 
