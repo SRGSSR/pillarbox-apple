@@ -10,6 +10,9 @@ import Foundation
 final class CommandersActStreamingAnalytics {
     var lastEvent: Event = .play
 
+    private var lastEventTime: CMTime = .zero
+    private var lastEventDate = Date()
+
     init() {
         sendEvent(.play, at: .zero)
     }
@@ -27,11 +30,13 @@ final class CommandersActStreamingAnalytics {
         default:
             sendEvent(event, at: time)
         }
-
-        lastEvent = event
     }
 
     private func sendEvent(_ event: Event, at time: CMTime) {
+        lastEvent = event
+        lastEventTime = time
+        lastEventDate = Date()
+
         Analytics.shared.sendCommandersActStreamingEvent(name: event.rawValue, labels: [
             "media_player_display": "Pillarbox",
             "media_player_version": PackageInfo.version,
@@ -39,8 +44,13 @@ final class CommandersActStreamingAnalytics {
         ])
     }
 
+    private func eventTime(after interval: CMTime) -> CMTime {
+        return lastEvent == .play ? lastEventTime + interval : lastEventTime
+    }
+
     deinit {
-        sendEvent(.stop, at: .zero)
+        let interval = CMTime(seconds: Date().timeIntervalSince(lastEventDate), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        sendEvent(.stop, at: eventTime(after: interval))
     }
 }
 
