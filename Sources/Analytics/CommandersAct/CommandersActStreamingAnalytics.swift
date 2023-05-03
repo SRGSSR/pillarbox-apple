@@ -13,11 +13,12 @@ final class CommandersActStreamingAnalytics {
     private var isLive: Bool
     private var playbackDuration: TimeInterval = 0
     private var lastEventTime: CMTime = .zero
+    private var lastEventRange: CMTimeRange = .zero
     private var lastEventDate = Date()
 
     init(at time: CMTime, in range: CMTimeRange, isLive: Bool) {
         self.isLive = isLive
-        sendEvent(.play, at: time, in: range)
+        sendEvent(.play, at: time, in: range, playbackDuration: playbackDuration)
     }
 
     func notify(_ event: Event, at time: CMTime, in range: CMTimeRange) {
@@ -32,22 +33,23 @@ final class CommandersActStreamingAnalytics {
             return
         default:
             playbackDuration += (time - lastEventTime).seconds
-            sendEvent(event, at: time, in: range)
+            sendEvent(event, at: time, in: range, playbackDuration: playbackDuration)
         }
     }
 
-    private func sendEvent(_ event: Event, at time: CMTime, in range: CMTimeRange) {
+    private func sendEvent(_ event: Event, at time: CMTime, in range: CMTimeRange, playbackDuration: TimeInterval) {
         lastEvent = event
         lastEventTime = time
+        lastEventRange = range
         lastEventDate = Date()
 
         Analytics.shared.sendCommandersActStreamingEvent(
             name: event.rawValue,
-            labels: self.labels(at: time, in: range)
+            labels: self.labels(at: time, in: range, playbackDuration: playbackDuration)
         )
     }
 
-    private func labels(at time: CMTime, in range: CMTimeRange) -> [String: String] {
+    private func labels(at time: CMTime, in range: CMTimeRange, playbackDuration: TimeInterval) -> [String: String] {
         var labels = [
             "media_player_display": "Pillarbox",
             "media_player_version": PackageInfo.version
@@ -66,9 +68,17 @@ final class CommandersActStreamingAnalytics {
         lastEvent == .play ? lastEventTime + interval : lastEventTime
     }
 
+    private func eventRange(after interval: CMTime) -> CMTimeRange {
+        .init(start: lastEventRange.start + interval, duration: lastEventRange.duration)
+    }
+
+    private func playbackDuration(after interval: CMTime) -> TimeInterval {
+        lastEvent == .play ? playbackDuration + interval.seconds : playbackDuration
+    }
+
     deinit {
         let interval = CMTime(seconds: Date().timeIntervalSince(lastEventDate), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-        sendEvent(.stop, at: eventTime(after: interval), in: .zero)
+        sendEvent(.stop, at: eventTime(after: interval), in: eventRange(after: interval), playbackDuration: playbackDuration(after: interval))
     }
 }
 

@@ -35,4 +35,35 @@ final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {
             analytics.notify(.pause, at: CMTime(value: 18, timescale: 1), in: Self.range)
         }
     }
+
+    func testPositionWhenDestroyedAfterPlay() {
+        var analytics: CommandersActStreamingAnalytics? = .init(at: CMTime(value: 15, timescale: 1), in: Self.range, isLive: true)
+        _ = analytics       // Silences the "was written to, but never read" warning.
+        wait(for: .seconds(1))
+
+        expectAtLeastEvents(
+            .stop { labels in
+                expect(labels.media_position).to(equal(1))
+                expect(labels.media_timeshift).to(equal(5))
+            }
+        ) {
+            analytics = nil
+        }
+    }
+
+    func testPositionWhenDestroyedAfterPause() {
+        var analytics: CommandersActStreamingAnalytics? = .init(at: CMTime(value: 15, timescale: 1), in: Self.range, isLive: true)
+        let newRange = CMTimeRange(start: CMTime(value: 5, timescale: 1), end: CMTime(value: 23, timescale: 1))
+        analytics?.notify(.pause, at: CMTime(value: 18, timescale: 1), in: newRange)
+        wait(for: .seconds(1))
+
+        expectAtLeastEvents(
+            .stop { labels in
+                expect(labels.media_position).to(equal(3))
+                expect(labels.media_timeshift).to(equal(6))
+            }
+        ) {
+            analytics = nil
+        }
+    }
 }
