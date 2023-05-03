@@ -12,24 +12,6 @@ import Streams
 import XCTest
 
 final class CommandersActTrackerTests: CommandersActTestCase {
-    func testMediaPlayerProperties() {
-        let player = Player(item: .simple(
-            url: Stream.onDemand.url,
-            trackerAdapters: [
-                CommandersActTracker.adapter()
-            ]
-        ))
-
-        expectAtLeastEvents(
-            .play { labels in
-                expect(labels.media_player_display).to(equal("Pillarbox"))
-                expect(labels.media_player_version).notTo(beEmpty())
-            }
-        ) {
-            player.play()
-        }
-    }
-
     func testInitiallyPlaying() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,

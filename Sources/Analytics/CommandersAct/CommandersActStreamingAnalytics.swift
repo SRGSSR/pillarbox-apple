@@ -10,7 +10,7 @@ final class CommandersActStreamingAnalytics {
     var lastEvent: Event = .play
 
     init() {
-        Analytics.shared.sendCommandersActStreamingEvent(name: Event.play.rawValue, labels: [:])
+        sendEvent(.play)
     }
 
     func notify(_ event: Event) {
@@ -24,14 +24,21 @@ final class CommandersActStreamingAnalytics {
         case (.eof, _), (.stop, _):
             return
         default:
-            Analytics.shared.sendCommandersActStreamingEvent(name: event.rawValue, labels: [:])
+            sendEvent(event)
         }
 
         lastEvent = event
     }
 
+    private func sendEvent(_ event: Event) {
+        Analytics.shared.sendCommandersActStreamingEvent(name: event.rawValue, labels: [
+            "media_player_display": "Pillarbox",
+            "media_player_version": PackageInfo.version
+        ])
+    }
+
     deinit {
-        Analytics.shared.sendCommandersActStreamingEvent(name: "stop", labels: [:])
+        sendEvent(.stop)
     }
 }
 
