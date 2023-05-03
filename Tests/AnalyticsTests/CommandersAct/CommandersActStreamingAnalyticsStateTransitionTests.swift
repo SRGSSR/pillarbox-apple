@@ -12,232 +12,242 @@ import Nimble
 final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTestCase {
     func testLifeCycle() {
         expectAtLeastEvents(.play(), .stop()) {
-            _ = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
+            _ = CommandersActStreamingAnalytics()
         }
     }
 
     func testPlayPlay() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
+        let analytics = CommandersActStreamingAnalytics()
         expect(analytics.lastEvent).to(equal(.play))
         expectNoEvents(during: .seconds(2)) {
-            analytics.notify(.play, at: .zero, in: .zero)
+            analytics.notify(.play)
             expect(analytics.lastEvent).to(equal(.play))
         }
     }
 
     func testPlayPause() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
+        let analytics = CommandersActStreamingAnalytics()
         expect(analytics.lastEvent).to(equal(.play))
         expectAtLeastEvents(.pause()) {
-            analytics.notify(.pause, at: .zero, in: .zero)
+            analytics.notify(.pause)
             expect(analytics.lastEvent).to(equal(.pause))
         }
     }
 
     func testPlaySeek() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
+        let analytics = CommandersActStreamingAnalytics()
         expect(analytics.lastEvent).to(equal(.play))
         expectAtLeastEvents(.seek()) {
-            analytics.notify(.seek, at: .zero, in: .zero)
+            analytics.notify(.seek)
             expect(analytics.lastEvent).to(equal(.seek))
         }
     }
 
     func testPlayEof() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
+        let analytics = CommandersActStreamingAnalytics()
         expect(analytics.lastEvent).to(equal(.play))
         expectAtLeastEvents(.eof()) {
-            analytics.notify(.eof, at: .zero, in: .zero)
+            analytics.notify(.eof)
             expect(analytics.lastEvent).to(equal(.eof))
         }
     }
 
     func testPlayStop() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
+        let analytics = CommandersActStreamingAnalytics()
         expect(analytics.lastEvent).to(equal(.play))
         expectAtLeastEvents(.stop()) {
-            analytics.notify(.stop, at: .zero, in: .zero)
+            analytics.notify(.stop)
             expect(analytics.lastEvent).to(equal(.stop))
         }
     }
 
     func testPausePlay() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.pause, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.pause)
         expectAtLeastEvents(.play()) {
-            analytics.notify(.play, at: .zero, in: .zero)
+            analytics.notify(.play)
             expect(analytics.lastEvent).to(equal(.play))
         }
     }
 
     func testPausePause() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.pause, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.pause)
         expectNoEvents(during: .seconds(2)) {
-            analytics.notify(.pause, at: .zero, in: .zero)
+            analytics.notify(.pause)
             expect(analytics.lastEvent).to(equal(.pause))
         }
     }
 
     func testPauseSeek() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.pause, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.pause)
         expectNoEvents(during: .seconds(2)) {
-            analytics.notify(.seek, at: .zero, in: .zero)
+            analytics.notify(.seek)
             expect(analytics.lastEvent).to(equal(.pause))
         }
     }
 
     func testPauseEof() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.pause, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.pause)
         expectNoEvents(during: .seconds(2)) {
-            analytics.notify(.eof, at: .zero, in: .zero)
+            analytics.notify(.eof)
             expect(analytics.lastEvent).to(equal(.pause))
         }
     }
 
     func testPauseStop() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.pause, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.pause)
         expectAtLeastEvents(.stop()) {
-            analytics.notify(.stop, at: .zero, in: .zero)
+            analytics.notify(.stop)
             expect(analytics.lastEvent).to(equal(.stop))
         }
     }
 
     func testSeekPlay() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.seek, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.seek)
         expectAtLeastEvents(.play()) {
-            analytics.notify(.play, at: .zero, in: .zero)
+            analytics.notify(.play)
             expect(analytics.lastEvent).to(equal(.play))
         }
     }
 
     func testSeekPause() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.seek, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.seek)
         expectNoEvents(during: .seconds(2)) {
-            analytics.notify(.pause, at: .zero, in: .zero)
+            analytics.notify(.pause)
             expect(analytics.lastEvent).to(equal(.seek))
         }
     }
 
     func testSeekSeek() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.seek, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.seek)
         expectNoEvents(during: .seconds(2)) {
-            analytics.notify(.seek, at: .zero, in: .zero)
+            analytics.notify(.seek)
             expect(analytics.lastEvent).to(equal(.seek))
         }
     }
 
     func testSeekEof() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.seek, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.seek)
         expectNoEvents(during: .seconds(2)) {
-            analytics.notify(.eof, at: .zero, in: .zero)
+            analytics.notify(.eof)
             expect(analytics.lastEvent).to(equal(.seek))
         }
     }
 
     func testSeekStop() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.seek, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.seek)
         expectAtLeastEvents(.stop()) {
-            analytics.notify(.stop, at: .zero, in: .zero)
+            analytics.notify(.stop)
             expect(analytics.lastEvent).to(equal(.stop))
         }
     }
 
     func testEofPlay() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.eof, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.eof)
         expectNoEvents(during: .seconds(2)) {
-            analytics.notify(.play, at: .zero, in: .zero)
+            analytics.notify(.play)
             expect(analytics.lastEvent).to(equal(.eof))
         }
     }
 
     func testEofPause() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.eof, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.eof)
         expectNoEvents(during: .seconds(2)) {
-            analytics.notify(.pause, at: .zero, in: .zero)
+            analytics.notify(.pause)
             expect(analytics.lastEvent).to(equal(.eof))
         }
     }
 
     func testEofSeek() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.eof, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.eof)
         expectNoEvents(during: .seconds(2)) {
-            analytics.notify(.seek, at: .zero, in: .zero)
+            analytics.notify(.seek)
             expect(analytics.lastEvent).to(equal(.eof))
         }
     }
 
     func testEofEof() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.eof, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.eof)
         expectNoEvents(during: .seconds(2)) {
-            analytics.notify(.eof, at: .zero, in: .zero)
+            analytics.notify(.eof)
             expect(analytics.lastEvent).to(equal(.eof))
         }
     }
 
     func testEofStop() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.eof, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.eof)
         expectNoEvents(during: .seconds(2)) {
-            analytics.notify(.stop, at: .zero, in: .zero)
+            analytics.notify(.stop)
             expect(analytics.lastEvent).to(equal(.eof))
         }
     }
 
     func testStopPlay() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.stop, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.stop)
         expectNoEvents(during: .seconds(2)) {
-            analytics.notify(.play, at: .zero, in: .zero)
+            analytics.notify(.play)
             expect(analytics.lastEvent).to(equal(.stop))
         }
     }
 
     func testStopPause() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.stop, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.stop)
         expectNoEvents(during: .seconds(2)) {
-            analytics.notify(.pause, at: .zero, in: .zero)
+            analytics.notify(.pause)
             expect(analytics.lastEvent).to(equal(.stop))
         }
     }
 
     func testStopSeek() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.stop, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.stop)
         expectNoEvents(during: .seconds(2)) {
-            analytics.notify(.seek, at: .zero, in: .zero)
+            analytics.notify(.seek)
             expect(analytics.lastEvent).to(equal(.stop))
         }
     }
 
     func testStopEof() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.stop, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.stop)
         expectNoEvents(during: .seconds(2)) {
-            analytics.notify(.eof, at: .zero, in: .zero)
+            analytics.notify(.eof)
             expect(analytics.lastEvent).to(equal(.stop))
         }
     }
 
     func testStopStop() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
-        analytics.notify(.stop, at: .zero, in: .zero)
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(.stop)
         expectNoEvents(during: .seconds(2)) {
-            analytics.notify(.stop, at: .zero, in: .zero)
+            analytics.notify(.stop)
             expect(analytics.lastEvent).to(equal(.stop))
         }
+    }
+}
+
+private extension CommandersActStreamingAnalytics {
+    convenience init() {
+        self.init(at: .zero, in: .zero, isLive: false)
+    }
+
+    func notify(_ event: Event) {
+        notify(event, at: .zero, in: .zero)
     }
 }
