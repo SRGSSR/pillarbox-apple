@@ -28,7 +28,7 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
         }
     }
 
-    func testIntermediatePosition() {
+    func testPositionAfterPause() {
         let analytics = CommandersActStreamingAnalytics(at: .zero, in: Self.range, isLive: false)
         expectAtLeastEvents(
             .pause { labels in

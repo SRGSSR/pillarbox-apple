@@ -11,6 +11,7 @@ final class CommandersActStreamingAnalytics {
     var lastEvent: Event = .play
 
     private var isLive: Bool
+    private var playbackDuration: TimeInterval = 0
     private var lastEventTime: CMTime = .zero
     private var lastEventDate = Date()
 
@@ -30,6 +31,7 @@ final class CommandersActStreamingAnalytics {
         case (.eof, _), (.stop, _):
             return
         default:
+            playbackDuration += (time - lastEventTime).seconds
             sendEvent(event, at: time, in: range)
         }
     }
@@ -51,7 +53,7 @@ final class CommandersActStreamingAnalytics {
             "media_player_version": PackageInfo.version
         ]
         if isLive {
-            labels["media_position"] = "0"
+            labels["media_position"] = String(Int(playbackDuration))
             labels["media_timeshift"] = String(Int((range.end - time).seconds))
         }
         else {

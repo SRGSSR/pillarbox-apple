@@ -17,14 +17,22 @@ final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {
         expectAtLeastEvents(
             .play { labels in
                 expect(labels.media_position).to(equal(0))
-                expect(labels.media_timeshift).to(equal(5))
+                expect(labels.media_timeshift).to(equal(2))
             }
         ) {
-            _ = CommandersActStreamingAnalytics(
-                at: CMTime(value: 15, timescale: 1),
-                in: Self.range,
-                isLive: true
-            )
+            _ = CommandersActStreamingAnalytics(at: CMTime(value: 18, timescale: 1), in: Self.range, isLive: true)
+        }
+    }
+
+    func testPositionAfterPause() {
+        let analytics = CommandersActStreamingAnalytics(at: CMTime(value: 15, timescale: 1), in: Self.range, isLive: true)
+        expectAtLeastEvents(
+            .pause { labels in
+                expect(labels.media_position).to(equal(3))
+                expect(labels.media_timeshift).to(equal(2))
+            }
+        ) {
+            analytics.notify(.pause, at: CMTime(value: 18, timescale: 1), in: Self.range)
         }
     }
 }
