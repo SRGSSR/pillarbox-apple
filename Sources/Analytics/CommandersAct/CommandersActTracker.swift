@@ -12,8 +12,11 @@ import Player
 public final class CommandersActTracker: PlayerItemTracker {
     private var cancellables = Set<AnyCancellable>()
     private var streamingAnalytics: CommandersActStreamingAnalytics?
+    @Published private var metadata: Metadata = .empty
 
-    public init(configuration: Void, metadataPublisher: AnyPublisher<[String: String], Never>) {}
+    public init(configuration: Void, metadataPublisher: AnyPublisher<Metadata, Never>) {
+        metadataPublisher.assign(to: &$metadata)
+    }
 
     private static func eventName(for playbackState: PlaybackState) -> String? {
         switch playbackState {
@@ -55,7 +58,7 @@ public final class CommandersActTracker: PlayerItemTracker {
                     streamingAnalytics = CommandersActStreamingAnalytics(
                         at: player.time,
                         in: player.timeRange,
-                        isLive: [.dvr, .live].contains(player.streamType)
+                        isLive: metadata.isLive
                     )
                 }
                 else {
@@ -76,5 +79,26 @@ public final class CommandersActTracker: PlayerItemTracker {
     public func disable() {
         cancellables = []
         streamingAnalytics = nil
+    }
+}
+
+public extension CommandersActTracker {
+    /// Metadata
+    struct Metadata {
+        let labels: [String: String]
+        let isLive: Bool
+
+        static var empty: Self {
+            .init(labels: [:], isLive: false)
+        }
+
+        /// The initializer.
+        /// - Parameters:
+        ///   - labels: The labels.
+        ///   - isLive: True if tracking a live stream.
+        public init(labels: [String: String], isLive: Bool) {
+            self.labels = labels
+            self.isLive = isLive
+        }
     }
 }
