@@ -96,6 +96,9 @@ public struct CommandersActLabels: Decodable {
     /// Value of `media_player_version`.
     public var media_player_version: String?
 
+    /// Value of `media_volume`.
+    public var media_volume: String?
+
     /// Value of `media_position`.
     public var media_position: Int? {
         guard let _media_position else { return nil }
@@ -140,6 +143,7 @@ private extension CommandersActLabels {
         case event_value_5
         case media_player_display
         case media_player_version
+        case media_volume
         case _media_position = "media_position"
         case _media_timeshift = "media_timeshift"
     }

@@ -20,12 +20,12 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
                 expect(labels.media_timeshift).to(equal(2))
             }
         ) {
-            _ = CommandersActStreamingAnalytics(at: CMTime(value: 18, timescale: 1), in: Self.range, streamType: .dvr)
+            _ = CommandersActStreamingAnalytics(labels: [:], at: CMTime(value: 18, timescale: 1), in: Self.range, streamType: .dvr)
         }
     }
 
     func testPositionAfterPause() {
-        let analytics = CommandersActStreamingAnalytics(at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .dvr)
+        let analytics = CommandersActStreamingAnalytics(labels: [:], at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .dvr)
         wait(for: .seconds(3))
         expectAtLeastEvents(
             .pause { labels in
@@ -38,7 +38,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedAfterPlay() {
-        var analytics: CommandersActStreamingAnalytics? = .init(at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .dvr)
+        var analytics: CommandersActStreamingAnalytics? = .init(labels: [:], at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .dvr)
         _ = analytics       // Silences the "was written to, but never read" warning.
         wait(for: .seconds(1))
 
@@ -53,7 +53,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedDuringBuffering() {
-        var analytics: CommandersActStreamingAnalytics? = .init(at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .dvr)
+        var analytics: CommandersActStreamingAnalytics? = .init(labels: [:], at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .dvr)
 
         analytics?.notify(isBuffering: true, time: CMTime(value: 15, timescale: 1), range: Self.range)
         wait(for: .seconds(1))
@@ -69,7 +69,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedWhenBufferingStarts() {
-        var analytics: CommandersActStreamingAnalytics? = .init(at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .dvr)
+        var analytics: CommandersActStreamingAnalytics? = .init(labels: [:], at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .dvr)
 
         wait(for: .seconds(1))
         analytics?.notify(
@@ -89,7 +89,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedAfterPause() {
-        var analytics: CommandersActStreamingAnalytics? = .init(at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .dvr)
+        var analytics: CommandersActStreamingAnalytics? = .init(labels: [:], at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .dvr)
         wait(for: .seconds(3))
 
         let newRange = CMTimeRange(start: CMTime(value: 5, timescale: 1), end: CMTime(value: 23, timescale: 1))

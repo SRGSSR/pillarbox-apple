@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFAudio
 import Combine
 import Foundation
 import Player
@@ -56,6 +57,7 @@ public final class CommandersActTracker: PlayerItemTracker {
             case .playing:
                 if streamingAnalytics == nil {
                     streamingAnalytics = CommandersActStreamingAnalytics(
+                        labels: labels(),
                         at: player.time,
                         in: player.timeRange,
                         streamType: metadata.streamType
@@ -79,6 +81,20 @@ public final class CommandersActTracker: PlayerItemTracker {
     public func disable() {
         cancellables = []
         streamingAnalytics = nil
+    }
+}
+
+extension CommandersActTracker {
+    private var volume: Float {
+        AVAudioSession.sharedInstance().outputVolume * 100
+    }
+
+    func labels() -> [String: String] {
+        metadata.labels.merging([
+            "media_player_display": "Pillarbox",
+            "media_player_version": PackageInfo.version,
+            "media_volume": "\(volume)"
+        ]) { _, new in new }
     }
 }
 

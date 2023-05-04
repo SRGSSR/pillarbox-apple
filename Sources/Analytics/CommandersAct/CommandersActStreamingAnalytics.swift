@@ -11,6 +11,7 @@ import Player
 final class CommandersActStreamingAnalytics {
     var lastEvent: Event = .play
 
+    private let labels: [String: String]
     private var streamType: StreamType
     private var isBuffering = false
     private var playbackDuration: TimeInterval = 0
@@ -18,8 +19,9 @@ final class CommandersActStreamingAnalytics {
     private var lastEventRange: CMTimeRange = .zero
     private var lastEventDate = Date()
 
-    init(at time: CMTime, in range: CMTimeRange, streamType: StreamType) {
+    init(labels: [String: String], at time: CMTime, in range: CMTimeRange, streamType: StreamType) {
         self.streamType = streamType
+        self.labels = labels
         sendEvent(.play, at: time, in: range)
     }
 
@@ -54,10 +56,7 @@ final class CommandersActStreamingAnalytics {
     }
 
     private func labels(at time: CMTime, in range: CMTimeRange, playbackDuration: TimeInterval) -> [String: String] {
-        var labels = [
-            "media_player_display": "Pillarbox",
-            "media_player_version": PackageInfo.version
-        ]
+        var labels = self.labels
         switch streamType {
         case .onDemand:
             labels["media_position"] = String(Int(time.timeInterval()))
