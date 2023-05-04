@@ -13,12 +13,17 @@ import Player
 import Streams
 import XCTest
 
+private struct AssetMetadataMock: AssetMetadata {}
+
 final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
     func testOnDemand() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter()
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .onDemand)
+                }
             ]
         ))
 
@@ -34,8 +39,11 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
     func testLive() {
         let player = Player(item: .simple(
             url: Stream.live.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter()
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .live)
+                }
             ]
         ))
 
@@ -51,8 +59,11 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
     func testDvrAtLiveEdge() {
         let player = Player(item: .simple(
             url: Stream.dvr.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter()
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .dvr)
+                }
             ]
         ))
 
@@ -68,8 +79,11 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
     func testDvrAwayFromLiveEdge() {
         let player = Player(item: .simple(
             url: Stream.dvr.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter()
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .dvr)
+                }
             ]
         ))
 
@@ -91,8 +105,11 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
     func testDestroyPlayerDuringPlayback() {
         var player: Player? = Player(item: .simple(
             url: Stream.dvr.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter()
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .dvr)
+                }
             ]
         ))
 
@@ -114,8 +131,11 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
     func testDestroyPlayerWhileInitiallyPaused() {
         var player: Player? = Player(item: .simple(
             url: Stream.dvr.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter()
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .dvr)
+                }
             ]
         ))
         expect(player?.playbackState).toEventually(equal(.paused))

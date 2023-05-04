@@ -11,12 +11,17 @@ import Player
 import Streams
 import XCTest
 
+private struct AssetMetadataMock: AssetMetadata {}
+
 final class CommandersActTrackerSeekTests: CommandersActTestCase {
     func testSeekWhilePlaying() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter()
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .onDemand)
+                }
             ]
         ))
 
@@ -38,8 +43,11 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
     func testSeekWhilePaused() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter()
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .onDemand)
+                }
             ]
         ))
 
@@ -61,8 +69,11 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
     func testDestroyPlayerWhileSeeking() {
         var player: Player? = Player(item: .simple(
             url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter()
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .onDemand)
+                }
             ]
         ))
 

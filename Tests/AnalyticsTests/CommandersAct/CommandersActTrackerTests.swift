@@ -11,12 +11,17 @@ import Player
 import Streams
 import XCTest
 
+private struct AssetMetadataMock: AssetMetadata {}
+
 final class CommandersActTrackerTests: CommandersActTestCase {
     func testInitiallyPlaying() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter()
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .onDemand)
+                }
             ]
         ))
 
@@ -45,8 +50,11 @@ final class CommandersActTrackerTests: CommandersActTestCase {
     func testPauseDuringPlayback() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter()
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .onDemand)
+                }
             ]
         ))
 
@@ -65,8 +73,11 @@ final class CommandersActTrackerTests: CommandersActTestCase {
     func testPlaybackEnd() {
         let player = Player(item: .simple(
             url: Stream.mediumOnDemand.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter()
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .onDemand)
+                }
             ]
         ))
 
@@ -83,8 +94,11 @@ final class CommandersActTrackerTests: CommandersActTestCase {
     func testDestroyPlayerDuringPlayback() {
         var player: Player? = Player(item: .simple(
             url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter()
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .onDemand)
+                }
             ]
         ))
 
