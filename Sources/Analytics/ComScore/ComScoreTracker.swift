@@ -14,9 +14,9 @@ import Player
 public final class ComScoreTracker: PlayerItemTracker {
     private var streamingAnalytics = SCORStreamingAnalytics()
     private var cancellables = Set<AnyCancellable>()
-    @Published private var metadata: [String: String] = [:]
+    @Published private var metadata: Metadata = .empty
 
-    public init(configuration: Void, metadataPublisher: AnyPublisher<[String: String], Never>) {
+    public init(configuration: Void, metadataPublisher: AnyPublisher<Metadata, Never>) {
         metadataPublisher.assign(to: &$metadata)
     }
 
@@ -44,17 +44,17 @@ public final class ComScoreTracker: PlayerItemTracker {
     }
 
     private func notify(playbackState: PlaybackState, isSeeking: Bool, isBuffering: Bool, player: Player) {
-        guard !metadata.isEmpty else { return }
+        guard !metadata.labels.isEmpty else { return }
         AnalyticsListener.capture(streamingAnalytics.configuration())
-        streamingAnalytics.setProperties(for: player)
+        streamingAnalytics.setProperties(for: player, streamType: metadata.streamType)
         streamingAnalytics.notifyEvent(playbackState: playbackState, isSeeking: isSeeking, isBuffering: isBuffering)
     }
 
-    private func updateMetadata(with metadata: [String: String]) {
+    private func updateMetadata(with metadata: Metadata) {
         let builder = SCORStreamingContentMetadataBuilder()
-        builder.setCustomLabels(metadata)
-        let metadata = SCORStreamingContentMetadata(builder: builder)
-        streamingAnalytics.setMetadata(metadata)
+        builder.setCustomLabels(metadata.labels)
+        let contentMetadata = SCORStreamingContentMetadata(builder: builder)
+        streamingAnalytics.setMetadata(contentMetadata)
     }
 }
 
@@ -86,8 +86,8 @@ private extension SCORStreamingAnalytics {
         }
     }
 
-    func setProperties(for player: Player) {
-        if player.streamType == .dvr {
+    func setProperties(for player: Player, streamType: StreamType) {
+        if streamType == .dvr {
             start(fromDvrWindowOffset: Self.offset(for: player))
             setDVRWindowLength(Self.duration(for: player))
         }
@@ -109,6 +109,27 @@ private extension SCORStreamingAnalytics {
         case (false, false):
             notifyBufferStop()
             notifyEvent(playbackState: playbackState)
+        }
+    }
+}
+
+public extension ComScoreTracker {
+    /// Metadata
+    struct Metadata {
+        let labels: [String: String]
+        let streamType: StreamType
+
+        static var empty: Self {
+            .init(labels: [:], streamType: .unknown)
+        }
+
+        /// The initializer.
+        /// - Parameters:
+        ///   - labels: The labels.
+        ///   - streamType: The stream type.
+        public init(labels: [String: String], streamType: StreamType) {
+            self.labels = labels
+            self.streamType = streamType
         }
     }
 }

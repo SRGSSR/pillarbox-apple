@@ -29,7 +29,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter { _ in ["meta": "data"] }
+                ComScoreTracker.adapter { _ in .test }
             ]
         ))
 
@@ -48,7 +48,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter { _ in ["meta": "data"] }
+                ComScoreTracker.adapter { _ in .test }
             ]
         ))
 
@@ -66,7 +66,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter { _ in ["meta": "data"] }
+                ComScoreTracker.adapter { _ in .test }
             ]
         ))
 
@@ -80,7 +80,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter { _ in ["meta": "data"] }
+                ComScoreTracker.adapter { _ in .test }
             ]
         ))
 
@@ -102,7 +102,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             url: Stream.mediumOnDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter { _ in ["meta": "data"] }
+                ComScoreTracker.adapter { _ in .test }
             ]
         ))
 
@@ -121,7 +121,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter { _ in ["meta": "data"] }
+                ComScoreTracker.adapter { _ in .test }
             ]
         ))
 
@@ -144,7 +144,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             url: Stream.unavailable.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter { _ in ["meta": "data"] }
+                ComScoreTracker.adapter { _ in .test }
             ]
         ))
 
@@ -158,7 +158,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter { _ in ["meta": "data"] }
+                ComScoreTracker.adapter { _ in .test }
             ]
         ))
 
@@ -176,7 +176,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter { _ in ["meta": "data"] }
+                ComScoreTracker.adapter { _ in .test }
             ]
         ))
 
