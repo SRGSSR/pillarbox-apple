@@ -59,10 +59,10 @@ final class CommandersActStreamingAnalytics {
         ]
         if isLive {
             labels["media_position"] = String(Int(playbackDuration))
-            labels["media_timeshift"] = String(Int((range.end - time).seconds))
+            labels["media_timeshift"] = String(Int((range.end - time).timeInterval()))
         }
         else {
-            labels["media_position"] = String(Int(time.seconds))
+            labels["media_position"] = String(Int(time.timeInterval()))
         }
         return labels
     }
