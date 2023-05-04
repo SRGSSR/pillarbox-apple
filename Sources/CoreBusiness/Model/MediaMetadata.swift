@@ -50,8 +50,8 @@ public struct MediaMetadata: AssetMetadata {
         mediaComposition.mainChapter.description
     }
 
-    public var isLive: Bool {
-        [.dvr, .live].contains(resource.streamType)
+    public var streamType: StreamType {
+        resource.streamType
     }
 
     /// Consolidated comScore analytics data.

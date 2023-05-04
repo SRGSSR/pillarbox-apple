@@ -43,7 +43,7 @@ public extension PlayerItem {
                 mediaMetadata.analyticsData
             },
             CommandersActTracker.adapter { mediaMetadata in
-                CommandersActTracker.Metadata(labels: mediaMetadata.analyticsMetadata, isLive: mediaMetadata.isLive)
+                CommandersActTracker.Metadata(labels: mediaMetadata.analyticsMetadata, streamType: mediaMetadata.streamType)
             }
         ] + trackerAdapters)
     }

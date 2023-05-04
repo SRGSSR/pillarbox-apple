@@ -21,7 +21,7 @@ final class CommandersActStreamingAnalyticsLabelTests: CommandersActTestCase {
                 expect(labels.media_player_version).notTo(beEmpty())
             }
         ) {
-            _ = CommandersActStreamingAnalytics(at: .zero, in: .zero, isLive: false)
+            _ = CommandersActStreamingAnalytics(at: .zero, in: .zero, streamType: .unknown)
         }
     }
 }

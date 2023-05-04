@@ -282,7 +282,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
 
 private extension CommandersActStreamingAnalytics {
     convenience init() {
-        self.init(at: .zero, in: .zero, isLive: false)
+        self.init(at: .zero, in: .zero, streamType: .unknown)
     }
 
     func notify(_ event: Event) {

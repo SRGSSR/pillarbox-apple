@@ -58,7 +58,7 @@ public final class CommandersActTracker: PlayerItemTracker {
                     streamingAnalytics = CommandersActStreamingAnalytics(
                         at: player.time,
                         in: player.timeRange,
-                        isLive: metadata.isLive
+                        streamType: metadata.streamType
                     )
                 }
                 else {
@@ -86,19 +86,19 @@ public extension CommandersActTracker {
     /// Metadata
     struct Metadata {
         let labels: [String: String]
-        let isLive: Bool
+        let streamType: StreamType
 
         static var empty: Self {
-            .init(labels: [:], isLive: false)
+            .init(labels: [:], streamType: .unknown)
         }
 
         /// The initializer.
         /// - Parameters:
         ///   - labels: The labels.
-        ///   - isLive: True if tracking a live stream.
-        public init(labels: [String: String], isLive: Bool) {
+        ///   - streamType: The stream type.
+        public init(labels: [String: String], streamType: StreamType) {
             self.labels = labels
-            self.isLive = isLive
+            self.streamType = streamType
         }
     }
 }

@@ -6,19 +6,20 @@
 
 import CoreMedia
 import Foundation
+import Player
 
 final class CommandersActStreamingAnalytics {
     var lastEvent: Event = .play
 
-    private var isLive: Bool
+    private var streamType: StreamType
     private var isBuffering = false
     private var playbackDuration: TimeInterval = 0
     private var lastEventTime: CMTime = .zero
     private var lastEventRange: CMTimeRange = .zero
     private var lastEventDate = Date()
 
-    init(at time: CMTime, in range: CMTimeRange, isLive: Bool) {
-        self.isLive = isLive
+    init(at time: CMTime, in range: CMTimeRange, streamType: StreamType) {
+        self.streamType = streamType
         sendEvent(.play, at: time, in: range)
     }
 
@@ -57,12 +58,17 @@ final class CommandersActStreamingAnalytics {
             "media_player_display": "Pillarbox",
             "media_player_version": PackageInfo.version
         ]
-        if isLive {
+        switch streamType {
+        case .onDemand:
+            labels["media_position"] = String(Int(time.timeInterval()))
+        case .live:
+            labels["media_position"] = String(Int(playbackDuration))
+            labels["media_timeshift"] = "0"
+        case .dvr:
             labels["media_position"] = String(Int(playbackDuration))
             labels["media_timeshift"] = String(Int((range.end - time).timeInterval()))
-        }
-        else {
-            labels["media_position"] = String(Int(time.timeInterval()))
+        default:
+            break
         }
         return labels
     }

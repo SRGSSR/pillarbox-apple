@@ -23,13 +23,13 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
             _ = CommandersActStreamingAnalytics(
                 at: CMTime(value: 2, timescale: 1),
                 in: Self.range,
-                isLive: false
+                streamType: .onDemand
             )
         }
     }
 
     func testPositionAfterPause() {
-        let analytics = CommandersActStreamingAnalytics(at: .zero, in: Self.range, isLive: false)
+        let analytics = CommandersActStreamingAnalytics(at: .zero, in: Self.range, streamType: .onDemand)
         expectAtLeastEvents(
             .pause { labels in
                 expect(labels.media_position).to(equal(2))
@@ -40,7 +40,7 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
     }
 
     func testPositionWhenDestroyedAfterPlay() {
-        var analytics: CommandersActStreamingAnalytics? = .init(at: .zero, in: Self.range, isLive: false)
+        var analytics: CommandersActStreamingAnalytics? = .init(at: .zero, in: Self.range, streamType: .onDemand)
         _ = analytics       // Silences the "was written to, but never read" warning.
         wait(for: .seconds(1))
 
@@ -54,7 +54,7 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
     }
 
     func testPositionWhenDestroyedAfterPlayWhileBuffering() {
-        var analytics: CommandersActStreamingAnalytics? = .init(at: .zero, in: Self.range, isLive: false)
+        var analytics: CommandersActStreamingAnalytics? = .init(at: .zero, in: Self.range, streamType: .onDemand)
 
         analytics?.notify(isBuffering: true, time: .zero, range: Self.range)
         wait(for: .seconds(1))
@@ -69,7 +69,7 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
     }
 
     func testPositionWhenDestroyedAfterPlayWhileBuffering2() {
-        var analytics: CommandersActStreamingAnalytics? = .init(at: .zero, in: Self.range, isLive: false)
+        var analytics: CommandersActStreamingAnalytics? = .init(at: .zero, in: Self.range, streamType: .onDemand)
 
         wait(for: .seconds(1))
         analytics?.notify(isBuffering: true, time: CMTime(value: 1, timescale: 1), range: Self.range)
@@ -84,7 +84,7 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
     }
 
     func testPositionWhenDestroyedAfterPause() {
-        var analytics: CommandersActStreamingAnalytics? = .init(at: .zero, in: Self.range, isLive: false)
+        var analytics: CommandersActStreamingAnalytics? = .init(at: .zero, in: Self.range, streamType: .onDemand)
         analytics?.notify(.pause, at: CMTime(value: 2, timescale: 1), in: Self.range)
         wait(for: .seconds(1))
 
@@ -98,7 +98,7 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
     }
 
     func testPositionWhenDestroyedAfterSeek() {
-        var analytics: CommandersActStreamingAnalytics? = .init(at: .zero, in: Self.range, isLive: false)
+        var analytics: CommandersActStreamingAnalytics? = .init(at: .zero, in: Self.range, streamType: .onDemand)
         analytics?.notify(.seek, at: CMTime(value: 2, timescale: 1), in: Self.range)
         wait(for: .seconds(1))
 
@@ -117,7 +117,7 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
                 expect(labels.media_timeshift).to(beNil())
             }
         ) {
-            _ = CommandersActStreamingAnalytics(at: .zero, in: Self.range, isLive: false)
+            _ = CommandersActStreamingAnalytics(at: .zero, in: Self.range, streamType: .onDemand)
         }
     }
 }
