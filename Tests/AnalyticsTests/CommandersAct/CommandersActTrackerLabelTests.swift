@@ -33,6 +33,7 @@ final class CommandersActTrackerLabelTests: CommandersActTestCase {
                 expect(labels.media_player_version).notTo(beEmpty())
                 expect(labels.media_volume).notTo(beEmpty())
                 expect(labels.media_playback_rate).to(equal(1))
+                expect(labels.media_bandwidth).to(equal(0))
             }
         ) {
             player.pause()

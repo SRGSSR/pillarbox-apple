@@ -57,7 +57,7 @@ public final class CommandersActTracker: PlayerItemTracker {
             case .playing:
                 if streamingAnalytics == nil {
                     streamingAnalytics = CommandersActStreamingAnalytics(
-                        labels: labels(),
+                        labels: labels(for: player),
                         at: player.time,
                         in: player.timeRange,
                         streamType: metadata.streamType
@@ -89,12 +89,18 @@ extension CommandersActTracker {
         AVAudioSession.sharedInstance().outputVolume * 100
     }
 
-    func labels() -> [String: String] {
+    private func bitrate(for player: Player) -> Int {
+        guard let event = player.systemPlayer.currentItem?.accessLog()?.events.last else { return 0 }
+        return Int(max(event.indicatedBitrate, 0))
+    }
+
+    func labels(for player: Player) -> [String: String] {
         metadata.labels.merging([
             "media_player_display": "Pillarbox",
             "media_player_version": PackageInfo.version,
             "media_volume": "\(volume)",
-            "media_playback_rate": "1"
+            "media_playback_rate": "1",
+            "media_bandwidth": "\(bitrate(for: player))"
         ]) { _, new in new }
     }
 }

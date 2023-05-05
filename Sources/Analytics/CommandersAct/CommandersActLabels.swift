@@ -11,6 +11,7 @@ public struct CommandersActLabels: Decodable {
     private var _media_position: String?
     private var _media_timeshift: String?
     private var _media_playback_rate: String?
+    private var _media_bandwidth: String?
 
     var event_name: String?
     var listener_session_id: String?
@@ -117,6 +118,12 @@ public struct CommandersActLabels: Decodable {
         guard let _media_playback_rate else { return nil }
         return Float(_media_playback_rate)
     }
+
+    /// Value of `media_bandwidth`.
+    public var media_bandwidth: Double? {
+        guard let _media_bandwidth else { return nil }
+        return Double(_media_bandwidth)
+    }
 }
 
 private extension CommandersActLabels {
@@ -154,5 +161,6 @@ private extension CommandersActLabels {
         case _media_playback_rate = "media_playback_rate"
         case _media_position = "media_position"
         case _media_timeshift = "media_timeshift"
+        case _media_bandwidth = "media_bandwidth"
     }
 }
