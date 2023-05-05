@@ -20,12 +20,16 @@ final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {
                 expect(labels.media_timeshift).to(equal(0))
             }
         ) {
-            _ = CommandersActStreamingAnalytics(labels: [:], at: CMTime(value: 18, timescale: 1), in: Self.range, streamType: .live)
+            _ = CommandersActStreamingAnalytics(streamType: .live) {
+                .init(labels: [:], time: CMTime(value: 18, timescale: 1), range: Self.range)
+            }
         }
     }
 
     func testPositionAfterPause() {
-        let analytics = CommandersActStreamingAnalytics(labels: [:], at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .live)
+        let analytics = CommandersActStreamingAnalytics(streamType: .live) {
+            .init(labels: [:], time: CMTime(value: 15, timescale: 1), range: Self.range)
+        }
         wait(for: .seconds(3))
         expectAtLeastEvents(
             .pause { labels in
@@ -33,12 +37,17 @@ final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {
                 expect(labels.media_timeshift).to(equal(0))
             }
         ) {
-            analytics.notify(.pause, at: CMTime(value: 18, timescale: 1), in: Self.range)
+            analytics.update = {
+                .init(labels: [:], time: CMTime(value: 18, timescale: 1), range: Self.range)
+            }
+            analytics.notify(.pause)
         }
     }
 
     func testPositionWhenDestroyedAfterPlay() {
-        var analytics: CommandersActStreamingAnalytics? = .init(labels: [:], at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .live)
+        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .live) {
+            .init(labels: [:], time: CMTime(value: 15, timescale: 1), range: Self.range)
+        }
         _ = analytics       // Silences the "was written to, but never read" warning.
         wait(for: .seconds(1))
 
@@ -53,9 +62,14 @@ final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedDuringBuffering() {
-        var analytics: CommandersActStreamingAnalytics? = .init(labels: [:], at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .live)
+        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .live) {
+            .init(labels: [:], time: CMTime(value: 15, timescale: 1), range: Self.range)
+        }
 
-        analytics?.notify(isBuffering: true, time: CMTime(value: 15, timescale: 1), range: Self.range)
+        analytics?.update = {
+            .init(labels: [:], time: CMTime(value: 15, timescale: 1), range: Self.range)
+        }
+        analytics?.notify(isBuffering: true)
         wait(for: .seconds(1))
 
         expectAtLeastEvents(
@@ -69,14 +83,17 @@ final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedWhenBufferingStarts() {
-        var analytics: CommandersActStreamingAnalytics? = .init(labels: [:], at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .live)
+        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .live) {
+            .init(labels: [:], time: CMTime(value: 15, timescale: 1), range: Self.range)
+        }
 
         wait(for: .seconds(1))
-        analytics?.notify(
-            isBuffering: true,
-            time: CMTime(value: 16, timescale: 1),
-            range: CMTimeRange(start: CMTime(value: 3, timescale: 1), duration: .zero)
-        )
+
+        analytics?.update = {
+            .init(labels: [:], time: CMTime(value: 16, timescale: 1), range: CMTimeRange(start: CMTime(value: 3, timescale: 1), duration: .zero))
+        }
+
+        analytics?.notify(isBuffering: true)
 
         expectAtLeastEvents(
             .stop { labels in
@@ -89,11 +106,15 @@ final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedAfterPause() {
-        var analytics: CommandersActStreamingAnalytics? = .init(labels: [:], at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .live)
+        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .live) {
+            .init(labels: [:], time: CMTime(value: 15, timescale: 1), range: Self.range)
+        }
         wait(for: .seconds(3))
 
-        let newRange = CMTimeRange(start: CMTime(value: 5, timescale: 1), duration: .zero)
-        analytics?.notify(.pause, at: CMTime(value: 18, timescale: 1), in: newRange)
+        analytics?.update = {
+            .init(labels: [:], time: CMTime(value: 18, timescale: 1), range: CMTimeRange(start: CMTime(value: 5, timescale: 1), duration: .zero))
+        }
+        analytics?.notify(.pause)
         wait(for: .seconds(1))
 
         expectAtLeastEvents(

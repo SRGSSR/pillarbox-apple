@@ -9,25 +9,30 @@ import Foundation
 import Player
 
 final class CommandersActStreamingAnalytics {
+    struct EventData {
+        var labels: [String: String]
+        var time: CMTime
+        var range: CMTimeRange
+    }
+
     var lastEvent: Event = .play
 
-    private var labels: [String: String]
     private var streamType: StreamType
+    var update: () -> EventData
     private var isBuffering = false
     private var playbackDuration: TimeInterval = 0
     private var lastEventTime: CMTime = .zero
     private var lastEventRange: CMTimeRange = .zero
     private var lastEventDate = Date()
 
-    init(labels: [String: String], at time: CMTime, in range: CMTimeRange, streamType: StreamType) {
+    init(streamType: StreamType, update: @escaping () -> EventData) {
         self.streamType = streamType
-        self.labels = labels
-        sendEvent(.play, at: time, in: range)
+        self.update = update
+        sendEvent(.play)
     }
 
-    func notify(_ event: Event, labels: [String: String] = [:], at time: CMTime, in range: CMTimeRange) {
+    func notify(_ event: Event) {
         guard event != lastEvent else { return }
-        self.labels = labels
 
         switch (lastEvent, event) {
         case (.pause, .seek), (.pause, .eof):
@@ -37,49 +42,50 @@ final class CommandersActStreamingAnalytics {
         case (.eof, _), (.stop, _):
             return
         default:
-            sendEvent(event, at: time, in: range)
+            sendEvent(event)
         }
     }
 
-    func notify(isBuffering: Bool, time: CMTime, range: CMTimeRange) {
-        updateReferences(at: time, in: range)
+    func notify(isBuffering: Bool) {
+        updateReferences()
         self.isBuffering = isBuffering
     }
 
-    private func sendEvent(_ event: Event, at time: CMTime, in range: CMTimeRange) {
-        updateReferences(at: time, in: range)
+    private func sendEvent(_ event: Event) {
+        updateReferences()
         lastEvent = event
 
         Analytics.shared.sendCommandersActStreamingEvent(
             name: event.rawValue,
-            labels: self.labels(at: time, in: range, playbackDuration: playbackDuration)
+            labels: labels()
         )
     }
 
-    private func labels(at time: CMTime, in range: CMTimeRange, playbackDuration: TimeInterval) -> [String: String] {
-        var labels = self.labels
+    private func labels() -> [String: String] {
+        let eventData = update()
+        var labels = eventData.labels
         switch streamType {
         case .onDemand:
-            labels["media_position"] = String(Int(time.timeInterval()))
+            labels["media_position"] = String(Int(eventData.time.timeInterval()))
         case .live:
             labels["media_position"] = String(Int(playbackDuration))
             labels["media_timeshift"] = "0"
         case .dvr:
             labels["media_position"] = String(Int(playbackDuration))
-            labels["media_timeshift"] = String(Int((range.end - time).timeInterval()))
+            labels["media_timeshift"] = String(Int((eventData.range.end - eventData.time).timeInterval()))
         default:
             break
         }
         return labels
     }
 
-    private func updateReferences(at time: CMTime, in range: CMTimeRange) {
+    private func updateReferences() {
         if lastEvent == .play, !isBuffering {
             playbackDuration += Date().timeIntervalSince(lastEventDate)
         }
-
-        lastEventTime = time
-        lastEventRange = range
+        let eventData = update()
+        lastEventTime = eventData.time
+        lastEventRange = eventData.range
         lastEventDate = Date()
     }
 
@@ -93,7 +99,9 @@ final class CommandersActStreamingAnalytics {
 
     deinit {
         let interval = CMTime(seconds: Date().timeIntervalSince(lastEventDate), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-        notify(.stop, labels: labels, at: eventTime(after: interval), in: eventRange(after: interval))
+        let eventData = EventData(labels: update().labels, time: eventTime(after: interval), range: eventRange(after: interval))
+        update = { eventData }
+        notify(.stop)
     }
 }
 

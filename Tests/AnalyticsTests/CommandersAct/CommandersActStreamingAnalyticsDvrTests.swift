@@ -20,12 +20,16 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
                 expect(labels.media_timeshift).to(equal(2))
             }
         ) {
-            _ = CommandersActStreamingAnalytics(labels: [:], at: CMTime(value: 18, timescale: 1), in: Self.range, streamType: .dvr)
+            _ = CommandersActStreamingAnalytics(streamType: .dvr) {
+                .init(labels: [:], time: CMTime(value: 18, timescale: 1), range: Self.range)
+            }
         }
     }
 
     func testPositionAfterPause() {
-        let analytics = CommandersActStreamingAnalytics(labels: [:], at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .dvr)
+        let analytics = CommandersActStreamingAnalytics(streamType: .dvr) {
+            .init(labels: [:], time: CMTime(value: 15, timescale: 1), range: Self.range)
+        }
         wait(for: .seconds(3))
         expectAtLeastEvents(
             .pause { labels in
@@ -33,12 +37,21 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
                 expect(labels.media_timeshift).to(equal(2))
             }
         ) {
-            analytics.notify(.pause, at: CMTime(value: 18, timescale: 1), in: Self.range)
+            analytics.update = {
+                CommandersActStreamingAnalytics.EventData(
+                    labels: [:],
+                    time: CMTime(value: 18, timescale: 1),
+                    range: Self.range
+                )
+            }
+            analytics.notify(.pause)
         }
     }
 
     func testPositionWhenDestroyedAfterPlay() {
-        var analytics: CommandersActStreamingAnalytics? = .init(labels: [:], at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .dvr)
+        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .dvr) {
+            .init(labels: [:], time: CMTime(value: 15, timescale: 1), range: Self.range)
+        }
         _ = analytics       // Silences the "was written to, but never read" warning.
         wait(for: .seconds(1))
 
@@ -53,9 +66,18 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedDuringBuffering() {
-        var analytics: CommandersActStreamingAnalytics? = .init(labels: [:], at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .dvr)
+        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .dvr) {
+            .init(labels: [:], time: CMTime(value: 15, timescale: 1), range: Self.range)
+        }
 
-        analytics?.notify(isBuffering: true, time: CMTime(value: 15, timescale: 1), range: Self.range)
+        analytics?.update = {
+            CommandersActStreamingAnalytics.EventData(
+                labels: [:],
+                time: CMTime(value: 15, timescale: 1),
+                range: Self.range
+            )
+        }
+        analytics?.notify(isBuffering: true)
         wait(for: .seconds(1))
 
         expectAtLeastEvents(
@@ -69,14 +91,19 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedWhenBufferingStarts() {
-        var analytics: CommandersActStreamingAnalytics? = .init(labels: [:], at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .dvr)
+        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .dvr) {
+            .init(labels: [:], time: CMTime(value: 15, timescale: 1), range: Self.range)
+        }
 
         wait(for: .seconds(1))
-        analytics?.notify(
-            isBuffering: true,
-            time: CMTime(value: 16, timescale: 1),
-            range: CMTimeRange(start: CMTime(value: 3, timescale: 1), end: CMTime(value: 21, timescale: 1))
-        )
+        analytics?.update = {
+            CommandersActStreamingAnalytics.EventData(
+                labels: [:],
+                time: CMTime(value: 16, timescale: 1),
+                range: CMTimeRange(start: CMTime(value: 3, timescale: 1), end: CMTime(value: 21, timescale: 1))
+            )
+        }
+        analytics?.notify(isBuffering: true)
 
         expectAtLeastEvents(
             .stop { labels in
@@ -89,11 +116,20 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedAfterPause() {
-        var analytics: CommandersActStreamingAnalytics? = .init(labels: [:], at: CMTime(value: 15, timescale: 1), in: Self.range, streamType: .dvr)
+        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .dvr) {
+            .init(labels: [:], time: CMTime(value: 15, timescale: 1), range: Self.range)
+        }
+
         wait(for: .seconds(3))
 
-        let newRange = CMTimeRange(start: CMTime(value: 5, timescale: 1), end: CMTime(value: 23, timescale: 1))
-        analytics?.notify(.pause, at: CMTime(value: 18, timescale: 1), in: newRange)
+        analytics?.update = {
+            CommandersActStreamingAnalytics.EventData(
+                labels: [:],
+                time: CMTime(value: 18, timescale: 1),
+                range: CMTimeRange(start: CMTime(value: 5, timescale: 1), end: CMTime(value: 23, timescale: 1))
+            )
+        }
+        analytics?.notify(.pause)
         wait(for: .seconds(1))
 
         expectAtLeastEvents(

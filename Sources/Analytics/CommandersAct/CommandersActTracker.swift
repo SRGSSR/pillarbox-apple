@@ -40,9 +40,8 @@ public final class CommandersActTracker: PlayerItemTracker {
             .store(in: &cancellables)
 
         player.$isBuffering
-            .weakCapture(player)
-            .sink { [weak self] isBuffering, player in
-                self?.streamingAnalytics?.notify(isBuffering: isBuffering, time: player.time, range: player.timeRange)
+            .sink { [weak self] isBuffering in
+                self?.streamingAnalytics?.notify(isBuffering: isBuffering)
             }
             .store(in: &cancellables)
     }
@@ -50,28 +49,33 @@ public final class CommandersActTracker: PlayerItemTracker {
     // swiftlint:disable:next cyclomatic_complexity
     private func notify(playbackState: PlaybackState, isSeeking: Bool, player: Player) {
         if isSeeking {
-            streamingAnalytics?.notify(.seek, labels: labels(for: player), at: player.time, in: player.timeRange)
+            streamingAnalytics?.notify(.seek)
         }
         else {
             switch playbackState {
             case .playing:
                 if streamingAnalytics == nil {
-                    streamingAnalytics = CommandersActStreamingAnalytics(
-                        labels: labels(for: player),
-                        at: player.time,
-                        in: player.timeRange,
-                        streamType: metadata.streamType
-                    )
+                    streamingAnalytics = CommandersActStreamingAnalytics(streamType: metadata.streamType) { [weak self, weak player] in
+                        guard let self, let player else {
+                            // TODO: We should avoid to init our CommandersActStreamingAnalytics (failable init?)
+                            return .init(labels: [:], time: .zero, range: .zero)
+                        }
+                        return CommandersActStreamingAnalytics.EventData(
+                            labels: labels(for: player),
+                            time: player.time,
+                            range: player.timeRange
+                        )
+                    }
                 }
                 else {
-                    streamingAnalytics?.notify(.play, labels: labels(for: player), at: player.time, in: player.timeRange)
+                    streamingAnalytics?.notify(.play)
                 }
             case .paused:
-                streamingAnalytics?.notify(.pause, labels: labels(for: player), at: player.time, in: player.timeRange)
+                streamingAnalytics?.notify(.pause)
             case .ended:
-                streamingAnalytics?.notify(.eof, labels: labels(for: player), at: player.time, in: player.timeRange)
+                streamingAnalytics?.notify(.eof)
             case .failed:
-                streamingAnalytics?.notify(.stop, labels: labels(for: player), at: player.time, in: player.timeRange)
+                streamingAnalytics?.notify(.stop)
             default:
                 break
             }
