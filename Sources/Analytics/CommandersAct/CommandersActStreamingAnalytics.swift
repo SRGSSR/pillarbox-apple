@@ -39,12 +39,12 @@ final class CommandersActStreamingAnalytics {
     }
 
     func notify(isBuffering: Bool) {
-        updateReferences(eventData: update() ?? .empty)
+        updateReferences(eventData: eventData())
         self.isBuffering = isBuffering
     }
 
     func notify(_ event: Event) {
-        notify(event, eventData: update() ?? .empty)
+        notify(event, eventData: eventData())
     }
 
     private func notify(_ event: Event, eventData: EventData) {
@@ -63,7 +63,7 @@ final class CommandersActStreamingAnalytics {
     }
 
     private func sendEvent(_ event: Event) {
-        sendEvent(event, eventData: update() ?? .empty)
+        sendEvent(event, eventData: eventData())
     }
 
     private func sendEvent(_ event: Event, eventData: EventData) {
@@ -110,9 +110,13 @@ final class CommandersActStreamingAnalytics {
         isAdvancing ? .init(start: lastEventRange.start + interval, duration: lastEventRange.duration) : lastEventRange
     }
 
+    private func eventData() -> EventData {
+        update() ?? .empty
+    }
+
     deinit {
         let interval = CMTime(seconds: Date().timeIntervalSince(lastEventDate), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-        let eventData = EventData(labels: (update() ?? .empty).labels, time: eventTime(after: interval), range: eventRange(after: interval))
+        let eventData = EventData(labels: eventData().labels, time: eventTime(after: interval), range: eventRange(after: interval))
         notify(.stop, eventData: eventData)
     }
 }
