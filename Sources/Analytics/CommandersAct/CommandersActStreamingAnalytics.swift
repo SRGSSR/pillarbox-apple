@@ -11,7 +11,7 @@ import Player
 final class CommandersActStreamingAnalytics {
     var lastEvent: Event = .play
 
-    private let labels: [String: String]
+    private var labels: [String: String]
     private var streamType: StreamType
     private var isBuffering = false
     private var playbackDuration: TimeInterval = 0
@@ -25,8 +25,9 @@ final class CommandersActStreamingAnalytics {
         sendEvent(.play, at: time, in: range)
     }
 
-    func notify(_ event: Event, at time: CMTime, in range: CMTimeRange) {
+    func notify(_ event: Event, labels: [String: String] = [:], at time: CMTime, in range: CMTimeRange) {
         guard event != lastEvent else { return }
+        self.labels = labels
 
         switch (lastEvent, event) {
         case (.pause, .seek), (.pause, .eof):
@@ -92,7 +93,7 @@ final class CommandersActStreamingAnalytics {
 
     deinit {
         let interval = CMTime(seconds: Date().timeIntervalSince(lastEventDate), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-        notify(.stop, at: eventTime(after: interval), in: eventRange(after: interval))
+        notify(.stop, labels: labels, at: eventTime(after: interval), in: eventRange(after: interval))
     }
 }
 

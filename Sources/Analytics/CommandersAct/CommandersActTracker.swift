@@ -50,7 +50,7 @@ public final class CommandersActTracker: PlayerItemTracker {
     // swiftlint:disable:next cyclomatic_complexity
     private func notify(playbackState: PlaybackState, isSeeking: Bool, player: Player) {
         if isSeeking {
-            streamingAnalytics?.notify(.seek, at: player.time, in: player.timeRange)
+            streamingAnalytics?.notify(.seek, labels: labels(for: player), at: player.time, in: player.timeRange)
         }
         else {
             switch playbackState {
@@ -64,14 +64,14 @@ public final class CommandersActTracker: PlayerItemTracker {
                     )
                 }
                 else {
-                    streamingAnalytics?.notify(.play, at: player.time, in: player.timeRange)
+                    streamingAnalytics?.notify(.play, labels: labels(for: player), at: player.time, in: player.timeRange)
                 }
             case .paused:
-                streamingAnalytics?.notify(.pause, at: player.time, in: player.timeRange)
+                streamingAnalytics?.notify(.pause, labels: labels(for: player), at: player.time, in: player.timeRange)
             case .ended:
-                streamingAnalytics?.notify(.eof, at: player.time, in: player.timeRange)
+                streamingAnalytics?.notify(.eof, labels: labels(for: player), at: player.time, in: player.timeRange)
             case .failed:
-                streamingAnalytics?.notify(.stop, at: player.time, in: player.timeRange)
+                streamingAnalytics?.notify(.stop, labels: labels(for: player), at: player.time, in: player.timeRange)
             default:
                 break
             }
