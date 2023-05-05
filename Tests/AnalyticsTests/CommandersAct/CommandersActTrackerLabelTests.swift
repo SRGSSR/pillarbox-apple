@@ -32,6 +32,7 @@ final class CommandersActTrackerLabelTests: CommandersActTestCase {
                 expect(labels.media_player_display).to(equal("Pillarbox"))
                 expect(labels.media_player_version).notTo(beEmpty())
                 expect(labels.media_volume).notTo(beEmpty())
+                expect(labels.media_playback_rate).to(equal(1))
             }
         ) {
             player.pause()

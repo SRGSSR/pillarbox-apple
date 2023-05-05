@@ -93,7 +93,8 @@ extension CommandersActTracker {
         metadata.labels.merging([
             "media_player_display": "Pillarbox",
             "media_player_version": PackageInfo.version,
-            "media_volume": "\(volume)"
+            "media_volume": "\(volume)",
+            "media_playback_rate": "1"
         ]) { _, new in new }
     }
 }

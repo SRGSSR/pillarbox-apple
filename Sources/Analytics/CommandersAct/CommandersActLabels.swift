@@ -10,6 +10,7 @@ import Foundation
 public struct CommandersActLabels: Decodable {
     private var _media_position: String?
     private var _media_timeshift: String?
+    private var _media_playback_rate: String?
 
     var event_name: String?
     var listener_session_id: String?
@@ -110,6 +111,12 @@ public struct CommandersActLabels: Decodable {
         guard let _media_timeshift else { return nil }
         return Int(_media_timeshift)
     }
+
+    /// Value of `media_playback_rate`.
+    public var media_playback_rate: Float? {
+        guard let _media_playback_rate else { return nil }
+        return Float(_media_playback_rate)
+    }
 }
 
 private extension CommandersActLabels {
@@ -144,6 +151,7 @@ private extension CommandersActLabels {
         case media_player_display
         case media_player_version
         case media_volume
+        case _media_playback_rate = "media_playback_rate"
         case _media_position = "media_position"
         case _media_timeshift = "media_timeshift"
     }
