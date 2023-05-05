@@ -56,10 +56,7 @@ public final class CommandersActTracker: PlayerItemTracker {
             case .playing:
                 if streamingAnalytics == nil {
                     streamingAnalytics = CommandersActStreamingAnalytics(streamType: metadata.streamType) { [weak self, weak player] in
-                        guard let self, let player else {
-                            // TODO: We should avoid to init our CommandersActStreamingAnalytics (failable init?)
-                            return .init(labels: [:], time: .zero, range: .zero)
-                        }
+                        guard let self, let player else { return nil }
                         return CommandersActStreamingAnalytics.EventData(
                             labels: labels(for: player),
                             time: player.time,

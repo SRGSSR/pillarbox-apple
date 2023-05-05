@@ -13,19 +13,23 @@ final class CommandersActStreamingAnalytics {
         var labels: [String: String]
         var time: CMTime
         var range: CMTimeRange
+
+        static var empty: Self {
+            .init(labels: [:], time: .zero, range: .zero)
+        }
     }
 
     var lastEvent: Event = .play
 
     private var streamType: StreamType
-    var update: () -> EventData
+    var update: () -> EventData?
     private var isBuffering = false
     private var playbackDuration: TimeInterval = 0
     private var lastEventTime: CMTime = .zero
     private var lastEventRange: CMTimeRange = .zero
     private var lastEventDate = Date()
 
-    init(streamType: StreamType, update: @escaping () -> EventData) {
+    init(streamType: StreamType, update: @escaping () -> EventData?) {
         self.streamType = streamType
         self.update = update
         sendEvent(.play)
@@ -62,7 +66,7 @@ final class CommandersActStreamingAnalytics {
     }
 
     private func labels() -> [String: String] {
-        let eventData = update()
+        let eventData = update() ?? .empty
         var labels = eventData.labels
         switch streamType {
         case .onDemand:
@@ -83,7 +87,7 @@ final class CommandersActStreamingAnalytics {
         if lastEvent == .play, !isBuffering {
             playbackDuration += Date().timeIntervalSince(lastEventDate)
         }
-        let eventData = update()
+        let eventData = update() ?? .empty
         lastEventTime = eventData.time
         lastEventRange = eventData.range
         lastEventDate = Date()
@@ -99,7 +103,7 @@ final class CommandersActStreamingAnalytics {
 
     deinit {
         let interval = CMTime(seconds: Date().timeIntervalSince(lastEventDate), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-        let eventData = EventData(labels: update().labels, time: eventTime(after: interval), range: eventRange(after: interval))
+        let eventData = EventData(labels: (update() ?? .empty).labels, time: eventTime(after: interval), range: eventRange(after: interval))
         update = { eventData }
         notify(.stop)
     }
