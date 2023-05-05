@@ -121,7 +121,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
 
         expectAtLeastEvents(
             .stop { labels in
-                expect(labels.media_timeshift).to(equal(2))
+                expect(labels.media_position).to(equal(0))
             }
         ) {
             player = nil

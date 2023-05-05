@@ -21,13 +21,16 @@ final class CommandersActStreamingAnalytics {
 
     var lastEvent: Event = .play
 
-    private var streamType: StreamType
-    var update: () -> EventData?
+    private let streamType: StreamType
+    private let update: () -> EventData?
     private var isBuffering = false
     private var playbackDuration: TimeInterval = 0
     private var lastEventTime: CMTime = .zero
     private var lastEventRange: CMTimeRange = .zero
     private var lastEventDate = Date()
+    private var isAdvancing: Bool {
+        lastEvent == .play && !isBuffering
+    }
 
     init(streamType: StreamType, update: @escaping () -> EventData?) {
         self.streamType = streamType
@@ -35,7 +38,16 @@ final class CommandersActStreamingAnalytics {
         sendEvent(.play)
     }
 
+    func notify(isBuffering: Bool) {
+        updateReferences(eventData: update() ?? .empty)
+        self.isBuffering = isBuffering
+    }
+
     func notify(_ event: Event) {
+        notify(event, eventData: update() ?? .empty)
+    }
+
+    private func notify(_ event: Event, eventData: EventData) {
         guard event != lastEvent else { return }
 
         switch (lastEvent, event) {
@@ -46,27 +58,25 @@ final class CommandersActStreamingAnalytics {
         case (.eof, _), (.stop, _):
             return
         default:
-            sendEvent(event)
+            sendEvent(event, eventData: eventData)
         }
     }
 
-    func notify(isBuffering: Bool) {
-        updateReferences()
-        self.isBuffering = isBuffering
+    private func sendEvent(_ event: Event) {
+        sendEvent(event, eventData: update() ?? .empty)
     }
 
-    private func sendEvent(_ event: Event) {
-        updateReferences()
+    private func sendEvent(_ event: Event, eventData: EventData) {
+        updateReferences(eventData: eventData)
         lastEvent = event
 
         Analytics.shared.sendCommandersActStreamingEvent(
             name: event.rawValue,
-            labels: labels()
+            labels: labels(eventData: eventData)
         )
     }
 
-    private func labels() -> [String: String] {
-        let eventData = update() ?? .empty
+    private func labels(eventData: EventData) -> [String: String] {
         var labels = eventData.labels
         switch streamType {
         case .onDemand:
@@ -83,29 +93,27 @@ final class CommandersActStreamingAnalytics {
         return labels
     }
 
-    private func updateReferences() {
+    private func updateReferences(eventData: EventData) {
         if lastEvent == .play, !isBuffering {
             playbackDuration += Date().timeIntervalSince(lastEventDate)
         }
-        let eventData = update() ?? .empty
         lastEventTime = eventData.time
         lastEventRange = eventData.range
         lastEventDate = Date()
     }
 
     private func eventTime(after interval: CMTime) -> CMTime {
-        lastEvent == .play && !isBuffering ? lastEventTime + interval : lastEventTime
+        isAdvancing ? lastEventTime + interval : lastEventTime
     }
 
     private func eventRange(after interval: CMTime) -> CMTimeRange {
-        .init(start: lastEventRange.start + interval, duration: lastEventRange.duration)
+        isAdvancing ? .init(start: lastEventRange.start + interval, duration: lastEventRange.duration) : lastEventRange
     }
 
     deinit {
         let interval = CMTime(seconds: Date().timeIntervalSince(lastEventDate), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         let eventData = EventData(labels: (update() ?? .empty).labels, time: eventTime(after: interval), range: eventRange(after: interval))
-        update = { eventData }
-        notify(.stop)
+        notify(.stop, eventData: eventData)
     }
 }
 
