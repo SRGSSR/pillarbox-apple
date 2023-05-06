@@ -9,16 +9,6 @@ import Foundation
 import Player
 
 final class CommandersActStreamingAnalytics {
-    struct EventData {
-        var labels: [String: String]
-        var time: CMTime
-        var range: CMTimeRange
-
-        static var empty: Self {
-            .init(labels: [:], time: .zero, range: .zero)
-        }
-    }
-
     var lastEvent: Event = .play
 
     private let streamType: StreamType
@@ -128,5 +118,15 @@ extension CommandersActStreamingAnalytics {
         case seek
         case eof
         case stop
+    }
+
+    struct EventData {
+        var labels: [String: String]
+        var time: CMTime
+        var range: CMTimeRange
+
+        static var empty: Self {
+            .init(labels: [:], time: .zero, range: .zero)
+        }
     }
 }
