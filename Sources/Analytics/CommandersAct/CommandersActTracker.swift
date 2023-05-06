@@ -54,7 +54,7 @@ public final class CommandersActTracker: PlayerItemTracker {
         else {
             switch playbackState {
             case .playing:
-                if streamingAnalytics == nil {
+                guard streamingAnalytics != nil else {
                     streamingAnalytics = CommandersActStreamingAnalytics(streamType: metadata.streamType) { [weak self, weak player] in
                         guard let self, let player else { return nil }
                         return CommandersActStreamingAnalytics.EventData(
@@ -63,10 +63,9 @@ public final class CommandersActTracker: PlayerItemTracker {
                             range: player.timeRange
                         )
                     }
+                    break
                 }
-                else {
-                    streamingAnalytics?.notify(.play)
-                }
+                streamingAnalytics?.notify(.play)
             case .paused:
                 streamingAnalytics?.notify(.pause)
             case .ended:
