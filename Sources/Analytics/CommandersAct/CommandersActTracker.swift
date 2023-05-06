@@ -85,7 +85,7 @@ public final class CommandersActTracker: PlayerItemTracker {
     }
 }
 
-extension CommandersActTracker {
+private extension CommandersActTracker {
     private var volume: Float {
         AVAudioSession.sharedInstance().outputVolume * 100
     }
