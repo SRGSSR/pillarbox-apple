@@ -17,7 +17,20 @@ final class CommandersActStreamingAnalyticsHeartbeatLiveTests: CommandersActTest
         }
         _ = analytics
 
-        expectAtLeastEvents(.pos(), .uptime(), .pos(), .uptime())
+        expectAtLeastEvents(
+            .pos { labels in
+                expect(labels.media_position).to(equal(1))
+            },
+            .uptime { labels in
+                expect(labels.media_position).to(equal(1))
+            },
+            .pos { labels in
+                expect(labels.media_position).to(equal(2))
+            },
+            .uptime { labels in
+                expect(labels.media_position).to(equal(2))
+            }
+        )
     }
 
     func testNoHeartbeatAfterPause() {
@@ -57,6 +70,20 @@ final class CommandersActStreamingAnalyticsHeartbeatLiveTests: CommandersActTest
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(isBuffering: true)
-        expectAtLeastEvents(.pos(), .uptime(), .pos(), .uptime())
+
+        expectAtLeastEvents(
+            .pos { labels in
+                expect(labels.media_position).to(equal(0))
+            },
+            .uptime { labels in
+                expect(labels.media_position).to(equal(0))
+            },
+            .pos { labels in
+                expect(labels.media_position).to(equal(0))
+            },
+            .uptime { labels in
+                expect(labels.media_position).to(equal(0))
+            }
+        )
     }
 }

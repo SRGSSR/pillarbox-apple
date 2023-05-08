@@ -158,9 +158,11 @@ extension CommandersActStreamingAnalytics {
     }
 
     private func sendHeartbeat(_ heartbeat: Heartbeat) {
+        let eventData = eventData()
+        updateReferences(eventData: eventData)
         Analytics.shared.sendCommandersActStreamingEvent(
             name: heartbeat.rawValue,
-            labels: labels(eventData: eventData())
+            labels: labels(eventData: eventData)
         )
     }
 }
