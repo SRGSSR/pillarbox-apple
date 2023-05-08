@@ -50,7 +50,7 @@ final class CommandersActHeartbeatOnDemandTests: CommandersActTestCase {
         expectNoEvents(during: .seconds(2))
     }
 
-    func testNoHeartbeatWhileBuffering() {
+    func testHeartbeatWhileBuffering() {
         let analytics = CommandersActStreamingAnalytics(streamType: .onDemand) {
             .init(labels: [:], time: .zero, range: .zero)
         }
