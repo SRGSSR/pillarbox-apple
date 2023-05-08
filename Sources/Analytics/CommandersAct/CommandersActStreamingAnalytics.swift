@@ -28,7 +28,6 @@ final class CommandersActStreamingAnalytics {
         self.streamType = streamType
         self.update = update
         sendEvent(.play)
-        configureHeartbeats()
     }
 
     func notify(isBuffering: Bool) {
@@ -62,6 +61,13 @@ final class CommandersActStreamingAnalytics {
     private func sendEvent(_ event: Event, eventData: EventData) {
         updateReferences(eventData: eventData)
         lastEvent = event
+
+        if event == .play {
+            installHeartbeats()
+        }
+        else {
+            uninstallHeartbeats()
+        }
 
         Analytics.shared.sendCommandersActStreamingEvent(
             name: event.rawValue,
@@ -120,13 +126,17 @@ extension CommandersActStreamingAnalytics {
         case uptime
     }
 
-    func configureHeartbeats() {
+    func installHeartbeats() {
         Timer.publish(every: 1.0, on: .main, in: .common)
             .autoconnect()
             .sink { _ in
                 self.sendHeartbeat(.pos)
             }
             .store(in: &cancellables)
+    }
+
+    func uninstallHeartbeats() {
+        cancellables = []
     }
 
     private func sendHeartbeat(_ heartbeat: Heartbeat) {

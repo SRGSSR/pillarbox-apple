@@ -21,6 +21,11 @@ final class CommandersActHeartbeatOnDemandTests: CommandersActTestCase {
     }
 
     func testNoHeartbeatAfterPause() {
+        let analytics = CommandersActStreamingAnalytics(streamType: .onDemand) {
+            .init(labels: [:], time: .zero, range: .zero)
+        }
+        analytics.notify(.pause)
+        expectNoEvents(during: .seconds(2))
     }
 
     func testNoHeartbeatAfterSeek() {
