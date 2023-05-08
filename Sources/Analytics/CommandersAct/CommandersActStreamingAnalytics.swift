@@ -15,10 +15,11 @@ final class CommandersActStreamingAnalytics {
     private let streamType: StreamType
     private let heartbeatInterval: HeartbeatInterval
     private let update: () -> EventData?
-    
+
     private var isBuffering = false
     private var cancellables = Set<AnyCancellable>()
     private var playbackDuration: TimeInterval = 0
+    
     private var lastEventTime: CMTime = .zero
     private var lastEventRange: CMTimeRange = .zero
     private var lastEventDate = Date()
@@ -125,9 +126,22 @@ final class CommandersActStreamingAnalytics {
 }
 
 extension CommandersActStreamingAnalytics {
-    enum Heartbeat: String {
-        case pos
-        case uptime
+    enum Event: String {
+        case play
+        case pause
+        case seek
+        case eof
+        case stop
+    }
+
+    struct EventData {
+        var labels: [String: String]
+        var time: CMTime
+        var range: CMTimeRange
+
+        static var empty: Self {
+            .init(labels: [:], time: .zero, range: .zero)
+        }
     }
 
     struct HeartbeatInterval {
@@ -137,6 +151,13 @@ extension CommandersActStreamingAnalytics {
         static var `default`: Self {
             .init(pos: 30, uptime: 60)
         }
+    }
+}
+
+private extension CommandersActStreamingAnalytics {
+    enum Heartbeat: String {
+        case pos
+        case uptime
     }
 
     func installHeartbeats() {
@@ -166,25 +187,5 @@ extension CommandersActStreamingAnalytics {
             name: heartbeat.rawValue,
             labels: labels(eventData: eventData)
         )
-    }
-}
-
-extension CommandersActStreamingAnalytics {
-    enum Event: String {
-        case play
-        case pause
-        case seek
-        case eof
-        case stop
-    }
-
-    struct EventData {
-        var labels: [String: String]
-        var time: CMTime
-        var range: CMTimeRange
-
-        static var empty: Self {
-            .init(labels: [:], time: .zero, range: .zero)
-        }
     }
 }
