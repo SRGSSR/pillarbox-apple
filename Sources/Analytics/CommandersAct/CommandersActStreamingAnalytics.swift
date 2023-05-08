@@ -19,7 +19,7 @@ final class CommandersActStreamingAnalytics {
     private var isBuffering = false
     private var cancellables = Set<AnyCancellable>()
     private var playbackDuration: TimeInterval = 0
-    
+
     private var lastEventTime: CMTime = .zero
     private var lastEventRange: CMTimeRange = .zero
     private var lastEventDate = Date()
@@ -36,7 +36,7 @@ final class CommandersActStreamingAnalytics {
     }
 
     func notify(isBuffering: Bool) {
-        updateReferences(eventData: eventData())
+        updateTimeTracking(eventData: eventData())
         self.isBuffering = isBuffering
     }
 
@@ -64,7 +64,7 @@ final class CommandersActStreamingAnalytics {
     }
 
     private func sendEvent(_ event: Event, eventData: EventData) {
-        updateReferences(eventData: eventData)
+        updateTimeTracking(eventData: eventData)
         lastEvent = event
 
         if event == .play {
@@ -97,7 +97,7 @@ final class CommandersActStreamingAnalytics {
         return labels
     }
 
-    private func updateReferences(eventData: EventData) {
+    private func updateTimeTracking(eventData: EventData) {
         if lastEvent == .play, !isBuffering {
             playbackDuration += Date().timeIntervalSince(lastEventDate)
         }
@@ -182,7 +182,7 @@ private extension CommandersActStreamingAnalytics {
 
     private func sendHeartbeat(_ heartbeat: Heartbeat) {
         let eventData = eventData()
-        updateReferences(eventData: eventData)
+        updateTimeTracking(eventData: eventData)
         Analytics.shared.sendCommandersActStreamingEvent(
             name: heartbeat.rawValue,
             labels: labels(eventData: eventData)
