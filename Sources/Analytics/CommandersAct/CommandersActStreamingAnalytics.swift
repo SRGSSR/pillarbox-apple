@@ -129,8 +129,8 @@ extension CommandersActStreamingAnalytics {
     func installHeartbeats() {
         Timer.publish(every: 1.0, on: .main, in: .common)
             .autoconnect()
-            .sink { _ in
-                self.sendHeartbeat(.pos)
+            .sink { [weak self] _ in
+                self?.sendHeartbeat(.pos)
             }
             .store(in: &cancellables)
     }
