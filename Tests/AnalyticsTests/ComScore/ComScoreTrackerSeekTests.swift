@@ -21,7 +21,7 @@ final class ComScoreTrackerSeekTests: ComScoreTestCase {
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter { _ in ["meta": "data"] }
+                ComScoreTracker.adapter { _ in .test }
             ]
         ))
 
@@ -45,7 +45,7 @@ final class ComScoreTrackerSeekTests: ComScoreTestCase {
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter { _ in ["meta": "data"] }
+                ComScoreTracker.adapter { _ in .test }
             ]
         ))
 

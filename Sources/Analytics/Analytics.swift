@@ -98,8 +98,8 @@ public class Analytics {
         commandersActService.sendEvent(event)
     }
 
-    func sendCommandersActStreamingEvent(name: String) {
+    func sendCommandersActStreamingEvent(name: String, labels: [String: String]) {
         assert(!name.isEmpty, "A name is required")
-        commandersActService.sendStreamingEvent(name: name)
+        commandersActService.sendStreamingEvent(name: name, labels: labels)
     }
 }

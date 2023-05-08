@@ -22,10 +22,10 @@ final class ComScoreTrackerMetadataTests: ComScoreTestCase {
             metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in
-                    [
-                        "meta_1": "custom-1",
-                        "meta_2": "42"
-                    ]
+                    ComScoreTracker.Metadata(
+                        labels: ["meta_1": "custom-1", "meta_2": "42"],
+                        streamType: .unknown
+                    )
                 }
             ]
         ))
@@ -46,7 +46,7 @@ final class ComScoreTrackerMetadataTests: ComScoreTestCase {
             metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in
-                    [:]
+                    .empty
                 }
             ]
         ))

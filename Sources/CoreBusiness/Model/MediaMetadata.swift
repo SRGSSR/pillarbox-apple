@@ -50,6 +50,11 @@ public struct MediaMetadata: AssetMetadata {
         mediaComposition.mainChapter.description
     }
 
+    /// The stream type.
+    public var streamType: StreamType {
+        resource.streamType
+    }
+
     /// Consolidated comScore analytics data.
     var analyticsData: [String: String] {
         var analyticsData = mediaComposition.mainChapter.analyticsData
