@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFAudio
+import AVFoundation
 import Combine
 import Foundation
 import Player
