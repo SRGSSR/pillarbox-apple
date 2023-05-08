@@ -127,25 +127,23 @@ extension CommandersActStreamingAnalytics {
     }
 
     func installHeartbeats() {
-        Timer.publish(every: 1.0, on: .main, in: .common)
-            .autoconnect()
-            .sink { [weak self] _ in
-                self?.sendHeartbeat(.pos)
-            }
-            .store(in: &cancellables)
-
-        if streamType == .live {
-            Timer.publish(every: 1.0, on: .main, in: .common)
-                .autoconnect()
-                .sink { [weak self] _ in
-                    self?.sendHeartbeat(.uptime)
-                }
-                .store(in: &cancellables)
+        timer(for: .pos, interval: 1.0)
+        if [.live, .dvr].contains(streamType) {
+            timer(for: .uptime, interval: 1.0)
         }
     }
 
     func uninstallHeartbeats() {
         cancellables = []
+    }
+
+    private func timer(for heartbeat: Heartbeat, interval: TimeInterval) {
+        Timer.publish(every: interval, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+                self?.sendHeartbeat(heartbeat)
+            }
+            .store(in: &cancellables)
     }
 
     private func sendHeartbeat(_ heartbeat: Heartbeat) {
