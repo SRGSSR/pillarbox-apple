@@ -11,6 +11,7 @@ import Player
 
 final class CommandersActStreamingAnalytics {
     var lastEvent: Event = .play
+    private var lastLabels: [String: String] = [:]
 
     private let streamType: StreamType
     private let heartbeatInterval: HeartbeatInterval
@@ -65,7 +66,9 @@ final class CommandersActStreamingAnalytics {
 
     private func sendEvent(_ event: Event, eventData: EventData) {
         updateTimeTracking(eventData: eventData)
+
         lastEvent = event
+        lastLabels = eventData.labels
 
         if event == .play {
             installHeartbeats()
@@ -120,7 +123,7 @@ final class CommandersActStreamingAnalytics {
 
     deinit {
         let interval = CMTime(seconds: Date().timeIntervalSince(lastEventDate), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-        let eventData = EventData(labels: eventData().labels, time: eventTime(after: interval), range: eventRange(after: interval))
+        let eventData = EventData(labels: lastLabels, time: eventTime(after: interval), range: eventRange(after: interval))
         notify(.stop, eventData: eventData)
     }
 }

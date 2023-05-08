@@ -12,7 +12,7 @@ import Nimble
 
 // swiftlint:disable:next type_name
 final class CommandersActStreamingAnalyticsMetadataTests: CommandersActTestCase {
-    func testInitialPosition() {
+    func testPlay() {
         expectAtLeastEvents(
             .play { labels in
                 expect(labels.media_title).to(equal("title"))
@@ -24,7 +24,7 @@ final class CommandersActStreamingAnalyticsMetadataTests: CommandersActTestCase 
         }
     }
 
-    func testWhenDestroyedAfterPlay() {
+    func testStopWhenDestroyed() {
         var analytics: CommandersActStreamingAnalytics? = .init(streamType: .live) {
             .init(labels: ["media_title": "title"], time: .zero, range: .zero)
         }
