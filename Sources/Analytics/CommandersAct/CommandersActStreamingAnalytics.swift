@@ -13,6 +13,7 @@ final class CommandersActStreamingAnalytics {
     var lastEvent: Event = .play
 
     private let streamType: StreamType
+    private let heartbeatInterval: HeartbeatInterval
     private let update: () -> EventData?
     private var isBuffering = false
     private var cancellables = Set<AnyCancellable>()
@@ -24,8 +25,9 @@ final class CommandersActStreamingAnalytics {
         lastEvent == .play && !isBuffering
     }
 
-    init(streamType: StreamType, update: @escaping () -> EventData?) {
+    init(streamType: StreamType, heartbeatInterval: HeartbeatInterval = .default, update: @escaping () -> EventData?) {
         self.streamType = streamType
+        self.heartbeatInterval = heartbeatInterval
         self.update = update
         sendEvent(.play)
     }
@@ -126,10 +128,19 @@ extension CommandersActStreamingAnalytics {
         case uptime
     }
 
+    struct HeartbeatInterval {
+        let pos: TimeInterval
+        let uptime: TimeInterval
+
+        static var `default`: Self {
+            .init(pos: 30, uptime: 60)
+        }
+    }
+
     func installHeartbeats() {
-        timer(for: .pos, interval: 1.0)
+        timer(for: .pos, interval: heartbeatInterval.pos)
         if [.live, .dvr].contains(streamType) {
-            timer(for: .uptime, interval: 1.0)
+            timer(for: .uptime, interval: heartbeatInterval.uptime)
         }
     }
 

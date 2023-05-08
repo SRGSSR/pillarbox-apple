@@ -12,7 +12,7 @@ import Nimble
 // swiftlint:disable:next type_name
 final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestCase {
     func testHeartbeatAfterPlay() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .dvr) {
+        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeatInterval: .test) {
             .init(labels: [:], time: .zero, range: .zero)
         }
         _ = analytics
@@ -21,7 +21,7 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
     }
 
     func testNoHeartbeatAfterPause() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .dvr) {
+        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeatInterval: .test) {
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(.pause)
@@ -29,7 +29,7 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
     }
 
     func testNoHeartbeatAfterSeek() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .dvr) {
+        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeatInterval: .test) {
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(.seek)
@@ -37,7 +37,7 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
     }
 
     func testNoHeartbeatAfterEof() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .dvr) {
+        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeatInterval: .test) {
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(.eof)
@@ -45,7 +45,7 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
     }
 
     func testNoHeartbeatAfterStop() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .dvr) {
+        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeatInterval: .test) {
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(.stop)
@@ -53,7 +53,7 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
     }
 
     func testHeartbeatWhileBuffering() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .dvr) {
+        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeatInterval: .test) {
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(isBuffering: true)
