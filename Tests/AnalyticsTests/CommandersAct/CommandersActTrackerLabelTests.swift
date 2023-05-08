@@ -19,7 +19,7 @@ final class CommandersActTrackerLabelTests: CommandersActTestCase {
             metadata: AssetMetadataMock(),
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in
-                        .test(streamType: .onDemand)
+                    .test(streamType: .onDemand)
                 }
             ]
         ))
