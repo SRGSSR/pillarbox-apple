@@ -134,12 +134,14 @@ extension CommandersActStreamingAnalytics {
             }
             .store(in: &cancellables)
 
-        Timer.publish(every: 1.0, on: .main, in: .common)
-            .autoconnect()
-            .sink { [weak self] _ in
-                self?.sendHeartbeat(.uptime)
-            }
-            .store(in: &cancellables)
+        if streamType == .live {
+            Timer.publish(every: 1.0, on: .main, in: .common)
+                .autoconnect()
+                .sink { [weak self] _ in
+                    self?.sendHeartbeat(.uptime)
+                }
+                .store(in: &cancellables)
+        }
     }
 
     func uninstallHeartbeats() {

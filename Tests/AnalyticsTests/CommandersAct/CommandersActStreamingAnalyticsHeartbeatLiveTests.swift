@@ -15,6 +15,7 @@ final class CommandersActStreamingAnalyticsHeartbeatLiveTests: CommandersActTest
         let analytics = CommandersActStreamingAnalytics(streamType: .live) {
             .init(labels: [:], time: .zero, range: .zero)
         }
+        _ = analytics
 
         expectAtLeastEvents(.pos(), .uptime(), .pos(), .uptime())
     }
