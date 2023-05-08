@@ -29,12 +29,27 @@ final class CommandersActHeartbeatOnDemandTests: CommandersActTestCase {
     }
 
     func testNoHeartbeatAfterSeek() {
+        let analytics = CommandersActStreamingAnalytics(streamType: .onDemand) {
+            .init(labels: [:], time: .zero, range: .zero)
+        }
+        analytics.notify(.seek)
+        expectNoEvents(during: .seconds(2))
     }
 
     func testNoHeartbeatAfterEof() {
+        let analytics = CommandersActStreamingAnalytics(streamType: .onDemand) {
+            .init(labels: [:], time: .zero, range: .zero)
+        }
+        analytics.notify(.eof)
+        expectNoEvents(during: .seconds(2))
     }
 
     func testNoHeartbeatAfterStop() {
+        let analytics = CommandersActStreamingAnalytics(streamType: .onDemand) {
+            .init(labels: [:], time: .zero, range: .zero)
+        }
+        analytics.notify(.stop)
+        expectNoEvents(during: .seconds(2))
     }
 
     func testNoHeartbeatWhileBuffering() {
