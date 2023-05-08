@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Combine
 import CoreMedia
 import Foundation
 import Player
@@ -14,6 +15,7 @@ final class CommandersActStreamingAnalytics {
     private let streamType: StreamType
     private let update: () -> EventData?
     private var isBuffering = false
+    private var cancellables = Set<AnyCancellable>()
     private var playbackDuration: TimeInterval = 0
     private var lastEventTime: CMTime = .zero
     private var lastEventRange: CMTimeRange = .zero
@@ -26,6 +28,7 @@ final class CommandersActStreamingAnalytics {
         self.streamType = streamType
         self.update = update
         sendEvent(.play)
+        configureHeartbeats()
     }
 
     func notify(isBuffering: Bool) {
@@ -108,6 +111,29 @@ final class CommandersActStreamingAnalytics {
         let interval = CMTime(seconds: Date().timeIntervalSince(lastEventDate), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         let eventData = EventData(labels: eventData().labels, time: eventTime(after: interval), range: eventRange(after: interval))
         notify(.stop, eventData: eventData)
+    }
+}
+
+extension CommandersActStreamingAnalytics {
+    enum Heartbeat: String {
+        case pos
+        case uptime
+    }
+
+    func configureHeartbeats() {
+        Timer.publish(every: 1.0, on: .main, in: .common)
+            .autoconnect()
+            .sink { _ in
+                self.sendHeartbeat(.pos)
+            }
+            .store(in: &cancellables)
+    }
+
+    private func sendHeartbeat(_ heartbeat: Heartbeat) {
+        Analytics.shared.sendCommandersActStreamingEvent(
+            name: heartbeat.rawValue,
+            labels: labels(eventData: eventData())
+        )
     }
 }
 

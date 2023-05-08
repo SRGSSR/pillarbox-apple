@@ -15,6 +15,8 @@ public struct CommandersActEvent {
         case seek
         case stop
         case eof
+        case pos
+        case uptime
         case page_view
         case hidden_event
     }

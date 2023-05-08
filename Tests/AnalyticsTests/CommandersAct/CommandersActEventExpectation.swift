@@ -43,6 +43,16 @@ struct CommandersActEventExpectation {
         .init(name: .eof, evaluate: evaluate)
     }
 
+    /// Pos.
+    static func pos(evaluate: @escaping (CommandersActLabels) -> Void = { _ in }) -> Self {
+        .init(name: .pos, evaluate: evaluate)
+    }
+
+    /// Uptime.
+    static func uptime(evaluate: @escaping (CommandersActLabels) -> Void = { _ in }) -> Self {
+        .init(name: .uptime, evaluate: evaluate)
+    }
+
     /// Page view.
     static func page_view(evaluate: @escaping (CommandersActLabels) -> Void = { _ in }) -> Self {
         .init(name: .page_view, evaluate: evaluate)
