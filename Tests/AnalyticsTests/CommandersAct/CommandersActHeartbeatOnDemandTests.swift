@@ -15,9 +15,7 @@ final class CommandersActHeartbeatOnDemandTests: CommandersActTestCase {
             .init(labels: [:], time: .zero, range: .zero)
         }
 
-        expectAtLeastEvents(.pos(), .pos()) {
-            analytics.notify(.play)
-        }
+        expectAtLeastEvents(.pos(), .pos())
     }
 
     func testNoHeartbeatAfterPause() {
@@ -53,5 +51,10 @@ final class CommandersActHeartbeatOnDemandTests: CommandersActTestCase {
     }
 
     func testNoHeartbeatWhileBuffering() {
+        let analytics = CommandersActStreamingAnalytics(streamType: .onDemand) {
+            .init(labels: [:], time: .zero, range: .zero)
+        }
+        analytics.notify(isBuffering: true)
+        expectAtLeastEvents(.pos(), .pos())
     }
 }
