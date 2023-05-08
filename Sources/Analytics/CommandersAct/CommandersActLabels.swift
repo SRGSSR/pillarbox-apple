@@ -15,6 +15,7 @@ public struct CommandersActLabels: Decodable {
 
     let event_name: String?
     let listener_session_id: String?
+    let media_title: String?
 
     /// Value of `app_library_version`.
     public let app_library_version: String?
@@ -129,6 +130,7 @@ public struct CommandersActLabels: Decodable {
 private extension CommandersActLabels {
     enum CodingKeys: String, CodingKey {
         case event_name
+        case media_title
         case listener_session_id
         case app_library_version
         case navigation_app_site_name
