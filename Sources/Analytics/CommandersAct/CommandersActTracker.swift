@@ -19,17 +19,6 @@ public final class CommandersActTracker: PlayerItemTracker {
         metadataPublisher.assign(to: &$metadata)
     }
 
-    private static func eventName(for playbackState: PlaybackState) -> String? {
-        switch playbackState {
-        case .playing:
-            return "play"
-        case .paused:
-            return "pause"
-        default:
-            return nil
-        }
-    }
-
     public func enable(for player: Player) {
         Publishers.CombineLatest(player.$playbackState, player.$isSeeking)
             .map { (playbackState: $0, isSeeking: $1) }
