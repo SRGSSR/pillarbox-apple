@@ -15,12 +15,14 @@ final class CommandersActStreamingAnalytics {
     private let streamType: StreamType
     private let heartbeatInterval: HeartbeatInterval
     private let update: () -> EventData?
+    
     private var isBuffering = false
     private var cancellables = Set<AnyCancellable>()
     private var playbackDuration: TimeInterval = 0
     private var lastEventTime: CMTime = .zero
     private var lastEventRange: CMTimeRange = .zero
     private var lastEventDate = Date()
+
     private var isAdvancing: Bool {
         lastEvent == .play && !isBuffering
     }
