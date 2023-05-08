@@ -95,7 +95,7 @@ private extension CommandersActTracker {
 }
 
 public extension CommandersActTracker {
-    /// Metadata
+    /// Metadata.
     struct Metadata {
         let labels: [String: String]
         let streamType: StreamType
@@ -104,9 +104,9 @@ public extension CommandersActTracker {
             .init(labels: [:], streamType: .unknown)
         }
 
-        /// The initializer.
+        /// Create metadata.
         /// - Parameters:
-        ///   - labels: The labels.
+        ///   - labels: Labels associated with the content being played.
         ///   - streamType: The stream type.
         public init(labels: [String: String], streamType: StreamType) {
             self.labels = labels

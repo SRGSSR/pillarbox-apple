@@ -50,6 +50,7 @@ public struct MediaMetadata: AssetMetadata {
         mediaComposition.mainChapter.description
     }
 
+    /// The stream type.
     public var streamType: StreamType {
         resource.streamType
     }
