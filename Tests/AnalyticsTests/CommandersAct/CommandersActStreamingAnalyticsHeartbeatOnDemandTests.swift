@@ -9,13 +9,14 @@ import CoreMedia
 import Foundation
 import Nimble
 
-final class CommandersActHeartbeatOnDemandTests: CommandersActTestCase {
-    func testHeartbeatPosAfterPlay() {
+// swiftlint:disable:next type_name
+final class CommandersActStreamingAnalyticsHeartbeatOnDemandTests: CommandersActTestCase {
+    func testHeartbeatAfterPlay() {
         let analytics = CommandersActStreamingAnalytics(streamType: .onDemand) {
             .init(labels: [:], time: .zero, range: .zero)
         }
 
-        expectAtLeastEvents(.pos(), .pos())
+        expectAtLeastEvents(.pos(), .uptime(), .pos(), .uptime())
     }
 
     func testNoHeartbeatAfterPause() {
@@ -55,6 +56,6 @@ final class CommandersActHeartbeatOnDemandTests: CommandersActTestCase {
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(isBuffering: true)
-        expectAtLeastEvents(.pos(), .pos())
+        expectAtLeastEvents(.pos(), .uptime(), .pos(), .uptime())
     }
 }
