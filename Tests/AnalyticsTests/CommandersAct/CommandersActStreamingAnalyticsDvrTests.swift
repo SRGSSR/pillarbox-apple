@@ -49,7 +49,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
         var analytics: CommandersActStreamingAnalytics? = .init(streamType: .dvr) {
             .init(labels: [:], time: CMTime(value: 15, timescale: 1), range: Self.range)
         }
-        _ = analytics       // Silences the "was written to, but never read" warning.
+        _ = analytics
         wait(for: .seconds(1))
 
         expectAtLeastEvents(

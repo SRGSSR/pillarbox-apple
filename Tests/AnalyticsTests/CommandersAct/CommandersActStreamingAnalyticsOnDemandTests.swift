@@ -41,7 +41,7 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
 
     func testPositionWhenDestroyedAfterPlay() {
         var analytics: CommandersActStreamingAnalytics? = .init(streamType: .onDemand) { .empty }
-        _ = analytics       // Silences the "was written to, but never read" warning.
+        _ = analytics
         wait(for: .seconds(1))
 
         expectAtLeastEvents(

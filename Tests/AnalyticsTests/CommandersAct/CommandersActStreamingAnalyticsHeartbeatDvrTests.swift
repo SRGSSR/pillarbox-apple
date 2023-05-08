@@ -5,6 +5,7 @@
 //
 
 @testable import Analytics
+
 import CoreMedia
 import Foundation
 import Nimble

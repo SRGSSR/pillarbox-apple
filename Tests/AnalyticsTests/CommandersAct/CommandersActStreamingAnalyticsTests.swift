@@ -5,6 +5,7 @@
 //
 
 @testable import Analytics
+
 import Foundation
 import Nimble
 
