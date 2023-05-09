@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import AVFoundation
 import SwiftUI
 
@@ -45,6 +46,7 @@ struct SettingsView: View {
             debuggingSection()
         }
         .navigationTitle("Settings")
+        .tracked(title: "Settings")
     }
 
     @ViewBuilder
