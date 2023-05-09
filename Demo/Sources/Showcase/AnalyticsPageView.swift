@@ -7,14 +7,6 @@
 import Analytics
 import SwiftUI
 
-struct AnalyticsPageView: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> UINavigationController {
-        .init(rootViewController: AnalyticsPageViewController())
-    }
-
-    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {}
-}
-
 final class AnalyticsPageViewController: UIViewController, PageViewTracking {
     let pageTitle = "Analytics"
 
@@ -28,4 +20,12 @@ final class AnalyticsPageViewController: UIViewController, PageViewTracking {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
+}
+
+struct AnalyticsPageView: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UINavigationController {
+        .init(rootViewController: AnalyticsPageViewController())
+    }
+
+    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {}
 }

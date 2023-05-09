@@ -53,7 +53,8 @@ extension UIViewController {
         return containerViewController.activeChildren
     }
 
-    @objc static func applicationWillEnterForeground(_ notification: Notification) {
+    @objc
+    static func applicationWillEnterForeground(_ notification: Notification) {
         guard let application = notification.object as? UIApplication,
               let windowScene = application.connectedScenes.first as? UIWindowScene else {
             return
@@ -61,12 +62,14 @@ extension UIViewController {
         sendPageViews(in: windowScene)
     }
 
-    @objc static func sceneWillEnterForeground(_ notification: Notification) {
+    @objc
+    static func sceneWillEnterForeground(_ notification: Notification) {
         guard let windowScene = notification.object as? UIWindowScene else { return }
         sendPageViews(in: windowScene)
     }
 
-    @objc func swizzledViewDidAppear(_ animated: Bool) {
+    @objc
+    func swizzledViewDidAppear(_ animated: Bool) {
         swizzledViewDidAppear(animated)
         sendPageView(recursive: false)
     }
