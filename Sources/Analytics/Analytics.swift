@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// Gathers analytics according to SRG SSR standards. Used as a singleton which must be started using `start(with:)`
 /// before use.
@@ -47,6 +48,7 @@ public class Analytics {
             throw AnalyticsError.alreadyStarted
         }
         self.configuration = configuration
+        UIViewController.setupTracking()
         comScoreService.start(with: configuration)
         commandersActService.start(with: configuration)
     }

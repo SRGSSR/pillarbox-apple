@@ -21,3 +21,16 @@ public extension PageViewTracking {
         true
     }
 }
+
+extension UIViewController {
+    static func setupTracking() {
+        method_exchangeImplementations(
+            class_getInstanceMethod(Self.self, #selector(viewDidAppear(_:)))!,
+            class_getInstanceMethod(Self.self, #selector(swizzledViewDidAppear(_:)))!
+        )
+    }
+
+    @objc func swizzledViewDidAppear(_ animated: Bool) {
+        swizzledViewDidAppear(animated)
+    }
+}
