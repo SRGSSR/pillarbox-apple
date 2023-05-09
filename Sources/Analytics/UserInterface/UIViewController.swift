@@ -39,7 +39,11 @@ extension UIViewController {
     }
 
     static func sendPageViews(in window: UIWindow) {
-        print("--> send on wake")
+        var topViewController = window.rootViewController
+        while let presentedViewController = topViewController?.presentedViewController {
+            topViewController = presentedViewController
+        }
+        topViewController?.sendPageView()
     }
 
     @objc static func applicationWillEnterForeground(_ notification: Notification) {
