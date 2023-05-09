@@ -32,12 +32,27 @@ extension UIViewController {
         }
     }
 
+    static func sendPageViews(in windowScene: UIWindowScene) {
+        windowScene.windows.forEach { window in
+            sendPageViews(in: window)
+        }
+    }
+
+    static func sendPageViews(in window: UIWindow) {
+        print("--> send on wake")
+    }
+
     @objc static func applicationWillEnterForeground(_ notification: Notification) {
-        print("--> app will enter foreground")
+        guard let application = notification.object as? UIApplication,
+              let windowScene = application.connectedScenes.first as? UIWindowScene else {
+            return
+        }
+        sendPageViews(in: windowScene)
     }
 
     @objc static func sceneWillEnterForeground(_ notification: Notification) {
-        print("--> scene will enter foreground")
+        guard let windowScene = notification.object as? UIWindowScene else { return }
+        sendPageViews(in: windowScene)
     }
 
     @objc func swizzledViewDidAppear(_ animated: Bool) {
