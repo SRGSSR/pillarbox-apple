@@ -9,7 +9,7 @@ import Combine
 import Foundation
 import Player
 
-/// Stream tracker for Commanders Act.
+/// Stream tracker for Commanders Act. Implements streaming measurements according to SRG SSR official specifications.
 public final class CommandersActTracker: PlayerItemTracker {
     private var cancellables = Set<AnyCancellable>()
     private var streamingAnalytics: CommandersActStreamingAnalytics?
