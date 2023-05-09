@@ -35,9 +35,17 @@ private struct PageTrackingView: UIViewControllerRepresentable {
 
 public extension View {
     func tracked(title: String, levels: [String] = []) -> some View {
-        ZStack {
+        background {
             PageTrackingView(title: title, levels: levels)
-            self
         }
+    }
+}
+
+struct TrackedView_Previews: PreviewProvider {
+    static var previews: some View {
+        Color.red
+            .frame(width: 40, height: 40)
+            .tracked(title: "Title")
+            .border(Color.blue)
     }
 }
