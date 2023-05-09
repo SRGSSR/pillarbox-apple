@@ -48,7 +48,10 @@ public class Analytics {
             throw AnalyticsError.alreadyStarted
         }
         self.configuration = configuration
-        UIViewController.setupTracking()
+
+        UIViewController.setupViewControllerTracking()
+        UITabBarController.setupTabBarControllerTracking()
+
         comScoreService.start(with: configuration)
         commandersActService.start(with: configuration)
     }

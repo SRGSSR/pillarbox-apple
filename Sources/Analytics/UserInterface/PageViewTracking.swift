@@ -23,7 +23,7 @@ public extension PageViewTracking {
 }
 
 extension UIViewController {
-    static func setupTracking() {
+    static func setupViewControllerTracking() {
         method_exchangeImplementations(
             class_getInstanceMethod(Self.self, #selector(viewDidAppear(_:)))!,
             class_getInstanceMethod(Self.self, #selector(swizzledViewDidAppear(_:)))!
@@ -102,5 +102,10 @@ extension UIViewController {
         }
         guard let trackedViewController = self as? PageViewTracking, trackedViewController.isTrackedAutomatically else { return }
         Analytics.shared.sendPageView(title: trackedViewController.pageTitle, levels: trackedViewController.pageLevels)
+    }
+
+    public func setNeedsAutomaticPageViewTracking(in viewController: UIViewController) {
+        guard Self.children(in: self).contains(viewController) else { return }
+        return viewController.sendPageView(recursive: true)
     }
 }
