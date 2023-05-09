@@ -7,5 +7,5 @@
 import UIKit
 
 public protocol ContainerPageViewTracking {
-    var activeChildViewControllers: [UIViewController] { get }
+    var activeChildren: [UIViewController] { get }
 }

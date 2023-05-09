@@ -32,18 +32,25 @@ extension UIViewController {
         }
     }
 
-    static func sendPageViews(in windowScene: UIWindowScene) {
+    private static func sendPageViews(in windowScene: UIWindowScene) {
         windowScene.windows.forEach { window in
             sendPageViews(in: window)
         }
     }
 
-    static func sendPageViews(in window: UIWindow) {
+    private static func sendPageViews(in window: UIWindow) {
         var topViewController = window.rootViewController
         while let presentedViewController = topViewController?.presentedViewController {
             topViewController = presentedViewController
         }
-        topViewController?.sendPageView()
+        topViewController?.sendPageView(recursive: true)
+    }
+
+    private static func children(in viewController: UIViewController) -> [UIViewController] {
+        guard let containerViewController = viewController as? ContainerPageViewTracking else {
+            return viewController.children
+        }
+        return containerViewController.activeChildren
     }
 
     @objc static func applicationWillEnterForeground(_ notification: Notification) {
@@ -61,17 +68,22 @@ extension UIViewController {
 
     @objc func swizzledViewDidAppear(_ animated: Bool) {
         swizzledViewDidAppear(animated)
-        sendPageView()
+        sendPageView(recursive: false)
     }
 
-    private func sendPageView() {
+    private func sendPageView(recursive: Bool) {
+        if recursive {
+            Self.children(in: self).forEach { viewController in
+                viewController.sendPageView(recursive: true)
+            }
+        }
         guard let trackedViewController = self as? PageViewTracking, trackedViewController.isTrackedAutomatically else { return }
         Analytics.shared.sendPageView(title: trackedViewController.pageTitle, levels: trackedViewController.pageLevels)
     }
 }
 
 extension UINavigationController: ContainerPageViewTracking {
-    public var activeChildViewControllers: [UIViewController] {
+    public var activeChildren: [UIViewController] {
         guard let topViewController else { return [] }
         return [topViewController]
     }
