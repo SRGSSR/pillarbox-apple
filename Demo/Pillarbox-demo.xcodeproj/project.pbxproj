@@ -61,6 +61,7 @@
 		6FBEFCEB289132DB004BE625 /* UserInterface in Frameworks */ = {isa = PBXBuildFile; productRef = 6FBEFCEA289132DB004BE625 /* UserInterface */; };
 		6FCA4747292CBEC7008C2812 /* ShowTime in Frameworks */ = {isa = PBXBuildFile; productRef = 6FCA4746292CBEC7008C2812 /* ShowTime */; };
 		6FCB9DDE29E024E900961B69 /* BlurredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCB9DDD29E024E900961B69 /* BlurredView.swift */; };
+		6FD0AEC12A0A3BE40035A389 /* AnalyticsPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD0AEC02A0A3BE40035A389 /* AnalyticsPageView.swift */; };
 		6FE324B329E4657D007501CF /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE324B229E4657D007501CF /* View.swift */; };
 /* End PBXBuildFile section */
 
@@ -122,6 +123,7 @@
 		6F917C0D2887EA8E004113BA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6F9DDB40288FE8F80069B687 /* pillarbox-apple */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "pillarbox-apple"; path = ..; sourceTree = "<group>"; };
 		6FCB9DDD29E024E900961B69 /* BlurredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurredView.swift; sourceTree = "<group>"; };
+		6FD0AEC02A0A3BE40035A389 /* AnalyticsPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsPageView.swift; sourceTree = "<group>"; };
 		6FE324B229E4657D007501CF /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -258,6 +260,7 @@
 				6F59E85629CF31E10093E6FB /* Playlist */,
 				6F59E85B29CF31E10093E6FB /* Stories */,
 				6F59E85F29CF31E10093E6FB /* Wrapped */,
+				6FD0AEC02A0A3BE40035A389 /* AnalyticsPageView.swift */,
 				6FCB9DDD29E024E900961B69 /* BlurredView.swift */,
 				6F59E86229CF31E10093E6FB /* LinkView.swift */,
 				6F59E85529CF31E10093E6FB /* MultiView.swift */,
@@ -483,6 +486,7 @@
 			files = (
 				6F59E88729CF31E20093E6FB /* SettingsView.swift in Sources */,
 				6F59E87C29CF31E10093E6FB /* AppDelegate.swift in Sources */,
+				6FD0AEC12A0A3BE40035A389 /* AnalyticsPageView.swift in Sources */,
 				6F59E88E29CF31E20093E6FB /* StoriesViewModel.swift in Sources */,
 				6F59E89729CF31E20093E6FB /* MessageViews.swift in Sources */,
 				6F59E88C29CF31E20093E6FB /* TwinsView.swift in Sources */,
