@@ -33,7 +33,6 @@ extension UIPageViewController: ContainerPageViewTracking {
     }
 }
 
-// TODO: Maybe not necessary if children == viewControllers?
 extension UISplitViewController: ContainerPageViewTracking {
     public var activeChildren: [UIViewController] {
         viewControllers
