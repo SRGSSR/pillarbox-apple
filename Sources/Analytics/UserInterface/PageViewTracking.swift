@@ -59,7 +59,7 @@ extension UIViewController {
         while let presentedViewController = topViewController?.presentedViewController {
             topViewController = presentedViewController
         }
-        topViewController?.sendPageView(recursive: true)
+        topViewController?.sendPageView(automatic: true, recursive: true)
     }
 
     private static func children(in viewController: UIViewController) -> [UIViewController] {
@@ -87,25 +87,28 @@ extension UIViewController {
     @objc
     func swizzledViewDidAppear(_ animated: Bool) {
         swizzledViewDidAppear(animated)
-        sendPageView(recursive: false)
+        sendPageView(automatic: true, recursive: false)
     }
 
     public func sendPageView() {
-        sendPageView(recursive: false)
+        sendPageView(automatic: false, recursive: false)
     }
 
-    private func sendPageView(recursive: Bool) {
+    private func sendPageView(automatic: Bool, recursive: Bool) {
         if recursive {
             Self.children(in: self).forEach { viewController in
-                viewController.sendPageView(recursive: true)
+                viewController.sendPageView(automatic: automatic, recursive: true)
             }
         }
-        guard let trackedViewController = self as? PageViewTracking, trackedViewController.isTrackedAutomatically else { return }
+        guard let trackedViewController = self as? PageViewTracking,
+              automatic, trackedViewController.isTrackedAutomatically else {
+            return
+        }
         Analytics.shared.sendPageView(title: trackedViewController.pageTitle, levels: trackedViewController.pageLevels)
     }
 
     public func setNeedsAutomaticPageViewTracking(in viewController: UIViewController) {
         guard Self.children(in: self).contains(viewController) else { return }
-        return viewController.sendPageView(recursive: true)
+        viewController.sendPageView(automatic: true, recursive: true)
     }
 }
