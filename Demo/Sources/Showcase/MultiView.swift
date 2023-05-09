@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import Player
 import SwiftUI
 
@@ -27,6 +28,7 @@ struct MultiView: View {
             Self.play(media: media1, in: topPlayer)
             Self.play(media: media2, in: bottomPlayer)
         }
+        .tracked(title: "Multi")
     }
 
     private static func play(media: Media, in player: Player) {

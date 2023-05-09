@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import Player
 import SwiftUI
 
@@ -57,6 +58,7 @@ private struct PlaylistSelectionView: View {
                 }
             }
         }
+        .tracked(title: "Selection", levels: ["Playlist"])
     }
 
     @ViewBuilder
@@ -165,6 +167,7 @@ struct PlaylistView: View {
         .onChange(of: templates) { newValue in
             model.templates = newValue
         }
+        .tracked(title: "Playlist")
     }
 }
 

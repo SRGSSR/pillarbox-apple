@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import Player
 import SwiftUI
 
@@ -24,6 +25,7 @@ struct BlurredView: View {
         }
         .background(.black)
         .onAppear(perform: play)
+        .tracked(title: "Blurred")
     }
 
     private func play() {

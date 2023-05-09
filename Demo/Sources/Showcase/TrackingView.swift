@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import Player
 import SwiftUI
 
@@ -22,6 +23,7 @@ struct TrackingView: View {
         }
         .background(.black)
         .onAppear(perform: load)
+        .tracked(title: "Tracking")
     }
 
     private func load() {

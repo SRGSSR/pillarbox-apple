@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import AVFoundation
 import Player
 import SwiftUI
@@ -17,6 +18,7 @@ struct PlayerView: View {
     var body: some View {
         PlaybackView(player: player)
             .onAppear(perform: load)
+            .tracked(title: "Player")
     }
 
     private func load() {

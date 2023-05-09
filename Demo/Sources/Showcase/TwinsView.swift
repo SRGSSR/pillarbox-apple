@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import Player
 import SwiftUI
 
@@ -39,6 +40,7 @@ struct TwinsView: View {
             .padding()
         }
         .onAppear(perform: play)
+        .tracked(title: "Twins")
     }
 
     private func play() {

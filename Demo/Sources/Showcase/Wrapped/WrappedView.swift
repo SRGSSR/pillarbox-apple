@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import AVFoundation
 import Player
 import SwiftUI
@@ -28,6 +29,7 @@ struct WrappedView: View {
             .padding()
         }
         .onAppear(perform: play)
+        .tracked(title: "Wrapped")
     }
 
     private func play() {
