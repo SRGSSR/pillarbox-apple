@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-/// Gathers analytics according to SRG SSR standards. Used as a singleton which must be started using `start(with:)`
+/// Gathers analytics according to SRG SSR standards. The singleton instance which must be started with `start(with:)`
 /// before use.
 public class Analytics {
     /// Analytics configuration.

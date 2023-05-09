@@ -10,12 +10,12 @@ import UIKit
 /// the associated measurement data.
 ///
 /// By default, if a view controller conforms to the `PageViewTracking` protocol, a page view event will automatically
-/// be sent each time its `-viewDidAppear:` method is called. Page views are also sent when the application returns
+/// be sent each time its `viewDidAppear(_:)` method is called. Page views are also sent when the application returns
 /// from background automatically.
 ///
 /// If you need to precisely control when page view events are emitted, however, you can implement the optional
-/// `-isTrackedAutomatically` property to return `false`, disabling both mechanisms described above. This is mostly
-/// useful when page view information is not available at the time `-viewDidAppear:` is called, e.g. if this
+/// `isTrackedAutomatically` property to return `false`, disabling both mechanisms described above. This is mostly
+/// useful when page view information is not available at the time `viewDidAppear(_:)` is called, e.g. if this
 /// information is retrieved from a web service request. Beware that in this case you are responsible of calling
 /// `UIViewController.sendPageView()` when:
 ///
