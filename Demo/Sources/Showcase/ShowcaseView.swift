@@ -121,9 +121,6 @@ struct ShowcaseView: View {
             Cell(title: "Video URN") {
                 TrackingView(media: Media(from: URNTemplate.onDemandVerticalVideo))
             }
-            Cell(title: "View") {
-                AnalyticsPageView()
-            }
         }
     }
 }
