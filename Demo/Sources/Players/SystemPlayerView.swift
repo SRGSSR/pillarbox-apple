@@ -19,7 +19,7 @@ struct SystemPlayerView: View {
         SystemVideoView(player: player)
             .ignoresSafeArea()
             .onAppear(perform: play)
-            .tracked(title: "System")
+            .tracked(title: "system-player")
     }
 
     private func play() {

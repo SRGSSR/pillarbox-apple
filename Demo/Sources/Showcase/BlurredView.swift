@@ -25,7 +25,7 @@ struct BlurredView: View {
         }
         .background(.black)
         .onAppear(perform: play)
-        .tracked(title: "Blurred")
+        .tracked(title: "blurred")
     }
 
     private func play() {

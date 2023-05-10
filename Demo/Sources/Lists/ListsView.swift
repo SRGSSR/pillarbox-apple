@@ -26,7 +26,7 @@ struct ListsView: View {
             Self.latestAudiosSection(image: "music.note.list")
         }
         .navigationTitle("Lists (\(serviceUrl.title))")
-        .tracked(title: "Lists")
+        .tracked(title: "lists")
         .toolbarTitleMenu {
             titlesMenu()
         }

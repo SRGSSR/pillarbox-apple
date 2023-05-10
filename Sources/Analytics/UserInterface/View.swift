@@ -50,7 +50,7 @@ struct TrackedView_Previews: PreviewProvider {
     static var previews: some View {
         Color.red
             .frame(width: 40, height: 40)
-            .tracked(title: "Title")
+            .tracked(title: "title")
             .border(Color.blue)
     }
 }

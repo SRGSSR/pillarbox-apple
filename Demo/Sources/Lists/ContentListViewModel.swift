@@ -85,40 +85,40 @@ final class ContentListViewModel: ObservableObject, Refreshable {
         var pageTitle: String {
             switch self {
             case .tvTopics:
-                 return "TV Topics"
+                 return "tv-topics"
             case let .latestMediasForTopic(topic):
                 return topic.title
             case .tvShows:
-                 return "TV Shows"
+                 return "tv-shows"
             case let .latestMediasForShow(show):
                 return show.title
             case .tvLatestMedias:
-                 return "TV Latest Videos"
+                 return "tv-latest-videos"
             case .tvLivestreams:
-                 return "TV Livestreams"
+                 return "tv-livestreams"
             case .tvScheduledLivestreams:
-                 return "Live Web"
+                 return "live-web"
             case .liveCenterVideos:
-                 return "Live Center"
+                 return "live-center"
             case .radioShows:
-                return "Shows"
+                return "shows"
             case .radioLivestreams:
-                 return "Radio Livestreams"
+                 return "radio-livestreams"
             case .radioLatestMedias:
-                return "Latest Audios"
+                return "latest-audios"
             }
         }
 
         var pageLevels: [String] {
-            ["Lists"] + pageSublevels
+            ["lists"] + pageSublevels
         }
 
         private var pageSublevels: [String] {
             switch self {
             case .latestMediasForTopic:
-                return ["Topics"]
+                return ["topics"]
             case .latestMediasForShow:
-                return ["Shows"]
+                return ["shows"]
             case let .radioShows(radioChannel: radioChannel), let .radioLatestMedias(radioChannel: radioChannel):
                 return [radioChannel.name]
             default:

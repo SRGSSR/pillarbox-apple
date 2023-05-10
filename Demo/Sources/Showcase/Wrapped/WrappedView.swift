@@ -29,7 +29,7 @@ struct WrappedView: View {
             .padding()
         }
         .onAppear(perform: play)
-        .tracked(title: "Wrapped")
+        .tracked(title: "wrapped")
     }
 
     private func play() {

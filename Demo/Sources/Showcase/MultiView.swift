@@ -28,7 +28,7 @@ struct MultiView: View {
             Self.play(media: media1, in: topPlayer)
             Self.play(media: media2, in: bottomPlayer)
         }
-        .tracked(title: "Multi")
+        .tracked(title: "multi")
     }
 
     private static func play(media: Media, in player: Player) {

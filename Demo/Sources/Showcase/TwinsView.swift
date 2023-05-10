@@ -40,7 +40,7 @@ struct TwinsView: View {
             .padding()
         }
         .onAppear(perform: play)
-        .tracked(title: "Twins")
+        .tracked(title: "twins")
     }
 
     private func play() {

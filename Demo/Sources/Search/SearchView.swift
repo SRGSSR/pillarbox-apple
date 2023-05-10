@@ -26,7 +26,7 @@ struct SearchView: View {
         }
         .animation(.defaultLinear, value: model.state)
         .navigationTitle("Search")
-        .tracked(title: "Search")
+        .tracked(title: "search")
         .searchable(text: $model.text)
 #if os(iOS)
         .searchScopes($model.vendor) {

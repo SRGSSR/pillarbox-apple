@@ -26,7 +26,7 @@ struct LinkView: View {
                 .padding()
         }
         .onAppear(perform: play)
-        .tracked(title: "Link")
+        .tracked(title: "link")
     }
 
     private func play() {

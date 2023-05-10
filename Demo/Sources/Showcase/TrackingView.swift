@@ -26,7 +26,7 @@ struct TrackingView: View {
         }
         .background(.black)
         .onAppear(perform: load)
-        .tracked(title: "Tracking")
+        .tracked(title: "tracking")
     }
 
     private func load() {
