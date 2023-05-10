@@ -42,17 +42,20 @@ public protocol PageViewTracking {
 
 public extension PageViewTracking {
     /// Default page levels.
-    var pageLevels: [String] {
-        []
-    }
+    var pageLevels: [String] { [] }
 
     /// Default automatic tracking setting.
-    var isTrackedAutomatically: Bool {
-        true
-    }
+    var isTrackedAutomatically: Bool { true }
 }
 
 extension UIViewController {
+    private var trackedChildren: [UIViewController] {
+        guard let containerViewController = self as? ContainerPageViewTracking else {
+            return children
+        }
+        return containerViewController.activeChildren
+    }
+
     static func setupViewControllerTracking() {
         method_exchangeImplementations(
             class_getInstanceMethod(Self.self, #selector(viewDidAppear(_:)))!,
@@ -92,13 +95,6 @@ extension UIViewController {
         topViewController?.sendPageView(automatic: true, recursive: true)
     }
 
-    private static func children(in viewController: UIViewController) -> [UIViewController] {
-        guard let containerViewController = viewController as? ContainerPageViewTracking else {
-            return viewController.children
-        }
-        return containerViewController.activeChildren
-    }
-
     @objc
     private static func applicationWillEnterForeground(_ notification: Notification) {
         guard let application = notification.object as? UIApplication,
@@ -129,7 +125,7 @@ extension UIViewController {
 
     private func sendPageView(automatic: Bool, recursive: Bool) {
         if recursive {
-            Self.children(in: self).forEach { viewController in
+            trackedChildren.forEach { viewController in
                 viewController.sendPageView(automatic: automatic, recursive: true)
             }
         }
@@ -154,7 +150,7 @@ extension UIViewController {
     /// - Parameter viewController: The view controller for which automatic page view event generation must be
     ///   evaluated again.
     public func setNeedsAutomaticPageViewTracking(in viewController: UIViewController) {
-        guard Self.children(in: self).contains(viewController) else { return }
+        guard trackedChildren.contains(viewController) else { return }
         viewController.sendPageView(automatic: true, recursive: true)
     }
 }
