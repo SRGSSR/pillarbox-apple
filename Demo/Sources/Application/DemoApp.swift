@@ -66,7 +66,7 @@ struct DemoApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self)
     private var appDelegate
 
-    var body: some Scene {
+    @SceneBuilder var body: some Scene {
         WindowGroup {
             TabView {
                 ExamplesTab()
