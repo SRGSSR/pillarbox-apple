@@ -7,7 +7,7 @@
 import Foundation
 import UIKit
 
-/// Gathers analytics according to SRG SSR standards. The singleton instance which must be started with `start(with:)`
+/// Gathers analytics according to SRG SSR standards. The associated singleton instance must be started with `start(with:)`
 /// before use.
 public class Analytics {
     /// Analytics configuration.
@@ -16,8 +16,7 @@ public class Analytics {
         let sourceKey: String
         let site: String
 
-        /// Configure analytics. `sourceKey` and `site` must be obtained from the team responsible of measurements for
-        /// your application.
+        /// Configure analytics. `sourceKey` and `site` must be obtained from the SRG SSR Digital Analytics team (ADI).
         /// - Parameters:
         ///   - vendor: The vendor which the application belongs to.
         ///   - sourceKey: The source key.

@@ -114,7 +114,7 @@ private extension SCORStreamingAnalytics {
 }
 
 public extension ComScoreTracker {
-    /// Metadata
+    /// Metadata.
     struct Metadata {
         let labels: [String: String]
         let streamType: StreamType
