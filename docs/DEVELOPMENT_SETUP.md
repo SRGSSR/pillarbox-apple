@@ -87,7 +87,7 @@ Xcode _Text Editing_ settings should be configured as follows:
 - Enable _Automatically trim trailing whitespaces_ with _Including whitespace-only lines_ enabled as well.
 - Set _Default Text Encoding_ to _UTF-8_.
 - Set _Default Line Endings_ to _macOS / Unix (LF)_.
-- Use _Spaces_ for identation (with 4 spaces both for _Tab Width_ and _Indent Width_).
+- Use _Spaces_ for indentation (with 4 spaces both for _Tab Width_ and _Indent Width_).
 
 ### Visual Studio Code
 

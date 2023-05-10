@@ -81,6 +81,50 @@ final class ContentListViewModel: ObservableObject, Refreshable {
                 return radioChannel.name
             }
         }
+
+        var pageTitle: String {
+            switch self {
+            case .tvTopics:
+                 return "tv-topics"
+            case let .latestMediasForTopic(topic):
+                return topic.title
+            case .tvShows:
+                 return "tv-shows"
+            case let .latestMediasForShow(show):
+                return show.title
+            case .tvLatestMedias:
+                 return "tv-latest-videos"
+            case .tvLivestreams:
+                 return "tv-livestreams"
+            case .tvScheduledLivestreams:
+                 return "live-web"
+            case .liveCenterVideos:
+                 return "live-center"
+            case .radioShows:
+                return "shows"
+            case .radioLivestreams:
+                 return "radio-livestreams"
+            case .radioLatestMedias:
+                return "latest-audios"
+            }
+        }
+
+        var pageLevels: [String] {
+            ["lists"] + pageSublevels
+        }
+
+        private var pageSublevels: [String] {
+            switch self {
+            case .latestMediasForTopic:
+                return ["topics"]
+            case .latestMediasForShow:
+                return ["shows"]
+            case let .radioShows(radioChannel: radioChannel), let .radioLatestMedias(radioChannel: radioChannel):
+                return [radioChannel.name]
+            default:
+                return []
+            }
+        }
     }
 
     enum Content: Hashable {

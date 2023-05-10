@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import SRGDataProviderModel
 import SwiftUI
 
@@ -106,6 +107,7 @@ struct ContentListView: View {
         .animation(.defaultLinear, value: model.state)
         .onAppear { model.configuration = configuration }
         .navigationTitle(configuration.kind.name)
+        .tracked(title: configuration.kind.pageTitle, levels: configuration.kind.pageLevels)
     }
 }
 

@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import AVFoundation
 import Player
 import SwiftUI
@@ -18,6 +19,7 @@ struct SystemPlayerView: View {
         SystemVideoView(player: player)
             .ignoresSafeArea()
             .onAppear(perform: play)
+            .tracked(title: "system-player")
     }
 
     private func play() {

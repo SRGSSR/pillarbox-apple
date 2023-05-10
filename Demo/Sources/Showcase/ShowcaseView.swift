@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import SwiftUI
 
 // Behavior: h-exp, v-exp
@@ -18,6 +19,7 @@ struct ShowcaseView: View {
             trackingSection()
         }
         .navigationTitle("Showcase")
+        .tracked(title: "showcase")
     }
 
     @ViewBuilder

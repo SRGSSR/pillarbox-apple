@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import SwiftUI
 
 // Behavior: h-exp, v-hug
@@ -85,6 +86,7 @@ struct ExamplesView: View {
         .scrollDismissesKeyboard(.immediately)
         .animation(.defaultLinear, value: model.protectedMedias)
         .navigationTitle("Examples")
+        .tracked(title: "examples")
         .refreshable { await model.refresh() }
     }
 

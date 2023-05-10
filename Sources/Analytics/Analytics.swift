@@ -5,8 +5,9 @@
 //
 
 import Foundation
+import UIKit
 
-/// Gathers analytics according to SRG SSR standards. Used as a singleton which must be started using `start(with:)`
+/// Gathers analytics according to SRG SSR standards. The associated singleton instance must be started with `start(with:)`
 /// before use.
 public class Analytics {
     /// Analytics configuration.
@@ -15,8 +16,7 @@ public class Analytics {
         let sourceKey: String
         let site: String
 
-        /// Configure analytics. `sourceKey` and `site` must be obtained from the team responsible of measurements for
-        /// your application.
+        /// Configure analytics. `sourceKey` and `site` must be obtained from the SRG SSR Digital Analytics team (ADI).
         /// - Parameters:
         ///   - vendor: The vendor which the application belongs to.
         ///   - sourceKey: The source key.
@@ -47,21 +47,25 @@ public class Analytics {
             throw AnalyticsError.alreadyStarted
         }
         self.configuration = configuration
+
+        UIViewController.setupViewControllerTracking()
+        UITabBarController.setupTabBarControllerTracking()
+
         comScoreService.start(with: configuration)
         commandersActService.start(with: configuration)
     }
 
-    /// Record a page view event.
+    /// Track a page view.
     /// - Parameters:
     ///   - title: The page title.
     ///   - levels: The page levels.
-    public func sendPageView(title: String, levels: [String] = []) {
+    public func trackPageView(title: String, levels: [String] = []) {
         assert(!title.isBlank, "A title is required")
-        comScoreService.sendPageView(title: title, levels: levels)
-        commandersActService.sendPageView(title: title, levels: levels)
+        comScoreService.trackPageView(title: title, levels: levels)
+        commandersActService.trackPageView(title: title, levels: levels)
     }
 
-    /// Record an event.
+    /// Send an event.
     /// - Parameters:
     ///   - name: The event name.
     ///   - type: The event type.

@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import SRGDataProviderModel
 import SwiftUI
 
@@ -25,6 +26,7 @@ struct ListsView: View {
             Self.latestAudiosSection(image: "music.note.list")
         }
         .navigationTitle("Lists (\(serviceUrl.title))")
+        .tracked(title: "lists")
         .toolbarTitleMenu {
             titlesMenu()
         }

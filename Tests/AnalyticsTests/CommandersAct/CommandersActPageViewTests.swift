@@ -31,7 +31,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                 expect(labels.navigation_bu_distributer).to(equal("RTS"))
             }
         ) {
-            Analytics.shared.sendPageView(title: "title", levels: [
+            Analytics.shared.trackPageView(title: "title", levels: [
                 "level_1",
                 "level_2",
                 "level_3",
@@ -58,7 +58,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                 expect(labels.navigation_level_8).to(beNil())
             }
         ) {
-            Analytics.shared.sendPageView(title: "title", levels: [
+            Analytics.shared.trackPageView(title: "title", levels: [
                 " ",
                 " ",
                 " ",

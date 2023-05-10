@@ -9,7 +9,7 @@ import ComScore
 import Foundation
 import TCServerSide_noIDFA
 
-/// Provide a context in which analytics events can be listen. Should never be used in production, only for
+/// Provide a context in which analytics events are captured. Should never be used in production, only for
 /// development purposes (e.g. unit tests). Must be started first.
 public enum AnalyticsListener {
     private static let sessionIdentifierKey = "listener_session_id"

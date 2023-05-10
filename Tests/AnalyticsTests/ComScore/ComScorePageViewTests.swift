@@ -22,7 +22,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
                 expect(labels.mp_v).notTo(beEmpty())
             }
         ) {
-            Analytics.shared.sendPageView(title: "title")
+            Analytics.shared.trackPageView(title: "title")
         }
     }
 }

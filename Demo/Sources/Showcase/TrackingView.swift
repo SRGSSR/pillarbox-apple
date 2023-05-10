@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import Player
 import SwiftUI
 
@@ -14,14 +15,18 @@ struct TrackingView: View {
     var body: some View {
         VStack {
             PlaybackView(player: player)
-            Toggle(isOn: $player.isTrackingEnabled) {
-                Label("Tracking", systemImage: "eyes")
+            VStack(alignment: .leading) {
+                Toggle(isOn: $player.isTrackingEnabled) {
+                    Text("Tracking")
+                }
+                Label("Use a proxy tool to observe events.", systemImage: "eyes")
             }
             .foregroundColor(.white)
             .padding()
         }
         .background(.black)
         .onAppear(perform: load)
+        .tracked(title: "tracking")
     }
 
     private func load() {

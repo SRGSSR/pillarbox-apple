@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import SRGDataProviderModel
 import SwiftUI
 
@@ -25,6 +26,7 @@ struct SearchView: View {
         }
         .animation(.defaultLinear, value: model.state)
         .navigationTitle("Search")
+        .tracked(title: "search")
         .searchable(text: $model.text)
 #if os(iOS)
         .searchScopes($model.vendor) {

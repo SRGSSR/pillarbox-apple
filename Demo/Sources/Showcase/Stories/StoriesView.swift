@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Analytics
 import AVFoundation
 import Player
 import SwiftUI
@@ -53,6 +54,7 @@ struct StoriesView: View {
         .background(.black)
         .tabViewStyle(.page)
         .ignoresSafeArea()
+        .tracked(title: "stories")
     }
 }
 
