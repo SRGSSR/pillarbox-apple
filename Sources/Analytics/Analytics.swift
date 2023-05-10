@@ -28,6 +28,14 @@ public class Analytics {
         }
     }
 
+    /// Application states.
+    public enum ApplicationState {
+        /// Foreground and background.
+        case foregroundAndBackground
+        /// Foreground only.
+        case foreground
+    }
+
     /// The singleton instance.
     public static var shared = Analytics()
 
@@ -59,8 +67,12 @@ public class Analytics {
     /// - Parameters:
     ///   - title: The page title.
     ///   - levels: The page levels.
-    public func trackPageView(title: String, levels: [String] = []) {
+    ///   - state: The application states for which the page can be tracked. Defaults to `.foreground`. The
+    ///     `.foregroundAndBackground` option should only be used in the rare cases where page views must be recorded
+    ///     also while the application is in background, e.g. when tracking a CarPlay user interface.
+    public func trackPageView(title: String, levels: [String] = [], in state: ApplicationState = .foreground) {
         assert(!title.isBlank, "A title is required")
+        guard state == .foregroundAndBackground || UIApplication.shared.applicationState != .background else { return }
         comScoreService.trackPageView(title: title, levels: levels)
         commandersActService.trackPageView(title: title, levels: levels)
     }
