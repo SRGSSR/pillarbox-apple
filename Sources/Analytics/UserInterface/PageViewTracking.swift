@@ -60,7 +60,7 @@ extension UIViewController {
         )
 
         // Scene support requires the `UIApplicationSceneManifest` key to be present in the Info.plist.
-        if Bundle.main.infoDictionary?["UIApplicationSceneManifest"] != nil {
+        if Bundle.main.infoDictionary?["UIApplicationSceneManifest"] == nil {
             NotificationCenter.default.addObserver(
                 self,
                 selector: #selector(applicationWillEnterForeground(_:)),
