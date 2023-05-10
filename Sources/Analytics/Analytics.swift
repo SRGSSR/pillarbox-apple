@@ -55,17 +55,17 @@ public class Analytics {
         commandersActService.start(with: configuration)
     }
 
-    /// Record a page view event.
+    /// Track a page view.
     /// - Parameters:
     ///   - title: The page title.
     ///   - levels: The page levels.
-    public func sendPageView(title: String, levels: [String] = []) {
+    public func trackPageView(title: String, levels: [String] = []) {
         assert(!title.isBlank, "A title is required")
-        comScoreService.sendPageView(title: title, levels: levels)
-        commandersActService.sendPageView(title: title, levels: levels)
+        comScoreService.trackPageView(title: title, levels: levels)
+        commandersActService.trackPageView(title: title, levels: levels)
     }
 
-    /// Record an event.
+    /// Send an event.
     /// - Parameters:
     ///   - name: The event name.
     ///   - type: The event type.

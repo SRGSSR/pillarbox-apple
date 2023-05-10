@@ -17,7 +17,7 @@ import UIKit
 /// `isTrackedAutomatically` property to return `false`, disabling both mechanisms described above. This is mostly
 /// useful when page view information is not available at the time `viewDidAppear(_:)` is called, e.g. if this
 /// information is retrieved from a web service request. Beware that in this case you are responsible of calling
-/// `UIViewController.sendPageView()` when:
+/// `UIViewController.trackPageView()` when:
 ///
 ///   - The view is visible and you received the information you needed for the page view.
 ///   - The application returns from background and the information you need for the page view is readily available.
@@ -81,18 +81,18 @@ extension UIViewController {
         }
     }
 
-    private static func sendPageViews(in windowScene: UIWindowScene) {
+    private static func trackPageViews(in windowScene: UIWindowScene) {
         windowScene.windows.forEach { window in
-            sendPageViews(in: window)
+            trackPageViews(in: window)
         }
     }
 
-    private static func sendPageViews(in window: UIWindow) {
+    private static func trackPageViews(in window: UIWindow) {
         var topViewController = window.rootViewController
         while let presentedViewController = topViewController?.presentedViewController {
             topViewController = presentedViewController
         }
-        topViewController?.sendPageView(automatic: true, recursive: true)
+        topViewController?.trackPageView(automatic: true, recursive: true)
     }
 
     @objc
@@ -101,39 +101,39 @@ extension UIViewController {
               let windowScene = application.connectedScenes.first as? UIWindowScene else {
             return
         }
-        sendPageViews(in: windowScene)
+        trackPageViews(in: windowScene)
     }
 
     @objc
     private static func sceneWillEnterForeground(_ notification: Notification) {
         guard let windowScene = notification.object as? UIWindowScene else { return }
-        sendPageViews(in: windowScene)
+        trackPageViews(in: windowScene)
     }
 
     @objc
     private func swizzledViewDidAppear(_ animated: Bool) {
         swizzledViewDidAppear(animated)
-        sendPageView(automatic: true, recursive: false)
+        trackPageView(automatic: true, recursive: false)
     }
 
-    /// Call this method to send a page view event manually for the receiver, using data declared by `PageViewTracking`
+    /// Call this method to track a page view event manually for the receiver, using data declared by `PageViewTracking`
     /// conformance. This method does nothing if the receiver does not conform to the `PageViewTracking` protocol and
     /// is mostly useful when automatic tracking has been disabled.
-    public func sendPageView() {
-        sendPageView(automatic: false, recursive: false)
+    public func trackPageView() {
+        trackPageView(automatic: false, recursive: false)
     }
 
-    private func sendPageView(automatic: Bool, recursive: Bool) {
+    private func trackPageView(automatic: Bool, recursive: Bool) {
         if recursive {
             trackedChildren.forEach { viewController in
-                viewController.sendPageView(automatic: automatic, recursive: true)
+                viewController.trackPageView(automatic: automatic, recursive: true)
             }
         }
         guard let trackedViewController = self as? PageViewTracking,
               automatic, trackedViewController.isTrackedAutomatically else {
             return
         }
-        Analytics.shared.sendPageView(title: trackedViewController.pageTitle, levels: trackedViewController.pageLevels)
+        Analytics.shared.trackPageView(title: trackedViewController.pageTitle, levels: trackedViewController.pageLevels)
     }
 
     /// Call this method after a child view controller has been added to a container to inform the automatic page view
@@ -151,6 +151,6 @@ extension UIViewController {
     ///   evaluated again.
     public func setNeedsAutomaticPageViewTracking(in viewController: UIViewController) {
         guard trackedChildren.contains(viewController) else { return }
-        viewController.sendPageView(automatic: true, recursive: true)
+        viewController.trackPageView(automatic: true, recursive: true)
     }
 }

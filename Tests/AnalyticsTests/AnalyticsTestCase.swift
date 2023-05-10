@@ -13,7 +13,7 @@ import XCTest
 final class AnalyticsTestsCase: TestCase {
     func testEmptyPageViewTitle() {
         guard nimbleThrowAssertionsEnabled() else { return }
-        expect(Analytics.shared.sendPageView(title: " ")).to(throwAssertion())
+        expect(Analytics.shared.trackPageView(title: " ")).to(throwAssertion())
     }
 
     func testEmptyEventTitle() {

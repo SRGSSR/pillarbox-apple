@@ -36,7 +36,7 @@ final class CommandersActService {
         self.serverSide = serverSide
     }
 
-    func sendPageView(title: String, levels: [String]) {
+    func trackPageView(title: String, levels: [String]) {
         guard let serverSide, let event = TCPageViewEvent(type: title) else { return }
         event.addNonBlankAdditionalProperty("navigation_property_type", withStringValue: "app")
         event.addNonBlankAdditionalProperty("navigation_bu_distributer", withStringValue: vendor?.rawValue)
