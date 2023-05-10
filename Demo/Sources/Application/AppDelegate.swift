@@ -12,7 +12,7 @@ import ShowTime
 import SRGDataProvider
 import UIKit
 
-class AppDelegate: NSObject, UIApplicationDelegate {
+final class AppDelegate: NSObject, UIApplicationDelegate {
     private var cancellables = Set<AnyCancellable>()
 
     // swiftlint:disable:next discouraged_optional_collection
