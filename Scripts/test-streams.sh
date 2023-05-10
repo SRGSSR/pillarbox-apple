@@ -3,9 +3,10 @@
 SCRIPT_NAME=$(basename "$0")
 SCRIPT_DIR=$(dirname "$0")
 
-MEDIAS_DIR="$SCRIPT_DIR/../Medias"
-GENERATED_STREAMS_DIR="/tmp/Pillarbox/Streams"
-METADATA_DIR="$MEDIAS_DIR/Metadata"
+GENERATED_DIR="/tmp/pillarbox"
+MEDIAS_DIR="$SCRIPT_DIR/../medias"
+GENERATED_STREAMS_DIR="$GENERATED_DIR/streams"
+METADATA_DIR="$MEDIAS_DIR/metadata"
 
 ON_DEMAND_DIR="$GENERATED_STREAMS_DIR/on_demand"
 ON_DEMAND_SHORT_DIR="$GENERATED_STREAMS_DIR/on_demand_short"
@@ -29,6 +30,7 @@ function serve_test_streams {
         exit 1
     fi
 
+    mkdir -p "$GENERATED_STREAMS_DIR"
     cp -R "$METADATA_DIR" "$GENERATED_STREAMS_DIR"
 
     mkdir -p "$ON_DEMAND_DIR"
@@ -68,7 +70,7 @@ function kill_test_streams {
         sleep 1
     done
 
-    rm -rf "$GENERATED_STREAMS_DIR"
+    rm -rf "$GENERATED_DIR"
 }
 
 function usage {
