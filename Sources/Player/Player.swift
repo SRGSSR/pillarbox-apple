@@ -37,6 +37,13 @@ public final class Player: ObservableObject, Equatable {
     /// Set whether trackers are enabled or not.
     @Published public var isTrackingEnabled = true
 
+    /// Set whether the audio output of the player is muted.
+    @Published public var isMuted = true {
+        didSet {
+            queuePlayer.isMuted = isMuted
+        }
+    }
+
     @Published private var currentTracker: CurrentTracker?
     @Published private var currentItem: CurrentItem = .good(nil)
     @Published private var storedItems: Deque<PlayerItem>
@@ -65,16 +72,6 @@ public final class Player: ObservableObject, Equatable {
     /// Returns whether the player is currently busy (buffering or seeking).
     public var isBusy: Bool {
         isBuffering || isSeeking
-    }
-
-    /// A Boolean value that indicates whether the audio output of the player is muted.
-    public var isMuted: Bool {
-        get {
-            queuePlayer.isMuted
-        }
-        set {
-            queuePlayer.isMuted = newValue
-        }
     }
 
     /// The low-level system player. Exposed for specific read-only needs like interfacing with `AVPlayer`-based
@@ -126,6 +123,7 @@ public final class Player: ObservableObject, Equatable {
         configureQueueUpdatePublisher()
         configureExternalPlaybackPublisher()
         configurePresentationSizePublisher()
+        configureMutedPublisher()
 
         configurePlayer()
     }
@@ -789,6 +787,12 @@ extension Player {
         queuePlayer.presentationSizePublisher()
             .receiveOnMainThread()
             .assign(to: &$presentationSize)
+    }
+
+    private func configureMutedPublisher() {
+        queuePlayer.publisher(for: \.isMuted)
+            .receiveOnMainThread()
+            .assign(to: &$isMuted)
     }
 
     private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
