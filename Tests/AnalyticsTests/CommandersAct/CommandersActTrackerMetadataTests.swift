@@ -65,4 +65,25 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
             player = nil
         }
     }
+
+    func testMuted() {
+        var player: Player?
+        expectAtLeastEvents(
+            .play { labels in
+                expect(labels.media_volume).to(equal(0))
+            }
+        ) {
+             player = Player(item: .simple(
+                url: Stream.shortOnDemand.url,
+                metadata: AssetMetadataMock(),
+                trackerAdapters: [
+                    CommandersActTracker.adapter { _ in
+                        .test(streamType: .onDemand)
+                    }
+                ]
+            ))
+            player?.isMuted = true
+            player?.play()
+        }
+    }
 }
