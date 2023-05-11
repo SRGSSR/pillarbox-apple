@@ -100,9 +100,14 @@ public struct CommandersActLabels: Decodable {
     /// Value of `media_player_version`.
     public let media_player_version: String?
 
-    /// Value of `media_volume`.
-    public var media_volume: Int? {
-        extract(\._media_volume)
+    /// Value of `media_bandwidth`.
+    public var media_bandwidth: Double? {
+        extract(\._media_bandwidth)
+    }
+
+    /// Value of `media_playback_rate`.
+    public var media_playback_rate: Float? {
+        extract(\._media_playback_rate)
     }
 
     /// Value of `media_position`.
@@ -115,14 +120,9 @@ public struct CommandersActLabels: Decodable {
         extract(\._media_timeshift)
     }
 
-    /// Value of `media_playback_rate`.
-    public var media_playback_rate: Float? {
-        extract(\._media_playback_rate)
-    }
-
-    /// Value of `media_bandwidth`.
-    public var media_bandwidth: Double? {
-        extract(\._media_bandwidth)
+    /// Value of `media_volume`.
+    public var media_volume: Int? {
+        extract(\._media_volume)
     }
 
     private func extract<T: LosslessStringConvertible>(_ keyPath: KeyPath<Self, String?>) -> T? {
