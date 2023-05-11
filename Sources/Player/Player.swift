@@ -701,6 +701,7 @@ extension Player {
     }
 
     private func configureControlCenterPublishers() {
+        guard !ProcessInfo.processInfo.isiOSAppOnMac else { return }
         configureControlCenterPublisher()
         configureControlCenterCommandAvailabilityPublisher()
     }
