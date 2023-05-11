@@ -22,7 +22,6 @@ class TestCase: XCTestCase {
     }
 
     override func setUp() {
-        super.setUp()
         waitUntil { done in
             AnalyticsListener.start(completion: done)
         }
