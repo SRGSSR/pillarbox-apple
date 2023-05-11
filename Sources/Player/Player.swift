@@ -67,6 +67,16 @@ public final class Player: ObservableObject, Equatable {
         isBuffering || isSeeking
     }
 
+    /// A Boolean value that indicates whether the audio output of the player is muted.
+    public var isMuted: Bool {
+        get {
+            queuePlayer.isMuted
+        }
+        set {
+            queuePlayer.isMuted = newValue
+        }
+    }
+
     /// The low-level system player. Exposed for specific read-only needs like interfacing with `AVPlayer`-based
     /// 3rd party APIs. Mutating the state of this player directly is not supported and leads to undefined behavior.
     public var systemPlayer: AVPlayer {
