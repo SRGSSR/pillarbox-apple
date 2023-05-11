@@ -119,7 +119,7 @@ final class ExamplesViewModel: ObservableObject {
 
     func refresh() async {
         Task {
-            try await Task.sleep(for: .seconds(1))
+            try? await Task.sleep(for: .seconds(1))
             trigger.activate(for: TriggerId.reload)
         }
     }
