@@ -74,8 +74,8 @@ public final class CommandersActTracker: PlayerItemTracker {
 }
 
 private extension CommandersActTracker {
-    private var volume: Float {
-        AVAudioSession.sharedInstance().outputVolume * 100
+    private var volume: Int {
+        Int(AVAudioSession.sharedInstance().outputVolume * 100)
     }
 
     private func bitrate(for player: Player) -> Int {
