@@ -42,6 +42,7 @@ public extension View {
     func tracked(title: String, levels: [String] = []) -> some View {
         background {
             PageTrackingView(title: title, levels: levels)
+                .allowsHitTesting(false)
         }
     }
 }
