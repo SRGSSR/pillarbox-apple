@@ -701,7 +701,7 @@ extension Player {
     }
 
     private func configureControlCenterPublishers() {
-        guard NSClassFromString("MediaPlayer") != nil else { return }
+        guard !ProcessInfo.processInfo.isiOSAppOnMac else { return }
         configureControlCenterPublisher()
         configureControlCenterCommandAvailabilityPublisher()
     }
