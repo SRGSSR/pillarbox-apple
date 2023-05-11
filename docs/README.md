@@ -45,7 +45,10 @@ If you want to contribute to the project have a look at our [contributing guide]
 
 The library can be integrated using [Swift Package Manager](https://swift.org/package-manager) directly [within Xcode](https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app). You can also declare the library as a dependency of another one directly in the associated `Package.swift` manifest.
 
-When building a project integrating Pillarbox for the first time, Xcode might ask you to trust our plugins. You should accept.
+A few remarks:
+
+- When building a project integrating Pillarbox for the first time, Xcode might ask you to trust our plugins. You should accept.
+- If you want your application to run on Mac Catalyst you must add `-weak_framework MediaPlayer` to your target _Other Linker Flags_ setting.
 
 # Getting started
 
