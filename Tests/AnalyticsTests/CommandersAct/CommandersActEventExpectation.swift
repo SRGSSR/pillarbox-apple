@@ -12,7 +12,7 @@ struct CommandersActEventExpectation {
     private let name: CommandersActEvent.Name
     private let evaluate: (CommandersActLabels) -> Void
 
-    static func match(event: CommandersActEvent, with expectation: CommandersActEventExpectation) -> Bool {
+    static func match(event: CommandersActEvent, with expectation: Self) -> Bool {
         guard event.name == expectation.name else { return false }
         expectation.evaluate(event.labels)
         return true

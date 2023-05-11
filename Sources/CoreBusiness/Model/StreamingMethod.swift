@@ -36,7 +36,7 @@ public enum StreamingMethod: String, Decodable {
     case unknown = "UNKNOWN"
 
     /// Supported streaming methods on Apple platforms.
-    public static var supportedMethods: [StreamingMethod] {
+    public static var supportedMethods: [Self] {
         [.progressive, .m3uPlaylist, .hls, .http, .https]
     }
 }
