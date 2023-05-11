@@ -48,7 +48,7 @@ The library can be integrated using [Swift Package Manager](https://swift.org/pa
 A few remarks:
 
 - When building a project integrating Pillarbox for the first time, Xcode might ask you to trust our plugins. You should accept.
-- If you want your application to run on Mac Catalyst you must add `-weak_framework MediaPlayer` to your target _Other Linker Flags_ setting.
+- If you want your application to run on Silicon Macs as an iPad application you must add `-weak_framework MediaPlayer` to your target _Other Linker Flags_ setting.
 
 # Getting started
 
