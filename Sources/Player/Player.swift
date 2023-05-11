@@ -742,10 +742,10 @@ extension Player {
             .sink { [weak self] items, index, streamType in
                 guard let self else { return }
                 let areSkipsEnabled = items.count <= 1 && streamType != .live
-                self.nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
-                self.nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
-                self.nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = self.canReturn(before: index, in: items, streamType: streamType)
-                self.nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = Self.canAdvanceToItem(after: index, in: items)
+                nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
+                nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
+                nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: items, streamType: streamType)
+                nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = Self.canAdvanceToItem(after: index, in: items)
             }
             .store(in: &cancellables)
     }

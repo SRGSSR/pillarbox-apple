@@ -79,7 +79,7 @@ class QueuePlayer: AVQueuePlayer {
 
         enqueue(seek: seek) { [weak self] in
             guard let self else { return }
-            self.notifySeekEnd()
+            notifySeekEnd()
         }
     }
 

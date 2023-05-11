@@ -31,9 +31,11 @@ disabled_rules:
   - no_magic_numbers
   - nslocalizedstring_require_bundle
   - required_deinit
+  - sorted_enum_cases
   - statement_position
   - strict_fileprivate
   - strong_iboutlet
+  - superfluous_else
   - todo
   - vertical_whitespace_between_cases
   - yoda_condition
@@ -55,6 +57,7 @@ opt_in_rules:
   - contains_over_first_not_nil
   - contains_over_range_nil_comparison
   - convenience_type
+  - direct_return
   - discarded_notification_center_observer
   - discouraged_assert
   - discouraged_object_literal
@@ -122,6 +125,7 @@ opt_in_rules:
   - raw_value_for_camel_cased_codable_enum
   - reduce_into
   - redundant_nil_coalescing
+  - redundant_self_in_closure
   - redundant_type_annotation
   - required_enum_case
   - return_value_from_void_function
@@ -139,6 +143,7 @@ opt_in_rules:
   - type_body_length
   - type_contents_order
   - unavailable_function
+  - unhandled_throwing_task
   - unneeded_parentheses_in_closure_argument
   - unowned_variable_capture
   - untyped_error_in_catch
@@ -153,6 +158,9 @@ analyzer_rules:
   - typesafe_array_init
   - unused_declaration
   - unused_import
+
+attributes:
+  always_on_same_line: ["@Environment"]
 
 cyclomatic_complexity:
   warning: 5
