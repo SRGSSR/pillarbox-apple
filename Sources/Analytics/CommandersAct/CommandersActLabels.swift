@@ -102,32 +102,32 @@ public struct CommandersActLabels: Decodable {
 
     /// Value of `media_volume`.
     public var media_volume: Int? {
-        guard let _media_volume else { return nil }
-        return Int(_media_volume)
+        extract(\._media_volume)
     }
 
     /// Value of `media_position`.
     public var media_position: Int? {
-        guard let _media_position else { return nil }
-        return Int(_media_position)
+        extract(\._media_position)
     }
 
     /// Value of `media_timeshift`.
     public var media_timeshift: Int? {
-        guard let _media_timeshift else { return nil }
-        return Int(_media_timeshift)
+        extract(\._media_timeshift)
     }
 
     /// Value of `media_playback_rate`.
     public var media_playback_rate: Float? {
-        guard let _media_playback_rate else { return nil }
-        return Float(_media_playback_rate)
+        extract(\._media_playback_rate)
     }
 
     /// Value of `media_bandwidth`.
     public var media_bandwidth: Double? {
-        guard let _media_bandwidth else { return nil }
-        return Double(_media_bandwidth)
+        extract(\._media_bandwidth)
+    }
+
+    private func extract<T: LosslessStringConvertible>(_ keyPath: KeyPath<Self, String?>) -> T? {
+        guard let value = self[keyPath: keyPath] else { return nil }
+        return .init(value)
     }
 }
 
