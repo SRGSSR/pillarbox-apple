@@ -13,22 +13,10 @@ import Streams
 private struct AssetMetadataMock: AssetMetadata {}
 
 final class CommandersActTrackerMetadataTests: CommandersActTestCase {
-    func testPause() {
-        let player = Player(item: .simple(
-            url: Stream.shortOnDemand.url,
-            metadata: AssetMetadataMock(),
-            trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .onDemand)
-                }
-            ]
-        ))
-
-        player.play()
-        expect(player.playbackState).toEventually(equal(.playing))
-
+    func testWhenInitialized() {
+        var player: Player?
         expectAtLeastEvents(
-            .pause { labels in
+            .play { labels in
                 expect(labels.media_player_display).to(equal("Pillarbox"))
                 expect(labels.media_player_version).notTo(beEmpty())
                 expect(labels.media_volume).notTo(beEmpty())
@@ -37,11 +25,20 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
                 expect(labels.media_title).to(equal("title"))
             }
         ) {
-            player.pause()
+             player = Player(item: .simple(
+                url: Stream.shortOnDemand.url,
+                metadata: AssetMetadataMock(),
+                trackerAdapters: [
+                    CommandersActTracker.adapter { _ in
+                        .test(streamType: .onDemand)
+                    }
+                ]
+            ))
+            player?.play()
         }
     }
 
-    func testStopWhenDestroyed() {
+    func testWhenDestroyed() {
         var player: Player? = Player(item: .simple(
             url: Stream.shortOnDemand.url,
             metadata: AssetMetadataMock(),
