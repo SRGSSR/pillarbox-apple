@@ -29,4 +29,14 @@ final class AVPlayerRatePublisherTests: TestCase {
             player.play()
         }
     }
+
+    func testLive() {
+        let player = AVPlayer(url: Stream.live.url)
+        expectAtLeastEqualPublished(
+            values: [0, 1],
+            from: player.ratePublisher()
+        ) {
+            player.play()
+        }
+    }
 }
