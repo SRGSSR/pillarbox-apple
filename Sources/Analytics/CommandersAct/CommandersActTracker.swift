@@ -74,8 +74,9 @@ public final class CommandersActTracker: PlayerItemTracker {
 }
 
 private extension CommandersActTracker {
-    private var volume: Float {
-        AVAudioSession.sharedInstance().outputVolume * 100
+    private func volume(for player: Player) -> Int {
+        guard !player.isMuted else { return 0 }
+        return Int(AVAudioSession.sharedInstance().outputVolume * 100)
     }
 
     private func bitrate(for player: Player) -> Int {
@@ -87,7 +88,7 @@ private extension CommandersActTracker {
         metadata.labels.merging([
             "media_player_display": "Pillarbox",
             "media_player_version": PackageInfo.version,
-            "media_volume": "\(volume)",
+            "media_volume": "\(volume(for: player))",
             "media_playback_rate": "1",
             "media_bandwidth": "\(bitrate(for: player))"
         ]) { _, new in new }

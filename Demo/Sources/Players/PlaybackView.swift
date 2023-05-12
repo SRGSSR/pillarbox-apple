@@ -127,12 +127,16 @@ private struct ControlsView: View {
     var body: some View {
         ZStack {
             Color(white: 0, opacity: 0.3)
+
             HStack(spacing: 30) {
                 SkipBackwardButton(player: player, progressTracker: progressTracker)
                 PlaybackButton(player: player)
                 SkipForwardButton(player: player, progressTracker: progressTracker)
             }
             .debugBodyCounter(color: .green)
+
+            VolumeButton(player: player)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
         }
         .animation(.defaultLinear, value: player.playbackState)
         .bind(progressTracker, to: player)
@@ -272,6 +276,27 @@ private struct FullScreenButton: View {
         default:
             break
         }
+    }
+}
+
+// Behavior: h-hug, v-hug
+private struct VolumeButton: View {
+    @ObservedObject var player: Player
+
+    var body: some View {
+        Button(action: toggleMuted) {
+            Image(systemName: imageName)
+                .tint(.white)
+        }
+        .frame(width: 45, height: 45)
+    }
+
+    private var imageName: String {
+        player.isMuted ? "speaker.slash.fill" : "speaker.wave.3.fill"
+    }
+
+    private func toggleMuted() {
+        player.isMuted.toggle()
     }
 }
 

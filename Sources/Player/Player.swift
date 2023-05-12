@@ -37,6 +37,13 @@ public final class Player: ObservableObject, Equatable {
     /// Set whether trackers are enabled or not.
     @Published public var isTrackingEnabled = true
 
+    /// Set whether the audio output of the player is muted.
+    @Published public var isMuted = true {
+        didSet {
+            queuePlayer.isMuted = isMuted
+        }
+    }
+
     @Published private var currentTracker: CurrentTracker?
     @Published private var currentItem: CurrentItem = .good(nil)
     @Published private var storedItems: Deque<PlayerItem>
@@ -116,6 +123,7 @@ public final class Player: ObservableObject, Equatable {
         configureQueueUpdatePublisher()
         configureExternalPlaybackPublisher()
         configurePresentationSizePublisher()
+        configureMutedPublisher()
 
         configurePlayer()
     }
@@ -782,6 +790,12 @@ extension Player {
             .assign(to: &$presentationSize)
     }
 
+    private func configureMutedPublisher() {
+        queuePlayer.publisher(for: \.isMuted)
+            .receiveOnMainThread()
+            .assign(to: &$isMuted)
+    }
+
     private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
         Publishers.CombineLatest($storedItems, $currentItem)
             .map { items, currentItem in
@@ -820,29 +834,29 @@ extension Player {
     }
 }
 
-extension Player {
-    private func playRegistration() -> some RemoteCommandRegistrable {
+private extension Player {
+    func playRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.playCommand) { [weak self] _ in
             self?.play()
             return .success
         }
     }
 
-    private func pauseRegistration() -> some RemoteCommandRegistrable {
+    func pauseRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.pauseCommand) { [weak self] _ in
             self?.pause()
             return .success
         }
     }
 
-    private func togglePlayPauseRegistration() -> some RemoteCommandRegistrable {
+    func togglePlayPauseRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.togglePlayPauseCommand) { [weak self] _ in
             self?.togglePlayPause()
             return .success
         }
     }
 
-    private func previousTrackRegistration() -> some RemoteCommandRegistrable {
+    func previousTrackRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = false
         return nowPlayingSession.remoteCommandCenter.register(command: \.previousTrackCommand) { [weak self] _ in
             self?.returnToPrevious()
@@ -850,7 +864,7 @@ extension Player {
         }
     }
 
-    private func nextTrackRegistration() -> some RemoteCommandRegistrable {
+    func nextTrackRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = false
         return nowPlayingSession.remoteCommandCenter.register(command: \.nextTrackCommand) { [weak self] _ in
             self?.advanceToNext()
@@ -858,7 +872,7 @@ extension Player {
         }
     }
 
-    private func changePlaybackPositionRegistration() -> some RemoteCommandRegistrable {
+    func changePlaybackPositionRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.changePlaybackPositionCommand) { [weak self] event in
             guard let positionEvent = event as? MPChangePlaybackPositionCommandEvent else { return .commandFailed }
             self?.seek(near(.init(seconds: positionEvent.positionTime, preferredTimescale: CMTimeScale(NSEC_PER_SEC))))
@@ -866,7 +880,7 @@ extension Player {
         }
     }
 
-    private func skipBackwardRegistration() -> some RemoteCommandRegistrable {
+    func skipBackwardRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = false
         nowPlayingSession.remoteCommandCenter.skipBackwardCommand.preferredIntervals = [.init(value: configuration.backwardSkipInterval)]
         return nowPlayingSession.remoteCommandCenter.register(command: \.skipBackwardCommand) { [weak self] _ in
@@ -875,7 +889,7 @@ extension Player {
         }
     }
 
-    private func skipForwardRegistration() -> some RemoteCommandRegistrable {
+    func skipForwardRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = false
         nowPlayingSession.remoteCommandCenter.skipForwardCommand.preferredIntervals = [.init(value: configuration.forwardSkipInterval)]
         return nowPlayingSession.remoteCommandCenter.register(command: \.skipForwardCommand) { [weak self] _ in
@@ -884,7 +898,7 @@ extension Player {
         }
     }
 
-    private func installRemoteCommands() {
+    func installRemoteCommands() {
         commandRegistrations = [
             playRegistration(),
             pauseRegistration(),
@@ -897,14 +911,14 @@ extension Player {
         ]
     }
 
-    private func uninstallRemoteCommands() {
+    func uninstallRemoteCommands() {
         commandRegistrations.forEach { registration in
             nowPlayingSession.remoteCommandCenter.unregister(registration)
         }
         commandRegistrations = []
     }
 
-    private func updateControlCenter(nowPlayingInfo: NowPlaying.Info) {
+    func updateControlCenter(nowPlayingInfo: NowPlaying.Info) {
         if !nowPlayingInfo.isEmpty {
             if nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo == nil {
                 uninstallRemoteCommands()

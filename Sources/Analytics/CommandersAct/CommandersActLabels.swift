@@ -8,10 +8,11 @@ import Foundation
 
 /// Labels associated with a Commanders Act event.
 public struct CommandersActLabels: Decodable {
+    private let _media_bandwidth: String?
+    private let _media_playback_rate: String?
     private let _media_position: String?
     private let _media_timeshift: String?
-    private let _media_playback_rate: String?
-    private let _media_bandwidth: String?
+    private let _media_volume: String?
 
     let event_name: String?
     let listener_session_id: String?
@@ -99,31 +100,34 @@ public struct CommandersActLabels: Decodable {
     /// Value of `media_player_version`.
     public let media_player_version: String?
 
-    /// Value of `media_volume`.
-    public let media_volume: String?
-
-    /// Value of `media_position`.
-    public var media_position: Int? {
-        guard let _media_position else { return nil }
-        return Int(_media_position)
-    }
-
-    /// Value of `media_timeshift`.
-    public var media_timeshift: Int? {
-        guard let _media_timeshift else { return nil }
-        return Int(_media_timeshift)
+    /// Value of `media_bandwidth`.
+    public var media_bandwidth: Double? {
+        extract(\._media_bandwidth)
     }
 
     /// Value of `media_playback_rate`.
     public var media_playback_rate: Float? {
-        guard let _media_playback_rate else { return nil }
-        return Float(_media_playback_rate)
+        extract(\._media_playback_rate)
     }
 
-    /// Value of `media_bandwidth`.
-    public var media_bandwidth: Double? {
-        guard let _media_bandwidth else { return nil }
-        return Double(_media_bandwidth)
+    /// Value of `media_position`.
+    public var media_position: Int? {
+        extract(\._media_position)
+    }
+
+    /// Value of `media_timeshift`.
+    public var media_timeshift: Int? {
+        extract(\._media_timeshift)
+    }
+
+    /// Value of `media_volume`.
+    public var media_volume: Int? {
+        extract(\._media_volume)
+    }
+
+    private func extract<T: LosslessStringConvertible>(_ keyPath: KeyPath<Self, String?>) -> T? {
+        guard let value = self[keyPath: keyPath] else { return nil }
+        return .init(value)
     }
 }
 
@@ -159,10 +163,10 @@ private extension CommandersActLabels {
         case event_value_5
         case media_player_display
         case media_player_version
-        case media_volume
+        case _media_bandwidth = "media_bandwidth"
         case _media_playback_rate = "media_playback_rate"
         case _media_position = "media_position"
         case _media_timeshift = "media_timeshift"
-        case _media_bandwidth = "media_bandwidth"
+        case _media_volume = "media_volume"
     }
 }
