@@ -12,9 +12,6 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.presenterModeEnabledKey)
     private var isPresenterModeEnabled = false
 
-    @AppStorage(UserDefaults.bodyCountersEnabledKey)
-    private var areBodyCountersEnabled = false
-
     @available(tvOS, unavailable)
     @AppStorage(UserDefaults.playerLayoutKey)
     private var playerLayout: PlayerLayout = .custom
@@ -55,10 +52,6 @@ struct SettingsView: View {
             Toggle(isOn: $isPresenterModeEnabled) {
                 Text("Presenter mode")
                 Text("Displays touches for presentation purposes.").font(.footnote)
-            }
-            Toggle(isOn: $areBodyCountersEnabled) {
-                Text("Body counters")
-                Text("Displays how often some views are refreshed.").font(.footnote)
             }
         }
     }

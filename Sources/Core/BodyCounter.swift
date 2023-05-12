@@ -67,14 +67,27 @@ private class _BodyCounterView: UIView {
 }
 
 public extension View {
-    /// Decorate the view with a bordered debugging frame whose attached label displays how many times the view
-    /// body has been evaluated.
-    /// - Parameters:
-    ///   - color: The frame and label color.
-    func _debugBodyCounter(color: UIColor = .red) -> some View {
-        overlay {
+    @ViewBuilder
+    private func debugBodyCounterOverlay(color: UIColor) -> some View {
+        if ProcessInfo.processInfo.environment["PILLARBOX_DEBUG_BODY_COUNTER"] != nil {
             BodyCounterView(color: color)
                 .allowsHitTesting(false)
         }
+    }
+
+    /// Decorate the view with a bordered debugging frame whose attached label displays how many times the view
+    /// body has been evaluated.
+    ///
+    /// This feature is only available in debug builds and requires the application to be run with the
+    /// `PILLARBOX_DEBUG_BODY_COUNTER` environment variable set.
+    ///
+    /// - Parameters:
+    ///   - color: The frame and label color.
+    func _debugBodyCounter(color: UIColor = .red) -> some View {
+#if DEBUG
+        overlay(debugBodyCounterOverlay(color: color))
+#else
+        self
+#endif
     }
 }

@@ -20,7 +20,6 @@ enum SeekBehaviorSetting: Int {
 // For more information see https://stackoverflow.com/a/47856467/760435
 extension UserDefaults {
     static let presenterModeEnabledKey = "presenterModeEnabled"
-    static let bodyCountersEnabledKey = "bodyCountersEnabled"
 
     @available(tvOS, unavailable)
     static let playerLayoutKey = "playerLayout"
@@ -33,10 +32,6 @@ extension UserDefaults {
 
     @objc dynamic var presenterModeEnabled: Bool {
         bool(forKey: Self.presenterModeEnabledKey)
-    }
-
-    @objc dynamic var bodyCountersEnabled: Bool {
-        bool(forKey: Self.bodyCountersEnabledKey)
     }
 
     @available(tvOS, unavailable)
@@ -76,7 +71,6 @@ extension UserDefaults {
     func registerDefaults() {
         register(defaults: [
             Self.presenterModeEnabledKey: false,
-            Self.bodyCountersEnabledKey: false,
             Self.seekBehaviorSettingKey: SeekBehaviorSetting.immediate.rawValue,
             Self.allowsExternalPlaybackKey: true,
             Self.smartNavigationEnabledKey: true,

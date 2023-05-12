@@ -33,7 +33,7 @@ private struct MainView: View {
             .animation(.defaultLinear, value: isUserInterfaceHidden)
         }
         .bind(visibilityTracker, to: player)
-        .debugBodyCounter()
+        ._debugBodyCounter()
     }
 
     private var gravity: AVLayerVideoGravity {
@@ -133,7 +133,7 @@ private struct ControlsView: View {
                 PlaybackButton(player: player)
                 SkipForwardButton(player: player, progressTracker: progressTracker)
             }
-            .debugBodyCounter(color: .green)
+            ._debugBodyCounter(color: .green)
 
             VolumeButton(player: player)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
@@ -425,7 +425,7 @@ private struct TimeSlider: View {
             transaction.animation = nil
         }
         .padding()
-        .debugBodyCounter(color: .blue)
+        ._debugBodyCounter(color: .blue)
     }
 
     private static func formattedDuration(_ duration: TimeInterval) -> String {
