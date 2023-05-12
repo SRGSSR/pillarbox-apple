@@ -39,4 +39,14 @@ final class AVPlayerRatePublisherTests: TestCase {
             player.play()
         }
     }
+
+    func testDvr() {
+        let player = AVPlayer(url: Stream.dvr.url)
+        expectAtLeastEqualPublished(
+            values: [0, 1],
+            from: player.ratePublisher()
+        ) {
+            player.play()
+        }
+    }
 }
