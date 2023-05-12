@@ -20,13 +20,13 @@ final class CurrentTracker {
     private func configureTrackingPublisher(player: Player) {
         player.$isTrackingEnabled
             .sink { [weak self, weak player] enabled in
-                guard let self, let player, self.isEnabled != enabled else { return }
-                self.isEnabled = enabled
+                guard let self, let player, isEnabled != enabled else { return }
+                isEnabled = enabled
                 if enabled {
-                    self.enableAsset(for: player)
+                    enableAsset(for: player)
                 }
                 else {
-                    self.disableAsset()
+                    disableAsset()
                 }
             }
             .store(in: &cancellables)

@@ -12,7 +12,7 @@ struct ComScoreEventExpectation {
     private let name: ComScoreEvent.Name
     private let evaluate: (ComScoreLabels) -> Void
 
-    static func match(event: ComScoreEvent, with expectation: ComScoreEventExpectation) -> Bool {
+    static func match(event: ComScoreEvent, with expectation: Self) -> Bool {
         guard event.name == expectation.name else { return false }
         expectation.evaluate(event.labels)
         return true

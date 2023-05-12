@@ -42,7 +42,7 @@ enum ItemState: Equatable {
         }
     }
 
-    static func == (lhs: ItemState, rhs: ItemState) -> Bool {
+    static func == (lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {
         case (.unknown, .unknown), (.readyToPlay, .readyToPlay), (.ended, .ended):
             return true

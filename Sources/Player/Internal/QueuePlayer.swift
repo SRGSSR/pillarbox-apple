@@ -22,7 +22,7 @@ struct Seek: Equatable {
 
     private let id = UUID()
 
-    static func == (lhs: Seek, rhs: Seek) -> Bool {
+    static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id
     }
 }
@@ -79,7 +79,7 @@ class QueuePlayer: AVQueuePlayer {
 
         enqueue(seek: seek) { [weak self] in
             guard let self else { return }
-            self.notifySeekEnd()
+            notifySeekEnd()
         }
     }
 

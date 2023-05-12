@@ -19,7 +19,7 @@ public enum PlaybackState: Equatable {
     /// The player encountered an error.
     case failed(error: Error)
 
-    static func state(for itemState: ItemState, rate: Float) -> PlaybackState {
+    static func state(for itemState: ItemState, rate: Float) -> Self {
         switch itemState {
         case .readyToPlay:
             return (rate == 0) ? .paused : .playing
@@ -32,7 +32,7 @@ public enum PlaybackState: Equatable {
         }
     }
 
-    public static func == (lhs: PlaybackState, rhs: PlaybackState) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {
         case (.idle, .idle), (.playing, .playing), (.paused, .paused), (.ended, .ended):
             return true

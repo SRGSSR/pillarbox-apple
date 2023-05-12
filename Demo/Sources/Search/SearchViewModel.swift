@@ -86,7 +86,7 @@ final class SearchViewModel: ObservableObject, Refreshable {
 
     func refresh() async {
         Task {
-            try await Task.sleep(for: .seconds(1))
+            try? await Task.sleep(for: .seconds(1))
             trigger.activate(for: TriggerId.reload)
         }
     }

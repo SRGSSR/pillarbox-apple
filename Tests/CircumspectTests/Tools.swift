@@ -12,7 +12,7 @@ struct StructError: Error {}
 struct NamedPerson: Similar {
     let name: String
 
-    static func ~~ (lhs: NamedPerson, rhs: NamedPerson) -> Bool {
+    static func ~~ (lhs: Self, rhs: Self) -> Bool {
         lhs.name.localizedCaseInsensitiveContains(rhs.name)
     }
 }

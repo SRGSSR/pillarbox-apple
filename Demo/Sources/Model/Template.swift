@@ -201,7 +201,7 @@ struct Template: Hashable {
         self.type = type
     }
 
-    static func medias(from templates: [Template]) -> [Media] {
+    static func medias(from templates: [Self]) -> [Media] {
         templates.map { Media(from: $0) }
     }
 }
