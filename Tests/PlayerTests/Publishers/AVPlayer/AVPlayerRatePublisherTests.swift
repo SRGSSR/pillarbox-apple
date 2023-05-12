@@ -7,6 +7,8 @@
 @testable import Player
 
 import AVFoundation
+import Circumspect
+import Streams
 import XCTest
 
 final class AVPlayerRatePublisherTests: TestCase {
@@ -16,5 +18,15 @@ final class AVPlayerRatePublisherTests: TestCase {
             values: [0],
             from: player.ratePublisher()
         )
+    }
+
+    func testOnDemand() {
+        let player = AVPlayer(url: Stream.onDemand.url)
+        expectAtLeastEqualPublished(
+            values: [0, 1],
+            from: player.ratePublisher()
+        ) {
+            player.play()
+        }
     }
 }
