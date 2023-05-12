@@ -30,6 +30,16 @@ final class AVPlayerRatePublisherTests: TestCase {
         }
     }
 
+    func testOnDemandHighestRate() {
+        let player = AVPlayer(url: Stream.onDemand.url)
+        player.rate = .infinity
+
+        expectAtLeastEqualPublished(
+            values: [2],
+            from: player.ratePublisher()
+        )
+    }
+
     func testLive() {
         let player = AVPlayer(url: Stream.live.url)
         expectAtLeastEqualPublished(
@@ -40,6 +50,16 @@ final class AVPlayerRatePublisherTests: TestCase {
         }
     }
 
+    func testLiveHighestRate() {
+        let player = AVPlayer(url: Stream.live.url)
+        player.rate = .infinity
+
+        expectAtLeastEqualPublished(
+            values: [2],
+            from: player.ratePublisher()
+        )
+    }
+
     func testDvr() {
         let player = AVPlayer(url: Stream.dvr.url)
         expectAtLeastEqualPublished(
@@ -48,5 +68,15 @@ final class AVPlayerRatePublisherTests: TestCase {
         ) {
             player.play()
         }
+    }
+
+    func testDvrHighestRate() {
+        let player = AVPlayer(url: Stream.dvr.url)
+        player.rate = .infinity
+
+        expectAtLeastEqualPublished(
+            values: [2],
+            from: player.ratePublisher()
+        )
     }
 }
