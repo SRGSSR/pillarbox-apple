@@ -144,4 +144,9 @@ extension AVPlayer {
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
+
+    func ratePublisher() -> AnyPublisher<Float, Never> {
+        publisher(for: \.rate)
+            .eraseToAnyPublisher()
+    }
 }
