@@ -810,7 +810,14 @@ extension Player {
             .receiveOnMainThread()
             .map { [weak self] rate in
                 guard let self else { return rate }
-                return (streamType == .live) ? 1 : rate
+                switch streamType {
+                case .live:
+                    return 1
+                case .dvr where !canSkipToDefault():
+                    return 1
+                default:
+                    return rate
+                }
             }
             .sink { [weak self] rate in
                 guard let self else { return }
