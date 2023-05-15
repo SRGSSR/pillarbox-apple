@@ -51,4 +51,14 @@ final class PlaybackSpeedTests: TestCase {
         player.playbackSpeed = 2
         expectAtLeastEqualPublished(values: [2], from: player.$playbackSpeed)
     }
+
+    func testDvrPlaybackSpeedNotAtLiveEdgeToLiveEdge() {
+        let player = Player(item: .simple(url: Stream.dvr.url))
+        expect(player.streamType).toEventually(equal(.dvr))
+        player.seek(at(.init(value: 15, timescale: 1)))
+        player.playbackSpeed = 2
+        expectEqualPublished(values: [2, 1], from: player.$playbackSpeed.removeDuplicates(), during: .seconds(3)) {
+            player.play()
+        }
+    }
 }
