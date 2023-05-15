@@ -805,25 +805,28 @@ extension Player {
     }
 
     private func configurePlaybackSpeedPublisher() {
-        queuePlayer.ratePublisher()
-            .removeDuplicates()
-            .receiveOnMainThread()
-            .map { [weak self] rate in
-                guard let self else { return rate }
-                switch streamType {
-                case .live:
-                    return 1
-                case .dvr where !canSkipToDefault():
-                    return 1
-                default:
-                    return rate
-                }
+        Publishers.CombineLatest(
+            queuePlayer.ratePublisher()
+                .removeDuplicates(),
+            periodicTimePublisher(forInterval: .init(value: 1, timescale: 1))
+        )
+        .receiveOnMainThread()
+        .map { [weak self] rate, _ in
+            guard let self else { return rate }
+            switch streamType {
+            case .live:
+                return 1
+            case .dvr where !canSkipToDefault():
+                return 1
+            default:
+                return rate
             }
-            .sink { [weak self] rate in
-                guard let self else { return }
-                playbackSpeed = rate
-            }
-            .store(in: &cancellables)
+        }
+        .sink { [weak self] rate in
+            guard let self else { return }
+            playbackSpeed = rate
+        }
+        .store(in: &cancellables)
     }
 
     private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
