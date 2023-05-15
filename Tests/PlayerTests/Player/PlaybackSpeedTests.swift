@@ -61,4 +61,28 @@ final class PlaybackSpeedTests: TestCase {
             player.play()
         }
     }
+
+    func testPlaylistOnDemandToLive() {
+        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.live.url)
+        let player = Player(items: [item1, item2])
+        player.play()
+        player.playbackSpeed = 2
+        expect(player.streamType).toEventually(equal(.onDemand))
+        expectEqualPublished(values: [2, 1], from: player.$playbackSpeed.removeDuplicates(), during: .seconds(3)) {
+            player.advanceToNext()
+        }
+    }
+
+    func testPlaylistOnDemandToDemand() {
+        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2])
+        expect(player.streamType).toEventually(equal(.onDemand))
+        player.play()
+        player.playbackSpeed = 2
+        expectEqualPublished(values: [2], from: player.$playbackSpeed.removeDuplicates(), during: .seconds(3)) {
+            player.advanceToNext()
+        }
+    }
 }
