@@ -18,4 +18,20 @@ final class PlaybackSpeedTests: TestCase {
         player.playbackSpeed = 2
         expectAtLeastEqualPublished(values: [2], from: player.$playbackSpeed)
     }
+
+    func testLivePlaybackSpeedZeroForLive() {
+        let player = Player(item: .simple(url: Stream.live.url))
+        expect(player.streamType).toEventually(equal(.live))
+        player.play()
+        player.playbackSpeed = 0
+        expectAtLeastEqualPublished(values: [1], from: player.$playbackSpeed)
+    }
+
+    func testLivePlaybackSpeedGreaterThanZeroForLive() {
+        let player = Player(item: .simple(url: Stream.live.url))
+        expect(player.streamType).toEventually(equal(.live))
+        player.play()
+        player.playbackSpeed = 2
+        expectAtLeastEqualPublished(values: [1], from: player.$playbackSpeed)
+    }
 }

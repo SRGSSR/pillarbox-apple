@@ -808,6 +808,10 @@ extension Player {
         queuePlayer.ratePublisher()
             .removeDuplicates()
             .receiveOnMainThread()
+            .map { [weak self] rate in
+                guard let self else { return rate }
+                return (streamType == .live) ? 1 : rate
+            }
             .sink { [weak self] rate in
                 guard let self else { return }
                 playbackSpeed = rate
