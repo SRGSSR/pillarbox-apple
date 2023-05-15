@@ -44,6 +44,13 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
+    /// The playback speed of the player.
+    @Published public var playbackSpeed: Float = 1 {
+        didSet {
+            queuePlayer.rate = playbackSpeed
+        }
+    }
+
     @Published private var currentTracker: CurrentTracker?
     @Published private var currentItem: CurrentItem = .good(nil)
     @Published private var storedItems: Deque<PlayerItem>
@@ -124,6 +131,7 @@ public final class Player: ObservableObject, Equatable {
         configureExternalPlaybackPublisher()
         configurePresentationSizePublisher()
         configureMutedPublisher()
+        configurePlaybackSpeedPublisher()
 
         configurePlayer()
     }
@@ -794,6 +802,17 @@ extension Player {
         queuePlayer.publisher(for: \.isMuted)
             .receiveOnMainThread()
             .assign(to: &$isMuted)
+    }
+
+    private func configurePlaybackSpeedPublisher() {
+        queuePlayer.ratePublisher()
+            .removeDuplicates()
+            .receiveOnMainThread()
+            .sink { [weak self] rate in
+                guard let self else { return }
+                playbackSpeed = rate
+            }
+            .store(in: &cancellables)
     }
 
     private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
