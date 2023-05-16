@@ -15,9 +15,9 @@ class PlaybackSpeedViewModel: ObservableObject {
 
     func bind(_ player: Player) {
         self.player = player
-        Publishers.CombineLatest(player.$currentIndex, player.$playbackState)
-            .filter { $1 == .playing }
-            .sink { [weak self] _, _ in
+        Publishers.CombineLatest3(player.$currentIndex, player.$playbackState, player.$isSeeking)
+            .filter { $0.1 == .playing }
+            .sink { [weak self] _, _, _ in
                 guard let self else { return }
                 tryToApplyPlaybackSpeed()
             }
