@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0E6B995C29D43E4200D0276D /* TrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6B995B29D43E4200D0276D /* TrackingView.swift */; };
 		0E84D6162A12753100EB48C5 /* PlaybackSpeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84D6152A12753100EB48C5 /* PlaybackSpeedView.swift */; };
+		0E84D6182A137FDE00EB48C5 /* PlaybackSpeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84D6172A137FDE00EB48C5 /* PlaybackSpeedViewModel.swift */; };
 		0EF42CB629AE513400553165 /* SRGDataProviderCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF42CB529AE513400553165 /* SRGDataProviderCombine */; };
 		6F36C62D28910538000DD160 /* CoreBusiness in Frameworks */ = {isa = PBXBuildFile; productRef = 6F36C62C28910538000DD160 /* CoreBusiness */; };
 		6F59E87929CF31E10093E6FB /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84029CF31E10093E6FB /* SearchView.swift */; };
@@ -67,6 +68,7 @@
 /* Begin PBXFileReference section */
 		0E6B995B29D43E4200D0276D /* TrackingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingView.swift; sourceTree = "<group>"; };
 		0E84D6152A12753100EB48C5 /* PlaybackSpeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackSpeedView.swift; sourceTree = "<group>"; };
+		0E84D6172A137FDE00EB48C5 /* PlaybackSpeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackSpeedViewModel.swift; sourceTree = "<group>"; };
 		6F010340289946220021BA76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pillarbox-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F45DB9A2893B773008ACCE6 /* Application.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 			isa = PBXGroup;
 			children = (
 				0E84D6152A12753100EB48C5 /* PlaybackSpeedView.swift */,
+				0E84D6172A137FDE00EB48C5 /* PlaybackSpeedViewModel.swift */,
 			);
 			path = PlaybackSpeed;
 			sourceTree = "<group>";
@@ -497,6 +500,7 @@
 				6F59E88529CF31E20093E6FB /* ListsView.swift in Sources */,
 				6F59E8A329CF31E20093E6FB /* ExamplesView.swift in Sources */,
 				0E6B995C29D43E4200D0276D /* TrackingView.swift in Sources */,
+				0E84D6182A137FDE00EB48C5 /* PlaybackSpeedViewModel.swift in Sources */,
 				6F59E89C29CF31E20093E6FB /* BasicPlaybackView.swift in Sources */,
 				6F59E87A29CF31E10093E6FB /* SearchViewModel.swift in Sources */,
 				6F59E88829CF31E20093E6FB /* UserDefaults.swift in Sources */,
