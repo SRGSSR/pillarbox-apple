@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Player
 import SwiftUI
 
 private struct SettingsMenuView<Content: View>: View {
@@ -48,6 +49,7 @@ private struct PlaybackSpeedButton: View {
 struct PlaybackSpeedView: View {
     let playbackSpeeds: [Double] = [0.5, 1, 1.25, 1.5, 2]
     @State var playbackSpeed: Double = 1
+    @ObservedObject var player: Player
 
     var body: some View {
         SettingsMenuView {
@@ -55,6 +57,7 @@ struct PlaybackSpeedView: View {
                 ForEach(playbackSpeeds.reversed(), id: \.self) { speed in
                     PlaybackSpeedButton(speed: speed, isSelected: playbackSpeed == speed) {
                         playbackSpeed = speed
+                        player.playbackSpeed = Float(speed)
                     }
                 }
             }
@@ -64,7 +67,7 @@ struct PlaybackSpeedView: View {
 
 struct PlaybackSpeedView_Previews: PreviewProvider {
     static var previews: some View {
-        PlaybackSpeedView()
+        PlaybackSpeedView(player: Player())
             .background(.black)
     }
 }
