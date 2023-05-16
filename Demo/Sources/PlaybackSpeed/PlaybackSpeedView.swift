@@ -62,6 +62,7 @@ struct PlaybackSpeedView: View {
                 }
             }
         }
+        .frame(width: 45, height: 45)
     }
 }
 
