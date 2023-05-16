@@ -46,10 +46,17 @@ private struct PlaybackSpeedButton: View {
 }
 
 struct PlaybackSpeedView: View {
+    let playbackSpeeds: [Double] = [0.5, 1, 1.25, 1.5, 2]
+    @State var playbackSpeed: Double = 1
+
     var body: some View {
         SettingsMenuView {
             PlaybackSpeedMenuView {
-                EmptyView()
+                ForEach(playbackSpeeds.reversed(), id: \.self) { speed in
+                    PlaybackSpeedButton(speed: speed, isSelected: playbackSpeed == speed) {
+                        playbackSpeed = speed
+                    }
+                }
             }
         }
     }
