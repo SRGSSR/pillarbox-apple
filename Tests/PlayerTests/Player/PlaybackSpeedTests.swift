@@ -15,8 +15,9 @@ final class PlaybackSpeedTests: TestCase {
     func testOnDemandPlaybackSpeed() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
-        player.playbackSpeed = 2
-        expectAtLeastEqualPublished(values: [2], from: player.$playbackSpeed)
+        expectAtLeastEqualPublished(values: [1, 2], from: player.$playbackSpeed) {
+            player.playbackSpeed = 2
+        }
     }
 
     func testLivePlaybackSpeedZeroForLive() {
@@ -30,7 +31,6 @@ final class PlaybackSpeedTests: TestCase {
     func testLivePlaybackSpeedGreaterThanZeroForLive() {
         let player = Player(item: .simple(url: Stream.live.url))
         expect(player.streamType).toEventually(equal(.live))
-        player.play()
         player.playbackSpeed = 2
         expectAtLeastEqualPublished(values: [1], from: player.$playbackSpeed)
     }
@@ -45,20 +45,19 @@ final class PlaybackSpeedTests: TestCase {
 
     func testDvrPlaybackSpeedNotAtLiveEdge() {
         let player = Player(item: .simple(url: Stream.dvr.url))
-        expect(player.streamType).toEventually(equal(.dvr))
-        player.play()
         player.seek(at(.init(value: 7, timescale: 1)))
-        player.playbackSpeed = 2
-        expectAtLeastEqualPublished(values: [2], from: player.$playbackSpeed)
+        expect(player.streamType).toEventually(equal(.dvr))
+        expectAtLeastEqualPublished(values: [1, 2], from: player.$playbackSpeed) {
+            player.playbackSpeed = 2
+        }
     }
 
     func testDvrPlaybackSpeedNotAtLiveEdgeToLiveEdge() {
         let player = Player(item: .simple(url: Stream.dvr.url))
-        expect(player.streamType).toEventually(equal(.dvr))
         player.seek(at(.init(value: 15, timescale: 1)))
-        player.playbackSpeed = 2
-        expectEqualPublished(values: [2, 1], from: player.$playbackSpeed.removeDuplicates(), during: .seconds(3)) {
-            player.play()
+        expect(player.streamType).toEventually(equal(.dvr))
+        expectEqualPublished(values: [1, 2, 1], from: player.$playbackSpeed, during: .seconds(3)) {
+            player.playbackSpeed = 2
         }
     }
 
@@ -78,11 +77,17 @@ final class PlaybackSpeedTests: TestCase {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
-        expect(player.streamType).toEventually(equal(.onDemand))
-        player.play()
         player.playbackSpeed = 2
+        expect(player.streamType).toEventually(equal(.onDemand))
         expectEqualPublished(values: [2], from: player.$playbackSpeed.removeDuplicates(), during: .seconds(3)) {
             player.advanceToNext()
         }
+    }
+
+    func testAvoidingToSetTheSamePlaybackSpeed() {
+        let player = Player(item: .simple(url: Stream.onDemand.url))
+        expect(player.streamType).toEventually(equal(.onDemand))
+        player.playbackSpeed = 1
+        expectEqualPublished(values: [1], from: player.$playbackSpeed, during: .seconds(2))
     }
 }
