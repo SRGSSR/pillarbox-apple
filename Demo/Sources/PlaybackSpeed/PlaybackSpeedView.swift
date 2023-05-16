@@ -17,10 +17,25 @@ private struct SettingsMenuView<Content: View>: View {
     }
 }
 
+private struct PlaybackSpeedMenuView<Content: View>: View {
+    let content: () -> Content
+
+    var body: some View {
+        Menu(content: content) {
+            HStack {
+                Text("Playback Speed")
+                Image(systemName: "speedometer")
+            }
+        }
+    }
+}
+
 struct PlaybackSpeedView: View {
     var body: some View {
         SettingsMenuView {
-            EmptyView()
+            PlaybackSpeedMenuView {
+                EmptyView()
+            }
         }
     }
 }
