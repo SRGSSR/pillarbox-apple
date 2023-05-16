@@ -47,22 +47,26 @@ private struct PlaybackSpeedButton: View {
 }
 
 struct PlaybackSpeedView: View {
-    let playbackSpeeds: [Double] = [0.5, 1, 1.25, 1.5, 2]
-    @State var playbackSpeed: Double = 1
+    @StateObject private var viewModel = PlaybackSpeedViewModel()
     @ObservedObject var player: Player
 
     var body: some View {
         SettingsMenuView {
             PlaybackSpeedMenuView {
-                ForEach(playbackSpeeds.reversed(), id: \.self) { speed in
-                    PlaybackSpeedButton(speed: speed, isSelected: playbackSpeed == speed) {
-                        playbackSpeed = speed
-                        player.playbackSpeed = Float(speed)
+                ForEach(viewModel.playbackSpeeds.reversed(), id: \.self) { speed in
+                    PlaybackSpeedButton(speed: speed, isSelected: viewModel.playbackSpeed == speed) {
+                        viewModel.updateSpeed(speed)
                     }
                 }
             }
         }
         .frame(width: 45, height: 45)
+        .onAppear {
+            viewModel.bind(player)
+        }
+        .onChange(of: player) { newValue in
+            viewModel.bind(newValue)
+        }
     }
 }
 
