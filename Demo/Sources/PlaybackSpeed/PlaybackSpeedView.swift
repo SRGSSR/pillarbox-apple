@@ -30,6 +30,21 @@ private struct PlaybackSpeedMenuView<Content: View>: View {
     }
 }
 
+private struct PlaybackSpeedButton: View {
+    let speed: Double
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            if isSelected {
+                Image(systemName: "checkmark")
+            }
+            Text(String(format: "%.2fx", speed))
+        }
+    }
+}
+
 struct PlaybackSpeedView: View {
     var body: some View {
         SettingsMenuView {
