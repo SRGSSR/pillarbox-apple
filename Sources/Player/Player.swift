@@ -822,11 +822,10 @@ extension Player {
                 return rate
             }
         }
-        .filter { [weak self] rate in
-            guard let self else { return false }
-            return rate != playbackSpeed
-        }
-        .assign(to: &$playbackSpeed)
+        .weakCapture(self)
+        .filter { $0.0 != $0.1.queuePlayer.rate }
+        .sink { $0.1.playbackSpeed = $0.0 }
+        .store(in: &cancellables)
     }
 
     private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
