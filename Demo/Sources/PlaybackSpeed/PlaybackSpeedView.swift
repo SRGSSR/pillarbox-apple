@@ -53,7 +53,7 @@ struct PlaybackSpeedView: View {
     var body: some View {
         SettingsMenuView {
             PlaybackSpeedMenuView {
-                ForEach(viewModel.playbackSpeeds.reversed(), id: \.self) { speed in
+                ForEach(viewModel.playbackSpeeds, id: \.self) { speed in
                     PlaybackSpeedButton(speed: speed, isSelected: viewModel.player?.playbackSpeed == Float(speed)) {
                         viewModel.updateSpeed(speed)
                     }
