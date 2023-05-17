@@ -90,4 +90,12 @@ final class PlaybackSpeedTests: TestCase {
         player.playbackSpeed = 1
         expectEqualPublished(values: [1], from: player.$playbackSpeed, during: .seconds(2))
     }
+
+    func testSyncBetweenPlaybackSpeedAndRate() {
+        let player = Player(item: .simple(url: Stream.onDemand.url))
+        expect(player.streamType).toEventually(equal(.onDemand))
+        player.playbackSpeed = 2
+        player.pause()
+        expect(player.playbackSpeed).toEventually(equal(player.queuePlayer.rate), pollInterval: .seconds(1))
+    }
 }
