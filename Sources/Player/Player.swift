@@ -823,7 +823,7 @@ extension Player {
             }
         }
         .weakCapture(self)
-        .filter { $0.0 != $0.1.queuePlayer.rate }
+        .filter { $0.0 != $0.1.playbackSpeed }
         .sink { $0.1.playbackSpeed = $0.0 }
         .store(in: &cancellables)
     }
