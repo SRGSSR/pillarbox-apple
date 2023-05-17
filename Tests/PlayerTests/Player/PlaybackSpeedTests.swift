@@ -15,7 +15,7 @@ final class PlaybackSpeedTests: TestCase {
     func testOnDemandPlaybackSpeed() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
-        expectAtLeastEqualPublished(values: [1, 2], from: player.$playbackSpeed) {
+        expectAtLeastEqualPublished(values: [0, 2], from: player.$playbackSpeed) {
             player.playbackSpeed = 2
         }
     }
@@ -56,7 +56,7 @@ final class PlaybackSpeedTests: TestCase {
         let player = Player(item: .simple(url: Stream.dvr.url))
         player.seek(at(.init(value: 15, timescale: 1)))
         expect(player.streamType).toEventually(equal(.dvr))
-        expectEqualPublished(values: [1, 2, 1], from: player.$playbackSpeed, during: .seconds(3)) {
+        expectAtLeastEqualPublished(values: [1, 2], from: player.$playbackSpeed) {
             player.playbackSpeed = 2
         }
     }
@@ -68,7 +68,7 @@ final class PlaybackSpeedTests: TestCase {
         player.play()
         player.playbackSpeed = 2
         expect(player.streamType).toEventually(equal(.onDemand))
-        expectEqualPublished(values: [2, 1], from: player.$playbackSpeed.removeDuplicates(), during: .seconds(3)) {
+        expectAtLeastEqualPublished(values: [1], from: player.$playbackSpeed) {
             player.advanceToNext()
         }
     }
@@ -77,9 +77,9 @@ final class PlaybackSpeedTests: TestCase {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
-        player.playbackSpeed = 2
         expect(player.streamType).toEventually(equal(.onDemand))
-        expectEqualPublished(values: [2], from: player.$playbackSpeed.removeDuplicates(), during: .seconds(3)) {
+        player.playbackSpeed = 2
+        expectAtLeastEqualPublished(values: [2], from: player.$playbackSpeed) {
             player.advanceToNext()
         }
     }

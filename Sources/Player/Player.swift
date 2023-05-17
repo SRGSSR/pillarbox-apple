@@ -806,12 +806,12 @@ extension Player {
 
     private func configurePlaybackSpeedPublisher() {
         Publishers.CombineLatest(
-            queuePlayer.ratePublisher()
-                .removeDuplicates(),
-            periodicTimePublisher(forInterval: .init(value: 1, timescale: 1))
+            queuePlayer.ratePublisher().removeDuplicates(),
+            queuePlayer.currentItemTimeRangePublisher()
         )
         .receiveOnMainThread()
-        .map { [weak self] rate, _ in
+        .map { $0.0 }
+        .map { [weak self] rate in
             guard let self else { return rate }
             switch streamType {
             case .live:
@@ -823,7 +823,7 @@ extension Player {
             }
         }
         .weakCapture(self)
-        .filter { $0.0 != $0.1.playbackSpeed }
+        .filter { $0.1.playbackSpeed != $0.0 }
         .sink { $0.1.playbackSpeed = $0.0 }
         .store(in: &cancellables)
     }
