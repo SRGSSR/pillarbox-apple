@@ -26,11 +26,11 @@ class PlaybackSpeedViewModel: ObservableObject {
 
     func updateSpeed(_ speed: Double) {
         playbackSpeed = speed
-        player?.playbackSpeed = Float(speed)
+        player?.setPlaybackSpeed(Float(speed))
     }
 
     private func tryToApplyPlaybackSpeed() {
         guard player?.playbackSpeed != Float(playbackSpeed) else { return }
-        player?.playbackSpeed = Float(playbackSpeed)
+        player?.setPlaybackSpeed(Float(playbackSpeed))
     }
 }
