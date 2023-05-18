@@ -45,11 +45,7 @@ public final class Player: ObservableObject, Equatable {
     }
 
     /// The playback speed of the player.
-    @Published public var playbackSpeed: Float = 1 {
-        didSet {
-            queuePlayer.rate = playbackSpeed
-        }
-    }
+    @Published public private(set) var playbackSpeed: Float = 0
 
     @Published private var currentTracker: CurrentTracker?
     @Published private var currentItem: CurrentItem = .good(nil)
@@ -805,27 +801,19 @@ extension Player {
     }
 
     private func configurePlaybackSpeedPublisher() {
-        Publishers.CombineLatest(
-            queuePlayer.ratePublisher().removeDuplicates(),
-            queuePlayer.currentItemTimeRangePublisher()
-        )
-        .receiveOnMainThread()
-        .map { $0.0 }
-        .map { [weak self] rate in
-            guard let self else { return rate }
-            switch streamType {
-            case .live:
-                return 1
-            case .dvr where !canSkipToDefault():
-                return 1
-            default:
-                return rate
+        queuePlayer.ratePublisher()
+            .receiveOnMainThread()
+            .lane("player_playback_speed")
+            .assign(to: &$playbackSpeed)
+
+        queuePlayer.currentItemTimeRangePublisher()
+            .receiveOnMainThread()
+            .weakCapture(self)
+            .map { $0.1 }
+            .sink { player in
+                player.setPlaybackSpeed(player.playbackSpeed)
             }
-        }
-        .weakCapture(self)
-        .filter { $0.1.playbackSpeed != $0.0 }
-        .sink { $0.1.playbackSpeed = $0.0 }
-        .store(in: &cancellables)
+            .store(in: &cancellables)
     }
 
     private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
@@ -961,6 +949,24 @@ private extension Player {
         else {
             uninstallRemoteCommands()
             nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nil
+        }
+    }
+}
+
+public extension Player {
+    /// Sets the playback speed of the player.
+    /// - Parameter speed: The speed at which the player should play the stream.
+    /// - Note: The behavior of the playback speed depends also on the stream type.
+    func setPlaybackSpeed(_ speed: Float) {
+        switch streamType {
+        case .live:
+            queuePlayer.rate = 1
+        case .dvr where !canSkipToDefault():
+            queuePlayer.rate = 1
+        case .unknown:
+            queuePlayer.rate = speed.clamp(min: 0, max: 1)
+        default:
+            queuePlayer.rate = speed
         }
     }
 }
