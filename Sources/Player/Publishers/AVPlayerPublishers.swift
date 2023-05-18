@@ -148,6 +148,7 @@ extension AVPlayer {
     func ratePublisher() -> AnyPublisher<Float, Never> {
         publisher(for: \.rate)
             .map { $0.clamp(min: 0, max: 2) }
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 }
