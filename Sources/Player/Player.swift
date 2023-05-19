@@ -806,7 +806,7 @@ extension Player {
             .lane("player_playback_speed")
             .assign(to: &$playbackSpeed)
 
-        queuePlayer.currentItemTimeRangePublisher()
+        Publishers.CombineLatest(queuePlayer.seekTimePublisher(), queuePlayer.currentItemTimeRangePublisher())
             .receiveOnMainThread()
             .weakCapture(self)
             .map { $0.1 }
