@@ -962,9 +962,9 @@ public extension Player {
         case .live:
             queuePlayer.rate = 1
         case .dvr where !canSkipToDefault():
-            queuePlayer.rate = 1
+            queuePlayer.rate = speed.clamp(min: Float(0), max: Float(1))
         case .unknown:
-            queuePlayer.rate = speed.clamp(min: 0, max: 1)
+            queuePlayer.rate = speed.clamp(min: Float(0), max: Float(1))
         default:
             queuePlayer.rate = speed
         }
