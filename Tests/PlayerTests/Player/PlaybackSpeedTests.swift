@@ -78,6 +78,23 @@ final class PlaybackSpeedTests: TestCase {
         }
     }
 
+    func testPlaylistHighPlaybackSpeedShouldNotMoveToNext() {
+        let item1 = PlayerItem.simple(url: Stream.dvr.url)
+        let item2 = PlayerItem.simple(url: Stream.live.url)
+        let player = Player(items: [item1, item2])
+        expect(player.streamType).toEventually(equal(.dvr))
+        waitUntil { done in
+            player.seek(at(.init(value: 1, timescale: 1))) { _ in
+                done()
+            }
+        }
+        player.setPlaybackSpeed(2)
+        expectEqualPublished(values: [2, 1], from: player.$playbackSpeed, during: .seconds(3)) {
+            player.skipToDefault()
+        }
+        expect(player.streamType).toEventually(equal(.dvr))
+    }
+
     func testPlaylistOnDemandToDemand() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
