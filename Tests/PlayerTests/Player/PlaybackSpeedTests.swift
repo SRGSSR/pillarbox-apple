@@ -39,8 +39,16 @@ final class PlaybackSpeedTests: TestCase {
     func testDvrPlaybackSpeedAtLiveEdge() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         expect(player.streamType).toEventually(equal(.dvr))
-        expectAtLeastEqualPublished(values: [1], from: player.$playbackSpeed) {
+        expectAtLeastEqualPublished(values: [0, 1], from: player.$playbackSpeed) {
             player.setPlaybackSpeed(2)
+        }
+    }
+
+    func testDvrPlaybackSpeedLessThanOneAtLiveEdge() {
+        let player = Player(item: .simple(url: Stream.dvr.url))
+        expect(player.streamType).toEventually(equal(.dvr))
+        expectAtLeastEqualPublished(values: [0, 0.5], from: player.$playbackSpeed) {
+            player.setPlaybackSpeed(0.5)
         }
     }
 
@@ -54,7 +62,7 @@ final class PlaybackSpeedTests: TestCase {
             }
         }
 
-        expectAtLeastEqualPublished(values: [1, 2], from: player.$playbackSpeed) {
+        expectAtLeastEqualPublished(values: [0, 2], from: player.$playbackSpeed) {
             player.setPlaybackSpeed(2)
         }
     }
