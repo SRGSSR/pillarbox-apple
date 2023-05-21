@@ -83,6 +83,7 @@ private struct MainView: View {
     private func volumeButton() -> some View {
         VolumeButton(player: player)
             .opacity(isUserInterfaceHidden && !areControlsAlwaysVisible ? 0 : 1)
+            .preventsTouchPropagation()
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
     }
 
