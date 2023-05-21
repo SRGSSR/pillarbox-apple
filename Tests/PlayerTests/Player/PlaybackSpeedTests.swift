@@ -12,7 +12,7 @@ import Streams
 import XCTest
 
 final class PlaybackSpeedTests: TestCase {
-    func testOnDemandPlaybackSpeed() {
+    func testOnDemand() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
         expectAtLeastEqualPublished(values: [0, 2], from: player.$playbackSpeed) {
@@ -20,7 +20,7 @@ final class PlaybackSpeedTests: TestCase {
         }
     }
 
-    func testLivePlaybackSpeedZeroForLive() {
+    func testZeroForLive() {
         let player = Player(item: .simple(url: Stream.live.url))
         expect(player.streamType).toEventually(equal(.live))
         expectAtLeastEqualPublished(values: [1], from: player.$playbackSpeed) {
@@ -28,7 +28,7 @@ final class PlaybackSpeedTests: TestCase {
         }
     }
 
-    func testLivePlaybackSpeedGreaterThanZeroForLive() {
+    func testGreaterThanOneForLive() {
         let player = Player(item: .simple(url: Stream.live.url))
         expect(player.streamType).toEventually(equal(.live))
         expectAtLeastEqualPublished(values: [1], from: player.$playbackSpeed) {
@@ -36,7 +36,7 @@ final class PlaybackSpeedTests: TestCase {
         }
     }
 
-    func testDvrPlaybackSpeedAtLiveEdge() {
+    func testDvrAtLiveEdge() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         expect(player.streamType).toEventually(equal(.dvr))
         expectAtLeastEqualPublished(values: [0, 1], from: player.$playbackSpeed) {
@@ -44,7 +44,7 @@ final class PlaybackSpeedTests: TestCase {
         }
     }
 
-    func testDvrPlaybackSpeedLessThanOneAtLiveEdge() {
+    func testDvrLessThanOneAtLiveEdge() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         expect(player.streamType).toEventually(equal(.dvr))
         expectAtLeastEqualPublished(values: [0, 0.5], from: player.$playbackSpeed) {
@@ -52,7 +52,7 @@ final class PlaybackSpeedTests: TestCase {
         }
     }
 
-    func testDvrPlaybackSpeedNotAtLiveEdge() {
+    func testDvrGreaterThanOneNotAtLiveEdge() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         expect(player.streamType).toEventually(equal(.dvr))
 
@@ -78,7 +78,7 @@ final class PlaybackSpeedTests: TestCase {
         }
     }
 
-    func testPlaylistHighPlaybackSpeedShouldNotMoveToNext() {
+    func testPlaylistHighSpeedShouldNotMoveToNext() {
         let item1 = PlayerItem.simple(url: Stream.dvr.url)
         let item2 = PlayerItem.simple(url: Stream.live.url)
         let player = Player(items: [item1, item2])
@@ -106,7 +106,7 @@ final class PlaybackSpeedTests: TestCase {
         }
     }
 
-    func testSyncBetweenPlaybackSpeedAndRate() {
+    func testSyncBetweenSpeedAndRate() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
         player.setPlaybackSpeed(2)
