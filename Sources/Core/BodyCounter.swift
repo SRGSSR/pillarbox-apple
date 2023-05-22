@@ -67,9 +67,17 @@ private class _BodyCounterView: UIView {
 }
 
 public extension View {
+    private var isDebuggingEnabled: Bool {
+        ProcessInfo.processInfo.environment["PILLARBOX_DEBUG_BODY_COUNTER"] != nil
+    }
+
+    private var isRunningInXcodePreviews: Bool {
+        ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != nil
+    }
+
     @ViewBuilder
     private func debugBodyCounterOverlay(color: UIColor) -> some View {
-        if ProcessInfo.processInfo.environment["PILLARBOX_DEBUG_BODY_COUNTER"] != nil {
+        if isDebuggingEnabled || isRunningInXcodePreviews {
             BodyCounterView(color: color)
                 .allowsHitTesting(false)
         }
@@ -79,7 +87,7 @@ public extension View {
     /// body has been evaluated.
     ///
     /// This feature is only available in debug builds and requires the application to be run with the
-    /// `PILLARBOX_DEBUG_BODY_COUNTER` environment variable set.
+    /// `PILLARBOX_DEBUG_BODY_COUNTER` environment variable set. It is also automatically enabled in Xcode previews.
     ///
     /// - Parameters:
     ///   - color: The frame and label color.

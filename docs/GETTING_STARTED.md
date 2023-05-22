@@ -190,7 +190,7 @@ struct PlayerView: View {
 
 By having the `ProgressTracker` stored in a nested view you ensure that only this part of the view hierarchy gets updated every 1/10th of a second. The main `PlayerView` itself is namely still only updated when the player state changes. This way you can avoid triggering frequent large view updates unnecessarily, which makes it possible to implement layouts in an energy-efficient way. Of course several progress trackers can be used should you want to have different parts of your user interface be updated at different rates.
 
-To make it easier to spot where user interface updates can be optimized our `Core` package provides a `_debugBodyCounter(color:)` modifier which surrounds any view you want to observe with a counter, showing how many times its body has been evaluated. This way you can observe how your layout behaves and visually detects where parts of your user interface could benefit from local progress tracking. This feature is only available in debug builds and requires the application to be run with the `PILLARBOX_DEBUG_BODY_COUNTER` environment variable set.
+To make it easier to spot where user interface updates can be optimized our `Core` package provides a `_debugBodyCounter(color:)` modifier which surrounds any view you want to observe with a counter, showing how many times its body has been evaluated. This way you can observe how your layout behaves and visually detects where parts of your user interface could benefit from local progress tracking. This feature is only available in debug builds and requires the application to be run with the `PILLARBOX_DEBUG_BODY_COUNTER` environment variable set. It is also automatically enabled in Xcode previews.
 
 ## Contextual layout management (iOS)
 
