@@ -28,6 +28,7 @@ private struct MainView: View {
             ZStack {
                 main()
                 timeBar()
+                volumeButton()
             }
             .animation(.defaultLinear, value: player.isBusy)
             .animation(.defaultLinear, value: isUserInterfaceHidden)
@@ -79,6 +80,14 @@ private struct MainView: View {
     }
 
     @ViewBuilder
+    private func volumeButton() -> some View {
+        VolumeButton(player: player)
+            .opacity(isUserInterfaceHidden && !areControlsAlwaysVisible ? 0 : 1)
+            .preventsTouchPropagation()
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+    }
+
+    @ViewBuilder
     private func video() -> some View {
         switch player.mediaType {
         case .audio:
@@ -127,16 +136,12 @@ private struct ControlsView: View {
     var body: some View {
         ZStack {
             Color(white: 0, opacity: 0.3)
-
             HStack(spacing: 30) {
                 SkipBackwardButton(player: player, progressTracker: progressTracker)
                 PlaybackButton(player: player)
                 SkipForwardButton(player: player, progressTracker: progressTracker)
             }
             ._debugBodyCounter(color: .green)
-
-            VolumeButton(player: player)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
         }
         .animation(.defaultLinear, value: player.playbackState)
         .bind(progressTracker, to: player)

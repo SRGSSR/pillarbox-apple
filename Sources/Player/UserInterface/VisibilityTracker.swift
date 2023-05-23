@@ -82,12 +82,12 @@ public extension View {
     /// - Parameters:
     ///   - visibilityTracker: The visibility tracker to bind.
     ///   - player: The player to observe.
-    func bind(_ visibility: VisibilityTracker, to player: Player?) -> some View {
+    func bind(_ visibilityTracker: VisibilityTracker, to player: Player?) -> some View {
         onAppear {
-            visibility.player = player
+            visibilityTracker.player = player
         }
         .onChange(of: player) { newValue in
-            visibility.player = newValue
+            visibilityTracker.player = newValue
         }
     }
 }
