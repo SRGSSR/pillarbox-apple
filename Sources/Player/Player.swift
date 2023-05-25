@@ -45,7 +45,8 @@ public final class Player: ObservableObject, Equatable {
     }
 
     /// The playback speed of the player.
-    @Published public private(set) var playbackSpeed: Float = 0
+    @Published public private(set) var playbackSpeed: Float = 1
+    private var targetPlaybackSpeed: Float?
 
     @Published private var currentTracker: CurrentTracker?
     @Published private var currentItem: CurrentItem = .good(nil)
@@ -801,19 +802,10 @@ extension Player {
     }
 
     private func configurePlaybackSpeedPublisher() {
-        queuePlayer.ratePublisher()
+        queuePlayer.playbackSpeedPublisher()
             .receiveOnMainThread()
             .lane("player_playback_speed")
             .assign(to: &$playbackSpeed)
-
-        Publishers.CombineLatest(queuePlayer.seekTimePublisher(), queuePlayer.currentItemTimeRangePublisher())
-            .receiveOnMainThread()
-            .weakCapture(self)
-            .map { $0.1 }
-            .sink { player in
-                player.setPlaybackSpeed(player.playbackSpeed)
-            }
-            .store(in: &cancellables)
     }
 
     private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
@@ -958,15 +950,6 @@ public extension Player {
     /// - Parameter speed: The speed at which the player should play the stream.
     /// - Note: The behavior of the playback speed depends also on the stream type.
     func setPlaybackSpeed(_ speed: Float) {
-        switch streamType {
-        case .live:
-            queuePlayer.rate = 1
-        case .dvr where !canSkipToDefault():
-            queuePlayer.rate = speed.clamp(min: Float(0), max: Float(1))
-        case .unknown:
-            queuePlayer.rate = speed.clamp(min: Float(0), max: Float(1))
-        default:
-            queuePlayer.rate = speed
-        }
+        targetPlaybackSpeed = speed
     }
 }
