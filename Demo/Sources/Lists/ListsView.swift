@@ -10,8 +10,8 @@ import SwiftUI
 
 // Behavior: h-exp, v-exp
 struct ListsView: View {
-    @AppStorage(UserDefaults.serviceUrlKey)
-    private var serviceUrl: ServiceUrl = .production
+    @AppStorage(UserDefaults.serverSettingKey)
+    private var selectedServerSetting: ServerSetting = .production
 
     var body: some View {
         List {
@@ -25,7 +25,7 @@ struct ListsView: View {
             Self.radioShows(image: "waveform")
             Self.latestAudiosSection(image: "music.note.list")
         }
-        .navigationTitle("Lists (\(serviceUrl.title))")
+        .navigationTitle("Lists (\(selectedServerSetting.title))")
         .tracked(title: "lists")
         .toolbarTitleMenu {
             titlesMenu()
@@ -102,13 +102,13 @@ struct ListsView: View {
 
     @ViewBuilder
     private func titlesMenu() -> some View {
-        ForEach(ServiceUrl.allCases, id: \.self) { service in
+        ForEach(ServerSetting.allCases, id: \.self) { service in
             Button {
-                serviceUrl = service
+                selectedServerSetting = service
             } label: {
                 HStack {
                     Text(service.title)
-                    if serviceUrl == service {
+                    if selectedServerSetting == service {
                         Image(systemName: "checkmark")
                     }
                 }

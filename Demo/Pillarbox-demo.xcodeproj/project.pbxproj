@@ -15,7 +15,7 @@
 		6F59E87B29CF31E10093E6FB /* DemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84329CF31E10093E6FB /* DemoApp.swift */; };
 		6F59E87C29CF31E10093E6FB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84429CF31E10093E6FB /* AppDelegate.swift */; };
 		6F59E87D29CF31E10093E6FB /* Vendor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84629CF31E10093E6FB /* Vendor.swift */; };
-		6F59E87E29CF31E10093E6FB /* ServiceUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84729CF31E10093E6FB /* ServiceUrl.swift */; };
+		6F59E87E29CF31E10093E6FB /* ServerSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84729CF31E10093E6FB /* ServerSetting.swift */; };
 		6F59E87F29CF31E10093E6FB /* Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84829CF31E10093E6FB /* Template.swift */; };
 		6F59E88029CF31E10093E6FB /* RadioChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84929CF31E10093E6FB /* RadioChannel.swift */; };
 		6F59E88129CF31E10093E6FB /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84A29CF31E10093E6FB /* Playlist.swift */; };
@@ -78,7 +78,7 @@
 		6F59E84329CF31E10093E6FB /* DemoApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoApp.swift; sourceTree = "<group>"; };
 		6F59E84429CF31E10093E6FB /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6F59E84629CF31E10093E6FB /* Vendor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vendor.swift; sourceTree = "<group>"; };
-		6F59E84729CF31E10093E6FB /* ServiceUrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceUrl.swift; sourceTree = "<group>"; };
+		6F59E84729CF31E10093E6FB /* ServerSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSetting.swift; sourceTree = "<group>"; };
 		6F59E84829CF31E10093E6FB /* Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Template.swift; sourceTree = "<group>"; };
 		6F59E84929CF31E10093E6FB /* RadioChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RadioChannel.swift; sourceTree = "<group>"; };
 		6F59E84A29CF31E10093E6FB /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
@@ -224,7 +224,7 @@
 				6F59E84C29CF31E10093E6FB /* MediaDescription.swift */,
 				6F59E84A29CF31E10093E6FB /* Playlist.swift */,
 				6F59E84929CF31E10093E6FB /* RadioChannel.swift */,
-				6F59E84729CF31E10093E6FB /* ServiceUrl.swift */,
+				6F59E84729CF31E10093E6FB /* ServerSetting.swift */,
 				6F59E84829CF31E10093E6FB /* Template.swift */,
 				6F59E84629CF31E10093E6FB /* Vendor.swift */,
 			);
@@ -497,7 +497,7 @@
 				6F59E88129CF31E10093E6FB /* Playlist.swift in Sources */,
 				6F59E87D29CF31E10093E6FB /* Vendor.swift in Sources */,
 				6F59E88229CF31E10093E6FB /* Media.swift in Sources */,
-				6F59E87E29CF31E10093E6FB /* ServiceUrl.swift in Sources */,
+				6F59E87E29CF31E10093E6FB /* ServerSetting.swift in Sources */,
 				6F59E89E29CF31E20093E6FB /* PlayerView.swift in Sources */,
 				6F59E87929CF31E10093E6FB /* SearchView.swift in Sources */,
 				6F59E88029CF31E10093E6FB /* RadioChannel.swift in Sources */,

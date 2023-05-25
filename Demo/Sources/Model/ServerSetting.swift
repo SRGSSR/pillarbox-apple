@@ -7,7 +7,7 @@
 import SRGDataProvider
 
 @objc
-enum ServiceUrl: Int, CaseIterable {
+enum ServerSetting: Int, CaseIterable {
     case production
     case staging
     case test
