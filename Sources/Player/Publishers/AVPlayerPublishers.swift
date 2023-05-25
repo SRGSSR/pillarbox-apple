@@ -144,4 +144,34 @@ extension AVPlayer {
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
+
+    // swiftlint:disable:next cyclomatic_complexity
+    func playbackSpeedPublisher() -> AnyPublisher<Float, Never> {
+        Publishers.CombineLatest(
+            publisher(for: \.rate),
+            publisher(for: \.currentItem)
+        )
+        .filter { $0.0 != 0 }
+        .compactMap { rate, item -> AnyPublisher<Float, Never>? in
+            guard let item else { return nil }
+            return item.streamTypePublisher()
+                .compactMap { [weak self] streamType -> Float? in
+                    guard let self else { return nil }
+                    switch streamType {
+                    case .unknown:
+                        return nil
+                    case .live:
+                        return 1.0
+                    case .dvr where currentTime() > (timeRange.end - CMTime(value: 10, timescale: 1)):
+                        return rate.clamped(to: 0.1...1)
+                    default:
+                        return rate.clamped(to: 0.1...2)
+                    }
+                }
+                .eraseToAnyPublisher()
+        }
+        .switchToLatest()
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
 }
