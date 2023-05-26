@@ -67,6 +67,7 @@ final class PlaybackSpeedTests: TestCase {
         expect(player.playbackSpeed).toEventually(equal(2))
 
         player.advanceToNextItem()
+        expect(player.streamType).toEventually(equal(.live))
 
         expect(player.playbackSpeed).to(equal(1))
         expect(player.playbackSpeedRange).to(equal(1...1))
@@ -81,6 +82,7 @@ final class PlaybackSpeedTests: TestCase {
         expect(player.playbackSpeed).toEventually(equal(2))
 
         player.advanceToNextItem()
+        expect(player.streamType).toEventually(equal(.onDemand))
 
         expect(player.playbackSpeed).to(equal(2))
         expect(player.playbackSpeedRange).to(equal(0.1...2))
