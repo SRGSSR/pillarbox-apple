@@ -978,11 +978,12 @@ extension Player {
             .weakCapture(self)
             .map { item, player -> AnyPublisher<PlaybackSpeed, Never> in
                 if let item {
-                    return Publishers.CombineLatest(
+                    return Publishers.CombineLatest3(
                         item.timeRangePublisher(),
-                        item.durationPublisher()
+                        item.durationPublisher(),
+                        player.playbackSpeedBoundaryTimePublisher(item: item)
                     )
-                    .map { timeRange, itemDuration in
+                    .map { timeRange, itemDuration, _ in
                         if let range = Self.playbackSpeedRange(for: timeRange, itemDuration: itemDuration, time: player.time) {
                             return .actual(speed: player._playbackSpeed.input, in: range)
                         }
@@ -999,5 +1000,16 @@ extension Player {
             }
             .switchToLatest()
             .assign(to: &$_playbackSpeed)
+    }
+
+    func playbackSpeedBoundaryTimePublisher(item: AVPlayerItem) -> AnyPublisher<Void, Never> {
+        item.timeRangePublisher()
+            .map { [queuePlayer] timeRange in
+                let triggerTime = timeRange.end - CMTime(value: 5, timescale: 1)
+                return Publishers.BoundaryTimePublisher(for: queuePlayer, times: [triggerTime])
+            }
+            .switchToLatest()
+            .prepend(())
+            .eraseToAnyPublisher()
     }
 }
