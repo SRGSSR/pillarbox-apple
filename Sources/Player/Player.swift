@@ -51,12 +51,7 @@ public final class Player: ObservableObject, Equatable {
     /// The playback speed of the player.
     public var playbackSpeed: Float {
         get {
-            switch streamType {
-            case .onDemand, .dvr:
-                return _playbackSpeed
-            default:
-                return 1
-            }
+            _playbackSpeed.clamped(to: playbackSpeedRange)
         }
         set {
             _playbackSpeed = newValue
@@ -67,12 +62,12 @@ public final class Player: ObservableObject, Equatable {
     /// The playback speed range of the player.
     public var playbackSpeedRange: ClosedRange<Float> {
         switch streamType {
-        case .onDemand:
-            return 0.1...2
-        case .dvr:
+        case .live:
+            return 1...1
+        case .dvr where time > timeRange.end - CMTime(value: 10, timescale: 1):
             return 0.1...1
         default:
-            return 1...1
+            return 0.1...2
         }
     }
 
