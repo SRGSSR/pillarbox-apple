@@ -147,6 +147,7 @@ public final class Player: ObservableObject, Equatable {
         configureExternalPlaybackPublisher()
         configurePresentationSizePublisher()
         configureMutedPublisher()
+        configurePlaybackSpeedPublisher()
 
         configurePlayer()
     }
@@ -953,5 +954,10 @@ private extension Player {
             uninstallRemoteCommands()
             nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nil
         }
+    }
+}
+
+extension Player {
+    func configurePlaybackSpeedPublisher() {
     }
 }
