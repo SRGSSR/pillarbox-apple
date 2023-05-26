@@ -11,6 +11,8 @@ import DequeModule
 import MediaPlayer
 import TimelaneCombine
 
+// swiftlint:disable file_length
+
 /// An audio / video player maintaining its items as a double-ended queue (deque).
 public final class Player: ObservableObject, Equatable {
     /// Current playback state.
@@ -47,28 +49,27 @@ public final class Player: ObservableObject, Equatable {
     @Published private var currentTracker: CurrentTracker?
     @Published private var currentItem: CurrentItem = .good(nil)
     @Published private var storedItems: Deque<PlayerItem>
+    @Published private var _playbackSpeed: PlaybackSpeed = .desired(speed: 1)
 
     /// The playback speed of the player.
     public var playbackSpeed: Float {
         get {
-            _playbackSpeed.clamped(to: playbackSpeedRange)
+            _playbackSpeed.value
         }
         set {
-            _playbackSpeed = newValue
+            if let item = queuePlayer.currentItem,
+               let range = Self.playbackSpeedRange(for: item.timeRange, itemDuration: item.duration, time: time) {
+                _playbackSpeed = .actual(speed: newValue, in: range)
+            }
+            else {
+                _playbackSpeed = .desired(speed: newValue)
+            }
         }
     }
-    private var _playbackSpeed: Float = 1
 
     /// The playback speed range of the player.
     public var playbackSpeedRange: ClosedRange<Float> {
-        switch streamType {
-        case .live, .unknown:
-            return 1...1
-        case .dvr where time > timeRange.end - CMTime(value: 5, timescale: 1):
-            return 0.1...1
-        default:
-            return 0.1...2
-        }
+        _playbackSpeed.range
     }
 
     /// The type of stream currently played.
@@ -958,6 +959,45 @@ private extension Player {
 }
 
 extension Player {
+    static func playbackSpeedRange(for timeRange: CMTimeRange, itemDuration: CMTime, time: CMTime) -> ClosedRange<Float>? {
+        let streamType = StreamType(for: timeRange, itemDuration: itemDuration)
+        switch streamType {
+        case .unknown:
+            return nil
+        case .live:
+            return 1...1
+        case .dvr where time > timeRange.end - CMTime(value: 5, timescale: 1):
+            return 0.1...1
+        default:
+            return 0.1...2
+        }
+    }
+
     func configurePlaybackSpeedPublisher() {
+        queuePlayer.publisher(for: \.currentItem)
+            .weakCapture(self)
+            .map { item, player -> AnyPublisher<PlaybackSpeed, Never> in
+                if let item {
+                    return Publishers.CombineLatest(
+                        item.timeRangePublisher(),
+                        item.durationPublisher()
+                    )
+                    .map { timeRange, itemDuration in
+                        if let range = Self.playbackSpeedRange(for: timeRange, itemDuration: itemDuration, time: player.time) {
+                            return .actual(speed: player._playbackSpeed.input, in: range)
+                        }
+                        else {
+                            return .desired(speed: player._playbackSpeed.input)
+                        }
+                    }
+                    .eraseToAnyPublisher()
+                }
+                else {
+                    return Just(.desired(speed: player._playbackSpeed.input))
+                        .eraseToAnyPublisher()
+                }
+            }
+            .switchToLatest()
+            .assign(to: &$_playbackSpeed)
     }
 }
