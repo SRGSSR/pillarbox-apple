@@ -62,7 +62,7 @@ public final class Player: ObservableObject, Equatable {
     /// The playback speed range of the player.
     public var playbackSpeedRange: ClosedRange<Float> {
         switch streamType {
-        case .live:
+        case .live, .unknown:
             return 1...1
         case .dvr where time > timeRange.end - CMTime(value: 10, timescale: 1):
             return 0.1...1

@@ -45,10 +45,10 @@ final class PlaybackSpeedTests: TestCase {
 
     func testDvrInThePast() {
         let player = Player(item: .simple(url: Stream.dvr.url))
-        expect(player.timeRange).toEventuallyNot(equal(.invalid))
+        expect(player.streamType).toEventually(equal(.dvr))
 
         waitUntil { done in
-            player.seek(at(.zero)) { _ in
+            player.seek(at(.init(value: 1, timescale: 1))) { _ in
                 done()
             }
         }
