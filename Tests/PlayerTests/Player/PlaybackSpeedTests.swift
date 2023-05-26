@@ -21,23 +21,26 @@ final class PlaybackSpeedTests: TestCase {
 
     func testOnDemand() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
+        expect(player.streamType).toEventually(equal(.onDemand))
         player.playbackSpeed = 2
-        expect(player.playbackSpeed).toEventually(equal(2))
-        expect(player.playbackSpeedRange).toEventually(equal(0.1...2))
+        expect(player.playbackSpeed).to(equal(2))
+        expect(player.playbackSpeedRange).to(equal(0.1...2))
     }
 
     func testDvr() {
         let player = Player(item: .simple(url: Stream.dvr.url))
-        player.playbackSpeed = 2
-        expect(player.playbackSpeed).toAlways(equal(1), until: .seconds(2))
-        expect(player.playbackSpeedRange).toAlways(equal(0.1...1), until: .seconds(2))
+        expect(player.streamType).toEventually(equal(.dvr))
+        player.playbackSpeed = 0.5
+        expect(player.playbackSpeed).to(equal(0.5))
+        expect(player.playbackSpeedRange).to(equal(0.1...1))
     }
 
     func testLive() {
         let player = Player(item: .simple(url: Stream.live.url))
+        expect(player.streamType).toEventually(equal(.live))
         player.playbackSpeed = 2
-        expect(player.playbackSpeed).toAlways(equal(1), until: .seconds(2))
-        expect(player.playbackSpeedRange).toAlways(equal(1...1), until: .seconds(2))
+        expect(player.playbackSpeed).to(equal(1))
+        expect(player.playbackSpeedRange).to(equal(1...1))
     }
 
     func testDvrInThePast() {
