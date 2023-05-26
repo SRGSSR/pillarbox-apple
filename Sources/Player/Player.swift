@@ -44,13 +44,15 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    /// The playback speed of the player.
-    @Published public private(set) var playbackSpeed: Float = 1
-    private var targetPlaybackSpeed: Float?
-
     @Published private var currentTracker: CurrentTracker?
     @Published private var currentItem: CurrentItem = .good(nil)
     @Published private var storedItems: Deque<PlayerItem>
+
+    /// The playback speed of the player.
+    public var playbackSpeed: Float = 1
+
+    /// The playback speed range of the player.
+    public var playbackSpeedRange: ClosedRange<Float> = 1...1
 
     /// The type of stream currently played.
     public var streamType: StreamType {
@@ -128,7 +130,6 @@ public final class Player: ObservableObject, Equatable {
         configureExternalPlaybackPublisher()
         configurePresentationSizePublisher()
         configureMutedPublisher()
-        configurePlaybackSpeedPublisher()
 
         configurePlayer()
     }
@@ -801,13 +802,6 @@ extension Player {
             .assign(to: &$isMuted)
     }
 
-    private func configurePlaybackSpeedPublisher() {
-        queuePlayer.playbackSpeedPublisher()
-            .receiveOnMainThread()
-            .lane("player_playback_speed")
-            .assign(to: &$playbackSpeed)
-    }
-
     private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
         Publishers.CombineLatest($storedItems, $currentItem)
             .map { items, currentItem in
@@ -942,14 +936,5 @@ private extension Player {
             uninstallRemoteCommands()
             nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nil
         }
-    }
-}
-
-public extension Player {
-    /// Sets the playback speed of the player.
-    /// - Parameter speed: The speed at which the player should play the stream.
-    /// - Note: The behavior of the playback speed depends also on the stream type.
-    func setPlaybackSpeed(_ speed: Float) {
-        targetPlaybackSpeed = speed
     }
 }
