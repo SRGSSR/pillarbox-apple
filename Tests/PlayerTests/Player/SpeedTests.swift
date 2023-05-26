@@ -6,13 +6,12 @@
 
 @testable import Player
 
-import AVFoundation
 import Circumspect
 import Nimble
 import Streams
 import XCTest
 
-final class PlaybackSpeedTests: TestCase {
+final class SpeedTests: TestCase {
     func testPlaybackSpeed() {
         let player = Player()
         expect(player.playbackSpeed).to(equal(1))
@@ -86,5 +85,34 @@ final class PlaybackSpeedTests: TestCase {
 
         expect(player.playbackSpeed).to(equal(2))
         expect(player.playbackSpeedRange).to(equal(0.1...2))
+    }
+
+    func testSpeedUpdateWhenStartingPlayback() {
+        let player = Player(item: .simple(url: Stream.dvr.url))
+        expect(player.playbackState).toEventually(equal(.paused))
+
+        expectEqualPublished(
+            values: [1, 0.5],
+            from: player.changePublisher(at: \.playbackSpeed).removeDuplicates(),
+            during: .seconds(2)
+        ) {
+            player.playbackSpeed = 0.5
+        }
+    }
+
+    func testSpeedRangeUpdateWhenStartingPlayback() {
+        let player = Player(item: .simple(url: Stream.dvr.url))
+        expect(player.playbackState).toEventually(equal(.paused))
+
+        expectEqualPublished(
+            values: [1...1, 0.1...1],
+            from: player.changePublisher(at: \.playbackSpeedRange).removeDuplicates(),
+            during: .seconds(2)
+        ) {
+            player.playbackSpeed = 0.5
+        }
+    }
+
+    func testSpeedUpdateWhenApproachingLiveEdge() {
     }
 }
