@@ -36,7 +36,6 @@ final class SpeedTests: TestCase {
 
     func testLive() {
         let player = Player(item: .simple(url: Stream.live.url))
-        expect(player.streamType).toEventually(equal(.live))
         player.playbackSpeed = 2
         expect(player.playbackSpeed).to(equal(1))
         expect(player.playbackSpeedRange).to(equal(1...1))
@@ -44,7 +43,7 @@ final class SpeedTests: TestCase {
 
     func testDvrInThePast() {
         let player = Player(item: .simple(url: Stream.dvr.url))
-        expect(player.streamType).toEventually(equal(.dvr))
+        expect(player.timeRange).toEventuallyNot(equal(.invalid))
 
         waitUntil { done in
             player.seek(at(.init(value: 1, timescale: 1))) { _ in
@@ -52,7 +51,7 @@ final class SpeedTests: TestCase {
             }
         }
 
-        expect(player.playbackSpeedRange).to(equal(0.1...2))
+        expect(player.playbackSpeedRange).toEventually(equal(0.1...2))
         player.playbackSpeed = 2
         expect(player.playbackSpeed).to(equal(2))
     }
@@ -81,15 +80,16 @@ final class SpeedTests: TestCase {
         expect(player.playbackSpeed).toEventually(equal(2))
 
         player.advanceToNextItem()
-        expect(player.streamType).toEventually(equal(.onDemand))
 
-        expect(player.playbackSpeed).to(equal(2))
-        expect(player.playbackSpeedRange).to(equal(0.1...2))
+        expect(player.playbackSpeed).to(equal(1))
+        expect(player.playbackSpeedRange).to(equal(1...1))
+
+        expect(player.playbackSpeed).toEventually(equal(2))
+        expect(player.playbackSpeedRange).toEventually(equal(0.1...2))
     }
 
     func testSpeedUpdateWhenStartingPlayback() {
         let player = Player(item: .simple(url: Stream.dvr.url))
-        expect(player.playbackState).toEventually(equal(.paused))
 
         expectEqualPublished(
             values: [1, 0.5],
@@ -102,7 +102,6 @@ final class SpeedTests: TestCase {
 
     func testSpeedRangeUpdateWhenStartingPlayback() {
         let player = Player(item: .simple(url: Stream.dvr.url))
-        expect(player.playbackState).toEventually(equal(.paused))
 
         expectEqualPublished(
             values: [1...1, 0.1...1],
