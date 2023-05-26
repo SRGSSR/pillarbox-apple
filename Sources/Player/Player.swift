@@ -983,7 +983,11 @@ extension Player {
                         item.durationPublisher(),
                         player.playbackSpeedBoundaryTimePublisher(item: item)
                     )
-                    .map { timeRange, itemDuration, _ in
+                    .weakCapture(player)
+                    .map { times, player in
+                        (times.0, times.1, times.2, player)
+                    }
+                    .map { timeRange, itemDuration, _, player in
                         if let range = Self.playbackSpeedRange(for: timeRange, itemDuration: itemDuration, time: player.time) {
                             return .actual(speed: player._playbackSpeed.input, in: range)
                         }
@@ -999,12 +1003,14 @@ extension Player {
                 }
             }
             .switchToLatest()
+            .receiveOnMainThread()
             .assign(to: &$_playbackSpeed)
     }
 
     func playbackSpeedBoundaryTimePublisher(item: AVPlayerItem) -> AnyPublisher<Void, Never> {
         item.timeRangePublisher()
-            .map { [queuePlayer] timeRange in
+            .weakCapture(queuePlayer)
+            .map { timeRange, queuePlayer in
                 let triggerTime = timeRange.end - CMTime(value: 5, timescale: 1)
                 return Publishers.BoundaryTimePublisher(for: queuePlayer, times: [triggerTime])
             }
