@@ -64,7 +64,7 @@ public final class Player: ObservableObject, Equatable {
         switch streamType {
         case .live, .unknown:
             return 1...1
-        case .dvr where time > timeRange.end - CMTime(value: 10, timescale: 1):
+        case .dvr where time > timeRange.end - CMTime(value: 5, timescale: 1):
             return 0.1...1
         default:
             return 0.1...2
