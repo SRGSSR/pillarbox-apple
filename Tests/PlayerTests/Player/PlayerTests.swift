@@ -54,21 +54,4 @@ final class PlayerTests: TestCase {
         let player = Player(item: .mock(url: Stream.onDemand.url, withMetadataUpdateAfter: 1))
         expectNothingPublishedNext(from: player.queuePlayer.publisher(for: \.currentItem), during: .seconds(2))
     }
-
-    func testPlaybackSpeed() {
-        let player = Player()
-        expect(player.playbackSpeed).to(equal(1))
-    }
-
-    func testMinSpeedUnknown() {
-        let player = Player()
-        player.setPlaybackSpeed(0)
-        expect(player.playbackSpeed).to(equal(1))
-    }
-
-    func testMaxSpeedUnknown() {
-        let player = Player()
-        player.setPlaybackSpeed(1)
-        expect(player.playbackSpeed).to(equal(1))
-    }
 }

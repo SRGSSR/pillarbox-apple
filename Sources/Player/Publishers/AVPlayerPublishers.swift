@@ -144,33 +144,4 @@ extension AVPlayer {
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
-
-    func playbackSpeedPublisher() -> AnyPublisher<Float, Never> {
-        Publishers.CombineLatest3(
-            publisher(for: \.rate),
-            publisher(for: \.currentItem),
-            currentItemTimeRangePublisher()
-        )
-        .filter { $0.0 != 0 && $0.2 != .invalid }
-        .compactMap { rate, item, timeRange -> AnyPublisher<Float, Never>? in
-            guard let item else { return nil }
-            return item.streamTypePublisher()
-                .filter { $0 != .unknown }
-                .compactMap { [weak self] streamType -> Float? in
-                    guard let self else { return nil }
-                    switch streamType {
-                    case .live:
-                        return 1.0
-                    case .dvr where currentTime() > (timeRange.end - CMTime(value: 10, timescale: 1)):
-                        return rate.clamped(to: 0.1...1)
-                    default:
-                        return rate.clamped(to: 0.1...2)
-                    }
-                }
-                .eraseToAnyPublisher()
-        }
-        .switchToLatest()
-        .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
 }
