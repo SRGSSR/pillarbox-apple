@@ -49,10 +49,20 @@ public final class Player: ObservableObject, Equatable {
     @Published private var storedItems: Deque<PlayerItem>
 
     /// The playback speed of the player.
-    public var playbackSpeed: Float = 1
+    public var playbackSpeed: Float {
+        get {
+            _playbackSpeed
+        }
+        set {
+            _playbackSpeed = newValue
+        }
+    }
+    private var _playbackSpeed: Float = 1
 
     /// The playback speed range of the player.
-    public var playbackSpeedRange: ClosedRange<Float> = 1...1
+    public var playbackSpeedRange: ClosedRange<Float> {
+        playbackSpeed == 1 ? 1...1 : 0.1...2
+    }
 
     /// The type of stream currently played.
     public var streamType: StreamType {
