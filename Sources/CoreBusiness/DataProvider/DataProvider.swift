@@ -17,11 +17,11 @@ final class DataProvider {
         case width1920 = 1920
     }
 
-    let environment: Environment
+    let server: Server
     private let session: URLSession
 
-    init(environment: Environment = .production) {
-        self.environment = environment
+    init(server: Server = .production) {
+        self.server = server
         session = URLSession(configuration: .ephemeral)
     }
 
@@ -40,7 +40,7 @@ final class DataProvider {
     }
 
     func mediaCompositionUrl(for urn: String) -> URL {
-        let url = environment.url.appending(path: "integrationlayer/2.1/mediaComposition/byUrn/\(urn)")
+        let url = server.url.appending(path: "integrationlayer/2.1/mediaComposition/byUrn/\(urn)")
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return url }
         components.queryItems = [
             URLQueryItem(name: "onlyChapters", value: "true")
@@ -72,7 +72,7 @@ final class DataProvider {
 
     private func scaledImageUrl(_ url: URL, width: ImageWidth) -> URL {
         guard var components = URLComponents(
-            url: environment.url.appending(path: "images/"),
+            url: server.url.appending(path: "images/"),
             resolvingAgainstBaseURL: false
         ) else {
             return url

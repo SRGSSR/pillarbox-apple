@@ -11,16 +11,16 @@ import Player
 import UIKit
 
 public extension PlayerItem {
-    /// Create a player item from a URN played in the specified environment.
+    /// Create a player item from a URN.
     /// - Parameters:
     ///   - urn: The URN to play.
-    ///   - environment: The environment which the URN is played from.
+    ///   - server: The server which the URN is played from.
     static func urn(
         _ urn: String,
-        environment: Environment = .production,
+        server: Server = .production,
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = []
     ) -> Self {
-        let dataProvider = DataProvider(environment: environment)
+        let dataProvider = DataProvider(server: server)
         let publisher = dataProvider.playableMediaCompositionPublisher(forUrn: urn)
             .tryMap { mediaComposition in
                 let mainChapter = mediaComposition.mainChapter

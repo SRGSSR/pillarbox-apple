@@ -35,10 +35,10 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     }
 
     private func configureDataProvider() {
-        UserDefaults.standard.publisher(for: \.serviceUrl)
+        UserDefaults.standard.publisher(for: \.serverSetting)
             .receiveOnMainThread()
-            .sink { serviceUrl in
-                SRGDataProvider.current = SRGDataProvider(serviceURL: serviceUrl.url)
+            .sink { serverSetting in
+                SRGDataProvider.current = SRGDataProvider(serviceURL: serverSetting.url)
             }
             .store(in: &cancellables)
     }

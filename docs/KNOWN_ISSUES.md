@@ -12,7 +12,7 @@ No workaround is available yet.
 
 ## DRM-protected streams do not play in the simulator
 
-DRM-protected streams do not play in the simulator. This is expected behavior as the required hardware features are not available in the simulator environment.
+DRM-protected streams do not play in the simulator. This is expected behavior as the required hardware features are not available in the simulator.
 
 ### Workaround
 

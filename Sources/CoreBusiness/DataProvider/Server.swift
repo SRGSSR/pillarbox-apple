@@ -6,8 +6,8 @@
 
 import Foundation
 
-/// Environment.
-public enum Environment {
+/// Server.
+public enum Server {
     /// Production.
     case production
     /// State.
