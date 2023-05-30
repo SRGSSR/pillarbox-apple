@@ -4,29 +4,20 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
+import AVFoundation
 
-enum PlaybackSpeed {
-    case desired(speed: Float)
-    case actual(speed: Float, in: ClosedRange<Float>)
-
-    var value: Float {
-        input.clamped(to: range)
+struct PlaybackSpeed {
+    let value: Float
+    let range: ClosedRange<Float>
+    var rate: Float {
+        value.clamped(to: range)
     }
 
-    var range: ClosedRange<Float> {
-        switch self {
-        case .desired:
-            return 1...1
-        case let .actual(_, range):
-            return range
-        }
+    static func desired(speed: Float) -> Self {
+        .init(value: speed, range: 1...1)
     }
 
-    var input: Float {
-        switch self {
-        case let .desired(speed), let .actual(speed, _):
-            return speed
-        }
+    static func actual(speed: Float, in range: ClosedRange<Float>) -> Self {
+        .init(value: speed.clamped(to: range), range: range)
     }
 }
