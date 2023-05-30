@@ -127,4 +127,19 @@ final class SpeedTests: TestCase {
         expect(player.playbackSpeedRange).toEventually(equal(0.1...1))
         expect(player.playbackSpeed).toEventually(equal(1))
     }
+
+    func testEndOfPlaylist() {
+        let item1 = PlayerItem(asset: .simple(url: Stream.shortOnDemand.url))
+        let player = Player(item: item1)
+
+        player.playbackSpeed = 2
+
+        expect(player.currentIndex).toEventually(beNil())
+        expect(player.playbackSpeed).toEventually(equal(1))
+
+        let item2 = PlayerItem(asset: .simple(url: Stream.onDemand.url))
+        player.append(item2)
+
+        expect(player.playbackSpeed).toEventually(equal(2))
+    }
 }
