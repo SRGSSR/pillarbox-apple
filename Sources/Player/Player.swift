@@ -1015,11 +1015,22 @@ extension Player {
     }
 
     func playbackSpeedBoundaryTimePublisher(item: AVPlayerItem) -> AnyPublisher<Void, Never> {
-        item.timeRangePublisher()
+        Publishers.CombineLatest(item.timeRangePublisher(), queuePlayer.seekTimePublisher())
             .weakCapture(queuePlayer)
-            .map { timeRange, queuePlayer in
+            .map { ($0.0, $0.1, $1) }
+            .map { timeRange, seekTime, queuePlayer in
                 let triggerTime = timeRange.end - CMTime(value: 5, timescale: 1)
-                return Publishers.BoundaryTimePublisher(for: queuePlayer, times: [triggerTime])
+                if let seekTime {
+                    if seekTime >= triggerTime {
+                        return Just(()).eraseToAnyPublisher()
+                    }
+                    else {
+                        return Empty().eraseToAnyPublisher()
+                    }
+                }
+                else {
+                    return Publishers.BoundaryTimePublisher(for: queuePlayer, times: [triggerTime])
+                }
             }
             .switchToLatest()
             .prepend(())
