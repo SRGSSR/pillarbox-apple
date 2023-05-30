@@ -115,6 +115,7 @@ final class SpeedTests: TestCase {
     func testSpeedUpdateWhenApproachingLiveEdge() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         player.playbackSpeed = 2
+        player.play()
 
         expect(player.timeRange).toEventuallyNot(equal(.invalid))
 
@@ -133,6 +134,7 @@ final class SpeedTests: TestCase {
         let player = Player(item: item1)
 
         player.playbackSpeed = 2
+        player.play()
 
         expect(player.currentIndex).toEventually(beNil())
         expect(player.playbackSpeed).toEventually(equal(1))
@@ -141,5 +143,13 @@ final class SpeedTests: TestCase {
         player.append(item2)
 
         expect(player.playbackSpeed).toEventually(equal(2))
+    }
+
+    func testApplySpeedShouldNotResumePlayback() {
+        let player = Player(item: .simple(url: Stream.onDemand.url))
+        player.playbackSpeed = 2
+        expect(player.playbackState).toEventually(equal(.paused))
+        player.play()
+        expect(player.queuePlayer.rate).to(equal(2))
     }
 }
