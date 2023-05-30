@@ -54,7 +54,7 @@ public final class Player: ObservableObject, Equatable {
     /// The playback speed of the player.
     public var playbackSpeed: Float {
         get {
-            _playbackSpeed.value
+            _playbackSpeed.rate
         }
         set {
             if let item = queuePlayer.currentItem,
@@ -974,6 +974,13 @@ extension Player {
     }
 
     func configurePlaybackSpeedPublisher() {
+        $_playbackSpeed
+            .weakCapture(queuePlayer)
+            .sink { speed, player in
+                player.rate = speed.rate
+            }
+            .store(in: &cancellables)
+
         queuePlayer.publisher(for: \.currentItem)
             .weakCapture(self)
             .map { item, player -> AnyPublisher<PlaybackSpeed, Never> in
@@ -989,16 +996,16 @@ extension Player {
                     }
                     .map { timeRange, itemDuration, _, player in
                         if let range = Self.playbackSpeedRange(for: timeRange, itemDuration: itemDuration, time: player.time) {
-                            return .actual(speed: player._playbackSpeed.input, in: range)
+                            return .actual(speed: player._playbackSpeed.value, in: range)
                         }
                         else {
-                            return .desired(speed: player._playbackSpeed.input)
+                            return .desired(speed: player._playbackSpeed.value)
                         }
                     }
                     .eraseToAnyPublisher()
                 }
                 else {
-                    return Just(.desired(speed: player._playbackSpeed.input))
+                    return Just(.desired(speed: player._playbackSpeed.value))
                         .eraseToAnyPublisher()
                 }
             }
