@@ -14,27 +14,27 @@ final class PlaybackSpeedTests: TestCase {
         let playbackSpeed = PlaybackSpeed.desired(speed: 1)
         expect(playbackSpeed.value).to(equal(1))
         expect(playbackSpeed.range).to(equal(1...1))
-        expect(playbackSpeed.input).to(equal(1))
+        expect(playbackSpeed.rate).to(equal(1))
     }
 
     func testDesiredOutOfBounds() {
         let playbackSpeed = PlaybackSpeed.desired(speed: 2)
-        expect(playbackSpeed.value).to(equal(1))
+        expect(playbackSpeed.value).to(equal(2))
         expect(playbackSpeed.range).to(equal(1...1))
-        expect(playbackSpeed.input).to(equal(2))
+        expect(playbackSpeed.rate).to(equal(1))
     }
 
     func testActual() {
         let playbackSpeed = PlaybackSpeed.actual(speed: 1, in: 0...1)
         expect(playbackSpeed.value).to(equal(1))
         expect(playbackSpeed.range).to(equal(0...1))
-        expect(playbackSpeed.input).to(equal(1))
+        expect(playbackSpeed.rate).to(equal(1))
     }
 
     func testActualOutOfBounds() {
         let playbackSpeed = PlaybackSpeed.actual(speed: 2, in: 0...1)
         expect(playbackSpeed.value).to(equal(1))
         expect(playbackSpeed.range).to(equal(0...1))
-        expect(playbackSpeed.input).to(equal(2))
+        expect(playbackSpeed.rate).to(equal(1))
     }
 }
