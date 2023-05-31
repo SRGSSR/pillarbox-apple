@@ -975,10 +975,20 @@ extension Player {
 
     func configurePlaybackSpeedPublisher() {
         $_playbackSpeed
+            .removeDuplicates()
             .weakCapture(queuePlayer)
             .sink { speed, player in
                 guard player.rate != 0 else { return }
                 player.rate = speed.rate
+            }
+            .store(in: &cancellables)
+
+        queuePlayer.publisher(for: \.rate)
+            .removeDuplicates()
+            .weakCapture(self)
+            .sink { rate, player in
+                guard rate != 0 else { return }
+                player.playbackSpeed = rate
             }
             .store(in: &cancellables)
 

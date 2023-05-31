@@ -159,4 +159,21 @@ final class SpeedTests: TestCase {
         player.play()
         expect(player.queuePlayer.rate).toEventually(equal(2))
     }
+
+    func testSyncBetweenRateAndSpeed() {
+        let player = Player(item: .simple(url: Stream.onDemand.url))
+        expect(player.streamType).toEventually(equal(.onDemand))
+        player.queuePlayer.rate = 2
+        player.play()
+        expect(player.playbackSpeed).toEventually(equal(2))
+    }
+
+    func testAvoidToSetTheSpeedWhenTheRateIsZero() {
+        let player = Player(item: .simple(url: Stream.onDemand.url))
+        expect(player.streamType).toEventually(equal(.onDemand))
+        player.playbackSpeed = 2
+        player.play()
+        player.queuePlayer.rate = 0
+        expect(player.playbackSpeed).toAlways(equal(2), until: .seconds(2))
+    }
 }

@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-struct PlaybackSpeed {
+struct PlaybackSpeed: Equatable {
     let value: Float
     let range: ClosedRange<Float>
     var rate: Float {
