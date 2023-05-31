@@ -8,13 +8,19 @@ import Player
 import SwiftUI
 
 private struct PlaybackSpeedMenu: View {
-    var speeds: Set<Float> = [0.5, 1, 1.25, 1.5, 2]
+    static let speeds: Set<Float> = [0.5, 1, 1.25, 1.5, 2]
+    private var speeds: [Float] {
+        Self.speeds.filter { speed in
+            player.playbackSpeedRange.contains(speed)
+        }
+        .sorted()
+    }
     @ObservedObject var player: Player
 
     var body: some View {
         Menu {
             Picker(selection: $player.playbackSpeed) {
-                ForEach(Array(speeds), id: \.self) { speed in
+                ForEach(speeds, id: \.self) { speed in
                     Text("\(speed, specifier: "%g×")").tag(speed)
                 }
             } label: {
@@ -34,6 +40,7 @@ struct SettingsMenu: View {
         } label: {
             Image(systemName: "ellipsis.circle")
                 .tint(.white)
+                .frame(width: 45)
         }
     }
 }
