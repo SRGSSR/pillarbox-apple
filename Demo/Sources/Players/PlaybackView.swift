@@ -352,7 +352,7 @@ private struct TimeBar: View {
             routePickerView()
             TimeSlider(player: player, progressTracker: progressTracker)
             LiveLabel(player: player, progressTracker: progressTracker)
-            PlaybackSpeedView(player: player)
+            SettingsMenu(player: player)
             FullScreenButton(layout: $layout)
         }
         .preventsTouchPropagation()
