@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0E6B995C29D43E4200D0276D /* TrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6B995B29D43E4200D0276D /* TrackingView.swift */; };
-		0E84D6162A12753100EB48C5 /* PlaybackSpeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84D6152A12753100EB48C5 /* PlaybackSpeedView.swift */; };
+		0E84D6162A12753100EB48C5 /* SettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84D6152A12753100EB48C5 /* SettingsMenu.swift */; };
 		0EF42CB629AE513400553165 /* SRGDataProviderCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF42CB529AE513400553165 /* SRGDataProviderCombine */; };
 		6F36C62D28910538000DD160 /* CoreBusiness in Frameworks */ = {isa = PBXBuildFile; productRef = 6F36C62C28910538000DD160 /* CoreBusiness */; };
 		6F59E87929CF31E10093E6FB /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84029CF31E10093E6FB /* SearchView.swift */; };
@@ -66,7 +66,7 @@
 
 /* Begin PBXFileReference section */
 		0E6B995B29D43E4200D0276D /* TrackingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingView.swift; sourceTree = "<group>"; };
-		0E84D6152A12753100EB48C5 /* PlaybackSpeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackSpeedView.swift; sourceTree = "<group>"; };
+		0E84D6152A12753100EB48C5 /* SettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMenu.swift; sourceTree = "<group>"; };
 		6F010340289946220021BA76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pillarbox-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F45DB9A2893B773008ACCE6 /* Application.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
@@ -142,14 +142,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0E84D6142A12749E00EB48C5 /* PlaybackSpeed */ = {
-			isa = PBXGroup;
-			children = (
-				0E84D6152A12753100EB48C5 /* PlaybackSpeedView.swift */,
-			);
-			path = PlaybackSpeed;
-			sourceTree = "<group>";
-		};
 		6F05B8CC2887E934005D75E3 = {
 			isa = PBXGroup;
 			children = (
@@ -318,6 +310,7 @@
 				6F59E86729CF31E10093E6FB /* Cell.swift */,
 				6F59E86629CF31E10093E6FB /* CopyButton.swift */,
 				6F59E86829CF31E10093E6FB /* MessageViews.swift */,
+				0E84D6152A12753100EB48C5 /* SettingsMenu.swift */,
 				6FE324B229E4657D007501CF /* View.swift */,
 			);
 			path = Views;
@@ -372,7 +365,6 @@
 				6F59E87629CF31E10093E6FB /* Examples */,
 				6F59E84D29CF31E10093E6FB /* Lists */,
 				6F59E84529CF31E10093E6FB /* Model */,
-				0E84D6142A12749E00EB48C5 /* PlaybackSpeed */,
 				6F59E86929CF31E10093E6FB /* Players */,
 				6F59E83F29CF31E10093E6FB /* Search */,
 				6F59E85129CF31E10093E6FB /* Settings */,
@@ -526,7 +518,7 @@
 				6F59E88329CF31E20093E6FB /* MediaDescription.swift in Sources */,
 				6F59E8A429CF31E20093E6FB /* ExamplesViewModel.swift in Sources */,
 				6F59E89829CF31E20093E6FB /* PlayerConfiguration.swift in Sources */,
-				0E84D6162A12753100EB48C5 /* PlaybackSpeedView.swift in Sources */,
+				0E84D6162A12753100EB48C5 /* SettingsMenu.swift in Sources */,
 				6F59E88B29CF31E20093E6FB /* PlaylistViewModel.swift in Sources */,
 				6F59E87F29CF31E10093E6FB /* Template.swift in Sources */,
 				6FCB9DDE29E024E900961B69 /* BlurredView.swift in Sources */,
