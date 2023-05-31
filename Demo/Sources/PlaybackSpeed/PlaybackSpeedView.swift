@@ -41,7 +41,7 @@ private struct PlaybackSpeedButton: View {
             if isSelected {
                 Image(systemName: "checkmark")
             }
-            Text(String(format: "%gx", speed))
+            Text(String(format: "%g×", speed))
         }
     }
 }
