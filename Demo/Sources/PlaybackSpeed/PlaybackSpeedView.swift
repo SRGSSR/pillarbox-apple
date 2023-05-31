@@ -7,72 +7,33 @@
 import Player
 import SwiftUI
 
-private struct SettingsMenuView<Content: View>: View {
-    let content: () -> Content
-
+struct SettingsMenu: View {
+    @ObservedObject var player: Player
     var body: some View {
-        Menu(content: content) {
+        Menu {
+            Menu {
+                Picker(selection: $player.playbackSpeed) {
+                    Text("0.5×").tag(Float(0.5))
+                    Text("1×").tag(Float(1))
+                    Text("1.25×").tag(Float(1.25))
+                    Text("1.5×").tag(Float(1.5))
+                    Text("2×").tag(Float(2))
+                } label: {
+                    Text("Playback Speed")
+                }
+            } label: {
+                Label("Playback Speed", systemImage: "speedometer")
+            }
+        } label: {
             Image(systemName: "ellipsis.circle")
                 .tint(.white)
         }
     }
 }
 
-private struct PlaybackSpeedMenuView<Content: View>: View {
-    let content: () -> Content
-
-    var body: some View {
-        Menu(content: content) {
-            HStack {
-                Text("Playback Speed")
-                Image(systemName: "speedometer")
-            }
-        }
-    }
-}
-
-private struct PlaybackSpeedButton: View {
-    let speed: Double
-    let isSelected: Bool
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            if isSelected {
-                Image(systemName: "checkmark")
-            }
-            Text(String(format: "%g×", speed))
-        }
-    }
-}
-
-struct PlaybackSpeedView: View {
-    @StateObject private var viewModel = PlaybackSpeedViewModel()
-    @ObservedObject var player: Player
-
-    var body: some View {
-        SettingsMenuView {
-            PlaybackSpeedMenuView {
-                ForEach(viewModel.playbackSpeeds.reversed(), id: \.self) { speed in
-                    PlaybackSpeedButton(speed: speed, isSelected: viewModel.playbackSpeed == speed) {
-                        viewModel.updateSpeed(speed)
-                    }
-                }
-            }
-        }
-        .frame(width: 45, height: 45)
-        .onAppear {
-            viewModel.bind(player)
-        }
-        .onChange(of: player) { newValue in
-            viewModel.bind(newValue)
-        }
-    }
-}
-
-struct PlaybackSpeedView_Previews: PreviewProvider {
+struct SettingsMenu_Previews: PreviewProvider {
     static var previews: some View {
-        PlaybackSpeedView(player: Player())
+        SettingsMenu(player: Player())
             .background(.black)
     }
 }
