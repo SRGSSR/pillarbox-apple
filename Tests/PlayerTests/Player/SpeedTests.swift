@@ -130,8 +130,8 @@ final class SpeedTests: TestCase {
     }
 
     func testEndOfPlaylist() {
-        let item1 = PlayerItem(asset: .simple(url: Stream.shortOnDemand.url))
-        let player = Player(item: item1)
+        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
+        expect(player.streamType).toEventually(equal(.onDemand))
 
         player.playbackSpeed = 2
         player.play()
@@ -139,8 +139,7 @@ final class SpeedTests: TestCase {
         expect(player.currentIndex).toEventually(beNil())
         expect(player.playbackSpeed).toEventually(equal(1))
 
-        let item2 = PlayerItem(asset: .simple(url: Stream.onDemand.url))
-        player.append(item2)
+        player.append(.simple(url: Stream.onDemand.url))
 
         expect(player.playbackSpeed).toEventually(equal(2))
     }
@@ -155,6 +154,7 @@ final class SpeedTests: TestCase {
 
     func testPlayMustNotResetSpeedBeforeStart() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
+        expect(player.streamType).toEventually(equal(.onDemand))
         player.playbackSpeed = 2
         player.play()
         expect(player.queuePlayer.rate).toEventually(equal(2))
