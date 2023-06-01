@@ -966,7 +966,7 @@ extension Player {
             return nil
         case .live:
             return 1...1
-        case .dvr where time > timeRange.end - CMTime(value: 5, timescale: 1):
+        case .dvr where time > timeRange.end - CMTime(value: 12, timescale: 1):
             return 0.1...1
         default:
             return 0.1...2
@@ -1029,7 +1029,7 @@ extension Player {
         item.timeRangePublisher()
             .weakCapture(queuePlayer)
             .map { timeRange, queuePlayer in
-                let triggerTime = timeRange.end - CMTime(value: 5, timescale: 1)
+                let triggerTime = timeRange.end - CMTime(value: 12, timescale: 1)
                 return Publishers.BoundaryTimePublisher(for: queuePlayer, times: [triggerTime])
             }
             .switchToLatest()
