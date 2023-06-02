@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Core
 import Player
 import SwiftUI
 
@@ -19,7 +20,7 @@ private struct PlaybackSpeedMenu: View {
 
     var body: some View {
         Menu {
-            Picker(selection: $player.playbackSpeed) {
+            Picker(selection: playbackSpeed) {
                 ForEach(speeds, id: \.self) { speed in
                     Text("\(speed, specifier: "%g×")").tag(speed)
                 }
@@ -28,6 +29,14 @@ private struct PlaybackSpeedMenu: View {
             }
         } label: {
             Label("Playback Speed", systemImage: "speedometer")
+        }
+    }
+
+    private var playbackSpeed: Binding<Float> {
+        .init {
+            player.effectivePlaybackSpeed
+        } set: { newValue in
+            player.setDesiredPlaybackSpeed(newValue)
         }
     }
 }

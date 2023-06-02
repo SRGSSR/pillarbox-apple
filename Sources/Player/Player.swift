@@ -51,28 +51,6 @@ public final class Player: ObservableObject, Equatable {
     @Published private var storedItems: Deque<PlayerItem>
     @Published private var _playbackSpeed: PlaybackSpeed = .desired(speed: 1)
 
-    /// The playback speed of the player. Use to set the desired playback speed (might not be applicable or applied
-    /// immediately) or to get the current applied speed.
-    public var playbackSpeed: Float {
-        get {
-            _playbackSpeed.rate
-        }
-        set {
-            if let item = queuePlayer.currentItem,
-               let range = Self.playbackSpeedRange(for: item.timeRange, itemDuration: item.duration, time: time) {
-                _playbackSpeed = .actual(speed: newValue, in: range)
-            }
-            else {
-                _playbackSpeed = .desired(speed: newValue)
-            }
-        }
-    }
-
-    /// The playback speed range of the player.
-    public var playbackSpeedRange: ClosedRange<Float> {
-        _playbackSpeed.range
-    }
-
     /// The type of stream currently played.
     public var streamType: StreamType {
         StreamType(for: timeRange, itemDuration: itemDuration)
@@ -322,6 +300,31 @@ public extension Player {
         }
         else {
             completion(true)
+        }
+    }
+}
+
+public extension Player {
+    /// The currently applicable playback speed.
+    var effectivePlaybackSpeed: Float {
+        _playbackSpeed.rate
+    }
+
+    /// The currently allowed playback speed range.
+    var playbackSpeedRange: ClosedRange<Float> {
+        _playbackSpeed.range
+    }
+
+    /// Set the desired playback speed. This value might not be applied immediately or might not be applicable at all,
+    /// check `effectivePlaybackSpeed` for the actually applied speed.
+    /// - Parameter playbackSpeed: The playback speed.
+    func setDesiredPlaybackSpeed(_ playbackSpeed: Float) {
+        if let item = queuePlayer.currentItem,
+           let range = Self.playbackSpeedRange(for: item.timeRange, itemDuration: item.duration, time: time) {
+            _playbackSpeed = .actual(speed: playbackSpeed, in: range)
+        }
+        else {
+            _playbackSpeed = .desired(speed: playbackSpeed)
         }
     }
 }
@@ -989,7 +992,7 @@ extension Player {
             .weakCapture(self)
             .sink { rate, player in
                 guard rate != 0 else { return }
-                player.playbackSpeed = rate
+                player.setDesiredPlaybackSpeed(rate)
             }
             .store(in: &cancellables)
 
