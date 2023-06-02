@@ -18,6 +18,13 @@ final class SpeedTests: TestCase {
         expect(player.playbackSpeedRange).toAlways(equal(1...1), until: .seconds(2))
     }
 
+    func testNoSpeedUpdateWhenEmpty() {
+        let player = Player()
+        player.playbackSpeed = 2
+        expect(player.playbackSpeed).toAlways(equal(1), until: .seconds(2))
+        expect(player.playbackSpeedRange).toAlways(equal(1...1), until: .seconds(2))
+    }
+
     func testOnDemand() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         player.playbackSpeed = 2
@@ -128,7 +135,7 @@ final class SpeedTests: TestCase {
         expect(player.playbackSpeedRange).toEventually(equal(1...1))
     }
 
-    func testAppendingItemMustStartAtCurrentSpeed() {
+    func testItemAppendMustStartAtCurrentSpeed() {
         let player = Player()
         player.playbackSpeed = 2
         player.append(.simple(url: Stream.onDemand.url))
