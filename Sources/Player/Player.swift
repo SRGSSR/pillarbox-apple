@@ -51,7 +51,8 @@ public final class Player: ObservableObject, Equatable {
     @Published private var storedItems: Deque<PlayerItem>
     @Published private var _playbackSpeed: PlaybackSpeed = .desired(speed: 1)
 
-    /// The playback speed of the player.
+    /// The playback speed of the player. Use to set the desired playback speed (might not be applicable or applied
+    /// immediately) or to get the current applied speed.
     public var playbackSpeed: Float {
         get {
             _playbackSpeed.rate
