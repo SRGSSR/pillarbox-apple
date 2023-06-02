@@ -324,7 +324,7 @@ public extension Player {
             return nil
         case .live:
             return 1...1
-        case .dvr where time > timeRange.end - CMTime(value: 12, timescale: 1):
+        case .dvr where time > timeRange.end - CMTime(value: 5, timescale: 1):
             return 0.1...1
         default:
             return 0.1...2
@@ -343,34 +343,42 @@ public extension Player {
             desiredPlaybackSpeedPublisher,
             supportedPlaybackSpeedPublisher()
         )
-        .withPrevious()
-        .compactMap { playbackSpeed in
-            playbackSpeed.previous?.updated(with: playbackSpeed.current)
+        .scan(.desired(speed: 1)) { initial, next in
+            initial.updated(with: next)
         }
-        .prepend(.desired(speed: 1))
         .removeDuplicates()
         .receiveOnMainThread()
         .assign(to: &$_playbackSpeed)
+
+        $_playbackSpeed
+            .sink { [queuePlayer] speed in
+                guard queuePlayer.rate != 0 else { return }
+                queuePlayer.rate = speed.rate
+            }
+            .store(in: &cancellables)
     }
 
     private func supportedPlaybackSpeedPublisher() -> AnyPublisher<PlaybackSpeed, Never> {
         queuePlayer.publisher(for: \.currentItem)
             .compactMap { [weak self] item -> AnyPublisher<PlaybackSpeed, Never>? in
                 guard let self, let item else { return nil }
-                return Publishers.CombineLatest3(
+                return Publishers.CombineLatest4(
                     item.timeRangePublisher(),
                     item.durationPublisher(),
-                    periodicTimePublisher(forInterval: CMTime(value: 1, timescale: 10))
+                    periodicTimePublisher(forInterval: CMTime(value: 1, timescale: 10)),
+                    self.queuePlayer.publisher(for: \.rate)
+                        .filter { $0 != 0 }
                 )
-                .compactMap { [weak self] timeRange, itemDuration, time -> PlaybackSpeed? in
-                    guard let self, let range = Self.playbackSpeedRange(for: timeRange, itemDuration: itemDuration, time: time) else {
+                .compactMap { timeRange, itemDuration, time, rate -> PlaybackSpeed? in
+                    guard let range = Self.playbackSpeedRange(for: timeRange, itemDuration: itemDuration, time: time) else {
                         return nil
                     }
-                    return .actual(speed: queuePlayer.rate, in: range)
+                    return .actual(speed: rate, in: range)
                 }
                 .eraseToAnyPublisher()
             }
             .switchToLatest()
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 }

@@ -28,8 +28,13 @@ struct PlaybackSpeed: Equatable {
     }
 
     func updated(with other: Self) -> Self {
-        if other.range.isEmpty {
-            return other
+        if other.range == 1...1 {
+            if range == 1...1 {
+                return other
+            }
+            else {
+                return .actual(speed: other.value, in: range)
+            }
         }
         else {
             return .actual(speed: value, in: other.range)
