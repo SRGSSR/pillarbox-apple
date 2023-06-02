@@ -6,12 +6,11 @@
 
 @testable import Player
 
-import Circumspect
 import Nimble
 import Streams
 import XCTest
 
-final class SpeedTests: TestCase {
+final class PlaybackSpeedTests: TestCase {
     func testEmpty() {
         let player = Player()
         expect(player.effectivePlaybackSpeed).toAlways(equal(1), until: .seconds(2))

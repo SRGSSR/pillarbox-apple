@@ -6,7 +6,16 @@
 
 import AVFoundation
 
+enum PlaybackSpeedUpdate: Equatable {
+    case desired(speed: Float)
+    case restricted(range: ClosedRange<Float>)
+}
+
 struct PlaybackSpeed: Equatable {
+    static var indefinite: Self {
+        .init(value: 1, range: 1...1)
+    }
+
     let value: Float
     let range: ClosedRange<Float>
 
@@ -14,30 +23,28 @@ struct PlaybackSpeed: Equatable {
         value.clamped(to: range)
     }
 
-    private init(value: Float, range: ClosedRange<Float>) {
+    init(value: Float, range: ClosedRange<Float>) {
         self.value = value
         self.range = range
     }
 
-    static func desired(speed: Float) -> Self {
-        .init(value: speed, range: 1...1)
-    }
-
-    static func actual(speed: Float, in range: ClosedRange<Float>) -> Self {
-        .init(value: speed.clamped(to: range), range: range)
-    }
-
-    func updated(with other: Self) -> Self {
-        if other.range == 1...1 {
-            if range == 1...1 {
-                return other
-            }
-            else {
-                return .actual(speed: other.value, in: range)
+    func updated(with update: PlaybackSpeedUpdate) -> Self {
+        if range == 1...1 {
+            switch update {
+            case let .desired(speed):
+                return .init(value: speed, range: range)
+            case let .restricted(range):
+                guard range != 1...1 else { return self }
+                return .init(value: value.clamped(to: range), range: range)
             }
         }
         else {
-            return .actual(speed: value, in: other.range)
+            switch update {
+            case let .desired(speed):
+                return .init(value: speed.clamped(to: range), range: range)
+            case let .restricted(range):
+                return .init(value: value.clamped(to: range), range: range)
+            }
         }
     }
 }

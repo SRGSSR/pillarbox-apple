@@ -49,9 +49,9 @@ public final class Player: ObservableObject, Equatable {
     @Published private var currentTracker: CurrentTracker?
     @Published private var currentItem: CurrentItem = .good(nil)
     @Published private var storedItems: Deque<PlayerItem>
-    @Published private var _playbackSpeed: PlaybackSpeed = .desired(speed: 1)
+    @Published private var _playbackSpeed: PlaybackSpeed = .indefinite
 
-    private var desiredPlaybackSpeedPublisher = PassthroughSubject<PlaybackSpeed, Never>()
+    private var desiredPlaybackSpeedPublisher = PassthroughSubject<Float, Never>()
 
     /// The type of stream currently played.
     public var streamType: StreamType {
@@ -317,12 +317,10 @@ public extension Player {
         _playbackSpeed.range
     }
 
-    private static func playbackSpeedRange(for timeRange: CMTimeRange, itemDuration: CMTime, time: CMTime) -> ClosedRange<Float>? {
+    private static func playbackSpeedRange(for timeRange: CMTimeRange, itemDuration: CMTime, time: CMTime) -> ClosedRange<Float> {
         let streamType = StreamType(for: timeRange, itemDuration: itemDuration)
         switch streamType {
-        case .unknown:
-            return nil
-        case .live:
+        case .live, .unknown:
             return 1...1
         case .dvr where time > timeRange.end - CMTime(value: 5, timescale: 1):
             return 0.1...1
@@ -335,18 +333,22 @@ public extension Player {
     /// check `effectivePlaybackSpeed` for the actually applied speed.
     /// - Parameter playbackSpeed: The playback speed.
     func setDesiredPlaybackSpeed(_ playbackSpeed: Float) {
-        desiredPlaybackSpeedPublisher.send(.desired(speed: playbackSpeed))
+        desiredPlaybackSpeedPublisher.send(playbackSpeed)
     }
 
     private func configurePlaybackSpeedPublisher() {
+        // TODO: Merge changes observed from queue player rate changes
         Publishers.Merge(
-            desiredPlaybackSpeedPublisher,
+            desiredPlaybackSpeedUpdatePublisher(),
             supportedPlaybackSpeedPublisher()
         )
-        .scan(.desired(speed: 1)) { initial, next in
-            initial.updated(with: next)
+        .removeDuplicates()
+        .print("--> upd")
+        .scan(.indefinite) { speed, update in
+            speed.updated(with: update)
         }
         .removeDuplicates()
+        .print("--> spd")
         .receiveOnMainThread()
         .assign(to: &$_playbackSpeed)
 
@@ -358,27 +360,34 @@ public extension Player {
             .store(in: &cancellables)
     }
 
-    private func supportedPlaybackSpeedPublisher() -> AnyPublisher<PlaybackSpeed, Never> {
+    private func desiredPlaybackSpeedUpdatePublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
+        desiredPlaybackSpeedPublisher
+            .map { .desired(speed: $0) }
+            .eraseToAnyPublisher()
+    }
+
+    private func supportedPlaybackSpeedPublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
         queuePlayer.publisher(for: \.currentItem)
-            .compactMap { [weak self] item -> AnyPublisher<PlaybackSpeed, Never>? in
-                guard let self, let item else { return nil }
-                return Publishers.CombineLatest4(
-                    item.timeRangePublisher(),
-                    item.durationPublisher(),
-                    periodicTimePublisher(forInterval: CMTime(value: 1, timescale: 10)),
-                    self.queuePlayer.publisher(for: \.rate)
-                        .filter { $0 != 0 }
-                )
-                .compactMap { timeRange, itemDuration, time, rate -> PlaybackSpeed? in
-                    guard let range = Self.playbackSpeedRange(for: timeRange, itemDuration: itemDuration, time: time) else {
-                        return nil
+            .weakCapture(self)
+            .map { item, player -> AnyPublisher<PlaybackSpeedUpdate, Never> in
+                if let item {
+                    return Publishers.CombineLatest3(
+                        item.timeRangePublisher(),
+                        item.durationPublisher(),
+                        player.periodicTimePublisher(forInterval: CMTime(value: 1, timescale: 1))
+                    )
+                    .map { timeRange, itemDuration, time in
+                        let range = Self.playbackSpeedRange(for: timeRange, itemDuration: itemDuration, time: time)
+                        return .restricted(range: range)
                     }
-                    return .actual(speed: rate, in: range)
+                    .eraseToAnyPublisher()
                 }
-                .eraseToAnyPublisher()
+                else {
+                    return Just(.restricted(range: 1...1))
+                        .eraseToAnyPublisher()
+                }
             }
             .switchToLatest()
-            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 }
