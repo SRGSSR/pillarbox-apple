@@ -9,8 +9,14 @@ import AVFoundation
 struct PlaybackSpeed: Equatable {
     let value: Float
     let range: ClosedRange<Float>
+
     var rate: Float {
         value.clamped(to: range)
+    }
+
+    private init(value: Float, range: ClosedRange<Float>) {
+        self.value = value
+        self.range = range
     }
 
     static func desired(speed: Float) -> Self {
@@ -19,5 +25,14 @@ struct PlaybackSpeed: Equatable {
 
     static func actual(speed: Float, in range: ClosedRange<Float>) -> Self {
         .init(value: speed.clamped(to: range), range: range)
+    }
+
+    func updated(with other: Self) -> Self {
+        if other.range.isEmpty {
+            return other
+        }
+        else {
+            return .actual(speed: value, in: other.range)
+        }
     }
 }

@@ -144,7 +144,7 @@ final class SpeedTests: TestCase {
 
     func testInitialSpeedMustSetRate() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
-        player.playbackSpeed = 2
+        player.setDesiredPlaybackSpeed(2)
         player.play()
         expect(player.queuePlayer.rate).toEventually(equal(2))
     }
@@ -154,7 +154,7 @@ final class SpeedTests: TestCase {
         player.play()
         expect(player.playbackState).toEventually(equal(.playing))
 
-        player.playbackSpeed = 2
+        player.setDesiredPlaybackSpeed(2)
         expect(player.queuePlayer.rate).toEventually(equal(2))
     }
 
