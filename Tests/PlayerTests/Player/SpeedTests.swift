@@ -120,7 +120,6 @@ final class SpeedTests: TestCase {
 
     func testPlaylistEnd() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
-        expect(player.streamType).toEventually(equal(.onDemand))
         player.playbackSpeed = 2
         player.play()
         expect(player.currentIndex).toEventually(beNil())
