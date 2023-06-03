@@ -339,20 +339,13 @@ public extension Player {
     }
 
     private func configurePlaybackSpeedPublisher() {
-        // TODO: Merge changes observed from queue player rate changes
-        Publishers.Merge(
-            desiredPlaybackSpeedUpdatePublisher(),
-            supportedPlaybackSpeedPublisher()
-        )
-        .removeDuplicates()
-        .print("--> upd")
-        .scan(.indefinite) { speed, update in
-            speed.updated(with: update)
-        }
-        .removeDuplicates()
-        .print("--> spd")
-        .receiveOnMainThread()
-        .assign(to: &$_playbackSpeed)
+        playbackSpeedUpdatePublisher()
+            .scan(.indefinite) { speed, update in
+                speed.updated(with: update)
+            }
+            .removeDuplicates()
+            .receiveOnMainThread()
+            .assign(to: &$_playbackSpeed)
 
         $_playbackSpeed
             .sink { [queuePlayer] speed in
@@ -362,8 +355,18 @@ public extension Player {
             .store(in: &cancellables)
     }
 
+    private func playbackSpeedUpdatePublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
+        Publishers.Merge(
+            desiredPlaybackSpeedUpdatePublisher(),
+            supportedPlaybackSpeedPublisher()
+        )
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
+
     private func desiredPlaybackSpeedUpdatePublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
         desiredPlaybackSpeedPublisher
+            .removeDuplicates()
             .map { .desired(speed: $0) }
             .eraseToAnyPublisher()
     }
@@ -390,6 +393,7 @@ public extension Player {
                 }
             }
             .switchToLatest()
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 }
