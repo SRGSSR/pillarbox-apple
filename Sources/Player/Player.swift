@@ -317,13 +317,15 @@ public extension Player {
         _playbackSpeed.range
     }
 
-    private static func playbackSpeedRange(for timeRange: CMTimeRange, itemDuration: CMTime, time: CMTime) -> ClosedRange<Float> {
+    private static func playbackSpeedRange(for timeRange: CMTimeRange, itemDuration: CMTime, time: CMTime) -> ClosedRange<Float>? {
         let streamType = StreamType(for: timeRange, itemDuration: itemDuration)
         switch streamType {
-        case .live, .unknown:
+        case .live:
             return 1...1
         case .dvr where time > timeRange.end - CMTime(value: 5, timescale: 1):
             return 0.1...1
+        case .unknown:
+            return nil
         default:
             return 0.1...2
         }
@@ -376,8 +378,8 @@ public extension Player {
                         item.durationPublisher(),
                         player.periodicTimePublisher(forInterval: CMTime(value: 1, timescale: 1))
                     )
-                    .map { timeRange, itemDuration, time in
-                        let range = Self.playbackSpeedRange(for: timeRange, itemDuration: itemDuration, time: time)
+                    .compactMap { timeRange, itemDuration, time in
+                        guard let range = Self.playbackSpeedRange(for: timeRange, itemDuration: itemDuration, time: time) else { return nil }
                         return .restricted(range: range)
                     }
                     .eraseToAnyPublisher()
