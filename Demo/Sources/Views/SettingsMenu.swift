@@ -10,16 +10,9 @@ import SwiftUI
 
 @available(tvOS, unavailable)
 private struct PlaybackSpeedMenu: View {
-    static let speeds: Set<Float> = [0.5, 1, 1.25, 1.5, 2]
+    private static let speeds: Set<Float> = [0.5, 1, 1.25, 1.5, 2]
 
     @ObservedObject var player: Player
-
-    private var speeds: [Float] {
-        Self.speeds.filter { speed in
-            player.playbackSpeedRange.contains(speed)
-        }
-        .sorted()
-    }
 
     var body: some View {
         Menu {
@@ -33,6 +26,13 @@ private struct PlaybackSpeedMenu: View {
         } label: {
             Label("Playback Speed", systemImage: "speedometer")
         }
+    }
+
+    private var speeds: [Float] {
+        Self.speeds.filter { speed in
+            player.playbackSpeedRange.contains(speed)
+        }
+        .sorted()
     }
 
     private var playbackSpeed: Binding<Float> {
