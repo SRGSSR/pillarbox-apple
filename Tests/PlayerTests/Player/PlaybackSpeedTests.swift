@@ -172,19 +172,10 @@ final class PlaybackSpeedTests: TestCase {
         expect(player.effectivePlaybackSpeed).toEventually(equal(2))
     }
 
-    func testRateUpdateMustUpdateSpeed() {
+    func testRateChangeMustNotUpdatePlaybackSpeedOutsideAVPlayerViewController() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
         player.queuePlayer.rate = 2
-        expect(player.effectivePlaybackSpeed).toEventually(equal(2))
-    }
-
-    func testRateUpdateToZeroMustNotUpdateSpeed() {
-        let player = Player(item: .simple(url: Stream.onDemand.url))
-        expect(player.streamType).toEventually(equal(.onDemand))
-        player.setDesiredPlaybackSpeed(2)
-        player.play()
-        player.queuePlayer.rate = 0
-        expect(player.effectivePlaybackSpeed).toAlways(equal(2), until: .seconds(2))
+        expect(player.effectivePlaybackSpeed).toAlways(equal(1), until: .seconds(2))
     }
 }

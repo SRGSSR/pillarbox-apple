@@ -356,9 +356,10 @@ public extension Player {
     }
 
     private func playbackSpeedUpdatePublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
-        Publishers.Merge(
+        Publishers.Merge3(
             desiredPlaybackSpeedUpdatePublisher(),
-            supportedPlaybackSpeedPublisher()
+            supportedPlaybackSpeedPublisher(),
+            avPlayerViewControllerPlaybackSpeedUpdatePublisher()
         )
         .removeDuplicates()
         .eraseToAnyPublisher()
@@ -366,6 +367,19 @@ public extension Player {
 
     private func desiredPlaybackSpeedUpdatePublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
         desiredPlaybackSpeedPublisher
+            .removeDuplicates()
+            .map { .desired(speed: $0) }
+            .eraseToAnyPublisher()
+    }
+
+    // Publish speed updates triggered from `AVPlayerViewController`.
+    private func avPlayerViewControllerPlaybackSpeedUpdatePublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
+        queuePlayer.publisher(for: \.rate)
+            .filter { rate in
+                rate != 0 && Thread.callStackSymbols.reversed().contains { symbol in
+                    symbol.contains("AVPlayerController")
+                }
+            }
             .removeDuplicates()
             .map { .desired(speed: $0) }
             .eraseToAnyPublisher()
