@@ -10,13 +10,15 @@ import SwiftUI
 
 private struct PlaybackSpeedMenu: View {
     static let speeds: Set<Float> = [0.5, 1, 1.25, 1.5, 2]
+
+    @ObservedObject var player: Player
+
     private var speeds: [Float] {
         Self.speeds.filter { speed in
             player.playbackSpeedRange.contains(speed)
         }
         .sorted()
     }
-    @ObservedObject var player: Player
 
     var body: some View {
         Menu {
