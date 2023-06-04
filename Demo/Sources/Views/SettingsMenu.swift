@@ -8,6 +8,7 @@ import Core
 import Player
 import SwiftUI
 
+@available(tvOS, unavailable)
 private struct PlaybackSpeedMenu: View {
     static let speeds: Set<Float> = [0.5, 1, 1.25, 1.5, 2]
 
@@ -43,6 +44,7 @@ private struct PlaybackSpeedMenu: View {
     }
 }
 
+@available(tvOS, unavailable)
 struct SettingsMenu: View {
     @ObservedObject var player: Player
     var body: some View {
@@ -56,6 +58,7 @@ struct SettingsMenu: View {
     }
 }
 
+@available(tvOS, unavailable)
 struct SettingsMenu_Previews: PreviewProvider {
     static var previews: some View {
         SettingsMenu(player: Player())
