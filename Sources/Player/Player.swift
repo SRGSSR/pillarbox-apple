@@ -378,7 +378,7 @@ public extension Player {
 #if os(iOS)
         queuePlayer.publisher(for: \.rate)
             .filter { rate in
-                rate != 0 && Thread.callStackSymbols.reversed().contains { symbol in
+                rate != 0 && Thread.callStackSymbols.contains { symbol in
                     symbol.contains("AVPlayerController")
                 }
             }
