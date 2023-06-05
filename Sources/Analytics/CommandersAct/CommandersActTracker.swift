@@ -33,6 +33,18 @@ public final class CommandersActTracker: PlayerItemTracker {
                 self?.streamingAnalytics?.notify(isBuffering: isBuffering)
             }
             .store(in: &cancellables)
+
+        player.objectWillChange
+            .receive(on: DispatchQueue.main)
+            .map { _ in () }
+            .prepend(())
+            .weakCapture(player)
+            .map { $1.effectivePlaybackSpeed }
+            .removeDuplicates()
+            .sink { [weak self] speed in
+                self?.streamingAnalytics?.notifyPlaybackSpeed(speed)
+            }
+            .store(in: &cancellables)
     }
 
     // swiftlint:disable:next cyclomatic_complexity

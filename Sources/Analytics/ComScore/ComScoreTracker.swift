@@ -42,9 +42,7 @@ public final class ComScoreTracker: PlayerItemTracker {
             .map { _ in () }
             .prepend(())
             .weakCapture(player)
-            .map { _, player in
-                player.effectivePlaybackSpeed
-            }
+            .map { $1.effectivePlaybackSpeed }
             .removeDuplicates()
             .sink { [weak self] speed in
                 self?.notifyPlaybackSpeedChange(speed: speed)
