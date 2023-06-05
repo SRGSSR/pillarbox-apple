@@ -47,6 +47,7 @@ final class CommandersActStreamingAnalytics {
     }
 
     func notifyPlaybackSpeed(_ playbackSpeed: Float) {
+        updateTimeTracking(eventData: eventData())
         self.playbackSpeed = playbackSpeed
     }
 

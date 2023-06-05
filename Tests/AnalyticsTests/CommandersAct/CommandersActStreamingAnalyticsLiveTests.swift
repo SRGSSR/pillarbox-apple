@@ -65,6 +65,22 @@ final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {
         }
     }
 
+    func testPositionWhenDestroyedAfterPlayAtSeveralNonStandardPlaybackSpeeds() {
+        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .live) { .empty }
+        wait(for: .seconds(1))
+        analytics?.notifyPlaybackSpeed(2)
+        wait(for: .seconds(1))
+
+        expectAtLeastEvents(
+            .stop { labels in
+                expect(labels.media_position).to(equal(2))
+                expect(labels.media_timeshift).to(equal(0))
+            }
+        ) {
+            analytics = nil
+        }
+    }
+
     func testPositionWhenDestroyedDuringBuffering() {
         var analytics: CommandersActStreamingAnalytics? = .init(streamType: .live) { .empty }
 
