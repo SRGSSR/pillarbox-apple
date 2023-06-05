@@ -77,3 +77,19 @@ Pillarbox can be used in iPad applications run on Silicon Macs (_Designed for iP
 ### Workaround
 
 No workaround is available yet.
+
+## Playback of a livestream in a playlist might fail if the previous item was played at a speed > 1
+
+When chaining an on-demand stream played at a speed > 1 to a livestream (without DVR) in a playlist, livestream playback might fail with a Core Media error. If there is an item after the livestream the livestream item will simply be skipped, otherwise the player will end in a failed state.
+
+### Workaround
+
+No workaround is available yet.
+
+## The system player UI does not reflect playback automatic speed changes
+
+When using `SystemVideoView ` the displayed playback speed is not correctly updated if automatically changed by the player, most notably when approaching the live edge of a DVR stream.
+
+### Workaround
+
+No workaround is available yet.
