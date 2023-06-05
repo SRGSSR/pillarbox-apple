@@ -372,25 +372,6 @@ public extension Player {
             .eraseToAnyPublisher()
     }
 
-    // Publish speed updates triggered from `AVPlayerViewController`. Not necessary on tvOS since the standard UI
-    // does not provide speed controls.
-    private func avPlayerViewControllerPlaybackSpeedUpdatePublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
-#if os(iOS)
-        queuePlayer.publisher(for: \.rate)
-            .filter { rate in
-                rate != 0 && Thread.callStackSymbols.contains { symbol in
-                    symbol.contains("AVPlayerController")
-                }
-            }
-            .removeDuplicates()
-            .map { .value($0) }
-            .eraseToAnyPublisher()
-#else
-        Empty(completeImmediately: true)
-            .eraseToAnyPublisher()
-#endif
-    }
-
     private func supportedPlaybackSpeedPublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
         queuePlayer.publisher(for: \.currentItem)
             .weakCapture(self)
@@ -415,6 +396,25 @@ public extension Player {
             .switchToLatest()
             .removeDuplicates()
             .eraseToAnyPublisher()
+    }
+
+    // Publish speed updates triggered from `AVPlayerViewController`. Not necessary on tvOS since the standard UI
+    // does not provide speed controls.
+    private func avPlayerViewControllerPlaybackSpeedUpdatePublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
+#if os(iOS)
+        queuePlayer.publisher(for: \.rate)
+            .filter { rate in
+                rate != 0 && Thread.callStackSymbols.contains { symbol in
+                    symbol.contains("AVPlayerController")
+                }
+            }
+            .removeDuplicates()
+            .map { .value($0) }
+            .eraseToAnyPublisher()
+#else
+        Empty(completeImmediately: true)
+            .eraseToAnyPublisher()
+#endif
     }
 }
 

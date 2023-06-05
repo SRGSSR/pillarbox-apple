@@ -47,6 +47,7 @@ private struct PlaybackSpeedMenu: View {
 @available(tvOS, unavailable)
 struct SettingsMenu: View {
     @ObservedObject var player: Player
+
     var body: some View {
         Menu {
             PlaybackSpeedMenu(player: player)
