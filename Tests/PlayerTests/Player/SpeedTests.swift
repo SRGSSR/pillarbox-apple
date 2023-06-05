@@ -6,6 +6,7 @@
 
 @testable import Player
 
+import Circumspect
 import Nimble
 import Streams
 import XCTest
@@ -179,5 +180,18 @@ final class SpeedTests: TestCase {
         expect(player.streamType).toEventually(equal(.onDemand))
         player.queuePlayer.rate = 2
         expect(player.effectivePlaybackSpeed).toAlways(equal(1), until: .seconds(2))
+    }
+
+    func testNoDesiredUpdateIsIgnored() {
+        let player = Player()
+        expectAtLeastEqualPublished(values: [
+            .value(1),
+            .value(2),
+            .value(2)
+        ], from: player.desiredPlaybackSpeedUpdatePublisher()) {
+            player.setDesiredPlaybackSpeed(1)
+            player.setDesiredPlaybackSpeed(2)
+            player.setDesiredPlaybackSpeed(2)
+        }
     }
 }

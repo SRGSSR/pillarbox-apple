@@ -67,9 +67,8 @@ extension Player {
         .eraseToAnyPublisher()
     }
 
-    private func desiredPlaybackSpeedUpdatePublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
+    func desiredPlaybackSpeedUpdatePublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
         desiredPlaybackSpeedPublisher
-            .removeDuplicates()
             .map { .value($0) }
             .eraseToAnyPublisher()
     }
