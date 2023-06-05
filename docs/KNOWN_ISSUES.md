@@ -85,11 +85,3 @@ When chaining an on-demand stream played at a speed > 1 to a livestream (without
 ### Workaround
 
 No workaround is available yet.
-
-## The system player UI does not reflect playback automatic speed changes
-
-When using `SystemVideoView ` the displayed playback speed is not correctly updated if automatically changed by the player, most notably when approaching the live edge of a DVR stream.
-
-### Workaround
-
-No workaround is available yet.

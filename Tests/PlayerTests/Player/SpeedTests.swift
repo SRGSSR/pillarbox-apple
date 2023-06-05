@@ -145,6 +145,7 @@ final class SpeedTests: TestCase {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         player.setDesiredPlaybackSpeed(2)
         player.play()
+        expect(player.queuePlayer.defaultRate).toEventually(equal(2))
         expect(player.queuePlayer.rate).toEventually(equal(2))
     }
 
@@ -154,6 +155,7 @@ final class SpeedTests: TestCase {
         expect(player.playbackState).toEventually(equal(.playing))
 
         player.setDesiredPlaybackSpeed(2)
+        expect(player.queuePlayer.defaultRate).toEventually(equal(2))
         expect(player.queuePlayer.rate).toEventually(equal(2))
     }
 

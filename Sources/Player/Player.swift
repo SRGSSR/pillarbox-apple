@@ -162,7 +162,7 @@ public final class Player: ObservableObject, Equatable {
 public extension Player {
     /// Resume playback.
     func play() {
-        queuePlayer.playImmediately(atRate: _playbackSpeed.effectiveValue)
+        queuePlayer.play()
     }
 
     /// Pause playback.
@@ -173,10 +173,10 @@ public extension Player {
     /// Toggle playback between play and pause.
     func togglePlayPause() {
         if queuePlayer.rate != 0 {
-            pause()
+            queuePlayer.pause()
         }
         else {
-            play()
+            queuePlayer.play()
         }
     }
 }
