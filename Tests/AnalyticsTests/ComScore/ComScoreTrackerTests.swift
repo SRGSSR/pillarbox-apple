@@ -6,7 +6,6 @@
 
 @testable import Analytics
 
-import ComScore
 import CoreMedia
 import Nimble
 import Player
