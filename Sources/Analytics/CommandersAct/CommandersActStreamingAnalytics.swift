@@ -18,6 +18,7 @@ final class CommandersActStreamingAnalytics {
     private let update: () -> EventData?
 
     private var isBuffering = false
+    private var playbackSpeed: Float = 1
     private var cancellables = Set<AnyCancellable>()
     private var playbackDuration: TimeInterval = 0
 
@@ -43,6 +44,10 @@ final class CommandersActStreamingAnalytics {
 
     func notify(_ event: Event) {
         notify(event, eventData: eventData())
+    }
+
+    func notifyPlaybackSpeed(_ playbackSpeed: Float) {
+        self.playbackSpeed = playbackSpeed
     }
 
     private func notify(_ event: Event, eventData: EventData) {
@@ -110,7 +115,8 @@ final class CommandersActStreamingAnalytics {
     }
 
     private func eventTime(after interval: CMTime) -> CMTime {
-        isAdvancing ? lastEventTime + interval : lastEventTime
+        let multiplier = (streamType == .onDemand) ? Float64(playbackSpeed) : 1
+        return isAdvancing ? lastEventTime + CMTimeMultiplyByFloat64(interval, multiplier: multiplier) : lastEventTime
     }
 
     private func eventRange(after interval: CMTime) -> CMTimeRange {
