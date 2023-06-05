@@ -44,9 +44,14 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
+    @Published var _playbackSpeed: PlaybackSpeed = .indefinite
+
     @Published private var currentTracker: CurrentTracker?
     @Published private var currentItem: CurrentItem = .good(nil)
     @Published private var storedItems: Deque<PlayerItem>
+
+    // swiftlint:disable:next private_subject
+    var desiredPlaybackSpeedPublisher = PassthroughSubject<Float, Never>()
 
     /// The type of stream currently played.
     public var streamType: StreamType {
@@ -89,7 +94,7 @@ public final class Player: ObservableObject, Equatable {
     private let nowPlayingSession: MPNowPlayingSession
 
     public let configuration: PlayerConfiguration
-    private var cancellables = Set<AnyCancellable>()
+    var cancellables = Set<AnyCancellable>()
 
     private var commandRegistrations: [any RemoteCommandRegistrable] = []
 
@@ -124,6 +129,7 @@ public final class Player: ObservableObject, Equatable {
         configureExternalPlaybackPublisher()
         configurePresentationSizePublisher()
         configureMutedPublisher()
+        configurePlaybackSpeedPublisher()
 
         configurePlayer()
     }
