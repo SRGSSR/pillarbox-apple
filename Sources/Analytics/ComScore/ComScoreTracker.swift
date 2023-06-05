@@ -36,6 +36,20 @@ public final class ComScoreTracker: PlayerItemTracker {
                 self?.notify(playbackState: state.0, isSeeking: state.1, isBuffering: state.2, player: player)
             }
             .store(in: &cancellables)
+
+        player.objectWillChange
+            .receive(on: DispatchQueue.main)
+            .map { _ in () }
+            .prepend(())
+            .weakCapture(player)
+            .map { _, player in
+                player.effectivePlaybackSpeed
+            }
+            .removeDuplicates()
+            .sink { [weak self] speed in
+                self?.notifyPlaybackSpeedChange(speed: speed)
+            }
+            .store(in: &cancellables)
     }
 
     public func disable() {
@@ -47,7 +61,12 @@ public final class ComScoreTracker: PlayerItemTracker {
         guard !metadata.labels.isEmpty else { return }
         AnalyticsListener.capture(streamingAnalytics.configuration())
         streamingAnalytics.setProperties(for: player, streamType: metadata.streamType)
+        streamingAnalytics.notifyChangePlaybackRate(player.effectivePlaybackSpeed)
         streamingAnalytics.notifyEvent(playbackState: playbackState, isSeeking: isSeeking, isBuffering: isBuffering)
+    }
+
+    private func notifyPlaybackSpeedChange(speed: Float) {
+        streamingAnalytics.notifyChangePlaybackRate(speed)
     }
 
     private func updateMetadata(with metadata: Metadata) {

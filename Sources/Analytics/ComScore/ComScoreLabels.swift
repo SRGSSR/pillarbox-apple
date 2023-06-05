@@ -95,4 +95,9 @@ public extension ComScoreLabels {
         guard let value: Double = extract() else { return nil }
         return value / 1000
     }
+
+    /// Value of `ns_st_rt` (playback rate).
+    var ns_st_rt: Int? {
+        extract()
+    }
 }
