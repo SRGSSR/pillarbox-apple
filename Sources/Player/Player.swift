@@ -162,7 +162,7 @@ public final class Player: ObservableObject, Equatable {
 public extension Player {
     /// Resume playback.
     func play() {
-        queuePlayer.playImmediately(atRate: _playbackSpeed.rate)
+        queuePlayer.playImmediately(atRate: _playbackSpeed.effectiveValue)
     }
 
     /// Pause playback.
@@ -309,12 +309,12 @@ public extension Player {
 public extension Player {
     /// The currently applicable playback speed.
     var effectivePlaybackSpeed: Float {
-        _playbackSpeed.rate
+        _playbackSpeed.effectiveValue
     }
 
     /// The currently allowed playback speed range.
     var playbackSpeedRange: ClosedRange<Float> {
-        _playbackSpeed.range
+        _playbackSpeed.effectiveRange
     }
 
     private static func playbackSpeedRange(for timeRange: CMTimeRange, itemDuration: CMTime, time: CMTime) -> ClosedRange<Float>? {
@@ -350,7 +350,7 @@ public extension Player {
         $_playbackSpeed
             .sink { [queuePlayer] speed in
                 guard queuePlayer.rate != 0 else { return }
-                queuePlayer.rate = speed.rate
+                queuePlayer.rate = speed.effectiveValue
             }
             .store(in: &cancellables)
     }
@@ -408,7 +408,7 @@ public extension Player {
                     .eraseToAnyPublisher()
                 }
                 else {
-                    return Just(.range(1...1))
+                    return Just(.range(nil))
                         .eraseToAnyPublisher()
                 }
             }

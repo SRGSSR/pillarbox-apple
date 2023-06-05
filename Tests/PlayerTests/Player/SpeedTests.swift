@@ -10,7 +10,7 @@ import Nimble
 import Streams
 import XCTest
 
-final class PlaybackSpeedTests: TestCase {
+final class SpeedTests: TestCase {
     func testEmpty() {
         let player = Player()
         expect(player.effectivePlaybackSpeed).toAlways(equal(1), until: .seconds(2))
