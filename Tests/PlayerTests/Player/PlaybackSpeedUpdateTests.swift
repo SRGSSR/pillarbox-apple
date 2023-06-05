@@ -12,21 +12,21 @@ import XCTest
 final class PlaybackSpeedUpdateTests: TestCase {
     func testUpdateIndefiniteWithDesired() {
         let speed = PlaybackSpeed(value: 1, range: 1...1)
-        let updatedSpeed = speed.updated(with: .desired(speed: 2))
+        let updatedSpeed = speed.updated(with: .value(2))
         expect(updatedSpeed.value).to(equal(2))
         expect(updatedSpeed.range).to(equal(1...1))
     }
 
     func testUpdateIndefiniteWithRestricted() {
         let speed = PlaybackSpeed(value: 1, range: 1...1)
-        let updatedSpeed = speed.updated(with: .restricted(range: 0...2))
+        let updatedSpeed = speed.updated(with: .range(0...2))
         expect(updatedSpeed.value).to(equal(1))
         expect(updatedSpeed.range).to(equal(0...2))
     }
 
     func testUpdateWithIndefiniteRangeMustPreserveValue() {
         let speed = PlaybackSpeed(value: 2, range: 1...1)
-        let updatedSpeed = speed.updated(with: .restricted(range: 1...1))
+        let updatedSpeed = speed.updated(with: .range(1...1))
         expect(updatedSpeed.value).to(equal(2))
         expect(updatedSpeed.range).to(equal(1...1))
     }

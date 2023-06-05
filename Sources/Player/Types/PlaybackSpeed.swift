@@ -7,8 +7,8 @@
 import AVFoundation
 
 enum PlaybackSpeedUpdate: Equatable {
-    case desired(speed: Float)
-    case restricted(range: ClosedRange<Float>)
+    case value(Float)
+    case range(ClosedRange<Float>)
 }
 
 struct PlaybackSpeed: Equatable {
@@ -31,18 +31,18 @@ struct PlaybackSpeed: Equatable {
     func updated(with update: PlaybackSpeedUpdate) -> Self {
         if range == 1...1 {
             switch update {
-            case let .desired(speed):
+            case let .value(speed):
                 return .init(value: speed, range: range)
-            case let .restricted(range):
+            case let .range(range):
                 guard range != 1...1 else { return self }
                 return .init(value: value.clamped(to: range), range: range)
             }
         }
         else {
             switch update {
-            case let .desired(speed):
+            case let .value(speed):
                 return .init(value: speed.clamped(to: range), range: range)
-            case let .restricted(range):
+            case let .range(range):
                 return .init(value: value.clamped(to: range), range: range)
             }
         }

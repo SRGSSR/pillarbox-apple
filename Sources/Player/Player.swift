@@ -368,7 +368,7 @@ public extension Player {
     private func desiredPlaybackSpeedUpdatePublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
         desiredPlaybackSpeedPublisher
             .removeDuplicates()
-            .map { .desired(speed: $0) }
+            .map { .value($0) }
             .eraseToAnyPublisher()
     }
 
@@ -383,7 +383,7 @@ public extension Player {
                 }
             }
             .removeDuplicates()
-            .map { .desired(speed: $0) }
+            .map { .value($0) }
             .eraseToAnyPublisher()
 #else
         Empty(completeImmediately: true)
@@ -403,12 +403,12 @@ public extension Player {
                     )
                     .compactMap { timeRange, itemDuration, time in
                         guard let range = Self.playbackSpeedRange(for: timeRange, itemDuration: itemDuration, time: time) else { return nil }
-                        return .restricted(range: range)
+                        return .range(range)
                     }
                     .eraseToAnyPublisher()
                 }
                 else {
-                    return Just(.restricted(range: 1...1))
+                    return Just(.range(1...1))
                         .eraseToAnyPublisher()
                 }
             }
