@@ -89,7 +89,7 @@ private extension CommandersActTracker {
             "media_player_display": "Pillarbox",
             "media_player_version": PackageInfo.version,
             "media_volume": "\(volume(for: player))",
-            "media_playback_rate": "1",
+            "media_playback_rate": "\(player.effectivePlaybackSpeed)",
             "media_bandwidth": "\(bitrate(for: player))"
         ]) { _, new in new }
     }
