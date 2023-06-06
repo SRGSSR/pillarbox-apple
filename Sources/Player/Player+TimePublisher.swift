@@ -1,0 +1,29 @@
+//
+//  Copyright (c) SRG SSR. All rights reserved.
+//
+//  License information is available from the LICENSE file.
+//
+
+import Combine
+import CoreMedia
+
+public extension Player {
+    /// Return a publisher periodically emitting the current time while the player is playing content. Does not emit any
+    /// value on subscription and only emits valid times.
+    /// - Parameters:
+    ///   - interval: The interval at which events must be emitted.
+    ///   - queue: The queue on which values are published.
+    /// - Returns: The publisher.
+    func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
+        Publishers.PeriodicTimePublisher(for: queuePlayer, interval: interval, queue: queue)
+    }
+
+    /// Return a publisher emitting when traversing the specified times during normal playback.
+    /// - Parameters:
+    ///   - times: The times to observe.
+    ///   - queue: The queue on which values are published.
+    /// - Returns: The publisher.
+    func boundaryTimePublisher(for times: [CMTime], queue: DispatchQueue = .main) -> AnyPublisher<Void, Never> {
+        Publishers.BoundaryTimePublisher(for: queuePlayer, times: times, queue: queue)
+    }
+}

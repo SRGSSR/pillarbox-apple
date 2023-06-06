@@ -7,17 +7,26 @@
 import Combine
 import CoreMedia
 
-extension Player {
+public extension Player {
     /// The currently applicable playback speed.
-    public var effectivePlaybackSpeed: Float {
+    var effectivePlaybackSpeed: Float {
         _playbackSpeed.effectiveValue
     }
 
     /// The currently allowed playback speed range.
-    public var playbackSpeedRange: ClosedRange<Float> {
+    var playbackSpeedRange: ClosedRange<Float> {
         _playbackSpeed.effectiveRange
     }
 
+    /// Set the desired playback speed. This value might not be applied immediately or might not be applicable at all,
+    /// check `effectivePlaybackSpeed` for the actually applied speed.
+    /// - Parameter playbackSpeed: The playback speed.
+    func setDesiredPlaybackSpeed(_ playbackSpeed: Float) {
+        desiredPlaybackSpeedPublisher.send(playbackSpeed)
+    }
+}
+
+extension Player {
     private static func playbackSpeedRange(for timeRange: CMTimeRange, itemDuration: CMTime, time: CMTime) -> ClosedRange<Float>? {
         let streamType = StreamType(for: timeRange, itemDuration: itemDuration)
         switch streamType {
@@ -32,32 +41,7 @@ extension Player {
         }
     }
 
-    /// Set the desired playback speed. This value might not be applied immediately or might not be applicable at all,
-    /// check `effectivePlaybackSpeed` for the actually applied speed.
-    /// - Parameter playbackSpeed: The playback speed.
-    public func setDesiredPlaybackSpeed(_ playbackSpeed: Float) {
-        desiredPlaybackSpeedPublisher.send(playbackSpeed)
-    }
-
-    func configurePlaybackSpeedPublisher() {
-        playbackSpeedUpdatePublisher()
-            .scan(.indefinite) { speed, update in
-                speed.updated(with: update)
-            }
-            .removeDuplicates()
-            .receiveOnMainThread()
-            .assign(to: &$_playbackSpeed)
-
-        $_playbackSpeed
-            .sink { [queuePlayer] speed in
-                guard queuePlayer.rate != 0 else { return }
-                queuePlayer.defaultRate = speed.effectiveValue
-                queuePlayer.rate = speed.effectiveValue
-            }
-            .store(in: &cancellables)
-    }
-
-    private func playbackSpeedUpdatePublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
+    func playbackSpeedUpdatePublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
         Publishers.Merge3(
             desiredPlaybackSpeedUpdatePublisher(),
             supportedPlaybackSpeedPublisher(),
