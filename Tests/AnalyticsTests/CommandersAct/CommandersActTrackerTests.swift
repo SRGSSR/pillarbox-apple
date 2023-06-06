@@ -114,6 +114,30 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         }
     }
 
+    func testDestroyPlayerDuringPlaybackAtNonStandardPlaybackSpeed() {
+        var player: Player? = Player(item: .simple(
+            url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
+            trackerAdapters: [
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .onDemand)
+                }
+            ]
+        ))
+        player?.setDesiredPlaybackSpeed(2)
+
+        player?.play()
+        expect(player?.time.seconds).toEventually(beGreaterThan(10))
+
+        expectAtLeastEvents(
+            .stop { labels in
+                expect(labels.media_position).to(equal(10))
+            }
+        ) {
+            player = nil
+        }
+    }
+
     func testDestroyPlayerAfterPlayback() {
         var player: Player? = Player(item: .simple(
             url: Stream.shortOnDemand.url,

@@ -33,6 +33,18 @@ public final class CommandersActTracker: PlayerItemTracker {
                 self?.streamingAnalytics?.notify(isBuffering: isBuffering)
             }
             .store(in: &cancellables)
+
+        player.objectWillChange
+            .receive(on: DispatchQueue.main)
+            .map { _ in () }
+            .prepend(())
+            .weakCapture(player)
+            .map { $1.effectivePlaybackSpeed }
+            .removeDuplicates()
+            .sink { [weak self] speed in
+                self?.streamingAnalytics?.notifyPlaybackSpeed(speed)
+            }
+            .store(in: &cancellables)
     }
 
     // swiftlint:disable:next cyclomatic_complexity
@@ -89,7 +101,7 @@ private extension CommandersActTracker {
             "media_player_display": "Pillarbox",
             "media_player_version": PackageInfo.version,
             "media_volume": "\(volume(for: player))",
-            "media_playback_rate": "1",
+            "media_playback_rate": "\(player.effectivePlaybackSpeed)",
             "media_bandwidth": "\(bitrate(for: player))"
         ]) { _, new in new }
     }

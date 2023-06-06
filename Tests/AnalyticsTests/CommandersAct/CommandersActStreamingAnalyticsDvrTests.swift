@@ -62,6 +62,41 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
         }
     }
 
+    func testPositionWhenDestroyedAfterPlayAtNonStandardPlaybackSpeed() {
+        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .dvr) {
+            .init(labels: [:], time: CMTime(value: 15, timescale: 1), range: Self.range)
+        }
+        analytics?.notifyPlaybackSpeed(2)
+        wait(for: .seconds(1))
+
+        expectAtLeastEvents(
+            .stop { labels in
+                expect(labels.media_position).to(equal(1))
+                expect(labels.media_timeshift).to(equal(5))
+            }
+        ) {
+            analytics = nil
+        }
+    }
+
+    func testPositionWhenDestroyedAfterPlayAtSeveralNonStandardPlaybackSpeeds() {
+        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .dvr) {
+            .init(labels: [:], time: CMTime(value: 15, timescale: 1), range: Self.range)
+        }
+        wait(for: .seconds(1))
+        analytics?.notifyPlaybackSpeed(2)
+        wait(for: .seconds(1))
+
+        expectAtLeastEvents(
+            .stop { labels in
+                expect(labels.media_position).to(equal(2))
+                expect(labels.media_timeshift).to(equal(5))
+            }
+        ) {
+            analytics = nil
+        }
+    }
+
     func testPositionWhenDestroyedDuringBuffering() {
         var analytics: CommandersActStreamingAnalytics? = .init(streamType: .dvr) {
             .init(labels: [:], time: CMTime(value: 15, timescale: 1), range: Self.range)
