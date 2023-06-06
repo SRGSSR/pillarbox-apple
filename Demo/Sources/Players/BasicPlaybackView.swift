@@ -8,8 +8,8 @@ import CoreMedia
 import Player
 import SwiftUI
 
+#if os(iOS)
 // Behavior: h-exp, v-hug
-@available(tvOS, unavailable)
 private struct TimeSlider: View {
     @ObservedObject var player: Player
     @StateObject var progressTracker = ProgressTracker(
@@ -23,6 +23,7 @@ private struct TimeSlider: View {
             ._debugBodyCounter()
     }
 }
+#endif
 
 /// A playback view with basic controls. Requires an ancestor view to own the player to be used.
 /// Behavior: h-exp, v-exp

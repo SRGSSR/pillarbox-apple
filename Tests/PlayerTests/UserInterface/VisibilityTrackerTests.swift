@@ -11,7 +11,7 @@ import Nimble
 import Streams
 import XCTest
 
-@available(tvOS, unavailable)
+#if os(iOS)
 final class VisibilityTrackerTests: TestCase {
     func testInitiallyVisible() {
         let visibilityTracker = VisibilityTracker()
@@ -134,3 +134,4 @@ final class VisibilityTrackerTests: TestCase {
         expect(visibilityTracker.isUserInterfaceHidden).toAlways(beFalse(), until: .milliseconds(400))
     }
 }
+#endif
