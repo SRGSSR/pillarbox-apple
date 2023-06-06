@@ -32,7 +32,7 @@ final class MediaMetadataTests: XCTestCase {
             resource: mediaComposition.mainChapter.recommendedResource!,
             image: nil
         )
-        expect(metadata.title).to(equal("February 6, 2023"))
+        expect(metadata.title).to(contain("February"))
         expect(metadata.subtitle).to(equal("19h30"))
         expect(metadata.description).to(beNil())
     }

@@ -9,8 +9,9 @@ import CoreMedia
 import Player
 import SwiftUI
 
+#if os(iOS)
+
 // Behavior: h-exp, v-exp
-@available(tvOS, unavailable)
 private struct MainView: View {
     @ObservedObject var player: Player
     @Binding var layout: PlaybackView.Layout
@@ -128,6 +129,8 @@ private struct MainView: View {
             .padding(60)
     }
 }
+
+#endif
 
 private struct ControlsView: View {
     @ObservedObject var player: Player
@@ -337,8 +340,9 @@ private struct LiveLabel: View {
     }
 }
 
+#if os(iOS)
+
 // Behavior: h-exp, v-hug
-@available(tvOS, unavailable)
 private struct TimeBar: View {
     @ObservedObject var player: Player
     @Binding var layout: PlaybackView.Layout
@@ -376,7 +380,6 @@ private struct TimeBar: View {
 }
 
 // Behavior: h-exp, v-hug
-@available(tvOS, unavailable)
 private struct TimeSlider: View {
     private static let shortFormatter: DateComponentsFormatter = {
         let formatter = DateComponentsFormatter()
@@ -451,6 +454,8 @@ private struct TimeSlider: View {
         }
     }
 }
+
+#endif
 
 /// A playback view with standard controls. Requires an ancestor view to own the player to be used.
 /// Behavior: h-exp, v-exp

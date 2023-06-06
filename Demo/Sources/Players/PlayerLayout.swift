@@ -6,9 +6,10 @@
 
 import Foundation
 
+#if os(iOS)
 @objc
-@available(tvOS, unavailable)
 enum PlayerLayout: Int {
     case custom
     case system
 }
+#endif

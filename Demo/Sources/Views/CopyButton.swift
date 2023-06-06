@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-@available(tvOS, unavailable)
+#if os(iOS)
 struct CopyButton: View {
     let text: String
 
@@ -19,3 +19,4 @@ struct CopyButton: View {
         .tint(.accentColor)
     }
 }
+#endif

@@ -12,9 +12,10 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.presenterModeEnabledKey)
     private var isPresenterModeEnabled = false
 
-    @available(tvOS, unavailable)
+#if os(iOS)
     @AppStorage(UserDefaults.playerLayoutKey)
     private var playerLayout: PlayerLayout = .custom
+#endif
 
     @AppStorage(UserDefaults.allowsExternalPlaybackKey)
     private var allowsExternalPlayback = true
@@ -72,7 +73,7 @@ struct SettingsView: View {
         }
     }
 
-    @available(tvOS, unavailable)
+#if os(iOS)
     @ViewBuilder
     private func playerLayoutPicker() -> some View {
         Picker("Layout", selection: $playerLayout) {
@@ -80,6 +81,7 @@ struct SettingsView: View {
             Text("System").tag(PlayerLayout.system)
         }
     }
+#endif
 
     @ViewBuilder
     private func seekBehaviorPicker() -> some View {

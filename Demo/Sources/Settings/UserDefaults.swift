@@ -21,8 +21,9 @@ enum SeekBehaviorSetting: Int {
 extension UserDefaults {
     static let presenterModeEnabledKey = "presenterModeEnabled"
 
-    @available(tvOS, unavailable)
+#if os(iOS)
     static let playerLayoutKey = "playerLayout"
+#endif
 
     static let allowsExternalPlaybackKey = "allowsExternalPlayback"
     static let smartNavigationEnabledKey = "smartNavigationEnabled"
@@ -34,10 +35,11 @@ extension UserDefaults {
         bool(forKey: Self.presenterModeEnabledKey)
     }
 
-    @available(tvOS, unavailable)
+#if os(iOS)
     @objc dynamic var playerLayout: PlayerLayout {
         .init(rawValue: integer(forKey: Self.playerLayoutKey)) ?? .custom
     }
+#endif
 
     @objc dynamic var allowsExternalPlaybackEnabled: Bool {
         bool(forKey: Self.allowsExternalPlaybackKey)
