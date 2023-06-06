@@ -16,12 +16,12 @@ public protocol Similar {
 }
 
 /// Nimble matcher displaying similarity differences in a friendly way.
-public func equalDiff<T: Similar>(_ expectedValue: T?) -> Predicate<T> {
+public func equalDiff<T: Similar>(_ expectedValue: T?) -> Nimble.Predicate<T> {
     equalDiff(expectedValue, by: ~~)
 }
 
 /// Nimble matcher displaying mismatches as differences.
-public func equal<T: Similar>(_ expectedValue: T?) -> Predicate<T> {
+public func equal<T: Similar>(_ expectedValue: T?) -> Nimble.Predicate<T> {
     equal(expectedValue, by: ~~)
 }
 
