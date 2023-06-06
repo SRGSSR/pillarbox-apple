@@ -10,7 +10,7 @@ import SwiftUI
 
 struct TrackingView: View {
     let media: Media
-    @StateObject var player = Player(configuration: .standard)
+    @StateObject private var player = Player(configuration: .standard)
 
     var body: some View {
         VStack {
