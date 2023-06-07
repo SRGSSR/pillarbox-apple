@@ -45,7 +45,7 @@ extension Player {
     var backwardSkipTime: CMTime {
         CMTime(seconds: -configuration.backwardSkipInterval, preferredTimescale: 1)
     }
-    
+
     var forwardSkipTime: CMTime {
         CMTime(seconds: configuration.forwardSkipInterval, preferredTimescale: 1)
     }

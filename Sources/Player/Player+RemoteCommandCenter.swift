@@ -20,7 +20,7 @@ extension Player {
             nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nil
         }
     }
-    
+
     func uninstallRemoteCommands() {
         commandRegistrations.forEach { registration in
             nowPlayingSession.remoteCommandCenter.unregister(registration)

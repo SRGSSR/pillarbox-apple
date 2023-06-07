@@ -111,21 +111,10 @@ public final class Player: ObservableObject, Equatable {
 
         self.configuration = configuration
 
-        configurePlaybackStatePublisher()
-        configureChunkDurationPublisher()
-        configureSeekingPublisher()
-        configureBufferingPublisher()
-        configureCurrentItemPublisher()
-        configureCurrentIndexPublisher()
-        configureCurrentTrackerPublisher()
-        configureControlCenterPublishers()
-        configureQueueUpdatePublisher()
-        configureExternalPlaybackPublisher()
-        configurePresentationSizePublisher()
-        configureMutedPublisher()
-        configurePlaybackSpeedPublishers()
-
         configurePlayer()
+        configureControlCenterPublishers()
+        configureUpdatePublishers()
+        configurePublishedPropertyPublishers()
     }
 
     /// Create a player with a single item in its queue.
@@ -145,6 +134,31 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
         queuePlayer.preventsDisplaySleepDuringVideoPlayback = configuration.preventsDisplaySleepDuringVideoPlayback
         queuePlayer.audiovisualBackgroundPlaybackPolicy = configuration.audiovisualBackgroundPlaybackPolicy
+    }
+
+    private func configureControlCenterPublishers() {
+        guard ProcessInfo.processInfo.isiOSAppOnMac else { return }
+        configureControlCenterMetadataUpdatePublisher()
+        configureControlCenterRemoteCommandUpdatePublisher()
+    }
+
+    private func configureUpdatePublishers() {
+        configureQueueUpdatePublisher()
+        configureRateUpdatePublisher()
+    }
+
+    private func configurePublishedPropertyPublishers() {
+        configurePlaybackStatePublisher()
+        configureChunkDurationPublisher()
+        configureSeekingPublisher()
+        configureBufferingPublisher()
+        configureCurrentItemPublisher()
+        configureCurrentIndexPublisher()
+        configureCurrentTrackerPublisher()
+        configureExternalPlaybackPublisher()
+        configurePresentationSizePublisher()
+        configureMutedPublisher()
+        configurePlaybackSpeedPublisher()
     }
 
     deinit {
@@ -167,102 +181,10 @@ extension Player {
             return playerItem
         }
     }
+}
 
-    private func configurePlaybackStatePublisher() {
-        queuePlayer.playbackStatePublisher()
-            .receiveOnMainThread()
-            .lane("player_state")
-            .assign(to: &$playbackState)
-    }
-
-    private func configureChunkDurationPublisher() {
-        queuePlayer.chunkDurationPublisher()
-            .receiveOnMainThread()
-            .lane("player_chunk_duration")
-            .assign(to: &$chunkDuration)
-    }
-
-    private func configureSeekingPublisher() {
-        queuePlayer.seekingPublisher()
-            .receiveOnMainThread()
-            .lane("player_seeking")
-            .assign(to: &$isSeeking)
-    }
-
-    private func configureBufferingPublisher() {
-        queuePlayer.bufferingPublisher()
-            .receiveOnMainThread()
-            .lane("player_buffering")
-            .assign(to: &$isBuffering)
-    }
-
-    private func configureCurrentItemPublisher() {
-        queuePlayer.smoothCurrentItemPublisher()
-            .receiveOnMainThread()
-            .assign(to: &$currentItem)
-    }
-
-    private func configureCurrentIndexPublisher() {
-        currentPublisher()
-            .map(\.?.index)
-            .receiveOnMainThread()
-            .lane("player_current_index")
-            .assign(to: &$currentIndex)
-    }
-
-    private func configureCurrentTrackerPublisher() {
-        currentPublisher()
-            .map { [weak self] current in
-                guard let self, let current else { return nil }
-                return CurrentTracker(item: current.item, player: self)
-            }
-            .receiveOnMainThread()
-            .assign(to: &$currentTracker)
-    }
-
-    private func configureControlCenterPublishers() {
-        guard !ProcessInfo.processInfo.isiOSAppOnMac else { return }
-        configureControlCenterMetadataPublisher()
-        configureControlCenterCommandAvailabilityPublisher()
-    }
-
-    private func configureControlCenterMetadataPublisher() {
-        Publishers.CombineLatest(
-            nowPlayingInfoMetadataPublisher(),
-            queuePlayer.nowPlayingInfoPlaybackPublisher()
-        )
-        .receiveOnMainThread()
-        .lane("control_center_update")
-        .sink { [weak self] nowPlayingInfoMetadata, nowPlayingInfoPlayback in
-            self?.updateControlCenter(
-                nowPlayingInfo: nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new }
-            )
-        }
-        .store(in: &cancellables)
-    }
-
-    private func configureControlCenterCommandAvailabilityPublisher() {
-        itemUpdatePublisher()
-            .map { update in
-                Publishers.CombineLatest3(
-                    Just(update.items),
-                    Just(update.currentIndex()),
-                    update.streamTypePublisher()
-                )
-            }
-            .switchToLatest()
-            .sink { [weak self] items, index, streamType in
-                guard let self else { return }
-                let areSkipsEnabled = items.count <= 1 && streamType != .live
-                nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
-                nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
-                nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: items, streamType: streamType)
-                nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: index, in: items)
-            }
-            .store(in: &cancellables)
-    }
-
-    private func configureQueueUpdatePublisher() {
+private extension Player {
+    func configureQueueUpdatePublisher() {
         assetsPublisher()
             .withPrevious()
             .map { [queuePlayer] sources in
@@ -279,25 +201,89 @@ extension Player {
             .store(in: &cancellables)
     }
 
-    private func configureExternalPlaybackPublisher() {
+    func configureRateUpdatePublisher() {
+        $_playbackSpeed
+            .sink { [queuePlayer] speed in
+                guard queuePlayer.rate != 0 else { return }
+                queuePlayer.defaultRate = speed.effectiveValue
+                queuePlayer.rate = speed.effectiveValue
+            }
+            .store(in: &cancellables)
+    }
+}
+
+private extension Player {
+    func configurePlaybackStatePublisher() {
+        queuePlayer.playbackStatePublisher()
+            .receiveOnMainThread()
+            .lane("player_state")
+            .assign(to: &$playbackState)
+    }
+
+    func configureChunkDurationPublisher() {
+        queuePlayer.chunkDurationPublisher()
+            .receiveOnMainThread()
+            .lane("player_chunk_duration")
+            .assign(to: &$chunkDuration)
+    }
+
+    func configureSeekingPublisher() {
+        queuePlayer.seekingPublisher()
+            .receiveOnMainThread()
+            .lane("player_seeking")
+            .assign(to: &$isSeeking)
+    }
+
+    func configureBufferingPublisher() {
+        queuePlayer.bufferingPublisher()
+            .receiveOnMainThread()
+            .lane("player_buffering")
+            .assign(to: &$isBuffering)
+    }
+
+    func configureCurrentItemPublisher() {
+        queuePlayer.smoothCurrentItemPublisher()
+            .receiveOnMainThread()
+            .assign(to: &$currentItem)
+    }
+
+    func configureCurrentIndexPublisher() {
+        currentPublisher()
+            .map(\.?.index)
+            .receiveOnMainThread()
+            .lane("player_current_index")
+            .assign(to: &$currentIndex)
+    }
+
+    func configureCurrentTrackerPublisher() {
+        currentPublisher()
+            .map { [weak self] current in
+                guard let self, let current else { return nil }
+                return CurrentTracker(item: current.item, player: self)
+            }
+            .receiveOnMainThread()
+            .assign(to: &$currentTracker)
+    }
+
+    func configureExternalPlaybackPublisher() {
         queuePlayer.publisher(for: \.isExternalPlaybackActive)
             .receiveOnMainThread()
             .assign(to: &$isExternalPlaybackActive)
     }
 
-    private func configurePresentationSizePublisher() {
+    func configurePresentationSizePublisher() {
         queuePlayer.presentationSizePublisher()
             .receiveOnMainThread()
             .assign(to: &$presentationSize)
     }
 
-    private func configureMutedPublisher() {
+    func configureMutedPublisher() {
         queuePlayer.publisher(for: \.isMuted)
             .receiveOnMainThread()
             .assign(to: &$isMuted)
     }
 
-    private func configurePlaybackSpeedPublishers() {
+    func configurePlaybackSpeedPublisher() {
         playbackSpeedUpdatePublisher()
             .scan(.indefinite) { speed, update in
                 speed.updated(with: update)
@@ -305,12 +291,42 @@ extension Player {
             .removeDuplicates()
             .receiveOnMainThread()
             .assign(to: &$_playbackSpeed)
+    }
+}
 
-        $_playbackSpeed
-            .sink { [queuePlayer] speed in
-                guard queuePlayer.rate != 0 else { return }
-                queuePlayer.defaultRate = speed.effectiveValue
-                queuePlayer.rate = speed.effectiveValue
+private extension Player {
+    func configureControlCenterMetadataUpdatePublisher() {
+        Publishers.CombineLatest(
+            nowPlayingInfoMetadataPublisher(),
+            queuePlayer.nowPlayingInfoPlaybackPublisher()
+        )
+        .receiveOnMainThread()
+        .lane("control_center_update")
+        .sink { [weak self] nowPlayingInfoMetadata, nowPlayingInfoPlayback in
+            self?.updateControlCenter(
+                nowPlayingInfo: nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new }
+            )
+        }
+        .store(in: &cancellables)
+    }
+
+    func configureControlCenterRemoteCommandUpdatePublisher() {
+        itemUpdatePublisher()
+            .map { update in
+                Publishers.CombineLatest3(
+                    Just(update.items),
+                    Just(update.currentIndex()),
+                    update.streamTypePublisher()
+                )
+            }
+            .switchToLatest()
+            .sink { [weak self] items, index, streamType in
+                guard let self else { return }
+                let areSkipsEnabled = items.count <= 1 && streamType != .live
+                nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
+                nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
+                nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: items, streamType: streamType)
+                nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: index, in: items)
             }
             .store(in: &cancellables)
     }
