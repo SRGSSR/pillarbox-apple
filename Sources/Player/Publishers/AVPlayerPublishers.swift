@@ -9,11 +9,6 @@ import Combine
 import Core
 import TimelaneCombine
 
-enum CurrentItem: Equatable {
-    case good(AVPlayerItem?)
-    case bad(AVPlayerItem?)
-}
-
 extension AVPlayer {
     func currentItemStatePublisher() -> AnyPublisher<ItemState, Never> {
         publisher(for: \.currentItem)

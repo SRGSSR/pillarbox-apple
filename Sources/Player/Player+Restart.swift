@@ -11,7 +11,7 @@ public extension Player {
     /// - Returns: `true` if possible.
     func canRestart() -> Bool {
         guard !storedItems.isEmpty else { return false }
-        return Self.smoothPlayerItem(for: currentItem, in: storedItems) == nil
+        return currentItem.smoothPlayerItem(in: storedItems) == nil
     }
 
     /// Restart playback if possible.

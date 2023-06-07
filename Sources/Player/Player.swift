@@ -112,7 +112,7 @@ public final class Player: ObservableObject, Equatable {
         self.configuration = configuration
 
         configurePlayer()
-        
+
         configureControlCenterPublishers()
         configureQueuePlayerUpdatePublishers()
         configurePublishedPropertyPublishers()
@@ -165,22 +165,6 @@ public final class Player: ObservableObject, Equatable {
     deinit {
         queuePlayer.cancelPendingReplacements()
         uninstallRemoteCommands()
-    }
-}
-
-extension Player {
-    static func smoothPlayerItem(for currentItem: CurrentItem, in items: Deque<PlayerItem>) -> AVPlayerItem? {
-        switch currentItem {
-        case let .bad(playerItem):
-            if let lastItem = items.last, lastItem.matches(playerItem) {
-                return nil
-            }
-            else {
-                return playerItem
-            }
-        case let .good(playerItem):
-            return playerItem
-        }
     }
 }
 
