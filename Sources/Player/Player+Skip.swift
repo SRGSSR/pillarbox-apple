@@ -45,12 +45,14 @@ extension Player {
     var backwardSkipTime: CMTime {
         CMTime(seconds: -configuration.backwardSkipInterval, preferredTimescale: 1)
     }
-
+    
     var forwardSkipTime: CMTime {
         CMTime(seconds: configuration.forwardSkipInterval, preferredTimescale: 1)
     }
+}
 
-    private func skip(
+private extension Player {
+    func skip(
         withInterval interval: CMTime,
         toleranceBefore: CMTime,
         toleranceAfter: CMTime,

@@ -45,10 +45,10 @@ public final class Player: ObservableObject, Equatable {
     }
 
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
-
-    @Published private var currentTracker: CurrentTracker?
     @Published var currentItem: CurrentItem = .good(nil)
     @Published var storedItems: Deque<PlayerItem>
+
+    @Published private var currentTracker: CurrentTracker?
 
     /// The player configuration
     public let configuration: PlayerConfiguration
@@ -58,7 +58,7 @@ public final class Player: ObservableObject, Equatable {
         StreamType(for: timeRange, itemDuration: itemDuration)
     }
 
-    /// Current media type.
+    /// The current media type.
     public var mediaType: MediaType {
         guard let presentationSize else { return .unknown }
         return presentationSize == .zero ? .audio : .video
@@ -257,7 +257,7 @@ extension Player {
                 nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
                 nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
                 nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: items, streamType: streamType)
-                nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvanceToItem(after: index, in: items)
+                nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: index, in: items)
             }
             .store(in: &cancellables)
     }

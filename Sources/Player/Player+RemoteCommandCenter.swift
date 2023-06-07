@@ -20,15 +20,17 @@ extension Player {
             nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nil
         }
     }
-
+    
     func uninstallRemoteCommands() {
         commandRegistrations.forEach { registration in
             nowPlayingSession.remoteCommandCenter.unregister(registration)
         }
         commandRegistrations = []
     }
+}
 
-    private func installRemoteCommands() {
+private extension Player {
+    func installRemoteCommands() {
         commandRegistrations = [
             playRegistration(),
             pauseRegistration(),
@@ -41,28 +43,28 @@ extension Player {
         ]
     }
 
-    private func playRegistration() -> some RemoteCommandRegistrable {
+    func playRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.playCommand) { [weak self] _ in
             self?.play()
             return .success
         }
     }
 
-    private func pauseRegistration() -> some RemoteCommandRegistrable {
+    func pauseRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.pauseCommand) { [weak self] _ in
             self?.pause()
             return .success
         }
     }
 
-    private func togglePlayPauseRegistration() -> some RemoteCommandRegistrable {
+    func togglePlayPauseRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.togglePlayPauseCommand) { [weak self] _ in
             self?.togglePlayPause()
             return .success
         }
     }
 
-    private func previousTrackRegistration() -> some RemoteCommandRegistrable {
+    func previousTrackRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = false
         return nowPlayingSession.remoteCommandCenter.register(command: \.previousTrackCommand) { [weak self] _ in
             self?.returnToPrevious()
@@ -70,7 +72,7 @@ extension Player {
         }
     }
 
-    private func nextTrackRegistration() -> some RemoteCommandRegistrable {
+    func nextTrackRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = false
         return nowPlayingSession.remoteCommandCenter.register(command: \.nextTrackCommand) { [weak self] _ in
             self?.advanceToNext()
@@ -78,7 +80,7 @@ extension Player {
         }
     }
 
-    private func changePlaybackPositionRegistration() -> some RemoteCommandRegistrable {
+    func changePlaybackPositionRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.changePlaybackPositionCommand) { [weak self] event in
             guard let positionEvent = event as? MPChangePlaybackPositionCommandEvent else { return .commandFailed }
             self?.seek(near(.init(seconds: positionEvent.positionTime, preferredTimescale: CMTimeScale(NSEC_PER_SEC))))
@@ -86,7 +88,7 @@ extension Player {
         }
     }
 
-    private func skipBackwardRegistration() -> some RemoteCommandRegistrable {
+    func skipBackwardRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = false
         nowPlayingSession.remoteCommandCenter.skipBackwardCommand.preferredIntervals = [.init(value: configuration.backwardSkipInterval)]
         return nowPlayingSession.remoteCommandCenter.register(command: \.skipBackwardCommand) { [weak self] _ in
@@ -95,7 +97,7 @@ extension Player {
         }
     }
 
-    private func skipForwardRegistration() -> some RemoteCommandRegistrable {
+    func skipForwardRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = false
         nowPlayingSession.remoteCommandCenter.skipForwardCommand.preferredIntervals = [.init(value: configuration.forwardSkipInterval)]
         return nowPlayingSession.remoteCommandCenter.register(command: \.skipForwardCommand) { [weak self] _ in
