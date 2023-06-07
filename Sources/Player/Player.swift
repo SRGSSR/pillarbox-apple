@@ -112,8 +112,9 @@ public final class Player: ObservableObject, Equatable {
         self.configuration = configuration
 
         configurePlayer()
+        
         configureControlCenterPublishers()
-        configureUpdatePublishers()
+        configureQueuePlayerUpdatePublishers()
         configurePublishedPropertyPublishers()
     }
 
@@ -142,7 +143,7 @@ public final class Player: ObservableObject, Equatable {
         configureControlCenterRemoteCommandUpdatePublisher()
     }
 
-    private func configureUpdatePublishers() {
+    private func configureQueuePlayerUpdatePublishers() {
         configureQueueUpdatePublisher()
         configureRateUpdatePublisher()
     }

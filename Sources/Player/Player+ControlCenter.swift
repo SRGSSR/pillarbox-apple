@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Combine
 import MediaPlayer
 
 extension Player {
@@ -26,6 +27,24 @@ extension Player {
             nowPlayingSession.remoteCommandCenter.unregister(registration)
         }
         commandRegistrations = []
+    }
+
+    func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
+        currentPublisher()
+            .map { current in
+                guard let current else {
+                    return Just(NowPlaying.Info()).eraseToAnyPublisher()
+                }
+                return current.item.$asset
+                    .map { $0.nowPlayingInfo() }
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .removeDuplicates { lhs, rhs in
+                // swiftlint:disable:next legacy_objc_type
+                NSDictionary(dictionary: lhs).isEqual(to: rhs)
+            }
+            .eraseToAnyPublisher()
     }
 }
 

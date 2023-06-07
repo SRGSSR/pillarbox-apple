@@ -4,8 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
-import DequeModule
+import Foundation
 
 public extension Player {
     /// Check whether the player has finished playing its content and can be restarted.
