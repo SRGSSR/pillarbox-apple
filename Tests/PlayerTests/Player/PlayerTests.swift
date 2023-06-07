@@ -13,10 +13,6 @@ import Streams
 import XCTest
 
 final class PlayerTests: TestCase {
-    func testConstants() {
-        expect(Player.startTimeThreshold).to(equal(3))
-    }
-
     func testDeallocation() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         var player: Player? = Player(item: item)

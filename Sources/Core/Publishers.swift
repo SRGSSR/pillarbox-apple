@@ -138,9 +138,8 @@ public extension Publisher {
 }
 
 public extension NotificationCenter {
-    /// The usual notification publisher retains the filter object, potentially creating cycles. The following
-    /// publisher avoids this issue while still only observing the filter object (if any), even after it is
-    /// eventually deallocated.
+    /// The usual notification publisher retains the observed object, potentially creating cycles. The following
+    /// publisher avoids this issue by only weakly capturing the observed object.
     /// - Parameters:
     ///   - name: The notification to observe.
     ///   - object: The object to observe (weakly captured).
