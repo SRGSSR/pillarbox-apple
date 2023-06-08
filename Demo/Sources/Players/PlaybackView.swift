@@ -485,7 +485,10 @@ struct PlaybackView: View {
             }
         }
         .background(.black)
-        .onAppear(perform: player.play)
+        .onAppear {
+            player.becomeActiveIfPossible()
+            player.play()
+        }
     }
 
     init(player: Player, layout: Binding<Layout> = .constant(.inline)) {
