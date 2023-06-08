@@ -30,9 +30,13 @@ struct MultiView: View {
             }
             .background(.black)
         }
+        .onChange(of: activePosition) { position in
+            setActive(position: position)
+        }
         .onAppear {
             Self.play(media: media1, in: topPlayer)
             Self.play(media: media2, in: bottomPlayer)
+            setActive(position: activePosition)
         }
         .tracked(title: "multi")
     }
@@ -50,6 +54,17 @@ struct MultiView: View {
                 activePosition = position
             }
             .saturation(activePosition == position ? 1 : 0)
+    }
+
+    private func setActive(position: PlayerPosition) {
+        switch position {
+        case .top:
+            topPlayer.isMuted = false
+            bottomPlayer.isMuted = true
+        case .bottom:
+            topPlayer.isMuted = true
+            bottomPlayer.isMuted = false
+        }
     }
 }
 
