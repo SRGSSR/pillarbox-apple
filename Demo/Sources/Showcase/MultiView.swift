@@ -8,6 +8,11 @@ import Analytics
 import Player
 import SwiftUI
 
+private enum ActivePlayer {
+    case top
+    case bottom
+}
+
 // Behavior: h-exp, v-exp
 struct MultiView: View {
     let media1: Media
@@ -15,12 +20,23 @@ struct MultiView: View {
 
     @StateObject private var topPlayer = Player(configuration: .externalPlaybackDisabled)
     @StateObject private var bottomPlayer = Player(configuration: .externalPlaybackDisabled)
+    @State private var activePlayer = ActivePlayer.top
 
     var body: some View {
         VStack(spacing: 10) {
             Group {
                 BasicPlaybackView(player: topPlayer)
+                    .accessibilityAddTraits(.isButton)
+                    .onTapGesture {
+                        activePlayer = .top
+                    }
+                    .saturation(activePlayer == .top ? 1 : 0)
                 BasicPlaybackView(player: bottomPlayer)
+                    .accessibilityAddTraits(.isButton)
+                    .onTapGesture {
+                        activePlayer = .bottom
+                    }
+                    .saturation(activePlayer == .bottom ? 1 : 0)
             }
             .background(.black)
         }
@@ -40,8 +56,8 @@ struct MultiView: View {
 struct MultiView_Previews: PreviewProvider {
     static var previews: some View {
         MultiView(
-            media1: Media(from: URLTemplate.appleBasic_16_9_TS_HLS),
-            media2: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS)
+            media1: Media(from: URNTemplate.onDemandHorizontalVideo),
+            media2: Media(from: URNTemplate.onDemandVerticalVideo)
         )
     }
 }
