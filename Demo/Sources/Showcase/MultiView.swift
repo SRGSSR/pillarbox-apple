@@ -13,13 +13,41 @@ private enum PlayerPosition {
     case bottom
 }
 
+/// Behavior: h-exp, v-exp
+private struct SingleView: View {
+    @ObservedObject var player: Player
+    let action: () -> Void
+
+    var body: some View {
+        ZStack {
+            VideoView(player: player)
+                .accessibilityAddTraits(.isButton)
+                .onTapGesture(perform: action)
+            routePickerView(player: player)
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+            ProgressView()
+                .opacity(player.isBusy ? 1 : 0)
+        }
+    }
+
+    @ViewBuilder
+    private func routePickerView(player: Player) -> some View {
+        if player.configuration.allowsExternalPlayback {
+            RoutePickerView()
+                .tint(.white)
+                .frame(width: 45, height: 45)
+        }
+    }
+}
+
 // Behavior: h-exp, v-exp
 struct MultiView: View {
     let media1: Media
     let media2: Media
 
-    @StateObject private var topPlayer = Player(configuration: .externalPlaybackDisabled)
-    @StateObject private var bottomPlayer = Player(configuration: .externalPlaybackDisabled)
+    @StateObject private var topPlayer = Player()
+    @StateObject private var bottomPlayer = Player()
     @State private var activePosition: PlayerPosition = .top
 
     var body: some View {
@@ -48,11 +76,8 @@ struct MultiView: View {
 
     @ViewBuilder
     private func playerView(player: Player, position: PlayerPosition) -> some View {
-        BasicPlaybackView(player: player)
+        SingleView(player: player) { activePosition = position }
             .accessibilityAddTraits(.isButton)
-            .onTapGesture {
-                activePosition = position
-            }
             .saturation(activePosition == position ? 1 : 0)
     }
 
