@@ -99,8 +99,8 @@ struct ShowcaseView: View {
             }
             Cell(title: "Multi") {
                 MultiView(
-                    media1: Media(from: URLTemplate.appleBasic_16_9_TS_HLS),
-                    media2: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS)
+                    media1: Media(from: URNTemplate.onDemandHorizontalVideo),
+                    media2: Media(from: URNTemplate.onDemandVerticalVideo)
                 )
             }
             Cell(title: "Link") {
