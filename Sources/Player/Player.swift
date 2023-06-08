@@ -138,7 +138,7 @@ public final class Player: ObservableObject, Equatable {
     }
 
     private func configureControlCenterPublishers() {
-        guard ProcessInfo.processInfo.isiOSAppOnMac else { return }
+        guard !ProcessInfo.processInfo.isiOSAppOnMac else { return }
         configureControlCenterMetadataUpdatePublisher()
         configureControlCenterRemoteCommandUpdatePublisher()
     }
