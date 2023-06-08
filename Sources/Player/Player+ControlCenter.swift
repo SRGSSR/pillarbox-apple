@@ -8,9 +8,15 @@ import Combine
 import MediaPlayer
 
 public extension Player {
+    private static weak var currentPlayer: Player?
+
     /// Make the player the current active one.
     func becomeActiveIfPossible() {
         nowPlayingSession.becomeActiveIfPossible()
+
+        Self.currentPlayer?.queuePlayer.allowsExternalPlayback = false
+        queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
+        Self.currentPlayer = self
     }
 }
 

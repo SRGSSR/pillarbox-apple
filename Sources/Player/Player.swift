@@ -107,11 +107,11 @@ public final class Player: ObservableObject, Equatable {
         storedItems = Deque(items)
 
         nowPlayingSession = MPNowPlayingSession(players: [queuePlayer])
-        nowPlayingSession.becomeActiveIfPossible()
 
         self.configuration = configuration
 
         configurePlayer()
+        becomeActiveIfPossible()
 
         configureControlCenterPublishers()
         configureQueuePlayerUpdatePublishers()
@@ -131,7 +131,7 @@ public final class Player: ObservableObject, Equatable {
     }
 
     private func configurePlayer() {
-        queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
+        queuePlayer.allowsExternalPlayback = false
         queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
         queuePlayer.preventsDisplaySleepDuringVideoPlayback = configuration.preventsDisplaySleepDuringVideoPlayback
         queuePlayer.audiovisualBackgroundPlaybackPolicy = configuration.audiovisualBackgroundPlaybackPolicy
