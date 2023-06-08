@@ -100,7 +100,7 @@ struct ShowcaseView: View {
             Cell(title: "Multi") {
                 MultiView(
                     media1: Media(from: URNTemplate.onDemandHorizontalVideo),
-                    media2: Media(from: URNTemplate.onDemandVerticalVideo)
+                    media2: Media(from: URNTemplate.onDemandVideo)
                 )
             }
             Cell(title: "Link") {

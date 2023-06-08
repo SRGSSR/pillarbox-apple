@@ -7,6 +7,13 @@
 import Combine
 import MediaPlayer
 
+public extension Player {
+    /// Make the player the current active one.
+    func becomeActiveIfPossible() {
+        nowPlayingSession.becomeActiveIfPossible()
+    }
+}
+
 extension Player {
     func updateControlCenter(nowPlayingInfo: NowPlaying.Info) {
         if !nowPlayingInfo.isEmpty {
