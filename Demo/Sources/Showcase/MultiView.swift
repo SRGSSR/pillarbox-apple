@@ -8,7 +8,7 @@ import Analytics
 import Player
 import SwiftUI
 
-private enum ActivePlayer {
+private enum PlayerPosition {
     case top
     case bottom
 }
@@ -20,23 +20,13 @@ struct MultiView: View {
 
     @StateObject private var topPlayer = Player(configuration: .externalPlaybackDisabled)
     @StateObject private var bottomPlayer = Player(configuration: .externalPlaybackDisabled)
-    @State private var activePlayer = ActivePlayer.top
+    @State private var activePosition: PlayerPosition = .top
 
     var body: some View {
         VStack(spacing: 10) {
             Group {
-                BasicPlaybackView(player: topPlayer)
-                    .accessibilityAddTraits(.isButton)
-                    .onTapGesture {
-                        activePlayer = .top
-                    }
-                    .saturation(activePlayer == .top ? 1 : 0)
-                BasicPlaybackView(player: bottomPlayer)
-                    .accessibilityAddTraits(.isButton)
-                    .onTapGesture {
-                        activePlayer = .bottom
-                    }
-                    .saturation(activePlayer == .bottom ? 1 : 0)
+                playerView(player: topPlayer, position: .top)
+                playerView(player: bottomPlayer, position: .bottom)
             }
             .background(.black)
         }
@@ -50,6 +40,16 @@ struct MultiView: View {
     private static func play(media: Media, in player: Player) {
         player.append(media.playerItem())
         player.play()
+    }
+
+    @ViewBuilder
+    private func playerView(player: Player, position: PlayerPosition) -> some View {
+        BasicPlaybackView(player: player)
+            .accessibilityAddTraits(.isButton)
+            .onTapGesture {
+                activePosition = position
+            }
+            .saturation(activePosition == position ? 1 : 0)
     }
 }
 
