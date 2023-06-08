@@ -13,6 +13,8 @@ import TimelaneCombine
 
 /// An audio / video player maintaining its items as a double-ended queue (deque).
 public final class Player: ObservableObject, Equatable {
+    private static weak var currentPlayer: Player?
+
     /// Current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle
 
@@ -48,6 +50,16 @@ public final class Player: ObservableObject, Equatable {
     @Published var currentItem: CurrentItem = .good(nil)
     @Published var storedItems: Deque<PlayerItem>
 
+    @Published private(set) var isActive = false {
+        didSet {
+            if isActive {
+                nowPlayingSession.becomeActiveIfPossible()
+                queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
+            } else {
+                queuePlayer.allowsExternalPlayback = false
+            }
+        }
+    }
     @Published private var currentTracker: CurrentTracker?
 
     /// The player configuration
@@ -111,7 +123,6 @@ public final class Player: ObservableObject, Equatable {
         self.configuration = configuration
 
         configurePlayer()
-        becomeActiveIfPossible()
 
         configureControlCenterPublishers()
         configureQueuePlayerUpdatePublishers()
@@ -128,6 +139,13 @@ public final class Player: ObservableObject, Equatable {
 
     public nonisolated static func == (lhs: Player, rhs: Player) -> Bool {
         lhs === rhs
+    }
+
+    /// Make the player the current active one.
+    public func becomeActiveIfPossible() {
+        Self.currentPlayer?.isActive = false
+        isActive = true
+        Self.currentPlayer = self
     }
 
     private func configurePlayer() {
@@ -281,16 +299,23 @@ private extension Player {
 
 private extension Player {
     func configureControlCenterMetadataUpdatePublisher() {
-        Publishers.CombineLatest(
+        Publishers.CombineLatest3(
             nowPlayingInfoMetadataPublisher(),
-            queuePlayer.nowPlayingInfoPlaybackPublisher()
+            queuePlayer.nowPlayingInfoPlaybackPublisher(),
+            $isActive
         )
         .receiveOnMainThread()
         .lane("control_center_update")
-        .sink { [weak self] nowPlayingInfoMetadata, nowPlayingInfoPlayback in
-            self?.updateControlCenter(
-                nowPlayingInfo: nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new }
-            )
+        .sink { [weak self] nowPlayingInfoMetadata, nowPlayingInfoPlayback, isActive in
+            guard let self else { return }
+            if isActive {
+                self.updateControlCenter(
+                    nowPlayingInfo: nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new }
+                )
+            }
+            else {
+                self.updateControlCenter(nowPlayingInfo: [:])
+            }
         }
         .store(in: &cancellables)
     }
