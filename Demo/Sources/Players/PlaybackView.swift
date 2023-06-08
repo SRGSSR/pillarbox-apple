@@ -466,8 +466,8 @@ struct PlaybackView: View {
         case maximized
     }
 
-    @ObservedObject var player: Player
-    @Binding var layout: Layout
+    @ObservedObject private var player: Player
+    @Binding private var layout: Layout
 
     var body: some View {
         ZStack {
