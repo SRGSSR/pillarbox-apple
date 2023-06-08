@@ -87,6 +87,14 @@ struct MultiView: View {
         player.play()
     }
 
+    private static func make(activePlayer: Player, inactivePlayer: Player) {
+        activePlayer.becomeActiveIfPossible()
+        activePlayer.isTrackingEnabled = true
+        activePlayer.isMuted = false
+        inactivePlayer.isMuted = true
+        inactivePlayer.isTrackingEnabled = false
+    }
+
     @ViewBuilder
     private func playerView(player: Player, position: PlayerPosition) -> some View {
         SingleView(player: player) { activePosition = position }
@@ -97,13 +105,9 @@ struct MultiView: View {
     private func setActive(position: PlayerPosition) {
         switch position {
         case .top:
-            topPlayer.isMuted = false
-            bottomPlayer.isMuted = true
-            topPlayer.becomeActiveIfPossible()
+            Self.make(activePlayer: topPlayer, inactivePlayer: bottomPlayer)
         case .bottom:
-            topPlayer.isMuted = true
-            bottomPlayer.isMuted = false
-            bottomPlayer.becomeActiveIfPossible()
+            Self.make(activePlayer: bottomPlayer, inactivePlayer: topPlayer)
         }
     }
 }
