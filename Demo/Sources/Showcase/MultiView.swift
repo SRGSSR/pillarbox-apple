@@ -23,11 +23,24 @@ private struct SingleView: View {
             VideoView(player: player)
                 .accessibilityAddTraits(.isButton)
                 .onTapGesture(perform: action)
+            playbackButton(player: player)
             routePickerView(player: player)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
             ProgressView()
                 .opacity(player.isBusy ? 1 : 0)
+        }
+    }
+
+    @ViewBuilder
+    private func playbackButton(player: Player) -> some View {
+        Button(action: player.togglePlayPause) {
+            Image(systemName: player.playbackState == .playing ? "pause.circle.fill" : "play.circle.fill")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 50)
+                .tint(.white)
+                .shadow(radius: 5)
         }
     }
 
