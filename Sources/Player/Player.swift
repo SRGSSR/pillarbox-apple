@@ -311,14 +311,8 @@ private extension Player {
         .lane("control_center_update")
         .sink { [weak self] nowPlayingInfoMetadata, nowPlayingInfoPlayback, isActive in
             guard let self else { return }
-            if isActive {
-                self.updateControlCenter(
-                    nowPlayingInfo: nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new }
-                )
-            }
-            else {
-                self.updateControlCenter(nowPlayingInfo: [:])
-            }
+            let nowPlayingInfo = isActive ? nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new } : [:]
+            self.updateControlCenter(nowPlayingInfo: nowPlayingInfo)
         }
         .store(in: &cancellables)
     }
