@@ -4,7 +4,7 @@ The following document lists known Pillarbox issues. Entries with a feedback num
 
 ## Video view leak (FB11934227)
 
-A bug in AVKit currently makes `SystemVideoView` leak resources after having interacted with the playback button.
+A bug in AVKit currently makes `SystemVideoView` leak resources after having interacted with the playback button on iOS 16. The issue has been fixed on iOS 17.
 
 ### Workaround
 
