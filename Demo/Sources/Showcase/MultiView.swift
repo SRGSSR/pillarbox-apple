@@ -20,16 +20,19 @@ private struct SingleView: View {
 
     var body: some View {
         ZStack {
-            VideoView(player: player)
-                .accessibilityAddTraits(.isButton)
-                .onTapGesture(perform: action)
+            videoView(player: player)
             playbackButton(player: player)
             routePickerView(player: player)
-                .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
             ProgressView()
                 .opacity(player.isBusy ? 1 : 0)
         }
+    }
+
+    @ViewBuilder
+    private func videoView(player: Player) -> some View {
+        VideoView(player: player)
+            .accessibilityAddTraits(.isButton)
+            .onTapGesture(perform: action)
     }
 
     @ViewBuilder
@@ -50,6 +53,8 @@ private struct SingleView: View {
             RoutePickerView()
                 .tint(.white)
                 .frame(width: 45, height: 45)
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
         }
     }
 }
