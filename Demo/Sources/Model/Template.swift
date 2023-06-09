@@ -141,6 +141,10 @@ enum URNTemplate {
         title: "Vertical video",
         type: .urn("urn:rts:video:13444390")
     )
+    static let onDemandVideo = Template(
+        title: "A bon entendeur",
+        type: .urn("urn:rts:video:14080915")
+    )
     static let liveVideo = Template(
         title: "RSI 1",
         description: "Live video",

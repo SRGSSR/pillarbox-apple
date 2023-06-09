@@ -13,6 +13,8 @@ import TimelaneCombine
 
 /// An audio / video player maintaining its items as a double-ended queue (deque).
 public final class Player: ObservableObject, Equatable {
+    private static weak var currentPlayer: Player?
+
     /// Current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle
 
@@ -47,6 +49,18 @@ public final class Player: ObservableObject, Equatable {
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
     @Published var currentItem: CurrentItem = .good(nil)
     @Published var storedItems: Deque<PlayerItem>
+
+    @Published private var isActive = false {
+        didSet {
+            if isActive {
+                nowPlayingSession.becomeActiveIfPossible()
+                queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
+            }
+            else {
+                queuePlayer.allowsExternalPlayback = false
+            }
+        }
+    }
 
     @Published private var currentTracker: CurrentTracker?
 
@@ -107,7 +121,6 @@ public final class Player: ObservableObject, Equatable {
         storedItems = Deque(items)
 
         nowPlayingSession = MPNowPlayingSession(players: [queuePlayer])
-        nowPlayingSession.becomeActiveIfPossible()
 
         self.configuration = configuration
 
@@ -130,8 +143,16 @@ public final class Player: ObservableObject, Equatable {
         lhs === rhs
     }
 
+    /// Enable AirPlay and Control Center integration for the receiver, making the player the current active one. At most
+    /// one player can be active at any time.
+    public func becomeActive() {
+        Self.currentPlayer?.isActive = false
+        isActive = true
+        Self.currentPlayer = self
+    }
+
     private func configurePlayer() {
-        queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
+        queuePlayer.allowsExternalPlayback = false
         queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
         queuePlayer.preventsDisplaySleepDuringVideoPlayback = configuration.preventsDisplaySleepDuringVideoPlayback
         queuePlayer.audiovisualBackgroundPlaybackPolicy = configuration.audiovisualBackgroundPlaybackPolicy
@@ -281,16 +302,17 @@ private extension Player {
 
 private extension Player {
     func configureControlCenterMetadataUpdatePublisher() {
-        Publishers.CombineLatest(
+        Publishers.CombineLatest3(
             nowPlayingInfoMetadataPublisher(),
-            queuePlayer.nowPlayingInfoPlaybackPublisher()
+            queuePlayer.nowPlayingInfoPlaybackPublisher(),
+            $isActive
         )
         .receiveOnMainThread()
         .lane("control_center_update")
-        .sink { [weak self] nowPlayingInfoMetadata, nowPlayingInfoPlayback in
-            self?.updateControlCenter(
-                nowPlayingInfo: nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new }
-            )
+        .sink { [weak self] nowPlayingInfoMetadata, nowPlayingInfoPlayback, isActive in
+            guard let self else { return }
+            let nowPlayingInfo = isActive ? nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new } : [:]
+            self.updateControlCenter(nowPlayingInfo: nowPlayingInfo)
         }
         .store(in: &cancellables)
     }

@@ -238,13 +238,12 @@ You can also use a layout reader to check whether the view covers the full scree
 
 A player can be loaded with several items to create a playlist. The playlist can be mutated at any time by inserting, deleting or moving items. Please refer to our extended playlist demo to discover what can be readily achieved with our current playlist API.
 
-## AirPlay (iOS)
+## AirPlay and Control Center integration (iOS)
 
-The player supports AirPlay. Please ensure that your application audio session and background modes are configured appropriately.
+The player supports AirPlay and can be integrated with the Control Center:
 
-## Control center integration (iOS)
-
-The player is automatically integrated with the control center. Currently only the most recent player instance is registered with the control center. This behavior will be further improved in the future, though.
+- For AirPlay support please ensure that your application audio session and background modes are configured appropriately.
+- Call `becomeActive()` on a player instance to enable AirPlay and Control Center support for it.
 
 ## Custom player items
 
