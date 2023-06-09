@@ -151,6 +151,15 @@ public final class Player: ObservableObject, Equatable {
         Self.currentPlayer = self
     }
 
+    /// Disable AirPlay and Control Center integration for the receiver. Does nothing if the receiver is currently
+    /// inactive. Calling `resignActive()` is superfluous if `becomeActive` is called on a different player instance
+    /// or if the player gets destroyed.
+    public func resignActive() {
+        guard isActive, Self.currentPlayer == self else { return }
+        isActive = false
+        Self.currentPlayer = nil
+    }
+
     private func configurePlayer() {
         queuePlayer.allowsExternalPlayback = false
         queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
