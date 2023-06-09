@@ -486,7 +486,7 @@ struct PlaybackView: View {
         }
         .background(.black)
         .onAppear {
-            player.becomeActiveIfPossible()
+            player.becomeActive()
             player.play()
         }
     }

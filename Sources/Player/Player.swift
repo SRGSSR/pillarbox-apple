@@ -145,7 +145,7 @@ public final class Player: ObservableObject, Equatable {
 
     /// Enable AirPlay and Control Center integration for the receiver, making the player the current active one. At most
     /// one player can be active at any time.
-    public func becomeActiveIfPossible() {
+    public func becomeActive() {
         Self.currentPlayer?.isActive = false
         isActive = true
         Self.currentPlayer = self

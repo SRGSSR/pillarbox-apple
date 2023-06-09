@@ -88,7 +88,7 @@ struct MultiView: View {
     }
 
     private static func make(activePlayer: Player, inactivePlayer: Player) {
-        activePlayer.becomeActiveIfPossible()
+        activePlayer.becomeActive()
         activePlayer.isTrackingEnabled = true
         activePlayer.isMuted = false
         inactivePlayer.isMuted = true

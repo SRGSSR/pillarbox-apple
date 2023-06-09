@@ -243,7 +243,7 @@ A player can be loaded with several items to create a playlist. The playlist can
 The player supports AirPlay and can be integrated with the Control Center:
 
 - For AirPlay support please ensure that your application audio session and background modes are configured appropriately.
-- Call `becomeActiveIfPossible()` on a player instance to enable AirPlay and Control Center support for it.
+- Call `becomeActive()` on a player instance to enable AirPlay and Control Center support for it.
 
 ## Custom player items
 
