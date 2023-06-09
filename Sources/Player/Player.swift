@@ -50,16 +50,18 @@ public final class Player: ObservableObject, Equatable {
     @Published var currentItem: CurrentItem = .good(nil)
     @Published var storedItems: Deque<PlayerItem>
 
-    @Published private(set) var isActive = false {
+    @Published private var isActive = false {
         didSet {
             if isActive {
                 nowPlayingSession.becomeActiveIfPossible()
                 queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
-            } else {
+            }
+            else {
                 queuePlayer.allowsExternalPlayback = false
             }
         }
     }
+
     @Published private var currentTracker: CurrentTracker?
 
     /// The player configuration
