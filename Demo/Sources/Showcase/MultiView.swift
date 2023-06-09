@@ -97,8 +97,9 @@ struct MultiView: View {
         activePlayer.becomeActive()
         activePlayer.isTrackingEnabled = true
         activePlayer.isMuted = false
-        inactivePlayer.isMuted = true
+
         inactivePlayer.isTrackingEnabled = false
+        inactivePlayer.isMuted = true
     }
 
     @ViewBuilder
