@@ -44,6 +44,7 @@ private struct SingleView: View {
                 .frame(width: 50)
                 .tint(.white)
                 .shadow(radius: 5)
+                .opacity(player.isBusy ? 0 : 1)
         }
     }
 
