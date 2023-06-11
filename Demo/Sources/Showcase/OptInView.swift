@@ -12,10 +12,15 @@ struct OptInView: View {
     let media: Media
     @StateObject private var player = Player(configuration: .standard)
 
+    @State private var isActive = true
+
     var body: some View {
         VStack {
             PlaybackView(player: player)
             VStack(alignment: .leading) {
+                Toggle(isOn: $isActive) {
+                    Text("Active")
+                }
                 Toggle(isOn: $player.isTrackingEnabled) {
                     Text("Tracking")
                 }
@@ -25,6 +30,14 @@ struct OptInView: View {
             .padding()
         }
         .background(.black)
+        .onChange(of: isActive) { newValue in
+            if newValue {
+                player.becomeActive()
+            }
+            else {
+                player.resignActive()
+            }
+        }
         .onAppear(perform: load)
         .tracked(title: "tracking")
     }
