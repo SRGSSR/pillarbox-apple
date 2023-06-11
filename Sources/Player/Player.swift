@@ -146,6 +146,7 @@ public final class Player: ObservableObject, Equatable {
     /// Enable AirPlay and Control Center integration for the receiver, making the player the current active one. At most
     /// one player can be active at any time.
     public func becomeActive() {
+        guard Self.currentPlayer != self else { return }
         Self.currentPlayer?.isActive = false
         isActive = true
         Self.currentPlayer = self
@@ -155,7 +156,7 @@ public final class Player: ObservableObject, Equatable {
     /// inactive. Calling `resignActive()` is superfluous if `becomeActive` is called on a different player instance
     /// or if the player gets destroyed.
     public func resignActive() {
-        guard isActive, Self.currentPlayer == self else { return }
+        guard Self.currentPlayer == self else { return }
         isActive = false
         Self.currentPlayer = nil
     }
