@@ -8,7 +8,7 @@ import Analytics
 import Player
 import SwiftUI
 
-struct TrackingView: View {
+struct OptInView: View {
     let media: Media
     @StateObject private var player = Player(configuration: .standard)
 
@@ -34,8 +34,8 @@ struct TrackingView: View {
     }
 }
 
-struct TrackingView_Previews: PreviewProvider {
+struct OptInView_Previews: PreviewProvider {
     static var previews: some View {
-        TrackingView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
+        OptInView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
     }
 }
