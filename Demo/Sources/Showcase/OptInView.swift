@@ -8,14 +8,19 @@ import Analytics
 import Player
 import SwiftUI
 
-struct TrackingView: View {
+struct OptInView: View {
     let media: Media
     @StateObject private var player = Player(configuration: .standard)
+
+    @State private var isActive = true
 
     var body: some View {
         VStack {
             PlaybackView(player: player)
             VStack(alignment: .leading) {
+                Toggle(isOn: $isActive) {
+                    Text("Active")
+                }
                 Toggle(isOn: $player.isTrackingEnabled) {
                     Text("Tracking")
                 }
@@ -25,6 +30,14 @@ struct TrackingView: View {
             .padding()
         }
         .background(.black)
+        .onChange(of: isActive) { newValue in
+            if newValue {
+                player.becomeActive()
+            }
+            else {
+                player.resignActive()
+            }
+        }
         .onAppear(perform: load)
         .tracked(title: "tracking")
     }
@@ -34,8 +47,8 @@ struct TrackingView: View {
     }
 }
 
-struct TrackingView_Previews: PreviewProvider {
+struct OptInView_Previews: PreviewProvider {
     static var previews: some View {
-        TrackingView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
+        OptInView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
     }
 }

@@ -114,12 +114,12 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func trackingSection() -> some View {
-        Section("Tracking") {
+        Section("Opt-in") {
             Cell(title: "Video URL") {
-                TrackingView(media: Media(from: URLTemplate.onDemandVideoMP4))
+                OptInView(media: Media(from: URLTemplate.onDemandVideoMP4))
             }
             Cell(title: "Video URN") {
-                TrackingView(media: Media(from: URNTemplate.onDemandVerticalVideo))
+                OptInView(media: Media(from: URNTemplate.onDemandVerticalVideo))
             }
         }
     }
