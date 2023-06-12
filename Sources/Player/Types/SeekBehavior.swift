@@ -6,10 +6,10 @@
 
 import Foundation
 
-/// Seek behavior during progress updates.
+/// A behavior for progress updates during a seek operation.
 public enum SeekBehavior {
-    /// Seek immediately when updated.
+    /// A behavior updating progress immediately during a seek.
     case immediate
-    /// Deferred until interaction ends.
+    /// A behavior deferring progress update after a seek ends.
     case deferred
 }

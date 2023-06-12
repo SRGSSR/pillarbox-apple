@@ -36,7 +36,7 @@ extension QueuePlayer {
         .eraseToAnyPublisher()
     }
 
-    /// Publishes current time, taking into account seeks to smooth out emitted values.
+    /// Publishes the current time, smoothing out emitted values during seeks.
     func smoothCurrentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
         Publishers.CombineLatest(
             Publishers.PeriodicTimePublisher(for: self, interval: interval, queue: queue),

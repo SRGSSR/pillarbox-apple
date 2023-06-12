@@ -18,9 +18,12 @@ public extension Player {
         _playbackSpeed.effectiveRange
     }
 
-    /// Set the desired playback speed. This value might not be applied immediately or might not be applicable at all,
-    /// check `effectivePlaybackSpeed` for the actually applied speed.
+    /// Sets the desired playback speed.
+    ///
     /// - Parameter playbackSpeed: The playback speed.
+    ///
+    /// This value might not be applied immediately or might not be applicable at all. You must check
+    /// `effectivePlaybackSpeed` to obtain the actually applied speed.
     func setDesiredPlaybackSpeed(_ playbackSpeed: Float) {
         desiredPlaybackSpeedPublisher.send(playbackSpeed)
     }

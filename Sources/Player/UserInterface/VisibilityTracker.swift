@@ -9,14 +9,18 @@ import Core
 import Foundation
 import SwiftUI
 
-/// Tracks user interface visibility, managing auto hide after a delay.
+/// An observable object tracking user interface visibility.
+///
+/// The tracker automatically turns off visibility after a delay while playing content.
 @available(tvOS, unavailable)
 public final class VisibilityTracker: ObservableObject {
     private enum TriggerId {
         case reset
     }
 
-    /// The player to attach. Use `View.bind(_:to:)` in SwiftUI code.
+    /// The player to attach.
+    ///
+    /// Use `View.bind(_:to:)` in SwiftUI code.
     @Published public var player: Player?
 
     /// Returns whether the user interface should be hidden.
@@ -29,8 +33,7 @@ public final class VisibilityTracker: ObservableObject {
 
     private let trigger = Trigger()
 
-    /// Create a tracker managing user interface visibility and automatically setting visibility to hidden after
-    /// a delay.
+    /// Creates a tracker managing user interface visibility.
     /// - Parameters:
     ///   - delay: The delay after which `isUserInterfaceHidden` is automatically reset to `true`.
     ///   - isUserInterfaceHidden: The initial value for `isUserInterfaceHidden`.
@@ -64,12 +67,12 @@ public final class VisibilityTracker: ObservableObject {
             .assign(to: &$isUserInterfaceHidden)
     }
 
-    /// Toggle user interface visibility.
+    /// Toggles user interface visibility.
     public func toggle() {
         isUserInterfaceHidden.toggle()
     }
 
-    /// Reset user interface auto hide delay.
+    /// Resets user interface auto hide delay.
     public func reset() {
         guard !isUserInterfaceHidden else { return }
         trigger.activate(for: TriggerId.reset)
@@ -78,7 +81,8 @@ public final class VisibilityTracker: ObservableObject {
 
 @available(tvOS, unavailable)
 public extension View {
-    /// Bind a visibility tracker to a player.
+    /// Binds a visibility tracker to a player.
+    /// 
     /// - Parameters:
     ///   - visibilityTracker: The visibility tracker to bind.
     ///   - player: The player to observe.

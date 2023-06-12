@@ -8,14 +8,18 @@ import Combine
 import CoreMedia
 import SwiftUI
 
-/// Tracks playback progress. Progress trackers can be locally instantiated in a SwiftUI view hierarchy to trigger
-/// view updates at a specific pace, avoiding unnecessary refreshes in other parts of the view hierarchy that do
-/// not need to be periodically refreshed.
+/// An observable object which tracks playback progress.
+///
+/// Progress trackers can be instantiated in a SwiftUI view hierarchy to trigger local view updates at a specific
+/// pace, avoiding unnecessary refreshes in other parts of the view hierarchy that do not need to be periodically
+/// refreshed.
 public final class ProgressTracker: ObservableObject {
-    /// The player to attach. Use `View.bind(_:to:)` in SwiftUI code.
+    /// The player to attach.
+    ///
+    /// Use `View.bind(_:to:)` in SwiftUI code.
     @Published public var player: Player?
 
-    /// Must be set to `true` to report user interaction to the progress tracker.
+    /// A Boolean describing whether user interaction is currently changing the progress value.
     @Published public var isInteracting = false {
         willSet {
             guard !newValue else { return }
@@ -27,8 +31,11 @@ public final class ProgressTracker: ObservableObject {
 
     private let seekBehavior: SeekBehavior
 
-    /// The current progress. Might be different from the player progress when interaction takes place. This property
-    /// returns 0 also when no progress information is available, which you can check using `isProgressAvailable`.
+    /// The current progress.
+    ///
+    /// The returned value might be different from the player progress when interaction takes place.
+    ///
+    /// This property returns 0 when no progress information is available, which you can check using `isProgressAvailable`.
     public var progress: Float {
         get {
             _progress ?? 0
@@ -41,13 +48,16 @@ public final class ProgressTracker: ObservableObject {
         }
     }
 
-    /// The time corresponding to the current progress. Might be different from the player current time when
-    /// interaction takes place. Guaranteed to be valid when returned.
+    /// The time corresponding to the current progress.
+    ///
+    /// The returned value might be different from the player current time when interaction takes place.
+    ///
+    /// Non-`nil` returned times are guaranteed to be valid.
     public var time: CMTime? {
         time(forProgress: _progress)
     }
 
-    /// Range for progress values.
+    /// The allowed range for progress values.
     public var range: ClosedRange<Float> {
         _progress != nil ? 0...1 : 0...0
     }
@@ -56,13 +66,15 @@ public final class ProgressTracker: ObservableObject {
         _progress != nil
     }
 
-    /// The current time range. Guaranteed to be valid when returned.
+    /// The current time range.
+    ///
+    /// Non-`nil` returned ranges are guaranteed to be valid.
     public var timeRange: CMTimeRange? {
         guard let timeRange = player?.timeRange, timeRange.isValidAndNotEmpty else { return nil }
         return timeRange
     }
 
-    /// Create a tracker updating its progress at the specified interval.
+    /// Creates a progress tracker updating its progress at the specified interval.
     /// - Parameter interval: The interval at which progress must be updated.
     public init(interval: CMTime, seekBehavior: SeekBehavior = .immediate) {
         self.seekBehavior = seekBehavior
@@ -120,7 +132,7 @@ public final class ProgressTracker: ObservableObject {
 }
 
 public extension View {
-    /// Bind a progress tracker to a player.
+    /// Binds a progress tracker to a player.
     /// - Parameters:
     ///   - progressTracker: The progress tracker to bind.
     ///   - player: The player to observe.

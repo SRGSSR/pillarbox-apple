@@ -7,12 +7,16 @@
 import AVFoundation
 
 extension AVPlayer {
-    /// The available time range or `.invalid` when not known.
+    /// The available time range.
+    ///
+    /// Returns `.invalid` when the time range is unknown.
     var timeRange: CMTimeRange {
         currentItem?.timeRange ?? .invalid
     }
 
-    /// The current item duration or `.invalid` when not known.
+    /// The current item duration.
+    ///
+    /// Returns `.invalid` when the duration is unknown.
     var itemDuration: CMTime {
         guard let currentItem else { return .invalid }
         let duration = currentItem.duration

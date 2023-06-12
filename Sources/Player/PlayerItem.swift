@@ -8,13 +8,13 @@ import AVFoundation
 import Combine
 import Core
 
-/// An item to be inserted into the player.
+/// An item to be inserted into a player.
 public final class PlayerItem: Equatable {
     @Published private(set) var asset: any Assetable
 
     private let id = UUID()
 
-    /// Create the item from an `Asset` publisher data source.
+    /// Creates the item from an `Asset` publisher data source.
     public init<P, M>(publisher: P, trackerAdapters: [TrackerAdapter<M>] = []) where P: Publisher, M: AssetMetadata, P.Output == Asset<M> {
         asset = Asset<M>.loading.withId(id).withTrackerAdapters(trackerAdapters)
         publisher
@@ -29,7 +29,8 @@ public final class PlayerItem: Equatable {
             .assign(to: &$asset)
     }
 
-    /// Create a player item from a URL.
+    /// Creates a player item from a URL.
+    ///
     /// - Parameters:
     ///   - url: The URL to play.
     ///   - configuration: A closure to configure player items created from the receiver.
@@ -47,7 +48,8 @@ public final class PlayerItem: Equatable {
 }
 
 public extension PlayerItem {
-    /// A simple playable item.
+    /// Returns a simple playable item.
+    ///
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - metadata: The metadata associated with the item.
@@ -63,8 +65,8 @@ public extension PlayerItem {
         .init(asset: .simple(url: url, metadata: metadata, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 
-    /// An item loaded with custom resource loading. The scheme of the URL to be played has to be recognized by
-    /// the associated resource loader delegate.
+    /// Returns an item loaded with custom resource loading.
+    ///
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - delegate: The custom resource loader to use.
@@ -72,6 +74,8 @@ public extension PlayerItem {
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The item.
+    ///
+    /// The scheme of the URL to be played has to be recognized by the associated resource loader delegate.
     static func custom<M>(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
@@ -82,7 +86,8 @@ public extension PlayerItem {
         .init(asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 
-    /// An encrypted item loaded with a content key session.
+    /// Returns an encrypted item loaded with a content key session.
+    ///
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - delegate: The content key session delegate to use.
@@ -102,7 +107,8 @@ public extension PlayerItem {
 }
 
 public extension PlayerItem {
-    /// A simple playable item.
+    /// Returns a simple playable item.
+    ///
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
@@ -116,14 +122,16 @@ public extension PlayerItem {
         .init(asset: .simple(url: url, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 
-    /// An item loaded with custom resource loading. The scheme of the URL to be played has to be recognized by
-    /// the associated resource loader delegate.
+    /// Returns an item loaded with custom resource loading.
+    ///
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - delegate: The custom resource loader to use.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The item.
+    ///
+    /// The scheme of the URL to be played has to be recognized by the associated resource loader delegate.
     static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
@@ -133,7 +141,8 @@ public extension PlayerItem {
         .init(asset: .custom(url: url, delegate: delegate, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 
-    /// An encrypted item loaded with a content key session.
+    /// Returns an encrypted item loaded with a content key session.
+    /// 
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - delegate: The content key session delegate to use.

@@ -8,8 +8,10 @@ import AVFoundation
 
 public extension AVAssetResourceLoadingRequest {
     /// Causes the receiver to handle the failure to load a resource for which a resource loader’s delegate took
-    /// responsibility. Unlike `finishLoading(with:)` this method ensures error information can be reliably
-    /// forwarded to the player item being loaded in case of failure.
+    /// responsibility.
+    ///
+    /// Unlike `finishLoading(with:)` this method ensures error information can be reliably forwarded to the player
+    /// item being loaded in case of failure.
     /// - Parameter error: An error object indicating the reason for the failure.
     func finishLoadingReliably(with error: Error?) {
         let nsError = NSError.error(from: error)
@@ -19,7 +21,7 @@ public extension AVAssetResourceLoadingRequest {
         finishLoading(with: nsError)
     }
 
-    /// Redirect the receiver to another URL.
+    /// Redirects the receiver to another URL.
     /// - Parameter url: The URL to redirect the receiver to.
     func redirect(to url: URL) {
         var redirectRequest = request

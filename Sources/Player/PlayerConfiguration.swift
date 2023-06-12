@@ -7,24 +7,26 @@
 import AVFoundation
 import CoreMedia
 
-/// Player configuration.
+/// A player configuration.
 public struct PlayerConfiguration {
     /// A Boolean value that indicates whether the player allows switching to external playback mode.
     public let allowsExternalPlayback: Bool
 
     /// A Boolean value that indicates whether the player allows switching to external playback when mirroring.
+    ///
     /// This property has no effect when `allowsExternalPlayback` is false.
     public let usesExternalPlaybackWhileMirroring: Bool
 
-    /// Indicates whether video playback prevents display and device sleep.
+    /// A Boolean indicating whether video playback prevents display and device sleep.
     public let preventsDisplaySleepDuringVideoPlayback: Bool
 
     /// A policy that determines how playback of audiovisual media continues when the app transitions
     /// to the background.
     public let audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy
 
-    /// Enables smart playlist navigation (calling `returnToPrevious()` returns to the previous item in a playlist
-    /// only within its first few seconds, otherwise resumes the current item at its beginning).
+    /// A Boolean controlling whether smart playlist navigation is enabled.
+    ///
+    /// See `returnToPrevious()` for more information.
     public let isSmartNavigationEnabled: Bool
 
     /// The forward skip interval in seconds.
@@ -33,16 +35,7 @@ public struct PlayerConfiguration {
     /// The backward skip interval in seconds.
     public let backwardSkipInterval: TimeInterval
 
-    /// Create a player configuration.
-    /// - Parameters:
-    ///   - allowsExternalPlayback: Allows switching to external playback mode.
-    ///   - usesExternalPlaybackWhileMirroring: Allows switching to external playback when mirroring.
-    ///   - preventsDisplaySleepDuringVideoPlayback: Indicates whether video playback prevents display and device sleep.
-    ///   - audiovisualBackgroundPlaybackPolicy: Policy that determines how playback of audiovisual media continues
-    ///     when the app transitions to the background.
-    ///   - smartNavigationEnabled: Enables smart playlist navigation (see `isSmartNavigationEnabled`).
-    ///   - backwardSkipInterval: The forward skip interval in seconds.
-    ///   - forwardSkipInterval: The backward skip interval in seconds.
+    /// Creates a player configuration.
     public init(
         allowsExternalPlayback: Bool = true,
         usesExternalPlaybackWhileMirroring: Bool = false,

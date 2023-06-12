@@ -6,9 +6,9 @@
 
 import Foundation
 
-/// Media types.
+/// A media type.
 public enum MediaType {
-    /// Not yet determined.
+    /// Unknown media type.
     case unknown
     /// Audio.
     case audio

@@ -64,7 +64,7 @@ struct LayoutReaderHost<Content: View>: UIViewControllerRepresentable {
         _content = .constant(content)
     }
 
-    // Return a `UIHostingController` directly to ensure correct safe area insets
+    // Returns a `UIHostingController` directly to ensure correct safe area insets
     func makeUIViewController(context: Context) -> LayoutReaderHostingController<Content> {
         LayoutReaderHostingController(rootView: content())
     }

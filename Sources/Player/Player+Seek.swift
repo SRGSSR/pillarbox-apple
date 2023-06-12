@@ -7,7 +7,8 @@
 import CoreMedia
 
 public extension Player {
-    /// Check whether seeking to a specific time is possible.
+    /// Checks whether seeking to a specific time is possible.
+    ///
     /// - Parameter time: The time to seek to.
     /// - Returns: `true` if possible.
     func canSeek(to time: CMTime) -> Bool {
@@ -15,7 +16,8 @@ public extension Player {
         return timeRange.start <= time && time <= timeRange.end
     }
 
-    /// Seek to a given position.
+    /// Seeks to a given position.
+    /// 
     /// - Parameters:
     ///   - position: The position to seek to.
     ///   - smooth: Set to `true` to enable smooth seeking. This allows any currently pending seek to complete before

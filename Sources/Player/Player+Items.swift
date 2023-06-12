@@ -19,26 +19,27 @@ public extension Player {
         }
     }
 
-    /// Items before the current item (not included).
-    /// - Returns: Items.
+    /// The items located before the current item (not included).
     var previousItems: [PlayerItem] {
         guard let currentIndex else { return [] }
         return Array(storedItems.prefix(upTo: currentIndex))
     }
 
-    /// Items past the current item (not included).
-    /// - Returns: Items.
+    /// The items located after the current item (not included).
     var nextItems: [PlayerItem] {
         guard let currentIndex else { return Array(storedItems) }
         return Array(storedItems.suffix(from: currentIndex).dropFirst())
     }
 
-    /// Insert an item before another item. Does nothing if the item already belongs to the deque.
+    /// Inserts an item before another one.
+    ///
     /// - Parameters:
     ///   - item: The item to insert.
     ///   - beforeItem: The item before which insertion must take place. Pass `nil` to insert the item at the front
     ///     of the deque.
     /// - Returns: `true` iff the item could be inserted.
+    ///
+    /// Does nothing if the item already belongs to the deque.
     @discardableResult
     func insert(_ item: PlayerItem, before beforeItem: PlayerItem?) -> Bool {
         guard canInsert(item, before: beforeItem) else { return false }
@@ -52,12 +53,15 @@ public extension Player {
         return true
     }
 
-    /// Insert an item after another item. Does nothing if the item already belongs to the deque.
+    /// Inserts an item after another one.
+    ///
     /// - Parameters:
     ///   - item: The item to insert.
     ///   - afterItem: The item after which insertion must take place. Pass `nil` to insert the item at the back of
     ///     the deque. If this item does not exist the method does nothing.
     /// - Returns: `true` iff the item could be inserted.
+    ///
+    /// Does nothing if the item already belongs to the deque.
     @discardableResult
     func insert(_ item: PlayerItem, after afterItem: PlayerItem?) -> Bool {
         guard canInsert(item, after: afterItem) else { return false }
@@ -71,7 +75,8 @@ public extension Player {
         return true
     }
 
-    /// Prepend an item to the deque.
+    /// Prepends an item to the deque.
+    ///
     /// - Parameter item: The item to prepend.
     /// - Returns: `true` iff the item could be prepended.
     @discardableResult
@@ -79,7 +84,8 @@ public extension Player {
         insert(item, before: nil)
     }
 
-    /// Append an item to the deque.
+    /// Appends an item to the deque.
+    ///
     /// - Parameter item: The item to append.
     /// - Returns: `true` iff the item could be appended.
     @discardableResult
@@ -87,7 +93,8 @@ public extension Player {
         insert(item, after: nil)
     }
 
-    /// Move an item before another item.
+    /// Moves an item before another one.
+    ///
     /// - Parameters:
     ///   - item: The item to move. The method does nothing if the item does not belong to the deque.
     ///   - beforeItem: The item before which the moved item must be relocated. Pass `nil` to move the item to the
@@ -108,7 +115,8 @@ public extension Player {
         return true
     }
 
-    /// Move an item after another item.
+    /// Moves an item after another one.
+    ///
     /// - Parameters:
     ///   - item: The item to move.
     ///   - afterItem: The item after which the moved item must be relocated. Pass `nil` to move the item to the
@@ -129,13 +137,14 @@ public extension Player {
         return true
     }
 
-    /// Remove an item from the deque.
+    /// Removes an item from the deque.
+    ///
     /// - Parameter item: The item to remove.
     func remove(_ item: PlayerItem) {
         storedItems.removeAll { $0 === item }
     }
 
-    /// Remove all items in the deque.
+    /// Removes all items from the deque.
     func removeAllItems() {
         storedItems.removeAll()
     }

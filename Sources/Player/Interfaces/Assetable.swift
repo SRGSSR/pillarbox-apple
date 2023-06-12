@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-/// Describes an asset in an opaque way.
+/// A protocol describing an asset.
 protocol Assetable {
     var id: UUID { get }
     var resource: Resource { get }
@@ -26,7 +26,7 @@ extension Assetable {
 }
 
 extension AVPlayerItem {
-    /// Return the list of `AVPlayerItems` to load into an `AVQueuePlayer` when a list of assets replaces a previous
+    /// Returns the list of `AVPlayerItems` to load into an `AVQueuePlayer` when a list of assets replaces a previous
     /// one.
     /// - Parameters:
     ///   - currentAssets: The current list of assets.

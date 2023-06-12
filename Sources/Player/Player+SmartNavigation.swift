@@ -8,13 +8,22 @@ import AVFoundation
 import DequeModule
 
 public extension Player {
-    /// Check whether returning to the previous content is possible.`
+    /// Checks whether returning to the previous content is possible.
+    ///
     /// - Returns: `true` if possible.
+    ///
+    /// Smart navigation takes into account the current position in an item. If close enough to the item start position
+    /// then navigation will be moved to the previous item, otherwise playback will be returned to the item start
+    /// position. This behavior is only applied for on-demand streams.
     func canReturnToPrevious() -> Bool {
         canReturn(before: currentIndex, in: storedItems, streamType: streamType)
     }
 
-    /// Return to the previous content.
+    /// Returns to the previous content.
+    ///
+    /// Smart navigation takes into account the current position in an item. If close enough to the item start position
+    /// then navigation will be moved to the previous item, otherwise playback will be returned to the item start
+    /// position. This behavior is only applied for on-demand streams.
     func returnToPrevious() {
         if shouldSeekToStartTime() {
             seek(near(.zero))
@@ -24,13 +33,14 @@ public extension Player {
         }
     }
 
-    /// Check whether moving to the next content is possible.`
+    /// Checks whether moving to the next content is possible.
+    ///
     /// - Returns: `true` if possible.
     func canAdvanceToNext() -> Bool {
         canAdvanceToNextItem()
     }
 
-    /// Move to the next content.
+    /// Moves to the next content.
     func advanceToNext() {
         advanceToNextItem()
     }

@@ -31,8 +31,10 @@ extension AVPlayer {
         .eraseToAnyPublisher()
     }
 
-    /// A publisher returning current item duration. Unlike `AVPlayerItem` this publisher returns `.invalid` when
-    /// the duration is unknown (`.indefinite` is still a valid value for DVR streams).
+    /// Returns a publisher emitting values for the current item duration.
+    ///
+    /// Unlike `AVPlayerItem` this publisher returns `.invalid` when the duration is unknown. Note that `.indefinite`
+    /// is a valid duration for DVR streams.
     func currentItemDurationPublisher() -> AnyPublisher<CMTime, Never> {
         publisher(for: \.currentItem)
             .map { item -> AnyPublisher<CMTime, Never> in
