@@ -7,16 +7,26 @@
 import Foundation
 import UIKit
 
-/// Gathers analytics according to SRG SSR standards. The associated singleton instance must be started with `start(with:)`
-/// before use.
+/// A single entry-point for analytics conforming to the SRG SSR standards.
+///
+/// SRG SSR applications must use this singleton to gather analytics. These include:
+///
+/// - Page views: Which views are presented to the user.
+/// - Events: Arbitrary events which need to be recorded (e.g. user interaction with a button).
+/// - Streaming: Streaming analytics collected with standard `PlayerItemTracker` implementations.
+///
+/// Before analytics can be gathered the singleton must be started with a configuration suitable for your application.
 public class Analytics {
-    /// Analytics configuration.
+    /// A configuration for analytics.
+    ///
+    /// Please contact our SRG SSR Digital Analytics team (ADI) to obtain configuration parameters suitable for your
+    /// application.
     public struct Configuration {
         let vendor: Vendor
         let sourceKey: String
         let site: String
 
-        /// Configure analytics. `sourceKey` and `site` must be obtained from the SRG SSR Digital Analytics team (ADI).
+        /// Creates an analytics configuration.
         /// - Parameters:
         ///   - vendor: The vendor which the application belongs to.
         ///   - sourceKey: The source key.
@@ -26,14 +36,6 @@ public class Analytics {
             self.sourceKey = sourceKey
             self.site = site
         }
-    }
-
-    /// Application states.
-    public enum ApplicationState {
-        /// Foreground and background.
-        case foregroundAndBackground
-        /// Foreground only.
-        case foreground
     }
 
     /// The singleton instance.
@@ -46,9 +48,12 @@ public class Analytics {
 
     private init() {}
 
-    /// Start analytics with the specified configuration. Must be called from your
-    /// `UIApplicationDelegate.application(_:didFinishLaunchingWithOptions:)` delegate method. Throws if started more
-    ///  than once.
+    /// Starts analytics with the specified configuration.
+    ///
+    /// This method must be called from your `UIApplicationDelegate.application(_:didFinishLaunchingWithOptions:)`
+    /// delegate method implementation, otherwise the behavior is undefined.
+    ///
+    /// The method throws if called more than once.
     /// - Parameter configuration: The configuration to use.
     public func start(with configuration: Configuration) throws {
         guard self.configuration == nil else {
@@ -63,21 +68,19 @@ public class Analytics {
         commandersActService.start(with: configuration)
     }
 
-    /// Track a page view.
+    /// Tracks a page view.
     /// - Parameters:
     ///   - title: The page title.
     ///   - levels: The page levels.
-    ///   - state: The application states for which the page can be tracked. Defaults to `.foreground`. The
-    ///     `.foregroundAndBackground` option should only be used in the rare cases where page views must be recorded
-    ///     also while the application is in background, e.g. when tracking a CarPlay user interface.
-    public func trackPageView(title: String, levels: [String] = [], in state: ApplicationState = .foreground) {
+    ///   - mode: The modes for which page views are recorded. Defaults to `.foreground`.
+    public func trackPageView(title: String, levels: [String] = [], for mode: PageViewMode = .foreground) {
         assert(!title.isBlank, "A title is required")
-        guard state == .foregroundAndBackground || UIApplication.shared.applicationState != .background else { return }
+        guard mode == .foregroundAndBackground || UIApplication.shared.applicationState != .background else { return }
         comScoreService.trackPageView(title: title, levels: levels)
         commandersActService.trackPageView(title: title, levels: levels)
     }
 
-    /// Send an event.
+    /// Sends an event.
     /// - Parameters:
     ///   - name: The event name.
     ///   - type: The event type.

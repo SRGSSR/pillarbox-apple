@@ -34,11 +34,12 @@ private struct PageTrackingView: UIViewControllerRepresentable {
 }
 
 public extension View {
-    /// Ensure a page view is sent for the receiver when it appears on screen, or when the application returns from
-    /// background with the view visible.
-    /// - Parameters:
-    ///   - title: The page title.
-    ///   - levels: Page levels.
+    /// Ensures page views are automatically tracked for the receiver.
+    ///
+    /// A page view will be automatically emitted when:
+    ///
+    /// - The receiver appears on screen.
+    /// - The application returns from background with the receiver visible.
     func tracked(title: String, levels: [String] = []) -> some View {
         background {
             PageTrackingView(title: title, levels: levels)

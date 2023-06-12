@@ -13,7 +13,7 @@ private enum ComScoreRequestInfoKey: String {
     case queryItems = "ComScoreRequestQueryItems"
 }
 
-/// Intercepts comScore requests and emits event information with a publisher.
+/// A tool that intercepts comScore requests and turns them into an event stream.
 enum ComScoreInterceptor {
     private static var started = false
     private static var cancellables = Set<AnyCancellable>()

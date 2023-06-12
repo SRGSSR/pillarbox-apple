@@ -6,7 +6,7 @@
 
 import Foundation
 
-/// The vendor for which analytics are collected.
+/// A vendor for which analytics are collected.
 public enum Vendor: String {
     /// SRF.
     case SRF

@@ -10,7 +10,11 @@ import CoreMedia
 import Foundation
 import Player
 
-/// Stream tracker for comScore. Implements streaming measurements according to Mediapulse official specifications.
+/// A comScore tracker for streaming.
+///
+/// This tracker implements streaming measurements according to Mediapulse official specifications.
+///
+/// Analytics have to be properly started for the tracker to collect events, see `Analytics.start(with:)`.
 public final class ComScoreTracker: PlayerItemTracker {
     private var streamingAnalytics = SCORStreamingAnalytics()
     private var cancellables = Set<AnyCancellable>()

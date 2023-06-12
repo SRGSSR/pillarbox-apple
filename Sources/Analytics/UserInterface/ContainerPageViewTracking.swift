@@ -6,14 +6,34 @@
 
 import UIKit
 
-/// Protocol for custom containers to implement automatic page view tracking propagation to their children. Standard
-/// UIKit containers already conform to this protocol and do not require any additional work. Custom containers
-/// should conform to this protocol to precisely declare which ones of their children are visible. If the protocol
-/// is not implemented all its children are considered to be visible.
+/// A protocol that view controller containers can implement to customize automatic page view tracking.
 ///
-/// The implementation of a custom container might also need to inform the automatic page view tracking engine of
-/// child controller appearance, see `UIViewController.setNeedsAutomaticPageViewTracking(in:)` documentation for
-/// more information.
+/// Automatic page view tracking can be optionally adopted by view controllers, as described in `PageViewTracking`
+/// documentation.
+///
+/// When containers are involved, though, which children view controller events should be automatically propagated to
+/// must be correctly configured depending on the container type:
+///
+/// - If page view events must be automatically forwarded to all children no additional work is required.
+/// - If page view events must be automatically forwarded to only selected children then a container must implement
+///   the `ContainerPageViewTracking` protocol to declare which ones of its children must be considered active for
+///   propagation.
+///
+/// When implementing a custom container you might sometimes need to inform the automatic page view tracking engine of
+/// child controller appearance so that correct propagation can be triggered. Refer to
+/// `UIViewController.setNeedsAutomaticPageViewTracking(in:)` documentation for more information.
+///
+/// ### Native UIKit Container Support
+///
+/// Some standard UIKit containers conform to `ContainerPageViewTracking` to implement correct propagation:
+///
+/// - `UINavigationController`: The top view controller is active.
+/// - `UIPageViewController`: The currently visible view controller is active.
+/// - `UISplitViewController`: The view controllers returned by `UISplitViewController.viewControllers` are active.
+/// - `UITabBarController`: The currently visible view controller is active.
+///
+/// Other UIKit containers do not need to conform to `ContainerPageViewTracking` as default event propagation yields
+/// correct behavior for them.
 public protocol ContainerPageViewTracking {
     /// The list of currently active children in the view controller container.
     var activeChildren: [UIViewController] { get }

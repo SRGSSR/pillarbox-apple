@@ -6,7 +6,7 @@
 
 import Foundation
 
-/// Labels associated with a Commanders Act event.
+/// The labels associated with a Commanders Act event.
 public struct CommandersActLabels: Decodable {
     private let _media_bandwidth: String?
     private let _media_playback_rate: String?
@@ -18,109 +18,117 @@ public struct CommandersActLabels: Decodable {
     let listener_session_id: String?
     let media_title: String?
 
-    /// Value of `app_library_version`.
+    // MARK: Common labels
+
+    /// The value of `app_library_version`.
     public let app_library_version: String?
 
-    /// Value of `navigation_app_site_name`.
+    /// The value of `navigation_app_site_name`.
     public let navigation_app_site_name: String?
 
-    /// Value of `navigation_property_type`.
-    public let navigation_property_type: String?
-
-    /// Value of `navigation_bu_distributer`.
-    public let navigation_bu_distributer: String?
-
-    /// Value of `navigation_device`.
+    /// The value of `navigation_device`.
     public let navigation_device: String?
 
-    /// Value of `navigation_level_0`.
+    // MARK: Page view labels
+
+    /// The value of `navigation_property_type`.
+    public let navigation_property_type: String?
+
+    /// The value of `navigation_bu_distributer`.
+    public let navigation_bu_distributer: String?
+
+    /// The value of `navigation_level_0`.
     public let navigation_level_0: String?
 
-    /// Value of `navigation_level_1`.
+    /// The value of `navigation_level_1`.
     public let navigation_level_1: String?
 
-    /// Value of `navigation_level_2`.
+    /// The value of `navigation_level_2`.
     public let navigation_level_2: String?
 
-    /// Value of `navigation_level_3`.
+    /// The value of `navigation_level_3`.
     public let navigation_level_3: String?
 
-    /// Value of `navigation_level_4`.
+    /// The value of `navigation_level_4`.
     public let navigation_level_4: String?
 
-    /// Value of `navigation_level_5`.
+    /// The value of `navigation_level_5`.
     public let navigation_level_5: String?
 
-    /// Value of `navigation_level_6`.
+    /// The value of `navigation_level_6`.
     public let navigation_level_6: String?
 
-    /// Value of `navigation_level_7`.
+    /// The value of `navigation_level_7`.
     public let navigation_level_7: String?
 
-    /// Value of `navigation_level_8`.
+    /// The value of `navigation_level_8`.
     public let navigation_level_8: String?
 
-    /// Value of `navigation_level_9`.
+    /// The value of `navigation_level_9`.
     public let navigation_level_9: String?
 
-    /// Value of `page_type`.
+    /// The value of `page_type`.
     public let page_type: String?
 
-    /// Value of `event_title`.
+    // MARK: Event labels
+
+    /// The value of `event_title`.
     /// FIXME: This field was introduced to avoid clashes with `event_name` but still needs to be discussed.
     public let event_title: String?
 
-    /// Value of `event_type`.
+    /// The value of `event_type`.
     public let event_type: String?
 
-    /// Value of `event_value`.
+    /// The value of `event_value`.
     public let event_value: String?
 
-    /// Value of `event_source`.
+    /// The value of `event_source`.
     public let event_source: String?
 
-    /// Value of `event_value_1`.
+    /// The value of `event_value_1`.
     public let event_value_1: String?
 
-    /// Value of `event_value_2`.
+    /// The value of `event_value_2`.
     public let event_value_2: String?
 
-    /// Value of `event_value_3`.
+    /// The value of `event_value_3`.
     public let event_value_3: String?
 
-    /// Value of `event_value_4`.
+    /// The value of `event_value_4`.
     public let event_value_4: String?
 
-    /// Value of `event_value_5`.
-    public let event_value_5: String?
+    /// The value of `event_value_5`.
+    public let event_value_5: String
 
-    /// Value of `media_player_display`.
+    // MARK: Streaming labels
+
+    /// The value of `media_player_display`.
     public let media_player_display: String?
 
-    /// Value of `media_player_version`.
+    /// The value of `media_player_version`.
     public let media_player_version: String?
 
-    /// Value of `media_bandwidth`.
+    /// The value of `media_bandwidth`.
     public var media_bandwidth: Double? {
         extract(\._media_bandwidth)
     }
 
-    /// Value of `media_playback_rate`.
+    /// The value of `media_playback_rate`.
     public var media_playback_rate: Float? {
         extract(\._media_playback_rate)
     }
 
-    /// Value of `media_position`.
+    /// The value of `media_position`.
     public var media_position: Int? {
         extract(\._media_position)
     }
 
-    /// Value of `media_timeshift`.
+    /// The value of `media_timeshift`.
     public var media_timeshift: Int? {
         extract(\._media_timeshift)
     }
 
-    /// Value of `media_volume`.
+    /// The value of `media_volume`.
     public var media_volume: Int? {
         extract(\._media_volume)
     }
