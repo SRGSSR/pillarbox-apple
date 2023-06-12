@@ -13,10 +13,11 @@ import UIKit
 public extension PlayerItem {
     /// Creates a player item from a URN.
     ///
-    /// The item is automatically tracked according to SRG SSR analytics standards.
     /// - Parameters:
     ///   - urn: The URN to play.
     ///   - server: The server which the URN is played from.
+    ///
+    /// The item is automatically tracked according to SRG SSR analytics standards.
     static func urn(
         _ urn: String,
         server: Server = .production,

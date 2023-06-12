@@ -23,6 +23,7 @@ public struct Trigger {
     public init() {}
 
     /// Creates an associated signal activated by some integer index.
+    ///
     /// - Parameter index: The index used for activation.
     /// - Returns: The signal.
     public func signal(activatedBy index: Index) -> Signal {
@@ -34,8 +35,9 @@ public struct Trigger {
 
     /// Activates associated signal publishers matching the provided integer index.
     ///
-    /// Signal publishers emit a single void value upon activation.
     /// - Parameter index: The index used for activation.
+    ///
+    /// Signal publishers emit a single void value upon activation.
     public func activate(for index: Index) {
         sender.send(index)
     }
@@ -43,6 +45,7 @@ public struct Trigger {
 
 public extension Trigger {
     /// Creates an associated signal activated by some hashable value.
+    ///
     /// - Parameter t: The hashable value used for activation.
     /// - Returns: The signal.
     func signal<T>(activatedBy t: T) -> Signal where T: Hashable {
@@ -51,8 +54,9 @@ public extension Trigger {
 
     /// Activates associated signal publishers matching the provided hashable value.
     ///
-    /// Signal publishers emit a single void value upon activation.
     /// - Parameter t: The hashable value used for activation.
+    ///
+    /// Signal publishers emit a single void value upon activation.
     func activate<T>(for t: T) where T: Hashable {
         activate(for: t.hashValue)
     }

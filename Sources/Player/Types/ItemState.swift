@@ -99,10 +99,11 @@ enum ItemState: Equatable {
     }
 
     /// Returns the error associated with an item, caching the first encountered error.
+    ///
     /// - Parameters:
     ///   - item: The item to consider.
     ///   - error: An error related to the item and which might be supplied by another channel (e.g. notification).
-    ///   Takes precedence over error information attached to the item when present.
+    ///     Takes precedence over error information attached to the item when present.
     /// - Returns: The error
     private static func consolidatedError(for item: AVPlayerItem, error: Error? = nil) -> Error {
         if let cachedError = item.cachedError {

@@ -21,12 +21,14 @@ public enum AnalyticsListener {
     private static var sessionIdentifier: String?
 
     /// Starts the listener.
+    ///
     /// - Parameter completion: A completion called when the listener has been started.
     public static func start(completion: @escaping () -> Void) {
         ComScoreInterceptor.start(completion: completion)
     }
 
     /// Captures comScore events.
+    ///
     /// - Parameter perform: A closure to be executed within the capture session. The session provides a publisher
     ///   which emits the associated events.
     public static func captureComScoreEvents(perform: (AnyPublisher<ComScoreEvent, Never>) -> Void) {
@@ -36,6 +38,7 @@ public enum AnalyticsListener {
     }
 
     /// Captures Commanders Act events.
+    /// 
     /// - Parameter perform: A closure to be executed within the capture session. The session provides a publisher
     ///   which emits the associated events.
     public static func captureCommandersActEvents(perform: (AnyPublisher<CommandersActEvent, Never>) -> Void) {

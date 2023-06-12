@@ -8,6 +8,7 @@ import Foundation
 
 public extension Array where Element: Hashable {
     /// Removes duplicates from the receiver, preserving the initial item order.
+    ///
     /// - Returns: The array without duplicate items.
     func removeDuplicates() -> [Element] {
         var itemDictionnary = [Element: Bool]()
@@ -15,6 +16,7 @@ public extension Array where Element: Hashable {
     }
 
     /// Safely returns the item at the specified index.
+    /// 
     /// - Parameter index: The index.
     /// - Returns: The item at the specified index or `nil` if the index is not within range.
     subscript(safeIndex index: Int) -> Element? {

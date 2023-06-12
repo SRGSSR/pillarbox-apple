@@ -8,8 +8,10 @@ import Foundation
 
 extension URLSession {
     /// Loads data for a request, throwing when HTTP errors are encountered.
-    /// - Parameter request: The request for which to load data.
-    /// - Parameter delegate: The task-specific delegate.
+    ///
+    /// - Parameters:
+    ///   - request: The request for which to load data.
+    ///   - delegate: The task-specific delegate to use.
     /// - Returns: Data and response.
     func httpData(for request: URLRequest, delegate: URLSessionTaskDelegate? = nil) async throws -> (Data, URLResponse) {
         let (data, response) = try await data(for: request, delegate: delegate)
@@ -20,8 +22,10 @@ extension URLSession {
     }
 
     /// Loads data for a URL, throwing when HTTP errors are encountered.
-    /// - Parameter url: The URL for which to load data.
-    /// - Parameter delegate: The task-specific delegate.
+    ///
+    /// - Parameters:
+    ///   - url: The URL for which to load data.
+    ///   - delegate: The task-specific delegate to use.
     /// - Returns: Data and response.
     func httpData(from url: URL, delegate: URLSessionTaskDelegate? = nil) async throws -> (Data, URLResponse) {
         let (data, response) = try await data(from: url, delegate: delegate)

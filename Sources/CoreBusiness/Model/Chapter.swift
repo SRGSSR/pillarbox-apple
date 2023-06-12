@@ -70,6 +70,7 @@ public struct Chapter: Decodable {
     private let _analyticsMetadata: [String: String]?
 
     /// Returns whether the content is blocked for some reason.
+    /// 
     /// - Parameter date: The date at which the availability must be evaluated.
     /// - Returns: The blocking reason.
     public func blockingReason(at date: Date = Date()) -> BlockingReason? {

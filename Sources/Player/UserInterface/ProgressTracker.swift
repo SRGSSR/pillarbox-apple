@@ -75,6 +75,7 @@ public final class ProgressTracker: ObservableObject {
     }
 
     /// Creates a progress tracker updating its progress at the specified interval.
+    /// 
     /// - Parameter interval: The interval at which progress must be updated.
     public init(interval: CMTime, seekBehavior: SeekBehavior = .immediate) {
         self.seekBehavior = seekBehavior
@@ -133,6 +134,7 @@ public final class ProgressTracker: ObservableObject {
 
 public extension View {
     /// Binds a progress tracker to a player.
+    ///
     /// - Parameters:
     ///   - progressTracker: The progress tracker to bind.
     ///   - player: The player to observe.

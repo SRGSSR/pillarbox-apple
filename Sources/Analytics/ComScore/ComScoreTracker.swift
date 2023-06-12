@@ -135,7 +135,7 @@ private extension SCORStreamingAnalytics {
 }
 
 public extension ComScoreTracker {
-    /// Metadata.
+    /// comScore tracker metadata.
     struct Metadata {
         let labels: [String: String]
         let streamType: StreamType
@@ -144,7 +144,8 @@ public extension ComScoreTracker {
             .init(labels: [:], streamType: .unknown)
         }
 
-        /// The initializer.
+        /// Creates comScore metadata.
+        ///
         /// - Parameters:
         ///   - labels: The labels.
         ///   - streamType: The stream type.

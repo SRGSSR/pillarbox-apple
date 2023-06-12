@@ -10,6 +10,7 @@ import UIKit
 /// A single entry-point for analytics conforming to the SRG SSR standards.
 ///
 /// SRG SSR applications must use this singleton to gather analytics. These include:
+///
 /// - Page views: Which views are presented to the user.
 /// - Events: Arbitrary events which need to be recorded (e.g. user interaction with a button).
 /// - Streaming: Streaming analytics collected with standard `PlayerItemTracker` implementations.
@@ -26,6 +27,7 @@ public class Analytics {
         let site: String
 
         /// Creates an analytics configuration.
+        ///
         /// - Parameters:
         ///   - vendor: The vendor which the application belongs to.
         ///   - sourceKey: The source key.
@@ -49,11 +51,12 @@ public class Analytics {
 
     /// Starts analytics with the specified configuration.
     ///
+    /// - Parameter configuration: The configuration to use.
+    ///
     /// This method must be called from your `UIApplicationDelegate.application(_:didFinishLaunchingWithOptions:)`
     /// delegate method implementation, otherwise the behavior is undefined.
     ///
     /// The method throws if called more than once.
-    /// - Parameter configuration: The configuration to use.
     public func start(with configuration: Configuration) throws {
         guard self.configuration == nil else {
             throw AnalyticsError.alreadyStarted
@@ -68,6 +71,7 @@ public class Analytics {
     }
 
     /// Tracks a page view.
+    ///
     /// - Parameters:
     ///   - title: The page title.
     ///   - levels: The page levels.
@@ -80,6 +84,7 @@ public class Analytics {
     }
 
     /// Sends an event.
+    /// 
     /// - Parameters:
     ///   - name: The event name.
     ///   - type: The event type.

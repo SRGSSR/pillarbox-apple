@@ -34,6 +34,7 @@ public final class VisibilityTracker: ObservableObject {
     private let trigger = Trigger()
 
     /// Creates a tracker managing user interface visibility.
+    /// 
     /// - Parameters:
     ///   - delay: The delay after which `isUserInterfaceHidden` is automatically reset to `true`.
     ///   - isUserInterfaceHidden: The initial value for `isUserInterfaceHidden`.

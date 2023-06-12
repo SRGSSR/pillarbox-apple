@@ -10,6 +10,7 @@ import UIKit
 ///
 /// View controllers whose usage must be measured should conform to the `PageViewTracking` protocol, which describes
 /// the associated measurement data:
+/// 
 /// - Page title.
 /// - Page levels.
 ///
@@ -19,6 +20,7 @@ import UIKit
 /// ### Automatic Tracking
 ///
 /// In automatic mode a page view is automatically emitted for a `PageViewTracking`-conforming view controller when:
+///
 /// - Its `viewDidAppear(_:)` method is called.
 /// - The application returns from background and the view controller is active (which in general means its is visible,
 ///   though this can depend on which container displays the view controller, see `ContainerPageViewTracking`).
@@ -30,8 +32,8 @@ import UIKit
 /// available at the time `viewDidAppear(_:)` is called, e.g. if this information is retrieved asynchronously. Beware
 /// that in this case you are responsible of calling `UIViewController.trackPageView()` when:
 ///
-///   - The view is visible and you received the information you needed for the page view.
-///   - The application returns from background and the information you need for the page view is readily available.
+/// - The view is visible and you received the information you needed for the page view.
+/// - The application returns from background and the information you need for the page view is readily available.
 ///
 /// ### Raw Page View Tracking
 ///
@@ -135,9 +137,10 @@ extension UIViewController {
         trackPageView(automatic: true, recursive: false, for: .foreground)
     }
 
-    /// Call this method to track a page view event manually for the receiver, using data declared by `PageViewTracking`
-    /// conformance. This method does nothing if the receiver does not conform to the `PageViewTracking` protocol and
-    /// is mostly useful when automatic tracking has been disabled.
+    /// Perform manual page view tracking for the receiver, using data declared by `PageViewTracking` conformance.
+    ///
+    /// This method does nothing if the receiver does not conform to the `PageViewTracking` protocol and is mostly
+    /// useful when automatic tracking has been disabled by setting `isTrackedAutomatically` to `false`.
     public func trackPageView() {
         trackPageView(automatic: false, recursive: false, for: .foreground)
     }
@@ -161,6 +164,9 @@ extension UIViewController {
 
     /// Informs the automatic page view tracking engine that page view events generation should be evaluated again.
     ///
+    /// - Parameter viewController: The view controller for which automatic page view event generation must be
+    ///   evaluated again.
+    ///
     /// You should call this method after a child view controller has been added to a custom container to notify the
     /// automatic page view tracking engine. This ensures that correct page view event generation and propagation can
     /// be triggered if needed.
@@ -173,9 +179,6 @@ extension UIViewController {
     /// keeping them alive while inactive (custom tab bar controllers, for example). For containers hiding children
     /// which have disappeared (similarly to what navigation controllers do), calling this method is not required, as
     /// standard view appearance namely suffices to trigger automatic page views again when required.
-    ///
-    /// - Parameter viewController: The view controller for which automatic page view event generation must be
-    ///   evaluated again.
     public func setNeedsAutomaticPageViewTracking(in viewController: UIViewController) {
         guard trackedChildren.contains(viewController) else { return }
         viewController.trackPageView(automatic: true, recursive: true, for: .foreground)

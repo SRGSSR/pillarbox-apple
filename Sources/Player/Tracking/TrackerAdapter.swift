@@ -15,6 +15,7 @@ public struct TrackerAdapter<M: AssetMetadata> {
     private let update: (M) -> Void
 
     /// Creates an adapter for a type of tracker with the provided mapping to its metadata format.
+    /// 
     /// - Parameters:
     ///   - trackerType: The type of the tracker to instantiate and manage.
     ///   - configuration: The tracker configuration.

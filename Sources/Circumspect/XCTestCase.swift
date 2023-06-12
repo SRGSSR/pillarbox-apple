@@ -8,6 +8,7 @@ import XCTest
 
 public extension XCTestCase {
     /// Waits for a specified time interval.
+    /// 
     /// - Parameter interval: The wait interval.
     func wait(for interval: DispatchTimeInterval) {
         XCTWaiter().wait(for: [XCTestExpectation()], timeout: interval.double())

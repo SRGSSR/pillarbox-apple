@@ -25,6 +25,7 @@ public struct Position {
 }
 
 /// Returns a position with explicitly associated tolerances.
+///
 /// - Parameters:
 ///   - time: The time to reach.
 ///   - toleranceBefore: The tolerance allowed before the time to reach.
@@ -35,6 +36,7 @@ public func to(_ time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) 
 }
 
 /// Returns a precise position.
+///
 /// - Parameter time: The time to reach.
 /// - Returns: A position.
 public func at(_ time: CMTime) -> Position {
@@ -42,6 +44,7 @@ public func at(_ time: CMTime) -> Position {
 }
 
 /// Returns an approximate position.
+///
 /// - Parameter time: The time to reach.
 /// - Returns: A position.
 public func near(_ time: CMTime) -> Position {
@@ -49,6 +52,7 @@ public func near(_ time: CMTime) -> Position {
 }
 
 /// Returns an approximate position always located before the specified time.
+///
 /// - Parameter time: The time to reach.
 /// - Returns: A position.
 public func before(_ time: CMTime) -> Position {
@@ -56,6 +60,7 @@ public func before(_ time: CMTime) -> Position {
 }
 
 /// Returns an approximate position always located after the specified time.
+/// 
 /// - Parameter time: The time to reach.
 /// - Returns: A position.
 public func after(_ time: CMTime) -> Position {

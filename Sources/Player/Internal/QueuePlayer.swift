@@ -218,7 +218,7 @@ extension QueuePlayer {
         Self.logger.info("Sentinel detected unhandled completion and fixed it")
     }
 
-    /// Perform a low-level seek without seek tracking.
+    /// Performs a low-level seek without seek tracking.
     private func rawSeek(to time: CMTime) {
         super.seek(to: time)
     }

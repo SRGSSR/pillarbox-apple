@@ -39,6 +39,7 @@ public struct LayoutReader<Content: View>: View {
     }
 
     /// Creates a layout reader.
+    /// 
     /// - Parameters:
     ///   - layoutInfo: The layout information.
     ///   - content: The wrapped content.

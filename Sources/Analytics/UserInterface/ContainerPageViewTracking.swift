@@ -13,6 +13,7 @@ import UIKit
 ///
 /// When containers are involved, though, which children view controller events should be automatically propagated to
 /// must be correctly configured depending on the container type:
+///
 /// - If page view events must be automatically forwarded to all children no additional work is required.
 /// - If page view events must be automatically forwarded to only selected children then a container must implement
 ///   the `ContainerPageViewTracking` protocol to declare which ones of its children must be considered active for
@@ -25,6 +26,7 @@ import UIKit
 /// ### Native UIKit Container Support
 ///
 /// Some standard UIKit containers conform to `ContainerPageViewTracking` to implement correct propagation:
+///
 /// - `UINavigationController`: The top view controller is active.
 /// - `UIPageViewController`: The currently visible view controller is active.
 /// - `UISplitViewController`: The view controllers returned by `UISplitViewController.viewControllers` are active.

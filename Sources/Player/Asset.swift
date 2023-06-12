@@ -216,7 +216,7 @@ public extension Asset where M == Never {
 
 extension Asset {
     static var loading: Self {
-        // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
+        // Provides a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
         .init(
             id: UUID(),
             resource: .custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate()),
@@ -227,7 +227,7 @@ extension Asset {
     }
 
     static func failed(error: Error) -> Self {
-        // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
+        // Provides a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
         .init(
             id: UUID(),
             resource: .custom(url: URL(string: "pillarbox://failing.m3u8")!, delegate: FailedResourceLoaderDelegate(error: error)),

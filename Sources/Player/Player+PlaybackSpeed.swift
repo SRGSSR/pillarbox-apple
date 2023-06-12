@@ -88,7 +88,7 @@ private extension Player {
             .eraseToAnyPublisher()
     }
 
-    // Publish speed updates triggered from `AVPlayerViewController`. Not necessary on tvOS since the standard UI
+    // Publishes speed updates triggered from `AVPlayerViewController`. Not necessary on tvOS since the standard UI
     // does not provide speed controls.
     func avPlayerViewControllerPlaybackSpeedUpdatePublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
 #if os(iOS)

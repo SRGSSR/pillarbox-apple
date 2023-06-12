@@ -31,12 +31,14 @@ public protocol PlayerItemTracker: AnyObject {
     associatedtype Metadata
 
     /// Creates the tracker.
+    ///
     /// - Parameters:
     ///   - configuration: The tracker configuration.
     ///   - metadataPublisher: The publisher that provides metadata updates.
     init(configuration: Configuration, metadataPublisher: AnyPublisher<Metadata, Never>)
 
     /// The lifecycle method called when the tracker is enabled for a player.
+    ///
     /// - Parameter player: The player for which the tracker must be enabled.
     func enable(for player: Player)
 
@@ -46,6 +48,7 @@ public protocol PlayerItemTracker: AnyObject {
 
 public extension PlayerItemTracker {
     /// Creates an adapter for the receiver with the provided mapping to its metadata format.
+    ///
     /// - Parameters:
     ///   - configuration: The tracker configuration.
     ///   - mapper: A closure that maps the tracker's metadata to another metadata.
@@ -55,6 +58,7 @@ public extension PlayerItemTracker {
     }
 
     /// Creates an adapter for the receiver.
+    ///
     /// - Parameter configuration: The tracker configuration.
     /// - Returns: The tracker adapter.
     static func adapter(configuration: Configuration) -> TrackerAdapter<Never> {
@@ -64,6 +68,7 @@ public extension PlayerItemTracker {
 
 public extension PlayerItemTracker where Metadata == Void {
     /// Creates an adapter for the receiver.
+    ///
     /// - Parameter configuration: The tracker configuration.
     /// - Returns: The tracker adapter.
     static func adapter<M>(configuration: Configuration) -> TrackerAdapter<M> where M: AssetMetadata {
@@ -73,6 +78,7 @@ public extension PlayerItemTracker where Metadata == Void {
 
 public extension PlayerItemTracker where Configuration == Void {
     /// Creates an adapter for the receiver.
+    ///
     /// - Parameter configuration: The tracker configuration.
     /// - Returns: The tracker adapter.
     static func adapter<M>(mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> where M: AssetMetadata {
@@ -80,6 +86,7 @@ public extension PlayerItemTracker where Configuration == Void {
     }
 
     /// Creates an adapter for the receiver.
+    ///
     /// - Returns: The tracker adapter.
     static func adapter() -> TrackerAdapter<Never> {
         TrackerAdapter(trackerType: Self.self, configuration: (), mapper: nil)
@@ -88,6 +95,7 @@ public extension PlayerItemTracker where Configuration == Void {
 
 public extension PlayerItemTracker where Metadata == Void, Configuration == Void {
     /// Creates an adapter for the receiver.
+    /// 
     /// - Returns: The tracker adapter.
     static func adapter<M>() -> TrackerAdapter<M> where M: AssetMetadata {
         TrackerAdapter(trackerType: Self.self, configuration: ()) { _ in }

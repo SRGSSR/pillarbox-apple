@@ -28,6 +28,7 @@ extension Assetable {
 extension AVPlayerItem {
     /// Returns the list of `AVPlayerItems` to load into an `AVQueuePlayer` when a list of assets replaces a previous
     /// one.
+    /// 
     /// - Parameters:
     ///   - currentAssets: The current list of assets.
     ///   - previousAssets: The previous list of assets.

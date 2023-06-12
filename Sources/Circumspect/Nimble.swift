@@ -9,6 +9,7 @@ import Foundation
 /// Returns whether Nimble throw assertions are available or not.
 ///
 /// Call this function at the start of test methods using Nimble `throwAssertion()`. This ensures that:
+/// 
 /// - No crashes occur on tvOS when a debugger is attached.
 /// - Tests never run endlessly.
 public func nimbleThrowAssertionsAvailable() -> Bool {

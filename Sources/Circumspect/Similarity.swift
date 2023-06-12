@@ -14,7 +14,7 @@ infix operator ~~ : ComparisonPrecedence
 /// You can implement similarity for types not conforming to `Equatable` but which still need to be meaningfully
 /// compared in tests.
 public protocol Similar {
-    /// Returns `true` iff the two sides can be considered to be similar.
+    /// Returns whether the two sides can be considered to be similar.
     static func ~~ (lhs: Self, rhs: Self) -> Bool
 }
 
