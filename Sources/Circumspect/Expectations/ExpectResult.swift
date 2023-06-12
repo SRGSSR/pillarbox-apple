@@ -8,7 +8,7 @@ import Combine
 import XCTest
 
 public extension XCTestCase {
-    /// Expect a publisher to complete successfully.
+    /// Expects a publisher to complete successfully.
     func expectSuccess<P: Publisher>(
         from publisher: P,
         timeout: DispatchTimeInterval = .seconds(20),
@@ -39,7 +39,7 @@ public extension XCTestCase {
         waitForExpectations(timeout: timeout.double())
     }
 
-    /// Expect a publisher to complete with a failure.
+    /// Expects a publisher to complete with a failure.
     func expectFailure<P: Publisher>(
         _ error: Error? = nil,
         from publisher: P,

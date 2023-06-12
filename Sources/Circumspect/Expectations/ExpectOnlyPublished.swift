@@ -8,7 +8,7 @@ import Combine
 import XCTest
 
 public extension XCTestCase {
-    /// Expect a publisher to emit a list of expected values and complete.
+    /// Expects a publisher to emit a list of expected values and complete.
     func expectOnlyPublished<P: Publisher, T>(
         values: [T],
         from publisher: P,
@@ -31,7 +31,7 @@ public extension XCTestCase {
         )
     }
 
-    /// Expect a publisher to emit a list of expected values and complete.
+    /// Expects a publisher to emit a list of expected values and complete.
     func expectOnlyEqualPublished<P: Publisher>(
         values: [P.Output],
         from publisher: P,
@@ -51,7 +51,7 @@ public extension XCTestCase {
         )
     }
 
-    /// Expect a publisher to emit a list of expected values and complete.
+    /// Expects a publisher to emit a list of expected values and complete.
     func expectOnlySimilarPublished<P: Publisher>(
         values: [P.Output],
         from publisher: P,
@@ -71,8 +71,9 @@ public extension XCTestCase {
         )
     }
 
-    /// Expect a publisher to emit a list of expected values and complete, ignoring the first value. Useful when testing
-    /// publishers which automatically deliver a non-relevant stored value upon subscription.
+    /// Expect a publisher to emit a list of expected values and complete, ignoring the first value.
+    ///
+    /// Useful when testing publishers which automatically deliver a non-relevant stored value upon subscription.
     func expectOnlyPublishedNext<P: Publisher, T>(
         values: [T],
         from publisher: P,
@@ -95,8 +96,9 @@ public extension XCTestCase {
         )
     }
 
-    /// Expect a publisher to emit a list of expected values and complete, ignoring the first value. Useful when testing
-    /// publishers which automatically deliver a non-relevant stored value upon subscription.
+    /// Expects a publisher to emit a list of expected values and complete, ignoring the first value.
+    ///
+    /// Useful when testing publishers which automatically deliver a non-relevant stored value upon subscription.
     func expectOnlyEqualPublishedNext<P: Publisher>(
         values: [P.Output],
         from publisher: P,
@@ -118,8 +120,9 @@ public extension XCTestCase {
         )
     }
 
-    /// Expect a publisher to emit a list of expected values and complete, ignoring the first value. Useful when testing
-    /// publishers which automatically deliver a non-relevant stored value upon subscription.
+    /// Expects a publisher to emit a list of expected values and complete, ignoring the first value.
+    ///
+    /// Useful when testing publishers which automatically deliver a non-relevant stored value upon subscription.
     func expectOnlySimilarPublishedNext<P: Publisher>(
         values: [P.Output],
         from publisher: P,

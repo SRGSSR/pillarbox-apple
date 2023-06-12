@@ -24,7 +24,7 @@ private class QueuePlayerMock: QueuePlayer {
 
 final class QueuePlayerSeekTests: TestCase {
     func testNotificationsForSeekWithInvalidTime() {
-        guard nimbleThrowAssertionsEnabled() else { return }
+        guard nimbleThrowAssertionsAvailable() else { return }
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         expect { player.seek(to: .invalid) }.to(throwAssertion())
