@@ -7,7 +7,7 @@
 import Foundation
 import Player
 
-/// Describes a playable resource.
+/// A description of a playable resource.
 public struct Resource: Decodable {
     enum CodingKeys: String, CodingKey {
         case _analyticsData = "analyticsData"

@@ -6,7 +6,7 @@
 
 import Foundation
 
-/// Token types.
+/// A token type.
 public enum TokenType: String, Decodable {
     /// No token.
     case none = "NONE"

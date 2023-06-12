@@ -6,7 +6,7 @@
 
 import Foundation
 
-/// Content blocking reasons.
+/// A content blocking reason.
 public enum BlockingReason: String, Decodable {
     /// Not suitable under the age of 12.
     case ageRating12 = "AGERATING12"
@@ -32,7 +32,7 @@ public enum BlockingReason: String, Decodable {
     /// Unknown reason.
     case unknown = "UNKNOWN"
 
-    /// A standard description for the blocking reason.
+    /// The standard description for the blocking reason.
     public var description: String {
         switch self {
         case .ageRating12:

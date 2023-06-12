@@ -7,28 +7,24 @@
 import Foundation
 
 extension URLSession {
-    /// Convenience method to load data using an URLRequest, creates and resumes an `URLSessionDataTask` internally.
-    /// Same as `data(for:delegate:)` but throwing HTTP errors when encountered.
-    ///
-    /// - Parameter request: The URLRequest for which to load data.
-    /// - Parameter delegate: Task-specific delegate.
+    /// Loads data for a request, throwing when HTTP errors are encountered.
+    /// - Parameter request: The request for which to load data.
+    /// - Parameter delegate: The task-specific delegate.
     /// - Returns: Data and response.
     func httpData(for request: URLRequest, delegate: URLSessionTaskDelegate? = nil) async throws -> (Data, URLResponse) {
-        let (data, response) = try await data(for: request)
+        let (data, response) = try await data(for: request, delegate: delegate)
         if let httpError = DataError.http(from: response) {
             throw httpError
         }
         return (data, response)
     }
 
-    /// Convenience method to load data using an URL, creates and resumes an `URLSessionDataTask` internally. Same
-    /// as `data(from:delegate:)` but throwing HTTP errors when encountered.
-    ///
+    /// Loads data for a URL, throwing when HTTP errors are encountered.
     /// - Parameter url: The URL for which to load data.
-    /// - Parameter delegate: Task-specific delegate.
+    /// - Parameter delegate: The task-specific delegate.
     /// - Returns: Data and response.
     func httpData(from url: URL, delegate: URLSessionTaskDelegate? = nil) async throws -> (Data, URLResponse) {
-        let (data, response) = try await data(from: url)
+        let (data, response) = try await data(from: url, delegate: delegate)
         if let httpError = DataError.http(from: response) {
             throw httpError
         }

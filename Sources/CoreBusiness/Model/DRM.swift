@@ -6,9 +6,9 @@
 
 import Foundation
 
-/// Describes DRM protection.
+/// A DRM protection description.
 public struct DRM: Decodable {
-    /// DRM types.
+    /// A DRM type.
     public enum `Type`: String, Decodable {
         /// FairPlay.
         case fairPlay = "FAIRPLAY"

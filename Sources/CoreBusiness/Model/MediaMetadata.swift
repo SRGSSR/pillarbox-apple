@@ -55,7 +55,7 @@ public struct MediaMetadata: AssetMetadata {
         resource.streamType
     }
 
-    /// Consolidated comScore analytics data.
+    /// The consolidated comScore analytics data.
     var analyticsData: [String: String] {
         var analyticsData = mediaComposition.mainChapter.analyticsData
         guard !analyticsData.isEmpty else { return [:] }
@@ -64,7 +64,7 @@ public struct MediaMetadata: AssetMetadata {
         return analyticsData
     }
 
-    /// Consolidated Commanders Act analytics data.
+    /// The consolidated Commanders Act analytics data.
     var analyticsMetadata: [String: String] {
         var analyticsMetadata = mediaComposition.mainChapter.analyticsMetadata
         guard !analyticsMetadata.isEmpty else { return [:] }

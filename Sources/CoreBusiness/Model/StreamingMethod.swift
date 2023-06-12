@@ -6,9 +6,9 @@
 
 import Foundation
 
-/// Streaming methods.
+/// A streaming method description.
 public enum StreamingMethod: String, Decodable {
-    /// Progressive stream.
+    /// Progressive streaming.
     case progressive = "PROGRESSIVE"
 
     /// M3U8 streaming.
@@ -35,7 +35,7 @@ public enum StreamingMethod: String, Decodable {
     /// Unknown.
     case unknown = "UNKNOWN"
 
-    /// Supported streaming methods on Apple platforms.
+    /// The supported streaming methods on Apple platforms.
     public static var supportedMethods: [Self] {
         [.progressive, .m3uPlaylist, .hls, .http, .https]
     }
