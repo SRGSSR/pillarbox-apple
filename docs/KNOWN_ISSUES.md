@@ -86,7 +86,7 @@ When chaining an on-demand stream played at a speed > 1 to a livestream (without
 
 No workaround is available yet.
 
-## Sound of a player casting to AirPlay incorrectly overlaps with sound of local player instances
+## Sound of a player casting to AirPlay incorrectly overlaps with sound of local player instances (FB12311238)
 
 When casting a player to AirPlay while other players are playing other content locally (even muted), sound of these other instances overlaps with the sound of the main instance played on the AirPlay receiver.
 
