@@ -14,15 +14,12 @@ public struct ComScoreLabels {
         extract()
     }
 
-    public var ns_st_ev: String? {
-        extract()
-    }
+    // MARK: Common labels
 
+    /// The value of `ns_ap_ev` (application event).
     public var ns_ap_ev: String? {
         extract()
     }
-
-    // MARK: Common labels
 
     /// The value of `c2` (comScore account).
     public var c2: String? {
@@ -54,6 +51,11 @@ public struct ComScoreLabels {
     }
 
     // MARK: Streaming labels
+
+    /// The value of `ns_st_ev` (streaming event).
+    public var ns_st_ev: String? {
+        extract()
+    }
 
     /// The value of `ns_st_mp` (media player name).
     public var ns_st_mp: String? {
