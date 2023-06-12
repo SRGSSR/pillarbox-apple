@@ -10,7 +10,6 @@ import UIKit
 ///
 /// View controllers whose usage must be measured should conform to the `PageViewTracking` protocol, which describes
 /// the associated measurement data:
-///
 /// - Page title.
 /// - Page levels.
 ///
@@ -20,7 +19,6 @@ import UIKit
 /// ### Automatic Tracking
 ///
 /// In automatic mode a page view is automatically emitted for a `PageViewTracking`-conforming view controller when:
-///
 /// - Its `viewDidAppear(_:)` method is called.
 /// - The application returns from background and the view controller is active (which in general means its is visible,
 ///   though this can depend on which container displays the view controller, see `ContainerPageViewTracking`).

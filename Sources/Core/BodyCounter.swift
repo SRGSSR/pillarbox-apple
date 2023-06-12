@@ -83,14 +83,15 @@ public extension View {
         }
     }
 
-    /// Decorate the view with a bordered debugging frame whose attached label displays how many times the view
+    /// Decorates the view with a bordered debugging frame whose attached label displays how many times the view
     /// body has been evaluated.
     ///
     /// This feature is only available in debug builds and requires the application to be run with the
-    /// `PILLARBOX_DEBUG_BODY_COUNTER` environment variable set. It is also automatically enabled in Xcode previews.
+    /// `PILLARBOX_DEBUG_BODY_COUNTER` environment variable set.
     ///
+    /// This feature is always automatically enabled in Xcode previews.
     /// - Parameters:
-    ///   - color: The frame and label color.
+    ///   - color: The frame color.
     func _debugBodyCounter(color: UIColor = .red) -> some View {
 #if DEBUG
         overlay(debugBodyCounterOverlay(color: color))

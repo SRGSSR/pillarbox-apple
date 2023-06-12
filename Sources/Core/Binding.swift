@@ -7,7 +7,7 @@
 import SwiftUI
 
 public extension Binding {
-    /// Create a binding to an object property.
+    /// Creates a binding to an object key path.
     /// - Parameters:
     ///   - object: The object to bind to.
     ///   - keyPath: The key path to bind to.

@@ -37,7 +37,6 @@ public extension View {
     /// Ensures page views are automatically tracked for the receiver.
     ///
     /// A page view will be automatically emitted when:
-    ///
     /// - The receiver appears on screen.
     /// - The application returns from background with the receiver visible.
     func tracked(title: String, levels: [String] = []) -> some View {

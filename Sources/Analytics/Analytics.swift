@@ -10,7 +10,6 @@ import UIKit
 /// A single entry-point for analytics conforming to the SRG SSR standards.
 ///
 /// SRG SSR applications must use this singleton to gather analytics. These include:
-///
 /// - Page views: Which views are presented to the user.
 /// - Events: Arbitrary events which need to be recorded (e.g. user interaction with a button).
 /// - Streaming: Streaming analytics collected with standard `PlayerItemTracker` implementations.
