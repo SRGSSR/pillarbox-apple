@@ -58,7 +58,7 @@ Once all status checks are successful and the pull request reviewed it can be ad
 
 To support our worflow GitHub `main` branch protection settings must be configured as follows:
 
-1. Enable _Require a pull request before merging_ and _Require approvals_ with 1 approval.
+1. Enable _Require a pull request before merging_, _Require approvals_ with 1 approval as well as _Require approval of the most recent reviewable push_.
 2. Enable _Require status checks to pass before merging_, _Require branches to be up to date before merging_ and the following required status checks:
   - Demo Archiving iOS (Apple)
   - Demo Archiving tvOS (Apple)
