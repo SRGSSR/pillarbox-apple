@@ -5,6 +5,7 @@
 //
 
 import Analytics
+import Combine
 import Player
 import SwiftUI
 
@@ -25,12 +26,21 @@ struct BlurredView: View {
         }
         .background(.black)
         .onAppear(perform: play)
+        .onReceive(applicationWillEnterForegroundPublisher()) { _ in
+            player.play()
+        }
         .tracked(title: "blurred")
     }
 
     private func play() {
         player.append(media.playerItem())
         player.play()
+    }
+
+    private func applicationWillEnterForegroundPublisher() -> AnyPublisher<Void, Never> {
+        NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)
+            .map { _ in () }
+            .eraseToAnyPublisher()
     }
 }
 
