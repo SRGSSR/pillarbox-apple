@@ -71,7 +71,7 @@ public extension XCTestCase {
         )
     }
 
-    /// Expect a publisher to emit a list of expected values and complete, ignoring the first value.
+    /// Expects a publisher to emit a list of expected values and complete, ignoring the first value.
     ///
     /// Useful when testing publishers which automatically deliver a non-relevant stored value upon subscription.
     func expectOnlyPublishedNext<P: Publisher, T>(
