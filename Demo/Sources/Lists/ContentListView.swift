@@ -57,6 +57,9 @@ private struct LoadedView: View {
 private struct ContentCell: View {
     let content: ContentListViewModel.Content
 
+    @AppStorage(UserDefaults.serverSettingKey)
+    private var serverSetting: ServerSetting = .production
+
     var body: some View {
         switch content {
         case let .topic(topic):
@@ -69,7 +72,7 @@ private struct ContentCell: View {
         case let .media(media):
             let title = MediaDescription.title(for: media)
             Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
-                PlayerView(media: Media(title: title, type: .urn(media.urn)))
+                PlayerView(media: Media(title: title, type: .urn(media.urn, server: serverSetting.server)))
             }
 #if os(iOS)
             .swipeActions { CopyButton(text: media.urn) }
