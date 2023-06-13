@@ -98,7 +98,7 @@ public struct CommandersActLabels: Decodable {
     public let event_value_4: String?
 
     /// The value of `event_value_5`.
-    public let event_value_5: String
+    public let event_value_5: String?
 
     // MARK: Streaming labels
 
