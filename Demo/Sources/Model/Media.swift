@@ -12,7 +12,11 @@ struct Media: Hashable, Identifiable {
     enum `Type`: Hashable {
         case url(URL)
         case unbufferedUrl(URL)
-        case urn(String)
+        case urn(String, server: Server)
+
+        static func urn(_ urn: String) -> Self {
+            .urn(urn, server: .production)
+        }
     }
 
     let id = UUID()
@@ -55,8 +59,8 @@ struct Media: Hashable, Identifiable {
                 item.automaticallyPreservesTimeOffsetFromLive = true
                 item.preferredForwardBufferDuration = 1
             }
-        case let .urn(urn):
-            return .urn(urn, trackerAdapters: [
+        case let .urn(urn, server: server):
+            return .urn(urn, server: server, trackerAdapters: [
                 DemoTracker.adapter { metadata in
                     DemoTracker.Metadata(title: metadata.title)
                 }
