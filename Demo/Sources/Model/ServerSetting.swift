@@ -4,20 +4,21 @@
 //  License information is available from the LICENSE file.
 //
 
+import CoreBusiness
 import SRGDataProvider
 
 @objc
 enum ServerSetting: Int, CaseIterable {
     case production
-    case staging
+    case stage
     case test
 
     var title: String {
         switch self {
         case .production:
             return "Production"
-        case .staging:
-            return "Staging"
+        case .stage:
+            return "Stage"
         case .test:
             return "Test"
         }
@@ -27,10 +28,21 @@ enum ServerSetting: Int, CaseIterable {
         switch self {
         case .production:
             return SRGIntegrationLayerProductionServiceURL()
-        case .staging:
+        case .stage:
             return SRGIntegrationLayerStagingServiceURL()
         case .test:
             return SRGIntegrationLayerTestServiceURL()
+        }
+    }
+
+    var server: Server {
+        switch self {
+        case .production:
+            return .production
+        case .stage:
+            return .stage
+        case .test:
+            return .test
         }
     }
 }
