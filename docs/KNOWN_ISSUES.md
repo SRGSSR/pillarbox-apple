@@ -97,7 +97,7 @@ Pause players playing content locally.
 ## Presentation size can't be determined when AirPlay is enable (FB12080967)
 
 When AirPlay is activated the value of the `AVPlayerItem.presentationSize` property is always zero.
-Therefore, we encounter the challenge of discerning whether the player content corresponds to a video or audio format when AirPlay is on.
+It is therefore not possible to tell whether a video or audio is played when AirPlay is enabled.
 
 ### Workaround
 
