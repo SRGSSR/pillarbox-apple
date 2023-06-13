@@ -75,7 +75,7 @@ public class Analytics {
     /// - Parameters:
     ///   - title: The page title.
     ///   - levels: The page levels.
-    ///   - mode: The modes for which page views are recorded. Defaults to `.foreground`.
+    ///   - mode: The mode for which page views are recorded. Defaults to `.foreground`.
     public func trackPageView(title: String, levels: [String] = [], for mode: PageViewMode = .foreground) {
         assert(!title.isBlank, "A title is required")
         guard mode == .foregroundAndBackground || UIApplication.shared.applicationState != .background else { return }
