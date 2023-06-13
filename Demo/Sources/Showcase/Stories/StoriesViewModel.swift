@@ -71,8 +71,7 @@ final class StoriesViewModel: ObservableObject {
     }
 
     private func configureAutomaticResume() {
-        NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)
-            .map { _ in () }
+        Signal.applicationWillEnterForeground()
             .prepend(())
             .sink { [weak self] _ in
                 guard let self else { return }
