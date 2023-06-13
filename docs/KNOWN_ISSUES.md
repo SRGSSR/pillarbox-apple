@@ -93,3 +93,12 @@ When casting a player to AirPlay while other players are playing other content l
 ### Workaround
 
 Pause players playing content locally.
+
+## Presentation size can't be determined when AirPlay is enable (FB12080967)
+
+When AirPlay is activated, the value of the `AVPlayerItem.presentationSize` property is consistently zero.
+Therefore, we encounter the challenge of discerning whether the player content corresponds to a video or audio format when AirPlay is on.
+
+### Workaround
+
+No workaround is available yet.
