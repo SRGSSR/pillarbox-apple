@@ -31,8 +31,7 @@ private struct MainView: View {
                 timeBar()
                 volumeButton()
             }
-            .animation(.defaultLinear, value: player.isBusy)
-            .animation(.defaultLinear, value: isUserInterfaceHidden)
+            .animation(.defaultLinear, values: player.isBusy, isUserInterfaceHidden)
         }
         .bind(visibilityTracker, to: player)
         ._debugBodyCounter()
@@ -188,8 +187,7 @@ private struct PlaybackButton: View {
                 .resizable()
                 .tint(.white)
                 .opacity(player.isBusy ? 0 : 1)
-                .animation(.defaultLinear, value: player.playbackState)
-                .animation(.defaultLinear, value: player.canRestart())
+                .animation(.defaultLinear, values: player.playbackState, player.canRestart())
         }
         .aspectRatio(contentMode: .fit)
         .frame(minWidth: 120, maxHeight: 90)
