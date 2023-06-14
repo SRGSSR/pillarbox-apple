@@ -14,7 +14,7 @@ import XCTest
 class TestCase: XCTestCase {
     override class func setUp() {
         PollingDefaults.timeout = .seconds(20)
-        try? Analytics.shared.start(with: .init(vendor: .RTS, sourceKey: "source", site: "site"))
+        try? Analytics.shared.start(with: .init(vendor: .SRG, sourceKey: "source", site: "site"))
     }
 
     override class func tearDown() {

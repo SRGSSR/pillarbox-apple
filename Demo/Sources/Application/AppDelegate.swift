@@ -45,7 +45,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
     private func configureAnalytics() {
         let configuration = Analytics.Configuration(
-            vendor: .RTS,
+            vendor: .SRG,
             sourceKey: "11111111-1111-1111-1111-111111111111",
             site: "rts-app-test-v"
         )

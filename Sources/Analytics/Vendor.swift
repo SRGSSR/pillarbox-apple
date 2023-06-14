@@ -18,4 +18,6 @@ public enum Vendor: String {
     case RTR
     /// SWI.
     case SWI
+    /// SRG.
+    case SRG
 }

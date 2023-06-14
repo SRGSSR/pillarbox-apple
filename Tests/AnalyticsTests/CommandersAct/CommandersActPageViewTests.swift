@@ -28,7 +28,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                 expect(labels.app_library_version).to(equal(PackageInfo.version))
                 expect(labels.navigation_app_site_name).to(equal("site"))
                 expect(labels.navigation_property_type).to(equal("app"))
-                expect(labels.navigation_bu_distributer).to(equal("RTS"))
+                expect(labels.navigation_bu_distributer).to(equal("SRG"))
             }
         ) {
             Analytics.shared.trackPageView(title: "title", levels: [
