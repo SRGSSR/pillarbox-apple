@@ -8,17 +8,20 @@ import Combine
 import CoreMedia
 
 public extension Player {
-    /// Return a publisher periodically emitting the current time while the player is playing content. Does not emit any
-    /// value on subscription and only emits valid times.
+    /// Returns a publisher periodically emitting the current time while the player is playing content.
+    ///
     /// - Parameters:
     ///   - interval: The interval at which events must be emitted.
     ///   - queue: The queue on which values are published.
     /// - Returns: The publisher.
+    ///
+    /// The publisher does not emit any value on subscription. Only valid times are emitted.
     func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
         Publishers.PeriodicTimePublisher(for: queuePlayer, interval: interval, queue: queue)
     }
 
-    /// Return a publisher emitting when traversing the specified times during normal playback.
+    /// Returns a publisher emitting a void value when traversing the specified times during normal playback.
+    /// 
     /// - Parameters:
     ///   - times: The times to observe.
     ///   - queue: The queue on which values are published.

@@ -31,10 +31,12 @@ extension NSError {
         return userInfo
     }
 
-    /// Convert any error to a true `NSError`. This is not the same as bridging an `Error` to `NSError` (which is
-    /// always possible but is not equivalent).
+    /// Converts any error to a true `NSError`.
+    ///
     /// - Parameter error: The error to convert.
     /// - Returns: The converted error (or the provided error if already an `NSError`).
+    ///
+    /// This process is not the same as bridging an `Error` to `NSError` (which is always possible but not equivalent).
     static func error(from error: Error?) -> NSError? {
         guard let error else { return nil }
         guard type(of: error) != NSError.self else { return error as NSError }

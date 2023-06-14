@@ -8,31 +8,36 @@ import AVFoundation
 import DequeModule
 
 public extension Player {
-    /// Check whether returning to the previous item in the deque is possible.`
+    /// Checks whether returning to the previous item in the deque is possible.
+    ///
     /// - Returns: `true` if possible.
     func canReturnToPreviousItem() -> Bool {
         canReturnToItem(before: currentIndex, in: storedItems)
     }
 
-    /// Return to the previous item in the deque. Skips failed items.
+    /// Returns to the previous item in the deque.
+    ///
+    /// Skips failed items.
     func returnToPreviousItem() {
         guard canReturnToPreviousItem() else { return }
         queuePlayer.replaceItems(with: AVPlayerItem.playerItems(from: returningItems))
     }
 
-    /// Check whether moving to the next item in the deque is possible.`
+    /// Checks whether moving to the next item in the deque is possible.
+    ///
     /// - Returns: `true` if possible.
     func canAdvanceToNextItem() -> Bool {
         canAdvanceToItem(after: currentIndex, in: storedItems)
     }
 
-    /// Move to the next item in the deque.
+    /// Moves to the next item in the deque.
     func advanceToNextItem() {
         guard canAdvanceToNextItem() else { return }
         queuePlayer.replaceItems(with: AVPlayerItem.playerItems(from: advancingItems))
     }
 
-    /// Set the item at the specified index to become the current one.
+    /// Makes the item at the specified index become the current one.
+    ///
     /// - Parameter index: The item index.
     func setCurrentIndex(_ index: Int) throws {
         guard index != currentIndex else { return }
@@ -53,12 +58,12 @@ extension Player {
 }
 
 private extension Player {
-    /// Return the list of items to be loaded to return to the previous (playable) item.
+    /// Returns the list of items to be loaded to return to the previous (playable) item.
     var returningItems: [PlayerItem] {
         Self.items(before: currentIndex, in: storedItems)
     }
 
-    /// Return the list of items to be loaded to advance to the next (playable) item.
+    /// Returns the list of items to be loaded to advance to the next (playable) item.
     var advancingItems: [PlayerItem] {
         Self.items(after: currentIndex, in: storedItems)
     }

@@ -7,9 +7,9 @@
 import Difference
 import Nimble
 
-/// Match against an expected value using some comparator.
-/// Directly borrowed from https://github.com/Quick/Nimble/blob/main/Sources/Nimble/Matchers/Equal.swift
+/// Matches against an expected value using some comparator.
 public func equal<T>(_ expectedValue: T?, by areEquivalent: @escaping (T, T) -> Bool) -> Predicate<T> {
+    // Directly borrowed from https://github.com/Quick/Nimble/blob/main/Sources/Nimble/Matchers/Equal.swift
     Predicate.define("equal <\(stringify(expectedValue))>") { actualExpression, message in
         let actualValue = try actualExpression.evaluate()
         switch (expectedValue, actualValue) {
@@ -24,9 +24,9 @@ public func equal<T>(_ expectedValue: T?, by areEquivalent: @escaping (T, T) -> 
     }
 }
 
-/// Nimble matcher displaying mismatches in a friendly way.
-/// Borrowed from https://github.com/krzysztofzablocki/Difference
+/// Matches against an expected value using some comparator, displaying mismatches in a user-readable form.
 public func equalDiff<T>(_ expectedValue: T?, by areEquivalent: @escaping (T, T) -> Bool) -> Predicate<T> {
+    // Borrowed from https://github.com/krzysztofzablocki/Difference
     Predicate.define("equal <\(stringify(expectedValue))>") { actualExpression, message in
         let actualValue = try actualExpression.evaluate()
         switch (expectedValue, actualValue) {
@@ -43,7 +43,7 @@ public func equalDiff<T>(_ expectedValue: T?, by areEquivalent: @escaping (T, T)
     }
 }
 
-/// Nimble matcher displaying equality differences in a friendly way.
+/// Matches against an expected equatable value, displaying mismatches in a user-readable form.
 public func equalDiff<T: Equatable>(_ expectedValue: T?) -> Predicate<T> {
     equalDiff(expectedValue, by: ==)
 }

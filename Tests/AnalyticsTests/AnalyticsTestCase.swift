@@ -12,12 +12,12 @@ import XCTest
 
 final class AnalyticsTestsCase: TestCase {
     func testEmptyPageViewTitle() {
-        guard nimbleThrowAssertionsEnabled() else { return }
+        guard nimbleThrowAssertionsAvailable() else { return }
         expect(Analytics.shared.trackPageView(title: " ")).to(throwAssertion())
     }
 
     func testEmptyEventTitle() {
-        guard nimbleThrowAssertionsEnabled() else { return }
+        guard nimbleThrowAssertionsAvailable() else { return }
         expect(Analytics.shared.sendEvent(name: " ")).to(throwAssertion())
     }
 }

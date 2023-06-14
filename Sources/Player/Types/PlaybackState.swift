@@ -6,7 +6,7 @@
 
 import Foundation
 
-/// Playback states.
+/// A playback state.
 public enum PlaybackState: Equatable {
     /// The player is idle.
     case idle

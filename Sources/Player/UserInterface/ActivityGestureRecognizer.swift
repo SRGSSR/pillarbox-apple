@@ -6,8 +6,9 @@
 
 import UIKit
 
-/// A gesture recognizer which detects all kinds of user activities and calls the associated action on its target if any
-/// activity is detected.
+/// A gesture recognizer which detects all kinds of user activities.
+///
+/// When a user activity is detected the gesture recognizer calls the associated action on its target.
 @available(tvOS, unavailable)
 final class ActivityGestureRecognizer: UIGestureRecognizer {
     // Heavily inspired by MPActivityGestureRecognizer from the MediaPlayer framework

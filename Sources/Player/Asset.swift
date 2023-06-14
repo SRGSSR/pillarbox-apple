@@ -33,7 +33,8 @@ public struct Asset<M: AssetMetadata>: Assetable {
     private let configuration: (AVPlayerItem) -> Void
     private let trackerAdapters: [TrackerAdapter<M>]
 
-    /// A simple asset playable from a URL.
+    /// Returns a simple asset playable from a URL.
+    /// 
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - metadata: The metadata associated with the asset.
@@ -53,14 +54,16 @@ public struct Asset<M: AssetMetadata>: Assetable {
         )
     }
 
-    /// An asset loaded with custom resource loading. The scheme of the URL to be played has to be recognized by
-    /// the associated resource loader delegate.
+    /// Returns an asset loaded with custom resource loading.
+    ///
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - delegate: The custom resource loader to use.
     ///   - metadata: The metadata associated with the asset.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The asset.
+    ///
+    /// The scheme of the URL to be played has to be recognized by the associated resource loader delegate.
     public static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
@@ -76,7 +79,8 @@ public struct Asset<M: AssetMetadata>: Assetable {
         )
     }
 
-    /// An encrypted asset loaded with a content key session.
+    /// Returns an encrypted asset loaded with a content key session.
+    ///
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - delegate: The content key session delegate to use.
@@ -146,7 +150,8 @@ public struct Asset<M: AssetMetadata>: Assetable {
 }
 
 public extension Asset where M == Never {
-    /// A simple asset playable from a URL.
+    /// Returns a simple asset playable from a URL.
+    ///
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - configuration: A closure to configure player items created from the receiver.
@@ -164,13 +169,15 @@ public extension Asset where M == Never {
         )
     }
 
-    /// An asset loaded with custom resource loading. The scheme of the URL to be played has to be recognized by
-    /// the associated resource loader delegate.
+    /// Returns an asset loaded with custom resource loading.
+    ///
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - delegate: The custom resource loader to use.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The asset.
+    ///
+    /// The scheme of the URL to be played has to be recognized by the associated resource loader delegate.
     static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
@@ -185,7 +192,8 @@ public extension Asset where M == Never {
         )
     }
 
-    /// An encrypted asset loaded with a content key session.
+    /// Returns an encrypted asset loaded with a content key session.
+    ///
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - delegate: The content key session delegate to use.
@@ -208,7 +216,7 @@ public extension Asset where M == Never {
 
 extension Asset {
     static var loading: Self {
-        // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
+        // Provides a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
         .init(
             id: UUID(),
             resource: .custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate()),
@@ -219,7 +227,7 @@ extension Asset {
     }
 
     static func failed(error: Error) -> Self {
-        // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
+        // Provides a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
         .init(
             id: UUID(),
             resource: .custom(url: URL(string: "pillarbox://failing.m3u8")!, delegate: FailedResourceLoaderDelegate(error: error)),
@@ -241,7 +249,8 @@ extension AVPlayerItem {
         }
     }
 
-    /// Assign an identifier to identify player items delivered by the same data source.
+    /// Assigns an identifier to identify player items delivered by the same data source.
+    /// 
     /// - Parameter id: The id to assign.
     /// - Returns: The receiver with the id assigned to it.
     fileprivate func withId(_ id: UUID) -> AVPlayerItem {

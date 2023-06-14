@@ -8,20 +8,26 @@ import Combine
 import Foundation
 
 public extension Publishers {
-    /// Accumulate the results of a list of publishers and deliver them as a stream of arrays containing the latest
-    /// values in publisher order. The first array is emitted once all publishers have at least emitted a value once.
+    /// Accumulates the results of a list of publishers and delivers them as a stream of arrays containing the latest
+    /// values in publisher order.
+    ///
     /// - Parameter publishers: The publishers to accumulate.
     /// - Returns: The resulting publisher.
+    ///
+    /// The first value is emitted once all publishers have at least emitted a value once.
     static func AccumulateLatestMany<Upstream>(
         _ publishers: Upstream...
     ) -> AnyPublisher<[Upstream.Output], Upstream.Failure> where Upstream: Publisher {
         AccumulateLatestMany(publishers)
     }
 
-    /// Accumulate the results of a list of publishers and deliver them as a stream of arrays containing the latest
-    /// values in publisher order. The first array is emitted once all publishers have at least emitted a value once.
+    /// Accumulates the results of a list of publishers and delivers them as a stream of arrays containing the latest
+    /// values in publisher order.
+    ///
     /// - Parameter publishers: The publishers to accumulate.
     /// - Returns: The resulting publisher.
+    ///
+    /// The first array is emitted once all publishers have at least emitted a value once.
     static func AccumulateLatestMany<Upstream, S>(
         _ publishers: S
     ) -> AnyPublisher<[Upstream.Output], Upstream.Failure> where Upstream: Publisher, S: Swift.Sequence, S.Element == Upstream {
@@ -56,10 +62,10 @@ public extension Publishers {
 }
 
 public extension Publishers {
-    /// Make the upstream publisher publish each time a second signal publisher emits some value. If no signal is provided
-    /// the publisher never executes.
+    /// Makes the upstream publisher publish each time another signal publisher emits some value.
+    ///
     /// - Parameters:
-    ///   - signal: The signal to listen to.
+    ///   - signal: The signal to listen to. If `nil` the upstream publisher will never publish.
     ///   - publisher: The publisher to execute.
     /// - Returns: The resulting publisher.
     static func Publish<S, P>(
@@ -75,10 +81,10 @@ public extension Publishers {
             .eraseToAnyPublisher()
     }
 
-    /// Make the upstream publisher execute once and repeat each time a second signal publisher emits some value. If no
-    /// signal is provided the publisher simply executes once and never repeats.
+    /// Makes the upstream publisher execute once and repeat each time another signal publisher emits some value.
+    ///
     /// - Parameters:
-    ///   - signal: The signal to listen to.
+    ///   - signal: The signal to listen to. If `nil` the upstream publisher executes only once.
     ///   - publisher: The publisher to execute.
     /// - Returns: The resulting publisher.
     static func PublishAndRepeat<S, P>(
@@ -101,18 +107,22 @@ public extension Publishers {
 }
 
 // Borrowed from https://stackoverflow.com/a/67133582/760435
+
 public extension Publisher {
     /// Includes the current element as well as the previous element from the upstream publisher in a tuple where the
-    /// previous element is optional. The first time the upstream publisher emits an element, the previous element will
-    /// be `nil`.
-    ///
-    ///     let range = (1...5)
-    ///     cancellable = range.publisher
-    ///         .withPrevious()
-    ///         .sink { print ("(\($0.previous), \($0.current))", terminator: " ") }
-    ///      // Prints: "(nil, 1) (Optional(1), 2) (Optional(2), 3) (Optional(3), 4) (Optional(4), 5) ".
+    /// previous element is optional.
     ///
     /// - Returns: A publisher of a tuple of the previous and current elements from the upstream publisher.
+    ///
+    /// The first time the upstream publisher emits an element, the previous element will be `nil`.
+    ///
+    /// ```swift
+    /// let range = (1...5)
+    /// cancellable = range.publisher
+    ///     .withPrevious()
+    ///     .sink { print ("(\($0.previous), \($0.current))", terminator: " ") }
+    /// // Prints: "(nil, 1) (Optional(1), 2) (Optional(2), 3) (Optional(3), 4) (Optional(4), 5) ".
+    /// ```
     func withPrevious() -> AnyPublisher<(previous: Output?, current: Output), Failure> {
         scan(Optional<(Output?, Output)>.none) { ($0?.1, $1) }
             .compactMap { $0 }
@@ -120,30 +130,37 @@ public extension Publisher {
     }
 
     /// Includes the current element as well as the previous element from the upstream publisher in a tuple where the
-    /// previous element is not optional. The first time the upstream publisher emits an element, the previous element
-    /// will be the `initialPreviousValue`.
+    /// previous element is not optional.
     ///
-    ///     let range = (1...5)
-    ///     cancellable = range.publisher
-    ///         .withPrevious(0)
-    ///         .sink { print ("(\($0.previous), \($0.current))", terminator: " ") }
-    ///      // Prints: "(0, 1) (1, 2) (2, 3) (3, 4) (4, 5) ".
-    ///
-    /// - Parameter initialPreviousValue: The initial value to use as the "previous" value when the upstream publisher
+    /// - Parameter initialPreviousValue: The initial value to use as the previous value when the upstream publisher
     ///   emits for the first time.
     /// - Returns: A publisher of a tuple of the previous and current elements from the upstream publisher.
+    ///
+    /// The first time the upstream publisher emits an element, the previous element will be the `initialPreviousValue`.
+    ///
+    /// ```swift
+    /// let range = (1...5)
+    /// cancellable = range.publisher
+    ///     .withPrevious(0)
+    ///     .sink { print ("(\($0.previous), \($0.current))", terminator: " ") }
+    /// // Prints: "(0, 1) (1, 2) (2, 3) (3, 4) (4, 5) ".
+    /// ```
     func withPrevious(_ initialPreviousValue: Output) -> AnyPublisher<(previous: Output, current: Output), Failure> {
         scan((initialPreviousValue, initialPreviousValue)) { ($0.1, $1) }.eraseToAnyPublisher()
     }
 }
 
 public extension NotificationCenter {
-    /// The usual notification publisher retains the observed object, potentially creating cycles. The following
-    /// publisher avoids this issue by only weakly capturing the observed object.
+    /// Returns a publisher that emits events when broadcasting notifications.
+    ///
     /// - Parameters:
-    ///   - name: The notification to observe.
-    ///   - object: The object to observe (weakly captured).
-    /// - Returns: A notification publisher.
+    ///   - name: The name of the notification to publish.
+    ///   - object: The object posting the named notification. If `nil` the publisher emits elements for any object
+    ///   producing a notification with the given name.
+    /// - Returns: A publisher that emits events when broadcasting notifications.
+    ///
+    /// Unlike usual notification publishers this publisher does not retain the observed object, preventing reference
+    /// cycles.
     func weakPublisher<T: AnyObject>(for name: Notification.Name, object: T?) -> AnyPublisher<Notification, Never> {
         if let object {
             return publisher(for: name)
@@ -165,12 +182,15 @@ public extension NotificationCenter {
 }
 
 public extension Publisher {
-    /// Capture another object weakly and provide one of its properties as additional output. Does not emit when the
-    /// object is `nil`.
+    /// Captures an object weakly and provides one of its properties as additional output.
+    ///
     /// - Parameters:
-    ///   - other: The other object to weakly capture.
+    ///   - other: The object to weakly capture.
     ///   - keyPath: The key path for which to provide values.
-    /// - Returns: A publisher combining the original output with properties from the weakly captured object.
+    /// - Returns: A publisher combining the original output with values from the weakly captured object at the
+    ///   specified key path.
+    ///
+    /// Does not emit when the object is `nil`.
     func weakCapture<T: AnyObject, V>(_ other: T?, at keyPath: KeyPath<T, V>) -> AnyPublisher<(Output, V), Failure> {
         compactMap { [weak other] output -> (Output, V)? in
             guard let other else { return nil }
@@ -179,15 +199,18 @@ public extension Publisher {
         .eraseToAnyPublisher()
     }
 
-    /// Capture another object weakly and provide it as additional output. Does not emit when the object is `nil`.
-    /// - Parameters:
-    ///   - other: The other object to weakly capture.
+    /// Captures an object weakly and provides it as additional output.
+    ///
+    /// - Parameter other: The object to weakly capture.
     /// - Returns: A publisher combining the original output with the weakly captured object (if not `nil`).
+    ///
+    /// Does not emit when the object is `nil`.
     func weakCapture<T: AnyObject>(_ other: T?) -> AnyPublisher<(Output, T), Failure> {
         weakCapture(other, at: \T.self)
     }
 
-    /// Safely receive elements from the publisher on the main thread.
+    /// Safely receives elements from the upstream on the main thread.
+    /// 
     /// - Returns: A publisher delivering elements on the main thread.
     func receiveOnMainThread() -> AnyPublisher<Output, Failure> {
         map { output in

@@ -6,7 +6,7 @@
 
 import Foundation
 
-/// Describes a playback context.
+/// A description of a playback context.
 public struct MediaComposition: Decodable {
     enum CodingKeys: String, CodingKey {
         case _analyticsData = "analyticsData"
@@ -16,7 +16,7 @@ public struct MediaComposition: Decodable {
         case show
     }
 
-    /// The URN of the chapter to be played..
+    /// The URN of the chapter to be played.
     public let chapterUrn: String
 
     /// The available chapters.

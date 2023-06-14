@@ -7,17 +7,17 @@
 import Foundation
 
 public extension Player {
-    /// Resume playback.
+    /// Resumes playback.
     func play() {
         queuePlayer.play()
     }
 
-    /// Pause playback.
+    /// Pauses playback.
     func pause() {
         queuePlayer.pause()
     }
 
-    /// Toggle playback between play and pause.
+    /// Toggles playback between play and pause.
     func togglePlayPause() {
         if queuePlayer.rate != 0 {
             queuePlayer.pause()

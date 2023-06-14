@@ -8,7 +8,7 @@ import Combine
 import XCTest
 
 public extension XCTestCase {
-    /// Collect values emitted by a publisher during some time interval and match them against an expected result.
+    /// Collects values emitted by a publisher during some time interval and matches them against an expected result.
     func expectPublished<P: Publisher, T>(
         values: [T],
         from publisher: P,
@@ -31,7 +31,7 @@ public extension XCTestCase {
         )
     }
 
-    /// Collect values emitted by a publisher during some time interval and match them against an expected result.
+    /// Collects values emitted by a publisher during some time interval and matches them against an expected result.
     func expectEqualPublished<P: Publisher>(
         values: [P.Output],
         from publisher: P,
@@ -53,7 +53,7 @@ public extension XCTestCase {
         )
     }
 
-    /// Collect values emitted by a publisher during some time interval and match them against an expected result.
+    /// Collects values emitted by a publisher during some time interval and matches them against an expected result.
     func expectSimilarPublished<P: Publisher>(
         values: [P.Output],
         from publisher: P,
@@ -75,9 +75,10 @@ public extension XCTestCase {
         )
     }
 
-    /// Collect values emitted by a publisher during some time interval and match them against an expected result,
-    /// ignoring the first value. Useful when testing publishers which automatically deliver a non-relevant stored
-    /// value upon subscription.
+    /// Collects values emitted by a publisher during some time interval and matches them against an expected result,
+    /// ignoring the first value.
+    ///
+    /// Useful when testing publishers which automatically deliver a non-relevant stored value upon subscription.
     func expectPublishedNext<P: Publisher, T>(
         values: [T],
         from publisher: P,
@@ -100,9 +101,10 @@ public extension XCTestCase {
         )
     }
 
-    /// Collect values emitted by a publisher during some time interval and match them against an expected result,
-    /// ignoring the first value. Useful when testing publishers which automatically deliver a non-relevant stored
-    /// value upon subscription.
+    /// Collects values emitted by a publisher during some time interval and matches them against an expected result,
+    /// ignoring the first value.
+    ///
+    /// Useful when testing publishers which automatically deliver a non-relevant stored value upon subscription.
     func expectEqualPublishedNext<P: Publisher>(
         values: [P.Output],
         from publisher: P,
@@ -124,9 +126,10 @@ public extension XCTestCase {
         )
     }
 
-    /// Collect values emitted by a publisher during some time interval and match them against an expected result,
-    /// ignoring the first value. Useful when testing publishers which automatically deliver a non-relevant stored
-    /// value upon subscription.
+    /// Collects values emitted by a publisher during some time interval and matches them against an expected result,
+    /// ignoring the first value.
+    ///
+    /// Useful when testing publishers which automatically deliver a non-relevant stored value upon subscription.
     func expectSimilarPublishedNext<P: Publisher>(
         values: [P.Output],
         from publisher: P,

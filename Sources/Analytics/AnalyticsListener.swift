@@ -9,30 +9,38 @@ import ComScore
 import Foundation
 import TCServerSide_noIDFA
 
-/// Provide a context in which analytics events are captured. Should never be used in production, only for
-/// development purposes (e.g. unit tests). Must be started first.
+/// A listener for analytics events.
+///
+/// The listener must be started first and provides two methods with which comScore, respectively Commanders Act
+/// events can be captured.
+///
+/// Note that `AnalyticsListener` is a development-oriented tool (e.g. unit testing) which must never be used directly
+/// in production code.
 public enum AnalyticsListener {
     private static let sessionIdentifierKey = "listener_session_id"
     private static var sessionIdentifier: String?
 
-    /// Start the listener.
+    /// Starts the listener.
+    ///
     /// - Parameter completion: A completion called when the listener has been started.
     public static func start(completion: @escaping () -> Void) {
         ComScoreInterceptor.start(completion: completion)
     }
 
-    /// Capture comScore events.
-    /// - Parameter perform: A closure to be executed. Receives a publisher which emits the events received during
-    ///   the capture.
+    /// Captures comScore events.
+    ///
+    /// - Parameter perform: A closure to be executed within the capture session. The session provides a publisher
+    ///   which emits the associated events.
     public static func captureComScoreEvents(perform: (AnyPublisher<ComScoreEvent, Never>) -> Void) {
         captureEvents(perform: perform) { identifier in
             ComScoreInterceptor.eventPublisher(for: identifier)
         }
     }
 
-    /// Capture Commanders Act events.
-    /// - Parameter perform: A closure to be executed. Receives a publisher which emits the events received during
-    ///   the capture.
+    /// Captures Commanders Act events.
+    /// 
+    /// - Parameter perform: A closure to be executed within the capture session. The session provides a publisher
+    ///   which emits the associated events.
     public static func captureCommandersActEvents(perform: (AnyPublisher<CommandersActEvent, Never>) -> Void) {
         captureEvents(perform: perform) { identifier in
             CommandersActInterceptor.eventPublisher(for: identifier)

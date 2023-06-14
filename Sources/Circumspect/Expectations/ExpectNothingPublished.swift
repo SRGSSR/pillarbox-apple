@@ -8,7 +8,7 @@ import Combine
 import XCTest
 
 public extension XCTestCase {
-    /// Ensure a publisher does not emit any value during some time interval.
+    /// Expects a publisher to not emit any value during some time interval.
     func expectNothingPublished<P: Publisher>(
         from publisher: P,
         during interval: DispatchTimeInterval = .seconds(20),
@@ -26,7 +26,7 @@ public extension XCTestCase {
         )
     }
 
-    /// Ensure a publisher does not emit any value during some time interval.
+    /// Expects a publisher to not emit any value during some time interval.
     func expectNothingPublishedNext<P: Publisher>(
         from publisher: P,
         during interval: DispatchTimeInterval = .seconds(20),

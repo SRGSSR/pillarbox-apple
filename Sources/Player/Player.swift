@@ -11,35 +11,37 @@ import DequeModule
 import MediaPlayer
 import TimelaneCombine
 
-/// An audio / video player maintaining its items as a double-ended queue (deque).
+/// An observable audio / video player maintaining its items as a double-ended queue (deque).
 public final class Player: ObservableObject, Equatable {
     private static weak var currentPlayer: Player?
 
-    /// Current playback state.
+    /// The current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle
 
-    /// Current presentation size. Might be zero for audio content or `nil` when unknown.
+    /// The current presentation size.
+    ///
+    /// Might be zero for audio content or `nil` when unknown.
     @Published public private(set) var presentationSize: CGSize?
 
-    /// Returns whether the player is currently buffering.
+    /// A Boolean describing whether the player is currently buffering.
     @Published public private(set) var isBuffering = false
 
-    /// Returns whether the player is currently seeking to another position.
+    /// A Boolean describing whether the player is currently seeking to another position.
     @Published public private(set) var isSeeking = false
 
     /// The index of the current item in the queue.
     @Published public private(set) var currentIndex: Int?
 
-    /// Duration of a chunk for the currently played item.
+    /// The duration of a chunk for the currently played item.
     @Published public private(set) var chunkDuration: CMTime = .invalid
 
-    /// Indicates whether the player is currently playing video in external playback mode.
+    /// A Boolean describing whether the player is currently playing video in external playback mode.
     @Published public private(set) var isExternalPlaybackActive = false
 
-    /// Set whether trackers are enabled or not.
+    /// A Boolean setting whether trackers must be enabled or not.
     @Published public var isTrackingEnabled = true
 
-    /// Set whether the audio output of the player is muted.
+    /// A Boolean setting whether the audio output of the player must be muted.
     @Published public var isMuted = true {
         didSet {
             queuePlayer.isMuted = isMuted
@@ -67,7 +69,7 @@ public final class Player: ObservableObject, Equatable {
     /// The player configuration
     public let configuration: PlayerConfiguration
 
-    /// The type of stream currently played.
+    /// The type of stream currently being played.
     public var streamType: StreamType {
         StreamType(for: timeRange, itemDuration: itemDuration)
     }
@@ -83,23 +85,29 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.currentTime().clamped(to: timeRange)
     }
 
-    /// The available time range or `.invalid` when not known.
+    /// The available time range.
+    ///
+    /// `.invalid` when unknown.
     public var timeRange: CMTimeRange {
         queuePlayer.timeRange
     }
 
-    /// Returns whether the player is currently busy (buffering or seeking).
+    /// A Boolean describing whether the player is currently busy (buffering or seeking).
     public var isBusy: Bool {
         isBuffering || isSeeking
     }
 
-    /// The low-level system player. Exposed for specific read-only needs like interfacing with `AVPlayer`-based
-    /// 3rd party APIs. Mutating the state of this player directly is not supported and leads to undefined behavior.
+    /// The low-level system player.
+    ///
+    /// Exposed for specific read-only needs like interfacing with `AVPlayer`-based 3rd party APIs. Mutating the state
+    /// of this player directly is not supported and leads to undefined behavior.
     public var systemPlayer: AVPlayer {
         queuePlayer
     }
 
-    /// The current item duration or `.invalid` when not known.
+    /// The current item duration.
+    ///
+    /// `.invalid` when unknown.
     var itemDuration: CMTime {
         queuePlayer.itemDuration
     }
@@ -113,7 +121,8 @@ public final class Player: ObservableObject, Equatable {
     // swiftlint:disable:next private_subject
     var desiredPlaybackSpeedPublisher = PassthroughSubject<Float, Never>()
 
-    /// Create a player with a given item queue.
+    /// Creates a player with a given item queue.
+    ///
     /// - Parameters:
     ///   - items: The items to be queued initially.
     ///   - configuration: The configuration to apply to the player.
@@ -131,7 +140,8 @@ public final class Player: ObservableObject, Equatable {
         configurePublishedPropertyPublishers()
     }
 
-    /// Create a player with a single item in its queue.
+    /// Creates a player with a single item in its queue.
+    ///
     /// - Parameters:
     ///   - item: The item to queue.
     ///   - configuration: The configuration to apply to the player.
@@ -143,8 +153,9 @@ public final class Player: ObservableObject, Equatable {
         lhs === rhs
     }
 
-    /// Enable AirPlay and Control Center integration for the receiver, making the player the current active one. At most
-    /// one player can be active at any time.
+    /// Enables AirPlay and Control Center integration for the receiver, making the player the current active one.
+    ///
+    /// At most one player can be active at any time.
     public func becomeActive() {
         guard Self.currentPlayer != self else { return }
         Self.currentPlayer?.isActive = false
@@ -152,9 +163,10 @@ public final class Player: ObservableObject, Equatable {
         Self.currentPlayer = self
     }
 
-    /// Disable AirPlay and Control Center integration for the receiver. Does nothing if the receiver is currently
-    /// inactive. Calling `resignActive()` is superfluous if `becomeActive` is called on a different player instance
-    /// or if the player gets destroyed.
+    /// Disables AirPlay and Control Center integration for the receiver.
+    ///
+    /// Does nothing if the receiver is currently inactive. Calling `resignActive()` is superfluous if `becomeActive`
+    /// is called on a different player instance or if the player gets destroyed.
     public func resignActive() {
         guard Self.currentPlayer == self else { return }
         isActive = false

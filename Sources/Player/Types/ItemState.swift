@@ -79,8 +79,9 @@ enum ItemState: Equatable {
         return [NSLocalizedDescriptionKey: comment]
     }
 
-    /// Consolidate intrinsic error and error log information. Only reliable the first time the item transitions to
-    /// the failed status as of iOS and tvOS 16.1.
+    /// Consolidates intrinsic error and error log information.
+    ///
+    /// Consolidation is only reliable the first time the item transitions to the failed status as of iOS and tvOS 16.1.
     private static func intrinsicError(for item: AVPlayerItem) -> Error {
         if let errorLog = item.errorLog(), let event = errorLog.events.last {
             return NSError(
@@ -97,7 +98,8 @@ enum ItemState: Equatable {
         }
     }
 
-    /// Return the error associated with an item. Caches the first encountered error.
+    /// Returns the error associated with an item, caching the first encountered error.
+    ///
     /// - Parameters:
     ///   - item: The item to consider.
     ///   - error: An error related to the item and which might be supplied by another channel (e.g. notification).

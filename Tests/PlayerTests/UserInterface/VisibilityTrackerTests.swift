@@ -101,7 +101,7 @@ final class VisibilityTrackerTests: TestCase {
     }
 
     func testInvalidDelay() {
-        guard nimbleThrowAssertionsEnabled() else { return }
+        guard nimbleThrowAssertionsAvailable() else { return }
         expect(VisibilityTracker(delay: -5)).to(throwAssertion())
     }
 

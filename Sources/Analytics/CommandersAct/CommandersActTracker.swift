@@ -9,7 +9,11 @@ import Combine
 import Foundation
 import Player
 
-/// Stream tracker for Commanders Act. Implements streaming measurements according to SRG SSR official specifications.
+/// A Commanders Act tracker for streaming.
+///
+/// This tracker implements streaming measurements according to SRG SSR official specifications.
+///
+/// Analytics have to be properly started for the tracker to collect events, see `Analytics.start(with:)`.
 public final class CommandersActTracker: PlayerItemTracker {
     private var cancellables = Set<AnyCancellable>()
     private var streamingAnalytics: CommandersActStreamingAnalytics?
@@ -108,7 +112,7 @@ private extension CommandersActTracker {
 }
 
 public extension CommandersActTracker {
-    /// Metadata.
+    /// Commanders Act tracker metadata.
     struct Metadata {
         let labels: [String: String]
         let streamType: StreamType
@@ -117,9 +121,10 @@ public extension CommandersActTracker {
             .init(labels: [:], streamType: .unknown)
         }
 
-        /// Create metadata.
+        /// Creates Commanders Act metadata.
+        ///
         /// - Parameters:
-        ///   - labels: Labels associated with the content being played.
+        ///   - labels: The labels associated with the content being played.
         ///   - streamType: The stream type.
         public init(labels: [String: String], streamType: StreamType) {
             self.labels = labels

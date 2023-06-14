@@ -7,9 +7,9 @@
 import CoreMedia
 import Foundation
 
-/// Stream types.
+/// A stream type.
 public enum StreamType {
-    /// Not yet determined.
+    /// Unknown stream.
     case unknown
     /// On-demand stream.
     case onDemand

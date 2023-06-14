@@ -7,16 +7,10 @@
 import Combine
 import XCTest
 
-/// Ideas borrowed from https://www.swiftbysundell.com/articles/unit-testing-combine-based-swift-code/
+// Ideas borrowed from https://www.swiftbysundell.com/articles/unit-testing-combine-based-swift-code/
+
 public extension XCTestCase {
-    /// Wait for a publisher to complete and return its result.
-    /// - Parameters:
-    ///   - publisher: Publisher to monitor.
-    ///   - timeout: Timeout after which the expectation fails.
-    ///   - file: File where the expectation is made.
-    ///   - line: Line where the expectation is made.
-    ///   - executing: Code which must be executed while waiting on the expectation.
-    /// - Returns: The result of the publisher.
+    /// Waits for a publisher to complete and returns its result.
     @discardableResult
     func waitForResult<P: Publisher>(
         from publisher: P,
@@ -56,14 +50,7 @@ public extension XCTestCase {
         return try XCTUnwrap(result, "The publisher did not produce any result", file: file, line: line)
     }
 
-    /// Wait for a publisher to complete and return its output.
-    /// - Parameters:
-    ///   - publisher: Publisher to monitor.
-    ///   - timeout: Timeout after which the expectation fails.
-    ///   - file: File where the expectation is made.
-    ///   - line: Line where the expectation is made.
-    ///   - executing: Code which must be executed while waiting on the expectation.
-    /// - Returns: The collected output.
+    /// Waits for a publisher to complete and returns its output.
     @discardableResult
     func waitForOutput<P: Publisher>(
         from publisher: P,
@@ -82,14 +69,7 @@ public extension XCTestCase {
         return try result.get()
     }
 
-    /// Wait for a publisher to complete with a single output. Fails if not the case.
-    /// - Parameters:
-    ///   - publisher: Publisher to monitor.
-    ///   - timeout: Timeout after which the expectation fails.
-    ///   - file: File where the expectation is made.
-    ///   - line: Line where the expectation is made.
-    ///   - executing: Code which must be executed while waiting on the expectation.
-    /// - Returns: The output.
+    /// Waits for a publisher to complete with a single output. Fails if not the case.
     @discardableResult
     func waitForSingleOutput<P: Publisher>(
         from publisher: P,
@@ -112,14 +92,7 @@ public extension XCTestCase {
         return singleOutput
     }
 
-    /// Wait for a publisher to complete with a failure. Fails if not the case.
-    /// - Parameters:
-    ///   - publisher: Publisher to monitor.
-    ///   - timeout: Timeout after which the expectation fails.
-    ///   - file: File where the expectation is made.
-    ///   - line: Line where the expectation is made.
-    ///   - executing: Code which must be executed while waiting on the expectation.
-    /// - Returns: The failure reason.
+    /// Waits for a publisher to complete with a failure. Fails if not the case.
     @discardableResult
     func waitForFailure<P: Publisher>(
         from publisher: P,
@@ -144,14 +117,7 @@ public extension XCTestCase {
         }
     }
 
-    /// Collect output emitted by a publisher during some interval.
-    /// - Parameters:
-    ///   - publisher: Publisher to monitor.
-    ///   - interval: Timeout after which the expectation fails.
-    ///   - file: File where the expectation is made.
-    ///   - line: Line where the expectation is made.
-    ///   - executing: Code which must be executed while waiting on the expectation.
-    /// - Returns: The collected output.
+    /// Collects output emitted by a publisher during some interval.
     func collectOutput<P: Publisher>(
         from publisher: P,
         during interval: DispatchTimeInterval = .seconds(20),
@@ -180,14 +146,14 @@ public extension XCTestCase {
 }
 
 public extension Publisher where Failure == Never {
-    /// Collect the specified number of items (including the current one) before completing.
+    /// Collects the specified number of items (including the current one) before completing.
     func collectFirst(_ count: Int) -> AnyPublisher<[Output], Never> {
         collect(count)
             .first()
             .eraseToAnyPublisher()
     }
 
-    /// Collect the next number of items before completing.
+    /// Collects the next number of items before completing.
     func collectNext(_ count: Int) -> AnyPublisher<[Output], Never> {
         dropFirst()
             .collect(count)

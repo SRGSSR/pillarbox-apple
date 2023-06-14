@@ -6,7 +6,7 @@
 
 import CoreMedia
 
-/// Describes a position to reach.
+/// A description for a position to reach.
 public struct Position {
     /// The time to reach.
     public let time: CMTime
@@ -24,7 +24,8 @@ public struct Position {
     }
 }
 
-/// A position with explicitly associated tolerances.
+/// Returns a position with explicitly associated tolerances.
+///
 /// - Parameters:
 ///   - time: The time to reach.
 ///   - toleranceBefore: The tolerance allowed before the time to reach.
@@ -34,28 +35,32 @@ public func to(_ time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) 
     .init(time: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
 }
 
-/// A precise position.
+/// Returns a precise position.
+///
 /// - Parameter time: The time to reach.
 /// - Returns: A position.
 public func at(_ time: CMTime) -> Position {
     .init(time: time, toleranceBefore: .zero, toleranceAfter: .zero)
 }
 
-/// An approximate position.
+/// Returns an approximate position.
+///
 /// - Parameter time: The time to reach.
 /// - Returns: A position.
 public func near(_ time: CMTime) -> Position {
     .init(time: time, toleranceBefore: .positiveInfinity, toleranceAfter: .positiveInfinity)
 }
 
-/// An approximate position, but always located before the specified time.
+/// Returns an approximate position always located before the specified time.
+///
 /// - Parameter time: The time to reach.
 /// - Returns: A position.
 public func before(_ time: CMTime) -> Position {
     .init(time: time, toleranceBefore: .positiveInfinity, toleranceAfter: .zero)
 }
 
-/// An approximate position, but always located after the specified time.
+/// Returns an approximate position always located after the specified time.
+/// 
 /// - Parameter time: The time to reach.
 /// - Returns: A position.
 public func after(_ time: CMTime) -> Position {

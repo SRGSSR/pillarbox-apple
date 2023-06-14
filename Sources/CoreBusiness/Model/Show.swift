@@ -6,7 +6,7 @@
 
 import Foundation
 
-/// Describes a show.
+/// A show description.
 public struct Show: Decodable {
     /// The show title.
     public let title: String

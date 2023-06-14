@@ -8,7 +8,8 @@ import SwiftUI
 
 @available(tvOS, unavailable)
 public extension Slider {
-    /// Create a slider bound to a progress tracker.
+    /// Creates a slider bound to a progress tracker.
+    ///
     /// - Parameters:
     ///   - progressTracker: The progress tracker.
     ///   - label: A view describing the slider purpose.
@@ -37,7 +38,8 @@ public extension Slider {
 
 @available(tvOS, unavailable)
 public extension Slider where ValueLabel == EmptyView {
-    /// Create a slider bound to a progress tracker.
+    /// Creates a slider bound to a progress tracker.
+    ///
     /// - Parameters:
     ///   - progressTracker: The progress tracker.
     ///   - label: A view describing the slider purpose.
@@ -60,7 +62,8 @@ public extension Slider where ValueLabel == EmptyView {
 
 @available(tvOS, unavailable)
 public extension Slider where Label == EmptyView, ValueLabel == EmptyView {
-    /// Create a slider bound to a progress tracker.
+    /// Creates a slider bound to a progress tracker.
+    /// 
     /// - Parameters:
     ///   - progressTracker: The progress tracker.
     ///   - onEditingChanged: A closure called when editing begins or ends.

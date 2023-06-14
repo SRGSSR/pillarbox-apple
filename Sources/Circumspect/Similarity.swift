@@ -9,18 +9,21 @@ import Nimble
 
 infix operator ~~ : ComparisonPrecedence
 
-/// Defines similarity for types not conforming to `Equatable` and which need to be meaningfully compared in tests.
+/// A protocol to define similarity for types.
+///
+/// You can implement similarity for types not conforming to `Equatable` but which still need to be meaningfully
+/// compared in tests.
 public protocol Similar {
-    /// Must return `true` iff the two sides can be considered to be similar.
+    /// Returns whether the two sides can be considered to be similar.
     static func ~~ (lhs: Self, rhs: Self) -> Bool
 }
 
-/// Nimble matcher displaying similarity differences in a friendly way.
+/// Matches against an expected similar value, displaying mismatches in a user-readable form.
 public func equalDiff<T: Similar>(_ expectedValue: T?) -> Nimble.Predicate<T> {
     equalDiff(expectedValue, by: ~~)
 }
 
-/// Nimble matcher displaying mismatches as differences.
+/// Matches against an expected similar value.
 public func equal<T: Similar>(_ expectedValue: T?) -> Nimble.Predicate<T> {
     equal(expectedValue, by: ~~)
 }

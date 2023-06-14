@@ -6,11 +6,11 @@
 
 import Foundation
 
-/// Server.
+/// A server environment.
 public enum Server {
     /// Production.
     case production
-    /// State.
+    /// Stage.
     case stage
     /// Test.
     case test

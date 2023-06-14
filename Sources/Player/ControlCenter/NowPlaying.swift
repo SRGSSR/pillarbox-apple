@@ -7,21 +7,23 @@
 import CoreMedia
 import UIKit
 
-/// Metadata used to display what is currently being played, most notably in the Control Center.
+/// Metadata providing information about what is currently being played.
+///
+/// This metadata is most notably displayed in the Control Center.
 public struct NowPlayingMetadata {
-    /// Title.
+    /// The title.
     let title: String?
 
-    /// Subtitle.
+    /// The subtitle.
     let subtitle: String?
 
-    /// Description.
+    /// The description.
     let description: String?
 
-    /// Image.
+    /// The image suitable for artwork display.
     let image: UIImage?
 
-    /// Create a now playing metadata.
+    /// Creates now playing metadata.
     public init(title: String? = nil, subtitle: String? = nil, description: String? = nil, image: UIImage? = nil) {
         self.title = title
         self.subtitle = subtitle
@@ -30,12 +32,12 @@ public struct NowPlayingMetadata {
     }
 }
 
-/// Types related to current metadata display in the control center.
+/// A type providing Control Center metadata.
 public enum NowPlaying {
-    /// Now playing information.
+    /// Standard now playing metadata.
     public typealias Info = [String: Any]
 
-    /// Playback properties for the now playing item.
+    /// A list of properties for the now playing item.
     struct Properties {
         let timeRange: CMTimeRange
         let itemDuration: CMTime

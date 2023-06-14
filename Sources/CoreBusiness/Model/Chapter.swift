@@ -6,7 +6,7 @@
 
 import Foundation
 
-/// Content associated with a playback context and providing a playable resource.
+/// A content providing a playable resource.
 public struct Chapter: Decodable {
     enum CodingKeys: String, CodingKey {
         case _analyticsData = "analyticsData"
@@ -34,7 +34,9 @@ public struct Chapter: Decodable {
     /// The chapter description.
     public let description: String?
 
-    /// The chapter image URL. Use `SRGDataProvider.imagePublisher(for:width:)` to obtain a scaled downloadable version.
+    /// The chapter image URL.
+    ///
+    /// Use `SRGDataProvider.imagePublisher(for:width:)` to obtain a scaled downloadable version.
     public let imageUrl: URL
 
     /// The content type.
@@ -43,7 +45,7 @@ public struct Chapter: Decodable {
     /// The publication date.
     public let date: Date
 
-    /// Available resources.
+    /// The available resources.
     public let resources: [Resource]
 
     /// The date at which the content is made available.
@@ -68,6 +70,7 @@ public struct Chapter: Decodable {
     private let _analyticsMetadata: [String: String]?
 
     /// Returns whether the content is blocked for some reason.
+    /// 
     /// - Parameter date: The date at which the availability must be evaluated.
     /// - Returns: The blocking reason.
     public func blockingReason(at date: Date = Date()) -> BlockingReason? {

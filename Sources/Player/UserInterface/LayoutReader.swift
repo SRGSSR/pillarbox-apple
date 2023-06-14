@@ -13,22 +13,23 @@ public struct LayoutInfo {
         .init(isOverCurrentContext: false, isFullScreen: false)
     }
 
-    /// Return whether the view covers its current context.
+    /// A Boolean describing whether the view covers its current context.
     public let isOverCurrentContext: Bool
 
-    /// Return whether the view covers the whole screen
+    /// A Boolean describing whether the view covers the whole screen.
     public let isFullScreen: Bool
 }
 
-/// A view which is able to determine whether it is covering its current context or full screen. The view lays out
-/// its children like a `ZStack`.
+/// A view which is able to determine layout information.
+///
+/// The view lays out its children like a `ZStack`.
 @available(tvOS, unavailable)
 public struct LayoutReader<Content: View>: View {
     @Binding private var layoutInfo: LayoutInfo
     @Binding private var content: () -> Content
 
     public var body: some View {
-        // Ignore the safe area to have support for safe area insets similar to a `ZStack`.
+        // Ignores the safe area to have support for safe area insets similar to a `ZStack`.
         LayoutReaderHost(layoutInfo: $layoutInfo) {
             ZStack {
                 content()
@@ -37,7 +38,8 @@ public struct LayoutReader<Content: View>: View {
         .ignoresSafeArea()
     }
 
-    /// Create the layout reader.
+    /// Creates a layout reader.
+    /// 
     /// - Parameters:
     ///   - layoutInfo: The layout information.
     ///   - content: The wrapped content.

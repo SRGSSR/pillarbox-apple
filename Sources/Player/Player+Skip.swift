@@ -7,13 +7,15 @@
 import CoreMedia
 
 public extension Player {
-    /// Check whether skipping backward is possible.
+    /// Checks whether skipping backward is possible.
+    ///
     /// - Returns: `true` if possible.
     func canSkipBackward() -> Bool {
         timeRange.isValidAndNotEmpty
     }
 
-    /// Check whether skipping forward is possible.
+    /// Checks whether skipping forward is possible.
+    ///
     /// - Returns: `true` if possible.
     func canSkipForward() -> Bool {
         guard timeRange.isValidAndNotEmpty else { return false }
@@ -26,14 +28,16 @@ public extension Player {
         }
     }
 
-    /// Skip backward.
+    /// Skips backward.
+    ///
     /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
     ///   whether the skip could finish without being cancelled.
     func skipBackward(completion: @escaping (Bool) -> Void = { _ in }) {
         skip(withInterval: backwardSkipTime, toleranceBefore: .positiveInfinity, toleranceAfter: .zero, completion: completion)
     }
 
-    /// Skip forward.
+    /// Skips forward.
+    /// 
     /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
     ///   whether the skip could finish without being cancelled.
     func skipForward(completion: @escaping (Bool) -> Void = { _ in }) {
