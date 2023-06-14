@@ -25,13 +25,13 @@ struct ShowcaseView: View {
     @ViewBuilder
     private func layoutsSection() -> some View {
         Section("Layouts") {
-            Cell(title: "Simple") {
+            Cell(title: "Simple", subtitle: "A basic video playback experience") {
                 SimplePlayerView(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
             }
-            Cell(title: "Blurred") {
+            Cell(title: "Blurred", subtitle: "A video displayed onto a blurred clone of itself") {
                 BlurredView(media: Media(from: URLTemplate.dvrVideoHLS))
             }
-            Cell(title: "Stories") {
+            Cell(title: "Stories", subtitle: "An Instagram-inspired user experience") {
                 StoriesView()
             }
         }
@@ -94,19 +94,19 @@ struct ShowcaseView: View {
     @ViewBuilder
     private func embeddingsSection() -> some View {
         Section("Embeddings") {
-            Cell(title: "Twins") {
+            Cell(title: "Twins", subtitle: "A video displayed twice") {
                 TwinsView(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
             }
-            Cell(title: "Multi") {
+            Cell(title: "Multi-instance", subtitle: "Two videos played at the same time") {
                 MultiView(
                     media1: Media(from: URNTemplate.onDemandHorizontalVideo),
                     media2: Media(from: URNTemplate.onDemandVideo)
                 )
             }
-            Cell(title: "Link") {
+            Cell(title: "Link", subtitle: "A player which can be linked to a view") {
                 LinkView(media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS))
             }
-            Cell(title: "Wrapped") {
+            Cell(title: "Wrapped", subtitle: "A view whose player can be removed") {
                 WrappedView(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
             }
         }
@@ -114,7 +114,7 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func trackingSection() -> some View {
-        Section("Opt-in") {
+        Section("Opt-in features") {
             Cell(title: "Video URL") {
                 OptInView(media: Media(from: URLTemplate.onDemandVideoMP4))
             }
