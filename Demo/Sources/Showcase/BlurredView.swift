@@ -5,6 +5,7 @@
 //
 
 import Analytics
+import Combine
 import Player
 import SwiftUI
 
@@ -25,6 +26,7 @@ struct BlurredView: View {
         }
         .background(.black)
         .onAppear(perform: play)
+        .onForeground(perform: player.play)
         .tracked(title: "blurred")
     }
 

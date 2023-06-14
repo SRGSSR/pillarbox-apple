@@ -4,13 +4,16 @@
 //  License information is available from the LICENSE file.
 //
 
+import Combine
 import Foundation
 import OrderedCollections
 import Player
+import UIKit
 
 final class StoriesViewModel: ObservableObject {
     private static let preloadDistance = 1
     private var players = OrderedDictionary<Story, Player?>()
+    private var cancellables = Set<AnyCancellable>()
 
     var stories: [Story] {
         Array(players.keys)
@@ -29,7 +32,7 @@ final class StoriesViewModel: ObservableObject {
         let currentStory = stories.first!
         self.currentStory = currentStory
         players = Self.players(for: stories, around: currentStory, reusedFrom: [:])
-        player(for: currentStory).play()
+        configureAutomaticResume()
     }
 
     private static func player(for story: Story) -> Player {
@@ -65,5 +68,15 @@ final class StoriesViewModel: ObservableObject {
         else {
             return Player()
         }
+    }
+
+    private func configureAutomaticResume() {
+        Signal.applicationWillEnterForeground()
+            .prepend(())
+            .sink { [weak self] _ in
+                guard let self else { return }
+                player(for: currentStory).play()
+            }
+            .store(in: &cancellables)
     }
 }

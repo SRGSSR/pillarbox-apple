@@ -40,11 +40,16 @@ struct TwinsView: View {
             .padding()
         }
         .onAppear(perform: play)
+        .onForeground(perform: resume)
         .tracked(title: "twins")
     }
 
     private func play() {
         player.append(media.playerItem())
+        player.play()
+    }
+
+    private func resume() {
         player.play()
     }
 }
