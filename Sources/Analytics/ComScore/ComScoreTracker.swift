@@ -61,10 +61,23 @@ public final class ComScoreTracker: PlayerItemTracker {
 
     private func notify(playbackState: PlaybackState, isSeeking: Bool, isBuffering: Bool, player: Player) {
         guard !metadata.labels.isEmpty else { return }
+        
         AnalyticsListener.capture(streamingAnalytics.configuration())
         streamingAnalytics.setProperties(for: player, streamType: metadata.streamType)
-        streamingAnalytics.notifyChangePlaybackRate(player.effectivePlaybackSpeed)
-        streamingAnalytics.notifyEvent(playbackState: playbackState, isSeeking: isSeeking, isBuffering: isBuffering)
+
+        switch (isSeeking, isBuffering) {
+        case (true, true):
+            streamingAnalytics.notifySeekStart()
+            streamingAnalytics.notifyBufferStart()
+        case (true, false):
+            streamingAnalytics.notifySeekStart()
+            streamingAnalytics.notifyBufferStop()
+        case (false, true):
+            streamingAnalytics.notifyBufferStart()
+        case (false, false):
+            streamingAnalytics.notifyBufferStop()
+            streamingAnalytics.notifyEvent(for: playbackState, at: player.effectivePlaybackSpeed)
+        }
     }
 
     private func notifyPlaybackSpeedChange(speed: Float) {
@@ -94,9 +107,10 @@ private extension SCORStreamingAnalytics {
         return Int(offset.seconds.toMilliseconds)
     }
 
-    private func notifyEvent(playbackState: PlaybackState) {
+    func notifyEvent(for playbackState: PlaybackState, at rate: Float) {
         switch playbackState {
         case .playing:
+            notifyChangePlaybackRate(rate)
             notifyPlay()
         case .paused:
             notifyPause()
@@ -114,22 +128,6 @@ private extension SCORStreamingAnalytics {
         }
         else {
             start(fromPosition: Self.position(for: player))
-        }
-    }
-
-    func notifyEvent(playbackState: PlaybackState, isSeeking: Bool, isBuffering: Bool) {
-        switch (isSeeking, isBuffering) {
-        case (true, true):
-            notifySeekStart()
-            notifyBufferStart()
-        case (true, false):
-            notifySeekStart()
-            notifyBufferStop()
-        case (false, true):
-            notifyBufferStart()
-        case (false, false):
-            notifyBufferStop()
-            notifyEvent(playbackState: playbackState)
         }
     }
 }
