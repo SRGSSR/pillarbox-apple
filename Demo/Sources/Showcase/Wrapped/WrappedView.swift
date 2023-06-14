@@ -29,6 +29,7 @@ struct WrappedView: View {
             .padding()
         }
         .onAppear(perform: play)
+        .onForeground(perform: resume)
         .tracked(title: "wrapped")
     }
 
@@ -36,6 +37,10 @@ struct WrappedView: View {
         let player = Player(item: media.playerItem(), configuration: .externalPlaybackDisabled)
         model.player = player
         player.play()
+    }
+
+    private func resume() {
+        model.player.play()
     }
 
     private func stop() {
