@@ -97,7 +97,7 @@ struct ShowcaseView: View {
             Cell(title: "Twins", subtitle: "A video displayed twice") {
                 TwinsView(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
             }
-            Cell(title: "Multi", subtitle: "Two videos played at the same time") {
+            Cell(title: "Multi-instance", subtitle: "Two videos played at the same time") {
                 MultiView(
                     media1: Media(from: URNTemplate.onDemandHorizontalVideo),
                     media2: Media(from: URNTemplate.onDemandVideo)
