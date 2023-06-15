@@ -71,10 +71,14 @@ public extension PageViewTracking {
 
 extension UIViewController {
     private var trackedChildren: [UIViewController] {
-        guard let containerViewController = self as? ContainerPageViewTracking else {
-            return children
-        }
+        guard let containerViewController = self as? ContainerPageViewTracking else { return children }
         return containerViewController.activeChildren
+    }
+
+    private var isActive: Bool {
+        // The top-level view controller is always considered active
+        guard let parent else { return true }
+        return parent.trackedChildren.contains(self) && parent.isActive
     }
 
     static func setupViewControllerTracking() {
@@ -151,10 +155,11 @@ extension UIViewController {
                 viewController.trackPageView(automatic: automatic, recursive: true, for: mode)
             }
         }
-        guard let trackedViewController = self as? PageViewTracking,
-              automatic, trackedViewController.isTrackedAutomatically else {
+        guard let trackedViewController = self as? PageViewTracking, automatic,
+              trackedViewController.isTrackedAutomatically, isActive else {
             return
         }
+
         Analytics.shared.trackPageView(
             title: trackedViewController.pageTitle,
             levels: trackedViewController.pageLevels,
