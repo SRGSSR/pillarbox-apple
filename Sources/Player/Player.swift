@@ -232,8 +232,8 @@ private extension Player {
     func configureRateUpdatePublisher() {
         $_playbackSpeed
             .sink { [queuePlayer] speed in
-                guard queuePlayer.rate != 0 else { return }
                 queuePlayer.defaultRate = speed.effectiveValue
+                guard queuePlayer.rate != 0 else { return }
                 queuePlayer.rate = speed.effectiveValue
             }
             .store(in: &cancellables)

@@ -160,6 +160,17 @@ final class SpeedTests: TestCase {
         expect(player.queuePlayer.rate).toEventually(equal(2))
     }
 
+    func testSpeedUpdateWhilePausedMustUpdateRate() {
+        let player = Player(item: .simple(url: Stream.onDemand.url))
+        expect(player.playbackState).toEventually(equal(.paused))
+
+        player.setDesiredPlaybackSpeed(2)
+        player.play()
+
+        expect(player.queuePlayer.defaultRate).toEventually(equal(2))
+        expect(player.queuePlayer.rate).toEventually(equal(2))
+    }
+
     func testSpeedUpdateMustNotResumePlayback() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.playbackState).toEventually(equal(.paused))
