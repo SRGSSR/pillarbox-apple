@@ -64,7 +64,6 @@ public class Analytics {
         self.configuration = configuration
 
         UIViewController.setupViewControllerTracking()
-        UITabBarController.setupTabBarControllerTracking()
 
         comScoreService.start(with: configuration)
         commandersActService.start(with: configuration)

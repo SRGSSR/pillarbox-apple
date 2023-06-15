@@ -161,26 +161,4 @@ extension UIViewController {
             for: mode
         )
     }
-
-    /// Informs the automatic page view tracking engine that page view events generation should be evaluated again.
-    ///
-    /// - Parameter viewController: The view controller for which automatic page view event generation must be
-    ///   evaluated again.
-    ///
-    /// You should call this method after a child view controller has been added to a custom container to notify the
-    /// automatic page view tracking engine. This ensures that correct page view event generation and propagation can
-    /// be triggered if needed.
-    ///
-    /// This method has no effect if the receiver does not conform to `ContainerPageViewTracking` or if the specified
-    /// view controller is not a child of the receiver.
-    ///
-    ///
-    /// This method is useful when implementing custom view controller containers displaying sibling view controllers,
-    /// keeping them alive while inactive (custom tab bar controllers, for example). For containers hiding children
-    /// which have disappeared (similarly to what navigation controllers do), calling this method is not required, as
-    /// standard view appearance namely suffices to trigger automatic page views again when required.
-    public func setNeedsAutomaticPageViewTracking(in viewController: UIViewController) {
-        guard trackedChildren.contains(viewController) else { return }
-        viewController.trackPageView(automatic: true, recursive: true, for: .foreground)
-    }
 }
