@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-private var kCachedError: Void?
+private var kCachedErrorKey: Void?
 
 enum ItemState: Equatable {
     case unknown
@@ -128,10 +128,10 @@ enum ItemState: Equatable {
 private extension AVPlayerItem {
     var cachedError: Error? {
         get {
-            objc_getAssociatedObject(self, &kCachedError) as? Error
+            objc_getAssociatedObject(self, &kCachedErrorKey) as? Error
         }
         set {
-            objc_setAssociatedObject(self, &kCachedError, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &kCachedErrorKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 }
