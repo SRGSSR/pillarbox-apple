@@ -61,10 +61,23 @@ public final class ComScoreTracker: PlayerItemTracker {
 
     private func notify(playbackState: PlaybackState, isSeeking: Bool, isBuffering: Bool, player: Player) {
         guard !metadata.labels.isEmpty else { return }
+
         AnalyticsListener.capture(streamingAnalytics.configuration())
         streamingAnalytics.setProperties(for: player, streamType: metadata.streamType)
-        streamingAnalytics.notifyChangePlaybackRate(player.effectivePlaybackSpeed)
-        streamingAnalytics.notifyEvent(playbackState: playbackState, isSeeking: isSeeking, isBuffering: isBuffering)
+
+        switch (isSeeking, isBuffering) {
+        case (true, true):
+            streamingAnalytics.notifySeekStart()
+            streamingAnalytics.notifyBufferStart()
+        case (true, false):
+            streamingAnalytics.notifySeekStart()
+            streamingAnalytics.notifyBufferStop()
+        case (false, true):
+            streamingAnalytics.notifyBufferStart()
+        case (false, false):
+            streamingAnalytics.notifyBufferStop()
+            streamingAnalytics.notifyEvent(for: playbackState, at: player.effectivePlaybackSpeed)
+        }
     }
 
     private func notifyPlaybackSpeedChange(speed: Float) {
@@ -76,61 +89,6 @@ public final class ComScoreTracker: PlayerItemTracker {
         builder.setCustomLabels(metadata.labels)
         let contentMetadata = SCORStreamingContentMetadata(builder: builder)
         streamingAnalytics.setMetadata(contentMetadata)
-    }
-}
-
-private extension SCORStreamingAnalytics {
-    private static func duration(for player: Player) -> Int {
-        player.timeRange.isValid ? Int(player.timeRange.duration.seconds.toMilliseconds) : 0
-    }
-
-    private static func position(for player: Player) -> Int {
-        player.time.isValid ? Int(player.time.seconds.toMilliseconds) : 0
-    }
-
-    private static func offset(for player: Player) -> Int {
-        guard player.timeRange.isValid, player.time.isValid else { return 0 }
-        let offset = player.timeRange.end - player.time
-        return Int(offset.seconds.toMilliseconds)
-    }
-
-    private func notifyEvent(playbackState: PlaybackState) {
-        switch playbackState {
-        case .playing:
-            notifyPlay()
-        case .paused:
-            notifyPause()
-        case .ended:
-            notifyEnd()
-        default:
-            break
-        }
-    }
-
-    func setProperties(for player: Player, streamType: StreamType) {
-        if streamType == .dvr {
-            start(fromDvrWindowOffset: Self.offset(for: player))
-            setDVRWindowLength(Self.duration(for: player))
-        }
-        else {
-            start(fromPosition: Self.position(for: player))
-        }
-    }
-
-    func notifyEvent(playbackState: PlaybackState, isSeeking: Bool, isBuffering: Bool) {
-        switch (isSeeking, isBuffering) {
-        case (true, true):
-            notifySeekStart()
-            notifyBufferStart()
-        case (true, false):
-            notifySeekStart()
-            notifyBufferStop()
-        case (false, true):
-            notifyBufferStart()
-        case (false, false):
-            notifyBufferStop()
-            notifyEvent(playbackState: playbackState)
-        }
     }
 }
 
