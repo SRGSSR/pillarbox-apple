@@ -115,7 +115,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         }
     }
 
-    func testAutomaticTrackingOnViewAppearanceInActiveHierarchy() {
+    func testAutomaticTrackingOnViewController() {
         let viewController = AutomaticMockViewController()
         expectAtLeastEvents(
             .view { labels in
@@ -126,8 +126,54 @@ final class ComScorePageViewTests: ComScoreTestCase {
         }
     }
 
-    func testAutomaticTrackingOnViewAppearanceInInActiveHierarchy() {
-        XCTFail()
+    func testAutomaticTrackingOnViewAppearanceWhenActiveInParent() {
+        let viewController1 = AutomaticMockViewController(title: "title1")
+        let viewController2 = AutomaticMockViewController(title: "title2")
+        let _ = CustomContainerViewController(viewControllers: [viewController1, viewController2])
+        expectAtLeastEvents(
+            .view { labels in
+                expect(labels.ns_category).to(equal("title1"))
+            }
+        ) {
+            viewController1.viewDidAppear(false)
+        }
+    }
+
+    func testAutomaticTrackingOnViewAppearanceWhenInactiveInParent() {
+        let viewController1 = AutomaticMockViewController(title: "title1")
+        let viewController2 = AutomaticMockViewController(title: "title2")
+        let _ = CustomContainerViewController(viewControllers: [viewController1, viewController2])
+        expectNoEvents(during: .seconds(2)) {
+            viewController2.viewDidAppear(false)
+        }
+    }
+
+    func testAutomaticTrackingOnViewAppearanceWhenInActiveHierarchy() {
+        let viewController1 = AutomaticMockViewController(title: "title1")
+        let viewController2 = AutomaticMockViewController(title: "title2")
+        let _ = CustomContainerViewController(viewControllers: [
+            UINavigationController(rootViewController: viewController1),
+            UINavigationController(rootViewController: viewController2)
+        ])
+        expectAtLeastEvents(
+            .view { labels in
+                expect(labels.ns_category).to(equal("title1"))
+            }
+        ) {
+            viewController1.viewDidAppear(false)
+        }
+    }
+
+    func testAutomaticTrackingOnViewAppearanceWhenInInactiveHierarchy() {
+        let viewController1 = AutomaticMockViewController(title: "title1")
+        let viewController2 = AutomaticMockViewController(title: "title2")
+        let _ = CustomContainerViewController(viewControllers: [
+            UINavigationController(rootViewController: viewController1),
+            UINavigationController(rootViewController: viewController2)
+        ])
+        expectNoEvents(during: .seconds(2)) {
+            viewController2.viewDidAppear(false)
+        }
     }
 
     func testManualTracking() {

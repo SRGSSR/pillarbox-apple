@@ -113,7 +113,9 @@ extension UIViewController {
     @objc
     private func swizzledViewDidAppear(_ animated: Bool) {
         swizzledViewDidAppear(animated)
-        trackAutomaticPageViews()
+        if isActive {
+            trackAutomaticPageViews()
+        }
     }
 
     /// Perform manual page view tracking for the receiver, using data declared by `PageViewTracking` conformance.
@@ -130,9 +132,17 @@ extension UIViewController {
 }
 
 extension UIViewController {
+    var isActive: Bool {
+        guard let parent else { return true }
+        return parent.effectivelyActiveChildren.contains(self) && parent.isActive
+    }
+
+    private var effectivelyActiveChildren: [UIViewController] {
+        (self as? ContainerPageViewTracking)?.activeChildren ?? children
+    }
+
     func trackAutomaticPageViews() {
-        let activeChildren = (self as? ContainerPageViewTracking)?.activeChildren ?? children
-        activeChildren.forEach { viewController in
+        effectivelyActiveChildren.forEach { viewController in
             viewController.trackAutomaticPageViews()
         }
 
