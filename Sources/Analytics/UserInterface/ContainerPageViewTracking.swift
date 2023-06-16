@@ -30,7 +30,7 @@ import UIKit
 ///
 /// Other UIKit containers do not need to conform to `ContainerPageViewTracking` as default event propagation yields
 /// correct behavior for them.
-public protocol ContainerPageViewTracking {
+public protocol ContainerPageViewTracking: UIViewController {
     /// The list of currently active children in the view controller container.
     var activeChildren: [UIViewController] { get }
 }

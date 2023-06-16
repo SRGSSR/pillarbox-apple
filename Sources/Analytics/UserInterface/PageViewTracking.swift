@@ -131,26 +131,9 @@ extension UIViewController {
 
 extension UIViewController {
     func trackAutomaticPageViews() {
-        if let navigationController = self as? UINavigationController {
-            navigationController.topViewController?.trackAutomaticPageViews()
-        }
-        else if let tabBarController = self as? UITabBarController {
-            tabBarController.selectedViewController?.trackAutomaticPageViews()
-        }
-        else if let splitViewController = self as? UISplitViewController {
-            splitViewController.viewControllers.forEach { viewController in
-                viewController.trackAutomaticPageViews()
-            }
-        }
-        else if let containerViewController = self as? ContainerPageViewTracking {
-            containerViewController.activeChildren.forEach { viewController in
-                viewController.trackAutomaticPageViews()
-            }
-        }
-        else {
-            children.forEach { viewController in
-                viewController.trackAutomaticPageViews()
-            }
+        let activeChildren = (self as? ContainerPageViewTracking)?.activeChildren ?? children
+        activeChildren.forEach { viewController in
+            viewController.trackAutomaticPageViews()
         }
 
         guard let trackedViewController = self as? PageViewTracking, trackedViewController.isTrackedAutomatically else { return }
