@@ -76,7 +76,6 @@ public class Analytics {
     ///   - levels: The page levels.
     public func trackPageView(title: String, levels: [String] = []) {
         assert(!title.isBlank, "A title is required")
-        guard UIApplication.shared.applicationState != .background else { return }
         comScoreService.trackPageView(title: title, levels: levels)
         commandersActService.trackPageView(title: title, levels: levels)
     }
