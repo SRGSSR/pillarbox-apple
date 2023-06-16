@@ -164,7 +164,7 @@ extension UIWindow {
     }
 }
 
-extension UIWindowScene {
+private extension UIWindowScene {
     func trackAutomaticPageViews() {
         windows.forEach { window in
             window.trackAutomaticPageViews()
