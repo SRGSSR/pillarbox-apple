@@ -46,32 +46,6 @@ private class ManualMockViewController: UIViewController, PageViewTracking {
     }
 }
 
-private class CustomContainerViewController: UIViewController, ContainerPageViewTracking {
-    private let viewControllers: [UIViewController]
-
-    var activeChildren: [UIViewController] {
-        if let firstViewController = viewControllers.first {
-            return [firstViewController]
-        }
-        else {
-            return []
-        }
-    }
-
-    init(viewControllers: [UIViewController]) {
-        self.viewControllers = viewControllers
-        super.init(nibName: nil, bundle: nil)
-        viewControllers.forEach { viewController in
-            addChild(viewController)
-        }
-    }
-
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
 final class ComScorePageViewTests: ComScoreTestCase {
     func testLabels() {
         expectAtLeastEvents(
@@ -143,7 +117,8 @@ final class ComScorePageViewTests: ComScoreTestCase {
     func testAutomaticTrackingOnViewAppearanceWhenActiveInParent() {
         let viewController1 = AutomaticMockViewController(title: "title1")
         let viewController2 = AutomaticMockViewController(title: "title2")
-        _ = CustomContainerViewController(viewControllers: [viewController1, viewController2])
+        let tabBarController = UITabBarController()
+        tabBarController.viewControllers = [viewController1, viewController2]
         expectAtLeastEvents(
             .view { labels in
                 expect(labels.ns_category).to(equal("title1"))
@@ -156,7 +131,8 @@ final class ComScorePageViewTests: ComScoreTestCase {
     func testAutomaticTrackingOnViewAppearanceWhenInactiveInParent() {
         let viewController1 = AutomaticMockViewController(title: "title1")
         let viewController2 = AutomaticMockViewController(title: "title2")
-        _ = CustomContainerViewController(viewControllers: [viewController1, viewController2])
+        let tabBarController = UITabBarController()
+        tabBarController.viewControllers = [viewController1, viewController2]
         expectNoEvents(during: .seconds(2)) {
             viewController2.simulateViewAppearance()
         }
@@ -165,10 +141,11 @@ final class ComScorePageViewTests: ComScoreTestCase {
     func testAutomaticTrackingOnViewAppearanceWhenInActiveHierarchy() {
         let viewController1 = AutomaticMockViewController(title: "title1")
         let viewController2 = AutomaticMockViewController(title: "title2")
-        _ = CustomContainerViewController(viewControllers: [
+        let tabBarController = UITabBarController()
+        tabBarController.viewControllers = [
             UINavigationController(rootViewController: viewController1),
             UINavigationController(rootViewController: viewController2)
-        ])
+        ]
         expectAtLeastEvents(
             .view { labels in
                 expect(labels.ns_category).to(equal("title1"))
@@ -181,10 +158,11 @@ final class ComScorePageViewTests: ComScoreTestCase {
     func testAutomaticTrackingOnViewAppearanceWhenInInactiveHierarchy() {
         let viewController1 = AutomaticMockViewController(title: "title1")
         let viewController2 = AutomaticMockViewController(title: "title2")
-        _ = CustomContainerViewController(viewControllers: [
+        let tabBarController = UITabBarController()
+        tabBarController.viewControllers = [
             UINavigationController(rootViewController: viewController1),
             UINavigationController(rootViewController: viewController2)
-        ])
+        ]
         expectNoEvents(during: .seconds(2)) {
             viewController2.simulateViewAppearance()
         }
@@ -265,21 +243,6 @@ final class ComScorePageViewTests: ComScoreTestCase {
             .view { labels in
                 expect(labels.ns_category).to(equal("title1"))
             }
-        ) {
-            viewController.recursivelyTrackAutomaticPageViews()
-        }
-    }
-
-    func testAutomaticTrackingFromCustomContainer() {
-        let viewController = CustomContainerViewController(viewControllers: [
-            AutomaticMockViewController(title: "title1"),
-            AutomaticMockViewController(title: "title2")
-        ])
-        expectEvents(
-            .view { labels in
-                expect(labels.ns_category).to(equal("title1"))
-            },
-            during: .seconds(2)
         ) {
             viewController.recursivelyTrackAutomaticPageViews()
         }
