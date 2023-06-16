@@ -11,17 +11,18 @@ import UIKit
 import XCTest
 
 private class AutomaticMockViewController: UIViewController, PageViewTracking {
+    var pageTitle: String {
+        title ?? "automatic"
+    }
+
     init(title: String? = nil) {
         super.init(nibName: nil, bundle: nil)
         self.title = title
     }
-    
+
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    var pageTitle: String {
-        title ?? "automatic"
     }
 }
 
@@ -42,6 +43,32 @@ private class ManualMockViewController: UIViewController, PageViewTracking {
 
     var isTrackedAutomatically: Bool {
         false
+    }
+}
+
+private class CustomContainerViewController: UIViewController, ContainerPageViewTracking {
+    private let viewControllers: [UIViewController]
+
+    var activeChildren: [UIViewController] {
+        if let firstViewController = viewControllers.first {
+            return [firstViewController]
+        }
+        else {
+            return []
+        }
+    }
+
+    init(viewControllers: [UIViewController]) {
+        self.viewControllers = viewControllers
+        super.init(nibName: nil, bundle: nil)
+        viewControllers.forEach { viewController in
+            addChild(viewController)
+        }
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -180,11 +207,18 @@ final class ComScorePageViewTests: ComScoreTestCase {
     }
 
     func testAutomaticTrackingFromCustomContainer() {
-
-    }
-
-    func testRecursiveTrackingInViewControllerHierarchy() {
-
+        let viewController = CustomContainerViewController(viewControllers: [
+            AutomaticMockViewController(title: "title1"),
+            AutomaticMockViewController(title: "title2")
+        ])
+        expectEvents(
+            .view { labels in
+                expect(labels.ns_category).to(equal("title1"))
+            },
+            during: .seconds(2)
+        ) {
+            viewController.trackAutomaticPageViews()
+        }
     }
 
 //    func testAutomaticTrackingInWindow() {

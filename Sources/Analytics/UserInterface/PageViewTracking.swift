@@ -142,6 +142,11 @@ extension UIViewController {
                 viewController.trackAutomaticPageViews()
             }
         }
+        else if let containerViewController = self as? ContainerPageViewTracking {
+            containerViewController.activeChildren.forEach { viewController in
+                viewController.trackAutomaticPageViews()
+            }
+        }
         else {
             children.forEach { viewController in
                 viewController.trackAutomaticPageViews()
@@ -158,12 +163,10 @@ extension UIViewController {
 
 extension UIWindow {
     func trackAutomaticPageViews() {
-
     }
 }
 
 extension UIWindowScene {
     func trackAutomaticPageViews() {
-
     }
 }
