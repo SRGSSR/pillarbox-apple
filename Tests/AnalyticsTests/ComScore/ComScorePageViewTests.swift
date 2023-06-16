@@ -7,7 +7,24 @@
 @testable import Analytics
 
 import Nimble
+import UIKit
 import XCTest
+
+private class AutomaticallyTrackedMockViewController: UIViewController, PageViewTracking {
+    var pageTitle: String {
+        "automatic"
+    }
+}
+
+private class ManuallyTrackedMockViewController: UIViewController, PageViewTracking {
+    var pageTitle: String {
+        "manual"
+    }
+
+    var isTrackedAutomatically: Bool {
+        false
+    }
+}
 
 final class ComScorePageViewTests: ComScoreTestCase {
     func testLabels() {
@@ -23,6 +40,38 @@ final class ComScorePageViewTests: ComScoreTestCase {
             }
         ) {
             Analytics.shared.trackPageView(title: "title")
+        }
+    }
+
+    func testNoTracking() {
+        let viewController = UIViewController()
+        expectNoEvents(during: .seconds(2)) {
+            viewController.viewDidAppear(false)
+        }
+    }
+
+    func testAutomaticTracking() {
+        let viewController = AutomaticallyTrackedMockViewController()
+        expectAtLeastEvents(
+            .view { labels in
+                expect(labels.ns_category).to(equal("automatic"))
+            }
+        ) {
+            viewController.viewDidAppear(false)
+        }
+    }
+
+    func testManualTracking() {
+        let viewController = ManuallyTrackedMockViewController()
+        expectNoEvents(during: .seconds(2)) {
+            viewController.viewDidAppear(false)
+        }
+        expectAtLeastEvents(
+            .view { labels in
+                expect(labels.ns_category).to(equal("manual"))
+            }
+        ) {
+            viewController.trackPageView()
         }
     }
 }

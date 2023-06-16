@@ -75,12 +75,6 @@ extension UIViewController {
         return containerViewController.activeChildren
     }
 
-    private var isActive: Bool {
-        // The top-level view controller is always considered active
-        guard let parent else { return true }
-        return parent.trackedChildren.contains(self) && parent.isActive
-    }
-
     static func setupViewControllerTracking() {
         method_exchangeImplementations(
             class_getInstanceMethod(Self.self, #selector(viewDidAppear(_:)))!,
@@ -106,18 +100,8 @@ extension UIViewController {
         }
     }
 
-    private static func trackForegroundAndBackgroundPageViews(in windowScene: UIWindowScene) {
-        windowScene.windows.forEach { window in
-            trackForegroundAndBackgroundPageViews(in: window)
-        }
-    }
+    private static func trackPageViews(in windowScene: UIWindowScene) {
 
-    private static func trackForegroundAndBackgroundPageViews(in window: UIWindow) {
-        var topViewController = window.rootViewController
-        while let presentedViewController = topViewController?.presentedViewController {
-            topViewController = presentedViewController
-        }
-        topViewController?.trackPageView(automatic: true, recursive: true, for: .foregroundAndBackground)
     }
 
     @objc
@@ -126,19 +110,19 @@ extension UIViewController {
               let windowScene = application.connectedScenes.first as? UIWindowScene else {
             return
         }
-        trackForegroundAndBackgroundPageViews(in: windowScene)
+        trackPageViews(in: windowScene)
     }
 
     @objc
     private static func sceneWillEnterForeground(_ notification: Notification) {
         guard let windowScene = notification.object as? UIWindowScene else { return }
-        trackForegroundAndBackgroundPageViews(in: windowScene)
+        trackPageViews(in: windowScene)
     }
 
     @objc
     private func swizzledViewDidAppear(_ animated: Bool) {
         swizzledViewDidAppear(animated)
-        trackPageView(automatic: true, recursive: false, for: .foreground)
+
     }
 
     /// Perform manual page view tracking for the receiver, using data declared by `PageViewTracking` conformance.
@@ -146,24 +130,6 @@ extension UIViewController {
     /// This method does nothing if the receiver does not conform to the `PageViewTracking` protocol and is mostly
     /// useful when automatic tracking has been disabled by setting `isTrackedAutomatically` to `false`.
     public func trackPageView() {
-        trackPageView(automatic: false, recursive: false, for: .foreground)
-    }
 
-    private func trackPageView(automatic: Bool, recursive: Bool, for mode: PageViewMode) {
-        if recursive {
-            trackedChildren.forEach { viewController in
-                viewController.trackPageView(automatic: automatic, recursive: true, for: mode)
-            }
-        }
-        guard let trackedViewController = self as? PageViewTracking, automatic,
-              trackedViewController.isTrackedAutomatically, isActive else {
-            return
-        }
-
-        Analytics.shared.trackPageView(
-            title: trackedViewController.pageTitle,
-            levels: trackedViewController.pageLevels,
-            for: mode
-        )
     }
 }
