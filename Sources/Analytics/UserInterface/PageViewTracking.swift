@@ -101,20 +101,20 @@ extension UIViewController {
               let windowScene = application.connectedScenes.first as? UIWindowScene else {
             return
         }
-        windowScene.trackAutomaticPageViews()
+        windowScene.recursivelyTrackAutomaticPageViews()
     }
 
     @objc
     private static func sceneWillEnterForeground(_ notification: Notification) {
         guard let windowScene = notification.object as? UIWindowScene else { return }
-        windowScene.trackAutomaticPageViews()
+        windowScene.recursivelyTrackAutomaticPageViews()
     }
 
     @objc
     private func swizzledViewDidAppear(_ animated: Bool) {
         swizzledViewDidAppear(animated)
         if isActive {
-            trackAutomaticPageViews()
+            trackAutomaticPageView()
         }
     }
 
@@ -141,33 +141,36 @@ extension UIViewController {
         (self as? ContainerPageViewTracking)?.activeChildren ?? children
     }
 
-    func trackAutomaticPageViews() {
-        effectivelyActiveChildren.forEach { viewController in
-            viewController.trackAutomaticPageViews()
-        }
-
+    func trackAutomaticPageView() {
         guard let trackedViewController = self as? PageViewTracking, trackedViewController.isTrackedAutomatically else { return }
         Analytics.shared.trackPageView(
             title: trackedViewController.pageTitle,
             levels: trackedViewController.pageLevels
         )
     }
+
+    func recursivelyTrackAutomaticPageViews() {
+        effectivelyActiveChildren.forEach { viewController in
+            viewController.recursivelyTrackAutomaticPageViews()
+        }
+        trackAutomaticPageView()
+    }
 }
 
 extension UIWindow {
-    func trackAutomaticPageViews() {
+    func recursivelyTrackAutomaticPageViews() {
         var topViewController = rootViewController
         while let presentedViewController = topViewController?.presentedViewController {
             topViewController = presentedViewController
         }
-        topViewController?.trackAutomaticPageViews()
+        topViewController?.recursivelyTrackAutomaticPageViews()
     }
 }
 
 private extension UIWindowScene {
-    func trackAutomaticPageViews() {
+    func recursivelyTrackAutomaticPageViews() {
         windows.forEach { window in
-            window.trackAutomaticPageViews()
+            window.recursivelyTrackAutomaticPageViews()
         }
     }
 }

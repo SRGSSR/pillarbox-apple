@@ -104,7 +104,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
     func testAutomaticTrackingWithoutProtocolImplementation() {
         let viewController = UIViewController()
         expectNoEvents(during: .seconds(2)) {
-            viewController.viewDidAppear(false)
+            viewController.simulateViewAppearance()
         }
     }
 
@@ -122,7 +122,21 @@ final class ComScorePageViewTests: ComScoreTestCase {
                 expect(labels.ns_category).to(equal("automatic"))
             }
         ) {
-            viewController.viewDidAppear(false)
+            viewController.simulateViewAppearance()
+        }
+    }
+
+    func testSinglePageViewOnContainerAppearance() {
+        let viewController = AutomaticMockViewController()
+        let navigationController = UINavigationController(rootViewController: viewController)
+        expectEvents(
+            .view { labels in
+                expect(labels.ns_category).to(equal("automatic"))
+            },
+            during: .seconds(2)
+        ) {
+            navigationController.simulateViewAppearance()
+            viewController.simulateViewAppearance()
         }
     }
 
@@ -135,7 +149,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
                 expect(labels.ns_category).to(equal("title1"))
             }
         ) {
-            viewController1.viewDidAppear(false)
+            viewController1.simulateViewAppearance()
         }
     }
 
@@ -144,7 +158,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         let viewController2 = AutomaticMockViewController(title: "title2")
         _ = CustomContainerViewController(viewControllers: [viewController1, viewController2])
         expectNoEvents(during: .seconds(2)) {
-            viewController2.viewDidAppear(false)
+            viewController2.simulateViewAppearance()
         }
     }
 
@@ -160,7 +174,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
                 expect(labels.ns_category).to(equal("title1"))
             }
         ) {
-            viewController1.viewDidAppear(false)
+            viewController1.simulateViewAppearance()
         }
     }
 
@@ -172,14 +186,14 @@ final class ComScorePageViewTests: ComScoreTestCase {
             UINavigationController(rootViewController: viewController2)
         ])
         expectNoEvents(during: .seconds(2)) {
-            viewController2.viewDidAppear(false)
+            viewController2.simulateViewAppearance()
         }
     }
 
     func testManualTracking() {
         let viewController = ManualMockViewController()
         expectNoEvents(during: .seconds(2)) {
-            viewController.viewDidAppear(false)
+            viewController.simulateViewAppearance()
         }
         expectAtLeastEvents(
             .view { labels in
@@ -197,7 +211,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
                 expect(labels.ns_category).to(equal("automatic"))
             }
         ) {
-            viewController.trackAutomaticPageViews()
+            viewController.recursivelyTrackAutomaticPageViews()
         }
     }
 
@@ -209,7 +223,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
                 expect(labels.ns_category).to(equal("pushed"))
             }
         ) {
-            viewController.trackAutomaticPageViews()
+            viewController.recursivelyTrackAutomaticPageViews()
         }
     }
 
@@ -221,7 +235,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
                 expect(labels.ns_category).to(equal("title1"))
             }
         ) {
-            viewController.trackAutomaticPageViews()
+            viewController.recursivelyTrackAutomaticPageViews()
         }
     }
 
@@ -236,7 +250,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
                 expect(labels.ns_category).to(equal("title1"))
             }
         ) {
-            viewController.trackAutomaticPageViews()
+            viewController.recursivelyTrackAutomaticPageViews()
         }
     }
 
@@ -252,7 +266,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
                 expect(labels.ns_category).to(equal("title1"))
             }
         ) {
-            viewController.trackAutomaticPageViews()
+            viewController.recursivelyTrackAutomaticPageViews()
         }
     }
 
@@ -267,7 +281,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
             },
             during: .seconds(2)
         ) {
-            viewController.trackAutomaticPageViews()
+            viewController.recursivelyTrackAutomaticPageViews()
         }
     }
 
@@ -280,7 +294,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
                 expect(labels.ns_category).to(equal("automatic"))
             }
         ) {
-            window.trackAutomaticPageViews()
+            window.recursivelyTrackAutomaticPageViews()
         }
     }
 
@@ -296,7 +310,14 @@ final class ComScorePageViewTests: ComScoreTestCase {
             },
             during: .seconds(2)
         ) {
-            window.trackAutomaticPageViews()
+            window.recursivelyTrackAutomaticPageViews()
         }
+    }
+}
+
+private extension UIViewController {
+    func simulateViewAppearance() {
+        beginAppearanceTransition(true, animated: false)
+        endAppearanceTransition()
     }
 }
