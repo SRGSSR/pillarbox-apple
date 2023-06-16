@@ -11,8 +11,17 @@ import UIKit
 import XCTest
 
 private class AutomaticMockViewController: UIViewController, PageViewTracking {
+    init(title: String? = nil) {
+        super.init(nibName: nil, bundle: nil)
+        self.title = title
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     var pageTitle: String {
-        "automatic"
+        title ?? "automatic"
     }
 }
 
@@ -103,4 +112,95 @@ final class ComScorePageViewTests: ComScoreTestCase {
             viewController.trackPageView()
         }
     }
+
+    func testAutomaticTrackingFromViewController() {
+        let viewController = AutomaticMockViewController()
+        expectAtLeastEvents(
+            .view { labels in
+                expect(labels.ns_category).to(equal("automatic"))
+            }
+        ) {
+            viewController.trackAutomaticPageViews()
+        }
+    }
+
+    func testAutomaticTrackingFromNavigationController() {
+        let viewController = UINavigationController(rootViewController: AutomaticMockViewController(title: "root"))
+        viewController.pushViewController(AutomaticMockViewController(title: "pushed"), animated: false)
+        expectAtLeastEvents(
+            .view { labels in
+                expect(labels.ns_category).to(equal("pushed"))
+            }
+        ) {
+            viewController.trackAutomaticPageViews()
+        }
+    }
+
+    func testAutomaticTrackingFromPageViewController() {
+        let viewController = UIPageViewController()
+        viewController.setViewControllers([AutomaticMockViewController(title: "title1")], direction: .forward, animated: false)
+        expectAtLeastEvents(
+            .view { labels in
+                expect(labels.ns_category).to(equal("title1"))
+            }
+        ) {
+            viewController.trackAutomaticPageViews()
+        }
+    }
+
+    func testAutomaticTrackingFromSplitViewController() {
+        let viewController = UISplitViewController()
+        viewController.viewControllers = [
+            AutomaticMockViewController(title: "title1"),
+            AutomaticMockViewController(title: "title2")
+        ]
+        expectAtLeastEvents(
+            .view { labels in
+                expect(labels.ns_category).to(equal("title1"))
+            }
+        ) {
+            viewController.trackAutomaticPageViews()
+        }
+    }
+
+    func testAutomaticTrackingFromTabBarController() {
+        let viewController = UITabBarController()
+        viewController.viewControllers = [
+            AutomaticMockViewController(title: "title1"),
+            AutomaticMockViewController(title: "title2"),
+            AutomaticMockViewController(title: "title3")
+        ]
+        expectAtLeastEvents(
+            .view { labels in
+                expect(labels.ns_category).to(equal("title1"))
+            }
+        ) {
+            viewController.trackAutomaticPageViews()
+        }
+    }
+
+    func testAutomaticTrackingFromCustomContainer() {
+
+    }
+
+    func testRecursiveTrackingInViewControllerHierarchy() {
+
+    }
+
+//    func testAutomaticTrackingInWindow() {
+//        let window = UIWindow()
+//        window.rootViewController = AutomaticMockViewController()
+//        expectAtLeastEvents(
+//            .view { labels in
+//                expect(labels.ns_category).to(equal("automatic"))
+//            }
+//        ) {
+//            UIViewController.trackPageViews(in: window)
+//        }
+//    }
+//
+//    func testAutomaticTrackingInWindowWithModalPresentation() {
+//        let window = UIWindow()
+//        window.rootViewController = AutomaticMockViewController()
+//    }
 }

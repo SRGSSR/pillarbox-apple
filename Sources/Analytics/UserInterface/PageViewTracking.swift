@@ -70,11 +70,6 @@ public extension PageViewTracking {
 }
 
 extension UIViewController {
-    private var trackedChildren: [UIViewController] {
-        guard let containerViewController = self as? ContainerPageViewTracking else { return children }
-        return containerViewController.activeChildren
-    }
-
     static func setupViewControllerTracking() {
         method_exchangeImplementations(
             class_getInstanceMethod(Self.self, #selector(viewDidAppear(_:)))!,
@@ -100,32 +95,25 @@ extension UIViewController {
         }
     }
 
-    private static func trackPageViews(in windowScene: UIWindowScene) {
-    }
-
     @objc
     private static func applicationWillEnterForeground(_ notification: Notification) {
         guard let application = notification.object as? UIApplication,
               let windowScene = application.connectedScenes.first as? UIWindowScene else {
             return
         }
-        trackPageViews(in: windowScene)
+        windowScene.trackAutomaticPageViews()
     }
 
     @objc
     private static func sceneWillEnterForeground(_ notification: Notification) {
         guard let windowScene = notification.object as? UIWindowScene else { return }
-        trackPageViews(in: windowScene)
+        windowScene.trackAutomaticPageViews()
     }
 
     @objc
     private func swizzledViewDidAppear(_ animated: Bool) {
         swizzledViewDidAppear(animated)
-        guard let trackedViewController = self as? PageViewTracking, trackedViewController.isTrackedAutomatically else { return }
-        Analytics.shared.trackPageView(
-            title: trackedViewController.pageTitle,
-            levels: trackedViewController.pageLevels
-        )
+        trackAutomaticPageViews()
     }
 
     /// Perform manual page view tracking for the receiver, using data declared by `PageViewTracking` conformance.
@@ -138,5 +126,44 @@ extension UIViewController {
             title: trackedViewController.pageTitle,
             levels: trackedViewController.pageLevels
         )
+    }
+}
+
+extension UIViewController {
+    func trackAutomaticPageViews() {
+        if let navigationController = self as? UINavigationController {
+            navigationController.topViewController?.trackAutomaticPageViews()
+        }
+        else if let tabBarController = self as? UITabBarController {
+            tabBarController.selectedViewController?.trackAutomaticPageViews()
+        }
+        else if let splitViewController = self as? UISplitViewController {
+            splitViewController.viewControllers.forEach { viewController in
+                viewController.trackAutomaticPageViews()
+            }
+        }
+        else {
+            children.forEach { viewController in
+                viewController.trackAutomaticPageViews()
+            }
+        }
+
+        guard let trackedViewController = self as? PageViewTracking, trackedViewController.isTrackedAutomatically else { return }
+        Analytics.shared.trackPageView(
+            title: trackedViewController.pageTitle,
+            levels: trackedViewController.pageLevels
+        )
+    }
+}
+
+extension UIWindow {
+    func trackAutomaticPageViews() {
+
+    }
+}
+
+extension UIWindowScene {
+    func trackAutomaticPageViews() {
+
     }
 }
