@@ -146,10 +146,18 @@ extension UIViewController {
 
 extension UIWindow {
     func trackAutomaticPageViews() {
+        var topViewController = rootViewController
+        while let presentedViewController = topViewController?.presentedViewController {
+            topViewController = presentedViewController
+        }
+        topViewController?.trackAutomaticPageViews()
     }
 }
 
 extension UIWindowScene {
     func trackAutomaticPageViews() {
+        windows.forEach { window in
+            window.trackAutomaticPageViews()
+        }
     }
 }

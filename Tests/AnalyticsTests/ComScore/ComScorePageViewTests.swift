@@ -115,7 +115,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         }
     }
 
-    func testAutomaticTrackingOnViewAppearance() {
+    func testAutomaticTrackingOnViewAppearanceInActiveHierarchy() {
         let viewController = AutomaticMockViewController()
         expectAtLeastEvents(
             .view { labels in
@@ -124,6 +124,10 @@ final class ComScorePageViewTests: ComScoreTestCase {
         ) {
             viewController.viewDidAppear(false)
         }
+    }
+
+    func testAutomaticTrackingOnViewAppearanceInInActiveHierarchy() {
+        XCTFail()
     }
 
     func testManualTracking() {
@@ -221,20 +225,32 @@ final class ComScorePageViewTests: ComScoreTestCase {
         }
     }
 
-//    func testAutomaticTrackingInWindow() {
-//        let window = UIWindow()
-//        window.rootViewController = AutomaticMockViewController()
-//        expectAtLeastEvents(
-//            .view { labels in
-//                expect(labels.ns_category).to(equal("automatic"))
-//            }
-//        ) {
-//            UIViewController.trackPageViews(in: window)
-//        }
-//    }
-//
-//    func testAutomaticTrackingInWindowWithModalPresentation() {
-//        let window = UIWindow()
-//        window.rootViewController = AutomaticMockViewController()
-//    }
+    func testAutomaticTrackingInWindow() {
+        let window = UIWindow()
+        window.makeKeyAndVisible()
+        window.rootViewController = AutomaticMockViewController()
+        expectAtLeastEvents(
+            .view { labels in
+                expect(labels.ns_category).to(equal("automatic"))
+            }
+        ) {
+            window.trackAutomaticPageViews()
+        }
+    }
+
+    func testAutomaticTrackingInWindowWithModalPresentation() {
+        let window = UIWindow()
+        let rootViewController = AutomaticMockViewController(title: "root")
+        window.makeKeyAndVisible()
+        window.rootViewController = rootViewController
+        rootViewController.present(AutomaticMockViewController(title: "modal"), animated: false)
+        expectEvents(
+            .view { labels in
+                expect(labels.ns_category).to(equal("modal"))
+            },
+            during: .seconds(2)
+        ) {
+            window.trackAutomaticPageViews()
+        }
+    }
 }
