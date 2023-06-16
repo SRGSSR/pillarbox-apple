@@ -101,7 +101,6 @@ extension UIViewController {
     }
 
     private static func trackPageViews(in windowScene: UIWindowScene) {
-
     }
 
     @objc
@@ -122,7 +121,11 @@ extension UIViewController {
     @objc
     private func swizzledViewDidAppear(_ animated: Bool) {
         swizzledViewDidAppear(animated)
-
+        guard let trackedViewController = self as? PageViewTracking, trackedViewController.isTrackedAutomatically else { return }
+        Analytics.shared.trackPageView(
+            title: trackedViewController.pageTitle,
+            levels: trackedViewController.pageLevels
+        )
     }
 
     /// Perform manual page view tracking for the receiver, using data declared by `PageViewTracking` conformance.
@@ -130,6 +133,10 @@ extension UIViewController {
     /// This method does nothing if the receiver does not conform to the `PageViewTracking` protocol and is mostly
     /// useful when automatic tracking has been disabled by setting `isTrackedAutomatically` to `false`.
     public func trackPageView() {
-
+        guard let trackedViewController = self as? PageViewTracking else { return }
+        Analytics.shared.trackPageView(
+            title: trackedViewController.pageTitle,
+            levels: trackedViewController.pageLevels
+        )
     }
 }

@@ -10,13 +10,23 @@ import Nimble
 import UIKit
 import XCTest
 
-private class AutomaticallyTrackedMockViewController: UIViewController, PageViewTracking {
+private class AutomaticMockViewController: UIViewController, PageViewTracking {
     var pageTitle: String {
         "automatic"
     }
 }
 
-private class ManuallyTrackedMockViewController: UIViewController, PageViewTracking {
+private class AutomaticWithLevelsMockViewController: UIViewController, PageViewTracking {
+    var pageTitle: String {
+        "automatic_with_levels"
+    }
+
+    var pageLevels: [String] {
+        ["level1", "level2"]
+    }
+}
+
+private class ManualMockViewController: UIViewController, PageViewTracking {
     var pageTitle: String {
         "manual"
     }
@@ -43,15 +53,34 @@ final class ComScorePageViewTests: ComScoreTestCase {
         }
     }
 
-    func testNoTracking() {
+    func testDefaultProtocolImplementation() {
+        let viewController = AutomaticMockViewController()
+        expect(viewController.pageLevels).to(beEmpty())
+        expect(viewController.isTrackedAutomatically).to(beTrue())
+    }
+
+    func testCustomProtocolImplementation() {
+        let viewController = AutomaticWithLevelsMockViewController()
+        expect(viewController.pageLevels).to(equal(["level1", "level2"]))
+        expect(viewController.isTrackedAutomatically).to(beTrue())
+    }
+
+    func testAutomaticTrackingWithoutProtocolImplementation() {
         let viewController = UIViewController()
         expectNoEvents(during: .seconds(2)) {
             viewController.viewDidAppear(false)
         }
     }
 
-    func testAutomaticTracking() {
-        let viewController = AutomaticallyTrackedMockViewController()
+    func testManualTrackingWithoutProtocolImplementation() {
+        let viewController = UIViewController()
+        expectNoEvents(during: .seconds(2)) {
+            viewController.trackPageView()
+        }
+    }
+
+    func testAutomaticTrackingOnViewAppearance() {
+        let viewController = AutomaticMockViewController()
         expectAtLeastEvents(
             .view { labels in
                 expect(labels.ns_category).to(equal("automatic"))
@@ -62,7 +91,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
     }
 
     func testManualTracking() {
-        let viewController = ManuallyTrackedMockViewController()
+        let viewController = ManualMockViewController()
         expectNoEvents(during: .seconds(2)) {
             viewController.viewDidAppear(false)
         }
