@@ -7,7 +7,7 @@
 import Combine
 import SwiftUI
 
-enum ModalDestination: Identifiable {
+enum Destination: Identifiable {
     case player(media: Media)
 
     var id: String {
@@ -18,17 +18,13 @@ enum ModalDestination: Identifiable {
     }
 }
 
-enum Destination {
-    case some
-}
-
 final class Router: ObservableObject {
     @Published var path: [Destination] = []
-    @Published var presented: ModalDestination?
+    @Published var presented: Destination?
 }
 
 extension View {
-    private static func presented(for router: Router) -> Binding<ModalDestination?> {
+    private static func presented(for router: Router) -> Binding<Destination?> {
         .init {
             router.presented
         } set: { newValue in
