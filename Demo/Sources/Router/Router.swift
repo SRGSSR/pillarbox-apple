@@ -8,7 +8,7 @@ import Combine
 import SRGDataProviderModel
 import SwiftUI
 
-/// A navigation stack managed by a router.
+/// Manages navigation using an associated router.
 struct RoutedNavigationStack<Root: View>: View {
     @ViewBuilder let root: () -> Root
     @StateObject private var router = Router()
@@ -60,6 +60,10 @@ struct RoutedNavigationStack<Root: View>: View {
     }
 }
 
+/// Manages application routes.
+///
+/// You can manage navigation with a `RoutedNavigationStack` or retrieve the router through the environment
+/// to present or dismiss the associated modal.
 final class Router: ObservableObject {
     @Published fileprivate var path: [RouterDestination] = []
     @Published fileprivate var presented: RouterDestination?
