@@ -166,5 +166,6 @@ struct ShowcaseView_Previews: PreviewProvider {
         NavigationStack {
             ShowcaseView()
         }
+        .environmentObject(Router())
     }
 }

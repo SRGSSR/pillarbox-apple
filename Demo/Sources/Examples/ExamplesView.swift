@@ -108,5 +108,6 @@ struct ExamplesView_Previews: PreviewProvider {
         NavigationStack {
             ExamplesView()
         }
+        .environmentObject(Router())
     }
 }
