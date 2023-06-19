@@ -89,7 +89,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         }
     }
 
-    func testAutomaticTrackingOnViewController() {
+    func testAutomaticTrackingWhenViewAppears() {
         let viewController = AutomaticMockViewController()
         expectAtLeastEvents(
             .view { labels in
@@ -100,7 +100,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         }
     }
 
-    func testSinglePageViewOnContainerAppearance() {
+    func testSinglePageViewWhenContainerViewAppears() {
         let viewController = AutomaticMockViewController()
         let navigationController = UINavigationController(rootViewController: viewController)
         expectEvents(
@@ -114,7 +114,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         }
     }
 
-    func testAutomaticTrackingOnViewAppearanceWhenActiveInParent() {
+    func testAutomaticTrackingWhenActiveViewInParentAppears() {
         let viewController1 = AutomaticMockViewController(title: "title1")
         let viewController2 = AutomaticMockViewController(title: "title2")
         let tabBarController = UITabBarController()
@@ -128,7 +128,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         }
     }
 
-    func testAutomaticTrackingOnViewAppearanceWhenInactiveInParent() {
+    func testAutomaticTrackingWhenInactiveViewInParentAppears() {
         let viewController1 = AutomaticMockViewController(title: "title1")
         let viewController2 = AutomaticMockViewController(title: "title2")
         let tabBarController = UITabBarController()
@@ -138,7 +138,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         }
     }
 
-    func testAutomaticTrackingOnViewAppearanceWhenInActiveHierarchy() {
+    func testAutomaticTrackingWhenViewAppearsInActiveHierarchy() {
         let viewController1 = AutomaticMockViewController(title: "title1")
         let viewController2 = AutomaticMockViewController(title: "title2")
         let tabBarController = UITabBarController()
@@ -155,7 +155,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         }
     }
 
-    func testAutomaticTrackingOnViewAppearanceWhenInInactiveHierarchy() {
+    func testAutomaticTrackingWhenViewAppearsInInactiveHierarchy() {
         let viewController1 = AutomaticMockViewController(title: "title1")
         let viewController2 = AutomaticMockViewController(title: "title2")
         let tabBarController = UITabBarController()
@@ -182,7 +182,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         }
     }
 
-    func testAutomaticTrackingFromViewController() {
+    func testRecursiveAutomaticTrackingOnViewController() {
         let viewController = AutomaticMockViewController()
         expectAtLeastEvents(
             .view { labels in
@@ -193,7 +193,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         }
     }
 
-    func testAutomaticTrackingFromNavigationController() {
+    func testRecursiveAutomaticTrackingOnNavigationController() {
         let viewController = UINavigationController(rootViewController: AutomaticMockViewController(title: "root"))
         viewController.pushViewController(AutomaticMockViewController(title: "pushed"), animated: false)
         expectAtLeastEvents(
@@ -205,19 +205,19 @@ final class ComScorePageViewTests: ComScoreTestCase {
         }
     }
 
-    func testAutomaticTrackingFromPageViewController() {
+    func testRecursiveAutomaticTrackingOnPageViewController() {
         let viewController = UIPageViewController()
-        viewController.setViewControllers([AutomaticMockViewController(title: "title1")], direction: .forward, animated: false)
+        viewController.setViewControllers([AutomaticMockViewController()], direction: .forward, animated: false)
         expectAtLeastEvents(
             .view { labels in
-                expect(labels.ns_category).to(equal("title1"))
+                expect(labels.ns_category).to(equal("automatic"))
             }
         ) {
             viewController.recursivelyTrackAutomaticPageViews()
         }
     }
 
-    func testAutomaticTrackingFromSplitViewController() {
+    func testRecursiveAutomaticTrackingOnSplitViewController() {
         let viewController = UISplitViewController()
         viewController.viewControllers = [
             AutomaticMockViewController(title: "title1"),
@@ -232,7 +232,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         }
     }
 
-    func testAutomaticTrackingFromTabBarController() {
+    func testRecursiveAutomaticTrackingOnTabBarController() {
         let viewController = UITabBarController()
         viewController.viewControllers = [
             AutomaticMockViewController(title: "title1"),
@@ -248,7 +248,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         }
     }
 
-    func testAutomaticTrackingInWindow() {
+    func testRecursiveAutomaticTrackingOnWindow() {
         let window = UIWindow()
         window.makeKeyAndVisible()
         window.rootViewController = AutomaticMockViewController()
@@ -261,7 +261,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         }
     }
 
-    func testAutomaticTrackingInWindowWithModalPresentation() {
+    func testRecursiveAutomaticTrackingOnWindowWithModalPresentation() {
         let window = UIWindow()
         let rootViewController = AutomaticMockViewController(title: "root")
         window.makeKeyAndVisible()
