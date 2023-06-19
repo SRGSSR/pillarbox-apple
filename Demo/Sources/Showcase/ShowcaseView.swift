@@ -41,12 +41,16 @@ struct ShowcaseView: View {
                 subtitle: "A basic video playback experience",
                 destination: .simplePlayer(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
             )
-            Cell(title: "Blurred", subtitle: "A video displayed onto a blurred clone of itself") {
-                BlurredView(media: Media(from: URLTemplate.dvrVideoHLS))
-            }
-            Cell(title: "Stories", subtitle: "An Instagram-inspired user experience") {
-                StoriesView()
-            }
+            cell(
+                title: "Blurred",
+                subtitle: "A video displayed onto a blurred clone of itself",
+                destination: .blurred(media: Media(from: URLTemplate.dvrVideoHLS))
+            )
+            cell(
+                title: "Stories",
+                subtitle: "An Instagram-inspired user experience",
+                destination: .stories
+            )
         }
     }
 

@@ -10,6 +10,8 @@ import SwiftUI
 enum Destination: Identifiable {
     case player(media: Media)
     case simplePlayer(media: Media)
+    case blurred(media: Media)
+    case stories
 
     var id: String {
         switch self {
@@ -17,6 +19,10 @@ enum Destination: Identifiable {
             return "player_\(media.id)"
         case let .simplePlayer(media: media):
             return "simple_player_\(media.id)"
+        case let .blurred(media: media):
+            return "blurred_\(media.id)"
+        case .stories:
+            return "stories"
         }
     }
 }
@@ -34,6 +40,10 @@ extension View {
                 PlayerView(media: media)
             case let .simplePlayer(media: media):
                 SimplePlayerView(media: media)
+            case let .blurred(media: media):
+                BlurredView(media: media)
+            case .stories:
+                StoriesView()
             }
         }
     }
