@@ -7,6 +7,35 @@
 import SwiftUI
 
 // Behavior: h-exp, v-hug
+struct Cell2: View {
+    let title: String
+    let subtitle: String?
+    let style: MediaDescription.Style
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(title)
+                .foregroundColor(.primary)
+            if let subtitle {
+                Text(subtitle)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+        }
+    }
+
+    init(title: String, subtitle: String? = nil, style: MediaDescription.Style = .standard) {
+        self.title = title
+        self.subtitle = subtitle
+        self.style = style
+    }
+
+    private static func foregroundColor(for style: MediaDescription.Style) -> Color {
+        style == .standard ? .primary : .secondary
+    }
+}
+
+// Behavior: h-exp, v-hug
 struct Cell<Content: View, Presented: View>: View {
     @ViewBuilder var content: () -> Content
     @ViewBuilder var presented: () -> Presented

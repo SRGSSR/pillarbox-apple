@@ -93,18 +93,10 @@ struct ExamplesView: View {
     private func section(title: String, medias: [Media]) -> some View {
         Section(title) {
             ForEach(medias) { media in
-                VStack(alignment: .leading) {
-                    Text(media.title)
-                        .foregroundColor(.primary)
-                    if let subtitle = media.description {
-                        Text(subtitle)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                Cell2(title: media.title, subtitle: media.description)
+                    .onTapGesture {
+                        router.presented = .player(media: media)
                     }
-                }
-                .onTapGesture {
-                    router.presented = .player(media: media)
-                }
             }
         }
     }
