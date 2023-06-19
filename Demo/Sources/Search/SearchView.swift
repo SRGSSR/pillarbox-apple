@@ -27,7 +27,6 @@ struct SearchView: View {
         }
         .animation(.defaultLinear, value: model.state)
         .navigationTitle("Search")
-        .routed(by: router)
         .tracked(title: "search")
         .searchable(text: $model.text)
 #if os(iOS)
@@ -69,9 +68,8 @@ struct SearchView: View {
 
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationStack {
+        RoutedNavigationStack {
             SearchView()
-                .environmentObject(Router())
         }
     }
 }

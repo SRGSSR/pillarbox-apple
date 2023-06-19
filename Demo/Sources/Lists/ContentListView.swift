@@ -60,27 +60,33 @@ private struct ContentCell: View {
     @AppStorage(UserDefaults.serverSettingKey)
     private var serverSetting: ServerSetting = .production
 
+    @EnvironmentObject private var router: Router
+
     var body: some View {
         switch content {
         case let .topic(topic):
-            NavigationLink(topic.title) {
-                ContentListView(configuration: .init(kind: .latestMediasForTopic(topic), vendor: topic.vendor))
-            }
+            NavigationLink(
+                topic.title,
+                value: Destination.contentList(configuration: .init(kind: .latestMediasForTopic(topic), vendor: topic.vendor))
+            )
 #if os(iOS)
             .swipeActions { CopyButton(text: topic.urn) }
 #endif
         case let .media(media):
             let title = MediaDescription.title(for: media)
-            Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
-                PlayerView(media: Media(title: title, type: .urn(media.urn, server: serverSetting.server)))
-            }
+            Cell2(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media))
+                .accessibilityAddTraits(.isButton)
+                .onTapGesture {
+                    router.presented = .player(media: Media(title: title, type: .urn(media.urn, server: serverSetting.server)))
+                }
 #if os(iOS)
-            .swipeActions { CopyButton(text: media.urn) }
+                .swipeActions { CopyButton(text: media.urn) }
 #endif
         case let .show(show):
-            NavigationLink(show.title) {
-                ContentListView(configuration: .init(kind: .latestMediasForShow(show), vendor: show.vendor))
-            }
+            NavigationLink(
+                show.title,
+                value: Destination.contentList(configuration: .init(kind: .latestMediasForShow(show), vendor: show.vendor))
+            )
 #if os(iOS)
             .swipeActions { CopyButton(text: show.urn) }
 #endif
@@ -116,7 +122,7 @@ struct ContentListView: View {
 
 struct ContentListView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationStack {
+        RoutedNavigationStack {
             ContentListView(configuration: .init(kind: .tvLatestMedias, vendor: .RTS))
         }
     }

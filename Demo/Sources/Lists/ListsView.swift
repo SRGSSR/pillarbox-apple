@@ -13,6 +13,8 @@ struct ListsView: View {
     @AppStorage(UserDefaults.serverSettingKey)
     private var selectedServerSetting: ServerSetting = .production
 
+    @EnvironmentObject private var router: Router
+
     var body: some View {
         List {
             Self.section(for: .tvTopics, image: "tv", vendors: [.SRF, .RTS, .RSI, .RTR, .SWI])
@@ -43,10 +45,8 @@ struct ListsView: View {
     @ViewBuilder
     private static func section(title: String, image: String? = nil, configurations: [ContentListViewModel.Configuration]) -> some View {
         Section {
-            ForEach(configurations, id: \.self) { configuration in
-                NavigationLink(configuration.name) {
-                    ContentListView(configuration: configuration)
-                }
+            ForEach(configurations) { configuration in
+                NavigationLink(configuration.name, value: Destination.contentList(configuration: configuration))
             }
         } header: {
             HStack {
@@ -119,6 +119,8 @@ struct ListsView: View {
 
 struct ListsView_Previews: PreviewProvider {
     static var previews: some View {
-        ListsView()
+        RoutedNavigationStack {
+            ListsView()
+        }
     }
 }

@@ -84,7 +84,6 @@ struct ExamplesView: View {
         .scrollDismissesKeyboard(.immediately)
         .animation(.defaultLinear, value: model.protectedMedias)
         .navigationTitle("Examples")
-        .routed(by: router)
         .tracked(title: "examples")
         .refreshable { await model.refresh() }
     }
@@ -105,9 +104,8 @@ struct ExamplesView: View {
 
 struct ExamplesView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationStack {
+        RoutedNavigationStack {
             ExamplesView()
         }
-        .environmentObject(Router())
     }
 }

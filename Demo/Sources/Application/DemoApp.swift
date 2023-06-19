@@ -8,19 +8,18 @@ import SwiftUI
 
 private struct ExamplesTab: View {
     var body: some View {
-        NavigationStack {
+        RoutedNavigationStack {
             ExamplesView()
         }
         .tabItem {
             Label("Examples", systemImage: "film")
         }
-        .environmentObject(Router())
     }
 }
 
 private struct ListsTab: View {
     var body: some View {
-        NavigationStack {
+        RoutedNavigationStack {
             ListsView()
         }
         .tabItem {
@@ -31,7 +30,7 @@ private struct ListsTab: View {
 
 private struct SettingsTab: View {
     var body: some View {
-        NavigationStack {
+        RoutedNavigationStack {
             SettingsView()
         }
         .tabItem {
@@ -42,25 +41,23 @@ private struct SettingsTab: View {
 
 private struct SearchTab: View {
     var body: some View {
-        NavigationStack {
+        RoutedNavigationStack {
             SearchView()
         }
         .tabItem {
             Label("Search", systemImage: "magnifyingglass")
         }
-        .environmentObject(Router())
     }
 }
 
 private struct ShowcaseTab: View {
     var body: some View {
-        NavigationStack {
+        RoutedNavigationStack {
             ShowcaseView()
         }
         .tabItem {
             Label("Showcase", systemImage: "text.book.closed")
         }
-        .environmentObject(Router())
     }
 }
 

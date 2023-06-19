@@ -33,7 +33,7 @@ final class ContentListViewModel: ObservableObject, Refreshable {
         case loadMore
     }
 
-    enum Kind: Hashable {
+    enum Kind: Hashable, Identifiable {
         case tvTopics
         case latestMediasForTopic(SRGTopic)
         case tvShows
@@ -52,6 +52,33 @@ final class ContentListViewModel: ObservableObject, Refreshable {
                 return radioChannel
             default:
                 return nil
+            }
+        }
+
+        var id: String {
+            switch self {
+            case .tvTopics:
+                 return "tvTopics"
+            case let .latestMediasForTopic(topic):
+                return "latestMediasForTopic_\(topic.urn)"
+            case .tvShows:
+                 return "tvShows"
+            case let .latestMediasForShow(show):
+                return "latestMediasForShow_\(show.urn)"
+            case .tvLatestMedias:
+                 return "tvLatestMedias"
+            case .tvLivestreams:
+                 return "tvLivestreams"
+            case .tvScheduledLivestreams:
+                 return "tvScheduledLivestreams"
+            case .liveCenterVideos:
+                 return "liveCenterVideos"
+            case let .radioShows(radioChannel: radioChannel):
+                return "radioShows_\(radioChannel.rawValue)"
+            case .radioLivestreams:
+                 return "radioLivestreams"
+            case let .radioLatestMedias(radioChannel: radioChannel):
+                return "radioLatestMedias_\(radioChannel.rawValue)"
             }
         }
 
@@ -133,9 +160,13 @@ final class ContentListViewModel: ObservableObject, Refreshable {
         case show(_ show: SRGShow)
     }
 
-    struct Configuration: Hashable {
+    struct Configuration: Hashable, Identifiable {
         let kind: Kind
         let vendor: SRGVendor
+
+        var id: String {
+            "\(kind.id)_\(vendor.rawValue)"
+        }
 
         var name: String {
             kind.radioChannel?.name ?? vendor.name

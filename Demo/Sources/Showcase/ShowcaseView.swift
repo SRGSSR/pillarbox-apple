@@ -21,7 +21,6 @@ struct ShowcaseView: View {
             trackingSection()
         }
         .navigationTitle("Showcase")
-        .routed(by: router)
         .tracked(title: "showcase")
     }
 
@@ -163,9 +162,8 @@ struct ShowcaseView: View {
 
 struct ShowcaseView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationStack {
+        RoutedNavigationStack {
             ShowcaseView()
         }
-        .environmentObject(Router())
     }
 }
