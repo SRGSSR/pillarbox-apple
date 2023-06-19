@@ -43,19 +43,17 @@ struct SearchView: View {
         if !medias.isEmpty {
             List(medias, id: \.urn) { media in
                 let title = MediaDescription.title(for: media)
-                Cell2(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media))
-                    .accessibilityAddTraits(.isButton)
-                    .onTapGesture {
-                        let media = Media(title: media.title, type: .urn(media.urn))
-                        router.present(.player(media: media))
+                Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
+                    let media = Media(title: media.title, type: .urn(media.urn))
+                    router.present(.player(media: media))
+                }
+                .onAppear {
+                    if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {
+                        model.loadMore()
                     }
-                    .onAppear {
-                        if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {
-                            model.loadMore()
-                        }
-                    }
+                }
 #if os(iOS)
-                    .swipeActions { CopyButton(text: media.urn) }
+                .swipeActions { CopyButton(text: media.urn) }
 #endif
             }
             .scrollDismissesKeyboard(.immediately)

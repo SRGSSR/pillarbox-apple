@@ -26,11 +26,9 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func cell(title: String, subtitle: String? = nil, destination: Destination) -> some View {
-        Cell2(title: title, subtitle: subtitle)
-            .accessibilityAddTraits(.isButton)
-            .onTapGesture {
-                router.present(destination)
-            }
+        Cell(title: title, subtitle: subtitle) {
+            router.present(destination)
+        }
     }
 
     @ViewBuilder

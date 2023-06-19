@@ -92,11 +92,9 @@ struct ExamplesView: View {
     private func section(title: String, medias: [Media]) -> some View {
         Section(title) {
             ForEach(medias) { media in
-                Cell2(title: media.title, subtitle: media.description)
-                    .accessibilityAddTraits(.isButton)
-                    .onTapGesture {
-                        router.present(.player(media: media))
-                    }
+                Cell(title: media.title, subtitle: media.description) {
+                    router.present(.player(media: media))
+                }
             }
         }
     }
