@@ -46,7 +46,8 @@ struct SearchView: View {
                 Cell2(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media))
                     .accessibilityAddTraits(.isButton)
                     .onTapGesture {
-                        router.presented = .player(media: Media(title: media.title, type: .urn(media.urn)))
+                        let media = Media(title: media.title, type: .urn(media.urn))
+                        router.present(.player(media: media))
                     }
                     .onAppear {
                         if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {

@@ -77,7 +77,8 @@ private struct ContentCell: View {
             Cell2(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media))
                 .accessibilityAddTraits(.isButton)
                 .onTapGesture {
-                    router.presented = .player(media: Media(title: title, type: .urn(media.urn, server: serverSetting.server)))
+                    let media = Media(title: title, type: .urn(media.urn, server: serverSetting.server))
+                    router.present(.player(media: media))
                 }
 #if os(iOS)
                 .swipeActions { CopyButton(text: media.urn) }

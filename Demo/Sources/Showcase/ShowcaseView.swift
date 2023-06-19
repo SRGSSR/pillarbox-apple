@@ -29,7 +29,7 @@ struct ShowcaseView: View {
         Cell2(title: title, subtitle: subtitle)
             .accessibilityAddTraits(.isButton)
             .onTapGesture {
-                router.presented = destination
+                router.present(destination)
             }
     }
 

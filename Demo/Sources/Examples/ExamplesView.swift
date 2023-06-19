@@ -58,7 +58,7 @@ private struct MediaEntryView: View {
     }
 
     private func play() {
-        router.presented = .player(media: media)
+        router.present(.player(media: media))
     }
 }
 
@@ -95,7 +95,7 @@ struct ExamplesView: View {
                 Cell2(title: media.title, subtitle: media.description)
                     .accessibilityAddTraits(.isButton)
                     .onTapGesture {
-                        router.presented = .player(media: media)
+                        router.present(.player(media: media))
                     }
             }
         }
