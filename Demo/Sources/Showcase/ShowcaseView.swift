@@ -136,24 +136,28 @@ struct ShowcaseView: View {
     @ViewBuilder
     private func vanillaPlayerSection() -> some View {
         Section("System player (using AVPlayer)") {
-            Cell(title: "Video URL") {
-                VanillaPlayerView(item: Template.playerItem(from: URLTemplate.appleAdvanced_16_9_TS_HLS)!)
-            }
-            Cell(title: "Unknown") {
-                VanillaPlayerView(item: Template.playerItem(from: URLTemplate.unknown)!)
-            }
+            cell(
+                title: "Video URL",
+                destination: .vanillaPlayer(item: Template.playerItem(from: URLTemplate.appleAdvanced_16_9_TS_HLS)!)
+            )
+            cell(
+                title: "Unknown",
+                destination: .vanillaPlayer(item: Template.playerItem(from: URLTemplate.unknown)!)
+            )
         }
     }
 
     @ViewBuilder
     private func trackingSection() -> some View {
         Section("Opt-in features") {
-            Cell(title: "Video URL") {
-                OptInView(media: Media(from: URLTemplate.onDemandVideoMP4))
-            }
-            Cell(title: "Video URN") {
-                OptInView(media: Media(from: URNTemplate.onDemandVerticalVideo))
-            }
+            cell(
+                title: "Video URL",
+                destination: .optInPlayer(media: Media(from: URLTemplate.onDemandVideoMP4))
+            )
+            cell(
+                title: "Video URN",
+                destination: .optInPlayer(media: Media(from: URNTemplate.onDemandVerticalVideo))
+            )
         }
     }
 }

@@ -4,12 +4,16 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import Foundation
 
 enum Destination: Identifiable, Hashable {
     case player(media: Media)
     case systemPlayer(media: Media)
     case simplePlayer(media: Media)
+    case optInPlayer(media: Media)
+
+    case vanillaPlayer(item: AVPlayerItem)
 
     case blurred(media: Media)
     case twins(media: Media)
@@ -27,9 +31,13 @@ enum Destination: Identifiable, Hashable {
         case let .player(media):
             return "player_\(media.id)"
         case let .systemPlayer(media: media):
-            return "system_player_\(media.id)"
+            return "systemPlayer_\(media.id)"
         case let .simplePlayer(media: media):
-            return "simple_player_\(media.id)"
+            return "simplePlayer_\(media.id)"
+        case let .optInPlayer(media: media):
+            return "optInPlayer_\(media.id)"
+        case let .vanillaPlayer(item: item):
+            return "vanillaPlayer\(item.hash)"
         case let .blurred(media: media):
             return "blurred_\(media.id)"
         case let .twins(media: media):

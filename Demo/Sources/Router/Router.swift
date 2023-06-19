@@ -36,6 +36,10 @@ struct RoutedNavigationStack<Root: View>: View {
             SystemPlayerView(media: media)
         case let .simplePlayer(media: media):
             SimplePlayerView(media: media)
+        case let .optInPlayer(media: media):
+            OptInView(media: media)
+        case let .vanillaPlayer(item: item):
+            VanillaPlayerView(item: item)
         case let .blurred(media: media):
             BlurredView(media: media)
         case let .twins(media: media):
