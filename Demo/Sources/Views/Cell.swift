@@ -22,6 +22,8 @@ struct Cell2: View {
                     .foregroundColor(.secondary)
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
     }
 
     init(title: String, subtitle: String? = nil, style: MediaDescription.Style = .standard) {
