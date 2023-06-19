@@ -17,7 +17,7 @@ struct Cell: View {
         Button(action: action) {
             VStack(alignment: .leading) {
                 Text(title)
-                    .foregroundColor(.primary)
+                    .foregroundColor(Self.foregroundColor(for: style))
                 if let subtitle {
                     Text(subtitle)
                         .font(.subheadline)
