@@ -11,7 +11,9 @@ enum Destination: Identifiable {
     case player(media: Media)
     case simplePlayer(media: Media)
     case blurred(media: Media)
+
     case stories
+    case playlist(templates: [Template])
 
     var id: String {
         switch self {
@@ -23,6 +25,8 @@ enum Destination: Identifiable {
             return "blurred_\(media.id)"
         case .stories:
             return "stories"
+        case .playlist:
+            return "playlist"
         }
     }
 }
@@ -44,6 +48,8 @@ extension View {
                 BlurredView(media: media)
             case .stories:
                 StoriesView()
+            case let .playlist(templates: templates):
+                PlaylistView(templates: templates)
             }
         }
     }

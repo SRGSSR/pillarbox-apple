@@ -26,7 +26,7 @@ struct ShowcaseView: View {
     }
 
     @ViewBuilder
-    private func cell(title: String, subtitle: String?, destination: Destination) -> some View {
+    private func cell(title: String, subtitle: String? = nil, destination: Destination) -> some View {
         Cell2(title: title, subtitle: subtitle)
             .onTapGesture {
                 router.presented = destination
@@ -55,6 +55,19 @@ struct ShowcaseView: View {
     }
 
     @ViewBuilder
+    private func playlistsSection() -> some View {
+        Section("Playlists") {
+            cell(title: "Video URLs", destination: .playlist(templates: URLTemplates.videos))
+            cell(title: "Video URNs", destination: .playlist(templates: URNTemplates.videos))
+            cell(title: "Long video URNs", destination: .playlist(templates: URNTemplates.longVideos))
+            cell(title: "Audios", destination: .playlist(templates: URNTemplates.audios))
+            cell(title: "Videos (one failed item)", destination: .playlist(templates: URNTemplates.videosWithOneError))
+            cell(title: "Videos (all failing)", destination: .playlist(templates: URNTemplates.videosWithErrors))
+            cell(title: "Empty", destination: .playlist(templates: []))
+        }
+    }
+
+    @ViewBuilder
     private func systemPlayerSection() -> some View {
         Section("System player (using Pillarbox)") {
             Cell(title: "Video URL") {
@@ -77,33 +90,6 @@ struct ShowcaseView: View {
             }
             Cell(title: "Unknown") {
                 VanillaPlayerView(item: Template.playerItem(from: URLTemplate.unknown)!)
-            }
-        }
-    }
-
-    @ViewBuilder
-    private func playlistsSection() -> some View {
-        Section("Playlists") {
-            Cell(title: "Video URLs") {
-                PlaylistView(templates: URLTemplates.videos)
-            }
-            Cell(title: "Video URNs") {
-                PlaylistView(templates: URNTemplates.videos)
-            }
-            Cell(title: "Long video URNs") {
-                PlaylistView(templates: URNTemplates.longVideos)
-            }
-            Cell(title: "Audios") {
-                PlaylistView(templates: URNTemplates.audios)
-            }
-            Cell(title: "Videos (one failed item)") {
-                PlaylistView(templates: URNTemplates.videosWithOneError)
-            }
-            Cell(title: "Videos (all failing)") {
-                PlaylistView(templates: URNTemplates.videosWithErrors)
-            }
-            Cell(title: "Empty") {
-                PlaylistView(templates: [])
             }
         }
     }
