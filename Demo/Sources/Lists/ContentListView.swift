@@ -96,7 +96,7 @@ private struct ContentCell: View {
 
 // Behavior: h-exp, v-exp
 struct ContentListView: View {
-    let configuration: ContentListViewModel.Configuration
+    let configuration: ContentListConfiguration
     @StateObject private var model = ContentListViewModel()
 
     var body: some View {

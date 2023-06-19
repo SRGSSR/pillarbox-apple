@@ -14,23 +14,19 @@ struct RoutedNavigationStack<Root: View>: View {
     var body: some View {
         NavigationStack(path: $router.path) {
             root()
-                .routed(by: router)
+                .sheet(item: presented(for: router)) { presented in
+                    view(for: presented)
+                }
+                .navigationDestination(for: Destination.self) { destination in
+                    view(for: destination)
+                }
         }
         .environmentObject(router)
     }
 }
 
 private extension View {
-    func routed(by router: Router) -> some View {
-        sheet(item: presented(for: router)) { presented in
-            view(for: presented)
-        }
-        .navigationDestination(for: Destination.self) { destination in
-            view(for: destination)
-        }
-    }
-
-    private func presented(for router: Router) -> Binding<Destination?> {
+    func presented(for router: Router) -> Binding<Destination?> {
         .init {
             router.presented
         } set: { newValue in
@@ -39,7 +35,7 @@ private extension View {
     }
 
     @ViewBuilder
-    private func view(for destination: Destination) -> some View {
+    func view(for destination: Destination) -> some View {
         // swiftlint:disable:previous cyclomatic_complexity
         switch destination {
         case let .player(media: media):

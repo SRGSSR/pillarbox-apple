@@ -35,15 +35,15 @@ struct ListsView: View {
     }
 
     @ViewBuilder
-    private static func section(for kind: ContentListViewModel.Kind, image: String? = nil, vendors: [SRGVendor]) -> some View {
+    private static func section(for kind: ContentListKind, image: String? = nil, vendors: [SRGVendor]) -> some View {
         let configurations = vendors.map { vendor in
-            ContentListViewModel.Configuration(kind: kind, vendor: vendor)
+            ContentListConfiguration(kind: kind, vendor: vendor)
         }
         section(title: kind.name, image: image, configurations: configurations)
     }
 
     @ViewBuilder
-    private static func section(title: String, image: String? = nil, configurations: [ContentListViewModel.Configuration]) -> some View {
+    private static func section(title: String, image: String? = nil, configurations: [ContentListConfiguration]) -> some View {
         Section {
             ForEach(configurations) { configuration in
                 NavigationLink(configuration.name, value: Destination.contentList(configuration: configuration))

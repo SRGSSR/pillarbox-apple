@@ -20,7 +20,7 @@ enum Destination: Identifiable, Hashable {
     case stories
     case playlist(templates: [Template])
 
-    case contentList(configuration: ContentListViewModel.Configuration)
+    case contentList(configuration: ContentListConfiguration)
 
     var id: String {
         switch self {
