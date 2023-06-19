@@ -10,6 +10,8 @@
 		0E6B995C29D43E4200D0276D /* OptInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6B995B29D43E4200D0276D /* OptInView.swift */; };
 		0E84D6162A12753100EB48C5 /* SettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84D6152A12753100EB48C5 /* SettingsMenu.swift */; };
 		0EF42CB629AE513400553165 /* SRGDataProviderCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF42CB529AE513400553165 /* SRGDataProviderCombine */; };
+		6F0B2E852A40EBAC00B69675 /* Destination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E842A40EBAC00B69675 /* Destination.swift */; };
+		6F0B2E872A40EBD200B69675 /* RoutedNavigationStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E862A40EBD200B69675 /* RoutedNavigationStack.swift */; };
 		6F36C62D28910538000DD160 /* CoreBusiness in Frameworks */ = {isa = PBXBuildFile; productRef = 6F36C62C28910538000DD160 /* CoreBusiness */; };
 		6F59E87929CF31E10093E6FB /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84029CF31E10093E6FB /* SearchView.swift */; };
 		6F59E87A29CF31E10093E6FB /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84129CF31E10093E6FB /* SearchViewModel.swift */; };
@@ -71,6 +73,8 @@
 		0E84D6152A12753100EB48C5 /* SettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMenu.swift; sourceTree = "<group>"; };
 		6F010340289946220021BA76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pillarbox-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F0B2E842A40EBAC00B69675 /* Destination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Destination.swift; sourceTree = "<group>"; };
+		6F0B2E862A40EBD200B69675 /* RoutedNavigationStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutedNavigationStack.swift; sourceTree = "<group>"; };
 		6F45DB9A2893B773008ACCE6 /* Application.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
 		6F45DB9B2893B773008ACCE6 /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		6F45DB9D2893B773008ACCE6 /* Demo.nightly.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Demo.nightly.xcconfig; sourceTree = "<group>"; };
@@ -169,6 +173,16 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		6F0B2E832A40EB9600B69675 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				6F0B2E842A40EBAC00B69675 /* Destination.swift */,
+				6F0B2E862A40EBD200B69675 /* RoutedNavigationStack.swift */,
+				6FDB51CA2A4042B2001F430F /* Router.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
 		6F45DB972893B772008ACCE6 /* Xcode */ = {
 			isa = PBXGroup;
 			children = (
@@ -230,7 +244,6 @@
 				6F59E84C29CF31E10093E6FB /* MediaDescription.swift */,
 				6F59E84A29CF31E10093E6FB /* Playlist.swift */,
 				6F59E84929CF31E10093E6FB /* RadioChannel.swift */,
-				6FDB51CA2A4042B2001F430F /* Router.swift */,
 				6F59E84729CF31E10093E6FB /* ServerSetting.swift */,
 				6F59E84829CF31E10093E6FB /* Template.swift */,
 				6F59E84629CF31E10093E6FB /* Vendor.swift */,
@@ -372,6 +385,7 @@
 				6F59E84D29CF31E10093E6FB /* Lists */,
 				6F59E84529CF31E10093E6FB /* Model */,
 				6F59E86929CF31E10093E6FB /* Players */,
+				6F0B2E832A40EB9600B69675 /* Router */,
 				6F59E83F29CF31E10093E6FB /* Search */,
 				6F59E85129CF31E10093E6FB /* Settings */,
 				6F59E85429CF31E10093E6FB /* Showcase */,
@@ -516,6 +530,7 @@
 				6F59E89529CF31E20093E6FB /* CopyButton.swift in Sources */,
 				6F59E8A229CF31E20093E6FB /* Logger.swift in Sources */,
 				6F59E89229CF31E20093E6FB /* WrappedViewModel.swift in Sources */,
+				6F0B2E872A40EBD200B69675 /* RoutedNavigationStack.swift in Sources */,
 				6F59E89929CF31E20093E6FB /* PlaybackView.swift in Sources */,
 				6F59E8A029CF31E20093E6FB /* Constant.swift in Sources */,
 				6F59E88A29CF31E20093E6FB /* PlaylistView.swift in Sources */,
@@ -529,6 +544,7 @@
 				0E84D6162A12753100EB48C5 /* SettingsMenu.swift in Sources */,
 				6F59E88B29CF31E20093E6FB /* PlaylistViewModel.swift in Sources */,
 				6F59E87F29CF31E10093E6FB /* Template.swift in Sources */,
+				6F0B2E852A40EBAC00B69675 /* Destination.swift in Sources */,
 				6FCB9DDE29E024E900961B69 /* BlurredView.swift in Sources */,
 				6F59E89129CF31E20093E6FB /* WrappedView.swift in Sources */,
 				6F59E88629CF31E20093E6FB /* ContentListView.swift in Sources */,
