@@ -14,6 +14,7 @@ private struct ExamplesTab: View {
         .tabItem {
             Label("Examples", systemImage: "film")
         }
+        .environmentObject(Router())
     }
 }
 

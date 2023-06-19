@@ -32,7 +32,7 @@ private struct TextFieldView: View {
 
 private struct MediaEntryView: View {
     @State private var text = ""
-    @State private var isPresented = false
+    @EnvironmentObject private var router: Router
 
     private var media: Media {
         let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -55,19 +55,17 @@ private struct MediaEntryView: View {
             }
         }
         .buttonStyle(.plain)
-        .sheet(isPresented: $isPresented) {
-            PlayerView(media: media)
-        }
     }
 
     private func play() {
-        isPresented.toggle()
+        router.presented = .player(media: media)
     }
 }
 
 // Behavior: h-exp, v-exp
 struct ExamplesView: View {
     @StateObject private var model = ExamplesViewModel()
+    @EnvironmentObject private var router: Router
 
     var body: some View {
         List {
@@ -87,6 +85,7 @@ struct ExamplesView: View {
         .animation(.defaultLinear, value: model.protectedMedias)
         .navigationTitle("Examples")
         .tracked(title: "examples")
+        .routed(by: router)
         .refreshable { await model.refresh() }
     }
 
@@ -94,8 +93,17 @@ struct ExamplesView: View {
     private func section(title: String, medias: [Media]) -> some View {
         Section(title) {
             ForEach(medias) { media in
-                Cell(title: media.title, subtitle: media.description) {
-                    PlayerView(media: media)
+                VStack(alignment: .leading) {
+                    Text(media.title)
+                        .foregroundColor(.primary)
+                    if let subtitle = media.description {
+                        Text(subtitle)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .onTapGesture {
+                    router.presented = .player(media: media)
                 }
             }
         }
