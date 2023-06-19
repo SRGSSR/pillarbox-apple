@@ -28,6 +28,7 @@ struct ShowcaseView: View {
     @ViewBuilder
     private func cell(title: String, subtitle: String? = nil, destination: Destination) -> some View {
         Cell2(title: title, subtitle: subtitle)
+            .accessibilityAddTraits(.isButton)
             .onTapGesture {
                 router.presented = destination
             }
@@ -57,28 +58,81 @@ struct ShowcaseView: View {
     @ViewBuilder
     private func playlistsSection() -> some View {
         Section("Playlists") {
-            cell(title: "Video URLs", destination: .playlist(templates: URLTemplates.videos))
-            cell(title: "Video URNs", destination: .playlist(templates: URNTemplates.videos))
-            cell(title: "Long video URNs", destination: .playlist(templates: URNTemplates.longVideos))
-            cell(title: "Audios", destination: .playlist(templates: URNTemplates.audios))
-            cell(title: "Videos (one failed item)", destination: .playlist(templates: URNTemplates.videosWithOneError))
-            cell(title: "Videos (all failing)", destination: .playlist(templates: URNTemplates.videosWithErrors))
-            cell(title: "Empty", destination: .playlist(templates: []))
+            cell(
+                title: "Video URLs",
+                destination: .playlist(templates: URLTemplates.videos)
+            )
+            cell(
+                title: "Video URNs",
+                destination: .playlist(templates: URNTemplates.videos)
+            )
+            cell(
+                title: "Long video URNs",
+                destination: .playlist(templates: URNTemplates.longVideos)
+            )
+            cell(
+                title: "Audios",
+                destination: .playlist(templates: URNTemplates.audios)
+            )
+            cell(
+                title: "Videos (one failed item)",
+                destination: .playlist(templates: URNTemplates.videosWithOneError)
+            )
+            cell(
+                title: "Videos (all failing)",
+                destination: .playlist(templates: URNTemplates.videosWithErrors)
+            )
+            cell(
+                title: "Empty",
+                destination: .playlist(templates: [])
+            )
+        }
+    }
+
+    @ViewBuilder
+    private func embeddingsSection() -> some View {
+        Section("Embeddings") {
+            cell(
+                title: "Twins",
+                subtitle: "A video displayed twice",
+                destination: .twins(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
+            )
+            cell(
+                title: "Multi-instance",
+                subtitle: "Two videos played at the same time",
+                destination: .multi(
+                    media1: Media(from: URNTemplate.onDemandHorizontalVideo),
+                    media2: Media(from: URNTemplate.onDemandVideo)
+                )
+            )
+            cell(
+                title: "Link",
+                subtitle: "A player which can be linked to a view",
+                destination: .link(media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS))
+            )
+            cell(
+                title: "Wrapped",
+                subtitle: "A view whose player can be removed",
+                destination: .wrapped(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
+            )
         }
     }
 
     @ViewBuilder
     private func systemPlayerSection() -> some View {
         Section("System player (using Pillarbox)") {
-            Cell(title: "Video URL") {
-                SystemPlayerView(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
-            }
-            Cell(title: "Video URN") {
-                SystemPlayerView(media: Media(from: URNTemplate.dvrVideo))
-            }
-            Cell(title: "Unknown") {
-                SystemPlayerView(media: Media(from: URNTemplate.unknown))
-            }
+            cell(
+                title: "Video URL",
+                destination: .systemPlayer(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
+            )
+            cell(
+                title: "Video URN",
+                destination: .systemPlayer(media: Media(from: URNTemplate.dvrVideo))
+            )
+            cell(
+                title: "Unknown",
+                destination: .systemPlayer(media: Media(from: URNTemplate.unknown))
+            )
         }
     }
 
@@ -90,27 +144,6 @@ struct ShowcaseView: View {
             }
             Cell(title: "Unknown") {
                 VanillaPlayerView(item: Template.playerItem(from: URLTemplate.unknown)!)
-            }
-        }
-    }
-
-    @ViewBuilder
-    private func embeddingsSection() -> some View {
-        Section("Embeddings") {
-            Cell(title: "Twins", subtitle: "A video displayed twice") {
-                TwinsView(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
-            }
-            Cell(title: "Multi-instance", subtitle: "Two videos played at the same time") {
-                MultiView(
-                    media1: Media(from: URNTemplate.onDemandHorizontalVideo),
-                    media2: Media(from: URNTemplate.onDemandVideo)
-                )
-            }
-            Cell(title: "Link", subtitle: "A player which can be linked to a view") {
-                LinkView(media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS))
-            }
-            Cell(title: "Wrapped", subtitle: "A view whose player can be removed") {
-                WrappedView(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
             }
         }
     }

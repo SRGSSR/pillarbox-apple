@@ -94,6 +94,7 @@ struct ExamplesView: View {
         Section(title) {
             ForEach(medias) { media in
                 Cell2(title: media.title, subtitle: media.description)
+                    .accessibilityAddTraits(.isButton)
                     .onTapGesture {
                         router.presented = .player(media: media)
                     }
