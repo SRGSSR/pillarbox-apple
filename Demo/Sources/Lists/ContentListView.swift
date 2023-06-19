@@ -67,7 +67,7 @@ private struct ContentCell: View {
         case let .topic(topic):
             NavigationLink(
                 topic.title,
-                value: Destination.contentList(configuration: .init(kind: .latestMediasForTopic(topic), vendor: topic.vendor))
+                destination: .contentList(configuration: .init(kind: .latestMediasForTopic(topic), vendor: topic.vendor))
             )
 #if os(iOS)
             .swipeActions { CopyButton(text: topic.urn) }
@@ -84,7 +84,7 @@ private struct ContentCell: View {
         case let .show(show):
             NavigationLink(
                 show.title,
-                value: Destination.contentList(configuration: .init(kind: .latestMediasForShow(show), vendor: show.vendor))
+                destination: .contentList(configuration: .init(kind: .latestMediasForShow(show), vendor: show.vendor))
             )
 #if os(iOS)
             .swipeActions { CopyButton(text: show.urn) }

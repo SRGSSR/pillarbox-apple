@@ -10,7 +10,7 @@
 		0E6B995C29D43E4200D0276D /* OptInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6B995B29D43E4200D0276D /* OptInView.swift */; };
 		0E84D6162A12753100EB48C5 /* SettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84D6152A12753100EB48C5 /* SettingsMenu.swift */; };
 		0EF42CB629AE513400553165 /* SRGDataProviderCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF42CB529AE513400553165 /* SRGDataProviderCombine */; };
-		6F0B2E852A40EBAC00B69675 /* Destination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E842A40EBAC00B69675 /* Destination.swift */; };
+		6F0B2E852A40EBAC00B69675 /* RouterDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E842A40EBAC00B69675 /* RouterDestination.swift */; };
 		6F0B2E892A40EDAD00B69675 /* ContentListConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E882A40EDAD00B69675 /* ContentListConfiguration.swift */; };
 		6F0B2E8B2A40EE0700B69675 /* ContentListKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E8A2A40EE0700B69675 /* ContentListKind.swift */; };
 		6F36C62D28910538000DD160 /* CoreBusiness in Frameworks */ = {isa = PBXBuildFile; productRef = 6F36C62C28910538000DD160 /* CoreBusiness */; };
@@ -74,7 +74,7 @@
 		0E84D6152A12753100EB48C5 /* SettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMenu.swift; sourceTree = "<group>"; };
 		6F010340289946220021BA76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pillarbox-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6F0B2E842A40EBAC00B69675 /* Destination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Destination.swift; sourceTree = "<group>"; };
+		6F0B2E842A40EBAC00B69675 /* RouterDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterDestination.swift; sourceTree = "<group>"; };
 		6F0B2E882A40EDAD00B69675 /* ContentListConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentListConfiguration.swift; sourceTree = "<group>"; };
 		6F0B2E8A2A40EE0700B69675 /* ContentListKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentListKind.swift; sourceTree = "<group>"; };
 		6F45DB9A2893B773008ACCE6 /* Application.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
@@ -178,7 +178,7 @@
 		6F0B2E832A40EB9600B69675 /* Router */ = {
 			isa = PBXGroup;
 			children = (
-				6F0B2E842A40EBAC00B69675 /* Destination.swift */,
+				6F0B2E842A40EBAC00B69675 /* RouterDestination.swift */,
 				6FDB51CA2A4042B2001F430F /* Router.swift */,
 			);
 			path = Router;
@@ -548,7 +548,7 @@
 				6F59E88B29CF31E20093E6FB /* PlaylistViewModel.swift in Sources */,
 				6F59E87F29CF31E10093E6FB /* Template.swift in Sources */,
 				6F0B2E8B2A40EE0700B69675 /* ContentListKind.swift in Sources */,
-				6F0B2E852A40EBAC00B69675 /* Destination.swift in Sources */,
+				6F0B2E852A40EBAC00B69675 /* RouterDestination.swift in Sources */,
 				6FCB9DDE29E024E900961B69 /* BlurredView.swift in Sources */,
 				6F59E89129CF31E20093E6FB /* WrappedView.swift in Sources */,
 				6F59E88629CF31E20093E6FB /* ContentListView.swift in Sources */,

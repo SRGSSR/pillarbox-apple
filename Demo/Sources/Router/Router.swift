@@ -19,7 +19,7 @@ struct RoutedNavigationStack<Root: View>: View {
                 .sheet(item: $router.presented) { presented in
                     view(for: presented)
                 }
-                .navigationDestination(for: Destination.self) { destination in
+                .navigationDestination(for: RouterDestination.self) { destination in
                     view(for: destination)
                 }
         }
@@ -27,7 +27,7 @@ struct RoutedNavigationStack<Root: View>: View {
     }
 
     @ViewBuilder
-    private func view(for destination: Destination) -> some View {
+    private func view(for destination: RouterDestination) -> some View {
         // swiftlint:disable:previous cyclomatic_complexity
         switch destination {
         case let .player(media: media):
@@ -61,10 +61,10 @@ struct RoutedNavigationStack<Root: View>: View {
 }
 
 final class Router: ObservableObject {
-    @Published fileprivate var path: [Destination] = []
-    @Published fileprivate var presented: Destination?
+    @Published fileprivate var path: [RouterDestination] = []
+    @Published fileprivate var presented: RouterDestination?
 
-    func present(_ destination: Destination) {
+    func present(_ destination: RouterDestination) {
         presented = destination
     }
 

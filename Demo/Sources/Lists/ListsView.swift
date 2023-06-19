@@ -46,7 +46,7 @@ struct ListsView: View {
     private static func section(title: String, image: String? = nil, configurations: [ContentListConfiguration]) -> some View {
         Section {
             ForEach(configurations) { configuration in
-                NavigationLink(configuration.name, value: Destination.contentList(configuration: configuration))
+                NavigationLink(configuration.name, destination: .contentList(configuration: configuration))
             }
         } header: {
             HStack {

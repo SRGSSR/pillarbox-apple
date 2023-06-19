@@ -6,8 +6,9 @@
 
 import AVFoundation
 import Foundation
+import SwiftUI
 
-enum Destination: Identifiable, Hashable {
+enum RouterDestination: Identifiable, Hashable {
     case player(media: Media)
     case systemPlayer(media: Media)
     case simplePlayer(media: Media)
@@ -55,5 +56,15 @@ enum Destination: Identifiable, Hashable {
         case let .contentList(configuration: configuration):
             return "contentList_\(configuration.id)"
         }
+    }
+}
+
+extension NavigationLink where Destination == Never {
+    init(_ titleKey: LocalizedStringKey, destination: RouterDestination) where Label == Text {
+        self.init(titleKey, value: destination)
+    }
+
+    init<S>(_ title: S, destination: RouterDestination) where Label == Text, S: StringProtocol {
+        self.init(title, value: destination)
     }
 }

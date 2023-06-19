@@ -25,7 +25,7 @@ struct ShowcaseView: View {
     }
 
     @ViewBuilder
-    private func cell(title: String, subtitle: String? = nil, destination: Destination) -> some View {
+    private func cell(title: String, subtitle: String? = nil, destination: RouterDestination) -> some View {
         Cell(title: title, subtitle: subtitle) {
             router.present(destination)
         }
