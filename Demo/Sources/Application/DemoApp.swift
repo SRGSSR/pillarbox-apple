@@ -59,6 +59,7 @@ private struct ShowcaseTab: View {
         .tabItem {
             Label("Showcase", systemImage: "text.book.closed")
         }
+        .environmentObject(Router())
     }
 }
 

@@ -9,6 +9,8 @@ import SwiftUI
 
 // Behavior: h-exp, v-exp
 struct ShowcaseView: View {
+    @EnvironmentObject private var router: Router
+
     var body: some View {
         List {
             layoutsSection()
@@ -19,15 +21,26 @@ struct ShowcaseView: View {
             trackingSection()
         }
         .navigationTitle("Showcase")
+        .routed(by: router)
         .tracked(title: "showcase")
+    }
+
+    @ViewBuilder
+    private func cell(title: String, subtitle: String?, destination: Destination) -> some View {
+        Cell2(title: title, subtitle: subtitle)
+            .onTapGesture {
+                router.presented = destination
+            }
     }
 
     @ViewBuilder
     private func layoutsSection() -> some View {
         Section("Layouts") {
-            Cell(title: "Simple", subtitle: "A basic video playback experience") {
-                SimplePlayerView(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
-            }
+            cell(
+                title: "Simple",
+                subtitle: "A basic video playback experience",
+                destination: .simplePlayer(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
+            )
             Cell(title: "Blurred", subtitle: "A video displayed onto a blurred clone of itself") {
                 BlurredView(media: Media(from: URLTemplate.dvrVideoHLS))
             }
