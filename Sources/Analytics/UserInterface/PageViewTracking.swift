@@ -70,13 +70,6 @@ public extension PageViewTracking {
 }
 
 extension UIViewController {
-    private var trackedChildren: [UIViewController] {
-        guard let containerViewController = self as? ContainerPageViewTracking else {
-            return children
-        }
-        return containerViewController.activeChildren
-    }
-
     static func setupViewControllerTracking() {
         method_exchangeImplementations(
             class_getInstanceMethod(Self.self, #selector(viewDidAppear(_:)))!,
@@ -102,39 +95,27 @@ extension UIViewController {
         }
     }
 
-    private static func trackForegroundAndBackgroundPageViews(in windowScene: UIWindowScene) {
-        windowScene.windows.forEach { window in
-            trackForegroundAndBackgroundPageViews(in: window)
-        }
-    }
-
-    private static func trackForegroundAndBackgroundPageViews(in window: UIWindow) {
-        var topViewController = window.rootViewController
-        while let presentedViewController = topViewController?.presentedViewController {
-            topViewController = presentedViewController
-        }
-        topViewController?.trackPageView(automatic: true, recursive: true, for: .foregroundAndBackground)
-    }
-
     @objc
     private static func applicationWillEnterForeground(_ notification: Notification) {
         guard let application = notification.object as? UIApplication,
               let windowScene = application.connectedScenes.first as? UIWindowScene else {
             return
         }
-        trackForegroundAndBackgroundPageViews(in: windowScene)
+        windowScene.recursivelyTrackAutomaticPageViews()
     }
 
     @objc
     private static func sceneWillEnterForeground(_ notification: Notification) {
         guard let windowScene = notification.object as? UIWindowScene else { return }
-        trackForegroundAndBackgroundPageViews(in: windowScene)
+        windowScene.recursivelyTrackAutomaticPageViews()
     }
 
     @objc
     private func swizzledViewDidAppear(_ animated: Bool) {
         swizzledViewDidAppear(animated)
-        trackPageView(automatic: true, recursive: false, for: .foreground)
+        if isActive {
+            trackAutomaticPageView()
+        }
     }
 
     /// Perform manual page view tracking for the receiver, using data declared by `PageViewTracking` conformance.
@@ -142,45 +123,54 @@ extension UIViewController {
     /// This method does nothing if the receiver does not conform to the `PageViewTracking` protocol and is mostly
     /// useful when automatic tracking has been disabled by setting `isTrackedAutomatically` to `false`.
     public func trackPageView() {
-        trackPageView(automatic: false, recursive: false, for: .foreground)
-    }
-
-    private func trackPageView(automatic: Bool, recursive: Bool, for mode: PageViewMode) {
-        if recursive {
-            trackedChildren.forEach { viewController in
-                viewController.trackPageView(automatic: automatic, recursive: true, for: mode)
-            }
-        }
-        guard let trackedViewController = self as? PageViewTracking,
-              automatic, trackedViewController.isTrackedAutomatically else {
-            return
-        }
+        guard let trackedViewController = self as? PageViewTracking else { return }
         Analytics.shared.trackPageView(
             title: trackedViewController.pageTitle,
-            levels: trackedViewController.pageLevels,
-            for: mode
+            levels: trackedViewController.pageLevels
+        )
+    }
+}
+
+extension UIViewController {
+    var isActive: Bool {
+        guard let parent else { return true }
+        return parent.effectivelyActiveChildren.contains(self) && parent.isActive
+    }
+
+    private var effectivelyActiveChildren: [UIViewController] {
+        (self as? ContainerPageViewTracking)?.activeChildren ?? children
+    }
+
+    func trackAutomaticPageView() {
+        guard let trackedViewController = self as? PageViewTracking, trackedViewController.isTrackedAutomatically else { return }
+        Analytics.shared.trackPageView(
+            title: trackedViewController.pageTitle,
+            levels: trackedViewController.pageLevels
         )
     }
 
-    /// Informs the automatic page view tracking engine that page view events generation should be evaluated again.
-    ///
-    /// - Parameter viewController: The view controller for which automatic page view event generation must be
-    ///   evaluated again.
-    ///
-    /// You should call this method after a child view controller has been added to a custom container to notify the
-    /// automatic page view tracking engine. This ensures that correct page view event generation and propagation can
-    /// be triggered if needed.
-    ///
-    /// This method has no effect if the receiver does not conform to `ContainerPageViewTracking` or if the specified
-    /// view controller is not a child of the receiver.
-    ///
-    ///
-    /// This method is useful when implementing custom view controller containers displaying sibling view controllers,
-    /// keeping them alive while inactive (custom tab bar controllers, for example). For containers hiding children
-    /// which have disappeared (similarly to what navigation controllers do), calling this method is not required, as
-    /// standard view appearance namely suffices to trigger automatic page views again when required.
-    public func setNeedsAutomaticPageViewTracking(in viewController: UIViewController) {
-        guard trackedChildren.contains(viewController) else { return }
-        viewController.trackPageView(automatic: true, recursive: true, for: .foreground)
+    func recursivelyTrackAutomaticPageViews() {
+        effectivelyActiveChildren.forEach { viewController in
+            viewController.recursivelyTrackAutomaticPageViews()
+        }
+        trackAutomaticPageView()
+    }
+}
+
+extension UIWindow {
+    func recursivelyTrackAutomaticPageViews() {
+        var topViewController = rootViewController
+        while let presentedViewController = topViewController?.presentedViewController {
+            topViewController = presentedViewController
+        }
+        topViewController?.recursivelyTrackAutomaticPageViews()
+    }
+}
+
+private extension UIWindowScene {
+    func recursivelyTrackAutomaticPageViews() {
+        windows.forEach { window in
+            window.recursivelyTrackAutomaticPageViews()
+        }
     }
 }

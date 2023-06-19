@@ -19,10 +19,6 @@ import UIKit
 ///   the `ContainerPageViewTracking` protocol to declare which ones of its children must be considered active for
 ///   propagation.
 ///
-/// When implementing a custom container you might sometimes need to inform the automatic page view tracking engine of
-/// child controller appearance so that correct propagation can be triggered. Refer to
-/// `UIViewController.setNeedsAutomaticPageViewTracking(in:)` documentation for more information.
-///
 /// ### Native UIKit Container Support
 ///
 /// Some standard UIKit containers conform to `ContainerPageViewTracking` to implement correct propagation:
@@ -34,7 +30,7 @@ import UIKit
 ///
 /// Other UIKit containers do not need to conform to `ContainerPageViewTracking` as default event propagation yields
 /// correct behavior for them.
-public protocol ContainerPageViewTracking {
+public protocol ContainerPageViewTracking: UIViewController {
     /// The list of currently active children in the view controller container.
     var activeChildren: [UIViewController] { get }
 }
@@ -63,21 +59,5 @@ extension UITabBarController: ContainerPageViewTracking {
     public var activeChildren: [UIViewController] {
         guard let selectedViewController else { return [] }
         return [selectedViewController]
-    }
-
-    static func setupTabBarControllerTracking() {
-        method_exchangeImplementations(
-            class_getInstanceMethod(Self.self, #selector(setter: selectedViewController))!,
-            class_getInstanceMethod(Self.self, #selector(swizzledSetSelectedViewController(_:)))!
-        )
-    }
-
-    @objc
-    public func swizzledSetSelectedViewController(_ viewController: UIViewController) {
-        let changed = (viewController !== self.selectedViewController)
-        swizzledSetSelectedViewController(viewController)
-        if changed {
-            setNeedsAutomaticPageViewTracking(in: viewController)
-        }
     }
 }
