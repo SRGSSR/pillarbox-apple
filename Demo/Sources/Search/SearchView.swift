@@ -10,6 +10,7 @@ import SwiftUI
 
 struct SearchView: View {
     @StateObject private var model = SearchViewModel()
+    @EnvironmentObject private var router: Router
 
     var body: some View {
         ZStack {
@@ -26,6 +27,7 @@ struct SearchView: View {
         }
         .animation(.defaultLinear, value: model.state)
         .navigationTitle("Search")
+        .routed(by: router)
         .tracked(title: "search")
         .searchable(text: $model.text)
 #if os(iOS)
@@ -42,16 +44,18 @@ struct SearchView: View {
         if !medias.isEmpty {
             List(medias, id: \.urn) { media in
                 let title = MediaDescription.title(for: media)
-                Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
-                    PlayerView(media: Media(title: media.title, type: .urn(media.urn)))
-                }
-                .onAppear {
-                    if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {
-                        model.loadMore()
+                Cell2(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media))
+                    .accessibilityAddTraits(.isButton)
+                    .onTapGesture {
+                        router.presented = .player(media: Media(title: media.title, type: .urn(media.urn)))
                     }
-                }
+                    .onAppear {
+                        if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {
+                            model.loadMore()
+                        }
+                    }
 #if os(iOS)
-                .swipeActions { CopyButton(text: media.urn) }
+                    .swipeActions { CopyButton(text: media.urn) }
 #endif
             }
             .scrollDismissesKeyboard(.immediately)
@@ -67,6 +71,7 @@ struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
             SearchView()
+                .environmentObject(Router())
         }
     }
 }

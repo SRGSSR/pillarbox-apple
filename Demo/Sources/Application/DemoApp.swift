@@ -48,6 +48,7 @@ private struct SearchTab: View {
         .tabItem {
             Label("Search", systemImage: "magnifyingglass")
         }
+        .environmentObject(Router())
     }
 }
 
