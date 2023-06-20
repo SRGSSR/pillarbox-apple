@@ -6,7 +6,7 @@
 
 import Combine
 import Foundation
-import TCServerSide_noIDFA
+import TCServerSide
 
 /// A tool that intercepts Commanders Act requests and turns them into an event stream.
 enum CommandersActInterceptor {
