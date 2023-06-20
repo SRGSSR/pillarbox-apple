@@ -60,27 +60,32 @@ private struct ContentCell: View {
     @AppStorage(UserDefaults.serverSettingKey)
     private var serverSetting: ServerSetting = .production
 
+    @EnvironmentObject private var router: Router
+
     var body: some View {
         switch content {
         case let .topic(topic):
-            NavigationLink(topic.title) {
-                ContentListView(configuration: .init(kind: .latestMediasForTopic(topic), vendor: topic.vendor))
-            }
+            NavigationLink(
+                topic.title,
+                destination: .contentList(configuration: .init(list: .latestMediasForTopic(topic), vendor: topic.vendor))
+            )
 #if os(iOS)
             .swipeActions { CopyButton(text: topic.urn) }
 #endif
         case let .media(media):
             let title = MediaDescription.title(for: media)
             Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
-                PlayerView(media: Media(title: title, type: .urn(media.urn, server: serverSetting.server)))
+                let media = Media(title: title, type: .urn(media.urn, server: serverSetting.server))
+                router.present(.player(media: media))
             }
 #if os(iOS)
             .swipeActions { CopyButton(text: media.urn) }
 #endif
         case let .show(show):
-            NavigationLink(show.title) {
-                ContentListView(configuration: .init(kind: .latestMediasForShow(show), vendor: show.vendor))
-            }
+            NavigationLink(
+                show.title,
+                destination: .contentList(configuration: .init(list: .latestMediasForShow(show), vendor: show.vendor))
+            )
 #if os(iOS)
             .swipeActions { CopyButton(text: show.urn) }
 #endif
@@ -90,7 +95,7 @@ private struct ContentCell: View {
 
 // Behavior: h-exp, v-exp
 struct ContentListView: View {
-    let configuration: ContentListViewModel.Configuration
+    let configuration: ContentList.Configuration
     @StateObject private var model = ContentListViewModel()
 
     var body: some View {
@@ -109,15 +114,15 @@ struct ContentListView: View {
         }
         .animation(.defaultLinear, value: model.state)
         .onAppear { model.configuration = configuration }
-        .navigationTitle(configuration.kind.name)
-        .tracked(title: configuration.kind.pageTitle, levels: configuration.kind.pageLevels)
+        .navigationTitle(configuration.list.name)
+        .tracked(title: configuration.list.pageTitle, levels: configuration.list.pageLevels)
     }
 }
 
 struct ContentListView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationStack {
-            ContentListView(configuration: .init(kind: .tvLatestMedias, vendor: .RTS))
+        RoutedNavigationStack {
+            ContentListView(configuration: .init(list: .tvLatestMedias, vendor: .RTS))
         }
     }
 }

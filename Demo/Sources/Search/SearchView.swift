@@ -10,6 +10,7 @@ import SwiftUI
 
 struct SearchView: View {
     @StateObject private var model = SearchViewModel()
+    @EnvironmentObject private var router: Router
 
     var body: some View {
         ZStack {
@@ -43,7 +44,8 @@ struct SearchView: View {
             List(medias, id: \.urn) { media in
                 let title = MediaDescription.title(for: media)
                 Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
-                    PlayerView(media: Media(title: media.title, type: .urn(media.urn)))
+                    let media = Media(title: media.title, type: .urn(media.urn))
+                    router.present(.player(media: media))
                 }
                 .onAppear {
                     if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {
@@ -65,7 +67,7 @@ struct SearchView: View {
 
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationStack {
+        RoutedNavigationStack {
             SearchView()
         }
     }

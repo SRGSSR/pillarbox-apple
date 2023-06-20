@@ -8,7 +8,7 @@ import SwiftUI
 
 private struct ExamplesTab: View {
     var body: some View {
-        NavigationStack {
+        RoutedNavigationStack {
             ExamplesView()
         }
         .tabItem {
@@ -17,10 +17,10 @@ private struct ExamplesTab: View {
     }
 }
 
-private struct ListsTab: View {
+private struct ContentListsTab: View {
     var body: some View {
-        NavigationStack {
-            ListsView()
+        RoutedNavigationStack {
+            ContentListsView()
         }
         .tabItem {
             Label("Lists", systemImage: "list.and.film")
@@ -30,7 +30,7 @@ private struct ListsTab: View {
 
 private struct SettingsTab: View {
     var body: some View {
-        NavigationStack {
+        RoutedNavigationStack {
             SettingsView()
         }
         .tabItem {
@@ -41,7 +41,7 @@ private struct SettingsTab: View {
 
 private struct SearchTab: View {
     var body: some View {
-        NavigationStack {
+        RoutedNavigationStack {
             SearchView()
         }
         .tabItem {
@@ -52,7 +52,7 @@ private struct SearchTab: View {
 
 private struct ShowcaseTab: View {
     var body: some View {
-        NavigationStack {
+        RoutedNavigationStack {
             ShowcaseView()
         }
         .tabItem {
@@ -71,7 +71,7 @@ struct DemoApp: App {
             TabView {
                 ExamplesTab()
                 ShowcaseTab()
-                ListsTab()
+                ContentListsTab()
                 SearchTab()
                 SettingsTab()
             }
