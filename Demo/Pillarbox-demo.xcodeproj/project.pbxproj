@@ -11,8 +11,7 @@
 		0E84D6162A12753100EB48C5 /* SettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84D6152A12753100EB48C5 /* SettingsMenu.swift */; };
 		0EF42CB629AE513400553165 /* SRGDataProviderCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF42CB529AE513400553165 /* SRGDataProviderCombine */; };
 		6F0B2E852A40EBAC00B69675 /* RouterDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E842A40EBAC00B69675 /* RouterDestination.swift */; };
-		6F0B2E892A40EDAD00B69675 /* ContentListConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E882A40EDAD00B69675 /* ContentListConfiguration.swift */; };
-		6F0B2E8B2A40EE0700B69675 /* ContentListKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E8A2A40EE0700B69675 /* ContentListKind.swift */; };
+		6F0B2E8B2A40EE0700B69675 /* ContentList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E8A2A40EE0700B69675 /* ContentList.swift */; };
 		6F36C62D28910538000DD160 /* CoreBusiness in Frameworks */ = {isa = PBXBuildFile; productRef = 6F36C62C28910538000DD160 /* CoreBusiness */; };
 		6F59E87929CF31E10093E6FB /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84029CF31E10093E6FB /* SearchView.swift */; };
 		6F59E87A29CF31E10093E6FB /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84129CF31E10093E6FB /* SearchViewModel.swift */; };
@@ -75,8 +74,7 @@
 		6F010340289946220021BA76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pillarbox-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F0B2E842A40EBAC00B69675 /* RouterDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterDestination.swift; sourceTree = "<group>"; };
-		6F0B2E882A40EDAD00B69675 /* ContentListConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentListConfiguration.swift; sourceTree = "<group>"; };
-		6F0B2E8A2A40EE0700B69675 /* ContentListKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentListKind.swift; sourceTree = "<group>"; };
+		6F0B2E8A2A40EE0700B69675 /* ContentList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentList.swift; sourceTree = "<group>"; };
 		6F45DB9A2893B773008ACCE6 /* Application.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
 		6F45DB9B2893B773008ACCE6 /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		6F45DB9D2893B773008ACCE6 /* Demo.nightly.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Demo.nightly.xcconfig; sourceTree = "<group>"; };
@@ -255,8 +253,7 @@
 		6F59E84D29CF31E10093E6FB /* Lists */ = {
 			isa = PBXGroup;
 			children = (
-				6F0B2E882A40EDAD00B69675 /* ContentListConfiguration.swift */,
-				6F0B2E8A2A40EE0700B69675 /* ContentListKind.swift */,
+				6F0B2E8A2A40EE0700B69675 /* ContentList.swift */,
 				6F59E85029CF31E10093E6FB /* ContentListView.swift */,
 				6F59E84E29CF31E10093E6FB /* ContentListViewModel.swift */,
 				6F59E84F29CF31E10093E6FB /* ListsView.swift */,
@@ -539,7 +536,6 @@
 				6FE324B329E4657D007501CF /* View.swift in Sources */,
 				6F59E88429CF31E20093E6FB /* ContentListViewModel.swift in Sources */,
 				6F59E88329CF31E20093E6FB /* MediaDescription.swift in Sources */,
-				6F0B2E892A40EDAD00B69675 /* ContentListConfiguration.swift in Sources */,
 				6F59E8A429CF31E20093E6FB /* ExamplesViewModel.swift in Sources */,
 				6F59E89829CF31E20093E6FB /* PlayerConfiguration.swift in Sources */,
 				6F8459F22A38543400A7B5F2 /* Signal.swift in Sources */,
@@ -547,7 +543,7 @@
 				0E84D6162A12753100EB48C5 /* SettingsMenu.swift in Sources */,
 				6F59E88B29CF31E20093E6FB /* PlaylistViewModel.swift in Sources */,
 				6F59E87F29CF31E10093E6FB /* Template.swift in Sources */,
-				6F0B2E8B2A40EE0700B69675 /* ContentListKind.swift in Sources */,
+				6F0B2E8B2A40EE0700B69675 /* ContentList.swift in Sources */,
 				6F0B2E852A40EBAC00B69675 /* RouterDestination.swift in Sources */,
 				6FCB9DDE29E024E900961B69 /* BlurredView.swift in Sources */,
 				6F59E89129CF31E20093E6FB /* WrappedView.swift in Sources */,

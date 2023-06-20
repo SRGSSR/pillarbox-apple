@@ -25,7 +25,7 @@ enum RouterDestination: Identifiable, Hashable {
     case stories
     case playlist(templates: [Template])
 
-    case contentList(configuration: ContentListConfiguration)
+    case contentList(configuration: ContentList.Configuration)
 
     var id: String {
         switch self {

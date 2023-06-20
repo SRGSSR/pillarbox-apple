@@ -35,15 +35,15 @@ struct ListsView: View {
     }
 
     @ViewBuilder
-    private static func section(for kind: ContentListKind, image: String? = nil, vendors: [SRGVendor]) -> some View {
+    private static func section(for list: ContentList, image: String? = nil, vendors: [SRGVendor]) -> some View {
         let configurations = vendors.map { vendor in
-            ContentListConfiguration(kind: kind, vendor: vendor)
+            ContentList.Configuration(list: list, vendor: vendor)
         }
-        section(title: kind.name, image: image, configurations: configurations)
+        section(title: list.name, image: image, configurations: configurations)
     }
 
     @ViewBuilder
-    private static func section(title: String, image: String? = nil, configurations: [ContentListConfiguration]) -> some View {
+    private static func section(title: String, image: String? = nil, configurations: [ContentList.Configuration]) -> some View {
         Section {
             ForEach(configurations) { configuration in
                 NavigationLink(configuration.name, destination: .contentList(configuration: configuration))
@@ -61,42 +61,42 @@ struct ListsView: View {
     @ViewBuilder
     private static func radioShows(image: String) -> some View {
         section(title: "Radio Shows", image: image, configurations: [
-            .init(kind: .radioShows(radioChannel: .SRF1), vendor: .SRF),
-            .init(kind: .radioShows(radioChannel: .SRF2Kultur), vendor: .SRF),
-            .init(kind: .radioShows(radioChannel: .SRF3), vendor: .SRF),
-            .init(kind: .radioShows(radioChannel: .SRF4News), vendor: .SRF),
-            .init(kind: .radioShows(radioChannel: .SRFMusikwelle), vendor: .SRF),
-            .init(kind: .radioShows(radioChannel: .SRFVirus), vendor: .SRF),
-            .init(kind: .radioShows(radioChannel: .RTSLaPremiere), vendor: .RTS),
-            .init(kind: .radioShows(radioChannel: .RTSEspace2), vendor: .RTS),
-            .init(kind: .radioShows(radioChannel: .RTSCouleur3), vendor: .RTS),
-            .init(kind: .radioShows(radioChannel: .RTSOptionMusique), vendor: .RTS),
-            .init(kind: .radioShows(radioChannel: .RTSPodcastsOriginaux), vendor: .RTS),
-            .init(kind: .radioShows(radioChannel: .RSIReteUno), vendor: .RSI),
-            .init(kind: .radioShows(radioChannel: .RSIReteDue), vendor: .RSI),
-            .init(kind: .radioShows(radioChannel: .RSIReteTre), vendor: .RSI),
-            .init(kind: .radioShows(radioChannel: .RTR), vendor: .RTR)
+            .init(list: .radioShows(radioChannel: .SRF1), vendor: .SRF),
+            .init(list: .radioShows(radioChannel: .SRF2Kultur), vendor: .SRF),
+            .init(list: .radioShows(radioChannel: .SRF3), vendor: .SRF),
+            .init(list: .radioShows(radioChannel: .SRF4News), vendor: .SRF),
+            .init(list: .radioShows(radioChannel: .SRFMusikwelle), vendor: .SRF),
+            .init(list: .radioShows(radioChannel: .SRFVirus), vendor: .SRF),
+            .init(list: .radioShows(radioChannel: .RTSLaPremiere), vendor: .RTS),
+            .init(list: .radioShows(radioChannel: .RTSEspace2), vendor: .RTS),
+            .init(list: .radioShows(radioChannel: .RTSCouleur3), vendor: .RTS),
+            .init(list: .radioShows(radioChannel: .RTSOptionMusique), vendor: .RTS),
+            .init(list: .radioShows(radioChannel: .RTSPodcastsOriginaux), vendor: .RTS),
+            .init(list: .radioShows(radioChannel: .RSIReteUno), vendor: .RSI),
+            .init(list: .radioShows(radioChannel: .RSIReteDue), vendor: .RSI),
+            .init(list: .radioShows(radioChannel: .RSIReteTre), vendor: .RSI),
+            .init(list: .radioShows(radioChannel: .RTR), vendor: .RTR)
         ])
     }
 
     @ViewBuilder
     private static func latestAudiosSection(image: String) -> some View {
         section(title: "Latest Audios", image: image, configurations: [
-            .init(kind: .radioLatestMedias(radioChannel: .SRF1), vendor: .SRF),
-            .init(kind: .radioLatestMedias(radioChannel: .SRF2Kultur), vendor: .SRF),
-            .init(kind: .radioLatestMedias(radioChannel: .SRF3), vendor: .SRF),
-            .init(kind: .radioLatestMedias(radioChannel: .SRF4News), vendor: .SRF),
-            .init(kind: .radioLatestMedias(radioChannel: .SRFMusikwelle), vendor: .SRF),
-            .init(kind: .radioLatestMedias(radioChannel: .SRFVirus), vendor: .SRF),
-            .init(kind: .radioLatestMedias(radioChannel: .RTSLaPremiere), vendor: .RTS),
-            .init(kind: .radioLatestMedias(radioChannel: .RTSEspace2), vendor: .RTS),
-            .init(kind: .radioLatestMedias(radioChannel: .RTSCouleur3), vendor: .RTS),
-            .init(kind: .radioLatestMedias(radioChannel: .RTSOptionMusique), vendor: .RTS),
-            .init(kind: .radioLatestMedias(radioChannel: .RTSPodcastsOriginaux), vendor: .RTS),
-            .init(kind: .radioLatestMedias(radioChannel: .RSIReteUno), vendor: .RSI),
-            .init(kind: .radioLatestMedias(radioChannel: .RSIReteDue), vendor: .RSI),
-            .init(kind: .radioLatestMedias(radioChannel: .RSIReteTre), vendor: .RSI),
-            .init(kind: .radioLatestMedias(radioChannel: .RTR), vendor: .RTR)
+            .init(list: .radioLatestMedias(radioChannel: .SRF1), vendor: .SRF),
+            .init(list: .radioLatestMedias(radioChannel: .SRF2Kultur), vendor: .SRF),
+            .init(list: .radioLatestMedias(radioChannel: .SRF3), vendor: .SRF),
+            .init(list: .radioLatestMedias(radioChannel: .SRF4News), vendor: .SRF),
+            .init(list: .radioLatestMedias(radioChannel: .SRFMusikwelle), vendor: .SRF),
+            .init(list: .radioLatestMedias(radioChannel: .SRFVirus), vendor: .SRF),
+            .init(list: .radioLatestMedias(radioChannel: .RTSLaPremiere), vendor: .RTS),
+            .init(list: .radioLatestMedias(radioChannel: .RTSEspace2), vendor: .RTS),
+            .init(list: .radioLatestMedias(radioChannel: .RTSCouleur3), vendor: .RTS),
+            .init(list: .radioLatestMedias(radioChannel: .RTSOptionMusique), vendor: .RTS),
+            .init(list: .radioLatestMedias(radioChannel: .RTSPodcastsOriginaux), vendor: .RTS),
+            .init(list: .radioLatestMedias(radioChannel: .RSIReteUno), vendor: .RSI),
+            .init(list: .radioLatestMedias(radioChannel: .RSIReteDue), vendor: .RSI),
+            .init(list: .radioLatestMedias(radioChannel: .RSIReteTre), vendor: .RSI),
+            .init(list: .radioLatestMedias(radioChannel: .RTR), vendor: .RTR)
         ])
     }
 

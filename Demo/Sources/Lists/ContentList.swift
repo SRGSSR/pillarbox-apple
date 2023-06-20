@@ -6,7 +6,7 @@
 
 import SRGDataProviderModel
 
-enum ContentListKind: Hashable {
+enum ContentList: Hashable {
     case tvTopics
     case latestMediasForTopic(SRGTopic)
     case tvShows
@@ -100,7 +100,7 @@ enum ContentListKind: Hashable {
     }
 }
 
-extension ContentListKind: Identifiable {
+extension ContentList: Identifiable {
     var id: String {
         switch self {
         case .tvTopics:
@@ -125,6 +125,21 @@ extension ContentListKind: Identifiable {
              return "radioLivestreams"
         case let .radioLatestMedias(radioChannel: radioChannel):
             return "radioLatestMedias_\(radioChannel.rawValue)"
+        }
+    }
+}
+
+extension ContentList {
+    struct Configuration: Hashable, Identifiable {
+        let list: ContentList
+        let vendor: SRGVendor
+
+        var id: String {
+            "\(list.id)_\(vendor.rawValue)"
+        }
+
+        var name: String {
+            list.radioChannel?.name ?? vendor.name
         }
     }
 }

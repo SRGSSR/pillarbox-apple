@@ -10,7 +10,7 @@ import SRGDataProviderModel
 
 final class ContentListViewModel: ObservableObject, Refreshable {
     @Published var state: State = .loading
-    @Published var configuration: ContentListConfiguration?
+    @Published var configuration: ContentList.Configuration?
     private let trigger = Trigger()
 
     init() {
@@ -25,7 +25,7 @@ final class ContentListViewModel: ObservableObject, Refreshable {
             .assign(to: &$state)
     }
 
-    private static func publisher(for configuration: ContentListConfiguration, trigger: Trigger) -> AnyPublisher<State, Never> {
+    private static func publisher(for configuration: ContentList.Configuration, trigger: Trigger) -> AnyPublisher<State, Never> {
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reload)) {
             contentPublisher(for: configuration, trigger: trigger)
                 .map { State.loaded(contents: $0.removeDuplicates()) }
@@ -35,8 +35,8 @@ final class ContentListViewModel: ObservableObject, Refreshable {
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private static func contentPublisher(for configuration: ContentListConfiguration, trigger: Trigger) -> AnyPublisher<[Content], Error> {
-        switch configuration.kind {
+    private static func contentPublisher(for configuration: ContentList.Configuration, trigger: Trigger) -> AnyPublisher<[Content], Error> {
+        switch configuration.list {
         case .tvTopics:
             return SRGDataProvider.current!.tvTopics(for: configuration.vendor)
                 .map { $0.map { .topic($0) } }
