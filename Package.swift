@@ -54,7 +54,10 @@ let package = Package(
                 .target(name: "Player"),
                 .product(name: "ComScore", package: "Comscore-Swift-Package-Manager"),
                 .product(name: "TCCore", package: "iOSV5"),
-                .product(name: "TCServerSide_noIDFA", package: "iOSV5")
+                .product(name: "TCServerSide", package: "iOSV5")
+            ],
+            linkerSettings: [
+                .linkedFramework("AdSupport")
             ],
             plugins: [
                 .plugin(name: "PackageInfoPlugin")

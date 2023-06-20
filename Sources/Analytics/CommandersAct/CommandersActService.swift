@@ -6,7 +6,7 @@
 
 import Foundation
 import TCCore
-import TCServerSide_noIDFA
+import TCServerSide
 
 final class CommandersActService {
     private var serverSide: ServerSide?

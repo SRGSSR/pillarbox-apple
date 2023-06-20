@@ -7,7 +7,7 @@
 import Combine
 import ComScore
 import Foundation
-import TCServerSide_noIDFA
+import TCServerSide
 
 /// A listener for analytics events.
 ///
