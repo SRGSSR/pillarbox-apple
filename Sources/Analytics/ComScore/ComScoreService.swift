@@ -26,7 +26,6 @@ struct ComScoreService {
             comScoreConfiguration.addClient(with: publisherConfiguration)
 
             comScoreConfiguration.applicationVersion = applicationVersion
-            comScoreConfiguration.usagePropertiesAutoUpdateMode = .foregroundAndBackground
             comScoreConfiguration.preventAdSupportUsage = true
             comScoreConfiguration.addPersistentLabels([
                 "mp_brand": configuration.vendor.rawValue,
