@@ -17,10 +17,10 @@ private struct ExamplesTab: View {
     }
 }
 
-private struct ListsTab: View {
+private struct ContentListsTab: View {
     var body: some View {
         RoutedNavigationStack {
-            ListsView()
+            ContentListsView()
         }
         .tabItem {
             Label("Lists", systemImage: "list.and.film")
@@ -71,7 +71,7 @@ struct DemoApp: App {
             TabView {
                 ExamplesTab()
                 ShowcaseTab()
-                ListsTab()
+                ContentListsTab()
                 SearchTab()
                 SettingsTab()
             }

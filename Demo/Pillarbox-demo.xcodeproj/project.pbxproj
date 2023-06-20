@@ -25,7 +25,7 @@
 		6F59E88229CF31E10093E6FB /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84B29CF31E10093E6FB /* Media.swift */; };
 		6F59E88329CF31E20093E6FB /* MediaDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84C29CF31E10093E6FB /* MediaDescription.swift */; };
 		6F59E88429CF31E20093E6FB /* ContentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84E29CF31E10093E6FB /* ContentListViewModel.swift */; };
-		6F59E88529CF31E20093E6FB /* ListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84F29CF31E10093E6FB /* ListsView.swift */; };
+		6F59E88529CF31E20093E6FB /* ContentListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84F29CF31E10093E6FB /* ContentListsView.swift */; };
 		6F59E88629CF31E20093E6FB /* ContentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E85029CF31E10093E6FB /* ContentListView.swift */; };
 		6F59E88729CF31E20093E6FB /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E85229CF31E10093E6FB /* SettingsView.swift */; };
 		6F59E88829CF31E20093E6FB /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E85329CF31E10093E6FB /* UserDefaults.swift */; };
@@ -93,7 +93,7 @@
 		6F59E84B29CF31E10093E6FB /* Media.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
 		6F59E84C29CF31E10093E6FB /* MediaDescription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaDescription.swift; sourceTree = "<group>"; };
 		6F59E84E29CF31E10093E6FB /* ContentListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentListViewModel.swift; sourceTree = "<group>"; };
-		6F59E84F29CF31E10093E6FB /* ListsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListsView.swift; sourceTree = "<group>"; };
+		6F59E84F29CF31E10093E6FB /* ContentListsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentListsView.swift; sourceTree = "<group>"; };
 		6F59E85029CF31E10093E6FB /* ContentListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentListView.swift; sourceTree = "<group>"; };
 		6F59E85229CF31E10093E6FB /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		6F59E85329CF31E10093E6FB /* UserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
@@ -250,15 +250,15 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		6F59E84D29CF31E10093E6FB /* Lists */ = {
+		6F59E84D29CF31E10093E6FB /* ContentLists */ = {
 			isa = PBXGroup;
 			children = (
 				6F0B2E8A2A40EE0700B69675 /* ContentList.swift */,
 				6F59E85029CF31E10093E6FB /* ContentListView.swift */,
 				6F59E84E29CF31E10093E6FB /* ContentListViewModel.swift */,
-				6F59E84F29CF31E10093E6FB /* ListsView.swift */,
+				6F59E84F29CF31E10093E6FB /* ContentListsView.swift */,
 			);
-			path = Lists;
+			path = ContentLists;
 			sourceTree = "<group>";
 		};
 		6F59E85129CF31E10093E6FB /* Settings */ = {
@@ -381,8 +381,8 @@
 			children = (
 				6F59E86329CF31E10093E6FB /* Analytics */,
 				6F59E84229CF31E10093E6FB /* Application */,
+				6F59E84D29CF31E10093E6FB /* ContentLists */,
 				6F59E87629CF31E10093E6FB /* Examples */,
-				6F59E84D29CF31E10093E6FB /* Lists */,
 				6F59E84529CF31E10093E6FB /* Model */,
 				6F59E86929CF31E10093E6FB /* Players */,
 				6F0B2E832A40EB9600B69675 /* Router */,
@@ -506,7 +506,7 @@
 				6F59E88E29CF31E20093E6FB /* StoriesViewModel.swift in Sources */,
 				6F59E89729CF31E20093E6FB /* MessageViews.swift in Sources */,
 				6F59E88C29CF31E20093E6FB /* TwinsView.swift in Sources */,
-				6F59E88529CF31E20093E6FB /* ListsView.swift in Sources */,
+				6F59E88529CF31E20093E6FB /* ContentListsView.swift in Sources */,
 				6F59E8A329CF31E20093E6FB /* ExamplesView.swift in Sources */,
 				0E6B995C29D43E4200D0276D /* OptInView.swift in Sources */,
 				6F59E89C29CF31E20093E6FB /* BasicPlaybackView.swift in Sources */,

@@ -9,7 +9,7 @@ import SRGDataProviderModel
 import SwiftUI
 
 // Behavior: h-exp, v-exp
-struct ListsView: View {
+struct ContentListsView: View {
     @AppStorage(UserDefaults.serverSettingKey)
     private var selectedServerSetting: ServerSetting = .production
 
@@ -117,10 +117,10 @@ struct ListsView: View {
     }
 }
 
-struct ListsView_Previews: PreviewProvider {
+struct ContentListsView_Previews: PreviewProvider {
     static var previews: some View {
         RoutedNavigationStack {
-            ListsView()
+            ContentListsView()
         }
     }
 }
