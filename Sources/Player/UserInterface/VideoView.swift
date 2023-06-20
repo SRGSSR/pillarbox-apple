@@ -8,8 +8,8 @@ import AVFoundation
 import SwiftUI
 import UIKit
 
-public final class VideoLayerView: UIView {
-    override public class var layerClass: AnyClass {
+private final class VideoLayerUIView: UIView {
+    override class var layerClass: AnyClass {
         AVPlayerLayer.self
     }
 
@@ -23,11 +23,35 @@ public final class VideoLayerView: UIView {
     }
 }
 
-/// A view displaying video content provided by an associated player.
-/// 
-/// Behavior: h-exp, v-exp
-public struct VideoView: UIViewRepresentable {
+private struct VideoLayerView: UIViewRepresentable {
     @ObservedObject private var player: Player
+
+    private let gravity: AVLayerVideoGravity
+
+    init(player: Player, gravity: AVLayerVideoGravity) {
+        self.player = player
+        self.gravity = gravity
+    }
+
+    func makeUIView(context: Context) -> VideoLayerUIView {
+        let view = VideoLayerUIView()
+        view.backgroundColor = .clear
+        view.player = player.queuePlayer
+        return view
+    }
+
+    func updateUIView(_ uiView: VideoLayerUIView, context: Context) {
+        uiView.player = player.queuePlayer
+        uiView.playerLayer.videoGravity = gravity
+    }
+}
+
+/// A view displaying video content provided by an associated player.
+///
+/// Behavior: h-exp, v-exp
+public struct VideoView: View {
+    @ObservedObject private var player: Player
+
     private let gravity: AVLayerVideoGravity
 
     public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect) {
@@ -35,15 +59,8 @@ public struct VideoView: UIViewRepresentable {
         self.gravity = gravity
     }
 
-    public func makeUIView(context: Context) -> VideoLayerView {
-        let view = VideoLayerView()
-        view.backgroundColor = .clear
-        view.player = player.queuePlayer
-        return view
-    }
-
-    public func updateUIView(_ uiView: VideoLayerView, context: Context) {
-        uiView.player = player.queuePlayer
-        uiView.playerLayer.videoGravity = gravity
+    public var body: some View {
+        VideoLayerView(player: player, gravity: gravity)
+            .opacity(player.isReadyForDisplay ? 1 : 0)
     }
 }

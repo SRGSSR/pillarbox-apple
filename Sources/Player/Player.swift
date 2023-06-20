@@ -48,6 +48,7 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
+    @Published var isReadyForDisplay = false
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
     @Published var currentItem: CurrentItem = .good(nil)
     @Published var storedItems: Deque<PlayerItem>
