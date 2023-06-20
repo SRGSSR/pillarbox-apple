@@ -45,8 +45,8 @@ public struct ComScoreLabels {
 
     // MARK: Page view labels
 
-    /// The value of `ns_category` (name of the section).
-    public var ns_category: String? {
+    /// The value of `c8` (page title).
+    public var c8: String? {
         extract()
     }
 

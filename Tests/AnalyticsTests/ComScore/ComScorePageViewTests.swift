@@ -52,7 +52,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
             .view { labels in
                 expect(labels.c2).to(equal("6036016"))
                 expect(labels.ns_ap_an).to(equal("xctest"))
-                expect(labels.ns_category).to(equal("title"))
+                expect(labels.c8).to(equal("title"))
                 expect(labels.ns_st_mp).to(beNil())
                 expect(labels.ns_st_mv).to(beNil())
                 expect(labels.mp_brand).to(equal("SRG"))
@@ -93,7 +93,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         let viewController = AutomaticMockViewController()
         expectAtLeastEvents(
             .view { labels in
-                expect(labels.ns_category).to(equal("automatic"))
+                expect(labels.c8).to(equal("automatic"))
             }
         ) {
             viewController.simulateViewAppearance()
@@ -105,7 +105,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         let navigationController = UINavigationController(rootViewController: viewController)
         expectEvents(
             .view { labels in
-                expect(labels.ns_category).to(equal("automatic"))
+                expect(labels.c8).to(equal("automatic"))
             },
             during: .seconds(2)
         ) {
@@ -121,7 +121,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         tabBarController.viewControllers = [viewController1, viewController2]
         expectAtLeastEvents(
             .view { labels in
-                expect(labels.ns_category).to(equal("title1"))
+                expect(labels.c8).to(equal("title1"))
             }
         ) {
             viewController1.simulateViewAppearance()
@@ -148,7 +148,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         ]
         expectAtLeastEvents(
             .view { labels in
-                expect(labels.ns_category).to(equal("title1"))
+                expect(labels.c8).to(equal("title1"))
             }
         ) {
             viewController1.simulateViewAppearance()
@@ -175,7 +175,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         }
         expectAtLeastEvents(
             .view { labels in
-                expect(labels.ns_category).to(equal("manual"))
+                expect(labels.c8).to(equal("manual"))
             }
         ) {
             viewController.trackPageView()
@@ -186,7 +186,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         let viewController = AutomaticMockViewController()
         expectAtLeastEvents(
             .view { labels in
-                expect(labels.ns_category).to(equal("automatic"))
+                expect(labels.c8).to(equal("automatic"))
             }
         ) {
             viewController.recursivelyTrackAutomaticPageViews()
@@ -198,7 +198,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         viewController.pushViewController(AutomaticMockViewController(title: "pushed"), animated: false)
         expectAtLeastEvents(
             .view { labels in
-                expect(labels.ns_category).to(equal("pushed"))
+                expect(labels.c8).to(equal("pushed"))
             }
         ) {
             viewController.recursivelyTrackAutomaticPageViews()
@@ -210,7 +210,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         viewController.setViewControllers([AutomaticMockViewController()], direction: .forward, animated: false)
         expectAtLeastEvents(
             .view { labels in
-                expect(labels.ns_category).to(equal("automatic"))
+                expect(labels.c8).to(equal("automatic"))
             }
         ) {
             viewController.recursivelyTrackAutomaticPageViews()
@@ -225,7 +225,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         ]
         expectAtLeastEvents(
             .view { labels in
-                expect(labels.ns_category).to(equal("title1"))
+                expect(labels.c8).to(equal("title1"))
             }
         ) {
             viewController.recursivelyTrackAutomaticPageViews()
@@ -241,7 +241,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         ]
         expectAtLeastEvents(
             .view { labels in
-                expect(labels.ns_category).to(equal("title1"))
+                expect(labels.c8).to(equal("title1"))
             }
         ) {
             viewController.recursivelyTrackAutomaticPageViews()
@@ -254,7 +254,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         window.rootViewController = AutomaticMockViewController()
         expectAtLeastEvents(
             .view { labels in
-                expect(labels.ns_category).to(equal("automatic"))
+                expect(labels.c8).to(equal("automatic"))
             }
         ) {
             window.recursivelyTrackAutomaticPageViews()
@@ -269,7 +269,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         rootViewController.present(AutomaticMockViewController(title: "modal"), animated: false)
         expectEvents(
             .view { labels in
-                expect(labels.ns_category).to(equal("modal"))
+                expect(labels.c8).to(equal("modal"))
             },
             during: .seconds(2)
         ) {
