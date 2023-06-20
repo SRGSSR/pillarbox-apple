@@ -9,6 +9,7 @@ import ComScore
 import CoreMedia
 import Foundation
 import Player
+import UIKit
 
 /// A comScore tracker for streaming.
 ///
@@ -34,12 +35,17 @@ public final class ComScoreTracker: PlayerItemTracker {
         }
         .store(in: &cancellables)
 
-        Publishers.CombineLatest3(player.$playbackState, player.$isSeeking, player.$isBuffering)
-            .weakCapture(player)
-            .sink { [weak self] state, player in
-                self?.notify(playbackState: state.0, isSeeking: state.1, isBuffering: state.2, player: player)
-            }
-            .store(in: &cancellables)
+        Publishers.CombineLatest4(
+            UIApplication.shared.applicationStatePublisher(),
+            player.$playbackState,
+            player.$isSeeking,
+            player.$isBuffering
+        )
+        .weakCapture(player)
+        .sink { [weak self] state, player in
+            self?.notify(applicationState: state.0, playbackState: state.1, isSeeking: state.2, isBuffering: state.3, player: player)
+        }
+        .store(in: &cancellables)
 
         player.objectWillChange
             .receive(on: DispatchQueue.main)
@@ -59,11 +65,17 @@ public final class ComScoreTracker: PlayerItemTracker {
         streamingAnalytics = SCORStreamingAnalytics()
     }
 
-    private func notify(playbackState: PlaybackState, isSeeking: Bool, isBuffering: Bool, player: Player) {
+    // swiftlint:disable:next cyclomatic_complexity
+    private func notify(applicationState: ApplicationState, playbackState: PlaybackState, isSeeking: Bool, isBuffering: Bool, player: Player) {
         guard !metadata.labels.isEmpty else { return }
 
         AnalyticsListener.capture(streamingAnalytics.configuration())
         streamingAnalytics.setProperties(for: player, streamType: metadata.streamType)
+
+        guard applicationState == .foreground else {
+            streamingAnalytics.notifyEvent(for: .paused, at: player.effectivePlaybackSpeed)
+            return
+        }
 
         switch (isSeeking, isBuffering) {
         case (true, true):
