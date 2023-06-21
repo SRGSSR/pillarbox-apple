@@ -8,7 +8,7 @@ import SwiftUI
 
 /// An internal host controller detecting user interaction in its content view.
 @available(tvOS, unavailable)
-final class InteractionHostingController<Content: View>: UIHostingController<Content>, UIGestureRecognizerDelegate {
+final class InteractionHostingController<Content>: UIHostingController<Content>, UIGestureRecognizerDelegate where Content: View {
     var isInteracting: Binding<Bool> = .constant(false)
     var action: (() -> Void)?
 
@@ -47,7 +47,7 @@ final class InteractionHostingController<Content: View>: UIHostingController<Con
 }
 
 @available(tvOS, unavailable)
-struct InteractionHostView<Content: View>: UIViewControllerRepresentable {
+struct InteractionHostView<Content>: UIViewControllerRepresentable where Content: View {
     @Binding private var isInteracting: Bool
     private let action: () -> Void
     @Binding private var content: () -> Content

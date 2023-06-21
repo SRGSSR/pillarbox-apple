@@ -9,13 +9,13 @@ import XCTest
 
 public extension XCTestCase {
     /// Expects a publisher to not emit any value during some time interval.
-    func expectNothingPublished<P: Publisher>(
+    func expectNothingPublished<P>(
         from publisher: P,
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P.Failure == Never {
+    ) where P: Publisher, P.Failure == Never {
         expectNothingPublished(
             next: false,
             from: publisher,
@@ -27,13 +27,13 @@ public extension XCTestCase {
     }
 
     /// Expects a publisher to not emit any value during some time interval.
-    func expectNothingPublishedNext<P: Publisher>(
+    func expectNothingPublishedNext<P>(
         from publisher: P,
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P.Failure == Never {
+    ) where P: Publisher, P.Failure == Never {
         expectNothingPublished(
             next: true,
             from: publisher,
@@ -44,14 +44,14 @@ public extension XCTestCase {
         )
     }
 
-    private func expectNothingPublished<P: Publisher>(
+    private func expectNothingPublished<P>(
         next: Bool,
         from publisher: P,
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P.Failure == Never {
+    ) where P: Publisher, P.Failure == Never {
         var actualValues = collectOutput(from: publisher, during: interval, while: executing)
         if next, !actualValues.isEmpty {
             actualValues.removeFirst()

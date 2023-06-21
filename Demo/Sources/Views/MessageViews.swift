@@ -33,7 +33,7 @@ struct MessageView: View {
     }
 }
 
-struct RefreshableMessageView<Model: Refreshable>: View {
+struct RefreshableMessageView<Model>: View where Model: Refreshable {
     let model: Model
     let message: String
     let icon: MessageIcon

@@ -35,7 +35,7 @@ extension Publishers {
 }
 
 private extension Publishers._BoundaryTimePublisher {
-    final actor Subscription<S: Subscriber>: Combine.Subscription where S.Input == Output, S.Failure == Failure {
+    final actor Subscription<S>: Combine.Subscription where S: Subscriber, S.Input == Output, S.Failure == Failure {
         private var subscriber: S?
         private let player: AVPlayer
         private let times: [CMTime]

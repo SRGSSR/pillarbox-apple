@@ -14,7 +14,7 @@ protocol RemoteCommandRegistrable {
     var target: Any? { get }
 }
 
-private struct RemoteCommandRegistration<Command: MPRemoteCommand>: RemoteCommandRegistrable {
+private struct RemoteCommandRegistration<Command>: RemoteCommandRegistrable where Command: MPRemoteCommand {
     let command: KeyPath<MPRemoteCommandCenter, Command>
     let target: Any?
 }

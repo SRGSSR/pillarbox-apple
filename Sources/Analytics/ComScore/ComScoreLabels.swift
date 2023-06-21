@@ -90,12 +90,12 @@ public struct ComScoreLabels {
         extract()
     }
 
-    private func extract<T: LosslessStringConvertible>(_ key: String = #function) -> T? {
+    private func extract<T>(_ key: String = #function) -> T? where T: LosslessStringConvertible {
         guard let value = dictionary[key] else { return nil }
         return .init(value)
     }
 
-    subscript<T: LosslessStringConvertible>(key: String) -> T? {
+    subscript<T>(key: String) -> T? where T: LosslessStringConvertible {
         extract(key)
     }
 }

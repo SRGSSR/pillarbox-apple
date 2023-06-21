@@ -24,7 +24,7 @@ public struct LayoutInfo {
 ///
 /// The view lays out its children like a `ZStack`.
 @available(tvOS, unavailable)
-public struct LayoutReader<Content: View>: View {
+public struct LayoutReader<Content>: View where Content: View {
     @Binding private var layoutInfo: LayoutInfo
     @Binding private var content: () -> Content
 

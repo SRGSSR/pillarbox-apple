@@ -133,7 +133,7 @@ public struct CommandersActLabels: Decodable {
         extract(\._media_volume)
     }
 
-    private func extract<T: LosslessStringConvertible>(_ keyPath: KeyPath<Self, String?>) -> T? {
+    private func extract<T>(_ keyPath: KeyPath<Self, String?>) -> T? where T: LosslessStringConvertible {
         guard let value = self[keyPath: keyPath] else { return nil }
         return .init(value)
     }

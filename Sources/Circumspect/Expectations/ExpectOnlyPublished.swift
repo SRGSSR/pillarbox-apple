@@ -9,7 +9,7 @@ import XCTest
 
 public extension XCTestCase {
     /// Expects a publisher to emit a list of expected values and complete.
-    func expectOnlyPublished<P: Publisher, T>(
+    func expectOnlyPublished<P, T>(
         values: [T],
         from publisher: P,
         to satisfy: @escaping (P.Output, T) -> Bool,
@@ -17,7 +17,7 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P.Failure == Never {
+    ) where P: Publisher, P.Failure == Never {
         expectOnlyPublished(
             next: false,
             values: values,
@@ -32,14 +32,14 @@ public extension XCTestCase {
     }
 
     /// Expects a publisher to emit a list of expected values and complete.
-    func expectOnlyEqualPublished<P: Publisher>(
+    func expectOnlyEqualPublished<P>(
         values: [P.Output],
         from publisher: P,
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P.Failure == Never, P.Output: Equatable {
+    ) where P: Publisher, P.Failure == Never, P.Output: Equatable {
         expectOnlyPublished(
             values: values,
             from: publisher,
@@ -52,14 +52,14 @@ public extension XCTestCase {
     }
 
     /// Expects a publisher to emit a list of expected values and complete.
-    func expectOnlySimilarPublished<P: Publisher>(
+    func expectOnlySimilarPublished<P>(
         values: [P.Output],
         from publisher: P,
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P.Failure == Never, P.Output: Similar {
+    ) where P: Publisher, P.Failure == Never, P.Output: Similar {
         expectOnlyPublished(
             values: values,
             from: publisher,
@@ -74,7 +74,7 @@ public extension XCTestCase {
     /// Expects a publisher to emit a list of expected values and complete, ignoring the first value.
     ///
     /// Useful when testing publishers which automatically deliver a non-relevant stored value upon subscription.
-    func expectOnlyPublishedNext<P: Publisher, T>(
+    func expectOnlyPublishedNext<P, T>(
         values: [T],
         from publisher: P,
         to satisfy: @escaping (P.Output, T) -> Bool,
@@ -82,7 +82,7 @@ public extension XCTestCase {
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P.Failure == Never {
+    ) where P: Publisher, P.Failure == Never {
         expectOnlyPublished(
             next: true,
             values: values,
@@ -99,14 +99,14 @@ public extension XCTestCase {
     /// Expects a publisher to emit a list of expected values and complete, ignoring the first value.
     ///
     /// Useful when testing publishers which automatically deliver a non-relevant stored value upon subscription.
-    func expectOnlyEqualPublishedNext<P: Publisher>(
+    func expectOnlyEqualPublishedNext<P>(
         values: [P.Output],
         from publisher: P,
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P.Failure == Never, P.Output: Equatable {
+    ) where P: Publisher, P.Failure == Never, P.Output: Equatable {
         expectOnlyPublished(
             next: true,
             values: values,
@@ -123,14 +123,14 @@ public extension XCTestCase {
     /// Expects a publisher to emit a list of expected values and complete, ignoring the first value.
     ///
     /// Useful when testing publishers which automatically deliver a non-relevant stored value upon subscription.
-    func expectOnlySimilarPublishedNext<P: Publisher>(
+    func expectOnlySimilarPublishedNext<P>(
         values: [P.Output],
         from publisher: P,
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) where P.Failure == Never, P.Output: Similar {
+    ) where P: Publisher, P.Failure == Never, P.Output: Similar {
         expectOnlyPublished(
             next: true,
             values: values,
@@ -145,7 +145,7 @@ public extension XCTestCase {
     }
 
     // swiftlint:disable:next function_parameter_count
-    private func expectOnlyPublished<P: Publisher, T>(
+    private func expectOnlyPublished<P, T>(
         next: Bool,
         values: [T],
         from publisher: P,
@@ -155,7 +155,7 @@ public extension XCTestCase {
         file: StaticString,
         line: UInt,
         while executing: (() -> Void)?
-    ) where P.Failure == Never {
+    ) where P: Publisher, P.Failure == Never {
         precondition(!values.isEmpty)
         guard let actualValues = try? waitForOutput(
             from: next ? publisher.dropFirst().eraseToAnyPublisher() : publisher.eraseToAnyPublisher(),
