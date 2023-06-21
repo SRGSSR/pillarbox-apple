@@ -20,6 +20,7 @@ public extension PlayerItem {
     /// The item is automatically tracked according to SRG SSR analytics standards.
     static func urn(
         _ urn: String,
+        position: @escaping () -> Position? = { nil },
         server: Server = .production,
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = []
     ) -> Self {
@@ -41,7 +42,7 @@ public extension PlayerItem {
             }
             .switchToLatest()
             .eraseToAnyPublisher()
-        return .init(publisher: publisher, trackerAdapters: [
+        return .init(publisher: publisher, position: position, trackerAdapters: [
             ComScoreTracker.adapter { mediaMetadata in
                 ComScoreTracker.Metadata(labels: mediaMetadata.analyticsData, streamType: mediaMetadata.streamType)
             },

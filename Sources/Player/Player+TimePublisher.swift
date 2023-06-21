@@ -21,7 +21,7 @@ public extension Player {
     }
 
     /// Returns a publisher emitting a void value when traversing the specified times during normal playback.
-    /// 
+    ///  
     /// - Parameters:
     ///   - times: The times to observe.
     ///   - queue: The queue on which values are published.
