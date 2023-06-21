@@ -46,6 +46,7 @@ public struct CommandersActEvent {
 
         /// Creates an event from a raw string.
         public init?(rawValue: String?) {
+            // swiftlint:disable:previous cyclomatic_complexity
             guard let rawValue else { return nil }
             switch rawValue {
             case "play":
