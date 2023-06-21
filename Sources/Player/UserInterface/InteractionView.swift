@@ -10,7 +10,7 @@ import SwiftUI
 ///
 /// The view lays out its children like a `ZStack`.
 @available(tvOS, unavailable)
-public struct InteractionView<Content: View>: View {
+public struct InteractionView<Content>: View where Content: View {
     @Binding private var isInteracting: Bool
     private let action: () -> Void
     @Binding private var content: () -> Content

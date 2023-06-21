@@ -12,13 +12,13 @@ import XCTest
 public extension XCTestCase {
     /// Waits for a publisher to complete and returns its result.
     @discardableResult
-    func waitForResult<P: Publisher>(
+    func waitForResult<P>(
         from publisher: P,
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws -> Result<[P.Output], P.Failure> {
+    ) throws -> Result<[P.Output], P.Failure> where P: Publisher {
         var values: [P.Output] = []
         var result: Result<[P.Output], P.Failure>?
 
@@ -52,13 +52,13 @@ public extension XCTestCase {
 
     /// Waits for a publisher to complete and returns its output.
     @discardableResult
-    func waitForOutput<P: Publisher>(
+    func waitForOutput<P>(
         from publisher: P,
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws -> [P.Output] {
+    ) throws -> [P.Output] where P: Publisher {
         let result = try waitForResult(
             from: publisher,
             timeout: timeout,
@@ -71,13 +71,13 @@ public extension XCTestCase {
 
     /// Waits for a publisher to complete with a single output. Fails if not the case.
     @discardableResult
-    func waitForSingleOutput<P: Publisher>(
+    func waitForSingleOutput<P>(
         from publisher: P,
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws -> P.Output {
+    ) throws -> P.Output where P: Publisher {
         let output = try waitForOutput(
             from: publisher,
             timeout: timeout,
@@ -94,13 +94,13 @@ public extension XCTestCase {
 
     /// Waits for a publisher to complete with a failure. Fails if not the case.
     @discardableResult
-    func waitForFailure<P: Publisher>(
+    func waitForFailure<P>(
         from publisher: P,
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) throws -> P.Failure {
+    ) throws -> P.Failure where P: Publisher {
         let result = try waitForResult(
             from: publisher,
             timeout: timeout,
@@ -118,13 +118,13 @@ public extension XCTestCase {
     }
 
     /// Collects output emitted by a publisher during some interval.
-    func collectOutput<P: Publisher>(
+    func collectOutput<P>(
         from publisher: P,
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
-    ) -> [P.Output] {
+    ) -> [P.Output] where P: Publisher {
         var values: [P.Output] = []
         let cancellable = publisher.sink(
             receiveCompletion: { _ in },

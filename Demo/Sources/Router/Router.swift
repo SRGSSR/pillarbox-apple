@@ -9,7 +9,7 @@ import SRGDataProviderModel
 import SwiftUI
 
 /// Manages navigation using an associated router.
-struct RoutedNavigationStack<Root: View>: View {
+struct RoutedNavigationStack<Root>: View where Root: View {
     @ViewBuilder let root: () -> Root
     @StateObject private var router = Router()
 

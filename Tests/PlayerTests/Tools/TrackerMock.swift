@@ -8,7 +8,7 @@
 
 import Combine
 
-final class TrackerMock<Metadata: Equatable>: PlayerItemTracker {
+final class TrackerMock<Metadata>: PlayerItemTracker where Metadata: Equatable {
     typealias StatePublisher = PassthroughSubject<State, Never>
 
     enum State: Equatable {

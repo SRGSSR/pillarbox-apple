@@ -44,6 +44,6 @@ public func equalDiff<T>(_ expectedValue: T?, by areEquivalent: @escaping (T, T)
 }
 
 /// Matches against an expected equatable value, displaying mismatches in a user-readable form.
-public func equalDiff<T: Equatable>(_ expectedValue: T?) -> Predicate<T> {
+public func equalDiff<T>(_ expectedValue: T?) -> Predicate<T> where T: Equatable {
     equalDiff(expectedValue, by: ==)
 }

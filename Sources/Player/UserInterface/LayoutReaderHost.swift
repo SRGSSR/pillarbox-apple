@@ -8,7 +8,7 @@ import SwiftUI
 
 /// An internal host controller which can determine whether it covers its current context or is full screen.
 @available(tvOS, unavailable)
-final class LayoutReaderHostingController<Content: View>: UIHostingController<Content>, UIGestureRecognizerDelegate {
+final class LayoutReaderHostingController<Content>: UIHostingController<Content>, UIGestureRecognizerDelegate where Content: View {
     var layoutInfo: Binding<LayoutInfo> = .constant(.none)
     private var isTransitioning = false
 
@@ -55,7 +55,7 @@ final class LayoutReaderHostingController<Content: View>: UIHostingController<Co
 }
 
 @available(tvOS, unavailable)
-struct LayoutReaderHost<Content: View>: UIViewControllerRepresentable {
+struct LayoutReaderHost<Content>: UIViewControllerRepresentable where Content: View {
     @Binding private var layoutInfo: LayoutInfo
     @Binding private var content: () -> Content
 

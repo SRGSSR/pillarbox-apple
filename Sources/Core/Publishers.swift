@@ -161,7 +161,7 @@ public extension NotificationCenter {
     ///
     /// Unlike usual notification publishers this publisher does not retain the observed object, preventing reference
     /// cycles.
-    func weakPublisher<T: AnyObject>(for name: Notification.Name, object: T?) -> AnyPublisher<Notification, Never> {
+    func weakPublisher<T>(for name: Notification.Name, object: T?) -> AnyPublisher<Notification, Never> where T: AnyObject {
         if let object {
             return publisher(for: name)
                 .weakCapture(object)
@@ -191,7 +191,7 @@ public extension Publisher {
     ///   specified key path.
     ///
     /// Does not emit when the object is `nil`.
-    func weakCapture<T: AnyObject, V>(_ other: T?, at keyPath: KeyPath<T, V>) -> AnyPublisher<(Output, V), Failure> {
+    func weakCapture<T, V>(_ other: T?, at keyPath: KeyPath<T, V>) -> AnyPublisher<(Output, V), Failure> where T: AnyObject {
         compactMap { [weak other] output -> (Output, V)? in
             guard let other else { return nil }
             return (output, other[keyPath: keyPath])
@@ -205,7 +205,7 @@ public extension Publisher {
     /// - Returns: A publisher combining the original output with the weakly captured object (if not `nil`).
     ///
     /// Does not emit when the object is `nil`.
-    func weakCapture<T: AnyObject>(_ other: T?) -> AnyPublisher<(Output, T), Failure> {
+    func weakCapture<T>(_ other: T?) -> AnyPublisher<(Output, T), Failure> where T: AnyObject {
         weakCapture(other, at: \T.self)
     }
 

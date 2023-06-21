@@ -26,7 +26,7 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
 }
 
 /// An asset representing content to be played.
-public struct Asset<M: AssetMetadata>: Assetable {
+public struct Asset<M>: Assetable where M: AssetMetadata {
     let id: UUID
     let resource: Resource
     private let metadata: M?
