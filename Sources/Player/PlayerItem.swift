@@ -26,13 +26,13 @@ public final class PlayerItem: Equatable {
         position: @escaping () -> Position? = { nil },
         trackerAdapters: [TrackerAdapter<M>] = []
     ) where P: Publisher, M: AssetMetadata, P.Output == Asset<M> {
-        asset = Asset<M>.loading.withId(id).withTrackerAdapters(trackerAdapters)
+        asset = Asset<M>.loading.withId(id).withTrackerAdapters(trackerAdapters).withPosition(position)
         publisher
             .catch { error in
                 Just(.failed(error: error))
             }
             .map { [id] asset in
-                asset.withId(id).withTrackerAdapters(trackerAdapters)
+                asset.withId(id).withTrackerAdapters(trackerAdapters).withPosition(position)
             }
             // Mitigate instabilities arising when publisher involves `URLSession` publishers, see issue #206.
             .receiveOnMainThread()

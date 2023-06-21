@@ -28,6 +28,7 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
 /// An asset representing content to be played.
 public struct Asset<M>: Assetable where M: AssetMetadata {
     let id: UUID
+    let position: () -> Position?
     let resource: Resource
     private let metadata: M?
     private let configuration: (AVPlayerItem) -> Void
@@ -47,6 +48,7 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
     ) -> Self {
         .init(
             id: UUID(),
+            position: { nil },
             resource: .simple(url: url),
             metadata: metadata,
             configuration: configuration,
@@ -72,6 +74,7 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
     ) -> Self {
         .init(
             id: UUID(),
+            position: { nil },
             resource: .custom(url: url, delegate: delegate),
             metadata: metadata,
             configuration: configuration,
@@ -95,6 +98,7 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
     ) -> Self {
         .init(
             id: UUID(),
+            position: { nil },
             resource: .encrypted(url: url, delegate: delegate),
             metadata: metadata,
             configuration: configuration,
@@ -103,11 +107,15 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
     }
 
     func withTrackerAdapters(_ trackerAdapters: [TrackerAdapter<M>]) -> Self {
-        .init(id: id, resource: resource, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
+        .init(id: id, position: position, resource: resource, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
     }
 
     func withId(_ id: UUID) -> Self {
-        .init(id: id, resource: resource, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
+        .init(id: id, position: position, resource: resource, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
+    }
+
+    func withPosition(_ position: @escaping () -> Position?) -> Self {
+        .init(id: id, position: position, resource: resource, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
     }
 
     func enable(for player: Player) {
@@ -162,6 +170,7 @@ public extension Asset where M == Never {
     ) -> Self {
         .init(
             id: UUID(),
+            position: { nil },
             resource: .simple(url: url),
             metadata: nil,
             configuration: configuration,
@@ -185,6 +194,7 @@ public extension Asset where M == Never {
     ) -> Self {
         .init(
             id: UUID(),
+            position: { nil },
             resource: .custom(url: url, delegate: delegate),
             metadata: nil,
             configuration: configuration,
@@ -206,6 +216,7 @@ public extension Asset where M == Never {
     ) -> Self {
         .init(
             id: UUID(),
+            position: { nil },
             resource: .encrypted(url: url, delegate: delegate),
             metadata: nil,
             configuration: configuration,
@@ -219,6 +230,7 @@ extension Asset {
         // Provides a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
         .init(
             id: UUID(),
+            position: { nil },
             resource: .custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate()),
             metadata: nil,
             configuration: { _ in },
@@ -230,6 +242,7 @@ extension Asset {
         // Provides a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
         .init(
             id: UUID(),
+            position: { nil },
             resource: .custom(url: URL(string: "pillarbox://failing.m3u8")!, delegate: FailedResourceLoaderDelegate(error: error)),
             metadata: nil,
             configuration: { _ in },

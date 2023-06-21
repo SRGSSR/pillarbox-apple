@@ -9,6 +9,7 @@ import AVFoundation
 /// A protocol describing an asset.
 protocol Assetable {
     var id: UUID { get }
+    var position: () -> Position? { get }
     var resource: Resource { get }
 
     func enable(for player: Player)
