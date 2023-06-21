@@ -58,9 +58,9 @@ struct CommandersActEventExpectation {
         .init(name: .page_view, evaluate: evaluate)
     }
 
-    /// Hidden event
-    static func hidden_event(evaluate: @escaping (CommandersActLabels) -> Void = { _ in }) -> Self {
-        .init(name: .hidden_event, evaluate: evaluate)
+    /// Custom event.
+    static func custom(name: String, evaluate: @escaping (CommandersActLabels) -> Void = { _ in }) -> Self {
+        .init(name: .custom(name), evaluate: evaluate)
     }
 }
 

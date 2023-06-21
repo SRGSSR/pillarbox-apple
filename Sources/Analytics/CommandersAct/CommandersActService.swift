@@ -49,10 +49,9 @@ final class CommandersActService {
     }
 
     func sendEvent(_ event: Event) {
-        guard let serverSide, let customEvent = TCCustomEvent(name: "hidden_event") else { return }
+        guard let serverSide, let customEvent = TCCustomEvent(name: event.name) else { return }
 
         let eventProperties = [
-            "event_title": event.name,
             "event_type": event.type,
             "event_value": event.value,
             "event_source": event.source,
