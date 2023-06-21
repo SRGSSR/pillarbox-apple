@@ -8,6 +8,7 @@ import AVFoundation
 import MediaPlayer
 
 private var kIdKey: Void?
+private var kPositionKey: Void?
 
 private let kResourceLoaderQueue = DispatchQueue(label: "ch.srgssr.player.resource_loader")
 
@@ -151,7 +152,7 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
     }
 
     func playerItem() -> AVPlayerItem {
-        let item = resource.playerItem().withId(id)
+        let item = resource.playerItem().withId(id).withPosition(position)
         configuration(item)
         return item
     }
@@ -252,7 +253,7 @@ extension Asset {
 }
 
 extension AVPlayerItem {
-    /// An identifier to identify player items delivered by the same data source.
+    /// An identifier common to all player items delivered by the same data source.
     var id: UUID? {
         get {
             objc_getAssociatedObject(self, &kIdKey) as? UUID
@@ -262,12 +263,31 @@ extension AVPlayerItem {
         }
     }
 
-    /// Assigns an identifier to identify player items delivered by the same data source.
-    /// 
+    /// A position to start at.
+    var position: () -> Position? {
+        get {
+            objc_getAssociatedObject(self, &kPositionKey) as? () -> Position? ?? { nil }
+        }
+        set {
+            objc_setAssociatedObject(self, &kPositionKey, newValue, .OBJC_ASSOCIATION_COPY_NONATOMIC)
+        }
+    }
+
+    /// Assigns an identifier common to all player items delivered by the same data source.
+    ///
     /// - Parameter id: The id to assign.
     /// - Returns: The receiver with the id assigned to it.
     fileprivate func withId(_ id: UUID) -> AVPlayerItem {
         self.id = id
+        return self
+    }
+
+    /// Assigns a starting position to the item.
+    ///
+    /// - Parameter position: The starting position.
+    /// - Returns: The receiver with the position assigned to it.
+    fileprivate func withPosition(_ position: @escaping () -> Position?) -> AVPlayerItem {
+        self.position = position
         return self
     }
 }
