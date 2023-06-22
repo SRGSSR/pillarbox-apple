@@ -165,8 +165,8 @@ public final class Player: ObservableObject, Equatable {
 
     /// Disables AirPlay and Control Center integration for the receiver.
     ///
-    /// Does nothing if the receiver is currently inactive. Calling `resignActive()` is superfluous if `becomeActive`
-    /// is called on a different player instance or if the player gets destroyed.
+    /// Does nothing if the receiver is currently inactive. Calling `resignActive()` is superfluous when `becomeActive()`
+    /// is called on a different player instance or when the player gets destroyed.
     public func resignActive() {
         guard Self.currentPlayer == self else { return }
         isActive = false
