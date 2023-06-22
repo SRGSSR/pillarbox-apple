@@ -154,6 +154,9 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
     func playerItem() -> AVPlayerItem {
         let item = resource.playerItem().withId(id).withPosition(position)
         configuration(item)
+        if let position = item.position() {
+            item.seek(to: position.time, toleranceBefore: position.toleranceBefore, toleranceAfter: position.toleranceAfter) { _ in }
+        }
         return item
     }
 }
