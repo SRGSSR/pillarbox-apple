@@ -114,8 +114,17 @@ struct SettingsView: View {
 
     @ViewBuilder
     private func debuggingFooter() -> some View {
-        HStack {
+        VStack {
             Text("Version \(version) Build \(buildVersion)")
+            if #available(iOS 17, *) {
+                HStack {
+                    Text("Made with")
+                    Image(systemName: "heart.fill")
+                        .foregroundColor(.red)
+                        .symbolEffect(.pulse)
+                    Text("in Switzerland")
+                }
+            }
         }
         .frame(maxWidth: .infinity)
     }
