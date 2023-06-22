@@ -31,25 +31,25 @@ final class DataProvider {
         return decoder
     }
 
-    func mediaCompositionPublisher(forUrn urn: String) -> AnyPublisher<MediaComposition, Error> {
-        session.dataTaskPublisher(for: mediaCompositionUrl(for: urn))
+    func mediaCompositionPublisher(forUrn urn: String, isStandalone: Bool) -> AnyPublisher<MediaComposition, Error> {
+        session.dataTaskPublisher(for: mediaCompositionUrl(for: urn, isStandalone: isStandalone))
             .mapHttpErrors()
             .map(\.data)
             .decode(type: MediaComposition.self, decoder: Self.decoder())
             .eraseToAnyPublisher()
     }
 
-    func mediaCompositionUrl(for urn: String) -> URL {
+    func mediaCompositionUrl(for urn: String, isStandalone: Bool) -> URL {
         let url = server.url.appending(path: "integrationlayer/2.1/mediaComposition/byUrn/\(urn)")
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return url }
         components.queryItems = [
-            URLQueryItem(name: "onlyChapters", value: "true")
+            URLQueryItem(name: "onlyChapters", value: isStandalone ? "true" : "false")
         ]
         return components.url ?? url
     }
 
-    func playableMediaCompositionPublisher(forUrn urn: String) -> AnyPublisher<MediaComposition, Error> {
-        mediaCompositionPublisher(forUrn: urn)
+    func playableMediaCompositionPublisher(forUrn urn: String, isStandalone: Bool) -> AnyPublisher<MediaComposition, Error> {
+        mediaCompositionPublisher(forUrn: urn, isStandalone: isStandalone)
             .tryMap { mediaComposition in
                 if let blockingReason = mediaComposition.mainChapter.blockingReason() {
                     throw DataError.blocked(withMessage: blockingReason.description)

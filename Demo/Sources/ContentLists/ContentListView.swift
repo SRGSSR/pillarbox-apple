@@ -75,7 +75,7 @@ private struct ContentCell: View {
         case let .media(media):
             let title = MediaDescription.title(for: media)
             Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
-                let media = Media(title: title, type: .urn(media.urn, server: serverSetting.server))
+                let media = Media(title: title, type: .urn(media.urn, isStandalone: true, server: serverSetting.server))
                 router.present(.player(media: media))
             }
 #if os(iOS)

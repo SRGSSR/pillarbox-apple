@@ -12,10 +12,10 @@ struct Media: Hashable, Identifiable {
     enum `Type`: Hashable {
         case url(URL)
         case unbufferedUrl(URL)
-        case urn(String, server: Server)
+        case urn(String, isStandalone: Bool, server: Server)
 
         static func urn(_ urn: String) -> Self {
-            .urn(urn, server: .production)
+            .urn(urn, isStandalone: true, server: .production)
         }
     }
 
@@ -59,8 +59,8 @@ struct Media: Hashable, Identifiable {
                 item.automaticallyPreservesTimeOffsetFromLive = true
                 item.preferredForwardBufferDuration = 1
             }
-        case let .urn(urn, server: server):
-            return .urn(urn, server: server, trackerAdapters: [
+        case let .urn(urn, isStandalone, server: server):
+            return .urn(urn, isStandalone: isStandalone, server: server, trackerAdapters: [
                 DemoTracker.adapter { metadata in
                     DemoTracker.Metadata(title: metadata.title)
                 }
