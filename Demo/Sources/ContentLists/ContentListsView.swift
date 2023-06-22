@@ -27,10 +27,11 @@ struct ContentListsView: View {
             Self.radioShows(image: "waveform")
             Self.latestAudiosSection(image: "music.note.list")
         }
-        .navigationTitle("Lists (\(selectedServerSetting.title))")
         .tracked(title: "lists")
+        .navigationTitle("Lists (\(selectedServerSetting.title))")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbarTitleMenu {
-            titlesMenu()
+            serverSettingsMenu()
         }
     }
 
@@ -101,18 +102,15 @@ struct ContentListsView: View {
     }
 
     @ViewBuilder
-    private func titlesMenu() -> some View {
-        ForEach(ServerSetting.allCases, id: \.self) { service in
-            Button {
-                selectedServerSetting = service
-            } label: {
-                HStack {
-                    Text(service.title)
-                    if selectedServerSetting == service {
-                        Image(systemName: "checkmark")
-                    }
+    private func serverSettingsMenu() -> some View {
+        Menu {
+            Picker("Server", selection: $selectedServerSetting) {
+                ForEach(ServerSetting.allCases, id: \.self) { service in
+                    Text(service.title).tag(service)
                 }
             }
+        } label: {
+            Label("Server", systemImage: "server.rack")
         }
     }
 }
