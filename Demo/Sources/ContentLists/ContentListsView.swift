@@ -11,7 +11,10 @@ import SwiftUI
 // Behavior: h-exp, v-exp
 struct ContentListsView: View {
     @AppStorage(UserDefaults.serverSettingKey)
-    private var selectedServerSetting: ServerSetting = .production
+    private var serverSetting: ServerSetting = .production
+
+    @AppStorage(UserDefaults.isStandaloneKey)
+    private var isStandalone = true
 
     @EnvironmentObject private var router: Router
 
@@ -28,10 +31,11 @@ struct ContentListsView: View {
             Self.latestAudiosSection(image: "music.note.list")
         }
         .tracked(title: "lists")
-        .navigationTitle("Lists (\(selectedServerSetting.title))")
+        .navigationTitle("Lists (\(serverSetting.title)\(isStandalone ? " - Standalone)" : ")")")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarTitleMenu {
             serverSettingsMenu()
+            standaloneSettingsMenu()
         }
     }
 
@@ -104,13 +108,25 @@ struct ContentListsView: View {
     @ViewBuilder
     private func serverSettingsMenu() -> some View {
         Menu {
-            Picker("Server", selection: $selectedServerSetting) {
+            Picker("Server", selection: $serverSetting) {
                 ForEach(ServerSetting.allCases, id: \.self) { service in
                     Text(service.title).tag(service)
                 }
             }
         } label: {
             Label("Server", systemImage: "server.rack")
+        }
+    }
+
+    @ViewBuilder
+    private func standaloneSettingsMenu() -> some View {
+        Menu {
+            Picker("Standalone", selection: $isStandalone) {
+                Text("Enabled").tag(true)
+                Text("Disabled").tag(false)
+            }
+        } label: {
+            Label("Standalone", systemImage: "1.square")
         }
     }
 }

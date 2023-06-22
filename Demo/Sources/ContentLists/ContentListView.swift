@@ -60,6 +60,9 @@ private struct ContentCell: View {
     @AppStorage(UserDefaults.serverSettingKey)
     private var serverSetting: ServerSetting = .production
 
+    @AppStorage(UserDefaults.isStandaloneKey)
+    private var isStandalone = true
+
     @EnvironmentObject private var router: Router
 
     var body: some View {
@@ -75,7 +78,7 @@ private struct ContentCell: View {
         case let .media(media):
             let title = MediaDescription.title(for: media)
             Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
-                let media = Media(title: title, type: .urn(media.urn, isStandalone: true, server: serverSetting.server))
+                let media = Media(title: title, type: .urn(media.urn, isStandalone: isStandalone, server: serverSetting.server))
                 router.present(.player(media: media))
             }
 #if os(iOS)

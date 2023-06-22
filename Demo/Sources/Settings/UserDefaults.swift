@@ -30,6 +30,7 @@ extension UserDefaults {
     static let seekBehaviorSettingKey = "seekBehaviorSetting"
     static let audiovisualBackgroundPlaybackPolicyKey = "audiovisualBackgroundPlaybackPolicy"
     static let serverSettingKey = "serverSetting"
+    static let isStandaloneKey = "isStandaloneSetting"
 
     @objc dynamic var presenterModeEnabled: Bool {
         bool(forKey: Self.presenterModeEnabledKey)
@@ -70,6 +71,10 @@ extension UserDefaults {
         .init(rawValue: integer(forKey: Self.serverSettingKey)) ?? .production
     }
 
+    @objc dynamic var isStandaloneSetting: Bool {
+        bool(forKey: Self.isStandaloneKey)
+    }
+
     func registerDefaults() {
         register(defaults: [
             Self.presenterModeEnabledKey: false,
@@ -77,7 +82,8 @@ extension UserDefaults {
             Self.allowsExternalPlaybackKey: true,
             Self.smartNavigationEnabledKey: true,
             Self.audiovisualBackgroundPlaybackPolicyKey: AVPlayerAudiovisualBackgroundPlaybackPolicy.automatic.rawValue,
-            Self.serverSettingKey: ServerSetting.production.rawValue
+            Self.serverSettingKey: ServerSetting.production.rawValue,
+            Self.isStandaloneKey: true
         ])
     }
 }
