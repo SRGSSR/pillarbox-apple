@@ -40,4 +40,8 @@ final class ChaptersTests: XCTestCase {
         let date = Self.date(year: 2022, month: 12, day: 31)
         expect(Mock.chapter(.timeLimited).blockingReason(at: date)).to(equal(.endDate))
     }
+
+    func testSegments() {
+        expect(Mock.chapter(.segments).segments).toNot(beEmpty())
+    }
 }

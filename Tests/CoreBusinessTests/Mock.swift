@@ -14,6 +14,7 @@ enum Mock {
         case geoblocked
         case standard
         case timeLimited
+        case segments
     }
 
     enum MediaCompositionKind: String {
@@ -22,6 +23,7 @@ enum Mock {
         case live
         case onDemand
         case redundant
+        case segments
     }
 
     static func chapter(_ kind: ChapterKind = .standard) -> Chapter {

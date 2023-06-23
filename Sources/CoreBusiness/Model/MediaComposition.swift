@@ -12,12 +12,16 @@ public struct MediaComposition: Decodable {
         case _analyticsData = "analyticsData"
         case _analyticsMetadata = "analyticsMetadata"
         case chapterUrn
+        case segmentUrn
         case chapters = "chapterList"
         case show
     }
 
     /// The URN of the chapter to be played.
     public let chapterUrn: String
+
+    /// The URN of the segment to be played.
+    public let segmentUrn: String?
 
     /// The available chapters.
     public let chapters: [Chapter]
@@ -45,5 +49,10 @@ public extension MediaComposition {
     /// The main chapter.
     var mainChapter: Chapter {
         chapters.first { $0.urn == chapterUrn }!
+    }
+
+    /// The main segement.
+    var mainSegment: Segment? {
+        mainChapter.segments?.first { $0.urn == segmentUrn }
     }
 }

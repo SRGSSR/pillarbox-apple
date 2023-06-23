@@ -18,6 +18,7 @@ public struct Chapter: Decodable {
         case endDate = "validTo"
         case imageUrl
         case resources = "resourceList"
+        case segments = "segmentList"
         case startDate = "validFrom"
         case title
         case urn
@@ -47,6 +48,9 @@ public struct Chapter: Decodable {
 
     /// The available resources.
     public let resources: [Resource]
+
+    /// The available segments.
+    public let segments: [Segment]? // swiftlint:disable:this discouraged_optional_collection
 
     /// The date at which the content is made available.
     public let startDate: Date?

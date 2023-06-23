@@ -14,4 +14,9 @@ final class MediaCompositionTests: XCTestCase {
         let mediaComposition = Mock.mediaComposition()
         expect(mediaComposition.mainChapter.urn).to(equal(mediaComposition.chapterUrn))
     }
+
+    func testMainSegment() {
+        let mediaComposition = Mock.mediaComposition(.segments)
+        expect(mediaComposition.mainSegment?.urn).to(equal(mediaComposition.segmentUrn))
+    }
 }
