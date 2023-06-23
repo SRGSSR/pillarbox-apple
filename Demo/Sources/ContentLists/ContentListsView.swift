@@ -116,6 +116,20 @@ struct ContentListsView: View {
                 Label("Server", systemImage: "server.rack")
             }
         }
+        else {
+            ForEach(ServerSetting.allCases, id: \.self) { service in
+                Button {
+                    selectedServerSetting = service
+                } label: {
+                    HStack {
+                        Text(service.title)
+                        if selectedServerSetting == service {
+                            Image(systemName: "checkmark")
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
