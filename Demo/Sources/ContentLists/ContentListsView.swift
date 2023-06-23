@@ -29,7 +29,9 @@ struct ContentListsView: View {
         }
         .tracked(title: "lists")
         .navigationTitle("Lists (\(selectedServerSetting.title))")
+#if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
+#endif
         .toolbarTitleMenu {
             serverSettingsMenu()
         }
@@ -103,14 +105,16 @@ struct ContentListsView: View {
 
     @ViewBuilder
     private func serverSettingsMenu() -> some View {
-        Menu {
-            Picker("Server", selection: $selectedServerSetting) {
-                ForEach(ServerSetting.allCases, id: \.self) { service in
-                    Text(service.title).tag(service)
+        if #available(iOS 17, tvOS 17.0, *) {
+            Menu {
+                Picker("Server", selection: $selectedServerSetting) {
+                    ForEach(ServerSetting.allCases, id: \.self) { service in
+                        Text(service.title).tag(service)
+                    }
                 }
+            } label: {
+                Label("Server", systemImage: "server.rack")
             }
-        } label: {
-            Label("Server", systemImage: "server.rack")
         }
     }
 }

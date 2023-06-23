@@ -116,7 +116,7 @@ struct SettingsView: View {
     private func debuggingFooter() -> some View {
         VStack {
             Text("Version \(version) Build \(buildVersion)")
-            if #available(iOS 17, *) {
+            if #available(iOS 17, tvOS 17, *) {
                 HStack(spacing: 0) {
                     Text("Made with ")
                     Image(systemName: "heart.fill")
