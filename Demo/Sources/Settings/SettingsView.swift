@@ -116,14 +116,12 @@ struct SettingsView: View {
     private func debuggingFooter() -> some View {
         VStack {
             Text("Version \(version) Build \(buildVersion)")
-            if #available(iOS 17, tvOS 17, *) {
-                HStack(spacing: 0) {
-                    Text("Made with ")
-                    Image(systemName: "heart.fill")
-                        .foregroundColor(.red)
-                        .symbolEffect(.pulse)
-                    Text(" in Switzerland")
-                }
+            HStack(spacing: 0) {
+                Text("Made with ")
+                Image(systemName: "heart.fill")
+                    .foregroundColor(.red)
+                    .pulseEffect()
+                Text(" in Switzerland")
             }
         }
         .frame(maxWidth: .infinity)
@@ -135,6 +133,18 @@ struct SettingsView: View {
 
     private func clearUrlCache() {
         URLCache.shared.removeAllCachedResponses()
+    }
+}
+
+fileprivate extension View {
+    @ViewBuilder
+    func pulseEffect() -> some View {
+        if #available(iOS 17, tvOS 17, *) {
+            symbolEffect(.pulse)
+        }
+        else {
+            self
+        }
     }
 }
 
