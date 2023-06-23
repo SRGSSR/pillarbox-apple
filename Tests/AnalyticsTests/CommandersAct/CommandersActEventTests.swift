@@ -13,8 +13,7 @@ import XCTest
 final class CommandersActEventTests: CommandersActTestCase {
     func testLabels() {
         expectAtLeastEvents(
-            .hidden_event { labels in
-                expect(labels.event_title).to(equal("name"))
+            .custom(name: "name") { labels in
                 expect(labels.event_type).to(equal("type"))
                 expect(labels.event_value).to(equal("value"))
                 expect(labels.event_source).to(equal("source"))
@@ -39,10 +38,10 @@ final class CommandersActEventTests: CommandersActTestCase {
         }
     }
 
-    func testEmptyLabels() {
+    func testBlankLabels() {
         expectAtLeastEvents(
-            .hidden_event { labels in
-                expect(labels.event_title).to(equal("name"))
+            .custom(name: "name") { labels in
+                expect(labels.event_name).to(equal("name"))
                 expect(labels.event_type).to(beNil())
                 expect(labels.event_value).to(beNil())
                 expect(labels.event_source).to(beNil())

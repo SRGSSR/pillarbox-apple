@@ -72,10 +72,6 @@ public struct CommandersActLabels: Decodable {
 
     // MARK: Event labels
 
-    /// The value of `event_title`.
-    /// FIXME: This field was introduced to avoid clashes with `event_name` but still needs to be discussed.
-    public let event_title: String?
-
     /// The value of `event_type`.
     public let event_type: String?
 
@@ -160,7 +156,6 @@ private extension CommandersActLabels {
         case navigation_level_8
         case navigation_level_9
         case page_type
-        case event_title
         case event_type
         case event_value
         case event_source
