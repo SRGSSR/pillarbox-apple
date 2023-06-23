@@ -117,12 +117,12 @@ struct SettingsView: View {
         VStack {
             Text("Version \(version) Build \(buildVersion)")
             if #available(iOS 17, *) {
-                HStack {
-                    Text("Made with")
+                HStack(spacing: 0) {
+                    Text("Made with ")
                     Image(systemName: "heart.fill")
                         .foregroundColor(.red)
                         .symbolEffect(.pulse)
-                    Text("in Switzerland")
+                    Text(" in Switzerland")
                 }
             }
         }
