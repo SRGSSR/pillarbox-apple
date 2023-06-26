@@ -80,6 +80,7 @@ struct ExamplesView: View {
             section(title: "Aspect ratios", medias: model.aspectRatioMedias)
             section(title: "Unbuffered streams", medias: model.unbufferedMedias)
             section(title: "Corner cases", medias: model.cornerCaseMedias)
+            section(title: "Bitmovin", medias: model.bitmovinMedias)
         }
         .scrollDismissesKeyboard(.immediately)
         .animation(.defaultLinear, value: model.protectedMedias)

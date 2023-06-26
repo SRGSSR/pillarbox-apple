@@ -56,6 +56,16 @@ final class ExamplesViewModel: ObservableObject {
         URNTemplate.unknown
     ])
 
+    let bitmovinMedias = Template.medias(from: [
+        URLTemplate.bitmovinOnDemandSintel,
+        URLTemplate.bitmovinOnDemandBigBuckBunny,
+        URLTemplate.bitmovinOnDemandAoM_1,
+        URLTemplate.bitmovinOnDemandAoM_2,
+        URLTemplate.bitmovinOnDemandAoM_3,
+        URLTemplate.bitmovinOnDemandAoM_4,
+        URLTemplate.bitmovinOnDemandAoM_5
+    ])
+
     @Published private(set) var protectedMedias = [Media]()
     private let trigger = Trigger()
 
