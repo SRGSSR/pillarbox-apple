@@ -61,7 +61,6 @@ class QueuePlayer: AVQueuePlayer {
             return
         }
 
-        registerSentinels()
         notifySeekStart(at: time)
 
         let seek = Seek(
@@ -171,53 +170,6 @@ extension AVQueuePlayer {
 }
 
 extension QueuePlayer {
-    /// Returns a publisher which emits a value when an incorrect start time is detected for the provided item.
-    private static func incorrectStartTimeDetectionPublisher(for item: AVPlayerItem) -> AnyPublisher<Void, Never> {
-        Publishers.CombineLatest(
-            Just(item.currentTime()),
-            item.durationPublisher()
-        )
-        .filter { currentTime, duration in
-            duration.isValid && !duration.isIndefinite && CMTimeAbsoluteValue(currentTime) > CMTime(value: 1, timescale: 1)
-        }
-        .map { _ in () }
-        .eraseToAnyPublisher()
-    }
-
-    private func registerSentinels() {
-        guard cancellables.isEmpty else { return }
-
-        // Workaround for `AVQueuePlayer` bug which, in some cases, might never call a pending seek completion handler
-        // when transitioning between two items. We can use a sentinel to fix this behavior and ensure we always can
-        // reliably match a seek request with a completion.
-        publisher(for: \.currentItem)
-            .sink { [weak self] _ in
-                self?.processPendingSeeks()
-            }
-            .store(in: &cancellables)
-
-        // Workaround for `AVQueuePlayer` bug which sometimes apply the previous current time to a newly loaded item.
-        publisher(for: \.currentItem)
-            .dropFirst()
-            .compactMap { $0 }
-            .map { Self.incorrectStartTimeDetectionPublisher(for: $0) }
-            .switchToLatest()
-            .sink { [weak self] _ in
-                self?.rawSeek(to: .zero)
-                Self.logger.info("Sentinel detected an incorrect start position and fixed it")
-            }
-            .store(in: &cancellables)
-    }
-
-    private func processPendingSeeks() {
-        guard !pendingSeeks.isEmpty else { return }
-        while let pendingSeek = pendingSeeks.popFirst() {
-            pendingSeek.completionHandler(true)
-        }
-        notifySeekEnd()
-        Self.logger.info("Sentinel detected unhandled completion and fixed it")
-    }
-
     /// Performs a low-level seek without seek tracking.
     private func rawSeek(to time: CMTime) {
         super.seek(to: time)
