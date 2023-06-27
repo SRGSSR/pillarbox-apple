@@ -48,22 +48,17 @@ final class ExamplesViewModel: ObservableObject {
     ])
 
     let thirdPartyMedias = Template.medias(from: [
-        URLTemplate.uhdVideoHLS
+        URLTemplate.uhdVideoHLS,
+        URLTemplate.bitmovinOnDemandSintel,
+        URLTemplate.bitmovinOnDemandBigBuckBunny,
+        URLTemplate.bitmovinOnDemandAoM1,
+        URLTemplate.bitmovinOnDemandAoM2,
+        URLTemplate.bitmovinOnDemandAoM3
     ])
 
     let cornerCaseMedias = Template.medias(from: [
         URNTemplate.expired,
         URNTemplate.unknown
-    ])
-
-    let bitmovinMedias = Template.medias(from: [
-        URLTemplate.bitmovinOnDemandSintel,
-        URLTemplate.bitmovinOnDemandBigBuckBunny,
-        URLTemplate.bitmovinOnDemandAoM_1,
-        URLTemplate.bitmovinOnDemandAoM_2,
-        URLTemplate.bitmovinOnDemandAoM_3,
-        URLTemplate.bitmovinOnDemandAoM_4,
-        URLTemplate.bitmovinOnDemandAoM_5
     ])
 
     @Published private(set) var protectedMedias = [Media]()
