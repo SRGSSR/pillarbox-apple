@@ -126,6 +126,36 @@ enum URLTemplate {
         title: "Unknown URL",
         type: .url(URL(string: "http://localhost:8123/unavailable/master.m3u8")!)
     )
+
+    static let bitmovinOnDemandSintel = Template(
+        title: "Sintel",
+        description: "Bitmovin - Multiple subtitles and audio tracks",
+        type: .url(.init(string: "https://bitmovin-a.akamaihd.net/content/sintel/hls/playlist.m3u8")!)
+    )
+
+    static let bitmovinOnDemandBigBuckBunny = Template(
+        title: "Big Buck Bunny",
+        description: "Bitmovin - 4K, HEVC",
+        type: .url(.init(string: "https://cdn.bitmovin.com/content/encoding_test_dash_hls/4k/hls/4k_profile/master.m3u8")!)
+    )
+
+    static let bitmovinOnDemandAoM1 = Template(
+        title: "Art of Motion",
+        description: "Bitmovin - VoD, single audio track",
+        type: .url(.init(string: "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8")!)
+    )
+
+    static let bitmovinOnDemandAoM2 = Template(
+        title: "Art of Motion",
+        description: "Bitmovin - AES-128",
+        type: .url(.init(string: "https://bitmovin-a.akamaihd.net/content/art-of-motion_drm/m3u8s/11331.m3u8")!)
+    )
+
+    static let bitmovinOnDemandAoM3 = Template(
+        title: "Art of Motion",
+        description: "Bitmovin - AVC Progressive",
+        type: .url(.init(string: "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/MI201109210084_mpeg-4_hd_high_1080p25_10mbits.mp4")!)
+    )
 }
 
 enum URNTemplate {
