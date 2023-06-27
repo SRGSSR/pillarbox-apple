@@ -136,15 +136,20 @@ struct SettingsView: View {
     }
 }
 
-fileprivate extension View {
+private extension View {
     @ViewBuilder
     func pulseEffect() -> some View {
+        // TODO: Remove when Xcode 15 has been released
+#if compiler(>=5.9)
         if #available(iOS 17, tvOS 17, *) {
             symbolEffect(.pulse)
         }
         else {
             self
         }
+#else
+        self
+#endif
     }
 }
 
