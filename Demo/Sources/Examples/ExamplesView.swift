@@ -70,9 +70,8 @@ struct ExamplesView: View {
     var body: some View {
         List {
             MediaEntryView()
-            srgssrSections()
+            srgSections()
             thirdPartySections()
-            unifiedStreamingSections()
             miscellaneousSections()
         }
         .scrollDismissesKeyboard(.immediately)
@@ -83,7 +82,7 @@ struct ExamplesView: View {
     }
 
     @ViewBuilder
-    private func srgssrSections() -> some View {
+    private func srgSections() -> some View {
         section(title: "SRG SSR streams (URLs)", medias: model.urlMedias)
         section(title: "SRG SSR streams (URNs)", medias: model.urnMedias)
         if !model.protectedMedias.isEmpty {
@@ -95,20 +94,8 @@ struct ExamplesView: View {
     private func thirdPartySections() -> some View {
         section(title: "Apple streams", medias: model.appleMedias)
         section(title: "Third-party streams", medias: model.thirdPartyMedias)
-        section(title: "Bitmovin streams", medias: model.bitmovinMedias)
-    }
-
-    @ViewBuilder
-    private func unifiedStreamingSections() -> some View {
-        section(title: "Unified Streaming - Source", medias: model.unifiedStreamingSourceMedias)
-        section(title: "Unified Streaming - Encryption", medias: model.unifiedStreamingEncryptionMedias)
-        section(title: "Unified Streaming - Subtitles", medias: model.unifiedStreamingSubtitlesMedias)
-        section(title: "Unified Streaming - Audio", medias: model.unifiedStreamingAudioMedias)
-        section(title: "Unified Streaming - Video", medias: model.unifiedStreamingSourceVideoMedias)
-        section(title: "Unified Streaming - Playout Control", medias: model.unifiedStreamingPlayoutControlMedias)
-        section(title: "Unified Streaming - Subclips", medias: model.unifiedStreamingSubclipsMedias)
-        section(title: "Unified Streaming - Live", medias: model.unifiedStreamingLiveMedias)
-        section(title: "Unified Streaming - HLS / fMP4", medias: model.unifiedStreamingHLSFMP4Medias)
+        section(title: "Bitmovin streams streams", medias: model.bitmovinMedias)
+        section(title: "Unified Streaming", medias: model.unifiedStreamingSourceMedias)
     }
 
     @ViewBuilder

@@ -120,65 +120,13 @@ enum URLTemplate {
         title: "Fragmented MP4",
         type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8")!)
     )
-    static let unifiedStreamingOnDemandMP4 = Template(
-        title: "MP4",
-        type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.mp4/.m3u8")!)
-    )
-    static let unifiedStreamingOnDemandCPIX = Template(
-        title: "CPIX",
-        type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-multikey-cenc.ism/.m3u8")!)
-    )
-    static let unifiedStreamingOnDemandAES128 = Template(
-        title: "AES-128",
-        type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-aes.ism/.m3u8")!)
-    )
-    static let unifiedStreamingOnDemandSampleAES = Template(
-        title: "SAMPLE-AES",
-        type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-sample-aes.ism/.m3u8")!)
-    )
-    static let unifiedStreamingOnDemandTransDRM = Template(
-        title: "TransDRM",
-        type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-pr-transdrm-aes128.ism/.m3u8")!)
-    )
     static let unifiedStreamingOnDemandKeyRotation = Template(
         title: "Key Rotation",
         type: .url(.init(string: "https://demo.unified-streaming.com/k8s/keyrotation/stable/keyrotation/keyrotation.isml/.m3u8")!)
     )
-    static let unifiedStreamingOnDemandWebVTT = Template(
-        title: "WebVTT",
-        type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-multiple-subtitles.ism/.m3u8")!)
-    )
-    static let unifiedStreamingOnDemandSingleWebVTT = Template(
-        title: "Single fragment WebVTT",
-        type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-single-fragment-wvtt.ism/.m3u8")!)
-    )
-    static let unifiedStreamingOnDemandSingleTTML = Template(
-        title: "Single fragment TTML",
-        type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-single-fragment-ttml.ism/.m3u8")!)
-    )
-    static let unifiedStreamingOnDemandFragmentedWebVTT = Template(
-        title: "Fragmented WebVTT",
-        type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-wvtt.ism/.m3u8")!)
-    )
-    static let unifiedStreamingOnDemandFragmentedTTML = Template(
-        title: "Fragmented TTML",
-        type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-ttml.ism/.m3u8")!)
-    )
-    static let unifiedStreamingOnDemandMultipleSubtitles = Template(
-        title: "Multiple subtitles, RFC 5646 language tags",
-        type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-rfc5646.ism/.m3u8")!)
-    )
-    static let unifiedStreamingOnDemandAccessibilitySubtitles = Template(
-        title: "Accessibility subtitles",
-        type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-hoh-subs.ism/.m3u8")!)
-    )
     static let unifiedStreamingOnDemandAlternateAudio = Template(
         title: "Alternate audio language",
         type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-multi-lang.ism/.m3u8")!)
-    )
-    static let unifiedStreamingOnDemandAudioDescription = Template(
-        title: "Audio description",
-        type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-desc-aud.ism/.m3u8")!)
     )
     static let unifiedStreamingOnDemandAudioOnly = Template(
         title: "Audio only",
@@ -197,22 +145,6 @@ enum URLTemplate {
         title: "Dynamic Track Selection",
         // swiftlint:disable:next line_length
         type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8?filter=%28type%3D%3D%22audio%22%26%26systemBitrate%3C100000%29%7C%7C%28type%3D%3D%22video%22%26%26systemBitrate%3C1024000%29")!)
-    )
-    static let unifiedStreamingSubclipsCutOffEnd = Template(
-        title: "Cut-off end",
-        type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8?vend=00:01:00")!)
-    )
-    static let unifiedStreamingSubclipsCreation = Template(
-        title: "Subclip creation",
-        type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8")!)
-    )
-    static let unifiedStreamingSubclipsShiftForward = Template(
-        title: "Shift forward",
-        type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8?vbegin=00:06:00")!)
-    )
-    static let unifiedStreamingSubclipsRange = Template(
-        title: "Range",
-        type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8?t=00:06:00-00:07:30")!)
     )
     static let unifiedStreamingPureLive = Template(
         title: "Pure live",
@@ -233,10 +165,6 @@ enum URLTemplate {
     static let unifiedStreamingOnDemand_fMP4_Clear = Template(
         title: "fMP4, clear",
         type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-fmp4.ism/.m3u8")!)
-    )
-    static let unifiedStreamingOnDemand_fMP4_PlayReady = Template(
-        title: "fMP4, PlayReady",
-        type: .url(.init(string: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-hls-playready.ism/.m3u8")!)
     )
     static let unifiedStreamingOnDemand_fMP4_HEVC_4K = Template(
         title: "fMP4, HEVC 4K",

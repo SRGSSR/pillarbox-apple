@@ -61,60 +61,17 @@ final class ExamplesViewModel: ObservableObject {
 
     let unifiedStreamingSourceMedias = Template.medias(from: [
         URLTemplate.unifiedStreamingOnDemand_fMP4,
-        URLTemplate.unifiedStreamingOnDemandMP4
-    ])
-
-    let unifiedStreamingEncryptionMedias = Template.medias(from: [
-        URLTemplate.unifiedStreamingOnDemandCPIX,
-        URLTemplate.unifiedStreamingOnDemandAES128,
-        URLTemplate.unifiedStreamingOnDemandSampleAES,
-        URLTemplate.unifiedStreamingOnDemandTransDRM,
-        URLTemplate.unifiedStreamingOnDemandKeyRotation
-    ])
-
-    let unifiedStreamingSubtitlesMedias = Template.medias(from: [
-        URLTemplate.unifiedStreamingOnDemandWebVTT,
-        URLTemplate.unifiedStreamingOnDemandSingleWebVTT,
-        URLTemplate.unifiedStreamingOnDemandSingleTTML,
-        URLTemplate.unifiedStreamingOnDemandFragmentedWebVTT,
-        URLTemplate.unifiedStreamingOnDemandFragmentedTTML,
-        URLTemplate.unifiedStreamingOnDemandMultipleSubtitles,
-        URLTemplate.unifiedStreamingOnDemandAccessibilitySubtitles
-    ])
-
-    let unifiedStreamingAudioMedias = Template.medias(from: [
+        URLTemplate.unifiedStreamingOnDemandKeyRotation,
         URLTemplate.unifiedStreamingOnDemandAlternateAudio,
-        URLTemplate.unifiedStreamingOnDemandAudioDescription,
-        URLTemplate.unifiedStreamingOnDemandAudioOnly
-    ])
-
-    let unifiedStreamingSourceVideoMedias = Template.medias(from: [
-        URLTemplate.unifiedStreamingOnDemandTrickplay
-    ])
-
-    let unifiedStreamingPlayoutControlMedias = Template.medias(from: [
+        URLTemplate.unifiedStreamingOnDemandAudioOnly,
+        URLTemplate.unifiedStreamingOnDemandTrickplay,
         URLTemplate.unifiedStreamingOnDemandLimitedBandwidth,
-        URLTemplate.unifiedStreamingOnDemandDynamicTrackSelection
-    ])
-
-    let unifiedStreamingSubclipsMedias = Template.medias(from: [
-        URLTemplate.unifiedStreamingSubclipsCutOffEnd,
-        URLTemplate.unifiedStreamingSubclipsCreation,
-        URLTemplate.unifiedStreamingSubclipsShiftForward,
-        URLTemplate.unifiedStreamingSubclipsRange
-    ])
-
-    let unifiedStreamingLiveMedias = Template.medias(from: [
+        URLTemplate.unifiedStreamingOnDemandDynamicTrackSelection,
         URLTemplate.unifiedStreamingPureLive,
         URLTemplate.unifiedStreamingTimeshift,
         URLTemplate.unifiedStreamingLiveAudio,
-        URLTemplate.unifiedStreamingPureLiveScte35
-    ])
-
-    let unifiedStreamingHLSFMP4Medias = Template.medias(from: [
         URLTemplate.unifiedStreamingPureLiveScte35,
         URLTemplate.unifiedStreamingOnDemand_fMP4_Clear,
-        URLTemplate.unifiedStreamingOnDemand_fMP4_PlayReady,
         URLTemplate.unifiedStreamingOnDemand_fMP4_HEVC_4K
     ])
 
