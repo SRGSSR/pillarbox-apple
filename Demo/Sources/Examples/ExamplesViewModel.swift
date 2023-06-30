@@ -48,12 +48,74 @@ final class ExamplesViewModel: ObservableObject {
     ])
 
     let thirdPartyMedias = Template.medias(from: [
-        URLTemplate.uhdVideoHLS,
-        URLTemplate.bitmovinOnDemandSintel,
-        URLTemplate.bitmovinOnDemandBigBuckBunny,
-        URLTemplate.bitmovinOnDemandAoM1,
-        URLTemplate.bitmovinOnDemandAoM2,
-        URLTemplate.bitmovinOnDemandAoM3
+        URLTemplate.uhdVideoHLS
+    ])
+
+    let bitmovinMedias = Template.medias(from: [
+        URLTemplate.bitmovinOnDemandMultipleTracks,
+        URLTemplate.bitmovinOnDemand_4K_HEVC,
+        URLTemplate.bitmovinOnDemandSingleAudio,
+        URLTemplate.bitmovinOnDemandAES128,
+        URLTemplate.bitmovinOnDemandProgressive
+    ])
+
+    let unifiedStreamingSourceMedias = Template.medias(from: [
+        URLTemplate.unifiedStreamingOnDemand_fMP4,
+        URLTemplate.unifiedStreamingOnDemandMP4
+    ])
+
+    let unifiedStreamingEncryptionMedias = Template.medias(from: [
+        URLTemplate.unifiedStreamingOnDemandCPIX,
+        URLTemplate.unifiedStreamingOnDemandAES128,
+        URLTemplate.unifiedStreamingOnDemandSampleAES,
+        URLTemplate.unifiedStreamingOnDemandTransDRM,
+        URLTemplate.unifiedStreamingOnDemandKeyRotation
+    ])
+
+    let unifiedStreamingSubtitlesMedias = Template.medias(from: [
+        URLTemplate.unifiedStreamingOnDemandWebVTT,
+        URLTemplate.unifiedStreamingOnDemandSingleWebVTT,
+        URLTemplate.unifiedStreamingOnDemandSingleTTML,
+        URLTemplate.unifiedStreamingOnDemandFragmentedWebVTT,
+        URLTemplate.unifiedStreamingOnDemandFragmentedTTML,
+        URLTemplate.unifiedStreamingOnDemandMultipleSubtitles,
+        URLTemplate.unifiedStreamingOnDemandAccessibilitySubtitles
+    ])
+
+    let unifiedStreamingAudioMedias = Template.medias(from: [
+        URLTemplate.unifiedStreamingOnDemandAlternateAudio,
+        URLTemplate.unifiedStreamingOnDemandAudioDescription,
+        URLTemplate.unifiedStreamingOnDemandAudioOnly
+    ])
+
+    let unifiedStreamingSourceVideoMedias = Template.medias(from: [
+        URLTemplate.unifiedStreamingOnDemandTrickplay
+    ])
+
+    let unifiedStreamingPlayoutControlMedias = Template.medias(from: [
+        URLTemplate.unifiedStreamingOnDemandLimitedBandwidth,
+        URLTemplate.unifiedStreamingOnDemandDynamicTrackSelection
+    ])
+
+    let unifiedStreamingSubclipsMedias = Template.medias(from: [
+        URLTemplate.unifiedStreamingSubclipsCutOffEnd,
+        URLTemplate.unifiedStreamingSubclipsCreation,
+        URLTemplate.unifiedStreamingSubclipsShiftForward,
+        URLTemplate.unifiedStreamingSubclipsRange
+    ])
+
+    let unifiedStreamingLiveMedias = Template.medias(from: [
+        URLTemplate.unifiedStreamingPureLive,
+        URLTemplate.unifiedStreamingTimeshift,
+        URLTemplate.unifiedStreamingLiveAudio,
+        URLTemplate.unifiedStreamingPureLiveScte35
+    ])
+
+    let unifiedStreamingHLSFMP4Medias = Template.medias(from: [
+        URLTemplate.unifiedStreamingPureLiveScte35,
+        URLTemplate.unifiedStreamingOnDemand_fMP4_Clear,
+        URLTemplate.unifiedStreamingOnDemand_fMP4_PlayReady,
+        URLTemplate.unifiedStreamingOnDemand_fMP4_HEVC_4K
     ])
 
     let cornerCaseMedias = Template.medias(from: [

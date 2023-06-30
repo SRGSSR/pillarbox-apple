@@ -70,22 +70,52 @@ struct ExamplesView: View {
     var body: some View {
         List {
             MediaEntryView()
-            section(title: "SRG SSR streams (URLs)", medias: model.urlMedias)
-            section(title: "SRG SSR streams (URNs)", medias: model.urnMedias)
-            if !model.protectedMedias.isEmpty {
-                section(title: "Protected streams (URNs)", medias: model.protectedMedias)
-            }
-            section(title: "Apple streams", medias: model.appleMedias)
-            section(title: "Third-party streams", medias: model.thirdPartyMedias)
-            section(title: "Aspect ratios", medias: model.aspectRatioMedias)
-            section(title: "Unbuffered streams", medias: model.unbufferedMedias)
-            section(title: "Corner cases", medias: model.cornerCaseMedias)
+            srgssrSections()
+            thirdPartySections()
+            unifiedStreamingSections()
+            miscellaneousSections()
         }
         .scrollDismissesKeyboard(.immediately)
         .animation(.defaultLinear, value: model.protectedMedias)
         .navigationTitle("Examples")
         .tracked(title: "examples")
         .refreshable { await model.refresh() }
+    }
+
+    @ViewBuilder
+    private func srgssrSections() -> some View {
+        section(title: "SRG SSR streams (URLs)", medias: model.urlMedias)
+        section(title: "SRG SSR streams (URNs)", medias: model.urnMedias)
+        if !model.protectedMedias.isEmpty {
+            section(title: "Protected streams (URNs)", medias: model.protectedMedias)
+        }
+    }
+
+    @ViewBuilder
+    private func thirdPartySections() -> some View {
+        section(title: "Apple streams", medias: model.appleMedias)
+        section(title: "Third-party streams", medias: model.thirdPartyMedias)
+        section(title: "Bitmovin streams", medias: model.bitmovinMedias)
+    }
+
+    @ViewBuilder
+    private func unifiedStreamingSections() -> some View {
+        section(title: "Unified Streaming - Source", medias: model.unifiedStreamingSourceMedias)
+        section(title: "Unified Streaming - Encryption", medias: model.unifiedStreamingEncryptionMedias)
+        section(title: "Unified Streaming - Subtitles", medias: model.unifiedStreamingSubtitlesMedias)
+        section(title: "Unified Streaming - Audio", medias: model.unifiedStreamingAudioMedias)
+        section(title: "Unified Streaming - Video", medias: model.unifiedStreamingSourceVideoMedias)
+        section(title: "Unified Streaming - Playout Control", medias: model.unifiedStreamingPlayoutControlMedias)
+        section(title: "Unified Streaming - Subclips", medias: model.unifiedStreamingSubclipsMedias)
+        section(title: "Unified Streaming - Live", medias: model.unifiedStreamingLiveMedias)
+        section(title: "Unified Streaming - HLS / fMP4", medias: model.unifiedStreamingHLSFMP4Medias)
+    }
+
+    @ViewBuilder
+    private func miscellaneousSections() -> some View {
+        section(title: "Aspect ratios", medias: model.aspectRatioMedias)
+        section(title: "Unbuffered streams", medias: model.unbufferedMedias)
+        section(title: "Corner cases", medias: model.cornerCaseMedias)
     }
 
     @ViewBuilder
