@@ -14,11 +14,13 @@ struct PlaybackSlider: View {
     @State private var bufferWidth: CGFloat = 0
 
     var body: some View {
-        HStack {
-            text(minimumValueText)
-            progressBar(valueWidth: valueWidth, bufferWidth: bufferWidth)
-                .gesture(dragGesture())
-            text(maximumValueText)
+        GeometryReader { geometry in
+            HStack {
+                text(minimumValueText)
+                progressBar(valueWidth: valueWidth, bufferWidth: bufferWidth)
+                    .gesture(dragGesture(geometry: geometry))
+                text(maximumValueText)
+            }
         }
     }
 
@@ -46,10 +48,10 @@ struct PlaybackSlider: View {
         }
     }
 
-    private func dragGesture() -> some Gesture {
+    private func dragGesture(geometry: GeometryProxy) -> some Gesture {
         DragGesture()
             .onChanged { gesture in
-                print("Dragging \(gesture.translation.width)")
+                print("Dragging \(gesture.translation.width) - Width: \(geometry.size.width)")
             }
             .onEnded { _ in
                 print("Ended")
