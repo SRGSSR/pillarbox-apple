@@ -18,7 +18,7 @@ struct PlaybackSlider: View {
 
     @State private var bufferWidth: CGFloat = 0
 
-    @State private var isDragging: Bool = false {
+    @State private var isDragging = false {
         didSet {
             progressTracker.isInteracting = isDragging
         }
@@ -82,6 +82,9 @@ struct PlaybackSlider: View {
     func onValueChanged(_ value: Float, geometry: GeometryProxy) {
         let width = geometry.size.width
         valueWidth = CGFloat(value) * width
+        if !isDragging {
+            previousValueWidth = valueWidth
+        }
     }
 }
 
