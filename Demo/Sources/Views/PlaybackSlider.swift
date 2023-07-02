@@ -18,6 +18,12 @@ struct PlaybackSlider: View {
 
     @State private var bufferWidth: CGFloat = 0
 
+    @State private var isDragging: Bool = false {
+        didSet {
+            progressTracker.isInteracting = isDragging
+        }
+    }
+
     var body: some View {
         HStack {
             text(minimumValueText)
@@ -62,11 +68,13 @@ struct PlaybackSlider: View {
     private func dragGesture(geometry: GeometryProxy) -> some Gesture {
         DragGesture()
             .onChanged { gesture in
+                isDragging = true
                 let width = geometry.size.width
                 let translation = gesture.translation.width
                 valueWidth = (previousValueWidth + translation).clamped(to: 0...width)
             }
             .onEnded { _ in
+                isDragging = false
                 previousValueWidth = valueWidth
             }
     }
