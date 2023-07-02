@@ -67,6 +67,9 @@ struct PlaybackSlider: View {
             .onChange(of: value) { onValueChanged($0, geometry: geometry) }
             .onChange(of: buffer) { onBufferChanged($0, geometry: geometry) }
         }
+        .cornerRadius(5)
+        .scaleEffect(y: isDragging ? 1.5 : 1.0)
+        .animation(.smooth(duration: 0.4), value: isDragging)
     }
 
     private func dragGesture(geometry: GeometryProxy) -> some Gesture {
