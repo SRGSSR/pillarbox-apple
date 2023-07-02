@@ -9,8 +9,8 @@ import SwiftUI
 
 struct PlaybackSlider: View {
     let progressTracker: ProgressTracker
-    let minimumValueText: String = ""
-    let maximumValueText: String = ""
+    let minimumValueText: String?
+    let maximumValueText: String?
 
     @Binding private var value: Float
     @State private var valueWidth: CGFloat = 0
@@ -34,17 +34,21 @@ struct PlaybackSlider: View {
         .frame(maxWidth: .infinity, minHeight: 10, maxHeight: 10)
     }
 
-    init(progressTracker: ProgressTracker) {
+    init(progressTracker: ProgressTracker, minimumValueText: String? = nil, maximumValueText: String? = nil) {
         self.progressTracker = progressTracker
+        self.minimumValueText = minimumValueText
+        self.maximumValueText = maximumValueText
         _value = Binding(progressTracker, at: \.progress)
         _buffer = Binding(progressTracker, at: \.loaded)
     }
 
     @ViewBuilder
-    private func text(_ text: String) -> some View {
-        Text(text)
-            .font(.footnote)
-            .fixedSize()
+    private func text(_ text: String?) -> some View {
+        if let text {
+            Text(text)
+                .font(.caption)
+                .monospacedDigit()
+        }
     }
 
     @ViewBuilder
