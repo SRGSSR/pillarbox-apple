@@ -16,13 +16,10 @@ struct PlaybackSlider: View {
     @State private var bufferWidth: CGFloat = 0
 
     var body: some View {
-        GeometryReader { geometry in
-            HStack {
-                text(minimumValueText)
-                progressBar(valueWidth: valueWidth, bufferWidth: bufferWidth)
-                    .gesture(dragGesture(geometry: geometry))
-                text(maximumValueText)
-            }
+        HStack {
+            text(minimumValueText)
+            progressBar(valueWidth: valueWidth, bufferWidth: bufferWidth)
+            text(maximumValueText)
         }
     }
 
@@ -43,10 +40,13 @@ struct PlaybackSlider: View {
 
     @ViewBuilder
     private func progressBar(valueWidth: CGFloat, bufferWidth: CGFloat) -> some View {
-        ZStack(alignment: .leading) {
-            rectangle(opacity: 0.1)
-            rectangle(opacity: 0.3, width: bufferWidth)
-            rectangle(width: valueWidth)
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                rectangle(opacity: 0.1)
+                rectangle(opacity: 0.3, width: bufferWidth)
+                rectangle(width: valueWidth)
+            }
+            .gesture(dragGesture(geometry: geometry))
         }
     }
 
