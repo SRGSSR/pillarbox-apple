@@ -72,6 +72,7 @@ struct PlaybackSlider: View {
                 let width = geometry.size.width
                 let translation = gesture.translation.width
                 valueWidth = (previousValueWidth + translation).clamped(to: 0...width)
+                value = Float(valueWidth / width)
             }
             .onEnded { _ in
                 isDragging = false
