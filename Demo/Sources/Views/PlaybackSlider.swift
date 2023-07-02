@@ -16,6 +16,7 @@ struct PlaybackSlider: View {
     @State private var valueWidth: CGFloat = 0
     @State private var previousValueWidth: CGFloat = 0
 
+    @Binding private var buffer: Float
     @State private var bufferWidth: CGFloat = 0
 
     @State private var isDragging = false {
@@ -35,6 +36,7 @@ struct PlaybackSlider: View {
     init(progressTracker: ProgressTracker) {
         self.progressTracker = progressTracker
         _value = Binding(progressTracker, at: \.progress)
+        _buffer = Binding(progressTracker, at: \.loaded)
     }
 
     @ViewBuilder
@@ -62,6 +64,7 @@ struct PlaybackSlider: View {
             }
             .gesture(dragGesture(geometry: geometry))
             .onChange(of: value) { onValueChanged($0, geometry: geometry) }
+            .onChange(of: buffer) { onBufferChanged($0, geometry: geometry) }
         }
     }
 
@@ -85,6 +88,14 @@ struct PlaybackSlider: View {
         valueWidth = CGFloat(value) * width
         if !isDragging {
             previousValueWidth = valueWidth
+        }
+    }
+
+    private func onBufferChanged(_ buffer: Float, geometry: GeometryProxy) {
+        let width = geometry.size.width
+        let widthToApply = CGFloat(buffer) * width
+        if widthToApply.isNormal {
+            bufferWidth = widthToApply
         }
     }
 }

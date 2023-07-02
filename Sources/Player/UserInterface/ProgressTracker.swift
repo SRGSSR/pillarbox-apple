@@ -27,6 +27,8 @@ public final class ProgressTracker: ObservableObject {
         }
     }
 
+    @Published public var loaded: Float = .zero
+
     @Published private var _progress: Float?
 
     private let seekBehavior: SeekBehavior
@@ -99,6 +101,22 @@ public final class ProgressTracker: ObservableObject {
             .removeDuplicates()
             .receiveOnMainThread()
             .assign(to: &$_progress)
+
+        $player
+            .map { player -> AnyPublisher<Float, Never> in
+                guard let player, let item = player.queuePlayer.currentItem else { return Just(.zero).eraseToAnyPublisher() }
+                return player.queuePlayer
+                    .currentItemLoadedTimeRangePublisher()
+                    .map { loadedTimeRange in
+                        let totalDuration = item.duration.seconds
+                        let durationRatio = loadedTimeRange.end.seconds / totalDuration
+                        return Float(durationRatio)
+                    }
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .receiveOnMainThread()
+            .assign(to: &$loaded)
     }
 
     private static func currentTimePublisher(
