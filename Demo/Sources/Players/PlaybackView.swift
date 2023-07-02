@@ -413,17 +413,10 @@ private struct TimeSlider: View {
     }
 
     var body: some View {
-        Slider(
+        PlaybackSlider(
             progressTracker: progressTracker,
-            label: {
-                Text("Progress")
-            },
-            minimumValueLabel: {
-                label(withText: formattedElapsedTime)
-            },
-            maximumValueLabel: {
-                label(withText: formattedTotalTime)
-            }
+            minimumValueText: formattedElapsedTime,
+            maximumValueText: formattedTotalTime
         )
         .foregroundColor(.white)
         .tint(.white)
