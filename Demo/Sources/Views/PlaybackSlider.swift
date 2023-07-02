@@ -11,6 +11,8 @@ struct PlaybackSlider: View {
     let maximumValueText: String = ""
 
     @State private var valueWidth: CGFloat = 0
+    @State private var previousValueWidth: CGFloat = 0
+
     @State private var bufferWidth: CGFloat = 0
 
     var body: some View {
@@ -51,10 +53,12 @@ struct PlaybackSlider: View {
     private func dragGesture(geometry: GeometryProxy) -> some Gesture {
         DragGesture()
             .onChanged { gesture in
-                print("Dragging \(gesture.translation.width) - Width: \(geometry.size.width)")
+                let width = geometry.size.width
+                let translation = gesture.translation.width
+                valueWidth = (previousValueWidth + translation).clamped(to: 0...width)
             }
             .onEnded { _ in
-                print("Ended")
+                previousValueWidth = valueWidth
             }
     }
 }
