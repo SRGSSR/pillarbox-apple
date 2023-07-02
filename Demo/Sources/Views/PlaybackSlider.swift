@@ -10,10 +10,13 @@ struct PlaybackSlider: View {
     let minimumValueText: String = ""
     let maximumValueText: String = ""
 
+    @State private var valueWidth: CGFloat = 0
+    @State private var bufferWidth: CGFloat = 0
+
     var body: some View {
         HStack {
             text(minimumValueText)
-            Rectangle()
+            progressBar(valueWidth: valueWidth, bufferWidth: bufferWidth)
             text(maximumValueText)
         }
     }
@@ -23,6 +26,23 @@ struct PlaybackSlider: View {
         Text(text)
             .font(.footnote)
             .fixedSize()
+    }
+
+    @ViewBuilder
+    private func rectangle(opacity: Double = 1, width: CGFloat? = nil) -> some View {
+        Rectangle()
+            .foregroundColor(.white)
+            .opacity(opacity)
+            .frame(width: width)
+    }
+
+    @ViewBuilder
+    private func progressBar(valueWidth: CGFloat, bufferWidth: CGFloat) -> some View {
+        ZStack(alignment: .leading) {
+            rectangle(opacity: 0.1)
+            rectangle(opacity: 0.3, width: bufferWidth)
+            rectangle(width: valueWidth)
+        }
     }
 }
 
