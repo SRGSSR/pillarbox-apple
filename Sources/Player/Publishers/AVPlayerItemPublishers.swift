@@ -36,6 +36,21 @@ extension AVPlayerItem {
         .eraseToAnyPublisher()
     }
 
+    func loadedTimeRangePublisher() -> AnyPublisher<CMTimeRange, Never> {
+        Publishers.CombineLatest(
+            publisher(for: \.status),
+            publisher(for: \.loadedTimeRanges)
+        )
+        .map { status, loadedTimeRanges in
+            guard status == .readyToPlay else { return .zero }
+            let start = loadedTimeRanges.first?.timeRangeValue.start ?? .zero
+            let end = loadedTimeRanges.first?.timeRangeValue.end ?? .zero
+            return CMTimeRangeFromTimeToTime(start: start, end: end)
+        }
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
+
     func durationPublisher() -> AnyPublisher<CMTime, Never> {
         Publishers.CombineLatest(
             publisher(for: \.status),
