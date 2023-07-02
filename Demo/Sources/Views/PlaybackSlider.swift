@@ -7,6 +7,7 @@
 import Player
 import SwiftUI
 
+#if os(iOS)
 struct PlaybackSlider: View {
     let progressTracker: ProgressTracker
     let minimumValueText: String?
@@ -114,3 +115,4 @@ struct PlaybackSlider_Previews: PreviewProvider {
             .padding(.horizontal, 5)
     }
 }
+#endif
