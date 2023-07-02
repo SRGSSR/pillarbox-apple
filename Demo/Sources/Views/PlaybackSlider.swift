@@ -4,12 +4,15 @@
 //  License information is available from the LICENSE file.
 //
 
+import Player
 import SwiftUI
 
 struct PlaybackSlider: View {
+    let progressTracker: ProgressTracker
     let minimumValueText: String = ""
     let maximumValueText: String = ""
 
+    @Binding private var value: Float
     @State private var valueWidth: CGFloat = 0
     @State private var previousValueWidth: CGFloat = 0
 
@@ -21,6 +24,11 @@ struct PlaybackSlider: View {
             progressBar(valueWidth: valueWidth, bufferWidth: bufferWidth)
             text(maximumValueText)
         }
+    }
+
+    init(progressTracker: ProgressTracker) {
+        self.progressTracker = progressTracker
+        _value = Binding(progressTracker, at: \.progress)
     }
 
     @ViewBuilder
@@ -47,6 +55,7 @@ struct PlaybackSlider: View {
                 rectangle(width: valueWidth)
             }
             .gesture(dragGesture(geometry: geometry))
+            .onChange(of: value) { onValueChanged($0, geometry: geometry) }
         }
     }
 
@@ -61,11 +70,16 @@ struct PlaybackSlider: View {
                 previousValueWidth = valueWidth
             }
     }
+
+    func onValueChanged(_ value: Float, geometry: GeometryProxy) {
+        let width = geometry.size.width
+        valueWidth = CGFloat(value) * width
+    }
 }
 
 struct PlaybackSlider_Previews: PreviewProvider {
     static var previews: some View {
-        PlaybackSlider()
+        PlaybackSlider(progressTracker: .init(interval: .zero))
             .padding(.horizontal, 5)
     }
 }
