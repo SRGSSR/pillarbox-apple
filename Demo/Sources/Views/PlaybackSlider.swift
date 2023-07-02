@@ -31,6 +31,7 @@ struct PlaybackSlider: View {
             progressBar(valueWidth: valueWidth, bufferWidth: bufferWidth)
             text(maximumValueText)
         }
+        .frame(maxWidth: .infinity, minHeight: 10, maxHeight: 10)
     }
 
     init(progressTracker: ProgressTracker) {
