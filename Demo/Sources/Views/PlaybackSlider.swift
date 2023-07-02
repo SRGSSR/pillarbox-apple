@@ -17,6 +17,7 @@ struct PlaybackSlider: View {
         HStack {
             text(minimumValueText)
             progressBar(valueWidth: valueWidth, bufferWidth: bufferWidth)
+                .gesture(dragGesture())
             text(maximumValueText)
         }
     }
@@ -43,6 +44,16 @@ struct PlaybackSlider: View {
             rectangle(opacity: 0.3, width: bufferWidth)
             rectangle(width: valueWidth)
         }
+    }
+
+    private func dragGesture() -> some Gesture {
+        DragGesture()
+            .onChanged { gesture in
+                print("Dragging \(gesture.translation.width)")
+            }
+            .onEnded { _ in
+                print("Ended")
+            }
     }
 }
 
