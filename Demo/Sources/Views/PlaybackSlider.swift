@@ -8,10 +8,10 @@ import Player
 import SwiftUI
 
 #if os(iOS)
-struct PlaybackSlider: View {
+struct PlaybackSlider<ValueLabel: View>: View {
     let progressTracker: ProgressTracker
-    let minimumValueText: String?
-    let maximumValueText: String?
+    let minimumValueLabel: () -> ValueLabel
+    let maximumValueLabel: () -> ValueLabel
 
     @Binding private var value: Float
     @State private var valueWidth: CGFloat = 0
@@ -20,36 +20,33 @@ struct PlaybackSlider: View {
     @Binding private var buffer: Float
     @State private var bufferWidth: CGFloat = 0
 
-    @State private var isDragging = false {
-        didSet {
-            progressTracker.isInteracting = isDragging
-        }
-    }
-
     var body: some View {
         HStack {
-            text(minimumValueText)
+            format(minimumValueLabel)
             progressBar(valueWidth: valueWidth, bufferWidth: bufferWidth)
-            text(maximumValueText)
+            format(maximumValueLabel)
         }
-        .frame(maxWidth: .infinity, minHeight: 10, maxHeight: 10)
+        .frame(height: 10)
+        .frame(maxWidth: .infinity)
     }
 
-    init(progressTracker: ProgressTracker, minimumValueText: String? = nil, maximumValueText: String? = nil) {
+    init(
+        progressTracker: ProgressTracker,
+        @ViewBuilder minimumValueLabel: @escaping () -> ValueLabel,
+        @ViewBuilder maximumValueLabel: @escaping () -> ValueLabel
+    ) {
         self.progressTracker = progressTracker
-        self.minimumValueText = minimumValueText
-        self.maximumValueText = maximumValueText
+        self.minimumValueLabel = minimumValueLabel
+        self.maximumValueLabel = maximumValueLabel
         _value = Binding(progressTracker, at: \.progress)
-        _buffer = Binding(progressTracker, at: \.loaded)
+        _buffer = Binding(progressTracker, at: \.buffer)
     }
 
     @ViewBuilder
-    private func text(_ text: String?) -> some View {
-        if let text {
-            Text(text)
-                .font(.caption)
-                .monospacedDigit()
-        }
+    private func format(_ label: () -> ValueLabel) -> some View {
+        label()
+            .font(.caption)
+            .monospacedDigit()
     }
 
     @ViewBuilder
@@ -73,21 +70,21 @@ struct PlaybackSlider: View {
             .onChange(of: buffer) { onBufferChanged($0, geometry: geometry) }
         }
         .cornerRadius(5)
-        .scaleEffect(y: isDragging ? 1.5 : 1.0)
-        .animation(.smooth(duration: 0.4), value: isDragging)
+        .scaleEffect(y: progressTracker.isInteracting ? 1.5 : 1.0)
+        .animation(.smooth(duration: 0.4), value: progressTracker.isInteracting)
     }
 
     private func dragGesture(geometry: GeometryProxy) -> some Gesture {
         DragGesture()
             .onChanged { gesture in
-                isDragging = true
+                progressTracker.isInteracting = true
                 let width = geometry.size.width
                 let translation = gesture.translation.width
                 valueWidth = (previousValueWidth + translation).clamped(to: 0...width)
                 value = Float(valueWidth / width)
             }
             .onEnded { _ in
-                isDragging = false
+                progressTracker.isInteracting = false
                 previousValueWidth = valueWidth
             }
     }
@@ -95,7 +92,7 @@ struct PlaybackSlider: View {
     func onValueChanged(_ value: Float, geometry: GeometryProxy) {
         let width = geometry.size.width
         valueWidth = CGFloat(value) * width
-        if !isDragging {
+        if !progressTracker.isInteracting {
             previousValueWidth = valueWidth
         }
     }
@@ -109,10 +106,17 @@ struct PlaybackSlider: View {
     }
 }
 
+extension PlaybackSlider where ValueLabel == EmptyView {
+    init(progressTracker: ProgressTracker) {
+        self.init(progressTracker: progressTracker, minimumValueLabel: { EmptyView() }, maximumValueLabel: { EmptyView() })
+    }
+}
+
 struct PlaybackSlider_Previews: PreviewProvider {
     static var previews: some View {
         PlaybackSlider(progressTracker: .init(interval: .zero))
             .padding(.horizontal, 5)
+            .preferredColorScheme(.dark)
     }
 }
 #endif

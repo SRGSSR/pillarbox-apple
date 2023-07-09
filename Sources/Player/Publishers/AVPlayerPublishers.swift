@@ -62,7 +62,7 @@ extension AVPlayer {
     func currentItemLoadedTimeRangePublisher() -> AnyPublisher<CMTimeRange, Never> {
         publisher(for: \.currentItem)
             .map { item in
-                guard let item else { return Just(CMTimeRange.zero).eraseToAnyPublisher() }
+                guard let item else { return Just(CMTimeRange.invalid).eraseToAnyPublisher() }
                 return item.loadedTimeRangePublisher()
             }
             .switchToLatest()

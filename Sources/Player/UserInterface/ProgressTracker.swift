@@ -27,7 +27,8 @@ public final class ProgressTracker: ObservableObject {
         }
     }
 
-    @Published public var loaded: Float = .zero
+    /// A Float value representing the amount of content that has been loaded and is available for playback.
+    @Published public var buffer: Float = .zero
 
     @Published private var _progress: Float?
 
@@ -116,7 +117,7 @@ public final class ProgressTracker: ObservableObject {
             }
             .switchToLatest()
             .receiveOnMainThread()
-            .assign(to: &$loaded)
+            .assign(to: &$buffer)
     }
 
     private static func currentTimePublisher(
