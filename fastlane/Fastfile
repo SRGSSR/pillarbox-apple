@@ -221,10 +221,7 @@ end
 platform :ios do
   before_all do
     ensure_git_status_clean
-    xcodes(
-      version: '15',
-      select_for_current_build_only: true
-    )
+    xcodes(select_for_current_build_only: true)
   end
 
   after_all do
