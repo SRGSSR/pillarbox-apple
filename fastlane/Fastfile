@@ -221,7 +221,13 @@ end
 platform :ios do
   before_all do
     ensure_git_status_clean
-    xcodes(select_for_current_build_only: true)
+    # Use .xcode-version file
+    # xcodes(select_for_current_build_only: true)
+
+    # Xcodes supports versions like '15 Beta 3', which is not compatible with fastlane.
+    # However, fastlane only supports semantic versioning, making 'xcversion' a more suitable choice for betas.
+    # See also: https://github.com/SRGSSR/pillarbox-apple/issues/440
+    xcversion
   end
 
   after_all do
