@@ -11,6 +11,12 @@ import Circumspect
 import Streams
 import XCTest
 
+private class MockAVPlayerItem: AVPlayerItem {
+    override var duration: CMTime {
+        CMTime(seconds: Double.nan, preferredTimescale: 0)
+    }
+}
+
 // swiftlint:disable:next type_name
 final class AVPlayerItemLoadedTimeRangePublisherTests: TestCase {
     func testEmpty() {
@@ -84,6 +90,16 @@ final class AVPlayerItemLoadedTimeRangePublisherTests: TestCase {
             ],
             from: player.currentItemLoadedTimeRangePublisher(),
             to: beClose(within: 1)
+        )
+    }
+
+    func testNonNumericDuration() {
+        let item = MockAVPlayerItem(url: Stream.shortOnDemand.url)
+        let player = AVPlayer(playerItem: item)
+        expectEqualPublished(
+            values: [.invalid],
+            from: player.currentItemLoadedTimeRangePublisher(),
+            during: .seconds(2)
         )
     }
 }

@@ -63,7 +63,15 @@ extension AVPlayer {
         publisher(for: \.currentItem)
             .map { item in
                 guard let item else { return Just(CMTimeRange.invalid).eraseToAnyPublisher() }
-                return item.loadedTimeRangePublisher()
+                return Publishers.CombineLatest(
+                    item.loadedTimeRangePublisher(),
+                    item.durationPublisher()
+                )
+                .map { loadedTimeRange, duration in
+                    guard loadedTimeRange.end.isNumeric, duration.isNumeric else { return .invalid }
+                    return loadedTimeRange
+                }
+                .eraseToAnyPublisher()
             }
             .switchToLatest()
             .removeDuplicates()

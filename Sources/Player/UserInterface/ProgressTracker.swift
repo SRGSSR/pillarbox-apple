@@ -109,8 +109,7 @@ public final class ProgressTracker: ObservableObject {
                 return player.queuePlayer
                     .currentItemLoadedTimeRangePublisher()
                     .map { loadedTimeRange in
-                        // FIXME: Add tests (never nan in buffer for all kinds of streams)
-                        guard item.duration.isNumeric, loadedTimeRange.end.isNumeric else { return 0 }
+                        guard loadedTimeRange.isValid else { return 0 }
                         return item.duration != .zero ? Float(loadedTimeRange.end.seconds / item.duration.seconds) : 0
                     }
                     .eraseToAnyPublisher()
