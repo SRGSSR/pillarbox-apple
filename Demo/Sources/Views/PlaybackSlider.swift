@@ -14,7 +14,7 @@ struct PlaybackSlider<ValueLabel: View>: View {
     let minimumValueLabel: () -> ValueLabel
     let maximumValueLabel: () -> ValueLabel
 
-    @State private var initialProgress: Float?
+    @State private var initialProgress: Float = 0
 
     var body: some View {
         HStack {
@@ -70,19 +70,15 @@ struct PlaybackSlider<ValueLabel: View>: View {
     private func dragGesture(in geometry: GeometryProxy) -> some Gesture {
         DragGesture()
             .onChanged { value in
-                progressTracker.isInteracting = true
-                if initialProgress == nil {
+                if !progressTracker.isInteracting {
+                    progressTracker.isInteracting = true
                     initialProgress = progressTracker.progress
                 }
-                if geometry.size.width != 0 {
-                    progressTracker.progress = initialProgress! + Float(value.translation.width / geometry.size.width)
-                }
-                else {
-                    progressTracker.progress = initialProgress!
-                }
+                let delta = (geometry.size.width != 0) ? Float(value.translation.width / geometry.size.width) : 0
+                progressTracker.progress = initialProgress + delta
             }
             .onEnded { _ in
-                initialProgress = nil
+                initialProgress = 0
                 progressTracker.isInteracting = false
             }
     }
