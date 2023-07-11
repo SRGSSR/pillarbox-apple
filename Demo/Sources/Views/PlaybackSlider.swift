@@ -9,21 +9,17 @@ import SwiftUI
 
 #if os(iOS)
 struct PlaybackSlider<ValueLabel: View>: View {
-    let progressTracker: ProgressTracker
+    @ObservedObject var progressTracker: ProgressTracker
+
     let minimumValueLabel: () -> ValueLabel
     let maximumValueLabel: () -> ValueLabel
 
-    @Binding private var value: Float
-    @State private var valueWidth: CGFloat = 0
-    @State private var previousValueWidth: CGFloat = 0
-
-    @Binding private var buffer: Float
-    @State private var bufferWidth: CGFloat = 0
+    @State private var initialProgress: Float?
 
     var body: some View {
         HStack {
             format(minimumValueLabel)
-            progressBar(valueWidth: valueWidth, bufferWidth: bufferWidth)
+            progressBar()
             format(maximumValueLabel)
         }
         .frame(height: 10)
@@ -38,8 +34,6 @@ struct PlaybackSlider<ValueLabel: View>: View {
         self.progressTracker = progressTracker
         self.minimumValueLabel = minimumValueLabel
         self.maximumValueLabel = maximumValueLabel
-        _value = Binding(progressTracker, at: \.progress)
-        _buffer = Binding(progressTracker, at: \.buffer)
     }
 
     @ViewBuilder
@@ -58,51 +52,39 @@ struct PlaybackSlider<ValueLabel: View>: View {
     }
 
     @ViewBuilder
-    private func progressBar(valueWidth: CGFloat, bufferWidth: CGFloat) -> some View {
+    private func progressBar() -> some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
                 rectangle(opacity: 0.1)
-                rectangle(opacity: 0.3, width: bufferWidth)
-                rectangle(width: valueWidth)
+                rectangle(opacity: 0.3, width: geometry.size.width * CGFloat(progressTracker.buffer))
+                rectangle(width: geometry.size.width * CGFloat(progressTracker.progress))
             }
-            .gesture(dragGesture(geometry: geometry))
-            .onChange(of: value) { onValueChanged($0, geometry: geometry) }
-            .onChange(of: buffer) { onBufferChanged($0, geometry: geometry) }
+            .animation(.linear(duration: 0.2), values: progressTracker.buffer, progressTracker.progress)
+            .gesture(dragGesture(in: geometry))
         }
         .cornerRadius(5)
         .scaleEffect(y: progressTracker.isInteracting ? 1.5 : 1.0)
         .animation(.smooth(duration: 0.4), value: progressTracker.isInteracting)
     }
 
-    private func dragGesture(geometry: GeometryProxy) -> some Gesture {
+    private func dragGesture(in geometry: GeometryProxy) -> some Gesture {
         DragGesture()
-            .onChanged { gesture in
+            .onChanged { value in
                 progressTracker.isInteracting = true
-                let width = geometry.size.width
-                let translation = gesture.translation.width
-                valueWidth = (previousValueWidth + translation).clamped(to: 0...width)
-                value = Float(valueWidth / width)
+                if initialProgress == nil {
+                    initialProgress = progressTracker.progress
+                }
+                if geometry.size.width != 0 {
+                    progressTracker.progress = initialProgress! + Float(value.translation.width / geometry.size.width)
+                }
+                else {
+                    progressTracker.progress = initialProgress!
+                }
             }
             .onEnded { _ in
+                initialProgress = nil
                 progressTracker.isInteracting = false
-                previousValueWidth = valueWidth
             }
-    }
-
-    func onValueChanged(_ value: Float, geometry: GeometryProxy) {
-        let width = geometry.size.width
-        valueWidth = CGFloat(value) * width
-        if !progressTracker.isInteracting {
-            previousValueWidth = valueWidth
-        }
-    }
-
-    private func onBufferChanged(_ buffer: Float, geometry: GeometryProxy) {
-        let width = geometry.size.width
-        let widthToApply = CGFloat(buffer) * width
-        if widthToApply.isNormal {
-            bufferWidth = widthToApply
-        }
     }
 }
 
