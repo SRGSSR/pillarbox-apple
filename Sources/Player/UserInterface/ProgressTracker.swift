@@ -105,13 +105,9 @@ public final class ProgressTracker: ObservableObject {
 
         $player
             .map { player -> AnyPublisher<Float, Never> in
-                guard let player, let item = player.queuePlayer.currentItem else { return Just(.zero).eraseToAnyPublisher() }
+                guard let player else { return Just(0).eraseToAnyPublisher() }
                 return player.queuePlayer
-                    .currentItemLoadedTimeRangePublisher()
-                    .map { loadedTimeRange in
-                        guard loadedTimeRange.isValid else { return 0 }
-                        return item.duration != .zero ? Float(loadedTimeRange.end.seconds / item.duration.seconds) : 0
-                    }
+                    .currentItemBufferPublisher()
                     .eraseToAnyPublisher()
             }
             .switchToLatest()

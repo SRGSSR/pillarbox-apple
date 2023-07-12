@@ -59,7 +59,7 @@ struct PlaybackSlider<ValueLabel: View>: View {
                 rectangle(opacity: 0.3, width: geometry.size.width * CGFloat(progressTracker.buffer))
                 rectangle(width: geometry.size.width * CGFloat(progressTracker.progress))
             }
-            .animation(.linear(duration: 0.2), values: progressTracker.buffer, progressTracker.progress)
+            .animation(.linear(duration: 0.5), value: progressTracker.buffer)
             .gesture(dragGesture(in: geometry))
         }
         .cornerRadius(5)

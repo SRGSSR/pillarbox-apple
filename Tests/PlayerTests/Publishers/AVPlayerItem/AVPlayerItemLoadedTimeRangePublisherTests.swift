@@ -13,7 +13,7 @@ import XCTest
 
 private class MockAVPlayerItem: AVPlayerItem {
     override var duration: CMTime {
-        CMTime(seconds: Double.nan, preferredTimescale: 0)
+        .init(value: 0, timescale: 0)
     }
 }
 
@@ -22,8 +22,8 @@ final class AVPlayerItemLoadedTimeRangePublisherTests: TestCase {
     func testEmpty() {
         let player = AVPlayer()
         expectAtLeastEqualPublished(
-            values: [.invalid],
-            from: player.currentItemLoadedTimeRangePublisher()
+            values: [0],
+            from: player.currentItemBufferPublisher()
         )
     }
 
@@ -31,8 +31,8 @@ final class AVPlayerItemLoadedTimeRangePublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastPublished(
-            values: [.invalid, CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration)],
-            from: player.currentItemLoadedTimeRangePublisher(),
+            values: [0, Float(Stream.shortOnDemand.duration.seconds)],
+            from: player.currentItemBufferPublisher(),
             to: beClose(within: 1)
         )
     }
@@ -41,8 +41,8 @@ final class AVPlayerItemLoadedTimeRangePublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.live.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
-            values: [.invalid],
-            from: player.currentItemLoadedTimeRangePublisher()
+            values: [0],
+            from: player.currentItemBufferPublisher()
         )
     }
 
@@ -51,12 +51,8 @@ final class AVPlayerItemLoadedTimeRangePublisherTests: TestCase {
         let player = AVQueuePlayer(playerItem: item)
         player.actionAtItemEnd = .advance
         expectAtLeastPublished(
-            values: [
-                .invalid,
-                CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration),
-                .invalid
-            ],
-            from: player.currentItemLoadedTimeRangePublisher(),
+            values: [0, Float(Stream.shortOnDemand.duration.seconds), 0],
+            from: player.currentItemBufferPublisher(),
             to: beClose(within: 1)
         ) {
             player.play()
@@ -68,11 +64,8 @@ final class AVPlayerItemLoadedTimeRangePublisherTests: TestCase {
         let player = AVQueuePlayer(playerItem: item)
         player.actionAtItemEnd = .none
         expectAtLeastPublished(
-            values: [
-                .invalid,
-                CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration)
-            ],
-            from: player.currentItemLoadedTimeRangePublisher(),
+            values: [0, Float(Stream.shortOnDemand.duration.seconds)],
+            from: player.currentItemBufferPublisher(),
             to: beClose(within: 1)
         ) {
             player.play()
@@ -84,11 +77,8 @@ final class AVPlayerItemLoadedTimeRangePublisherTests: TestCase {
         let item = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: [])
         let player = AVPlayer(playerItem: item)
         expectAtLeastPublished(
-            values: [
-                .invalid,
-                CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration)
-            ],
-            from: player.currentItemLoadedTimeRangePublisher(),
+            values: [0, Float(Stream.shortOnDemand.duration.seconds)],
+            from: player.currentItemBufferPublisher(),
             to: beClose(within: 1)
         )
     }
@@ -97,8 +87,8 @@ final class AVPlayerItemLoadedTimeRangePublisherTests: TestCase {
         let item = MockAVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVPlayer(playerItem: item)
         expectEqualPublished(
-            values: [.invalid],
-            from: player.currentItemLoadedTimeRangePublisher(),
+            values: [0, 0],
+            from: player.currentItemBufferPublisher(),
             during: .seconds(2)
         )
     }
