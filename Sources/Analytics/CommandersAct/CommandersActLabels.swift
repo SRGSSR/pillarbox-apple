@@ -8,7 +8,6 @@ import Foundation
 
 /// The labels associated with a Commanders Act event.
 public struct CommandersActLabels: Decodable {
-    private let _media_playback_rate: String?
     private let _media_position: String?
     private let _media_timeshift: String?
     private let _media_volume: String?
@@ -103,11 +102,6 @@ public struct CommandersActLabels: Decodable {
     /// The value of `media_player_version`.
     public let media_player_version: String?
 
-    /// The value of `media_playback_rate`.
-    public var media_playback_rate: Float? {
-        extract(\._media_playback_rate)
-    }
-
     /// The value of `media_position`.
     public var media_position: Int? {
         extract(\._media_position)
@@ -160,7 +154,6 @@ private extension CommandersActLabels {
         case event_value_5
         case media_player_display
         case media_player_version
-        case _media_playback_rate = "media_playback_rate"
         case _media_position = "media_position"
         case _media_timeshift = "media_timeshift"
         case _media_volume = "media_volume"
