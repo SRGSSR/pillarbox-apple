@@ -104,8 +104,7 @@ private extension CommandersActTracker {
         metadata.labels.merging([
             "media_player_display": "Pillarbox",
             "media_player_version": PackageInfo.version,
-            "media_volume": "\(volume(for: player))",
-            "media_playback_rate": "\(player.effectivePlaybackSpeed)"
+            "media_volume": "\(volume(for: player))"
         ]) { _, new in new }
     }
 }
