@@ -21,7 +21,6 @@ public struct TrackerAdapter<M: AssetMetadata> {
     ///   - configuration: The tracker configuration.
     ///   - mapper: The metadata mapper.
     public init<T>(trackerType: T.Type, configuration: T.Configuration, mapper: ((M) -> T.Metadata)?) where T: PlayerItemTracker {
-        // swiftlint:disable:next private_subject
         let metadataSubject = CurrentValueSubject<T.Metadata?, Never>(nil)
         let metadataPublisher = metadataSubject.compactMap { $0 }.eraseToAnyPublisher()
         let tracker = trackerType.init(configuration: configuration, metadataPublisher: metadataPublisher)
