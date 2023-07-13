@@ -24,18 +24,20 @@ public class Analytics {
     public struct Configuration {
         let vendor: Vendor
         let sourceKey: String
-        let site: String
+        let appSiteName: String
 
         /// Creates an analytics configuration.
+        ///
+        /// Contact the ADI team to get configuration parameters for your app.
         ///
         /// - Parameters:
         ///   - vendor: The vendor which the application belongs to.
         ///   - sourceKey: The source key.
-        ///   - site: The site name.
-        public init(vendor: Vendor, sourceKey: String, site: String) {
+        ///   - appSiteName: The app/site name.
+        public init(vendor: Vendor, sourceKey: String, appSiteName: String) {
             self.vendor = vendor
             self.sourceKey = sourceKey
-            self.site = site
+            self.appSiteName = appSiteName
         }
     }
 

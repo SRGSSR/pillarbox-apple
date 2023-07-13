@@ -47,7 +47,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         let configuration = Analytics.Configuration(
             vendor: .SRG,
             sourceKey: "39ae8f94-595c-4ca4-81f7-fb7748bd3f04",
-            site: "pillarbox-demo-apple"
+            appSiteName: "pillarbox-demo-apple"
         )
         try? Analytics.shared.start(with: configuration)
     }
