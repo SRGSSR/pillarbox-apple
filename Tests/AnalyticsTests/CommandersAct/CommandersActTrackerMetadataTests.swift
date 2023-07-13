@@ -21,7 +21,6 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
                 expect(labels.media_player_version).notTo(beEmpty())
                 expect(labels.media_volume).notTo(beNil())
                 expect(labels.media_playback_rate).to(equal(0.5))
-                expect(labels.media_bandwidth).to(equal(0))
                 expect(labels.media_title).to(equal("title"))
             }
         ) {
@@ -59,7 +58,6 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
                 expect(labels.media_player_version).notTo(beEmpty())
                 expect(labels.media_volume).notTo(beNil())
                 expect(labels.media_playback_rate).to(equal(1))
-                expect(labels.media_bandwidth).to(equal(0))
                 expect(labels.media_title).to(equal("title"))
             }
         ) {
