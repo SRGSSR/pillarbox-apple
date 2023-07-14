@@ -70,22 +70,39 @@ struct ExamplesView: View {
     var body: some View {
         List {
             MediaEntryView()
-            section(title: "SRG SSR streams (URLs)", medias: model.urlMedias)
-            section(title: "SRG SSR streams (URNs)", medias: model.urnMedias)
-            if !model.protectedMedias.isEmpty {
-                section(title: "Protected streams (URNs)", medias: model.protectedMedias)
-            }
-            section(title: "Apple streams", medias: model.appleMedias)
-            section(title: "Third-party streams", medias: model.thirdPartyMedias)
-            section(title: "Aspect ratios", medias: model.aspectRatioMedias)
-            section(title: "Unbuffered streams", medias: model.unbufferedMedias)
-            section(title: "Corner cases", medias: model.cornerCaseMedias)
+            srgSections()
+            thirdPartySections()
+            miscellaneousSections()
         }
         .scrollDismissesKeyboard(.immediately)
         .animation(.defaultLinear, value: model.protectedMedias)
         .navigationTitle("Examples")
         .tracked(title: "examples")
         .refreshable { await model.refresh() }
+    }
+
+    @ViewBuilder
+    private func srgSections() -> some View {
+        section(title: "SRG SSR streams (URLs)", medias: model.urlMedias)
+        section(title: "SRG SSR streams (URNs)", medias: model.urnMedias)
+        if !model.protectedMedias.isEmpty {
+            section(title: "Protected streams (URNs)", medias: model.protectedMedias)
+        }
+    }
+
+    @ViewBuilder
+    private func thirdPartySections() -> some View {
+        section(title: "Apple streams", medias: model.appleMedias)
+        section(title: "Third-party streams", medias: model.thirdPartyMedias)
+        section(title: "Bitmovin streams streams", medias: model.bitmovinMedias)
+        section(title: "Unified Streaming", medias: model.unifiedStreamingSourceMedias)
+    }
+
+    @ViewBuilder
+    private func miscellaneousSections() -> some View {
+        section(title: "Aspect ratios", medias: model.aspectRatioMedias)
+        section(title: "Unbuffered streams", medias: model.unbufferedMedias)
+        section(title: "Corner cases", medias: model.cornerCaseMedias)
     }
 
     @ViewBuilder

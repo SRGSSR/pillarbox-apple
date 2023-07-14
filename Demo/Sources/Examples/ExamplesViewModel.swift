@@ -48,12 +48,31 @@ final class ExamplesViewModel: ObservableObject {
     ])
 
     let thirdPartyMedias = Template.medias(from: [
-        URLTemplate.uhdVideoHLS,
-        URLTemplate.bitmovinOnDemandSintel,
-        URLTemplate.bitmovinOnDemandBigBuckBunny,
-        URLTemplate.bitmovinOnDemandAoM1,
-        URLTemplate.bitmovinOnDemandAoM2,
-        URLTemplate.bitmovinOnDemandAoM3
+        URLTemplate.uhdVideoHLS
+    ])
+
+    let bitmovinMedias = Template.medias(from: [
+        URLTemplate.bitmovinOnDemandMultipleTracks,
+        URLTemplate.bitmovinOnDemand_4K_HEVC,
+        URLTemplate.bitmovinOnDemandSingleAudio,
+        URLTemplate.bitmovinOnDemandAES128,
+        URLTemplate.bitmovinOnDemandProgressive
+    ])
+
+    let unifiedStreamingSourceMedias = Template.medias(from: [
+        URLTemplate.unifiedStreamingOnDemand_fMP4,
+        URLTemplate.unifiedStreamingOnDemandKeyRotation,
+        URLTemplate.unifiedStreamingOnDemandAlternateAudio,
+        URLTemplate.unifiedStreamingOnDemandAudioOnly,
+        URLTemplate.unifiedStreamingOnDemandTrickplay,
+        URLTemplate.unifiedStreamingOnDemandLimitedBandwidth,
+        URLTemplate.unifiedStreamingOnDemandDynamicTrackSelection,
+        URLTemplate.unifiedStreamingPureLive,
+        URLTemplate.unifiedStreamingTimeshift,
+        URLTemplate.unifiedStreamingLiveAudio,
+        URLTemplate.unifiedStreamingPureLiveScte35,
+        URLTemplate.unifiedStreamingOnDemand_fMP4_Clear,
+        URLTemplate.unifiedStreamingOnDemand_fMP4_HEVC_4K
     ])
 
     let cornerCaseMedias = Template.medias(from: [
