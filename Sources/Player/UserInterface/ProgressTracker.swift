@@ -116,6 +116,7 @@ public final class ProgressTracker: ObservableObject {
                     .eraseToAnyPublisher()
             }
             .switchToLatest()
+            .removeDuplicates()
             .receiveOnMainThread()
             .assign(to: &$buffer)
     }
