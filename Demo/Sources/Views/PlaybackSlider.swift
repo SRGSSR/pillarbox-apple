@@ -69,7 +69,7 @@ struct PlaybackSlider<ValueLabel: View>: View {
     }
 
     private func dragGesture(in geometry: GeometryProxy) -> some Gesture {
-        DragGesture()
+        DragGesture(minimumDistance: 1)
             .onChanged { value in
                 if !progressTracker.isInteracting {
                     progressTracker.isInteracting = true
