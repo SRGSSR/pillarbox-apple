@@ -27,7 +27,10 @@ public final class ProgressTracker: ObservableObject {
         }
     }
 
-    /// A Float value representing the amount of content that has been loaded and is available for playback.
+    /// The buffer position.
+    ///
+    /// Returns a value between 0 and 1 indicating up to where content has been loaded and is available for
+    /// playback.
     @Published public var buffer: Float = .zero
 
     @Published private var _progress: Float?
@@ -36,9 +39,11 @@ public final class ProgressTracker: ObservableObject {
 
     /// The current progress.
     ///
-    /// The returned value might be different from the player progress when interaction takes place.
+    /// Returns a value between 0 and 1. The progress might be different from the actual player progress during
+    /// user interaction.
     ///
-    /// This property returns 0 when no progress information is available, which you can check using `isProgressAvailable`.
+    /// This property returns 0 when no progress information is available. Use `isProgressAvailable` to check whether
+    /// progress is available or not.
     public var progress: Float {
         get {
             _progress ?? 0
