@@ -87,7 +87,7 @@ final class AVPlayerItemLoadedTimeRangePublisherTests: TestCase {
         let item = MockAVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVPlayer(playerItem: item)
         expectEqualPublished(
-            values: [0, 0],
+            values: [0],
             from: player.currentItemBufferPublisher(),
             during: .seconds(2)
         )

@@ -74,6 +74,7 @@ extension AVPlayer {
                 .eraseToAnyPublisher()
             }
             .switchToLatest()
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
