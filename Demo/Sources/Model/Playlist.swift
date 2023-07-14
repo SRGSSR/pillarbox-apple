@@ -7,12 +7,6 @@
 import CoreBusiness
 import Foundation
 
-extension URL: ExpressibleByStringLiteral {
-    public init(stringLiteral value: StringLiteralType) {
-        self = URL(string: value)!
-    }
-}
-
 enum URLTemplates {
     static let videos: [Template] = [
         Template(
