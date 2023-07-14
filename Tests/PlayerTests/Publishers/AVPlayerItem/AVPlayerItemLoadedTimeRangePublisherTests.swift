@@ -8,6 +8,7 @@
 
 import AVFoundation
 import Circumspect
+import Nimble
 import Streams
 import XCTest
 
@@ -31,9 +32,9 @@ final class AVPlayerItemLoadedTimeRangePublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastPublished(
-            values: [0, Float(Stream.shortOnDemand.duration.seconds)],
+            values: [0, 1],
             from: player.currentItemBufferPublisher(),
-            to: beClose(within: 1)
+            to: beClose(within: 0.2)
         )
     }
 
@@ -51,9 +52,9 @@ final class AVPlayerItemLoadedTimeRangePublisherTests: TestCase {
         let player = AVQueuePlayer(playerItem: item)
         player.actionAtItemEnd = .advance
         expectAtLeastPublished(
-            values: [0, Float(Stream.shortOnDemand.duration.seconds), 0],
+            values: [0, 1, 0],
             from: player.currentItemBufferPublisher(),
-            to: beClose(within: 1)
+            to: beClose(within: 0.2)
         ) {
             player.play()
         }
@@ -64,9 +65,9 @@ final class AVPlayerItemLoadedTimeRangePublisherTests: TestCase {
         let player = AVQueuePlayer(playerItem: item)
         player.actionAtItemEnd = .none
         expectAtLeastPublished(
-            values: [0, Float(Stream.shortOnDemand.duration.seconds)],
+            values: [0, 1],
             from: player.currentItemBufferPublisher(),
-            to: beClose(within: 1)
+            to: beClose(within: 0.2)
         ) {
             player.play()
         }
@@ -77,9 +78,9 @@ final class AVPlayerItemLoadedTimeRangePublisherTests: TestCase {
         let item = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: [])
         let player = AVPlayer(playerItem: item)
         expectAtLeastPublished(
-            values: [0, Float(Stream.shortOnDemand.duration.seconds)],
+            values: [0, 1],
             from: player.currentItemBufferPublisher(),
-            to: beClose(within: 1)
+            to: beClose(within: 0.2)
         )
     }
 
