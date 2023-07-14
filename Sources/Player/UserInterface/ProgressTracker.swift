@@ -27,15 +27,23 @@ public final class ProgressTracker: ObservableObject {
         }
     }
 
+    /// The buffer position.
+    ///
+    /// Returns a value between 0 and 1 indicating up to where content has been loaded and is available for
+    /// playback.
+    @Published public var buffer: Float = .zero
+
     @Published private var _progress: Float?
 
     private let seekBehavior: SeekBehavior
 
     /// The current progress.
     ///
-    /// The returned value might be different from the player progress when interaction takes place.
+    /// Returns a value between 0 and 1. The progress might be different from the actual player progress during
+    /// user interaction.
     ///
-    /// This property returns 0 when no progress information is available, which you can check using `isProgressAvailable`.
+    /// This property returns 0 when no progress information is available. Use `isProgressAvailable` to check whether
+    /// progress is available or not.
     public var progress: Float {
         get {
             _progress ?? 0
@@ -99,6 +107,18 @@ public final class ProgressTracker: ObservableObject {
             .removeDuplicates()
             .receiveOnMainThread()
             .assign(to: &$_progress)
+
+        $player
+            .map { player -> AnyPublisher<Float, Never> in
+                guard let player else { return Just(0).eraseToAnyPublisher() }
+                return player.queuePlayer
+                    .currentItemBufferPublisher()
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .removeDuplicates()
+            .receiveOnMainThread()
+            .assign(to: &$buffer)
     }
 
     private static func currentTimePublisher(

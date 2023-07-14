@@ -400,12 +400,12 @@ private struct TimeSlider: View {
         guard player.streamType == .onDemand, let time = progressTracker.time, let timeRange = progressTracker.timeRange else {
             return nil
         }
-        return Self.formattedDuration((time - timeRange.start).seconds)
+        return Self.formattedTime((time - timeRange.start).seconds, duration: timeRange.duration.seconds)
     }
 
     private var formattedTotalTime: String? {
         guard player.streamType == .onDemand, let timeRange = progressTracker.timeRange else { return nil }
-        return Self.formattedDuration(timeRange.duration.seconds)
+        return Self.formattedTime(timeRange.duration.seconds, duration: timeRange.duration.seconds)
     }
 
     private var isVisible: Bool {
@@ -413,17 +413,10 @@ private struct TimeSlider: View {
     }
 
     var body: some View {
-        Slider(
+        PlaybackSlider(
             progressTracker: progressTracker,
-            label: {
-                Text("Progress")
-            },
-            minimumValueLabel: {
-                label(withText: formattedElapsedTime)
-            },
-            maximumValueLabel: {
-                label(withText: formattedTotalTime)
-            }
+            minimumValueLabel: { Text(formattedElapsedTime ?? "") },
+            maximumValueLabel: { Text(formattedTotalTime ?? "") }
         )
         .foregroundColor(.white)
         .tint(.white)
@@ -435,12 +428,12 @@ private struct TimeSlider: View {
         ._debugBodyCounter(color: .blue)
     }
 
-    private static func formattedDuration(_ duration: TimeInterval) -> String {
+    private static func formattedTime(_ time: TimeInterval, duration: TimeInterval) -> String {
         if duration < 60 * 60 {
-            return shortFormatter.string(from: duration)!
+            return shortFormatter.string(from: time)!
         }
         else {
-            return longFormatter.string(from: duration)!
+            return longFormatter.string(from: time)!
         }
     }
 
