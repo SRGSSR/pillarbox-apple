@@ -22,7 +22,7 @@ struct PlaybackSlider<ValueLabel: View>: View {
             progressBar()
             format(maximumValueLabel)
         }
-        .frame(height: 10)
+        .frame(height: 8)
         .frame(maxWidth: .infinity)
     }
 
@@ -62,8 +62,8 @@ struct PlaybackSlider<ValueLabel: View>: View {
             .animation(.linear(duration: 0.5), value: progressTracker.buffer)
             .gesture(dragGesture(in: geometry))
         }
-        .cornerRadius(5)
-        .scaleEffect(y: progressTracker.isInteracting ? 1.5 : 1.0)
+        .frame(height: progressTracker.isInteracting ? 16 : 8)
+        .cornerRadius(progressTracker.isInteracting ? 8 : 4)
         .animation(.smooth(duration: 0.4), value: progressTracker.isInteracting)
     }
 
