@@ -41,6 +41,7 @@ struct PlaybackSlider<ValueLabel: View>: View {
         label()
             .font(.caption)
             .monospacedDigit()
+            .foregroundColor(.gray)
     }
 
     @ViewBuilder
