@@ -17,7 +17,8 @@ final class AVPlayerSmoothCurrentTimePublisherTests: TestCase {
         let player = QueuePlayer()
         expectEqualPublished(
             values: [],
-            from: player.smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main)
+            from: player.smoothCurrentTimePublisher(interval: CMTime(value: 1, timescale: 1), queue: .main),
+            during: .seconds(2)
         )
     }
 

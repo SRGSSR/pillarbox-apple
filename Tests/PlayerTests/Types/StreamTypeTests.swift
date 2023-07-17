@@ -14,7 +14,7 @@ import XCTest
 final class StreamTypeTests: TestCase {
     func testUnknown() {
         let player = Player()
-        expect(player.streamType).toAlways(equal(.unknown))
+        expect(player.streamType).toAlways(equal(.unknown), until: .seconds(2))
     }
 
     func testLiveIsLive() {

@@ -63,7 +63,8 @@ final class ProgressTrackerTimeTests: TestCase {
             ],
             from: progressTracker.changePublisher(at: \.time)
                 .removeDuplicates(),
-            to: beClose(within: 0.1)
+            to: beClose(within: 0.1),
+            during: .seconds(2)
         ) {
             progressTracker.player = player
             player.play()
