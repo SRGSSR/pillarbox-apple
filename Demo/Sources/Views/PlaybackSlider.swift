@@ -8,7 +8,7 @@ import Player
 import SwiftUI
 
 #if os(iOS)
-struct PlaybackSlider<ValueLabel: View>: View {
+struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     @ObservedObject var progressTracker: ProgressTracker
 
     let minimumValueLabel: () -> ValueLabel
@@ -18,9 +18,9 @@ struct PlaybackSlider<ValueLabel: View>: View {
 
     var body: some View {
         HStack {
-            format(minimumValueLabel)
+            minimumValueLabel()
             progressBar()
-            format(maximumValueLabel)
+            maximumValueLabel()
         }
         .frame(height: 8)
         .frame(maxWidth: .infinity)
@@ -34,14 +34,6 @@ struct PlaybackSlider<ValueLabel: View>: View {
         self.progressTracker = progressTracker
         self.minimumValueLabel = minimumValueLabel
         self.maximumValueLabel = maximumValueLabel
-    }
-
-    @ViewBuilder
-    private func format(_ label: () -> ValueLabel) -> some View {
-        label()
-            .font(.caption)
-            .monospacedDigit()
-            .foregroundColor(.gray)
     }
 
     @ViewBuilder
