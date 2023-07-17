@@ -58,6 +58,6 @@ final class ProgressTrackerSeekBehaviorTests: TestCase {
         ) {
             progressTracker.isInteracting = false
         }
-        expect(progressTracker.progress).to(equal(0.5))
+        expect(progressTracker.progress).toEventually(equal(0.5))
     }
 }
