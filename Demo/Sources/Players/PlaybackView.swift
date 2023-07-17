@@ -415,8 +415,12 @@ private struct TimeSlider: View {
     var body: some View {
         PlaybackSlider(
             progressTracker: progressTracker,
-            minimumValueLabel: { Text(formattedElapsedTime ?? "") },
-            maximumValueLabel: { Text(formattedTotalTime ?? "") }
+            minimumValueLabel: {
+                label(withText: formattedElapsedTime)
+            },
+            maximumValueLabel: {
+                label(withText: formattedTotalTime)
+            }
         )
         .foregroundColor(.white)
         .tint(.white)
@@ -441,7 +445,9 @@ private struct TimeSlider: View {
     private func label(withText text: String?) -> some View {
         if let text {
             Text(text)
+                .font(.caption)
                 .monospacedDigit()
+                .foregroundColor(.white)
         }
     }
 }
