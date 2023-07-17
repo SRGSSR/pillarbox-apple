@@ -8,7 +8,7 @@ import Player
 import SwiftUI
 
 #if os(iOS)
-struct PlaybackSlider<ValueLabel: View>: View {
+struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     @ObservedObject var progressTracker: ProgressTracker
 
     let minimumValueLabel: () -> ValueLabel
@@ -41,7 +41,7 @@ struct PlaybackSlider<ValueLabel: View>: View {
         label()
             .font(.caption)
             .monospacedDigit()
-            .foregroundColor(.gray)
+            .foregroundColor(.white)
     }
 
     @ViewBuilder
