@@ -97,3 +97,85 @@ public extension View {
         }
     }
 }
+
+@available(tvOS, unavailable)
+struct LayoutReader_Previews: PreviewProvider {
+    private struct IgnoredSafeArea: View {
+        @State private var layoutInfo: LayoutInfo = .none
+
+        var body: some View {
+            ZStack {
+                Color.red
+                    .ignoresSafeArea()
+                Color.blue
+                VStack {
+                    Text(layoutInfo.isOverCurrentContext ? "✅ Over current context" : "❌ Not over current context")
+                    Text(layoutInfo.isFullScreen ? "✅ Full screen" : "❌ Not full screen")
+                }
+            }
+            .readLayout(into: $layoutInfo)
+        }
+    }
+
+    private struct SafeArea: View {
+        @State private var layoutInfo: LayoutInfo = .none
+
+        var body: some View {
+            ZStack {
+                Color.red
+                Color.blue
+                VStack {
+                    Text(layoutInfo.isOverCurrentContext ? "✅ Over current context" : "❌ Not over current context")
+                    Text(layoutInfo.isFullScreen ? "✅ Full screen" : "❌ Not full screen")
+                }
+            }
+            .readLayout(into: $layoutInfo)
+        }
+    }
+
+    private struct NotOverCurrentContext: View {
+        @State private var layoutInfo: LayoutInfo = .none
+
+        var body: some View {
+            ZStack {
+                Color.blue
+                VStack {
+                    Text(layoutInfo.isOverCurrentContext ? "❌ Over current context" : "✅ Not over current context")
+                    Text(layoutInfo.isFullScreen ? "❌ Full screen" : "✅ Not full screen")
+                }
+            }
+            .frame(width: 400, height: 400)
+            .readLayout(into: $layoutInfo)
+        }
+    }
+
+    private struct NonFullScreen: View {
+        @State private var layoutInfo: LayoutInfo = .none
+
+        var body: some View {
+            Color.yellow
+                .sheet(isPresented: .constant(true)) {
+                    ZStack {
+                        Color.blue
+                        VStack {
+                            Text(layoutInfo.isOverCurrentContext ? "✅ Over current context" : "❌ Not over current context")
+                            Text(layoutInfo.isFullScreen ? "❌ Full screen" : "✅ Not full screen")
+                        }
+                    }
+                    .interactiveDismissDisabled()
+                    .readLayout(into: $layoutInfo)
+                }
+        }
+    }
+
+    static var previews: some View {
+        IgnoredSafeArea()
+            .previewDisplayName("Safe area ignored in LayoutReader")
+        SafeArea()
+            .previewDisplayName("Safe area in LayoutReader")
+        NotOverCurrentContext()
+            .previewDisplayName("Not over current context LayoutReader")
+        NonFullScreen()
+            .previewDisplayName("Non full-screen LayoutReader")
+    }
+}
