@@ -54,6 +54,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
             }
             .animation(.linear(duration: 0.5), value: progressTracker.buffer)
             .gesture(dragGesture(in: geometry))
+            .busy(progressTracker.player?.isBusy ?? false)
         }
         .frame(height: progressTracker.isInteracting ? 16 : 8)
         .cornerRadius(progressTracker.isInteracting ? 8 : 4)
@@ -80,6 +81,20 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
 extension PlaybackSlider where ValueLabel == EmptyView {
     init(progressTracker: ProgressTracker) {
         self.init(progressTracker: progressTracker, minimumValueLabel: { EmptyView() }, maximumValueLabel: { EmptyView() })
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func busy(_ isBusy: Bool) -> some View {
+        if #available(iOS 17.0, *) {
+            self.phaseAnimator([isBusy, false]) { content, phase in
+                content.opacity(phase ? 0.5 : 1)
+                    .animation(.easeInOut(duration: 0.7), value: phase)
+            }
+        } else {
+            self
+        }
     }
 }
 
