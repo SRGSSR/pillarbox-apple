@@ -122,7 +122,7 @@ We also bound an animation to `visibilityTracker.isUserInterfaceHidden` changes 
 
 ### Interaction tracking
 
-To ensure that controls stay visible when the user is somehow interacting with them we can call `visibilityTracker.reset()` to reset the automatic hiding mechanism. If we want to avoid controls to be automatically hidden if the user is dragging their finger on screen, we can e.g. call this method from a drag gesture simultaneously recognized with other gestures:
+To ensure that controls stay visible when the user is somehow interacting with them we can call `visibilityTracker.reset()` to reset the automatic hiding mechanism. For example we can use a simultaneous drag gesture to recognize when the user interacts with their screen:
 
 ```swift
 struct PlayerView: View {
@@ -136,7 +136,7 @@ struct PlayerView: View {
         .animation(.linear(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
         .onTapGesture(perform: visibilityTracker.toggle)
         .simultaneousGesture(
-            DragGesture()
+            DragGesture(minimumDistance: 0)
                 .onChanged { _ in visibilityTracker.reset() }
         )
         .onAppear(perform: player.play)
@@ -233,7 +233,7 @@ struct PlayerView: View {
 }
 ```
 
-You can also read the layout to check whether the view covers the full screen.
+You can also read the layout to check whether the view covers the full screen or not.
 
 ## Playlists
 
