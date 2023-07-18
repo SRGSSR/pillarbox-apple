@@ -363,7 +363,7 @@ private struct TimeBar: View {
                 SettingsMenu(player: player)
                 FullScreenButton(layout: $layout)
             }
-            .onInteractionGesture(notify: visibilityTracker)
+            .onInteractionGesture(minimumDistance: 0, notify: visibilityTracker)
         }
         .preventsTouchPropagation()
         .padding(.horizontal, 6)
