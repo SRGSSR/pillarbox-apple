@@ -30,7 +30,6 @@ private struct MainView: View {
             timeBar()
             volumeButton()
         }
-        .onInteractionGesture(notify: visibilityTracker)
         .animation(.defaultLinear, values: player.isBusy, isUserInterfaceHidden)
         .bind(visibilityTracker, to: player)
         ._debugBodyCounter()
@@ -68,11 +67,12 @@ private struct MainView: View {
         .accessibilityAddTraits(.isButton)
         .onTapGesture(perform: visibilityTracker.toggle)
         .gesture(magnificationGesture(), including: magnificationGestureMask)
+        .onInteractionGesture(notify: visibilityTracker)
     }
 
     @ViewBuilder
     private func timeBar() -> some View {
-        TimeBar(player: player, layout: $layout)
+        TimeBar(player: player, visibilityTracker: visibilityTracker, layout: $layout)
             .opacity(isUserInterfaceHidden && !areControlsAlwaysVisible ? 0 : 1)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
@@ -342,6 +342,7 @@ private struct LiveLabel: View {
 // Behavior: h-exp, v-hug
 private struct TimeBar: View {
     @ObservedObject var player: Player
+    @ObservedObject var visibilityTracker: VisibilityTracker
     @Binding var layout: PlaybackView.Layout
 
     @StateObject private var progressTracker = ProgressTracker(
@@ -356,10 +357,13 @@ private struct TimeBar: View {
     var body: some View {
         HStack(spacing: 0) {
             routePickerView()
-            TimeSlider(player: player, progressTracker: progressTracker)
-            LiveLabel(player: player, progressTracker: progressTracker)
-            SettingsMenu(player: player)
-            FullScreenButton(layout: $layout)
+            HStack(spacing: 0) {
+                TimeSlider(player: player, progressTracker: progressTracker)
+                LiveLabel(player: player, progressTracker: progressTracker)
+                SettingsMenu(player: player)
+                FullScreenButton(layout: $layout)
+            }
+            .onInteractionGesture(notify: visibilityTracker)
         }
         .preventsTouchPropagation()
         .padding(.horizontal, 6)
