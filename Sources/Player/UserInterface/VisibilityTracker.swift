@@ -100,7 +100,7 @@ public extension View {
     /// - Parameters:
     ///   - visibilityTracker: The visibility tracker to reset.
     ///   - minimumDistance: The minimum distance for swipe detection.
-    func onInteractionGesture(minimumDistance: CGFloat = 20, notify visibilityTracker: VisibilityTracker) -> some View {
+    func onInteractionGesture(minimumDistance: CGFloat = 30, notify visibilityTracker: VisibilityTracker) -> some View {
         simultaneousGesture(
             DragGesture(minimumDistance: minimumDistance)
                 .onChanged { _ in visibilityTracker.reset() }
