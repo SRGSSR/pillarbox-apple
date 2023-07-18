@@ -97,7 +97,7 @@ final class VisibilityTrackerTests: TestCase {
         player.play()
         visibilityTracker.player = player
         visibilityTracker.toggle()
-        expect(visibilityTracker.isUserInterfaceHidden).toEventually(beTrue(), timeout: .seconds(1))
+        expect(visibilityTracker.isUserInterfaceHidden).toEventually(beTrue())
     }
 
     func testInvalidDelay() {
