@@ -57,7 +57,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
         }
         .frame(height: progressTracker.isInteracting ? 16 : 8)
         .cornerRadius(progressTracker.isInteracting ? 8 : 4)
-        .animation(.smooth(duration: 0.4), value: progressTracker.isInteracting)
+        .animation(.easeInOut(duration: 0.4), value: progressTracker.isInteracting)
     }
 
     private func dragGesture(in geometry: GeometryProxy) -> some Gesture {
