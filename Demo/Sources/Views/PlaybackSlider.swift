@@ -88,8 +88,8 @@ extension PlaybackSlider where ValueLabel == EmptyView {
 private extension View {
     @ViewBuilder
     func busy(_ isBusy: Bool) -> some View {
-        if #available(iOS 17.0, *) {
-            phaseAnimator([isBusy, false]) { content, phase in
+        if #available(iOS 17.0, *), isBusy {
+            phaseAnimator([true, false]) { content, phase in
                 content
                     .opacity(phase ? 0.5 : 1)
                     .animation(.easeInOut(duration: 0.7), value: phase)
