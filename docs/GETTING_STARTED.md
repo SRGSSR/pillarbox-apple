@@ -195,7 +195,7 @@ To make it easier to spot where user interface updates can be optimized our `Cor
 
 Sometimes you want to enable behaviors only when a player view fills its parent context, for example zoom gestures which control the `VideoView` gravity.
 
-Pillarbox does not implement such behaviors natively but instead provides a `LayoutReader` wrapper returning its layout information through a binding.
+Pillarbox does not implement such behaviors natively but instead provides a `readLayout(into:)` modifier returning its layout information through a binding.
 
 Here is for example how you could implement a pinch gesture only available when the player view covers its current context:
 
@@ -210,12 +210,11 @@ struct PlayerView: View {
     @State private var gravity: AVLayerVideoGravity = .resizeAspect
 
     var body: some View {
-        LayoutReader(layoutInfo: $layoutInfo) {
-            VideoView(player: player, gravity: gravity)
-                .gesture(magnificationGesture(), including: magnificationGestureMask)
-                .ignoresSafeArea()
-        }
-        .onAppear(perform: player.play)
+        VideoView(player: player, gravity: gravity)
+            .readLayout(into: $layoutInfo)
+            .gesture(magnificationGesture(), including: magnificationGestureMask)
+            .ignoresSafeArea()
+            .onAppear(perform: player.play)
     }
 
     private var magnificationGestureMask: GestureMask {
@@ -231,7 +230,7 @@ struct PlayerView: View {
 }
 ```
 
-You can also use a layout reader to check whether the view covers the full screen.
+You can also read the layout to check whether the view covers the full screen.
 
 ## Playlists
 

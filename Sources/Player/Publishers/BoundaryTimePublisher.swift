@@ -16,12 +16,6 @@ extension Publishers {
         let times: [CMTime]
         let queue: DispatchQueue
 
-        init(player: AVPlayer, times: [CMTime], queue: DispatchQueue) {
-            self.player = player
-            self.times = times
-            self.queue = queue
-        }
-
         func receive<S>(subscriber: S) where S: Subscriber, Never == S.Failure, Void == S.Input {
             let subscription = Subscription(subscriber: subscriber, player: player, times: times, queue: queue)
             subscriber.receive(subscription: subscription)

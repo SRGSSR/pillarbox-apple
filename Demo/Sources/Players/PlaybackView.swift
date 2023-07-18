@@ -16,14 +16,14 @@ private struct MainView: View {
     @ObservedObject var player: Player
     @Binding var layout: PlaybackView.Layout
     @StateObject private var visibilityTracker = VisibilityTracker()
-    
+
     @State private var layoutInfo: LayoutInfo = .none
     @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
-    
+
     private var areControlsAlwaysVisible: Bool {
         player.isExternalPlaybackActive || player.mediaType == .audio
     }
-    
+
     var body: some View {
         ZStack {
             main()
@@ -57,18 +57,17 @@ private struct MainView: View {
 
     @ViewBuilder
     private func main() -> some View {
-        LayoutReader(layoutInfo: $layoutInfo) {
-            ZStack {
-                video()
-                    .ignoresSafeArea()
-                controls()
-                loadingIndicator()
-            }
-            .animation(.defaultLinear, value: isUserInterfaceHidden)
-            .accessibilityAddTraits(.isButton)
-            .onTapGesture(perform: visibilityTracker.toggle)
-            .gesture(magnificationGesture(), including: magnificationGestureMask)
+        ZStack {
+            video()
+                .ignoresSafeArea()
+            controls()
+            loadingIndicator()
         }
+        .animation(.defaultLinear, value: isUserInterfaceHidden)
+        .readLayout(into: $layoutInfo)
+        .accessibilityAddTraits(.isButton)
+        .onTapGesture(perform: visibilityTracker.toggle)
+        .gesture(magnificationGesture(), including: magnificationGestureMask)
     }
 
     @ViewBuilder

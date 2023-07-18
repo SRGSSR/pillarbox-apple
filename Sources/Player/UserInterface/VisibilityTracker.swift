@@ -95,7 +95,7 @@ public extension View {
             visibilityTracker.player = newValue
         }
     }
-    
+
     /// Adds an interaction gesture resetting the associated activity tracker when activity is detected.
     /// - Parameters:
     ///   - visibilityTracker: The visibility tracker to reset.
