@@ -6,9 +6,9 @@
 
 import SwiftUI
 
-/// An internal host controller which can determine whether it covers its current context or is full screen.
+/// An internal view controller which can determine whether it covers its current context or is full screen.
 @available(tvOS, unavailable)
-final class LayoutReaderHostingController<Content>: UIHostingController<Content>, UIGestureRecognizerDelegate where Content: View {
+final class LayoutReaderViewController: UIViewController, UIGestureRecognizerDelegate {
     var layoutInfo: Binding<LayoutInfo> = .constant(.none)
     private var isTransitioning = false
 
@@ -55,22 +55,18 @@ final class LayoutReaderHostingController<Content>: UIHostingController<Content>
 }
 
 @available(tvOS, unavailable)
-struct LayoutReaderHost<Content>: UIViewControllerRepresentable where Content: View {
+struct LayoutReaderView: UIViewControllerRepresentable {
     @Binding private var layoutInfo: LayoutInfo
-    @Binding private var content: () -> Content
 
-    init(layoutInfo: Binding<LayoutInfo>, @ViewBuilder content: @escaping () -> Content) {
+    init(layoutInfo: Binding<LayoutInfo>) {
         _layoutInfo = layoutInfo
-        _content = .constant(content)
     }
 
-    // Returns a `UIHostingController` directly to ensure correct safe area insets
-    func makeUIViewController(context: Context) -> LayoutReaderHostingController<Content> {
-        LayoutReaderHostingController(rootView: content())
+    func makeUIViewController(context: Context) -> LayoutReaderViewController {
+        .init()
     }
 
-    func updateUIViewController(_ uiViewController: LayoutReaderHostingController<Content>, context: Context) {
+    func updateUIViewController(_ uiViewController: LayoutReaderViewController, context: Context) {
         uiViewController.layoutInfo = _layoutInfo
-        uiViewController.rootView = content()
     }
 }

@@ -29,13 +29,13 @@ public struct LayoutReader<Content>: View where Content: View {
     @Binding private var content: () -> Content
 
     public var body: some View {
-        // Ignores the safe area to have support for safe area insets similar to a `ZStack`.
-        LayoutReaderHost(layoutInfo: $layoutInfo) {
-            ZStack {
-                content()
-            }
+        ZStack {
+            content()
         }
-        .ignoresSafeArea()
+        .background {
+            LayoutReaderView(layoutInfo: $layoutInfo)
+                .ignoresSafeArea()
+        }
     }
 
     /// Creates a layout reader.
