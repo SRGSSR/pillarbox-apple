@@ -22,7 +22,7 @@ public struct LayoutInfo {
 
 /// An internal view controller which can determine whether it covers its current context or is full screen.
 @available(tvOS, unavailable)
-final class LayoutReaderViewController: UIViewController, UIGestureRecognizerDelegate {
+private final class LayoutReaderViewController: UIViewController, UIGestureRecognizerDelegate {
     var layoutInfo: Binding<LayoutInfo> = .constant(.none)
     private var isTransitioning = false
 
