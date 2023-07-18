@@ -60,6 +60,7 @@ private struct MainView: View {
         LayoutReader(layoutInfo: $layoutInfo) {
             ZStack {
                 video()
+                    .ignoresSafeArea()
                 controls()
                 loadingIndicator()
             }
@@ -67,7 +68,6 @@ private struct MainView: View {
             .accessibilityAddTraits(.isButton)
             .onTapGesture(perform: visibilityTracker.toggle)
             .gesture(magnificationGesture(), including: magnificationGestureMask)
-            .ignoresSafeArea()
         }
     }
 
@@ -137,6 +137,7 @@ private struct ControlsView: View {
     var body: some View {
         ZStack {
             Color(white: 0, opacity: 0.3)
+                .ignoresSafeArea()
             HStack(spacing: 30) {
                 SkipBackwardButton(player: player, progressTracker: progressTracker)
                 PlaybackButton(player: player)
@@ -501,12 +502,13 @@ struct PlaybackView: View {
                 MainView(player: player, layout: $layout)
             case .system:
                 SystemVideoView(player: player)
+                    .ignoresSafeArea()
             }
 #else
             VideoView(player: player)
+                .ignoresSafeArea()
 #endif
         }
-        .ignoresSafeArea()
     }
 }
 
