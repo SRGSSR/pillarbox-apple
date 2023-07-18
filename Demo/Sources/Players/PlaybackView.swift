@@ -30,7 +30,7 @@ private struct MainView: View {
             timeBar()
             volumeButton()
         }
-        .interactionGesture(for: visibilityTracker)
+        .onInteractionGesture(notify: visibilityTracker)
         .animation(.defaultLinear, values: player.isBusy, isUserInterfaceHidden)
         .bind(visibilityTracker, to: player)
         ._debugBodyCounter()

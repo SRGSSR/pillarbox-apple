@@ -122,21 +122,20 @@ We also bound an animation to `visibilityTracker.isUserInterfaceHidden` changes 
 
 ### Interaction tracking
 
-We want to ensure that controls stay visible if the user is somehow interacting with them. This behavior can simply be achieved by wrapping the player area where user interaction must be tracked with an `InteractionView`. The interaction view calls an action block when any touch is detected within its frame. In our case we simply reset the auto hide mechanism whenever this happens:
-
+We want to ensure that controls stay visible if the user is somehow interacting with them. This behavior can simply be achieved by attaching an interaction detection gesture controlling visibility:
+ 
 ```swift
 struct PlayerView: View {
     // ...
 
     var body: some View {
-        InteractionView(action: visibilityTracker.reset) {
-            ZStack {
-                VideoView(player: player)
-                controls()
-            }
-            .animation(.linear(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
-            .onTapGesture(perform: visibilityTracker.toggle)
+        ZStack {
+            VideoView(player: player)
+            controls()
         }
+        .animation(.linear(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
+        .onTapGesture(perform: visibilityTracker.toggle)
+        .onInteractionGesture(notify: visibilityTracker)
         .onAppear(perform: player.play)
         .bind(visibilityTracker, to: player)
     }
