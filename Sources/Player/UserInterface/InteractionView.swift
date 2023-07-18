@@ -45,12 +45,10 @@ struct InteractionView_Previews: PreviewProvider {
 
         var body: some View {
             InteractionView(isInteracting: $isInteracting) {
-                ZStack {
-                    Color.red
-                        .ignoresSafeArea()
-                    Color.blue
-                    Text(isInteracting ? "Interacting" : "Not interacting")
-                }
+                Color.red
+                    .ignoresSafeArea()
+                Color.blue
+                Text(isInteracting ? "Interacting" : "Not interacting")
             }
         }
     }
