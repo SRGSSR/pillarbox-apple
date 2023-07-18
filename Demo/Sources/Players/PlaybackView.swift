@@ -16,23 +16,22 @@ private struct MainView: View {
     @ObservedObject var player: Player
     @Binding var layout: PlaybackView.Layout
     @StateObject private var visibilityTracker = VisibilityTracker()
-
+    
     @State private var layoutInfo: LayoutInfo = .none
     @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
-
+    
     private var areControlsAlwaysVisible: Bool {
         player.isExternalPlaybackActive || player.mediaType == .audio
     }
-
+    
     var body: some View {
-        InteractionView(action: visibilityTracker.reset) {
-            ZStack {
-                main()
-                timeBar()
-                volumeButton()
-            }
-            .animation(.defaultLinear, values: player.isBusy, isUserInterfaceHidden)
+        ZStack {
+            main()
+            timeBar()
+            volumeButton()
         }
+        .interactionGesture(for: visibilityTracker)
+        .animation(.defaultLinear, values: player.isBusy, isUserInterfaceHidden)
         .bind(visibilityTracker, to: player)
         ._debugBodyCounter()
     }
