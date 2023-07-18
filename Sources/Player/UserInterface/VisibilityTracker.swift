@@ -95,19 +95,4 @@ public extension View {
             visibilityTracker.player = newValue
         }
     }
-
-    /// Adds an interaction gesture resetting the associated activity tracker when activity is detected.
-    /// - Parameters:
-    ///   - visibilityTracker: The visibility tracker to reset.
-    ///   - minimumDistance: The minimum distance for swipe detection.
-    func onInteractionGesture(minimumDistance: CGFloat = 40, notify visibilityTracker: VisibilityTracker) -> some View {
-        simultaneousGesture(
-            DragGesture(minimumDistance: minimumDistance)
-                .onChanged { _ in visibilityTracker.reset() }
-        )
-        .simultaneousGesture(
-            TapGesture()
-                .onEnded { _ in visibilityTracker.reset() }
-        )
-    }
 }

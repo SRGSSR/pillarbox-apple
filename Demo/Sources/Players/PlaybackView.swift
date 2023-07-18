@@ -67,7 +67,10 @@ private struct MainView: View {
         .accessibilityAddTraits(.isButton)
         .onTapGesture(perform: visibilityTracker.toggle)
         .gesture(magnificationGesture(), including: magnificationGestureMask)
-        .onInteractionGesture(notify: visibilityTracker)
+        .simultaneousGesture(
+            TapGesture()
+                .onEnded { _ in visibilityTracker.reset() }
+        )
     }
 
     @ViewBuilder
@@ -357,13 +360,14 @@ private struct TimeBar: View {
     var body: some View {
         HStack(spacing: 0) {
             routePickerView()
-            HStack(spacing: 0) {
-                TimeSlider(player: player, progressTracker: progressTracker)
-                LiveLabel(player: player, progressTracker: progressTracker)
-                SettingsMenu(player: player)
-                FullScreenButton(layout: $layout)
-            }
-            .onInteractionGesture(minimumDistance: 0, notify: visibilityTracker)
+            TimeSlider(player: player, progressTracker: progressTracker)
+                .simultaneousGesture(
+                    DragGesture(minimumDistance: 0)
+                        .onChanged { _ in visibilityTracker.reset() }
+                )
+            LiveLabel(player: player, progressTracker: progressTracker)
+            SettingsMenu(player: player)
+            FullScreenButton(layout: $layout)
         }
         .preventsTouchPropagation()
         .padding(.horizontal, 6)

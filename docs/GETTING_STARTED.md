@@ -120,28 +120,6 @@ struct PlayerView: View {
 
 We also bound an animation to `visibilityTracker.isUserInterfaceHidden` changes so that controls fade in and out.
 
-### Interaction tracking
-
-We want to ensure that controls stay visible if the user is somehow interacting with them. This behavior can simply be achieved by attaching an interaction detection gesture controlling visibility:
- 
-```swift
-struct PlayerView: View {
-    // ...
-
-    var body: some View {
-        ZStack {
-            VideoView(player: player)
-            controls()
-        }
-        .animation(.linear(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
-        .onTapGesture(perform: visibilityTracker.toggle)
-        .onInteractionGesture(notify: visibilityTracker)
-        .onAppear(perform: player.play)
-        .bind(visibilityTracker, to: player)
-    }
-}
-```
-
 ## Custom view layouts
 
 Pillarbox currently does not provide any standard playback view you can use but you can build one yourself. Since `Player` is an `ObservableObject`, though, implementation of a playback view can be easily achieved in the same way as for any usual SwiftUI layout.
