@@ -56,14 +56,12 @@ struct LayoutReader_Previews: PreviewProvider {
 
         var body: some View {
             LayoutReader(layoutInfo: $layoutInfo) {
-                ZStack {
-                    Color.red
-                        .ignoresSafeArea()
-                    Color.blue
-                    VStack {
-                        Text(layoutInfo.isOverCurrentContext ? "✅ Over current context" : "❌ Not over current context")
-                        Text(layoutInfo.isFullScreen ? "✅ Full screen" : "❌ Not full screen")
-                    }
+                Color.red
+                    .ignoresSafeArea()
+                Color.blue
+                VStack {
+                    Text(layoutInfo.isOverCurrentContext ? "✅ Over current context" : "❌ Not over current context")
+                    Text(layoutInfo.isFullScreen ? "✅ Full screen" : "❌ Not full screen")
                 }
             }
         }
