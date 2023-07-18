@@ -54,7 +54,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
             }
             .animation(.linear(duration: 0.5), value: progressTracker.buffer)
             .gesture(dragGesture(in: geometry))
-            .busy(progressTracker.player?.isBusy ?? false)
+            .busy((progressTracker.player?.isBusy ?? false) && !progressTracker.isInteracting)
         }
         .frame(height: progressTracker.isInteracting ? 16 : 8)
         .cornerRadius(progressTracker.isInteracting ? 8 : 4)
