@@ -49,6 +49,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
                 rectangle(opacity: 0.1)
+                    .background(.ultraThinMaterial)
                 rectangle(opacity: 0.3, width: geometry.size.width * CGFloat(progressTracker.buffer))
                 rectangle(width: geometry.size.width * CGFloat(progressTracker.progress))
             }
