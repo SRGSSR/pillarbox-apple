@@ -95,6 +95,32 @@ final class ComScorePageViewTests: ComScoreTestCase {
         )).to(throwAssertion())
     }
 
+    func testCustomLabels() {
+        expectAtLeastHits(
+            .view { labels in
+                expect(labels["key"]).to(equal("value"))
+            }
+        ) {
+            Analytics.shared.trackPageView(
+                comScore: .init(title: "title", customLabels: ["key": "value"]),
+                commandersAct: .init(title: "title", type: "type")
+            )
+        }
+    }
+
+    func testCustomLabelsForbiddenOverrides() {
+        expectAtLeastHits(
+            .view { labels in
+                expect(labels.c8).to(equal("title"))
+            }
+        ) {
+            Analytics.shared.trackPageView(
+                comScore: .init(title: "title", customLabels: ["c8": "overridden_title"]),
+                commandersAct: .init(title: "title", type: "type")
+            )
+        }
+    }
+
     func testDefaultProtocolImplementation() {
         let viewController = AutomaticMockViewController()
         expect(viewController.isTrackedAutomatically).to(beTrue())
