@@ -21,4 +21,27 @@ final class CommandersActEventTests: CommandersActTestCase {
             Analytics.shared.sendEvent(commandersAct: .init(name: "name"))
         }
     }
+
+    func testCustomLabels() {
+        expectAtLeastHits(
+            .custom(name: "name") { labels in
+                // Use media-related key to test custom labels (so that its value can be parsed).
+                expect(labels.media_player_display).to(equal("value"))
+            }
+        ) {
+            Analytics.shared.sendEvent(commandersAct: .init(
+                name: "name",
+                customLabels: ["media_player_display": "value"]
+            ))
+        }
+    }
+
+    func testCustomLabelsForbiddenOverrides() {
+        expectAtLeastHits(.custom(name: "name")) {
+            Analytics.shared.sendEvent(commandersAct: .init(
+                name: "name",
+                customLabels: ["event_name": "overridden_name"]
+            ))
+        }
+    }
 }
