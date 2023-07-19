@@ -71,32 +71,6 @@ public struct CommandersActLabels: Decodable {
     /// The value of `content_title`.
     public let content_title: String?
 
-    // MARK: Event labels
-
-    /// The value of `event_type`.
-    public let event_type: String?
-
-    /// The value of `event_value`.
-    public let event_value: String?
-
-    /// The value of `event_source`.
-    public let event_source: String?
-
-    /// The value of `event_value_1`.
-    public let event_value_1: String?
-
-    /// The value of `event_value_2`.
-    public let event_value_2: String?
-
-    /// The value of `event_value_3`.
-    public let event_value_3: String?
-
-    /// The value of `event_value_4`.
-    public let event_value_4: String?
-
-    /// The value of `event_value_5`.
-    public let event_value_5: String?
-
     // MARK: Streaming labels
 
     /// The value of `media_player_display`.
