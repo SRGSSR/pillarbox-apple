@@ -11,8 +11,8 @@ private final class TrackerViewController: UIViewController, PageViewTracking {
     let commandersActPageView: CommandersActPageView
 
     init(comScore: ComScorePageView, commandersAct: CommandersActPageView) {
-        self.comScorePageView = comScore
-        self.commandersActPageView = commandersAct
+        comScorePageView = comScore
+        commandersActPageView = commandersAct
         super.init(nibName: nil, bundle: nil)
     }
 
