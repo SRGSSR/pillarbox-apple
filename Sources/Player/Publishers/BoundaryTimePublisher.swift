@@ -12,9 +12,15 @@ extension Publishers {
         typealias Output = Void
         typealias Failure = Never
 
-        let player: AVPlayer
-        let times: [CMTime]
-        let queue: DispatchQueue
+        private let player: AVPlayer
+        private let times: [CMTime]
+        private let queue: DispatchQueue
+
+        init(player: AVPlayer, times: [CMTime], queue: DispatchQueue) {
+            self.player = player
+            self.times = times
+            self.queue = queue
+        }
 
         func receive<S>(subscriber: S) where S: Subscriber, Never == S.Failure, Void == S.Input {
             let subscription = Subscription(subscriber: subscriber, player: player, times: times, queue: queue)
