@@ -32,7 +32,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             ]
         ))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .play { labels in
                 expect(labels.ns_st_mp).to(equal("Pillarbox"))
                 expect(labels.ns_st_mv).notTo(beEmpty())
@@ -51,7 +51,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             ]
         ))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .play { labels in
                 expect(labels.ns_st_po).to(equal(0))
             }
@@ -86,7 +86,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
         player.play()
         expect(player.time.seconds).toEventually(beGreaterThan(1))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .pause { labels in
                 expect(labels.ns_st_po).to(beCloseTo(1, within: 0.5))
             }
@@ -105,7 +105,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             ]
         ))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .play(),
             .end { labels in
                 expect(labels.ns_st_po).to(beCloseTo(Stream.mediumOnDemand.duration.seconds, within: 0.5))
@@ -124,7 +124,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             ]
         ))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .play(),
             .end { labels in
                 expect(labels.ns_st_po).to(beCloseTo(5, within: 0.5))
@@ -161,7 +161,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             ]
         ))
 
-        expectAtLeastEvents(.play(), .end()) {
+        expectAtLeastHits(.play(), .end()) {
             // See 2. at the top of this file.
             player.play()
             // See 1. at the top of this file.
@@ -185,7 +185,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             player.play()
         }
 
-        expectAtLeastEvents(.play()) {
+        expectAtLeastHits(.play()) {
             player.isTrackingEnabled = true
         }
     }

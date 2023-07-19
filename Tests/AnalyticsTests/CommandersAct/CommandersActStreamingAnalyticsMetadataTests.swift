@@ -13,7 +13,7 @@ import Nimble
 // swiftlint:disable:next type_name
 final class CommandersActStreamingAnalyticsMetadataTests: CommandersActTestCase {
     func testPlay() {
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .play { labels in
                 expect(labels.media_title).to(equal("title"))
             }
@@ -31,7 +31,7 @@ final class CommandersActStreamingAnalyticsMetadataTests: CommandersActTestCase 
         _ = analytics
         wait(for: .seconds(1))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .stop { labels in
                 expect(labels.media_title).to(equal("title"))
             }

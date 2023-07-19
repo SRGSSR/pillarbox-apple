@@ -83,10 +83,10 @@ final class CommandersActStreamingAnalytics {
             uninstallHeartbeats()
         }
 
-        Analytics.shared.sendCommandersActStreamingEvent(
+        Analytics.shared.sendStreamingEvent(commandersAct: .init(
             name: event.rawValue,
             labels: labels(eventData: eventData)
-        )
+        ))
     }
 
     private func labels(eventData: EventData) -> [String: String] {
@@ -193,9 +193,9 @@ private extension CommandersActStreamingAnalytics {
     private func sendHeartbeat(_ heartbeat: Heartbeat) {
         let eventData = eventData()
         updateTimeTracking(eventData: eventData)
-        Analytics.shared.sendCommandersActStreamingEvent(
+        Analytics.shared.sendStreamingEvent(commandersAct: .init(
             name: heartbeat.rawValue,
             labels: labels(eventData: eventData)
-        )
+        ))
     }
 }

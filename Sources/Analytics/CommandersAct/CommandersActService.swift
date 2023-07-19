@@ -36,11 +36,11 @@ final class CommandersActService {
         self.serverSide = serverSide
     }
 
-    func trackPageView(title: String, levels: [String]) {
-        guard let serverSide, let event = TCPageViewEvent(type: title) else { return }
+    func trackPageView(_ pageView: CommandersActPageView) {
+        guard let serverSide, let event = TCPageViewEvent(type: pageView.title) else { return }
         event.addNonBlankAdditionalProperty("navigation_property_type", withStringValue: "app")
         event.addNonBlankAdditionalProperty("navigation_bu_distributer", withStringValue: vendor?.rawValue)
-        levels.enumerated().forEach { index, level in
+        pageView.levels.enumerated().forEach { index, level in
             guard index < 8 else { return }
             event.addNonBlankAdditionalProperty("navigation_level_\(index + 1)", withStringValue: level)
         }
@@ -48,7 +48,7 @@ final class CommandersActService {
         serverSide.execute(event)
     }
 
-    func sendEvent(_ event: Event) {
+    func sendEvent(_ event: CommandersActEvent) {
         guard let serverSide, let customEvent = TCCustomEvent(name: event.name) else { return }
 
         let eventProperties = [
@@ -70,9 +70,9 @@ final class CommandersActService {
         serverSide.execute(customEvent)
     }
 
-    func sendStreamingEvent(name: String, labels: [String: String]) {
-        guard let serverSide, let customEvent = TCCustomEvent(name: name) else { return }
-        labels.forEach { key, value in
+    func sendStreamingEvent(_ event: CommandersActStreamingEvent) {
+        guard let serverSide, let customEvent = TCCustomEvent(name: event.name) else { return }
+        event.labels.forEach { key, value in
             customEvent.addNonBlankAdditionalProperty(key, withStringValue: value)
         }
         AnalyticsListener.capture(customEvent)

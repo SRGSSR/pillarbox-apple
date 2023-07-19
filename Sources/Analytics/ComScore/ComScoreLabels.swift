@@ -6,7 +6,7 @@
 
 import Foundation
 
-/// The labels associated with a comScore event.
+/// The labels associated with a comScore hit.
 public struct ComScoreLabels {
     let dictionary: [String: String]
 

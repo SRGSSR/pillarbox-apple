@@ -6,12 +6,13 @@
 
 @testable import Analytics
 
+import Circumspect
 import Nimble
 import XCTest
 
 final class CommandersActPageViewTests: CommandersActTestCase {
     func testLabels() {
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .page_view { labels in
                 expect(labels.page_type).to(equal("title"))
                 expect(labels.navigation_level_0).to(beNil())
@@ -31,21 +32,44 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                 expect(labels.navigation_bu_distributer).to(equal("SRG"))
             }
         ) {
-            Analytics.shared.trackPageView(title: "title", levels: [
-                "level_1",
-                "level_2",
-                "level_3",
-                "level_4",
-                "level_5",
-                "level_6",
-                "level_7",
-                "level_8"
-            ])
+            Analytics.shared.trackPageView(
+                comScore: .init(title: "title"),
+                commandersAct: .init(
+                    title: "title",
+                    type: "type",
+                    levels: [
+                        "level_1",
+                        "level_2",
+                        "level_3",
+                        "level_4",
+                        "level_5",
+                        "level_6",
+                        "level_7",
+                        "level_8"
+                    ]
+                )
+            )
         }
     }
 
-    func testEmptyLevels() {
-        expectAtLeastEvents(
+    func testBlankTitle() {
+        guard nimbleThrowAssertionsAvailable() else { return }
+        expect(Analytics.shared.trackPageView(
+            comScore: .init(title: "title"),
+            commandersAct: .init(title: " ", type: "type")
+        )).to(throwAssertion())
+    }
+
+    func testBlankType() {
+        guard nimbleThrowAssertionsAvailable() else { return }
+        expect(Analytics.shared.trackPageView(
+            comScore: .init(title: "title"),
+            commandersAct: .init(title: "title", type: " ")
+        )).to(throwAssertion())
+    }
+
+    func testBlankLevels() {
+        expectAtLeastHits(
             .page_view { labels in
                 expect(labels.page_type).to(equal("title"))
                 expect(labels.navigation_level_1).to(beNil())
@@ -58,16 +82,23 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                 expect(labels.navigation_level_8).to(beNil())
             }
         ) {
-            Analytics.shared.trackPageView(title: "title", levels: [
-                " ",
-                " ",
-                " ",
-                " ",
-                " ",
-                " ",
-                " ",
-                " "
-            ])
+            Analytics.shared.trackPageView(
+                comScore: .init(title: "title"),
+                commandersAct: .init(
+                    title: "title",
+                    type: "type",
+                    levels: [
+                        " ",
+                        " ",
+                        " ",
+                        " ",
+                        " ",
+                        " ",
+                        " ",
+                        " "
+                    ]
+                )
+            )
         }
     }
 }

@@ -27,10 +27,10 @@ import UIKit
 ///
 /// ### Manual Tracking
 ///
-/// If you need to precisely control when page view events are emitted you can implement the optional
-/// `isTrackedAutomatically` property to return `false`. This is mostly useful when page view information is not
-/// available at the time `viewDidAppear(_:)` is called, e.g. if this information is retrieved asynchronously. Beware
-/// that in this case you are responsible of calling `UIViewController.trackPageView()` when:
+/// If you need to precisely control when page views are emitted you can implement the optional `isTrackedAutomatically`
+/// property to return `false`. This is mostly useful when page view information is not available at the time
+/// `viewDidAppear(_:)` is called, e.g. if this information is retrieved asynchronously. Beware that in this case you
+/// are responsible of calling `UIViewController.trackPageView()` when:
 ///
 /// - The view is visible and you received the information you needed for the page view.
 /// - The application returns from background and the information you need for the page view is readily available.
@@ -47,22 +47,17 @@ import UIKit
 /// through your application view controller hierarchy. Refer to `ContainerPageViewTracking` documentation for more
 /// information.
 public protocol PageViewTracking {
-    /// The page view title.
-    var pageTitle: String { get }
+    /// The comScore page view data.
+    var comScorePageView: ComScorePageView { get }
 
-    /// The page view levels. Defaults to an empty array.
-    var pageLevels: [String] { get }
+    /// The Commanders Act page view data.
+    var commandersActPageView: CommandersActPageView { get }
 
     /// A Boolean to enable or disable automatic tracking. Defaults to `true`.
     var isTrackedAutomatically: Bool { get }
 }
 
 public extension PageViewTracking {
-    /// The default page levels.
-    var pageLevels: [String] {
-        []
-    }
-
     /// The default automatic tracking setting.
     var isTrackedAutomatically: Bool {
         true
@@ -125,8 +120,8 @@ extension UIViewController {
     public func trackPageView() {
         guard let trackedViewController = self as? PageViewTracking else { return }
         Analytics.shared.trackPageView(
-            title: trackedViewController.pageTitle,
-            levels: trackedViewController.pageLevels
+            comScore: trackedViewController.comScorePageView,
+            commandersAct: trackedViewController.commandersActPageView
         )
     }
 }
@@ -144,8 +139,8 @@ extension UIViewController {
     func trackAutomaticPageView() {
         guard let trackedViewController = self as? PageViewTracking, trackedViewController.isTrackedAutomatically else { return }
         Analytics.shared.trackPageView(
-            title: trackedViewController.pageTitle,
-            levels: trackedViewController.pageLevels
+            comScore: trackedViewController.comScorePageView,
+            commandersAct: trackedViewController.commandersActPageView
         )
     }
 

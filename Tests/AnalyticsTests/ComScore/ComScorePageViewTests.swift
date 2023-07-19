@@ -6,13 +6,22 @@
 
 @testable import Analytics
 
+import Circumspect
 import Nimble
 import UIKit
 import XCTest
 
 private class AutomaticMockViewController: UIViewController, PageViewTracking {
-    var pageTitle: String {
+    private var pageTitle: String {
         title ?? "automatic"
+    }
+
+    var comScorePageView: ComScorePageView {
+        .init(title: pageTitle)
+    }
+
+    var commandersActPageView: CommandersActPageView {
+        .init(title: pageTitle, type: "type")
     }
 
     init(title: String? = nil) {
@@ -27,18 +36,30 @@ private class AutomaticMockViewController: UIViewController, PageViewTracking {
 }
 
 private class AutomaticWithLevelsMockViewController: UIViewController, PageViewTracking {
-    var pageTitle: String {
+    private var pageTitle: String {
         "automatic_with_levels"
     }
 
-    var pageLevels: [String] {
-        ["level1", "level2"]
+    var comScorePageView: ComScorePageView {
+        .init(title: pageTitle)
+    }
+
+    var commandersActPageView: CommandersActPageView {
+        .init(title: pageTitle, type: "type", levels: ["level1", "level2"])
     }
 }
 
 private class ManualMockViewController: UIViewController, PageViewTracking {
-    var pageTitle: String {
+    private var pageTitle: String {
         "manual"
+    }
+
+    var comScorePageView: ComScorePageView {
+        .init(title: pageTitle)
+    }
+
+    var commandersActPageView: CommandersActPageView {
+        .init(title: pageTitle, type: "type")
     }
 
     var isTrackedAutomatically: Bool {
@@ -48,7 +69,7 @@ private class ManualMockViewController: UIViewController, PageViewTracking {
 
 final class ComScorePageViewTests: ComScoreTestCase {
     func testLabels() {
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .view { labels in
                 expect(labels.c2).to(equal("6036016"))
                 expect(labels.ns_ap_an).to(equal("xctest"))
@@ -59,20 +80,29 @@ final class ComScorePageViewTests: ComScoreTestCase {
                 expect(labels.mp_v).notTo(beEmpty())
             }
         ) {
-            Analytics.shared.trackPageView(title: "title")
+            Analytics.shared.trackPageView(
+                comScore: .init(title: "title"),
+                commandersAct: .init(title: "title", type: "type")
+            )
         }
+    }
+
+    func testBlankTitle() {
+        guard nimbleThrowAssertionsAvailable() else { return }
+        expect(Analytics.shared.trackPageView(
+            comScore: .init(title: " "),
+            commandersAct: .init(title: "title", type: "type")
+        )).to(throwAssertion())
     }
 
     func testDefaultProtocolImplementation() {
         let viewController = AutomaticMockViewController()
-        expect(viewController.pageLevels).to(beEmpty())
         expect(viewController.isTrackedAutomatically).to(beTrue())
     }
 
     func testCustomProtocolImplementation() {
-        let viewController = AutomaticWithLevelsMockViewController()
-        expect(viewController.pageLevels).to(equal(["level1", "level2"]))
-        expect(viewController.isTrackedAutomatically).to(beTrue())
+        let viewController = ManualMockViewController()
+        expect(viewController.isTrackedAutomatically).to(beFalse())
     }
 
     func testAutomaticTrackingWithoutProtocolImplementation() {
@@ -91,7 +121,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
 
     func testAutomaticTrackingWhenViewAppears() {
         let viewController = AutomaticMockViewController()
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .view { labels in
                 expect(labels.c8).to(equal("automatic"))
             }
@@ -103,7 +133,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
     func testSinglePageViewWhenContainerViewAppears() {
         let viewController = AutomaticMockViewController()
         let navigationController = UINavigationController(rootViewController: viewController)
-        expectEvents(
+        expectHits(
             .view { labels in
                 expect(labels.c8).to(equal("automatic"))
             },
@@ -119,7 +149,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         let viewController2 = AutomaticMockViewController(title: "title2")
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [viewController1, viewController2]
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .view { labels in
                 expect(labels.c8).to(equal("title1"))
             }
@@ -146,7 +176,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
             UINavigationController(rootViewController: viewController1),
             UINavigationController(rootViewController: viewController2)
         ]
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .view { labels in
                 expect(labels.c8).to(equal("title1"))
             }
@@ -173,7 +203,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         expectNoEvents(during: .seconds(2)) {
             viewController.simulateViewAppearance()
         }
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .view { labels in
                 expect(labels.c8).to(equal("manual"))
             }
@@ -184,7 +214,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
 
     func testRecursiveAutomaticTrackingOnViewController() {
         let viewController = AutomaticMockViewController()
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .view { labels in
                 expect(labels.c8).to(equal("automatic"))
             }
@@ -196,7 +226,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
     func testRecursiveAutomaticTrackingOnNavigationController() {
         let viewController = UINavigationController(rootViewController: AutomaticMockViewController(title: "root"))
         viewController.pushViewController(AutomaticMockViewController(title: "pushed"), animated: false)
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .view { labels in
                 expect(labels.c8).to(equal("pushed"))
             }
@@ -208,7 +238,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
     func testRecursiveAutomaticTrackingOnPageViewController() {
         let viewController = UIPageViewController()
         viewController.setViewControllers([AutomaticMockViewController()], direction: .forward, animated: false)
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .view { labels in
                 expect(labels.c8).to(equal("automatic"))
             }
@@ -223,7 +253,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
             AutomaticMockViewController(title: "title1"),
             AutomaticMockViewController(title: "title2")
         ]
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .view { labels in
                 expect(labels.c8).to(equal("title1"))
             }
@@ -239,7 +269,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
             AutomaticMockViewController(title: "title2"),
             AutomaticMockViewController(title: "title3")
         ]
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .view { labels in
                 expect(labels.c8).to(equal("title1"))
             }
@@ -252,7 +282,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         let window = UIWindow()
         window.makeKeyAndVisible()
         window.rootViewController = AutomaticMockViewController()
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .view { labels in
                 expect(labels.c8).to(equal("automatic"))
             }
@@ -267,7 +297,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
         window.makeKeyAndVisible()
         window.rootViewController = rootViewController
         rootViewController.present(AutomaticMockViewController(title: "modal"), animated: false)
-        expectEvents(
+        expectHits(
             .view { labels in
                 expect(labels.c8).to(equal("modal"))
             },

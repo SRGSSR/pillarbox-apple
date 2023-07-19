@@ -6,9 +6,9 @@
 
 import Foundation
 
-/// An event sent by the comScore SDK.
-public struct ComScoreEvent {
-    /// A name describing a comScore event.
+/// A hit sent by the comScore SDK.
+public struct ComScoreHit {
+    /// A name describing a comScore hit.
     public enum Name: String {
         case play
         case pause
@@ -16,10 +16,10 @@ public struct ComScoreEvent {
         case view
     }
 
-    /// The event name.
+    /// The hit name.
     public let name: Name
 
-    /// The labels associated with the event.
+    /// The labels associated with the hit.
     public let labels: ComScoreLabels
 
     init?(from labels: ComScoreLabels) {
@@ -29,7 +29,7 @@ public struct ComScoreEvent {
     }
 }
 
-extension ComScoreEvent: CustomDebugStringConvertible {
+extension ComScoreHit: CustomDebugStringConvertible {
     public var debugDescription: String {
         name.rawValue
     }

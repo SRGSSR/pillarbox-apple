@@ -18,7 +18,7 @@ final class CommandersActStreamingAnalyticsHeartbeatOnDemandTests: CommandersAct
         }
         _ = analytics
 
-        expectAtLeastEvents(.pos(), .pos())
+        expectAtLeastHits(.pos(), .pos())
     }
 
     func testNoHeartbeatAfterPause() {
@@ -58,6 +58,6 @@ final class CommandersActStreamingAnalyticsHeartbeatOnDemandTests: CommandersAct
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(isBuffering: true)
-        expectAtLeastEvents(.pos(), .pos())
+        expectAtLeastHits(.pos(), .pos())
     }
 }

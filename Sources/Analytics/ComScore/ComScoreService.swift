@@ -35,8 +35,8 @@ struct ComScoreService {
         SCORAnalytics.start()
     }
 
-    func trackPageView(title: String, levels: [String]) {
-        var labels = ["c8": title]
+    func trackPageView(_ pageView: ComScorePageView) {
+        var labels = ["c8": pageView.title]
         AnalyticsListener.capture(&labels)
         SCORAnalytics.notifyViewEvent(withLabels: labels)
     }

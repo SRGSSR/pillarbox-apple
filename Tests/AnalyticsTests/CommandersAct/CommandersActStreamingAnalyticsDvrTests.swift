@@ -14,7 +14,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     private static let range = CMTimeRange(start: CMTime(value: 2, timescale: 1), end: CMTime(value: 20, timescale: 1))
 
     func testInitialPosition() {
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .play { labels in
                 expect(labels.media_position).to(equal(0))
                 expect(labels.media_timeshift).to(equal(2))
@@ -35,7 +35,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
         wait(for: .seconds(3))
         time = CMTime(value: 18, timescale: 1)
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .pause { labels in
                 expect(labels.media_position).to(equal(3))
                 expect(labels.media_timeshift).to(equal(2))
@@ -52,7 +52,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
         _ = analytics
         wait(for: .seconds(1))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .stop { labels in
                 expect(labels.media_position).to(equal(1))
                 expect(labels.media_timeshift).to(equal(5))
@@ -69,7 +69,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
         analytics?.notifyPlaybackSpeed(2)
         wait(for: .seconds(1))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .stop { labels in
                 expect(labels.media_position).to(equal(1))
                 expect(labels.media_timeshift).to(equal(5))
@@ -87,7 +87,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
         analytics?.notifyPlaybackSpeed(2)
         wait(for: .seconds(1))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .stop { labels in
                 expect(labels.media_position).to(equal(2))
                 expect(labels.media_timeshift).to(equal(5))
@@ -105,7 +105,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
         analytics?.notify(isBuffering: true)
         wait(for: .seconds(1))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .stop { labels in
                 expect(labels.media_position).to(equal(0))
                 expect(labels.media_timeshift).to(equal(5))
@@ -126,7 +126,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
         analytics?.notify(.pause)
         wait(for: .seconds(1))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .stop { labels in
                 expect(labels.media_position).to(equal(3))
                 expect(labels.media_timeshift).to(equal(2))

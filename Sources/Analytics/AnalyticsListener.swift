@@ -9,10 +9,10 @@ import ComScore
 import Foundation
 import TCServerSide
 
-/// A listener for analytics events.
+/// A listener for analytics hits.
 ///
 /// The listener must be started first and provides two methods with which comScore, respectively Commanders Act
-/// events can be captured.
+/// hits can be captured.
 ///
 /// Note that `AnalyticsListener` is a development-oriented tool (e.g. unit testing) which must never be used directly
 /// in production code.
@@ -27,27 +27,27 @@ public enum AnalyticsListener {
         ComScoreInterceptor.start(completion: completion)
     }
 
-    /// Captures comScore events.
+    /// Captures comScore hits.
     ///
     /// - Parameter perform: A closure to be executed within the capture session. The session provides a publisher
-    ///   which emits the associated events.
-    public static func captureComScoreEvents(perform: (AnyPublisher<ComScoreEvent, Never>) -> Void) {
-        captureEvents(perform: perform) { identifier in
-            ComScoreInterceptor.eventPublisher(for: identifier)
+    ///   which emits the associated hits.
+    public static func captureComScoreHits(perform: (AnyPublisher<ComScoreHit, Never>) -> Void) {
+        captureHits(perform: perform) { identifier in
+            ComScoreInterceptor.hitPublisher(for: identifier)
         }
     }
 
-    /// Captures Commanders Act events.
-    /// 
+    /// Captures Commanders Act hits.
+    ///
     /// - Parameter perform: A closure to be executed within the capture session. The session provides a publisher
-    ///   which emits the associated events.
-    public static func captureCommandersActEvents(perform: (AnyPublisher<CommandersActEvent, Never>) -> Void) {
-        captureEvents(perform: perform) { identifier in
-            CommandersActInterceptor.eventPublisher(for: identifier)
+    ///   which emits the associated hits.
+    public static func captureCommandersActHits(perform: (AnyPublisher<CommandersActHit, Never>) -> Void) {
+        captureHits(perform: perform) { identifier in
+            CommandersActInterceptor.hitPublisher(for: identifier)
         }
     }
 
-    private static func captureEvents<P>(perform: (P) -> Void, using publisher: (String) -> P) where P: Publisher, P.Failure == Never {
+    private static func captureHits<P>(perform: (P) -> Void, using publisher: (String) -> P) where P: Publisher, P.Failure == Never {
         assert(sessionIdentifier == nil, "Multiple captures are not supported")
 
         let identifier = UUID().uuidString

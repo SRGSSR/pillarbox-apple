@@ -13,7 +13,7 @@ import Player
 ///
 /// This tracker implements streaming measurements according to SRG SSR official specifications.
 ///
-/// Analytics have to be properly started for the tracker to collect events, see `Analytics.start(with:)`.
+/// Analytics have to be properly started for the tracker to collect data, see `Analytics.start(with:)`.
 public final class CommandersActTracker: PlayerItemTracker {
     private var cancellables = Set<AnyCancellable>()
     private var streamingAnalytics: CommandersActStreamingAnalytics?

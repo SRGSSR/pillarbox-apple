@@ -6,86 +6,56 @@
 
 import Foundation
 
-/// An event sent by the Commanders Act SDK.
+/// A Commanders Act event.
 public struct CommandersActEvent {
-    /// A name describing a Commanders Act event.
-    public enum Name: Equatable {
-        case play
-        case pause
-        case seek
-        case stop
-        case eof
-        case pos
-        case uptime
-        case page_view
-        case custom(String)
+    let name: String
+    let type: String
+    let value: String
+    let source: String
+    let extra1: String
+    let extra2: String
+    let extra3: String
+    let extra4: String
+    let extra5: String
+    let customLabels: [String: String]
 
-        /// Returns the event raw representation.
-        public var rawValue: String {
-            switch self {
-            case .play:
-                return "play"
-            case .pause:
-                return "pause"
-            case .seek:
-                return "seek"
-            case .stop:
-                return "stop"
-            case .eof:
-                return "eof"
-            case .pos:
-                return "pos"
-            case .uptime:
-                return "uptime"
-            case .page_view:
-                return "page_view"
-            case let .custom(name):
-                return name
-            }
-        }
-
-        /// Creates an event from a raw string.
-        public init?(rawValue: String?) {
-            // swiftlint:disable:previous cyclomatic_complexity
-            guard let rawValue else { return nil }
-            switch rawValue {
-            case "play":
-                self = .play
-            case "pause":
-                self = .pause
-            case "seek":
-                self = .seek
-            case "stop":
-                self = .stop
-            case "eof":
-                self = .eof
-            case "pos":
-                self = .pos
-            case "uptime":
-                self = .uptime
-            case "page_view":
-                self = .page_view
-            default:
-                self = .custom(rawValue)
-            }
-        }
-    }
-
-    /// The event name.
-    public let name: Name
-
-    /// The labels associated with the event.
-    public let labels: CommandersActLabels
-
-    init?(from labels: CommandersActLabels) {
-        guard let name = Name(rawValue: labels.event_name ?? "") else { return nil }
+    /// Creates a Commanders Act event.
+    ///
+    /// Custom labels which might accidentally override official labels will be ignored.
+    ///
+    /// - Parameters:
+    ///   - name: The event name.
+    ///   - type: The event type.
+    ///   - value: The event value.
+    ///   - source: The event source.
+    ///   - extra1: Extra information associated with the event.
+    ///   - extra2: Extra information associated with the event.
+    ///   - extra3: Extra information associated with the event.
+    ///   - extra4: Extra information associated with the event.
+    ///   - extra5: Extra information associated with the event.
+    ///   - customLabels: Additional custom information associated with the event.
+    public init(
+        name: String,
+        type: String = "",
+        value: String = "",
+        source: String = "",
+        extra1: String = "",
+        extra2: String = "",
+        extra3: String = "",
+        extra4: String = "",
+        extra5: String = "",
+        customLabels: [String: String] = [:]
+    ) {
+        assert(!name.isBlank, "A name is required")
         self.name = name
-        self.labels = labels
-    }
-}
-
-extension CommandersActEvent: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        name.rawValue
+        self.type = type
+        self.value = value
+        self.source = source
+        self.extra1 = extra1
+        self.extra2 = extra2
+        self.extra3 = extra3
+        self.extra4 = extra4
+        self.extra5 = extra5
+        self.customLabels = customLabels
     }
 }

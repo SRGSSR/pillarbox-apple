@@ -11,8 +11,13 @@ import Nimble
 import XCTest
 
 final class CommandersActEventTests: CommandersActTestCase {
+    func testBlankName() {
+        guard nimbleThrowAssertionsAvailable() else { return }
+        expect(Analytics.shared.sendEvent(commandersAct: .init(name: " "))).to(throwAssertion())
+    }
+
     func testLabels() {
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .custom(name: "name") { labels in
                 expect(labels.event_type).to(equal("type"))
                 expect(labels.event_value).to(equal("value"))
@@ -24,7 +29,7 @@ final class CommandersActEventTests: CommandersActTestCase {
                 expect(labels.event_value_5).to(equal("extra5"))
             }
         ) {
-            Analytics.shared.sendEvent(
+            Analytics.shared.sendEvent(commandersAct: .init(
                 name: "name",
                 type: "type",
                 value: "value",
@@ -34,12 +39,12 @@ final class CommandersActEventTests: CommandersActTestCase {
                 extra3: "extra3",
                 extra4: "extra4",
                 extra5: "extra5"
-            )
+            ))
         }
     }
 
     func testBlankLabels() {
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .custom(name: "name") { labels in
                 expect(labels.event_name).to(equal("name"))
                 expect(labels.event_type).to(beNil())
@@ -52,7 +57,7 @@ final class CommandersActEventTests: CommandersActTestCase {
                 expect(labels.event_value_5).to(beNil())
             }
         ) {
-            Analytics.shared.sendEvent(
+            Analytics.shared.sendEvent(commandersAct: .init(
                 name: "name",
                 type: " ",
                 value: " ",
@@ -62,7 +67,7 @@ final class CommandersActEventTests: CommandersActTestCase {
                 extra3: " ",
                 extra4: " ",
                 extra5: " "
-            )
+            ))
         }
     }
 }

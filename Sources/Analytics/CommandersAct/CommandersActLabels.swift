@@ -6,7 +6,7 @@
 
 import Foundation
 
-/// The labels associated with a Commanders Act event.
+/// The labels associated with a Commanders Act hit.
 public struct CommandersActLabels: Decodable {
     private let _media_position: String?
     private let _media_timeshift: String?

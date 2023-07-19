@@ -18,7 +18,7 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
         }
         _ = analytics
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .pos { labels in
                 expect(labels.media_position).to(equal(1))
             },
@@ -72,7 +72,7 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
         }
         analytics.notify(isBuffering: true)
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .pos { labels in
                 expect(labels.media_position).to(equal(0))
             },
