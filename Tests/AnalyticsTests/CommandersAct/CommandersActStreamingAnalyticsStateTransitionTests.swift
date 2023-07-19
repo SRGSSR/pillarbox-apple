@@ -19,7 +19,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     func testPlayPlay() {
         let analytics = CommandersActStreamingAnalytics()
         expect(analytics.lastEvent).to(equal(.play))
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             analytics.notify(.play)
             expect(analytics.lastEvent).to(equal(.play))
         }
@@ -79,7 +79,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     func testPausePause() {
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.pause)
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             analytics.notify(.pause)
             expect(analytics.lastEvent).to(equal(.pause))
         }
@@ -88,7 +88,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     func testPauseSeek() {
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.pause)
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             analytics.notify(.seek)
             expect(analytics.lastEvent).to(equal(.pause))
         }
@@ -97,7 +97,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     func testPauseEof() {
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.pause)
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             analytics.notify(.eof)
             expect(analytics.lastEvent).to(equal(.pause))
         }
@@ -132,7 +132,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     func testSeekPause() {
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.seek)
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             analytics.notify(.pause)
             expect(analytics.lastEvent).to(equal(.seek))
         }
@@ -141,7 +141,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     func testSeekSeek() {
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.seek)
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             analytics.notify(.seek)
             expect(analytics.lastEvent).to(equal(.seek))
         }
@@ -150,7 +150,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     func testSeekEof() {
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.seek)
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             analytics.notify(.eof)
             expect(analytics.lastEvent).to(equal(.seek))
         }
@@ -176,7 +176,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     func testEofPlay() {
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.eof)
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             analytics.notify(.play)
             expect(analytics.lastEvent).to(equal(.eof))
         }
@@ -185,7 +185,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     func testEofPause() {
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.eof)
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             analytics.notify(.pause)
             expect(analytics.lastEvent).to(equal(.eof))
         }
@@ -194,7 +194,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     func testEofSeek() {
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.eof)
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             analytics.notify(.seek)
             expect(analytics.lastEvent).to(equal(.eof))
         }
@@ -203,7 +203,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     func testEofEof() {
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.eof)
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             analytics.notify(.eof)
             expect(analytics.lastEvent).to(equal(.eof))
         }
@@ -212,7 +212,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     func testEofStop() {
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.eof)
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             analytics.notify(.stop)
             expect(analytics.lastEvent).to(equal(.eof))
         }
@@ -221,7 +221,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     func testEofDeinit() {
         var analytics: CommandersActStreamingAnalytics? = CommandersActStreamingAnalytics()
         analytics?.notify(.eof)
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             analytics = nil
         }
     }
@@ -229,7 +229,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     func testStopPlay() {
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.stop)
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             analytics.notify(.play)
             expect(analytics.lastEvent).to(equal(.stop))
         }
@@ -238,7 +238,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     func testStopPause() {
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.stop)
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             analytics.notify(.pause)
             expect(analytics.lastEvent).to(equal(.stop))
         }
@@ -247,7 +247,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     func testStopSeek() {
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.stop)
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             analytics.notify(.seek)
             expect(analytics.lastEvent).to(equal(.stop))
         }
@@ -256,7 +256,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     func testStopEof() {
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.stop)
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             analytics.notify(.eof)
             expect(analytics.lastEvent).to(equal(.stop))
         }
@@ -265,7 +265,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     func testStopStop() {
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.stop)
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             analytics.notify(.stop)
             expect(analytics.lastEvent).to(equal(.stop))
         }
@@ -274,7 +274,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     func testStopDeinit() {
         var analytics: CommandersActStreamingAnalytics? = CommandersActStreamingAnalytics()
         analytics?.notify(.stop)
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             analytics = nil
         }
     }

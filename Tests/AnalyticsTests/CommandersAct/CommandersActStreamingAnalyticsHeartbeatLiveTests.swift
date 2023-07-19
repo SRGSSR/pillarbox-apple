@@ -39,7 +39,7 @@ final class CommandersActStreamingAnalyticsHeartbeatLiveTests: CommandersActTest
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(.pause)
-        expectNoEvents(during: .seconds(2))
+        expectNoHits(during: .seconds(2))
     }
 
     func testNoHeartbeatAfterSeek() {
@@ -47,7 +47,7 @@ final class CommandersActStreamingAnalyticsHeartbeatLiveTests: CommandersActTest
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(.seek)
-        expectNoEvents(during: .seconds(2))
+        expectNoHits(during: .seconds(2))
     }
 
     func testNoHeartbeatAfterEof() {
@@ -55,7 +55,7 @@ final class CommandersActStreamingAnalyticsHeartbeatLiveTests: CommandersActTest
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(.eof)
-        expectNoEvents(during: .seconds(2))
+        expectNoHits(during: .seconds(2))
     }
 
     func testNoHeartbeatAfterStop() {
@@ -63,7 +63,7 @@ final class CommandersActStreamingAnalyticsHeartbeatLiveTests: CommandersActTest
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(.stop)
-        expectNoEvents(during: .seconds(2))
+        expectNoHits(during: .seconds(2))
     }
 
     func testHeartbeatWhileBuffering() {

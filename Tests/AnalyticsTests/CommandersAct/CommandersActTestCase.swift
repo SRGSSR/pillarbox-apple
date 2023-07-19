@@ -54,8 +54,8 @@ extension CommandersActTestCase {
         }
     }
 
-    /// Expects no events emitted by Commanders Act during some time interval.
-    func expectNoEvents(
+    /// Expects no hits emitted by Commanders Act during some time interval.
+    func expectNoHits(
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,

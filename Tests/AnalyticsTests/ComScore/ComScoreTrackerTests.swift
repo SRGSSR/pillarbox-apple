@@ -69,7 +69,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             ]
         ))
 
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             player.pause()
         }
     }
@@ -147,7 +147,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             ]
         ))
 
-        expectNoEvents(during: .seconds(3)) {
+        expectNoHits(during: .seconds(3)) {
             player.play()
         }
     }
@@ -181,7 +181,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
 
         player.isTrackingEnabled = false
 
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             player.play()
         }
 

@@ -58,8 +58,8 @@ extension ComScoreTestCase {
         }
     }
 
-    /// Expect no events emitted by comScore during some time interval.
-    func expectNoEvents(
+    /// Expect no hits emitted by comScore during some time interval.
+    func expectNoHits(
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,

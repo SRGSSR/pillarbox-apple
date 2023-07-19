@@ -53,7 +53,7 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
 
         expect(player.playbackState).toEventually(equal(.paused))
 
-        expectNoEvents(during: .seconds(2)) {
+        expectNoHits(during: .seconds(2)) {
             player.seek(at(.init(value: 7, timescale: 1)))
         }
 
