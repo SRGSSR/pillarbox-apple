@@ -122,14 +122,6 @@ private extension CommandersActLabels {
         case navigation_level_9
         case page_type
         case content_title
-        case event_type
-        case event_value
-        case event_source
-        case event_value_1
-        case event_value_2
-        case event_value_3
-        case event_value_4
-        case event_value_5
         case media_player_display
         case media_player_version
         case _media_position = "media_position"

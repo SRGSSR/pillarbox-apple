@@ -103,4 +103,39 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             )
         }
     }
+
+    func testCustomLabels() {
+        expectAtLeastHits(
+            .page_view { labels in
+                // Use media-related key to test custom labels (so that its value can be parsed).
+                expect(labels.media_player_display).to(equal("value"))
+            }
+        ) {
+            Analytics.shared.trackPageView(
+                comScore: .init(title: "title"),
+                commandersAct: .init(
+                    title: "title",
+                    type: "type",
+                    customLabels: ["media_player_display": "value"]
+                )
+            )
+        }
+    }
+
+    func testCustomLabelsForbiddenOverrides() {
+        expectAtLeastHits(
+            .page_view { labels in
+                expect(labels.content_title).to(equal("title"))
+            }
+        ) {
+            Analytics.shared.trackPageView(
+                comScore: .init(title: "title"),
+                commandersAct: .init(
+                    title: "title",
+                    type: "type",
+                    customLabels: ["content_title": "overridden_title"]
+                )
+            )
+        }
+    }
 }
