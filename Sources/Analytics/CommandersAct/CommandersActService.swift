@@ -37,7 +37,8 @@ final class CommandersActService {
     }
 
     func trackPageView(_ pageView: CommandersActPageView) {
-        guard let serverSide, let event = TCPageViewEvent(type: pageView.title) else { return }
+        guard let serverSide, let event = TCPageViewEvent(type: pageView.type) else { return }
+        event.addNonBlankAdditionalProperty("content_title", withStringValue: pageView.title)
         event.addNonBlankAdditionalProperty("navigation_property_type", withStringValue: "app")
         event.addNonBlankAdditionalProperty("navigation_bu_distributer", withStringValue: vendor?.rawValue)
         pageView.levels.enumerated().forEach { index, level in

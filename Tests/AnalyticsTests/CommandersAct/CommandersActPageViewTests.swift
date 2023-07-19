@@ -14,7 +14,8 @@ final class CommandersActPageViewTests: CommandersActTestCase {
     func testLabels() {
         expectAtLeastHits(
             .page_view { labels in
-                expect(labels.page_type).to(equal("title"))
+                expect(labels.page_type).to(equal("type"))
+                expect(labels.content_title).to(equal("title"))
                 expect(labels.navigation_level_0).to(beNil())
                 expect(labels.navigation_level_1).to(equal("level_1"))
                 expect(labels.navigation_level_2).to(equal("level_2"))
@@ -71,7 +72,8 @@ final class CommandersActPageViewTests: CommandersActTestCase {
     func testBlankLevels() {
         expectAtLeastHits(
             .page_view { labels in
-                expect(labels.page_type).to(equal("title"))
+                expect(labels.page_type).to(equal("type"))
+                expect(labels.content_title).to(equal("title"))
                 expect(labels.navigation_level_1).to(beNil())
                 expect(labels.navigation_level_2).to(beNil())
                 expect(labels.navigation_level_3).to(beNil())

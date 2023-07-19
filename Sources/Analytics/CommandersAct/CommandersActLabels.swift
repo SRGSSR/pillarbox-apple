@@ -27,7 +27,7 @@ public struct CommandersActLabels: Decodable {
     /// The value of `navigation_device`.
     public let navigation_device: String?
 
-    // MARK: Page view labels
+    // MARK: Page view label
 
     /// The value of `navigation_property_type`.
     public let navigation_property_type: String?
@@ -67,6 +67,9 @@ public struct CommandersActLabels: Decodable {
 
     /// The value of `page_type`.
     public let page_type: String?
+
+    /// The value of `content_title`.
+    public let content_title: String?
 
     // MARK: Event labels
 
@@ -126,13 +129,13 @@ public struct CommandersActLabels: Decodable {
 private extension CommandersActLabels {
     enum CodingKeys: String, CodingKey {
         case event_name
-        case media_title
         case listener_session_id
+        case media_title
         case app_library_version
         case navigation_app_site_name
+        case navigation_device
         case navigation_property_type
         case navigation_bu_distributer
-        case navigation_device
         case navigation_level_0
         case navigation_level_1
         case navigation_level_2
@@ -144,6 +147,7 @@ private extension CommandersActLabels {
         case navigation_level_8
         case navigation_level_9
         case page_type
+        case content_title
         case event_type
         case event_value
         case event_source
