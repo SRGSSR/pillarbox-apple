@@ -29,7 +29,6 @@ From left to right:
 - Screenshots 1, 2 and 3: [Standard player interface](../Demo/Sources/Players/PlaybackView.swift) showing on-demand video, video livestream and audio stream playback respectively.
 - Screenshot 4: [Player with associated playlist](../Demo/Sources/Showcase/Playlist/PlaylistView.swift).
 - Screenshot 5: [Stories](../Demo/Sources/Showcase/Stories/StoriesView.swift).
-- Screenshot 6: [System AVKit user interface](../Demo/Sources/Players/SystemPlayerView.swift).
 
 # Compatibility
 
