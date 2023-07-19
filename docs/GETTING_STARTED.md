@@ -122,21 +122,23 @@ We also bound an animation to `visibilityTracker.isUserInterfaceHidden` changes 
 
 ### Interaction tracking
 
-We want to ensure that controls stay visible if the user is somehow interacting with them. This behavior can simply be achieved by wrapping the player area where user interaction must be tracked with an `InteractionView`. The interaction view calls an action block when any touch is detected within its frame. In our case we simply reset the auto hide mechanism whenever this happens:
+To ensure that controls stay visible when the user is somehow interacting with them we can call `visibilityTracker.reset()` to reset the automatic hiding mechanism. For example we can use a simultaneous drag gesture to recognize when the user interacts with their screen:
 
 ```swift
 struct PlayerView: View {
     // ...
 
     var body: some View {
-        InteractionView(action: visibilityTracker.reset) {
-            ZStack {
-                VideoView(player: player)
-                controls()
-            }
-            .animation(.linear(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
-            .onTapGesture(perform: visibilityTracker.toggle)
+        ZStack {
+            VideoView(player: player)
+            controls()
         }
+        .animation(.linear(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
+        .onTapGesture(perform: visibilityTracker.toggle)
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 0)
+                .onChanged { _ in visibilityTracker.reset() }
+        )
         .onAppear(perform: player.play)
         .bind(visibilityTracker, to: player)
     }
@@ -196,7 +198,7 @@ To make it easier to spot where user interface updates can be optimized our `Cor
 
 Sometimes you want to enable behaviors only when a player view fills its parent context, for example zoom gestures which control the `VideoView` gravity.
 
-Pillarbox does not implement such behaviors natively but instead provides a `LayoutReader` wrapper returning its layout information through a binding.
+Pillarbox does not implement such behaviors natively but instead provides a `readLayout(into:)` modifier returning its layout information through a binding.
 
 Here is for example how you could implement a pinch gesture only available when the player view covers its current context:
 
@@ -211,12 +213,11 @@ struct PlayerView: View {
     @State private var gravity: AVLayerVideoGravity = .resizeAspect
 
     var body: some View {
-        LayoutReader(layoutInfo: $layoutInfo) {
-            VideoView(player: player, gravity: gravity)
-                .gesture(magnificationGesture(), including: magnificationGestureMask)
-                .ignoresSafeArea()
-        }
-        .onAppear(perform: player.play)
+        VideoView(player: player, gravity: gravity)
+            .readLayout(into: $layoutInfo)
+            .gesture(magnificationGesture(), including: magnificationGestureMask)
+            .ignoresSafeArea()
+            .onAppear(perform: player.play)
     }
 
     private var magnificationGestureMask: GestureMask {
@@ -232,7 +233,7 @@ struct PlayerView: View {
 }
 ```
 
-You can also use a layout reader to check whether the view covers the full screen.
+You can also read the layout to check whether the view covers the full screen or not.
 
 ## Playlists
 

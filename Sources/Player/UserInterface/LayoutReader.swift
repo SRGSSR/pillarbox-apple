@@ -20,70 +20,108 @@ public struct LayoutInfo {
     public let isFullScreen: Bool
 }
 
-/// A view which is able to determine layout information.
-///
-/// The view lays out its children like a `ZStack`.
+/// An internal view controller which can determine whether it covers its current context or is full screen.
 @available(tvOS, unavailable)
-public struct LayoutReader<Content>: View where Content: View {
-    @Binding private var layoutInfo: LayoutInfo
-    @Binding private var content: () -> Content
+private final class LayoutReaderViewController: UIViewController, UIGestureRecognizerDelegate {
+    var layoutInfo: Binding<LayoutInfo> = .constant(.none)
+    private var isTransitioning = false
 
-    public var body: some View {
-        // Ignores the safe area to have support for safe area insets similar to a `ZStack`.
-        LayoutReaderHost(layoutInfo: $layoutInfo) {
-            ZStack {
-                content()
-            }
+    private static func parent(for viewController: UIViewController) -> UIViewController {
+        if let parentViewController = viewController.parent {
+            return parent(for: parentViewController)
         }
-        .ignoresSafeArea()
+        else {
+            return viewController
+        }
     }
 
-    /// Creates a layout reader.
-    /// 
-    /// - Parameters:
-    ///   - layoutInfo: The layout information.
-    ///   - content: The wrapped content.
-    public init(layoutInfo: Binding<LayoutInfo>, @ViewBuilder content: @escaping () -> Content) {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .clear
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateLayoutInfo()
+    }
+
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        isTransitioning = true
+        coordinator.animate(alongsideTransition: nil) { [weak self] _ in
+            self?.isTransitioning = false
+        }
+    }
+
+    private func updateLayoutInfo() {
+        guard !isTransitioning else { return }
+
+        let frame = view.frame
+
+        let parentFrame = Self.parent(for: self).view.frame
+        let screenFrame = view.window?.windowScene?.screen.bounds ?? .zero
+
+        layoutInfo.wrappedValue = .init(
+            isOverCurrentContext: frame == parentFrame,
+            isFullScreen: frame == screenFrame
+        )
+    }
+}
+
+@available(tvOS, unavailable)
+private struct LayoutReader: UIViewControllerRepresentable {
+    @Binding private var layoutInfo: LayoutInfo
+
+    init(layoutInfo: Binding<LayoutInfo>) {
         _layoutInfo = layoutInfo
-        _content = .constant(content)
+    }
+
+    func makeUIViewController(context: Context) -> LayoutReaderViewController {
+        .init()
+    }
+
+    func updateUIViewController(_ uiViewController: LayoutReaderViewController, context: Context) {
+        uiViewController.layoutInfo = _layoutInfo
+    }
+}
+
+@available(tvOS, unavailable)
+public extension View {
+    /// Read layout information.
+    /// 
+    /// - Parameter layoutInfo: The layout information.
+    func readLayout(into layoutInfo: Binding<LayoutInfo>) -> some View {
+        background {
+            LayoutReader(layoutInfo: layoutInfo)
+                .ignoresSafeArea()
+        }
     }
 }
 
 @available(tvOS, unavailable)
 struct LayoutReader_Previews: PreviewProvider {
-    private struct IgnoredSafeAreaInLayoutReader: View {
+    private struct IgnoredSafeArea: View {
         @State private var layoutInfo: LayoutInfo = .none
 
-        var body: some View {
-            LayoutReader(layoutInfo: $layoutInfo) {
-                ZStack {
-                    Color.red
-                        .ignoresSafeArea()
-                    Color.blue
-                    VStack {
-                        Text(layoutInfo.isOverCurrentContext ? "✅ Over current context" : "❌ Not over current context")
-                        Text(layoutInfo.isFullScreen ? "✅ Full screen" : "❌ Not full screen")
-                    }
-                }
-            }
-        }
-    }
-
-    private struct IgnoredSafeAreaInZStack: View {
         var body: some View {
             ZStack {
                 Color.red
                     .ignoresSafeArea()
                 Color.blue
+                VStack {
+                    Text(layoutInfo.isOverCurrentContext ? "✅ Over current context" : "❌ Not over current context")
+                    Text(layoutInfo.isFullScreen ? "✅ Full screen" : "❌ Not full screen")
+                }
             }
+            .readLayout(into: $layoutInfo)
         }
     }
 
-    private struct SafeAreaInLayoutReader: View {
+    private struct SafeArea: View {
         @State private var layoutInfo: LayoutInfo = .none
 
         var body: some View {
-            LayoutReader(layoutInfo: $layoutInfo) {
+            ZStack {
                 Color.red
                 Color.blue
                 VStack {
@@ -91,23 +129,15 @@ struct LayoutReader_Previews: PreviewProvider {
                     Text(layoutInfo.isFullScreen ? "✅ Full screen" : "❌ Not full screen")
                 }
             }
+            .readLayout(into: $layoutInfo)
         }
     }
 
-    private struct SafeAreaInZStack: View {
-        var body: some View {
-            ZStack {
-                Color.red
-                Color.blue
-            }
-        }
-    }
-
-    private struct NotOverCurrentContextLayoutReader: View {
+    private struct NotOverCurrentContext: View {
         @State private var layoutInfo: LayoutInfo = .none
 
         var body: some View {
-            LayoutReader(layoutInfo: $layoutInfo) {
+            ZStack {
                 Color.blue
                 VStack {
                     Text(layoutInfo.isOverCurrentContext ? "❌ Over current context" : "✅ Not over current context")
@@ -115,16 +145,17 @@ struct LayoutReader_Previews: PreviewProvider {
                 }
             }
             .frame(width: 400, height: 400)
+            .readLayout(into: $layoutInfo)
         }
     }
 
-    private struct NonFullScreenLayoutReader: View {
+    private struct NonFullScreen: View {
         @State private var layoutInfo: LayoutInfo = .none
 
         var body: some View {
             Color.yellow
                 .sheet(isPresented: .constant(true)) {
-                    LayoutReader(layoutInfo: $layoutInfo) {
+                    ZStack {
                         Color.blue
                         VStack {
                             Text(layoutInfo.isOverCurrentContext ? "✅ Over current context" : "❌ Not over current context")
@@ -132,22 +163,19 @@ struct LayoutReader_Previews: PreviewProvider {
                         }
                     }
                     .interactiveDismissDisabled()
+                    .readLayout(into: $layoutInfo)
                 }
         }
     }
 
     static var previews: some View {
-        IgnoredSafeAreaInLayoutReader()
+        IgnoredSafeArea()
             .previewDisplayName("Safe area ignored in LayoutReader")
-        IgnoredSafeAreaInZStack()
-            .previewDisplayName("Safe area ignored in ZStack")
-        SafeAreaInLayoutReader()
+        SafeArea()
             .previewDisplayName("Safe area in LayoutReader")
-        SafeAreaInZStack()
-            .previewDisplayName("Safe area in ZStack")
-        NotOverCurrentContextLayoutReader()
+        NotOverCurrentContext()
             .previewDisplayName("Not over current context LayoutReader")
-        NonFullScreenLayoutReader()
+        NonFullScreen()
             .previewDisplayName("Non full-screen LayoutReader")
     }
 }

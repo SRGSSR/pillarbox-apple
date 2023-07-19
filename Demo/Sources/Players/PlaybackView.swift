@@ -25,14 +25,12 @@ private struct MainView: View {
     }
 
     var body: some View {
-        InteractionView(action: visibilityTracker.reset) {
-            ZStack {
-                main()
-                timeBar()
-                volumeButton()
-            }
-            .animation(.defaultLinear, values: player.isBusy, isUserInterfaceHidden)
+        ZStack {
+            main()
+            timeBar()
+            volumeButton()
         }
+        .animation(.defaultLinear, values: player.isBusy, isUserInterfaceHidden)
         .bind(visibilityTracker, to: player)
         ._debugBodyCounter()
     }
@@ -58,23 +56,26 @@ private struct MainView: View {
 
     @ViewBuilder
     private func main() -> some View {
-        LayoutReader(layoutInfo: $layoutInfo) {
-            ZStack {
-                video()
-                controls()
-                loadingIndicator()
-            }
-            .animation(.defaultLinear, value: isUserInterfaceHidden)
-            .accessibilityAddTraits(.isButton)
-            .onTapGesture(perform: visibilityTracker.toggle)
-            .gesture(magnificationGesture(), including: magnificationGestureMask)
-            .ignoresSafeArea()
+        ZStack {
+            video()
+                .ignoresSafeArea()
+            controls()
+            loadingIndicator()
         }
+        .animation(.defaultLinear, value: isUserInterfaceHidden)
+        .readLayout(into: $layoutInfo)
+        .accessibilityAddTraits(.isButton)
+        .onTapGesture(perform: visibilityTracker.toggle)
+        .gesture(magnificationGesture(), including: magnificationGestureMask)
+        .simultaneousGesture(
+            TapGesture()
+                .onEnded { _ in visibilityTracker.reset() }
+        )
     }
 
     @ViewBuilder
     private func timeBar() -> some View {
-        TimeBar(player: player, layout: $layout)
+        TimeBar(player: player, visibilityTracker: visibilityTracker, layout: $layout)
             .opacity(isUserInterfaceHidden && !areControlsAlwaysVisible ? 0 : 1)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
@@ -138,6 +139,7 @@ private struct ControlsView: View {
     var body: some View {
         ZStack {
             Color(white: 0, opacity: 0.3)
+                .ignoresSafeArea()
             HStack(spacing: 30) {
                 SkipBackwardButton(player: player, progressTracker: progressTracker)
                 PlaybackButton(player: player)
@@ -343,6 +345,7 @@ private struct LiveLabel: View {
 // Behavior: h-exp, v-hug
 private struct TimeBar: View {
     @ObservedObject var player: Player
+    @ObservedObject var visibilityTracker: VisibilityTracker
     @Binding var layout: PlaybackView.Layout
 
     @StateObject private var progressTracker = ProgressTracker(
@@ -358,6 +361,10 @@ private struct TimeBar: View {
         HStack(spacing: 0) {
             routePickerView()
             TimeSlider(player: player, progressTracker: progressTracker)
+                .simultaneousGesture(
+                    DragGesture(minimumDistance: 0)
+                        .onChanged { _ in visibilityTracker.reset() }
+                )
             LiveLabel(player: player, progressTracker: progressTracker)
             SettingsMenu(player: player)
             FullScreenButton(layout: $layout)
@@ -502,12 +509,13 @@ struct PlaybackView: View {
                 MainView(player: player, layout: $layout)
             case .system:
                 SystemVideoView(player: player)
+                    .ignoresSafeArea()
             }
 #else
             VideoView(player: player)
+                .ignoresSafeArea()
 #endif
         }
-        .ignoresSafeArea()
     }
 }
 
