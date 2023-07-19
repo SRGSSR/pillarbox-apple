@@ -107,7 +107,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
     func testCustomLabels() {
         expectAtLeastHits(
             .page_view { labels in
-                // Use media-related key to test custom labels (so that its value can be parsed).
+                // Use `media_player_display`, a media-only key, so that its value can be parsed.
                 expect(labels.media_player_display).to(equal("value"))
             }
         ) {
