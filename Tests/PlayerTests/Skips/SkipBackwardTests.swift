@@ -43,7 +43,7 @@ final class SkipBackwardTests: TestCase {
 
         waitUntil { done in
             player.skipBackward { finished in
-                expect(finished).to(beTrue())
+                expect(finished).to(beFalse())
             }
 
             player.skipBackward { finished in
