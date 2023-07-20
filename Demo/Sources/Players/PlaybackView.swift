@@ -63,7 +63,7 @@ private struct MainView: View {
             controls()
             loadingIndicator()
         }
-        .animation(.defaultLinear, value: isUserInterfaceHidden)
+        .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
         .readLayout(into: $layoutInfo)
         .accessibilityAddTraits(.isButton)
         .onTapGesture(perform: visibilityTracker.toggle)
