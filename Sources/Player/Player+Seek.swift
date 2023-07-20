@@ -22,12 +22,15 @@ public extension Player {
         guard let item else {
             return near(time)
         }
+        // If stepping supported we must use exact seeking to provide a frame-by-frame experience at rate 0.
         if item.canStepForward {
             return at(time)
         }
+        // If fast-forward is supported we must use one-sided tolerance to allow the player to rely on I-frames at rate 0.
         else if item.canPlayFastForward {
             return after(time)
         }
+        // In all other cases we apply efficient smooth seeking.
         else {
             return near(time)
         }
