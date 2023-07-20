@@ -516,7 +516,7 @@ struct PlaybackView: View {
                     .ignoresSafeArea()
             }
 #else
-            VideoView(player: player)
+            SystemVideoView(player: player)
                 .ignoresSafeArea()
 #endif
         }
