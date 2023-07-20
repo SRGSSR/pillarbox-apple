@@ -31,7 +31,7 @@ final class CommandersActEventTests: CommandersActTestCase {
         ) {
             Analytics.shared.sendEvent(commandersAct: .init(
                 name: "name",
-                customLabels: ["media_player_display": "value"]
+                labels: ["media_player_display": "value"]
             ))
         }
     }
@@ -40,7 +40,7 @@ final class CommandersActEventTests: CommandersActTestCase {
         expectAtLeastHits(.custom(name: "name")) {
             Analytics.shared.sendEvent(commandersAct: .init(
                 name: "name",
-                customLabels: ["event_name": "overridden_name"]
+                labels: ["event_name": "overridden_name"]
             ))
         }
     }

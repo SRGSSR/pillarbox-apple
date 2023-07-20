@@ -9,7 +9,7 @@ import Foundation
 /// A Commanders Act event.
 public struct CommandersActEvent {
     let name: String
-    let customLabels: [String: String]
+    let labels: [String: String]
 
     /// Creates a Commanders Act event.
     ///
@@ -17,13 +17,13 @@ public struct CommandersActEvent {
     ///
     /// - Parameters:
     ///   - name: The event name.
-    ///   - customLabels: Additional custom information associated with the event.
+    ///   - labels: Additional information associated with the event.
     public init(
         name: String,
-        customLabels: [String: String] = [:]
+        labels: [String: String] = [:]
     ) {
         assert(!name.isBlank, "A name is required")
         self.name = name
-        self.customLabels = customLabels
+        self.labels = labels
     }
 }

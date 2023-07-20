@@ -17,7 +17,7 @@ public struct ComScorePageView {
     ///
     /// - Parameters:
     ///   - title: The page view title.
-    ///   - customLabels: Additional custom information associated with the page view.
+    ///   - labels: Additional custom information associated with the page view.
     public init(title: String, customLabels: [String: String] = [:]) {
         assert(!title.isBlank, "A title is required")
         self.title = title

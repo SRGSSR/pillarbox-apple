@@ -54,7 +54,7 @@ final class CommandersActService {
 
     func sendEvent(_ event: CommandersActEvent) {
         guard let serverSide, let customEvent = TCCustomEvent(name: event.name) else { return }
-        event.customLabels.forEach { key, value in
+        event.labels.forEach { key, value in
             customEvent.addNonBlankAdditionalProperty(key, withStringValue: value)
         }
         AnalyticsListener.capture(customEvent)

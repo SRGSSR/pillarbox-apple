@@ -20,7 +20,7 @@ public struct CommandersActPageView {
     /// - Parameters:
     ///   - title: The page title.
     ///   - type: The page type (e.g. Article).
-    ///   - customLabels: Additional custom information associated with the page view.
+    ///   - labels: Additional custom information associated with the page view.
     ///   - levels: The page levels.
     public init(title: String, type: String, levels: [String] = [], customLabels: [String: String] = [:]) {
         assert(!title.isBlank, "A title is required")
