@@ -116,13 +116,13 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                 commandersAct: .init(
                     title: "title",
                     type: "type",
-                    customLabels: ["media_player_display": "value"]
+                    labels: ["media_player_display": "value"]
                 )
             )
         }
     }
 
-    func testCustomLabelsForbiddenOverrides() {
+    func testLabelsForbiddenOverrides() {
         expectAtLeastHits(
             .page_view { labels in
                 expect(labels.content_title).to(equal("title"))
@@ -133,7 +133,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                 commandersAct: .init(
                     title: "title",
                     type: "type",
-                    customLabels: ["content_title": "overridden_title"]
+                    labels: ["content_title": "overridden_title"]
                 )
             )
         }

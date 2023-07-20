@@ -102,7 +102,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
             }
         ) {
             Analytics.shared.trackPageView(
-                comScore: .init(title: "title", customLabels: ["key": "value"]),
+                comScore: .init(title: "title", labels: ["key": "value"]),
                 commandersAct: .init(title: "title", type: "type")
             )
         }
@@ -115,7 +115,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
             }
         ) {
             Analytics.shared.trackPageView(
-                comScore: .init(title: "title", customLabels: ["c8": "overridden_title"]),
+                comScore: .init(title: "title", labels: ["c8": "overridden_title"]),
                 commandersAct: .init(title: "title", type: "type")
             )
         }

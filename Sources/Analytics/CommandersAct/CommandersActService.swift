@@ -38,7 +38,7 @@ final class CommandersActService {
 
     func trackPageView(_ pageView: CommandersActPageView) {
         guard let serverSide, let event = TCPageViewEvent(type: pageView.type) else { return }
-        pageView.customLabels.forEach { key, value in
+        pageView.labels.forEach { key, value in
             event.addAdditionalProperty(key, withStringValue: value)
         }
         event.addNonBlankAdditionalProperty("content_title", withStringValue: pageView.title)

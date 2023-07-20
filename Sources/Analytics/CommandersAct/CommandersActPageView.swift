@@ -11,7 +11,7 @@ public struct CommandersActPageView {
     let title: String
     let type: String
     let levels: [String]
-    let customLabels: [String: String]
+    let labels: [String: String]
 
     /// Creates a Commanders Act page view.
     /// 
@@ -20,14 +20,14 @@ public struct CommandersActPageView {
     /// - Parameters:
     ///   - title: The page title.
     ///   - type: The page type (e.g. Article).
-    ///   - labels: Additional custom information associated with the page view.
+    ///   - labels: Additional information associated with the page view.
     ///   - levels: The page levels.
-    public init(title: String, type: String, levels: [String] = [], customLabels: [String: String] = [:]) {
+    public init(title: String, type: String, levels: [String] = [], labels: [String: String] = [:]) {
         assert(!title.isBlank, "A title is required")
         assert(!type.isBlank, "A type is required")
         self.title = title
         self.type = type
         self.levels = levels
-        self.customLabels = customLabels
+        self.labels = labels
     }
 }

@@ -36,7 +36,7 @@ struct ComScoreService {
     }
 
     func trackPageView(_ pageView: ComScorePageView) {
-        var labels = pageView.customLabels.merging(["c8": pageView.title]) { _, new in new }
+        var labels = pageView.labels.merging(["c8": pageView.title]) { _, new in new }
         AnalyticsListener.capture(&labels)
         SCORAnalytics.notifyViewEvent(withLabels: labels)
     }
