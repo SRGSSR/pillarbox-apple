@@ -7,6 +7,8 @@
 import Foundation
 
 /// A hit sent by the comScore SDK.
+///
+/// Mainly used for development-oriented purposes (e.g. unit testing).
 public struct ComScoreHit {
     /// A name describing a comScore hit.
     public enum Name: String {
