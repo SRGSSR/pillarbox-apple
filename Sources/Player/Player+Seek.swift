@@ -82,7 +82,7 @@ public extension Player {
     ///   - time: The time to reach.
     ///   - completion: A completion called when seeking ends. The provided Boolean informs
     ///     whether the seek could finish without being cancelled.
-    func optimalSeek(to time: CMTime, completion: @escaping (Bool) -> Void = { _ in }) {
+    func seek(to time: CMTime, completion: @escaping (Bool) -> Void = { _ in }) {
         let position = Self.optimalPosition(reaching: time, for: queuePlayer.currentItem)
         seek(position, smooth: true, paused: true, completion: completion)
     }

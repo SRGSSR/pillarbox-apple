@@ -144,7 +144,7 @@ public final class ProgressTracker: ObservableObject {
     private func seek(to progress: Float, optimal: Bool) {
         guard let player, let time = time(forProgress: progress) else { return }
         if optimal {
-            player.optimalSeek(to: time)
+            player.seek(to: time)
         }
         else {
             player.seek(near(time), smooth: false)
