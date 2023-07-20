@@ -8,29 +8,33 @@ import AVFoundation
 import CoreMedia
 
 public extension Player {
-    /// Returns the optimal position to reach a given time based on available item information.
+    /// Returns the optimal position to use when seeking to a given time, depending on the provided item.
     ///
-    /// For perfect results the position should be reached with the player paused during the seek operation.
+    /// For an even better seek experience the position should be reached with the player paused during the seek
+    /// operation.
     ///
     /// - Parameters:
     ///   - time: The time to reach.
     ///   - item: The item to consider.
     ///
-    /// - Returns: An optimal position to seek to.
+    /// - Returns: The optimal position to use.
     private static func optimalPosition(reaching time: CMTime, for item: AVPlayerItem?) -> Position {
-        // Based on analysis of `AVPlayerViewController` behavior during seeks for a variety of content.
+        // This implementation is based on analysis of `AVPlayerViewController` behavior during seeks for various
+        // types of streams.
         guard let item else {
             return near(time)
         }
-        // If stepping supported we must use exact seeking to provide a frame-by-frame experience at rate 0.
+        // If the stream supports stepping use an exact position. This makes it possible for a paused player to provide a
+        // frame-by-frame user experience.
         if item.canStepForward {
             return at(time)
         }
-        // If fast-forward is supported we must use one-sided tolerance to allow the player to rely on I-frames at rate 0.
+        // If the stream supports fast-forward use one-sided tolerance. This allows a paused player to rely on available
+        // I-frame playlists to provide for a faster seeking user experience (trick mode).
         else if item.canPlayFastForward {
             return after(time)
         }
-        // In all other cases we apply efficient smooth seeking.
+        // For standard streams just seek as fast as we can (but without additional benefits).
         else {
             return near(time)
         }
@@ -52,8 +56,8 @@ public extension Player {
     ///   - smooth: Set to `true` to enable smooth seeking. This allows any currently pending seek to complete before
     ///     any new seek is performed, preventing unnecessary cancellation. The player is also paused during the seek
     ///     operation. Altogether both measures make it possible for the playhead position to be moved in a smoother way.
-    ///   - completion: A completion called when seeking ends. The provided Boolean informs
-    ///     whether the seek could finish without being cancelled.
+    ///   - completion: A completion called when seeking ends. The provided Boolean informs whether the seek could
+    ///     finish without being cancelled.
     func seek(
         _ position: Position,
         smooth: Bool = true,
@@ -74,13 +78,12 @@ public extension Player {
         )
     }
 
-    /// Performs an optimal seek to a given time, providing the smoothest possible experience depending on the type of
-    /// content.
+    /// Performs an optimal seek to a given time, providing the best possible user experience in all cases.
     ///
     /// - Parameters:
     ///   - time: The time to reach.
-    ///   - completion: A completion called when seeking ends. The provided Boolean informs
-    ///     whether the seek could finish without being cancelled.
+    ///   - completion: A completion called when seeking ends. The provided Boolean informs whether the seek could
+    ///     finish without being cancelled.
     func seek(to time: CMTime, completion: @escaping (Bool) -> Void = { _ in }) {
         let position = Self.optimalPosition(reaching: time, for: queuePlayer.currentItem)
         seek(position, smooth: true, completion: completion)
