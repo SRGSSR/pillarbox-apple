@@ -8,7 +8,7 @@ import Foundation
 
 /// A comScore page view.
 public struct ComScorePageView {
-    let title: String
+    let name: String
     let labels: [String: String]
 
     /// Creates a comScore page view.
@@ -16,11 +16,11 @@ public struct ComScorePageView {
     /// Custom labels which might accidentally override official labels will be ignored.
     ///
     /// - Parameters:
-    ///   - title: The page view title.
+    ///   - name: The page view name.
     ///   - labels: Additional information associated with the page view.
-    public init(title: String, labels: [String: String] = [:]) {
-        assert(!title.isBlank, "A title is required")
-        self.title = title
+    public init(name: String, labels: [String: String] = [:]) {
+        assert(!name.isBlank, "A name is required")
+        self.name = name
         self.labels = labels
     }
 }

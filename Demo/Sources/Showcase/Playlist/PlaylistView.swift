@@ -58,7 +58,7 @@ private struct PlaylistSelectionView: View {
                 }
             }
         }
-        .tracked(title: "selection", levels: ["playlist"])
+        .tracked(name: "selection", levels: ["playlist"])
     }
 
     @ViewBuilder
@@ -167,7 +167,7 @@ struct PlaylistView: View {
         .onChange(of: templates) { newValue in
             model.templates = newValue
         }
-        .tracked(title: "playlist")
+        .tracked(name: "playlist")
     }
 }
 

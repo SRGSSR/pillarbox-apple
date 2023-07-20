@@ -54,7 +54,7 @@ struct StoriesView: View {
         .background(.black)
         .tabViewStyle(.page)
         .ignoresSafeArea()
-        .tracked(title: "stories")
+        .tracked(name: "stories")
     }
 }
 

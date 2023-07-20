@@ -85,7 +85,7 @@ struct MultiView: View {
             Self.play(media: media2, in: bottomPlayer)
             setActive(position: activePosition)
         }
-        .tracked(title: "multi")
+        .tracked(name: "multi")
     }
 
     private static func play(media: Media, in player: Player) {

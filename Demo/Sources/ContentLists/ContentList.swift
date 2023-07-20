@@ -55,7 +55,7 @@ enum ContentList: Hashable {
         }
     }
 
-    var pageTitle: String {
+    var pageName: String {
         switch self {
         case .tvTopics:
              return "tv-topics"

@@ -9,10 +9,7 @@ import UIKit
 /// A protocol that view controller containers can implement to declare how they are tracked.
 ///
 /// View controllers whose usage must be measured should conform to the `PageViewTracking` protocol, which describes
-/// the associated measurement data:
-/// 
-/// - Page title.
-/// - Page levels.
+/// the associated measurement data.
 ///
 /// The protocol also provides a `isTrackedAutomatically` property, set to `true` by default, which lets you choose
 /// between automatic and manual tracking.

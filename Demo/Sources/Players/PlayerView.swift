@@ -18,7 +18,7 @@ struct PlayerView: View {
     var body: some View {
         PlaybackView(player: player)
             .onAppear(perform: load)
-            .tracked(title: "player")
+            .tracked(name: "player")
     }
 
     private func load() {

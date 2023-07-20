@@ -8,7 +8,7 @@ import Foundation
 
 /// A Commanders Act page view.
 public struct CommandersActPageView {
-    let title: String
+    let name: String
     let type: String
     let levels: [String]
     let labels: [String: String]
@@ -18,14 +18,14 @@ public struct CommandersActPageView {
     /// Custom labels which might accidentally override official labels will be ignored.
     /// 
     /// - Parameters:
-    ///   - title: The page title.
+    ///   - name: The page name.
     ///   - type: The page type (e.g. Article).
     ///   - labels: Additional information associated with the page view.
     ///   - levels: The page levels.
-    public init(title: String, type: String, levels: [String] = [], labels: [String: String] = [:]) {
-        assert(!title.isBlank, "A title is required")
+    public init(name: String, type: String, levels: [String] = [], labels: [String: String] = [:]) {
+        assert(!name.isBlank, "A name is required")
         assert(!type.isBlank, "A type is required")
-        self.title = title
+        self.name = name
         self.type = type
         self.levels = levels
         self.labels = labels

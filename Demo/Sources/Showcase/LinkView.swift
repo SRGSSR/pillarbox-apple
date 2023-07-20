@@ -27,7 +27,7 @@ struct LinkView: View {
         }
         .onAppear(perform: play)
         .onForeground(perform: resume)
-        .tracked(title: "link")
+        .tracked(name: "link")
     }
 
     private func play() {
