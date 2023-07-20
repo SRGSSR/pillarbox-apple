@@ -35,6 +35,8 @@ class QueuePlayer: AVQueuePlayer {
     private var pendingSeeks = Deque<Seek>()
     private var cancellables = Set<AnyCancellable>()
 
+    private var wasPaused = false
+
     private var targetSeek: Seek? {
         pendingSeeks.last
     }
@@ -43,8 +45,20 @@ class QueuePlayer: AVQueuePlayer {
         targetSeek?.time
     }
 
+    override var rate: Float {
+        get {
+            super.rate
+        }
+        set {
+            if wasPaused && newValue != 0 {
+                wasPaused = false
+            }
+            super.rate = newValue
+        }
+    }
+
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, smooth: false, completionHandler: completionHandler)
+        seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, smooth: false, paused: false, completionHandler: completionHandler)
     }
 
     func seek(
@@ -52,6 +66,7 @@ class QueuePlayer: AVQueuePlayer {
         toleranceBefore: CMTime = .positiveInfinity,
         toleranceAfter: CMTime = .positiveInfinity,
         smooth: Bool,
+        paused: Bool,
         completionHandler: @escaping (Bool) -> Void
     ) {
         assert(time.isValid)
@@ -76,9 +91,17 @@ class QueuePlayer: AVQueuePlayer {
             return
         }
 
+        if paused && rate != 0 {
+            wasPaused = true
+            rate = 0
+        }
         enqueue(seek: seek) { [weak self] in
             guard let self else { return }
             notifySeekEnd()
+            if wasPaused {
+                rate = defaultRate
+                wasPaused = false
+            }
         }
     }
 
