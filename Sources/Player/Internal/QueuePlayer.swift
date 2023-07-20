@@ -78,17 +78,11 @@ class QueuePlayer: AVQueuePlayer {
             return
         }
 
-        if smooth && rate != 0 {
-            wasPaused = true
-            rate = 0
-        }
+        pausePlaybackIfNeeded(smooth: smooth)
         enqueue(seek: seek) { [weak self] in
             guard let self else { return }
             notifySeekEnd()
-            if wasPaused {
-                rate = defaultRate
-                wasPaused = false
-            }
+            resumePlaybackIfNeeded()
         }
     }
 
@@ -134,6 +128,18 @@ class QueuePlayer: AVQueuePlayer {
 
     private func notifySeekEnd() {
         Self.notificationCenter.post(name: .didSeek, object: self)
+    }
+
+    private func pausePlaybackIfNeeded(smooth: Bool) {
+        guard smooth && rate != 0 else { return }
+        wasPaused = true
+        rate = 0
+    }
+
+    private func resumePlaybackIfNeeded() {
+        guard wasPaused else { return }
+        rate = defaultRate
+        wasPaused = false
     }
 }
 
