@@ -103,7 +103,7 @@ final class QueuePlayerSeekTests: TestCase {
         let time1 = CMTime(value: 1, timescale: 1)
         let time2 = CMTime(value: 2, timescale: 1)
         expect {
-            player.seek(to: time1, smooth: true, paused: false) { finished in
+            player.seek(to: time1, smooth: true) { finished in
                 expect(finished).to(beFalse())
             }
             player.seek(to: time2) { finished in
@@ -163,9 +163,9 @@ final class QueuePlayerSeekTests: TestCase {
             }
         }
 
-        player.seek(to: time1, smooth: true, paused: false, completionHandler: completion(index: 1))
-        player.seek(to: time2, smooth: true, paused: false, completionHandler: completion(index: 2))
-        player.seek(to: time3, smooth: false, paused: false, completionHandler: completion(index: 3))
+        player.seek(to: time1, smooth: true, completionHandler: completion(index: 1))
+        player.seek(to: time2, smooth: true, completionHandler: completion(index: 2))
+        player.seek(to: time3, smooth: false, completionHandler: completion(index: 3))
 
         expect(results).toEventually(equalDiff([
             1: false,
@@ -260,11 +260,11 @@ final class QueuePlayerSeekTests: TestCase {
         let player = QueuePlayerMock(playerItem: item)
         expect(player.timeRange).toEventuallyNot(equal(.invalid))
         waitUntil { done in
-            player.seek(to: CMTime(value: 1, timescale: 1), smooth: true, paused: false) { _ in }
-            player.seek(to: CMTime(value: 2, timescale: 1), smooth: true, paused: false) { _ in }
-            player.seek(to: CMTime(value: 3, timescale: 1), smooth: true, paused: false) { _ in }
-            player.seek(to: CMTime(value: 4, timescale: 1), smooth: true, paused: false) { _ in }
-            player.seek(to: CMTime(value: 5, timescale: 1), smooth: true, paused: false) { _ in
+            player.seek(to: CMTime(value: 1, timescale: 1), smooth: true) { _ in }
+            player.seek(to: CMTime(value: 2, timescale: 1), smooth: true) { _ in }
+            player.seek(to: CMTime(value: 3, timescale: 1), smooth: true) { _ in }
+            player.seek(to: CMTime(value: 4, timescale: 1), smooth: true) { _ in }
+            player.seek(to: CMTime(value: 5, timescale: 1), smooth: true) { _ in
                 done()
             }
         }

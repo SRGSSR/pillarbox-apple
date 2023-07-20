@@ -50,16 +50,13 @@ public extension Player {
     /// - Parameters:
     ///   - position: The position to seek to.
     ///   - smooth: Set to `true` to enable smooth seeking. This allows any currently pending seek to complete before
-    ///     any new seek is performed, preventing unnecessary cancellation. This makes it possible for the playhead
-    ///     position to be moved in a smoother way.
-    ///   - paused: Set to `true` to pause playback during seeks. This in general allows the player to seek more
-    ///     efficiently.
+    ///     any new seek is performed, preventing unnecessary cancellation. The player is also paused during the seek
+    ///     operation. Altogether both measures make it possible for the playhead position to be moved in a smoother way.
     ///   - completion: A completion called when seeking ends. The provided Boolean informs
     ///     whether the seek could finish without being cancelled.
     func seek(
         _ position: Position,
         smooth: Bool = true,
-        paused: Bool = true,
         completion: @escaping (Bool) -> Void = { _ in }
     ) {
         // Mitigates issues arising when seeking to the very end of the range by introducing a small offset.
@@ -73,7 +70,6 @@ public extension Player {
             toleranceBefore: position.toleranceBefore,
             toleranceAfter: position.toleranceAfter,
             smooth: smooth,
-            paused: paused,
             completionHandler: completion
         )
     }
@@ -87,6 +83,6 @@ public extension Player {
     ///     whether the seek could finish without being cancelled.
     func seek(to time: CMTime, completion: @escaping (Bool) -> Void = { _ in }) {
         let position = Self.optimalPosition(reaching: time, for: queuePlayer.currentItem)
-        seek(position, smooth: true, paused: true, completion: completion)
+        seek(position, smooth: true, completion: completion)
     }
 }

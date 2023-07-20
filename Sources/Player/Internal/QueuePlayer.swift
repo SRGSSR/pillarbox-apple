@@ -58,7 +58,7 @@ class QueuePlayer: AVQueuePlayer {
     }
 
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
-        seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, smooth: false, paused: false, completionHandler: completionHandler)
+        seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, smooth: false, completionHandler: completionHandler)
     }
 
     func seek(
@@ -66,7 +66,6 @@ class QueuePlayer: AVQueuePlayer {
         toleranceBefore: CMTime = .positiveInfinity,
         toleranceAfter: CMTime = .positiveInfinity,
         smooth: Bool,
-        paused: Bool,
         completionHandler: @escaping (Bool) -> Void
     ) {
         assert(time.isValid)
@@ -91,7 +90,7 @@ class QueuePlayer: AVQueuePlayer {
             return
         }
 
-        if paused && rate != 0 {
+        if rate != 0 {
             wasPaused = true
             rate = 0
         }
