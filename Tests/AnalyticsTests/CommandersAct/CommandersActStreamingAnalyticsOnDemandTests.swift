@@ -13,7 +13,7 @@ import Nimble
 // swiftlint:disable:next type_name
 final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase {
     func testInitialPosition() {
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .play { labels in
                 expect(labels.media_position).to(equal(2))
                 expect(labels.media_timeshift).to(beNil())
@@ -29,7 +29,7 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
         let analytics = CommandersActStreamingAnalytics(streamType: .onDemand) {
             .init(labels: [:], time: CMTime(value: 2, timescale: 1), range: .zero)
         }
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .pause { labels in
                 expect(labels.media_position).to(equal(2))
                 expect(labels.media_timeshift).to(beNil())
@@ -44,7 +44,7 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
         _ = analytics
         wait(for: .seconds(1))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .stop { labels in
                 expect(labels.media_position).to(equal(1))
                 expect(labels.media_timeshift).to(beNil())
@@ -59,7 +59,7 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
         analytics?.notifyPlaybackSpeed(2)
         wait(for: .seconds(1))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .stop { labels in
                 expect(labels.media_position).to(equal(2))
                 expect(labels.media_timeshift).to(beNil())
@@ -77,7 +77,7 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
         analytics?.notifyPlaybackSpeed(2)
         wait(for: .seconds(1))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .stop { labels in
                 expect(labels.media_position).to(equal(3))
                 expect(labels.media_timeshift).to(beNil())
@@ -93,7 +93,7 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
         analytics?.notify(isBuffering: true)
         wait(for: .seconds(1))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .stop { labels in
                 expect(labels.media_position).to(equal(0))
                 expect(labels.media_timeshift).to(beNil())
@@ -111,7 +111,7 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
         analytics?.notify(.pause)
         wait(for: .seconds(1))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .stop { labels in
                 expect(labels.media_position).to(equal(2))
                 expect(labels.media_timeshift).to(beNil())
@@ -129,7 +129,7 @@ final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase 
         analytics?.notify(.seek)
         wait(for: .seconds(1))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .stop { labels in
                 expect(labels.media_position).to(equal(2))
                 expect(labels.media_timeshift).to(beNil())

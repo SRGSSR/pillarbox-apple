@@ -7,12 +7,12 @@
 import SwiftUI
 
 private final class TrackerViewController: UIViewController, PageViewTracking {
-    let pageTitle: String
-    let pageLevels: [String]
+    let comScorePageView: ComScorePageView
+    let commandersActPageView: CommandersActPageView
 
-    init(pageTitle: String, pageLevels: [String]) {
-        self.pageTitle = pageTitle
-        self.pageLevels = pageLevels
+    init(comScore: ComScorePageView, commandersAct: CommandersActPageView) {
+        comScorePageView = comScore
+        commandersActPageView = commandersAct
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -23,11 +23,11 @@ private final class TrackerViewController: UIViewController, PageViewTracking {
 }
 
 private struct PageTrackingView: UIViewControllerRepresentable {
-    let title: String
-    let levels: [String]
+    let comScore: ComScorePageView
+    let commandersAct: CommandersActPageView
 
     func makeUIViewController(context: Context) -> TrackerViewController {
-        TrackerViewController(pageTitle: title, pageLevels: levels)
+        TrackerViewController(comScore: comScore, commandersAct: commandersAct)
     }
 
     func updateUIViewController(_ uiViewController: TrackerViewController, context: Context) {}
@@ -39,9 +39,9 @@ public extension View {
     /// A page view will be automatically emitted when:
     /// - The receiver appears on screen.
     /// - The application returns from background with the receiver visible.
-    func tracked(title: String, levels: [String] = []) -> some View {
+    func tracked(comScore: ComScorePageView, commandersAct: CommandersActPageView) -> some View {
         background {
-            PageTrackingView(title: title, levels: levels)
+            PageTrackingView(comScore: comScore, commandersAct: commandersAct)
                 .allowsHitTesting(false)
         }
     }
@@ -51,7 +51,10 @@ struct TrackedView_Previews: PreviewProvider {
     static var previews: some View {
         Color.red
             .frame(width: 40, height: 40)
-            .tracked(title: "title")
+            .tracked(
+                comScore: .init(title: "title"),
+                commandersAct: .init(title: "title", type: "home")
+            )
             .border(Color.blue)
     }
 }

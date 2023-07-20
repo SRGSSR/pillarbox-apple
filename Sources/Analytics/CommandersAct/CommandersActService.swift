@@ -36,11 +36,15 @@ final class CommandersActService {
         self.serverSide = serverSide
     }
 
-    func trackPageView(title: String, levels: [String]) {
-        guard let serverSide, let event = TCPageViewEvent(type: title) else { return }
+    func trackPageView(_ pageView: CommandersActPageView) {
+        guard let serverSide, let event = TCPageViewEvent(type: pageView.type) else { return }
+        pageView.labels.forEach { key, value in
+            event.addAdditionalProperty(key, withStringValue: value)
+        }
+        event.addNonBlankAdditionalProperty("content_title", withStringValue: pageView.title)
         event.addNonBlankAdditionalProperty("navigation_property_type", withStringValue: "app")
         event.addNonBlankAdditionalProperty("navigation_bu_distributer", withStringValue: vendor?.rawValue)
-        levels.enumerated().forEach { index, level in
+        pageView.levels.enumerated().forEach { index, level in
             guard index < 8 else { return }
             event.addNonBlankAdditionalProperty("navigation_level_\(index + 1)", withStringValue: level)
         }
@@ -48,31 +52,9 @@ final class CommandersActService {
         serverSide.execute(event)
     }
 
-    func sendEvent(_ event: Event) {
+    func sendEvent(_ event: CommandersActEvent) {
         guard let serverSide, let customEvent = TCCustomEvent(name: event.name) else { return }
-
-        let eventProperties = [
-            "event_type": event.type,
-            "event_value": event.value,
-            "event_source": event.source,
-            "event_value_1": event.extra1,
-            "event_value_2": event.extra2,
-            "event_value_3": event.extra3,
-            "event_value_4": event.extra4,
-            "event_value_5": event.extra5
-        ]
-
-        eventProperties.forEach { key, value in
-            customEvent.addNonBlankAdditionalProperty(key, withStringValue: value)
-        }
-
-        AnalyticsListener.capture(customEvent)
-        serverSide.execute(customEvent)
-    }
-
-    func sendStreamingEvent(name: String, labels: [String: String]) {
-        guard let serverSide, let customEvent = TCCustomEvent(name: name) else { return }
-        labels.forEach { key, value in
+        event.labels.forEach { key, value in
             customEvent.addNonBlankAdditionalProperty(key, withStringValue: value)
         }
         AnalyticsListener.capture(customEvent)

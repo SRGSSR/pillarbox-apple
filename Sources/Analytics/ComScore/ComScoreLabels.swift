@@ -6,7 +6,9 @@
 
 import Foundation
 
-/// The labels associated with a comScore event.
+/// The labels associated with a comScore hit.
+///
+/// Mainly used for development-oriented purposes (e.g. unit testing).
 public struct ComScoreLabels {
     let dictionary: [String: String]
 

@@ -13,7 +13,7 @@ private enum ComScoreRequestInfoKey: String {
     case queryItems = "ComScoreRequestQueryItems"
 }
 
-/// A tool that intercepts comScore requests and turns them into an event stream.
+/// A tool that intercepts comScore requests and turns them into a hit stream.
 enum ComScoreInterceptor {
     private static var started = false
     private static var cancellables = Set<AnyCancellable>()
@@ -40,7 +40,7 @@ enum ComScoreInterceptor {
             .eraseToAnyPublisher()
     }
 
-    static func eventPublisher(for identifier: String) -> AnyPublisher<ComScoreEvent, Never> {
+    static func hitPublisher(for identifier: String) -> AnyPublisher<ComScoreHit, Never> {
         labelsPublisher()
             .filter { $0.listener_session_id == identifier }
             .compactMap { .init(from: $0) }

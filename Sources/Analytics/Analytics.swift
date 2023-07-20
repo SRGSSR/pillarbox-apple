@@ -74,54 +74,20 @@ public class Analytics {
     /// Tracks a page view.
     ///
     /// - Parameters:
-    ///   - title: The page title.
-    ///   - levels: The page levels.
-    public func trackPageView(title: String, levels: [String] = []) {
-        assert(!title.isBlank, "A title is required")
-        comScoreService.trackPageView(title: title, levels: levels)
-        commandersActService.trackPageView(title: title, levels: levels)
+    ///   - comScore: comScore page view data.
+    ///   - commandersAct: Commanders Act page view data.
+    public func trackPageView(
+        comScore comScorePageView: ComScorePageView,
+        commandersAct commandersActPageView: CommandersActPageView
+    ) {
+        comScoreService.trackPageView(comScorePageView)
+        commandersActService.trackPageView(commandersActPageView)
     }
 
     /// Sends an event.
     /// 
-    /// - Parameters:
-    ///   - name: The event name.
-    ///   - type: The event type.
-    ///   - value: The event value.
-    ///   - source: The event source.
-    ///   - extra1: Extra information associated with the event.
-    ///   - extra2: Extra information associated with the event.
-    ///   - extra3: Extra information associated with the event.
-    ///   - extra4: Extra information associated with the event.
-    ///   - extra5: Extra information associated with the event.
-    public func sendEvent(
-        name: String,
-        type: String = "",
-        value: String = "",
-        source: String = "",
-        extra1: String = "",
-        extra2: String = "",
-        extra3: String = "",
-        extra4: String = "",
-        extra5: String = ""
-    ) {
-        assert(!name.isBlank, "A name is required")
-        let event = Event(
-            name: name,
-            type: type,
-            value: value,
-            source: source,
-            extra1: extra1,
-            extra2: extra2,
-            extra3: extra3,
-            extra4: extra4,
-            extra5: extra5
-        )
-        commandersActService.sendEvent(event)
-    }
-
-    func sendCommandersActStreamingEvent(name: String, labels: [String: String]) {
-        assert(!name.isEmpty, "A name is required")
-        commandersActService.sendStreamingEvent(name: name, labels: labels)
+    /// - Parameter commandersAct: Commanders Act event data
+    public func sendEvent(commandersAct commandersActEvent: CommandersActEvent) {
+        commandersActService.sendEvent(commandersActEvent)
     }
 }

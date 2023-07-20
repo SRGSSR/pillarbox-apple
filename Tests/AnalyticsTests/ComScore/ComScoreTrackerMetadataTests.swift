@@ -29,7 +29,7 @@ final class ComScoreTrackerMetadataTests: ComScoreTestCase {
             ]
         ))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .play { labels in
                 expect(labels["meta_1"]).to(equal("custom-1"))
                 expect(labels["meta_2"]).to(equal(42))
@@ -50,7 +50,7 @@ final class ComScoreTrackerMetadataTests: ComScoreTestCase {
             ]
         ))
 
-        expectNoEvents(during: .seconds(3)) {
+        expectNoHits(during: .seconds(3)) {
             player.play()
         }
     }
@@ -63,7 +63,7 @@ final class ComScoreTrackerMetadataTests: ComScoreTestCase {
             ]
         ))
 
-        expectNoEvents(during: .seconds(3)) {
+        expectNoHits(during: .seconds(3)) {
             player.play()
         }
     }

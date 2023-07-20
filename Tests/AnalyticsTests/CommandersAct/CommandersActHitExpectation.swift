@@ -7,14 +7,14 @@
 import Analytics
 import Foundation
 
-/// Describes a Commanders Act stream event expectation.
-struct CommandersActEventExpectation {
-    private let name: CommandersActEvent.Name
+/// Describes a Commanders Act stream hit expectation.
+struct CommandersActHitExpectation {
+    private let name: CommandersActHit.Name
     private let evaluate: (CommandersActLabels) -> Void
 
-    static func match(event: CommandersActEvent, with expectation: Self) -> Bool {
-        guard event.name == expectation.name else { return false }
-        expectation.evaluate(event.labels)
+    static func match(hit: CommandersActHit, with expectation: Self) -> Bool {
+        guard hit.name == expectation.name else { return false }
+        expectation.evaluate(hit.labels)
         return true
     }
 
@@ -64,7 +64,7 @@ struct CommandersActEventExpectation {
     }
 }
 
-extension CommandersActEventExpectation: CustomDebugStringConvertible {
+extension CommandersActHitExpectation: CustomDebugStringConvertible {
     var debugDescription: String {
         name.rawValue
     }

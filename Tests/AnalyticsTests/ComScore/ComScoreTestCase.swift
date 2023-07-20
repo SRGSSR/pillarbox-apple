@@ -12,20 +12,21 @@ import XCTest
 class ComScoreTestCase: TestCase {}
 
 extension ComScoreTestCase {
-    /// Collect events emitted by comScore during some time interval and match them against expectations.
-    /// Note that a network connection is required by the comScore SDK to properly emit events.
-    func expectEvents(
-        _ expectations: ComScoreEventExpectation...,
+    /// Collects hits emitted by comScore during some time interval and matches them against expectations.
+    ///
+    /// A network connection is required by the comScore SDK to properly emit hits.
+    func expectHits(
+        _ expectations: ComScoreHitExpectation...,
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) {
-        AnalyticsListener.captureComScoreEvents { publisher in
+        AnalyticsListener.captureComScoreHits { publisher in
             expectPublished(
                 values: expectations,
                 from: publisher,
-                to: ComScoreEventExpectation.match,
+                to: ComScoreHitExpectation.match,
                 during: interval,
                 file: file,
                 line: line,
@@ -34,20 +35,21 @@ extension ComScoreTestCase {
         }
     }
 
-    /// Expect events emitted by comScore during some time interval and match them against expectations.
-    /// Note that a network connection is required by the comScore SDK to properly emit events.
-    func expectAtLeastEvents(
-        _ expectations: ComScoreEventExpectation...,
+    /// Expects hits emitted by comScore during some time interval and matches them against expectations.
+    ///
+    /// A network connection is required by the comScore SDK to properly emit hits.
+    func expectAtLeastHits(
+        _ expectations: ComScoreHitExpectation...,
         timeout: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) {
-        AnalyticsListener.captureComScoreEvents { publisher in
+        AnalyticsListener.captureComScoreHits { publisher in
             expectAtLeastPublished(
                 values: expectations,
                 from: publisher,
-                to: ComScoreEventExpectation.match,
+                to: ComScoreHitExpectation.match,
                 timeout: timeout,
                 file: file,
                 line: line,
@@ -56,14 +58,14 @@ extension ComScoreTestCase {
         }
     }
 
-    /// Expect no events emitted by comScore during some time interval.
-    func expectNoEvents(
+    /// Expect no hits emitted by comScore during some time interval.
+    func expectNoHits(
         during interval: DispatchTimeInterval = .seconds(20),
         file: StaticString = #file,
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) {
-        AnalyticsListener.captureComScoreEvents { publisher in
+        AnalyticsListener.captureComScoreHits { publisher in
             expectNothingPublished(
                 from: publisher,
                 during: interval,

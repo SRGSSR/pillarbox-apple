@@ -24,7 +24,7 @@ final class ComScoreTrackerDvrPropertiesTests: ComScoreTestCase {
             ]
         ))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .play { labels in
                 expect(labels.ns_st_ldw).to(equal(0))
                 expect(labels.ns_st_ldo).to(equal(0))
@@ -43,7 +43,7 @@ final class ComScoreTrackerDvrPropertiesTests: ComScoreTestCase {
             ]
         ))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .play { labels in
                 expect(labels.ns_st_ldw).to(equal(0))
                 expect(labels.ns_st_ldo).to(equal(0))
@@ -62,7 +62,7 @@ final class ComScoreTrackerDvrPropertiesTests: ComScoreTestCase {
             ]
         ))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .play { labels in
                 expect(labels.ns_st_ldo).to(equal(0))
                 expect(labels.ns_st_ldw).to(equal(Stream.dvr.duration.seconds))
@@ -84,7 +84,7 @@ final class ComScoreTrackerDvrPropertiesTests: ComScoreTestCase {
         player.play()
         expect(player.playbackState).toEventually(equal(.playing))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .pause { labels in
                 expect(labels.ns_st_ldo).to(equal(0))
                 expect(labels.ns_st_ldw).to(equal(Stream.dvr.duration.seconds))

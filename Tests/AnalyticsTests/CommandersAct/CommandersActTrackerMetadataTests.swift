@@ -15,7 +15,7 @@ private struct AssetMetadataMock: AssetMetadata {}
 final class CommandersActTrackerMetadataTests: CommandersActTestCase {
     func testWhenInitialized() {
         var player: Player?
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .play { labels in
                 expect(labels.media_player_display).to(equal("Pillarbox"))
                 expect(labels.media_player_version).notTo(beEmpty())
@@ -51,7 +51,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         player?.play()
         expect(player?.playbackState).toEventually(equal(.playing))
 
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .stop { labels in
                 expect(labels.media_player_display).to(equal("Pillarbox"))
                 expect(labels.media_player_version).notTo(beEmpty())
@@ -65,7 +65,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
 
     func testMuted() {
         var player: Player?
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .play { labels in
                 expect(labels.media_volume).to(equal(0))
             }

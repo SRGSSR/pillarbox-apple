@@ -6,14 +6,16 @@
 
 @testable import Analytics
 
+import Circumspect
 import Nimble
 import XCTest
 
 final class CommandersActPageViewTests: CommandersActTestCase {
     func testLabels() {
-        expectAtLeastEvents(
+        expectAtLeastHits(
             .page_view { labels in
-                expect(labels.page_type).to(equal("title"))
+                expect(labels.page_type).to(equal("type"))
+                expect(labels.content_title).to(equal("title"))
                 expect(labels.navigation_level_0).to(beNil())
                 expect(labels.navigation_level_1).to(equal("level_1"))
                 expect(labels.navigation_level_2).to(equal("level_2"))
@@ -31,23 +33,47 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                 expect(labels.navigation_bu_distributer).to(equal("SRG"))
             }
         ) {
-            Analytics.shared.trackPageView(title: "title", levels: [
-                "level_1",
-                "level_2",
-                "level_3",
-                "level_4",
-                "level_5",
-                "level_6",
-                "level_7",
-                "level_8"
-            ])
+            Analytics.shared.trackPageView(
+                comScore: .init(title: "title"),
+                commandersAct: .init(
+                    title: "title",
+                    type: "type",
+                    levels: [
+                        "level_1",
+                        "level_2",
+                        "level_3",
+                        "level_4",
+                        "level_5",
+                        "level_6",
+                        "level_7",
+                        "level_8"
+                    ]
+                )
+            )
         }
     }
 
-    func testEmptyLevels() {
-        expectAtLeastEvents(
+    func testBlankTitle() {
+        guard nimbleThrowAssertionsAvailable() else { return }
+        expect(Analytics.shared.trackPageView(
+            comScore: .init(title: "title"),
+            commandersAct: .init(title: " ", type: "type")
+        )).to(throwAssertion())
+    }
+
+    func testBlankType() {
+        guard nimbleThrowAssertionsAvailable() else { return }
+        expect(Analytics.shared.trackPageView(
+            comScore: .init(title: "title"),
+            commandersAct: .init(title: "title", type: " ")
+        )).to(throwAssertion())
+    }
+
+    func testBlankLevels() {
+        expectAtLeastHits(
             .page_view { labels in
-                expect(labels.page_type).to(equal("title"))
+                expect(labels.page_type).to(equal("type"))
+                expect(labels.content_title).to(equal("title"))
                 expect(labels.navigation_level_1).to(beNil())
                 expect(labels.navigation_level_2).to(beNil())
                 expect(labels.navigation_level_3).to(beNil())
@@ -58,16 +84,58 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                 expect(labels.navigation_level_8).to(beNil())
             }
         ) {
-            Analytics.shared.trackPageView(title: "title", levels: [
-                " ",
-                " ",
-                " ",
-                " ",
-                " ",
-                " ",
-                " ",
-                " "
-            ])
+            Analytics.shared.trackPageView(
+                comScore: .init(title: "title"),
+                commandersAct: .init(
+                    title: "title",
+                    type: "type",
+                    levels: [
+                        " ",
+                        " ",
+                        " ",
+                        " ",
+                        " ",
+                        " ",
+                        " ",
+                        " "
+                    ]
+                )
+            )
+        }
+    }
+
+    func testCustomLabels() {
+        expectAtLeastHits(
+            .page_view { labels in
+                // Use `media_player_display`, a media-only key, so that its value can be parsed.
+                expect(labels.media_player_display).to(equal("value"))
+            }
+        ) {
+            Analytics.shared.trackPageView(
+                comScore: .init(title: "title"),
+                commandersAct: .init(
+                    title: "title",
+                    type: "type",
+                    labels: ["media_player_display": "value"]
+                )
+            )
+        }
+    }
+
+    func testLabelsForbiddenOverrides() {
+        expectAtLeastHits(
+            .page_view { labels in
+                expect(labels.content_title).to(equal("title"))
+            }
+        ) {
+            Analytics.shared.trackPageView(
+                comScore: .init(title: "title"),
+                commandersAct: .init(
+                    title: "title",
+                    type: "type",
+                    labels: ["content_title": "overridden_title"]
+                )
+            )
         }
     }
 }

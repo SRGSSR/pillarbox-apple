@@ -6,7 +6,9 @@
 
 import Foundation
 
-/// The labels associated with a Commanders Act event.
+/// The labels associated with a Commanders Act hit.
+///
+/// Mainly used for development-oriented purposes (e.g. unit testing).
 public struct CommandersActLabels: Decodable {
     private let _media_position: String?
     private let _media_timeshift: String?
@@ -68,31 +70,8 @@ public struct CommandersActLabels: Decodable {
     /// The value of `page_type`.
     public let page_type: String?
 
-    // MARK: Event labels
-
-    /// The value of `event_type`.
-    public let event_type: String?
-
-    /// The value of `event_value`.
-    public let event_value: String?
-
-    /// The value of `event_source`.
-    public let event_source: String?
-
-    /// The value of `event_value_1`.
-    public let event_value_1: String?
-
-    /// The value of `event_value_2`.
-    public let event_value_2: String?
-
-    /// The value of `event_value_3`.
-    public let event_value_3: String?
-
-    /// The value of `event_value_4`.
-    public let event_value_4: String?
-
-    /// The value of `event_value_5`.
-    public let event_value_5: String?
+    /// The value of `content_title`.
+    public let content_title: String?
 
     // MARK: Streaming labels
 
@@ -126,13 +105,13 @@ public struct CommandersActLabels: Decodable {
 private extension CommandersActLabels {
     enum CodingKeys: String, CodingKey {
         case event_name
-        case media_title
         case listener_session_id
+        case media_title
         case app_library_version
         case navigation_app_site_name
+        case navigation_device
         case navigation_property_type
         case navigation_bu_distributer
-        case navigation_device
         case navigation_level_0
         case navigation_level_1
         case navigation_level_2
@@ -144,14 +123,7 @@ private extension CommandersActLabels {
         case navigation_level_8
         case navigation_level_9
         case page_type
-        case event_type
-        case event_value
-        case event_source
-        case event_value_1
-        case event_value_2
-        case event_value_3
-        case event_value_4
-        case event_value_5
+        case content_title
         case media_player_display
         case media_player_version
         case _media_position = "media_position"

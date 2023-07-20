@@ -8,9 +8,9 @@ import Combine
 import Foundation
 import TCServerSide
 
-/// A tool that intercepts Commanders Act requests and turns them into an event stream.
+/// A tool that intercepts Commanders Act requests and turns them into a hit stream.
 enum CommandersActInterceptor {
-    static func eventPublisher(for identifier: String) -> AnyPublisher<CommandersActEvent, Never> {
+    static func hitPublisher(for identifier: String) -> AnyPublisher<CommandersActHit, Never> {
         NotificationCenter.default.publisher(for: .init(rawValue: kTCNotification_HTTPRequest))
             .compactMap { labels(from: $0) }
             .filter { $0.listener_session_id == identifier }

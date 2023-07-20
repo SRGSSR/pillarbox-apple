@@ -7,14 +7,14 @@
 import Analytics
 import Foundation
 
-/// Describes a comScore stream event expectation.
-struct ComScoreEventExpectation {
-    private let name: ComScoreEvent.Name
+/// Describes a comScore stream hit expectation.
+struct ComScoreHitExpectation {
+    private let name: ComScoreHit.Name
     private let evaluate: (ComScoreLabels) -> Void
 
-    static func match(event: ComScoreEvent, with expectation: Self) -> Bool {
-        guard event.name == expectation.name else { return false }
-        expectation.evaluate(event.labels)
+    static func match(hit: ComScoreHit, with expectation: Self) -> Bool {
+        guard hit.name == expectation.name else { return false }
+        expectation.evaluate(hit.labels)
         return true
     }
 
@@ -39,7 +39,7 @@ struct ComScoreEventExpectation {
     }
 }
 
-extension ComScoreEventExpectation: CustomDebugStringConvertible {
+extension ComScoreHitExpectation: CustomDebugStringConvertible {
     var debugDescription: String {
         name.rawValue
     }
