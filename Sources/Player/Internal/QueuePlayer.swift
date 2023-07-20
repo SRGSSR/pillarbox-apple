@@ -45,18 +45,6 @@ class QueuePlayer: AVQueuePlayer {
         targetSeek?.time
     }
 
-    override var rate: Float {
-        get {
-            super.rate
-        }
-        set {
-            if wasPaused && newValue != 0 {
-                wasPaused = false
-            }
-            super.rate = newValue
-        }
-    }
-
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, smooth: false, completionHandler: completionHandler)
     }
