@@ -90,8 +90,4 @@ public class Analytics {
     public func sendEvent(commandersAct commandersActEvent: CommandersActEvent) {
         commandersActService.sendEvent(commandersActEvent)
     }
-
-    func sendStreamingEvent(commandersAct commandersActEvent: CommandersActStreamingEvent) {
-        commandersActService.sendStreamingEvent(commandersActEvent)
-    }
 }

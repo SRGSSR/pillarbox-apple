@@ -60,15 +60,6 @@ final class CommandersActService {
         AnalyticsListener.capture(customEvent)
         serverSide.execute(customEvent)
     }
-
-    func sendStreamingEvent(_ event: CommandersActStreamingEvent) {
-        guard let serverSide, let customEvent = TCCustomEvent(name: event.name) else { return }
-        event.labels.forEach { key, value in
-            customEvent.addNonBlankAdditionalProperty(key, withStringValue: value)
-        }
-        AnalyticsListener.capture(customEvent)
-        serverSide.execute(customEvent)
-    }
 }
 
 extension TCAdditionalProperties {
