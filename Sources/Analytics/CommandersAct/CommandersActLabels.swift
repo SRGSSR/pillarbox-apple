@@ -29,7 +29,7 @@ public struct CommandersActLabels: Decodable {
     /// The value of `navigation_device`.
     public let navigation_device: String?
 
-    // MARK: Page view label
+    // MARK: Page view labels
 
     /// The value of `navigation_property_type`.
     public let navigation_property_type: String?
