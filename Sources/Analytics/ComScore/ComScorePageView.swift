@@ -16,7 +16,7 @@ public struct ComScorePageView {
     /// Custom labels which might accidentally override official labels will be ignored.
     ///
     /// - Parameters:
-    ///   - name: The page view name.
+    ///   - name: The page name.
     ///   - labels: Additional information associated with the page view.
     public init(name: String, labels: [String: String] = [:]) {
         assert(!name.isBlank, "A name is required")
