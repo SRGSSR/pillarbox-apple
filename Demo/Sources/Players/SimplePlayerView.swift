@@ -22,7 +22,7 @@ struct SimplePlayerView: View {
             playbackButton()
         }
         .onAppear(perform: play)
-        .tracked(title: "simple-player")
+        .tracked(name: "simple-player")
     }
 
     @ViewBuilder

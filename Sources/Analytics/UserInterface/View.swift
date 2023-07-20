@@ -52,8 +52,8 @@ struct TrackedView_Previews: PreviewProvider {
         Color.red
             .frame(width: 40, height: 40)
             .tracked(
-                comScore: .init(title: "title"),
-                commandersAct: .init(title: "title", type: "home")
+                comScore: .init(name: "name"),
+                commandersAct: .init(name: "name", type: "home")
             )
             .border(Color.blue)
     }

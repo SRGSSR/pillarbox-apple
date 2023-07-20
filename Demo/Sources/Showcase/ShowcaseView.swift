@@ -21,7 +21,7 @@ struct ShowcaseView: View {
             trackingSection()
         }
         .navigationTitle("Showcase")
-        .tracked(title: "showcase")
+        .tracked(name: "showcase")
     }
 
     @ViewBuilder

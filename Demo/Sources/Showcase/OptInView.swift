@@ -39,7 +39,7 @@ struct OptInView: View {
             }
         }
         .onAppear(perform: load)
-        .tracked(title: "tracking")
+        .tracked(name: "tracking")
     }
 
     private func load() {

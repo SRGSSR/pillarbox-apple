@@ -18,10 +18,10 @@ extension View {
             .animation(animation, value: v2)
     }
 
-    func tracked(title: String, levels: [String] = []) -> some View {
+    func tracked(name: String, levels: [String] = []) -> some View {
         tracked(
-            comScore: .init(title: title),
-            commandersAct: .init(title: title, type: "content", levels: levels)
+            comScore: .init(name: name),
+            commandersAct: .init(name: name, type: "content", levels: levels)
         )
     }
 }

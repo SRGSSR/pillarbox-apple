@@ -44,7 +44,7 @@ struct SettingsView: View {
             debuggingSection()
         }
         .navigationTitle("Settings")
-        .tracked(title: "settings")
+        .tracked(name: "settings")
     }
 
     @ViewBuilder

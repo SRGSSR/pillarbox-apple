@@ -41,7 +41,7 @@ struct TwinsView: View {
         }
         .onAppear(perform: play)
         .onForeground(perform: resume)
-        .tracked(title: "twins")
+        .tracked(name: "twins")
     }
 
     private func play() {

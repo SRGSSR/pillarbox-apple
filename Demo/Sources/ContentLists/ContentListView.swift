@@ -115,7 +115,7 @@ struct ContentListView: View {
         .animation(.defaultLinear, value: model.state)
         .onAppear { model.configuration = configuration }
         .navigationTitle(configuration.list.name)
-        .tracked(title: configuration.list.pageTitle, levels: configuration.list.pageLevels)
+        .tracked(name: configuration.list.pageName, levels: configuration.list.pageLevels)
     }
 }
 

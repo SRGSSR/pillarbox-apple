@@ -12,16 +12,16 @@ import UIKit
 import XCTest
 
 private class AutomaticMockViewController: UIViewController, PageViewTracking {
-    private var pageTitle: String {
+    private var pageName: String {
         title ?? "automatic"
     }
 
     var comScorePageView: ComScorePageView {
-        .init(title: pageTitle)
+        .init(name: pageName)
     }
 
     var commandersActPageView: CommandersActPageView {
-        .init(title: pageTitle, type: "type")
+        .init(name: pageName, type: "type")
     }
 
     init(title: String? = nil) {
@@ -36,30 +36,30 @@ private class AutomaticMockViewController: UIViewController, PageViewTracking {
 }
 
 private class AutomaticWithLevelsMockViewController: UIViewController, PageViewTracking {
-    private var pageTitle: String {
+    private var pageName: String {
         "automatic_with_levels"
     }
 
     var comScorePageView: ComScorePageView {
-        .init(title: pageTitle)
+        .init(name: pageName)
     }
 
     var commandersActPageView: CommandersActPageView {
-        .init(title: pageTitle, type: "type", levels: ["level1", "level2"])
+        .init(name: pageName, type: "type", levels: ["level1", "level2"])
     }
 }
 
 private class ManualMockViewController: UIViewController, PageViewTracking {
-    private var pageTitle: String {
+    private var pageName: String {
         "manual"
     }
 
     var comScorePageView: ComScorePageView {
-        .init(title: pageTitle)
+        .init(name: pageName)
     }
 
     var commandersActPageView: CommandersActPageView {
-        .init(title: pageTitle, type: "type")
+        .init(name: pageName, type: "type")
     }
 
     var isTrackedAutomatically: Bool {
@@ -73,7 +73,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
             .view { labels in
                 expect(labels.c2).to(equal("6036016"))
                 expect(labels.ns_ap_an).to(equal("xctest"))
-                expect(labels.c8).to(equal("title"))
+                expect(labels.c8).to(equal("name"))
                 expect(labels.ns_st_mp).to(beNil())
                 expect(labels.ns_st_mv).to(beNil())
                 expect(labels.mp_brand).to(equal("SRG"))
@@ -81,8 +81,8 @@ final class ComScorePageViewTests: ComScoreTestCase {
             }
         ) {
             Analytics.shared.trackPageView(
-                comScore: .init(title: "title"),
-                commandersAct: .init(title: "title", type: "type")
+                comScore: .init(name: "name"),
+                commandersAct: .init(name: "name", type: "type")
             )
         }
     }
@@ -90,8 +90,8 @@ final class ComScorePageViewTests: ComScoreTestCase {
     func testBlankTitle() {
         guard nimbleThrowAssertionsAvailable() else { return }
         expect(Analytics.shared.trackPageView(
-            comScore: .init(title: " "),
-            commandersAct: .init(title: "title", type: "type")
+            comScore: .init(name: " "),
+            commandersAct: .init(name: "name", type: "type")
         )).to(throwAssertion())
     }
 
@@ -102,8 +102,8 @@ final class ComScorePageViewTests: ComScoreTestCase {
             }
         ) {
             Analytics.shared.trackPageView(
-                comScore: .init(title: "title", labels: ["key": "value"]),
-                commandersAct: .init(title: "title", type: "type")
+                comScore: .init(name: "name", labels: ["key": "value"]),
+                commandersAct: .init(name: "name", type: "type")
             )
         }
     }
@@ -111,12 +111,12 @@ final class ComScorePageViewTests: ComScoreTestCase {
     func testCustomLabelsForbiddenOverrides() {
         expectAtLeastHits(
             .view { labels in
-                expect(labels.c8).to(equal("title"))
+                expect(labels.c8).to(equal("name"))
             }
         ) {
             Analytics.shared.trackPageView(
-                comScore: .init(title: "title", labels: ["c8": "overridden_title"]),
-                commandersAct: .init(title: "title", type: "type")
+                comScore: .init(name: "name", labels: ["c8": "overridden_title"]),
+                commandersAct: .init(name: "name", type: "type")
             )
         }
     }

@@ -13,6 +13,6 @@ extension CommandersActTracker.Metadata {
     }
 
     static func test(streamType: StreamType) -> Self {
-        .init(labels: ["media_title": "title"], streamType: streamType)
+        .init(labels: ["media_title": "name"], streamType: streamType)
     }
 }

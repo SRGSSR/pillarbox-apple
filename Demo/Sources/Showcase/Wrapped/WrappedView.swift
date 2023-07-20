@@ -30,7 +30,7 @@ struct WrappedView: View {
         }
         .onAppear(perform: play)
         .onForeground(perform: resume)
-        .tracked(title: "wrapped")
+        .tracked(name: "wrapped")
     }
 
     private func play() {
