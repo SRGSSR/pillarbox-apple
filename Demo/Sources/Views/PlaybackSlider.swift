@@ -88,15 +88,21 @@ extension PlaybackSlider where ValueLabel == EmptyView {
 private extension View {
     @ViewBuilder
     func busy(_ isBusy: Bool) -> some View {
+        // TODO: Remove when Xcode 15 has been released
+#if compiler(>=5.9)
         if #available(iOS 17.0, *), isBusy {
             phaseAnimator([true, false]) { content, phase in
                 content
                     .opacity(phase ? 0.5 : 1)
                     .animation(.easeInOut(duration: 0.7), value: phase)
             }
-        } else {
+        }
+        else {
             self
         }
+#else
+        self
+#endif
     }
 }
 
