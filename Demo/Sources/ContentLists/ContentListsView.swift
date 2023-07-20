@@ -105,7 +105,7 @@ struct ContentListsView: View {
 
     @ViewBuilder
     private func serverSettingsMenu() -> some View {
-        if #available(iOS 17, tvOS 17.0, *) {
+        if #available(iOS 17.0, tvOS 17.0, *) {
             Menu {
                 Picker("Server", selection: $selectedServerSetting) {
                     ForEach(ServerSetting.allCases, id: \.self) { service in

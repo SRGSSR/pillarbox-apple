@@ -141,7 +141,7 @@ private extension View {
     func pulseEffect() -> some View {
         // TODO: Remove when Xcode 15 has been released
 #if compiler(>=5.9)
-        if #available(iOS 17, tvOS 17, *) {
+        if #available(iOS 17.0, tvOS 17.0, *) {
             symbolEffect(.pulse)
         }
         else {

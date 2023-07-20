@@ -19,6 +19,7 @@ private struct MainView: View {
 
     @State private var layoutInfo: LayoutInfo = .none
     @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
+    @State private var isInteracting = false
 
     private var areControlsAlwaysVisible: Bool {
         player.isExternalPlaybackActive || player.mediaType == .audio
@@ -62,7 +63,7 @@ private struct MainView: View {
             controls()
             loadingIndicator()
         }
-        .animation(.defaultLinear, value: isUserInterfaceHidden)
+        .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
         .readLayout(into: $layoutInfo)
         .accessibilityAddTraits(.isButton)
         .onTapGesture(perform: visibilityTracker.toggle)
@@ -75,7 +76,7 @@ private struct MainView: View {
 
     @ViewBuilder
     private func timeBar() -> some View {
-        TimeBar(player: player, visibilityTracker: visibilityTracker, layout: $layout)
+        TimeBar(player: player, visibilityTracker: visibilityTracker, layout: $layout, isInteracting: $isInteracting)
             .opacity(isUserInterfaceHidden && !areControlsAlwaysVisible ? 0 : 1)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
@@ -107,13 +108,14 @@ private struct MainView: View {
     private func controls() -> some View {
         ControlsView(player: player)
             .opacity(isUserInterfaceHidden && !areControlsAlwaysVisible ? 0 : 1)
+            .opacity(isInteracting ? 0 : 1)
     }
 
     @ViewBuilder
     private func loadingIndicator() -> some View {
         ProgressView()
             .tint(.white)
-            .opacity(player.isBusy ? 1 : 0)
+            .opacity(player.isBusy && !isInteracting ? 1 : 0)
             .controlSize(.large)
     }
 
@@ -347,6 +349,7 @@ private struct TimeBar: View {
     @ObservedObject var player: Player
     @ObservedObject var visibilityTracker: VisibilityTracker
     @Binding var layout: PlaybackView.Layout
+    @Binding var isInteracting: Bool
 
     @StateObject private var progressTracker = ProgressTracker(
         interval: CMTime(value: 1, timescale: 10),
@@ -371,6 +374,7 @@ private struct TimeBar: View {
         }
         .preventsTouchPropagation()
         .padding(.horizontal, 6)
+        .onChange(of: progressTracker.isInteracting) { isInteracting = $0 }
         .bind(progressTracker, to: player)
     }
 
