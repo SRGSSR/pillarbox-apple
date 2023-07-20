@@ -78,7 +78,7 @@ class QueuePlayer: AVQueuePlayer {
             return
         }
 
-        if rate != 0 {
+        if smooth && rate != 0 {
             wasPaused = true
             rate = 0
         }
