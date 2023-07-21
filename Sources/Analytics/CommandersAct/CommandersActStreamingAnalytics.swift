@@ -155,25 +155,59 @@ extension CommandersActStreamingAnalytics {
     }
 
     struct Heartbeat {
-        let name: String
-        let delay: TimeInterval
-        let interval: TimeInterval
-        let streamTypes: [StreamType]
+        enum Kind: String {
+            case pos
+            case uptime
+
+            private var supportedStreamTypes: [StreamType] {
+                switch self {
+                case .pos:
+                    return [.onDemand, .live, .dvr]
+                case .uptime:
+                    return [.live, .dvr]
+                }
+            }
+
+            func isSupported(for streamType: StreamType) -> Bool {
+                supportedStreamTypes.contains(streamType)
+            }
+
+            func shouldSend(eventData: EventData) -> Bool {
+                switch self {
+                case .pos:
+                    return true
+                case .uptime:
+                    return eventData.range.end - eventData.time < CMTime(value: 30, timescale: 1)
+                }
+            }
+        }
+
+        private let kind: Kind
+        private let delay: TimeInterval
+        private let interval: TimeInterval
+
+        var name: String {
+            kind.rawValue
+        }
 
         static func pos(interval: TimeInterval = 30) -> Self {
-            .init(name: "pos", delay: 0, interval: interval, streamTypes: [.onDemand, .live, .dvr])
+            .init(kind: .pos, delay: 0, interval: interval)
         }
 
         static func uptime(delay: TimeInterval = 30, interval: TimeInterval = 60) -> Self {
-            .init(name: "uptime", delay: delay, interval: interval, streamTypes: [.live, .dvr])
+            .init(kind: .uptime, delay: delay, interval: interval)
         }
 
         func timer(for streamType: StreamType) -> AnyPublisher<Date, Never>? {
-            guard streamTypes.contains(streamType) else { return nil }
+            guard kind.isSupported(for: streamType) else { return nil }
             return Timer.publish(every: interval, on: .main, in: .common)
                 .autoconnect()
                 .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
                 .eraseToAnyPublisher()
+        }
+
+        func shouldSend(eventData: EventData) -> Bool {
+            kind.shouldSend(eventData: eventData)
         }
     }
 }
@@ -197,6 +231,7 @@ private extension CommandersActStreamingAnalytics {
     private func sendHeartbeat(_ heartbeat: Heartbeat) {
         let eventData = eventData()
         updateTimeTracking(eventData: eventData)
+        guard heartbeat.shouldSend(eventData: eventData) else { return }
         Analytics.shared.sendEvent(commandersAct: .init(
             name: heartbeat.name,
             labels: labels(eventData: eventData)

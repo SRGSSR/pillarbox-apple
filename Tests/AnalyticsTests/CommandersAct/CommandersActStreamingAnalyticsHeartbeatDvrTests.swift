@@ -42,6 +42,25 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
         )
     }
 
+    func testHeartbeatAfterPlayInPastConditions() {
+        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeats: Self.heartbeats) {
+            .init(labels: [:], time: .zero, range: .init(start: .zero, duration: .init(value: 100, timescale: 1)))
+        }
+        _ = analytics
+
+        expectAtLeastHits(
+            .pos { labels in
+                expect(labels.media_position).to(equal(1))
+            },
+            .pos { labels in
+                expect(labels.media_position).to(equal(2))
+            },
+            .pos { labels in
+                expect(labels.media_position).to(equal(3))
+            }
+        )
+    }
+
     func testNoHeartbeatAfterPause() {
         let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeats: Self.heartbeats) {
             .init(labels: [:], time: .zero, range: .zero)
