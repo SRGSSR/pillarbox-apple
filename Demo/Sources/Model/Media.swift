@@ -13,6 +13,7 @@ struct Media: Hashable, Identifiable {
         case url(URL)
         case unbufferedUrl(URL)
         case urn(String, server: Server)
+        case youtube(String)
 
         static func urn(_ urn: String) -> Self {
             .urn(urn, server: .production)
@@ -65,6 +66,9 @@ struct Media: Hashable, Identifiable {
                     DemoTracker.Metadata(title: metadata.title)
                 }
             ])
+
+        case let .youtube(youtubeId):
+            return .youtube(videoId: youtubeId)
         }
     }
 }
