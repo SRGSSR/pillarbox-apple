@@ -40,7 +40,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/comScore/Comscore-Swift-Package-Manager.git", .upToNextMinor(from: "6.10.0")),
-        .package(url: "https://github.com/SRGSSR/GoogleCastSDK-no-bluetooth.git", .upToNextMinor(from: "4.7.1-beta.1")),
+        .package(url: "https://github.com/SRGSSR/GoogleCastSDK-no-bluetooth.git", .upToNextMinor(from: "4.8.0")),
         .package(url: "https://github.com/CommandersAct/iOSV5.git", .upToNextMinor(from: "5.3.0")),
         .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.3")),
         .package(url: "https://github.com/krzysztofzablocki/Difference.git", exact: "1.0.1"),
