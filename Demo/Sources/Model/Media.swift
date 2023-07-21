@@ -42,11 +42,16 @@ struct Media: Hashable, Identifiable {
     func playerItem() -> PlayerItem {
         switch type {
         case let .url(url):
-            return .simple(url: url, metadata: self, trackerAdapters: [
-                DemoTracker.adapter { media in
-                    DemoTracker.Metadata(title: media.title)
-                }
-            ])
+            if let youtubeId = Self.youtubeId(from: url) {
+                return .youtube(videoId: youtubeId)
+            }
+            else {
+                return .simple(url: url, metadata: self, trackerAdapters: [
+                    DemoTracker.adapter { media in
+                        DemoTracker.Metadata(title: media.title)
+                    }
+                ])
+            }
         case let .unbufferedUrl(url):
             return .simple(
                 url: url,
@@ -70,6 +75,20 @@ struct Media: Hashable, Identifiable {
         case let .youtube(youtubeId):
             return .youtube(videoId: youtubeId)
         }
+    }
+}
+
+private extension Media {
+    static func youtubeId(from url: URL) -> String? {
+        guard
+            let component = URLComponents(url: url, resolvingAgainstBaseURL: false),
+            let host = component.host,
+            host.contains("youtube") else { return nil }
+
+        return component
+            .queryItems?
+            .first { $0.name == "v" }?
+            .value
     }
 }
 
