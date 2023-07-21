@@ -23,7 +23,7 @@ public final class ProgressTracker: ObservableObject {
     @Published public var isInteracting = false {
         willSet {
             guard !newValue else { return }
-            seek(to: progress, smooth: false)
+            seek(to: progress, optimal: false)
         }
     }
 
@@ -52,7 +52,7 @@ public final class ProgressTracker: ObservableObject {
             guard _progress != nil else { return }
             _progress = newValue.clamped(to: range)
             guard seekBehavior == .immediate else { return }
-            seek(to: newValue, smooth: true)
+            seek(to: newValue, optimal: true)
         }
     }
 
@@ -141,9 +141,14 @@ public final class ProgressTracker: ObservableObject {
         return Float((time - timeRange.start).seconds / timeRange.duration.seconds).clamped(to: 0...1)
     }
 
-    private func seek(to progress: Float, smooth: Bool) {
+    private func seek(to progress: Float, optimal: Bool) {
         guard let player, let time = time(forProgress: progress) else { return }
-        player.seek(near(time), smooth: smooth)
+        if optimal {
+            player.seek(to: time)
+        }
+        else {
+            player.seek(near(time), smooth: false)
+        }
     }
 
     private func time(forProgress progress: Float?) -> CMTime? {

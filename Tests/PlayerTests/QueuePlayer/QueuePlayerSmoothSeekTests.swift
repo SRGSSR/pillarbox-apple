@@ -171,4 +171,43 @@ final class QueuePlayerSmoothSeekTests: TestCase {
         player.seek(to: time2, smooth: true) { _ in }
         expect(player.targetSeekTime).to(equal(time2))
     }
+
+    func testSmoothSeekPausesPlayback() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayer(playerItem: item)
+        player.play()
+        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+
+        expectAtLeastEqualPublished(values: [1, 0, 1], from: player.publisher(for: \.rate)) {
+            player.seek(to: CMTime(value: 30, timescale: 1), smooth: true) { finished in
+                expect(finished).to(beTrue())
+            }
+        }
+    }
+
+    func testSmoothSeekPreservesPlaybackSpeed() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayer(playerItem: item)
+        player.defaultRate = 0.5
+        player.play()
+        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+
+        expectAtLeastEqualPublished(values: [0.5, 0, 0.5], from: player.publisher(for: \.rate)) {
+            player.seek(to: CMTime(value: 30, timescale: 1), smooth: true) { finished in
+                expect(finished).to(beTrue())
+            }
+        }
+    }
+
+    func testSmoothSeekDoesNotResumePausedPlayback() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayer(playerItem: item)
+        expect(item.timeRange).toEventuallyNot(equal(.invalid))
+
+        expectEqualPublished(values: [0], from: player.publisher(for: \.rate), during: .seconds(2)) {
+            player.seek(to: CMTime(value: 30, timescale: 1), smooth: true) { finished in
+                expect(finished).to(beTrue())
+            }
+        }
+    }
 }

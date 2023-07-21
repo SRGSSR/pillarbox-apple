@@ -35,6 +35,8 @@ class QueuePlayer: AVQueuePlayer {
     private var pendingSeeks = Deque<Seek>()
     private var cancellables = Set<AnyCancellable>()
 
+    private var wasPaused = false
+
     private var targetSeek: Seek? {
         pendingSeeks.last
     }
@@ -76,9 +78,11 @@ class QueuePlayer: AVQueuePlayer {
             return
         }
 
+        pausePlaybackIfNeeded(smooth: smooth)
         enqueue(seek: seek) { [weak self] in
             guard let self else { return }
             notifySeekEnd()
+            resumePlaybackIfNeeded()
         }
     }
 
@@ -124,6 +128,18 @@ class QueuePlayer: AVQueuePlayer {
 
     private func notifySeekEnd() {
         Self.notificationCenter.post(name: .didSeek, object: self)
+    }
+
+    private func pausePlaybackIfNeeded(smooth: Bool) {
+        guard smooth && rate != 0 else { return }
+        wasPaused = true
+        rate = 0
+    }
+
+    private func resumePlaybackIfNeeded() {
+        guard wasPaused else { return }
+        rate = defaultRate
+        wasPaused = false
     }
 }
 

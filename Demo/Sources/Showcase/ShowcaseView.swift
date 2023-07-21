@@ -119,11 +119,19 @@ struct ShowcaseView: View {
     private func systemPlayerSection() -> some View {
         Section("System player (using Pillarbox)") {
             cell(
-                title: "Video URL",
-                destination: .systemPlayer(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
+                title: "Apple Advanced - fMP4",
+                destination: .systemPlayer(media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS))
             )
             cell(
-                title: "Video URN",
+                title: "Trickplay",
+                destination: .systemPlayer(media: Media(from: URLTemplate.unifiedStreamingOnDemandTrickplay))
+            )
+            cell(
+                title: "VOD - MP4",
+                destination: .systemPlayer(media: Media(from: URLTemplate.onDemandVideoMP4))
+            )
+            cell(
+                title: "Video URN - Livestream with DRM",
                 destination: .systemPlayer(media: Media(from: URNTemplate.dvrVideo))
             )
             cell(
@@ -137,8 +145,16 @@ struct ShowcaseView: View {
     private func vanillaPlayerSection() -> some View {
         Section("System player (using AVPlayer)") {
             cell(
-                title: "Video URL",
-                destination: .vanillaPlayer(item: Template.playerItem(from: URLTemplate.appleAdvanced_16_9_TS_HLS)!)
+                title: "Apple Advanced - fMP4",
+                destination: .vanillaPlayer(item: Template.playerItem(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS)!)
+            )
+            cell(
+                title: "Trickplay",
+                destination: .vanillaPlayer(item: Template.playerItem(from: URLTemplate.unifiedStreamingOnDemandTrickplay)!)
+            )
+            cell(
+                title: "VOD - MP4",
+                destination: .vanillaPlayer(item: Template.playerItem(from: URLTemplate.onDemandVideoMP4)!)
             )
             cell(
                 title: "Unknown",

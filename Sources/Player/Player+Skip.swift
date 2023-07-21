@@ -30,16 +30,16 @@ public extension Player {
 
     /// Skips backward.
     ///
-    /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
-    ///   whether the skip could finish without being cancelled.
+    /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs whether the skip
+    ///   could finish without being cancelled.
     func skipBackward(completion: @escaping (Bool) -> Void = { _ in }) {
         skip(withInterval: backwardSkipTime, toleranceBefore: .positiveInfinity, toleranceAfter: .zero, completion: completion)
     }
 
     /// Skips forward.
     /// 
-    /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
-    ///   whether the skip could finish without being cancelled.
+    /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs whether the skip
+    ///   could finish without being cancelled.
     func skipForward(completion: @escaping (Bool) -> Void = { _ in }) {
         skip(withInterval: forwardSkipTime, toleranceBefore: .zero, toleranceAfter: .positiveInfinity, completion: completion)
     }
@@ -68,7 +68,7 @@ private extension Player {
         if interval < .zero || currentTime < timeRange.end - endTolerance {
             seek(
                 to(currentTime + interval, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter),
-                smooth: true,
+                smooth: false,
                 completion: completion
             )
         }
