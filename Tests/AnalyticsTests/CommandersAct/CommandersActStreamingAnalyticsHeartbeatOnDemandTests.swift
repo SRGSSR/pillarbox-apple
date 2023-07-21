@@ -13,8 +13,8 @@ import Nimble
 // swiftlint:disable:next type_name
 final class CommandersActStreamingAnalyticsHeartbeatOnDemandTests: CommandersActTestCase {
     private static var heartbeats: [CommandersActStreamingAnalytics.Heartbeat] = [
-        .pos(interval: 1),
-        .uptime(delay: 1, interval: 1)
+        .pos(delay: 1, interval: 1),
+        .uptime(delay: 1, interval: 2)
     ]
 
     func testHeartbeatAfterPlay() {

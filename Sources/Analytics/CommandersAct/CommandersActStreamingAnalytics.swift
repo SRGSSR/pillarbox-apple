@@ -190,18 +190,20 @@ extension CommandersActStreamingAnalytics {
             kind.rawValue
         }
 
-        static func pos(interval: TimeInterval = 30) -> Self {
-            .init(kind: .pos, delay: 0, interval: interval)
+        static func pos(delay: TimeInterval = 30, interval: TimeInterval = 30) -> Self {
+            .init(kind: .pos, delay: delay, interval: interval)
         }
 
         static func uptime(delay: TimeInterval = 30, interval: TimeInterval = 60) -> Self {
             .init(kind: .uptime, delay: delay, interval: interval)
         }
 
-        func timer(for streamType: StreamType) -> AnyPublisher<Date, Never>? {
+        func timer(for streamType: StreamType) -> AnyPublisher<Void, Never>? {
             guard kind.isSupported(for: streamType) else { return nil }
             return Timer.publish(every: interval, on: .main, in: .common)
                 .autoconnect()
+                .map { _ in }
+                .prepend(())
                 .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
                 .eraseToAnyPublisher()
         }

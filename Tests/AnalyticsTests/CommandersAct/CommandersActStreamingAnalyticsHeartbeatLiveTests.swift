@@ -13,8 +13,8 @@ import Nimble
 // swiftlint:disable:next type_name
 final class CommandersActStreamingAnalyticsHeartbeatLiveTests: CommandersActTestCase {
     private static var heartbeats: [CommandersActStreamingAnalytics.Heartbeat] = [
-        .pos(interval: 1),
-        .uptime(delay: 1, interval: 1)
+        .pos(delay: 1, interval: 1),
+        .uptime(delay: 1, interval: 2)
     ]
 
     func testHeartbeatAfterPlay() {
@@ -27,10 +27,10 @@ final class CommandersActStreamingAnalyticsHeartbeatLiveTests: CommandersActTest
             .pos { labels in
                 expect(labels.media_position).to(equal(1))
             },
-            .pos { labels in
-                expect(labels.media_position).to(equal(2))
-            },
             .uptime { labels in
+                expect(labels.media_position).to(equal(1))
+            },
+            .pos { labels in
                 expect(labels.media_position).to(equal(2))
             },
             .pos { labels in
@@ -84,10 +84,10 @@ final class CommandersActStreamingAnalyticsHeartbeatLiveTests: CommandersActTest
             .pos { labels in
                 expect(labels.media_position).to(equal(0))
             },
-            .pos { labels in
+            .uptime { labels in
                 expect(labels.media_position).to(equal(0))
             },
-            .uptime { labels in
+            .pos { labels in
                 expect(labels.media_position).to(equal(0))
             },
             .pos { labels in
