@@ -5,6 +5,7 @@
 //
 
 import Combine
+import Core
 import CoreMedia
 import SwiftUI
 
@@ -26,12 +27,6 @@ public final class ProgressTracker: ObservableObject {
             seek(to: progress, smooth: false)
         }
     }
-
-    /// The buffer position.
-    ///
-    /// Returns a value between 0 and 1 indicating up to where content has been loaded and is available for
-    /// playback.
-    @Published public var buffer: Float = .zero
 
     @Published private var _progress: Float?
 
@@ -107,18 +102,6 @@ public final class ProgressTracker: ObservableObject {
             .removeDuplicates()
             .receiveOnMainThread()
             .assign(to: &$_progress)
-
-        $player
-            .map { player -> AnyPublisher<Float, Never> in
-                guard let player else { return Just(0).eraseToAnyPublisher() }
-                return player.queuePlayer
-                    .currentItemBufferPublisher()
-                    .eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .removeDuplicates()
-            .receiveOnMainThread()
-            .assign(to: &$buffer)
     }
 
     private static func currentTimePublisher(
