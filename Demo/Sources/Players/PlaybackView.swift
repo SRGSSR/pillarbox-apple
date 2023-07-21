@@ -435,10 +435,8 @@ private struct TimeSlider: View {
         )
         .foregroundColor(.white)
         .tint(.white)
+        .shadow(color: .init(white: 0.2, opacity: 0.8), radius: 15)
         .opacity(isVisible ? 1 : 0)
-        .transaction { transaction in
-            transaction.animation = nil
-        }
         .padding()
         ._debugBodyCounter(color: .blue)
     }
@@ -459,6 +457,7 @@ private struct TimeSlider: View {
                 .font(.caption)
                 .monospacedDigit()
                 .foregroundColor(.white)
+                .shadow(color: .init(white: 0.2, opacity: 0.8), radius: 15)
         }
     }
 }
