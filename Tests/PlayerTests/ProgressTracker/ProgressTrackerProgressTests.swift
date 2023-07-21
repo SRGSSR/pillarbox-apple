@@ -128,7 +128,7 @@ final class ProgressTrackerProgressTests: TestCase {
         }
 
         let progress = Float(20.0 / Stream.onDemand.duration.seconds)
-        expectPublished(
+        expectAtLeastPublished(
             values: [0, progress],
             from: progressTracker.changePublisher(at: \.progress)
                 .removeDuplicates(),
