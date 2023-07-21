@@ -156,6 +156,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0EA8A9A82A6A7FE30077E3E4 /* Youtube */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Youtube;
+			sourceTree = "<group>";
+		};
 		6F05B8CC2887E934005D75E3 = {
 			isa = PBXGroup;
 			children = (
@@ -407,6 +414,7 @@
 				6F59E85429CF31E10093E6FB /* Showcase */,
 				6F59E87229CF31E10093E6FB /* Tools */,
 				6F59E86529CF31E10093E6FB /* Views */,
+				0EA8A9A82A6A7FE30077E3E4 /* Youtube */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
