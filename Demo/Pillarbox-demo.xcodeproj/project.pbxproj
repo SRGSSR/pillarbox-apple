@@ -10,6 +10,7 @@
 		0E6B995C29D43E4200D0276D /* OptInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6B995B29D43E4200D0276D /* OptInView.swift */; };
 		0E84D6162A12753100EB48C5 /* SettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84D6152A12753100EB48C5 /* SettingsMenu.swift */; };
 		0EA8A9A72A6A7F940077E3E4 /* YouTubeKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0EA8A9A62A6A7F940077E3E4 /* YouTubeKit */; };
+		0EA8A9AA2A6A80430077E3E4 /* PlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8A9A92A6A80430077E3E4 /* PlayerItem.swift */; };
 		0ECC5AD52A517A4C0064E701 /* PlaybackSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECC5AD42A517A4C0064E701 /* PlaybackSlider.swift */; };
 		0EF42CB629AE513400553165 /* SRGDataProviderCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF42CB529AE513400553165 /* SRGDataProviderCombine */; };
 		6F0B2E852A40EBAC00B69675 /* RouterDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E842A40EBAC00B69675 /* RouterDestination.swift */; };
@@ -74,6 +75,7 @@
 /* Begin PBXFileReference section */
 		0E6B995B29D43E4200D0276D /* OptInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptInView.swift; sourceTree = "<group>"; };
 		0E84D6152A12753100EB48C5 /* SettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMenu.swift; sourceTree = "<group>"; };
+		0EA8A9A92A6A80430077E3E4 /* PlayerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerItem.swift; sourceTree = "<group>"; };
 		0ECC5AD42A517A4C0064E701 /* PlaybackSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackSlider.swift; sourceTree = "<group>"; };
 		6F010340289946220021BA76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pillarbox-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -159,6 +161,7 @@
 		0EA8A9A82A6A7FE30077E3E4 /* Youtube */ = {
 			isa = PBXGroup;
 			children = (
+				0EA8A9A92A6A80430077E3E4 /* PlayerItem.swift */,
 			);
 			path = Youtube;
 			sourceTree = "<group>";
@@ -570,6 +573,7 @@
 				6FDB51CB2A4042B2001F430F /* Router.swift in Sources */,
 				0E84D6162A12753100EB48C5 /* SettingsMenu.swift in Sources */,
 				6F59E88B29CF31E20093E6FB /* PlaylistViewModel.swift in Sources */,
+				0EA8A9AA2A6A80430077E3E4 /* PlayerItem.swift in Sources */,
 				6F59E87F29CF31E10093E6FB /* Template.swift in Sources */,
 				6F0B2E8B2A40EE0700B69675 /* ContentList.swift in Sources */,
 				6F0B2E852A40EBAC00B69675 /* RouterDestination.swift in Sources */,
