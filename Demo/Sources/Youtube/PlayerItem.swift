@@ -5,8 +5,8 @@
 //
 
 import Combine
-import Foundation
 import Player
+import UIKit
 import YouTubeKit
 
 enum YoutubeError: Error {
@@ -16,17 +16,30 @@ enum YoutubeError: Error {
 
 extension PlayerItem {
     static func youtube(videoId: String) -> Self {
-        let publisher = Future<Asset<Never>, YoutubeError> { promise in
+        let youtubePublisher = imagePublisher(videoId: videoId)
+            .prepend(UIImage())
+            .map { image in
+                urlPublisher(videoId: videoId)
+                    .map { url in
+                        Asset.simple(url: url, metadata: YoutubeMetadata(image: image))
+                    }
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+
+        return self.init(publisher: youtubePublisher)
+    }
+
+    private static func urlPublisher(videoId: String) -> AnyPublisher<URL, YoutubeError> {
+        Future<URL, YoutubeError> { promise in
             Task {
                 do {
                     let stream = try await YouTube(videoID: videoId)
                         .streams
                         .filter { $0.subtype == "mp4" }
                         .highestAudioBitrateStream()
-                    guard let url = stream?.url else {
-                        return promise(.failure(.url))
-                    }
-                    return promise(.success(.simple(url: url)))
+                    guard let url = stream?.url else { return promise(.failure(.url)) }
+                    return promise(.success(url))
                 }
                 catch {
                     return promise(.failure(.error(error)))
@@ -34,7 +47,14 @@ extension PlayerItem {
             }
         }
         .eraseToAnyPublisher()
+    }
 
-        return self.init(publisher: publisher)
+    private static func imagePublisher(videoId: String) -> AnyPublisher<UIImage, Never> {
+        let url = URL(string: "https://img.youtube.com/vi/\(videoId)/maxresdefault.jpg")!
+        return URLSession.shared.dataTaskPublisher(for: url)
+            .map(\.data)
+            .compactMap { UIImage(data: $0) }
+            .replaceError(with: UIImage())
+            .eraseToAnyPublisher()
     }
 }
