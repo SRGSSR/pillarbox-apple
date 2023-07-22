@@ -59,10 +59,10 @@ private struct MainView: View {
     private func main() -> some View {
         ZStack {
             video()
-                .ignoresSafeArea()
             controls()
             loadingIndicator()
         }
+        .ignoresSafeArea()
         .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
         .readLayout(into: $layoutInfo)
         .accessibilityAddTraits(.isButton)
