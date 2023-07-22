@@ -96,7 +96,7 @@ private struct MainView: View {
             image(name: "music.note.tv.fill")
         default:
             if player.isExternalPlaybackActive {
-                image(name: "airplayvideo")
+                image(name: "tv")
             }
             else {
                 VideoView(player: player, gravity: gravity)
