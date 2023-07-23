@@ -162,14 +162,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0EA8A9A82A6A7FE30077E3E4 /* Youtube */ = {
+		0EA8A9A82A6A7FE30077E3E4 /* YouTube */ = {
 			isa = PBXGroup;
 			children = (
 				0EA8A9A92A6A80430077E3E4 /* PlayerItem.swift */,
 				0EA8A9AD2A6AF0AF0077E3E4 /* YoutubeMetadata.swift */,
 				0E4003532A6D707F002543A4 /* YoutubeIdentifierExtractor.swift */,
 			);
-			path = Youtube;
+			path = YouTube;
 			sourceTree = "<group>";
 		};
 		6F05B8CC2887E934005D75E3 = {
@@ -423,7 +423,7 @@
 				6F59E85429CF31E10093E6FB /* Showcase */,
 				6F59E87229CF31E10093E6FB /* Tools */,
 				6F59E86529CF31E10093E6FB /* Views */,
-				0EA8A9A82A6A7FE30077E3E4 /* Youtube */,
+				0EA8A9A82A6A7FE30077E3E4 /* YouTube */,
 			);
 			path = Sources;
 			sourceTree = "<group>";

@@ -9,29 +9,29 @@ import Player
 import UIKit
 import YouTubeKit
 
-enum YoutubeError: Error {
+enum YouTubeError: Error {
     case url
     case error(Error)
 }
 
 extension PlayerItem {
-    static func youtube(videoId: String) -> Self {
-        let youtubePublisher = imagePublisher(videoId: videoId)
+    static func youTube(videoId: String) -> Self {
+        let youTubePublisher = imagePublisher(videoId: videoId)
             .prepend(UIImage())
             .map { image in
                 urlPublisher(videoId: videoId)
                     .map { url in
-                        Asset.simple(url: url, metadata: YoutubeMetadata(image: image))
+                        Asset.simple(url: url, metadata: YouTubeMetadata(image: image))
                     }
             }
             .switchToLatest()
             .eraseToAnyPublisher()
 
-        return self.init(publisher: youtubePublisher)
+        return self.init(publisher: youTubePublisher)
     }
 
-    private static func urlPublisher(videoId: String) -> AnyPublisher<URL, YoutubeError> {
-        Future<URL, YoutubeError> { promise in
+    private static func urlPublisher(videoId: String) -> AnyPublisher<URL, YouTubeError> {
+        Future<URL, YouTubeError> { promise in
             Task {
                 do {
                     let stream = try await YouTube(videoID: videoId)

@@ -13,7 +13,7 @@ struct Media: Hashable, Identifiable {
         case url(URL)
         case unbufferedUrl(URL)
         case urn(String, server: Server)
-        case youtube(String)
+        case youTube(String)
 
         static func urn(_ urn: String) -> Self {
             .urn(urn, server: .production)
@@ -42,8 +42,8 @@ struct Media: Hashable, Identifiable {
     func playerItem() -> PlayerItem {
         switch type {
         case let .url(url):
-            if let youtubeId = Self.youtubeId(from: url) {
-                return .youtube(videoId: youtubeId)
+            if let youTubeId = Self.youTubeId(from: url) {
+                return .youTube(videoId: youTubeId)
             }
             else {
                 return .simple(url: url, metadata: self, trackerAdapters: [
@@ -72,14 +72,14 @@ struct Media: Hashable, Identifiable {
                 }
             ])
 
-        case let .youtube(youtubeId):
-            return .youtube(videoId: youtubeId)
+        case let .youTube(youTubeId):
+            return .youTube(videoId: youTubeId)
         }
     }
 }
 
 private extension Media {
-    static func youtubeId(from url: URL) -> String? {
+    static func youTubeId(from url: URL) -> String? {
         YouTubeIdentifierExtractor.extract(url: url)
     }
 }

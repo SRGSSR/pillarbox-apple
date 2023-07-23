@@ -41,7 +41,7 @@ private struct MediaEntryView: View {
         }
         else if trimmedText.lowercased().hasPrefix("yt:") {
             let videoId = String(trimmedText[String.Index(utf16Offset: 3, in: trimmedText) ..< trimmedText.endIndex])
-            return .init(title: "Youtube", type: .youtube(videoId))
+            return .init(title: "YouTube", type: .youTube(videoId))
         }
         else if let url = URL(string: trimmedText) {
             return .init(title: "URL", type: .url(url))

@@ -7,7 +7,7 @@
 import Player
 import UIKit
 
-struct YoutubeMetadata: AssetMetadata {
+struct YouTubeMetadata: AssetMetadata {
     let image: UIImage
 
     func nowPlayingMetadata() -> NowPlayingMetadata {
