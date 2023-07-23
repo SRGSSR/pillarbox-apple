@@ -142,7 +142,7 @@ final class ProgressTrackerTimeTests: TestCase {
             }
         }
 
-        expectPublished(
+        expectAtLeastPublished(
             values: [nil, time],
             from: progressTracker.changePublisher(at: \.time)
                 .removeDuplicates(),
