@@ -80,15 +80,7 @@ struct Media: Hashable, Identifiable {
 
 private extension Media {
     static func youtubeId(from url: URL) -> String? {
-        guard
-            let component = URLComponents(url: url, resolvingAgainstBaseURL: false),
-            let host = component.host,
-            host.contains("youtube") else { return nil }
-
-        return component
-            .queryItems?
-            .first { $0.name == "v" }?
-            .value
+        YouTubeIdentifierExtractor.extract(url: url)
     }
 }
 
