@@ -270,17 +270,4 @@ final class QueuePlayerSeekTests: TestCase {
         }
         expect(player.seeks).to(equal(2))
     }
-
-    func testSeekDoesNotPausePlayback() {
-        let item = AVPlayerItem(url: Stream.onDemand.url)
-        let player = QueuePlayer(playerItem: item)
-        player.play()
-        expect(item.timeRange).toEventuallyNot(equal(.invalid))
-
-        expectEqualPublished(values: [1], from: player.publisher(for: \.rate), during: .seconds(2)) {
-            player.seek(to: CMTime(value: 30, timescale: 1), smooth: false) { finished in
-                expect(finished).to(beTrue())
-            }
-        }
-    }
 }

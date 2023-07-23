@@ -54,8 +54,7 @@ public extension Player {
     /// - Parameters:
     ///   - position: The position to seek to.
     ///   - smooth: Set to `true` to enable smooth seeking. This allows any currently pending seek to complete before
-    ///     any new seek is performed, preventing unnecessary cancellation. The player is also paused during the seek
-    ///     operation. Altogether both measures make it possible for the playhead position to be moved in a smoother way.
+    ///     any new seek is performed, preventing unnecessary cancellation and providing for a smoother experience.
     ///   - completion: A completion called when seeking ends. The provided Boolean informs whether the seek could
     ///     finish without being cancelled.
     func seek(
@@ -78,7 +77,9 @@ public extension Player {
         )
     }
 
-    /// Performs an optimal seek to a given time, providing the best possible user experience in all cases.
+    /// Performs an optimal seek to a given time, providing the best possible interactive user experience in all cases.
+    ///
+    /// For the best result the player should be paused during the whole interaction.
     ///
     /// - Parameters:
     ///   - time: The time to reach.

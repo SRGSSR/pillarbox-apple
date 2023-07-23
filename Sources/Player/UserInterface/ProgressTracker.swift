@@ -23,14 +23,20 @@ public final class ProgressTracker: ObservableObject {
     /// A Boolean describing whether user interaction is currently changing the progress value.
     @Published public var isInteracting = false {
         willSet {
-            guard !newValue else { return }
-            seek(to: progress, optimal: false)
+            if newValue {
+                pausePlaybackIfNeeded()
+            }
+            else {
+                resumePlaybackIfNeeded()
+                seek(to: progress, optimal: false)
+            }
         }
     }
 
     @Published private var _progress: Float?
 
     private let seekBehavior: SeekBehavior
+    private var wasPaused = false
 
     /// The current progress.
     ///
@@ -137,6 +143,18 @@ public final class ProgressTracker: ObservableObject {
     private func time(forProgress progress: Float?) -> CMTime? {
         guard let timeRange, let progress else { return nil }
         return timeRange.start + CMTimeMultiplyByFloat64(timeRange.duration, multiplier: Float64(progress))
+    }
+
+    private func pausePlaybackIfNeeded() {
+        guard let player, player.playbackState == .playing else { return }
+        player.pause()
+        wasPaused = true
+    }
+
+    private func resumePlaybackIfNeeded() {
+        guard let player, wasPaused else { return }
+        player.play()
+        wasPaused = false
     }
 }
 
