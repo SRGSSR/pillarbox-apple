@@ -9,11 +9,6 @@ import Player
 import UIKit
 import YouTubeKit
 
-enum YouTubeError: Error {
-    case url
-    case error(Error)
-}
-
 extension PlayerItem {
     static func youTube(videoId: String) -> Self {
         let youTubePublisher = imagePublisher(videoId: videoId)
