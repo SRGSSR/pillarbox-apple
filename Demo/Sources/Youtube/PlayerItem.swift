@@ -36,7 +36,7 @@ extension PlayerItem {
                 do {
                     let stream = try await YouTube(videoID: videoId)
                         .streams
-                        .filter { $0.subtype == "mp4" }
+                        .filter { $0.subtype == "mp4" && $0.includesVideoTrack }
                         .highestAudioBitrateStream()
                     guard let url = stream?.url else { return promise(.failure(.url)) }
                     return promise(.success(url))
