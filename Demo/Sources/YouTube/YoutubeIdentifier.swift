@@ -6,8 +6,8 @@
 
 import Foundation
 
-enum YouTubeIdentifierExtractor {
-    static func extract(url: URL) -> String? {
+enum YouTubeIdentifier {
+    static func extract(from url: URL) -> String? {
         guard
             let match = try? Regex("https://(?:.*youtube.*v=|.*youtu.*/(?:embed/)*(?:shorts/)*)([\\w-]+)").firstMatch(in: url.absoluteString),
             let identifier = match[1].substring else {

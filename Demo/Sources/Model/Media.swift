@@ -80,7 +80,7 @@ struct Media: Hashable, Identifiable {
 
 private extension Media {
     static func youTubeId(from url: URL) -> String? {
-        YouTubeIdentifierExtractor.extract(url: url)
+        YouTubeIdentifier.extract(from: url)
     }
 }
 
