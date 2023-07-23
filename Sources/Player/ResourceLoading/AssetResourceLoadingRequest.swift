@@ -15,11 +15,7 @@ public extension AVAssetResourceLoadingRequest {
     /// Unlike `finishLoading(with:)` this method ensures error information can be reliably forwarded to the player
     /// item being loaded in case of failure.
     func finishLoadingReliably(with error: Error?) {
-        let nsError = NSError.error(from: error)
-        if let nsError {
-            assert(nsError.code != 0, "An error must have a code != 0 to be properly returned by the resource loader")
-        }
-        finishLoading(with: nsError)
+        finishLoading(with: NSError.error(from: error))
     }
 
     /// Redirects the receiver to another URL.
