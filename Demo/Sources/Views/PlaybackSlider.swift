@@ -10,6 +10,7 @@ import SwiftUI
 #if os(iOS)
 struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     @ObservedObject var progressTracker: ProgressTracker
+    @StateObject var bufferTracker = BufferTracker()
 
     let minimumValueLabel: () -> ValueLabel
     let maximumValueLabel: () -> ValueLabel
@@ -54,16 +55,17 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
             ZStack(alignment: .leading) {
                 rectangle(opacity: 0.1)
                     .background(.ultraThinMaterial)
-                rectangle(opacity: 0.3, width: geometry.size.width * CGFloat(progressTracker.buffer))
+                rectangle(opacity: 0.3, width: geometry.size.width * CGFloat(bufferTracker.buffer))
                 rectangle(width: geometry.size.width * CGFloat(progressTracker.progress))
             }
-            .animation(.linear(duration: 0.5), value: progressTracker.buffer)
+            .animation(.linear(duration: 0.5), value: bufferTracker.buffer)
             .gesture(dragGesture(in: geometry))
             .busy(isBusy && !progressTracker.isInteracting)
         }
         .frame(height: progressTracker.isInteracting ? 16 : 8)
         .cornerRadius(progressTracker.isInteracting ? 8 : 4)
         .animation(.easeInOut(duration: 0.4), value: progressTracker.isInteracting)
+        .bind(bufferTracker, to: progressTracker.player)
     }
 
     private func dragGesture(in geometry: GeometryProxy) -> some Gesture {
