@@ -190,11 +190,11 @@ private struct PlaybackButton: View {
             Image(systemName: imageName)
                 .resizable()
                 .tint(.white)
-                .opacity(player.isBusy ? 0 : 1)
-                .animation(.defaultLinear, values: player.playbackState, player.canRestart())
         }
         .aspectRatio(contentMode: .fit)
         .frame(minWidth: 120, maxHeight: 90)
+        .opacity(player.isBusy ? 0 : 1)
+        .animation(.defaultLinear, values: player.playbackState, player.canRestart())
     }
 
     private func play() {
