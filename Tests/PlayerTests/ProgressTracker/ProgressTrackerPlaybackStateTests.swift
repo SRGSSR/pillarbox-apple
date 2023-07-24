@@ -6,7 +6,6 @@
 
 @testable import Player
 
-import Circumspect
 import Combine
 import CoreMedia
 import Nimble
@@ -22,12 +21,11 @@ final class ProgressTrackerPlaybackStateTests: TestCase {
         player.play()
         expect(player.playbackState).toEventually(equal(.playing))
 
-        expectAtLeastEqualPublished(values: [.playing, .paused], from: player.$playbackState) {
-            progressTracker.isInteracting = true
-        }
-        expectAtLeastEqualPublishedNext(values: [.playing], from: player.$playbackState) {
-            progressTracker.isInteracting = false
-        }
+        progressTracker.isInteracting = true
+        expect(player.playbackState).toEventually(equal(.paused))
+
+        progressTracker.isInteracting = false
+        expect(player.playbackState).toEventually(equal(.playing))
     }
 
     func testInteractionDoesUpdateAlreadyPausedPlayback() {
@@ -37,11 +35,10 @@ final class ProgressTrackerPlaybackStateTests: TestCase {
         progressTracker.player = player
         expect(player.playbackState).toEventually(equal(.paused))
 
-        expectNothingPublishedNext(from: player.$playbackState, during: .seconds(2)) {
-            progressTracker.isInteracting = true
-        }
-        expectNothingPublishedNext(from: player.$playbackState, during: .seconds(2)) {
-            progressTracker.isInteracting = false
-        }
+        progressTracker.isInteracting = true
+        expect(player.playbackState).toAlways(equal(.paused), until: .seconds(1))
+
+        progressTracker.isInteracting = false
+        expect(player.playbackState).toAlways(equal(.paused), until: .seconds(1))
     }
 }
