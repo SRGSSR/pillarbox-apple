@@ -12,8 +12,13 @@ import Nimble
 
 // swiftlint:disable:next type_name
 final class CommandersActStreamingAnalyticsHeartbeatOnDemandTests: CommandersActTestCase {
+    private static var heartbeats: [CommandersActStreamingAnalytics.Heartbeat] = [
+        .pos(delay: 1, interval: 1),
+        .uptime(delay: 1, interval: 2)
+    ]
+
     func testHeartbeatAfterPlay() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .onDemand, heartbeatInterval: .test) {
+        let analytics = CommandersActStreamingAnalytics(streamType: .onDemand, heartbeats: Self.heartbeats) {
             .init(labels: [:], time: .zero, range: .zero)
         }
         _ = analytics
@@ -22,7 +27,7 @@ final class CommandersActStreamingAnalyticsHeartbeatOnDemandTests: CommandersAct
     }
 
     func testNoHeartbeatAfterPause() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .onDemand, heartbeatInterval: .test) {
+        let analytics = CommandersActStreamingAnalytics(streamType: .onDemand, heartbeats: Self.heartbeats) {
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(.pause)
@@ -30,7 +35,7 @@ final class CommandersActStreamingAnalyticsHeartbeatOnDemandTests: CommandersAct
     }
 
     func testNoHeartbeatAfterSeek() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .onDemand, heartbeatInterval: .test) {
+        let analytics = CommandersActStreamingAnalytics(streamType: .onDemand, heartbeats: Self.heartbeats) {
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(.seek)
@@ -38,7 +43,7 @@ final class CommandersActStreamingAnalyticsHeartbeatOnDemandTests: CommandersAct
     }
 
     func testNoHeartbeatAfterEof() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .onDemand, heartbeatInterval: .test) {
+        let analytics = CommandersActStreamingAnalytics(streamType: .onDemand, heartbeats: Self.heartbeats) {
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(.eof)
@@ -46,7 +51,7 @@ final class CommandersActStreamingAnalyticsHeartbeatOnDemandTests: CommandersAct
     }
 
     func testNoHeartbeatAfterStop() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .onDemand, heartbeatInterval: .test) {
+        let analytics = CommandersActStreamingAnalytics(streamType: .onDemand, heartbeats: Self.heartbeats) {
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(.stop)
@@ -54,7 +59,7 @@ final class CommandersActStreamingAnalyticsHeartbeatOnDemandTests: CommandersAct
     }
 
     func testHeartbeatWhileBuffering() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .onDemand, heartbeatInterval: .test) {
+        let analytics = CommandersActStreamingAnalytics(streamType: .onDemand, heartbeats: Self.heartbeats) {
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(isBuffering: true)

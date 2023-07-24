@@ -12,8 +12,13 @@ import Nimble
 
 // swiftlint:disable:next type_name
 final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestCase {
+    private static var heartbeats: [CommandersActStreamingAnalytics.Heartbeat] = [
+        .pos(delay: 1, interval: 1),
+        .uptime(delay: 1, interval: 2)
+    ]
+
     func testHeartbeatAfterPlay() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeatInterval: .test) {
+        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeats: Self.heartbeats) {
             .init(labels: [:], time: .zero, range: .zero)
         }
         _ = analytics
@@ -28,14 +33,36 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
             .pos { labels in
                 expect(labels.media_position).to(equal(2))
             },
+            .pos { labels in
+                expect(labels.media_position).to(equal(3))
+            },
             .uptime { labels in
+                expect(labels.media_position).to(equal(3))
+            }
+        )
+    }
+
+    func testHeartbeatAfterPlayInPastConditions() {
+        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeats: Self.heartbeats) {
+            .init(labels: [:], time: .zero, range: .init(start: .zero, duration: .init(value: 100, timescale: 1)))
+        }
+        _ = analytics
+
+        expectAtLeastHits(
+            .pos { labels in
+                expect(labels.media_position).to(equal(1))
+            },
+            .pos { labels in
                 expect(labels.media_position).to(equal(2))
+            },
+            .pos { labels in
+                expect(labels.media_position).to(equal(3))
             }
         )
     }
 
     func testNoHeartbeatAfterPause() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeatInterval: .test) {
+        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeats: Self.heartbeats) {
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(.pause)
@@ -43,7 +70,7 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
     }
 
     func testNoHeartbeatAfterSeek() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeatInterval: .test) {
+        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeats: Self.heartbeats) {
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(.seek)
@@ -51,7 +78,7 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
     }
 
     func testNoHeartbeatAfterEof() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeatInterval: .test) {
+        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeats: Self.heartbeats) {
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(.eof)
@@ -59,7 +86,7 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
     }
 
     func testNoHeartbeatAfterStop() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeatInterval: .test) {
+        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeats: Self.heartbeats) {
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(.stop)
@@ -67,7 +94,7 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
     }
 
     func testHeartbeatWhileBuffering() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeatInterval: .test) {
+        let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeats: Self.heartbeats) {
             .init(labels: [:], time: .zero, range: .zero)
         }
         analytics.notify(isBuffering: true)
@@ -77,6 +104,9 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
                 expect(labels.media_position).to(equal(0))
             },
             .uptime { labels in
+                expect(labels.media_position).to(equal(0))
+            },
+            .pos { labels in
                 expect(labels.media_position).to(equal(0))
             },
             .pos { labels in

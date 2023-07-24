@@ -14,7 +14,7 @@ final class CommandersActStreamingAnalytics {
     private var lastLabels: [String: String] = [:]
 
     private let streamType: StreamType
-    private let heartbeatInterval: HeartbeatInterval
+    private let heartbeats: [Heartbeat]
     private let update: () -> EventData?
 
     private var isBuffering = false
@@ -30,9 +30,9 @@ final class CommandersActStreamingAnalytics {
         lastEvent == .play && !isBuffering
     }
 
-    init(streamType: StreamType, heartbeatInterval: HeartbeatInterval = .default, update: @escaping () -> EventData?) {
+    init(streamType: StreamType, heartbeats: [Heartbeat] = [.pos(), .uptime()], update: @escaping () -> EventData?) {
         self.streamType = streamType
-        self.heartbeatInterval = heartbeatInterval
+        self.heartbeats = heartbeats
         self.update = update
         sendEvent(.play)
     }
@@ -154,26 +154,75 @@ extension CommandersActStreamingAnalytics {
         }
     }
 
-    struct HeartbeatInterval {
-        let pos: TimeInterval
-        let uptime: TimeInterval
+    struct Heartbeat {
+        enum Kind: String {
+            case pos
+            case uptime
 
-        static var `default`: Self {
-            .init(pos: 30, uptime: 60)
+            private var supportedStreamTypes: [StreamType] {
+                switch self {
+                case .pos:
+                    return [.onDemand, .live, .dvr]
+                case .uptime:
+                    return [.live, .dvr]
+                }
+            }
+
+            func isSupported(for streamType: StreamType) -> Bool {
+                supportedStreamTypes.contains(streamType)
+            }
+
+            func shouldSend(eventData: EventData) -> Bool {
+                switch self {
+                case .pos:
+                    return true
+                case .uptime:
+                    return eventData.range.end - eventData.time < CMTime(value: 30, timescale: 1)
+                }
+            }
+        }
+
+        private let kind: Kind
+        private let delay: TimeInterval
+        private let interval: TimeInterval
+
+        var name: String {
+            kind.rawValue
+        }
+
+        static func pos(delay: TimeInterval = 30, interval: TimeInterval = 30) -> Self {
+            .init(kind: .pos, delay: delay, interval: interval)
+        }
+
+        static func uptime(delay: TimeInterval = 30, interval: TimeInterval = 60) -> Self {
+            .init(kind: .uptime, delay: delay, interval: interval)
+        }
+
+        func timer(for streamType: StreamType) -> AnyPublisher<Void, Never>? {
+            guard kind.isSupported(for: streamType) else { return nil }
+            return Timer.publish(every: interval, on: .main, in: .common)
+                .autoconnect()
+                .map { _ in }
+                .prepend(())
+                .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
+                .eraseToAnyPublisher()
+        }
+
+        func shouldSend(eventData: EventData) -> Bool {
+            kind.shouldSend(eventData: eventData)
         }
     }
 }
 
 private extension CommandersActStreamingAnalytics {
-    enum Heartbeat: String {
-        case pos
-        case uptime
-    }
-
     func installHeartbeats() {
-        timer(for: .pos, interval: heartbeatInterval.pos)
-        if [.live, .dvr].contains(streamType) {
-            timer(for: .uptime, interval: heartbeatInterval.uptime)
+        heartbeats.forEach { heartbeat in
+            guard let timer = heartbeat.timer(for: streamType) else { return }
+            timer
+                .sink { [weak self] _ in
+                    self?.sendHeartbeat(heartbeat)
+                }
+                .store(in: &cancellables)
         }
     }
 
@@ -181,20 +230,12 @@ private extension CommandersActStreamingAnalytics {
         cancellables = []
     }
 
-    private func timer(for heartbeat: Heartbeat, interval: TimeInterval) {
-        Timer.publish(every: interval, on: .main, in: .common)
-            .autoconnect()
-            .sink { [weak self] _ in
-                self?.sendHeartbeat(heartbeat)
-            }
-            .store(in: &cancellables)
-    }
-
     private func sendHeartbeat(_ heartbeat: Heartbeat) {
         let eventData = eventData()
         updateTimeTracking(eventData: eventData)
+        guard heartbeat.shouldSend(eventData: eventData) else { return }
         Analytics.shared.sendEvent(commandersAct: .init(
-            name: heartbeat.rawValue,
+            name: heartbeat.name,
             labels: labels(eventData: eventData)
         ))
     }
