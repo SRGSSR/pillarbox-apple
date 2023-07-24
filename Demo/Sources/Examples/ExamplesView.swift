@@ -36,11 +36,17 @@ private struct MediaEntryView: View {
 
     private var media: Media {
         let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        if !trimmedText.hasPrefix("urn"), let url = URL(string: trimmedText) {
+        if trimmedText.hasPrefix("urn") {
+            return .init(title: "URN", type: .urn(trimmedText))
+        }
+        else if let videoId = trimmedText.split(separator: "yt:").first {
+            return .init(title: "YouTube", type: .youTube(String(videoId)))
+        }
+        else if let url = URL(string: trimmedText) {
             return .init(title: "URL", type: .url(url))
         }
         else {
-            return .init(title: "URN", type: .urn(trimmedText))
+            return .init(from: URLTemplate.unknown)
         }
     }
 
