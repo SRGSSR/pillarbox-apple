@@ -59,10 +59,10 @@ private struct MainView: View {
     private func main() -> some View {
         ZStack {
             video()
-                .ignoresSafeArea()
             controls()
             loadingIndicator()
         }
+        .ignoresSafeArea()
         .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
         .readLayout(into: $layoutInfo)
         .accessibilityAddTraits(.isButton)
@@ -96,7 +96,7 @@ private struct MainView: View {
             image(name: "music.note.tv.fill")
         default:
             if player.isExternalPlaybackActive {
-                image(name: "airplayvideo")
+                image(name: "tv")
             }
             else {
                 VideoView(player: player, gravity: gravity)
@@ -190,11 +190,11 @@ private struct PlaybackButton: View {
             Image(systemName: imageName)
                 .resizable()
                 .tint(.white)
-                .opacity(player.isBusy ? 0 : 1)
-                .animation(.defaultLinear, values: player.playbackState, player.canRestart())
         }
         .aspectRatio(contentMode: .fit)
         .frame(minWidth: 120, maxHeight: 90)
+        .opacity(player.isBusy ? 0 : 1)
+        .animation(.defaultLinear, values: player.playbackState, player.canRestart())
     }
 
     private func play() {
