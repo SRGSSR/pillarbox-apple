@@ -7,6 +7,7 @@
 import CoreBusiness
 import Foundation
 import Player
+import YouTubeIdentifier
 
 struct Media: Hashable, Identifiable {
     enum `Type`: Hashable {
