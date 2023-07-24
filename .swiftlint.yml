@@ -6,7 +6,7 @@ included:
   - Tests
 
 excluded:
-  - Package.swift
+  - ./**/Package.swift
 
 disabled_rules:
   - conditional_returns_on_newline
