@@ -18,19 +18,33 @@ public final class ProgressTracker: ObservableObject {
     /// The player to attach.
     ///
     /// Use `View.bind(_:to:)` in SwiftUI code.
-    @Published public var player: Player?
+    @Published public var player: Player? {
+        willSet {
+            resumePlaybackIfNeeded(with: player)
+        }
+        didSet {
+            guard isInteracting else { return }
+            pausePlaybackIfNeeded(with: player)
+        }
+    }
 
     /// A Boolean describing whether user interaction is currently changing the progress value.
     @Published public var isInteracting = false {
         willSet {
-            guard !newValue else { return }
-            seek(to: progress, optimal: false)
+            if newValue {
+                pausePlaybackIfNeeded(with: player)
+            }
+            else {
+                resumePlaybackIfNeeded(with: player)
+                seek(to: progress, optimal: false)
+            }
         }
     }
 
     @Published private var _progress: Float?
 
     private let seekBehavior: SeekBehavior
+    private var wasPaused = false
 
     /// The current progress.
     ///
@@ -137,6 +151,18 @@ public final class ProgressTracker: ObservableObject {
     private func time(forProgress progress: Float?) -> CMTime? {
         guard let timeRange, let progress else { return nil }
         return timeRange.start + CMTimeMultiplyByFloat64(timeRange.duration, multiplier: Float64(progress))
+    }
+
+    private func pausePlaybackIfNeeded(with player: Player?) {
+        guard let player, player.playbackState == .playing else { return }
+        player.pause()
+        wasPaused = true
+    }
+
+    private func resumePlaybackIfNeeded(with player: Player?) {
+        guard let player, wasPaused else { return }
+        player.play()
+        wasPaused = false
     }
 }
 
