@@ -12,7 +12,7 @@
 		0E84D6162A12753100EB48C5 /* SettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84D6152A12753100EB48C5 /* SettingsMenu.swift */; };
 		0EA8A9A72A6A7F940077E3E4 /* YouTubeKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0EA8A9A62A6A7F940077E3E4 /* YouTubeKit */; };
 		0EA8A9AA2A6A80430077E3E4 /* PlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8A9A92A6A80430077E3E4 /* PlayerItem.swift */; };
-		0EA8A9AE2A6AF0AF0077E3E4 /* YoutubeMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8A9AD2A6AF0AF0077E3E4 /* YoutubeMetadata.swift */; };
+		0EA8A9AE2A6AF0AF0077E3E4 /* YouTubeMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8A9AD2A6AF0AF0077E3E4 /* YouTubeMetadata.swift */; };
 		0EA8E5D52A6D9AC700AB33BB /* YouTubeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8E5D42A6D9AC700AB33BB /* YouTubeError.swift */; };
 		0ECC5AD52A517A4C0064E701 /* PlaybackSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECC5AD42A517A4C0064E701 /* PlaybackSlider.swift */; };
 		0EF42CB629AE513400553165 /* SRGDataProviderCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF42CB529AE513400553165 /* SRGDataProviderCombine */; };
@@ -80,7 +80,7 @@
 		0E6B995B29D43E4200D0276D /* OptInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptInView.swift; sourceTree = "<group>"; };
 		0E84D6152A12753100EB48C5 /* SettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMenu.swift; sourceTree = "<group>"; };
 		0EA8A9A92A6A80430077E3E4 /* PlayerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerItem.swift; sourceTree = "<group>"; };
-		0EA8A9AD2A6AF0AF0077E3E4 /* YoutubeMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeMetadata.swift; sourceTree = "<group>"; };
+		0EA8A9AD2A6AF0AF0077E3E4 /* YouTubeMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeMetadata.swift; sourceTree = "<group>"; };
 		0EA8E5D42A6D9AC700AB33BB /* YouTubeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeError.swift; sourceTree = "<group>"; };
 		0ECC5AD42A517A4C0064E701 /* PlaybackSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackSlider.swift; sourceTree = "<group>"; };
 		6F010340289946220021BA76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -171,7 +171,7 @@
 				0EA8A9A92A6A80430077E3E4 /* PlayerItem.swift */,
 				0EA8E5D42A6D9AC700AB33BB /* YouTubeError.swift */,
 				0E2A3C392A6E431000645CA2 /* YouTubeIdentifier */,
-				0EA8A9AD2A6AF0AF0077E3E4 /* YoutubeMetadata.swift */,
+				0EA8A9AD2A6AF0AF0077E3E4 /* YouTubeMetadata.swift */,
 			);
 			path = YouTube;
 			sourceTree = "<group>";
@@ -552,7 +552,7 @@
 				6F59E89C29CF31E20093E6FB /* BasicPlaybackView.swift in Sources */,
 				6F59E87A29CF31E10093E6FB /* SearchViewModel.swift in Sources */,
 				6F59E88829CF31E20093E6FB /* UserDefaults.swift in Sources */,
-				0EA8A9AE2A6AF0AF0077E3E4 /* YoutubeMetadata.swift in Sources */,
+				0EA8A9AE2A6AF0AF0077E3E4 /* YouTubeMetadata.swift in Sources */,
 				6F59E88D29CF31E20093E6FB /* ShowcaseView.swift in Sources */,
 				6F59E88929CF31E20093E6FB /* MultiView.swift in Sources */,
 				6F59E89F29CF31E20093E6FB /* PlayerLayout.swift in Sources */,
