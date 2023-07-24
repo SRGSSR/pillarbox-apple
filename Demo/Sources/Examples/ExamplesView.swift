@@ -39,8 +39,8 @@ private struct MediaEntryView: View {
         if trimmedText.hasPrefix("urn") {
             return .init(title: "URN", type: .urn(trimmedText))
         }
-        else if let videoId = trimmedText.split(separator: "yt:").first {
-            return .init(title: "YouTube", type: .youTube(String(videoId)))
+        else if let videoId = trimmedText.firstMatch(of: /yt:(.*)/) {
+            return .init(title: "YouTube", type: .youTube(String(videoId.1)))
         }
         else if let url = URL(string: trimmedText) {
             return .init(title: "URL", type: .url(url))
