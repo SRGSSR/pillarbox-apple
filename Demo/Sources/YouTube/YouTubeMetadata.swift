@@ -8,9 +8,11 @@ import Player
 import UIKit
 
 struct YouTubeMetadata: AssetMetadata {
+    let videoId: String
+    let url: URL
     let image: UIImage
 
     func nowPlayingMetadata() -> NowPlayingMetadata {
-        .init(image: image)
+        .init(title: "YouTube (\(videoId))", subtitle: url.absoluteString, image: image)
     }
 }

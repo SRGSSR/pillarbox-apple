@@ -11,16 +11,17 @@ import YouTubeKit
 
 extension PlayerItem {
     static func youTube(videoId: String) -> Self {
-        let youTubePublisher = imagePublisher(videoId: videoId)
-            .prepend(UIImage())
-            .map { image in
-                urlPublisher(videoId: videoId)
-                    .map { url in
-                        Asset.simple(url: url, metadata: YouTubeMetadata(image: image))
-                    }
-            }
-            .switchToLatest()
-            .eraseToAnyPublisher()
+        let youTubePublisher =
+        Publishers.CombineLatest(
+            urlPublisher(videoId: videoId),
+            imagePublisher(videoId: videoId)
+                .prepend(UIImage())
+                .setFailureType(to: YouTubeError.self)
+        )
+        .map { url, image in
+            Asset.simple(url: url, metadata: YouTubeMetadata(videoId: videoId, url: url, image: image))
+        }
+        .eraseToAnyPublisher()
 
         return self.init(publisher: youTubePublisher)
     }
