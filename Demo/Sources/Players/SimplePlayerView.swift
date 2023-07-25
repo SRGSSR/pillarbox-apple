@@ -21,6 +21,9 @@ struct SimplePlayerView: View {
             progressView()
             playbackButton()
         }
+        .overlay(alignment: .topLeading) {
+            CloseButton()
+        }
         .onAppear(perform: play)
         .tracked(name: "simple-player")
     }

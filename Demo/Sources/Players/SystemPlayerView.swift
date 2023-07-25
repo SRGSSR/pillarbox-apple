@@ -18,6 +18,9 @@ struct SystemPlayerView: View {
     var body: some View {
         SystemVideoView(player: player)
             .ignoresSafeArea()
+            .overlay(alignment: .topLeading) {
+                CloseButton()
+            }
             .onAppear(perform: play)
             .tracked(name: "system-player")
     }

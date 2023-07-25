@@ -39,6 +39,9 @@ struct TwinsView: View {
             .pickerStyle(.segmented)
             .padding()
         }
+        .overlay(alignment: .topLeading) {
+            CloseButton()
+        }
         .onAppear(perform: play)
         .onForeground(perform: resume)
         .tracked(name: "twins")

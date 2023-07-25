@@ -16,7 +16,7 @@ struct RoutedNavigationStack<Root>: View where Root: View {
     var body: some View {
         NavigationStack(path: $router.path) {
             root()
-                .sheet(item: $router.presented) { presented in
+                .modal(item: $router.presented) { presented in
                     view(for: presented)
                 }
                 .navigationDestination(for: RouterDestination.self) { destination in
