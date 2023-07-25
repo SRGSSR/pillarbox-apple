@@ -22,6 +22,7 @@ private struct TextFieldView: View {
             }
             .tint(.white)
             .opacity(text.isEmpty ? 0 : 1)
+            .youTubePaste($text)
         }
     }
 
