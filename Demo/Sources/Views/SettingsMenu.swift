@@ -18,7 +18,7 @@ private struct PlaybackSpeedMenu: View {
     var body: some View {
         Menu {
             Picker(selection: playbackSpeed) {
-                ForEach(speeds, id: \.self) { speed in
+                ForEach(speeds.reversed(), id: \.self) { speed in
                     Text("\(speed, specifier: "%g×")").tag(speed)
                 }
             } label: {
