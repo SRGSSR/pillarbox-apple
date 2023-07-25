@@ -9,8 +9,8 @@ import YouTubeIdentifier
 
 extension View {
     private static func paste(_ text: Binding<String>) {
-        guard let paste = UIPasteboard.general.string,
-              YouTubeIdentifier.extract(from: URL(string: paste)!) != nil else { return }
+        guard UIPasteboard.general.hasYouTubeUrl,
+              let paste = UIPasteboard.general.string else { return }
         text.wrappedValue = paste
     }
 
@@ -21,5 +21,12 @@ extension View {
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             Self.paste(text)
         }
+    }
+}
+
+private extension UIPasteboard {
+    var hasYouTubeUrl: Bool {
+        guard let string else { return false }
+        return YouTubeIdentifier.extract(from: URL(string: string)!) != nil
     }
 }
