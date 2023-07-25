@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0E310FE32A6E504700054319 /* YouTubeIdentifier in Frameworks */ = {isa = PBXBuildFile; productRef = 0E310FE22A6E504700054319 /* YouTubeIdentifier */; };
 		0E6B995C29D43E4200D0276D /* OptInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6B995B29D43E4200D0276D /* OptInView.swift */; };
 		0E84D6162A12753100EB48C5 /* SettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84D6152A12753100EB48C5 /* SettingsMenu.swift */; };
 		0EA6D2AA2A6F8FF300CC78BE /* YouTube+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6D2A92A6F8FF300CC78BE /* YouTube+View.swift */; };
@@ -19,7 +18,6 @@
 		0EF42CB629AE513400553165 /* SRGDataProviderCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF42CB529AE513400553165 /* SRGDataProviderCombine */; };
 		6F0B2E852A40EBAC00B69675 /* RouterDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E842A40EBAC00B69675 /* RouterDestination.swift */; };
 		6F0B2E8B2A40EE0700B69675 /* ContentList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E8A2A40EE0700B69675 /* ContentList.swift */; };
-		6F36C62D28910538000DD160 /* CoreBusiness in Frameworks */ = {isa = PBXBuildFile; productRef = 6F36C62C28910538000DD160 /* CoreBusiness */; };
 		6F59E87929CF31E10093E6FB /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84029CF31E10093E6FB /* SearchView.swift */; };
 		6F59E87A29CF31E10093E6FB /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84129CF31E10093E6FB /* SearchViewModel.swift */; };
 		6F59E87B29CF31E10093E6FB /* DemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84329CF31E10093E6FB /* DemoApp.swift */; };
@@ -64,12 +62,12 @@
 		6F59E8A329CF31E20093E6FB /* ExamplesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E87729CF31E10093E6FB /* ExamplesView.swift */; };
 		6F59E8A429CF31E20093E6FB /* ExamplesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E87829CF31E10093E6FB /* ExamplesViewModel.swift */; };
 		6F6643D92A61140600BFD644 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6643D82A61140600BFD644 /* URL.swift */; };
+		6F7A2B292A707742005701C7 /* YouTubeIdentifier in Frameworks */ = {isa = PBXBuildFile; productRef = 6F7A2B282A707742005701C7 /* YouTubeIdentifier */; };
+		6F7A2B2B2A707748005701C7 /* CoreBusiness in Frameworks */ = {isa = PBXBuildFile; productRef = 6F7A2B2A2A707748005701C7 /* CoreBusiness */; };
 		6F8459F22A38543400A7B5F2 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8459F12A38543400A7B5F2 /* Signal.swift */; };
 		6F917C0E2887EA8E004113BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F917C082887EA8E004113BA /* Assets.xcassets */; };
 		6F917C112887EA8E004113BA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F917C0D2887EA8E004113BA /* Preview Assets.xcassets */; };
 		6F9B5BC928CF8C530074B9E0 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 6F9B5BC828CF8C530074B9E0 /* OrderedCollections */; };
-		6F9DDB44288FE90E0069B687 /* Player in Frameworks */ = {isa = PBXBuildFile; productRef = 6F9DDB43288FE90E0069B687 /* Player */; };
-		6FBEFCEB289132DB004BE625 /* UserInterface in Frameworks */ = {isa = PBXBuildFile; productRef = 6FBEFCEA289132DB004BE625 /* UserInterface */; };
 		6FC5D6A22A6FA8D20012BC89 /* Modal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC5D6A12A6FA8D20012BC89 /* Modal.swift */; };
 		6FC5D6A42A6FACB20012BC89 /* CloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC5D6A32A6FACB20012BC89 /* CloseButton.swift */; };
 		6FCA4747292CBEC7008C2812 /* ShowTime in Frameworks */ = {isa = PBXBuildFile; productRef = 6FCA4746292CBEC7008C2812 /* ShowTime */; };
@@ -79,7 +77,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0E2A3C392A6E431000645CA2 /* YouTubeIdentifier */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = YouTubeIdentifier; sourceTree = "<group>"; };
 		0E6B995B29D43E4200D0276D /* OptInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptInView.swift; sourceTree = "<group>"; };
 		0E84D6152A12753100EB48C5 /* SettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMenu.swift; sourceTree = "<group>"; };
 		0EA6D2A92A6F8FF300CC78BE /* YouTube+View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "YouTube+View.swift"; sourceTree = "<group>"; };
@@ -141,10 +138,11 @@
 		6F59E87729CF31E10093E6FB /* ExamplesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExamplesView.swift; sourceTree = "<group>"; };
 		6F59E87829CF31E10093E6FB /* ExamplesViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExamplesViewModel.swift; sourceTree = "<group>"; };
 		6F6643D82A61140600BFD644 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
+		6F7A2B252A707708005701C7 /* pillarbox-apple */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "pillarbox-apple"; path = ..; sourceTree = "<group>"; };
+		6F7A2B262A707734005701C7 /* youtube-identifier */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "youtube-identifier"; path = "Packages/youtube-identifier"; sourceTree = "<group>"; };
 		6F8459F12A38543400A7B5F2 /* Signal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
 		6F917C082887EA8E004113BA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6F917C0D2887EA8E004113BA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		6F9DDB40288FE8F80069B687 /* pillarbox-apple */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "pillarbox-apple"; path = ..; sourceTree = "<group>"; };
 		6FC5D6A12A6FA8D20012BC89 /* Modal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modal.swift; sourceTree = "<group>"; };
 		6FC5D6A32A6FACB20012BC89 /* CloseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseButton.swift; sourceTree = "<group>"; };
 		6FCB9DDD29E024E900961B69 /* BlurredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurredView.swift; sourceTree = "<group>"; };
@@ -158,13 +156,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				0EA8A9A72A6A7F940077E3E4 /* YouTubeKit in Frameworks */,
-				0E310FE32A6E504700054319 /* YouTubeIdentifier in Frameworks */,
-				6F36C62D28910538000DD160 /* CoreBusiness in Frameworks */,
+				6F7A2B2B2A707748005701C7 /* CoreBusiness in Frameworks */,
+				6F7A2B292A707742005701C7 /* YouTubeIdentifier in Frameworks */,
 				6FCA4747292CBEC7008C2812 /* ShowTime in Frameworks */,
 				0EF42CB629AE513400553165 /* SRGDataProviderCombine in Frameworks */,
-				6F9DDB44288FE90E0069B687 /* Player in Frameworks */,
 				6F9B5BC928CF8C530074B9E0 /* OrderedCollections in Frameworks */,
-				6FBEFCEB289132DB004BE625 /* UserInterface in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -177,7 +173,6 @@
 				0EA8A9A92A6A80430077E3E4 /* PlayerItem.swift */,
 				0EA6D2A92A6F8FF300CC78BE /* YouTube+View.swift */,
 				0EA8E5D42A6D9AC700AB33BB /* YouTubeError.swift */,
-				0E2A3C392A6E431000645CA2 /* YouTubeIdentifier */,
 				0EA8A9AD2A6AF0AF0077E3E4 /* YouTubeMetadata.swift */,
 			);
 			path = YouTube;
@@ -188,13 +183,13 @@
 			children = (
 				6F56C23F28E890140056458F /* Pillarbox.playground */,
 				6F010340289946220021BA76 /* Info.plist */,
-				6FAA7E9E288E84BD00380147 /* Packages */,
+				6F7A2B242A7076FA005701C7 /* Packages */,
 				6F917C092887EA8E004113BA /* Sources */,
 				6F917C072887EA8E004113BA /* Resources */,
 				6F917C0C2887EA8E004113BA /* Preview Content */,
 				6F45DB972893B772008ACCE6 /* Xcode */,
 				6F05B8D62887E934005D75E3 /* Products */,
-				6F917C142887EE30004113BA /* Frameworks */,
+				6F7A2B272A707742005701C7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -412,6 +407,22 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		6F7A2B242A7076FA005701C7 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				6F7A2B252A707708005701C7 /* pillarbox-apple */,
+				6F7A2B262A707734005701C7 /* youtube-identifier */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		6F7A2B272A707742005701C7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		6F917C072887EA8E004113BA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -449,21 +460,6 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		6F917C142887EE30004113BA /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		6FAA7E9E288E84BD00380147 /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-				6F9DDB40288FE8F80069B687 /* pillarbox-apple */,
-			);
-			name = Packages;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -481,14 +477,12 @@
 			);
 			name = "Pillarbox-demo";
 			packageProductDependencies = (
-				6F9DDB43288FE90E0069B687 /* Player */,
-				6F36C62C28910538000DD160 /* CoreBusiness */,
-				6FBEFCEA289132DB004BE625 /* UserInterface */,
 				6F9B5BC828CF8C530074B9E0 /* OrderedCollections */,
 				6FCA4746292CBEC7008C2812 /* ShowTime */,
 				0EF42CB529AE513400553165 /* SRGDataProviderCombine */,
 				0EA8A9A62A6A7F940077E3E4 /* YouTubeKit */,
-				0E310FE22A6E504700054319 /* YouTubeIdentifier */,
+				6F7A2B282A707742005701C7 /* YouTubeIdentifier */,
+				6F7A2B2A2A707748005701C7 /* CoreBusiness */,
 			);
 			productName = PillarboxDemo;
 			productReference = 6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */;
@@ -930,10 +924,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0E310FE22A6E504700054319 /* YouTubeIdentifier */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = YouTubeIdentifier;
-		};
 		0EA8A9A62A6A7F940077E3E4 /* YouTubeKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 0EA8A9A52A6A7F940077E3E4 /* XCRemoteSwiftPackageReference "YouTubeKit" */;
@@ -944,7 +934,11 @@
 			package = 0EF42CB429AE513400553165 /* XCRemoteSwiftPackageReference "srgdataprovider-apple" */;
 			productName = SRGDataProviderCombine;
 		};
-		6F36C62C28910538000DD160 /* CoreBusiness */ = {
+		6F7A2B282A707742005701C7 /* YouTubeIdentifier */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = YouTubeIdentifier;
+		};
+		6F7A2B2A2A707748005701C7 /* CoreBusiness */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CoreBusiness;
 		};
@@ -952,14 +946,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6F9B5BC728CF8C530074B9E0 /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = OrderedCollections;
-		};
-		6F9DDB43288FE90E0069B687 /* Player */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Player;
-		};
-		6FBEFCEA289132DB004BE625 /* UserInterface */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = UserInterface;
 		};
 		6FCA4746292CBEC7008C2812 /* ShowTime */ = {
 			isa = XCSwiftPackageProductDependency;
