@@ -31,9 +31,14 @@ private struct MainView: View {
             timeBar()
             topBar()
         }
+        .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
         .animation(.defaultLinear, values: player.isBusy, isUserInterfaceHidden)
         .bind(visibilityTracker, to: player)
         ._debugBodyCounter()
+    }
+
+    private var isFullScreen: Bool {
+        layout == .inline || layout == .maximized
     }
 
     private var gravity: AVLayerVideoGravity {
