@@ -18,7 +18,7 @@ struct CloseButton: View {
                     .tint(.white)
                     .frame(width: 45, height: 45)
             }
-            .shadow(color: /*@START_MENU_TOKEN@*/.black/*@END_MENU_TOKEN@*/, radius: 1)
+            .shadow(color: .black, radius: 1)
         default:
             EmptyView()
         }
