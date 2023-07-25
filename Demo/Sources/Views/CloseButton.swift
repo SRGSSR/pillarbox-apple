@@ -5,15 +5,21 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct CloseButton: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        Button(action: dismiss.callAsFunction) {
-            Image(systemName: "chevron.down")
-                .tint(.white)
-                .frame(width: 45, height: 45)
+        switch UIDevice.current.userInterfaceIdiom {
+        case .pad:
+            Button(action: dismiss.callAsFunction) {
+                Image(systemName: "chevron.down")
+                    .tint(.white)
+                    .frame(width: 45, height: 45)
+            }
+        default:
+            EmptyView()
         }
     }
 }
