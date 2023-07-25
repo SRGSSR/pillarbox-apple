@@ -6,6 +6,7 @@
 
 import SwiftUI
 
+@available(tvOS, unavailable)
 private struct PresentedView<Content>: View where Content: View {
     @ViewBuilder var content: () -> Content
     @Environment(\.dismiss) private var dismiss
@@ -25,6 +26,7 @@ private struct PresentedView<Content>: View where Content: View {
 extension View {
     @ViewBuilder
     func modal<Item, Content>(item: Binding<Item?>, @ViewBuilder content: @escaping (Item) -> Content) -> some View where Item: Identifiable, Content: View {
+#if os(iOS)
         switch UIDevice.current.userInterfaceIdiom {
         case .pad:
             fullScreenCover(item: item) { item in
@@ -35,5 +37,8 @@ extension View {
         default:
             sheet(item: item, content: content)
         }
+#else
+        fullScreenCover(item: item, content: content)
+#endif
     }
 }
