@@ -50,7 +50,7 @@ private struct MainView: View {
     }
 
     private var isUserInterfaceHidden: Bool {
-        visibilityTracker.isUserInterfaceHidden && !player.canRestart()
+        visibilityTracker.isUserInterfaceHidden && !areControlsAlwaysVisible && !player.canRestart()
     }
 
     private func magnificationGesture() -> some Gesture {
@@ -82,7 +82,7 @@ private struct MainView: View {
     @ViewBuilder
     private func timeBar() -> some View {
         TimeBar(player: player, visibilityTracker: visibilityTracker, layout: $layout, isInteracting: $isInteracting)
-            .opacity(isUserInterfaceHidden && !areControlsAlwaysVisible ? 0 : 1)
+            .opacity(isUserInterfaceHidden ? 0 : 1)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 
@@ -93,7 +93,7 @@ private struct MainView: View {
             Spacer()
             VolumeButton(player: player)
         }
-        .opacity(isUserInterfaceHidden && !areControlsAlwaysVisible ? 0 : 1)
+        .opacity(isUserInterfaceHidden ? 0 : 1)
         .preventsTouchPropagation()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
     }
@@ -116,7 +116,7 @@ private struct MainView: View {
     @ViewBuilder
     private func controls() -> some View {
         ControlsView(player: player)
-            .opacity(isUserInterfaceHidden && !areControlsAlwaysVisible ? 0 : 1)
+            .opacity(isUserInterfaceHidden ? 0 : 1)
             .opacity(isInteracting ? 0 : 1)
     }
 
