@@ -77,6 +77,9 @@ struct MultiView: View {
             }
             .background(.black)
         }
+        .overlay(alignment: .topLeading) {
+            CloseButton()
+        }
         .onChange(of: activePosition) { position in
             setActive(position: position)
         }

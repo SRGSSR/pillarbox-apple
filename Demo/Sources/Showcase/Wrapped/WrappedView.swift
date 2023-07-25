@@ -28,6 +28,9 @@ struct WrappedView: View {
             }
             .padding()
         }
+        .overlay(alignment: .topLeading) {
+            CloseButton()
+        }
         .onAppear(perform: play)
         .onForeground(perform: resume)
         .tracked(name: "wrapped")

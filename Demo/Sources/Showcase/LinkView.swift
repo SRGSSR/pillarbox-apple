@@ -25,6 +25,9 @@ struct LinkView: View {
             Toggle("Content displayed", isOn: $isDisplayed)
                 .padding()
         }
+        .overlay(alignment: .topLeading) {
+            CloseButton()
+        }
         .onAppear(perform: play)
         .onForeground(perform: resume)
         .tracked(name: "link")

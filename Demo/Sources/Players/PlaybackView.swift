@@ -29,7 +29,7 @@ private struct MainView: View {
         ZStack {
             main()
             timeBar()
-            volumeButton()
+            topBar()
         }
         .animation(.defaultLinear, values: player.isBusy, isUserInterfaceHidden)
         .bind(visibilityTracker, to: player)
@@ -82,11 +82,15 @@ private struct MainView: View {
     }
 
     @ViewBuilder
-    private func volumeButton() -> some View {
-        VolumeButton(player: player)
-            .opacity(isUserInterfaceHidden && !areControlsAlwaysVisible ? 0 : 1)
-            .preventsTouchPropagation()
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+    private func topBar() -> some View {
+        HStack {
+            CloseButton()
+            Spacer()
+            VolumeButton(player: player)
+        }
+        .opacity(isUserInterfaceHidden && !areControlsAlwaysVisible ? 0 : 1)
+        .preventsTouchPropagation()
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
     }
 
     @ViewBuilder
@@ -260,9 +264,9 @@ private struct FullScreenButton: View {
             Button(action: toggleFullScreen) {
                 Image(systemName: imageName)
                     .tint(.white)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 45, height: 45)
             }
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 45, height: 45)
         }
     }
 
@@ -297,8 +301,8 @@ private struct VolumeButton: View {
         Button(action: toggleMuted) {
             Image(systemName: imageName)
                 .tint(.white)
+                .frame(width: 45, height: 45)
         }
-        .frame(width: 45, height: 45)
     }
 
     private var imageName: String {
@@ -482,6 +486,9 @@ struct PlaybackView: View {
                 switch player.playbackState {
                 case let .failed(error: error):
                     PlaybackMessageView(message: error.localizedDescription)
+                        .overlay(alignment: .topLeading) {
+                            CloseButton()
+                        }
                 default:
                     videoView()
                         .persistentSystemOverlays(.hidden)
@@ -489,6 +496,9 @@ struct PlaybackView: View {
             }
             else {
                 PlaybackMessageView(message: "No content")
+                    .overlay(alignment: .topLeading) {
+                        CloseButton()
+                    }
             }
         }
         .background(.black)
@@ -512,6 +522,9 @@ struct PlaybackView: View {
                 MainView(player: player, layout: $layout)
             case .system:
                 SystemVideoView(player: player)
+                    .overlay(alignment: .topLeading) {
+                        CloseButton()
+                    }
                     .ignoresSafeArea()
             }
 #else

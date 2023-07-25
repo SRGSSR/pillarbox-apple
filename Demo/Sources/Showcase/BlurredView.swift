@@ -25,6 +25,9 @@ struct BlurredView: View {
                 .opacity(player.isBusy ? 1 : 0)
         }
         .background(.black)
+        .overlay(alignment: .topLeading) {
+            CloseButton()
+        }
         .onAppear(perform: play)
         .onForeground(perform: player.play)
         .tracked(name: "blurred")
