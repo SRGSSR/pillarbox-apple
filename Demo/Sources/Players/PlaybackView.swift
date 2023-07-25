@@ -522,10 +522,11 @@ struct PlaybackView: View {
                 MainView(player: player, layout: $layout)
             case .system:
                 SystemVideoView(player: player)
+                    .ignoresSafeArea()
                     .overlay(alignment: .topLeading) {
                         CloseButton()
+                            .offset(y: -5)
                     }
-                    .ignoresSafeArea()
             }
 #else
             SystemVideoView(player: player)
