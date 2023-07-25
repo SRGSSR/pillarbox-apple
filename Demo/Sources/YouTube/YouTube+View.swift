@@ -33,8 +33,8 @@ extension View {
 #if os(iOS)
 private extension UIPasteboard {
     var hasYouTubeUrl: Bool {
-        guard let string else { return false }
-        return YouTubeIdentifier.extract(from: URL(string: string)!) != nil
+        guard let string, let url = URL(string: string) else { return false }
+        return YouTubeIdentifier.extract(from: url) != nil
     }
 }
 #endif
