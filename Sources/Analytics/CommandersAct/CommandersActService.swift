@@ -5,7 +5,6 @@
 //
 
 import Foundation
-import TCCore
 import TCServerSide
 
 final class CommandersActService {
@@ -27,7 +26,6 @@ final class CommandersActService {
 
     func start(with configuration: Analytics.Configuration) {
         vendor = configuration.vendor
-        TCDebug.setDebugLevel(TCLogLevel_None)
         guard let serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey) else { return }
         serverSide.addPermanentData("app_library_version", withValue: PackageInfo.version)
         serverSide.addPermanentData("navigation_app_site_name", withValue: configuration.appSiteName)
