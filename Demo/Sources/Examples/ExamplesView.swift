@@ -17,12 +17,21 @@ private struct TextFieldView: View {
                 .keyboardType(.URL)
                 .autocapitalization(.none)
                 .autocorrectionDisabled()
-            Button(action: clear) {
-                Image(systemName: "xmark.circle.fill")
+
+            HStack(spacing: 0) {
+                Button(action: clear) {
+                    Image(systemName: "xmark.circle.fill")
+                }
+                .tint(.white)
+                .opacity(text.isEmpty ? 0 : 1)
+#if os(iOS)
+                PasteButton(payloadType: URL.self) { url in
+                    text = url.first?.absoluteString ?? ""
+                }
+                .labelStyle(.iconOnly)
+                .scaleEffect(x: 0.5, y: 0.5)
+#endif
             }
-            .tint(.white)
-            .opacity(text.isEmpty ? 0 : 1)
-            .youTubePaste($text)
         }
     }
 
