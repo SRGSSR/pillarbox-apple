@@ -10,7 +10,7 @@ import SwiftUI
 #if os(iOS)
 struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     @ObservedObject var progressTracker: ProgressTracker
-    @StateObject var bufferTracker = BufferTracker()
+    @StateObject private var bufferTracker = BufferTracker()
 
     let minimumValueLabel: () -> ValueLabel
     let maximumValueLabel: () -> ValueLabel
