@@ -18,6 +18,9 @@ let package = Package(
     ],
     targets: [
         .target(name: "YouTubeIdentifier"),
-        .testTarget(name: "YouTubeIdentifierTests", dependencies: ["YouTubeIdentifier", "Nimble"])
+        .testTarget(
+            name: "YouTubeIdentifierTests",
+            dependencies: ["YouTubeIdentifier", "Nimble"]
+        )
     ]
 )
