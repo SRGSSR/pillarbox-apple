@@ -28,7 +28,7 @@ public final class ComScoreTracker: PlayerItemTracker {
     public func enable(for player: Player) {
         streamingAnalytics.createPlaybackSession()
         streamingAnalytics.setMediaPlayerName("Pillarbox")
-        streamingAnalytics.setMediaPlayerVersion(PackageInfo.version)
+        streamingAnalytics.setMediaPlayerVersion(Player.version)
 
         $metadata.sink { [weak self] metadata in
             self?.updateMetadata(with: metadata)

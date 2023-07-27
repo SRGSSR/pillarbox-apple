@@ -15,6 +15,11 @@ import TimelaneCombine
 public final class Player: ObservableObject, Equatable {
     private static weak var currentPlayer: Player?
 
+    /// The player version.
+    public static var version: String {
+        PackageInfo.version
+    }
+
     /// The current playback state.
     @Published public private(set) var playbackState: PlaybackState = .idle
 
