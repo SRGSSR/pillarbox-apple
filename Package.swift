@@ -88,6 +88,9 @@ let package = Package(
                 .target(name: "Core"),
                 .product(name: "DequeModule", package: "swift-collections"),
                 .product(name: "TimelaneCombine", package: "TimelaneCombine")
+            ],
+            plugins: [
+                .plugin(name: "PackageInfoPlugin")
             ]
         ),
         .target(
