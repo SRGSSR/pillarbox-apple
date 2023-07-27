@@ -6,6 +6,7 @@
 
 import Analytics
 import AVFoundation
+import Player
 import SwiftUI
 
 struct SettingsView: View {
@@ -115,7 +116,7 @@ struct SettingsView: View {
     @ViewBuilder
     private func debuggingFooter() -> some View {
         VStack {
-            Text("Version \(version) Build \(buildVersion)")
+            Text("Version \(version) Build \(buildVersion), Player \(Player.version)")
             HStack(spacing: 0) {
                 Text("Made with ")
                 Image(systemName: "heart.fill")
