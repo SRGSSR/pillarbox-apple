@@ -27,7 +27,7 @@ final class CommandersActService {
     func start(with configuration: Analytics.Configuration) {
         vendor = configuration.vendor
         guard let serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey) else { return }
-        serverSide.addPermanentData("app_library_version", withValue: PackageInfo.version)
+        serverSide.addPermanentData("app_library_version", withValue: Analytics.version)
         serverSide.addPermanentData("navigation_app_site_name", withValue: configuration.appSiteName)
         serverSide.addPermanentData("navigation_device", withValue: Self.device())
         serverSide.enableRunningInBackground()
