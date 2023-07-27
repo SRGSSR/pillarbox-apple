@@ -70,7 +70,7 @@ The media type can be `.unknown` if an AirPlay session was established before pl
 
 No workaround is available yet.
 
-## Audio duration is zero in Mac applications "Designed for iPad"
+## Audio duration is zero in Mac applications "Designed for iPad" (FB12765347)
 
 Pillarbox can be used in iPad applications run on Silicon Macs (_Designed for iPad_ destination) but audios played will have a reported duration of zero. As a result progress reported by `ProgressTracker` also remains stuck at zero.
 
