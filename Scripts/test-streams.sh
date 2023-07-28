@@ -46,6 +46,7 @@ function serve_test_streams {
     "in=$GENERATED_STREAMS_DIR/source_640x360.mp4,stream=video,segment_template=$ON_DEMAND_TRACKS_DIR/640x360/\$Number\$.ts" \
     "in=$GENERATED_STREAMS_DIR/source_audio_eng.mp4,stream=audio,segment_template=$ON_DEMAND_TRACKS_DIR/audio_eng/\$Number\$.ts,lang=en,hls_name=English" \
     "in=$GENERATED_STREAMS_DIR/source_audio_fre.mp4,stream=audio,segment_template=$ON_DEMAND_TRACKS_DIR/audio_fre/\$Number\$.ts,lang=fr,hls_name=Français" \
+    "in=$GENERATED_STREAMS_DIR/source_audio_eng.mp4,stream=audio,segment_template=$ON_DEMAND_TRACKS_DIR/audio_eng_ad/\$Number\$.ts,lang=en,hls_name=English (AD),hls_characteristics=public.accessibility.describes-video" \
     --hls_master_playlist_output $ON_DEMAND_TRACKS_DIR/master.m3u8
 
     mkdir -p "$ON_DEMAND_DIR"
