@@ -32,8 +32,8 @@ function serve_test_streams {
     mkdir -p "$GENERATED_STREAMS_DIR"
     cp -R "$METADATA_DIR" "$GENERATED_STREAMS_DIR"
 
-    ffmpeg -f lavfi -i testsrc=duration=4:size=640x360:rate=30 -f lavfi -i anullsrc=duration=4:channel_layout=stereo:sample_rate=44100 -pix_fmt yuv420p "$GENERATED_STREAMS_DIR/source_640x360.mp4" > /dev/null 2>&1
-    ffmpeg -f lavfi -i testsrc=duration=4:size=360x360:rate=30 -f lavfi -i anullsrc=duration=4:channel_layout=stereo:sample_rate=44100 -pix_fmt yuv420p "$GENERATED_STREAMS_DIR/source_360x360.mp4" > /dev/null 2>&1
+    ffmpeg -f lavfi -i testsrc=duration=4:size=640x360:rate=30 -f lavfi -i anullsrc=duration=4:channel_layout=stereo:sample_rate=44100 -pix_fmt yuv420p -g 30 "$GENERATED_STREAMS_DIR/source_640x360.mp4" > /dev/null 2>&1
+    ffmpeg -f lavfi -i testsrc=duration=4:size=360x360:rate=30 -f lavfi -i anullsrc=duration=4:channel_layout=stereo:sample_rate=44100 -pix_fmt yuv420p -g 30 "$GENERATED_STREAMS_DIR/source_360x360.mp4" > /dev/null 2>&1
 
     mkdir -p "$ON_DEMAND_DIR"
     ffmpeg -stream_loop -1 -i "$GENERATED_STREAMS_DIR/source_640x360.mp4" -t 120 -vcodec copy -acodec copy \

@@ -18,7 +18,7 @@ final class AVQueuePlayerPresentationSizePublisherTests: TestCase {
         let item2 = AVPlayerItem(url: Stream.mp3.url)
         let player = AVQueuePlayer(items: [item1, item2])
         expectAtLeastEqualPublished(
-            values: [nil, CGSize(width: 640, height: 426), nil, .zero],
+            values: [nil, CGSize(width: 640, height: 360), nil, .zero],
             from: player.presentationSizePublisher()
         ) {
             player.play()
@@ -30,7 +30,7 @@ final class AVQueuePlayerPresentationSizePublisherTests: TestCase {
         let item2 = AVPlayerItem(url: Stream.croppedOnDemand.url)
         let player = AVQueuePlayer(items: [item1, item2])
         expectAtLeastEqualPublished(
-            values: [nil, CGSize(width: 640, height: 426), CGSize(width: 482, height: 426)],
+            values: [nil, CGSize(width: 640, height: 360), CGSize(width: 360, height: 360)],
             from: player.presentationSizePublisher()
         ) {
             player.play()
@@ -42,7 +42,7 @@ final class AVQueuePlayerPresentationSizePublisherTests: TestCase {
         let item2 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2])
         expectEqualPublished(
-            values: [nil, CGSize(width: 640, height: 426)],
+            values: [nil, CGSize(width: 640, height: 360)],
             from: player.presentationSizePublisher(),
             during: .seconds(2)
         ) {
@@ -56,7 +56,7 @@ final class AVQueuePlayerPresentationSizePublisherTests: TestCase {
         let item3 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2, item3])
         expectAtLeastEqualPublished(
-            values: [nil, CGSize(width: 640, height: 426), nil, CGSize(width: 640, height: 426)],
+            values: [nil, CGSize(width: 640, height: 360), nil, CGSize(width: 640, height: 360)],
             from: player.presentationSizePublisher()
         ) {
             player.play()

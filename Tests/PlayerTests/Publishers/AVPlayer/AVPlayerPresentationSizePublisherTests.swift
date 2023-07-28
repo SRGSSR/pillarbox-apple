@@ -22,6 +22,6 @@ final class AVPlayerPresentationSizePublisherTests: TestCase {
 
     func testVideo() {
         let player = AVPlayer(url: Stream.shortOnDemand.url)
-        expectAtLeastEqualPublished(values: [nil, CGSize(width: 640, height: 426)], from: player.presentationSizePublisher())
+        expectAtLeastEqualPublished(values: [nil, CGSize(width: 640, height: 360)], from: player.presentationSizePublisher())
     }
 }
