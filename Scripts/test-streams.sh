@@ -39,11 +39,13 @@ function serve_test_streams {
 
     # Audio
     ffmpeg -f lavfi -i anullsrc=duration=4:channel_layout=stereo:sample_rate=44100 -metadata:s:a:0 language=eng $GENERATED_STREAMS_DIR/source_audio_eng.mp4
+    ffmpeg -f lavfi -i anullsrc=duration=4:channel_layout=stereo:sample_rate=44100 -metadata:s:a:0 language=fre $GENERATED_STREAMS_DIR/source_audio_fre.mp4
 
     # Shaka
     shaka-packager \
     "in=$GENERATED_STREAMS_DIR/source_640x360.mp4,stream=video,segment_template=$ON_DEMAND_TRACKS_DIR/640x360/\$Number\$.ts" \
     "in=$GENERATED_STREAMS_DIR/source_audio_eng.mp4,stream=audio,segment_template=$ON_DEMAND_TRACKS_DIR/audio_eng/\$Number\$.ts,lang=en,hls_name=English" \
+    "in=$GENERATED_STREAMS_DIR/source_audio_fre.mp4,stream=audio,segment_template=$ON_DEMAND_TRACKS_DIR/audio_fre/\$Number\$.ts,lang=fr,hls_name=Français" \
     --hls_master_playlist_output $ON_DEMAND_TRACKS_DIR/master.m3u8
 
     mkdir -p "$ON_DEMAND_DIR"
