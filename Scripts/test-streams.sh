@@ -32,35 +32,35 @@ function serve_test_streams {
     mkdir -p "$GENERATED_STREAMS_DIR"
     cp -R "$METADATA_DIR" "$GENERATED_STREAMS_DIR"
 
-    ffmpeg -f lavfi -i testsrc=duration=4:size=640x360:rate=30 -pix_fmt yuv420p "$GENERATED_STREAMS_DIR/source_video_640x360.mp4" > /dev/null 2>&1
-    ffmpeg -f lavfi -i testsrc=duration=4:size=360x360:rate=30 -pix_fmt yuv420p "$GENERATED_STREAMS_DIR/source_video_360x360.mp4" > /dev/null 2>&1
+    ffmpeg -f lavfi -i testsrc=duration=4:size=640x360:rate=30 -f lavfi -i anullsrc=duration=4:channel_layout=stereo:sample_rate=44100 -pix_fmt yuv420p "$GENERATED_STREAMS_DIR/source_640x360.mp4" > /dev/null 2>&1
+    ffmpeg -f lavfi -i testsrc=duration=4:size=360x360:rate=30 -f lavfi -i anullsrc=duration=4:channel_layout=stereo:sample_rate=44100 -pix_fmt yuv420p "$GENERATED_STREAMS_DIR/source_360x360.mp4" > /dev/null 2>&1
 
     mkdir -p "$ON_DEMAND_DIR"
-    ffmpeg -stream_loop -1 -i "$GENERATED_STREAMS_DIR/source_video_640x360.mp4" -t 120 -vcodec copy -acodec copy \
+    ffmpeg -stream_loop -1 -i "$GENERATED_STREAMS_DIR/source_640x360.mp4" -t 120 -vcodec copy -acodec copy \
         -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_DIR/master.m3u8" > /dev/null 2>&1 &
 
     mkdir -p "$ON_DEMAND_SHORT_DIR"
-    ffmpeg -stream_loop -1 -i "$GENERATED_STREAMS_DIR/source_video_640x360.mp4" -t 1 -vcodec copy -acodec copy \
+    ffmpeg -stream_loop -1 -i "$GENERATED_STREAMS_DIR/source_640x360.mp4" -t 1 -vcodec copy -acodec copy \
         -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_SHORT_DIR/master.m3u8" > /dev/null 2>&1 &
 
     mkdir -p "$ON_DEMAND_MEDIUM_DIR"
-    ffmpeg -stream_loop -1 -i "$GENERATED_STREAMS_DIR/source_video_640x360.mp4" -t 5 -vcodec copy -acodec copy \
+    ffmpeg -stream_loop -1 -i "$GENERATED_STREAMS_DIR/source_640x360.mp4" -t 5 -vcodec copy -acodec copy \
         -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_MEDIUM_DIR/master.m3u8" > /dev/null 2>&1 &
 
     mkdir -p "$ON_DEMAND_CROPPED_DIR"
-    ffmpeg -stream_loop -1 -i "$GENERATED_STREAMS_DIR/source_video_360x360.mp4" -t 120 -vcodec copy -acodec copy \
+    ffmpeg -stream_loop -1 -i "$GENERATED_STREAMS_DIR/source_360x360.mp4" -t 120 -vcodec copy -acodec copy \
         -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_CROPPED_DIR/master.m3u8" > /dev/null 2>&1 &
 
     mkdir -p "$ON_DEMAND_CORRUPT_DIR"
-    ffmpeg -stream_loop -1 -i "$GENERATED_STREAMS_DIR/source_video_640x360.mp4" -t 2 -vcodec copy -acodec copy \
+    ffmpeg -stream_loop -1 -i "$GENERATED_STREAMS_DIR/source_640x360.mp4" -t 2 -vcodec copy -acodec copy \
         -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_CORRUPT_DIR/master.m3u8" > /dev/null 2>&1 && rm "$ON_DEMAND_CORRUPT_DIR"/*.ts &
 
     mkdir -p "$LIVE_DIR"
-    ffmpeg -stream_loop -1 -re -i "$GENERATED_STREAMS_DIR/source_video_640x360.mp4" -vcodec copy -acodec copy \
+    ffmpeg -stream_loop -1 -re -i "$GENERATED_STREAMS_DIR/source_640x360.mp4" -vcodec copy -acodec copy \
         -f hls -hls_time 4 -hls_list_size 3 -hls_flags delete_segments+round_durations "$LIVE_DIR/master.m3u8" > /dev/null 2>&1 &
 
     mkdir -p "$DVR_DIR"
-    ffmpeg -stream_loop -1 -re -i "$GENERATED_STREAMS_DIR/source_video_640x360.mp4" -vcodec copy -acodec copy \
+    ffmpeg -stream_loop -1 -re -i "$GENERATED_STREAMS_DIR/source_640x360.mp4" -vcodec copy -acodec copy \
         -f hls -hls_time 1 -hls_list_size 20 -hls_flags delete_segments+round_durations "$DVR_DIR/master.m3u8" > /dev/null 2>&1 &
 
     python3 -m http.server 8123 --directory "$GENERATED_STREAMS_DIR" > /dev/null 2>&1 &
