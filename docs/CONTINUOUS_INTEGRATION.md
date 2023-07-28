@@ -153,6 +153,7 @@ To have TeamCity deliver nightly builds of the demo application to TestFlight:
 2. Add a _Schedule Trigger_ to deliver nightlies from `+:main` during the night.
 3. Add a _Command Line_ build step which simply executes `make deliver-demo-nightly-ios`.
 4. Add an _Agent Requirement_ ensuring that `tools.xcode.home` exists. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
+5. Add a _Parameter_ with `teamcity.git.fetchAllHeads` as name, _Configuration parameter_ as kind and `true` as value.
 
 For comprehensive results a second _Demo Nightly tvOS_ configuration must be created for tvOS. This is easily achieved by copying the configuration you just created and editing the _Command Line_ build step to execute `make deliver-demo-nightly-tvos`.
 
@@ -167,6 +168,7 @@ To have TeamCity deliver release builds of the demo application to TestFlight ma
 1. Create a TeamCity configuration called _Demo Release iOS_.
 2. Add a _Command Line_ build step which simply executes `make deliver-demo-release-ios`.
 3. Add an _Agent Requirement_ ensuring that `tools.xcode.home` exists. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
+4. Add a _Parameter_ with `teamcity.git.fetchAllHeads` as name, _Configuration parameter_ as kind and `true` as value.
 
 For comprehensive results a second _Demo Release tvOS_ configuration must be created for tvOS. This is easily achieved by copying the configuration you just created and editing the _Command Line_ build step to execute `make deliver-demo-release-tvos`.
 
