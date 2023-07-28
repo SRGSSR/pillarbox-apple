@@ -9,6 +9,7 @@ SUBTITLES_DIR="$METADATA_DIR/subtitles"
 JSON_DIR="$METADATA_DIR/json"
 
 ON_DEMAND_DIR="$GENERATED_DIR/on_demand"
+ON_DEMAND_WITHOUT_AUDIO_DIR="$GENERATED_DIR/on_demand_without_audio"
 ON_DEMAND_TRACKS_DIR="$GENERATED_DIR/on_demand_tracks"
 ON_DEMAND_SHORT_DIR="$GENERATED_DIR/on_demand_short"
 ON_DEMAND_MEDIUM_DIR="$GENERATED_DIR/on_demand_medium"
@@ -56,6 +57,10 @@ function serve_test_streams {
     mkdir -p "$ON_DEMAND_DIR"
     ffmpeg -stream_loop -1 -i "$GENERATED_DIR/source_640x360.mp4" -stream_loop -1 -i "$GENERATED_DIR/source_audio_eng.mp4" -t 120 -vcodec copy -acodec copy \
         -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_DIR/master.m3u8" > /dev/null 2>&1 &
+
+    mkdir -p "$ON_DEMAND_WITHOUT_AUDIO_DIR"
+    ffmpeg -stream_loop -1 -i "$GENERATED_DIR/source_640x360.mp4" -t 120 -vcodec copy -acodec copy \
+        -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_WITHOUT_AUDIO_DIR/master.m3u8" > /dev/null 2>&1 &
 
     mkdir -p "$ON_DEMAND_SHORT_DIR"
     ffmpeg -stream_loop -1 -i "$GENERATED_DIR/source_640x360.mp4" -stream_loop -1 -i "$GENERATED_DIR/source_audio_eng.mp4" -t 1 -vcodec copy -acodec copy \
