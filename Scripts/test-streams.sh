@@ -4,18 +4,20 @@ SCRIPT_NAME=$(basename "$0")
 SCRIPT_DIR=$(dirname "$0")
 
 GENERATED_DIR="/tmp/pillarbox"
-MEDIAS_DIR="$SCRIPT_DIR/../medias"
-GENERATED_STREAMS_DIR="$GENERATED_DIR/streams"
-METADATA_DIR="$MEDIAS_DIR/metadata"
+METADATA_DIR="$SCRIPT_DIR/../metadata"
+SUBTITLES_DIR="$METADATA_DIR/subtitles"
+JSON_DIR="$METADATA_DIR/json"
 
-ON_DEMAND_DIR="$GENERATED_STREAMS_DIR/on_demand"
-ON_DEMAND_SHORT_DIR="$GENERATED_STREAMS_DIR/on_demand_short"
-ON_DEMAND_MEDIUM_DIR="$GENERATED_STREAMS_DIR/on_demand_medium"
-ON_DEMAND_CROPPED_DIR="$GENERATED_STREAMS_DIR/on_demand_cropped"
-ON_DEMAND_CORRUPT_DIR="$GENERATED_STREAMS_DIR/on_demand_corrupt"
+ON_DEMAND_DIR="$GENERATED_DIR/on_demand"
+ON_DEMAND_WITHOUT_AUDIO_DIR="$GENERATED_DIR/on_demand_without_audio"
+ON_DEMAND_TRACKS_DIR="$GENERATED_DIR/on_demand_tracks"
+ON_DEMAND_SHORT_DIR="$GENERATED_DIR/on_demand_short"
+ON_DEMAND_MEDIUM_DIR="$GENERATED_DIR/on_demand_medium"
+ON_DEMAND_CROPPED_DIR="$GENERATED_DIR/on_demand_cropped"
+ON_DEMAND_CORRUPT_DIR="$GENERATED_DIR/on_demand_corrupt"
 
-LIVE_DIR="$GENERATED_STREAMS_DIR/live"
-DVR_DIR="$GENERATED_STREAMS_DIR/dvr"
+LIVE_DIR="$GENERATED_DIR/live"
+DVR_DIR="$GENERATED_DIR/dvr"
 
 function serve_test_streams {
     kill_test_streams
@@ -30,43 +32,66 @@ function serve_test_streams {
         exit 1
     fi
 
-    mkdir -p "$GENERATED_STREAMS_DIR"
-    cp -R "$METADATA_DIR" "$GENERATED_STREAMS_DIR"
+    mkdir -p "$GENERATED_DIR"
+    cp -R "$JSON_DIR" "$GENERATED_DIR"
+
+    # Video
+    ffmpeg -f lavfi -i testsrc=duration=4:size=640x360:rate=30 -pix_fmt yuv420p -g 30 "$GENERATED_DIR/source_640x360.mp4" > /dev/null 2>&1
+    ffmpeg -f lavfi -i testsrc=duration=4:size=360x360:rate=30 -pix_fmt yuv420p -g 30 "$GENERATED_DIR/source_360x360.mp4" > /dev/null 2>&1
+
+    # Audio
+    ffmpeg -f lavfi -i anullsrc=duration=4:channel_layout=stereo:sample_rate=44100 -metadata:s:a:0 language=eng $GENERATED_DIR/source_audio_eng.mp4 > /dev/null 2>&1
+    ffmpeg -f lavfi -i anullsrc=duration=4:channel_layout=stereo:sample_rate=44100 -metadata:s:a:0 language=fre $GENERATED_DIR/source_audio_fre.mp4 > /dev/null 2>&1
+
+    # Shaka
+    shaka-packager \
+        "in=$GENERATED_DIR/source_640x360.mp4,stream=video,segment_template=$ON_DEMAND_TRACKS_DIR/640x360/\$Number\$.ts" \
+        "in=$GENERATED_DIR/source_audio_eng.mp4,stream=audio,segment_template=$ON_DEMAND_TRACKS_DIR/audio_eng/\$Number\$.ts,lang=en,hls_name=English" \
+        "in=$GENERATED_DIR/source_audio_fre.mp4,stream=audio,segment_template=$ON_DEMAND_TRACKS_DIR/audio_fre/\$Number\$.ts,lang=fr,hls_name=Français" \
+        "in=$GENERATED_DIR/source_audio_eng.mp4,stream=audio,segment_template=$ON_DEMAND_TRACKS_DIR/audio_eng_ad/\$Number\$.ts,lang=en,hls_name=English (AD),hls_characteristics=public.accessibility.describes-video" \
+        "in=$SUBTITLES_DIR/subtitles_en.webvtt,stream=text,segment_template=$ON_DEMAND_TRACKS_DIR/subtitles_en/\$Number\$.vtt,lang=en,hls_name=English" \
+        "in=$SUBTITLES_DIR/subtitles_fr.webvtt,stream=text,segment_template=$ON_DEMAND_TRACKS_DIR/subtitles_fr/\$Number\$.vtt,lang=fr,hls_name=Français" \
+        "in=$SUBTITLES_DIR/subtitles_ja.webvtt,stream=text,segment_template=$ON_DEMAND_TRACKS_DIR/subtitles_ja/\$Number\$.vtt,lang=ja,hls_name=日本語" \
+        --hls_master_playlist_output $ON_DEMAND_TRACKS_DIR/master.m3u8 > /dev/null 2>&1
 
     mkdir -p "$ON_DEMAND_DIR"
-    ffmpeg -stream_loop -1 -i "$MEDIAS_DIR/nyan_cat.mov" -t 120 -vcodec copy -acodec copy \
+    ffmpeg -stream_loop -1 -i "$GENERATED_DIR/source_640x360.mp4" -stream_loop -1 -i "$GENERATED_DIR/source_audio_eng.mp4" -t 120 -vcodec copy -acodec copy \
         -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_DIR/master.m3u8" > /dev/null 2>&1 &
 
+    mkdir -p "$ON_DEMAND_WITHOUT_AUDIO_DIR"
+    ffmpeg -stream_loop -1 -i "$GENERATED_DIR/source_640x360.mp4" -t 120 -vcodec copy -acodec copy \
+        -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_WITHOUT_AUDIO_DIR/master.m3u8" > /dev/null 2>&1 &
+
     mkdir -p "$ON_DEMAND_SHORT_DIR"
-    ffmpeg -stream_loop -1 -i "$MEDIAS_DIR/nyan_cat.mov" -t 1 -vcodec copy -acodec copy \
+    ffmpeg -stream_loop -1 -i "$GENERATED_DIR/source_640x360.mp4" -stream_loop -1 -i "$GENERATED_DIR/source_audio_eng.mp4" -t 1 -vcodec copy -acodec copy \
         -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_SHORT_DIR/master.m3u8" > /dev/null 2>&1 &
 
     mkdir -p "$ON_DEMAND_MEDIUM_DIR"
-    ffmpeg -stream_loop -1 -i "$MEDIAS_DIR/nyan_cat.mov" -t 5 -vcodec copy -acodec copy \
+    ffmpeg -stream_loop -1 -i "$GENERATED_DIR/source_640x360.mp4" -stream_loop -1 -i "$GENERATED_DIR/source_audio_eng.mp4" -t 5 -vcodec copy -acodec copy \
         -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_MEDIUM_DIR/master.m3u8" > /dev/null 2>&1 &
 
     mkdir -p "$ON_DEMAND_CROPPED_DIR"
-    ffmpeg -stream_loop -1 -i "$MEDIAS_DIR/nyan_cat_cropped.mp4" -t 120 -vcodec copy -acodec copy \
+    ffmpeg -stream_loop -1 -i "$GENERATED_DIR/source_360x360.mp4" -stream_loop -1 -i "$GENERATED_DIR/source_audio_eng.mp4" -t 120 -vcodec copy -acodec copy \
         -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_CROPPED_DIR/master.m3u8" > /dev/null 2>&1 &
 
     mkdir -p "$ON_DEMAND_CORRUPT_DIR"
-    ffmpeg -stream_loop -1 -i "$MEDIAS_DIR/nyan_cat.mov" -t 2 -vcodec copy -acodec copy \
+    ffmpeg -stream_loop -1 -i "$GENERATED_DIR/source_640x360.mp4" -stream_loop -1 -i "$GENERATED_DIR/source_audio_eng.mp4" -t 2 -vcodec copy -acodec copy \
         -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_CORRUPT_DIR/master.m3u8" > /dev/null 2>&1 && rm "$ON_DEMAND_CORRUPT_DIR"/*.ts &
 
     mkdir -p "$LIVE_DIR"
-    ffmpeg -stream_loop -1 -re -i "$MEDIAS_DIR/nyan_cat.mov" -vcodec copy -acodec copy \
+    ffmpeg -stream_loop -1 -re -i "$GENERATED_DIR/source_640x360.mp4" -stream_loop -1 -re -i "$GENERATED_DIR/source_audio_eng.mp4" -vcodec copy -acodec copy \
         -f hls -hls_time 4 -hls_list_size 3 -hls_flags delete_segments+round_durations "$LIVE_DIR/master.m3u8" > /dev/null 2>&1 &
 
     mkdir -p "$DVR_DIR"
-    ffmpeg -stream_loop -1 -re -i "$MEDIAS_DIR/nyan_cat.mov" -vcodec copy -acodec copy \
+    ffmpeg -stream_loop -1 -re -i "$GENERATED_DIR/source_640x360.mp4" -stream_loop -1 -re -i "$GENERATED_DIR/source_audio_eng.mp4" -vcodec copy -acodec copy \
         -f hls -hls_time 1 -hls_list_size 20 -hls_flags delete_segments+round_durations "$DVR_DIR/master.m3u8" > /dev/null 2>&1 &
 
-    python3 -m http.server 8123 --directory "$GENERATED_STREAMS_DIR" > /dev/null 2>&1 &
+    python3 -m http.server 8123 --directory "$GENERATED_DIR" > /dev/null 2>&1 &
 }
 
 function kill_test_streams {
     # Kill all processes accessing the generated stream directory (wait for termination)
-    while pkill -if "$GENERATED_STREAMS_DIR"; do
+    while pkill -if "$GENERATED_DIR"; do
         sleep 1
     done
 
