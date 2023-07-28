@@ -45,14 +45,14 @@ function serve_test_streams {
 
     # Shaka
     shaka-packager \
-    "in=$GENERATED_DIR/source_640x360.mp4,stream=video,segment_template=$ON_DEMAND_TRACKS_DIR/640x360/\$Number\$.ts" \
-    "in=$GENERATED_DIR/source_audio_eng.mp4,stream=audio,segment_template=$ON_DEMAND_TRACKS_DIR/audio_eng/\$Number\$.ts,lang=en,hls_name=English" \
-    "in=$GENERATED_DIR/source_audio_fre.mp4,stream=audio,segment_template=$ON_DEMAND_TRACKS_DIR/audio_fre/\$Number\$.ts,lang=fr,hls_name=Français" \
-    "in=$GENERATED_DIR/source_audio_eng.mp4,stream=audio,segment_template=$ON_DEMAND_TRACKS_DIR/audio_eng_ad/\$Number\$.ts,lang=en,hls_name=English (AD),hls_characteristics=public.accessibility.describes-video" \
-    "in=$SUBTITLES_DIR/subtitles_en.webvtt,stream=text,segment_template=$ON_DEMAND_TRACKS_DIR/subtitles_en/\$Number\$.vtt,lang=en,hls_name=English" \
-    "in=$SUBTITLES_DIR/subtitles_fr.webvtt,stream=text,segment_template=$ON_DEMAND_TRACKS_DIR/subtitles_fr/\$Number\$.vtt,lang=fr,hls_name=Français" \
-    "in=$SUBTITLES_DIR/subtitles_ja.webvtt,stream=text,segment_template=$ON_DEMAND_TRACKS_DIR/subtitles_ja/\$Number\$.vtt,lang=ja,hls_name=日本語" \
-    --hls_master_playlist_output $ON_DEMAND_TRACKS_DIR/master.m3u8 > /dev/null 2>&1
+        "in=$GENERATED_DIR/source_640x360.mp4,stream=video,segment_template=$ON_DEMAND_TRACKS_DIR/640x360/\$Number\$.ts" \
+        "in=$GENERATED_DIR/source_audio_eng.mp4,stream=audio,segment_template=$ON_DEMAND_TRACKS_DIR/audio_eng/\$Number\$.ts,lang=en,hls_name=English" \
+        "in=$GENERATED_DIR/source_audio_fre.mp4,stream=audio,segment_template=$ON_DEMAND_TRACKS_DIR/audio_fre/\$Number\$.ts,lang=fr,hls_name=Français" \
+        "in=$GENERATED_DIR/source_audio_eng.mp4,stream=audio,segment_template=$ON_DEMAND_TRACKS_DIR/audio_eng_ad/\$Number\$.ts,lang=en,hls_name=English (AD),hls_characteristics=public.accessibility.describes-video" \
+        "in=$SUBTITLES_DIR/subtitles_en.webvtt,stream=text,segment_template=$ON_DEMAND_TRACKS_DIR/subtitles_en/\$Number\$.vtt,lang=en,hls_name=English" \
+        "in=$SUBTITLES_DIR/subtitles_fr.webvtt,stream=text,segment_template=$ON_DEMAND_TRACKS_DIR/subtitles_fr/\$Number\$.vtt,lang=fr,hls_name=Français" \
+        "in=$SUBTITLES_DIR/subtitles_ja.webvtt,stream=text,segment_template=$ON_DEMAND_TRACKS_DIR/subtitles_ja/\$Number\$.vtt,lang=ja,hls_name=日本語" \
+        --hls_master_playlist_output $ON_DEMAND_TRACKS_DIR/master.m3u8 > /dev/null 2>&1
 
     mkdir -p "$ON_DEMAND_DIR"
     ffmpeg -stream_loop -1 -i "$GENERATED_DIR/source_640x360.mp4" -stream_loop -1 -i "$GENERATED_DIR/source_audio_eng.mp4" -t 120 -vcodec copy -acodec copy \
