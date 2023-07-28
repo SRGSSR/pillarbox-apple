@@ -47,6 +47,9 @@ function serve_test_streams {
     "in=$GENERATED_STREAMS_DIR/source_audio_eng.mp4,stream=audio,segment_template=$ON_DEMAND_TRACKS_DIR/audio_eng/\$Number\$.ts,lang=en,hls_name=English" \
     "in=$GENERATED_STREAMS_DIR/source_audio_fre.mp4,stream=audio,segment_template=$ON_DEMAND_TRACKS_DIR/audio_fre/\$Number\$.ts,lang=fr,hls_name=Français" \
     "in=$GENERATED_STREAMS_DIR/source_audio_eng.mp4,stream=audio,segment_template=$ON_DEMAND_TRACKS_DIR/audio_eng_ad/\$Number\$.ts,lang=en,hls_name=English (AD),hls_characteristics=public.accessibility.describes-video" \
+    "in=$METADATA_DIR/subtitles_en.webvtt,stream=text,segment_template=$ON_DEMAND_TRACKS_DIR/subtitles_en/\$Number\$.vtt,lang=en,hls_name=English" \
+    "in=$METADATA_DIR/subtitles_fr.webvtt,stream=text,segment_template=$ON_DEMAND_TRACKS_DIR/subtitles_fr/\$Number\$.vtt,lang=fr,hls_name=Français" \
+    "in=$METADATA_DIR/subtitles_ja.webvtt,stream=text,segment_template=$ON_DEMAND_TRACKS_DIR/subtitles_ja/\$Number\$.vtt,lang=ja,hls_name=日本語" \
     --hls_master_playlist_output $ON_DEMAND_TRACKS_DIR/master.m3u8
 
     mkdir -p "$ON_DEMAND_DIR"
