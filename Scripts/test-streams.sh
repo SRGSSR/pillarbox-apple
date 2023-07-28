@@ -33,6 +33,8 @@ function serve_test_streams {
     mkdir -p "$GENERATED_STREAMS_DIR"
     cp -R "$METADATA_DIR" "$GENERATED_STREAMS_DIR"
 
+    ffmpeg -f lavfi -i testsrc=duration=4:size=640x360:rate=30 -pix_fmt yuv420p $GENERATED_STREAMS_DIR/source_video_640x360.mp4
+
     mkdir -p "$ON_DEMAND_DIR"
     ffmpeg -stream_loop -1 -i "$MEDIAS_DIR/nyan_cat.mov" -t 120 -vcodec copy -acodec copy \
         -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_DIR/master.m3u8" > /dev/null 2>&1 &
