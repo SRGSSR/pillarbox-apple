@@ -8,6 +8,7 @@ GENERATED_STREAMS_DIR="$GENERATED_DIR/streams"
 METADATA_DIR="$SCRIPT_DIR/../metadata"
 
 ON_DEMAND_DIR="$GENERATED_STREAMS_DIR/on_demand"
+ON_DEMAND_TRACKS_DIR="$GENERATED_STREAMS_DIR/on_demand_tracks"
 ON_DEMAND_SHORT_DIR="$GENERATED_STREAMS_DIR/on_demand_short"
 ON_DEMAND_MEDIUM_DIR="$GENERATED_STREAMS_DIR/on_demand_medium"
 ON_DEMAND_CROPPED_DIR="$GENERATED_STREAMS_DIR/on_demand_cropped"
@@ -38,6 +39,12 @@ function serve_test_streams {
 
     # Audio
     ffmpeg -f lavfi -i anullsrc=duration=4:channel_layout=stereo:sample_rate=44100 -metadata:s:a:0 language=eng $GENERATED_STREAMS_DIR/source_audio_eng.mp4
+
+    # Shaka
+    shaka-packager \
+    "in=$GENERATED_STREAMS_DIR/source_640x360.mp4,stream=video,segment_template=$ON_DEMAND_TRACKS_DIR/640x360/\$Number\$.ts" \
+    "in=$GENERATED_STREAMS_DIR/source_audio_eng.mp4,stream=audio,segment_template=$ON_DEMAND_TRACKS_DIR/audio_eng/\$Number\$.ts,lang=en,hls_name=English" \
+    --hls_master_playlist_output $ON_DEMAND_TRACKS_DIR/master.m3u8
 
     mkdir -p "$ON_DEMAND_DIR"
     ffmpeg -stream_loop -1 -i "$GENERATED_STREAMS_DIR/source_640x360.mp4" -stream_loop -1 -i "$GENERATED_STREAMS_DIR/source_audio_eng.mp4" -t 120 -vcodec copy -acodec copy \
