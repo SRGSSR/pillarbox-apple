@@ -12,7 +12,7 @@ import SwiftUI
 // Behavior: h-exp, v-hug
 private struct TimeSlider: View {
     @ObservedObject var player: Player
-    @StateObject private var progressTracker = ProgressTracker(
+    @StateObject var progressTracker = ProgressTracker(
         interval: CMTime(value: 1, timescale: 10),
         seekBehavior: UserDefaults.standard.seekBehavior
     )

@@ -149,7 +149,7 @@ private struct MainView: View {
 
 private struct ControlsView: View {
     @ObservedObject var player: Player
-    @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
+    @StateObject var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
 
     var body: some View {
         HStack(spacing: 30) {

@@ -62,6 +62,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
                 rectangle(width: geometry.size.width * CGFloat(progressTracker.progress))
             }
             .animation(.linear(duration: 0.5), value: bufferTracker.buffer)
+            .busy(isBusy && !progressTracker.isInteracting)
             .gesture(
                 DragGesture(minimumDistance: 1)
                     .updating($gestureValue) { value, state, _ in
@@ -99,6 +100,27 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
 extension PlaybackSlider where ValueLabel == EmptyView {
     init(progressTracker: ProgressTracker) {
         self.init(progressTracker: progressTracker, minimumValueLabel: { EmptyView() }, maximumValueLabel: { EmptyView() })
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func busy(_ isBusy: Bool) -> some View {
+        // TODO: Remove when Xcode 15 has been released
+#if compiler(>=5.9)
+        if #available(iOS 17.0, *), isBusy {
+            phaseAnimator([true, false]) { content, phase in
+                content
+                    .opacity(phase ? 0.5 : 1)
+                    .animation(.easeInOut(duration: 0.7), value: phase)
+            }
+        }
+        else {
+            self
+        }
+#else
+        self
+#endif
     }
 }
 
