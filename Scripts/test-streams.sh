@@ -13,7 +13,7 @@ ON_DEMAND_WITHOUT_AUDIO_DIR="$GENERATED_DIR/on_demand_without_audio"
 ON_DEMAND_TRACKS_DIR="$GENERATED_DIR/on_demand_tracks"
 ON_DEMAND_SHORT_DIR="$GENERATED_DIR/on_demand_short"
 ON_DEMAND_MEDIUM_DIR="$GENERATED_DIR/on_demand_medium"
-ON_DEMAND_CROPPED_DIR="$GENERATED_DIR/on_demand_cropped"
+ON_DEMAND_SQUARE_DIR="$GENERATED_DIR/on_demand_square"
 ON_DEMAND_CORRUPT_DIR="$GENERATED_DIR/on_demand_corrupt"
 
 LIVE_DIR="$GENERATED_DIR/live"
@@ -70,9 +70,9 @@ function serve_test_streams {
     ffmpeg -stream_loop -1 -i "$GENERATED_DIR/source_640x360.mp4" -stream_loop -1 -i "$GENERATED_DIR/source_audio_eng.mp4" -t 5 -vcodec copy -acodec copy \
         -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_MEDIUM_DIR/master.m3u8" > /dev/null 2>&1 &
 
-    mkdir -p "$ON_DEMAND_CROPPED_DIR"
+    mkdir -p "$ON_DEMAND_SQUARE_DIR"
     ffmpeg -stream_loop -1 -i "$GENERATED_DIR/source_360x360.mp4" -stream_loop -1 -i "$GENERATED_DIR/source_audio_eng.mp4" -t 120 -vcodec copy -acodec copy \
-        -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_CROPPED_DIR/master.m3u8" > /dev/null 2>&1 &
+        -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$ON_DEMAND_SQUARE_DIR/master.m3u8" > /dev/null 2>&1 &
 
     mkdir -p "$ON_DEMAND_CORRUPT_DIR"
     ffmpeg -stream_loop -1 -i "$GENERATED_DIR/source_640x360.mp4" -stream_loop -1 -i "$GENERATED_DIR/source_audio_eng.mp4" -t 2 -vcodec copy -acodec copy \

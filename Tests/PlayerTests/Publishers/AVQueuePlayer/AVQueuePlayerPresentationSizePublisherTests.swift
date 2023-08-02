@@ -27,7 +27,7 @@ final class AVQueuePlayerPresentationSizePublisherTests: TestCase {
 
     func testVideosWithDifferentSizes() {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let item2 = AVPlayerItem(url: Stream.croppedOnDemand.url)
+        let item2 = AVPlayerItem(url: Stream.squareOnDemand.url)
         let player = AVQueuePlayer(items: [item1, item2])
         expectAtLeastEqualPublished(
             values: [nil, CGSize(width: 640, height: 360), CGSize(width: 360, height: 360)],

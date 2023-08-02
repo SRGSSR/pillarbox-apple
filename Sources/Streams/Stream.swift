@@ -26,9 +26,9 @@ public struct Stream {
         duration: CMTime(value: 5, timescale: 1)
     )
 
-    /// A cropped on-demand stream.
-    public static let croppedOnDemand: Self = .init(
-        url: URL(string: "http://localhost:8123/on_demand_cropped/master.m3u8")!,
+    /// A square on-demand stream.
+    public static let squareOnDemand: Self = .init(
+        url: URL(string: "http://localhost:8123/on_demand_square/master.m3u8")!,
         duration: CMTime(value: 120, timescale: 1)
     )
 
