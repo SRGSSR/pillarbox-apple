@@ -87,13 +87,13 @@ enum URLTemplate {
         type: .url("http://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8")
     )
     static let onDemandVideoLocalHLS = Template(
-        title: "Nyan cat",
+        title: "Test video pattern",
         description: "Stream served locally",
-        type: .url("http://localhost:8123/on_demand/master.m3u8")
+        type: .url("http://localhost:8123/single/on_demand/master.m3u8")
     )
     static let unknown = Template(
         title: "Unknown URL",
-        type: .url("http://localhost:8123/unavailable/master.m3u8")
+        type: .url("http://localhost:8123/single/unavailable/master.m3u8")
     )
     static let bitmovinOnDemandMultipleTracks = Template(
         title: "Multiple subtitles and audio tracks",

@@ -8,92 +8,6 @@ import CoreMedia
 
 /// A stream description.
 public struct Stream {
-    /// An on-demand stream.
-    public static let onDemand: Self = .init(
-        url: URL(string: "http://localhost:8123/on_demand/master.m3u8")!,
-        duration: CMTime(value: 120, timescale: 1)
-    )
-
-    /// A short on-demand stream.
-    public static let shortOnDemand: Self = .init(
-        url: URL(string: "http://localhost:8123/on_demand_short/master.m3u8")!,
-        duration: CMTime(value: 1, timescale: 1)
-    )
-
-    /// A medium-sized on-demand stream.
-    public static let mediumOnDemand: Self = .init(
-        url: URL(string: "http://localhost:8123/on_demand_medium/master.m3u8")!,
-        duration: CMTime(value: 5, timescale: 1)
-    )
-
-    /// A square on-demand stream.
-    public static let squareOnDemand: Self = .init(
-        url: URL(string: "http://localhost:8123/on_demand_square/master.m3u8")!,
-        duration: CMTime(value: 120, timescale: 1)
-    )
-
-    /// A corrupt on-demand stream.
-    public static let corruptOnDemand: Self = .init(
-        url: URL(string: "http://localhost:8123/on_demand_corrupt/master.m3u8")!,
-        duration: CMTime(value: 2, timescale: 1)
-    )
-
-    /// A live stream.
-    public static let live: Self = .init(
-        url: URL(string: "http://localhost:8123/live/master.m3u8")!,
-        duration: .zero
-    )
-
-    /// A DVR stream.
-    public static let dvr: Self = .init(
-        url: URL(string: "http://localhost:8123/dvr/master.m3u8")!,
-        duration: CMTime(value: 17 /* 20 - 3 * 1 (chunk) */, timescale: 1)
-    )
-
-    /// An MP3 stream.
-    public static let mp3: Self = .init(
-        url: Bundle.module.url(forResource: "silence", withExtension: "mp3")!,
-        duration: CMTime(value: 5, timescale: 1)
-    )
-
-    /// An unavailable stream.
-    public static let unavailable: Self = .init(
-        url: URL(string: "http://localhost:8123/unavailable/master.m3u8")!,
-        duration: .indefinite
-    )
-
-    /// A stream with a custom scheme.
-    ///
-    /// Not intended to be playable.
-    public static let custom: Self = .init(
-        url: URL(string: "custom://arbitrary.server/some.m3u8")!,
-        duration: .indefinite
-    )
-
-    /// A stream identifying some item in a playlist.
-    ///
-    /// Not intended to be playable, mostly useful for testing playlist mutations.
-    public static let item: Self = .init(
-        url: URL(string: "https://www.server.com/item.m3u8")!,
-        duration: .indefinite
-    )
-
-    /// A stream identifying an item inserted into a playlist.
-    ///
-    /// Not intended to be playable, mostly useful for testing playlist mutations.
-    public static let insertedItem: Self = .init(
-        url: URL(string: "https://www.server.com/inserted.m3u8")!,
-        duration: .indefinite
-    )
-
-    /// A stream identifying a foreign item not belonging to a playlist.
-    ///
-    /// Not intended to be playable, mostly useful for testing playlist mutations.
-    public static let foreignItem: Self = .init(
-        url: URL(string: "https://www.server.com/foreign.m3u8")!,
-        duration: .indefinite
-    )
-
     /// The stream URL.
     public let url: URL
 
@@ -111,4 +25,96 @@ public struct Stream {
             duration: .indefinite
         )
     }
+}
+
+public extension Stream {
+    /// An on-demand stream.
+    static let onDemand: Self = .init(
+        url: URL(string: "http://localhost:8123/single/on_demand/master.m3u8")!,
+        duration: CMTime(value: 120, timescale: 1)
+    )
+
+    /// A short on-demand stream.
+    static let shortOnDemand: Self = .init(
+        url: URL(string: "http://localhost:8123/single/on_demand_short/master.m3u8")!,
+        duration: CMTime(value: 1, timescale: 1)
+    )
+
+    /// A medium-sized on-demand stream.
+    static let mediumOnDemand: Self = .init(
+        url: URL(string: "http://localhost:8123/single/on_demand_medium/master.m3u8")!,
+        duration: CMTime(value: 5, timescale: 1)
+    )
+
+    /// A square on-demand stream.
+    static let squareOnDemand: Self = .init(
+        url: URL(string: "http://localhost:8123/single/on_demand_square/master.m3u8")!,
+        duration: CMTime(value: 120, timescale: 1)
+    )
+
+    /// A corrupt on-demand stream.
+    static let corruptOnDemand: Self = .init(
+        url: URL(string: "http://localhost:8123/single/on_demand_corrupt/master.m3u8")!,
+        duration: CMTime(value: 2, timescale: 1)
+    )
+
+    /// A live stream.
+    static let live: Self = .init(
+        url: URL(string: "http://localhost:8123/single/live/master.m3u8")!,
+        duration: .zero
+    )
+
+    /// A DVR stream.
+    static let dvr: Self = .init(
+        url: URL(string: "http://localhost:8123/single/dvr/master.m3u8")!,
+        duration: CMTime(value: 17 /* 20 - 3 * 1 (chunk) */, timescale: 1)
+    )
+}
+
+public extension Stream {
+    /// An unavailable stream.
+    static let unavailable: Self = .init(
+        url: URL(string: "http://localhost:8123/unavailable/master.m3u8")!,
+        duration: .indefinite
+    )
+
+    /// An MP3 stream.
+    static let mp3: Self = .init(
+        url: Bundle.module.url(forResource: "silence", withExtension: "mp3")!,
+        duration: CMTime(value: 5, timescale: 1)
+    )
+}
+
+public extension Stream {
+    /// A stream with a custom scheme.
+    ///
+    /// Not intended to be playable.
+    static let custom: Self = .init(
+        url: URL(string: "custom://arbitrary.server/some.m3u8")!,
+        duration: .indefinite
+    )
+
+    /// A stream identifying some item in a playlist.
+    ///
+    /// Not intended to be playable, mostly useful for testing playlist mutations.
+    static let item: Self = .init(
+        url: URL(string: "https://www.server.com/item.m3u8")!,
+        duration: .indefinite
+    )
+
+    /// A stream identifying an item inserted into a playlist.
+    ///
+    /// Not intended to be playable, mostly useful for testing playlist mutations.
+    static let insertedItem: Self = .init(
+        url: URL(string: "https://www.server.com/inserted.m3u8")!,
+        duration: .indefinite
+    )
+
+    /// A stream identifying a foreign item not belonging to a playlist.
+    ///
+    /// Not intended to be playable, mostly useful for testing playlist mutations.
+    static let foreignItem: Self = .init(
+        url: URL(string: "https://www.server.com/foreign.m3u8")!,
+        duration: .indefinite
+    )
 }
