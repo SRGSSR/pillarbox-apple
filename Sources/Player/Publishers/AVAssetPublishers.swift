@@ -187,4 +187,20 @@ public extension AVAsset {
         }
         .eraseToAnyPublisher()
     }
+
+    /// Returns a publisher emitting the media selection group matching a characteristic, if any.
+    func mediaSelectionGroupPublisher(for characteristic: AVMediaCharacteristic) -> AnyPublisher<AVMediaSelectionGroup?, Error> {
+        Future { promise in
+            Task {
+                do {
+                    let result = try await self.loadMediaSelectionGroup(for: characteristic)
+                    promise(.success(result))
+                }
+                catch {
+                    promise(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
+    }
 }
