@@ -72,6 +72,20 @@ public extension Stream {
 }
 
 public extension Stream {
+    /// An on-demand stream with several subtitles and audio tracks.
+    static let onDemandWithTracks: Self = .init(
+        url: URL(string: "http://localhost:8123/multi/on_demand_tracks/master.m3u8")!,
+        duration: CMTime(value: 4, timescale: 1)
+    )
+
+    /// An on-demand stream without subtitles and audio tracks.
+    static let onDemandWithoutTracks: Self = .init(
+        url: URL(string: "http://localhost:8123/multi/on_demand_without_tracks/master.m3u8")!,
+        duration: CMTime(value: 4, timescale: 1)
+    )
+}
+
+public extension Stream {
     /// An unavailable stream.
     static let unavailable: Self = .init(
         url: URL(string: "http://localhost:8123/unavailable/master.m3u8")!,

@@ -103,6 +103,11 @@ function generate_multi_variant_streams {
         "in=$SUBTITLES_DIR/subtitles_fr.webvtt,stream=text,segment_template=$on_demand_tracks_dir/subtitles_fr/\$Number\$.vtt,lang=fr,hls_name=Français" \
         "in=$SUBTITLES_DIR/subtitles_ja.webvtt,stream=text,segment_template=$on_demand_tracks_dir/subtitles_ja/\$Number\$.vtt,lang=ja,hls_name=日本語" \
         --hls_master_playlist_output "$on_demand_tracks_dir/master.m3u8" > /dev/null 2>&1
+
+    local on_demand_without_tracks_dir="$dest_dir/on_demand_without_tracks"
+    shaka-packager \
+        "in=$src_dir/source_640x360.mp4,stream=video,segment_template=$on_demand_without_tracks_dir/640x360/\$Number\$.ts" \
+        --hls_master_playlist_output "$on_demand_without_tracks_dir/master.m3u8" > /dev/null 2>&1
 }
 
 function serve_directory {
