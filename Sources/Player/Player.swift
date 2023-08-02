@@ -69,6 +69,9 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
+    @Published private var audibleMediaSelectionGroup: AVMediaSelectionGroup?
+    @Published private var legibleMediaSelectionGroup: AVMediaSelectionGroup?
+
     @Published private var currentTracker: CurrentTracker?
 
     /// The player configuration
@@ -208,6 +211,8 @@ public final class Player: ObservableObject, Equatable {
         configurePresentationSizePublisher()
         configureMutedPublisher()
         configurePlaybackSpeedPublisher()
+        configureAudibleMediaSelectionGroupPublisher()
+        configureLegibleMediaSelectionGroupPublisher()
     }
 
     deinit {
@@ -324,6 +329,18 @@ private extension Player {
             .removeDuplicates()
             .receiveOnMainThread()
             .assign(to: &$_playbackSpeed)
+    }
+
+    func configureAudibleMediaSelectionGroupPublisher() {
+        queuePlayer.currentItemMediaSelectionGroupPublisher(for: .audible)
+            .receiveOnMainThread()
+            .assign(to: &$audibleMediaSelectionGroup)
+    }
+
+    func configureLegibleMediaSelectionGroupPublisher() {
+        queuePlayer.currentItemMediaSelectionGroupPublisher(for: .legible)
+            .receiveOnMainThread()
+            .assign(to: &$legibleMediaSelectionGroup)
     }
 }
 
