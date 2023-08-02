@@ -69,8 +69,8 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    @Published private var audibleMediaSelectionGroup: AVMediaSelectionGroup?
-    @Published private var legibleMediaSelectionGroup: AVMediaSelectionGroup?
+    @Published var audibleMediaSelectionGroup: AVMediaSelectionGroup?
+    @Published var legibleMediaSelectionGroup: AVMediaSelectionGroup?
 
     @Published private var currentTracker: CurrentTracker?
 
