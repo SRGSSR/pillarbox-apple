@@ -74,7 +74,7 @@ public extension Stream {
 public extension Stream {
     /// An on-demand stream with several subtitles and audio tracks.
     static let onDemandWithTracks: Self = .init(
-        url: URL(string: "http://localhost:8123/multi/on_demand_tracks/master.m3u8")!,
+        url: URL(string: "http://localhost:8123/multi/on_demand_with_tracks/master.m3u8")!,
         duration: CMTime(value: 4, timescale: 1)
     )
 

@@ -93,16 +93,16 @@ function generate_multi_variant_streams {
 
     mkdir -p "$dest_dir"
 
-    local on_demand_tracks_dir="$dest_dir/on_demand_tracks"
+    local on_demand_with_tracks_dir="$dest_dir/on_demand_with_tracks"
     shaka-packager \
-        "in=$src_dir/source_640x360.mp4,stream=video,segment_template=$on_demand_tracks_dir/640x360/\$Number\$.ts" \
-        "in=$src_dir/source_audio_eng.mp4,stream=audio,segment_template=$on_demand_tracks_dir/audio_eng/\$Number\$.ts,lang=en,hls_name=English" \
-        "in=$src_dir/source_audio_fre.mp4,stream=audio,segment_template=$on_demand_tracks_dir/audio_fre/\$Number\$.ts,lang=fr,hls_name=Français" \
-        "in=$src_dir/source_audio_eng.mp4,stream=audio,segment_template=$on_demand_tracks_dir/audio_eng_ad/\$Number\$.ts,lang=en,hls_name=English (AD),hls_characteristics=public.accessibility.describes-video" \
-        "in=$SUBTITLES_DIR/subtitles_en.webvtt,stream=text,segment_template=$on_demand_tracks_dir/subtitles_en/\$Number\$.vtt,lang=en,hls_name=English" \
-        "in=$SUBTITLES_DIR/subtitles_fr.webvtt,stream=text,segment_template=$on_demand_tracks_dir/subtitles_fr/\$Number\$.vtt,lang=fr,hls_name=Français" \
-        "in=$SUBTITLES_DIR/subtitles_ja.webvtt,stream=text,segment_template=$on_demand_tracks_dir/subtitles_ja/\$Number\$.vtt,lang=ja,hls_name=日本語" \
-        --hls_master_playlist_output "$on_demand_tracks_dir/master.m3u8" > /dev/null 2>&1
+        "in=$src_dir/source_640x360.mp4,stream=video,segment_template=$on_demand_with_tracks_dir/640x360/\$Number\$.ts" \
+        "in=$src_dir/source_audio_eng.mp4,stream=audio,segment_template=$on_demand_with_tracks_dir/audio_eng/\$Number\$.ts,lang=en,hls_name=English" \
+        "in=$src_dir/source_audio_fre.mp4,stream=audio,segment_template=$on_demand_with_tracks_dir/audio_fre/\$Number\$.ts,lang=fr,hls_name=Français" \
+        "in=$src_dir/source_audio_eng.mp4,stream=audio,segment_template=$on_demand_with_tracks_dir/audio_eng_ad/\$Number\$.ts,lang=en,hls_name=English (AD),hls_characteristics=public.accessibility.describes-video" \
+        "in=$SUBTITLES_DIR/subtitles_en.webvtt,stream=text,segment_template=$on_demand_with_tracks_dir/subtitles_en/\$Number\$.vtt,lang=en,hls_name=English" \
+        "in=$SUBTITLES_DIR/subtitles_fr.webvtt,stream=text,segment_template=$on_demand_with_tracks_dir/subtitles_fr/\$Number\$.vtt,lang=fr,hls_name=Français" \
+        "in=$SUBTITLES_DIR/subtitles_ja.webvtt,stream=text,segment_template=$on_demand_with_tracks_dir/subtitles_ja/\$Number\$.vtt,lang=ja,hls_name=日本語" \
+        --hls_master_playlist_output "$on_demand_with_tracks_dir/master.m3u8" > /dev/null 2>&1
 
     local on_demand_without_tracks_dir="$dest_dir/on_demand_without_tracks"
     shaka-packager \
