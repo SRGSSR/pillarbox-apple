@@ -11,7 +11,8 @@ import Circumspect
 import Streams
 import XCTest
 
-final class AVQueuePlayerItemTimeRangePublisherTests: TestCase {
+// swiftlint:disable:next type_name
+final class AVQueuePlayerCurrentItemTimeRangePublisherTests: TestCase {
     func testItems() {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.onDemand.url)

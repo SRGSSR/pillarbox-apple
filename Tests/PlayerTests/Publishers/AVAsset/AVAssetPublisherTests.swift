@@ -12,7 +12,7 @@ import Nimble
 import Streams
 import XCTest
 
-final class AssetPublishersTests: TestCase {
+final class AVAssetPublisherTests: TestCase {
     func testFetch() throws {
         let asset = AVURLAsset(url: Stream.onDemand.url)
         let duration = try waitForSingleOutput(from: asset.propertyPublisher(.duration))

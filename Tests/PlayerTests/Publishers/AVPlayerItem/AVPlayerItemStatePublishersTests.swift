@@ -12,7 +12,7 @@ import Nimble
 import Streams
 import XCTest
 
-final class AVPlayerItemStatePublishersTests: TestCase {
+final class AVPlayerItemStatePublisherTests: TestCase {
     func testValidItemStateWithoutPlayback() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         _ = AVPlayer(playerItem: item)
