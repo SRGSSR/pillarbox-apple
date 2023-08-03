@@ -14,25 +14,25 @@ import XCTest
 final class AVAssetMediaSelectionsPublisherTests: TestCase {
     func testFetch() throws {
         let asset = AVURLAsset(url: Stream.onDemandWithTracks.url)
-        let groups = try waitForSingleOutput(from: asset.mediaSelectionsPublisher())
-        expect(groups[.audible]).notTo(beNil())
-        expect(groups[.legible]).notTo(beNil())
+        let selections = try waitForSingleOutput(from: asset.mediaSelectionsPublisher())
+        expect(selections.options(withMediaCharacteristic: .audible)).notTo(beNil())
+        expect(selections.options(withMediaCharacteristic: .legible)).notTo(beNil())
     }
 
     func testFetchWithoutSelectionAvailable() throws {
         let asset = AVURLAsset(url: Stream.onDemandWithoutTracks.url)
-        let groups = try waitForSingleOutput(from: asset.mediaSelectionsPublisher())
-        expect(groups).to(beEmpty())
+        let selections = try waitForSingleOutput(from: asset.mediaSelectionsPublisher())
+        expect(selections.characteristics).to(beEmpty())
     }
 
     func testRepeatedFetch() throws {
         let asset = AVURLAsset(url: Stream.onDemandWithTracks.url)
 
-        let groups1 = try waitForSingleOutput(from: asset.mediaSelectionsPublisher())
-        expect(groups1).notTo(beEmpty())
+        let selections1 = try waitForSingleOutput(from: asset.mediaSelectionsPublisher())
+        expect(selections1.characteristics).notTo(beEmpty())
 
-        let groups2 = try waitForSingleOutput(from: asset.mediaSelectionsPublisher())
-        expect(groups2).to(equal(groups1))
+        let selections2 = try waitForSingleOutput(from: asset.mediaSelectionsPublisher())
+        expect(selections2).to(equal(selections1))
     }
 
     func testFailedFetch() throws {

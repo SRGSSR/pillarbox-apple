@@ -191,7 +191,7 @@ extension AVAsset {
 
 extension AVAsset {
     /// A publisher emitting all available media selections for the receiver as a single output.
-    func mediaSelectionsPublisher() -> AnyPublisher<[AVMediaCharacteristic: AVMediaSelectionGroup], Error> {
+    func mediaSelectionsPublisher() -> AnyPublisher<MediaSelections, Error> {
         propertyPublisher(.availableMediaCharacteristicsWithMediaSelectionOptions)
             .compactMap { [weak self] characteristics in
                 Publishers.MergeMany(characteristics.compactMap { characteristic in
@@ -204,6 +204,7 @@ extension AVAsset {
             .switchToLatest()
             // swiftlint:disable:next reduce_into
             .reduce([:]) { $0.merging($1) { _, new in new } }
+            .map { MediaSelections(groups: $0) }
             .eraseToAnyPublisher()
     }
 

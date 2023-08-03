@@ -53,6 +53,9 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
+    /// The available media selections.
+    @Published public private(set) var mediaSelections: MediaSelections = .empty
+
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
     @Published var currentItem: CurrentItem = .good(nil)
     @Published var storedItems: Deque<PlayerItem>
@@ -68,8 +71,6 @@ public final class Player: ObservableObject, Equatable {
             }
         }
     }
-
-    @Published var mediaSelections: [AVMediaCharacteristic: AVMediaSelectionGroup] = [:]
 
     @Published private var currentTracker: CurrentTracker?
 

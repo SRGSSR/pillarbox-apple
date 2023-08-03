@@ -11,12 +11,12 @@ import Streams
 import XCTest
 
 // swiftlint:disable:next type_name
-final class AVPlayerCurrentItemmediaSelectionsPublisherTests: TestCase {
+final class AVPlayerCurrentItemMediaSelectionsPublisherTests: TestCase {
     func testEmpty() {
         let player = AVPlayer()
         expectEqualPublished(
             values: [0],
-            from: player.currentItemMediaSelectionsPublisher().map(\.count),
+            from: player.currentItemMediaSelectionsPublisher().map(\.characteristics.count),
             during: .seconds(2)
         )
     }
@@ -26,7 +26,7 @@ final class AVPlayerCurrentItemmediaSelectionsPublisherTests: TestCase {
         let player = AVPlayer(playerItem: item)
         expectEqualPublished(
             values: [0, 2],
-            from: player.currentItemMediaSelectionsPublisher().map(\.count),
+            from: player.currentItemMediaSelectionsPublisher().map(\.characteristics.count),
             during: .seconds(2)
         )
     }
@@ -36,7 +36,7 @@ final class AVPlayerCurrentItemmediaSelectionsPublisherTests: TestCase {
         let player = AVPlayer(playerItem: item)
         expectEqualPublished(
             values: [0],
-            from: player.currentItemMediaSelectionsPublisher().map(\.count),
+            from: player.currentItemMediaSelectionsPublisher().map(\.characteristics.count),
             during: .seconds(2)
         )
     }
