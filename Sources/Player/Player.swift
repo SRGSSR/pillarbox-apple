@@ -69,8 +69,7 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    @Published var audibleMediaSelectionGroup: AVMediaSelectionGroup?
-    @Published var legibleMediaSelectionGroup: AVMediaSelectionGroup?
+    @Published var mediaSelections: [AVMediaCharacteristic: AVMediaSelectionGroup] = [:]
 
     @Published private var currentTracker: CurrentTracker?
 
@@ -211,8 +210,7 @@ public final class Player: ObservableObject, Equatable {
         configurePresentationSizePublisher()
         configureMutedPublisher()
         configurePlaybackSpeedPublisher()
-        configureAudibleMediaSelectionGroupPublisher()
-        configureLegibleMediaSelectionGroupPublisher()
+        configureMediaSelectionsPublisher()
     }
 
     deinit {
@@ -331,16 +329,10 @@ private extension Player {
             .assign(to: &$_playbackSpeed)
     }
 
-    func configureAudibleMediaSelectionGroupPublisher() {
-        queuePlayer.currentItemMediaSelectionGroupPublisher(for: .audible)
+    func configureMediaSelectionsPublisher() {
+        queuePlayer.currentItemMediaSelectionsPublisher()
             .receiveOnMainThread()
-            .assign(to: &$audibleMediaSelectionGroup)
-    }
-
-    func configureLegibleMediaSelectionGroupPublisher() {
-        queuePlayer.currentItemMediaSelectionGroupPublisher(for: .legible)
-            .receiveOnMainThread()
-            .assign(to: &$legibleMediaSelectionGroup)
+            .assign(to: &$mediaSelections)
     }
 }
 

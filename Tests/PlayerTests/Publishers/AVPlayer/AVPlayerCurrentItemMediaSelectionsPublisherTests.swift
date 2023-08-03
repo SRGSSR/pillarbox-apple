@@ -11,12 +11,12 @@ import Streams
 import XCTest
 
 // swiftlint:disable:next type_name
-final class AVPlayerCurrentItemMediaSelectionGroupPublisherTests: TestCase {
+final class AVPlayerCurrentItemmediaSelectionsPublisherTests: TestCase {
     func testEmpty() {
         let player = AVPlayer()
         expectEqualPublished(
-            values: [nil],
-            from: player.currentItemMediaSelectionGroupPublisher(for: .audible),
+            values: [0],
+            from: player.currentItemMediaSelectionsPublisher().map(\.count),
             during: .seconds(2)
         )
     }
@@ -25,8 +25,8 @@ final class AVPlayerCurrentItemMediaSelectionGroupPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.onDemandWithTracks.url)
         let player = AVPlayer(playerItem: item)
         expectEqualPublished(
-            values: [nil, 3],
-            from: player.currentItemMediaSelectionGroupPublisher(for: .audible).map { $0?.options.count },
+            values: [0, 2],
+            from: player.currentItemMediaSelectionsPublisher().map(\.count),
             during: .seconds(2)
         )
     }
@@ -35,8 +35,8 @@ final class AVPlayerCurrentItemMediaSelectionGroupPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         let player = AVPlayer(playerItem: item)
         expectEqualPublished(
-            values: [nil],
-            from: player.currentItemMediaSelectionGroupPublisher(for: .audible).map { $0?.options.count },
+            values: [0],
+            from: player.currentItemMediaSelectionsPublisher().map(\.count),
             during: .seconds(2)
         )
     }

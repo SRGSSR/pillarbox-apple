@@ -7,7 +7,7 @@
 import AVFoundation
 import Combine
 
-public extension AVAsset {
+extension AVAsset {
     /// A publisher emitting values for a given asset property.
     func propertyPublisher<T>(_ property: AVAsyncProperty<AVAsset, T>) -> AnyPublisher<T, Error> {
         Future { promise in
@@ -189,9 +189,25 @@ public extension AVAsset {
     }
 }
 
-public extension AVAsset {
-    /// A publisher emitting the media selection group matching a characteristic, if any.
-    func mediaSelectionGroupPublisher(for characteristic: AVMediaCharacteristic) -> AnyPublisher<AVMediaSelectionGroup?, Error> {
+extension AVAsset {
+    /// A publisher emitting all available media selections for the receiver as a single output.
+    func mediaSelectionsPublisher() -> AnyPublisher<[AVMediaCharacteristic: AVMediaSelectionGroup], Error> {
+        propertyPublisher(.availableMediaCharacteristicsWithMediaSelectionOptions)
+            .compactMap { [weak self] characteristics in
+                Publishers.MergeMany(characteristics.compactMap { characteristic in
+                    self?.mediaSelectionGroupPublisher(for: characteristic)
+                        .compactMap { $0 }
+                        .map { [characteristic: $0] }
+                })
+                .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            // swiftlint:disable:next reduce_into
+            .reduce([:]) { $0.merging($1) { _, new in new } }
+            .eraseToAnyPublisher()
+    }
+
+    private func mediaSelectionGroupPublisher(for characteristic: AVMediaCharacteristic) -> AnyPublisher<AVMediaSelectionGroup?, Error> {
         Future { promise in
             Task {
                 do {

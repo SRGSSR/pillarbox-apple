@@ -78,12 +78,12 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    func currentItemMediaSelectionGroupPublisher(for characteristic: AVMediaCharacteristic) -> AnyPublisher<AVMediaSelectionGroup?, Never> {
+    func currentItemMediaSelectionsPublisher() -> AnyPublisher<[AVMediaCharacteristic: AVMediaSelectionGroup], Never> {
         publisher(for: \.currentItem)
-            .compactMap { $0?.asset.mediaSelectionGroupPublisher(for: characteristic) }
+            .compactMap { $0?.asset.mediaSelectionsPublisher() }
             .switchToLatest()
-            .replaceError(with: nil)
-            .prepend(nil)
+            .replaceError(with: [:])
+            .prepend([:])
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
