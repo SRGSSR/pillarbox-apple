@@ -8,7 +8,7 @@ import AVFoundation
 import Combine
 
 public extension AVAsset {
-    /// Returns a publisher emitting values for a given asset property.
+    /// A publisher emitting values for a given asset property.
     func propertyPublisher<T>(_ property: AVAsyncProperty<AVAsset, T>) -> AnyPublisher<T, Error> {
         Future { promise in
             Task {
@@ -24,7 +24,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
-    /// Returns a publisher emitting values for given asset properties.
+    /// A publisher emitting values for given asset properties.
     func propertyPublisher<A, B>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>
@@ -43,7 +43,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
-    /// Returns a publisher emitting values for given asset properties.
+    /// A publisher emitting values for given asset properties.
     func propertyPublisher<A, B, C>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>,
@@ -64,7 +64,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
-    /// Returns a publisher emitting values for given asset properties.
+    /// A publisher emitting values for given asset properties.
     func propertyPublisher<A, B, C, D>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>,
@@ -86,7 +86,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
-    /// Returns a publisher emitting values for given asset properties.
+    /// A publisher emitting values for given asset properties.
     func propertyPublisher<A, B, C, D, E>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>,
@@ -109,7 +109,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
-    /// Returns a publisher emitting values for given asset properties.
+    /// A publisher emitting values for given asset properties.
     func propertyPublisher<A, B, C, D, E, F>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>,
@@ -133,7 +133,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
-    /// Returns a publisher emitting values for given asset properties.
+    /// A publisher emitting values for given asset properties.
     func propertyPublisher<A, B, C, D, E, F, G>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>,
@@ -160,7 +160,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
-    /// Returns a publisher emitting values for given asset properties.
+    /// A publisher emitting values for given asset properties.
     func propertyPublisher<A, B, C, D, E, F, G, H>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>,
@@ -187,8 +187,10 @@ public extension AVAsset {
         }
         .eraseToAnyPublisher()
     }
+}
 
-    /// Returns a publisher emitting the media selection group matching a characteristic, if any.
+public extension AVAsset {
+    /// A publisher emitting the media selection group matching a characteristic, if any.
     func mediaSelectionGroupPublisher(for characteristic: AVMediaCharacteristic) -> AnyPublisher<AVMediaSelectionGroup?, Error> {
         Future { promise in
             Task {
