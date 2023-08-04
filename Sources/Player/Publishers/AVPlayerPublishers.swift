@@ -80,9 +80,8 @@ extension AVPlayer {
 
     func currentItemMediaSelectorPublisher() -> AnyPublisher<MediaSelector, Never> {
         publisher(for: \.currentItem)
-            .compactMap { $0?.asset.mediaSelectorPublisher() }
+            .compactMap { $0?.mediaSelectorPublisher() }
             .switchToLatest()
-            .replaceError(with: .empty)
             .prepend(.empty)
             .removeDuplicates()
             .eraseToAnyPublisher()

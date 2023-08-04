@@ -16,5 +16,8 @@ final class MediaSelectionTests: TestCase {
         expect(player.mediaSelectionCharacteristics).toEventually(equal([.audible, .legible]))
         expect(player.mediaSelectionOptions(for: .audible)).notTo(beEmpty())
         expect(player.mediaSelectionOptions(for: .visual)).to(beEmpty())
+        expect(player.selectedMediaOption(for: .audible)).to(beNil())
     }
+
+    // TODO: Test change in playlists as well
 }

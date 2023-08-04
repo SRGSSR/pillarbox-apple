@@ -15,6 +15,7 @@ final class MediaSelectorTests: TestCase {
     func testEmpty() {
         let selector = MediaSelector.empty
         expect(selector.characteristics).to(beEmpty())
-        expect(selector.options(withMediaCharacteristic: .legible)).to(beEmpty())
+        expect(selector.options(for: .legible)).to(beEmpty())
+        expect(selector.selectedMediaOption(for: .legible)).to(beNil())
     }
 }
