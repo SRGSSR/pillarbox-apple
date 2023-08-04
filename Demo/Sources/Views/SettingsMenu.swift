@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import Core
 import Player
 import SwiftUI
@@ -45,12 +46,54 @@ private struct PlaybackSpeedMenu: View {
     }
 }
 
+private struct AudibleMediaOptionsMenu: View {
+    @ObservedObject var player: Player
+
+    var body: some View {
+        if mediaOptions.count > 1 {
+            Menu {
+                ForEach(mediaOptions, id: \.self) { option in
+                    Text(option.displayName)
+                }
+            } label: {
+                Label("Languages", systemImage: "waveform.circle")
+            }
+        }
+    }
+
+    private var mediaOptions: [AVMediaSelectionOption] {
+        player.mediaSelections.options(withMediaCharacteristic: .audible)
+    }
+}
+
+private struct LegibleMediaOptionsMenu: View {
+    @ObservedObject var player: Player
+
+    var body: some View {
+        if mediaOptions.count > 1 {
+            Menu {
+                ForEach(mediaOptions, id: \.self) { option in
+                    Text(option.displayName)
+                }
+            } label: {
+                Label("Subtitles", systemImage: "captions.bubble")
+            }
+        }
+    }
+
+    private var mediaOptions: [AVMediaSelectionOption] {
+        player.mediaSelections.options(withMediaCharacteristic: .legible)
+    }
+}
+
 struct SettingsMenu: View {
     @ObservedObject var player: Player
 
     var body: some View {
         Menu {
             PlaybackSpeedMenu(player: player)
+            AudibleMediaOptionsMenu(player: player)
+            LegibleMediaOptionsMenu(player: player)
         } label: {
             Image(systemName: "ellipsis.circle")
                 .tint(.white)
