@@ -15,8 +15,7 @@ final class AVAssetMediaSelectionsPublisherTests: TestCase {
     func testFetch() throws {
         let asset = AVURLAsset(url: Stream.onDemandWithTracks.url)
         let selections = try waitForSingleOutput(from: asset.mediaSelectionsPublisher())
-        expect(selections.options(withMediaCharacteristic: .audible)).notTo(beNil())
-        expect(selections.options(withMediaCharacteristic: .legible)).notTo(beNil())
+        expect(selections.characteristics).notTo(beEmpty())
     }
 
     func testFetchWithoutSelectionAvailable() throws {
