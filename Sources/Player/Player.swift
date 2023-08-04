@@ -53,10 +53,8 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    /// The available media selections.
-    @Published public private(set) var mediaSelections: MediaSelections = .empty
-
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
+    @Published var mediaSelections: MediaSelections = .empty
     @Published var currentItem: CurrentItem = .good(nil)
     @Published var storedItems: Deque<PlayerItem>
 

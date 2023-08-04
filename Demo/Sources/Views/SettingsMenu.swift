@@ -62,7 +62,7 @@ private struct AudibleMediaOptionsMenu: View {
     }
 
     private var mediaOptions: [AVMediaSelectionOption] {
-        player.mediaSelections.options(withMediaCharacteristic: .audible)
+        player.mediaSelectionOptions(for: .audible)
     }
 }
 
@@ -82,7 +82,7 @@ private struct LegibleMediaOptionsMenu: View {
     }
 
     private var mediaOptions: [AVMediaSelectionOption] {
-        player.mediaSelections.options(withMediaCharacteristic: .legible)
+        player.mediaSelectionOptions(for: .legible)
     }
 }
 
