@@ -7,9 +7,9 @@
 import AVFoundation
 
 public extension Player {
-    /// The list of media characteristics for which a media selection is available.
-    var mediaSelectionCharacteristics: [AVMediaCharacteristic] {
-        []
+    /// The set of media characteristics for which a media selection is available.
+    var mediaSelectionCharacteristics: Set<AVMediaCharacteristic> {
+        mediaSelections.characteristics
     }
 
     /// The list of media options associated with a characteristic.
@@ -19,7 +19,7 @@ public extension Player {
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The list of options associated with the characteristic of an empty array if none.
     func mediaSelectionOptions(for characteristic: AVMediaCharacteristic) -> [AVMediaSelectionOption] {
-        []
+        mediaSelections.options(withMediaCharacteristic: characteristic)
     }
 
     /// The currently selected media option for a characteristic.

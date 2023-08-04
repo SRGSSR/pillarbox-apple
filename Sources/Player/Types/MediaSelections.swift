@@ -13,8 +13,8 @@ struct MediaSelections: Equatable {
 
     let groups: [AVMediaCharacteristic: AVMediaSelectionGroup]
 
-    var characteristics: [AVMediaCharacteristic] {
-        Array(groups.keys)
+    var characteristics: Set<AVMediaCharacteristic> {
+        Set(groups.keys)
     }
 
     func options(withMediaCharacteristic characteristic: AVMediaCharacteristic) -> [AVMediaSelectionOption] {
