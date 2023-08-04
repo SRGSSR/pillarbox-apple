@@ -6,7 +6,8 @@
 
 import AVFoundation
 
-struct MediaSelections: Equatable {
+/// Manages the available media selections as well as the currently selected one.
+struct MediaSelector: Equatable {
     static var empty: Self {
         self.init(groups: [:])
     }

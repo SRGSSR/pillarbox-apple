@@ -78,9 +78,9 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    func currentItemMediaSelectionsPublisher() -> AnyPublisher<MediaSelections, Never> {
+    func currentItemMediaSelectorPublisher() -> AnyPublisher<MediaSelector, Never> {
         publisher(for: \.currentItem)
-            .compactMap { $0?.asset.mediaSelectionsPublisher() }
+            .compactMap { $0?.asset.mediaSelectorPublisher() }
             .switchToLatest()
             .replaceError(with: .empty)
             .prepend(.empty)
