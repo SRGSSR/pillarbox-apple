@@ -18,8 +18,8 @@ public struct MediaSelections: Equatable {
     let groups: [AVMediaCharacteristic: AVMediaSelectionGroup]
 
     /// The available media characteristics.
-    public var characteristics: Set<AVMediaCharacteristic> {
-        Set(groups.keys)
+    public var characteristics: [AVMediaCharacteristic] {
+        Array(groups.keys)
     }
 
     /// The available options matching some characteristic.
