@@ -19,5 +19,5 @@ final class MediaSelectionTests: TestCase {
         expect(player.selectedMediaOption(for: .audible)).to(beNil())
     }
 
-    // TODO: Test change in playlists as well
+    // TODO: Test selection R/W APIs, also when switching between items
 }

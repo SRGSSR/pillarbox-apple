@@ -25,6 +25,17 @@ struct MediaSelector: Equatable {
     }
 
     func selectedMediaOption(for characteristic: AVMediaCharacteristic) -> AVMediaSelectionOption? {
-        nil
+        guard let group = groups[characteristic] else { return nil }
+        return selection.selectedMediaOption(in: group)
+    }
+
+    func select(mediaOption: AVMediaSelectionOption?, for characteristic: AVMediaCharacteristic, in item: AVPlayerItem?) {
+        guard let item, let group = groups[characteristic] else { return }
+        item.select(mediaOption, in: group)
+    }
+
+    func selectMediaOptionAutomatically(for characteristic: AVMediaCharacteristic, in item: AVPlayerItem?) {
+        guard let item, let group = groups[characteristic] else { return }
+        item.selectMediaOptionAutomatically(in: group)
     }
 }
