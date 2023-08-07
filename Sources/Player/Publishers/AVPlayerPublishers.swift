@@ -83,7 +83,6 @@ extension AVPlayer {
             .compactMap { $0?.mediaSelectorPublisher() }
             .switchToLatest()
             .prepend(.empty)
-            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
