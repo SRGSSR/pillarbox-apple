@@ -82,6 +82,7 @@ private struct LegibleMediaOptionsMenu: View {
     var body: some View {
         Menu {
             Picker(selection: selectedMediaOption) {
+                Text("None").tag(nil as AVMediaSelectionOption?)
                 ForEach(mediaOptions, id: \.self) { option in
                     Text(option.displayName).tag(option as AVMediaSelectionOption?)
                 }

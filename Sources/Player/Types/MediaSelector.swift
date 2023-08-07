@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import MediaAccessibility
 
 /// Manages the available media selections as well as the currently selected one.
 struct MediaSelector: Equatable {
@@ -26,7 +27,12 @@ struct MediaSelector: Equatable {
 
     func selectedMediaOption(for characteristic: AVMediaCharacteristic) -> AVMediaSelectionOption? {
         guard let group = groups[characteristic] else { return nil }
-        return selection.selectedMediaOption(in: group)
+        switch MACaptionAppearanceGetDisplayType(.user) {
+        case .alwaysOn:
+            return selection.selectedMediaOption(in: group)
+        default:
+            return nil
+        }
     }
 
     func select(mediaOption: AVMediaSelectionOption?, for characteristic: AVMediaCharacteristic, in item: AVPlayerItem?) {
