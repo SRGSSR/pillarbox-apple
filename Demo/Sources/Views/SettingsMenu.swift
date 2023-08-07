@@ -46,63 +46,51 @@ private struct PlaybackSpeedMenu: View {
     }
 }
 
-private struct AudibleMediaOptionsMenu: View {
+private struct MediaOptionsMenu: View {
+    let characteristic: AVMediaCharacteristic
     @ObservedObject var player: Player
 
     var body: some View {
         Menu {
             Picker(selection: selectedMediaOption) {
-                ForEach(mediaOptions, id: \.self) { option in
-                    Text(option.displayName).tag(option as AVMediaSelectionOption?)
+                ForEach(mediaOptions.reversed(), id: \.self) { option in
+                    Text(option.displayName).tag(option)
                 }
             } label: {
-                Text("Languages")
+                Text(title)
             }
         } label: {
-            Label("Languages", systemImage: "waveform.circle")
+            Label(title, systemImage: icon)
         }
     }
 
-    private var mediaOptions: [AVMediaSelectionOption] {
-        player.mediaSelectionOptions(for: .audible)
+    private var title: String {
+        switch characteristic {
+        case .legible:
+            return "Subtitles"
+        default:
+            return "Languages"
+        }
     }
 
-    private var selectedMediaOption: Binding<AVMediaSelectionOption?> {
+    private var icon: String {
+        switch characteristic {
+        case .legible:
+            return "captions.bubble"
+        default:
+            return "waveform.circle"
+        }
+    }
+
+    private var mediaOptions: [MediaSelectionOption] {
+        player.mediaSelectionOptions(for: characteristic)
+    }
+
+    private var selectedMediaOption: Binding<MediaSelectionOption> {
         .init {
-            player.selectedMediaOption(for: .audible)
+            player.selectedMediaOption(for: characteristic)
         } set: { newValue in
-            player.select(mediaOption: newValue, for: .audible)
-        }
-    }
-}
-
-private struct LegibleMediaOptionsMenu: View {
-    @ObservedObject var player: Player
-
-    var body: some View {
-        Menu {
-            Picker(selection: selectedMediaOption) {
-                Text("None").tag(nil as AVMediaSelectionOption?)
-                ForEach(mediaOptions, id: \.self) { option in
-                    Text(option.displayName).tag(option as AVMediaSelectionOption?)
-                }
-            } label: {
-                Text("Subtitles")
-            }
-        } label: {
-            Label("Subtitles", systemImage: "captions.bubble")
-        }
-    }
-
-    private var mediaOptions: [AVMediaSelectionOption] {
-        player.mediaSelectionOptions(for: .legible)
-    }
-
-    private var selectedMediaOption: Binding<AVMediaSelectionOption?> {
-        .init {
-            player.selectedMediaOption(for: .legible)
-        } set: { newValue in
-            player.select(mediaOption: newValue, for: .legible)
+            player.select(mediaOption: newValue, for: characteristic)
         }
     }
 }
@@ -112,9 +100,9 @@ struct SettingsMenu: View {
 
     var body: some View {
         Menu {
+            MediaOptionsMenu(characteristic: .legible, player: player)
+            MediaOptionsMenu(characteristic: .audible, player: player)
             PlaybackSpeedMenu(player: player)
-            AudibleMediaOptionsMenu(player: player)
-            LegibleMediaOptionsMenu(player: player)
         } label: {
             Image(systemName: "ellipsis.circle")
                 .tint(.white)

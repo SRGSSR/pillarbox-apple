@@ -18,7 +18,7 @@ public extension Player {
     ///
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The list of options associated with the characteristic of an empty array if none.
-    func mediaSelectionOptions(for characteristic: AVMediaCharacteristic) -> [AVMediaSelectionOption] {
+    func mediaSelectionOptions(for characteristic: AVMediaCharacteristic) -> [MediaSelectionOption] {
         mediaSelector.options(for: characteristic)
     }
 
@@ -28,7 +28,7 @@ public extension Player {
     ///
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The selected option or `nil` if none.
-    func selectedMediaOption(for characteristic: AVMediaCharacteristic) -> AVMediaSelectionOption? {
+    func selectedMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
         mediaSelector.selectedMediaOption(for: characteristic)
     }
 
@@ -40,16 +40,7 @@ public extension Player {
     /// - Parameters:
     ///   - mediaOption: The option to select.
     ///   - characteristic: The characteristic.
-    func select(mediaOption: AVMediaSelectionOption?, for characteristic: AVMediaCharacteristic) {
+    func select(mediaOption: MediaSelectionOption, for characteristic: AVMediaCharacteristic) {
         mediaSelector.select(mediaOption: mediaOption, for: characteristic, in: queuePlayer.currentItem)
-    }
-
-    /// Selects the media option that best matches the player automatic selection criteria for a characteristic.
-    ///
-    /// Use `mediaCharacteristics` to retrieve available characteristics.
-    ///
-    /// - Parameter characteristic: The characteristic
-    func selectMediaOptionAutomatically(for characteristic: AVMediaCharacteristic) {
-        mediaSelector.selectMediaOptionAutomatically(for: characteristic, in: queuePlayer.currentItem)
     }
 }

@@ -7,6 +7,23 @@
 import AVFoundation
 import MediaAccessibility
 
+public enum MediaSelectionOption: Hashable {
+    case none
+    case automatic
+    case alwaysOn(AVMediaSelectionOption)
+
+    public var displayName: String {
+        switch self {
+        case .none:
+            return "Off"
+        case .automatic:
+            return "Auto (Recommended)"
+        case let .alwaysOn(option):
+            return option.displayName
+        }
+    }
+}
+
 /// Manages the available media selections as well as the currently selected one.
 struct MediaSelector: Equatable {
     static var empty: Self {
@@ -20,24 +37,49 @@ struct MediaSelector: Equatable {
         Set(groups.keys)
     }
 
-    func options(for characteristic: AVMediaCharacteristic) -> [AVMediaSelectionOption] {
+    func options(for characteristic: AVMediaCharacteristic) -> [MediaSelectionOption] {
         guard let group = groups[characteristic] else { return [] }
-        return group.options
+        var options = [MediaSelectionOption]()
+        if characteristic == .legible {
+            options.append(contentsOf: [.automatic, .none])
+        }
+        options.append(contentsOf: group.options.map { .alwaysOn($0) })
+        return options
     }
 
-    func selectedMediaOption(for characteristic: AVMediaCharacteristic) -> AVMediaSelectionOption? {
-        guard let group = groups[characteristic] else { return nil }
+    func selectedMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
+        guard let group = groups[characteristic] else { return .none }
         switch MACaptionAppearanceGetDisplayType(.user) {
         case .alwaysOn:
-            return selection.selectedMediaOption(in: group)
+            if let option = selection.selectedMediaOption(in: group) {
+                return .alwaysOn(option)
+            }
+            else {
+                return .none
+            }
+        case .automatic:
+            return .automatic
         default:
-            return nil
+            return .none
         }
     }
 
-    func select(mediaOption: AVMediaSelectionOption?, for characteristic: AVMediaCharacteristic, in item: AVPlayerItem?) {
+    func select(mediaOption: MediaSelectionOption, for characteristic: AVMediaCharacteristic, in item: AVPlayerItem?) {
         guard let item, let group = groups[characteristic] else { return }
-        item.select(mediaOption, in: group)
+        switch mediaOption {
+        case .none:
+            MACaptionAppearanceSetDisplayType(.user, .forcedOnly)
+            item.select(nil, in: group)
+        case .automatic:
+            MACaptionAppearanceSetDisplayType(.user, .automatic)
+            item.selectMediaOptionAutomatically(in: group)
+        case let .alwaysOn(option):
+            MACaptionAppearanceSetDisplayType(.user, .alwaysOn)
+            if let languageCode = option.locale?.language.languageCode {
+                MACaptionAppearanceAddSelectedLanguage(.user, languageCode.identifier as CFString)
+            }
+            item.select(option, in: group)
+        }
     }
 
     func selectMediaOptionAutomatically(for characteristic: AVMediaCharacteristic, in item: AVPlayerItem?) {
