@@ -268,9 +268,9 @@ private struct FullScreenButton: View {
         if let imageName {
             Button(action: toggleFullScreen) {
                 Image(systemName: imageName)
+                    .resizable()
                     .tint(.white)
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 45, height: 45)
             }
         }
     }
@@ -370,17 +370,22 @@ private struct TimeBar: View {
     }
 
     var body: some View {
-        HStack(spacing: 0) {
+        HStack(spacing: 8) {
             routePickerView()
-            TimeSlider(player: player, progressTracker: progressTracker)
-                .simultaneousGesture(
-                    DragGesture(minimumDistance: 0)
-                        .onChanged { _ in visibilityTracker.reset() }
-                )
-            LiveLabel(player: player, progressTracker: progressTracker)
-            SettingsMenu(player: player)
-            FullScreenButton(layout: $layout)
+            HStack(spacing: 20) {
+                TimeSlider(player: player, progressTracker: progressTracker)
+                    .simultaneousGesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { _ in visibilityTracker.reset() }
+                    )
+                LiveLabel(player: player, progressTracker: progressTracker)
+                SettingsMenu(player: player)
+                    .padding(.vertical, 12)
+                FullScreenButton(layout: $layout)
+                    .padding(.vertical, 12)
+            }
         }
+        .frame(height: 44)
         .preventsTouchPropagation()
         .padding(.horizontal, 6)
         .onChange(of: progressTracker.isInteracting) { isInteracting = $0 }
@@ -392,7 +397,7 @@ private struct TimeBar: View {
         if player.configuration.allowsExternalPlayback {
             RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices)
                 .tint(.white)
-                .frame(width: 45, height: 45)
+                .aspectRatio(contentMode: .fit)
         }
     }
 }
@@ -446,7 +451,6 @@ private struct TimeSlider: View {
         .tint(.white)
         .shadow(color: .init(white: 0.2, opacity: 0.8), radius: 15)
         .opacity(isVisible ? 1 : 0)
-        .padding()
         ._debugBodyCounter(color: .blue)
     }
 

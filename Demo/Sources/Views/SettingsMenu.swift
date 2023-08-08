@@ -105,8 +105,9 @@ struct SettingsMenu: View {
             PlaybackSpeedMenu(player: player)
         } label: {
             Image(systemName: "ellipsis.circle")
+                .resizable()
                 .tint(.white)
-                .frame(width: 45)
+                .aspectRatio(contentMode: .fit)
         }
     }
 }
