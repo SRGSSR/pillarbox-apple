@@ -4,17 +4,14 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
-import Core
-import Player
 import SwiftUI
 
-#if os(iOS)
+/// A standard settings menu mimicking Apple player menu.
+@available(iOS 16.0, tvOS 17.0, *)
+public struct SettingsMenu: View {
+    @ObservedObject private var player: Player
 
-struct SettingsMenu: View {
-    @ObservedObject var player: Player
-
-    var body: some View {
+    public var body: some View {
         Menu {
             MediaSelectionMenu(characteristic: .legible, player: player)
             MediaSelectionMenu(characteristic: .audible, player: player)
@@ -26,13 +23,19 @@ struct SettingsMenu: View {
                 .aspectRatio(contentMode: .fit)
         }
     }
+    
+    /// Creates a settings menu.
+    ///
+    /// - Parameter player: The player which settings must be displayed for.
+    public init(player: Player) {
+        self.player = player
+    }
 }
 
+@available(iOS 16.0, tvOS 17.0, *)
 struct SettingsMenu_Previews: PreviewProvider {
     static var previews: some View {
         SettingsMenu(player: Player())
             .background(.black)
     }
 }
-
-#endif
