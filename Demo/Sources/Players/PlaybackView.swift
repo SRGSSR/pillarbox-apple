@@ -388,7 +388,7 @@ private struct TimeBar: View {
         }
         .frame(height: 44)
         .preventsTouchPropagation()
-        .padding(.horizontal, 6)
+        .padding(.trailing, 12)
         .onChange(of: progressTracker.isInteracting) { isInteracting = $0 }
         .bind(progressTracker, to: player)
     }
