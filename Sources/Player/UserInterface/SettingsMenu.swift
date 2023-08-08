@@ -7,6 +7,8 @@
 import SwiftUI
 
 /// A standard settings menu mimicking Apple player menu.
+///
+/// Behavior: h-exp, v-exp
 @available(iOS 16.0, tvOS 17.0, *)
 public struct SettingsMenu: View {
     @ObservedObject private var player: Player
@@ -23,7 +25,7 @@ public struct SettingsMenu: View {
                 .aspectRatio(contentMode: .fit)
         }
     }
-    
+
     /// Creates a settings menu.
     ///
     /// - Parameter player: The player which settings must be displayed for.
