@@ -87,3 +87,12 @@ struct MediaSelector: Equatable {
         item.selectMediaOptionAutomatically(in: group)
     }
 }
+
+extension MediaSelector: CustomDebugStringConvertible {
+    var debugDescription: String {
+        groups.map { characteristic, _ in
+            let option = selectedMediaOption(for: characteristic)
+            return "\(characteristic.rawValue) = \(option.displayName)"
+        }.joined(separator: ", ")
+    }
+}
