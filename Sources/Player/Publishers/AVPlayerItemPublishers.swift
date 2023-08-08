@@ -96,10 +96,24 @@ extension AVPlayerItem {
     func mediaSelectorPublisher() -> AnyPublisher<MediaSelector, Never> {
         Publishers.CombineLatest(
             asset.mediaSelectionGroupsPublisher(),
-            publisher(for: \.currentMediaSelection)
+            mediaSelectionPublisher()
         )
         .map { MediaSelector(groups: $0, selection: $1) }
+        .prepend(.empty)
         .eraseToAnyPublisher()
+    }
+
+    private func mediaSelectionPublisher() -> AnyPublisher<AVMediaSelection, Never> {
+        publisher(for: \.status)
+            .weakCapture(self)
+            .compactMap { status, item -> AnyPublisher<AVMediaSelection, Never>? in
+                guard status == .readyToPlay else { return nil }
+                return item.publisher(for: \.currentMediaSelection)
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
     func nowPlayingInfoPropertiesPublisher() -> AnyPublisher<NowPlaying.Properties, Never> {
