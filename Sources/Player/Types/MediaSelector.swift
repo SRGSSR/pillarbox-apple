@@ -81,11 +81,6 @@ struct MediaSelector: Equatable {
             item.select(option, in: group)
         }
     }
-
-    func selectMediaOptionAutomatically(for characteristic: AVMediaCharacteristic, in item: AVPlayerItem?) {
-        guard let item, let group = groups[characteristic] else { return }
-        item.selectMediaOptionAutomatically(in: group)
-    }
 }
 
 extension MediaSelector: CustomDebugStringConvertible {
