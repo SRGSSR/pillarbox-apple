@@ -46,62 +46,13 @@ private struct PlaybackSpeedMenu: View {
     }
 }
 
-private struct MediaOptionsMenu: View {
-    let characteristic: AVMediaCharacteristic
-    @ObservedObject var player: Player
-
-    var body: some View {
-        Menu {
-            Picker(selection: selectedMediaOption) {
-                ForEach(mediaOptions.reversed(), id: \.self) { option in
-                    Text(option.displayName).tag(option)
-                }
-            } label: {
-                Text(title)
-            }
-        } label: {
-            Label(title, systemImage: icon)
-        }
-    }
-
-    private var title: String {
-        switch characteristic {
-        case .legible:
-            return "Subtitles"
-        default:
-            return "Languages"
-        }
-    }
-
-    private var icon: String {
-        switch characteristic {
-        case .legible:
-            return "captions.bubble"
-        default:
-            return "waveform.circle"
-        }
-    }
-
-    private var mediaOptions: [MediaSelectionOption] {
-        player.mediaSelectionOptions(for: characteristic)
-    }
-
-    private var selectedMediaOption: Binding<MediaSelectionOption> {
-        .init {
-            player.selectedMediaOption(for: characteristic)
-        } set: { newValue in
-            player.select(mediaOption: newValue, for: characteristic)
-        }
-    }
-}
-
 struct SettingsMenu: View {
     @ObservedObject var player: Player
 
     var body: some View {
         Menu {
-            MediaOptionsMenu(characteristic: .legible, player: player)
-            MediaOptionsMenu(characteristic: .audible, player: player)
+            MediaSelectionMenu(characteristic: .legible, player: player)
+            MediaSelectionMenu(characteristic: .audible, player: player)
             PlaybackSpeedMenu(player: player)
         } label: {
             Image(systemName: "ellipsis.circle")
