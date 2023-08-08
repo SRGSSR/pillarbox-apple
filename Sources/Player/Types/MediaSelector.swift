@@ -23,9 +23,9 @@ struct MediaSelector {
         self.groups = .init(uniqueKeysWithValues: groups.compactMap { characteristic, group in
             switch characteristic {
             case .legible:
-                return (characteristic, LegibleGroup(group: group))
+                return (characteristic, LegibleSelectionGroup(group: group))
             case .audible:
-                return (characteristic, AudibleGroup(group: group))
+                return (characteristic, AudibleSelectionGroup(group: group))
             default:
                 return nil
             }

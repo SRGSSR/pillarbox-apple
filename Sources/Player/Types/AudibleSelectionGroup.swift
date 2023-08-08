@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-struct AudibleGroup: MediaSelectionGroup {
+struct AudibleSelectionGroup: MediaSelectionGroup {
     let group: AVMediaSelectionGroup
 
     var options: [MediaSelectionOption] {
