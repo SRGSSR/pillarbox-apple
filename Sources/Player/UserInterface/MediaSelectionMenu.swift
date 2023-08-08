@@ -56,7 +56,7 @@ public struct MediaSelectionMenu: View {
             player.select(mediaOption: newValue, for: characteristic)
         }
     }
-    
+
     /// Creates a menu display options associated with a specific characteristic.
     ///
     /// - Parameters:
