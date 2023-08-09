@@ -19,24 +19,3 @@ func haveLanguageIdentifier<T>(_ identifier: String) -> Nimble.Predicate<T> wher
         )
     }
 }
-
-protocol LanguageIdentifiable {
-    var languageIdentifier: String? { get }
-}
-
-extension MediaSelectionOption: LanguageIdentifiable {
-    var languageIdentifier: String? {
-        switch self {
-        case let .enabled(option):
-            return option.locale?.language.languageCode?.identifier
-        default:
-            return nil
-        }
-    }
-}
-
-extension AVMediaSelectionOption: LanguageIdentifiable {
-    var languageIdentifier: String? {
-        locale?.language.languageCode?.identifier
-    }
-}
