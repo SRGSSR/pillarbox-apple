@@ -36,13 +36,16 @@ struct LegibleSelectionGroup: MediaSelectionGroup {
         switch mediaOption {
         case .automatic:
             MACaptionAppearanceSetDisplayType(.user, .automatic)
+            item.selectMediaOptionAutomatically(in: group)
         case .disabled:
             MACaptionAppearanceSetDisplayType(.user, .forcedOnly)
+            item.select(nil, in: group)
         case let .enabled(option):
             MACaptionAppearanceSetDisplayType(.user, .alwaysOn)
             if let languageCode = option.locale?.language.languageCode {
                 MACaptionAppearanceAddSelectedLanguage(.user, languageCode.identifier as CFString)
             }
+            item.select(option, in: group)
         }
     }
 }
