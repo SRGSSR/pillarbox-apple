@@ -15,7 +15,8 @@ final class AVAssetMediaSelectorPublisherTests: TestCase {
     func testFetch() throws {
         let asset = AVURLAsset(url: Stream.onDemandWithTracks.url)
         let groups = try waitForSingleOutput(from: asset.mediaSelectionGroupsPublisher())
-        expect(groups).notTo(beEmpty())
+        expect(groups[.audible]).notTo(beNil())
+        expect(groups[.legible]).notTo(beNil())
     }
 
     func testFetchWithoutSelectionAvailable() throws {
