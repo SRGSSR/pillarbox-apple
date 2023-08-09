@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import Core
 
 extension AVAsset {
     /// A publisher emitting values for a given asset property.
@@ -194,9 +195,10 @@ extension AVAsset {
     func mediaSelectionGroupsPublisher() -> AnyPublisher<[AVMediaCharacteristic: AVMediaSelectionGroup], Never> {
         propertyPublisher(.availableMediaCharacteristicsWithMediaSelectionOptions)
             .replaceError(with: [])
-            .compactMap { [weak self] characteristics in
+            .weakCapture(self)
+            .map { characteristics, asset in
                 Publishers.MergeMany(characteristics.compactMap { characteristic in
-                    self?.mediaSelectionGroupPublisher(for: characteristic)
+                    asset.mediaSelectionGroupPublisher(for: characteristic)
                         .compactMap { $0 }
                         .map { [characteristic: $0] }
                         .replaceError(with: [:])
