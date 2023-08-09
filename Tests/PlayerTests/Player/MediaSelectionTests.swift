@@ -76,7 +76,14 @@ final class MediaSelectionTests: TestCase {
         expect(player.mediaSelectionOptions(for: .visual)).to(beEmpty())
     }
 
-    // TODO: testInitiallyEnabledAudibleOption when we implement initial setup
+    @MainActor
+    func testInitiallyEnabledAudibleOption() async throws {
+        let player = Player(item: .simple(url: Stream.onDemandWithTracks.url))
+        await expect(player.selectedMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("en"))
+        await expect {
+            try await Self.selectedMediaOption(forMediaCharacteristic: .audible, player: player)
+        }.to(haveLanguageIdentifier("en"))
+    }
 
     @MainActor
     func testInitiallyEnabledLegibleOption() async throws {
