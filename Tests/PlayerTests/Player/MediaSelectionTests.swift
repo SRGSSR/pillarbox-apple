@@ -16,7 +16,7 @@ final class MediaSelectionTests: TestCase {
         expect(player.mediaSelectionCharacteristics).toEventually(equal([.audible, .legible]))
         expect(player.mediaSelectionOptions(for: .audible)).notTo(beEmpty())
         expect(player.mediaSelectionOptions(for: .visual)).to(beEmpty())
-        expect(player.selectedMediaOption(for: .audible)).to(beNil())
+        expect(player.selectedMediaOption(for: .audible)).to(haveLanguageIdentifier("en"))
     }
 
     // TODO: Test selection R/W APIs, also when switching between items
