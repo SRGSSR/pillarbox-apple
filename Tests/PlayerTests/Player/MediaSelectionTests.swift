@@ -128,12 +128,28 @@ final class MediaSelectionTests: TestCase {
         }.to(haveLanguageIdentifier("fr"))
     }
 
-    func testSelectAutomaticAudibleOption() {
-        // Should do nothing
+    @MainActor
+    func testSelectAutomaticAudibleOptionDoesNothing() async throws {
+        let player = Player(item: .simple(url: Stream.onDemandWithTracks.url))
+        await expect(player.mediaSelectionOptions(for: .audible)).toEventuallyNot(beEmpty())
+
+        player.select(mediaOption: .automatic, for: .audible)
+        await expect(player.selectedMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("en"))
+        await expect {
+            try await Self.selectedMediaOption(forMediaCharacteristic: .audible, player: player)
+        }.to(haveLanguageIdentifier("en"))
     }
 
-    func testSelectDisabledAudibleOption() {
-        // Should do nothing
+    @MainActor
+    func testSelectDisabledAudibleOptionDoesNothing() async throws {
+        let player = Player(item: .simple(url: Stream.onDemandWithTracks.url))
+        await expect(player.mediaSelectionOptions(for: .audible)).toEventuallyNot(beEmpty())
+
+        player.select(mediaOption: .disabled, for: .audible)
+        await expect(player.selectedMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("en"))
+        await expect {
+            try await Self.selectedMediaOption(forMediaCharacteristic: .audible, player: player)
+        }.to(haveLanguageIdentifier("en"))
     }
 
     @MainActor

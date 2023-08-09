@@ -28,7 +28,7 @@ struct AudibleSelectionGroup: MediaSelectionGroup {
         case let .enabled(option):
             item.select(option, in: group)
         default:
-            item.select(nil, in: group)
+            break
         }
     }
 }
