@@ -13,6 +13,8 @@ public struct PlaybackSpeedMenu: View {
     @ObservedObject private var player: Player
 
     public var body: some View {
+        // TODO: Remove when Xcode 15 has been released
+#if os(iOS) || compiler(>=5.9)
         Menu {
             Picker(selection: selectedPlaybackSpeed) {
                 ForEach(playbackSpeeds, id: \.self) { speed in
@@ -24,6 +26,7 @@ public struct PlaybackSpeedMenu: View {
         } label: {
             Label("Playback Speed", systemImage: "speedometer")
         }
+#endif
     }
 
     private var playbackSpeeds: [Float] {

@@ -14,6 +14,8 @@ public struct SettingsMenu: View {
     @ObservedObject private var player: Player
 
     public var body: some View {
+        // TODO: Remove when Xcode 15 has been released
+#if os(iOS) || compiler(>=5.9)
         Menu {
             MediaSelectionMenu(characteristic: .legible, player: player)
             MediaSelectionMenu(characteristic: .audible, player: player)
@@ -24,6 +26,7 @@ public struct SettingsMenu: View {
                 .tint(.white)
                 .aspectRatio(contentMode: .fit)
         }
+#endif
     }
 
     /// Creates a settings menu.

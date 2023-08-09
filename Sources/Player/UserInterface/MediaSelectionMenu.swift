@@ -14,6 +14,8 @@ public struct MediaSelectionMenu: View {
     @ObservedObject private var player: Player
 
     public var body: some View {
+        // TODO: Remove when Xcode 15 has been released
+#if os(iOS) || compiler(>=5.9)
         Menu {
             Picker(selection: selectedMediaOption) {
                 ForEach(mediaOptions.reversed(), id: \.self) { option in
@@ -25,6 +27,7 @@ public struct MediaSelectionMenu: View {
         } label: {
             Label(title, systemImage: icon)
         }
+#endif
     }
 
     private var title: String {
