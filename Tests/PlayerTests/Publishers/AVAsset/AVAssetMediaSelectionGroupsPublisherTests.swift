@@ -11,6 +11,7 @@ import Nimble
 import Streams
 import XCTest
 
+// swiftlint:disable:next type_name
 final class AVAssetMediaSelectionGroupsPublisherTests: TestCase {
     func testFetch() throws {
         let asset = AVURLAsset(url: Stream.onDemandWithTracks.url)
