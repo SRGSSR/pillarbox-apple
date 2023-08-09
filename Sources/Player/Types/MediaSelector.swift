@@ -9,17 +9,17 @@ import MediaAccessibility
 /// Manages the available media selections as well as the currently selected one.
 struct MediaSelector {
     static var empty: Self {
-        self.init(groups: [:], selection: .init())
+        self.init(groups: [:], selection: nil)
     }
 
     let groups: [AVMediaCharacteristic: any MediaSelectionGroup]
-    let selection: AVMediaSelection
+    let selection: AVMediaSelection?
 
     var characteristics: Set<AVMediaCharacteristic> {
         Set(groups.keys)
     }
 
-    init(groups: [AVMediaCharacteristic: AVMediaSelectionGroup], selection: AVMediaSelection) {
+    init(groups: [AVMediaCharacteristic: AVMediaSelectionGroup], selection: AVMediaSelection?) {
         self.groups = .init(uniqueKeysWithValues: groups.compactMap { characteristic, group in
             switch characteristic {
             case .legible:
@@ -39,7 +39,7 @@ struct MediaSelector {
     }
 
     func selectedMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
-        guard let group = groups[characteristic] else { return .disabled }
+        guard let selection, let group = groups[characteristic] else { return .disabled }
         return group.selectedMediaOption(in: selection)
     }
 
