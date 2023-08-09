@@ -11,7 +11,7 @@ import Nimble
 import Streams
 import XCTest
 
-final class AVAssetMediaSelectorPublisherTests: TestCase {
+final class AVAssetMediaSelectionGroupsPublisherTests: TestCase {
     func testFetch() throws {
         let asset = AVURLAsset(url: Stream.onDemandWithTracks.url)
         let groups = try waitForSingleOutput(from: asset.mediaSelectionGroupsPublisher())
