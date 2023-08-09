@@ -41,19 +41,4 @@ extension View {
         self
 #endif
     }
-
-    @ViewBuilder
-    func replaceEffect() -> some View {
-        // TODO: Remove when Xcode 15 has been released
-#if compiler(>=5.9)
-        if #available(iOS 17.0, tvOS 17.0, *) {
-            contentTransition(.symbolEffect(.replace))
-        }
-        else {
-            self
-        }
-#else
-        self
-#endif
-    }
 }

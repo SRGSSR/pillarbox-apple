@@ -200,7 +200,6 @@ private struct PlaybackButton: View {
                 .resizable()
                 .tint(.white)
         }
-        .replaceEffect()
         .aspectRatio(contentMode: .fit)
         .frame(minWidth: 120, maxHeight: 90)
         .opacity(player.isBusy ? 0 : 1)
