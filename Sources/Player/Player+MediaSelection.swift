@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import SwiftUI
 
 public extension Player {
     /// The set of media characteristics for which a media selection is available.
@@ -42,5 +43,17 @@ public extension Player {
     ///   - characteristic: The characteristic.
     func select(mediaOption: MediaSelectionOption, for characteristic: AVMediaCharacteristic) {
         mediaSelector.select(mediaOption: mediaOption, for: characteristic, in: queuePlayer.currentItem)
+    }
+
+    /// A binding to read and write the current media selection for a characteristic.
+    ///
+    /// - Parameter characteristic: The characteristic.
+    /// - Returns: The binding.
+    func mediaOption(for characteristic: AVMediaCharacteristic) -> Binding<MediaSelectionOption> {
+        .init {
+            self.selectedMediaOption(for: characteristic)
+        } set: { newValue in
+            self.select(mediaOption: newValue, for: characteristic)
+        }
     }
 }

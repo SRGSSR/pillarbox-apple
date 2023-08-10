@@ -17,7 +17,7 @@ public struct MediaSelectionMenu: View {
         // TODO: Remove when Xcode 15 has been released
 #if os(iOS) || compiler(>=5.9)
         Menu {
-            Picker(selection: selectedMediaOption) {
+            Picker(selection: player.mediaOption(for: characteristic)) {
                 ForEach(mediaOptions.reversed(), id: \.self) { option in
                     Text(option.displayName).tag(option)
                 }
@@ -50,14 +50,6 @@ public struct MediaSelectionMenu: View {
 
     private var mediaOptions: [MediaSelectionOption] {
         player.mediaSelectionOptions(for: characteristic)
-    }
-
-    private var selectedMediaOption: Binding<MediaSelectionOption> {
-        .init {
-            player.selectedMediaOption(for: characteristic)
-        } set: { newValue in
-            player.select(mediaOption: newValue, for: characteristic)
-        }
     }
 
     /// Creates a menu display options associated with a specific characteristic.
