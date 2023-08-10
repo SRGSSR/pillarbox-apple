@@ -16,7 +16,7 @@ public struct PlaybackSpeedMenu: View {
         // TODO: Remove when Xcode 15 has been released
 #if os(iOS) || compiler(>=5.9)
         Menu {
-            Picker(selection: selectedPlaybackSpeed) {
+            Picker(selection: player.playbackSpeed) {
                 ForEach(playbackSpeeds, id: \.self) { speed in
                     Text("\(speed, specifier: "%g×")").tag(speed)
                 }
@@ -35,14 +35,6 @@ public struct PlaybackSpeedMenu: View {
         }
         .sorted()
         .reversed()
-    }
-
-    private var selectedPlaybackSpeed: Binding<Float> {
-        .init {
-            player.effectivePlaybackSpeed
-        } set: { newValue in
-            player.setDesiredPlaybackSpeed(newValue)
-        }
     }
 
     /// Creates a menu display playback speeds available for playback.

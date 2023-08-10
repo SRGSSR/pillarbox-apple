@@ -6,6 +6,7 @@
 
 import Combine
 import CoreMedia
+import SwiftUI
 
 public extension Player {
     /// The currently applicable playback speed.
@@ -26,6 +27,15 @@ public extension Player {
     /// `effectivePlaybackSpeed` to obtain the actually applied speed.
     func setDesiredPlaybackSpeed(_ playbackSpeed: Float) {
         desiredPlaybackSpeedPublisher.send(playbackSpeed)
+    }
+
+    /// A binding to read and write the current playback speed.
+    var playbackSpeed: Binding<Float> {
+        .init {
+            self.effectivePlaybackSpeed
+        } set: { newValue in
+            self.setDesiredPlaybackSpeed(newValue)
+        }
     }
 }
 
