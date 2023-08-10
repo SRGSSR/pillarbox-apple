@@ -47,12 +47,16 @@ final class MediaSelectionTests: TestCase {
         Self.setupMediaAccessibilityType(.disabled)
     }
 
-    func testCharacteristicsAndOptionsWhenEmpty() {
+    @MainActor
+    func testCharacteristicsAndOptionsWhenEmpty() async throws {
         let player = Player()
-        expect(player.mediaSelectionCharacteristics).toAlways(beEmpty(), until: .seconds(2))
+        await expect(player.mediaSelectionCharacteristics).toAlways(beEmpty(), until: .seconds(2))
         expect(player.mediaSelectionOptions(for: .audible)).to(beEmpty())
         expect(player.mediaSelectionOptions(for: .legible)).to(beEmpty())
         expect(player.mediaSelectionOptions(for: .visual)).to(beEmpty())
+        await expect {
+            try await Self.selectedMediaOption(forMediaCharacteristic: .audible, player: player)
+        }.to(beNil())
     }
 
     @MainActor
@@ -68,12 +72,39 @@ final class MediaSelectionTests: TestCase {
         }.to(haveLanguageIdentifier("en"))
     }
 
-    func testCharacteristicsAndOptionsWhenFailed() {
+    @MainActor
+    func testCharacteristicsAndOptionsWhenFailed() async throws {
         let player = Player(item: .simple(url: Stream.unavailable.url))
-        expect(player.mediaSelectionCharacteristics).toAlways(beEmpty(), until: .seconds(2))
+        await expect(player.mediaSelectionCharacteristics).toAlways(beEmpty(), until: .seconds(2))
         expect(player.mediaSelectionOptions(for: .audible)).to(beEmpty())
         expect(player.mediaSelectionOptions(for: .legible)).to(beEmpty())
         expect(player.mediaSelectionOptions(for: .visual)).to(beEmpty())
+        await expect {
+            try await Self.selectedMediaOption(forMediaCharacteristic: .audible, player: player)
+        }.to(beNil())
+    }
+
+    @MainActor
+    func testWithoutCharacteristicsAndOptions() async throws {
+        let player = Player(item: .simple(url: Stream.onDemandWithoutTracks.url))
+        await expect(player.mediaSelectionCharacteristics).toAlways(beEmpty(), until: .seconds(2))
+        expect(player.mediaSelectionOptions(for: .audible)).to(beEmpty())
+        expect(player.mediaSelectionOptions(for: .legible)).to(beEmpty())
+        expect(player.mediaSelectionOptions(for: .visual)).to(beEmpty())
+        await expect {
+            try await Self.selectedMediaOption(forMediaCharacteristic: .audible, player: player)
+        }.to(beNil())
+    }
+
+    @MainActor
+    func testCharacteristicsAndOptionsWhenAdvancingToNextItem() async throws {
+        let player = Player(items: [
+            .simple(url: Stream.onDemandWithTracks.url),
+            .simple(url: Stream.onDemandWithoutTracks.url)
+        ])
+        await expect(player.mediaSelectionCharacteristics).toEventuallyNot(beEmpty())
+        player.advanceToNextItem()
+        await expect(player.mediaSelectionCharacteristics).toEventually(beEmpty())
     }
 
     @MainActor
@@ -130,6 +161,29 @@ final class MediaSelectionTests: TestCase {
         await expect {
             try await Self.selectedMediaOption(forMediaCharacteristic: .legible, player: player)
         }.to(beNil())
+    }
+
+    @MainActor
+    func testSelectedAudibleOptionWhenAdvancingToNextItem() async throws {
+        let player = Player(items: [
+            .simple(url: Stream.onDemandWithTracks.url),
+            .simple(url: Stream.onDemandWithoutTracks.url)
+        ])
+        await expect(player.selectedMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("en"))
+        player.advanceToNextItem()
+        await expect(player.selectedMediaOption(for: .audible)).toEventually(equal(.disabled))
+    }
+
+    @MainActor
+    func testSelectedLegibleOptionWhenAdvancingToNextItem() async throws {
+        Self.setupMediaAccessibilityType(.enabled(languageCode: "fr"))
+        let player = Player(items: [
+            .simple(url: Stream.onDemandWithTracks.url),
+            .simple(url: Stream.onDemandWithoutTracks.url)
+        ])
+        await expect(player.selectedMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("fr"))
+        player.advanceToNextItem()
+        await expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.disabled))
     }
 
     @MainActor
@@ -208,7 +262,4 @@ final class MediaSelectionTests: TestCase {
             try await Self.selectedMediaOption(forMediaCharacteristic: .legible, player: player)
         }.to(beNil())
     }
-
-    // TODO:
-    // - Test when switching between items in playlists
 }
