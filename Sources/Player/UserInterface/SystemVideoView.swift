@@ -21,6 +21,12 @@ public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
         VideoPlayer(player: player.queuePlayer) {
             videoOverlay
         }
+#if os(tvOS)
+        .onDisappear {
+            // Avoid sound continuing in background on tvOS, see https://github.com/SRGSSR/pillarbox-apple/issues/520.
+            player.pause()
+        }
+#endif
     }
 
     /// Creates the view.
