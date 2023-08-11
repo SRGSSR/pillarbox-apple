@@ -31,10 +31,10 @@ struct ContentListsView: View {
         .navigationTitle("Lists (\(selectedServerSetting.title))")
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
-#endif
         .toolbarTitleMenu {
             serverSettingsMenu()
         }
+#endif
     }
 
     @ViewBuilder
@@ -103,34 +103,20 @@ struct ContentListsView: View {
         ])
     }
 
+#if os(iOS)
     @ViewBuilder
     private func serverSettingsMenu() -> some View {
-        if #available(iOS 17.0, tvOS 17.0, *) {
-            Menu {
-                Picker("Server", selection: $selectedServerSetting) {
-                    ForEach(ServerSetting.allCases, id: \.self) { service in
-                        Text(service.title).tag(service)
-                    }
-                }
-            } label: {
-                Label("Server", systemImage: "server.rack")
-            }
-        }
-        else {
-            ForEach(ServerSetting.allCases, id: \.self) { service in
-                Button {
-                    selectedServerSetting = service
-                } label: {
-                    HStack {
-                        Text(service.title)
-                        if selectedServerSetting == service {
-                            Image(systemName: "checkmark")
-                        }
-                    }
+        Menu {
+            Picker("Server", selection: $selectedServerSetting) {
+                ForEach(ServerSetting.allCases, id: \.self) { service in
+                    Text(service.title).tag(service)
                 }
             }
+        } label: {
+            Label("Server", systemImage: "server.rack")
         }
     }
+#endif
 }
 
 struct ContentListsView_Previews: PreviewProvider {

@@ -78,6 +78,14 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
+    func currentItemMediaSelectorPublisher() -> AnyPublisher<MediaSelector, Never> {
+        publisher(for: \.currentItem)
+            .compactMap { $0?.mediaSelectorPublisher() }
+            .switchToLatest()
+            .prepend(.empty)
+            .eraseToAnyPublisher()
+    }
+
     func bufferingPublisher() -> AnyPublisher<Bool, Never> {
         publisher(for: \.currentItem)
             .compactMap { $0?.bufferingPublisher() }

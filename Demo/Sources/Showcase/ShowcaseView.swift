@@ -119,7 +119,11 @@ struct ShowcaseView: View {
     private func systemPlayerSection() -> some View {
         Section("System player (using Pillarbox)") {
             cell(
-                title: "Apple Advanced - fMP4",
+                title: "Apple Basic 16:9",
+                destination: .systemPlayer(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
+            )
+            cell(
+                title: "Apple Advanced 16:9",
                 destination: .systemPlayer(media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS))
             )
             cell(
@@ -145,7 +149,11 @@ struct ShowcaseView: View {
     private func vanillaPlayerSection() -> some View {
         Section("System player (using AVPlayer)") {
             cell(
-                title: "Apple Advanced - fMP4",
+                title: "Apple Basic 16:9",
+                destination: .vanillaPlayer(item: Template.playerItem(from: URLTemplate.appleBasic_16_9_TS_HLS)!)
+            )
+            cell(
+                title: "Apple Advanced 16:9",
                 destination: .vanillaPlayer(item: Template.playerItem(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS)!)
             )
             cell(

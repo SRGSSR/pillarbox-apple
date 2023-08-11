@@ -8,33 +8,26 @@
 
 import AVFoundation
 import Circumspect
-import Nimble
 import Streams
 import XCTest
 
-private class MockAVPlayerItem: AVPlayerItem {
-    override var duration: CMTime {
-        .init(value: 0, timescale: 0)
-    }
-}
-
 // swiftlint:disable:next type_name
-final class AVPlayerItemLoadedTimeRangePublisherTests: TestCase {
+final class AVPlayerCurrentItemTimeRangePublisherTests: TestCase {
     func testEmpty() {
         let player = AVPlayer()
         expectAtLeastEqualPublished(
-            values: [0],
-            from: player.currentItemBufferPublisher()
+            values: [.invalid],
+            from: player.currentItemTimeRangePublisher()
         )
     }
 
     func testOnDemand() {
-        let item = AVPlayerItem(url: Stream.shortOnDemand.url)
+        let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastPublished(
-            values: [0, 1],
-            from: player.currentItemBufferPublisher(),
-            to: beClose(within: 0.2)
+            values: [.invalid, CMTimeRange(start: .zero, duration: Stream.onDemand.duration)],
+            from: player.currentItemTimeRangePublisher(),
+            to: beClose(within: 1)
         )
     }
 
@@ -42,8 +35,8 @@ final class AVPlayerItemLoadedTimeRangePublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.live.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
-            values: [0],
-            from: player.currentItemBufferPublisher()
+            values: [.invalid, .zero],
+            from: player.currentItemTimeRangePublisher()
         )
     }
 
@@ -51,10 +44,13 @@ final class AVPlayerItemLoadedTimeRangePublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVQueuePlayer(playerItem: item)
         player.actionAtItemEnd = .advance
-        expectAtLeastPublished(
-            values: [0, 1, 0],
-            from: player.currentItemBufferPublisher(),
-            to: beClose(within: 0.2)
+        expectAtLeastEqualPublished(
+            values: [
+                .invalid,
+                CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration),
+                .invalid
+            ],
+            from: player.currentItemTimeRangePublisher()
         ) {
             player.play()
         }
@@ -64,33 +60,28 @@ final class AVPlayerItemLoadedTimeRangePublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVQueuePlayer(playerItem: item)
         player.actionAtItemEnd = .none
-        expectAtLeastPublished(
-            values: [0, 1],
-            from: player.currentItemBufferPublisher(),
-            to: beClose(within: 0.2)
+        expectAtLeastEqualPublished(
+            values: [
+                .invalid,
+                CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration)
+            ],
+            from: player.currentItemTimeRangePublisher()
         ) {
             player.play()
         }
     }
 
     func testWithoutAutomaticallyLoadedAssetKeys() {
-        let asset = AVURLAsset(url: Stream.shortOnDemand.url)
+        let asset = AVURLAsset(url: Stream.onDemand.url)
         let item = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: [])
         let player = AVPlayer(playerItem: item)
         expectAtLeastPublished(
-            values: [0, 1],
-            from: player.currentItemBufferPublisher(),
-            to: beClose(within: 0.2)
-        )
-    }
-
-    func testNonNumericDuration() {
-        let item = MockAVPlayerItem(url: Stream.shortOnDemand.url)
-        let player = AVPlayer(playerItem: item)
-        expectEqualPublished(
-            values: [0],
-            from: player.currentItemBufferPublisher(),
-            during: .seconds(2)
+            values: [
+                .invalid,
+                CMTimeRange(start: .zero, duration: Stream.onDemand.duration)
+            ],
+            from: player.currentItemTimeRangePublisher(),
+            to: beClose(within: 1)
         )
     }
 }

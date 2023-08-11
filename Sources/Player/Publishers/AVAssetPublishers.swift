@@ -6,9 +6,10 @@
 
 import AVFoundation
 import Combine
+import Core
 
-public extension AVAsset {
-    /// Returns a publisher emitting values for a given asset property.
+extension AVAsset {
+    /// A publisher emitting values for a given asset property.
     func propertyPublisher<T>(_ property: AVAsyncProperty<AVAsset, T>) -> AnyPublisher<T, Error> {
         Future { promise in
             Task {
@@ -24,7 +25,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
-    /// Returns a publisher emitting values for given asset properties.
+    /// A publisher emitting values for given asset properties.
     func propertyPublisher<A, B>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>
@@ -43,7 +44,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
-    /// Returns a publisher emitting values for given asset properties.
+    /// A publisher emitting values for given asset properties.
     func propertyPublisher<A, B, C>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>,
@@ -64,7 +65,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
-    /// Returns a publisher emitting values for given asset properties.
+    /// A publisher emitting values for given asset properties.
     func propertyPublisher<A, B, C, D>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>,
@@ -86,7 +87,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
-    /// Returns a publisher emitting values for given asset properties.
+    /// A publisher emitting values for given asset properties.
     func propertyPublisher<A, B, C, D, E>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>,
@@ -109,7 +110,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
-    /// Returns a publisher emitting values for given asset properties.
+    /// A publisher emitting values for given asset properties.
     func propertyPublisher<A, B, C, D, E, F>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>,
@@ -133,7 +134,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
-    /// Returns a publisher emitting values for given asset properties.
+    /// A publisher emitting values for given asset properties.
     func propertyPublisher<A, B, C, D, E, F, G>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>,
@@ -160,7 +161,7 @@ public extension AVAsset {
         .eraseToAnyPublisher()
     }
 
-    /// Returns a publisher emitting values for given asset properties.
+    /// A publisher emitting values for given asset properties.
     func propertyPublisher<A, B, C, D, E, F, G, H>(
         _ propertyA: AVAsyncProperty<AVAsset, A>,
         _ propertyB: AVAsyncProperty<AVAsset, B>,
@@ -178,6 +179,43 @@ public extension AVAsset {
                     let result = try await self.load(
                         propertyA, propertyB, propertyC, propertyD, propertyE, propertyF, propertyG, propertyH
                     )
+                    promise(.success(result))
+                }
+                catch {
+                    promise(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+}
+
+extension AVAsset {
+    /// A publisher emitting media selection groups as a single value and completing.
+    func mediaSelectionGroupsPublisher() -> AnyPublisher<[AVMediaCharacteristic: AVMediaSelectionGroup], Never> {
+        propertyPublisher(.availableMediaCharacteristicsWithMediaSelectionOptions)
+            .replaceError(with: [])
+            .weakCapture(self)
+            .map { characteristics, asset in
+                Publishers.MergeMany(characteristics.compactMap { characteristic in
+                    asset.mediaSelectionGroupPublisher(for: characteristic)
+                        .compactMap { $0 }
+                        .map { [characteristic: $0] }
+                        .replaceError(with: [:])
+                })
+                .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            // swiftlint:disable:next reduce_into
+            .reduce([:]) { $0.merging($1) { _, new in new } }
+            .eraseToAnyPublisher()
+    }
+
+    private func mediaSelectionGroupPublisher(for characteristic: AVMediaCharacteristic) -> AnyPublisher<AVMediaSelectionGroup?, Error> {
+        Future { promise in
+            Task {
+                do {
+                    let result = try await self.loadMediaSelectionGroup(for: characteristic)
                     promise(.success(result))
                 }
                 catch {

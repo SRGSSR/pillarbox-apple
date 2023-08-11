@@ -54,6 +54,7 @@ public final class Player: ObservableObject, Equatable {
     }
 
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
+    @Published var mediaSelector: MediaSelector = .empty
     @Published var currentItem: CurrentItem = .good(nil)
     @Published var storedItems: Deque<PlayerItem>
 
@@ -208,6 +209,7 @@ public final class Player: ObservableObject, Equatable {
         configurePresentationSizePublisher()
         configureMutedPublisher()
         configurePlaybackSpeedPublisher()
+        configureMediaSelectorPublisher()
     }
 
     deinit {
@@ -324,6 +326,12 @@ private extension Player {
             .removeDuplicates()
             .receiveOnMainThread()
             .assign(to: &$_playbackSpeed)
+    }
+
+    func configureMediaSelectorPublisher() {
+        queuePlayer.currentItemMediaSelectorPublisher()
+            .receiveOnMainThread()
+            .assign(to: &$mediaSelector)
     }
 }
 

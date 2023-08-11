@@ -12,7 +12,7 @@ import Streams
 import XCTest
 
 final class AVPlayerChunkDurationPublisherTests: TestCase {
-    func testChunkDuration() {
+    func testPlayback() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
@@ -21,7 +21,7 @@ final class AVPlayerChunkDurationPublisherTests: TestCase {
         )
     }
 
-    func testChunkDurationDuringEntirePlayback() {
+    func testEntirePlayback() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
@@ -32,7 +32,7 @@ final class AVPlayerChunkDurationPublisherTests: TestCase {
         }
     }
 
-    func testChunkDurationDuringEntirePlaybackInQueuePlayerAdvancingAtItemEnd() {
+    func testEntirePlaybackInQueuePlayerAdvancingAtItemEnd() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVQueuePlayer(playerItem: item)
         player.actionAtItemEnd = .advance
@@ -44,7 +44,7 @@ final class AVPlayerChunkDurationPublisherTests: TestCase {
         }
     }
 
-    func testChunkDurationDuringEntirePlaybackInQueuePlayerPausingAtItemEnd() {
+    func testEntirePlaybackInQueuePlayerPausingAtItemEnd() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVQueuePlayer(playerItem: item)
         player.actionAtItemEnd = .pause
@@ -56,7 +56,7 @@ final class AVPlayerChunkDurationPublisherTests: TestCase {
         }
     }
 
-    func testCheckDurationsDuringItemChange() {
+    func testDuringItemChange() {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2])

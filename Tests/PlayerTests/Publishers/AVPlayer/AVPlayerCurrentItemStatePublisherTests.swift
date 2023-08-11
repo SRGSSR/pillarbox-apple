@@ -11,7 +11,7 @@ import Circumspect
 import Streams
 import XCTest
 
-final class AVPlayerItemStatePublisherTests: TestCase {
+final class AVPlayerCurrentItemStatePublisherTests: TestCase {
     // swiftlint:disable:next weak_delegate
     private let resourceLoaderDelegate = FailingResourceLoaderDelegate()
 

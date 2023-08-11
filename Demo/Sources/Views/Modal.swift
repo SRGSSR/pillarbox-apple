@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-@available(tvOS, unavailable)
+#if os(iOS)
 private struct PresentedView<Content>: View where Content: View {
     @ViewBuilder var content: () -> Content
     @Environment(\.dismiss) private var dismiss
@@ -22,6 +22,7 @@ private struct PresentedView<Content>: View where Content: View {
             )
     }
 }
+#endif
 
 extension View {
     @ViewBuilder
