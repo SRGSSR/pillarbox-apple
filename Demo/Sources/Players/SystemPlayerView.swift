@@ -12,7 +12,6 @@ import SwiftUI
 // Behavior: h-exp, v-exp
 struct SystemPlayerView: View {
     let media: Media
-
     @StateObject private var player = Player()
 
     var body: some View {
