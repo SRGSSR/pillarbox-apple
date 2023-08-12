@@ -23,8 +23,15 @@ final class VisibilityTrackerTests: TestCase {
         expect(visibilityTracker.isUserInterfaceHidden).to(beTrue())
     }
 
+    func testNoToggleWithoutPlayer() {
+        let visibilityTracker = VisibilityTracker()
+        visibilityTracker.toggle()
+        expect(visibilityTracker.isUserInterfaceHidden).to(beFalse())
+    }
+
     func testToggle() {
         let visibilityTracker = VisibilityTracker()
+        visibilityTracker.player = Player()
         visibilityTracker.toggle()
         expect(visibilityTracker.isUserInterfaceHidden).to(beTrue())
     }
@@ -132,6 +139,29 @@ final class VisibilityTrackerTests: TestCase {
 
         visibilityTracker.player = player2
         expect(visibilityTracker.isUserInterfaceHidden).toAlways(beFalse(), until: .milliseconds(400))
+    }
+
+    func testDeallocation() {
+        var visibilityTracker: VisibilityTracker? = VisibilityTracker()
+        weak var weakVisibilityTracker = visibilityTracker
+        autoreleasepool {
+            visibilityTracker = nil
+        }
+        expect(weakVisibilityTracker).to(beNil())
+    }
+
+    func testDeallocationWhilePlaying() {
+        var visibilityTracker: VisibilityTracker? = VisibilityTracker()
+        let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
+        player.play()
+        visibilityTracker?.player = player
+        expect(player.playbackState).toEventually(equal(.playing))
+
+        weak var weakVisibilityTracker = visibilityTracker
+        autoreleasepool {
+            visibilityTracker = nil
+        }
+        expect(weakVisibilityTracker).to(beNil())
     }
 }
 #endif
