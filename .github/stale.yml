@@ -1,6 +1,6 @@
 ---
 # Documentation: https://github.com/probot/stale
-daysUntilStale: 180
+daysUntilStale: 90
 daysUntilClose: 14
 exemptLabels:
   - bug
