@@ -41,7 +41,23 @@ public final class VisibilityTracker: ObservableObject {
     public init(delay: TimeInterval = 3, isUserInterfaceHidden: Bool = false) {
         assert(delay > 0)
         self.isUserInterfaceHidden = isUserInterfaceHidden
+        autohidePublisher(delay: delay)
+            .receiveOnMainThread()
+            .assign(to: &$isUserInterfaceHidden)
+    }
 
+    /// Toggles user interface visibility.
+    public func toggle() {
+        isUserInterfaceHidden.toggle()
+    }
+
+    /// Resets user interface auto hide delay.
+    public func reset() {
+        guard !isUserInterfaceHidden else { return }
+        trigger.activate(for: TriggerId.reset)
+    }
+
+    private func autohidePublisher(delay: TimeInterval) -> AnyPublisher<Bool, Never> {
         $player
             .removeDuplicates()
             .map { player -> AnyPublisher<PlaybackState, Never> in
@@ -64,19 +80,7 @@ public final class VisibilityTracker: ObservableObject {
                 .eraseToAnyPublisher()
             }
             .switchToLatest()
-            .receiveOnMainThread()
-            .assign(to: &$isUserInterfaceHidden)
-    }
-
-    /// Toggles user interface visibility.
-    public func toggle() {
-        isUserInterfaceHidden.toggle()
-    }
-
-    /// Resets user interface auto hide delay.
-    public func reset() {
-        guard !isUserInterfaceHidden else { return }
-        trigger.activate(for: TriggerId.reset)
+            .eraseToAnyPublisher()
     }
 }
 
