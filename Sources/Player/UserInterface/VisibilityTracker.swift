@@ -15,6 +15,7 @@ import SwiftUI
 @available(tvOS, unavailable)
 public final class VisibilityTracker: ObservableObject {
     private enum TriggerId {
+        case toggle
         case reset
     }
 
@@ -41,20 +42,31 @@ public final class VisibilityTracker: ObservableObject {
     public init(delay: TimeInterval = 3, isUserInterfaceHidden: Bool = false) {
         assert(delay > 0)
         self.isUserInterfaceHidden = isUserInterfaceHidden
-        autohidePublisher(delay: delay)
-            .receiveOnMainThread()
-            .assign(to: &$isUserInterfaceHidden)
+
+        Publishers.Merge(
+            togglePublisher(),
+            autohidePublisher(delay: delay)
+        )
+        .receiveOnMainThread()
+        .assign(to: &$isUserInterfaceHidden)
     }
 
     /// Toggles user interface visibility.
     public func toggle() {
-        isUserInterfaceHidden.toggle()
+        trigger.activate(for: TriggerId.toggle)
     }
 
     /// Resets user interface auto hide delay.
     public func reset() {
         guard !isUserInterfaceHidden else { return }
         trigger.activate(for: TriggerId.reset)
+    }
+
+    private func togglePublisher() -> AnyPublisher<Bool, Never> {
+        trigger.signal(activatedBy: TriggerId.toggle)
+            .weakCapture(self, at: \.isUserInterfaceHidden)
+            .map { !$1 }
+            .eraseToAnyPublisher()
     }
 
     private func autohidePublisher(delay: TimeInterval) -> AnyPublisher<Bool, Never> {
