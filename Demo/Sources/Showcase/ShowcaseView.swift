@@ -135,6 +135,10 @@ struct ShowcaseView: View {
                 destination: .systemPlayer(media: Media(from: URLTemplate.onDemandVideoMP4))
             )
             cell(
+                title: "Video URN - On-demand",
+                destination: .systemPlayer(media: Media(from: URNTemplate.onDemandVideo))
+            )
+            cell(
                 title: "Video URN - Livestream with DRM",
                 destination: .systemPlayer(media: Media(from: URNTemplate.dvrVideo))
             )
