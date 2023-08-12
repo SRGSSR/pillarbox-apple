@@ -20,6 +20,14 @@ final class DataProvider {
     let server: Server
     private let session: URLSession
 
+    private var vector: String {
+#if os(iOS)
+        return "appplay"
+#else
+        return "tvplay"
+#endif
+    }
+
     init(server: Server = .production) {
         self.server = server
         session = URLSession(configuration: .ephemeral)
@@ -43,7 +51,8 @@ final class DataProvider {
         let url = server.url.appending(path: "integrationlayer/2.1/mediaComposition/byUrn/\(urn)")
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return url }
         components.queryItems = [
-            URLQueryItem(name: "onlyChapters", value: "true")
+            URLQueryItem(name: "onlyChapters", value: "true"),
+            URLQueryItem(name: "vector", value: vector)
         ]
         return components.url ?? url
     }
