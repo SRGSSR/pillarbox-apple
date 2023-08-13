@@ -95,7 +95,7 @@ public final class VisibilityTracker: ObservableObject {
     }
 
     private func foregroundPublisher() -> AnyPublisher<Bool, Never> {
-        NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
+        NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)
             .map { _ in false }
             .eraseToAnyPublisher()
     }
