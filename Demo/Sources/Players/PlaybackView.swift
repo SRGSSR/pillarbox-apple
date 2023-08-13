@@ -115,16 +115,20 @@ private struct MainView: View {
 
     @ViewBuilder
     private func controls() -> some View {
-        ControlsView(player: player)
-            .opacity(isUserInterfaceHidden ? 0 : 1)
-            .opacity(isInteracting ? 0 : 1)
+        ZStack {
+            Color(white: 0, opacity: 0.3)
+                .opacity(isUserInterfaceHidden || (isInteracting && !areControlsAlwaysVisible) ? 0 : 1)
+                .ignoresSafeArea()
+            ControlsView(player: player)
+                .opacity(isUserInterfaceHidden || isInteracting ? 0 : 1)
+        }
     }
 
     @ViewBuilder
     private func loadingIndicator() -> some View {
         ProgressView()
             .tint(.white)
-            .opacity(player.isBusy && !isInteracting ? 1 : 0)
+            .opacity(!player.isBusy || (isInteracting && !areControlsAlwaysVisible) ? 0 : 1)
             .controlSize(.large)
     }
 
@@ -148,16 +152,12 @@ private struct ControlsView: View {
     @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
 
     var body: some View {
-        ZStack {
-            Color(white: 0, opacity: 0.3)
-                .ignoresSafeArea()
-            HStack(spacing: 30) {
-                SkipBackwardButton(player: player, progressTracker: progressTracker)
-                PlaybackButton(player: player)
-                SkipForwardButton(player: player, progressTracker: progressTracker)
-            }
-            ._debugBodyCounter(color: .green)
+        HStack(spacing: 30) {
+            SkipBackwardButton(player: player, progressTracker: progressTracker)
+            PlaybackButton(player: player)
+            SkipForwardButton(player: player, progressTracker: progressTracker)
         }
+        ._debugBodyCounter(color: .green)
         .animation(.defaultLinear, value: player.playbackState)
         .bind(progressTracker, to: player)
     }
