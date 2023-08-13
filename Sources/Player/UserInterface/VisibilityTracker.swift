@@ -129,7 +129,10 @@ public extension View {
 }
 
 private extension Publisher {
-    func append<P>(_ publisher: P, if condition: Bool) -> AnyPublisher<Output, Failure> where P: Publisher, Failure == P.Failure, Output == P.Output {
+    func append<P>(
+        _ publisher: P,
+        if condition: Bool
+    ) -> AnyPublisher<Output, Failure> where P: Publisher, Failure == P.Failure, Output == P.Output {
         if condition {
             return self.append(publisher).eraseToAnyPublisher()
         }
