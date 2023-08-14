@@ -26,6 +26,7 @@ public struct PlaybackSpeedMenu: View {
         } label: {
             Label("Playback Speed", systemImage: "speedometer")
         }
+        .menuOrder(.fixed)
 #endif
     }
 
@@ -34,7 +35,6 @@ public struct PlaybackSpeedMenu: View {
             player.playbackSpeedRange.contains(speed)
         }
         .sorted()
-        .reversed()
     }
 
     /// Creates a menu display playback speeds available for playback.
