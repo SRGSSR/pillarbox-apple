@@ -81,6 +81,10 @@ enum URLTemplate {
         description: "16x9 aspect ratio, H.264 and HEVC @ 30Hz and 60Hz",
         type: .url("https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_adv_example_hevc/master.m3u8")
     )
+    static let appleWWDCKeynote2023 = Template(
+        title: "Apple WWDC Keynote 2023",
+        type: .url("https://events-delivery.apple.com/0105cftwpxxsfrpdwklppzjhjocakrsk/m3u8/vod_index-PQsoJoECcKHTYzphNkXohHsQWACugmET.m3u8")
+    )
     static let uhdVideoHLS = Template(
         title: "Brain Farm Skate Phantom Flex",
         description: "4K video",
