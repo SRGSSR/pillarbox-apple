@@ -18,7 +18,7 @@ public struct MediaSelectionMenu: View {
 #if os(iOS) || compiler(>=5.9)
         Menu {
             Picker(selection: player.mediaOption(for: characteristic)) {
-                ForEach(mediaOptions.reversed(), id: \.self) { option in
+                ForEach(mediaOptions, id: \.self) { option in
                     Text(option.displayName).tag(option)
                 }
             } label: {
@@ -27,6 +27,7 @@ public struct MediaSelectionMenu: View {
         } label: {
             Label(title, systemImage: icon)
         }
+        .menuOrder(.fixed)
 #endif
     }
 

@@ -17,15 +17,16 @@ public struct SettingsMenu: View {
         // TODO: Remove when Xcode 15 has been released
 #if os(iOS) || compiler(>=5.9)
         Menu {
-            MediaSelectionMenu(characteristic: .legible, player: player)
-            MediaSelectionMenu(characteristic: .audible, player: player)
             PlaybackSpeedMenu(speeds: [0.5, 1, 1.25, 1.5, 2], player: player)
+            MediaSelectionMenu(characteristic: .audible, player: player)
+            MediaSelectionMenu(characteristic: .legible, player: player)
         } label: {
             Image(systemName: "ellipsis.circle")
                 .resizable()
                 .tint(.white)
                 .aspectRatio(contentMode: .fit)
         }
+        .menuOrder(.fixed)
 #endif
     }
 
