@@ -11,6 +11,7 @@ import SwiftUI
 struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     @ObservedObject var progressTracker: ProgressTracker
     @StateObject private var bufferTracker = BufferTracker()
+    @GestureState private var gestureValue: DragGesture.Value?
 
     let minimumValueLabel: () -> ValueLabel
     let maximumValueLabel: () -> ValueLabel
@@ -59,7 +60,15 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
                 rectangle(width: geometry.size.width * CGFloat(progressTracker.progress))
             }
             .animation(.linear(duration: 0.5), value: bufferTracker.buffer)
-            .gesture(dragGesture(in: geometry))
+            .gesture(
+                DragGesture(minimumDistance: 1)
+                    .updating($gestureValue) { value, state, _ in
+                        state = value
+                    }
+            )
+            .onChange(of: gestureValue) { value in
+                updateProgress(for: value, in: geometry)
+            }
         }
         .frame(height: progressTracker.isInteracting ? 16 : 8)
         .cornerRadius(progressTracker.isInteracting ? 8 : 4)
@@ -67,20 +76,19 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
         .bind(bufferTracker, to: progressTracker.player)
     }
 
-    private func dragGesture(in geometry: GeometryProxy) -> some Gesture {
-        DragGesture(minimumDistance: 1)
-            .onChanged { value in
-                if !progressTracker.isInteracting {
-                    progressTracker.isInteracting = true
-                    initialProgress = progressTracker.progress
-                }
-                let delta = (geometry.size.width != 0) ? Float(value.translation.width / geometry.size.width) : 0
-                progressTracker.progress = initialProgress + delta
+    private func updateProgress(for value: DragGesture.Value?, in geometry: GeometryProxy) {
+        if let value {
+            if !progressTracker.isInteracting {
+                progressTracker.isInteracting = true
+                initialProgress = progressTracker.progress
             }
-            .onEnded { _ in
-                initialProgress = 0
-                progressTracker.isInteracting = false
-            }
+            let delta = (geometry.size.width != 0) ? Float(value.translation.width / geometry.size.width) : 0
+            progressTracker.progress = initialProgress + delta
+        }
+        else {
+            initialProgress = 0
+            progressTracker.isInteracting = false
+        }
     }
 }
 
