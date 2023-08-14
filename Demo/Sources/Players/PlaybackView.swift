@@ -373,11 +373,10 @@ private struct TimeBar: View {
         HStack(spacing: 8) {
             routePickerView()
             HStack(spacing: 20) {
-                TimeSlider(player: player, progressTracker: progressTracker)
-                    .simultaneousGesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { _ in visibilityTracker.reset() }
-                    )
+                TimeSlider(player: player, progressTracker: progressTracker) { isEditing in
+                    guard isEditing else { return }
+                    visibilityTracker.reset()
+                }
                 LiveLabel(player: player, progressTracker: progressTracker)
                 SettingsMenu(player: player)
                     .padding(.vertical, 12)
@@ -420,6 +419,7 @@ private struct TimeSlider: View {
 
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
+    let onEditingChanged: (Bool) -> Void
 
     private var formattedElapsedTime: String? {
         guard player.streamType == .onDemand, let time = progressTracker.time, let timeRange = progressTracker.timeRange else {
@@ -445,7 +445,8 @@ private struct TimeSlider: View {
             },
             maximumValueLabel: {
                 label(withText: formattedTotalTime)
-            }
+            },
+            onEditingChanged: onEditingChanged
         )
         .foregroundColor(.white)
         .tint(.white)

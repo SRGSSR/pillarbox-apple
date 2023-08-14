@@ -10,12 +10,12 @@ import SwiftUI
 #if os(iOS)
 struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     @ObservedObject var progressTracker: ProgressTracker
-    @StateObject private var bufferTracker = BufferTracker()
-    @GestureState private var gestureValue: DragGesture.Value?
-
     let minimumValueLabel: () -> ValueLabel
     let maximumValueLabel: () -> ValueLabel
+    let onEditingChanged: (Bool) -> Void
 
+    @StateObject private var bufferTracker = BufferTracker()
+    @GestureState private var gestureValue: DragGesture.Value?
     @State private var initialProgress: Float = 0
 
     private var isBusy: Bool {
@@ -35,11 +35,13 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     init(
         progressTracker: ProgressTracker,
         @ViewBuilder minimumValueLabel: @escaping () -> ValueLabel,
-        @ViewBuilder maximumValueLabel: @escaping () -> ValueLabel
+        @ViewBuilder maximumValueLabel: @escaping () -> ValueLabel,
+        onEditingChanged: @escaping (Bool) -> Void = { _ in }
     ) {
         self.progressTracker = progressTracker
         self.minimumValueLabel = minimumValueLabel
         self.maximumValueLabel = maximumValueLabel
+        self.onEditingChanged = onEditingChanged
     }
 
     @ViewBuilder
@@ -81,6 +83,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
             if !progressTracker.isInteracting {
                 progressTracker.isInteracting = true
                 initialProgress = progressTracker.progress
+                onEditingChanged(true)
             }
             let delta = (geometry.size.width != 0) ? Float(value.translation.width / geometry.size.width) : 0
             progressTracker.progress = initialProgress + delta
@@ -88,6 +91,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
         else {
             initialProgress = 0
             progressTracker.isInteracting = false
+            onEditingChanged(false)
         }
     }
 }
