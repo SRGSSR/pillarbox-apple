@@ -7,7 +7,7 @@
 import AVFoundation
 import MediaAccessibility
 
-struct LegibleSelectionGroup: MediaSelectionGroup {
+struct LegibleMediaSelectionGroup: MediaSelectionGroup {
     let group: AVMediaSelectionGroup
 
     var options: [MediaSelectionOption] {
