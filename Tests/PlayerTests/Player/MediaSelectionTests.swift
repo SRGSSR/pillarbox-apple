@@ -108,6 +108,13 @@ final class MediaSelectionTests: TestCase {
     }
 
     @MainActor
+    func testSingleAudibleOptionIsNeverReturned() async throws {
+        let player = Player(item: .simple(url: Stream.onDemandWithSingleAudibleOption.url))
+        await expect(player.mediaSelectionCharacteristics).toEventually(equal([.audible]))
+        expect(player.mediaSelectionOptions(for: .audible)).to(beEmpty())
+    }
+
+    @MainActor
     func testLegibleOptionsMustNotContainForcedSubtitles() async throws {
         let player = Player(item: .simple(url: Stream.onDemandWithForcedAndUnforcedLegibleOptions.url))
         await expect(player.mediaSelectionCharacteristics).toEventually(equal([.audible, .legible]))
