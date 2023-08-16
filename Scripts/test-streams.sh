@@ -29,8 +29,8 @@ function serve_test_streams {
 
     local sources_dir="$dest_dir/sources"
     generate_sources "$sources_dir"
-    generate_single_variant_streams "$sources_dir" "$dest_dir/single"
-    generate_multi_variant_streams "$sources_dir" "$dest_dir/multi"
+    generate_simple_streams "$sources_dir" "$dest_dir/simple"
+    generate_packaged_streams "$sources_dir" "$dest_dir/packaged"
     serve_directory "$dest_dir"
 }
 
@@ -47,7 +47,7 @@ function generate_sources {
     ffmpeg -f lavfi -i anullsrc=duration=4:channel_layout=stereo:sample_rate=44100 -metadata:s:a:0 language=fre "$dest_dir/source_audio_fre.mp4" > /dev/null 2>&1
 }
 
-function generate_single_variant_streams {
+function generate_simple_streams {
     local src_dir="$1"
     local dest_dir="$2"
 
@@ -87,33 +87,33 @@ function generate_single_variant_streams {
         -f hls -hls_time 1 -hls_list_size 20 -hls_flags delete_segments+round_durations "$dvr_dir/master.m3u8" > /dev/null 2>&1 &
 }
 
-function generate_multi_variant_streams {
+function generate_packaged_streams {
     local src_dir="$1"
     local dest_dir="$2"
 
     mkdir -p "$dest_dir"
 
-    local on_demand_with_tracks_dir="$dest_dir/on_demand_with_tracks"
+    local on_demand_with_options_dir="$dest_dir/on_demand_with_options"
     shaka-packager \
-        "in=$src_dir/source_640x360.mp4,stream=video,segment_template=$on_demand_with_tracks_dir/640x360/\$Number\$.ts" \
-        "in=$src_dir/source_audio_eng.mp4,stream=audio,segment_template=$on_demand_with_tracks_dir/audio_eng/\$Number\$.ts,lang=en,hls_name=English" \
-        "in=$src_dir/source_audio_fre.mp4,stream=audio,segment_template=$on_demand_with_tracks_dir/audio_fre/\$Number\$.ts,lang=fr,hls_name=Français" \
-        "in=$src_dir/source_audio_eng.mp4,stream=audio,segment_template=$on_demand_with_tracks_dir/audio_eng_ad/\$Number\$.ts,lang=en,hls_name=English (AD),hls_characteristics=public.accessibility.describes-video" \
-        "in=$SUBTITLES_DIR/subtitles_en.webvtt,stream=text,segment_template=$on_demand_with_tracks_dir/subtitles_en/\$Number\$.vtt,lang=en,hls_name=English" \
-        "in=$SUBTITLES_DIR/subtitles_fr.webvtt,stream=text,segment_template=$on_demand_with_tracks_dir/subtitles_fr/\$Number\$.vtt,lang=fr,hls_name=Français" \
-        "in=$SUBTITLES_DIR/subtitles_ja.webvtt,stream=text,segment_template=$on_demand_with_tracks_dir/subtitles_ja/\$Number\$.vtt,lang=ja,hls_name=日本語" \
-        --hls_master_playlist_output "$on_demand_with_tracks_dir/master.m3u8" > /dev/null 2>&1
+        "in=$src_dir/source_640x360.mp4,stream=video,segment_template=$on_demand_with_options_dir/640x360/\$Number\$.ts" \
+        "in=$src_dir/source_audio_eng.mp4,stream=audio,segment_template=$on_demand_with_options_dir/audio_eng/\$Number\$.ts,lang=en,hls_name=English" \
+        "in=$src_dir/source_audio_fre.mp4,stream=audio,segment_template=$on_demand_with_options_dir/audio_fre/\$Number\$.ts,lang=fr,hls_name=Français" \
+        "in=$src_dir/source_audio_eng.mp4,stream=audio,segment_template=$on_demand_with_options_dir/audio_eng_ad/\$Number\$.ts,lang=en,hls_name=English (AD),hls_characteristics=public.accessibility.describes-video" \
+        "in=$SUBTITLES_DIR/subtitles_en.webvtt,stream=text,segment_template=$on_demand_with_options_dir/subtitles_en/\$Number\$.vtt,lang=en,hls_name=English" \
+        "in=$SUBTITLES_DIR/subtitles_fr.webvtt,stream=text,segment_template=$on_demand_with_options_dir/subtitles_fr/\$Number\$.vtt,lang=fr,hls_name=Français" \
+        "in=$SUBTITLES_DIR/subtitles_ja.webvtt,stream=text,segment_template=$on_demand_with_options_dir/subtitles_ja/\$Number\$.vtt,lang=ja,hls_name=日本語" \
+        --hls_master_playlist_output "$on_demand_with_options_dir/master.m3u8" > /dev/null 2>&1
 
-    local on_demand_without_tracks_dir="$dest_dir/on_demand_without_tracks"
+    local on_demand_without_options_dir="$dest_dir/on_demand_without_options"
     shaka-packager \
-        "in=$src_dir/source_640x360.mp4,stream=video,segment_template=$on_demand_without_tracks_dir/640x360/\$Number\$.ts" \
-        --hls_master_playlist_output "$on_demand_without_tracks_dir/master.m3u8" > /dev/null 2>&1
+        "in=$src_dir/source_640x360.mp4,stream=video,segment_template=$on_demand_without_options_dir/640x360/\$Number\$.ts" \
+        --hls_master_playlist_output "$on_demand_without_options_dir/master.m3u8" > /dev/null 2>&1
 
-    local on_demand_with_single_audio_track_dir="$dest_dir/on_demand_with_single_audio_track"
+    local on_demand_with_single_audible_option_dir="$dest_dir/on_demand_with_single_audible_option"
     shaka-packager \
-        "in=$src_dir/source_640x360.mp4,stream=video,segment_template=$on_demand_with_single_audio_track_dir/640x360/\$Number\$.ts" \
-        "in=$src_dir/source_audio_eng.mp4,stream=audio,segment_template=$on_demand_with_single_audio_track_dir/audio_eng/\$Number\$.ts,lang=en,hls_name=English" \
-        --hls_master_playlist_output "$on_demand_with_single_audio_track_dir/master.m3u8" > /dev/null 2>&1
+        "in=$src_dir/source_640x360.mp4,stream=video,segment_template=$on_demand_with_single_audible_option_dir/640x360/\$Number\$.ts" \
+        "in=$src_dir/source_audio_eng.mp4,stream=audio,segment_template=$on_demand_with_single_audible_option_dir/audio_eng/\$Number\$.ts,lang=en,hls_name=English" \
+        --hls_master_playlist_output "$on_demand_with_single_audible_option_dir/master.m3u8" > /dev/null 2>&1
 }
 
 function serve_directory {

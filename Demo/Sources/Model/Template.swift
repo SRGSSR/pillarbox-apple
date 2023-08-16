@@ -93,11 +93,11 @@ enum URLTemplate {
     static let onDemandVideoLocalHLS = Template(
         title: "Test video pattern",
         description: "Stream served locally",
-        type: .url("http://localhost:8123/single/on_demand/master.m3u8")
+        type: .url("http://localhost:8123/simple/on_demand/master.m3u8")
     )
     static let unknown = Template(
         title: "Unknown URL",
-        type: .url("http://localhost:8123/single/unavailable/master.m3u8")
+        type: .url("http://localhost:8123/simple/unavailable/master.m3u8")
     )
     static let bitmovinOnDemandMultipleTracks = Template(
         title: "Multiple subtitles and audio tracks",
