@@ -108,6 +108,12 @@ function generate_multi_variant_streams {
     shaka-packager \
         "in=$src_dir/source_640x360.mp4,stream=video,segment_template=$on_demand_without_tracks_dir/640x360/\$Number\$.ts" \
         --hls_master_playlist_output "$on_demand_without_tracks_dir/master.m3u8" > /dev/null 2>&1
+
+    local on_demand_with_single_audio_track_dir="$dest_dir/on_demand_with_single_audio_track"
+    shaka-packager \
+        "in=$src_dir/source_640x360.mp4,stream=video,segment_template=$on_demand_with_single_audio_track_dir/640x360/\$Number\$.ts" \
+        "in=$src_dir/source_audio_eng.mp4,stream=audio,segment_template=$on_demand_with_single_audio_track_dir/audio_eng/\$Number\$.ts,lang=en,hls_name=English" \
+        --hls_master_playlist_output "$on_demand_with_single_audio_track_dir/master.m3u8" > /dev/null 2>&1
 }
 
 function serve_directory {
