@@ -44,8 +44,8 @@ struct MediaSelector {
     }
 
     func select(mediaOption: MediaSelectionOption, for characteristic: AVMediaCharacteristic, in item: AVPlayerItem?) {
-        guard let item, let group = groups[characteristic] else { return }
-        group.select(mediaOption: mediaOption, in: item)
+        guard let selection, let item, let group = groups[characteristic] else { return }
+        group.select(mediaOption: mediaOption, in: selection, for: item)
     }
 
     func activeMediaOption(for characteristic: AVMediaCharacteristic) -> AVMediaSelectionOption? {

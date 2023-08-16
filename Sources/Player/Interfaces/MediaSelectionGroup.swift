@@ -13,7 +13,7 @@ protocol MediaSelectionGroup {
     init(group: AVMediaSelectionGroup)
 
     func selectedMediaOption(in selection: AVMediaSelection) -> MediaSelectionOption
-    func select(mediaOption: MediaSelectionOption, in item: AVPlayerItem)
+    func select(mediaOption: MediaSelectionOption, in selection: AVMediaSelection, for item: AVPlayerItem)
 }
 
 extension MediaSelectionGroup {

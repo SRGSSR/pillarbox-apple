@@ -32,7 +32,7 @@ struct LegibleMediaSelectionGroup: MediaSelectionGroup {
         }
     }
 
-    func select(mediaOption: MediaSelectionOption, in item: AVPlayerItem) {
+    func select(mediaOption: MediaSelectionOption, in selection: AVMediaSelection, for item: AVPlayerItem) {
         switch mediaOption {
         case .automatic:
             MACaptionAppearanceSetDisplayType(.user, .automatic)
