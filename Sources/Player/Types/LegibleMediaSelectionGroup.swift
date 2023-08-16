@@ -12,7 +12,7 @@ struct LegibleMediaSelectionGroup: MediaSelectionGroup {
 
     var options: [MediaSelectionOption] {
         var options: [MediaSelectionOption] = [.automatic, .disabled]
-        options.append(contentsOf: group.sortedOptions.map { .enabled($0) })
+        options.append(contentsOf: group.sortedOptions(withoutMediaCharacteristics: [.containsOnlyForcedSubtitles]))
         return options
     }
 

@@ -83,6 +83,13 @@ public extension Stream {
         url: URL(string: "http://localhost:8123/multi/on_demand_without_tracks/master.m3u8")!,
         duration: CMTime(value: 4, timescale: 1)
     )
+
+    /// An on-demand stream with forced subtitles.
+    static let onDemandWithForcedSubtitles: Self = .init(
+        // TODO: Should update to a local stream when forced subtitles are supported by Shaka Packager.
+        url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8")!,
+        duration: CMTime(value: 1800, timescale: 1)
+    )
 }
 
 public extension Stream {

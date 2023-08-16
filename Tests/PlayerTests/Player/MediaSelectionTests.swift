@@ -108,6 +108,13 @@ final class MediaSelectionTests: TestCase {
     }
 
     @MainActor
+    func testLegibleOptionsMustNotContainForcedSubtitles() async throws {
+        let player = Player(item: .simple(url: Stream.onDemandWithForcedSubtitles.url))
+        await expect(player.mediaSelectionCharacteristics).toEventually(equal([.audible, .legible]))
+        expect(player.mediaSelectionOptions(for: .legible).count).to(equal(6))
+    }
+
+    @MainActor
     func testInitiallySelectedEnabledAudibleOption() async throws {
         let player = Player(item: .simple(url: Stream.onDemandWithTracks.url))
         await expect(player.selectedMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("en"))

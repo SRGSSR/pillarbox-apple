@@ -10,8 +10,8 @@ struct AudibleMediaSelectionGroup: MediaSelectionGroup {
     let group: AVMediaSelectionGroup
 
     var options: [MediaSelectionOption] {
-        guard group.options.count > 1 else { return [] }
-        return group.sortedOptions.map { .enabled($0) }
+        let options = group.sortedOptions()
+        return options.count > 1 ? options : []
     }
 
     func selectedMediaOption(in selection: AVMediaSelection) -> MediaSelectionOption {
