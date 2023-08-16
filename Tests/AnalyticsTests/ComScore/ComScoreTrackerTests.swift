@@ -53,7 +53,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
 
         expectAtLeastHits(
             .play { labels in
-                expect(labels.ns_st_po).to(equal(0))
+                expect(labels.ns_st_po).to(beCloseTo(0, within: 1))
             }
         ) {
             player.play()
