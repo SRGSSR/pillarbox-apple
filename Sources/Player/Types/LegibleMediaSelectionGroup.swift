@@ -16,6 +16,10 @@ struct LegibleMediaSelectionGroup: MediaSelectionGroup {
         return options
     }
 
+    func forcedLegibleOption(matching selection: AVMediaSelection) -> AVMediaSelectionOption? {
+        nil
+    }
+
     func selectedMediaOption(in selection: AVMediaSelection) -> MediaSelectionOption {
         switch MACaptionAppearanceGetDisplayType(.user) {
         case .alwaysOn:
@@ -39,7 +43,7 @@ struct LegibleMediaSelectionGroup: MediaSelectionGroup {
             item.selectMediaOptionAutomatically(in: group)
         case .disabled:
             MACaptionAppearanceSetDisplayType(.user, .forcedOnly)
-            item.select(nil, in: group)
+            item.select(forcedLegibleOption(matching: selection), in: group)
         case let .enabled(option):
             MACaptionAppearanceSetDisplayType(.user, .alwaysOn)
             if let languageCode = option.locale?.language.languageCode {
