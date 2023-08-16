@@ -35,8 +35,8 @@ public extension Player {
 
     /// Selects a media option for a characteristic.
     ///
-    /// This method does nothing if the provided option is not associated with the characteristic. Use `mediaCharacteristics`
-    /// to retrieve available characteristics.
+    /// This method does nothing if the provided option is not associated with the characteristic. Use 
+    /// `mediaCharacteristics` to retrieve available characteristics.
     ///
     /// - Parameters:
     ///   - mediaOption: The option to select.
@@ -55,5 +55,18 @@ public extension Player {
         } set: { newValue in
             self.select(mediaOption: newValue, for: characteristic)
         }
+    }
+}
+
+extension Player {
+    /// The currently active AVFoundation media option for a characteristic.
+    ///
+    /// This method can be used to retrieve the actual media selection option set by the player. This can be useful
+    /// to retrieve options that can be automatically activated by the player, e.g. forced subtitles.
+    ///
+    /// - Parameter characteristic: The characteristic.
+    /// - Returns: The active option or `nil` if none.
+    func activeMediaOption(for characteristic: AVMediaCharacteristic) -> AVMediaSelectionOption? {
+        mediaSelector.activeMediaOption(for: characteristic)
     }
 }

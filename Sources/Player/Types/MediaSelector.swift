@@ -47,6 +47,11 @@ struct MediaSelector {
         guard let item, let group = groups[characteristic] else { return }
         group.select(mediaOption: mediaOption, in: item)
     }
+
+    func activeMediaOption(for characteristic: AVMediaCharacteristic) -> AVMediaSelectionOption? {
+        guard let selection, let group = groups[characteristic] else { return nil }
+        return group.activeMediaOption(in: selection)
+    }
 }
 
 extension MediaSelector: CustomDebugStringConvertible {
