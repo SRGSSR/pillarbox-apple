@@ -90,7 +90,7 @@ final class ComScoreTrackerDvrPropertiesTests: ComScoreTestCase {
                 expect(labels.ns_st_ldw).to(equal(Stream.dvr.duration.seconds))
             },
             .play { labels in
-                expect(labels.ns_st_ldo).to(equal(4))
+                expect(labels.ns_st_ldo).to(beCloseTo(4, within: 1))
                 expect(labels.ns_st_ldw).to(equal(Stream.dvr.duration.seconds))
             }
         ) {

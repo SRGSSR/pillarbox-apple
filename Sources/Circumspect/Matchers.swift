@@ -47,3 +47,18 @@ public func equalDiff<T>(_ expectedValue: T?, by areEquivalent: @escaping (T, T)
 public func equalDiff<T>(_ expectedValue: T?) -> Predicate<T> where T: Equatable {
     equalDiff(expectedValue, by: ==)
 }
+
+/// Matches close signed numeric values up to a given tolerance.
+public func beCloseTo<Value: SignedNumeric & Comparable>(
+    _ expectedValue: Value,
+    within delta: Value = 1
+) -> Predicate<Value> {
+    let message = "be close to <\(stringify(expectedValue))> (within \(stringify(delta)))"
+    return Predicate.define { actualExpression in
+        let actualValue = try actualExpression.evaluate()
+        return PredicateResult(
+            bool: actualValue != nil && abs(actualValue! - expectedValue) < delta,
+            message: .expectedCustomValueTo(message, actual: "<\(stringify(actualValue))>")
+        )
+    }
+}

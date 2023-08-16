@@ -171,15 +171,6 @@ extension CommandersActStreamingAnalytics {
             func isSupported(for streamType: StreamType) -> Bool {
                 supportedStreamTypes.contains(streamType)
             }
-
-            func shouldSend(eventData: EventData) -> Bool {
-                switch self {
-                case .pos:
-                    return true
-                case .uptime:
-                    return eventData.range.end - eventData.time < CMTime(value: 30, timescale: 1)
-                }
-            }
         }
 
         private let kind: Kind
@@ -207,10 +198,6 @@ extension CommandersActStreamingAnalytics {
                 .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
                 .eraseToAnyPublisher()
         }
-
-        func shouldSend(eventData: EventData) -> Bool {
-            kind.shouldSend(eventData: eventData)
-        }
     }
 }
 
@@ -233,7 +220,6 @@ private extension CommandersActStreamingAnalytics {
     private func sendHeartbeat(_ heartbeat: Heartbeat) {
         let eventData = eventData()
         updateTimeTracking(eventData: eventData)
-        guard heartbeat.shouldSend(eventData: eventData) else { return }
         Analytics.shared.sendEvent(commandersAct: .init(
             name: heartbeat.name,
             labels: labels(eventData: eventData)
