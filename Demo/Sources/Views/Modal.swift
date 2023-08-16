@@ -7,12 +7,12 @@
 import SwiftUI
 
 #if os(iOS)
-private struct PresentedView<Content>: View where Content: View {
-    @ViewBuilder var content: () -> Content
+
+private struct PresentedModifier: ViewModifier {
     @Environment(\.dismiss) private var dismiss
 
-    var body: some View {
-        content()
+    func body(content: Content) -> some View {
+        content
             .gesture(
                 DragGesture(minimumDistance: 100)
                     .onEnded { value in
@@ -22,22 +22,32 @@ private struct PresentedView<Content>: View where Content: View {
             )
     }
 }
+
+private struct ModalModifier<Item, Presented>: ViewModifier where Item: Identifiable, Presented: View {
+    let item: Binding<Item?>
+    @ViewBuilder let presented: (Item) -> Presented
+
+    func body(content: Content) -> some View {
+        switch UIDevice.current.userInterfaceIdiom {
+        case .pad:
+            content
+                .fullScreenCover(item: item) { item in
+                    presented(item)
+                        .modifier(PresentedModifier())
+                }
+        default:
+            content
+                .sheet(item: item, content: presented)
+        }
+    }
+}
+
 #endif
 
 extension View {
-    @ViewBuilder
     func modal<Item, Content>(item: Binding<Item?>, @ViewBuilder content: @escaping (Item) -> Content) -> some View where Item: Identifiable, Content: View {
 #if os(iOS)
-        switch UIDevice.current.userInterfaceIdiom {
-        case .pad:
-            fullScreenCover(item: item) { item in
-                PresentedView {
-                    content(item)
-                }
-            }
-        default:
-            sheet(item: item, content: content)
-        }
+        modifier(ModalModifier(item: item, presented: content))
 #else
         fullScreenCover(item: item, content: content)
 #endif
