@@ -121,7 +121,7 @@ struct SettingsView: View {
                 Text("Made with ")
                 Image(systemName: "heart.fill")
                     .foregroundColor(.red)
-                    .pulseEffect()
+                    .symbolPulseEffect()
                 Text(" in Switzerland")
             }
         }

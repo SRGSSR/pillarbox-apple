@@ -7,6 +7,23 @@
 import Analytics
 import SwiftUI
 
+private struct SymbolPulseEffect: ViewModifier {
+    func body(content: Content) -> some View {
+        // TODO: Remove when Xcode 15 has been released
+#if compiler(>=5.9)
+        if #available(iOS 17.0, tvOS 17.0, *) {
+            content
+                .symbolEffect(.pulse)
+        }
+        else {
+            content
+        }
+#else
+        content
+#endif
+    }
+}
+
 extension View {
     /// Prevents touch propagation to views located below the receiver.
     func preventsTouchPropagation() -> some View {
@@ -24,21 +41,8 @@ extension View {
             commandersAct: .init(name: name, type: "content", levels: levels)
         )
     }
-}
 
-extension View {
-    @ViewBuilder
-    func pulseEffect() -> some View {
-        // TODO: Remove when Xcode 15 has been released
-#if compiler(>=5.9)
-        if #available(iOS 17.0, tvOS 17.0, *) {
-            symbolEffect(.pulse)
-        }
-        else {
-            self
-        }
-#else
-        self
-#endif
+    func symbolPulseEffect() -> some View {
+        modifier(SymbolPulseEffect())
     }
 }
