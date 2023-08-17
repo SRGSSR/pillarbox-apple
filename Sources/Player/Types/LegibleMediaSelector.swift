@@ -32,24 +32,31 @@ struct LegibleMediaSelector: MediaSelector {
         }
     }
 
-    func select(mediaOption: MediaSelectionOption, on item: AVPlayerItem) {
+    func select(
+        mediaOption: MediaSelectionOption,
+        otherSelectedOptions: [AVMediaCharacteristic: AVMediaSelectionOption],
+        on item: AVPlayerItem
+    ) {
         switch mediaOption {
         case .automatic:
             MACaptionAppearanceSetDisplayType(.user, .automatic)
             item.selectMediaOptionAutomatically(in: group)
         case .disabled:
             MACaptionAppearanceSetDisplayType(.user, .forcedOnly)
-            item.select(nil, in: group)
+            item.select(forcedSubtitles(matching: otherSelectedOptions), in: group)
         case let .enabled(option):
             MACaptionAppearanceSetDisplayType(.user, .alwaysOn)
-            if let languageCode = option.locale?.language.languageCode {
-                MACaptionAppearanceAddSelectedLanguage(.user, languageCode.identifier as CFString)
+            if let languageCode = option.languageCode {
+                MACaptionAppearanceAddSelectedLanguage(.user, languageCode as CFString)
             }
             item.select(option, in: group)
         }
     }
 
-    func initialMediaOption() -> MediaSelectionOption? {
-        nil
+    private func forcedSubtitles(matching otherSelectedOptions: [AVMediaCharacteristic: AVMediaSelectionOption]) -> AVMediaSelectionOption? {
+        guard let audibleOption = otherSelectedOptions[.audible] else { return nil }
+        return AVMediaSelectionGroup.mediaSelectionOptions(from: group.options, withMediaCharacteristics: [.containsOnlyForcedSubtitles])
+            .filter { $0.languageCode == audibleOption.languageCode }
+            .first
     }
 }
