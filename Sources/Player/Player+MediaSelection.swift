@@ -20,7 +20,8 @@ public extension Player {
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The list of options associated with the characteristic of an empty array if none.
     func mediaSelectionOptions(for characteristic: AVMediaCharacteristic) -> [MediaSelectionOption] {
-        mediaSelectionContext.mediaSelectionOptions(for: characteristic)
+        guard let selector = mediaSelector(for: characteristic) else { return [] }
+        return selector.mediaSelectionOptions()
     }
 
     /// The currently selected media option for a characteristic.
@@ -30,7 +31,10 @@ public extension Player {
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The selected option or `nil` if none.
     func selectedMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
-        mediaSelectionContext.selectedMediaOption(for: characteristic)
+        guard let selection = mediaSelectionContext.selection, let selector = mediaSelector(for: characteristic) else {
+            return .disabled
+        }
+        return selector.selectedMediaOption(in: selection)
     }
 
     /// Selects a media option for a characteristic.
@@ -42,7 +46,8 @@ public extension Player {
     ///   - mediaOption: The option to select.
     ///   - characteristic: The characteristic.
     func select(mediaOption: MediaSelectionOption, for characteristic: AVMediaCharacteristic) {
-        mediaSelectionContext.select(mediaOption: mediaOption, for: characteristic, in: queuePlayer.currentItem)
+        guard let item = queuePlayer.currentItem, let selector = mediaSelector(for: characteristic) else { return }
+        selector.select(mediaOption: mediaOption, on: item)
     }
 
     /// A binding to read and write the current media selection for a characteristic.
@@ -56,6 +61,18 @@ public extension Player {
             self.select(mediaOption: newValue, for: characteristic)
         }
     }
+
+    private func mediaSelector(for characteristic: AVMediaCharacteristic) -> MediaSelector? {
+        guard let group = mediaSelectionContext.groups[characteristic] else { return nil }
+        switch characteristic {
+        case .audible:
+            return AudibleMediaSelector(group: group)
+        case .legible:
+            return LegibleMediaSelector(group: group)
+        default:
+            return nil
+        }
+    }
 }
 
 extension Player {
@@ -67,6 +84,9 @@ extension Player {
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The active option or `nil` if none.
     func activeMediaOption(for characteristic: AVMediaCharacteristic) -> AVMediaSelectionOption? {
-        mediaSelectionContext.activeMediaOption(for: characteristic)
+        guard let selection = mediaSelectionContext.selection, let group = mediaSelectionContext.groups[characteristic] else {
+            return nil
+        }
+        return selection.selectedMediaOption(in: group)
     }
 }
