@@ -134,7 +134,7 @@ final class MediaSelectionTests: TestCase {
 
         let player = Player(item: .simple(url: Stream.onDemandWithForcedAndUnforcedLegibleOptions.url))
         expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.disabled))
-        expect(player.activeMediaOption(for: .legible)).to(haveLanguageIdentifier("en"))
+        expect(player.activeMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("en"))
     }
 
     func testSelectedAudibleOptionWhenAdvancingToNextItem() {
@@ -231,6 +231,6 @@ final class MediaSelectionTests: TestCase {
 
         player.select(mediaOption: .disabled, for: .legible)
         expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.disabled))
-        expect(player.activeMediaOption(for: .legible)).to(haveLanguageIdentifier("en"))
+        expect(player.activeMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("en"))
     }
 }
