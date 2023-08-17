@@ -81,7 +81,7 @@ struct MediaSelectionContext {
                 item.selectMediaOptionAutomatically(in: group)
             case .disabled:
                 MACaptionAppearanceSetDisplayType(.user, .forcedOnly)
-                item.select(nil, in: group)
+                item.select(forcedLegibleOption(in: group), in: group)
             case let .enabled(option):
                 MACaptionAppearanceSetDisplayType(.user, .alwaysOn)
                 if let languageCode = option.locale?.language.languageCode {
@@ -97,5 +97,13 @@ struct MediaSelectionContext {
     func activeMediaOption(for characteristic: AVMediaCharacteristic) -> AVMediaSelectionOption? {
         guard let selection, let group = groups[characteristic] else { return nil }
         return selection.selectedMediaOption(in: group)
+    }
+
+    private func forcedLegibleOption(in group: AVMediaSelectionGroup) -> AVMediaSelectionOption? {
+        guard let selection, let audibleGroup = groups[.audible], let audibleOption = selection.selectedMediaOption(in: audibleGroup) else {
+            return nil
+        }
+        return AVMediaSelectionGroup.mediaSelectionOptions(from: group.options, withMediaCharacteristics: [.containsOnlyForcedSubtitles])
+            .first { $0.locale?.language.languageCode == audibleOption.locale?.language.languageCode }
     }
 }
