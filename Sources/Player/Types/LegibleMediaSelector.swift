@@ -43,7 +43,7 @@ struct LegibleMediaSelector: MediaSelector {
             item.selectMediaOptionAutomatically(in: group)
         case .disabled:
             MACaptionAppearanceSetDisplayType(.user, .forcedOnly)
-            item.select(forcedSubtitles(matching: otherSelectedOptions), in: group)
+            item.selectMediaOptionAutomatically(in: group)
         case let .enabled(option):
             MACaptionAppearanceSetDisplayType(.user, .alwaysOn)
             if let languageCode = option.languageCode {
@@ -51,12 +51,5 @@ struct LegibleMediaSelector: MediaSelector {
             }
             item.select(option, in: group)
         }
-    }
-
-    private func forcedSubtitles(matching otherSelectedOptions: [AVMediaCharacteristic: AVMediaSelectionOption]) -> AVMediaSelectionOption? {
-        guard let audibleOption = otherSelectedOptions[.audible] else { return nil }
-        return AVMediaSelectionGroup.mediaSelectionOptions(from: group.options, withMediaCharacteristics: [.containsOnlyForcedSubtitles])
-            .filter { $0.languageCode == audibleOption.languageCode }
-            .first
     }
 }
