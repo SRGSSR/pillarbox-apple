@@ -8,10 +8,12 @@ import Combine
 import Core
 import Foundation
 import SwiftUI
+import UIKit
 
 /// An observable object tracking user interface visibility.
 ///
-/// The tracker automatically turns off visibility after a delay while playing content.
+/// The tracker automatically turns off visibility after a delay while playing content. It also automatically turns
+/// on visibility when the application returns to the foreground, provided the player is not currently playing.
 @available(tvOS, unavailable)
 public final class VisibilityTracker: ObservableObject {
     private enum TriggerId {
@@ -24,14 +26,11 @@ public final class VisibilityTracker: ObservableObject {
     @Published public var player: Player?
 
     /// Returns whether the user interface should be hidden.
-    @Published public private(set) var isUserInterfaceHidden: Bool {
-        didSet {
-            guard !isUserInterfaceHidden else { return }
-            trigger.activate(for: TriggerId.reset)
-        }
-    }
+    @Published public private(set) var isUserInterfaceHidden: Bool
 
+    private let delay: TimeInterval
     private let trigger = Trigger()
+    private let togglePublisher = PassthroughSubject<Bool, Never>()
 
     /// Creates a tracker managing user interface visibility.
     /// 
@@ -40,6 +39,8 @@ public final class VisibilityTracker: ObservableObject {
     ///   - isUserInterfaceHidden: The initial value for `isUserInterfaceHidden`.
     public init(delay: TimeInterval = 3, isUserInterfaceHidden: Bool = false) {
         assert(delay > 0)
+
+        self.delay = delay
         self.isUserInterfaceHidden = isUserInterfaceHidden
 
         $player
@@ -51,32 +52,62 @@ public final class VisibilityTracker: ObservableObject {
                 return player.$playbackState.eraseToAnyPublisher()
             }
             .switchToLatest()
-            .map { [trigger] playbackState -> AnyPublisher<Bool, Never> in
-                guard playbackState == .playing else {
-                    return Empty().eraseToAnyPublisher()
-                }
-                return Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reset)) {
-                    Timer.publish(every: delay, on: .main, in: .common)
-                        .autoconnect()
-                        .first()
-                }
-                .map { _ in true }
-                .eraseToAnyPublisher()
+            .compactMap { [weak self] playbackState in
+                self?.updatePublisher(for: playbackState)
             }
             .switchToLatest()
+            .removeDuplicates()
             .receiveOnMainThread()
             .assign(to: &$isUserInterfaceHidden)
     }
 
     /// Toggles user interface visibility.
     public func toggle() {
-        isUserInterfaceHidden.toggle()
+        togglePublisher.send(!isUserInterfaceHidden)
     }
 
     /// Resets user interface auto hide delay.
     public func reset() {
         guard !isUserInterfaceHidden else { return }
         trigger.activate(for: TriggerId.reset)
+    }
+
+    private func updatePublisher(for playbackState: PlaybackState) -> AnyPublisher<Bool, Never> {
+        switch playbackState {
+        case .playing:
+            return interactivePublisher()
+                .compactMap { [weak self] isHidden -> AnyPublisher<Bool, Never>? in
+                    guard let self else { return nil }
+                    return Just(isHidden).append(autohidePublisher(delay: delay), if: !isHidden)
+                }
+                .switchToLatest()
+                .eraseToAnyPublisher()
+        default:
+            return Publishers.Merge(interactivePublisher(), foregroundPublisher())
+                .eraseToAnyPublisher()
+        }
+    }
+
+    private func interactivePublisher() -> AnyPublisher<Bool, Never> {
+        togglePublisher
+            .prepend(isUserInterfaceHidden)
+            .eraseToAnyPublisher()
+    }
+
+    private func foregroundPublisher() -> AnyPublisher<Bool, Never> {
+        NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)
+            .map { _ in false }
+            .eraseToAnyPublisher()
+    }
+
+    private func autohidePublisher(delay: TimeInterval) -> AnyPublisher<Bool, Never> {
+        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reset)) {
+            Timer.publish(every: delay, on: .main, in: .common)
+                .autoconnect()
+                .first()
+        }
+        .map { _ in true }
+        .eraseToAnyPublisher()
     }
 }
 
@@ -93,6 +124,20 @@ public extension View {
         }
         .onChange(of: player) { newValue in
             visibilityTracker.player = newValue
+        }
+    }
+}
+
+private extension Publisher {
+    func append<P>(
+        _ publisher: P,
+        if condition: Bool
+    ) -> AnyPublisher<Output, Failure> where P: Publisher, Failure == P.Failure, Output == P.Output {
+        if condition {
+            return self.append(publisher).eraseToAnyPublisher()
+        }
+        else {
+            return self.eraseToAnyPublisher()
         }
     }
 }
