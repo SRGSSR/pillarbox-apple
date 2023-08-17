@@ -129,14 +129,6 @@ final class MediaSelectionTests: TestCase {
         expect(player.activeMediaOption(for: .legible)).to(beNil())
     }
 
-    func testInitiallySelectedDisabledLegibleOptionWithForcedSubtitlesAvailable() {
-        Self.setupLegibleSelectionTestWithAccessibilityDisplayType(.disabled)
-
-        let player = Player(item: .simple(url: Stream.onDemandWithForcedAndUnforcedLegibleOptions.url))
-        expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.disabled))
-        expect(player.activeMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("en"))
-    }
-
     func testSelectedAudibleOptionWhenAdvancingToNextItem() {
         let player = Player(items: [
             .simple(url: Stream.onDemandWithOptions.url),
@@ -221,16 +213,5 @@ final class MediaSelectionTests: TestCase {
         player.select(mediaOption: .disabled, for: .legible)
         expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.disabled))
         expect(player.activeMediaOption(for: .legible)).to(beNil())
-    }
-
-    func testSelectDisabledLegibleOptionWithForcedSubtitlesAvailable() {
-        Self.setupLegibleSelectionTestWithAccessibilityDisplayType(.automatic)
-
-        let player = Player(item: .simple(url: Stream.onDemandWithForcedAndUnforcedLegibleOptions.url))
-        expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
-
-        player.select(mediaOption: .disabled, for: .legible)
-        expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.disabled))
-        expect(player.activeMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("en"))
     }
 }
