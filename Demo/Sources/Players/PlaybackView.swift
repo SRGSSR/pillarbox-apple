@@ -374,10 +374,6 @@ private struct TimeBar: View {
             routePickerView()
             HStack(spacing: 20) {
                 TimeSlider(player: player, progressTracker: progressTracker)
-                    .simultaneousGesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { _ in visibilityTracker.reset() }
-                    )
                 LiveLabel(player: player, progressTracker: progressTracker)
                 SettingsMenu(player: player)
                     .padding(.vertical, 12)
