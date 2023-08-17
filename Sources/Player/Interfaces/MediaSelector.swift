@@ -13,9 +13,5 @@ protocol MediaSelector {
 
     func mediaSelectionOptions() -> [MediaSelectionOption]
     func selectedMediaOption(in selection: AVMediaSelection) -> MediaSelectionOption
-    func select(
-        mediaOption: MediaSelectionOption,
-        otherSelectedOptions: [AVMediaCharacteristic: AVMediaSelectionOption],
-        on item: AVPlayerItem
-    )
+    func select(mediaOption: MediaSelectionOption, on item: AVPlayerItem)
 }

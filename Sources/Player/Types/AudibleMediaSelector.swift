@@ -23,11 +23,7 @@ struct AudibleMediaSelector: MediaSelector {
         }
     }
 
-    func select(
-        mediaOption: MediaSelectionOption,
-        otherSelectedOptions: [AVMediaCharacteristic: AVMediaSelectionOption],
-        on item: AVPlayerItem
-    ) {
+    func select(mediaOption: MediaSelectionOption, on item: AVPlayerItem) {
         switch mediaOption {
         case let .enabled(option):
             item.select(option, in: group)

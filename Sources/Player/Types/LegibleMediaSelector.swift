@@ -32,11 +32,7 @@ struct LegibleMediaSelector: MediaSelector {
         }
     }
 
-    func select(
-        mediaOption: MediaSelectionOption,
-        otherSelectedOptions: [AVMediaCharacteristic: AVMediaSelectionOption],
-        on item: AVPlayerItem
-    ) {
+    func select(mediaOption: MediaSelectionOption, on item: AVPlayerItem) {
         switch mediaOption {
         case .automatic:
             MACaptionAppearanceSetDisplayType(.user, .automatic)
