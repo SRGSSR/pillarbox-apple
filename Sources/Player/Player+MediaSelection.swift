@@ -10,7 +10,7 @@ import SwiftUI
 public extension Player {
     /// The set of media characteristics for which a media selection is available.
     var mediaSelectionCharacteristics: Set<AVMediaCharacteristic> {
-        mediaSelector.characteristics
+        mediaSelectionContext.characteristics
     }
 
     /// The list of media options associated with a characteristic.
@@ -20,7 +20,7 @@ public extension Player {
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The list of options associated with the characteristic of an empty array if none.
     func mediaSelectionOptions(for characteristic: AVMediaCharacteristic) -> [MediaSelectionOption] {
-        mediaSelector.options(for: characteristic)
+        mediaSelectionContext.mediaSelectionOptions(for: characteristic)
     }
 
     /// The currently selected media option for a characteristic.
@@ -30,7 +30,7 @@ public extension Player {
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The selected option or `nil` if none.
     func selectedMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
-        mediaSelector.selectedMediaOption(for: characteristic)
+        mediaSelectionContext.selectedMediaOption(for: characteristic)
     }
 
     /// Selects a media option for a characteristic.
@@ -42,7 +42,7 @@ public extension Player {
     ///   - mediaOption: The option to select.
     ///   - characteristic: The characteristic.
     func select(mediaOption: MediaSelectionOption, for characteristic: AVMediaCharacteristic) {
-        mediaSelector.select(mediaOption: mediaOption, for: characteristic, in: queuePlayer.currentItem)
+        mediaSelectionContext.select(mediaOption: mediaOption, for: characteristic, in: queuePlayer.currentItem)
     }
 
     /// A binding to read and write the current media selection for a characteristic.
@@ -67,6 +67,6 @@ extension Player {
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The active option or `nil` if none.
     func activeMediaOption(for characteristic: AVMediaCharacteristic) -> AVMediaSelectionOption? {
-        mediaSelector.activeMediaOption(for: characteristic)
+        mediaSelectionContext.activeMediaOption(for: characteristic)
     }
 }
