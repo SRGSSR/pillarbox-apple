@@ -13,7 +13,7 @@ Its robust player provides all essential playback features you might expect:
 
 - Video and audio playback.
 - Support for on-demand and live streams (with or without DVR).
-- First-class integration with SwiftUI to build the player user interface your application needs.
+- First-class integration with SwiftUI to create the stunning playback user experience that your application deserves.
 - Integration with the standard system playback user experience, both on iOS and tvOS.
 - Playlist management including bidirectional navigation.
 - Support for alternative audio tracks, Audio Description, subtitles, CC and SDH, all tightly integrated with standard system accessibility features.
