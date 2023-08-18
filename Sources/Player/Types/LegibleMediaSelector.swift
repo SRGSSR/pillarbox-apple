@@ -7,6 +7,7 @@
 import AVFoundation
 import MediaAccessibility
 
+/// The default selector for legible options.
 struct LegibleMediaSelector: MediaSelector {
     let group: AVMediaSelectionGroup
 

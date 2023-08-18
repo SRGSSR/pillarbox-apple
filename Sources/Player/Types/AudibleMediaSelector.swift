@@ -6,6 +6,7 @@
 
 import AVFoundation
 
+/// The default selector for audible options.
 struct AudibleMediaSelector: MediaSelector {
     let group: AVMediaSelectionGroup
 

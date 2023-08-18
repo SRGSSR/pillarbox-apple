@@ -169,7 +169,7 @@ final class MediaSelectionTests: TestCase {
             option.languageIdentifier == "ja"
         }!
 
-        // Simulate an external change using the low-level player API directly.
+        // Simulates an external change using the low-level player API directly.
         player.systemPlayer.currentItem?.select(option, in: group)
 
         await expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.off))
