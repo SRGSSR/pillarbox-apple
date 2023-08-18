@@ -37,6 +37,42 @@ From left to right:
 - Screenshot 4: [Player with associated playlist](../Demo/Sources/Showcase/Playlist/PlaylistView.swift).
 - Screenshot 5: [Stories](../Demo/Sources/Showcase/Stories/StoriesView.swift).
 
+# Code example
+
+With Pillarbox creating a user custom interface for a player has never been easier. Just instantiate a `Player` and start building your user interface in SwiftUI:
+
+```swift
+import Player
+import SwiftUI
+
+struct PlayerView: View {
+    @StateObject private var player = Player(
+        item: .simple(url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!)
+    )
+
+    private var buttonImage: String {
+        switch player.playbackState {
+        case .playing:
+            return "pause.fill"
+        default:
+            return "play.fill"
+        }
+    }
+
+    var body: some View {
+        ZStack {
+            VideoView(player: player)
+            Button(action: player.togglePlayPause) {
+                Image(systemName: buttonImage)
+                    .resizable()
+                    .frame(width: 80, height: 80)
+            }
+        }
+        .onAppear(perform: player.play)
+    }
+}
+```
+
 # Compatibility
 
 [![GitHub releases](https://img.shields.io/github/v/release/SRGSSR/pillarbox-apple)](https://github.com/SRGSSR/pillarbox-apple/releases) [![platform](https://img.shields.io/badge/platfom-ios%20%7C%20tvos-blue)](https://github.com/SRGSSR/pillarbox-apple) [![SPM compatible](https://img.shields.io/badge/SPM-compatible-4BC51D.svg?style=flat)](https://swift.org/package-manager) [![GitHub license](https://img.shields.io/github/license/SRGSSR/pillarbox-apple)](../LICENSE)
