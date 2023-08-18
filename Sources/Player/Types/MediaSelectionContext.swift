@@ -12,11 +12,20 @@ struct MediaSelectionContext {
         self.init(groups: [:], selection: nil)
     }
 
-    let groups: [AVMediaCharacteristic: AVMediaSelectionGroup]
+    private let groups: [AVMediaCharacteristic: AVMediaSelectionGroup]
     let selection: AVMediaSelection?
 
     var characteristics: Set<AVMediaCharacteristic> {
         Set(groups.keys)
+    }
+
+    init(groups: [AVMediaCharacteristic: AVMediaSelectionGroup], selection: AVMediaSelection?) {
+        self.groups = groups
+        self.selection = selection
+    }
+
+    func group(for characteristic: AVMediaCharacteristic) -> AVMediaSelectionGroup? {
+        groups[characteristic]
     }
 
     func selectedOption(for characteristic: AVMediaCharacteristic) -> AVMediaSelectionOption? {
