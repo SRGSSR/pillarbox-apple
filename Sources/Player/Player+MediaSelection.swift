@@ -15,10 +15,10 @@ public extension Player {
 
     /// The list of media options associated with a characteristic.
     ///
-    /// Use `mediaCharacteristics` to retrieve available characteristics.
-    ///
     /// - Parameter characteristic: The characteristic.
-    /// - Returns: The list of options associated with the characteristic of an empty array if none.
+    /// - Returns: The list of options associated with the characteristic (might be empty).
+    ///
+    /// Use `mediaCharacteristics` to retrieve available characteristics.
     func mediaSelectionOptions(for characteristic: AVMediaCharacteristic) -> [MediaSelectionOption] {
         guard let selector = mediaSelector(for: characteristic) else { return [] }
         return selector.mediaSelectionOptions()
@@ -26,11 +26,12 @@ public extension Player {
 
     /// The currently selected media option for a characteristic.
     ///
-    /// Use `mediaCharacteristics` to retrieve available characteristics. Returns the selection based on
-    /// MediaAccessibility.
-    ///
     /// - Parameter characteristic: The characteristic.
-    /// - Returns: The selected option or `nil` if none.
+    /// - Returns: The selected option.
+    ///
+    /// Returns the selection based on [Media Accessibility](https://developer.apple.com/documentation/mediaaccessibility).
+    ///
+    /// You can use `mediaCharacteristics` to retrieve available characteristics.
     func selectedMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
         guard let selection = mediaSelectionContext.selection, let selector = mediaSelector(for: characteristic) else {
             return .off
@@ -40,15 +41,20 @@ public extension Player {
 
     /// Selects a media option for a characteristic.
     ///
-    /// This method does nothing if the provided option is not associated with the characteristic. Use 
-    /// `mediaCharacteristics` to retrieve available characteristics and sets the selection using MediaAccessibility.
-    /// Ignores options not returned by `mediaSelectionOptions(for:)`.
-    ///
     /// - Parameters:
     ///   - mediaOption: The option to select.
     ///   - characteristic: The characteristic.
+    ///
+    /// Sets the selection using [Media Accessibility](https://developer.apple.com/documentation/mediaaccessibility).
+    ///
+    /// You can use `mediaCharacteristics` to retrieve available characteristics. This method does nothing if attempting
+    /// to set an option that is not supported.
     func select(mediaOption: MediaSelectionOption, for characteristic: AVMediaCharacteristic) {
-        guard let item = queuePlayer.currentItem, let selector = mediaSelector(for: characteristic) else { return }
+        guard let item = queuePlayer.currentItem,
+              let selector = mediaSelector(for: characteristic),
+              selector.supports(mediaSelectionOption: mediaOption) else {
+            return
+        }
         selector.select(mediaOption: mediaOption, on: item)
     }
 
@@ -78,12 +84,12 @@ public extension Player {
 
     /// The current media option for a characteristic.
     ///
-    /// Unlike `selectedMediaOption(for:)` this method provides the currently applied selection. This method can
-    /// be useful if you need to access the actual selection made by `select(mediaOption:for:)` for `.automatic`
-    /// and `.off` options. Might return forced options.
-    ///
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The current option or `nil` if none.
+    ///
+    /// Unlike `selectedMediaOption(for:)` this method provides the currently applied option. This method can
+    /// be useful if you need to access the actual selection made by `select(mediaOption:for:)` for `.automatic`
+    /// and `.off` options. Forced options might be returned where applicable.
     func currentMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
         guard let option = mediaSelectionContext.selectedOption(for: characteristic) else { return .off }
         return .on(option)

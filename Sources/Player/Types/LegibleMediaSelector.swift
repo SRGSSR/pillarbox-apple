@@ -26,7 +26,6 @@ struct LegibleMediaSelector: MediaSelector {
         switch MACaptionAppearanceGetDisplayType(.user) {
         case .alwaysOn:
             if let option = selection.selectedMediaOption(in: group) {
-                assert(!option.hasMediaCharacteristic(.containsOnlyForcedSubtitles))
                 return .on(option)
             }
             else {
@@ -47,14 +46,12 @@ struct LegibleMediaSelector: MediaSelector {
         case .off:
             MACaptionAppearanceSetDisplayType(.user, .forcedOnly)
             item.selectMediaOptionAutomatically(in: group)
-        case let .on(option) where !option.hasMediaCharacteristic(.containsOnlyForcedSubtitles):
+        case let .on(option):
             MACaptionAppearanceSetDisplayType(.user, .alwaysOn)
             if let languageCode = option.languageCode {
                 MACaptionAppearanceAddSelectedLanguage(.user, languageCode as CFString)
             }
             item.select(option, in: group)
-        default:
-            break
         }
     }
 }

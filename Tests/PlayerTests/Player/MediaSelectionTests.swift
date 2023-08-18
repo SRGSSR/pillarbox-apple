@@ -215,29 +215,15 @@ final class MediaSelectionTests: TestCase {
         expect(player.currentMediaOption(for: .legible)).to(equal(.off))
     }
 
-    @MainActor
-    func testSelectLegibleOnOptionDoesNothingWhenForced() async throws {
+    func testSelectIncompatibleOptionDoesNothing() {
         setupAccessibilityDisplayType(.forcedOnly)
 
-        let player = Player(item: .simple(url: Stream.onDemandWithForcedAndUnforcedLegibleOptions.url))
-        await expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        expect(player.mediaSelectionOptions(for: .audible)).toEventuallyNot(beEmpty())
 
-        let forcedLegibleOption = try await player.options(for: .legible, withMediaCharacteristics: [.containsOnlyForcedSubtitles])
-            .first { $0.languageIdentifier == "ja" }!
-        player.select(mediaOption: .on(forcedLegibleOption), for: .legible)
-        await expect(player.selectedMediaOption(for: .legible)).toNever(haveLanguageIdentifier("ja"), until: .seconds(2))
-    }
-}
-
-private extension Player {
-    func options(
-        for characteristic: AVMediaCharacteristic,
-        withMediaCharacteristics characteristics: [AVMediaCharacteristic]
-    ) async throws -> [AVMediaSelectionOption] {
-        guard let item = systemPlayer.currentItem,
-              let group = try await item.asset.loadMediaSelectionGroup(for: characteristic) else {
-            return []
-        }
-        return AVMediaSelectionGroup.mediaSelectionOptions(from: group.options, withMediaCharacteristics: characteristics)
+        let firstAudibleOption = player.mediaSelectionOptions(for: .audible).first!
+        player.select(mediaOption: firstAudibleOption, for: .legible)
+        expect(player.selectedMediaOption(for: .legible)).toAlways(equal(.off), until: .seconds(2))
+        expect(player.currentMediaOption(for: .legible)).to(equal(.off))
     }
 }
