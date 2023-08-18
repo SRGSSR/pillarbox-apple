@@ -51,8 +51,7 @@ public extension Player {
     /// You can use `mediaCharacteristics` to retrieve available characteristics. This method does nothing if attempting
     /// to set an option that is not supported.
     func select(mediaOption: MediaSelectionOption, for characteristic: AVMediaCharacteristic) {
-        guard let item = queuePlayer.currentItem,
-              let selector = mediaSelector(for: characteristic),
+        guard let item = queuePlayer.currentItem, let selector = mediaSelector(for: characteristic),
               selector.supports(mediaSelectionOption: mediaOption) else {
             return
         }
@@ -71,18 +70,6 @@ public extension Player {
         }
     }
 
-    private func mediaSelector(for characteristic: AVMediaCharacteristic) -> MediaSelector? {
-        guard let group = mediaSelectionContext.group(for: characteristic) else { return nil }
-        switch characteristic {
-        case .audible:
-            return AudibleMediaSelector(group: group)
-        case .legible:
-            return LegibleMediaSelector(group: group)
-        default:
-            return nil
-        }
-    }
-
     /// The current media option for a characteristic.
     ///
     /// - Parameter characteristic: The characteristic.
@@ -94,5 +81,17 @@ public extension Player {
     func currentMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
         guard let option = mediaSelectionContext.selectedOption(for: characteristic) else { return .off }
         return .on(option)
+    }
+
+    private func mediaSelector(for characteristic: AVMediaCharacteristic) -> MediaSelector? {
+        guard let group = mediaSelectionContext.group(for: characteristic) else { return nil }
+        switch characteristic {
+        case .audible:
+            return AudibleMediaSelector(group: group)
+        case .legible:
+            return LegibleMediaSelector(group: group)
+        default:
+            return nil
+        }
     }
 }
