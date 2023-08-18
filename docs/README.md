@@ -57,6 +57,7 @@ To learn more how integration of Pillarbox into your project please have a look 
 
 Follow the links below for further documentation:
 
+- [Stream packaging advice](STREAM_PACKAGING_ADVICE.md)
 - [Known issues](KNOWN_ISSUES.md)
 - [Development setup](DEVELOPMENT_SETUP.md)
 - [Continuous integration](CONTINUOUS_INTEGRATION.md)
