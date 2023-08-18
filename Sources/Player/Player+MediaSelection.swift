@@ -33,7 +33,7 @@ public extension Player {
     /// - Returns: The selected option or `nil` if none.
     func selectedMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
         guard let selection = mediaSelectionContext.selection, let selector = mediaSelector(for: characteristic) else {
-            return .disabled
+            return .off
         }
         return selector.selectedMediaOption(in: selection)
     }
@@ -85,7 +85,7 @@ public extension Player {
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The active option or `nil` if none.
     func activeMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
-        guard let option = mediaSelectionContext.selectedOption(for: characteristic) else { return .disabled }
-        return .enabled(option)
+        guard let option = mediaSelectionContext.selectedOption(for: characteristic) else { return .off }
+        return .on(option)
     }
 }

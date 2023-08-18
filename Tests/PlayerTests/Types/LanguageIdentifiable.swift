@@ -14,7 +14,7 @@ protocol LanguageIdentifiable {
 extension MediaSelectionOption: LanguageIdentifiable {
     var languageIdentifier: String? {
         switch self {
-        case let .enabled(option):
+        case let .on(option):
             return option.locale?.language.languageCode?.identifier
         default:
             return nil

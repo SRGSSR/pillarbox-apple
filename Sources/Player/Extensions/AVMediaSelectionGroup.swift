@@ -12,6 +12,6 @@ extension AVMediaSelectionGroup {
             .sorted { lhsOption, rhsOption in
                 lhsOption.displayName.localizedCaseInsensitiveCompare(rhsOption.displayName) == .orderedAscending
             }
-            .map { .enabled($0) }
+            .map { .on($0) }
     }
 }

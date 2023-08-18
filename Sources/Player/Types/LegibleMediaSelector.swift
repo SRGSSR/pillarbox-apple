@@ -11,7 +11,7 @@ struct LegibleMediaSelector: MediaSelector {
     let group: AVMediaSelectionGroup
 
     func mediaSelectionOptions() -> [MediaSelectionOption] {
-        var options: [MediaSelectionOption] = [.automatic, .disabled]
+        var options: [MediaSelectionOption] = [.automatic, .off]
         options.append(contentsOf: group.sortedOptions(withoutMediaCharacteristics: [.containsOnlyForcedSubtitles]))
         return options
     }
@@ -20,15 +20,15 @@ struct LegibleMediaSelector: MediaSelector {
         switch MACaptionAppearanceGetDisplayType(.user) {
         case .alwaysOn:
             if let option = selection.selectedMediaOption(in: group) {
-                return .enabled(option)
+                return .on(option)
             }
             else {
-                return .disabled
+                return .off
             }
         case .automatic:
             return .automatic
         default:
-            return .disabled
+            return .off
         }
     }
 
@@ -37,10 +37,10 @@ struct LegibleMediaSelector: MediaSelector {
         case .automatic:
             MACaptionAppearanceSetDisplayType(.user, .automatic)
             item.selectMediaOptionAutomatically(in: group)
-        case .disabled:
+        case .off:
             MACaptionAppearanceSetDisplayType(.user, .forcedOnly)
             item.selectMediaOptionAutomatically(in: group)
-        case let .enabled(option):
+        case let .on(option):
             MACaptionAppearanceSetDisplayType(.user, .alwaysOn)
             if let languageCode = option.languageCode {
                 MACaptionAppearanceAddSelectedLanguage(.user, languageCode as CFString)

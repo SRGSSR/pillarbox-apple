@@ -16,16 +16,16 @@ struct AudibleMediaSelector: MediaSelector {
 
     func selectedMediaOption(in selection: AVMediaSelection) -> MediaSelectionOption {
         if let option = selection.selectedMediaOption(in: group) {
-            return .enabled(option)
+            return .on(option)
         }
         else {
-            return .disabled
+            return .off
         }
     }
 
     func select(mediaOption: MediaSelectionOption, on item: AVPlayerItem) {
         switch mediaOption {
-        case let .enabled(option):
+        case let .on(option):
             item.select(option, in: group)
         default:
             break
