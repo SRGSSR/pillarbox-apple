@@ -16,7 +16,7 @@ public extension Player {
     /// The list of media options associated with a characteristic.
     ///
     /// - Parameter characteristic: The characteristic.
-    /// - Returns: The list of options associated with the characteristic (might be empty).
+    /// - Returns: The list of options associated with the characteristic.
     ///
     /// Use `mediaCharacteristics` to retrieve available characteristics.
     func mediaSelectionOptions(for characteristic: AVMediaCharacteristic) -> [MediaSelectionOption] {
