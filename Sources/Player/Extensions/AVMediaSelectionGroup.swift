@@ -8,7 +8,7 @@ import AVFoundation
 import MediaAccessibility
 
 extension AVMediaSelectionGroup {
-    /// Returns media selection options where duplicates with the provided characteristics are preferred.
+    /// Returns media selection options where options with the provided characteristics are preferred.
     ///
     /// When several options have the same language code in the original list, those which have the provided media
     /// characteristics are preferred.
@@ -27,7 +27,7 @@ extension AVMediaSelectionGroup {
         .flatMap { $0 }
     }
 
-    /// Returns media selection options where duplicates without the provided characteristics are preferred.
+    /// Returns media selection options where options without the provided characteristics are preferred.
     ///
     /// When several options have the same language code in the original list, those which don't have the provided media
     /// characteristics are preferred.

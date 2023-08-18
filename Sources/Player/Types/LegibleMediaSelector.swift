@@ -54,10 +54,10 @@ struct LegibleMediaSelector: MediaSelector {
         }
     }
 
-    /// Returns the preferred captioning options from a list.
+    /// Returns the preferred captioning options from a list of options.
     ///
     /// The "Closed Captions + SDH" Accessibility setting is taken into account to return either a list containing
-    /// non-SDH options preferably (setting Off), or SDH-options preferably (setting On).
+    /// non-CC / non-SDH options preferably (setting Off), or CC / SDH-options preferably (setting On).
     private func preferredCaptioningOptions(from options: [AVMediaSelectionOption]) -> [AVMediaSelectionOption] {
         // swiftlint:disable:next line_length
         guard let preferredCharacteristics = MACaptionAppearanceCopyPreferredCaptioningMediaCharacteristics(.user).takeRetainedValue() as? [AVMediaCharacteristic] else {
