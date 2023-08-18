@@ -39,7 +39,7 @@ From left to right:
 
 # Code example
 
-With Pillarbox creating a user custom interface for a player has never been easier. Just instantiate a `Player` and start building your user interface in SwiftUI:
+With Pillarbox creating a custom video player user interface has never been easier. Simply instantiate a `Player` and start building your user interface in SwiftUI right away:
 
 ```swift
 import Player
@@ -72,6 +72,8 @@ struct PlayerView: View {
     }
 }
 ```
+
+With the expressiveness of SwiftUI, our rich playback API and the set of components at your disposal you will have a full-fledged player user interface in no time.
 
 # Compatibility
 
