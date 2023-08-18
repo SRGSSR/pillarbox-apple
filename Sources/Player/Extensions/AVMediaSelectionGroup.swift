@@ -5,17 +5,49 @@
 //
 
 import AVFoundation
+import MediaAccessibility
 
 extension AVMediaSelectionGroup {
-    static func sortedMediaSelectionOptions(from options: [AVMediaSelectionOption]) -> [AVMediaSelectionOption] {
-        options.sorted(by: <)
+    /// Returns media selection options where duplicates with the provided characteristics are preferred.
+    ///
+    /// When several options have the same language code in the original list, those which have the provided media
+    /// characteristics are preferred.
+    static func preferredMediaSelectionOptions(
+        from options: [AVMediaSelectionOption],
+        withMediaCharacteristics characteristics: [AVMediaCharacteristic]
+    ) -> [AVMediaSelectionOption] {
+        let withOptions = Dictionary(grouping: mediaSelectionOptions(from: options, withMediaCharacteristics: characteristics)) { option in
+            option.languageCode
+        }
+        return Dictionary(grouping: options) { option in
+            option.languageCode
+        }
+        .merging(withOptions) { _, new in new }
+        .values
+        .flatMap { $0 }
     }
 
-    static func sortedMediaSelectionOptions(
+    /// Returns media selection options where duplicates without the provided characteristics are preferred.
+    ///
+    /// When several options have the same language code in the original list, those which don't have the provided media
+    /// characteristics are preferred.
+    static func preferredMediaSelectionOptions(
         from options: [AVMediaSelectionOption],
         withoutMediaCharacteristics characteristics: [AVMediaCharacteristic]
     ) -> [AVMediaSelectionOption] {
-        mediaSelectionOptions(from: options, withoutMediaCharacteristics: characteristics).sorted(by: <)
+        let withoutOptions = Dictionary(grouping: mediaSelectionOptions(from: options, withoutMediaCharacteristics: characteristics)) { option in
+            option.languageCode
+        }
+        return Dictionary(grouping: options) { option in
+            option.languageCode
+        }
+        .merging(withoutOptions) { _, new in new }
+        .values
+        .flatMap { $0 }
+    }
+
+    static func sortedMediaSelectionOptions(from options: [AVMediaSelectionOption]) -> [AVMediaSelectionOption] {
+        options.sorted(by: <)
     }
 }
 
