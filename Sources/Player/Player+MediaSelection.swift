@@ -36,7 +36,8 @@ public extension Player {
         guard let selection = mediaSelectionContext.selection, let selector = mediaSelector(for: characteristic) else {
             return .off
         }
-        return selector.selectedMediaOption(in: selection)
+        let option = selector.selectedMediaOption(in: selection)
+        return selector.supports(mediaSelectionOption: option) ? option : .off
     }
 
     /// Selects a media option for a characteristic.

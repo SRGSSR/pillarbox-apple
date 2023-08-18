@@ -151,6 +151,30 @@ final class MediaSelectionTests: TestCase {
         expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.off))
     }
 
+    // When using AirPlay the receiver might offer forced subtitle selection, thus changing subtitles externally. In
+    // this case the perceived selected option must be `.off`.
+    @MainActor
+    func testLegibleOptionStaysOffEvenIfForcedSubtitlesAreEnabledExternally() async throws {
+        setupAccessibilityDisplayType(.alwaysOn(languageCode: "ja"))
+
+        let player = Player(item: .simple(url: Stream.onDemandWithForcedAndUnforcedLegibleOptions.url))
+        await expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
+
+        let group = try await player.group(for: .legible)!
+        let option = AVMediaSelectionGroup.mediaSelectionOptions(
+            from: group.options,
+            withMediaCharacteristics: [.containsOnlyForcedSubtitles]
+        )
+        .first { option in
+            option.languageIdentifier == "ja"
+        }!
+
+        // Simulate an external change using the low-level player API directly.
+        player.systemPlayer.currentItem?.select(option, in: group)
+
+        await expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.off))
+    }
+
     func testSelectAudibleOnOption() {
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
         expect(player.mediaSelectionOptions(for: .audible)).toEventuallyNot(beEmpty())
@@ -225,5 +249,12 @@ final class MediaSelectionTests: TestCase {
         player.select(mediaOption: firstAudibleOption, for: .legible)
         expect(player.selectedMediaOption(for: .legible)).toAlways(equal(.off), until: .seconds(2))
         expect(player.currentMediaOption(for: .legible)).to(equal(.off))
+    }
+}
+
+private extension Player {
+    func group(for characteristic: AVMediaCharacteristic) async throws -> AVMediaSelectionGroup? {
+        guard let item = systemPlayer.currentItem else { return nil }
+        return try await item.asset.loadMediaSelectionGroup(for: characteristic)
     }
 }
