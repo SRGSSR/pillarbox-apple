@@ -76,15 +76,15 @@ public extension Player {
         }
     }
 
-    /// The currently active media option for a characteristic.
+    /// The current media option for a characteristic.
     ///
-    /// This method can be used to retrieve the actual media selection option set by the player. This can be useful
-    /// to retrieve options that can be automatically activated by the player, e.g. forced subtitles. Ignores
-    /// MediaAccessibility and might therefore return forced subtitles.
+    /// Unlike `selectedMediaOption(for:)` this method provides the currently applied selection. This method can
+    /// be useful if you need to access the actual selection made by `select(mediaOption:for:)` for `.automatic`
+    /// and `.off` options. Might return forced options.
     ///
     /// - Parameter characteristic: The characteristic.
-    /// - Returns: The active option or `nil` if none.
-    func activeMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
+    /// - Returns: The current option or `nil` if none.
+    func currentMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
         guard let option = mediaSelectionContext.selectedOption(for: characteristic) else { return .off }
         return .on(option)
     }
