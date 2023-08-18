@@ -26,7 +26,8 @@ public extension Player {
 
     /// The currently selected media option for a characteristic.
     ///
-    /// Use `mediaCharacteristics` to retrieve available characteristics.
+    /// Use `mediaCharacteristics` to retrieve available characteristics. Returns the selection based on
+    /// MediaAccessibility.
     ///
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The selected option or `nil` if none.
@@ -40,7 +41,8 @@ public extension Player {
     /// Selects a media option for a characteristic.
     ///
     /// This method does nothing if the provided option is not associated with the characteristic. Use 
-    /// `mediaCharacteristics` to retrieve available characteristics.
+    /// `mediaCharacteristics` to retrieve available characteristics and sets the selection using MediaAccessibility.
+    /// Ignores options not returned by `mediaSelectionOptions(for:)`.
     ///
     /// - Parameters:
     ///   - mediaOption: The option to select.
@@ -73,17 +75,17 @@ public extension Player {
             return nil
         }
     }
-}
 
-extension Player {
-    /// The currently active AVFoundation media option for a characteristic.
+    /// The currently active media option for a characteristic.
     ///
     /// This method can be used to retrieve the actual media selection option set by the player. This can be useful
-    /// to retrieve options that can be automatically activated by the player, e.g. forced subtitles.
+    /// to retrieve options that can be automatically activated by the player, e.g. forced subtitles. Ignores
+    /// MediaAccessibility and might therefore return forced subtitles.
     ///
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The active option or `nil` if none.
-    func activeMediaOption(for characteristic: AVMediaCharacteristic) -> AVMediaSelectionOption? {
-        mediaSelectionContext.selectedOption(for: characteristic)
+    func activeMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
+        guard let option = mediaSelectionContext.selectedOption(for: characteristic) else { return .disabled }
+        return .enabled(option)
     }
 }

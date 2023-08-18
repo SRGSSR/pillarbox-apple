@@ -104,13 +104,13 @@ final class MediaSelectionTests: TestCase {
 
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
         expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.automatic))
-        expect(player.activeMediaOption(for: .legible)).to(beNil())
+        expect(player.activeMediaOption(for: .legible)).to(equal(.disabled))
     }
 
     func testInitiallySelectedAudibleOptionWithoutOptions() {
         let player = Player(item: .simple(url: Stream.onDemandWithoutOptions.url))
         expect(player.selectedMediaOption(for: .audible)).toAlways(equal(.disabled), until: .seconds(2))
-        expect(player.activeMediaOption(for: .audible)).to(beNil())
+        expect(player.activeMediaOption(for: .audible)).to(equal(.disabled))
     }
 
     func testInitiallySelectedLegibleOptionWithoutOptions() {
@@ -118,7 +118,7 @@ final class MediaSelectionTests: TestCase {
 
         let player = Player(item: .simple(url: Stream.onDemandWithoutOptions.url))
         expect(player.selectedMediaOption(for: .legible)).toAlways(equal(.disabled), until: .seconds(2))
-        expect(player.activeMediaOption(for: .legible)).to(beNil())
+        expect(player.activeMediaOption(for: .legible)).to(equal(.disabled))
     }
 
     func testInitiallySelectedDisabledLegibleOption() {
@@ -126,7 +126,7 @@ final class MediaSelectionTests: TestCase {
 
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
         expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.disabled))
-        expect(player.activeMediaOption(for: .legible)).to(beNil())
+        expect(player.activeMediaOption(for: .legible)).to(equal(.disabled))
     }
 
     func testSelectedAudibleOptionWhenAdvancingToNextItem() {
@@ -201,7 +201,7 @@ final class MediaSelectionTests: TestCase {
 
         player.select(mediaOption: .automatic, for: .legible)
         expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.automatic))
-        expect(player.activeMediaOption(for: .legible)).to(beNil())
+        expect(player.activeMediaOption(for: .legible)).to(equal(.disabled))
     }
 
     func testSelectDisabledLegibleOption() {
@@ -212,6 +212,8 @@ final class MediaSelectionTests: TestCase {
 
         player.select(mediaOption: .disabled, for: .legible)
         expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.disabled))
-        expect(player.activeMediaOption(for: .legible)).to(beNil())
+        expect(player.activeMediaOption(for: .legible)).to(equal(.disabled))
     }
+
+    // TODO: Try to select forced subtitles returned from activeMediaOption. Must do nothing
 }
