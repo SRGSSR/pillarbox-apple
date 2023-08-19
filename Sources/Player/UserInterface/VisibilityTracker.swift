@@ -13,7 +13,7 @@ import UIKit
 /// An observable object tracking user interface visibility.
 ///
 /// The tracker automatically turns off visibility after a delay while playing content. It also automatically turns
-/// on visibility when the application returns to the foreground, provided the player is not currently playing.
+/// on visibility when playback is paused externally (e.g. by another app or through the control center).
 @available(tvOS, unavailable)
 public final class VisibilityTracker: ObservableObject {
     private enum TriggerId {

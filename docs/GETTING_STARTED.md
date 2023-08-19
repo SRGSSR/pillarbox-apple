@@ -65,7 +65,7 @@ A player usually responds to user interaction in a standard way:
 
 - Controls are toggled on or off when the user taps the player area.
 - Controls are automatically hidden after some delay during playback. Auto hide must only occur as long as the user is not actively interacting with the player, though, for example if controls contain a slider or buttons.
-- When not playing controls are automatically toggled on when returning from background, inviting the user to resume playback.
+- Controls are shown when playback is paused externally (e.g. by another app or through the control center), inviting the user to resume playback.
 
 Pillarbox provides `VisibilityTracker` to make implementing this standard behavior as straightforward as possible. This observable object exposes a `isUserInterfaceHidden` read-only property which advises whether a player user interface should be hidden or not.
 
