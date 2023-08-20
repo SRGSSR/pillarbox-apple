@@ -7,9 +7,20 @@
 import AVFoundation
 
 extension AVMediaSelectionGroup {
-    var sortedOptions: [AVMediaSelectionOption] {
-        options.sorted { lhsOption, rhsOption in
-            lhsOption.displayName.localizedCaseInsensitiveCompare(rhsOption.displayName) == .orderedAscending
-        }
+    static func sortedMediaSelectionOptions(from options: [AVMediaSelectionOption]) -> [AVMediaSelectionOption] {
+        options.sorted(by: <)
+    }
+
+    static func sortedMediaSelectionOptions(
+        from options: [AVMediaSelectionOption],
+        withoutMediaCharacteristics characteristics: [AVMediaCharacteristic]
+    ) -> [AVMediaSelectionOption] {
+        mediaSelectionOptions(from: options, withoutMediaCharacteristics: characteristics).sorted(by: <)
+    }
+}
+
+private extension AVMediaSelectionOption {
+    static func < (_ lhs: AVMediaSelectionOption, _ rhs: AVMediaSelectionOption) -> Bool {
+        lhs.displayName.localizedCaseInsensitiveCompare(rhs.displayName) == .orderedAscending
     }
 }

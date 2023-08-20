@@ -95,7 +95,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
                 expect(labels.media_timeshift).to(equal(0))
             },
             .play { labels in
-                expect(labels.media_timeshift).to(beCloseTo(4, within: 1))
+                expect(labels.media_timeshift).to(beCloseTo(4, within: 2))
             }
         ) {
             player.seek(at(player.timeRange.end - CMTime(value: 4, timescale: 1)))

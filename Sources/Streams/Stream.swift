@@ -30,58 +30,71 @@ public struct Stream {
 public extension Stream {
     /// An on-demand stream.
     static let onDemand: Self = .init(
-        url: URL(string: "http://localhost:8123/single/on_demand/master.m3u8")!,
+        url: URL(string: "http://localhost:8123/simple/on_demand/master.m3u8")!,
         duration: CMTime(value: 120, timescale: 1)
     )
 
     /// A short on-demand stream.
     static let shortOnDemand: Self = .init(
-        url: URL(string: "http://localhost:8123/single/on_demand_short/master.m3u8")!,
+        url: URL(string: "http://localhost:8123/simple/on_demand_short/master.m3u8")!,
         duration: CMTime(value: 1, timescale: 1)
     )
 
     /// A medium-sized on-demand stream.
     static let mediumOnDemand: Self = .init(
-        url: URL(string: "http://localhost:8123/single/on_demand_medium/master.m3u8")!,
+        url: URL(string: "http://localhost:8123/simple/on_demand_medium/master.m3u8")!,
         duration: CMTime(value: 5, timescale: 1)
     )
 
     /// A square on-demand stream.
     static let squareOnDemand: Self = .init(
-        url: URL(string: "http://localhost:8123/single/on_demand_square/master.m3u8")!,
+        url: URL(string: "http://localhost:8123/simple/on_demand_square/master.m3u8")!,
         duration: CMTime(value: 120, timescale: 1)
     )
 
     /// A corrupt on-demand stream.
     static let corruptOnDemand: Self = .init(
-        url: URL(string: "http://localhost:8123/single/on_demand_corrupt/master.m3u8")!,
+        url: URL(string: "http://localhost:8123/simple/on_demand_corrupt/master.m3u8")!,
         duration: CMTime(value: 2, timescale: 1)
     )
 
     /// A live stream.
     static let live: Self = .init(
-        url: URL(string: "http://localhost:8123/single/live/master.m3u8")!,
+        url: URL(string: "http://localhost:8123/simple/live/master.m3u8")!,
         duration: .zero
     )
 
     /// A DVR stream.
     static let dvr: Self = .init(
-        url: URL(string: "http://localhost:8123/single/dvr/master.m3u8")!,
+        url: URL(string: "http://localhost:8123/simple/dvr/master.m3u8")!,
         duration: CMTime(value: 17 /* 20 - 3 * 1 (chunk) */, timescale: 1)
     )
 }
 
 public extension Stream {
-    /// An on-demand stream with several subtitles and audio tracks.
-    static let onDemandWithTracks: Self = .init(
-        url: URL(string: "http://localhost:8123/multi/on_demand_with_tracks/master.m3u8")!,
+    /// An on-demand stream with several audible and legible options.
+    static let onDemandWithOptions: Self = .init(
+        url: URL(string: "http://localhost:8123/packaged/on_demand_with_options/master.m3u8")!,
         duration: CMTime(value: 4, timescale: 1)
     )
 
-    /// An on-demand stream without subtitles and audio tracks.
-    static let onDemandWithoutTracks: Self = .init(
-        url: URL(string: "http://localhost:8123/multi/on_demand_without_tracks/master.m3u8")!,
+    /// An on-demand stream without audible or legible options.
+    static let onDemandWithoutOptions: Self = .init(
+        url: URL(string: "http://localhost:8123/packaged/on_demand_without_options/master.m3u8")!,
         duration: CMTime(value: 4, timescale: 1)
+    )
+
+    /// An on-demand stream with a single audible option.
+    static let onDemandWithSingleAudibleOption: Self = .init(
+        url: URL(string: "http://localhost:8123/packaged/on_demand_with_single_audible_option/master.m3u8")!,
+        duration: CMTime(value: 4, timescale: 1)
+    )
+
+    /// An on-demand stream with forced and unforced legible options.
+    static let onDemandWithForcedAndUnforcedLegibleOptions: Self = .init(
+        // TODO: Should update to a local stream when forced subtitles are supported by Shaka Packager.
+        url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8")!,
+        duration: CMTime(value: 1800, timescale: 1)
     )
 }
 

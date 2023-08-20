@@ -6,26 +6,27 @@
 
 import AVFoundation
 
-struct AudibleSelectionGroup: MediaSelectionGroup {
+/// The default selector for audible options.
+struct AudibleMediaSelector: MediaSelector {
     let group: AVMediaSelectionGroup
 
-    var options: [MediaSelectionOption] {
-        guard group.options.count > 1 else { return [] }
-        return group.sortedOptions.map { .enabled($0) }
+    func mediaSelectionOptions() -> [MediaSelectionOption] {
+        let options = AVMediaSelectionGroup.sortedMediaSelectionOptions(from: group.options)
+        return options.count > 1 ? options.map { .on($0) } : []
     }
 
     func selectedMediaOption(in selection: AVMediaSelection) -> MediaSelectionOption {
         if let option = selection.selectedMediaOption(in: group) {
-            return .enabled(option)
+            return .on(option)
         }
         else {
-            return .disabled
+            return .off
         }
     }
 
-    func select(mediaOption: MediaSelectionOption, in item: AVPlayerItem) {
+    func select(mediaOption: MediaSelectionOption, on item: AVPlayerItem) {
         switch mediaOption {
-        case let .enabled(option):
+        case let .on(option):
             item.select(option, in: group)
         default:
             break

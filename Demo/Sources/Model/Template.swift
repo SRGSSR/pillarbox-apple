@@ -85,6 +85,10 @@ enum URLTemplate {
         title: "Apple WWDC Keynote 2023",
         type: .url("https://events-delivery.apple.com/0105cftwpxxsfrpdwklppzjhjocakrsk/m3u8/vod_index-PQsoJoECcKHTYzphNkXohHsQWACugmET.m3u8")
     )
+    static let appleDolbyAtmos = Template(
+        title: "Apple Dolby Atmos",
+        type: .url("https://devstreaming-cdn.apple.com/videos/streaming/examples/adv_dv_atmos/main.m3u8")
+    )
     static let uhdVideoHLS = Template(
         title: "Brain Farm Skate Phantom Flex",
         description: "4K video",
@@ -93,11 +97,11 @@ enum URLTemplate {
     static let onDemandVideoLocalHLS = Template(
         title: "Test video pattern",
         description: "Stream served locally",
-        type: .url("http://localhost:8123/single/on_demand/master.m3u8")
+        type: .url("http://localhost:8123/simple/on_demand/master.m3u8")
     )
     static let unknown = Template(
         title: "Unknown URL",
-        type: .url("http://localhost:8123/single/unavailable/master.m3u8")
+        type: .url("http://localhost:8123/simple/unavailable/master.m3u8")
     )
     static let bitmovinOnDemandMultipleTracks = Template(
         title: "Multiple subtitles and audio tracks",

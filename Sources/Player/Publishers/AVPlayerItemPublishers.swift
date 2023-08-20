@@ -93,12 +93,12 @@ extension AVPlayerItem {
         .eraseToAnyPublisher()
     }
 
-    func mediaSelectorPublisher() -> AnyPublisher<MediaSelector, Never> {
+    func mediaSelectionContextPublisher() -> AnyPublisher<MediaSelectionContext, Never> {
         Publishers.CombineLatest(
             asset.mediaSelectionGroupsPublisher(),
             mediaSelectionPublisher()
         )
-        .map { MediaSelector(groups: $0, selection: $1) }
+        .map { MediaSelectionContext(groups: $0, selection: $1) }
         .prepend(.empty)
         .eraseToAnyPublisher()
     }
