@@ -13,7 +13,7 @@ import UIKit
 /// An observable object tracking user interface visibility.
 ///
 /// The tracker automatically turns off visibility after a delay while playing content. It also automatically turns
-/// on visibility when the application returns to the foreground, provided the player is not currently playing.
+/// on visibility when playback is paused externally (e.g. by another app or through the control center).
 @available(tvOS, unavailable)
 public final class VisibilityTracker: ObservableObject {
     private enum TriggerId {
@@ -75,23 +75,24 @@ public final class VisibilityTracker: ObservableObject {
     private func updatePublisher(for playbackState: PlaybackState) -> AnyPublisher<Bool, Never> {
         switch playbackState {
         case .playing:
-            return interactivePublisher()
+            return togglePublisher
+                .prepend(isUserInterfaceHidden)
                 .compactMap { [weak self] isHidden -> AnyPublisher<Bool, Never>? in
                     guard let self else { return nil }
-                    return Just(isHidden).append(autohidePublisher(delay: delay), if: !isHidden)
+                    return Just(isHidden)
+                        .append(autoHidePublisher(delay: delay), if: !isHidden)
                 }
                 .switchToLatest()
                 .eraseToAnyPublisher()
+        case .paused:
+            return Publishers.Merge(togglePublisher, foregroundPublisher())
+                .prepend(false)
+                .eraseToAnyPublisher()
         default:
-            return Publishers.Merge(interactivePublisher(), foregroundPublisher())
+            return Publishers.Merge(togglePublisher, foregroundPublisher())
+                .prepend(isUserInterfaceHidden)
                 .eraseToAnyPublisher()
         }
-    }
-
-    private func interactivePublisher() -> AnyPublisher<Bool, Never> {
-        togglePublisher
-            .prepend(isUserInterfaceHidden)
-            .eraseToAnyPublisher()
     }
 
     private func foregroundPublisher() -> AnyPublisher<Bool, Never> {
@@ -100,7 +101,7 @@ public final class VisibilityTracker: ObservableObject {
             .eraseToAnyPublisher()
     }
 
-    private func autohidePublisher(delay: TimeInterval) -> AnyPublisher<Bool, Never> {
+    private func autoHidePublisher(delay: TimeInterval) -> AnyPublisher<Bool, Never> {
         Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reset)) {
             Timer.publish(every: delay, on: .main, in: .common)
                 .autoconnect()
