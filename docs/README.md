@@ -2,19 +2,26 @@
 
 # Overview
 
-Pillarbox is the modern SRG SSR player ecosystem implemented on top of AVFoundation and AVKit. Pillarbox was designed with flexibilty in mind, letting you fully customize:
+Pillarbox is the iOS and tvOS modern reactive SRG SSR player ecosystem implemented on top of AVFoundation and AVKit. Pillarbox has been designed with robustness, efficiency and flexibilty in mind, with full customization of:
 
 - Metadata and asset URL retrieval.
-- Asset resource loading.
+- Asset resource loading, including support for FairPlay.
 - Analytics and QoS integration.
 - User interface layout in SwiftUI.
 
-Its robust reactive player provides all essential playback features, as well as:
+Its robust player provides all essential playback features you might expect:
 
-- Support for playlists, including bidirectional navigation.
-- First-class integration with SwiftUI.
+- Video and audio playback.
+- Support for on-demand and live streams (with or without DVR).
+- First-class integration with SwiftUI to create the stunning playback user experience that your application deserves.
+- Integration with the standard system playback user experience, both on iOS and tvOS.
+- Playlist management including bidirectional navigation.
+- Support for alternative audio tracks, Audio Description, subtitles, CC and SDH, all tightly integrated with standard system accessibility features.
 - AirPlay compatibility.
 - Control center integration.
+- Multiple instance support.
+- The smoothest possible seek experience on Apple devices, with blazing-fast content navigation in streams enabled for trick play.
+- Playback speed controls.
 
 In addition Pillarbox provides the ability to play all SRG SSR content through a dedicated package.
 
@@ -26,9 +33,47 @@ Here are a few examples of layouts which can be achieved using Pillarbox and Swi
 
 From left to right:
 
-- Screenshots 1, 2 and 3: [Standard player interface](../Demo/Sources/Players/PlaybackView.swift) showing on-demand video, video livestream and audio stream playback respectively.
+- Screenshots 1, 2 and 3: [Rich custom player user interface](../Demo/Sources/Players/PlaybackView.swift).
 - Screenshot 4: [Player with associated playlist](../Demo/Sources/Showcase/Playlist/PlaylistView.swift).
 - Screenshot 5: [Stories](../Demo/Sources/Showcase/Stories/StoriesView.swift).
+
+# Code example
+
+With Pillarbox creating a custom video player user interface has never been easier. Simply instantiate a `Player` and start building your user interface in SwiftUI right away:
+
+```swift
+import Player
+import SwiftUI
+
+struct PlayerView: View {
+    @StateObject private var player = Player(
+        item: .simple(url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!)
+    )
+
+    private var buttonImage: String {
+        switch player.playbackState {
+        case .playing:
+            return "pause.fill"
+        default:
+            return "play.fill"
+        }
+    }
+
+    var body: some View {
+        ZStack {
+            VideoView(player: player)
+            Button(action: player.togglePlayPause) {
+                Image(systemName: buttonImage)
+                    .resizable()
+                    .frame(width: 80, height: 80)
+            }
+        }
+        .onAppear(perform: player.play)
+    }
+}
+```
+
+With the expressiveness of SwiftUI, our rich playback API and the set of components at your disposal you will have a full-fledged player user interface in no time.
 
 # Compatibility
 

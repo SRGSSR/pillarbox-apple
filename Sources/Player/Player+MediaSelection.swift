@@ -30,6 +30,7 @@ public extension Player {
     /// - Returns: The selected option.
     ///
     /// Returns the selection based on [Media Accessibility](https://developer.apple.com/documentation/mediaaccessibility).
+    /// This ensures that selection made in other apps relying on Media Accessibility is automatically restored.
     ///
     /// You can use `mediaCharacteristics` to retrieve available characteristics.
     func selectedMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
@@ -47,6 +48,7 @@ public extension Player {
     ///   - characteristic: The characteristic.
     ///
     /// Sets the selection using [Media Accessibility](https://developer.apple.com/documentation/mediaaccessibility).
+    /// This ensures that selection is automatically restored in other apps relying on Media Accessibility.
     ///
     /// You can use `mediaCharacteristics` to retrieve available characteristics. This method does nothing if attempting
     /// to set an option that is not supported.
