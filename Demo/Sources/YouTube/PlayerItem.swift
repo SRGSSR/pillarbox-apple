@@ -28,11 +28,12 @@ extension PlayerItem {
         Future<URL, YouTubeError> { promise in
             Task {
                 do {
-                    let stream = try await YouTube(videoID: videoId)
-                        .streams
+                    let liveStream = try await YouTube(videoID: videoId).livestreams.first
+                    let stream = try await YouTube(videoID: videoId).streams
                         .filter { $0.subtype == "mp4" && $0.includesVideoTrack }
                         .highestAudioBitrateStream()
-                    guard let url = stream?.url else { return promise(.failure(.url)) }
+
+                    guard let url = liveStream?.url ?? stream?.url else { return promise(.failure(.url)) }
                     return promise(.success(url))
                 }
                 catch {
