@@ -250,6 +250,17 @@ final class MediaSelectionTests: TestCase {
         expect(player.selectedMediaOption(for: .legible)).toAlways(equal(.off), until: .seconds(2))
         expect(player.currentMediaOption(for: .legible)).to(equal(.off))
     }
+
+    func testLegibleOptionSwitchFromOffToAutomatic() {
+        setupAccessibilityDisplayType(.forcedOnly)
+
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
+        player.select(mediaOption: .automatic, for: .legible)
+
+        expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.automatic))
+        expect(player.currentMediaOption(for: .legible)).to(equal(.off))
+    }
 }
 
 private extension Player {
