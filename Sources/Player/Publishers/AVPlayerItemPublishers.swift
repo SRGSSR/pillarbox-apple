@@ -7,6 +7,7 @@
 import AVFoundation
 import Combine
 import Core
+import MediaAccessibility
 
 extension AVPlayerItem {
     func itemStatePublisher() -> AnyPublisher<ItemState, Never> {
@@ -94,11 +95,16 @@ extension AVPlayerItem {
     }
 
     func mediaSelectionContextPublisher() -> AnyPublisher<MediaSelectionContext, Never> {
-        Publishers.CombineLatest(
+        Publishers.CombineLatest3(
             asset.mediaSelectionGroupsPublisher(),
-            mediaSelectionPublisher()
+            mediaSelectionPublisher(),
+            NotificationCenter.default.publisher(for: kMACaptionAppearanceSettingsChangedNotification as Notification.Name)
+                .map { _ in }
+                .prepend(())
         )
-        .map { MediaSelectionContext(groups: $0, selection: $1) }
+        .map { groups, selection, _ in
+            MediaSelectionContext(groups: groups, selection: selection)
+        }
         .prepend(.empty)
         .eraseToAnyPublisher()
     }
