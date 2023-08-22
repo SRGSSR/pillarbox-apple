@@ -4,14 +4,11 @@ This article discusses how streams should be packaged for optimal compatibility 
 
 ## Automatic media option selection
 
-Pillarbox player supports automatic media option selection based on:
-
-- System language and accessibility settings (e.g. unforced subtitles, CC, SDH and audio description).
-- Content language (e.g. forced subtitles).
+Pillarbox player supports automatic media option selection based on language and accessibility settings (e.g. unforced subtitles, CC, SDH and audio description), both for audible and legible renditions. This requires streams to satifsfy common requirements which are listed below.
 
 ### Audio renditions
 
-For automatic selection to work with audio description be sure that the corresponding [renditions](https://datatracker.ietf.org/doc/html/rfc8216#section-4.3.4.1) have the `public.accessibility.describes-video` characteristic.
+For automatic selection to work with audio description be sure that the corresponding [renditions](https://datatracker.ietf.org/doc/html/rfc8216#section-4.3.4.1) have the `public.accessibility.describes-video` characteristic. All renditions should also have their `AUTOSELECT` attribute set to `YES` so that the player can consider them for automatic selection.
 
 ### Legible renditions
 
