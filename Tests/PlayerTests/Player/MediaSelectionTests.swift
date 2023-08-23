@@ -266,7 +266,7 @@ final class MediaSelectionTests: TestCase {
         setupAccessibilityDisplayType(.alwaysOn(languageCode: "ja"))
 
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
-        player.setMediaSelectionCriteria(preferredLanguages: ["xx"], for: .legible)
+        player.setMediaSelectionCriteria(preferredLanguages: ["xy", "ja"], for: .legible)
         expect(player.mediaSelectionContext.selectedOption(for: .legible)).toEventually(haveLanguageIdentifier("ja"))
     }
 
@@ -274,7 +274,19 @@ final class MediaSelectionTests: TestCase {
         setupAccessibilityDisplayType(.alwaysOn(languageCode: "ja"))
 
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
-        player.setMediaSelectionCriteria(preferredLanguages: ["fr"], for: .legible)
+        player.setMediaSelectionCriteria(preferredLanguages: ["fr", "ja"], for: .legible)
+        expect(player.mediaSelectionContext.selectedOption(for: .legible)).toEventually(haveLanguageIdentifier("fr"))
+    }
+
+    func testSelectLanguageWithPreSelectedLanguage() {
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
+
+        player.select(mediaOption: player.mediaSelectionOptions(for: .legible).first { option in
+            option.languageIdentifier == "ja"
+        }!, for: .legible)
+
+        player.setMediaSelectionCriteria(preferredLanguages: ["fr", "ja"], for: .legible)
         expect(player.mediaSelectionContext.selectedOption(for: .legible)).toEventually(haveLanguageIdentifier("fr"))
     }
 }
