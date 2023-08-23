@@ -85,6 +85,17 @@ public extension Player {
         return .on(option)
     }
 
+    /// Applies automatic selection criteria for media that has the specified media characteristic.
+    /// - Parameters:
+    ///   - preferredLanguages: An Array of strings containing language identifiers, in order of desirability, that are preferred for selection.
+    ///   Languages can be indicated via BCP 47 language identifiers or via ISO 639-2/T language codes.
+    ///   - characteristic: The media characteristic for which the selection criteria are to be applied. 
+    ///   Supported values include .audible, .legible, and .visual.
+    func setMediaSelectionCriteria(preferredLanguages: [String], for characteristic: AVMediaCharacteristic) {
+        let criteria = AVPlayerMediaSelectionCriteria(preferredLanguages: preferredLanguages, preferredMediaCharacteristics: nil)
+        queuePlayer.setMediaSelectionCriteria(criteria, forMediaCharacteristic: characteristic)
+    }
+
     private func mediaSelector(for characteristic: AVMediaCharacteristic) -> MediaSelector? {
         guard let group = mediaSelectionContext.group(for: characteristic) else { return nil }
         switch characteristic {

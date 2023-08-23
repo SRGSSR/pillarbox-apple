@@ -261,6 +261,22 @@ final class MediaSelectionTests: TestCase {
         expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.automatic))
         expect(player.currentMediaOption(for: .legible)).to(equal(.off))
     }
+
+    func testSelectUnknownLanguage() {
+        setupAccessibilityDisplayType(.alwaysOn(languageCode: "ja"))
+
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        player.setMediaSelectionCriteria(preferredLanguages: ["xx"], for: .legible)
+        expect(player.mediaSelectionContext.selectedOption(for: .legible)).toEventually(haveLanguageIdentifier("ja"))
+    }
+
+    func testSelectLanguage() {
+        setupAccessibilityDisplayType(.alwaysOn(languageCode: "ja"))
+
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        player.setMediaSelectionCriteria(preferredLanguages: ["fr"], for: .legible)
+        expect(player.mediaSelectionContext.selectedOption(for: .legible)).toEventually(haveLanguageIdentifier("fr"))
+    }
 }
 
 private extension Player {
