@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import MediaAccessibility
 import SwiftUI
 
 public extension Player {
@@ -98,7 +99,8 @@ public extension Player {
         if preferredLanguages.isEmpty {
             queuePlayer.setMediaSelectionCriteria(nil, forMediaCharacteristic: characteristic)
         } else {
-            let criteria = AVPlayerMediaSelectionCriteria(preferredLanguages: preferredLanguages, preferredMediaCharacteristics: nil)
+            let languages = MACaptionAppearanceCopySelectedLanguages(.user).takeUnretainedValue() as? [String] ?? []
+            let criteria = AVPlayerMediaSelectionCriteria(preferredLanguages: preferredLanguages + languages, preferredMediaCharacteristics: nil)
             queuePlayer.setMediaSelectionCriteria(criteria, forMediaCharacteristic: characteristic)
         }
     }
