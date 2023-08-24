@@ -98,6 +98,22 @@ final class MediaSelectionCriteriaTests: TestCase {
         player.setMediaSelectionCriteria(preferredLanguages: [], for: .audible)
         expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("en"))
     }
+
+    func testAudibleUnselectableWithMediaSelectionCriteria() {
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        expect(player.mediaSelectionOptions(for: .audible)).toEventuallyNot(beEmpty())
+
+        let option = player.mediaSelectionOptions(for: .audible).first { option in
+            option.languageIdentifier == "fr"
+        }!
+        player.select(mediaOption: option, for: .audible)
+
+        player.setMediaSelectionCriteria(preferredLanguages: ["en"], for: .audible)
+        expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("en"))
+
+        player.select(mediaOption: option, for: .audible)
+        expect(player.currentMediaOption(for: .audible)).toAlways(haveLanguageIdentifier("en"), until: .seconds(2))
+    }
 }
 
 private extension Player {

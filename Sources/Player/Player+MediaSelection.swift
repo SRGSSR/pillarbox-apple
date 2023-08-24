@@ -66,8 +66,10 @@ public extension Player {
     /// You can use `mediaCharacteristics` to retrieve available characteristics. This method does nothing if attempting
     /// to set an option that is not supported.
     func select(mediaOption: MediaSelectionOption, for characteristic: AVMediaCharacteristic) {
-        guard let item = queuePlayer.currentItem, let selector = mediaSelector(for: characteristic),
-              selector.supports(mediaSelectionOption: mediaOption) else {
+        guard let item = queuePlayer.currentItem,
+              let selector = mediaSelector(for: characteristic),
+              selector.supports(mediaSelectionOption: mediaOption),
+              queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) == nil else {
             return
         }
         selector.select(mediaOption: mediaOption, on: item)
