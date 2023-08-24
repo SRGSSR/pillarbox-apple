@@ -155,7 +155,7 @@ public final class Player: ObservableObject, Equatable {
         self.init(items: [item], configuration: configuration)
     }
 
-    public nonisolated static func == (lhs: Player, rhs: Player) -> Bool {
+    public static func == (lhs: Player, rhs: Player) -> Bool {
         lhs === rhs
     }
 
