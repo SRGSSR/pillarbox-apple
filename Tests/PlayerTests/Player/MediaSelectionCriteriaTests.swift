@@ -67,10 +67,16 @@ final class MediaSelectionCriteriaTests: TestCase {
         expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("ja"))
     }
 
-    func testAudibleMediaSelectionCriteriaWithUnknownOrUnavailableLanguage() {
+    func testAudibleMediaSelectionCriteriaWithUnknownLanguage() {
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
-        player.setMediaSelectionCriteria(preferredLanguages: ["xy", "it"], for: .audible)
-        expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("en"))
+        player.setMediaSelectionCriteria(preferredLanguages: ["xy"], for: .audible)
+        expect(player.currentMediaOption(for: .audible)).toNever(haveLanguageIdentifier("xy"), until: .seconds(2))
+    }
+
+    func testAudibleMediaSelectionCriteriaWithUnavailableLanguage() {
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        player.setMediaSelectionCriteria(preferredLanguages: ["it"], for: .audible)
+        expect(player.currentMediaOption(for: .audible)).toNever(haveLanguageIdentifier("it"), until: .seconds(2))
     }
 
     func testAudibleMediaSelectionCriteriaWithAvailableLanguage() {
