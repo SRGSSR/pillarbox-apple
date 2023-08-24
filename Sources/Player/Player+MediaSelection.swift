@@ -92,15 +92,15 @@ public extension Player {
     ///   - characteristic: The media characteristic for which the selection criteria are to be applied. 
     ///   Supported values include .audible, .legible, and .visual.
     func setMediaSelectionCriteria(preferredLanguages: [String], for characteristic: AVMediaCharacteristic) {
-        if let group = mediaSelectionContext.group(for: characteristic), group.options.contains(where: { option in
-                guard let code = option.languageCode else { return false }
-                return preferredLanguages.contains(code)
-        }) {
+        if let group = mediaSelectionContext.group(for: characteristic) {
             queuePlayer.currentItem?.selectMediaOptionAutomatically(in: group)
         }
-
-        let criteria = AVPlayerMediaSelectionCriteria(preferredLanguages: preferredLanguages, preferredMediaCharacteristics: nil)
-        queuePlayer.setMediaSelectionCriteria(criteria, forMediaCharacteristic: characteristic)
+        if preferredLanguages.isEmpty {
+            queuePlayer.setMediaSelectionCriteria(nil, forMediaCharacteristic: characteristic)
+        } else {
+            let criteria = AVPlayerMediaSelectionCriteria(preferredLanguages: preferredLanguages, preferredMediaCharacteristics: nil)
+            queuePlayer.setMediaSelectionCriteria(criteria, forMediaCharacteristic: characteristic)
+        }
     }
 
     private func mediaSelector(for characteristic: AVMediaCharacteristic) -> MediaSelector? {
