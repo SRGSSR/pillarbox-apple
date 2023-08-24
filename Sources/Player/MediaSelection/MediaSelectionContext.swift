@@ -5,7 +5,6 @@
 //
 
 import AVFoundation
-import MediaAccessibility
 
 struct MediaSelectionContext {
     static var empty: Self {
