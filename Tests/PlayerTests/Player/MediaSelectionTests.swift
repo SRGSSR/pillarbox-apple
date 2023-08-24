@@ -262,7 +262,7 @@ final class MediaSelectionTests: TestCase {
         expect(player.currentMediaOption(for: .legible)).to(equal(.off))
     }
 
-    func testMediaSelectionCriteriaWithUnknownOrUnavailableLanguage() {
+    func testLegibleMediaSelectionCriteriaWithUnknownOrUnavailableLanguage() {
         setupAccessibilityDisplayType(.alwaysOn(languageCode: "ja"))
 
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
@@ -270,7 +270,7 @@ final class MediaSelectionTests: TestCase {
         expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("ja"))
     }
 
-    func testMediaSelectionCriteriaWithAvailableLanguage() {
+    func testLegibleMediaSelectionCriteriaWithAvailableLanguage() {
         setupAccessibilityDisplayType(.alwaysOn(languageCode: "ja"))
 
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
@@ -278,7 +278,7 @@ final class MediaSelectionTests: TestCase {
         expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("fr"))
     }
 
-    func testMediaSelectionCriteriaOverride() {
+    func testLegibleMediaSelectionCriteriaOverride() {
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
         expect(player.mediaSelectionOptions(for: .legible)).toEventuallyNot(beEmpty())
 
@@ -290,7 +290,7 @@ final class MediaSelectionTests: TestCase {
         expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("fr"))
     }
 
-    func testMediaSelectionCriteriaReset() {
+    func testLegibleMediaSelectionCriteriaReset() {
         setupAccessibilityDisplayType(.alwaysOn(languageCode: "ja"))
 
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
@@ -298,6 +298,38 @@ final class MediaSelectionTests: TestCase {
         expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("fr"))
         player.setMediaSelectionCriteria(preferredLanguages: [], for: .legible)
         expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("ja"))
+    }
+
+    func testAudibleMediaSelectionCriteriaWithUnknownOrUnavailableLanguage() {
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        player.setMediaSelectionCriteria(preferredLanguages: ["xy", "it"], for: .audible)
+        expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("en"))
+    }
+
+    func testAudibleMediaSelectionCriteriaWithAvailableLanguage() {
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        player.setMediaSelectionCriteria(preferredLanguages: ["fr"], for: .audible)
+        expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("fr"))
+    }
+
+    func testAudibleMediaSelectionCriteriaOverride() {
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        expect(player.mediaSelectionOptions(for: .audible)).toEventuallyNot(beEmpty())
+
+        player.select(mediaOption: player.mediaSelectionOptions(for: .audible).first { option in
+            option.languageIdentifier == "fr"
+        }!, for: .audible)
+
+        player.setMediaSelectionCriteria(preferredLanguages: ["en"], for: .audible)
+        expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("en"))
+    }
+
+    func testAudibleMediaSelectionCriteriaReset() {
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        player.setMediaSelectionCriteria(preferredLanguages: ["fr"], for: .audible)
+        expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("fr"))
+        player.setMediaSelectionCriteria(preferredLanguages: [], for: .audible)
+        expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("en"))
     }
 }
 
