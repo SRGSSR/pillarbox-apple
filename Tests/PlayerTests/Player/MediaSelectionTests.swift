@@ -36,7 +36,7 @@ final class MediaSelectionTests: TestCase {
         expect(player.mediaSelectionOptions(for: .visual)).to(beEmpty())
     }
 
-    func testWithoutCharacteristicsAndOptions() {
+    func testCharacteristicsAndOptionsWhenUnavailable() {
         let player = Player(item: .simple(url: Stream.onDemandWithoutOptions.url))
         expect(player.mediaSelectionCharacteristics).toAlways(beEmpty(), until: .seconds(2))
         expect(player.mediaSelectionOptions(for: .audible)).to(beEmpty())
@@ -44,7 +44,7 @@ final class MediaSelectionTests: TestCase {
         expect(player.mediaSelectionOptions(for: .visual)).to(beEmpty())
     }
 
-    func testCharacteristicsAndOptionsWhenAdvancingToNextItem() {
+    func testCharacteristicsAndOptionsUpdateWhenAdvancingToNextItem() {
         let player = Player(items: [
             .simple(url: Stream.onDemandWithOptions.url),
             .simple(url: Stream.onDemandWithoutOptions.url)

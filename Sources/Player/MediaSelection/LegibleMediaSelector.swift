@@ -21,7 +21,7 @@ struct LegibleMediaSelector: MediaSelector {
         return options
     }
 
-    func selectedMediaOption(in selection: AVMediaSelection) -> MediaSelectionOption {
+    func persistedSelectedMediaOption(in selection: AVMediaSelection) -> MediaSelectionOption {
         switch MACaptionAppearanceGetDisplayType(.user) {
         case .alwaysOn:
             if let option = selection.selectedMediaOption(in: group) {
@@ -37,7 +37,7 @@ struct LegibleMediaSelector: MediaSelector {
         }
     }
 
-    func select(mediaOption: MediaSelectionOption, on item: AVPlayerItem) {
+    func select(mediaOption: MediaSelectionOption, on item: AVPlayerItem, in player: AVPlayer) {
         switch mediaOption {
         case .automatic:
             MACaptionAppearanceSetDisplayType(.user, .automatic)

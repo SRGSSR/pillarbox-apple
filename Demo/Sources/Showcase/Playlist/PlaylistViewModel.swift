@@ -32,6 +32,8 @@ final class PlaylistViewModel: ObservableObject {
         URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS,
         URLTemplate.appleWWDCKeynote2023,
         URLTemplate.appleDolbyAtmos,
+        URLTemplate.appleTvMorningShowSeason1Trailer,
+        URLTemplate.appleTvMorningShowSeason2Trailer,
         URLTemplate.uhdVideoHLS,
         URNTemplate.expired,
         URNTemplate.unknown

@@ -47,8 +47,22 @@ public extension Player {
         guard let selection = mediaSelectionContext.selection, let selector = mediaSelector(for: characteristic) else {
             return .off
         }
-        let option = selector.selectedMediaOption(in: selection)
+
+        let option = selectedMediaOption(in: selection, with: selector, for: characteristic)
         return selector.supports(mediaSelectionOption: option) ? option : .off
+    }
+
+    private func selectedMediaOption(
+        in selection: AVMediaSelection,
+        with selector: MediaSelector,
+        for characteristic: AVMediaCharacteristic
+    ) -> MediaSelectionOption {
+        if queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) == nil {
+            return selector.persistedSelectedMediaOption(in: selection)
+        }
+        else {
+            return selector.selectedMediaOption(in: selection)
+        }
     }
 
     /// Selects a media option for a characteristic.
@@ -67,7 +81,8 @@ public extension Player {
               selector.supports(mediaSelectionOption: mediaOption) else {
             return
         }
-        selector.select(mediaOption: mediaOption, on: item)
+        queuePlayer.setMediaSelectionCriteria(nil, forMediaCharacteristic: characteristic)
+        selector.select(mediaOption: mediaOption, on: item, in: queuePlayer)
     }
 
     /// A binding to read and write the current media selection for a characteristic.
@@ -96,11 +111,16 @@ public extension Player {
     }
 
     /// Applies automatic selection criteria for media that has the specified media characteristic.
+    /// 
     /// - Parameters:
-    ///   - preferredLanguages: An Array of strings containing language identifiers, in order of desirability, that are preferred for selection.
-    ///   Languages can be indicated via BCP 47 language identifiers or via ISO 639-2/T language codes.
+    ///   - preferredLanguages: An Array of strings containing language identifiers, in order of desirability, that are 
+    ///     preferred for selection. Languages can be indicated via BCP 47 language identifiers or via ISO 639-2/T language
+    ///     codes.
     ///   - characteristic: The media characteristic for which the selection criteria are to be applied.
-    ///   Supported values include .audible, .legible, and .visual.
+    ///     Supported values include .audible, .legible, and .visual.
+    ///
+    /// Criteria will be applied to an `AVPlayerItem` instance when is ready to play. They are cleared when a selection
+    /// is made using `select(mediaOption:for`).
     func setMediaSelectionCriteria(preferredLanguages languages: [String], for characteristic: AVMediaCharacteristic) {
         if let item = queuePlayer.currentItem {
             mediaSelectionContext.reset(for: characteristic, in: item)
@@ -118,14 +138,8 @@ public extension Player {
         }
     }
 
-    private func supportsSelection(for characteristic: AVMediaCharacteristic) -> Bool {
-        queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) == nil
-    }
-
     private func mediaSelector(for characteristic: AVMediaCharacteristic) -> MediaSelector? {
-        guard supportsSelection(for: characteristic), let group = mediaSelectionContext.group(for: characteristic) else {
-            return nil
-        }
+        guard let group = mediaSelectionContext.group(for: characteristic) else { return nil }
         switch characteristic {
         case .audible:
             return AudibleMediaSelector(group: group)
