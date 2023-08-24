@@ -30,8 +30,7 @@ public extension Player {
     ///
     /// Use `mediaCharacteristics` to retrieve available characteristics.
     func mediaSelectionOptions(for characteristic: AVMediaCharacteristic) -> [MediaSelectionOption] {
-        guard let selector = mediaSelector(for: characteristic),
-              queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) == nil else { return [] }
+        guard let selector = mediaSelector(for: characteristic) else { return [] }
         return selector.mediaSelectionOptions()
     }
 
@@ -45,9 +44,7 @@ public extension Player {
     ///
     /// You can use `mediaCharacteristics` to retrieve available characteristics.
     func selectedMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
-        guard let selection = mediaSelectionContext.selection,
-              let selector = mediaSelector(for: characteristic),
-              queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) == nil else {
+        guard let selection = mediaSelectionContext.selection, let selector = mediaSelector(for: characteristic) else {
             return .off
         }
         let option = selector.selectedMediaOption(in: selection)
@@ -66,10 +63,8 @@ public extension Player {
     /// You can use `mediaCharacteristics` to retrieve available characteristics. This method does nothing if attempting
     /// to set an option that is not supported.
     func select(mediaOption: MediaSelectionOption, for characteristic: AVMediaCharacteristic) {
-        guard let item = queuePlayer.currentItem,
-              let selector = mediaSelector(for: characteristic),
-              selector.supports(mediaSelectionOption: mediaOption),
-              queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) == nil else {
+        guard let item = queuePlayer.currentItem, let selector = mediaSelector(for: characteristic),
+              selector.supports(mediaSelectionOption: mediaOption) else {
             return
         }
         selector.select(mediaOption: mediaOption, on: item)
@@ -104,7 +99,7 @@ public extension Player {
     /// - Parameters:
     ///   - preferredLanguages: An Array of strings containing language identifiers, in order of desirability, that are preferred for selection.
     ///   Languages can be indicated via BCP 47 language identifiers or via ISO 639-2/T language codes.
-    ///   - characteristic: The media characteristic for which the selection criteria are to be applied. 
+    ///   - characteristic: The media characteristic for which the selection criteria are to be applied.
     ///   Supported values include .audible, .legible, and .visual.
     func setMediaSelectionCriteria(preferredLanguages languages: [String], for characteristic: AVMediaCharacteristic) {
         if let item = queuePlayer.currentItem {
@@ -123,8 +118,14 @@ public extension Player {
         }
     }
 
+    private func supportsSelection(for characteristic: AVMediaCharacteristic) -> Bool {
+        queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) == nil
+    }
+
     private func mediaSelector(for characteristic: AVMediaCharacteristic) -> MediaSelector? {
-        guard let group = mediaSelectionContext.group(for: characteristic) else { return nil }
+        guard supportsSelection(for: characteristic), let group = mediaSelectionContext.group(for: characteristic) else {
+            return nil
+        }
         switch characteristic {
         case .audible:
             return AudibleMediaSelector(group: group)
