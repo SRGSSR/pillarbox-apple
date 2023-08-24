@@ -112,6 +112,11 @@ struct ShowcaseView: View {
                 subtitle: "A view whose player can be removed",
                 destination: .wrapped(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
             )
+            cell(
+                title: "Transition",
+                subtitle: "A transition between two layouts sharing the same player",
+                destination: .transition(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
+            )
         }
     }
 
