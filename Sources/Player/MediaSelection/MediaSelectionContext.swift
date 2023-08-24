@@ -31,4 +31,9 @@ struct MediaSelectionContext {
         guard let selection, let group = groups[characteristic] else { return nil }
         return selection.selectedMediaOption(in: group)
     }
+
+    func reset(for characteristic: AVMediaCharacteristic, in item: AVPlayerItem) {
+        guard let group = groups[characteristic] else { return }
+        item.selectMediaOptionAutomatically(in: group)
+    }
 }

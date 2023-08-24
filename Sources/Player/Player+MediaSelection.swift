@@ -14,6 +14,15 @@ public extension Player {
         mediaSelectionContext.characteristics
     }
 
+    private static func preferredLanguages(for characteristic: AVMediaCharacteristic) -> [String] {
+        switch characteristic {
+        case .legible:
+            MACaptionAppearanceCopySelectedLanguages(.user).takeUnretainedValue() as? [String] ?? []
+        default:
+            []
+        }
+    }
+
     /// The list of media options associated with a characteristic.
     ///
     /// - Parameter characteristic: The characteristic.
@@ -92,16 +101,20 @@ public extension Player {
     ///   Languages can be indicated via BCP 47 language identifiers or via ISO 639-2/T language codes.
     ///   - characteristic: The media characteristic for which the selection criteria are to be applied. 
     ///   Supported values include .audible, .legible, and .visual.
-    func setMediaSelectionCriteria(preferredLanguages: [String], for characteristic: AVMediaCharacteristic) {
-        if let group = mediaSelectionContext.group(for: characteristic) {
-            queuePlayer.currentItem?.selectMediaOptionAutomatically(in: group)
+    func setMediaSelectionCriteria(preferredLanguages languages: [String], for characteristic: AVMediaCharacteristic) {
+        if let item = queuePlayer.currentItem {
+            mediaSelectionContext.reset(for: characteristic, in: item)
         }
-        if preferredLanguages.isEmpty {
-            queuePlayer.setMediaSelectionCriteria(nil, forMediaCharacteristic: characteristic)
-        } else {
-            let languages = MACaptionAppearanceCopySelectedLanguages(.user).takeUnretainedValue() as? [String] ?? []
-            let criteria = AVPlayerMediaSelectionCriteria(preferredLanguages: preferredLanguages + languages, preferredMediaCharacteristics: nil)
+
+        if !languages.isEmpty {
+            let criteria = AVPlayerMediaSelectionCriteria(
+                preferredLanguages: languages + Self.preferredLanguages(for: characteristic),
+                preferredMediaCharacteristics: nil
+            )
             queuePlayer.setMediaSelectionCriteria(criteria, forMediaCharacteristic: characteristic)
+        }
+        else {
+            queuePlayer.setMediaSelectionCriteria(nil, forMediaCharacteristic: characteristic)
         }
     }
 
