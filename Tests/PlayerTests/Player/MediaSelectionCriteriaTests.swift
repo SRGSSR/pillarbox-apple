@@ -23,6 +23,12 @@ final class MediaSelectionCriteriaTests: TestCase {
         expect(player.mediaSelectionOptions(for: .visual)).to(beEmpty())
     }
 
+    func testAudibleOptionWithMediaSelectionCriteria() {
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        player.setMediaSelectionCriteria(preferredLanguages: ["fr"], for: .audible)
+        expect(player.selectedMediaOption(for: .audible)).toAlways(equal(.off), until: .seconds(2))
+    }
+
     func testLegibleMediaSelectionCriteriaWithUnknownOrUnavailableLanguage() {
         MediaAccessibilityDisplayType.alwaysOn(languageCode: "ja").apply()
 
