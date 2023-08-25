@@ -12,7 +12,7 @@ import Nimble
 import Streams
 import XCTest
 
-final class MediaSelectionCriteriaTests: TestCase {
+final class PreferredLanguagesForMediaSelectionTests: TestCase {
     func testAudibleOptionMatchesAvailablePreferredLanguage() {
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
         player.setMediaSelection(preferredLanguages: ["fr"], for: .audible)
