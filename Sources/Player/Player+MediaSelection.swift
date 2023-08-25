@@ -120,8 +120,7 @@ public extension Player {
     ///   - characteristic: The media characteristic for which the selection criteria are to be applied.
     ///     Supported values include .audible, .legible, and .visual.
     ///
-    /// Criteria will be applied to an `AVPlayerItem` instance when is ready to play. They are cleared when a selection
-    /// is made using `select(mediaOption:for`).
+    /// Criteria will be applied to an `AVPlayerItem` instance when is ready to play.
     func setMediaSelection(preferredLanguages languages: [String], for characteristic: AVMediaCharacteristic) {
         if let item = queuePlayer.currentItem {
             mediaSelectionContext.reset(for: characteristic, in: item)
