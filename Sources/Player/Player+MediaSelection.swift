@@ -127,11 +127,16 @@ public extension Player {
         }
 
         if !languages.isEmpty {
-            let selectionCriteria = AVPlayerMediaSelectionCriteria(
-                preferredLanguages: languages + Self.preferredLanguages(for: characteristic),
-                preferredMediaCharacteristics: nil
-            )
-            queuePlayer.setMediaSelectionCriteria(selectionCriteria, forMediaCharacteristic: characteristic)
+            if let criteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) {
+                queuePlayer.setMediaSelectionCriteria(criteria.adding(preferredLanguages: languages), forMediaCharacteristic: characteristic)
+            }
+            else {
+                let selectionCriteria = AVPlayerMediaSelectionCriteria(
+                    preferredLanguages: languages + Self.preferredLanguages(for: characteristic),
+                    preferredMediaCharacteristics: nil
+                )
+                queuePlayer.setMediaSelectionCriteria(selectionCriteria, forMediaCharacteristic: characteristic)
+            }
         }
         else {
             queuePlayer.setMediaSelectionCriteria(nil, forMediaCharacteristic: characteristic)
