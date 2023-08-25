@@ -13,11 +13,11 @@ private struct FullScreenView: View {
     var body: some View {
         PlaybackView(player: player)
             .onAppear {
-                player.setMediaSelectionCriteria(preferredLanguages: [], for: .legible)
+                player.setMediaSelection(preferredLanguages: [], for: .legible)
                 player.isMuted = false
             }
             .onDisappear {
-                player.setMediaSelectionCriteria(preferredLanguages: ["fr"], for: .legible)
+                player.setMediaSelection(preferredLanguages: ["fr"], for: .legible)
                 player.isMuted = true
             }
     }
@@ -42,7 +42,7 @@ struct TransitionView: View {
     }
 
     private func play() {
-        player.setMediaSelectionCriteria(preferredLanguages: ["fr"], for: .legible)
+        player.setMediaSelection(preferredLanguages: ["fr"], for: .legible)
         player.isMuted = true
         player.append(media.playerItem())
         player.play()

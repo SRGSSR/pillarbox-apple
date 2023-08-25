@@ -81,6 +81,7 @@ public extension Player {
               selector.supports(mediaSelectionOption: mediaOption) else {
             return
         }
+        // TODO: Likely clear for legible options but append for audible options
         queuePlayer.setMediaSelectionCriteria(nil, forMediaCharacteristic: characteristic)
         selector.select(mediaOption: mediaOption, on: item, in: queuePlayer)
     }
@@ -110,8 +111,8 @@ public extension Player {
         return .on(option)
     }
 
-    /// Applies automatic selection criteria for media that has the specified media characteristic.
-    /// 
+    /// Sets media selection preferred languages for the specified media characteristic.
+    ///
     /// - Parameters:
     ///   - preferredLanguages: An Array of strings containing language identifiers, in order of desirability, that are 
     ///     preferred for selection. Languages can be indicated via BCP 47 language identifiers or via ISO 639-2/T language
@@ -121,21 +122,31 @@ public extension Player {
     ///
     /// Criteria will be applied to an `AVPlayerItem` instance when is ready to play. They are cleared when a selection
     /// is made using `select(mediaOption:for`).
-    func setMediaSelectionCriteria(preferredLanguages languages: [String], for characteristic: AVMediaCharacteristic) {
+    func setMediaSelection(preferredLanguages languages: [String], for characteristic: AVMediaCharacteristic) {
         if let item = queuePlayer.currentItem {
             mediaSelectionContext.reset(for: characteristic, in: item)
         }
 
         if !languages.isEmpty {
-            let criteria = AVPlayerMediaSelectionCriteria(
+            let selectionCriteria = AVPlayerMediaSelectionCriteria(
                 preferredLanguages: languages + Self.preferredLanguages(for: characteristic),
                 preferredMediaCharacteristics: nil
             )
-            queuePlayer.setMediaSelectionCriteria(criteria, forMediaCharacteristic: characteristic)
+            queuePlayer.setMediaSelectionCriteria(selectionCriteria, forMediaCharacteristic: characteristic)
         }
         else {
             queuePlayer.setMediaSelectionCriteria(nil, forMediaCharacteristic: characteristic)
         }
+    }
+    
+    /// Returns media selection preferred languages for the specified media characteristic.
+    ///
+    /// - Parameter characteristic: The characteristic.
+    func mediaSelectionPreferredLanguages(for characteristic: AVMediaCharacteristic) -> [String] {
+        guard let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) else {
+            return []
+        }
+        return selectionCriteria.preferredLanguages ?? []
     }
 
     private func mediaSelector(for characteristic: AVMediaCharacteristic) -> MediaSelector? {
