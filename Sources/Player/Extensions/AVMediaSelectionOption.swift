@@ -8,6 +8,6 @@ import AVFoundation
 
 extension AVMediaSelectionOption {
     var languageCode: String? {
-        locale?.language.languageCode?.identifier
+        locale?.identifier
     }
 }
