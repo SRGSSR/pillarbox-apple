@@ -17,9 +17,9 @@ public extension Player {
     private static func preferredLanguages(for characteristic: AVMediaCharacteristic) -> [String] {
         switch characteristic {
         case .legible:
-            MACaptionAppearanceCopySelectedLanguages(.user).takeUnretainedValue() as? [String] ?? []
+            return MACaptionAppearanceCopySelectedLanguages(.user).takeUnretainedValue() as? [String] ?? []
         default:
-            []
+            return []
         }
     }
 
@@ -138,7 +138,7 @@ public extension Player {
             queuePlayer.setMediaSelectionCriteria(nil, forMediaCharacteristic: characteristic)
         }
     }
-    
+
     /// Returns media selection preferred languages for the specified media characteristic.
     ///
     /// - Parameter characteristic: The characteristic.
