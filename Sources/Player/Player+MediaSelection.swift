@@ -128,7 +128,7 @@ public extension Player {
 
         if !languages.isEmpty {
             let criteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) ?? AVPlayerMediaSelectionCriteria(
-                preferredLanguages: languages + Self.preferredLanguages(for: characteristic),
+                preferredLanguages: Self.preferredLanguages(for: characteristic),
                 preferredMediaCharacteristics: nil
             )
             queuePlayer.setMediaSelectionCriteria(criteria.adding(preferredLanguages: languages), forMediaCharacteristic: characteristic)
