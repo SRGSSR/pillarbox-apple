@@ -40,7 +40,7 @@ public extension Player {
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The list of options associated with the characteristic.
     ///
-    /// Use `mediaCharacteristics` to retrieve available characteristics.
+    /// Use `mediaSelectionCharacteristics` to retrieve available characteristics.
     func mediaSelectionOptions(for characteristic: AVMediaCharacteristic) -> [MediaSelectionOption] {
         guard let selector = mediaSelector(for: characteristic) else { return [] }
         return selector.mediaSelectionOptions()
@@ -50,9 +50,6 @@ public extension Player {
     ///
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The selected option.
-    ///
-    /// Returns the selection based on [Media Accessibility](https://developer.apple.com/documentation/mediaaccessibility).
-    /// This ensures that selection made in other apps relying on Media Accessibility is automatically restored.
     ///
     /// You can use `mediaCharacteristics` to retrieve available characteristics.
     func selectedMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
@@ -70,9 +67,6 @@ public extension Player {
     /// - Parameters:
     ///   - mediaOption: The option to select.
     ///   - characteristic: The characteristic.
-    ///
-    /// Sets the selection using [Media Accessibility](https://developer.apple.com/documentation/mediaaccessibility).
-    /// This ensures that selection is automatically restored in other apps relying on Media Accessibility.
     ///
     /// You can use `mediaCharacteristics` to retrieve available characteristics. This method does nothing if attempting
     /// to set an option that is not supported.
@@ -116,10 +110,10 @@ public extension Player {
     ///
     /// - Parameters:
     ///   - preferredLanguages: An Array of strings containing language identifiers, in order of desirability, that are 
-    ///     preferred for selection. Languages can be indicated via BCP 47 language identifiers or via ISO 639-2/T language
-    ///     codes.
+    ///     preferred for selection. Languages can be indicated via BCP 47 language identifiers or via ISO 639-2/T 
+    ///     language codes.
     ///   - characteristic: The media characteristic for which the selection criteria are to be applied.
-    ///     Supported values include .audible, .legible, and .visual.
+    ///     Supported values include `.audible`, `.legible`, and `.visual`.
     ///
     /// Criteria will be applied to an `AVPlayerItem` instance when is ready to play.
     func setMediaSelection(preferredLanguages languages: [String], for characteristic: AVMediaCharacteristic) {
