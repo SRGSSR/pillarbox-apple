@@ -23,6 +23,18 @@ public extension Player {
         }
     }
 
+    // swiftlint:disable:next discouraged_optional_collection
+    private static func preferredMediaCharacteristics(for characteristic: AVMediaCharacteristic) -> [AVMediaCharacteristic]? {
+        switch characteristic {
+        case .audible:
+            return MAAudibleMediaCopyPreferredCharacteristics().takeRetainedValue() as? [AVMediaCharacteristic]
+        case .legible:
+            return MACaptionAppearanceCopyPreferredCaptioningMediaCharacteristics(.user).takeRetainedValue() as? [AVMediaCharacteristic]
+        default:
+            return []
+        }
+    }
+
     /// The list of media options associated with a characteristic.
     ///
     /// - Parameter characteristic: The characteristic.
@@ -129,7 +141,7 @@ public extension Player {
         if !languages.isEmpty {
             let criteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) ?? AVPlayerMediaSelectionCriteria(
                 preferredLanguages: Self.preferredLanguages(for: characteristic),
-                preferredMediaCharacteristics: nil
+                preferredMediaCharacteristics: Self.preferredMediaCharacteristics(for: characteristic)
             )
             queuePlayer.setMediaSelectionCriteria(criteria.adding(preferredLanguages: languages), forMediaCharacteristic: characteristic)
         }

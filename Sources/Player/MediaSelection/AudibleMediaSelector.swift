@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import MediaAccessibility
 
 /// The default selector for audible options.
 struct AudibleMediaSelector: MediaSelector {
@@ -28,7 +29,10 @@ struct AudibleMediaSelector: MediaSelector {
                     )
                 }
                 else {
-                    let selectionCriteria = AVPlayerMediaSelectionCriteria(preferredLanguages: [languageCode], preferredMediaCharacteristics: nil)
+                    let selectionCriteria = AVPlayerMediaSelectionCriteria(
+                        preferredLanguages: [languageCode],
+                        preferredMediaCharacteristics: MAAudibleMediaCopyPreferredCharacteristics().takeRetainedValue() as? [AVMediaCharacteristic]
+                    )
                     player.setMediaSelectionCriteria(selectionCriteria, forMediaCharacteristic: .audible)
                 }
             }
