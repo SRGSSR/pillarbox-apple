@@ -60,21 +60,8 @@ public extension Player {
             return .off
         }
 
-        let option = selectedMediaOption(in: selection, with: selector, for: characteristic)
+        let option = selector.selectedMediaOption(in: selection, of: queuePlayer)
         return selector.supports(mediaSelectionOption: option) ? option : .off
-    }
-
-    private func selectedMediaOption(
-        in selection: AVMediaSelection,
-        with selector: MediaSelector,
-        for characteristic: AVMediaCharacteristic
-    ) -> MediaSelectionOption {
-        if queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) == nil {
-            return selector.persistedSelectedMediaOption(in: selection)
-        }
-        else {
-            return selector.selectedMediaOption(in: selection)
-        }
     }
 
     /// Selects a media option for a characteristic.
@@ -93,7 +80,7 @@ public extension Player {
               selector.supports(mediaSelectionOption: mediaOption) else {
             return
         }
-        selector.select(mediaOption: mediaOption, on: item, in: queuePlayer)
+        selector.select(mediaOption: mediaOption, on: item, of: queuePlayer)
     }
 
     /// A binding to read and write the current media selection for a characteristic.

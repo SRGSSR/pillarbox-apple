@@ -16,12 +16,20 @@ struct AudibleMediaSelector: MediaSelector {
         return options.count > 1 ? options.map { .on($0) } : []
     }
 
-    // Question: Can this be moved for all characteristics to Player+MediaOption? What about persisted vs non-persisted then?
+    func selectedMediaOption(in selection: AVMediaSelection, of player: AVPlayer) -> MediaSelectionOption {
+        if let option = selection.selectedMediaOption(in: group) {
+            return .on(option)
+        }
+        else {
+            return .off
+        }
+    }
 
-    func select(mediaOption: MediaSelectionOption, on item: AVPlayerItem, in player: AVPlayer) {
+    func select(mediaOption: MediaSelectionOption, on item: AVPlayerItem, of player: AVPlayer) {
         switch mediaOption {
         case let .on(option):
             if let languageCode = option.languageCode {
+                // TODO: In a private method
                 if let selectionCriteria = player.mediaSelectionCriteria(forMediaCharacteristic: .audible) {
                     player.setMediaSelectionCriteria(
                         selectionCriteria.adding(preferredLanguages: [languageCode]),

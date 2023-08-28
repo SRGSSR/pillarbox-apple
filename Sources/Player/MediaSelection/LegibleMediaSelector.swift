@@ -21,23 +21,32 @@ struct LegibleMediaSelector: MediaSelector {
         return options
     }
 
-    func persistedSelectedMediaOption(in selection: AVMediaSelection) -> MediaSelectionOption {
-        switch MACaptionAppearanceGetDisplayType(.user) {
-        case .alwaysOn:
-            if let option = selection.selectedMediaOption(in: group) {
-                return .on(option)
-            }
-            else {
+    func selectedMediaOption(in selection: AVMediaSelection, of player: AVPlayer) -> MediaSelectionOption {
+        // TODO: Factor code
+        if player.mediaSelectionCriteria(forMediaCharacteristic: .legible) == nil {
+            switch MACaptionAppearanceGetDisplayType(.user) {
+            case .alwaysOn:
+                if let option = selection.selectedMediaOption(in: group) {
+                    return .on(option)
+                }
+                else {
+                    return .off
+                }
+            case .automatic:
+                return .automatic
+            default:
                 return .off
             }
-        case .automatic:
-            return .automatic
-        default:
+        }
+        else if let option = selection.selectedMediaOption(in: group) {
+            return .on(option)
+        }
+        else {
             return .off
         }
     }
 
-    func select(mediaOption: MediaSelectionOption, on item: AVPlayerItem, in player: AVPlayer) {
+    func select(mediaOption: MediaSelectionOption, on item: AVPlayerItem, of player: AVPlayer) {
         switch mediaOption {
         case .automatic:
             MACaptionAppearanceSetDisplayType(.user, .automatic)
