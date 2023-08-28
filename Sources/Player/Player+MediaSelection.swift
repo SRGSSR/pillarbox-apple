@@ -93,8 +93,6 @@ public extension Player {
               selector.supports(mediaSelectionOption: mediaOption) else {
             return
         }
-        // TODO: Likely clear for legible options but append for audible options
-        queuePlayer.setMediaSelectionCriteria(nil, forMediaCharacteristic: characteristic)
         selector.select(mediaOption: mediaOption, on: item, in: queuePlayer)
     }
 
