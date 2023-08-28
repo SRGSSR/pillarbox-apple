@@ -21,22 +21,9 @@ struct LegibleMediaSelector: MediaSelector {
         return options
     }
 
-    func selectedMediaOption(in selection: AVMediaSelection, of player: AVPlayer) -> MediaSelectionOption {
-        // TODO: Factor code
-        if player.mediaSelectionCriteria(forMediaCharacteristic: .legible) == nil {
-            switch MACaptionAppearanceGetDisplayType(.user) {
-            case .alwaysOn:
-                if let option = selection.selectedMediaOption(in: group) {
-                    return .on(option)
-                }
-                else {
-                    return .off
-                }
-            case .automatic:
-                return .automatic
-            default:
-                return .off
-            }
+    func selectedMediaOption(in selection: AVMediaSelection, with selectionCriteria: AVPlayerMediaSelectionCriteria?) -> MediaSelectionOption {
+        if selectionCriteria == nil {
+            return persistedMediaOption(in: selection)
         }
         else if let option = selection.selectedMediaOption(in: group) {
             return .on(option)
@@ -46,7 +33,27 @@ struct LegibleMediaSelector: MediaSelector {
         }
     }
 
-    func select(mediaOption: MediaSelectionOption, on item: AVPlayerItem, of player: AVPlayer) {
+    private func persistedMediaOption(in selection: AVMediaSelection) -> MediaSelectionOption {
+        switch MACaptionAppearanceGetDisplayType(.user) {
+        case .alwaysOn:
+            if let option = selection.selectedMediaOption(in: group) {
+                return .on(option)
+            }
+            else {
+                return .off
+            }
+        case .automatic:
+            return .automatic
+        default:
+            return .off
+        }
+    }
+
+    func select(
+        mediaOption: MediaSelectionOption,
+        on item: AVPlayerItem,
+        with selectionCriteria: AVPlayerMediaSelectionCriteria?
+    ) -> AVPlayerMediaSelectionCriteria? {
         switch mediaOption {
         case .automatic:
             MACaptionAppearanceSetDisplayType(.user, .automatic)
@@ -61,6 +68,7 @@ struct LegibleMediaSelector: MediaSelector {
             }
             item.select(option, in: group)
         }
+        return nil
     }
 
     /// Returns the preferred captioning options from a list of options.

@@ -60,7 +60,8 @@ public extension Player {
             return .off
         }
 
-        let option = selector.selectedMediaOption(in: selection, of: queuePlayer)
+        let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic)
+        let option = selector.selectedMediaOption(in: selection, with: selectionCriteria)
         return selector.supports(mediaSelectionOption: option) ? option : .off
     }
 
@@ -80,7 +81,10 @@ public extension Player {
               selector.supports(mediaSelectionOption: mediaOption) else {
             return
         }
-        selector.select(mediaOption: mediaOption, on: item, of: queuePlayer)
+        let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic)
+        if let updatedSelectionCriteria = selector.select(mediaOption: mediaOption, on: item, with: selectionCriteria) {
+            queuePlayer.setMediaSelectionCriteria(updatedSelectionCriteria, forMediaCharacteristic: characteristic)
+        }
     }
 
     /// A binding to read and write the current media selection for a characteristic.
@@ -124,11 +128,11 @@ public extension Player {
         }
 
         if !languages.isEmpty {
-            let criteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) ?? AVPlayerMediaSelectionCriteria(
+            let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) ?? AVPlayerMediaSelectionCriteria(
                 preferredLanguages: Self.preferredLanguages(for: characteristic),
                 preferredMediaCharacteristics: Self.preferredMediaCharacteristics(for: characteristic)
             )
-            queuePlayer.setMediaSelectionCriteria(criteria.adding(preferredLanguages: languages), forMediaCharacteristic: characteristic)
+            queuePlayer.setMediaSelectionCriteria(selectionCriteria.adding(preferredLanguages: languages), forMediaCharacteristic: characteristic)
         }
         else {
             queuePlayer.setMediaSelectionCriteria(nil, forMediaCharacteristic: characteristic)

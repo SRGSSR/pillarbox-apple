@@ -16,7 +16,7 @@ struct AudibleMediaSelector: MediaSelector {
         return options.count > 1 ? options.map { .on($0) } : []
     }
 
-    func selectedMediaOption(in selection: AVMediaSelection, of player: AVPlayer) -> MediaSelectionOption {
+    func selectedMediaOption(in selection: AVMediaSelection, with selectionCriteria: AVPlayerMediaSelectionCriteria?) -> MediaSelectionOption {
         if let option = selection.selectedMediaOption(in: group) {
             return .on(option)
         }
@@ -25,28 +25,33 @@ struct AudibleMediaSelector: MediaSelector {
         }
     }
 
-    func select(mediaOption: MediaSelectionOption, on item: AVPlayerItem, of player: AVPlayer) {
+    func select(
+        mediaOption: MediaSelectionOption,
+        on item: AVPlayerItem,
+        with selectionCriteria: AVPlayerMediaSelectionCriteria?
+    ) -> AVPlayerMediaSelectionCriteria? {
         switch mediaOption {
         case let .on(option):
-            if let languageCode = option.languageCode {
-                // TODO: In a private method
-                if let selectionCriteria = player.mediaSelectionCriteria(forMediaCharacteristic: .audible) {
-                    player.setMediaSelectionCriteria(
-                        selectionCriteria.adding(preferredLanguages: [languageCode]),
-                        forMediaCharacteristic: .audible
-                    )
-                }
-                else {
-                    let selectionCriteria = AVPlayerMediaSelectionCriteria(
-                        preferredLanguages: [languageCode],
-                        preferredMediaCharacteristics: MAAudibleMediaCopyPreferredCharacteristics().takeRetainedValue() as? [AVMediaCharacteristic]
-                    )
-                    player.setMediaSelectionCriteria(selectionCriteria, forMediaCharacteristic: .audible)
-                }
-            }
             item.select(option, in: group)
+            return mediaSelectionCriteria(from: selectionCriteria, for: option)
         default:
-            break
+            return nil
+        }
+    }
+
+    private func mediaSelectionCriteria(
+        from selectionCriteria: AVPlayerMediaSelectionCriteria?,
+        for option: AVMediaSelectionOption
+    ) -> AVPlayerMediaSelectionCriteria? {
+        guard let languageCode = option.languageCode else { return nil }
+        if let selectionCriteria {
+            return selectionCriteria.adding(preferredLanguages: [languageCode])
+        }
+        else {
+            return AVPlayerMediaSelectionCriteria(
+                preferredLanguages: [languageCode],
+                preferredMediaCharacteristics: MAAudibleMediaCopyPreferredCharacteristics().takeRetainedValue() as? [AVMediaCharacteristic]
+            )
         }
     }
 }
