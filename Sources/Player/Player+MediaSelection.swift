@@ -51,12 +51,11 @@ public extension Player {
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The selected option.
     ///
-    /// You can use `mediaCharacteristics` to retrieve available characteristics.
+    /// You can use `mediaSelectionCharacteristics` to retrieve available characteristics.
     func selectedMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
         guard let selection = mediaSelectionContext.selection, let selector = mediaSelector(for: characteristic) else {
             return .off
         }
-
         let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic)
         let option = selector.selectedMediaOption(in: selection, with: selectionCriteria)
         return selector.supports(mediaSelectionOption: option) ? option : .off
@@ -68,8 +67,8 @@ public extension Player {
     ///   - mediaOption: The option to select.
     ///   - characteristic: The characteristic.
     ///
-    /// You can use `mediaCharacteristics` to retrieve available characteristics. This method does nothing if attempting
-    /// to set an option that is not supported.
+    /// You can use `mediaSelectionCharacteristics` to retrieve available characteristics. This method does nothing when
+    /// attempting to set an option that is not supported.
     func select(mediaOption: MediaSelectionOption, for characteristic: AVMediaCharacteristic) {
         guard let item = queuePlayer.currentItem, let selector = mediaSelector(for: characteristic),
               selector.supports(mediaSelectionOption: mediaOption) else {
@@ -96,11 +95,11 @@ public extension Player {
     /// The current media option for a characteristic.
     ///
     /// - Parameter characteristic: The characteristic.
-    /// - Returns: The current option or `nil` if none.
+    /// - Returns: The current option.
     ///
     /// Unlike `selectedMediaOption(for:)` this method provides the currently applied option. This method can
     /// be useful if you need to access the actual selection made by `select(mediaOption:for:)` for `.automatic`
-    /// and `.off` options. Forced options might be returned where applicable.
+    /// and `.off` options (forced options might be returned where applicable).
     func currentMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
         guard let option = mediaSelectionContext.selectedOption(for: characteristic) else { return .off }
         return .on(option)
@@ -112,15 +111,15 @@ public extension Player {
     ///   - preferredLanguages: An Array of strings containing language identifiers, in order of desirability, that are 
     ///     preferred for selection. Languages can be indicated via BCP 47 language identifiers or via ISO 639-2/T 
     ///     language codes.
-    ///   - characteristic: The media characteristic for which the selection criteria are to be applied.
-    ///     Supported values include `.audible`, `.legible`, and `.visual`.
+    ///   - characteristic: The media characteristic for which the selection criteria are to be applied. Supported values
+    ///     include `.audible`, `.legible`, and `.visual`.
     ///
-    /// Criteria will be applied to an `AVPlayerItem` instance when is ready to play.
+    /// This method can be used to override the default media option selection for some characteristic, e.g. to start
+    /// playback with a predefined language for audio and / or subtitles.
     func setMediaSelection(preferredLanguages languages: [String], for characteristic: AVMediaCharacteristic) {
         if let item = queuePlayer.currentItem {
             mediaSelectionContext.reset(for: characteristic, in: item)
         }
-
         if !languages.isEmpty {
             let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) ?? AVPlayerMediaSelectionCriteria(
                 preferredLanguages: Self.preferredLanguages(for: characteristic),
