@@ -54,6 +54,7 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func playlistsSection() -> some View {
+        // swiftlint:disable:next closure_body_length
         Section("Playlists") {
             cell(
                 title: "Video URLs",
@@ -66,6 +67,10 @@ struct ShowcaseView: View {
             cell(
                 title: "Long video URNs",
                 destination: .playlist(templates: URNTemplates.longVideos)
+            )
+            cell(
+                title: "Videos with media selections",
+                destination: .playlist(templates: URNTemplates.videosWithMediaSelections)
             )
             cell(
                 title: "Audios",
@@ -111,6 +116,11 @@ struct ShowcaseView: View {
                 title: "Wrapped",
                 subtitle: "A view whose player can be removed",
                 destination: .wrapped(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
+            )
+            cell(
+                title: "Transition",
+                subtitle: "A transition between two layouts sharing the same player",
+                destination: .transition(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
             )
         }
     }

@@ -46,7 +46,9 @@ final class ExamplesViewModel: ObservableObject {
         URLTemplate.appleAdvanced_16_9_fMP4_HLS,
         URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS,
         URLTemplate.appleWWDCKeynote2023,
-        URLTemplate.appleDolbyAtmos
+        URLTemplate.appleDolbyAtmos,
+        URLTemplate.appleTvMorningShowSeason1Trailer,
+        URLTemplate.appleTvMorningShowSeason2Trailer
     ])
 
     let thirdPartyMedias = Template.medias(from: [

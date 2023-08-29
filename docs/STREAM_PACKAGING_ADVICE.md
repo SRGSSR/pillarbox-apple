@@ -24,6 +24,16 @@ Pillarbox player supports closed captions (CC) and Subtitles for the Deaf or Har
 - CC renditions are identified by the `CLOSED-CAPTIONS` type. They must also have their `AUTOSELECT` attribute set to `YES`.
 - SDH renditions [must](https://developer.apple.com/documentation/http-live-streaming/hls-authoring-specification-for-apple-devices#Accessibility) have the `SUBTITLES` type and the `public.accessibility.transcribes-spoken-dialog` and `public.accessibility.describes-music-and-sound` characteristics. They must also have their `AUTOSELECT` attribute set to `YES`.
 
+### Troubleshooting
+
+If you think audible or legible renditions are incorrectly handled for some content you play with Pillarbox `Player`, please check the following in order:
+
+1. Check that your master playlist adopts the standards listed in this document. You should in particular ensure that `AUTOSELECT`, `FORCED` and accessibility characteristics are properly set.
+2. If your master playlist is correct then check system settings on your device. Automatic audible and legible rendition selection namely strongly depends on:
+  - The list of preferred languages defined in the system settings (all languages are considered as potentially understood by the user) and their relative order. Remove languages that you do not expect and reorder the list as appropriate.
+  - The user accessibility settings (AD and SDH / CC preferences). Enable or disable these settings according to your needs.
+3. Whether your code overrides rendition selection with `setMediaSelection(preferredLanguages:for:)` in an unexpected way.
+
 ## Trick mode / Trick play
 
 Pillarbox player supports [trick mode](https://developer.apple.com/documentation/http-live-streaming/hls-authoring-specification-for-apple-devices#Trick-Play) (aka trick play) which requires dedicated I-frame playlists to be delivered in video master playlists to provide for a [faster seeking experience](https://en.wikipedia.org/wiki/Trick_mode).

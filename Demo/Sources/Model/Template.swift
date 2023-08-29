@@ -89,6 +89,16 @@ enum URLTemplate {
         title: "Apple Dolby Atmos",
         type: .url("https://devstreaming-cdn.apple.com/videos/streaming/examples/adv_dv_atmos/main.m3u8")
     )
+    static let appleTvMorningShowSeason1Trailer = Template(
+        title: "The Morning Show - My Way: Season 1",
+        // swiftlint:disable:next line_length
+        type: .url("https://play-edge.itunes.apple.com/WebObjects/MZPlayLocal.woa/hls/subscription/playlist.m3u8?cc=CH&svcId=tvs.vds.4021&a=1522121579&isExternal=true&brandId=tvs.sbd.4000&id=518077009&l=en-GB&aec=UHD")
+    )
+    static let appleTvMorningShowSeason2Trailer = Template(
+        title: "The Morning Show - Change: Season 2",
+        // swiftlint:disable:next line_length
+        type: .url("https://play-edge.itunes.apple.com/WebObjects/MZPlayLocal.woa/hls/subscription/playlist.m3u8?cc=CH&svcId=tvs.vds.4021&a=1568297173&isExternal=true&brandId=tvs.sbd.4000&id=518034010&l=en-GB&aec=UHD")
+    )
     static let uhdVideoHLS = Template(
         title: "Brain Farm Skate Phantom Flex",
         description: "4K video",

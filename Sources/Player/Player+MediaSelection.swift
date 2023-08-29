@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import MediaAccessibility
 import SwiftUI
 
 public extension Player {
@@ -13,12 +14,33 @@ public extension Player {
         mediaSelectionContext.characteristics
     }
 
+    private static func preferredLanguages(for characteristic: AVMediaCharacteristic) -> [String] {
+        switch characteristic {
+        case .legible:
+            return MACaptionAppearanceCopySelectedLanguages(.user).takeUnretainedValue() as? [String] ?? []
+        default:
+            return []
+        }
+    }
+
+    // swiftlint:disable:next discouraged_optional_collection
+    private static func preferredMediaCharacteristics(for characteristic: AVMediaCharacteristic) -> [AVMediaCharacteristic]? {
+        switch characteristic {
+        case .audible:
+            return MAAudibleMediaCopyPreferredCharacteristics().takeRetainedValue() as? [AVMediaCharacteristic]
+        case .legible:
+            return MACaptionAppearanceCopyPreferredCaptioningMediaCharacteristics(.user).takeRetainedValue() as? [AVMediaCharacteristic]
+        default:
+            return []
+        }
+    }
+
     /// The list of media options associated with a characteristic.
     ///
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The list of options associated with the characteristic.
     ///
-    /// Use `mediaCharacteristics` to retrieve available characteristics.
+    /// Use `mediaSelectionCharacteristics` to retrieve available characteristics.
     func mediaSelectionOptions(for characteristic: AVMediaCharacteristic) -> [MediaSelectionOption] {
         guard let selector = mediaSelector(for: characteristic) else { return [] }
         return selector.mediaSelectionOptions()
@@ -29,15 +51,13 @@ public extension Player {
     /// - Parameter characteristic: The characteristic.
     /// - Returns: The selected option.
     ///
-    /// Returns the selection based on [Media Accessibility](https://developer.apple.com/documentation/mediaaccessibility).
-    /// This ensures that selection made in other apps relying on Media Accessibility is automatically restored.
-    ///
-    /// You can use `mediaCharacteristics` to retrieve available characteristics.
+    /// You can use `mediaSelectionCharacteristics` to retrieve available characteristics.
     func selectedMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
         guard let selection = mediaSelectionContext.selection, let selector = mediaSelector(for: characteristic) else {
             return .off
         }
-        let option = selector.selectedMediaOption(in: selection)
+        let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic)
+        let option = selector.selectedMediaOption(in: selection, with: selectionCriteria)
         return selector.supports(mediaSelectionOption: option) ? option : .off
     }
 
@@ -47,17 +67,16 @@ public extension Player {
     ///   - mediaOption: The option to select.
     ///   - characteristic: The characteristic.
     ///
-    /// Sets the selection using [Media Accessibility](https://developer.apple.com/documentation/mediaaccessibility).
-    /// This ensures that selection is automatically restored in other apps relying on Media Accessibility.
-    ///
-    /// You can use `mediaCharacteristics` to retrieve available characteristics. This method does nothing if attempting
-    /// to set an option that is not supported.
+    /// You can use `mediaSelectionCharacteristics` to retrieve available characteristics. This method does nothing when
+    /// attempting to set an option that is not supported.
     func select(mediaOption: MediaSelectionOption, for characteristic: AVMediaCharacteristic) {
         guard let item = queuePlayer.currentItem, let selector = mediaSelector(for: characteristic),
               selector.supports(mediaSelectionOption: mediaOption) else {
             return
         }
-        selector.select(mediaOption: mediaOption, on: item)
+        let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic)
+        let updatedSelectionCriteria = selector.select(mediaOption: mediaOption, on: item, with: selectionCriteria)
+        queuePlayer.setMediaSelectionCriteria(updatedSelectionCriteria, forMediaCharacteristic: characteristic)
     }
 
     /// A binding to read and write the current media selection for a characteristic.
@@ -75,14 +94,52 @@ public extension Player {
     /// The current media option for a characteristic.
     ///
     /// - Parameter characteristic: The characteristic.
-    /// - Returns: The current option or `nil` if none.
+    /// - Returns: The current option.
     ///
     /// Unlike `selectedMediaOption(for:)` this method provides the currently applied option. This method can
     /// be useful if you need to access the actual selection made by `select(mediaOption:for:)` for `.automatic`
-    /// and `.off` options. Forced options might be returned where applicable.
+    /// and `.off` options (forced options might be returned where applicable).
     func currentMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
         guard let option = mediaSelectionContext.selectedOption(for: characteristic) else { return .off }
         return .on(option)
+    }
+
+    /// Sets media selection preferred languages for the specified media characteristic.
+    ///
+    /// - Parameters:
+    ///   - preferredLanguages: An Array of strings containing language identifiers, in order of desirability, that are 
+    ///     preferred for selection. Languages can be indicated via BCP 47 language identifiers or via ISO 639-2/T 
+    ///     language codes.
+    ///   - characteristic: The media characteristic for which the selection criteria are to be applied. Supported values
+    ///     include `.audible`, `.legible`, and `.visual`.
+    ///
+    /// This method can be used to override the default media option selection for some characteristic, e.g. to start
+    /// playback with a predefined language for audio and / or subtitles.
+    func setMediaSelection(preferredLanguages languages: [String], for characteristic: AVMediaCharacteristic) {
+        if let item = queuePlayer.currentItem {
+            mediaSelectionContext.reset(for: characteristic, in: item)
+        }
+        if !languages.isEmpty {
+            let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) ?? AVPlayerMediaSelectionCriteria(
+                preferredLanguages: Self.preferredLanguages(for: characteristic),
+                preferredMediaCharacteristics: Self.preferredMediaCharacteristics(for: characteristic)
+            )
+            queuePlayer.setMediaSelectionCriteria(selectionCriteria.adding(preferredLanguages: languages), forMediaCharacteristic: characteristic)
+        }
+        else {
+            queuePlayer.setMediaSelectionCriteria(nil, forMediaCharacteristic: characteristic)
+        }
+    }
+
+    /// Returns media selection preferred languages for the specified media characteristic.
+    ///
+    /// - Parameter characteristic: The characteristic.
+    func mediaSelectionPreferredLanguages(for characteristic: AVMediaCharacteristic) -> [String] {
+        guard let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic),
+              let preferredLanguages = selectionCriteria.preferredLanguages else {
+            return []
+        }
+        return preferredLanguages
     }
 
     private func mediaSelector(for characteristic: AVMediaCharacteristic) -> MediaSelector? {

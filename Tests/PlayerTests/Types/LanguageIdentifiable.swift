@@ -24,6 +24,6 @@ extension MediaSelectionOption: LanguageIdentifiable {
 
 extension AVMediaSelectionOption: LanguageIdentifiable {
     var languageIdentifier: String? {
-        locale?.language.languageCode?.identifier
+        locale?.identifier
     }
 }

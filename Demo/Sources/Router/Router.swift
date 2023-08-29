@@ -50,6 +50,8 @@ struct RoutedNavigationStack<Root>: View where Root: View {
             LinkView(media: media)
         case let .wrapped(media: media):
             WrappedView(media: media)
+        case let .transition(media: media):
+            TransitionView(media: media)
         case .stories:
             StoriesView()
         case let .playlist(templates: templates):

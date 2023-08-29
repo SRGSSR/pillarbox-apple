@@ -21,7 +21,19 @@ struct LegibleMediaSelector: MediaSelector {
         return options
     }
 
-    func selectedMediaOption(in selection: AVMediaSelection) -> MediaSelectionOption {
+    func selectedMediaOption(in selection: AVMediaSelection, with selectionCriteria: AVPlayerMediaSelectionCriteria?) -> MediaSelectionOption {
+        if selectionCriteria == nil {
+            return persistedMediaOption(in: selection)
+        }
+        else if let option = selection.selectedMediaOption(in: group) {
+            return .on(option)
+        }
+        else {
+            return .off
+        }
+    }
+
+    private func persistedMediaOption(in selection: AVMediaSelection) -> MediaSelectionOption {
         switch MACaptionAppearanceGetDisplayType(.user) {
         case .alwaysOn:
             if let option = selection.selectedMediaOption(in: group) {
@@ -37,7 +49,11 @@ struct LegibleMediaSelector: MediaSelector {
         }
     }
 
-    func select(mediaOption: MediaSelectionOption, on item: AVPlayerItem) {
+    func select(
+        mediaOption: MediaSelectionOption,
+        on item: AVPlayerItem,
+        with selectionCriteria: AVPlayerMediaSelectionCriteria?
+    ) -> AVPlayerMediaSelectionCriteria? {
         switch mediaOption {
         case .automatic:
             MACaptionAppearanceSetDisplayType(.user, .automatic)
@@ -52,6 +68,7 @@ struct LegibleMediaSelector: MediaSelector {
             }
             item.select(option, in: group)
         }
+        return nil
     }
 
     /// Returns the preferred captioning options from a list of options.

@@ -21,6 +21,7 @@ enum RouterDestination: Identifiable, Hashable {
     case multi(media1: Media, media2: Media)
     case link(media: Media)
     case wrapped(media: Media)
+    case transition(media: Media)
 
     case stories
     case playlist(templates: [Template])
@@ -49,6 +50,8 @@ enum RouterDestination: Identifiable, Hashable {
             return "link_\(media.id)"
         case let .wrapped(media: media):
             return "wrapped_\(media.id)"
+        case let .transition(media: media):
+            return "transition_\(media.id)"
         case .stories:
             return "stories"
         case .playlist:

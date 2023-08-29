@@ -109,3 +109,11 @@ When a layout contains a `RoutePickerView` as well as a tap gesture recognizer (
 ### Workaround
 
 Move tap gesture recognizers in your layout so that they do not overlap with the `RoutePickerView`.
+
+## Subtitle selection might be incorrect near the end of the current item (FB13070742)
+
+When approaching the end of the current item, and if there is a next item in the list, subtitle selection might suddenly change to an incorrect value. Subtitles displayed on screen, though, remain the same as before.
+
+### Workaround
+
+No workaround is available yet.

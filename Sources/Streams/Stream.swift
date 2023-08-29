@@ -96,6 +96,15 @@ public extension Stream {
         url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8")!,
         duration: CMTime(value: 1800, timescale: 1)
     )
+
+    /// An on-demand with many audible and legible options.
+    static let onDemandWithManyLegibleAndAudibleOptions: Self = .init(
+        url: URL(string: """
+        https://play-edge.itunes.apple.com/WebObjects/MZPlayLocal.woa/hls/subscription/playlist.m3u8\
+        ?cc=CH&svcId=tvs.vds.4021&a=1522121579&isExternal=true&brandId=tvs.sbd.4000&id=518077009&l=en-GB&aec=UHD
+        """)!,
+        duration: CMTime(value: 151, timescale: 1)
+    )
 }
 
 public extension Stream {

@@ -5,7 +5,6 @@
 //
 
 import AVFoundation
-import MediaAccessibility
 
 struct MediaSelectionContext {
     static var empty: Self {
@@ -31,5 +30,10 @@ struct MediaSelectionContext {
     func selectedOption(for characteristic: AVMediaCharacteristic) -> AVMediaSelectionOption? {
         guard let selection, let group = groups[characteristic] else { return nil }
         return selection.selectedMediaOption(in: group)
+    }
+
+    func reset(for characteristic: AVMediaCharacteristic, in item: AVPlayerItem) {
+        guard let group = groups[characteristic] else { return }
+        item.selectMediaOptionAutomatically(in: group)
     }
 }
