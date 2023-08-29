@@ -29,10 +29,10 @@ Pillarbox player supports closed captions (CC) and Subtitles for the Deaf or Har
 If you think audible or legible renditions are incorrectly handled for some content you play with Pillarbox `Player`, please check the following in order:
 
 1. Check that your master playlist adopts the standards listed in this document. You should in particular ensure that `AUTOSELECT`, `FORCED` and accessibility characteristics are properly set.
-2. If your master playlist is correct then check system settings on your device. Automatic audible and legible subtitle selection namely strongly depends on:
+2. If your master playlist is correct then check system settings on your device. Automatic audible and legible rendition selection namely strongly depends on:
   - The list of preferred languages defined in the system settings (all languages are considered as potentially understood by the user) and their relative order. Remove languages that you do not expect and reorder the list as appropriate.
   - The user accessibility settings (AD and SDH / CC preferences). Enable or disable these settings according to your needs.
-3. Whether your code overrides rendition selection with `setMediaSelection(preferredLanguages:for:)` but should in fact not.
+3. Whether your code overrides rendition selection with `setMediaSelection(preferredLanguages:for:)` in an unexpected way.
 
 ## Trick mode / Trick play
 
