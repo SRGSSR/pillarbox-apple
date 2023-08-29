@@ -133,4 +133,24 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
         player.returnToPrevious()
         expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("en"))
     }
+
+    func testSelectLegibleOffOptionWithPreferredLanguage() {
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+
+        player.setMediaSelection(preferredLanguages: ["en"], for: .legible)
+        expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("en"))
+
+        player.select(mediaOption: .off, for: .legible)
+        expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.off))
+    }
+
+    func testSelectLegibleAutomaticOptionWithPreferredLanguage() {
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+
+        player.setMediaSelection(preferredLanguages: ["en"], for: .legible)
+        expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("en"))
+
+        player.select(mediaOption: .automatic, for: .legible)
+        expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.automatic))
+    }
 }

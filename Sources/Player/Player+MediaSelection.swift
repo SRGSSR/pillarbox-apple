@@ -75,9 +75,8 @@ public extension Player {
             return
         }
         let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic)
-        if let updatedSelectionCriteria = selector.select(mediaOption: mediaOption, on: item, with: selectionCriteria) {
-            queuePlayer.setMediaSelectionCriteria(updatedSelectionCriteria, forMediaCharacteristic: characteristic)
-        }
+        let updatedSelectionCriteria = selector.select(mediaOption: mediaOption, on: item, with: selectionCriteria)
+        queuePlayer.setMediaSelectionCriteria(updatedSelectionCriteria, forMediaCharacteristic: characteristic)
     }
 
     /// A binding to read and write the current media selection for a characteristic.
