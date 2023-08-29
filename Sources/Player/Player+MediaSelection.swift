@@ -137,10 +137,11 @@ public extension Player {
     ///
     /// - Parameter characteristic: The characteristic.
     func mediaSelectionPreferredLanguages(for characteristic: AVMediaCharacteristic) -> [String] {
-        guard let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) else {
+        guard let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic),
+              let preferredLanguages = selectionCriteria.preferredLanguages else {
             return []
         }
-        return selectionCriteria.preferredLanguages ?? []
+        return preferredLanguages
     }
 
     private func mediaSelector(for characteristic: AVMediaCharacteristic) -> MediaSelector? {
