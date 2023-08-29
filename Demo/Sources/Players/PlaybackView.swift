@@ -77,18 +77,6 @@ private struct MainView: View {
             TapGesture()
                 .onEnded { _ in visibilityTracker.reset() }
         )
-        .overlay(alignment: .top) {
-            VStack {
-                Text("Audible, selected: \(player.selectedMediaOption(for: .audible).displayName)")
-                    .foregroundStyle(.green)
-                Text("Audible, current: \(player.currentMediaOption(for: .audible).displayName)")
-                    .foregroundStyle(.green)
-                Text("Legible, selected: \(player.selectedMediaOption(for: .legible).displayName)")
-                    .foregroundStyle(.red)
-                Text("Legible, current: \(player.currentMediaOption(for: .legible).displayName)")
-                    .foregroundStyle(.red)
-            }
-        }
     }
 
     @ViewBuilder
