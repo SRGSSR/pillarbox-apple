@@ -5,14 +5,13 @@
 //
 
 import AVFoundation
-
-// TODO: Remove duplicates
+import Core
 
 extension AVPlayerMediaSelectionCriteria {
     func adding(preferredLanguages languages: [String]) -> Self {
         let existingPreferredLanguages = preferredLanguages ?? []
         return Self(
-            preferredLanguages: languages + existingPreferredLanguages,
+            preferredLanguages: (languages + existingPreferredLanguages).removeDuplicates(),
             preferredMediaCharacteristics: preferredMediaCharacteristics
         )
     }
