@@ -16,4 +16,10 @@ final class AVMediaSelectionOptionTests: TestCase {
         let option2 = AVMediaSelectionOptionMock(displayName: "French")
         expect(option1 < option2).to(beTrue())
     }
+
+    func testEqualOptions() {
+        let option1 = AVMediaSelectionOptionMock(displayName: "English")
+        let option2 = AVMediaSelectionOptionMock(displayName: "English")
+        expect(option1 < option2).to(beFalse())
+    }
 }
