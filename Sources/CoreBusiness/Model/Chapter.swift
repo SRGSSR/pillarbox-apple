@@ -92,6 +92,10 @@ public struct Chapter: Decodable {
 public extension Chapter {
     /// The resource recommended for playback on Apple platforms.
     var recommendedResource: Resource? {
-        resources.first { StreamingMethod.supportedMethods.contains($0.streamingMethod) }
+        let resourceBuckets = Dictionary(grouping: resources) { $0.streamingMethod }
+        guard let preferredMethod = StreamingMethod.supportedMethods.first(where: { method in
+            resourceBuckets[method] != nil
+        }) else { return nil }
+        return resourceBuckets[preferredMethod]?.first
     }
 }
