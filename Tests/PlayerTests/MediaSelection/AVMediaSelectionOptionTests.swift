@@ -22,4 +22,10 @@ final class AVMediaSelectionOptionTests: TestCase {
         let option2 = AVMediaSelectionOptionMock(displayName: "English")
         expect(option1 < option2).to(beFalse())
     }
+
+    func testSortedOptionsWithOriginal() {
+        let option1 = AVMediaSelectionOptionMock(displayName: "English")
+        let option2 = AVMediaSelectionOptionMock(displayName: "French", isOriginal: true)
+        expect(option2 < option1).to(beTrue())
+    }
 }
