@@ -107,8 +107,8 @@ public extension Player {
     /// Sets media selection preferred languages for the specified media characteristic.
     ///
     /// - Parameters:
-    ///   - preferredLanguages: An Array of strings containing language identifiers, in order of desirability, that are 
-    ///     preferred for selection. Languages can be indicated via BCP 47 language identifiers or via ISO 639-2/T 
+    ///   - preferredLanguages: An Array of strings containing language identifiers, in order of desirability, that are
+    ///     preferred for selection. Languages can be indicated via BCP 47 language identifiers or via ISO 639-2/T
     ///     language codes.
     ///   - characteristic: The media characteristic for which the selection criteria are to be applied. Supported values
     ///     include `.audible`, `.legible`, and `.visual`.
@@ -151,6 +151,22 @@ public extension Player {
             return LegibleMediaSelector(group: group)
         default:
             return nil
+        }
+    }
+}
+
+public extension Player {
+    /// An array of text style rules that specify the formatting and presentation of Web Video Text Tracks (WebVTT)
+    /// subtitles.
+    ///
+    /// Text style rules apply only to WebVTT subtitles. They don’t apply to other subtitle formats and legible text
+    /// or if WebVTT subtitles provide style information.
+    var textStyleRules: [AVTextStyleRule] {
+        get {
+            textStyleRulesPublisher.value
+        }
+        set {
+            textStyleRulesPublisher.send(newValue)
         }
     }
 }

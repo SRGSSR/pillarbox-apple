@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import Player
 import SwiftUI
 
@@ -48,11 +49,17 @@ struct TransitionView: View {
 
 private extension Player {
     func enableSilentPlayback(withLanguage language: String) {
+        let textStyleRule = AVTextStyleRule(textMarkupAttributes: [
+            kCMTextMarkupAttribute_BackgroundColorARGB: [1, 1, 0, 0],
+            kCMTextMarkupAttribute_ItalicStyle: true
+        ])
+        textStyleRules = [textStyleRule]
         setMediaSelection(preferredLanguages: [language], for: .legible)
         isMuted = true
     }
 
     func disableSilentPlayback() {
+        textStyleRules = []
         setMediaSelection(preferredLanguages: [], for: .legible)
         isMuted = false
     }
