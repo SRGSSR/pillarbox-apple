@@ -127,6 +127,9 @@ public final class Player: ObservableObject, Equatable {
     // swiftlint:disable:next private_subject
     var desiredPlaybackSpeedPublisher = PassthroughSubject<Float, Never>()
 
+    // swiftlint:disable:next private_subject
+    var textStyleRulesPublisher = CurrentValueSubject<[AVTextStyleRule], Never>([])
+
     /// Creates a player with a given item queue.
     ///
     /// - Parameters:
@@ -195,6 +198,7 @@ public final class Player: ObservableObject, Equatable {
     private func configureQueuePlayerUpdatePublishers() {
         configureQueueUpdatePublisher()
         configureRateUpdatePublisher()
+        configureTextStyleRulesUpdatePublisher()
     }
 
     private func configurePublishedPropertyPublishers() {
@@ -244,6 +248,17 @@ private extension Player {
                 queuePlayer.rate = speed.effectiveValue
             }
             .store(in: &cancellables)
+    }
+
+    func configureTextStyleRulesUpdatePublisher() {
+        Publishers.CombineLatest(
+            textStyleRulesPublisher,
+            queuePlayer.publisher(for: \.currentItem)
+        )
+        .sink { textStyleRules, item in
+            item?.textStyleRules = textStyleRules
+        }
+        .store(in: &cancellables)
     }
 }
 
