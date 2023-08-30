@@ -226,10 +226,13 @@ final class MediaSelectionTests: TestCase {
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
         expect(player.mediaSelectionOptions(for: .audible)).toEventuallyNot(beEmpty())
 
+        let selectedMediaOption = player.selectedMediaOption(for: .legible)
+        let currentMediaOption = player.currentMediaOption(for: .legible)
+
         let firstAudibleOption = player.mediaSelectionOptions(for: .audible).first!
         player.select(mediaOption: firstAudibleOption, for: .legible)
-        expect(player.selectedMediaOption(for: .legible)).toAlways(equal(.off), until: .seconds(2))
-        expect(player.currentMediaOption(for: .legible)).to(equal(.off))
+        expect(player.selectedMediaOption(for: .legible)).toAlways(equal(selectedMediaOption), until: .seconds(2))
+        expect(player.currentMediaOption(for: .legible)).to(equal(currentMediaOption))
     }
 
     func testAudibleSelectionIsPreservedBetweenItems() {
