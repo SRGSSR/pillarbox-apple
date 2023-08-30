@@ -159,7 +159,8 @@ public extension Player {
     /// An array of text style rules that specify the formatting and presentation of Web Video Text Tracks (WebVTT)
     /// subtitles.
     ///
-    /// Text style rules apply only to WebVTT subtitles. They don’t apply to other subtitle formats and legible text.
+    /// Text style rules apply only to WebVTT subtitles. They don’t apply to other subtitle formats and legible text
+    /// or if WebVTT subtitles provide style information.
     var textStyleRules: [AVTextStyleRule] {
         get {
             textStyleRulesPublisher.value
