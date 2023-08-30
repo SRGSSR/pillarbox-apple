@@ -51,7 +51,7 @@ extension AVMediaSelectionGroup {
     }
 }
 
-private extension AVMediaSelectionOption {
+extension AVMediaSelectionOption {
     static func < (_ lhs: AVMediaSelectionOption, _ rhs: AVMediaSelectionOption) -> Bool {
         lhs.displayName.localizedCaseInsensitiveCompare(rhs.displayName) == .orderedAscending
     }
