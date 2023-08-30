@@ -11,16 +11,22 @@ class AVMediaSelectionOptionMock: AVMediaSelectionOption {
         _displayName
     }
 
-    private let _displayName: String
-    private let _isOriginal: Bool
+    override var locale: Locale? {
+        _locale
+    }
 
-    init(displayName: String, isOriginal: Bool = false) {
+    private let _displayName: String
+    private let _locale: Locale
+    private let _characteristics: [AVMediaCharacteristic]
+
+    init(displayName: String, languageCode: String = "", characteristics: [AVMediaCharacteristic] = []) {
         self._displayName = displayName
-        self._isOriginal = isOriginal
+        self._locale = Locale(identifier: languageCode)
+        self._characteristics = characteristics
         super.init()
     }
 
     override func hasMediaCharacteristic(_ mediaCharacteristic: AVMediaCharacteristic) -> Bool {
-        _isOriginal
+        _characteristics.contains(mediaCharacteristic)
     }
 }

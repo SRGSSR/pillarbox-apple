@@ -25,7 +25,7 @@ final class AVMediaSelectionOptionTests: TestCase {
 
     func testSortedOptionsWithOriginal() {
         let option1 = AVMediaSelectionOptionMock(displayName: "English")
-        let option2 = AVMediaSelectionOptionMock(displayName: "French", isOriginal: true)
+        let option2 = AVMediaSelectionOptionMock(displayName: "French", characteristics: [.isOriginalContent])
         expect(option2 < option1).to(beTrue())
     }
 }
