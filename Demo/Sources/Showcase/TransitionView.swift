@@ -50,9 +50,9 @@ struct TransitionView: View {
 private extension Player {
     func enableSilentPlayback(withLanguage language: String) {
         let textStyleRule = AVTextStyleRule(textMarkupAttributes: [
-            kCMTextMarkupAttribute_BackgroundColorARGB as String: [1, 1, 0, 0],
-            kCMTextMarkupAttribute_ItalicStyle as String: true
-        ])!
+            kCMTextMarkupAttribute_BackgroundColorARGB: [1, 1, 0, 0],
+            kCMTextMarkupAttribute_ItalicStyle: true
+        ])
         textStyleRules = [textStyleRule]
         setMediaSelection(preferredLanguages: [language], for: .legible)
         isMuted = true

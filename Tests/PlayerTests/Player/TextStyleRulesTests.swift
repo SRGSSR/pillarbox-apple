@@ -15,9 +15,9 @@ final class TextStyleRulesTests: TestCase {
     private static var textStyleRules: [AVTextStyleRule] = {
         [
             .init(textMarkupAttributes: [
-                kCMTextMarkupAttribute_ForegroundColorARGB as String: [1, 1, 0, 0],
-                kCMTextMarkupAttribute_ItalicStyle as String: true
-            ])!
+                kCMTextMarkupAttribute_ForegroundColorARGB: [1, 1, 0, 0],
+                kCMTextMarkupAttribute_ItalicStyle: true
+            ])
         ]
     }()
 
