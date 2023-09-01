@@ -104,6 +104,6 @@ final class SeekTests: TestCase {
         expect(player.streamType).toEventually(equal(.onDemand))
         player.play()
         player.seek(near(player.timeRange.end + CMTime(value: 10, timescale: 1)))
-        expect(player.time).toAlways(beLessThanOrEqualTo(player.timeRange.end), until: .seconds(1))
+        expect(player.time).toEventually(equal(player.timeRange.end), timeout: .seconds(1))
     }
 }

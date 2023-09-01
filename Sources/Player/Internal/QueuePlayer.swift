@@ -83,8 +83,18 @@ class QueuePlayer: AVQueuePlayer {
     }
 
     func enqueue(seek: Seek, completion: @escaping () -> Void) {
-        super.seek(to: seek.time, toleranceBefore: seek.toleranceBefore, toleranceAfter: seek.toleranceAfter) { [weak self] finished in
+        self.seek(safelyTo: seek.time, toleranceBefore: seek.toleranceBefore, toleranceAfter: seek.toleranceAfter) { [weak self] finished in
             self?.process(seek: seek, finished: finished, completion: completion)
+        }
+    }
+
+    private func seek(safelyTo time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
+        let endTimeRange = CMTimeRange(start: timeRange.end - CMTime(value: 18, timescale: 1), end: timeRange.end)
+        if itemDuration.isIndefinite || !endTimeRange.containsTime(time) {
+            super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
+        }
+        else {
+            super.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero, completionHandler: completionHandler)
         }
     }
 
