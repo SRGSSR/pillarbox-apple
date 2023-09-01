@@ -41,7 +41,7 @@ final class MediaSelectionTests: TestCase {
         expect(player.mediaSelectionCharacteristics).toEventuallyNot(beEmpty())
         player.play()
         expect(player.playbackState).toEventually(equal(.ended))
-        expect(player.mediaSelectionCharacteristics).to(beEmpty())
+        expect(player.mediaSelectionCharacteristics).toEventually(beEmpty())
     }
 
     func testCharacteristicsAndOptionsWhenUnavailable() {
