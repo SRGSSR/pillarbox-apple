@@ -10,26 +10,26 @@ import Foundation
 import Nimble
 import Streams
 
-final class RestartChecksTests: TestCase {
-    func testEmptyPlayer() {
-        let player = Player()
-        expect(player.canRestart()).to(beFalse())
-    }
-
+final class ReplayTests: TestCase {
     func testWithOneGoodItem() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
-        expect(player.canRestart()).to(beFalse())
+        player.replay()
+        expect(player.currentIndex).to(equal(0))
     }
 
     func testWithOneGoodItemPlayedEntirely() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         player.play()
-        expect(player.canRestart()).toEventually(beTrue())
+        expect(player.currentIndex).toEventually(beNil())
+        player.replay()
+        expect(player.currentIndex).toEventually(equal(0))
     }
 
     func testWithOneBadItem() {
         let player = Player(item: .simple(url: Stream.unavailable.url))
-        expect(player.canRestart()).toEventually(beTrue())
+        expect(player.currentIndex).toEventually(beNil())
+        player.replay()
+        expect(player.currentIndex).toEventually(equal(0))
     }
 
     func testWithManyGoodItems() {
@@ -38,7 +38,9 @@ final class RestartChecksTests: TestCase {
             .simple(url: Stream.shortOnDemand.url)
         ])
         player.play()
-        expect(player.canRestart()).toEventually(beTrue())
+        expect(player.currentIndex).toEventually(equal(1))
+        player.replay()
+        expect(player.currentIndex).to(equal(1))
     }
 
     func testWithManyBadItems() {
@@ -47,7 +49,9 @@ final class RestartChecksTests: TestCase {
             .simple(url: Stream.unavailable.url)
         ])
         player.play()
-        expect(player.canRestart()).toEventually(beTrue())
+        expect(player.currentIndex).toEventually(beNil())
+        player.replay()
+        expect(player.currentIndex).to(equal(0))
     }
 
     func testWithOneGoodItemAndOneBadItem() {
@@ -56,6 +60,18 @@ final class RestartChecksTests: TestCase {
             .simple(url: Stream.unavailable.url)
         ])
         player.play()
-        expect(player.canRestart()).toEventually(beTrue())
+        expect(player.currentIndex).toEventually(beNil())
+        player.replay()
+        expect(player.currentIndex).to(equal(0))
+    }
+
+    func testResumePlaybackIfNeeded() {
+        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
+        player.play()
+        expect(player.currentIndex).toEventually(beNil())
+        player.pause()
+        player.replay()
+        expect(player.currentIndex).toEventually(equal(0))
+        expect(player.playbackState).toEventually(equal(.playing))
     }
 }

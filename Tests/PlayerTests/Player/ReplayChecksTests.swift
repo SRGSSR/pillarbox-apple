@@ -10,26 +10,26 @@ import Foundation
 import Nimble
 import Streams
 
-final class RestartTests: TestCase {
+final class ReplayChecksTests: TestCase {
+    func testEmptyPlayer() {
+        let player = Player()
+        expect(player.canReplay()).to(beFalse())
+    }
+
     func testWithOneGoodItem() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
-        player.restart()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.canReplay()).to(beFalse())
     }
 
     func testWithOneGoodItemPlayedEntirely() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         player.play()
-        expect(player.currentIndex).toEventually(beNil())
-        player.restart()
-        expect(player.currentIndex).toEventually(equal(0))
+        expect(player.canReplay()).toEventually(beTrue())
     }
 
     func testWithOneBadItem() {
         let player = Player(item: .simple(url: Stream.unavailable.url))
-        expect(player.currentIndex).toEventually(beNil())
-        player.restart()
-        expect(player.currentIndex).toEventually(equal(0))
+        expect(player.canReplay()).toEventually(beTrue())
     }
 
     func testWithManyGoodItems() {
@@ -38,9 +38,7 @@ final class RestartTests: TestCase {
             .simple(url: Stream.shortOnDemand.url)
         ])
         player.play()
-        expect(player.currentIndex).toEventually(equal(1))
-        player.restart()
-        expect(player.currentIndex).to(equal(1))
+        expect(player.canReplay()).toEventually(beTrue())
     }
 
     func testWithManyBadItems() {
@@ -49,9 +47,7 @@ final class RestartTests: TestCase {
             .simple(url: Stream.unavailable.url)
         ])
         player.play()
-        expect(player.currentIndex).toEventually(beNil())
-        player.restart()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.canReplay()).toEventually(beTrue())
     }
 
     func testWithOneGoodItemAndOneBadItem() {
@@ -60,8 +56,6 @@ final class RestartTests: TestCase {
             .simple(url: Stream.unavailable.url)
         ])
         player.play()
-        expect(player.currentIndex).toEventually(beNil())
-        player.restart()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.canReplay()).toEventually(beTrue())
     }
 }
