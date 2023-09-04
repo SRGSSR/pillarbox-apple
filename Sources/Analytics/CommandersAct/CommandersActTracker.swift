@@ -104,12 +104,22 @@ private extension CommandersActTracker {
         }
     }
 
+    private func areSubtitlesEnabled(for player: Player) -> Bool {
+        switch player.currentMediaOption(for: .legible) {
+        case let .on(option):
+            return !option.hasMediaCharacteristic(.containsOnlyForcedSubtitles)
+        default:
+            return false
+        }
+    }
+
     func labels(for player: Player) -> [String: String] {
         metadata.labels.merging([
             "media_player_display": "Pillarbox",
             "media_player_version": Player.version,
             "media_volume": "\(volume(for: player))",
-            "media_audio_track": "\(audioTrack(for: player))"
+            "media_audio_track": "\(audioTrack(for: player))",
+            "media_subtitles_on": "\(areSubtitlesEnabled(for: player))"
         ]) { _, new in new }
     }
 }

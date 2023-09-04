@@ -86,7 +86,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         }
     }
 
-    func testMediaOptions() {
+    func testAudioTrack() {
         let player = Player(item: .simple(
             url: Stream.onDemandWithOptions.url,
             metadata: AssetMetadataMock(),
@@ -104,6 +104,31 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         expectAtLeastHits(
             .pause { labels in
                 expect(labels.media_audio_track).to(equal("FR"))
+            }
+        ) {
+            player.pause()
+        }
+    }
+
+    func testSubtitlesOff() {
+        let player = Player(item: .simple(
+            url: Stream.onDemandWithOptions.url,
+            metadata: AssetMetadataMock(),
+            trackerAdapters: [
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .onDemand)
+                }
+            ]
+        ))
+
+        player.play()
+        expect(player.playbackState).toEventually(equal(.playing))
+        player.select(mediaOption: .off, for: .legible)
+        expect(player.currentMediaOption(for: .legible)).toEventually(equal(.off))
+
+        expectAtLeastHits(
+            .pause { labels in
+                expect(labels.media_subtitles_on).to(beFalse())
             }
         ) {
             player.pause()
