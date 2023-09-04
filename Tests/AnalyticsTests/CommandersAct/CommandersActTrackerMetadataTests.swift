@@ -97,8 +97,8 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
             ]
         ))
 
-        player.play()
         player.setMediaSelection(preferredLanguages: ["fr"], for: .audible)
+        player.play()
         expect(player.playbackState).toEventually(equal(.playing))
 
         expectAtLeastHits(
