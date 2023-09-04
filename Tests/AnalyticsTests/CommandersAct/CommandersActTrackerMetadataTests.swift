@@ -21,6 +21,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
                 expect(labels.media_player_version).notTo(beEmpty())
                 expect(labels.media_volume).notTo(beNil())
                 expect(labels.media_title).to(equal("name"))
+                expect(labels.media_audio_track).to(equal("UND"))
             }
         ) {
              player = Player(item: .simple(
@@ -57,6 +58,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
                 expect(labels.media_player_version).notTo(beEmpty())
                 expect(labels.media_volume).notTo(beNil())
                 expect(labels.media_title).to(equal("name"))
+                expect(labels.media_audio_track).to(equal("UND"))
             }
         ) {
             player = nil
@@ -81,6 +83,30 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
             ))
             player?.isMuted = true
             player?.play()
+        }
+    }
+
+    func testMediaOptions() {
+        let player = Player(item: .simple(
+            url: Stream.onDemandWithOptions.url,
+            metadata: AssetMetadataMock(),
+            trackerAdapters: [
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .onDemand)
+                }
+            ]
+        ))
+
+        player.play()
+        player.setMediaSelection(preferredLanguages: ["fr"], for: .audible)
+        expect(player.playbackState).toEventually(equal(.playing))
+
+        expectAtLeastHits(
+            .pause { labels in
+                expect(labels.media_audio_track).to(equal("FR"))
+            }
+        ) {
+            player.pause()
         }
     }
 }

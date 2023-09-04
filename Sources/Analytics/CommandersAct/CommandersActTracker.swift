@@ -95,6 +95,15 @@ private extension CommandersActTracker {
         return Int(AVAudioSession.sharedInstance().outputVolume * 100)
     }
 
+    private func audioTrack(for player: Player) -> String {
+        switch player.currentMediaOption(for: .audible) {
+        case let .on(option):
+            return option.locale?.language.languageCode?.identifier.uppercased() ?? "UND"
+        default:
+            return "UND"
+        }
+    }
+
     private func bitrate(for player: Player) -> Int {
         guard let event = player.systemPlayer.currentItem?.accessLog()?.events.last else { return 0 }
         return Int(max(event.indicatedBitrate, 0))
@@ -104,7 +113,8 @@ private extension CommandersActTracker {
         metadata.labels.merging([
             "media_player_display": "Pillarbox",
             "media_player_version": Player.version,
-            "media_volume": "\(volume(for: player))"
+            "media_volume": "\(volume(for: player))",
+            "media_audio_track": "\(audioTrack(for: player))"
         ]) { _, new in new }
     }
 }
