@@ -50,7 +50,7 @@ private struct MainView: View {
     }
 
     private var isUserInterfaceHidden: Bool {
-        visibilityTracker.isUserInterfaceHidden && !areControlsAlwaysVisible && !player.canRestart()
+        visibilityTracker.isUserInterfaceHidden && !areControlsAlwaysVisible && !player.canReplay()
     }
 
     private func magnificationGesture() -> some Gesture {
@@ -181,7 +181,7 @@ private struct PlaybackButton: View {
     @ObservedObject var player: Player
 
     private var imageName: String {
-        if player.canRestart() {
+        if player.canReplay() {
             return "arrow.counterclockwise.circle.fill"
         }
         else {
@@ -203,12 +203,12 @@ private struct PlaybackButton: View {
         .aspectRatio(contentMode: .fit)
         .frame(minWidth: 120, maxHeight: 90)
         .opacity(player.isBusy ? 0 : 1)
-        .animation(.defaultLinear, values: player.playbackState, player.canRestart())
+        .animation(.defaultLinear, values: player.playbackState, player.canReplay())
     }
 
     private func play() {
-        if player.canRestart() {
-            player.restart()
+        if player.canReplay() {
+            player.replay()
         }
         else {
             player.togglePlayPause()
