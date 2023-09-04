@@ -11,13 +11,13 @@ public struct Chapter: Decodable {
     enum CodingKeys: String, CodingKey {
         case _analyticsData = "analyticsData"
         case _analyticsMetadata = "analyticsMetadata"
+        case _resources = "resourceList"
         case blockingReason = "blockReason"
         case contentType = "type"
         case date
         case description
         case endDate = "validTo"
         case imageUrl
-        case resources = "resourceList"
         case startDate = "validFrom"
         case title
         case urn
@@ -46,7 +46,9 @@ public struct Chapter: Decodable {
     public let date: Date
 
     /// The available resources.
-    public let resources: [Resource]
+    public var resources: [Resource] {
+        _resources ?? []
+    }
 
     /// The date at which the content is made available.
     public let startDate: Date?
@@ -68,6 +70,8 @@ public struct Chapter: Decodable {
     private let _analyticsData: [String: String]?
     // swiftlint:disable:next discouraged_optional_collection
     private let _analyticsMetadata: [String: String]?
+    // swiftlint:disable:next discouraged_optional_collection
+    private let _resources: [Resource]?
 
     /// Returns whether the content is blocked for some reason.
     /// 
