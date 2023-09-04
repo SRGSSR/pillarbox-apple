@@ -104,11 +104,6 @@ private extension CommandersActTracker {
         }
     }
 
-    private func bitrate(for player: Player) -> Int {
-        guard let event = player.systemPlayer.currentItem?.accessLog()?.events.last else { return 0 }
-        return Int(max(event.indicatedBitrate, 0))
-    }
-
     func labels(for player: Player) -> [String: String] {
         metadata.labels.merging([
             "media_player_display": "Pillarbox",
