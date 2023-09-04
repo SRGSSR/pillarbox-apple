@@ -146,14 +146,14 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
             ]
         ))
 
+        player.setMediaSelection(preferredLanguages: ["fr"], for: .legible)
         player.play()
         expect(player.playbackState).toEventually(equal(.playing))
-        player.setMediaSelection(preferredLanguages: ["fr"], for: .legible)
-        expect(player.currentMediaOption(for: .legible)).toEventuallyNot(equal(.off))
 
         expectAtLeastHits(
             .pause { labels in
                 expect(labels.media_subtitles_on).to(beTrue())
+                expect(labels.media_subtitle_selection).to(equal("FR"))
             }
         ) {
             player.pause()

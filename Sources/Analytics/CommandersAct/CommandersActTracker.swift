@@ -95,32 +95,42 @@ private extension CommandersActTracker {
         return Int(AVAudioSession.sharedInstance().outputVolume * 100)
     }
 
+    private func languageCode(from option: AVMediaSelectionOption?) -> String {
+        option?.locale?.language.languageCode?.identifier.uppercased() ?? "UND"
+    }
+
     private func audioTrack(for player: Player) -> String {
         switch player.currentMediaOption(for: .audible) {
         case let .on(option):
-            return option.locale?.language.languageCode?.identifier.uppercased() ?? "UND"
+            return languageCode(from: option)
         default:
-            return "UND"
+            return languageCode(from: nil)
         }
     }
 
-    private func areSubtitlesEnabled(for player: Player) -> Bool {
+    private func subtitleLabels(for player: Player) -> [String: String] {
         switch player.currentMediaOption(for: .legible) {
-        case let .on(option):
-            return !option.hasMediaCharacteristic(.containsOnlyForcedSubtitles)
+        case let .on(option) where !option.hasMediaCharacteristic(.containsOnlyForcedSubtitles):
+            return [
+                "media_subtitles_on": "true",
+                "media_subtitle_selection": "\(languageCode(from: option))"
+            ]
         default:
-            return false
+            return [
+                "media_subtitles_on": "false"
+            ]
         }
     }
 
     func labels(for player: Player) -> [String: String] {
-        metadata.labels.merging([
-            "media_player_display": "Pillarbox",
-            "media_player_version": Player.version,
-            "media_volume": "\(volume(for: player))",
-            "media_audio_track": "\(audioTrack(for: player))",
-            "media_subtitles_on": "\(areSubtitlesEnabled(for: player))"
-        ]) { _, new in new }
+        metadata.labels
+            .merging([
+                "media_player_display": "Pillarbox",
+                "media_player_version": Player.version,
+                "media_volume": "\(volume(for: player))",
+                "media_audio_track": "\(audioTrack(for: player))"
+            ]) { _, new in new }
+            .merging(subtitleLabels(for: player)) { _, new in new }
     }
 }
 
