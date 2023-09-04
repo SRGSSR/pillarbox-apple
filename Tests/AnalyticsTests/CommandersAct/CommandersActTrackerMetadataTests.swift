@@ -134,4 +134,29 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
             player.pause()
         }
     }
+
+    func testSubtitlesOn() {
+        let player = Player(item: .simple(
+            url: Stream.onDemandWithOptions.url,
+            metadata: AssetMetadataMock(),
+            trackerAdapters: [
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .onDemand)
+                }
+            ]
+        ))
+
+        player.play()
+        expect(player.playbackState).toEventually(equal(.playing))
+        player.setMediaSelection(preferredLanguages: ["fr"], for: .legible)
+        expect(player.currentMediaOption(for: .legible)).toEventuallyNot(equal(.off))
+
+        expectAtLeastHits(
+            .pause { labels in
+                expect(labels.media_subtitles_on).to(beTrue())
+            }
+        ) {
+            player.pause()
+        }
+    }
 }
