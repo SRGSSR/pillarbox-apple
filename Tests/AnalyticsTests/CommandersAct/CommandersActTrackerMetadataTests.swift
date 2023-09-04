@@ -21,6 +21,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
                 expect(labels.media_player_version).notTo(beEmpty())
                 expect(labels.media_volume).notTo(beNil())
                 expect(labels.media_title).to(equal("name"))
+                expect(labels.media_audio_track).to(equal("UND"))
             }
         ) {
              player = Player(item: .simple(
@@ -57,6 +58,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
                 expect(labels.media_player_version).notTo(beEmpty())
                 expect(labels.media_volume).notTo(beNil())
                 expect(labels.media_title).to(equal("name"))
+                expect(labels.media_audio_track).to(equal("UND"))
             }
         ) {
             player = nil
@@ -81,6 +83,80 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
             ))
             player?.isMuted = true
             player?.play()
+        }
+    }
+
+    func testAudioTrack() {
+        let player = Player(item: .simple(
+            url: Stream.onDemandWithOptions.url,
+            metadata: AssetMetadataMock(),
+            trackerAdapters: [
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .onDemand)
+                }
+            ]
+        ))
+
+        player.setMediaSelection(preferredLanguages: ["fr"], for: .audible)
+        player.play()
+        expect(player.playbackState).toEventually(equal(.playing))
+
+        expectAtLeastHits(
+            .pause { labels in
+                expect(labels.media_audio_track).to(equal("FR"))
+            }
+        ) {
+            player.pause()
+        }
+    }
+
+    func testSubtitlesOff() {
+        let player = Player(item: .simple(
+            url: Stream.onDemandWithOptions.url,
+            metadata: AssetMetadataMock(),
+            trackerAdapters: [
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .onDemand)
+                }
+            ]
+        ))
+
+        player.play()
+        expect(player.playbackState).toEventually(equal(.playing))
+        player.select(mediaOption: .off, for: .legible)
+        expect(player.currentMediaOption(for: .legible)).toEventually(equal(.off))
+
+        expectAtLeastHits(
+            .pause { labels in
+                expect(labels.media_subtitles_on).to(beFalse())
+            }
+        ) {
+            player.pause()
+        }
+    }
+
+    func testSubtitlesOn() {
+        let player = Player(item: .simple(
+            url: Stream.onDemandWithOptions.url,
+            metadata: AssetMetadataMock(),
+            trackerAdapters: [
+                CommandersActTracker.adapter { _ in
+                    .test(streamType: .onDemand)
+                }
+            ]
+        ))
+
+        player.setMediaSelection(preferredLanguages: ["fr"], for: .legible)
+        player.play()
+        expect(player.playbackState).toEventually(equal(.playing))
+
+        expectAtLeastHits(
+            .pause { labels in
+                expect(labels.media_subtitles_on).to(beTrue())
+                expect(labels.media_subtitle_selection).to(equal("FR"))
+            }
+        ) {
+            player.pause()
         }
     }
 }

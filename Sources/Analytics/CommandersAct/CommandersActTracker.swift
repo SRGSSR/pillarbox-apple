@@ -95,17 +95,42 @@ private extension CommandersActTracker {
         return Int(AVAudioSession.sharedInstance().outputVolume * 100)
     }
 
-    private func bitrate(for player: Player) -> Int {
-        guard let event = player.systemPlayer.currentItem?.accessLog()?.events.last else { return 0 }
-        return Int(max(event.indicatedBitrate, 0))
+    private func languageCode(from option: AVMediaSelectionOption?) -> String {
+        option?.locale?.language.languageCode?.identifier.uppercased() ?? "UND"
+    }
+
+    private func audioTrack(for player: Player) -> String {
+        switch player.currentMediaOption(for: .audible) {
+        case let .on(option):
+            return languageCode(from: option)
+        default:
+            return languageCode(from: nil)
+        }
+    }
+
+    private func subtitleLabels(for player: Player) -> [String: String] {
+        switch player.currentMediaOption(for: .legible) {
+        case let .on(option) where !option.hasMediaCharacteristic(.containsOnlyForcedSubtitles):
+            return [
+                "media_subtitles_on": "true",
+                "media_subtitle_selection": "\(languageCode(from: option))"
+            ]
+        default:
+            return [
+                "media_subtitles_on": "false"
+            ]
+        }
     }
 
     func labels(for player: Player) -> [String: String] {
-        metadata.labels.merging([
-            "media_player_display": "Pillarbox",
-            "media_player_version": Player.version,
-            "media_volume": "\(volume(for: player))"
-        ]) { _, new in new }
+        metadata.labels
+            .merging([
+                "media_player_display": "Pillarbox",
+                "media_player_version": Player.version,
+                "media_volume": "\(volume(for: player))",
+                "media_audio_track": "\(audioTrack(for: player))"
+            ]) { _, new in new }
+            .merging(subtitleLabels(for: player)) { _, new in new }
     }
 }
 
