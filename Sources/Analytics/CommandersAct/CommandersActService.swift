@@ -39,7 +39,7 @@ final class CommandersActService {
         pageView.labels.forEach { key, value in
             event.addAdditionalProperty(key, withStringValue: value)
         }
-        event.addNonBlankAdditionalProperty("content_title", withStringValue: pageView.name)
+        event.pageName = pageView.name
         event.addNonBlankAdditionalProperty("navigation_property_type", withStringValue: "app")
         event.addNonBlankAdditionalProperty("navigation_bu_distributer", withStringValue: vendor?.rawValue)
         pageView.levels.enumerated().forEach { index, level in

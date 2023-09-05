@@ -15,7 +15,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
         expectAtLeastHits(
             .page_view { labels in
                 expect(labels.page_type).to(equal("type"))
-                expect(labels.content_title).to(equal("name"))
+                expect(labels.page_name).to(equal("name"))
                 expect(labels.navigation_level_0).to(beNil())
                 expect(labels.navigation_level_1).to(equal("level_1"))
                 expect(labels.navigation_level_2).to(equal("level_2"))
@@ -73,7 +73,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
         expectAtLeastHits(
             .page_view { labels in
                 expect(labels.page_type).to(equal("type"))
-                expect(labels.content_title).to(equal("name"))
+                expect(labels.page_name).to(equal("name"))
                 expect(labels.navigation_level_1).to(beNil())
                 expect(labels.navigation_level_2).to(beNil())
                 expect(labels.navigation_level_3).to(beNil())
@@ -125,7 +125,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
     func testLabelsForbiddenOverrides() {
         expectAtLeastHits(
             .page_view { labels in
-                expect(labels.content_title).to(equal("name"))
+                expect(labels.page_name).to(equal("name"))
             }
         ) {
             Analytics.shared.trackPageView(
@@ -133,7 +133,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                 commandersAct: .init(
                     name: "name",
                     type: "type",
-                    labels: ["content_title": "overridden_title"]
+                    labels: ["page_name": "overridden_title"]
                 )
             )
         }
