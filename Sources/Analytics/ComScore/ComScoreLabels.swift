@@ -45,6 +45,11 @@ public struct ComScoreLabels {
         extract()
     }
 
+    /// The value of `cs_ucfr` (user consent).
+    public var cs_ucfr: String? {
+        extract()
+    }
+
     // MARK: Page view labels
 
     /// The value of `c8` (page title).

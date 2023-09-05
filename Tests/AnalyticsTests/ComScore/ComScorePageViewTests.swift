@@ -68,7 +68,7 @@ private class ManualMockViewController: UIViewController, PageViewTracking {
 }
 
 final class ComScorePageViewTests: ComScoreTestCase {
-    func testLabels() {
+    func testGlobalLabels() {
         expectAtLeastHits(
             .view { labels in
                 expect(labels.c2).to(equal("6036016"))
@@ -78,6 +78,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
                 expect(labels.ns_st_mv).to(beNil())
                 expect(labels.mp_brand).to(equal("SRG"))
                 expect(labels.mp_v).notTo(beEmpty())
+                expect(labels.cs_ucfr).notTo(beEmpty())
             }
         ) {
             Analytics.shared.trackPageView(

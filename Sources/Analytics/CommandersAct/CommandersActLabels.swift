@@ -30,6 +30,9 @@ public struct CommandersActLabels: Decodable {
     /// The value of `navigation_device`.
     public let navigation_device: String?
 
+    /// The value of `consent_services`.
+    public let consent_services: String?
+
     // MARK: Page view labels
 
     /// The value of `navigation_property_type`.
@@ -127,6 +130,7 @@ private extension CommandersActLabels {
         case app_library_version
         case navigation_app_site_name
         case navigation_device
+        case consent_services
         case navigation_property_type
         case navigation_bu_distributer
         case navigation_level_0

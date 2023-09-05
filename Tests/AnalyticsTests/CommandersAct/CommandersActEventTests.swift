@@ -36,6 +36,19 @@ final class CommandersActEventTests: CommandersActTestCase {
         }
     }
 
+    func testGlobalLabels() {
+        expectAtLeastHits(
+            .custom(name: "name") { labels in
+                expect(labels.consent_services).to(equal("service1,service2,service3"))
+            }
+        ) {
+            Analytics.shared.sendEvent(commandersAct: .init(
+                name: "name",
+                labels: ["consent_services": "service1,service2,service3"]
+            ))
+        }
+    }
+
     func testCustomLabelsForbiddenOverrides() {
         expectAtLeastHits(.custom(name: "name")) {
             Analytics.shared.sendEvent(commandersAct: .init(
