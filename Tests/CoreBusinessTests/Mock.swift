@@ -10,23 +10,12 @@ import Foundation
 import UIKit
 
 enum Mock {
-    enum ChapterKind: String {
-        case geoblocked
-        case standard
-        case timeLimited
-    }
-
     enum MediaCompositionKind: String {
         case missingAnalytics
         case drm
         case live
         case onDemand
         case redundant
-    }
-
-    static func chapter(_ kind: ChapterKind = .standard) -> Chapter {
-        let data = NSDataAsset(name: "Chapter_\(kind.rawValue)", bundle: .module)!.data
-        return try! DataProvider.decoder().decode(Chapter.self, from: data)
     }
 
     static func mediaComposition(_ kind: MediaCompositionKind = .onDemand) -> MediaComposition {

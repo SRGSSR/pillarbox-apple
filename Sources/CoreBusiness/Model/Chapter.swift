@@ -12,18 +12,15 @@ public struct Chapter: Decodable {
         case _analyticsData = "analyticsData"
         case _analyticsMetadata = "analyticsMetadata"
         case _resources = "resourceList"
+        case _segments = "segmentList"
         case blockingReason = "blockReason"
         case contentType = "type"
         case date
         case description
-        case endDate = "validTo"
         case imageUrl
-        case startDate = "validFrom"
         case title
         case urn
     }
-
-    private let blockingReason: BlockingReason?
 
     /// The chapter URN.
     public let urn: String
@@ -45,16 +42,18 @@ public struct Chapter: Decodable {
     /// The publication date.
     public let date: Date
 
+    /// Returns whether the content is blocked for some reason.
+    public let blockingReason: BlockingReason?
+
+    /// The available segments.
+    public var segments: [Segment] {
+        _segments ?? []
+    }
+
     /// The available resources.
     public var resources: [Resource] {
         _resources ?? []
     }
-
-    /// The date at which the content is made available.
-    public let startDate: Date?
-
-    /// The date at which the content is removed.
-    public let endDate: Date?
 
     /// comScore analytics data.
     public var analyticsData: [String: String] {
@@ -68,29 +67,15 @@ public struct Chapter: Decodable {
 
     // swiftlint:disable:next discouraged_optional_collection
     private let _analyticsData: [String: String]?
+
     // swiftlint:disable:next discouraged_optional_collection
     private let _analyticsMetadata: [String: String]?
+
+    // swiftlint:disable:next discouraged_optional_collection
+    private let _segments: [Segment]?
+
     // swiftlint:disable:next discouraged_optional_collection
     private let _resources: [Resource]?
-
-    /// Returns whether the content is blocked for some reason.
-    /// 
-    /// - Parameter date: The date at which the availability must be evaluated.
-    /// - Returns: The blocking reason.
-    public func blockingReason(at date: Date = Date()) -> BlockingReason? {
-        if blockingReason != .none {
-            return blockingReason
-        }
-        else if let startDate, date < startDate {
-            return .startDate
-        }
-        else if let endDate, date > endDate {
-            return .endDate
-        }
-        else {
-            return .none
-        }
-    }
 }
 
 public extension Chapter {
