@@ -54,6 +54,8 @@ public class Analytics {
     private let comScoreService = ComScoreService()
     private let commandersActService = CommandersActService()
 
+    weak var dataSource: AnalyticsDataSource?
+
     private init() {}
 
     /// Starts analytics with the specified configuration.
@@ -64,11 +66,12 @@ public class Analytics {
     /// delegate method implementation, otherwise the behavior is undefined.
     ///
     /// The method throws if called more than once.
-    public func start(with configuration: Configuration) throws {
+    public func start(with configuration: Configuration, dataSource: AnalyticsDataSource? = nil) throws {
         guard self.configuration == nil else {
             throw AnalyticsError.alreadyStarted
         }
         self.configuration = configuration
+        self.dataSource = dataSource
 
         UIViewController.setupViewControllerTracking()
 

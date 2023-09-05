@@ -49,6 +49,16 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             sourceKey: "39ae8f94-595c-4ca4-81f7-fb7748bd3f04",
             appSiteName: "pillarbox-demo-apple"
         )
-        try? Analytics.shared.start(with: configuration)
+        try? Analytics.shared.start(with: configuration, dataSource: self)
+    }
+}
+
+extension AppDelegate: AnalyticsDataSource {
+    var comScoreGlobals: ComScoreGlobals {
+        .init(consent: .unknown, labels: [:])
+    }
+
+    var commandersActGlobals: CommandersActGlobals {
+        .init(consentServices: ["service1", "service2", "service3"], labels: [:])
     }
 }
