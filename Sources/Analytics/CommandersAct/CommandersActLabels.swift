@@ -71,8 +71,8 @@ public struct CommandersActLabels: Decodable {
     /// The value of `page_type`.
     public let page_type: String?
 
-    /// The value of `content_title`.
-    public let content_title: String?
+    /// The value of `page_name`.
+    public let page_name: String?
 
     // MARK: Streaming labels
 
@@ -140,7 +140,7 @@ private extension CommandersActLabels {
         case navigation_level_8
         case navigation_level_9
         case page_type
-        case content_title
+        case page_name
         case media_player_display
         case media_player_version
         case media_subtitle_selection
