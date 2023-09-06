@@ -6,23 +6,24 @@
 
 import Foundation
 
-/// An enum representing the user consent options for ComScore.
+/// An enum representing the user consent options for comScore.
 public enum ComScoreConsent: String {
     /// The user's consent status is unknown.
     case unknown = ""
 
-    /// The user has accepted ComScore analytics.
+    /// The user has accepted comScore analytics.
     case accepted = "1"
 
-    /// The user has declined ComScore analytics.
+    /// The user has declined comScore analytics.
     case declined = "0"
 }
 
-/// A struct representing the global labels to send to ComScore.
+/// A struct representing global labels to send to comScore.
 public struct ComScoreGlobals {
     let labels: [String: String]
 
-    /// Creates a ComScore global labels.
+    /// Creates comScore global labels.
+    ///
     /// - Parameters:
     ///   - consent: The user's consent status.
     ///   - labels: Additional information associated with the global labels.

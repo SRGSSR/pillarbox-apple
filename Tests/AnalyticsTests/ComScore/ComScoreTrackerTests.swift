@@ -23,7 +23,7 @@ private struct AssetMetadataMock: AssetMetadata {}
 //      Thus, to test end events resulting from tracker deallocation we need to have another event sent within the same
 //      expectation first so that the end event is provided a listener identifier.
 final class ComScoreTrackerTests: ComScoreTestCase {
-    func testGlobalProperties() {
+    func testGlobals() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),

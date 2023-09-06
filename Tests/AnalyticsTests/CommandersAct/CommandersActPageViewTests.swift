@@ -15,7 +15,6 @@ final class CommandersActPageViewTests: CommandersActTestCase {
         let pageView = CommandersActPageView(
             name: "name",
             type: "type",
-            levels: [],
             labels: [
                 "pageview-label": "pageview",
                 "common-label": "pageview"

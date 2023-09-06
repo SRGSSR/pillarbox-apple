@@ -15,13 +15,13 @@ public struct CommandersActPageView {
 
     /// Creates a Commanders Act page view.
     /// 
-    /// Custom labels which might accidentally override official labels will be ignored.
-    /// 
     /// - Parameters:
     ///   - name: The page name.
     ///   - type: The page type (e.g. Article).
     ///   - labels: Additional information associated with the page view.
     ///   - levels: The page levels.
+    ///
+    /// Custom labels which might accidentally override official labels will be ignored.
     public init(name: String, type: String, levels: [String] = [], labels: [String: String] = [:]) {
         assert(!name.isBlank, "A name is required")
         assert(!type.isBlank, "A type is required")

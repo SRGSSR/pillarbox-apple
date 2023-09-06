@@ -13,11 +13,11 @@ public struct CommandersActEvent {
 
     /// Creates a Commanders Act event.
     ///
-    /// Custom labels which might accidentally override official labels will be ignored.
-    ///
     /// - Parameters:
     ///   - name: The event name.
     ///   - labels: Additional information associated with the event.
+    ///
+    /// Custom labels which might accidentally override official labels will be ignored.
     public init(
         name: String,
         labels: [String: String] = [:]
