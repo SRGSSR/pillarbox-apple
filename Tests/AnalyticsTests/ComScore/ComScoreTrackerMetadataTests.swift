@@ -33,6 +33,7 @@ final class ComScoreTrackerMetadataTests: ComScoreTestCase {
             .play { labels in
                 expect(labels["meta_1"]).to(equal("custom-1"))
                 expect(labels["meta_2"]).to(equal(42))
+                expect(labels["cs_ucfr"]).to(beEmpty())
             }
         ) {
             player.play()

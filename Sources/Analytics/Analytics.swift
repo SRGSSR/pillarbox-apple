@@ -49,6 +49,10 @@ public class Analytics {
         PackageInfo.version
     }
 
+    var comScoreGlobals: ComScoreGlobals? {
+        dataSource?.comScoreGlobals
+    }
+
     private var configuration: Configuration?
 
     private let comScoreService = ComScoreService()
@@ -75,7 +79,7 @@ public class Analytics {
 
         UIViewController.setupViewControllerTracking()
 
-        comScoreService.start(with: configuration)
+        comScoreService.start(with: configuration, globals: dataSource?.comScoreGlobals)
         commandersActService.start(with: configuration)
     }
 
