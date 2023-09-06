@@ -25,8 +25,15 @@ final class DataProviderTests: XCTestCase {
 
     func testBlockedMediaComposition() {
         expectFailure(
-            DataError.blocked(withMessage: "This content is not available anymore."),
+            DataError.blocked(withMessage: "Some message"),
             from: DataProvider().playableMediaCompositionPublisher(forUrn: "urn:rts:video:13382911")
+        )
+    }
+
+    func testPartiallyBlockedMediaComposition() {
+        expectFailure(
+            DataError.blocked(withMessage: "Some message"),
+            from: DataProvider().playableMediaCompositionPublisher(forUrn: "urn:srf:video:40ca0277-0e53-4312-83e2-4710354ff53e")
         )
     }
 }
