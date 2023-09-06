@@ -32,7 +32,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
             "consent_services": "service1,service2,service3",
             "globals-label": "globals",
             "pageview-label": "pageview",
-            "common-label": "pageview"
+            "common-label": "globals"
         ]))
     }
 

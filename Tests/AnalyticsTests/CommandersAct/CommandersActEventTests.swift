@@ -31,7 +31,7 @@ final class CommandersActEventTests: CommandersActTestCase {
             "consent_services": "service1,service2,service3",
             "globals-label": "globals",
             "event-label": "event",
-            "common-label": "event"
+            "common-label": "globals"
         ]))
     }
 

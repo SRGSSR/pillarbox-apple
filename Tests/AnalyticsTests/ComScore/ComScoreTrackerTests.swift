@@ -36,7 +36,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             .play { labels in
                 expect(labels.ns_st_mp).to(equal("Pillarbox"))
                 expect(labels.ns_st_mv).notTo(beEmpty())
-                expect(labels.cs_ucfr).notTo(beEmpty())
+                expect(labels.cs_ucfr).to(beEmpty())
             }
         ) {
             player.play()
