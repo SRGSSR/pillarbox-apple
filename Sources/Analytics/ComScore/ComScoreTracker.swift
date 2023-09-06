@@ -99,7 +99,7 @@ public final class ComScoreTracker: PlayerItemTracker {
     private func updateMetadata(with metadata: Metadata) {
         let builder = SCORStreamingContentMetadataBuilder()
         if let globals = Analytics.shared.comScoreGlobals {
-            builder.setCustomLabels(metadata.labels.merging(globals.allLabels) { _, new in new })
+            builder.setCustomLabels(metadata.labels.merging(globals.labels) { _, new in new })
         }
         else {
             builder.setCustomLabels(metadata.labels)

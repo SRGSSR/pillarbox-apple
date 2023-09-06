@@ -20,19 +20,13 @@ public enum ComScoreConsent: String {
 
 /// A struct representing the global labels to send to ComScore.
 public struct ComScoreGlobals {
-    let consent: ComScoreConsent
     let labels: [String: String]
-
-    var allLabels: [String: String] {
-        labels.merging(["cs_ucfr": consent.rawValue]) { _, new in new }
-    }
 
     /// Creates a ComScore global labels.
     /// - Parameters:
     ///   - consent: The user's consent status.
     ///   - labels: Additional information associated with the global labels.
     public init(consent: ComScoreConsent, labels: [String: String]) {
-        self.consent = consent
-        self.labels = labels
+        self.labels = labels.merging(["cs_ucfr": consent.rawValue]) { _, new in new }
     }
 }

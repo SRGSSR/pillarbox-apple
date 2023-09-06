@@ -32,7 +32,7 @@ struct ComScoreService {
                 "mp_v": applicationVersion
             ])
             if let globals {
-                comScoreConfiguration.addStartLabels(globals.allLabels)
+                comScoreConfiguration.addStartLabels(globals.labels)
             }
         }
         SCORAnalytics.start()

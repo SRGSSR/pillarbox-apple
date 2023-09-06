@@ -55,10 +55,14 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
 extension AppDelegate: AnalyticsDataSource {
     var comScoreGlobals: ComScoreGlobals {
-        .init(consent: .unknown, labels: [:])
+        .init(consent: .unknown, labels: [
+           "demo_key": "demo_value"
+        ])
     }
 
     var commandersActGlobals: CommandersActGlobals {
-        .init(consentServices: ["service1", "service2", "service3"], labels: [:])
+        .init(consentServices: ["service1", "service2", "service3"], labels: [
+            "demo_key": "demo_value"
+        ])
     }
 }
