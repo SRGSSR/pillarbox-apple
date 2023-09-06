@@ -23,4 +23,10 @@ public struct ComScorePageView {
         self.name = name
         self.labels = labels
     }
+
+    func merging(globals: ComScoreGlobals?) -> Self {
+        guard let globals else { return self }
+        let labels = labels.merging(globals.allLabels) { _, new in new }
+        return .init(name: name, labels: labels)
+    }
 }

@@ -71,10 +71,17 @@ final class CommandersActEventTests: CommandersActTestCase {
     }
 
     func testCustomLabelsForbiddenOverrides() {
-        expectAtLeastHits(.custom(name: "name")) {
+        expectAtLeastHits(
+            .custom(name: "name") { labels in
+                expect(labels.consent_services).to(equal("service1,service2,service3"))
+            }
+        ) {
             Analytics.shared.sendEvent(commandersAct: .init(
                 name: "name",
-                labels: ["event_name": "overridden_name"]
+                labels: [
+                    "event_name": "overridden_name",
+                    "consent_services": "service42"
+                ]
             ))
         }
     }

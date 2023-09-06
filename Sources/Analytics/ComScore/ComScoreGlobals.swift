@@ -7,21 +7,25 @@
 import Foundation
 
 /// An enum representing the user consent options for ComScore.
-public enum ComScoreConsent {
+public enum ComScoreConsent: String {
     /// The user's consent status is unknown.
-    case unknown
+    case unknown = ""
 
     /// The user has accepted ComScore analytics.
-    case accepted
+    case accepted = "1"
 
     /// The user has declined ComScore analytics.
-    case declined
+    case declined = "0"
 }
 
 /// A struct representing the global labels to send to ComScore.
 public struct ComScoreGlobals {
     let consent: ComScoreConsent
     let labels: [String: String]
+
+    var allLabels: [String: String] {
+        labels.merging(["cs_ucfr": consent.rawValue]) { _, new in new }
+    }
 
     /// Creates a ComScore global labels.
     /// - Parameters:

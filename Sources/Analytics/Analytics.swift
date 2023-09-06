@@ -88,7 +88,9 @@ public class Analytics {
         comScore comScorePageView: ComScorePageView,
         commandersAct commandersActPageView: CommandersActPageView
     ) {
-        comScoreService.trackPageView(comScorePageView)
+        comScoreService.trackPageView(
+            comScorePageView.merging(globals: dataSource?.comScoreGlobals)
+        )
         commandersActService.trackPageView(
             commandersActPageView.merging(globals: dataSource?.commandersActGlobals)
         )

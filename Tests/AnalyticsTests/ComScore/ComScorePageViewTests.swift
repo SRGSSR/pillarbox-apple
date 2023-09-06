@@ -68,7 +68,7 @@ private class ManualMockViewController: UIViewController, PageViewTracking {
 }
 
 final class ComScorePageViewTests: ComScoreTestCase {
-    func testGlobalLabels() {
+    func testGlobals() {
         expectAtLeastHits(
             .view { labels in
                 expect(labels.c2).to(equal("6036016"))
@@ -78,7 +78,7 @@ final class ComScorePageViewTests: ComScoreTestCase {
                 expect(labels.ns_st_mv).to(beNil())
                 expect(labels.mp_brand).to(equal("SRG"))
                 expect(labels.mp_v).notTo(beEmpty())
-                expect(labels.cs_ucfr).notTo(beEmpty())
+                expect(labels.cs_ucfr).to(beEmpty())
             }
         ) {
             Analytics.shared.trackPageView(
@@ -113,10 +113,14 @@ final class ComScorePageViewTests: ComScoreTestCase {
         expectAtLeastHits(
             .view { labels in
                 expect(labels.c8).to(equal("name"))
+                expect(labels.cs_ucfr).to(beEmpty())
             }
         ) {
             Analytics.shared.trackPageView(
-                comScore: .init(name: "name", labels: ["c8": "overridden_title"]),
+                comScore: .init(name: "name", labels: [
+                    "c8": "overridden_title",
+                    "cs_ucfr": "42"
+                ]),
                 commandersAct: .init(name: "name", type: "type")
             )
         }

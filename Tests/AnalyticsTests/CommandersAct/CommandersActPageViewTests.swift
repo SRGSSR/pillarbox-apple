@@ -166,6 +166,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
         expectAtLeastHits(
             .page_view { labels in
                 expect(labels.page_name).to(equal("name"))
+                expect(labels.consent_services).to(equal("service1,service2,service3"))
             }
         ) {
             Analytics.shared.trackPageView(
@@ -173,7 +174,10 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                 commandersAct: .init(
                     name: "name",
                     type: "type",
-                    labels: ["page_name": "overridden_title"]
+                    labels: [
+                        "page_name": "overridden_title",
+                        "consent_services": "service42"
+                    ]
                 )
             )
         }
