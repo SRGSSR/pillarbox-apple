@@ -22,6 +22,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
                 expect(labels.media_volume).notTo(beNil())
                 expect(labels.media_title).to(equal("name"))
                 expect(labels.media_audio_track).to(equal("UND"))
+                expect(labels.consent_services).to(equal("service1,service2,service3"))
             }
         ) {
              player = Player(item: .simple(

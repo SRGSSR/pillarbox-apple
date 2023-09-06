@@ -49,10 +49,16 @@ public class Analytics {
         PackageInfo.version
     }
 
+    var comScoreGlobals: ComScoreGlobals? {
+        dataSource?.comScoreGlobals
+    }
+
     private var configuration: Configuration?
 
     private let comScoreService = ComScoreService()
     private let commandersActService = CommandersActService()
+
+    private weak var dataSource: AnalyticsDataSource?
 
     private init() {}
 
@@ -64,15 +70,16 @@ public class Analytics {
     /// delegate method implementation, otherwise the behavior is undefined.
     ///
     /// The method throws if called more than once.
-    public func start(with configuration: Configuration) throws {
+    public func start(with configuration: Configuration, dataSource: AnalyticsDataSource? = nil) throws {
         guard self.configuration == nil else {
             throw AnalyticsError.alreadyStarted
         }
         self.configuration = configuration
+        self.dataSource = dataSource
 
         UIViewController.setupViewControllerTracking()
 
-        comScoreService.start(with: configuration)
+        comScoreService.start(with: configuration, globals: dataSource?.comScoreGlobals)
         commandersActService.start(with: configuration)
     }
 
@@ -85,14 +92,20 @@ public class Analytics {
         comScore comScorePageView: ComScorePageView,
         commandersAct commandersActPageView: CommandersActPageView
     ) {
-        comScoreService.trackPageView(comScorePageView)
-        commandersActService.trackPageView(commandersActPageView)
+        comScoreService.trackPageView(
+            comScorePageView.merging(globals: dataSource?.comScoreGlobals)
+        )
+        commandersActService.trackPageView(
+            commandersActPageView.merging(globals: dataSource?.commandersActGlobals)
+        )
     }
 
     /// Sends an event.
     /// 
     /// - Parameter commandersAct: Commanders Act event data
     public func sendEvent(commandersAct commandersActEvent: CommandersActEvent) {
-        commandersActService.sendEvent(commandersActEvent)
+        commandersActService.sendEvent(
+            commandersActEvent.merging(globals: dataSource?.commandersActGlobals)
+        )
     }
 }

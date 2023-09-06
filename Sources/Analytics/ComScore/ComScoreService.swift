@@ -12,7 +12,7 @@ struct ComScoreService {
         Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
     }
 
-    func start(with configuration: Analytics.Configuration) {
+    func start(with configuration: Analytics.Configuration, globals: ComScoreGlobals?) {
         let publisherConfiguration = SCORPublisherConfiguration { builder in
             guard let builder else { return }
             builder.publisherId = "6036016"
@@ -31,6 +31,9 @@ struct ComScoreService {
                 "mp_brand": configuration.vendor.rawValue,
                 "mp_v": applicationVersion
             ])
+            if let globals {
+                comScoreConfiguration.addStartLabels(globals.labels)
+            }
         }
         SCORAnalytics.start()
     }

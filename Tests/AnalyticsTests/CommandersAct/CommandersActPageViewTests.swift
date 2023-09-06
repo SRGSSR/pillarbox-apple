@@ -11,6 +11,31 @@ import Nimble
 import XCTest
 
 final class CommandersActPageViewTests: CommandersActTestCase {
+    func testMergingWithGlobals() {
+        let pageView = CommandersActPageView(
+            name: "name",
+            type: "type",
+            labels: [
+                "pageview-label": "pageview",
+                "common-label": "pageview"
+            ]
+        )
+        let globals = CommandersActGlobals(
+            consentServices: ["service1,service2,service3"],
+            labels: [
+                "globals-label": "globals",
+                "common-label": "globals"
+            ]
+        )
+
+        expect(pageView.merging(globals: globals).labels).to(equal([
+            "consent_services": "service1,service2,service3",
+            "globals-label": "globals",
+            "pageview-label": "pageview",
+            "common-label": "globals"
+        ]))
+    }
+
     func testLabels() {
         expectAtLeastHits(
             .page_view { labels in
@@ -31,6 +56,7 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                 expect(labels.navigation_app_site_name).to(equal("site"))
                 expect(labels.navigation_property_type).to(equal("app"))
                 expect(labels.navigation_bu_distributer).to(equal("SRG"))
+                expect(labels.consent_services).to(equal("service1,service2,service3"))
             }
         ) {
             Analytics.shared.trackPageView(
@@ -122,10 +148,24 @@ final class CommandersActPageViewTests: CommandersActTestCase {
         }
     }
 
+    func testGlobals() {
+        expectAtLeastHits(
+            .page_view { labels in
+                expect(labels.consent_services).to(equal("service1,service2,service3"))
+            }
+        ) {
+            Analytics.shared.trackPageView(
+                comScore: .init(name: "name"),
+                commandersAct: .init(name: "name", type: "type")
+            )
+        }
+    }
+
     func testLabelsForbiddenOverrides() {
         expectAtLeastHits(
             .page_view { labels in
                 expect(labels.page_name).to(equal("name"))
+                expect(labels.consent_services).to(equal("service1,service2,service3"))
             }
         ) {
             Analytics.shared.trackPageView(
@@ -133,7 +173,10 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                 commandersAct: .init(
                     name: "name",
                     type: "type",
-                    labels: ["page_name": "overridden_title"]
+                    labels: [
+                        "page_name": "overridden_title",
+                        "consent_services": "service42"
+                    ]
                 )
             )
         }
