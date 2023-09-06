@@ -26,4 +26,10 @@ public struct CommandersActEvent {
         self.name = name
         self.labels = labels
     }
+
+    func merging(globals: CommandersActGlobals?) -> Self {
+        guard let globals else { return self }
+        let labels = globals.allLabels.merging(labels) { _, new in new }
+        return .init(name: name, labels: labels)
+    }
 }

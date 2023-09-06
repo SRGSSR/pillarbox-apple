@@ -11,6 +11,10 @@ public struct CommandersActGlobals {
     let consentServices: [String]
     let labels: [String: String]
 
+    var allLabels: [String: String] {
+        ["consent_services": consentServices.joined(separator: ",")].merging(labels) { _, new in new }
+    }
+
     /// Creates a Commanders Act global labels.
     /// - Parameters:
     ///   - consentServices: The list of service allowed.

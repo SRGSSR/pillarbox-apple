@@ -54,7 +54,7 @@ public class Analytics {
     private let comScoreService = ComScoreService()
     private let commandersActService = CommandersActService()
 
-    weak var dataSource: AnalyticsDataSource?
+    private weak var dataSource: AnalyticsDataSource?
 
     private init() {}
 
@@ -89,13 +89,17 @@ public class Analytics {
         commandersAct commandersActPageView: CommandersActPageView
     ) {
         comScoreService.trackPageView(comScorePageView)
-        commandersActService.trackPageView(commandersActPageView)
+        commandersActService.trackPageView(
+            commandersActPageView.merging(globals: dataSource?.commandersActGlobals)
+        )
     }
 
     /// Sends an event.
     /// 
     /// - Parameter commandersAct: Commanders Act event data
     public func sendEvent(commandersAct commandersActEvent: CommandersActEvent) {
-        commandersActService.sendEvent(commandersActEvent)
+        commandersActService.sendEvent(
+            commandersActEvent.merging(globals: dataSource?.commandersActGlobals)
+        )
     }
 }

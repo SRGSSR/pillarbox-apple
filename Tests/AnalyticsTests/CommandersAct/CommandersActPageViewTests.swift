@@ -11,6 +11,32 @@ import Nimble
 import XCTest
 
 final class CommandersActPageViewTests: CommandersActTestCase {
+    func testMergingWithGlobals() {
+        let pageView = CommandersActPageView(
+            name: "name",
+            type: "type",
+            levels: [],
+            labels: [
+                "pageview-label": "pageview",
+                "common-label": "pageview"
+            ]
+        )
+        let globals = CommandersActGlobals(
+            consentServices: ["service1,service2,service3"],
+            labels: [
+                "globals-label": "globals",
+                "common-label": "globals"
+            ]
+        )
+
+        expect(pageView.merging(globals: globals).labels).to(equal([
+            "consent_services": "service1,service2,service3",
+            "globals-label": "globals",
+            "pageview-label": "pageview",
+            "common-label": "pageview"
+        ]))
+    }
+
     func testLabels() {
         expectAtLeastHits(
             .page_view { labels in
@@ -119,6 +145,19 @@ final class CommandersActPageViewTests: CommandersActTestCase {
                     type: "type",
                     labels: ["media_player_display": "value"]
                 )
+            )
+        }
+    }
+
+    func testGlobals() {
+        expectAtLeastHits(
+            .page_view { labels in
+                expect(labels.consent_services).to(equal("service1,service2,service3"))
+            }
+        ) {
+            Analytics.shared.trackPageView(
+                comScore: .init(name: "name"),
+                commandersAct: .init(name: "name", type: "type")
             )
         }
     }

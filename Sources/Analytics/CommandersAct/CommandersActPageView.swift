@@ -30,4 +30,10 @@ public struct CommandersActPageView {
         self.levels = levels
         self.labels = labels
     }
+
+    func merging(globals: CommandersActGlobals?) -> Self {
+        guard let globals else { return self }
+        let labels = globals.allLabels.merging(labels) { _, new in new }
+        return .init(name: name, type: type, levels: levels, labels: labels)
+    }
 }

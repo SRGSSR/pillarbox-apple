@@ -11,6 +11,30 @@ import Nimble
 import XCTest
 
 final class CommandersActEventTests: CommandersActTestCase {
+    func testMergingWithGlobals() {
+        let event = CommandersActEvent(
+            name: "name",
+            labels: [
+                "event-label": "event",
+                "common-label": "event"
+            ]
+        )
+        let globals = CommandersActGlobals(
+            consentServices: ["service1,service2,service3"],
+            labels: [
+                "globals-label": "globals",
+                "common-label": "globals"
+            ]
+        )
+
+        expect(event.merging(globals: globals).labels).to(equal([
+            "consent_services": "service1,service2,service3",
+            "globals-label": "globals",
+            "event-label": "event",
+            "common-label": "event"
+        ]))
+    }
+
     func testBlankName() {
         guard nimbleThrowAssertionsAvailable() else { return }
         expect(Analytics.shared.sendEvent(commandersAct: .init(name: " "))).to(throwAssertion())
@@ -36,16 +60,13 @@ final class CommandersActEventTests: CommandersActTestCase {
         }
     }
 
-    func testGlobalLabels() {
+    func testGlobals() {
         expectAtLeastHits(
             .custom(name: "name") { labels in
                 expect(labels.consent_services).to(equal("service1,service2,service3"))
             }
         ) {
-            Analytics.shared.sendEvent(commandersAct: .init(
-                name: "name",
-                labels: ["consent_services": "service1,service2,service3"]
-            ))
+            Analytics.shared.sendEvent(commandersAct: .init(name: "name"))
         }
     }
 
