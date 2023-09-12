@@ -25,7 +25,7 @@ final class PlayerItemTests: XCTestCase {
     }
 
     func testUrnPlaybackMP3() {
-        let item = PlayerItem.urn("urn:rsi:audio:8833144")
+        let item = PlayerItem.urn("urn:rsi:audio:1861947")
         let player = Player(item: item)
         expectAtLeastEqualPublished(
             values: [
