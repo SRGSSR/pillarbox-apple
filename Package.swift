@@ -26,21 +26,12 @@ let package = Package(
             targets: ["CoreBusiness"]
         ),
         .library(
-            name: "Diagnostics",
-            targets: ["Diagnostics"]
-        ),
-        .library(
             name: "Player",
             targets: ["Player"]
-        ),
-        .library(
-            name: "UserInterface",
-            targets: ["UserInterface"]
         )
     ],
     dependencies: [
         .package(url: "https://github.com/comScore/Comscore-Swift-Package-Manager.git", .upToNextMinor(from: "6.10.0")),
-        .package(url: "https://github.com/SRGSSR/GoogleCastSDK-no-bluetooth.git", .upToNextMinor(from: "4.8.0")),
         .package(url: "https://github.com/CommandersAct/iOSV5.git", .upToNextMinor(from: "5.3.0")),
         .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.3")),
         .package(url: "https://github.com/krzysztofzablocki/Difference.git", exact: "1.0.1"),
@@ -67,8 +58,7 @@ let package = Package(
         .target(
             name: "CoreBusiness",
             dependencies: [
-                .target(name: "Analytics"),
-                .target(name: "Diagnostics")
+                .target(name: "Analytics")
             ],
             plugins: [
                 .plugin(name: "PackageInfoPlugin")
@@ -81,7 +71,6 @@ let package = Package(
                 .product(name: "Nimble", package: "Nimble")
             ]
         ),
-        .target(name: "Diagnostics"),
         .target(
             name: "Player",
             dependencies: [
@@ -97,13 +86,6 @@ let package = Package(
             name: "Streams",
             resources: [
                 .process("Resources")
-            ]
-        ),
-        .target(
-            name: "UserInterface",
-            dependencies: [
-                .target(name: "Player"),
-                .product(name: "GoogleCastSDK-no-bluetooth", package: "GoogleCastSDK-no-bluetooth", condition: .when(platforms: [.iOS]))
             ]
         ),
         .binaryTarget(name: "PackageInfo", path: "Artifacts/PackageInfo.artifactbundle"),
@@ -143,26 +125,12 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "DiagnosticsTests",
-            dependencies: [
-                .target(name: "Circumspect"),
-                .target(name: "Diagnostics")
-            ]
-        ),
-        .testTarget(
             name: "PlayerTests",
             dependencies: [
                 .target(name: "Circumspect"),
                 .target(name: "Player"),
                 .target(name: "Streams"),
                 .product(name: "OrderedCollections", package: "swift-collections")
-            ]
-        ),
-        .testTarget(
-            name: "UserInterfaceTests",
-            dependencies: [
-                .target(name: "Circumspect"),
-                .target(name: "UserInterface")
             ]
         )
     ]

@@ -37,21 +37,12 @@
       }
     },
     {
-      "identity" : "googlecastsdk-no-bluetooth",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SRGSSR/GoogleCastSDK-no-bluetooth.git",
-      "state" : {
-        "revision" : "5e0f9f3deb7dea21856a57cd81a4d538cdb7d241",
-        "version" : "4.8.0"
-      }
-    },
-    {
       "identity" : "iosv5",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CommandersAct/iOSV5.git",
       "state" : {
-        "revision" : "b76b700d92c35f02a3d977e7707ecf4df4732b35",
-        "version" : "5.3.2"
+        "revision" : "2e56e97db76d55657d0dc7d13e2fcd81ce4eaa6c",
+        "version" : "5.3.3"
       }
     },
     {
@@ -59,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Quick/Nimble.git",
       "state" : {
-        "revision" : "831000dd1939bc2096df572c5fd156f41d858bfa",
-        "version" : "12.1.0"
+        "revision" : "f552a16f434eef1f18b62985172489f41d37a18e",
+        "version" : "12.2.0"
       }
     },
     {
