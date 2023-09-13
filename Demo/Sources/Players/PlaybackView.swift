@@ -375,10 +375,12 @@ private struct TimeBar: View {
             HStack(spacing: 20) {
                 TimeSlider(player: player, progressTracker: progressTracker)
                 LiveLabel(player: player, progressTracker: progressTracker)
-                SettingsMenu(player: player)
-                    .padding(.vertical, 12)
-                FullScreenButton(layout: $layout)
-                    .padding(.vertical, 12)
+
+                Group {
+                    settingsMenu()
+                    FullScreenButton(layout: $layout)
+                }
+                .padding(.vertical, 12)
             }
         }
         .frame(height: 44)
@@ -395,6 +397,19 @@ private struct TimeBar: View {
                 .tint(.white)
                 .aspectRatio(contentMode: .fit)
         }
+    }
+
+    @ViewBuilder
+    private func settingsMenu() -> some View {
+        Menu {
+            player.settingMenu()
+        } label: {
+            Image(systemName: "ellipsis.circle")
+                .resizable()
+                .tint(.white)
+                .aspectRatio(contentMode: .fit)
+        }
+        .menuOrder(.fixed)
     }
 }
 
@@ -543,7 +558,7 @@ struct PlaybackView: View {
 
 struct PlaybackView_Previews: PreviewProvider {
     static var previews: some View {
-        PlaybackView(player: Player())
+        PlaybackView(player: Player(item: Media(from: URLTemplate.onDemandVideoLocalHLS).playerItem()))
             .background(.black)
             .previewLayout(.fixed(width: 320, height: 180))
     }
