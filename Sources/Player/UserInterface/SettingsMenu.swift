@@ -65,7 +65,6 @@ private struct SettingsMenuContent: View {
         } label: {
             Label("Playback Speed", systemImage: "speedometer")
         }
-        .menuOrder(.fixed)
     }
 
     @ViewBuilder
@@ -75,7 +74,6 @@ private struct SettingsMenuContent: View {
         } label: {
             Label("Languages", systemImage: "waveform.circle")
         }
-        .menuOrder(.fixed)
     }
 
     @ViewBuilder
@@ -85,7 +83,6 @@ private struct SettingsMenuContent: View {
         } label: {
             Label("Subtitles", systemImage: "captions.bubble")
         }
-        .menuOrder(.fixed)
     }
 }
 
