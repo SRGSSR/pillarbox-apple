@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1400"
-   version = "1.3">
+   LastUpgradeVersion = "1500"
+   version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UserInterface"
-               BuildableName = "UserInterface"
-               BlueprintName = "UserInterface"
+               BlueprintIdentifier = "YouTubeIdentifier"
+               BuildableName = "YouTubeIdentifier"
+               BlueprintName = "YouTubeIdentifier"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -27,23 +27,7 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
-      language = "en"
-      region = "CH"
-      codeCoverageEnabled = "YES">
-      <Testables>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES"
-            testExecutionOrdering = "random">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "UserInterfaceTests"
-               BuildableName = "UserInterfaceTests"
-               BlueprintName = "UserInterfaceTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
+      shouldAutocreateTestPlan = "YES">
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -65,9 +49,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "UserInterface"
-            BuildableName = "UserInterface"
-            BlueprintName = "UserInterface"
+            BlueprintIdentifier = "YouTubeIdentifier"
+            BuildableName = "YouTubeIdentifier"
+            BlueprintName = "YouTubeIdentifier"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>
