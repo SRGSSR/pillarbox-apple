@@ -102,11 +102,9 @@ extension PlaybackSlider where ValueLabel == EmptyView {
     }
 }
 
-struct PlaybackSlider_Previews: PreviewProvider {
-    static var previews: some View {
-        PlaybackSlider(progressTracker: .init(interval: .zero))
-            .padding(.horizontal, 5)
-            .preferredColorScheme(.dark)
-    }
+#Preview {
+    PlaybackSlider(progressTracker: .init(interval: .zero))
+        .padding(.horizontal, 5)
+        .preferredColorScheme(.dark)
 }
 #endif

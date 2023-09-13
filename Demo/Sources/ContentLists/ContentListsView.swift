@@ -119,10 +119,8 @@ struct ContentListsView: View {
 #endif
 }
 
-struct ContentListsView_Previews: PreviewProvider {
-    static var previews: some View {
-        RoutedNavigationStack {
-            ContentListsView()
-        }
+#Preview {
+    RoutedNavigationStack {
+        ContentListsView()
     }
 }

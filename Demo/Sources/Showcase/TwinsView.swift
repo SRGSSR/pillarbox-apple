@@ -65,8 +65,6 @@ private extension TwinsView {
     }
 }
 
-struct TwinsView_Previews: PreviewProvider {
-    static var previews: some View {
-        TwinsView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
-    }
+#Preview {
+    TwinsView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
 }

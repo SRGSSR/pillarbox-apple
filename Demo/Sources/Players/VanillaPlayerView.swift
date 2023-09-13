@@ -28,8 +28,6 @@ struct VanillaPlayerView: View {
     }
 }
 
-struct VanillaPlayerView_Previews: PreviewProvider {
-    static var previews: some View {
-        VanillaPlayerView(item: Template.playerItem(from: URLTemplate.appleAdvanced_16_9_TS_HLS)!)
-    }
+#Preview {
+    VanillaPlayerView(item: Template.playerItem(from: URLTemplate.appleAdvanced_16_9_TS_HLS)!)
 }

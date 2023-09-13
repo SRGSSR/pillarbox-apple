@@ -30,8 +30,6 @@ struct SystemPlayerView: View {
     }
 }
 
-struct SystemPlayerView_Previews: PreviewProvider {
-    static var previews: some View {
-        SystemPlayerView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
-    }
+#Preview {
+    SystemPlayerView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
 }

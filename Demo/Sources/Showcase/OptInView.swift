@@ -47,8 +47,6 @@ struct OptInView: View {
     }
 }
 
-struct OptInView_Previews: PreviewProvider {
-    static var previews: some View {
-        OptInView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
-    }
+#Preview {
+    OptInView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
 }

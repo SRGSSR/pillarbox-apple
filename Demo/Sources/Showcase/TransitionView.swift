@@ -65,8 +65,6 @@ private extension Player {
     }
 }
 
-struct TransitionView_Previews: PreviewProvider {
-    static var previews: some View {
-        TransitionView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
-    }
+#Preview {
+    TransitionView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
 }

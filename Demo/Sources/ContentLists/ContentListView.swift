@@ -119,10 +119,8 @@ struct ContentListView: View {
     }
 }
 
-struct ContentListView_Previews: PreviewProvider {
-    static var previews: some View {
-        RoutedNavigationStack {
-            ContentListView(configuration: .init(list: .tvLatestMedias, vendor: .RTS))
-        }
+#Preview {
+    RoutedNavigationStack {
+        ContentListView(configuration: .init(list: .tvLatestMedias, vendor: .RTS))
     }
 }

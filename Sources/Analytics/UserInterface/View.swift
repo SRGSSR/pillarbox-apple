@@ -46,15 +46,3 @@ public extension View {
         }
     }
 }
-
-struct TrackedView_Previews: PreviewProvider {
-    static var previews: some View {
-        Color.red
-            .frame(width: 40, height: 40)
-            .tracked(
-                comScore: .init(name: "name"),
-                commandersAct: .init(name: "name", type: "home")
-            )
-            .border(Color.blue)
-    }
-}

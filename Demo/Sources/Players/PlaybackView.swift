@@ -556,10 +556,6 @@ struct PlaybackView: View {
     }
 }
 
-struct PlaybackView_Previews: PreviewProvider {
-    static var previews: some View {
-        PlaybackView(player: Player(item: Media(from: URLTemplate.onDemandVideoLocalHLS).playerItem()))
-            .background(.black)
-            .previewLayout(.fixed(width: 320, height: 180))
-    }
+#Preview {
+    PlaybackView(player: Player(item: Media(from: URLTemplate.onDemandVideoLocalHLS).playerItem()))
 }

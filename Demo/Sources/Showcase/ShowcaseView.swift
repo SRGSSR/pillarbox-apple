@@ -200,10 +200,8 @@ struct ShowcaseView: View {
     }
 }
 
-struct ShowcaseView_Previews: PreviewProvider {
-    static var previews: some View {
-        RoutedNavigationStack {
-            ShowcaseView()
-        }
+#Preview {
+    RoutedNavigationStack {
+        ShowcaseView()
     }
 }

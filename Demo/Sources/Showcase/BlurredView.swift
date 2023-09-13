@@ -39,8 +39,6 @@ struct BlurredView: View {
     }
 }
 
-struct BlurredView_Previews: PreviewProvider {
-    static var previews: some View {
-        BlurredView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
-    }
+#Preview {
+    BlurredView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
 }

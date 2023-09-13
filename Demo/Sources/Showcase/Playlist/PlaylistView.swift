@@ -171,12 +171,10 @@ struct PlaylistView: View {
     }
 }
 
-struct PlaylistView_Previews: PreviewProvider {
-    static var previews: some View {
-        PlaylistView(templates: [
-            URLTemplate.onDemandVideoLocalHLS,
-            URLTemplate.shortOnDemandVideoHLS,
-            URLTemplate.dvrVideoHLS
-        ])
-    }
+#Preview {
+    PlaylistView(templates: [
+        URLTemplate.onDemandVideoLocalHLS,
+        URLTemplate.shortOnDemandVideoHLS,
+        URLTemplate.dvrVideoHLS
+    ])
 }
