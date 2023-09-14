@@ -89,6 +89,9 @@ private struct SettingsMenuContent: View {
 @available(iOS 16.0, tvOS 17.0, *)
 public extension Player {
     /// Returns content for a standard player settings menu.
+    ///
+    /// The returned view is meant to be used as content of a `Menu`. Using it for any other purpose has undefined
+    /// behavior.
     func settingMenu() -> some View {
         SettingsMenuContent(player: self)
     }
@@ -96,6 +99,9 @@ public extension Player {
     /// Returns content for a standard playback speed menu.
     ///
     /// - Parameter speeds: The offered speeds.
+    ///
+    /// The returned view is meant to be used as content of a `Menu`. Using it for any other purpose has undefined
+    /// behavior.
     func playbackSpeedMenu(speeds: Set<Float> = [0.5, 1, 1.25, 1.5, 2]) -> some View {
         PlaybackSpeedMenuContent(speeds: speeds, player: self)
     }
@@ -103,6 +109,9 @@ public extension Player {
     /// Returns content for a standard media selection menu.
     ///
     /// - Parameter characteristic: The characteristic for which selection is made.
+    ///
+    /// The returned view is meant to be used as content of a `Menu`. Using it for any other purpose has undefined
+    /// behavior.
     func mediaSelectionMenu(characteristic: AVMediaCharacteristic) -> some View {
         MediaSelectionMenuContent(characteristic: characteristic, player: self)
     }
