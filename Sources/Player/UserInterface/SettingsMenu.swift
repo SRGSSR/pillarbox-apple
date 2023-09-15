@@ -95,7 +95,7 @@ public extension Player {
 
     /// Returns content for a standard playback speed menu.
     ///
-    /// - Parameter speeds: The offered speeds
+    /// - Parameter speeds: The offered speeds.
     func playbackSpeedMenu(speeds: Set<Float> = [0.5, 1, 1.25, 1.5, 2]) -> some View {
         PlaybackSpeedMenuContent(speeds: speeds, player: self)
     }
