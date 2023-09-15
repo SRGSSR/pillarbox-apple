@@ -92,11 +92,11 @@ public extension Player {
     ///
     /// The returned view is meant to be used as content of a `Menu`. Using it for any other purpose has undefined
     /// behavior.
-    func settingMenu() -> some View {
+    func standardSettingMenu() -> some View {
         SettingsMenuContent(player: self)
     }
 
-    /// Returns content for a standard playback speed menu.
+    /// Returns content for a playback speed menu.
     ///
     /// - Parameter speeds: The offered speeds.
     ///
@@ -106,7 +106,7 @@ public extension Player {
         PlaybackSpeedMenuContent(speeds: speeds, player: self)
     }
 
-    /// Returns content for a standard media selection menu.
+    /// Returns content for a media selection menu.
     ///
     /// - Parameter characteristic: The characteristic for which selection is made.
     ///

@@ -402,7 +402,7 @@ private struct TimeBar: View {
     @ViewBuilder
     private func settingsMenu() -> some View {
         Menu {
-            player.settingMenu()
+            player.standardSettingMenu()
         } label: {
             Image(systemName: "ellipsis.circle")
                 .resizable()
