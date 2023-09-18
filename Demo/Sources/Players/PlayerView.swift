@@ -26,8 +26,6 @@ struct PlayerView: View {
     }
 }
 
-struct PlayerView_Previews: PreviewProvider {
-    static var previews: some View {
-        PlayerView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
-    }
+#Preview {
+    PlayerView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
 }

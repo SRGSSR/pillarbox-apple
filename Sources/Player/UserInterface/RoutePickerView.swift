@@ -47,12 +47,10 @@ public extension RoutePickerView {
     }
 }
 
-struct RoutePickerView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            RoutePickerView()
-            RoutePickerView(prioritizesVideoDevices: true)
-        }
-        .previewLayout(.fixed(width: 45, height: 45))
-    }
+#Preview("Audio") {
+    RoutePickerView()
+}
+
+#Preview("Video") {
+    RoutePickerView(prioritizesVideoDevices: true)
 }

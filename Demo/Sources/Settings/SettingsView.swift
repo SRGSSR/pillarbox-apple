@@ -137,10 +137,8 @@ struct SettingsView: View {
     }
 }
 
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        RoutedNavigationStack {
-            SettingsView()
-        }
+#Preview {
+    RoutedNavigationStack {
+        SettingsView()
     }
 }

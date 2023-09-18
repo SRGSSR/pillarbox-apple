@@ -44,10 +44,6 @@ struct BasicPlaybackView: View {
     }
 }
 
-struct BasicPlaybackView_Previews: PreviewProvider {
-    static var previews: some View {
-        BasicPlaybackView(player: Player())
-            .background(.black)
-            .previewLayout(.fixed(width: 320, height: 180))
-    }
+#Preview {
+    BasicPlaybackView(player: Player())
 }

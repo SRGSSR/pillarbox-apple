@@ -122,11 +122,9 @@ struct MultiView: View {
     }
 }
 
-struct MultiView_Previews: PreviewProvider {
-    static var previews: some View {
-        MultiView(
-            media1: Media(from: URNTemplate.onDemandHorizontalVideo),
-            media2: Media(from: URNTemplate.onDemandVideo)
-        )
-    }
+#Preview {
+    MultiView(
+        media1: Media(from: URNTemplate.onDemandHorizontalVideo),
+        media2: Media(from: URNTemplate.onDemandVideo)
+    )
 }

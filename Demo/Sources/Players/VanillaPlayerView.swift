@@ -11,7 +11,7 @@ import SwiftUI
 struct VanillaPlayerView: View {
     let item: AVPlayerItem
 
-    @State private var player = AVQueuePlayer()
+    @StateObject private var player = AVQueuePlayer()
 
     var body: some View {
         VideoPlayer(player: player)
@@ -28,8 +28,10 @@ struct VanillaPlayerView: View {
     }
 }
 
-struct VanillaPlayerView_Previews: PreviewProvider {
-    static var previews: some View {
-        VanillaPlayerView(item: Template.playerItem(from: URLTemplate.appleAdvanced_16_9_TS_HLS)!)
-    }
+// Workaround for FB13126425. Makes it possible to use `AVPlayer` as `@ObservableObject` to avoid memory leaks
+// in modal presentations.
+extension AVPlayer: ObservableObject {}
+
+#Preview {
+    VanillaPlayerView(item: Template.playerItem(from: URLTemplate.appleAdvanced_16_9_TS_HLS)!)
 }

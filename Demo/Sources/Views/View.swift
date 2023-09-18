@@ -9,8 +9,6 @@ import SwiftUI
 
 private struct SymbolPulseEffect: ViewModifier {
     func body(content: Content) -> some View {
-        // TODO: Remove when Xcode 15 has been released
-#if compiler(>=5.9)
         if #available(iOS 17.0, tvOS 17.0, *) {
             content
                 .symbolEffect(.pulse)
@@ -18,9 +16,6 @@ private struct SymbolPulseEffect: ViewModifier {
         else {
             content
         }
-#else
-        content
-#endif
     }
 }
 
