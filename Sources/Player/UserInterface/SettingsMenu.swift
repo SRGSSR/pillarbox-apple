@@ -63,7 +63,11 @@ private struct SettingsMenuContent: View {
         Menu {
             player.playbackSpeedMenu()
         } label: {
-            Label("Playback Speed", systemImage: "speedometer")
+            Label {
+                Text("Playback Speed", bundle: .module, comment: "Playback setting section")
+            } icon: {
+                Image(systemName: "speedometer")
+            }
         }
     }
 
@@ -72,7 +76,11 @@ private struct SettingsMenuContent: View {
         Menu {
             player.mediaSelectionMenu(characteristic: .audible)
         } label: {
-            Label("Languages", systemImage: "waveform.circle")
+            Label {
+                Text("Languages", bundle: .module, comment: "Playback setting section")
+            } icon: {
+                Image(systemName: "waveform.circle")
+            }
         }
     }
 
@@ -81,7 +89,11 @@ private struct SettingsMenuContent: View {
         Menu {
             player.mediaSelectionMenu(characteristic: .legible)
         } label: {
-            Label("Subtitles", systemImage: "captions.bubble")
+            Label {
+                Text("Subtitles", bundle: .module, comment: "Playback setting section")
+            } icon: {
+                Image(systemName: "captions.bubble")
+            }
         }
     }
 }

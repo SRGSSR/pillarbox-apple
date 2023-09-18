@@ -1,0 +1,191 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    " in Switzerland" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ""
+          }
+        }
+      }
+    },
+    "Active" : {
+
+    },
+    "Add" : {
+
+    },
+    "Add a stream to the playlist" : {
+
+    },
+    "Allows external playback" : {
+
+    },
+    "Application" : {
+
+    },
+    "Audiovisual background policy" : {
+
+    },
+    "Automatic" : {
+
+    },
+    "Both" : {
+
+    },
+    "Bottom" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Clear URL cache" : {
+
+    },
+    "Content displayed" : {
+
+    },
+    "Continues if possible" : {
+
+    },
+    "Custom" : {
+
+    },
+    "Debugging" : {
+
+    },
+    "Deferred" : {
+
+    },
+    "Displays touches for presentation purposes." : {
+
+    },
+    "Embeddings" : {
+
+    },
+    "Enter URL or URN" : {
+
+    },
+    "Examples" : {
+
+    },
+    "Immediate" : {
+
+    },
+    "Improves playlist navigation so that it feels more natural." : {
+
+    },
+    "Layout" : {
+
+    },
+    "Layouts" : {
+
+    },
+    "Lists" : {
+
+    },
+    "Lists (%@)" : {
+
+    },
+    "LIVE" : {
+
+    },
+    "Made with " : {
+
+    },
+    "Mode" : {
+
+    },
+    "Opt-in features" : {
+
+    },
+    "Pauses" : {
+
+    },
+    "Play" : {
+
+    },
+    "Player" : {
+
+    },
+    "Playlists" : {
+
+    },
+    "Presenter mode" : {
+
+    },
+    "Search" : {
+
+    },
+    "Seek behavior" : {
+
+    },
+    "Server" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Showcase" : {
+
+    },
+    "Simulate memory warning" : {
+
+    },
+    "Smart navigation" : {
+
+    },
+    "Stop" : {
+
+    },
+    "System" : {
+
+    },
+    "System player (using AVPlayer)" : {
+
+    },
+    "System player (using Pillarbox)" : {
+
+    },
+    "Top" : {
+
+    },
+    "Tracking" : {
+
+    },
+    "Use a proxy tool to observe events." : {
+
+    },
+    "Version %@ Build %@, Player %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Version %1$@ Build %2$@, Player %3$@"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
