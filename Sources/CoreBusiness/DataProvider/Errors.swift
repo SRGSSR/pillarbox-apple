@@ -21,7 +21,8 @@ enum TokenError: Error {
 struct DataError: LocalizedError {
     static var noResourceAvailable: Self {
         .init(errorDescription: NSLocalizedString(
-            "No playable resources could be found",
+            "No playable resources could be found.",
+            bundle: .module,
             comment: "Generic error message returned when no playable resources could be found"
         ))
     }
@@ -29,6 +30,7 @@ struct DataError: LocalizedError {
     static var malformedData: Self {
         .init(errorDescription: NSLocalizedString(
             "The data is invalid",
+            bundle: .module,
             comment: "Generic error message returned when data is invalid"
         ))
     }

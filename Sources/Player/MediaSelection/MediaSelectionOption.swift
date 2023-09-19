@@ -25,9 +25,9 @@ public enum MediaSelectionOption: Hashable {
     public var displayName: String {
         switch self {
         case .automatic:
-            return NSLocalizedString("Auto (Recommended)", comment: "Subtitle selection option")
+            return NSLocalizedString("Auto (Recommended)", bundle: .module, comment: "Subtitle selection option")
         case .off:
-            return NSLocalizedString("Off", comment: "Subtitle selection option")
+            return NSLocalizedString("Off", bundle: .module, comment: "Subtitle selection option")
         case let .on(option):
             return option.displayName
         }

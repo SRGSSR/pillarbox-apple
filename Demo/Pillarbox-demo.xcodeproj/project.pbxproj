@@ -14,6 +14,7 @@
 		0EA8E5D52A6D9AC700AB33BB /* YouTubeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8E5D42A6D9AC700AB33BB /* YouTubeError.swift */; };
 		0ECC5AD52A517A4C0064E701 /* PlaybackSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECC5AD42A517A4C0064E701 /* PlaybackSlider.swift */; };
 		0EF42CB629AE513400553165 /* SRGDataProviderCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF42CB529AE513400553165 /* SRGDataProviderCombine */; };
+		6F02B3092AB870AD002D15DB /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 6F02B3082AB870AD002D15DB /* Localizable.xcstrings */; };
 		6F0B2E852A40EBAC00B69675 /* RouterDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E842A40EBAC00B69675 /* RouterDestination.swift */; };
 		6F0B2E8B2A40EE0700B69675 /* ContentList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E8A2A40EE0700B69675 /* ContentList.swift */; };
 		6F59E87929CF31E10093E6FB /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84029CF31E10093E6FB /* SearchView.swift */; };
@@ -82,6 +83,7 @@
 		0EA8E5D42A6D9AC700AB33BB /* YouTubeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeError.swift; sourceTree = "<group>"; };
 		0ECC5AD42A517A4C0064E701 /* PlaybackSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackSlider.swift; sourceTree = "<group>"; };
 		6F010340289946220021BA76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6F02B3082AB870AD002D15DB /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pillarbox-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F0B2E842A40EBAC00B69675 /* RouterDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterDestination.swift; sourceTree = "<group>"; };
 		6F0B2E8A2A40EE0700B69675 /* ContentList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentList.swift; sourceTree = "<group>"; };
@@ -424,6 +426,7 @@
 			isa = PBXGroup;
 			children = (
 				6F917C082887EA8E004113BA /* Assets.xcassets */,
+				6F02B3082AB870AD002D15DB /* Localizable.xcstrings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -507,6 +510,10 @@
 			knownRegions = (
 				en,
 				Base,
+				fr,
+				de,
+				it,
+				rm,
 			);
 			mainGroup = 6F05B8CC2887E934005D75E3;
 			packageReferences = (
@@ -531,6 +538,7 @@
 			files = (
 				6F917C112887EA8E004113BA /* Preview Assets.xcassets in Resources */,
 				6F917C0E2887EA8E004113BA /* Assets.xcassets in Resources */,
+				6F02B3092AB870AD002D15DB /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

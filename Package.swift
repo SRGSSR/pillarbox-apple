@@ -60,6 +60,9 @@ let package = Package(
             dependencies: [
                 .target(name: "Analytics")
             ],
+            resources: [
+                .process("Resources")
+            ],
             plugins: [
                 .plugin(name: "PackageInfoPlugin")
             ]
@@ -77,6 +80,9 @@ let package = Package(
                 .target(name: "Core"),
                 .product(name: "DequeModule", package: "swift-collections"),
                 .product(name: "TimelaneCombine", package: "TimelaneCombine")
+            ],
+            resources: [
+                .process("Resources")
             ],
             plugins: [
                 .plugin(name: "PackageInfoPlugin")
