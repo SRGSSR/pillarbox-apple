@@ -75,21 +75,24 @@ public final class VisibilityTracker: ObservableObject {
     private func updatePublisher(for playbackState: PlaybackState) -> AnyPublisher<Bool, Never> {
         switch playbackState {
         case .playing:
-            return togglePublisher
-                .prepend(isUserInterfaceHidden)
-                .compactMap { [weak self] isHidden -> AnyPublisher<Bool, Never>? in
-                    guard let self else { return nil }
-                    return Just(isHidden)
-                        .append(autoHidePublisher(delay: delay), if: !isHidden)
-                }
-                .switchToLatest()
-                .eraseToAnyPublisher()
+            return Publishers.CombineLatest(
+                userInterfaceHiddenPublisher()
+                    .prepend(isUserInterfaceHidden),
+                voiceOverRunningPublisher()
+            )
+            .compactMap { [weak self] isHidden, isVoiceOverRunning -> AnyPublisher<Bool, Never>? in
+                guard let self else { return nil }
+                return Just(isHidden)
+                    .append(autoHidePublisher(delay: delay), if: !isHidden && !isVoiceOverRunning)
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
         case .paused:
-            return Publishers.Merge(togglePublisher, foregroundPublisher())
+            return Publishers.Merge(userInterfaceHiddenPublisher(), foregroundPublisher())
                 .prepend(false)
                 .eraseToAnyPublisher()
         default:
-            return Publishers.Merge(togglePublisher, foregroundPublisher())
+            return Publishers.Merge(userInterfaceHiddenPublisher(), foregroundPublisher())
                 .prepend(isUserInterfaceHidden)
                 .eraseToAnyPublisher()
         }
@@ -109,6 +112,31 @@ public final class VisibilityTracker: ObservableObject {
         }
         .map { _ in true }
         .eraseToAnyPublisher()
+    }
+
+    private func userInterfaceHiddenPublisher() -> AnyPublisher<Bool, Never> {
+        Publishers.Merge(togglePublisher, voiceOverUnhidePublisher())
+            .eraseToAnyPublisher()
+    }
+
+    private func voiceOverRunningPublisher() -> AnyPublisher<Bool, Never> {
+        NotificationCenter.default.publisher(for: UIAccessibility.voiceOverStatusDidChangeNotification)
+            .map { _ in }
+            .prepend(())
+            .map { _ in UIAccessibility.isVoiceOverRunning }
+            .eraseToAnyPublisher()
+    }
+
+    private func voiceOverUnhidePublisher() -> AnyPublisher<Bool, Never> {
+        NotificationCenter.default.publisher(for: UIAccessibility.voiceOverStatusDidChangeNotification)
+            .map { _ -> AnyPublisher<Bool, Never> in
+                guard UIAccessibility.isVoiceOverRunning else {
+                    return Empty().eraseToAnyPublisher()
+                }
+                return Just(false).eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
     }
 }
 
