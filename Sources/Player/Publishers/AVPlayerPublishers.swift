@@ -10,6 +10,19 @@ import Core
 import TimelaneCombine
 
 extension AVPlayer {
+    func contextPublisher() -> AnyPublisher<AVPlayerContext, Never> {
+        publisher(for: \.currentItem)
+            .map { item in
+                guard let item else {
+                    return Just(AVPlayerItemContext(duration: .invalid)).eraseToAnyPublisher()
+                }
+                return item.contextPublisher()
+            }
+            .switchToLatest()
+            .map { .init(currentItemContext: $0) }
+            .eraseToAnyPublisher()
+    }
+
     func currentItemStatePublisher() -> AnyPublisher<ItemState, Never> {
         publisher(for: \.currentItem)
             .compactMap { $0 }

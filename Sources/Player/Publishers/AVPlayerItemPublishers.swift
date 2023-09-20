@@ -10,6 +10,12 @@ import Core
 import MediaAccessibility
 
 extension AVPlayerItem {
+    func contextPublisher() -> AnyPublisher<AVPlayerItemContext, Never> {
+        durationPublisher()
+            .map { AVPlayerItemContext(duration: $0) }
+            .eraseToAnyPublisher()
+    }
+
     func itemStatePublisher() -> AnyPublisher<ItemState, Never> {
         Publishers.Merge3(
             publisher(for: \.status)
