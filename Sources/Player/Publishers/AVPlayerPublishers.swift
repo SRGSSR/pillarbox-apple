@@ -24,6 +24,51 @@ extension AVPlayer {
     }
 }
 
+// TODO: Remove once migration done
+
+extension AVPlayer {
+    /// Returns a publisher emitting values for the current item duration.
+    ///
+    /// Unlike `AVPlayerItem` this publisher returns `.invalid` when the duration is unknown. Note that `.indefinite`
+    /// is a valid duration for DVR streams.
+    func currentItemDurationPublisher() -> AnyPublisher<CMTime, Never> {
+        publisher(for: \.currentItem)
+            .map { item -> AnyPublisher<CMTime, Never> in
+                guard let item else {
+                    return Just(.invalid).eraseToAnyPublisher()
+                }
+                return item.durationPublisher()
+            }
+            .switchToLatest()
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    func bufferingPublisher() -> AnyPublisher<Bool, Never> {
+        publisher(for: \.currentItem)
+            .compactMap { $0?.bufferingPublisher() }
+            .switchToLatest()
+            .prepend(false)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    func chunkDurationPublisher() -> AnyPublisher<CMTime, Never> {
+        publisher(for: \.currentItem)
+            .map { item -> AnyPublisher<CMTime, Never> in
+                guard let item else { return Just(.invalid).eraseToAnyPublisher() }
+                return item.asset.propertyPublisher(.minimumTimeOffsetFromLive)
+                    .map { CMTimeMultiplyByRatio($0, multiplier: 1, divisor: 3) }       // The minimum offset represents 3 chunks
+                    .replaceError(with: .invalid)
+                    .prepend(.invalid)
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+}
+
 extension AVPlayer {
     func currentItemStatePublisher() -> AnyPublisher<ItemState, Never> {
         publisher(for: \.currentItem)
@@ -44,23 +89,6 @@ extension AVPlayer {
         .map { PlaybackState.state(for: $0, rate: $1) }
         .removeDuplicates()
         .eraseToAnyPublisher()
-    }
-
-    /// Returns a publisher emitting values for the current item duration.
-    ///
-    /// Unlike `AVPlayerItem` this publisher returns `.invalid` when the duration is unknown. Note that `.indefinite`
-    /// is a valid duration for DVR streams.
-    func currentItemDurationPublisher() -> AnyPublisher<CMTime, Never> {
-        publisher(for: \.currentItem)
-            .map { item -> AnyPublisher<CMTime, Never> in
-                guard let item else {
-                    return Just(.invalid).eraseToAnyPublisher()
-                }
-                return item.durationPublisher()
-            }
-            .switchToLatest()
-            .removeDuplicates()
-            .eraseToAnyPublisher()
     }
 
     func currentItemTimeRangePublisher() -> AnyPublisher<CMTimeRange, Never> {
@@ -101,30 +129,6 @@ extension AVPlayer {
             }
             .switchToLatest()
             .prepend(.empty)
-            .eraseToAnyPublisher()
-    }
-
-    func bufferingPublisher() -> AnyPublisher<Bool, Never> {
-        publisher(for: \.currentItem)
-            .compactMap { $0?.bufferingPublisher() }
-            .switchToLatest()
-            .prepend(false)
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-
-    func chunkDurationPublisher() -> AnyPublisher<CMTime, Never> {
-        publisher(for: \.currentItem)
-            .map { item -> AnyPublisher<CMTime, Never> in
-                guard let item else { return Just(.invalid).eraseToAnyPublisher() }
-                return item.asset.propertyPublisher(.minimumTimeOffsetFromLive)
-                    .map { CMTimeMultiplyByRatio($0, multiplier: 1, divisor: 3) }       // The minimum offset represents 3 chunks
-                    .replaceError(with: .invalid)
-                    .prepend(.invalid)
-                    .eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 

@@ -8,16 +8,24 @@
 
 import AVFoundation
 import Circumspect
+import Combine
 import Streams
 import XCTest
 
 final class AVPlayerChunkDurationPublisherTests: TestCase {
+    private func chunkDurationPublisher(for player: AVPlayer) -> AnyPublisher<CMTime, Never> {
+        player.contextPublisher()
+            .map(\.currentItemContext.chunkDuration)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
     func testPlayback() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [.invalid, CMTime(value: 1, timescale: 1)],
-            from: player.chunkDurationPublisher()
+            from: chunkDurationPublisher(for: player)
         )
     }
 
@@ -26,7 +34,7 @@ final class AVPlayerChunkDurationPublisherTests: TestCase {
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [.invalid, CMTime(value: 1, timescale: 1)],
-            from: player.chunkDurationPublisher()
+            from: chunkDurationPublisher(for: player)
         ) {
             player.play()
         }
@@ -38,7 +46,7 @@ final class AVPlayerChunkDurationPublisherTests: TestCase {
         player.actionAtItemEnd = .advance
         expectAtLeastEqualPublished(
             values: [.invalid, CMTime(value: 1, timescale: 1), .invalid],
-            from: player.chunkDurationPublisher()
+            from: chunkDurationPublisher(for: player)
         ) {
             player.play()
         }
@@ -50,7 +58,7 @@ final class AVPlayerChunkDurationPublisherTests: TestCase {
         player.actionAtItemEnd = .pause
         expectAtLeastEqualPublished(
             values: [.invalid, CMTime(value: 1, timescale: 1)],
-            from: player.chunkDurationPublisher()
+            from: chunkDurationPublisher(for: player)
         ) {
             player.play()
         }
@@ -67,7 +75,7 @@ final class AVPlayerChunkDurationPublisherTests: TestCase {
                 .invalid,
                 CMTime(value: 4, timescale: 1)
             ],
-            from: player.chunkDurationPublisher()
+            from: chunkDurationPublisher(for: player)
         ) {
             player.play()
         }

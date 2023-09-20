@@ -11,12 +11,13 @@ import MediaAccessibility
 
 extension AVPlayerItem {
     func contextPublisher() -> AnyPublisher<AVPlayerItemContext, Never> {
-        Publishers.CombineLatest3(
-            statePublisher(), 
+        Publishers.CombineLatest4(
+            statePublisher(),
             durationPublisher(),
+            minimumTimeOffsetFromLivePublisher(),
             bufferingPublisher()
         )
-        .map { AVPlayerItemContext(state: $0, duration: $1, isBuffering: $2) }
+        .map { AVPlayerItemContext(state: $0, duration: $1, minimumTimeOffsetFromLive: $2, isBuffering: $3) }
         .eraseToAnyPublisher()
     }
 
@@ -31,6 +32,25 @@ extension AVPlayerItem {
                 .compactMap { ItemState(for: $0) }
         )
         .eraseToAnyPublisher()
+    }
+
+    func durationPublisher() -> AnyPublisher<CMTime, Never> {
+        Publishers.CombineLatest(
+            publisher(for: \.status),
+            publisher(for: \.duration)
+        )
+        .map { status, duration in
+            status == .readyToPlay ? duration : .invalid
+        }
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
+
+    func minimumTimeOffsetFromLivePublisher() -> AnyPublisher<CMTime, Never> {
+        asset.propertyPublisher(.minimumTimeOffsetFromLive)
+            .replaceError(with: .invalid)
+            .prepend(.invalid)
+            .eraseToAnyPublisher()
     }
 
     func timeRangePublisher() -> AnyPublisher<CMTimeRange, Never> {
@@ -57,18 +77,6 @@ extension AVPlayerItem {
             let start = loadedTimeRanges.first?.timeRangeValue.start ?? .zero
             let end = loadedTimeRanges.last?.timeRangeValue.end ?? .zero
             return CMTimeRangeFromTimeToTime(start: start, end: end)
-        }
-        .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
-
-    func durationPublisher() -> AnyPublisher<CMTime, Never> {
-        Publishers.CombineLatest(
-            publisher(for: \.status),
-            publisher(for: \.duration)
-        )
-        .map { status, duration in
-            status == .readyToPlay ? duration : .invalid
         }
         .removeDuplicates()
         .eraseToAnyPublisher()
