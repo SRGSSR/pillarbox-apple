@@ -12,8 +12,8 @@ import UIKit
 
 /// An observable object tracking user interface visibility.
 ///
-/// The tracker automatically turns off visibility after a delay while playing content. It also automatically turns
-/// on visibility when playback is paused externally (e.g. by another app or through the control center).
+/// The tracker automatically provides meaningful default behaviors, most notably to automatically turn visibility off
+/// after a delay during playback. This mechanism is disabled when playback is paused or when VoiceOver is enabled.
 @available(tvOS, unavailable)
 public final class VisibilityTracker: ObservableObject {
     private enum TriggerId {
