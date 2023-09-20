@@ -15,9 +15,9 @@ extension AVPlayerItem {
             statePublisher(),
             durationPublisher(),
             minimumTimeOffsetFromLivePublisher(),
-            bufferingPublisher()
+            isPlaybackLikelyToKeepUpPublisher()
         )
-        .map { AVPlayerItemContext(state: $0, duration: $1, minimumTimeOffsetFromLive: $2, isBuffering: $3) }
+        .map { AVPlayerItemContext(state: $0, duration: $1, minimumTimeOffsetFromLive: $2, isPlaybackLikelyToKeepUp: $3) }
         .eraseToAnyPublisher()
     }
 
@@ -53,6 +53,13 @@ extension AVPlayerItem {
             .eraseToAnyPublisher()
     }
 
+    func isPlaybackLikelyToKeepUpPublisher() -> AnyPublisher<Bool, Never> {
+        publisher(for: \.isPlaybackLikelyToKeepUp)
+            .eraseToAnyPublisher()
+    }
+}
+
+extension AVPlayerItem {
     func timeRangePublisher() -> AnyPublisher<CMTimeRange, Never> {
         Publishers.CombineLatest3(
             publisher(for: \.status),

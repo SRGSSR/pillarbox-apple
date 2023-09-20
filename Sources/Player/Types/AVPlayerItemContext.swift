@@ -9,16 +9,25 @@ import Foundation
 
 struct AVPlayerItemContext {
     static var empty: Self {
-        .init(state: .unknown, duration: .invalid, minimumTimeOffsetFromLive: .invalid, isBuffering: false)
+        .init(state: .unknown, duration: .invalid, minimumTimeOffsetFromLive: .invalid, isPlaybackLikelyToKeepUp: true)
     }
 
     let state: ItemState
     let duration: CMTime
     let minimumTimeOffsetFromLive: CMTime
-    let isBuffering: Bool
+    let isPlaybackLikelyToKeepUp: Bool
 
     var chunkDuration: CMTime {
         // The minimum offset represents 3 chunks
         CMTimeMultiplyByRatio(minimumTimeOffsetFromLive, multiplier: 1, divisor: 3)
+    }
+
+    var isBuffering: Bool {
+        switch state {
+        case .failed:
+            return false
+        default:
+            return !isPlaybackLikelyToKeepUp
+        }
     }
 }
