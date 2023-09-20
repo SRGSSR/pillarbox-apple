@@ -62,6 +62,24 @@ public extension Publishers {
 }
 
 public extension Publishers {
+    /// A publisher that receives and combines the latest elements from five publishers.
+    static func CombineLatest5<A, B, C, D, E>(_ a: A, _ b: B, _ c: C, _ d: D, _ e: E) -> AnyPublisher<(A.Output, B.Output, C.Output, D.Output, E.Output), A.Failure> where A: Publisher, B: Publisher, C: Publisher, D: Publisher, E: Publisher, B.Failure == A.Failure, C.Failure == A.Failure, D.Failure == A.Failure, E.Failure == A.Failure {
+        // swiftlint:disable:previous large_tuple line_length
+        Publishers.CombineLatest(Publishers.CombineLatest4(a, b, c, d), e)
+            .map { ($0.0, $0.1, $0.2, $0.3, $1) }
+            .eraseToAnyPublisher()
+    }
+
+    /// A publisher that receives and combines the latest elements from six publishers.
+    static func CombineLatest6<A, B, C, D, E, F>(_ a: A, _ b: B, _ c: C, _ d: D, _ e: E, _ f: F) -> AnyPublisher<(A.Output, B.Output, C.Output, D.Output, E.Output, F.Output), A.Failure> where A: Publisher, B: Publisher, C: Publisher, D: Publisher, E: Publisher, F: Publisher, B.Failure == A.Failure, C.Failure == A.Failure, D.Failure == A.Failure, E.Failure == A.Failure, F.Failure == A.Failure {
+        // swiftlint:disable:previous large_tuple line_length
+        Publishers.CombineLatest3(Publishers.CombineLatest4(a, b, c, d), e, f)
+            .map { ($0.0, $0.1, $0.2, $0.3, $1, $2) }
+            .eraseToAnyPublisher()
+    }
+}
+
+public extension Publishers {
     /// Makes the upstream publisher publish each time another signal publisher emits some value.
     ///
     /// - Parameters:
