@@ -22,7 +22,9 @@ extension AVPlayer {
             .map { .init(currentItemContext: $0) }
             .eraseToAnyPublisher()
     }
+}
 
+extension AVPlayer {
     func currentItemStatePublisher() -> AnyPublisher<ItemState, Never> {
         publisher(for: \.currentItem)
             .compactMap { $0 }
