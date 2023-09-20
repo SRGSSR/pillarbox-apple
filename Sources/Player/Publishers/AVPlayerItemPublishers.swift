@@ -11,9 +11,13 @@ import MediaAccessibility
 
 extension AVPlayerItem {
     func contextPublisher() -> AnyPublisher<AVPlayerItemContext, Never> {
-        Publishers.CombineLatest(statePublisher(), durationPublisher())
-            .map { AVPlayerItemContext(state: $0, duration: $1) }
-            .eraseToAnyPublisher()
+        Publishers.CombineLatest3(
+            statePublisher(), 
+            durationPublisher(),
+            bufferingPublisher()
+        )
+        .map { AVPlayerItemContext(state: $0, duration: $1, isBuffering: $2) }
+        .eraseToAnyPublisher()
     }
 
     func statePublisher() -> AnyPublisher<ItemState, Never> {

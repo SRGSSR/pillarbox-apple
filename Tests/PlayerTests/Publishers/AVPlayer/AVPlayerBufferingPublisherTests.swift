@@ -8,15 +8,23 @@
 
 import AVFoundation
 import Circumspect
+import Combine
 import Streams
 import XCTest
 
 final class AVPlayerBufferingPublisherTests: TestCase {
+    private func bufferingPublisher(for player: AVPlayer) -> AnyPublisher<Bool, Never> {
+        player.contextPublisher()
+            .map(\.currentItemContext.isBuffering)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
     func testEmpty() {
         let player = AVPlayer()
         expectAtLeastEqualPublished(
             values: [false],
-            from: player.bufferingPublisher()
+            from: bufferingPublisher(for: player)
         )
     }
 
@@ -25,7 +33,7 @@ final class AVPlayerBufferingPublisherTests: TestCase {
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false, true, false],
-            from: player.bufferingPublisher()
+            from: bufferingPublisher(for: player)
         )
     }
 
@@ -34,7 +42,7 @@ final class AVPlayerBufferingPublisherTests: TestCase {
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false, true, false],
-            from: player.bufferingPublisher()
+            from: bufferingPublisher(for: player)
         ) {
             player.play()
         }
@@ -45,7 +53,7 @@ final class AVPlayerBufferingPublisherTests: TestCase {
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false, true, false],
-            from: player.bufferingPublisher()
+            from: bufferingPublisher(for: player)
         )
     }
 
@@ -54,13 +62,13 @@ final class AVPlayerBufferingPublisherTests: TestCase {
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false, true, false],
-            from: player.bufferingPublisher()
+            from: bufferingPublisher(for: player)
         ) {
             player.play()
         }
         expectAtLeastEqualPublishedNext(
             values: [true, false],
-            from: player.bufferingPublisher()
+            from: bufferingPublisher(for: player)
         ) {
             player.seek(
                 to: CMTime(value: 10, timescale: 1),

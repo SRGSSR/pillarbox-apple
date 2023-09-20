@@ -9,9 +9,10 @@ import Foundation
 
 struct AVPlayerItemContext {
     static var empty: Self {
-        .init(state: .unknown, duration: .invalid)
+        .init(state: .unknown, duration: .invalid, isBuffering: false)
     }
 
     let state: ItemState
     let duration: CMTime
+    let isBuffering: Bool
 }
