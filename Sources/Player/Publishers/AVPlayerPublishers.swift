@@ -27,6 +27,17 @@ extension AVPlayer {
 // TODO: Remove once migration done
 
 extension AVPlayer {
+    func currentItemStatePublisher() -> AnyPublisher<ItemState, Never> {
+        publisher(for: \.currentItem)
+            .compactMap { $0 }
+            .map { $0.statePublisher() }
+            .switchToLatest()
+            .prepend(ItemState(for: currentItem))
+            .removeDuplicates()
+            .lane("player_item_state")
+            .eraseToAnyPublisher()
+    }
+
     /// Returns a publisher emitting values for the current item duration.
     ///
     /// Unlike `AVPlayerItem` this publisher returns `.invalid` when the duration is unknown. Note that `.indefinite`
@@ -70,17 +81,6 @@ extension AVPlayer {
 }
 
 extension AVPlayer {
-    func currentItemStatePublisher() -> AnyPublisher<ItemState, Never> {
-        publisher(for: \.currentItem)
-            .compactMap { $0 }
-            .map { $0.statePublisher() }
-            .switchToLatest()
-            .prepend(ItemState(for: currentItem))
-            .removeDuplicates()
-            .lane("player_item_state")
-            .eraseToAnyPublisher()
-    }
-
     func playbackStatePublisher() -> AnyPublisher<PlaybackState, Never> {
         Publishers.CombineLatest(
             currentItemStatePublisher(),
