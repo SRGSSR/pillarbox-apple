@@ -14,7 +14,7 @@ extension AVPlayer {
         publisher(for: \.currentItem)
             .map { item in
                 guard let item else {
-                    return Just(AVPlayerItemContext(duration: .invalid)).eraseToAnyPublisher()
+                    return Just(AVPlayerItemContext.empty).eraseToAnyPublisher()
                 }
                 return item.contextPublisher()
             }
@@ -26,7 +26,7 @@ extension AVPlayer {
     func currentItemStatePublisher() -> AnyPublisher<ItemState, Never> {
         publisher(for: \.currentItem)
             .compactMap { $0 }
-            .map { $0.itemStatePublisher() }
+            .map { $0.statePublisher() }
             .switchToLatest()
             .prepend(ItemState(for: currentItem))
             .removeDuplicates()

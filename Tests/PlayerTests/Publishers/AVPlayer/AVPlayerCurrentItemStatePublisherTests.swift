@@ -8,6 +8,7 @@
 
 import AVFoundation
 import Circumspect
+import Combine
 import Streams
 import XCTest
 
@@ -15,11 +16,18 @@ final class AVPlayerCurrentItemStatePublisherTests: TestCase {
     // swiftlint:disable:next weak_delegate
     private let resourceLoaderDelegate = FailingResourceLoaderDelegate()
 
+    private func currentItemStatePublisher(for player: AVPlayer) -> AnyPublisher<ItemState, Never> {
+        player.contextPublisher()
+            .map(\.currentItemContext.state)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
     func testEmpty() {
         let player = AVPlayer()
         expectAtLeastEqualPublished(
             values: [.unknown],
-            from: player.currentItemStatePublisher()
+            from: currentItemStatePublisher(for: player)
         )
     }
 
@@ -28,7 +36,7 @@ final class AVPlayerCurrentItemStatePublisherTests: TestCase {
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [.unknown, .readyToPlay],
-            from: player.currentItemStatePublisher()
+            from: currentItemStatePublisher(for: player)
         )
     }
 
@@ -37,7 +45,7 @@ final class AVPlayerCurrentItemStatePublisherTests: TestCase {
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [.unknown, .readyToPlay, .ended],
-            from: player.currentItemStatePublisher()
+            from: currentItemStatePublisher(for: player)
         ) {
             player.play()
         }
@@ -51,7 +59,7 @@ final class AVPlayerCurrentItemStatePublisherTests: TestCase {
                 .unknown,
                 .failed(error: PlayerError.resourceNotFound)
             ],
-            from: player.currentItemStatePublisher()
+            from: currentItemStatePublisher(for: player)
         )
     }
 
@@ -63,7 +71,7 @@ final class AVPlayerCurrentItemStatePublisherTests: TestCase {
                 .unknown,
                 .failed(error: PlayerError.segmentNotFound)
             ],
-            from: player.currentItemStatePublisher()
+            from: currentItemStatePublisher(for: player)
         )
     }
 
@@ -83,7 +91,7 @@ final class AVPlayerCurrentItemStatePublisherTests: TestCase {
                     ]
                 ))
             ],
-            from: player.currentItemStatePublisher()
+            from: currentItemStatePublisher(for: player)
         )
     }
 }

@@ -18,7 +18,7 @@ final class AVPlayerItemStatePublisherTests: TestCase {
         _ = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [.unknown, .readyToPlay],
-            from: item.itemStatePublisher()
+            from: item.statePublisher()
         )
     }
 
@@ -27,7 +27,7 @@ final class AVPlayerItemStatePublisherTests: TestCase {
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [.unknown, .readyToPlay, .ended],
-            from: item.itemStatePublisher()
+            from: item.statePublisher()
         ) {
             player.play()
         }
@@ -41,7 +41,7 @@ final class AVPlayerItemStatePublisherTests: TestCase {
                 .unknown,
                 .failed(error: PlayerError.segmentNotFound)
             ],
-            from: item.itemStatePublisher()
+            from: item.statePublisher()
         )
     }
 }

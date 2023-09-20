@@ -11,12 +11,12 @@ import MediaAccessibility
 
 extension AVPlayerItem {
     func contextPublisher() -> AnyPublisher<AVPlayerItemContext, Never> {
-        durationPublisher()
-            .map { AVPlayerItemContext(duration: $0) }
+        Publishers.CombineLatest(statePublisher(), durationPublisher())
+            .map { AVPlayerItemContext(state: $0, duration: $1) }
             .eraseToAnyPublisher()
     }
 
-    func itemStatePublisher() -> AnyPublisher<ItemState, Never> {
+    func statePublisher() -> AnyPublisher<ItemState, Never> {
         Publishers.Merge3(
             publisher(for: \.status)
                 .weakCapture(self)
@@ -85,7 +85,7 @@ extension AVPlayerItem {
     func bufferingPublisher() -> AnyPublisher<Bool, Never> {
         Publishers.CombineLatest(
             publisher(for: \.isPlaybackLikelyToKeepUp),
-            itemStatePublisher()
+            statePublisher()
         )
         .map { isPlaybackLikelyToKeepUp, itemState in
             switch itemState {

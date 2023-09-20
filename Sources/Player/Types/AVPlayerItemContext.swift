@@ -8,5 +8,10 @@ import CoreMedia
 import Foundation
 
 struct AVPlayerItemContext {
+    static var empty: Self {
+        .init(state: .unknown, duration: .invalid)
+    }
+
+    let state: ItemState
     let duration: CMTime
 }

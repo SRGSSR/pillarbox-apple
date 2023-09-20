@@ -46,7 +46,7 @@ final class AssetPlayerItemTests: TestCase {
                     ]
                 ))
             ],
-            from: item.itemStatePublisher()
+            from: item.statePublisher()
         )
     }
 }
