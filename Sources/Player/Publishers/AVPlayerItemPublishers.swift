@@ -11,13 +11,22 @@ import MediaAccessibility
 
 extension AVPlayerItem {
     func contextPublisher() -> AnyPublisher<AVPlayerItemContext, Never> {
-        Publishers.CombineLatest4(
+        Publishers.CombineLatest5(
             statePublisher(),
             durationPublisher(),
             minimumTimeOffsetFromLivePublisher(),
-            isPlaybackLikelyToKeepUpPublisher()
+            isPlaybackLikelyToKeepUpPublisher(),
+            presentationSizePublisher()
         )
-        .map { AVPlayerItemContext(state: $0, duration: $1, minimumTimeOffsetFromLive: $2, isPlaybackLikelyToKeepUp: $3) }
+        .map { state, duration, minimumTimeOffsetFromLive, isPlaybackLikelyToKeepUp, presentationSize in
+            AVPlayerItemContext(
+                state: state,
+                duration: duration,
+                minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
+                isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp,
+                presentationSize: presentationSize
+            )
+        }
         .eraseToAnyPublisher()
     }
 
@@ -55,6 +64,11 @@ extension AVPlayerItem {
 
     func isPlaybackLikelyToKeepUpPublisher() -> AnyPublisher<Bool, Never> {
         publisher(for: \.isPlaybackLikelyToKeepUp)
+            .eraseToAnyPublisher()
+    }
+
+    func presentationSizePublisher() -> AnyPublisher<CGSize, Never> {
+        publisher(for: \.presentationSize)
             .eraseToAnyPublisher()
     }
 }
@@ -157,7 +171,7 @@ extension AVPlayerItem {
         .eraseToAnyPublisher()
     }
 
-    func presentationSizePublisher() -> AnyPublisher<CGSize?, Never> {
+    func presentationSizePublisherLegacy() -> AnyPublisher<CGSize?, Never> {
         publisher(for: \.status)
             .weakCapture(self)
             .map { status, item -> AnyPublisher<CGSize?, Never> in

@@ -184,7 +184,7 @@ extension AVPlayer {
             guard let currentItem else {
                 return Just(nil).eraseToAnyPublisher()
             }
-            return currentItem.presentationSizePublisher()
+            return currentItem.presentationSizePublisherLegacy()
         }
         .switchToLatest()
         .removeDuplicates()
