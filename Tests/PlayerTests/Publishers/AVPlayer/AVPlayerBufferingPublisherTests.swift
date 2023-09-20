@@ -32,7 +32,7 @@ final class AVPlayerBufferingPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
-            values: [true, false],
+            values: [false, true, false],
             from: bufferingPublisher(for: player)
         )
     }
@@ -41,7 +41,7 @@ final class AVPlayerBufferingPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
-            values: [true, false],
+            values: [false, true, false],
             from: bufferingPublisher(for: player)
         ) {
             player.play()
@@ -52,7 +52,7 @@ final class AVPlayerBufferingPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
-            values: [true, false],
+            values: [false],
             from: bufferingPublisher(for: player)
         )
     }
@@ -61,7 +61,7 @@ final class AVPlayerBufferingPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
-            values: [true, false],
+            values: [false, true, false],
             from: bufferingPublisher(for: player)
         ) {
             player.play()

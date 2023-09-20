@@ -9,13 +9,7 @@ import Foundation
 
 struct AVPlayerItemContext {
     static var empty: Self {
-        .init(
-            state: .unknown,
-            duration: .invalid,
-            minimumTimeOffsetFromLive: .invalid,
-            isPlaybackLikelyToKeepUp: true,
-            presentationSize: nil
-        )
+        empty(state: .unknown)
     }
 
     let state: ItemState
@@ -36,5 +30,15 @@ struct AVPlayerItemContext {
         default:
             return !isPlaybackLikelyToKeepUp
         }
+    }
+
+    static func empty(state: ItemState) -> Self {
+        .init(
+            state: state,
+            duration: .invalid,
+            minimumTimeOffsetFromLive: .invalid,
+            isPlaybackLikelyToKeepUp: true,
+            presentationSize: nil
+        )
     }
 }

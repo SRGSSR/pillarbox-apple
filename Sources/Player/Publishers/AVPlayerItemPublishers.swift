@@ -19,7 +19,8 @@ extension AVPlayerItem {
             presentationSizePublisher()
         )
         .map { state, duration, minimumTimeOffsetFromLive, isPlaybackLikelyToKeepUp, presentationSize in
-            AVPlayerItemContext(
+            guard state == .readyToPlay else { return .empty(state: state) }
+            return AVPlayerItemContext(
                 state: state,
                 duration: duration,
                 minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
@@ -44,15 +45,9 @@ extension AVPlayerItem {
     }
 
     func durationPublisher() -> AnyPublisher<CMTime, Never> {
-        Publishers.CombineLatest(
-            publisher(for: \.status),
-            publisher(for: \.duration)
-        )
-        .map { status, duration in
-            status == .readyToPlay ? duration : .invalid
-        }
-        .removeDuplicates()
-        .eraseToAnyPublisher()
+        publisher(for: \.duration)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
     func minimumTimeOffsetFromLivePublisher() -> AnyPublisher<CMTime, Never> {

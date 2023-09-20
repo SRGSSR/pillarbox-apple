@@ -15,14 +15,12 @@ final class AVPlayerItemPresentationSizePublisherTests: TestCase {
     func testAudio() {
         let item = AVPlayerItem(url: Stream.mp3.url)
         _ = AVPlayer(playerItem: item)
-        expect(item.status).toEventually(equal(.readyToPlay))
         expectAtLeastEqualPublished(values: [.zero], from: item.presentationSizePublisher())
     }
 
     func testVideo() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         _ = AVPlayer(playerItem: item)
-        expect(item.status).toEventually(equal(.readyToPlay))
-        expectAtLeastEqualPublished(values: [CGSize(width: 640, height: 360)], from: item.presentationSizePublisher())
+        expectAtLeastEqualPublished(values: [.zero, CGSize(width: 640, height: 360)], from: item.presentationSizePublisher())
     }
 }
