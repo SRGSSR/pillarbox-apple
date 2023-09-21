@@ -8,25 +8,33 @@
 
 import AVFoundation
 import Circumspect
+import Combine
 import Streams
 import XCTest
 
 final class AVPlayerPlaybackStatePublisherTests: TestCase {
+    private func playbackStatePublisher(for player: AVPlayer) -> AnyPublisher<PlaybackState, Never> {
+        player.contextPublisher()
+            .map(\.playbackState)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
     func testEmpty() {
         let player = AVPlayer()
-        expectAtLeastEqualPublished(values: [.idle], from: player.playbackStatePublisher())
+        expectAtLeastEqualPublished(values: [.idle], from: playbackStatePublisher(for: player))
     }
 
     func testNoPlayback() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
-        expectAtLeastEqualPublished(values: [.idle, .paused], from: player.playbackStatePublisher())
+        expectAtLeastEqualPublished(values: [.idle, .paused], from: playbackStatePublisher(for: player))
     }
 
     func testPlayback() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
-        expectAtLeastEqualPublished(values: [.idle, .playing], from: player.playbackStatePublisher()) {
+        expectAtLeastEqualPublished(values: [.idle, .playing], from: playbackStatePublisher(for: player)) {
             player.play()
         }
     }
@@ -34,10 +42,10 @@ final class AVPlayerPlaybackStatePublisherTests: TestCase {
     func testPlayPause() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
-        expectAtLeastEqualPublished(values: [.idle, .playing], from: player.playbackStatePublisher()) {
+        expectAtLeastEqualPublished(values: [.idle, .playing], from: playbackStatePublisher(for: player)) {
             player.play()
         }
-        expectAtLeastEqualPublishedNext(values: [.paused], from: player.playbackStatePublisher()) {
+        expectAtLeastEqualPublishedNext(values: [.paused], from: playbackStatePublisher(for: player)) {
             player.pause()
         }
     }
@@ -47,7 +55,7 @@ final class AVPlayerPlaybackStatePublisherTests: TestCase {
         let player = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [.idle, .playing, .ended],
-            from: player.playbackStatePublisher()
+            from: playbackStatePublisher(for: player)
         ) {
             player.play()
         }
@@ -61,7 +69,7 @@ final class AVPlayerPlaybackStatePublisherTests: TestCase {
                 .idle,
                 .failed(error: PlayerError.resourceNotFound)
             ],
-            from: player.playbackStatePublisher()
+            from: playbackStatePublisher(for: player)
         )
     }
 }

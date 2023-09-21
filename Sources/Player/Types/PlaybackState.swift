@@ -19,16 +19,16 @@ public enum PlaybackState: Equatable {
     /// The player encountered an error.
     case failed(error: Error)
 
-    static func state(for itemState: ItemState, rate: Float) -> Self {
+    init(itemState: ItemState, rate: Float) {
         switch itemState {
         case .readyToPlay:
-            return (rate == 0) ? .paused : .playing
+            self = (rate == 0) ? .paused : .playing
         case let .failed(error: error):
-            return .failed(error: error)
+            self = .failed(error: error)
         case .ended:
-            return .ended
+            self = .ended
         case .unknown:
-            return .idle
+            self = .idle
         }
     }
 

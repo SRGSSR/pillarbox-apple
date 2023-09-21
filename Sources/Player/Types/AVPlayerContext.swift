@@ -8,4 +8,9 @@ import Foundation
 
 struct AVPlayerContext {
     let currentItemContext: AVPlayerItemContext
+    let rate: Float
+
+    var playbackState: PlaybackState {
+        .init(itemState: currentItemContext.state, rate: rate)
+    }
 }

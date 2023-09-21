@@ -11,6 +11,15 @@ import TimelaneCombine
 
 extension AVPlayer {
     func contextPublisher() -> AnyPublisher<AVPlayerContext, Never> {
+        Publishers.CombineLatest(
+            currentItemContextPublisher(),
+            publisher(for: \.rate)
+        )
+        .map { .init(currentItemContext: $0, rate: $1) }
+        .eraseToAnyPublisher()
+    }
+
+    private func currentItemContextPublisher() -> AnyPublisher<AVPlayerItemContext, Never> {
         publisher(for: \.currentItem)
             .map { item in
                 guard let item else {
@@ -19,7 +28,6 @@ extension AVPlayer {
                 return item.contextPublisher()
             }
             .switchToLatest()
-            .map { .init(currentItemContext: $0) }
             .eraseToAnyPublisher()
     }
 }
@@ -86,7 +94,7 @@ extension AVPlayer {
             currentItemStatePublisher(),
             publisher(for: \.rate)
         )
-        .map { PlaybackState.state(for: $0, rate: $1) }
+        .map { PlaybackState(itemState: $0, rate: $1) }
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
