@@ -10,12 +10,14 @@ import MediaPlayer
 
 extension QueuePlayer {
     func contextPublisher() -> AnyPublisher<QueuePlayerContext, Never> {
-        Publishers.CombineLatest3(
+        Publishers.CombineLatest5(
             currentItemContextPublisher(),
             publisher(for: \.rate),
-            isSeekingPublisher()
+            isSeekingPublisher(),
+            publisher(for: \.isExternalPlaybackActive),
+            publisher(for: \.isMuted)
         )
-        .map { .init(currentItemContext: $0, rate: $1, isSeeking: $2) }
+        .map { .init(currentItemContext: $0, rate: $1, isSeeking: $2, isExternalPlaybackActive: $3, isMuted: $4) }
         .eraseToAnyPublisher()
     }
 
