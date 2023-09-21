@@ -11,21 +11,23 @@ import MediaAccessibility
 
 extension AVPlayerItem {
     func contextPublisher() -> AnyPublisher<AVPlayerItemContext, Never> {
-        Publishers.CombineLatest5(
+        Publishers.CombineLatest6(
             statePublisher(),
             durationPublisher(),
             minimumTimeOffsetFromLivePublisher(),
             isPlaybackLikelyToKeepUpPublisher(),
-            presentationSizePublisher()
+            presentationSizePublisher(),
+            mediaSelectionContextPublisher()
         )
-        .map { state, duration, minimumTimeOffsetFromLive, isPlaybackLikelyToKeepUp, presentationSize in
+        .map { state, duration, minimumTimeOffsetFromLive, isPlaybackLikelyToKeepUp, presentationSize, mediaSelectionContext in
             guard state == .readyToPlay else { return .empty(state: state) }
             return AVPlayerItemContext(
                 state: state,
                 duration: duration,
                 minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
                 isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp,
-                presentationSize: presentationSize
+                presentationSize: presentationSize,
+                mediaSelectionContext: mediaSelectionContext
             )
         }
         .eraseToAnyPublisher()
@@ -64,6 +66,35 @@ extension AVPlayerItem {
 
     func presentationSizePublisher() -> AnyPublisher<CGSize, Never> {
         publisher(for: \.presentationSize)
+            .eraseToAnyPublisher()
+    }
+
+    func mediaSelectionContextPublisher() -> AnyPublisher<MediaSelectionContext, Never> {
+        Publishers.CombineLatest3(
+            asset.mediaSelectionGroupsPublisher(),
+            mediaSelectionPublisher(),
+            NotificationCenter.default.publisher(for: kMACaptionAppearanceSettingsChangedNotification as Notification.Name)
+                .map { _ in }
+                .prepend(())
+        )
+        .map { groups, selection, _ in
+            MediaSelectionContext(groups: groups, selection: selection)
+        }
+        .prepend(.empty)
+        .eraseToAnyPublisher()
+    }
+
+    private func mediaSelectionPublisher() -> AnyPublisher<AVMediaSelection, Never> {
+        publisher(for: \.status)
+            .weakCapture(self)
+            .compactMap { status, item -> AnyPublisher<AVMediaSelection, Never>? in
+                guard status == .readyToPlay else { return nil }
+                return item.publisher(for: \.currentMediaSelection)
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .prepend(currentMediaSelection)
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 }
@@ -126,34 +157,6 @@ extension AVPlayerItem {
         .prepend(false)
         .removeDuplicates()
         .eraseToAnyPublisher()
-    }
-
-    func mediaSelectionContextPublisher() -> AnyPublisher<MediaSelectionContext, Never> {
-        Publishers.CombineLatest3(
-            asset.mediaSelectionGroupsPublisher(),
-            mediaSelectionPublisher(),
-            NotificationCenter.default.publisher(for: kMACaptionAppearanceSettingsChangedNotification as Notification.Name)
-                .map { _ in }
-                .prepend(())
-        )
-        .map { groups, selection, _ in
-            MediaSelectionContext(groups: groups, selection: selection)
-        }
-        .prepend(.empty)
-        .eraseToAnyPublisher()
-    }
-
-    private func mediaSelectionPublisher() -> AnyPublisher<AVMediaSelection, Never> {
-        publisher(for: \.status)
-            .weakCapture(self)
-            .compactMap { status, item -> AnyPublisher<AVMediaSelection, Never>? in
-                guard status == .readyToPlay else { return nil }
-                return item.publisher(for: \.currentMediaSelection)
-                    .eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .removeDuplicates()
-            .eraseToAnyPublisher()
     }
 
     func nowPlayingInfoPropertiesPublisher() -> AnyPublisher<NowPlaying.Properties, Never> {

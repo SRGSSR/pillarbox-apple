@@ -17,6 +17,7 @@ struct AVPlayerItemContext {
     let minimumTimeOffsetFromLive: CMTime
     let isPlaybackLikelyToKeepUp: Bool
     let presentationSize: CGSize?
+    let mediaSelectionContext: MediaSelectionContext
 
     var chunkDuration: CMTime {
         // The minimum offset represents 3 chunks
@@ -38,7 +39,8 @@ struct AVPlayerItemContext {
             duration: .invalid,
             minimumTimeOffsetFromLive: .invalid,
             isPlaybackLikelyToKeepUp: true,
-            presentationSize: nil
+            presentationSize: nil,
+            mediaSelectionContext: .empty
         )
     }
 }
