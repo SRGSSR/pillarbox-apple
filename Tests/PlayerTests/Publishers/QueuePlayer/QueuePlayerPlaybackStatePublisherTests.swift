@@ -12,8 +12,8 @@ import Combine
 import Streams
 import XCTest
 
-final class AVPlayerPlaybackStatePublisherTests: TestCase {
-    private func playbackStatePublisher(for player: AVPlayer) -> AnyPublisher<PlaybackState, Never> {
+final class QueuePlayerPlaybackStatePublisherTests: TestCase {
+    private func playbackStatePublisher(for player: QueuePlayer) -> AnyPublisher<PlaybackState, Never> {
         player.contextPublisher()
             .map(\.playbackState)
             .removeDuplicates()
@@ -21,19 +21,19 @@ final class AVPlayerPlaybackStatePublisherTests: TestCase {
     }
 
     func testEmpty() {
-        let player = AVPlayer()
+        let player = QueuePlayer()
         expectAtLeastEqualPublished(values: [.idle], from: playbackStatePublisher(for: player))
     }
 
     func testNoPlayback() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
-        let player = AVPlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(values: [.idle, .paused], from: playbackStatePublisher(for: player))
     }
 
     func testPlayback() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
-        let player = AVPlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(values: [.idle, .playing], from: playbackStatePublisher(for: player)) {
             player.play()
         }
@@ -41,7 +41,7 @@ final class AVPlayerPlaybackStatePublisherTests: TestCase {
 
     func testPlayPause() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
-        let player = AVPlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(values: [.idle, .playing], from: playbackStatePublisher(for: player)) {
             player.play()
         }
@@ -52,7 +52,7 @@ final class AVPlayerPlaybackStatePublisherTests: TestCase {
 
     func testEntirePlayback() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let player = AVPlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [.idle, .playing, .ended],
             from: playbackStatePublisher(for: player)
@@ -63,7 +63,7 @@ final class AVPlayerPlaybackStatePublisherTests: TestCase {
 
     func testPlaybackFailure() {
         let item = AVPlayerItem(url: Stream.unavailable.url)
-        let player = AVPlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [
                 .idle,
@@ -71,5 +71,18 @@ final class AVPlayerPlaybackStatePublisherTests: TestCase {
             ],
             from: playbackStatePublisher(for: player)
         )
+    }
+
+    func testItems() {
+        let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
+        let item2 = AVPlayerItem(url: Stream.shortOnDemand.url)
+        let player = QueuePlayer(items: [item1, item2])
+        expectAtLeastEqualPublished(
+            // The second item can be pre-buffered and is immediately played
+            values: [.idle, .playing, .ended, .playing, .ended],
+            from: playbackStatePublisher(for: player)
+        ) {
+            player.play()
+        }
     }
 }

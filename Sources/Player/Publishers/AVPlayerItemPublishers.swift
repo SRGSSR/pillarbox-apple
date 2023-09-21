@@ -11,27 +11,33 @@ import MediaAccessibility
 
 extension AVPlayerItem {
     func contextPublisher() -> AnyPublisher<AVPlayerItemContext, Never> {
-        Publishers.CombineLatest6(
-            statePublisher(),
-            durationPublisher(),
-            minimumTimeOffsetFromLivePublisher(),
-            isPlaybackLikelyToKeepUpPublisher(),
-            presentationSizePublisher(),
-            mediaSelectionContextPublisher()
-        )
-        .map { state, duration, minimumTimeOffsetFromLive, isPlaybackLikelyToKeepUp, presentationSize, mediaSelectionContext in
-            guard state == .readyToPlay else { return .empty(state: state) }
-            return AVPlayerItemContext(
-                state: state,
-                duration: duration,
-                minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
-                isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp,
-                presentationSize: presentationSize,
-                mediaSelectionContext: mediaSelectionContext
-            )
-        }
-        .removeDuplicates()
-        .eraseToAnyPublisher()
+        statePublisher()
+            .map { [weak self] state -> AnyPublisher<AVPlayerItemContext, Never> in
+                guard let self, state == .readyToPlay else {
+                    return Just(.empty(state: state)).eraseToAnyPublisher()
+                }
+                return Publishers.CombineLatest5(
+                    durationPublisher(),
+                    minimumTimeOffsetFromLivePublisher(),
+                    isPlaybackLikelyToKeepUpPublisher(),
+                    presentationSizePublisher(),
+                    mediaSelectionContextPublisher()
+                )
+                .map { duration, minimumTimeOffsetFromLive, isPlaybackLikelyToKeepUp, presentationSize, mediaSelectionContext in
+                    AVPlayerItemContext(
+                        state: state,
+                        duration: duration,
+                        minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
+                        isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp,
+                        presentationSize: presentationSize,
+                        mediaSelectionContext: mediaSelectionContext
+                    )
+                }
+                .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
     func statePublisher() -> AnyPublisher<ItemState, Never> {

@@ -10,8 +10,9 @@ import AVFoundation
 import Combine
 import Streams
 
-final class AVPlayerPresentationSizePublisherTests: TestCase {
-    private func presentationSizePublisher(for player: AVPlayer) -> AnyPublisher<CGSize?, Never> {
+// swiftlint:disable:next type_name
+final class QueuePlayerPresentationSizePublisherTests: TestCase {
+    private func presentationSizePublisher(for player: QueuePlayer) -> AnyPublisher<CGSize?, Never> {
         player.contextPublisher()
             .map(\.currentItemContext.presentationSize)
             .removeDuplicates()
@@ -19,17 +20,17 @@ final class AVPlayerPresentationSizePublisherTests: TestCase {
     }
 
     func testUnknown() {
-        let player = AVPlayer()
+        let player = QueuePlayer()
         expectAtLeastEqualPublished(values: [nil], from: presentationSizePublisher(for: player))
     }
 
     func testAudio() {
-        let player = AVPlayer(url: Stream.mp3.url)
+        let player = QueuePlayer(url: Stream.mp3.url)
         expectAtLeastEqualPublished(values: [nil, .zero], from: presentationSizePublisher(for: player))
     }
 
     func testVideo() {
-        let player = AVPlayer(url: Stream.shortOnDemand.url)
+        let player = QueuePlayer(url: Stream.shortOnDemand.url)
         expectAtLeastEqualPublished(values: [nil, CGSize(width: 640, height: 360)], from: presentationSizePublisher(for: player))
     }
 }

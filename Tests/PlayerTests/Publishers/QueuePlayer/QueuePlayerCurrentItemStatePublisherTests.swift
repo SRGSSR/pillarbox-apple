@@ -12,11 +12,12 @@ import Combine
 import Streams
 import XCTest
 
-final class AVPlayerCurrentItemStatePublisherTests: TestCase {
+// swiftlint:disable:next type_name
+final class QueuePlayerCurrentItemStatePublisherTests: TestCase {
     // swiftlint:disable:next weak_delegate
     private let resourceLoaderDelegate = FailingResourceLoaderDelegate()
 
-    private func currentItemStatePublisher(for player: AVPlayer) -> AnyPublisher<ItemState, Never> {
+    private func currentItemStatePublisher(for player: QueuePlayer) -> AnyPublisher<ItemState, Never> {
         player.contextPublisher()
             .map(\.currentItemContext.state)
             .removeDuplicates()
@@ -24,7 +25,7 @@ final class AVPlayerCurrentItemStatePublisherTests: TestCase {
     }
 
     func testEmpty() {
-        let player = AVPlayer()
+        let player = QueuePlayer()
         expectAtLeastEqualPublished(
             values: [.unknown],
             from: currentItemStatePublisher(for: player)
@@ -33,7 +34,7 @@ final class AVPlayerCurrentItemStatePublisherTests: TestCase {
 
     func testNoPlayback() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let player = AVPlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [.unknown, .readyToPlay],
             from: currentItemStatePublisher(for: player)
@@ -42,7 +43,7 @@ final class AVPlayerCurrentItemStatePublisherTests: TestCase {
 
     func testEntirePlayback() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let player = AVPlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [.unknown, .readyToPlay, .ended],
             from: currentItemStatePublisher(for: player)
@@ -53,7 +54,7 @@ final class AVPlayerCurrentItemStatePublisherTests: TestCase {
 
     func testUnavailableStream() {
         let item = AVPlayerItem(url: Stream.unavailable.url)
-        let player = AVPlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [
                 .unknown,
@@ -65,7 +66,7 @@ final class AVPlayerCurrentItemStatePublisherTests: TestCase {
 
     func testCorruptStream() {
         let item = AVPlayerItem(url: Stream.corruptOnDemand.url)
-        let player = AVPlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [
                 .unknown,
@@ -79,7 +80,7 @@ final class AVPlayerCurrentItemStatePublisherTests: TestCase {
         let asset = AVURLAsset(url: Stream.custom.url)
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: .global())
         let item = AVPlayerItem(asset: asset)
-        let player = AVPlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [
                 .unknown,

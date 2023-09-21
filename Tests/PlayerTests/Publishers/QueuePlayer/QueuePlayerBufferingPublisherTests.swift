@@ -12,8 +12,8 @@ import Combine
 import Streams
 import XCTest
 
-final class AVPlayerBufferingPublisherTests: TestCase {
-    private func bufferingPublisher(for player: AVPlayer) -> AnyPublisher<Bool, Never> {
+final class QueuePlayerBufferingPublisherTests: TestCase {
+    private func bufferingPublisher(for player: QueuePlayer) -> AnyPublisher<Bool, Never> {
         player.contextPublisher()
             .map(\.currentItemContext.isBuffering)
             .removeDuplicates()
@@ -21,7 +21,7 @@ final class AVPlayerBufferingPublisherTests: TestCase {
     }
 
     func testEmpty() {
-        let player = AVPlayer()
+        let player = QueuePlayer()
         expectAtLeastEqualPublished(
             values: [false],
             from: bufferingPublisher(for: player)
@@ -30,7 +30,7 @@ final class AVPlayerBufferingPublisherTests: TestCase {
 
     func testLoaded() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
-        let player = AVPlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false, true, false],
             from: bufferingPublisher(for: player)
@@ -39,7 +39,7 @@ final class AVPlayerBufferingPublisherTests: TestCase {
 
     func testFailure() {
         let item = AVPlayerItem(url: Stream.unavailable.url)
-        let player = AVPlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false],
             from: bufferingPublisher(for: player)
@@ -48,7 +48,7 @@ final class AVPlayerBufferingPublisherTests: TestCase {
 
     func testSeek() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
-        let player = AVPlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false, true, false],
             from: bufferingPublisher(for: player)

@@ -12,8 +12,8 @@ import Combine
 import Streams
 import XCTest
 
-final class AVPlayerChunkDurationPublisherTests: TestCase {
-    private func chunkDurationPublisher(for player: AVPlayer) -> AnyPublisher<CMTime, Never> {
+final class QueuePlayerChunkDurationPublisherTests: TestCase {
+    private func chunkDurationPublisher(for player: QueuePlayer) -> AnyPublisher<CMTime, Never> {
         player.contextPublisher()
             .map(\.currentItemContext.chunkDuration)
             .removeDuplicates()
@@ -22,7 +22,7 @@ final class AVPlayerChunkDurationPublisherTests: TestCase {
 
     func testPlayback() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let player = AVPlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [.invalid, CMTime(value: 1, timescale: 1)],
             from: chunkDurationPublisher(for: player)
@@ -31,7 +31,7 @@ final class AVPlayerChunkDurationPublisherTests: TestCase {
 
     func testEntirePlayback() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let player = AVPlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [.invalid, CMTime(value: 1, timescale: 1)],
             from: chunkDurationPublisher(for: player)
@@ -42,7 +42,7 @@ final class AVPlayerChunkDurationPublisherTests: TestCase {
 
     func testEntirePlaybackInQueuePlayerAdvancingAtItemEnd() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let player = AVQueuePlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         player.actionAtItemEnd = .advance
         expectAtLeastEqualPublished(
             values: [.invalid, CMTime(value: 1, timescale: 1), .invalid],
@@ -54,7 +54,7 @@ final class AVPlayerChunkDurationPublisherTests: TestCase {
 
     func testEntirePlaybackInQueuePlayerPausingAtItemEnd() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let player = AVQueuePlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         player.actionAtItemEnd = .pause
         expectAtLeastEqualPublished(
             values: [.invalid, CMTime(value: 1, timescale: 1)],
@@ -67,7 +67,7 @@ final class AVPlayerChunkDurationPublisherTests: TestCase {
     func testDuringItemChange() {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.onDemand.url)
-        let player = AVQueuePlayer(items: [item1, item2])
+        let player = QueuePlayer(items: [item1, item2])
         expectAtLeastEqualPublished(
             values: [
                 .invalid,
