@@ -48,34 +48,9 @@ extension AVPlayer {
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
-
-    func chunkDurationPublisher() -> AnyPublisher<CMTime, Never> {
-        publisher(for: \.currentItem)
-            .map { item -> AnyPublisher<CMTime, Never> in
-                guard let item else { return Just(.invalid).eraseToAnyPublisher() }
-                return item.asset.propertyPublisher(.minimumTimeOffsetFromLive)
-                    .map { CMTimeMultiplyByRatio($0, multiplier: 1, divisor: 3) }       // The minimum offset represents 3 chunks
-                    .replaceError(with: .invalid)
-                    .prepend(.invalid)
-                    .eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
 }
 
 extension AVPlayer {
-    func playbackStatePublisher() -> AnyPublisher<PlaybackState, Never> {
-        Publishers.CombineLatest(
-            currentItemStatePublisher(),
-            publisher(for: \.rate)
-        )
-        .map { PlaybackState(itemState: $0, rate: $1) }
-        .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
-
     func currentItemTimeRangePublisher() -> AnyPublisher<CMTimeRange, Never> {
         publisher(for: \.currentItem)
             .map { item in
@@ -103,17 +78,6 @@ extension AVPlayer {
             }
             .switchToLatest()
             .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-
-    func currentItemMediaSelectionContextPublisher() -> AnyPublisher<MediaSelectionContext, Never> {
-        publisher(for: \.currentItem)
-            .map { item -> AnyPublisher<MediaSelectionContext, Never> in
-                guard let item else { return Just(.empty).eraseToAnyPublisher() }
-                return item.mediaSelectionContextPublisher()
-            }
-            .switchToLatest()
-            .prepend(.empty)
             .eraseToAnyPublisher()
     }
 
@@ -155,24 +119,5 @@ extension AVPlayer {
                 }
             }
             .eraseToAnyPublisher()
-    }
-
-    func presentationSizePublisher() -> AnyPublisher<CGSize?, Never> {
-        Publishers.CombineLatest(
-            publisher(for: \.currentItem),
-            publisher(for: \.isExternalPlaybackActive)
-        )
-        .map { currentItem, isExternalPlaybackActive -> AnyPublisher<CGSize?, Never> in
-            guard !isExternalPlaybackActive else {
-                return Empty().eraseToAnyPublisher()
-            }
-            guard let currentItem else {
-                return Just(nil).eraseToAnyPublisher()
-            }
-            return currentItem.presentationSizePublisherLegacy()
-        }
-        .switchToLatest()
-        .removeDuplicates()
-        .eraseToAnyPublisher()
     }
 }

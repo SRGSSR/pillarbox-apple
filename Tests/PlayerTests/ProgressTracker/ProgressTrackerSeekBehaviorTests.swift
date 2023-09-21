@@ -14,6 +14,13 @@ import Streams
 import XCTest
 
 final class ProgressTrackerSeekBehaviorTests: TestCase {
+    private func isSeekingPublisher(for player: Player) -> AnyPublisher<Bool, Never> {
+        player.$context
+            .map(\.isSeeking)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
     func testImmediateSeek() {
         let progressTracker = ProgressTracker(
             interval: CMTime(value: 1, timescale: 4),
@@ -26,7 +33,7 @@ final class ProgressTrackerSeekBehaviorTests: TestCase {
 
         expectAtLeastEqualPublished(
             values: [false, true, false],
-            from: player.$isSeeking
+            from: isSeekingPublisher(for: player)
         ) {
             progressTracker.isInteracting = true
             progressTracker.progress = 0.5
@@ -46,7 +53,7 @@ final class ProgressTrackerSeekBehaviorTests: TestCase {
 
         expectAtLeastEqualPublished(
             values: [false],
-            from: player.$isSeeking
+            from: isSeekingPublisher(for: player)
         ) {
             progressTracker.isInteracting = true
             progressTracker.progress = 0.5
@@ -54,7 +61,7 @@ final class ProgressTrackerSeekBehaviorTests: TestCase {
 
         expectAtLeastEqualPublishedNext(
             values: [true, false],
-            from: player.$isSeeking
+            from: isSeekingPublisher(for: player)
         ) {
             progressTracker.isInteracting = false
         }

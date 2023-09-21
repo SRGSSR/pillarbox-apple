@@ -24,31 +24,32 @@ public final class CommandersActTracker: PlayerItemTracker {
     }
 
     public func enable(for player: Player) {
-        Publishers.CombineLatest(player.$playbackState, player.$isSeeking)
-            .map { (playbackState: $0, isSeeking: $1) }
-            .weakCapture(player)
-            .sink { [weak self] state, player in
-                self?.notify(playbackState: state.playbackState, isSeeking: state.isSeeking, player: player)
-            }
-            .store(in: &cancellables)
-
-        player.$isBuffering
-            .sink { [weak self] isBuffering in
-                self?.streamingAnalytics?.notify(isBuffering: isBuffering)
-            }
-            .store(in: &cancellables)
-
-        player.objectWillChange
-            .receive(on: DispatchQueue.main)
-            .map { _ in () }
-            .prepend(())
-            .weakCapture(player)
-            .map { $1.effectivePlaybackSpeed }
-            .removeDuplicates()
-            .sink { [weak self] speed in
-                self?.streamingAnalytics?.notifyPlaybackSpeed(speed)
-            }
-            .store(in: &cancellables)
+        // FIXME: Quick and dirty
+//        Publishers.CombineLatest(player.$playbackState, player.$isSeeking)
+//            .map { (playbackState: $0, isSeeking: $1) }
+//            .weakCapture(player)
+//            .sink { [weak self] state, player in
+//                self?.notify(playbackState: state.playbackState, isSeeking: state.isSeeking, player: player)
+//            }
+//            .store(in: &cancellables)
+//
+//        player.$isBuffering
+//            .sink { [weak self] isBuffering in
+//                self?.streamingAnalytics?.notify(isBuffering: isBuffering)
+//            }
+//            .store(in: &cancellables)
+//
+//        player.objectWillChange
+//            .receive(on: DispatchQueue.main)
+//            .map { _ in () }
+//            .prepend(())
+//            .weakCapture(player)
+//            .map { $1.effectivePlaybackSpeed }
+//            .removeDuplicates()
+//            .sink { [weak self] speed in
+//                self?.streamingAnalytics?.notifyPlaybackSpeed(speed)
+//            }
+//            .store(in: &cancellables)
     }
 
     // swiftlint:disable:next cyclomatic_complexity

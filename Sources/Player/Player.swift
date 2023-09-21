@@ -20,41 +20,15 @@ public final class Player: ObservableObject, Equatable {
         PackageInfo.version
     }
 
-    /// The current playback state.
-    /* remove */ @Published public private(set) var playbackState: PlaybackState = .idle
-
-    /// The current presentation size.
-    ///
-    /// Might be zero for audio content or `nil` when unknown.
-    /* remove */ @Published public private(set) var presentationSize: CGSize?
-
-    /// A Boolean describing whether the player is currently buffering.
-    /* remove */ @Published public private(set) var isBuffering = false
-
-    /// A Boolean describing whether the player is currently seeking to another position.
-    /* remove */ @Published public private(set) var isSeeking = false
+    @Published private(set) var context: QueuePlayerContext = .empty
 
     /// The index of the current item in the queue.
     @Published public private(set) var currentIndex: Int?
 
-    /// The duration of a chunk for the currently played item.
-    /* remove */ @Published public private(set) var chunkDuration: CMTime = .invalid
-
-    /// A Boolean describing whether the player is currently playing video in external playback mode.
-    /* remove */ @Published public private(set) var isExternalPlaybackActive = false
-
     /// A Boolean setting whether trackers must be enabled or not.
     @Published public var isTrackingEnabled = true
 
-    /// A Boolean setting whether the audio output of the player must be muted.
-    /* remove */ @Published public var isMuted = true {
-        didSet {
-            queuePlayer.isMuted = isMuted
-        }
-    }
-
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
-    /* remove */ @Published var mediaSelectionContext: MediaSelectionContext = .empty
     @Published var currentItem: CurrentItem = .good(nil)
     @Published var storedItems: Deque<PlayerItem>
 
@@ -74,6 +48,49 @@ public final class Player: ObservableObject, Equatable {
 
     /// The player configuration
     public let configuration: PlayerConfiguration
+
+    /// The current playback state.
+    public var playbackState: PlaybackState {
+        context.playbackState
+    }
+
+    /// The current presentation size.
+    ///
+    /// Might be zero for audio content or `nil` when unknown.
+    public var presentationSize: CGSize? {
+        context.currentItemContext.presentationSize
+    }
+
+    /// A Boolean describing whether the player is currently buffering.
+    public var isBuffering: Bool {
+        context.currentItemContext.isBuffering
+    }
+
+    /// A Boolean describing whether the player is currently seeking to another position.
+    public var isSeeking: Bool {
+        context.isSeeking
+    }
+
+    /// The duration of a chunk for the currently played item.
+    public var chunkDuration: CMTime {
+        // TODO: Return instantaneous value
+        .invalid
+    }
+
+    /// A Boolean describing whether the player is currently playing video in external playback mode.
+    public var isExternalPlaybackActive: Bool {
+        context.isExternalPlaybackActive
+    }
+
+    /// A Boolean setting whether the audio output of the player must be muted.
+    public var isMuted: Bool {
+        get {
+            context.isMuted
+        }
+        set {
+            queuePlayer.isMuted = newValue
+        }
+    }
 
     /// The type of stream currently being played.
     public var streamType: StreamType {
@@ -202,18 +219,11 @@ public final class Player: ObservableObject, Equatable {
     }
 
     private func configurePublishedPropertyPublishers() {
-        configurePlaybackStatePublisher()
-        configureChunkDurationPublisher()
-        configureSeekingPublisher()
-        configureBufferingPublisher()
+        configureContextPublisher()
         configureCurrentItemPublisher()
         configureCurrentIndexPublisher()
         configureCurrentTrackerPublisher()
-        configureExternalPlaybackPublisher()
-        configurePresentationSizePublisher()
-        configureMutedPublisher()
         configurePlaybackSpeedPublisher()
-        configureMediaSelectionContextPublisher()
     }
 
     deinit {
@@ -263,32 +273,10 @@ private extension Player {
 }
 
 private extension Player {
-    func configurePlaybackStatePublisher() {
-        queuePlayer.playbackStatePublisher()
+    func configureContextPublisher() {
+        queuePlayer.contextPublisher()
             .receiveOnMainThread()
-            .lane("player_state")
-            .assign(to: &$playbackState)
-    }
-
-    func configureChunkDurationPublisher() {
-        queuePlayer.chunkDurationPublisher()
-            .receiveOnMainThread()
-            .lane("player_chunk_duration")
-            .assign(to: &$chunkDuration)
-    }
-
-    func configureSeekingPublisher() {
-        queuePlayer.isSeekingPublisher()
-            .receiveOnMainThread()
-            .lane("player_seeking")
-            .assign(to: &$isSeeking)
-    }
-
-    func configureBufferingPublisher() {
-        queuePlayer.bufferingPublisher()
-            .receiveOnMainThread()
-            .lane("player_buffering")
-            .assign(to: &$isBuffering)
+            .assign(to: &$context)
     }
 
     func configureCurrentItemPublisher() {
@@ -315,24 +303,6 @@ private extension Player {
             .assign(to: &$currentTracker)
     }
 
-    func configureExternalPlaybackPublisher() {
-        queuePlayer.publisher(for: \.isExternalPlaybackActive)
-            .receiveOnMainThread()
-            .assign(to: &$isExternalPlaybackActive)
-    }
-
-    func configurePresentationSizePublisher() {
-        queuePlayer.presentationSizePublisher()
-            .receiveOnMainThread()
-            .assign(to: &$presentationSize)
-    }
-
-    func configureMutedPublisher() {
-        queuePlayer.publisher(for: \.isMuted)
-            .receiveOnMainThread()
-            .assign(to: &$isMuted)
-    }
-
     func configurePlaybackSpeedPublisher() {
         playbackSpeedUpdatePublisher()
             .scan(.indefinite) { speed, update in
@@ -341,12 +311,6 @@ private extension Player {
             .removeDuplicates()
             .receiveOnMainThread()
             .assign(to: &$_playbackSpeed)
-    }
-
-    func configureMediaSelectionContextPublisher() {
-        queuePlayer.currentItemMediaSelectionContextPublisher()
-            .receiveOnMainThread()
-            .assign(to: &$mediaSelectionContext)
     }
 }
 

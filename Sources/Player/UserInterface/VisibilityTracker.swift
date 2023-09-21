@@ -43,22 +43,23 @@ public final class VisibilityTracker: ObservableObject {
         self.delay = delay
         self.isUserInterfaceHidden = isUserInterfaceHidden
 
-        $player
-            .removeDuplicates()
-            .map { player -> AnyPublisher<PlaybackState, Never> in
-                guard let player else {
-                    return Empty().eraseToAnyPublisher()
-                }
-                return player.$playbackState.eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .compactMap { [weak self] playbackState in
-                self?.updatePublisher(for: playbackState)
-            }
-            .switchToLatest()
-            .removeDuplicates()
-            .receiveOnMainThread()
-            .assign(to: &$isUserInterfaceHidden)
+        // FIXME: Quick and dirty
+//        $player
+//            .removeDuplicates()
+//            .map { player -> AnyPublisher<PlaybackState, Never> in
+//                guard let player else {
+//                    return Empty().eraseToAnyPublisher()
+//                }
+//                return player.$playbackState.eraseToAnyPublisher()
+//            }
+//            .switchToLatest()
+//            .compactMap { [weak self] playbackState in
+//                self?.updatePublisher(for: playbackState)
+//            }
+//            .switchToLatest()
+//            .removeDuplicates()
+//            .receiveOnMainThread()
+//            .assign(to: &$isUserInterfaceHidden)
     }
 
     /// Toggles user interface visibility.

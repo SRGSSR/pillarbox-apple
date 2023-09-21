@@ -7,12 +7,20 @@
 @testable import Player
 
 import Circumspect
+import Combine
 import CoreMedia
 import Nimble
 import Streams
 import XCTest
 
 final class SkipForwardTests: TestCase {
+    private func isSeekingPublisher(for player: Player) -> AnyPublisher<Bool, Never> {
+        player.$context
+            .map(\.isSeeking)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
     func testSkipWhenEmpty() {
         let player = Player()
         waitUntil { done in
@@ -91,7 +99,7 @@ final class SkipForwardTests: TestCase {
             }
         }
 
-        expectNothingPublishedNext(from: player.$isSeeking, during: .seconds(2)) {
+        expectNothingPublishedNext(from: isSeekingPublisher(for: player), during: .seconds(2)) {
             player.skipForward()
         }
     }

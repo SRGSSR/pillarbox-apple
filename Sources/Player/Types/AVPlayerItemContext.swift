@@ -9,7 +9,7 @@ import Foundation
 
 struct AVPlayerItemContext: Equatable {
     static var empty: Self {
-        empty(state: .unknown)
+        empty(state: .unknown, isPlaybackLikelyToKeepUp: true)
     }
 
     let state: ItemState
@@ -27,10 +27,10 @@ struct AVPlayerItemContext: Equatable {
         }
     }
 
-    static func empty(state: ItemState) -> Self {
+    static func empty(state: ItemState, isPlaybackLikelyToKeepUp: Bool) -> Self {
         .init(
             state: state,
-            isPlaybackLikelyToKeepUp: true,
+            isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp,
             presentationSize: nil,
             mediaSelectionContext: .empty
         )
