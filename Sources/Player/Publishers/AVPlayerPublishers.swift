@@ -9,29 +9,6 @@ import Combine
 import Core
 import TimelaneCombine
 
-extension AVPlayer {
-    func contextPublisher() -> AnyPublisher<QueuePlayerContext, Never> {
-        Publishers.CombineLatest(
-            currentItemContextPublisher(),
-            publisher(for: \.rate)
-        )
-        .map { .init(currentItemContext: $0, rate: $1) }
-        .eraseToAnyPublisher()
-    }
-
-    private func currentItemContextPublisher() -> AnyPublisher<AVPlayerItemContext, Never> {
-        publisher(for: \.currentItem)
-            .map { item in
-                guard let item else {
-                    return Just(AVPlayerItemContext.empty).eraseToAnyPublisher()
-                }
-                return item.contextPublisher()
-            }
-            .switchToLatest()
-            .eraseToAnyPublisher()
-    }
-}
-
 // TODO: Remove once migration done
 
 extension AVPlayer {

@@ -9,6 +9,15 @@ import Combine
 import MediaPlayer
 
 extension QueuePlayer {
+    func contextPublisher() -> AnyPublisher<QueuePlayerContext, Never> {
+        Publishers.CombineLatest(
+            currentItemContextPublisher(),
+            publisher(for: \.rate)
+        )
+        .map { .init(currentItemContext: $0, rate: $1) }
+        .eraseToAnyPublisher()
+    }
+
     func seekingPublisher() -> AnyPublisher<Bool, Never> {
         Publishers.Merge(
             Self.notificationCenter.weakPublisher(for: .willSeek, object: self)
@@ -68,5 +77,17 @@ extension QueuePlayer {
             return nowPlayingInfo
         }
         .eraseToAnyPublisher()
+    }
+
+    private func currentItemContextPublisher() -> AnyPublisher<AVPlayerItemContext, Never> {
+        publisher(for: \.currentItem)
+            .map { item in
+                guard let item else {
+                    return Just(AVPlayerItemContext.empty).eraseToAnyPublisher()
+                }
+                return item.contextPublisher()
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
     }
 }
