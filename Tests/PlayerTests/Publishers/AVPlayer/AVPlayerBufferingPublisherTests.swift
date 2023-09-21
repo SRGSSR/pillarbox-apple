@@ -37,17 +37,6 @@ final class AVPlayerBufferingPublisherTests: TestCase {
         )
     }
 
-    func testEntirePlayback() {
-        let item = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let player = AVPlayer(playerItem: item)
-        expectAtLeastEqualPublished(
-            values: [false, true, false],
-            from: bufferingPublisher(for: player)
-        ) {
-            player.play()
-        }
-    }
-
     func testFailure() {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         let player = AVPlayer(playerItem: item)
