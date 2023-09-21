@@ -10,7 +10,7 @@ import Core
 import TimelaneCombine
 
 extension AVPlayer {
-    func contextPublisher() -> AnyPublisher<AVPlayerContext, Never> {
+    func contextPublisher() -> AnyPublisher<QueuePlayerContext, Never> {
         Publishers.CombineLatest(
             currentItemContextPublisher(),
             publisher(for: \.rate)

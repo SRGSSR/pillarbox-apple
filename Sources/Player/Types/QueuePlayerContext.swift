@@ -6,7 +6,7 @@
 
 import Foundation
 
-struct AVPlayerContext {
+struct QueuePlayerContext {
     let currentItemContext: AVPlayerItemContext
     let rate: Float
 
