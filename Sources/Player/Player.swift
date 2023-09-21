@@ -278,7 +278,7 @@ private extension Player {
     }
 
     func configureSeekingPublisher() {
-        queuePlayer.seekingPublisher()
+        queuePlayer.isSeekingPublisher()
             .receiveOnMainThread()
             .lane("player_seeking")
             .assign(to: &$isSeeking)

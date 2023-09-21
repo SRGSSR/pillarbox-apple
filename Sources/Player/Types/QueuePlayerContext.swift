@@ -9,6 +9,7 @@ import Foundation
 struct QueuePlayerContext {
     let currentItemContext: AVPlayerItemContext
     let rate: Float
+    let isSeeking: Bool
 
     var playbackState: PlaybackState {
         .init(itemState: currentItemContext.state, rate: rate)

@@ -17,7 +17,7 @@ final class QueuePlayerSeekingPublisherTests: TestCase {
         let player = QueuePlayer()
         expectAtLeastEqualPublished(
             values: [false],
-            from: player.seekingPublisher()
+            from: player.isSeekingPublisher()
         )
     }
 
@@ -27,7 +27,7 @@ final class QueuePlayerSeekingPublisherTests: TestCase {
         let time = CMTime(value: 1, timescale: 1)
         expectAtLeastEqualPublished(
             values: [false, true, false],
-            from: player.seekingPublisher()
+            from: player.isSeekingPublisher()
         ) {
             player.seek(to: time)
         }
@@ -40,7 +40,7 @@ final class QueuePlayerSeekingPublisherTests: TestCase {
         let time2 = CMTime(value: 2, timescale: 1)
         expectAtLeastEqualPublished(
             values: [false, true, false, true, false],
-            from: player.seekingPublisher()
+            from: player.isSeekingPublisher()
         ) {
             player.seek(to: time1)
             player.seek(to: time2)
@@ -57,7 +57,7 @@ final class QueuePlayerSeekingPublisherTests: TestCase {
         let time2 = CMTime(value: 2, timescale: 1)
         expectAtLeastEqualPublished(
             values: [false, true, false],
-            from: player.seekingPublisher()
+            from: player.isSeekingPublisher()
         ) {
             player.seek(to: time1)
             player.seek(to: time2)

@@ -10,15 +10,16 @@ import MediaPlayer
 
 extension QueuePlayer {
     func contextPublisher() -> AnyPublisher<QueuePlayerContext, Never> {
-        Publishers.CombineLatest(
+        Publishers.CombineLatest3(
             currentItemContextPublisher(),
-            publisher(for: \.rate)
+            publisher(for: \.rate),
+            isSeekingPublisher()
         )
-        .map { .init(currentItemContext: $0, rate: $1) }
+        .map { .init(currentItemContext: $0, rate: $1, isSeeking: $2) }
         .eraseToAnyPublisher()
     }
 
-    func seekingPublisher() -> AnyPublisher<Bool, Never> {
+    func isSeekingPublisher() -> AnyPublisher<Bool, Never> {
         Publishers.Merge(
             Self.notificationCenter.weakPublisher(for: .willSeek, object: self)
                 .map { _ in true },
