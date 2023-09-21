@@ -21,40 +21,40 @@ public final class Player: ObservableObject, Equatable {
     }
 
     /// The current playback state.
-    @Published public private(set) var playbackState: PlaybackState = .idle
+    /* remove */ @Published public private(set) var playbackState: PlaybackState = .idle
 
     /// The current presentation size.
     ///
     /// Might be zero for audio content or `nil` when unknown.
-    @Published public private(set) var presentationSize: CGSize?
+    /* remove */ @Published public private(set) var presentationSize: CGSize?
 
     /// A Boolean describing whether the player is currently buffering.
-    @Published public private(set) var isBuffering = false
+    /* remove */ @Published public private(set) var isBuffering = false
 
     /// A Boolean describing whether the player is currently seeking to another position.
-    @Published public private(set) var isSeeking = false
+    /* remove */ @Published public private(set) var isSeeking = false
 
     /// The index of the current item in the queue.
     @Published public private(set) var currentIndex: Int?
 
     /// The duration of a chunk for the currently played item.
-    @Published public private(set) var chunkDuration: CMTime = .invalid
+    /* remove */ @Published public private(set) var chunkDuration: CMTime = .invalid
 
     /// A Boolean describing whether the player is currently playing video in external playback mode.
-    @Published public private(set) var isExternalPlaybackActive = false
+    /* remove */ @Published public private(set) var isExternalPlaybackActive = false
 
     /// A Boolean setting whether trackers must be enabled or not.
     @Published public var isTrackingEnabled = true
 
     /// A Boolean setting whether the audio output of the player must be muted.
-    @Published public var isMuted = true {
+    /* remove */ @Published public var isMuted = true {
         didSet {
             queuePlayer.isMuted = isMuted
         }
     }
 
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
-    @Published var mediaSelectionContext: MediaSelectionContext = .empty
+    /* remove */ @Published var mediaSelectionContext: MediaSelectionContext = .empty
     @Published var currentItem: CurrentItem = .good(nil)
     @Published var storedItems: Deque<PlayerItem>
 

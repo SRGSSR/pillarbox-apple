@@ -16,18 +16,14 @@ extension AVPlayerItem {
                 guard let self, state == .readyToPlay else {
                     return Just(.empty(state: state)).eraseToAnyPublisher()
                 }
-                return Publishers.CombineLatest5(
-                    durationPublisher(),
-                    minimumTimeOffsetFromLivePublisher(),
+                return Publishers.CombineLatest3(
                     isPlaybackLikelyToKeepUpPublisher(),
                     presentationSizePublisher(),
                     mediaSelectionContextPublisher()
                 )
-                .map { duration, minimumTimeOffsetFromLive, isPlaybackLikelyToKeepUp, presentationSize, mediaSelectionContext in
+                .map { isPlaybackLikelyToKeepUp, presentationSize, mediaSelectionContext in
                     AVPlayerItemContext(
                         state: state,
-                        duration: duration,
-                        minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
                         isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp,
                         presentationSize: presentationSize,
                         mediaSelectionContext: mediaSelectionContext
@@ -51,19 +47,6 @@ extension AVPlayerItem {
                 .compactMap { ItemState(for: $0) }
         )
         .eraseToAnyPublisher()
-    }
-
-    func durationPublisher() -> AnyPublisher<CMTime, Never> {
-        publisher(for: \.duration)
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-
-    func minimumTimeOffsetFromLivePublisher() -> AnyPublisher<CMTime, Never> {
-        asset.propertyPublisher(.minimumTimeOffsetFromLive)
-            .replaceError(with: .invalid)
-            .prepend(.invalid)
-            .eraseToAnyPublisher()
     }
 
     func isPlaybackLikelyToKeepUpPublisher() -> AnyPublisher<Bool, Never> {
@@ -107,6 +90,43 @@ extension AVPlayerItem {
 }
 
 extension AVPlayerItem {
+    func timeContextPublisher() -> AnyPublisher<TimeContext, Never> {
+        statePublisher()
+            .map { [weak self] state in
+                guard let self, state == .readyToPlay else { return Just(TimeContext.empty).eraseToAnyPublisher() }
+                return Publishers.CombineLatest4(
+                    durationPublisher(),
+                    minimumTimeOffsetFromLivePublisher(),
+                    publisher(for: \.loadedTimeRanges),
+                    publisher(for: \.seekableTimeRanges)
+                )
+                .map { duration, minimumTimeOffsetFromLive, loadedTimeRanges, seekableTimeRanges in
+                    .init(duration: duration, minimumTimeOffsetFromLive: minimumTimeOffsetFromLive, loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
+                }
+                .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    func durationPublisher() -> AnyPublisher<CMTime, Never> {
+        publisher(for: \.duration)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    func minimumTimeOffsetFromLivePublisher() -> AnyPublisher<CMTime, Never> {
+        asset.propertyPublisher(.minimumTimeOffsetFromLive)
+            .replaceError(with: .invalid)
+            .prepend(.invalid)
+            .eraseToAnyPublisher()
+    }
+}
+
+// TODO: Remove once migration done
+
+extension AVPlayerItem {
     func timeRangePublisher() -> AnyPublisher<CMTimeRange, Never> {
         Publishers.CombineLatest3(
             publisher(for: \.status),
@@ -115,7 +135,7 @@ extension AVPlayerItem {
         )
         .map { status, loadedTimeRanges, seekableTimeRanges in
             guard status == .readyToPlay else { return .invalid }
-            return Self.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
+            return TimeContext.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
         }
         .removeDuplicates()
         .eraseToAnyPublisher()

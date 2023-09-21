@@ -33,6 +33,44 @@ extension QueuePlayer {
         .eraseToAnyPublisher()
     }
 
+    private func currentItemContextPublisher() -> AnyPublisher<AVPlayerItemContext, Never> {
+        publisher(for: \.currentItem)
+            .map { item in
+                guard let item else { return Just(AVPlayerItemContext.empty).eraseToAnyPublisher() }
+                return item.contextPublisher()
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+}
+
+extension QueuePlayer {
+    func timeContextPublisher() -> AnyPublisher<TimeContext, Never> {
+        publisher(for: \.currentItem)
+            .map { item in
+                guard let item else { return Just(TimeContext.empty).eraseToAnyPublisher() }
+                return item.timeContextPublisher().eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+}
+
+// TODO: Remove once migration done
+
+extension QueuePlayer {
+    /// Publishes the current time, smoothing out emitted values during seeks.
+    func smoothCurrentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
+        Publishers.CombineLatest(
+            Publishers.PeriodicTimePublisher(for: self, interval: interval, queue: queue),
+            seekTimePublisher()
+        )
+        .map { time, seekTime in
+            seekTime ?? time
+        }
+        .eraseToAnyPublisher()
+    }
+
     func seekTimePublisher() -> AnyPublisher<CMTime?, Never> {
         let notificationCenter = Self.notificationCenter
         return Publishers.Merge(
@@ -45,18 +83,6 @@ extension QueuePlayer {
         )
         .prepend(nil)
         .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
-
-    /// Publishes the current time, smoothing out emitted values during seeks.
-    func smoothCurrentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
-        Publishers.CombineLatest(
-            Publishers.PeriodicTimePublisher(for: self, interval: interval, queue: queue),
-            seekTimePublisher()
-        )
-        .map { time, seekTime in
-            seekTime ?? time
-        }
         .eraseToAnyPublisher()
     }
 
@@ -80,17 +106,5 @@ extension QueuePlayer {
             return nowPlayingInfo
         }
         .eraseToAnyPublisher()
-    }
-
-    private func currentItemContextPublisher() -> AnyPublisher<AVPlayerItemContext, Never> {
-        publisher(for: \.currentItem)
-            .map { item in
-                guard let item else {
-                    return Just(AVPlayerItemContext.empty).eraseToAnyPublisher()
-                }
-                return item.contextPublisher()
-            }
-            .switchToLatest()
-            .eraseToAnyPublisher()
     }
 }

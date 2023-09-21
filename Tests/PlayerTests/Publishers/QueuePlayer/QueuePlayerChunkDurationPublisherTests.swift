@@ -14,8 +14,8 @@ import XCTest
 
 final class QueuePlayerChunkDurationPublisherTests: TestCase {
     private func chunkDurationPublisher(for player: QueuePlayer) -> AnyPublisher<CMTime, Never> {
-        player.contextPublisher()
-            .map(\.currentItemContext.chunkDuration)
+        player.timeContextPublisher()
+            .map(\.chunkDuration)
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
