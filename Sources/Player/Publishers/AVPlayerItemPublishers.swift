@@ -30,6 +30,7 @@ extension AVPlayerItem {
                 mediaSelectionContext: mediaSelectionContext
             )
         }
+        .removeDuplicates()
         .eraseToAnyPublisher()
     }
 

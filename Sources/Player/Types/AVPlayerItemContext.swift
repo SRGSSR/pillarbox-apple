@@ -7,7 +7,7 @@
 import CoreMedia
 import Foundation
 
-struct AVPlayerItemContext {
+struct AVPlayerItemContext: Equatable {
     static var empty: Self {
         empty(state: .unknown)
     }
