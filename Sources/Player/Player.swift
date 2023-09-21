@@ -20,7 +20,7 @@ public final class Player: ObservableObject, Equatable {
         PackageInfo.version
     }
 
-    @Published private(set) var context: QueuePlayerContext = .empty
+    @Published public private(set) var context: QueuePlayerContext = .empty
 
     /// The index of the current item in the queue.
     @Published public private(set) var currentIndex: Int?

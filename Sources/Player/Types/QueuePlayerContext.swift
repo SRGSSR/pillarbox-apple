@@ -6,7 +6,7 @@
 
 import Foundation
 
-struct QueuePlayerContext {
+public struct QueuePlayerContext {
     let currentItemContext: AVPlayerItemContext
     let rate: Float
     let isSeeking: Bool
@@ -17,7 +17,7 @@ struct QueuePlayerContext {
         .init(currentItemContext: .empty, rate: 0, isSeeking: false, isExternalPlaybackActive: false, isMuted: false)
     }
 
-    var playbackState: PlaybackState {
+    public var playbackState: PlaybackState {
         .init(itemState: currentItemContext.state, rate: rate)
     }
 }
