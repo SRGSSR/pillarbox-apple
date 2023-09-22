@@ -98,7 +98,7 @@ extension AVPlayerItem {
             intrinsicErrorPublisher(),
             playbackErrorPublisher()
         )
-        .map { $0 }
+        .map { Optional($0) }
         .prepend(nil)
         .eraseToAnyPublisher()
     }

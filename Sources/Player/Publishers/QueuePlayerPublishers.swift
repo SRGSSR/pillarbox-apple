@@ -50,7 +50,6 @@ extension QueuePlayer {
         publisher(for: \.currentItem)
             .compactMap { $0?.errorPublisher() }
             .switchToLatest()
-            .map { $0 } 
             .eraseToAnyPublisher()
     }
 }
