@@ -15,14 +15,19 @@ final class AVPlayerItemErrorPublisherTests: TestCase {
     func testValidStream() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         _ = AVPlayer(playerItem: item)
-        expectNothingPublished(from: item.errorPublisher(), during: .seconds(1))
+        expectPublished(
+            values: [nil],
+            from: item.errorPublisher(),
+            to: beEqual,
+            during: .seconds(1)
+        )
     }
 
     func testPlaybackFailure() {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         _ = AVPlayer(playerItem: item)
         expectAtLeastPublished(
-            values: [PlayerError.resourceNotFound],
+            values: [nil, PlayerError.resourceNotFound],
             from: item.errorPublisher(),
             to: beEqual
         )
@@ -32,13 +37,13 @@ final class AVPlayerItemErrorPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.corruptOnDemand.url)
         _ = AVPlayer(playerItem: item)
         expectAtLeastPublished(
-            values: [PlayerError.segmentNotFound],
+            values: [nil, PlayerError.segmentNotFound],
             from: item.errorPublisher(),
             to: beEqual
         )
     }
 }
 
-private func beEqual(_ lhsError: Error, _ rhsError: Error) -> Bool {
-    lhsError as NSError == rhsError as NSError
+private func beEqual(_ lhsError: Error?, _ rhsError: Error?) -> Bool {
+    lhsError as? NSError == rhsError as? NSError
 }
