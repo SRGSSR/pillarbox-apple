@@ -518,8 +518,8 @@ struct PlaybackView: View {
 
     var body: some View {
         ZStack {
-            if let errorDescription {
-                ErrorView(description: errorDescription, player: player)
+            if let error = player.error {
+                ErrorView(description: error.localizedDescription, player: player)
             }
             else if !player.items.isEmpty {
                 videoView()
@@ -537,9 +537,6 @@ struct PlaybackView: View {
         .onAppear {
             player.becomeActive()
             player.play()
-        }
-        .onReceive(player.errorPublisher) { error in
-            errorDescription = error.localizedDescription
         }
     }
 

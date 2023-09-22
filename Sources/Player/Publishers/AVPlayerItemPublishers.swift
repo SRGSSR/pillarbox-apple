@@ -93,11 +93,13 @@ extension AVPlayerItem {
 }
 
 extension AVPlayerItem {
-    func errorPublisher() -> AnyPublisher<Error, Never> {
+    func errorPublisher() -> AnyPublisher<Error?, Never> {
         Publishers.Merge(
             intrinsicErrorPublisher(),
             playbackErrorPublisher()
         )
+        .map { $0 }
+        .prepend(nil)
         .eraseToAnyPublisher()
     }
 

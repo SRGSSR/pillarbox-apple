@@ -21,6 +21,7 @@ public final class Player: ObservableObject, Equatable {
     }
 
     @Published public private(set) var context: QueuePlayerContext = .empty
+    @Published public private(set) var error: (any Error)?
 
     /// The index of the current item in the queue.
     @Published public private(set) var currentIndex: Int?
@@ -126,11 +127,6 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer
     }
 
-    /// A publisher for errors.
-    public var errorPublisher: AnyPublisher<Error, Never> {
-        queuePlayer.errorPublisher()
-    }
-
     /// The current item duration.
     ///
     /// `.invalid` when unknown.
@@ -223,6 +219,7 @@ public final class Player: ObservableObject, Equatable {
 
     private func configurePublishedPropertyPublishers() {
         configureContextPublisher()
+        configureErrorPublisher()
         configureCurrentIndexPublisher()
         configureCurrentTrackerPublisher()
         configurePlaybackSpeedPublisher()
@@ -279,6 +276,22 @@ private extension Player {
         queuePlayer.contextPublisher()
             .receiveOnMainThread()
             .assign(to: &$context)
+    }
+
+    func configureErrorPublisher() {
+        Publishers.Merge(
+            queuePlayer.errorPublisher(),
+            resetErrorPublisher()
+        )
+        .receiveOnMainThread()
+        .assign(to: &$error)
+    }
+
+    private func resetErrorPublisher() -> AnyPublisher<Error?, Never> {
+        $storedItems
+            .filter { $0.isEmpty }
+            .map { _ in nil }
+            .eraseToAnyPublisher()
     }
 
     func configureCurrentIndexPublisher() {
