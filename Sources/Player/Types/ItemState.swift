@@ -12,7 +12,6 @@ enum ItemState: Equatable {
     case unknown
     case readyToPlay
     case ended
-    case failed(error: Error)
 
     init(for item: AVPlayerItem?) {
         guard let item else {
@@ -22,34 +21,8 @@ enum ItemState: Equatable {
         switch item.status {
         case .readyToPlay:
             self = .readyToPlay
-        case .failed:
-            self = .failed(error: Self.consolidatedError(for: item))
         default:
             self = .unknown
-        }
-    }
-
-    init?(for notification: Notification) {
-        switch notification.name {
-        case .AVPlayerItemFailedToPlayToEndTime:
-            guard let item = notification.object as? AVPlayerItem,
-                  let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error else {
-                return nil
-            }
-            self = .failed(error: Self.consolidatedError(for: item, error: error))
-        default:
-            return nil
-        }
-    }
-
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        switch (lhs, rhs) {
-        case (.unknown, .unknown), (.readyToPlay, .readyToPlay), (.ended, .ended):
-            return true
-        case let (.failed(error: lhsError), .failed(error: rhsError)):
-            return lhsError as NSError == rhsError as NSError
-        default:
-            return false
         }
     }
 

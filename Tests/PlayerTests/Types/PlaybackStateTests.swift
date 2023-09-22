@@ -16,12 +16,10 @@ final class PlaybackStateTests: TestCase {
         expect(PlaybackState.playing).to(equal(.playing))
         expect(PlaybackState.paused).to(equal(.paused))
         expect(PlaybackState.ended).to(equal(.ended))
-        expect(ItemState.failed(error: StructError())).to(equal(.failed(error: StructError())))
     }
 
     func testInequality() {
         expect(PlaybackState.idle).notTo(equal(.playing))
-        expect(PlaybackState.failed(error: EnumError.error1)).notTo(equal(.failed(error: EnumError.error2)))
     }
 
     func testSimilarity() {
@@ -29,6 +27,5 @@ final class PlaybackStateTests: TestCase {
         expect(PlaybackState.playing).to(equal(.playing))
         expect(PlaybackState.paused).to(equal(.paused))
         expect(PlaybackState.ended).to(equal(.ended))
-        expect(ItemState.failed(error: StructError())).to(equal(.failed(error: StructError())))
     }
 }

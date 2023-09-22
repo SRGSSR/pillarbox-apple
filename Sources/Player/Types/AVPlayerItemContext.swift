@@ -29,12 +29,7 @@ struct AVPlayerItemContext: Equatable {
     let mediaSelectionContext: MediaSelectionContext
 
     var isBuffering: Bool {
-        switch state {
-        case .failed:
-            return false
-        default:
-            return !isPlaybackLikelyToKeepUp
-        }
+        !isPlaybackLikelyToKeepUp
     }
 
     var chunkDuration: CMTime {

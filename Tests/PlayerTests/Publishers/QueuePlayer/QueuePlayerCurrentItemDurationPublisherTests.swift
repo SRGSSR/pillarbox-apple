@@ -30,7 +30,7 @@ final class QueuePlayerCurrentItemDurationPublisherTests: TestCase {
             to: beClose(within: 1)
         )
     }
-    
+
     func testItems() {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.onDemand.url)

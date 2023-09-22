@@ -35,18 +35,12 @@ final class AssetPlayerItemTests: TestCase {
     func testFailingPlayerItem() {
         let item = EmptyAsset.failed(error: StructError()).playerItem()
         _ = AVPlayer(playerItem: item)
-        expectAtLeastEqualPublished(
+        expectEqualPublished(
             values: [
-                .unknown,
-                .failed(error: NSError(
-                    domain: "PlayerTests.StructError",
-                    code: 1,
-                    userInfo: [
-                        NSLocalizedDescriptionKey: "Struct error description"
-                    ]
-                ))
+                .unknown
             ],
-            from: item.statePublisher()
+            from: item.statePublisher(),
+            during: .seconds(1)
         )
     }
 }

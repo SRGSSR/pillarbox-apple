@@ -64,12 +64,10 @@ final class QueuePlayerPlaybackStatePublisherTests: TestCase {
     func testPlaybackFailure() {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         let player = QueuePlayer(playerItem: item)
-        expectAtLeastEqualPublished(
-            values: [
-                .idle,
-                .failed(error: PlayerError.resourceNotFound)
-            ],
-            from: playbackStatePublisher(for: player)
+        expectEqualPublished(
+            values: [.idle],
+            from: playbackStatePublisher(for: player),
+            during: .seconds(1)
         )
     }
 

@@ -35,8 +35,10 @@ extension QueuePlayer {
 
     private func currentItemContextPublisher() -> AnyPublisher<AVPlayerItemContext, Never> {
         publisher(for: \.currentItem)
-            .compactMap { $0 }
-            .map { $0.contextPublisher() }
+            .map { item in
+                guard let item else { return Just(AVPlayerItemContext.empty).eraseToAnyPublisher() }
+                return item.contextPublisher()
+            }
             .switchToLatest()
             .prepend(.empty)
             .eraseToAnyPublisher()

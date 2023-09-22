@@ -35,15 +35,14 @@ extension AVPlayerItem {
     }
 
     func statePublisher() -> AnyPublisher<ItemState, Never> {
-        Publishers.Merge3(
+        Publishers.Merge(
             publisher(for: \.status)
                 .weakCapture(self)
                 .map { ItemState(for: $0.1) },
             NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: self)
-                .map { _ in .ended },
-            NotificationCenter.default.weakPublisher(for: .AVPlayerItemFailedToPlayToEndTime, object: self)
-                .compactMap { ItemState(for: $0) }
+                .map { _ in .ended }
         )
+        .removeDuplicates()
         .eraseToAnyPublisher()
     }
 
@@ -165,21 +164,9 @@ extension AVPlayerItem {
     }
 
     func bufferingPublisher() -> AnyPublisher<Bool, Never> {
-        Publishers.CombineLatest(
-            publisher(for: \.isPlaybackLikelyToKeepUp),
-            statePublisher()
-        )
-        .map { isPlaybackLikelyToKeepUp, itemState in
-            switch itemState {
-            case .failed:
-                return false
-            default:
-                return !isPlaybackLikelyToKeepUp
-            }
-        }
-        .prepend(false)
-        .removeDuplicates()
-        .eraseToAnyPublisher()
+        publisher(for: \.isPlaybackLikelyToKeepUp)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
     func nowPlayingInfoPropertiesPublisher() -> AnyPublisher<NowPlaying.Properties, Never> {

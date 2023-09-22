@@ -40,7 +40,6 @@ final class MediaSelectionTests: TestCase {
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
         expect(player.mediaSelectionCharacteristics).toEventuallyNot(beEmpty())
         player.play()
-        expect(player.playbackState).toEventually(equal(.ended))
         expect(player.mediaSelectionCharacteristics).toEventually(beEmpty())
     }
 

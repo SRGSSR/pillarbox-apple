@@ -35,7 +35,6 @@ final class AVQueuePlayerCurrentItemStatePublisherTests: TestCase {
             // The third item cannot be pre-buffered and goes through the usual states
             values: [
                 .unknown, .readyToPlay, .ended,
-                .failed(error: PlayerError.resourceNotFound),
                 .unknown, .readyToPlay, .ended
             ],
             from: player.currentItemStatePublisher()

@@ -78,7 +78,6 @@ final class VisibilityTrackerTests: TestCase {
         let player = Player(item: PlayerItem.simple(url: Stream.shortOnDemand.url))
         player.play()
         visibilityTracker.player = player
-        expect(player.playbackState).toEventually(equal(.ended))
         expect(visibilityTracker.isUserInterfaceHidden).toNever(beTrue(), until: .seconds(1))
     }
 

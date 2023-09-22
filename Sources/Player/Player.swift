@@ -29,7 +29,6 @@ public final class Player: ObservableObject, Equatable {
     @Published public var isTrackingEnabled = true
 
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
-    @Published var currentItem: CurrentItem = .good(nil)
     @Published var storedItems: Deque<PlayerItem>
 
     @Published private var isActive = false {
@@ -219,7 +218,6 @@ public final class Player: ObservableObject, Equatable {
 
     private func configurePublishedPropertyPublishers() {
         configureContextPublisher()
-        configureCurrentItemPublisher()
         configureCurrentIndexPublisher()
         configureCurrentTrackerPublisher()
         configurePlaybackSpeedPublisher()
@@ -276,12 +274,6 @@ private extension Player {
         queuePlayer.contextPublisher()
             .receiveOnMainThread()
             .assign(to: &$context)
-    }
-
-    func configureCurrentItemPublisher() {
-        queuePlayer.smoothCurrentItemPublisher()
-            .receiveOnMainThread()
-            .assign(to: &$currentItem)
     }
 
     func configureCurrentIndexPublisher() {

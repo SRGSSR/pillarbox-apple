@@ -24,11 +24,8 @@ extension Player {
     }
 
     func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
-        Publishers.CombineLatest($storedItems, $currentItem)
-            .map { items, currentItem in
-                let playerItem = currentItem.smoothPlayerItem(in: items)
-                return ItemUpdate(items: items, currentItem: playerItem)
-            }
+        Publishers.CombineLatest($storedItems, queuePlayer.publisher(for: \.currentItem))
+            .map { ItemUpdate(items: $0, currentItem: $1) }
             .eraseToAnyPublisher()
     }
 }

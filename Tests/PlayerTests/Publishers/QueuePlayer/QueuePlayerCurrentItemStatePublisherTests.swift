@@ -55,24 +55,24 @@ final class QueuePlayerCurrentItemStatePublisherTests: TestCase {
     func testUnavailableStream() {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         let player = QueuePlayer(playerItem: item)
-        expectAtLeastEqualPublished(
+        expectEqualPublished(
             values: [
-                .unknown,
-                .failed(error: PlayerError.resourceNotFound)
+                .unknown
             ],
-            from: currentItemStatePublisher(for: player)
+            from: currentItemStatePublisher(for: player),
+            during: .seconds(1)
         )
     }
 
     func testCorruptStream() {
         let item = AVPlayerItem(url: Stream.corruptOnDemand.url)
         let player = QueuePlayer(playerItem: item)
-        expectAtLeastEqualPublished(
+        expectEqualPublished(
             values: [
-                .unknown,
-                .failed(error: PlayerError.segmentNotFound)
+                .unknown
             ],
-            from: currentItemStatePublisher(for: player)
+            from: currentItemStatePublisher(for: player),
+            during: .seconds(1)
         )
     }
 
@@ -81,18 +81,12 @@ final class QueuePlayerCurrentItemStatePublisherTests: TestCase {
         asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: .global())
         let item = AVPlayerItem(asset: asset)
         let player = QueuePlayer(playerItem: item)
-        expectAtLeastEqualPublished(
+        expectEqualPublished(
             values: [
-                .unknown,
-                .failed(error: NSError(
-                    domain: "PlayerTests.ResourceLoaderError",
-                    code: 1,
-                    userInfo: [
-                        NSLocalizedDescriptionKey: "Failed to load the resource (custom message)"
-                    ]
-                ))
+                .unknown
             ],
-            from: currentItemStatePublisher(for: player)
+            from: currentItemStatePublisher(for: player),
+            during: .seconds(1)
         )
     }
 }

@@ -503,16 +503,8 @@ struct PlaybackView: View {
     var body: some View {
         ZStack {
             if !player.items.isEmpty {
-                switch player.playbackState {
-                case let .failed(error: error):
-                    PlaybackMessageView(message: error.localizedDescription)
-                        .overlay(alignment: .topLeading) {
-                            CloseButton()
-                        }
-                default:
-                    videoView()
-                        .persistentSystemOverlays(.hidden)
-                }
+                videoView()
+                    .persistentSystemOverlays(.hidden)
             }
             else {
                 PlaybackMessageView(message: "No content")

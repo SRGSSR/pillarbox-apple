@@ -76,8 +76,6 @@ public final class CommandersActTracker: PlayerItemTracker {
                 streamingAnalytics?.notify(.pause)
             case .ended:
                 streamingAnalytics?.notify(.eof)
-            case .failed:
-                streamingAnalytics?.notify(.stop)
             default:
                 break
             }

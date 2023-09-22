@@ -11,8 +11,7 @@ public extension Player {
     ///
     /// - Returns: `true` if possible.
     func canReplay() -> Bool {
-        guard !storedItems.isEmpty else { return false }
-        return currentItem.smoothPlayerItem(in: storedItems) == nil
+        !storedItems.isEmpty && queuePlayer.items().isEmpty
     }
 
     /// Replays the content from the start, resuming playback automatically.
