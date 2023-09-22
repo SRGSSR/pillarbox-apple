@@ -163,7 +163,7 @@ private struct ControlsView: View {
     }
 }
 
-// Behavior: h-exp, v-exp
+// Behavior: h-hug, v-hug
 private struct PlaybackMessageView: View {
     let message: String
 
@@ -172,7 +172,6 @@ private struct PlaybackMessageView: View {
             .multilineTextAlignment(.center)
             .foregroundColor(.white)
             .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
@@ -486,6 +485,22 @@ private struct TimeSlider: View {
     }
 }
 
+private struct ErrorView: View {
+    let description: String
+    @ObservedObject var player: Player
+
+    var body: some View {
+        VStack {
+            PlaybackButton(player: player)
+            PlaybackMessageView(message: description)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .overlay(alignment: .topLeading) {
+            CloseButton()
+        }
+    }
+}
+
 #endif
 
 /// A playback view with standard controls. Requires an ancestor view to own the player to be used.
@@ -504,10 +519,7 @@ struct PlaybackView: View {
     var body: some View {
         ZStack {
             if let errorDescription {
-                PlaybackMessageView(message: errorDescription)
-                    .overlay(alignment: .topLeading) {
-                        CloseButton()
-                    }
+                ErrorView(description: errorDescription, player: player)
             }
             else if !player.items.isEmpty {
                 videoView()
@@ -515,6 +527,7 @@ struct PlaybackView: View {
             }
             else {
                 PlaybackMessageView(message: "No content")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .overlay(alignment: .topLeading) {
                         CloseButton()
                     }
