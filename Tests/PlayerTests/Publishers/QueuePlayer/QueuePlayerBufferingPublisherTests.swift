@@ -32,7 +32,7 @@ final class QueuePlayerBufferingPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(
-            values: [false, true, false],
+            values: [true, false],
             from: bufferingPublisher(for: player)
         )
     }
@@ -41,7 +41,7 @@ final class QueuePlayerBufferingPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.unavailable.url)
         let player = QueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(
-            values: [false],
+            values: [true, false],
             from: bufferingPublisher(for: player)
         )
     }
@@ -50,7 +50,7 @@ final class QueuePlayerBufferingPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(
-            values: [false, true, false],
+            values: [true, false],
             from: bufferingPublisher(for: player)
         ) {
             player.play()

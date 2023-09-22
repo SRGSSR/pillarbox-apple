@@ -10,7 +10,7 @@ struct TimeContext: Equatable {
     static var empty: Self {
         .init(loadedTimeRanges: [], seekableTimeRanges: [])
     }
-    
+
     let loadedTimeRanges: [NSValue]
     let seekableTimeRanges: [NSValue]
 
@@ -26,4 +26,3 @@ struct TimeContext: Equatable {
         return CMTimeRangeFromTimeToTime(start: firstRange.start, end: lastRange.end)
     }
 }
-
