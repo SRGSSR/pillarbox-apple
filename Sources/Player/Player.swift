@@ -73,8 +73,7 @@ public final class Player: ObservableObject, Equatable {
 
     /// The duration of a chunk for the currently played item.
     public var chunkDuration: CMTime {
-        // TODO: Return instantaneous value
-        .invalid
+        context.currentItemContext.chunkDuration
     }
 
     /// A Boolean describing whether the player is currently playing video in external playback mode.

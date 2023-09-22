@@ -13,8 +13,11 @@ struct AVPlayerItemContext: Equatable {
     }
 
     let state: ItemState
-
     let isPlaybackLikelyToKeepUp: Bool
+
+    let duration: CMTime
+    let minimumTimeOffsetFromLive: CMTime
+
     let presentationSize: CGSize?
     let mediaSelectionContext: MediaSelectionContext
 
@@ -27,10 +30,16 @@ struct AVPlayerItemContext: Equatable {
         }
     }
 
+    var chunkDuration: CMTime {
+        CMTimeMultiplyByRatio(minimumTimeOffsetFromLive, multiplier: 1, divisor: 3)
+    }
+
     static func empty(state: ItemState, isPlaybackLikelyToKeepUp: Bool) -> Self {
         .init(
             state: state,
             isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp,
+            duration: .invalid,
+            minimumTimeOffsetFromLive: .invalid,
             presentationSize: nil,
             mediaSelectionContext: .empty
         )

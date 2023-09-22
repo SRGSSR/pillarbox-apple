@@ -19,14 +19,18 @@ extension AVPlayerItem {
             guard let self, state == .readyToPlay else {
                 return Just(.empty(state: state, isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp)).eraseToAnyPublisher()
             }
-            return Publishers.CombineLatest(
+            return Publishers.CombineLatest4(
                 presentationSizePublisher(),
-                mediaSelectionContextPublisher()
+                mediaSelectionContextPublisher(),
+                durationPublisher(),
+                minimumTimeOffsetFromLivePublisher()
             )
-            .map { presentationSize, mediaSelectionContext in
+            .map { presentationSize, mediaSelectionContext, duration, minimumTimeOffsetFromLive in
                 AVPlayerItemContext(
                     state: state,
                     isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp,
+                    duration: duration,
+                    minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
                     presentationSize: presentationSize,
                     mediaSelectionContext: mediaSelectionContext
                 )
@@ -96,14 +100,12 @@ extension AVPlayerItem {
         statePublisher()
             .map { [weak self] state in
                 guard let self, state == .readyToPlay else { return Just(TimeContext.empty).eraseToAnyPublisher() }
-                return Publishers.CombineLatest4(
-                    durationPublisher(),
-                    minimumTimeOffsetFromLivePublisher(),
+                return Publishers.CombineLatest(
                     publisher(for: \.loadedTimeRanges),
                     publisher(for: \.seekableTimeRanges)
                 )
-                .map { duration, minimumTimeOffsetFromLive, loadedTimeRanges, seekableTimeRanges in
-                    .init(duration: duration, minimumTimeOffsetFromLive: minimumTimeOffsetFromLive, loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
+                .map { loadedTimeRanges, seekableTimeRanges in
+                    .init(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
                 }
                 .eraseToAnyPublisher()
             }

@@ -85,7 +85,7 @@ final class SeekTests: TestCase {
         waitUntil { done in
             player.seek(near(player.timeRange.end + CMTime(value: 10, timescale: 1))) { finished in
                 expect(finished).to(beTrue())
-                expect(player.time).to(equal(player.timeRange.end, by: beClose(within: player.chunkDuration.seconds)))
+                expect(player.time).to(equal(player.timeRange.end, by: beClose(within: 1)))
                 done()
             }
         }
