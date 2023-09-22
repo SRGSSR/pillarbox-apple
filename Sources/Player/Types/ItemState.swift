@@ -9,22 +9,9 @@ import AVFoundation
 private var kCachedErrorKey: Void?
 
 enum ItemState: Equatable {
-    case unknown
+    case unknown        // TODO: Maybe rename as .idle
     case readyToPlay
     case ended
-
-    init(for item: AVPlayerItem?) {
-        guard let item else {
-            self = .unknown
-            return
-        }
-        switch item.status {
-        case .readyToPlay:
-            self = .readyToPlay
-        default:
-            self = .unknown
-        }
-    }
 
     static func innerComment(from comment: String?) -> String? {
         // For some reason extended delimiters are currently required for compilation to succeed in Swift Packages.
