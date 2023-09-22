@@ -38,6 +38,7 @@ extension QueuePlayer {
             .compactMap { $0 }
             .map { $0.contextPublisher() }
             .switchToLatest()
+            .prepend(.empty)
             .eraseToAnyPublisher()
     }
 }
