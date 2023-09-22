@@ -9,7 +9,14 @@ import Foundation
 
 struct AVPlayerItemContext: Equatable {
     static var empty: Self {
-        empty(state: .unknown, isPlaybackLikelyToKeepUp: true)
+        .init(
+            state: .unknown,
+            isPlaybackLikelyToKeepUp: true,
+            duration: .invalid,
+            minimumTimeOffsetFromLive: .invalid,
+            presentationSize: nil,
+            mediaSelectionContext: .empty
+        )
     }
 
     let state: ItemState
@@ -32,16 +39,5 @@ struct AVPlayerItemContext: Equatable {
 
     var chunkDuration: CMTime {
         CMTimeMultiplyByRatio(minimumTimeOffsetFromLive, multiplier: 1, divisor: 3)
-    }
-
-    static func empty(state: ItemState, isPlaybackLikelyToKeepUp: Bool) -> Self {
-        .init(
-            state: state,
-            isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp,
-            duration: .invalid,
-            minimumTimeOffsetFromLive: .invalid,
-            presentationSize: nil,
-            mediaSelectionContext: .empty
-        )
     }
 }

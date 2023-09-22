@@ -11,33 +11,25 @@ import MediaAccessibility
 
 extension AVPlayerItem {
     func contextPublisher() -> AnyPublisher<AVPlayerItemContext, Never> {
-        Publishers.CombineLatest(
+        Publishers.CombineLatest6(
             statePublisher(),
-            isPlaybackLikelyToKeepUpPublisher()
+            isPlaybackLikelyToKeepUpPublisher(),
+            presentationSizePublisher(),
+            mediaSelectionContextPublisher(),
+            durationPublisher(),
+            minimumTimeOffsetFromLivePublisher()
         )
-        .map { [weak self] state, isPlaybackLikelyToKeepUp -> AnyPublisher<AVPlayerItemContext, Never> in
-            guard let self, state == .readyToPlay else {
-                return Just(.empty(state: state, isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp)).eraseToAnyPublisher()
-            }
-            return Publishers.CombineLatest4(
-                presentationSizePublisher(),
-                mediaSelectionContextPublisher(),
-                durationPublisher(),
-                minimumTimeOffsetFromLivePublisher()
+        .map { state, isPlaybackLikelyToKeepUp, presentationSize, mediaSelectionContext, duration, minimumTimeOffsetFromLive in
+            let isKnown = (state != .unknown)
+            return AVPlayerItemContext(
+                state: state,
+                isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp,
+                duration: isKnown ? duration : .invalid,
+                minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
+                presentationSize: isKnown ? presentationSize : nil,
+                mediaSelectionContext: mediaSelectionContext
             )
-            .map { presentationSize, mediaSelectionContext, duration, minimumTimeOffsetFromLive in
-                AVPlayerItemContext(
-                    state: state,
-                    isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp,
-                    duration: duration,
-                    minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
-                    presentationSize: presentationSize,
-                    mediaSelectionContext: mediaSelectionContext
-                )
-            }
-            .eraseToAnyPublisher()
         }
-        .switchToLatest()
         .removeDuplicates()
         .eraseToAnyPublisher()
     }

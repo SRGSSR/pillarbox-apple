@@ -30,8 +30,7 @@ final class QueuePlayerCurrentItemDurationPublisherTests: TestCase {
             to: beClose(within: 1)
         )
     }
-
-    // FIXME: `.invalid` event now always sent between items. Is it an issue?
+    
     func testItems() {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.onDemand.url)
@@ -43,9 +42,7 @@ final class QueuePlayerCurrentItemDurationPublisherTests: TestCase {
                 // Next media can be prepared and is immediately ready
                 Stream.onDemand.duration
             ],
-            from: currentItemDurationPublisher(for: player)
-                // TODO: Really needed?
-                .removeDuplicates(by: CMTime.close(within: 1)),
+            from: currentItemDurationPublisher(for: player),
             to: beClose(within: 1)
         ) {
             player.play()
