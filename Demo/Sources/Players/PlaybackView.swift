@@ -499,10 +499,17 @@ struct PlaybackView: View {
 
     @ObservedObject private var player: Player
     @Binding private var layout: Layout
+    @State private var errorDescription: String?
 
     var body: some View {
         ZStack {
-            if !player.items.isEmpty {
+            if let errorDescription {
+                PlaybackMessageView(message: errorDescription)
+                    .overlay(alignment: .topLeading) {
+                        CloseButton()
+                    }
+            }
+            else if !player.items.isEmpty {
                 videoView()
                     .persistentSystemOverlays(.hidden)
             }
@@ -517,6 +524,9 @@ struct PlaybackView: View {
         .onAppear {
             player.becomeActive()
             player.play()
+        }
+        .onReceive(player.errorPublisher) { error in
+            errorDescription = error.localizedDescription
         }
     }
 

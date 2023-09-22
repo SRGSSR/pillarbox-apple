@@ -46,6 +46,15 @@ extension QueuePlayer {
 }
 
 extension QueuePlayer {
+    func errorPublisher() -> AnyPublisher<Error, Never> {
+        publisher(for: \.currentItem)
+            .compactMap { $0?.errorPublisher() }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+}
+
+extension QueuePlayer {
     func timeContextPublisher() -> AnyPublisher<TimeContext, Never> {
         publisher(for: \.currentItem)
             .map { item in

@@ -126,6 +126,11 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer
     }
 
+    /// A publisher for errors.
+    public var errorPublisher: AnyPublisher<Error, Never> {
+        queuePlayer.errorPublisher()
+    }
+
     /// The current item duration.
     ///
     /// `.invalid` when unknown.
