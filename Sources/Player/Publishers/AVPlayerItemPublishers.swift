@@ -93,6 +93,37 @@ extension AVPlayerItem {
 }
 
 extension AVPlayerItem {
+    func errorPublisher() -> AnyPublisher<Error, Never> {
+        Publishers.Merge(
+            intrinsicErrorPublisher(),
+            playbackErrorPublisher()
+        )
+        .eraseToAnyPublisher()
+    }
+
+    private func intrinsicErrorPublisher() -> AnyPublisher<Error, Never> {
+        publisher(for: \.status)
+            .filter { $0 == .failed }
+            .weakCapture(self)
+            .map { _, item in
+                ItemError.intrinsicError(for: item)
+            }
+            .eraseToAnyPublisher()
+    }
+
+    private func playbackErrorPublisher() -> AnyPublisher<Error, Never> {
+        NotificationCenter.default.weakPublisher(for: .AVPlayerItemFailedToPlayToEndTime, object: self)
+            .compactMap { notification in
+                guard let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error else {
+                    return nil
+                }
+                return ItemError.localizedError(from: error)
+            }
+            .eraseToAnyPublisher()
+    }
+}
+
+extension AVPlayerItem {
     func timeContextPublisher() -> AnyPublisher<TimeContext, Never> {
         statePublisher()
             .map { [weak self] state in
