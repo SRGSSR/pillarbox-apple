@@ -116,3 +116,17 @@ extension QueuePlayer {
         .eraseToAnyPublisher()
     }
 }
+
+extension QueuePlayer {
+    func currentItemBufferPublisher() -> AnyPublisher<Float, Never> {
+        Publishers.CombineLatest(contextPublisher(), timeContextPublisher())
+            .map { context, timeContext in
+                let loadedTimeRange = timeContext.loadedTimeRange()
+                let duration = context.currentItemContext.duration
+                guard loadedTimeRange.end.isNumeric, duration.isNumeric, duration != .zero else { return 0 }
+                return Float(loadedTimeRange.end.seconds / duration.seconds)
+            }
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+}

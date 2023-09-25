@@ -14,6 +14,7 @@ struct TimeContext: Equatable {
     let loadedTimeRanges: [NSValue]
     let seekableTimeRanges: [NSValue]
 
+    // TODO: Rename as `seekableTimeRange` and make func?
     var timeRange: CMTimeRange {
         Self.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
     }
@@ -24,5 +25,11 @@ struct TimeContext: Equatable {
             return !loadedTimeRanges.isEmpty ? .zero : .invalid
         }
         return CMTimeRangeFromTimeToTime(start: firstRange.start, end: lastRange.end)
+    }
+
+    func loadedTimeRange() -> CMTimeRange {
+        let start = loadedTimeRanges.first?.timeRangeValue.start ?? .zero
+        let end = loadedTimeRanges.last?.timeRangeValue.end ?? .zero
+        return CMTimeRangeFromTimeToTime(start: start, end: end)
     }
 }

@@ -20,7 +20,7 @@ private class MockAVPlayerItem: AVPlayerItem {
 
 final class AVPlayerCurrentItemBufferPublisherTests: TestCase {
     func testEmpty() {
-        let player = AVPlayer()
+        let player = QueuePlayer()
         expectAtLeastEqualPublished(
             values: [0],
             from: player.currentItemBufferPublisher()
@@ -29,7 +29,7 @@ final class AVPlayerCurrentItemBufferPublisherTests: TestCase {
 
     func testOnDemand() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let player = AVPlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         expectAtLeastPublished(
             values: [0, 1],
             from: player.currentItemBufferPublisher(),
@@ -39,7 +39,7 @@ final class AVPlayerCurrentItemBufferPublisherTests: TestCase {
 
     func testLive() {
         let item = AVPlayerItem(url: Stream.live.url)
-        let player = AVPlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [0],
             from: player.currentItemBufferPublisher()
@@ -48,7 +48,7 @@ final class AVPlayerCurrentItemBufferPublisherTests: TestCase {
 
     func testQueueExhaustion() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let player = AVQueuePlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         player.actionAtItemEnd = .advance
         expectAtLeastPublished(
             values: [0, 1, 0],
@@ -61,7 +61,7 @@ final class AVPlayerCurrentItemBufferPublisherTests: TestCase {
 
     func testQueueEnd() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let player = AVQueuePlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         player.actionAtItemEnd = .none
         expectAtLeastPublished(
             values: [0, 1],
@@ -75,7 +75,7 @@ final class AVPlayerCurrentItemBufferPublisherTests: TestCase {
     func testWithoutAutomaticallyLoadedAssetKeys() {
         let asset = AVURLAsset(url: Stream.shortOnDemand.url)
         let item = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: [])
-        let player = AVPlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         expectAtLeastPublished(
             values: [0, 1],
             from: player.currentItemBufferPublisher(),
@@ -85,7 +85,7 @@ final class AVPlayerCurrentItemBufferPublisherTests: TestCase {
 
     func testNonNumericDuration() {
         let item = MockAVPlayerItem(url: Stream.shortOnDemand.url)
-        let player = AVPlayer(playerItem: item)
+        let player = QueuePlayer(playerItem: item)
         expectEqualPublished(
             values: [0],
             from: player.currentItemBufferPublisher(),
