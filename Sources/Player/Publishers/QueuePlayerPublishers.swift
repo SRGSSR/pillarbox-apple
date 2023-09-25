@@ -18,6 +18,7 @@ extension QueuePlayer {
             publisher(for: \.isMuted)
         )
         .map { .init(currentItemContext: $0, rate: $1, isSeeking: $2, isExternalPlaybackActive: $3, isMuted: $4) }
+        .removeDuplicates()
         .eraseToAnyPublisher()
     }
 
@@ -62,6 +63,7 @@ extension QueuePlayer {
                 return item.timeContextPublisher().eraseToAnyPublisher()
             }
             .switchToLatest()
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
