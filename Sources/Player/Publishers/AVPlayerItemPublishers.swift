@@ -217,20 +217,4 @@ extension AVPlayerItem {
         .map { NowPlaying.Properties(timeRange: $0, itemDuration: $1, isBuffering: $2) }
         .eraseToAnyPublisher()
     }
-
-    func presentationSizePublisherLegacy() -> AnyPublisher<CGSize?, Never> {
-        publisher(for: \.status)
-            .weakCapture(self)
-            .map { status, item -> AnyPublisher<CGSize?, Never> in
-                guard status == .readyToPlay else {
-                    return Just(nil).eraseToAnyPublisher()
-                }
-                return item.publisher(for: \.presentationSize)
-                    .map { Optional($0) }
-                    .eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
 }
