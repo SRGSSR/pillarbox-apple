@@ -16,11 +16,6 @@ extension Player {
         func currentIndex() -> Int? {
             items.firstIndex { $0.matches(currentItem) }
         }
-
-        func streamTypePublisher() -> AnyPublisher<StreamType, Never> {
-            guard let currentItem else { return Just(.unknown).eraseToAnyPublisher() }
-            return currentItem.streamTypePublisher().eraseToAnyPublisher()
-        }
     }
 
     func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {

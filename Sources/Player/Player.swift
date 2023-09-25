@@ -341,23 +341,23 @@ private extension Player {
     }
 
     func configureControlCenterRemoteCommandUpdatePublisher() {
-        itemUpdatePublisher()
-            .map { update in
-                Publishers.CombineLatest3(
-                    Just(update.items),
-                    Just(update.currentIndex()),
-                    update.streamTypePublisher()
-                )
-            }
-            .switchToLatest()
-            .sink { [weak self] items, index, streamType in
-                guard let self else { return }
-                let areSkipsEnabled = items.count <= 1 && streamType != .live
-                nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
-                nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
-                nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: items, streamType: streamType)
-                nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: index, in: items)
-            }
-            .store(in: &cancellables)
+        Publishers.CombineLatest3(
+            itemUpdatePublisher(),
+            queuePlayer.contextPublisher(),
+            queuePlayer.timeContextPublisher()
+        )
+        .sink { [weak self] update, context, timeContext in
+            guard let self else { return }
+
+            let streamType = StreamType(for: timeContext.timeRange, itemDuration: context.currentItemContext.duration)
+            let areSkipsEnabled = update.items.count <= 1 && streamType != .live
+            nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
+            nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
+
+            let index = update.currentIndex()
+            nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: update.items, streamType: streamType)
+            nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: index, in: update.items)
+        }
+        .store(in: &cancellables)
     }
 }
