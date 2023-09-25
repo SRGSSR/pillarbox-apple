@@ -78,12 +78,14 @@ private extension Player {
             .map { item, player -> AnyPublisher<PlaybackSpeedUpdate, Never> in
                 if let item {
                     return Publishers.CombineLatest3(
-                        item.timeRangePublisher(),
-                        item.durationPublisher(),
+                        item.contextPublisher(),
+                        item.timeContextPublisher(),
                         player.periodicTimePublisher(forInterval: CMTime(value: 1, timescale: 1))
                     )
-                    .compactMap { timeRange, itemDuration, time in
-                        guard let range = Self.playbackSpeedRange(for: timeRange, itemDuration: itemDuration, time: time) else { return nil }
+                    .compactMap { context, timeContext, time in
+                        guard let range = Self.playbackSpeedRange(for: timeContext.timeRange, itemDuration: context.duration, time: time) else {
+                            return nil
+                        }
                         return .range(range)
                     }
                     .eraseToAnyPublisher()

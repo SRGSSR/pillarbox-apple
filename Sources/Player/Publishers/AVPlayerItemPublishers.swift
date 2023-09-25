@@ -156,6 +156,17 @@ extension AVPlayerItem {
             .prepend(.invalid)
             .eraseToAnyPublisher()
     }
+
+    func nowPlayingInfoPropertiesPublisher() -> AnyPublisher<NowPlaying.Properties, Never> {
+        Publishers.CombineLatest(
+            contextPublisher(),
+            timeContextPublisher()
+        )
+        .map { context, timeContext in
+            NowPlaying.Properties(timeRange: timeContext.timeRange, itemDuration: context.duration, isBuffering: context.isBuffering)
+        }
+        .eraseToAnyPublisher()
+    }
 }
 
 // TODO: Remove once migration done
@@ -199,22 +210,6 @@ extension AVPlayerItem {
             StreamType(for: timeRange, itemDuration: duration)
         }
         .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
-
-    func bufferingPublisher() -> AnyPublisher<Bool, Never> {
-        publisher(for: \.isPlaybackLikelyToKeepUp)
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-
-    func nowPlayingInfoPropertiesPublisher() -> AnyPublisher<NowPlaying.Properties, Never> {
-        Publishers.CombineLatest3(
-            timeRangePublisher(),
-            durationPublisher(),
-            bufferingPublisher()
-        )
-        .map { NowPlaying.Properties(timeRange: $0, itemDuration: $1, isBuffering: $2) }
         .eraseToAnyPublisher()
     }
 }
