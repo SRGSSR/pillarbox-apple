@@ -156,17 +156,6 @@ extension AVPlayerItem {
             .prepend(.invalid)
             .eraseToAnyPublisher()
     }
-
-    func nowPlayingInfoPropertiesPublisher() -> AnyPublisher<NowPlaying.Properties, Never> {
-        Publishers.CombineLatest(
-            contextPublisher(),
-            timeContextPublisher()
-        )
-        .map { context, timeContext in
-            NowPlaying.Properties(timeRange: timeContext.timeRange, itemDuration: context.duration, isBuffering: context.isBuffering)
-        }
-        .eraseToAnyPublisher()
-    }
 }
 
 // TODO: Remove once migration done

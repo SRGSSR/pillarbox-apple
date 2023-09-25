@@ -91,27 +91,23 @@ extension QueuePlayer {
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
-}
 
-// TODO: Remove once migration done
-
-extension QueuePlayer {
     func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
         Publishers.CombineLatest3(
-            nowPlayingInfoPropertiesPublisher(),
-            publisher(for: \.rate),
+            contextPublisher(),
+            timeContextPublisher(),
             seekTimePublisher()
         )
-        .map { [weak self] properties, rate, seekTime in
+        .map { [weak self] context, timeContext, seekTime in
             var nowPlayingInfo = NowPlaying.Info()
-            if let properties {
-                let isLive = StreamType(for: properties.timeRange, itemDuration: properties.itemDuration) == .live
+            if context != .empty {
+                let isLive = StreamType(for: timeContext.timeRange, itemDuration: context.currentItemContext.duration) == .live
                 nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLive
-                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : rate
+                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = context.currentItemContext.isBuffering ? 0 : context.rate
                 if let time = seekTime ?? self?.currentTime(), time.isValid {
-                    nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - properties.timeRange.start).seconds
+                    nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - timeContext.timeRange.start).seconds
                 }
-                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = properties.timeRange.duration.seconds
+                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = timeContext.timeRange.duration.seconds
             }
             return nowPlayingInfo
         }
