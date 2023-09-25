@@ -64,11 +64,7 @@ extension QueuePlayer {
             .switchToLatest()
             .eraseToAnyPublisher()
     }
-}
 
-// TODO: Remove once migration done
-
-extension QueuePlayer {
     /// Publishes the current time, smoothing out emitted values during seeks.
     func smoothCurrentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
         Publishers.CombineLatest(
@@ -95,7 +91,11 @@ extension QueuePlayer {
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
+}
 
+// TODO: Remove once migration done
+
+extension QueuePlayer {
     func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
         Publishers.CombineLatest3(
             nowPlayingInfoPropertiesPublisher(),
