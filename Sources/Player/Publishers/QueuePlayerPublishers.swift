@@ -102,14 +102,14 @@ extension QueuePlayer {
         )
         .map { [weak self] context, timeContext, seekTime in
             var nowPlayingInfo = NowPlaying.Info()
-            let streamType = StreamType(for: timeContext.timeRange, itemDuration: context.currentItemContext.duration)
+            let streamType = StreamType(for: timeContext.seekableTimeRange, itemDuration: context.currentItemContext.duration)
             if streamType != .unknown {
                 nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (streamType == .live)
                 nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = context.currentItemContext.isBuffering ? 0 : context.rate
                 if let time = seekTime ?? self?.currentTime(), time.isValid {
-                    nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - timeContext.timeRange.start).seconds
+                    nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - timeContext.seekableTimeRange.start).seconds
                 }
-                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = timeContext.timeRange.duration.seconds
+                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = timeContext.seekableTimeRange.duration.seconds
             }
             return nowPlayingInfo
         }
@@ -121,7 +121,7 @@ extension QueuePlayer {
     func currentItemBufferPublisher() -> AnyPublisher<Float, Never> {
         Publishers.CombineLatest(contextPublisher(), timeContextPublisher())
             .map { context, timeContext in
-                let loadedTimeRange = timeContext.loadedTimeRange()
+                let loadedTimeRange = timeContext.loadedTimeRange
                 let duration = context.currentItemContext.duration
                 guard loadedTimeRange.end.isNumeric, duration.isNumeric, duration != .zero else { return 0 }
                 return Float(loadedTimeRange.end.seconds / duration.seconds)

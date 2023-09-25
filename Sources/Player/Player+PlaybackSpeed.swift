@@ -83,7 +83,7 @@ private extension Player {
                         player.periodicTimePublisher(forInterval: CMTime(value: 1, timescale: 1))
                     )
                     .compactMap { context, timeContext, time in
-                        guard let range = Self.playbackSpeedRange(for: timeContext.timeRange, itemDuration: context.duration, time: time) else {
+                        guard let range = Self.playbackSpeedRange(for: timeContext.seekableTimeRange, itemDuration: context.duration, time: time) else {
                             return nil
                         }
                         return .range(range)

@@ -16,7 +16,7 @@ import XCTest
 final class AVPlayerCurrentItemTimeRangePublisherTests: TestCase {
     private func seekableTimeRangePublisher(for player: QueuePlayer) -> AnyPublisher<CMTimeRange, Never> {
         player.timeContextPublisher()
-            .map(\.timeRange)
+            .map(\.seekableTimeRange)
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
