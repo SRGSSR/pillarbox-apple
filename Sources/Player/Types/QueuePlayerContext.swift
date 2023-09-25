@@ -6,7 +6,7 @@
 
 import Foundation
 
-public struct QueuePlayerContext: Equatable {
+public struct QueuePlayerContext {
     static var empty: Self {
         .init(currentItemContext: .empty, rate: 0, isSeeking: false, isExternalPlaybackActive: false, isMuted: false)
     }

@@ -100,9 +100,9 @@ extension QueuePlayer {
         )
         .map { [weak self] context, timeContext, seekTime in
             var nowPlayingInfo = NowPlaying.Info()
-            if context != .empty {
-                let isLive = StreamType(for: timeContext.timeRange, itemDuration: context.currentItemContext.duration) == .live
-                nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLive
+            let streamType = StreamType(for: timeContext.timeRange, itemDuration: context.currentItemContext.duration)
+            if streamType != .unknown {
+                nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (streamType == .live)
                 nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = context.currentItemContext.isBuffering ? 0 : context.rate
                 if let time = seekTime ?? self?.currentTime(), time.isValid {
                     nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - timeContext.timeRange.start).seconds
