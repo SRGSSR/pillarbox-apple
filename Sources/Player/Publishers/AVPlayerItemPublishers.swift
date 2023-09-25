@@ -189,16 +189,4 @@ extension AVPlayerItem {
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
-
-    func streamTypePublisher() -> AnyPublisher<StreamType, Never> {
-        Publishers.CombineLatest(
-            timeRangePublisher(),
-            durationPublisher()
-        )
-        .map { timeRange, duration in
-            StreamType(for: timeRange, itemDuration: duration)
-        }
-        .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
 }
