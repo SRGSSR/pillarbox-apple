@@ -18,7 +18,8 @@ private class MockAVPlayerItem: AVPlayerItem {
     }
 }
 
-final class AVPlayerCurrentItemBufferPublisherTests: TestCase {
+// swiftlint:disable:next type_name
+final class QueuePlayerCurrentItemBufferPublisherTests: TestCase {
     func testEmpty() {
         let player = QueuePlayer()
         expectAtLeastEqualPublished(

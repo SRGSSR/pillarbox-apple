@@ -30,16 +30,9 @@ extension Publishers {
     }
 
     static func PeriodicTimePublisher(for player: AVPlayer, interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
-        Publishers.CombineLatest(
-            Publishers._PeriodicTimePublisher(player: player, interval: interval, queue: queue),
-            player.currentItemTimeRangePublisher()
-        )
-        .compactMap { time, timeRange in
-            let clampedTime = time.clamped(to: timeRange)
-            return clampedTime.isValid ? clampedTime : nil
-        }
-        .removeDuplicates(by: CMTime.close(within: interval.seconds / 2))
-        .eraseToAnyPublisher()
+        Publishers._PeriodicTimePublisher(player: player, interval: interval, queue: queue)
+            .removeDuplicates(by: CMTime.close(within: interval.seconds / 2))
+            .eraseToAnyPublisher()
     }
 }
 

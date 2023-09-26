@@ -157,21 +157,3 @@ extension AVPlayerItem {
             .eraseToAnyPublisher()
     }
 }
-
-// TODO: Remove once migration done
-
-extension AVPlayerItem {
-    func timeRangePublisher() -> AnyPublisher<CMTimeRange, Never> {
-        Publishers.CombineLatest3(
-            publisher(for: \.status),
-            publisher(for: \.loadedTimeRanges),
-            publisher(for: \.seekableTimeRanges)
-        )
-        .map { status, loadedTimeRanges, seekableTimeRanges in
-            guard status == .readyToPlay else { return .invalid }
-            return TimeContext.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
-        }
-        .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
-}
