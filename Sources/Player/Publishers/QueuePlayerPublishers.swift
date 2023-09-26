@@ -107,7 +107,7 @@ extension QueuePlayer {
             let streamType = StreamType(for: timeProperties.seekableTimeRange, itemDuration: properties.itemProperties.duration)
             if streamType != .unknown {
                 nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (streamType == .live)
-                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.itemProperties.isBuffering ? 0 : properties.rate
+                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : properties.rate
                 if let time = seekTime ?? self?.currentTime(), time.isValid {
                     nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - timeProperties.seekableTimeRange.start).seconds
                 }

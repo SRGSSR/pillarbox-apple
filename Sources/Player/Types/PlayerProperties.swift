@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import CoreMedia
 import Foundation
 
 public struct PlayerProperties: Equatable {
@@ -11,7 +12,8 @@ public struct PlayerProperties: Equatable {
         .init(itemProperties: .empty, rate: 0, isSeeking: false, isExternalPlaybackActive: false, isMuted: false)
     }
 
-    public let itemProperties: PlayerItemProperties
+    let itemProperties: PlayerItemProperties
+
     public let rate: Float
     public let isSeeking: Bool
     public let isExternalPlaybackActive: Bool
@@ -19,5 +21,17 @@ public struct PlayerProperties: Equatable {
 
     public var playbackState: PlaybackState {
         .init(itemState: itemProperties.state, rate: rate)
+    }
+
+    public var isBuffering: Bool {
+        itemProperties.isBuffering
+    }
+
+    public var chunkDuration: CMTime {
+        itemProperties.chunkDuration
+    }
+
+    public var presentationSize: CGSize? {
+        itemProperties.presentationSize
     }
 }

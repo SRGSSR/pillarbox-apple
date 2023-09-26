@@ -15,7 +15,7 @@ import XCTest
 final class QueuePlayerBufferingPublisherTests: TestCase {
     private func bufferingPublisher(for player: QueuePlayer) -> AnyPublisher<Bool, Never> {
         player.propertiesPublisher()
-            .map(\.itemProperties.isBuffering)
+            .map(\.isBuffering)
             .removeDuplicates()
             .eraseToAnyPublisher()
     }

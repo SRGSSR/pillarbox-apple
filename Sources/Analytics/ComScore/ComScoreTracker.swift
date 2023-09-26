@@ -45,7 +45,7 @@ public final class ComScoreTracker: PlayerItemTracker {
                 applicationState: state,
                 playbackState: properties.playbackState,
                 isSeeking: properties.isSeeking,
-                isBuffering: properties.itemProperties.isBuffering,
+                isBuffering: properties.isBuffering,
                 player: player
             )
         }

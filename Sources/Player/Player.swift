@@ -49,38 +49,6 @@ public final class Player: ObservableObject, Equatable {
     /// The player configuration
     public let configuration: PlayerConfiguration
 
-    /// The current playback state.
-    public var playbackState: PlaybackState {
-        properties.playbackState
-    }
-
-    /// The current presentation size.
-    ///
-    /// Might be zero for audio content or `nil` when unknown.
-    public var presentationSize: CGSize? {
-        properties.itemProperties.presentationSize
-    }
-
-    /// A Boolean describing whether the player is currently buffering.
-    public var isBuffering: Bool {
-        properties.itemProperties.isBuffering
-    }
-
-    /// A Boolean describing whether the player is currently seeking to another position.
-    public var isSeeking: Bool {
-        properties.isSeeking
-    }
-
-    /// The duration of a chunk for the currently played item.
-    public var chunkDuration: CMTime {
-        properties.itemProperties.chunkDuration
-    }
-
-    /// A Boolean describing whether the player is currently playing video in external playback mode.
-    public var isExternalPlaybackActive: Bool {
-        properties.isExternalPlaybackActive
-    }
-
     /// A Boolean setting whether the audio output of the player must be muted.
     public var isMuted: Bool {
         get {

@@ -29,7 +29,7 @@ public final class CommandersActTracker: PlayerItemTracker {
             .sink { [weak self] properties, player in
                 guard let self else { return }
                 notify(playbackState: properties.playbackState, isSeeking: properties.isSeeking, player: player)
-                streamingAnalytics?.notify(isBuffering: properties.itemProperties.isBuffering)
+                streamingAnalytics?.notify(isBuffering: properties.isBuffering)
             }
             .store(in: &cancellables)
 
