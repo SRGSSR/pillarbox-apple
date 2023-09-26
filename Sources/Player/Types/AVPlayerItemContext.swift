@@ -7,7 +7,7 @@
 import CoreMedia
 import Foundation
 
-struct AVPlayerItemContext: Equatable {
+public struct AVPlayerItemContext: Equatable {
     static var empty: Self {
         .init(
             state: .unknown,
@@ -20,19 +20,19 @@ struct AVPlayerItemContext: Equatable {
     }
 
     let state: ItemState
-    let isPlaybackLikelyToKeepUp: Bool
+    public let isPlaybackLikelyToKeepUp: Bool
 
-    let duration: CMTime
-    let minimumTimeOffsetFromLive: CMTime
+    public let duration: CMTime
+    public let minimumTimeOffsetFromLive: CMTime
 
-    let presentationSize: CGSize?
+    public let presentationSize: CGSize?
     let mediaSelectionContext: MediaSelectionContext
 
-    var isBuffering: Bool {
+    public var isBuffering: Bool {
         !isPlaybackLikelyToKeepUp
     }
 
-    var chunkDuration: CMTime {
+    public var chunkDuration: CMTime {
         CMTimeMultiplyByRatio(minimumTimeOffsetFromLive, multiplier: 1, divisor: 3)
     }
 }

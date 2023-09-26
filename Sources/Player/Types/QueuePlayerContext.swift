@@ -11,11 +11,11 @@ public struct QueuePlayerContext: Equatable {
         .init(currentItemContext: .empty, rate: 0, isSeeking: false, isExternalPlaybackActive: false, isMuted: false)
     }
 
-    let currentItemContext: AVPlayerItemContext
-    let rate: Float
-    let isSeeking: Bool
-    let isExternalPlaybackActive: Bool
-    let isMuted: Bool
+    public let currentItemContext: AVPlayerItemContext
+    public let rate: Float
+    public let isSeeking: Bool
+    public let isExternalPlaybackActive: Bool
+    public let isMuted: Bool
 
     public var playbackState: PlaybackState {
         .init(itemState: currentItemContext.state, rate: rate)
