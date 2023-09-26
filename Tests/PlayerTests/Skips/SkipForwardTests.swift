@@ -15,7 +15,7 @@ import XCTest
 
 final class SkipForwardTests: TestCase {
     private func isSeekingPublisher(for player: Player) -> AnyPublisher<Bool, Never> {
-        player.$context
+        player.$properties
             .map(\.isSeeking)
             .removeDuplicates()
             .eraseToAnyPublisher()

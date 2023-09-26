@@ -20,7 +20,7 @@ public final class Player: ObservableObject, Equatable {
         PackageInfo.version
     }
 
-    @Published public private(set) var context: QueuePlayerContext = .empty
+    @Published public private(set) var properties: QueuePlayerProperties = .empty
     @Published public private(set) var error: (any Error)?
 
     /// The index of the current item in the queue.
@@ -51,40 +51,40 @@ public final class Player: ObservableObject, Equatable {
 
     /// The current playback state.
     public var playbackState: PlaybackState {
-        context.playbackState
+        properties.playbackState
     }
 
     /// The current presentation size.
     ///
     /// Might be zero for audio content or `nil` when unknown.
     public var presentationSize: CGSize? {
-        context.currentItemContext.presentationSize
+        properties.itemProperties.presentationSize
     }
 
     /// A Boolean describing whether the player is currently buffering.
     public var isBuffering: Bool {
-        context.currentItemContext.isBuffering
+        properties.itemProperties.isBuffering
     }
 
     /// A Boolean describing whether the player is currently seeking to another position.
     public var isSeeking: Bool {
-        context.isSeeking
+        properties.isSeeking
     }
 
     /// The duration of a chunk for the currently played item.
     public var chunkDuration: CMTime {
-        context.currentItemContext.chunkDuration
+        properties.itemProperties.chunkDuration
     }
 
     /// A Boolean describing whether the player is currently playing video in external playback mode.
     public var isExternalPlaybackActive: Bool {
-        context.isExternalPlaybackActive
+        properties.isExternalPlaybackActive
     }
 
     /// A Boolean setting whether the audio output of the player must be muted.
     public var isMuted: Bool {
         get {
-            context.isMuted
+            properties.isMuted
         }
         set {
             queuePlayer.isMuted = newValue
@@ -218,7 +218,7 @@ public final class Player: ObservableObject, Equatable {
     }
 
     private func configurePublishedPropertyPublishers() {
-        configureContextPublisher()
+        configurePropertiesPublisher()
         configureErrorPublisher()
         configureCurrentIndexPublisher()
         configureCurrentTrackerPublisher()
@@ -272,10 +272,10 @@ private extension Player {
 }
 
 private extension Player {
-    func configureContextPublisher() {
-        queuePlayer.contextPublisher()
+    func configurePropertiesPublisher() {
+        queuePlayer.propertiesPublisher()
             .receiveOnMainThread()
-            .assign(to: &$context)
+            .assign(to: &$properties)
     }
 
     func configureErrorPublisher() {
@@ -343,13 +343,13 @@ private extension Player {
     func configureControlCenterRemoteCommandUpdatePublisher() {
         Publishers.CombineLatest3(
             itemUpdatePublisher(),
-            queuePlayer.contextPublisher(),
-            queuePlayer.timeContextPublisher()
+            queuePlayer.propertiesPublisher(),
+            queuePlayer.timePropertiesPublisher()
         )
-        .sink { [weak self] update, context, timeContext in
+        .sink { [weak self] update, properties, timeProperties in
             guard let self else { return }
 
-            let streamType = StreamType(for: timeContext.seekableTimeRange, itemDuration: context.currentItemContext.duration)
+            let streamType = StreamType(for: timeProperties.seekableTimeRange, itemDuration: properties.itemProperties.duration)
             let areSkipsEnabled = update.items.count <= 1 && streamType != .live
             nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
             nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled

@@ -10,7 +10,7 @@ import Core
 import MediaAccessibility
 
 extension AVPlayerItem {
-    func contextPublisher() -> AnyPublisher<AVPlayerItemContext, Never> {
+    func propertiesPublisher() -> AnyPublisher<AVPlayerItemProperties, Never> {
         Publishers.CombineLatest6(
             statePublisher(),
             publisher(for: \.isPlaybackLikelyToKeepUp),
@@ -21,7 +21,7 @@ extension AVPlayerItem {
         )
         .map { state, isPlaybackLikelyToKeepUp, presentationSize, mediaSelectionContext, duration, minimumTimeOffsetFromLive in
             let isKnown = (state != .unknown)
-            return AVPlayerItemContext(
+            return AVPlayerItemProperties(
                 state: state,
                 isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp,
                 duration: isKnown ? duration : .invalid,
@@ -124,10 +124,10 @@ extension AVPlayerItem {
 }
 
 extension AVPlayerItem {
-    func timeContextPublisher() -> AnyPublisher<TimeContext, Never> {
+    func timePropertiesPublisher() -> AnyPublisher<TimeProperties, Never> {
         statePublisher()
             .map { [weak self] state in
-                guard let self, state != .unknown else { return Just(TimeContext.empty).eraseToAnyPublisher() }
+                guard let self, state != .unknown else { return Just(TimeProperties.empty).eraseToAnyPublisher() }
                 return Publishers.CombineLatest(
                     publisher(for: \.loadedTimeRanges),
                     publisher(for: \.seekableTimeRanges)

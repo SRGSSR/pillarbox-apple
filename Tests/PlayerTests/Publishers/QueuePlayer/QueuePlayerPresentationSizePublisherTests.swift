@@ -13,8 +13,8 @@ import Streams
 // swiftlint:disable:next type_name
 final class QueuePlayerPresentationSizePublisherTests: TestCase {
     private func presentationSizePublisher(for player: QueuePlayer) -> AnyPublisher<CGSize?, Never> {
-        player.contextPublisher()
-            .map(\.currentItemContext.presentationSize)
+        player.propertiesPublisher()
+            .map(\.itemProperties.presentationSize)
             .removeDuplicates()
             .eraseToAnyPublisher()
     }

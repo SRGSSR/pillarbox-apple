@@ -18,8 +18,8 @@ final class QueuePlayerCurrentItemStatePublisherTests: TestCase {
     private let resourceLoaderDelegate = FailingResourceLoaderDelegate()
 
     private func currentItemStatePublisher(for player: QueuePlayer) -> AnyPublisher<ItemState, Never> {
-        player.contextPublisher()
-            .map(\.currentItemContext.state)
+        player.propertiesPublisher()
+            .map(\.itemProperties.state)
             .removeDuplicates()
             .eraseToAnyPublisher()
     }

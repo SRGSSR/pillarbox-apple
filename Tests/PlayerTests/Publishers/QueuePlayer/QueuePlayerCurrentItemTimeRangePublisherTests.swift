@@ -15,7 +15,7 @@ import XCTest
 // swiftlint:disable:next type_name
 final class QueuePlayerCurrentItemTimeRangePublisherTests: TestCase {
     private func currentItemTimeRangePublisher(for player: QueuePlayer) -> AnyPublisher<CMTimeRange, Never> {
-        player.timeContextPublisher()
+        player.timePropertiesPublisher()
             .map(\.seekableTimeRange)
             .removeDuplicates()
             .eraseToAnyPublisher()

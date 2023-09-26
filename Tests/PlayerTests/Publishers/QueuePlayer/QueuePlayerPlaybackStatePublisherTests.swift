@@ -14,7 +14,7 @@ import XCTest
 
 final class QueuePlayerPlaybackStatePublisherTests: TestCase {
     private func playbackStatePublisher(for player: QueuePlayer) -> AnyPublisher<PlaybackState, Never> {
-        player.contextPublisher()
+        player.propertiesPublisher()
             .map(\.playbackState)
             .removeDuplicates()
             .eraseToAnyPublisher()

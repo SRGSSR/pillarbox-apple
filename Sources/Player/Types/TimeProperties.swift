@@ -6,7 +6,7 @@
 
 import CoreMedia
 
-struct TimeContext: Equatable {
+struct TimeProperties: Equatable {
     static var empty: Self {
         .init(loadedTimeRanges: [], seekableTimeRanges: [])
     }

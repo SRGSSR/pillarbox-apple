@@ -24,12 +24,12 @@ public final class CommandersActTracker: PlayerItemTracker {
     }
 
     public func enable(for player: Player) {
-        player.$context
+        player.$properties
             .weakCapture(player)
-            .sink { [weak self] context, player in
+            .sink { [weak self] properties, player in
                 guard let self else { return }
-                notify(playbackState: context.playbackState, isSeeking: context.isSeeking, player: player)
-                streamingAnalytics?.notify(isBuffering: context.currentItemContext.isBuffering)
+                notify(playbackState: properties.playbackState, isSeeking: properties.isSeeking, player: player)
+                streamingAnalytics?.notify(isBuffering: properties.itemProperties.isBuffering)
             }
             .store(in: &cancellables)
 

@@ -7,7 +7,7 @@
 import CoreMedia
 import Foundation
 
-public struct AVPlayerItemContext: Equatable {
+public struct AVPlayerItemProperties: Equatable {
     static var empty: Self {
         .init(
             state: .unknown,

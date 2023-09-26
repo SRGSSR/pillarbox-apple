@@ -9,15 +9,15 @@ import Combine
 import MediaPlayer
 
 extension QueuePlayer {
-    func contextPublisher() -> AnyPublisher<QueuePlayerContext, Never> {
+    func propertiesPublisher() -> AnyPublisher<QueuePlayerProperties, Never> {
         Publishers.CombineLatest5(
-            currentItemContextPublisher(),
+            itemPropertiesPublisher(),
             publisher(for: \.rate),
             isSeekingPublisher(),
             publisher(for: \.isExternalPlaybackActive),
             publisher(for: \.isMuted)
         )
-        .map { .init(currentItemContext: $0, rate: $1, isSeeking: $2, isExternalPlaybackActive: $3, isMuted: $4) }
+        .map { .init(itemProperties: $0, rate: $1, isSeeking: $2, isExternalPlaybackActive: $3, isMuted: $4) }
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
@@ -34,11 +34,11 @@ extension QueuePlayer {
         .eraseToAnyPublisher()
     }
 
-    private func currentItemContextPublisher() -> AnyPublisher<AVPlayerItemContext, Never> {
+    private func itemPropertiesPublisher() -> AnyPublisher<AVPlayerItemProperties, Never> {
         publisher(for: \.currentItem)
             .map { item in
-                guard let item else { return Just(AVPlayerItemContext.empty).eraseToAnyPublisher() }
-                return item.contextPublisher()
+                guard let item else { return Just(AVPlayerItemProperties.empty).eraseToAnyPublisher() }
+                return item.propertiesPublisher()
             }
             .switchToLatest()
             .prepend(.empty)
@@ -57,11 +57,11 @@ extension QueuePlayer {
 }
 
 extension QueuePlayer {
-    func timeContextPublisher() -> AnyPublisher<TimeContext, Never> {
+    func timePropertiesPublisher() -> AnyPublisher<TimeProperties, Never> {
         publisher(for: \.currentItem)
             .map { item in
-                guard let item else { return Just(TimeContext.empty).eraseToAnyPublisher() }
-                return item.timeContextPublisher().eraseToAnyPublisher()
+                guard let item else { return Just(TimeProperties.empty).eraseToAnyPublisher() }
+                return item.timePropertiesPublisher().eraseToAnyPublisher()
             }
             .switchToLatest()
             .removeDuplicates()
@@ -98,20 +98,20 @@ extension QueuePlayer {
 
     func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
         Publishers.CombineLatest3(
-            contextPublisher(),
-            timeContextPublisher(),
+            propertiesPublisher(),
+            timePropertiesPublisher(),
             seekTimePublisher()
         )
-        .map { [weak self] context, timeContext, seekTime in
+        .map { [weak self] properties, timeProperties, seekTime in
             var nowPlayingInfo = NowPlaying.Info()
-            let streamType = StreamType(for: timeContext.seekableTimeRange, itemDuration: context.currentItemContext.duration)
+            let streamType = StreamType(for: timeProperties.seekableTimeRange, itemDuration: properties.itemProperties.duration)
             if streamType != .unknown {
                 nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (streamType == .live)
-                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = context.currentItemContext.isBuffering ? 0 : context.rate
+                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.itemProperties.isBuffering ? 0 : properties.rate
                 if let time = seekTime ?? self?.currentTime(), time.isValid {
-                    nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - timeContext.seekableTimeRange.start).seconds
+                    nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - timeProperties.seekableTimeRange.start).seconds
                 }
-                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = timeContext.seekableTimeRange.duration.seconds
+                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = timeProperties.seekableTimeRange.duration.seconds
             }
             return nowPlayingInfo
         }
@@ -121,10 +121,10 @@ extension QueuePlayer {
 
 extension QueuePlayer {
     func currentItemBufferPublisher() -> AnyPublisher<Float, Never> {
-        Publishers.CombineLatest(contextPublisher(), timeContextPublisher())
-            .map { context, timeContext in
-                let loadedTimeRange = timeContext.loadedTimeRange
-                let duration = context.currentItemContext.duration
+        Publishers.CombineLatest(propertiesPublisher(), timePropertiesPublisher())
+            .map { properties, timeProperties in
+                let loadedTimeRange = timeProperties.loadedTimeRange
+                let duration = properties.itemProperties.duration
                 guard loadedTimeRange.end.isNumeric, duration.isNumeric, duration != .zero else { return 0 }
                 return Float(loadedTimeRange.end.seconds / duration.seconds)
             }
