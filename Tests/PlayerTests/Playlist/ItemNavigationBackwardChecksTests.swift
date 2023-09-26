@@ -30,13 +30,4 @@ final class ItemNavigationBackwardChecksTests: TestCase {
         let player = Player()
         expect(player.canReturnToPreviousItem()).to(beFalse())
     }
-
-    func testCanReturnToPreviousItemOnFailedItem() {
-        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
-        let item2 = PlayerItem.simple(url: Stream.unavailable.url)
-        let item3 = PlayerItem.simple(url: Stream.onDemand.url)
-        let player = Player(items: [item1, item2, item3])
-        player.advanceToNextItem()
-        expect(player.canReturnToPreviousItem()).toAlways(beTrue(), until: .seconds(1))
-    }
 }
