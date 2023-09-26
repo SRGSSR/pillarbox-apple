@@ -129,7 +129,7 @@ extension AVPlayerItem {
     func timeContextPublisher() -> AnyPublisher<TimeContext, Never> {
         statePublisher()
             .map { [weak self] state in
-                guard let self, state == .readyToPlay else { return Just(TimeContext.empty).eraseToAnyPublisher() }
+                guard let self, state != .unknown else { return Just(TimeContext.empty).eraseToAnyPublisher() }
                 return Publishers.CombineLatest(
                     publisher(for: \.loadedTimeRanges),
                     publisher(for: \.seekableTimeRanges)
