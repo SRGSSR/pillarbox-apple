@@ -7,7 +7,7 @@
 import AVFoundation
 
 enum ItemState: Equatable {
-    case unknown        // TODO: Maybe rename as .idle
+    case unknown
     case readyToPlay
     case ended
 }
