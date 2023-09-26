@@ -20,7 +20,7 @@ public final class Player: ObservableObject, Equatable {
         PackageInfo.version
     }
 
-    @Published public private(set) var properties: QueuePlayerProperties = .empty
+    @Published public private(set) var properties: PlayerProperties = .empty
     @Published public private(set) var error: (any Error)?
 
     /// The index of the current item in the queue.

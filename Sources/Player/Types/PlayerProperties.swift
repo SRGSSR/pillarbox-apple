@@ -6,12 +6,12 @@
 
 import Foundation
 
-public struct QueuePlayerProperties: Equatable {
+public struct PlayerProperties: Equatable {
     static var empty: Self {
         .init(itemProperties: .empty, rate: 0, isSeeking: false, isExternalPlaybackActive: false, isMuted: false)
     }
 
-    public let itemProperties: AVPlayerItemProperties
+    public let itemProperties: PlayerItemProperties
     public let rate: Float
     public let isSeeking: Bool
     public let isExternalPlaybackActive: Bool

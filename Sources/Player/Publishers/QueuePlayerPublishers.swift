@@ -9,7 +9,7 @@ import Combine
 import MediaPlayer
 
 extension QueuePlayer {
-    func propertiesPublisher() -> AnyPublisher<QueuePlayerProperties, Never> {
+    func propertiesPublisher() -> AnyPublisher<PlayerProperties, Never> {
         Publishers.CombineLatest5(
             itemPropertiesPublisher(),
             publisher(for: \.rate),
@@ -34,10 +34,10 @@ extension QueuePlayer {
         .eraseToAnyPublisher()
     }
 
-    private func itemPropertiesPublisher() -> AnyPublisher<AVPlayerItemProperties, Never> {
+    private func itemPropertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
         publisher(for: \.currentItem)
             .map { item in
-                guard let item else { return Just(AVPlayerItemProperties.empty).eraseToAnyPublisher() }
+                guard let item else { return Just(PlayerItemProperties.empty).eraseToAnyPublisher() }
                 return item.propertiesPublisher()
             }
             .switchToLatest()

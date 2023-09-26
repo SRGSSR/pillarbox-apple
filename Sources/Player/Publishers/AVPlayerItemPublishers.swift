@@ -10,7 +10,7 @@ import Core
 import MediaAccessibility
 
 extension AVPlayerItem {
-    func propertiesPublisher() -> AnyPublisher<AVPlayerItemProperties, Never> {
+    func propertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
         Publishers.CombineLatest6(
             statePublisher(),
             publisher(for: \.isPlaybackLikelyToKeepUp),
@@ -21,7 +21,7 @@ extension AVPlayerItem {
         )
         .map { state, isPlaybackLikelyToKeepUp, presentationSize, mediaSelectionContext, duration, minimumTimeOffsetFromLive in
             let isKnown = (state != .unknown)
-            return AVPlayerItemProperties(
+            return PlayerItemProperties(
                 state: state,
                 isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp,
                 duration: isKnown ? duration : .invalid,
