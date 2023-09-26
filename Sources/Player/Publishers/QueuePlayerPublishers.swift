@@ -42,6 +42,7 @@ extension QueuePlayer {
             }
             .switchToLatest()
             .prepend(.empty)
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 }
@@ -66,16 +67,17 @@ extension QueuePlayer {
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
+}
 
+extension QueuePlayer {
     /// Publishes the current time, smoothing out emitted values during seeks.
     func smoothCurrentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
         Publishers.CombineLatest(
-            Publishers.PeriodicTimePublisher(for: self, interval: interval, queue: queue),
-            seekTimePublisher()
+            seekTimePublisher(),
+            Publishers.PeriodicTimePublisher(for: self, interval: interval, queue: queue)
         )
-        .map { time, seekTime in
-            seekTime ?? time
-        }
+        .map { $0 ?? $1 }
+        .removeDuplicates()
         .eraseToAnyPublisher()
     }
 

@@ -13,10 +13,10 @@ extension AVPlayerItem {
     func contextPublisher() -> AnyPublisher<AVPlayerItemContext, Never> {
         Publishers.CombineLatest6(
             statePublisher(),
-            isPlaybackLikelyToKeepUpPublisher(),
-            presentationSizePublisher(),
+            publisher(for: \.isPlaybackLikelyToKeepUp),
+            publisher(for: \.presentationSize),
             mediaSelectionContextPublisher(),
-            durationPublisher(),
+            publisher(for: \.duration),
             minimumTimeOffsetFromLivePublisher()
         )
         .map { state, isPlaybackLikelyToKeepUp, presentationSize, mediaSelectionContext, duration, minimumTimeOffsetFromLive in
@@ -52,17 +52,7 @@ extension AVPlayerItem {
         .eraseToAnyPublisher()
     }
 
-    func isPlaybackLikelyToKeepUpPublisher() -> AnyPublisher<Bool, Never> {
-        publisher(for: \.isPlaybackLikelyToKeepUp)
-            .eraseToAnyPublisher()
-    }
-
-    func presentationSizePublisher() -> AnyPublisher<CGSize, Never> {
-        publisher(for: \.presentationSize)
-            .eraseToAnyPublisher()
-    }
-
-    func mediaSelectionContextPublisher() -> AnyPublisher<MediaSelectionContext, Never> {
+   private func mediaSelectionContextPublisher() -> AnyPublisher<MediaSelectionContext, Never> {
         Publishers.CombineLatest3(
             asset.mediaSelectionGroupsPublisher(),
             mediaSelectionPublisher(),
@@ -74,6 +64,7 @@ extension AVPlayerItem {
             MediaSelectionContext(groups: groups, selection: selection)
         }
         .prepend(.empty)
+        .removeDuplicates()
         .eraseToAnyPublisher()
     }
 
@@ -88,6 +79,13 @@ extension AVPlayerItem {
             .switchToLatest()
             .prepend(currentMediaSelection)
             .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    private func minimumTimeOffsetFromLivePublisher() -> AnyPublisher<CMTime, Never> {
+        asset.propertyPublisher(.minimumTimeOffsetFromLive)
+            .replaceError(with: .invalid)
+            .prepend(.invalid)
             .eraseToAnyPublisher()
     }
 }
@@ -141,19 +139,6 @@ extension AVPlayerItem {
             }
             .switchToLatest()
             .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-
-    func durationPublisher() -> AnyPublisher<CMTime, Never> {
-        publisher(for: \.duration)
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-
-    func minimumTimeOffsetFromLivePublisher() -> AnyPublisher<CMTime, Never> {
-        asset.propertyPublisher(.minimumTimeOffsetFromLive)
-            .replaceError(with: .invalid)
-            .prepend(.invalid)
             .eraseToAnyPublisher()
     }
 }
