@@ -12,15 +12,15 @@ import XCTest
 
 final class ItemNavigationForwardChecksTests: TestCase {
     func testCanAdvanceToNextItem() {
-        let item1 = PlayerItem.simple(url: Stream.item(numbered: 1).url)
-        let item2 = PlayerItem.simple(url: Stream.item(numbered: 2).url)
+        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         expect(player.canAdvanceToNextItem()).to(beTrue())
     }
 
     func testCannotAdvanceToNextItemAtBack() {
-        let item1 = PlayerItem.simple(url: Stream.item(numbered: 1).url)
-        let item2 = PlayerItem.simple(url: Stream.item(numbered: 2).url)
+        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
         player.advanceToNextItem()
         expect(player.canAdvanceToNextItem()).to(beFalse())
@@ -32,9 +32,9 @@ final class ItemNavigationForwardChecksTests: TestCase {
     }
 
     func testCanAdvanceToNextItemOnFailedItem() {
-        let item1 = PlayerItem.simple(url: Stream.item(numbered: 1).url)
+        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)
-        let item3 = PlayerItem.simple(url: Stream.item(numbered: 3).url)
+        let item3 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2, item3])
         player.advanceToNextItem()
         expect(player.canAdvanceToNextItem()).toAlways(beTrue(), until: .seconds(1))

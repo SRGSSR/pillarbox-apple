@@ -132,7 +132,7 @@ final class AssetableTests: TestCase {
     }
 
     func testPlayerItemsWithUpdatedCurrentItem() {
-        let currentItemAsset = EmptyAsset.simple(url: Stream.item.url).withId(UUID("1"))
+        let currentItemAsset = EmptyAsset.simple(url: Stream.onDemand.url).withId(UUID("1"))
         let previousAssets: [EmptyAsset] = [
             .loading.withId(UUID("1")),
             .loading.withId(UUID("2")),
