@@ -35,30 +35,33 @@ public final class ComScoreTracker: PlayerItemTracker {
         }
         .store(in: &cancellables)
 
-        // FIXME: Quick and dirty
-//        Publishers.CombineLatest4(
-//            UIApplication.shared.applicationStatePublisher(),
-//            player.$playbackState,
-//            player.$isSeeking,
-//            player.$isBuffering
-//        )
-//        .weakCapture(player)
-//        .sink { [weak self] state, player in
-//            self?.notify(applicationState: state.0, playbackState: state.1, isSeeking: state.2, isBuffering: state.3, player: player)
-//        }
-//        .store(in: &cancellables)
-//
-//        player.objectWillChange
-//            .receive(on: DispatchQueue.main)
-//            .map { _ in () }
-//            .prepend(())
-//            .weakCapture(player)
-//            .map { $1.effectivePlaybackSpeed }
-//            .removeDuplicates()
-//            .sink { [weak self] speed in
-//                self?.notifyPlaybackSpeedChange(speed: speed)
-//            }
-//            .store(in: &cancellables)
+        Publishers.CombineLatest(
+            UIApplication.shared.applicationStatePublisher(),
+            player.$context
+        )
+        .sink { [weak self, weak player] state, context in
+            guard let self, let player else { return }
+            notify(
+                applicationState: state,
+                playbackState: context.playbackState,
+                isSeeking: context.isSeeking,
+                isBuffering: context.currentItemContext.isBuffering,
+                player: player
+            )
+        }
+        .store(in: &cancellables)
+
+        player.objectWillChange
+            .receive(on: DispatchQueue.main)
+            .map { _ in () }
+            .prepend(())
+            .weakCapture(player)
+            .map { $1.effectivePlaybackSpeed }
+            .removeDuplicates()
+            .sink { [weak self] speed in
+                self?.notifyPlaybackSpeedChange(speed: speed)
+            }
+            .store(in: &cancellables)
     }
 
     public func disable() {
