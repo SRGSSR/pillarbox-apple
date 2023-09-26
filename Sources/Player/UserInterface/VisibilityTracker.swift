@@ -119,23 +119,22 @@ public final class VisibilityTracker: ObservableObject {
             .eraseToAnyPublisher()
     }
 
-    private func voiceOverRunningPublisher() -> AnyPublisher<Bool, Never> {
+   private func voiceOverStatusPublisher() -> AnyPublisher<Bool, Never> {
         NotificationCenter.default.publisher(for: UIAccessibility.voiceOverStatusDidChangeNotification)
-            .map { _ in }
-            .prepend(())
             .map { _ in UIAccessibility.isVoiceOverRunning }
             .eraseToAnyPublisher()
     }
 
+    private func voiceOverRunningPublisher() -> AnyPublisher<Bool, Never> {
+        voiceOverStatusPublisher()
+            .prepend(UIAccessibility.isVoiceOverRunning)
+            .eraseToAnyPublisher()
+    }
+
     private func voiceOverUnhidePublisher() -> AnyPublisher<Bool, Never> {
-        NotificationCenter.default.publisher(for: UIAccessibility.voiceOverStatusDidChangeNotification)
-            .map { _ -> AnyPublisher<Bool, Never> in
-                guard UIAccessibility.isVoiceOverRunning else {
-                    return Empty().eraseToAnyPublisher()
-                }
-                return Just(false).eraseToAnyPublisher()
-            }
-            .switchToLatest()
+        voiceOverStatusPublisher()
+            .filter { $0 }
+            .map { _ in false }
             .eraseToAnyPublisher()
     }
 }
