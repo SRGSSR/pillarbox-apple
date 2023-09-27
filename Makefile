@@ -110,6 +110,14 @@ spm-reload:
 	@swift package update
 	@echo "... done.\n"
 
+.PHONY: clean-imports
+clean-imports:
+	@echo "Cleaning imports..."
+	@mkdir .build
+	@xcodebuild -scheme Pillarbox-Package -destination generic/platform=ios > ./.build/xcodebuild.log
+	@swiftlint analyze --fix --compiler-log-path ./.build/xcodebuild.log
+	@echo "... done.\n"
+
 .PHONY: doc
 doc: setup
 	@echo "Generating documentation sets..."
@@ -147,7 +155,7 @@ help:
 	@echo "   git-hook-uninstall                 Use default hooks located in .git/hooks"
 	@echo ""
 	@echo "   spm-reload                         Reload SPM dependencies"
-	@echo ""
+	@echo "   clean-imports                      Remove useless imports from the project"
 	@echo "   doc                                Build the documentation"
 	@echo ""
 	@echo "   help                               Display this help message"
