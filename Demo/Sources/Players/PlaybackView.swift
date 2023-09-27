@@ -514,7 +514,6 @@ struct PlaybackView: View {
 
     @ObservedObject private var player: Player
     @Binding private var layout: Layout
-    @State private var errorDescription: String?
 
     var body: some View {
         ZStack {

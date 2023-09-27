@@ -12,8 +12,6 @@ struct ContentListsView: View {
     @AppStorage(UserDefaults.serverSettingKey)
     private var selectedServerSetting: ServerSetting = .production
 
-    @EnvironmentObject private var router: Router
-
     var body: some View {
         List {
             Self.section(for: .tvTopics, image: "tv", vendors: [.SRF, .RTS, .RSI, .RTR, .SWI])

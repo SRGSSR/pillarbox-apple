@@ -18,10 +18,6 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     @GestureState private var gestureValue: DragGesture.Value?
     @State private var initialProgress: Float = 0
 
-    private var isBusy: Bool {
-        progressTracker.player?.isBusy ?? false
-    }
-
     var body: some View {
         HStack {
             minimumValueLabel()
