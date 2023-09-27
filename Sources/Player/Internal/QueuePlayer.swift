@@ -7,7 +7,7 @@
 import AVFoundation
 import Combine
 import DequeModule
-import OSLog
+import os
 
 enum SeekKey: String {
     case time

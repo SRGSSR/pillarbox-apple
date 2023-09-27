@@ -5,7 +5,7 @@
 //
 
 import AVFoundation
-import OSLog
+import os
 
 private let kContentKeySession = AVContentKeySession(keySystem: .fairPlayStreaming)
 private let kContentKeySessionQueue = DispatchQueue(label: "ch.srgssr.player.content_key_session")

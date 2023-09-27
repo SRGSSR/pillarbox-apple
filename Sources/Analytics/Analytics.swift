@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
 import UIKit
 
 /// A single entry-point for analytics conforming to the SRG SSR standards.

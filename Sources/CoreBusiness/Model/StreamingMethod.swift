@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// A streaming method description.
 public enum StreamingMethod: String, Decodable {
     /// Progressive streaming.

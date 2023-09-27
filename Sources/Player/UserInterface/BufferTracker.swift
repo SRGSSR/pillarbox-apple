@@ -5,7 +5,6 @@
 //
 
 import Combine
-import CoreMedia
 import SwiftUI
 
 /// An observable object which tracks buffering.

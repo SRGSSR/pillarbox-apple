@@ -4,8 +4,9 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
+import CoreMedia
 import DequeModule
+import Foundation
 
 public extension Player {
     /// Checks whether returning to the previous content is possible.

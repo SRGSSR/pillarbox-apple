@@ -5,7 +5,6 @@
 //
 
 import CoreMedia
-import Foundation
 
 /// A stream type.
 public enum StreamType {

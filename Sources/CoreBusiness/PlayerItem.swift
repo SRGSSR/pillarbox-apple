@@ -8,7 +8,6 @@ import Analytics
 import AVFoundation
 import Combine
 import Player
-import UIKit
 
 public extension PlayerItem {
     /// Creates a player item from a URN.

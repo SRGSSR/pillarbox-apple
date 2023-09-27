@@ -5,7 +5,6 @@
 //
 
 import CoreMedia
-import Foundation
 
 struct PlayerItemProperties: Equatable {
     static var empty: Self {

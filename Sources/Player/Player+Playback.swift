@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 public extension Player {
     /// Resumes playback.
     func play() {

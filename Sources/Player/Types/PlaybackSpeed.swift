@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
-
 enum PlaybackSpeedUpdate: Equatable {
     case value(Float)
     case range(ClosedRange<Float>?)

@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// A playback state.
 public enum PlaybackState: Equatable {
     /// The player is idle.

@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// Content types.
 public enum ContentType: String, Decodable {
     /// Episode.

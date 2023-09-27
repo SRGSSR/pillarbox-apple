@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 public extension Player {
     /// Checks whether the player has finished playing and its content can be played again from the start.
     ///

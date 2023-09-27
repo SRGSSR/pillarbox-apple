@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// An enum representing the user consent options for comScore.
 public enum ComScoreConsent: String {
     /// The user's consent status is unknown.

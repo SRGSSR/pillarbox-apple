@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// A Commanders Act page view.
 public struct CommandersActPageView {
     let name: String

@@ -5,7 +5,6 @@
 //
 
 import CoreMedia
-import Foundation
 
 public extension Player {
     /// The current playback state.
