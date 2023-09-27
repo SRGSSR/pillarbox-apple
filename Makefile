@@ -113,7 +113,7 @@ spm-reload:
 .PHONY: clean-imports
 clean-imports:
 	@echo "Cleaning imports..."
-	@mkdir .build
+	@mkdir -p .build
 	@xcodebuild -scheme Pillarbox-Package -destination generic/platform=ios > ./.build/xcodebuild.log
 	@swiftlint analyze --fix --compiler-log-path ./.build/xcodebuild.log
 	@echo "... done.\n"
