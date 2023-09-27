@@ -76,6 +76,24 @@ Git hooks can be uninstalled by running the following command:
 make git-hook-uninstall
 ```
 
+### Clean imports
+
+This ensures to keep a clean codebase by removing unnecessary imports from the code.
+
+```shell
+make clean-imports
+```
+
+### Find dead code
+
+This ensures to catch some parts of code which are potentially unused.
+
+```shell
+make find-dead-code
+```
+
+Before using the `make find-dead-code` command, ensure you have installed [Periphery](https://github.com/peripheryapp/periphery).
+
 ## Editor configuration
 
 An [editor configuration file](../.editorconfig) and several linter configuration files are provided to ensure common styling and best practices. Editors can usually be configured to apply some of these rules automatically and consistently.
