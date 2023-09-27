@@ -5,7 +5,6 @@
 //
 
 import Combine
-import Core
 
 extension Player {
     func assetsPublisher() -> AnyPublisher<[any Assetable], Never> {

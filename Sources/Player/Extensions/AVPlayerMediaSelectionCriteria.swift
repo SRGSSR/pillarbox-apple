@@ -5,7 +5,6 @@
 //
 
 import AVFoundation
-import Core
 
 extension AVPlayerMediaSelectionCriteria {
     func adding(preferredLanguages languages: [String]) -> Self {

@@ -7,7 +7,6 @@
 import Analytics
 import AVFoundation
 import Combine
-import Core
 import ShowTime
 import SRGDataProvider
 import UIKit

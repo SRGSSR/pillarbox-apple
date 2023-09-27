@@ -6,7 +6,6 @@
 
 import AVFoundation
 import Combine
-import Core
 
 extension Publishers {
     fileprivate struct _PeriodicTimePublisher: Publisher {
