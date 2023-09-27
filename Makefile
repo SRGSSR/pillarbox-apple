@@ -120,6 +120,17 @@ clean-imports:
 	@swiftlint analyze --fix --compiler-log-path ./.build/xcodebuild.log
 	@echo "... done.\n"
 
+.PHONY: find-dead-code
+find-dead-code:
+	@echo "Start checking dead code..."
+	@mkdir -p .build
+	@xcodebuild -scheme Pillarbox-Package -destination generic/platform=iOS -derivedDataPath ./.build/derived-data clean build > /dev/null
+	@periphery scan --retain-public --skip-build --index-store-path ./.build/derived-data/Index.noindex/DataStore/
+	@rm -rf ./.build/derived-data
+	@xcodebuild -scheme Pillarbox-demo -project ./Demo/Pillarbox-demo.xcodeproj -destination generic/platform=iOS -derivedDataPath ./.build/derived-data clean build > /dev/null
+	@periphery scan --project ./Demo/Pillarbox-demo.xcodeproj --schemes Pillarbox-demo --targets Pillarbox-demo --skip-build --index-store-path ./.build/derived-data/Index.noindex/DataStore/
+	@echo "... done.\n"
+
 .PHONY: doc
 doc: setup
 	@echo "Generating documentation sets..."
@@ -158,6 +169,7 @@ help:
 	@echo ""
 	@echo "   spm-reload                         Reload SPM dependencies"
 	@echo "   clean-imports                      Remove useless imports from the project"
+	@echo "   find-dead-code                     Find dead code"
 	@echo "   doc                                Build the documentation"
 	@echo ""
 	@echo "   help                               Display this help message"
