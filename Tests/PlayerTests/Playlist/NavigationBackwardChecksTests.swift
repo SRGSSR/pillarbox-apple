@@ -6,11 +6,9 @@
 
 @testable import Player
 
-import Circumspect
 import CoreMedia
 import Nimble
 import Streams
-import XCTest
 
 final class NavigationBackwardChecksTests: TestCase {
     private static func configuration() -> PlayerConfiguration {

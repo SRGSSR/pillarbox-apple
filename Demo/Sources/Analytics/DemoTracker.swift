@@ -6,7 +6,7 @@
 
 import Combine
 import Foundation
-import OSLog
+import os
 import Player
 
 final class DemoTracker: PlayerItemTracker {

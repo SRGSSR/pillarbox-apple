@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 struct Story: Identifiable, Hashable {
     let id: Int
     let template: Template

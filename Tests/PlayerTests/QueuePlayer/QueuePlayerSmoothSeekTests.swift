@@ -11,7 +11,6 @@ import Circumspect
 import Nimble
 import OrderedCollections
 import Streams
-import XCTest
 
 final class QueuePlayerSmoothSeekTests: TestCase {
     func testNotificationsForSeekWithEmptyPlayer() {

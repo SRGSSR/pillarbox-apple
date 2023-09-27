@@ -10,7 +10,6 @@ import AVFoundation
 import Circumspect
 import Combine
 import Streams
-import XCTest
 
 final class QueuePlayerPlaybackStatePublisherTests: TestCase {
     private func playbackStatePublisher(for player: QueuePlayer) -> AnyPublisher<PlaybackState, Never> {

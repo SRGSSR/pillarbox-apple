@@ -11,7 +11,6 @@ import Circumspect
 import Combine
 import Nimble
 import Streams
-import XCTest
 
 final class AVPlayerPeriodicTimePublisherTests: TestCase {
     func testEmpty() {

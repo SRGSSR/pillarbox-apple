@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
 import SwiftUI
 
 let kPageSize: UInt = 50

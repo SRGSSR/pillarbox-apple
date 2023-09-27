@@ -10,7 +10,6 @@ import Circumspect
 import CoreMedia
 import Nimble
 import Streams
-import XCTest
 
 final class PlayerTests: TestCase {
     func testDeallocation() {

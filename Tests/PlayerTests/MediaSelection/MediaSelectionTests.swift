@@ -9,7 +9,6 @@
 import AVFoundation
 import Nimble
 import Streams
-import XCTest
 
 final class MediaSelectionTests: TestCase {
     func testCharacteristicsAndOptionsWhenEmpty() {

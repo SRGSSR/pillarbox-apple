@@ -7,7 +7,6 @@
 @testable import Analytics
 
 import CoreMedia
-import Foundation
 import Nimble
 
 // swiftlint:disable:next type_name

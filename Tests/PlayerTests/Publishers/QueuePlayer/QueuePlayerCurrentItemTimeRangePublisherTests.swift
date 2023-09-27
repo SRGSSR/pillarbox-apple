@@ -10,7 +10,6 @@ import AVFoundation
 import Circumspect
 import Combine
 import Streams
-import XCTest
 
 // swiftlint:disable:next type_name
 final class QueuePlayerCurrentItemTimeRangePublisherTests: TestCase {

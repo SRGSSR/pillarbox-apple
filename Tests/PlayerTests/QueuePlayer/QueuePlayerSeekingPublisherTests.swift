@@ -10,7 +10,6 @@ import AVFoundation
 import Circumspect
 import Nimble
 import Streams
-import XCTest
 
 final class QueuePlayerSeekingPublisherTests: TestCase {
     func testEmpty() {

@@ -8,8 +8,8 @@
 
 import Circumspect
 import Nimble
+import ObjectiveC
 import Streams
-import XCTest
 
 #if os(iOS)
 final class VisibilityTrackerTests: TestCase {

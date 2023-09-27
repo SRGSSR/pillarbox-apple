@@ -8,7 +8,6 @@
 
 import Nimble
 import Streams
-import XCTest
 
 final class ItemNavigationForwardChecksTests: TestCase {
     func testCanAdvanceToNextItem() {

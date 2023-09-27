@@ -10,7 +10,6 @@ import AVFoundation
 import Circumspect
 import Combine
 import Streams
-import XCTest
 
 final class QueuePlayerBufferingPublisherTests: TestCase {
     private func bufferingPublisher(for player: QueuePlayer) -> AnyPublisher<Bool, Never> {

@@ -10,7 +10,6 @@ import Circumspect
 import Combine
 import Nimble
 import Streams
-import XCTest
 
 final class BufferTrackerTests: TestCase {
     func testUnbound() {

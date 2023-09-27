@@ -11,7 +11,6 @@ import Combine
 import CoreMedia
 import Nimble
 import Streams
-import XCTest
 
 final class SkipForwardTests: TestCase {
     private func isSeekingPublisher(for player: Player) -> AnyPublisher<Bool, Never> {

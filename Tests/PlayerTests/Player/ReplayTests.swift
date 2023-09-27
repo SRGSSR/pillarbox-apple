@@ -6,7 +6,6 @@
 
 @testable import Player
 
-import Foundation
 import Nimble
 import Streams
 

@@ -6,10 +6,9 @@
 
 @testable import Player
 
-import AVFoundation
+import CoreMedia
 import Nimble
 import Streams
-import XCTest
 
 final class SeekChecksTests: TestCase {
     func testCannotSeekWithEmptyPlayer() {

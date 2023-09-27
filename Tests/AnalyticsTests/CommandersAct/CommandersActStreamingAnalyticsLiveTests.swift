@@ -7,7 +7,6 @@
 @testable import Analytics
 
 import Circumspect
-import CoreMedia
 import Nimble
 
 final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {

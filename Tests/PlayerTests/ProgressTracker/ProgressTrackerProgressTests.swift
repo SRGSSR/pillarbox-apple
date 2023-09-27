@@ -11,7 +11,6 @@ import Combine
 import CoreMedia
 import Nimble
 import Streams
-import XCTest
 
 final class ProgressTrackerProgressTests: TestCase {
     func testUnbound() {

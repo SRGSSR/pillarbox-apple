@@ -7,10 +7,8 @@
 @testable import Player
 
 import AVFoundation
-import MediaAccessibility
 import Nimble
 import Streams
-import XCTest
 
 final class PreferredLanguagesForMediaSelectionTests: TestCase {
     func testAudibleOptionMatchesAvailablePreferredLanguage() {

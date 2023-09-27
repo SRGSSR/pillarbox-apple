@@ -6,10 +6,8 @@
 
 @testable import Player
 
-import CoreMedia
 import Nimble
 import Streams
-import XCTest
 
 final class StreamTypeTests: TestCase {
     func testUnknown() {

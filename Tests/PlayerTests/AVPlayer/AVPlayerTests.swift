@@ -7,10 +7,8 @@
 @testable import Player
 
 import AVFoundation
-import Circumspect
 import Nimble
 import Streams
-import XCTest
 
 final class AVPlayerTests: TestCase {
     func testTimeRangeWhenEmpty() {

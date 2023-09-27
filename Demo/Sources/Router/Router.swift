@@ -5,7 +5,6 @@
 //
 
 import Combine
-import SRGDataProviderModel
 import SwiftUI
 
 /// Manages navigation using an associated router.

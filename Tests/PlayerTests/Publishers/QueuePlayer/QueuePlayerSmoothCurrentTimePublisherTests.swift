@@ -8,9 +8,7 @@
 
 import AVFoundation
 import Circumspect
-import Nimble
 import Streams
-import XCTest
 
 // swiftlint:disable:next type_name
 final class AVQueuePlayerSmoothCurrentTimePublisherTests: TestCase {

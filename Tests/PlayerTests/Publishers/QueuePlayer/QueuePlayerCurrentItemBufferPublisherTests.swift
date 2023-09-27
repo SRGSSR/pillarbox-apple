@@ -8,9 +8,7 @@
 
 import AVFoundation
 import Circumspect
-import Nimble
 import Streams
-import XCTest
 
 private class MockAVPlayerItem: AVPlayerItem {
     override var duration: CMTime {

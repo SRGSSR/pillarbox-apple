@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import SRGDataProviderModel
-
 enum RadioChannel: String {
     case SRF1 = "69e8ac16-4327-4af4-b873-fd5cd6e895a7"
     case SRF2Kultur = "c8537421-c9c5-4461-9c9c-c15816458b46"

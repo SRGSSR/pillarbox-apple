@@ -10,7 +10,6 @@ import AVFoundation
 import Circumspect
 import Combine
 import Streams
-import XCTest
 
 final class QueuePlayerChunkDurationPublisherTests: TestCase {
     private func chunkDurationPublisher(for player: QueuePlayer) -> AnyPublisher<CMTime, Never> {

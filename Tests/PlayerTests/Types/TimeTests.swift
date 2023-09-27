@@ -8,7 +8,6 @@
 
 import CoreMedia
 import Nimble
-import XCTest
 
 final class TimeTests: TestCase {
     func testClampedWithNonEmptyRange() {

@@ -8,10 +8,7 @@
 
 import AVFoundation
 import Circumspect
-import Combine
-import Nimble
 import Streams
-import XCTest
 
 final class AssetPlayerItemTests: TestCase {
     func testNativePlayerItem() {

@@ -8,7 +8,6 @@
 
 import Circumspect
 import Nimble
-import XCTest
 
 final class CommandersActPageViewTests: CommandersActTestCase {
     func testMergingWithGlobals() {

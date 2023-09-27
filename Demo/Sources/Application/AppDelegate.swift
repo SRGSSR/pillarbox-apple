@@ -5,7 +5,7 @@
 //
 
 import Analytics
-import AVFoundation
+import AVFAudio
 import Combine
 import ShowTime
 import SRGDataProvider

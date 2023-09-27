@@ -6,7 +6,7 @@
 
 @testable import Player
 
-import AVFoundation
+import Foundation
 
 typealias EmptyAsset = Asset<Never>
 

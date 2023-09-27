@@ -6,9 +6,8 @@
 
 @testable import Player
 
-import Circumspect
+import Foundation
 import Nimble
-import XCTest
 
 final class ItemErrorTests: TestCase {
     func testNoInnerComment() {

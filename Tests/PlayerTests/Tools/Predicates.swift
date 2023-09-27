@@ -4,9 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
 import Nimble
-import Player
 
 /// A Nimble matcher that checks language identifiers.
 func haveLanguageIdentifier<T>(_ identifier: String) -> Nimble.Predicate<T> where T: LanguageIdentifiable {

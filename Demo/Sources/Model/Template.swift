@@ -5,8 +5,6 @@
 //
 
 import AVFoundation
-import CoreBusiness
-import Foundation
 
 // Apple streams are found at https://developer.apple.com/streaming/examples/
 // Unified Streaming streams are found at https://demo.unified-streaming.com/k8s/features/stable/#!/hls

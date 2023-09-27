@@ -9,7 +9,6 @@
 import Circumspect
 import Nimble
 import UIKit
-import XCTest
 
 private class AutomaticMockViewController: UIViewController, PageViewTracking {
     private var pageName: String {

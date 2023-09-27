@@ -11,7 +11,6 @@ import CoreMedia
 import Nimble
 import Player
 import Streams
-import XCTest
 
 private struct AssetMetadataMock: AssetMetadata {}
 

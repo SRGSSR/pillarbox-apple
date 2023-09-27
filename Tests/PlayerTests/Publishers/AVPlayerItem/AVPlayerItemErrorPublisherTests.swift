@@ -9,7 +9,6 @@
 import AVFoundation
 import Circumspect
 import Streams
-import XCTest
 
 final class AVPlayerItemErrorPublisherTests: TestCase {
     func testValidStream() {

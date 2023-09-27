@@ -6,11 +6,10 @@
 
 @testable import Player
 
-import AVFoundation
 import Circumspect
+import CoreMedia
 import Nimble
 import Streams
-import XCTest
 
 final class SeekTests: TestCase {
     func testSeekWhenEmpty() {

@@ -8,7 +8,6 @@
 
 import AVFoundation
 import Nimble
-import XCTest
 
 final class AVMediaSelectionGroupTests: TestCase {
     func testPreferredMediaSelectionOptionsWithCharacteristics() {
