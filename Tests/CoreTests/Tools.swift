@@ -6,14 +6,7 @@
 
 import Foundation
 
-// swiftlint:disable:next file_types_order
-final class TestNSObject: NSObject {
-    let identifier: String
-
-    init(identifier: String = UUID().uuidString) {
-        self.identifier = identifier
-    }
-}
+final class TestNSObject: NSObject {}
 
 final class TestObject {
     let identifier: String

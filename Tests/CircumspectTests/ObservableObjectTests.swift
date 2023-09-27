@@ -10,8 +10,8 @@ import Nimble
 import XCTest
 
 private class TestObservableObject: ObservableObject {
-    @Published var publishedProperty1: Int = 1
-    @Published var publishedProperty2: String = "a"
+    @Published var publishedProperty1 = 1
+    @Published var publishedProperty2 = "a"
 
     var nonPublishedProperty: Int {
         publishedProperty1 * 2

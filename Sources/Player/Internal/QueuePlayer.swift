@@ -7,7 +7,6 @@
 import AVFoundation
 import Combine
 import DequeModule
-import os
 
 enum SeekKey: String {
     case time
@@ -30,10 +29,7 @@ struct Seek: Equatable {
 class QueuePlayer: AVQueuePlayer {
     static let notificationCenter = NotificationCenter()
 
-    private static let logger = Logger(category: "QueuePlayer")
-
     private var pendingSeeks = Deque<Seek>()
-    private var cancellables = Set<AnyCancellable>()
 
     private var targetSeek: Seek? {
         pendingSeeks.last
@@ -176,13 +172,6 @@ extension AVQueuePlayer {
 
     func cancelPendingReplacements() {
         RunLoop.cancelPreviousPerformRequests(withTarget: self)
-    }
-}
-
-extension QueuePlayer {
-    /// Performs a low-level seek without seek tracking.
-    private func rawSeek(to time: CMTime) {
-        super.seek(to: time)
     }
 }
 

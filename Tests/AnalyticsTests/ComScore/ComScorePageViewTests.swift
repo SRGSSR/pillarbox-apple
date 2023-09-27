@@ -34,20 +34,6 @@ private class AutomaticMockViewController: UIViewController, PageViewTracking {
     }
 }
 
-private class AutomaticWithLevelsMockViewController: UIViewController, PageViewTracking {
-    private var pageName: String {
-        "automatic_with_levels"
-    }
-
-    var comScorePageView: ComScorePageView {
-        .init(name: pageName)
-    }
-
-    var commandersActPageView: CommandersActPageView {
-        .init(name: pageName, type: "type", levels: ["level1", "level2"])
-    }
-}
-
 private class ManualMockViewController: UIViewController, PageViewTracking {
     private var pageName: String {
         "manual"

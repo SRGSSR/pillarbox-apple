@@ -96,14 +96,14 @@ extension QueuePlayer {
         .eraseToAnyPublisher()
     }
 
-    func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
+    func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
         Publishers.CombineLatest3(
             propertiesPublisher(),
             timePropertiesPublisher(),
             seekTimePublisher()
         )
         .map { [weak self] properties, timeProperties, seekTime in
-            var nowPlayingInfo = NowPlaying.Info()
+            var nowPlayingInfo = NowPlayingInfo()
             let streamType = StreamType(for: timeProperties.seekableTimeRange, itemDuration: properties.itemProperties.duration)
             if streamType != .unknown {
                 nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (streamType == .live)

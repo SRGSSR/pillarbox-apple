@@ -8,10 +8,6 @@ import Analytics
 import Player
 
 extension CommandersActTracker.Metadata {
-    static var test: Self {
-        test(streamType: .unknown)
-    }
-
     static func test(streamType: StreamType) -> Self {
         .init(labels: ["media_title": "name"], streamType: streamType)
     }

@@ -22,7 +22,7 @@ extension Asset: Similar {
     }
 }
 
-extension NowPlaying.Info: Similar {
+extension NowPlayingInfo: Similar {
     public static func ~~ (lhs: Self, rhs: Self) -> Bool {
         // swiftlint:disable:next legacy_objc_type
         NSDictionary(dictionary: lhs).isEqual(to: rhs)

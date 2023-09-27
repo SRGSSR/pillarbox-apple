@@ -16,11 +16,6 @@ struct StructError: LocalizedError {
     }
 }
 
-enum EnumError: Int, Error {
-    case error1 = 1
-    case error2
-}
-
 enum PlayerError {
     static var resourceNotFound: NSError {
         NSError(

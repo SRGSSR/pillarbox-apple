@@ -8,7 +8,7 @@ import Combine
 import MediaPlayer
 
 extension Player {
-    func updateControlCenter(nowPlayingInfo: NowPlaying.Info) {
+    func updateControlCenter(nowPlayingInfo: NowPlayingInfo) {
         if !nowPlayingInfo.isEmpty {
             if nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo == nil {
                 uninstallRemoteCommands()
@@ -29,11 +29,11 @@ extension Player {
         commandRegistrations = []
     }
 
-    func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
+    func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
         currentPublisher()
             .map { current in
                 guard let current else {
-                    return Just(NowPlaying.Info()).eraseToAnyPublisher()
+                    return Just(NowPlayingInfo()).eraseToAnyPublisher()
                 }
                 return current.item.$asset
                     .map { $0.nowPlayingInfo() }
