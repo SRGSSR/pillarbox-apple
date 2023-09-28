@@ -49,11 +49,6 @@ enum URLTemplate {
         description: "Audio livestream - MP3",
         type: .url("http://stream.srg-ssr.ch/m/couleur3/mp3_128")
     )
-    static let dvrAudioHLS = Template(
-        title: "Couleur 3 (DVR)",
-        description: "Audio livestream - HLS",
-        type: .url("https://lsaplus.swisstxt.ch/audio/couleur3_96.stream/playlist.m3u8")
-    )
     static let appleBasic_4_3_HLS = Template(
         title: "Apple Basic 4:3",
         description: "4x3 aspect ratio, H.264 @ 30Hz",
