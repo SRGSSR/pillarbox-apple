@@ -9,16 +9,17 @@ The following tools are required for the best possible development experience:
 
 - The latest version of Xcode.
 - The tvOS simulator (otherwise provisioning fails for tvOS when archiving the tvOS app).
-- [Python](https://www.python.org)
-- [gem](https://rubygems.org)
 - [bundler](https://bundler.io)
 - [ffmpeg](https://ffmpeg.org)
-- [swiftlint](https://github.com/realm/SwiftLint)
+- [gem](https://rubygems.org)
+- [Periphery](https://github.com/peripheryapp/periphery)
+- [Python](https://www.python.org)
 - [shellcheck](https://www.shellcheck.net)
+- [swiftlint](https://github.com/realm/SwiftLint)
 - [xcodes](https://github.com/RobotsAndPencils/xcodes)
 - [yamllint](https://github.com/adrienverge/yamllint)
 
-ffmpeg, swiftlint, shellcheck and yamllint can easily be installed with [Homebrew](https://brew.sh).
+Most of these tools can easily be installed with [Homebrew](https://brew.sh).
 
 ## Demo
 
