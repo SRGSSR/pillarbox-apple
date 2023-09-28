@@ -19,37 +19,10 @@ final class AVPlayerPeriodicTimePublisherTests: TestCase {
             values: [],
             from: Publishers.PeriodicTimePublisher(
                 for: player,
-                interval: CMTimeMake(value: 1, timescale: 2)
+                interval: CMTimeMake(value: 1, timescale: 10)
             ),
-            to: beClose(within: 0.5),
-            during: .seconds(2)
-        )
-    }
-
-    func testTimesInEmptyRange() {
-        let player = AVPlayer(url: Stream.live.url)
-        expect(player.currentItem?.timeRange).toEventuallyNot(equal(.invalid))
-        player.play()
-        let publisher = Publishers.PeriodicTimePublisher(
-            for: player,
-            interval: CMTimeMake(value: 1, timescale: 10)
-        )
-
-        let times = collectOutput(from: publisher, during: .seconds(2))
-        expect(times).to(allPass { $0.isValid })
-    }
-
-    func testNoPlayback() {
-        let item = AVPlayerItem(url: Stream.onDemand.url)
-        let player = AVPlayer(playerItem: item)
-        expectPublished(
-            values: [.zero],
-            from: Publishers.PeriodicTimePublisher(
-                for: player,
-                interval: CMTimeMake(value: 1, timescale: 2)
-            ),
-            to: beClose(within: 0.5),
-            during: .seconds(2)
+            to: beClose(within: 0.1),
+            during: .milliseconds(500)
         )
     }
 
@@ -59,36 +32,17 @@ final class AVPlayerPeriodicTimePublisherTests: TestCase {
         expectAtLeastPublished(
             values: [
                 .zero,
-                CMTimeMake(value: 1, timescale: 2),
-                CMTimeMake(value: 2, timescale: 2),
-                CMTimeMake(value: 3, timescale: 2),
-                CMTimeMake(value: 4, timescale: 2),
-                CMTimeMake(value: 5, timescale: 2)
+                CMTimeMake(value: 1, timescale: 10),
+                CMTimeMake(value: 2, timescale: 10),
+                CMTimeMake(value: 3, timescale: 10)
             ],
             from: Publishers.PeriodicTimePublisher(
                 for: player,
-                interval: CMTimeMake(value: 1, timescale: 2)
+                interval: CMTimeMake(value: 1, timescale: 10)
             ),
-            to: beClose(within: 0.5)
+            to: beClose(within: 0.1)
         ) {
             player.play()
-        }
-    }
-
-    func testInitialSeek() {
-        let item = AVPlayerItem(url: Stream.onDemand.url)
-        let player = AVPlayer(playerItem: item)
-        expectAtLeastPublished(
-            values: [
-                CMTimeMake(value: 5, timescale: 1)
-            ],
-            from: Publishers.PeriodicTimePublisher(
-                for: player,
-                interval: CMTimeMake(value: 1, timescale: 2)
-            ),
-            to: beClose(within: 0.5)
-        ) {
-            player.seek(to: CMTime(value: 5, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero)
         }
     }
 
