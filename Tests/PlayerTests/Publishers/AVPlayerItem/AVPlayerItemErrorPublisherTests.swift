@@ -42,7 +42,3 @@ final class AVPlayerItemErrorPublisherTests: TestCase {
         )
     }
 }
-
-private func beEqual(_ lhsError: Error?, _ rhsError: Error?) -> Bool {
-    lhsError as? NSError == rhsError as? NSError
-}

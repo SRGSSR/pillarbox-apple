@@ -58,3 +58,7 @@ extension UUID {
         )!
     }
 }
+
+func beEqual(_ lhsError: Error?, _ rhsError: Error?) -> Bool {
+    lhsError as? NSError == rhsError as? NSError
+}
