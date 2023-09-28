@@ -12,8 +12,8 @@ import Combine
 import Streams
 
 // swiftlint:disable:next type_name
-final class QueuePlayerCurrentItemTimeRangePublisherTests: TestCase {
-    private func currentItemTimeRangePublisher(for player: QueuePlayer) -> AnyPublisher<CMTimeRange, Never> {
+final class AVQueuePlayerCurrentItemTimeRangePublisherTests: TestCase {
+    private func currentItemTimeRangePublisher(for player: AVQueuePlayer) -> AnyPublisher<CMTimeRange, Never> {
         player.timePropertiesPublisher()
             .map(\.seekableTimeRange)
             .removeDuplicates()
@@ -23,7 +23,7 @@ final class QueuePlayerCurrentItemTimeRangePublisherTests: TestCase {
     func testItems() {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.onDemand.url)
-        let player = QueuePlayer(items: [item1, item2])
+        let player = AVQueuePlayer(items: [item1, item2])
         expectAtLeastPublished(
             values: [
                 .invalid,
@@ -41,7 +41,7 @@ final class QueuePlayerCurrentItemTimeRangePublisherTests: TestCase {
         let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let item2 = AVPlayerItem(url: Stream.unavailable.url)
         let item3 = AVPlayerItem(url: Stream.onDemand.url)
-        let player = QueuePlayer(items: [item1, item2, item3])
+        let player = AVQueuePlayer(items: [item1, item2, item3])
         expectAtLeastPublished(
             values: [
                 .invalid,

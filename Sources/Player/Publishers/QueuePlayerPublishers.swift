@@ -33,40 +33,6 @@ extension QueuePlayer {
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
-
-    private func itemPropertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
-        publisher(for: \.currentItem)
-            .map { item in
-                guard let item else { return Just(PlayerItemProperties.empty).eraseToAnyPublisher() }
-                return item.propertiesPublisher()
-            }
-            .switchToLatest()
-            .prepend(.empty)
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-}
-
-extension QueuePlayer {
-    func errorPublisher() -> AnyPublisher<Error?, Never> {
-        publisher(for: \.currentItem)
-            .compactMap { $0?.errorPublisher() }
-            .switchToLatest()
-            .eraseToAnyPublisher()
-    }
-}
-
-extension QueuePlayer {
-    func timePropertiesPublisher() -> AnyPublisher<TimeProperties, Never> {
-        publisher(for: \.currentItem)
-            .map { item in
-                guard let item else { return Just(TimeProperties.empty).eraseToAnyPublisher() }
-                return item.timePropertiesPublisher().eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
 }
 
 extension QueuePlayer {

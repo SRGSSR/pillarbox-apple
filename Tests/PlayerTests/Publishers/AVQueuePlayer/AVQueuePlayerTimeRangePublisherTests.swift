@@ -11,9 +11,8 @@ import Circumspect
 import Combine
 import Streams
 
-// swiftlint:disable:next type_name
-final class AVPlayerCurrentItemTimeRangePublisherTests: TestCase {
-    private func seekableTimeRangePublisher(for player: QueuePlayer) -> AnyPublisher<CMTimeRange, Never> {
+final class AVQueuePlayerTimeRangePublisherTests: TestCase {
+    private func seekableTimeRangePublisher(for player: AVQueuePlayer) -> AnyPublisher<CMTimeRange, Never> {
         player.timePropertiesPublisher()
             .map(\.seekableTimeRange)
             .removeDuplicates()
@@ -21,7 +20,7 @@ final class AVPlayerCurrentItemTimeRangePublisherTests: TestCase {
     }
 
     func testEmpty() {
-        let player = QueuePlayer()
+        let player = AVQueuePlayer()
         expectAtLeastEqualPublished(
             values: [.invalid],
             from: seekableTimeRangePublisher(for: player)
@@ -30,7 +29,7 @@ final class AVPlayerCurrentItemTimeRangePublisherTests: TestCase {
 
     func testOnDemand() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
-        let player = QueuePlayer(playerItem: item)
+        let player = AVQueuePlayer(playerItem: item)
         expectAtLeastPublished(
             values: [.invalid, CMTimeRange(start: .zero, duration: Stream.onDemand.duration)],
             from: seekableTimeRangePublisher(for: player),
@@ -40,7 +39,7 @@ final class AVPlayerCurrentItemTimeRangePublisherTests: TestCase {
 
     func testLive() {
         let item = AVPlayerItem(url: Stream.live.url)
-        let player = QueuePlayer(playerItem: item)
+        let player = AVQueuePlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [.invalid, .zero],
             from: seekableTimeRangePublisher(for: player)
@@ -49,7 +48,7 @@ final class AVPlayerCurrentItemTimeRangePublisherTests: TestCase {
 
     func testQueueExhaustion() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let player = QueuePlayer(playerItem: item)
+        let player = AVQueuePlayer(playerItem: item)
         player.actionAtItemEnd = .advance
         expectAtLeastEqualPublished(
             values: [
@@ -65,7 +64,7 @@ final class AVPlayerCurrentItemTimeRangePublisherTests: TestCase {
 
     func testQueueEnd() {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let player = QueuePlayer(playerItem: item)
+        let player = AVQueuePlayer(playerItem: item)
         player.actionAtItemEnd = .none
         expectAtLeastEqualPublished(
             values: [
@@ -81,7 +80,7 @@ final class AVPlayerCurrentItemTimeRangePublisherTests: TestCase {
     func testWithoutAutomaticallyLoadedAssetKeys() {
         let asset = AVURLAsset(url: Stream.onDemand.url)
         let item = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: [])
-        let player = QueuePlayer(playerItem: item)
+        let player = AVQueuePlayer(playerItem: item)
         expectAtLeastPublished(
             values: [
                 .invalid,
