@@ -13,35 +13,27 @@ import Streams
 
 // swiftlint:disable:next type_name
 final class QueuePlayerCurrentItemDurationPublisherTests: TestCase {
-    private func currentItemDurationPublisher(for player: QueuePlayer) -> AnyPublisher<CMTime, Never> {
+    private func itemDurationPublisher(for player: QueuePlayer) -> AnyPublisher<CMTime, Never> {
         player.propertiesPublisher()
             .map(\.itemProperties.duration)
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
-    func testDuration() {
-        let item = AVPlayerItem(url: Stream.onDemand.url)
-        let player = QueuePlayer(playerItem: item)
+    func testEmpty() {
+        let player = QueuePlayer()
         expectAtLeastPublished(
-            values: [.invalid, Stream.onDemand.duration],
-            from: currentItemDurationPublisher(for: player),
+            values: [.invalid],
+            from: itemDurationPublisher(for: player),
             to: beClose(within: 1)
         )
     }
 
-    func testItems() {
-        let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let item2 = AVPlayerItem(url: Stream.onDemand.url)
-        let player = QueuePlayer(items: [item1, item2])
+    func testDuration() {
+        let player = QueuePlayer(playerItem: .init(url: Stream.shortOnDemand.url))
         expectAtLeastPublished(
-            values: [
-                .invalid,
-                Stream.shortOnDemand.duration,
-                // Next media can be prepared and is immediately ready
-                Stream.onDemand.duration
-            ],
-            from: currentItemDurationPublisher(for: player),
+            values: [.invalid, Stream.shortOnDemand.duration, .invalid],
+            from: itemDurationPublisher(for: player),
             to: beClose(within: 1)
         ) {
             player.play()
