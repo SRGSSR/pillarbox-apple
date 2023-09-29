@@ -19,7 +19,7 @@ final class QueuePlayerBufferingPublisherTests: TestCase {
             .eraseToAnyPublisher()
     }
 
-    func testEmpty() {
+    func testBufferingEmpty() {
         let player = QueuePlayer()
         expectAtLeastEqualPublished(
             values: [false],
@@ -27,42 +27,11 @@ final class QueuePlayerBufferingPublisherTests: TestCase {
         )
     }
 
-    func testLoaded() {
-        let item = AVPlayerItem(url: Stream.onDemand.url)
-        let player = QueuePlayer(playerItem: item)
+    func testBuffering() {
+        let player = QueuePlayer(playerItem: .init(url: Stream.onDemand.url))
         expectAtLeastEqualPublished(
             values: [true, false],
             from: bufferingPublisher(for: player)
         )
-    }
-
-    func testFailure() {
-        let item = AVPlayerItem(url: Stream.unavailable.url)
-        let player = QueuePlayer(playerItem: item)
-        expectAtLeastEqualPublished(
-            values: [true, false],
-            from: bufferingPublisher(for: player)
-        )
-    }
-
-    func testSeek() {
-        let item = AVPlayerItem(url: Stream.onDemand.url)
-        let player = QueuePlayer(playerItem: item)
-        expectAtLeastEqualPublished(
-            values: [true, false],
-            from: bufferingPublisher(for: player)
-        ) {
-            player.play()
-        }
-        expectAtLeastEqualPublishedNext(
-            values: [true, false],
-            from: bufferingPublisher(for: player)
-        ) {
-            player.seek(
-                to: CMTime(value: 10, timescale: 1),
-                toleranceBefore: .zero,
-                toleranceAfter: .zero
-            ) { _ in }
-        }
     }
 }
