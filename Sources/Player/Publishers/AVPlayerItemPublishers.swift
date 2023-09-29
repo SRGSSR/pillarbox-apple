@@ -14,11 +14,11 @@ extension AVPlayerItem {
             statePublisher(),
             publisher(for: \.isPlaybackLikelyToKeepUp),
             publisher(for: \.presentationSize),
-            mediaSelectionContextPublisher(),
+            mediaSelectionPropertiesPublisher(),
             publisher(for: \.duration),
             minimumTimeOffsetFromLivePublisher()
         )
-        .map { state, isPlaybackLikelyToKeepUp, presentationSize, mediaSelectionContext, duration, minimumTimeOffsetFromLive in
+        .map { state, isPlaybackLikelyToKeepUp, presentationSize, mediaSelectionProperties, duration, minimumTimeOffsetFromLive in
             let isKnown = (state != .unknown)
             return PlayerItemProperties(
                 state: state,
@@ -26,7 +26,7 @@ extension AVPlayerItem {
                 duration: isKnown ? duration : .invalid,
                 minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
                 presentationSize: isKnown ? presentationSize : nil,
-                mediaSelectionContext: mediaSelectionContext
+                mediaSelectionProperties: mediaSelectionProperties
             )
         }
         .removeDuplicates()
@@ -51,7 +51,7 @@ extension AVPlayerItem {
         .eraseToAnyPublisher()
     }
 
-   private func mediaSelectionContextPublisher() -> AnyPublisher<MediaSelectionContext, Never> {
+   private func mediaSelectionPropertiesPublisher() -> AnyPublisher<MediaSelectionProperties, Never> {
         Publishers.CombineLatest3(
             asset.mediaSelectionGroupsPublisher(),
             mediaSelectionPublisher(),
@@ -60,7 +60,7 @@ extension AVPlayerItem {
                 .prepend(())
         )
         .map { groups, selection, _ in
-            MediaSelectionContext(groups: groups, selection: selection)
+            MediaSelectionProperties(groups: groups, selection: selection)
         }
         .prepend(.empty)
         .removeDuplicates()

@@ -11,7 +11,7 @@ import SwiftUI
 public extension Player {
     /// The set of media characteristics for which a media selection is available.
     var mediaSelectionCharacteristics: Set<AVMediaCharacteristic> {
-        properties.itemProperties.mediaSelectionContext.characteristics
+        properties.itemProperties.mediaSelectionProperties.characteristics
     }
 
     private static func preferredLanguages(for characteristic: AVMediaCharacteristic) -> [String] {
@@ -53,7 +53,7 @@ public extension Player {
     ///
     /// You can use `mediaSelectionCharacteristics` to retrieve available characteristics.
     func selectedMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
-        guard let selection = properties.itemProperties.mediaSelectionContext.selection, let selector = mediaSelector(for: characteristic) else {
+        guard let selection = properties.itemProperties.mediaSelectionProperties.selection, let selector = mediaSelector(for: characteristic) else {
             return .off
         }
         let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic)
@@ -100,7 +100,7 @@ public extension Player {
     /// be useful if you need to access the actual selection made by `select(mediaOption:for:)` for `.automatic`
     /// and `.off` options (forced options might be returned where applicable).
     func currentMediaOption(for characteristic: AVMediaCharacteristic) -> MediaSelectionOption {
-        guard let option = properties.itemProperties.mediaSelectionContext.selectedOption(for: characteristic) else { return .off }
+        guard let option = properties.itemProperties.mediaSelectionProperties.selectedOption(for: characteristic) else { return .off }
         return .on(option)
     }
 
@@ -117,7 +117,7 @@ public extension Player {
     /// playback with a predefined language for audio and / or subtitles.
     func setMediaSelection(preferredLanguages languages: [String], for characteristic: AVMediaCharacteristic) {
         if let item = queuePlayer.currentItem {
-            properties.itemProperties.mediaSelectionContext.reset(for: characteristic, in: item)
+            properties.itemProperties.mediaSelectionProperties.reset(for: characteristic, in: item)
         }
         if !languages.isEmpty {
             let selectionCriteria = queuePlayer.mediaSelectionCriteria(forMediaCharacteristic: characteristic) ?? AVPlayerMediaSelectionCriteria(
@@ -143,7 +143,7 @@ public extension Player {
     }
 
     private func mediaSelector(for characteristic: AVMediaCharacteristic) -> MediaSelector? {
-        guard let group = properties.itemProperties.mediaSelectionContext.group(for: characteristic) else { return nil }
+        guard let group = properties.itemProperties.mediaSelectionProperties.group(for: characteristic) else { return nil }
         switch characteristic {
         case .audible:
             return AudibleMediaSelector(group: group)

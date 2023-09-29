@@ -14,7 +14,7 @@ struct PlayerItemProperties: Equatable {
             duration: .invalid,
             minimumTimeOffsetFromLive: .invalid,
             presentationSize: nil,
-            mediaSelectionContext: .empty
+            mediaSelectionProperties: .empty
         )
     }
 
@@ -25,7 +25,7 @@ struct PlayerItemProperties: Equatable {
     let minimumTimeOffsetFromLive: CMTime
 
     let presentationSize: CGSize?
-    let mediaSelectionContext: MediaSelectionContext
+    let mediaSelectionProperties: MediaSelectionProperties
 
     var isBuffering: Bool {
         !isPlaybackLikelyToKeepUp
