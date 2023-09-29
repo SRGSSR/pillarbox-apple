@@ -13,7 +13,7 @@ import Streams
 
 // swiftlint:disable:next type_name
 final class AVQueuePlayerCurrentItemTimeRangePublisherTests: TestCase {
-    private func currentItemTimeRangePublisher(for player: AVQueuePlayer) -> AnyPublisher<CMTimeRange, Never> {
+    private static func currentItemTimeRangePublisher(for player: AVQueuePlayer) -> AnyPublisher<CMTimeRange, Never> {
         player.timePropertiesPublisher()
             .map(\.seekableTimeRange)
             .removeDuplicates()
@@ -29,7 +29,7 @@ final class AVQueuePlayerCurrentItemTimeRangePublisherTests: TestCase {
                 CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration),
                 .invalid
             ],
-            from: currentItemTimeRangePublisher(for: player),
+            from: Self.currentItemTimeRangePublisher(for: player),
             to: beClose(within: 1)
         ) {
             player.play()
