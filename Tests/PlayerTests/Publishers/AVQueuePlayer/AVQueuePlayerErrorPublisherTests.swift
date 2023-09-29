@@ -19,11 +19,7 @@ final class AVQueuePlayerErrorPublisherTests: TestCase {
 
     func testEmpty() {
         let player = AVQueuePlayer()
-        expectAtLeastPublished(
-            values: [nil],
-            from: Self.errorPublisher(for: player),
-            to: beEqual
-        )
+        expectNothingPublished(from: Self.errorPublisher(for: player), during: .milliseconds(100))
     }
 
     func testError() {
