@@ -6,7 +6,6 @@
 
 @testable import Circumspect
 
-import Combine
 import XCTest
 
 final class ExpectNotificationsTests: XCTestCase {

@@ -8,7 +8,6 @@
 
 import AVFoundation
 import Circumspect
-import Nimble
 import Streams
 
 final class QueuePlayerSeekingPublisherTests: TestCase {
