@@ -15,18 +15,26 @@ struct TimeProperties: Equatable {
     let seekableTimeRanges: [NSValue]
 
     var seekableTimeRange: CMTimeRange {
-        Self.timeRange(from: seekableTimeRanges)
+        Self.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
     }
 
     var loadedTimeRange: CMTimeRange {
-        Self.timeRange(from: loadedTimeRanges)
+        Self.timeRange(from: loadedTimeRanges) ?? .invalid
     }
 
-    static func timeRange(from timeRanges: [NSValue]) -> CMTimeRange {
+    static func timeRange(from timeRanges: [NSValue]) -> CMTimeRange? {
         guard let firstRange = timeRanges.first?.timeRangeValue, !firstRange.isIndefinite,
               let lastRange = timeRanges.last?.timeRangeValue, !lastRange.isIndefinite else {
-            return .invalid
+            return nil
         }
         return CMTimeRangeFromTimeToTime(start: firstRange.start, end: lastRange.end)
+    }
+
+    static func timeRange(loadedTimeRanges: [NSValue], seekableTimeRanges: [NSValue]) -> CMTimeRange {
+        guard let timeRange = timeRange(from: seekableTimeRanges) else {
+            // Fallback for live MP3.
+            return !loadedTimeRanges.isEmpty ? .zero : .invalid
+        }
+        return timeRange
     }
 }

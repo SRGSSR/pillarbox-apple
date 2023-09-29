@@ -11,7 +11,7 @@ import Nimble
 
 final class TimePropertiesTests: TestCase {
     func testWithoutTimeRange() {
-        expect(TimeProperties.timeRange(from: [])).to(equal(.invalid))
+        expect(TimeProperties.timeRange(from: [])).to(beNil())
     }
 
     func testTimeRange() {
@@ -29,6 +29,13 @@ final class TimePropertiesTests: TestCase {
 
     func testInvalidTimeRange() {
         expect(TimeProperties.timeRange(from: [NSValue(timeRange: .invalid)])).to(equal(.invalid))
+    }
+
+    func testSeekableTimeRangeFallback() {
+        expect(
+            TimeProperties.timeRange(loadedTimeRanges: [NSValue(timeRange: .finite)], seekableTimeRanges: [])
+        )
+        .to(equal(.zero))
     }
 }
 

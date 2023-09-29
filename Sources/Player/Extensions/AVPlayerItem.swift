@@ -8,7 +8,7 @@ import AVFoundation
 
 extension AVPlayerItem {
     var timeRange: CMTimeRange {
-        TimeProperties.timeRange(from: seekableTimeRanges)
+        TimeProperties.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
     }
 
     static func playerItems(from items: [PlayerItem]) -> [AVPlayerItem] {
