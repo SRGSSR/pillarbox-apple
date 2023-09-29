@@ -10,7 +10,7 @@ import Circumspect
 import Streams
 
 final class PlayerItemTrackerTests: TestCase {
-    func testPlayerItemLifecycle() {
+    func testPlayerItemLifeCycle() {
         let publisher = NoMetadataTrackerMock.StatePublisher()
         expectAtLeastEqualPublished(values: [.initialized, .deinitialized], from: publisher) {
             _ = PlayerItem.simple(
