@@ -22,7 +22,7 @@ extension AVPlayer {
 
     func errorPublisher() -> AnyPublisher<Error?, Never> {
         publisher(for: \.currentItem)
-            .compactMap { $0?.errorPublisher() }
+            .map { $0?.errorPublisher() ?? Just(nil).eraseToAnyPublisher() }
             .switchToLatest()
             .eraseToAnyPublisher()
     }

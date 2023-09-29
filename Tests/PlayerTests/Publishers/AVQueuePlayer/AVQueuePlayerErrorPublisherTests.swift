@@ -7,23 +7,33 @@
 @testable import Player
 
 import AVFoundation
+import Combine
 import Streams
 
 final class AVQueuePlayerErrorPublisherTests: TestCase {
-    func testError() {
-        let item1 = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let item2 = AVPlayerItem(url: Stream.unavailable.url)
-        let item3 = AVPlayerItem(url: Stream.shortOnDemand.url)
-        let player = AVQueuePlayer(items: [item1, item2, item3])
-        let publisher = player.errorPublisher()
+    private static func errorPublisher(for player: AVPlayer) -> AnyPublisher<Error?, Never> {
+        player.errorPublisher()
             .removeDuplicates { $0 as? NSError == $1 as? NSError }
+            .eraseToAnyPublisher()
+    }
 
+    func testEmpty() {
+        let player = AVQueuePlayer()
+        expectAtLeastPublished(
+            values: [nil],
+            from: Self.errorPublisher(for: player),
+            to: beEqual
+        )
+    }
+
+    func testError() {
+        let player = AVQueuePlayer(
+            playerItem: .init(url: Stream.unavailable.url)
+        )
         expectAtLeastPublished(
             values: [nil, PlayerError.resourceNotFound, nil],
-            from: publisher,
+            from: Self.errorPublisher(for: player),
             to: beEqual
-        ) {
-            player.play()
-        }
+        )
     }
 }
