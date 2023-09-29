@@ -1,0 +1,39 @@
+//
+//  Copyright (c) SRG SSR. All rights reserved.
+//
+//  License information is available from the LICENSE file.
+//
+
+@testable import Player
+
+import CoreMedia
+import Nimble
+
+final class TimePropertiesTests: TestCase {
+    func testWithoutTimeRange() {
+        expect(TimeProperties.timeRange(from: [])).to(equal(.invalid))
+    }
+
+    func testTimeRange() {
+        expect(TimeProperties.timeRange(from: [NSValue(timeRange: .finite)])).to(equal(.finite))
+    }
+
+    func testTimeRanges() {
+        expect(TimeProperties.timeRange(from: [
+            NSValue(timeRange: .init(start: .init(value: 1, timescale: 1), duration: .init(value: 3, timescale: 1))),
+            NSValue(timeRange: .init(start: .init(value: 10, timescale: 1), duration: .init(value: 5, timescale: 1)))
+        ])).to(equal(
+            .init(start: .init(value: 1, timescale: 1), duration: .init(value: 14, timescale: 1))
+        ))
+    }
+
+    func testInvalidTimeRange() {
+        expect(TimeProperties.timeRange(from: [NSValue(timeRange: .invalid)])).to(equal(.invalid))
+    }
+}
+
+private extension CMTimeRange {
+    static var finite: Self {
+        .init(start: .zero, duration: .init(value: 1, timescale: 1))
+    }
+}

@@ -11,7 +11,6 @@ import Nimble
 
 final class StreamTypeTests: TestCase {
     func testAllCases() {
-        expect(StreamType(for: .invalid, itemDuration: .zero)).to(equal(.unknown))
         expect(StreamType(for: .zero, itemDuration: .invalid)).to(equal(.unknown))
         expect(StreamType(for: .zero, itemDuration: .indefinite)).to(equal(.live))
         expect(StreamType(for: .finite, itemDuration: .indefinite)).to(equal(.dvr))
