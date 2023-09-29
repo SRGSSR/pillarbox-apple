@@ -30,10 +30,11 @@ final class AVQueuePlayerErrorPublisherTests: TestCase {
         let player = AVQueuePlayer(
             playerItem: .init(url: Stream.unavailable.url)
         )
-        expectAtLeastPublished(
-            values: [nil, PlayerError.resourceNotFound, nil],
+        expectPublished(
+            values: [nil, PlayerError.resourceNotFound],
             from: Self.errorPublisher(for: player),
-            to: beEqual
+            to: beEqual,
+            during: .milliseconds(500)
         )
     }
 }
