@@ -15,13 +15,11 @@ import Streams
 final class AVPlayerPeriodicTimePublisherTests: TestCase {
     func testEmpty() {
         let player = AVPlayer()
-        expectPublished(
-            values: [],
+        expectNothingPublished(
             from: Publishers.PeriodicTimePublisher(
                 for: player,
                 interval: CMTimeMake(value: 1, timescale: 10)
             ),
-            to: beClose(within: 0.1),
             during: .milliseconds(500)
         )
     }

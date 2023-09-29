@@ -162,6 +162,7 @@ public extension XCTestCase {
         line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) where P: Publisher, P.Failure == Never {
+        precondition(!values.isEmpty)
         var actualValues = collectOutput(from: publisher, during: interval, while: executing)
         if next, !actualValues.isEmpty {
             actualValues.removeFirst()
