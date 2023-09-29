@@ -87,13 +87,8 @@ extension QueuePlayer {
 
 extension QueuePlayer {
     func currentItemBufferPublisher() -> AnyPublisher<Float, Never> {
-        Publishers.CombineLatest(propertiesPublisher(), timePropertiesPublisher())
-            .map { properties, timeProperties in
-                let loadedTimeRange = timeProperties.loadedTimeRange
-                let duration = properties.itemProperties.duration
-                guard loadedTimeRange.end.isNumeric, duration.isNumeric, duration != .zero else { return 0 }
-                return Float(loadedTimeRange.end.seconds / duration.seconds)
-            }
+        timePropertiesPublisher()
+            .map(\.buffer)
             .removeDuplicates()
             .eraseToAnyPublisher()
     }

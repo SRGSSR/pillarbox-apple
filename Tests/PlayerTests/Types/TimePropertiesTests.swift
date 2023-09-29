@@ -33,9 +33,32 @@ final class TimePropertiesTests: TestCase {
 
     func testSeekableTimeRangeFallback() {
         expect(
-            TimeProperties.timeRange(loadedTimeRanges: [NSValue(timeRange: .finite)], seekableTimeRanges: [])
+            TimeProperties.timeRange(
+                loadedTimeRanges: [NSValue(timeRange: .finite)],
+                seekableTimeRanges: []
+            )
         )
         .to(equal(.zero))
+    }
+
+    func testBufferEmptyLoadedTimeRanges() {
+        expect(
+            TimeProperties(
+                loadedTimeRanges: [],
+                seekableTimeRanges: [NSValue(timeRange: .finite)]
+            ).buffer
+        )
+        .to(equal(0))
+    }
+
+    func testBuffer() {
+        expect(
+            TimeProperties(
+                loadedTimeRanges: [NSValue(timeRange: .finite)],
+                seekableTimeRanges: [NSValue(timeRange: .finite)]
+            ).buffer
+        )
+        .to(equal(1))
     }
 }
 

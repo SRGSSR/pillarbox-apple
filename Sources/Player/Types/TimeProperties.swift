@@ -22,6 +22,12 @@ struct TimeProperties: Equatable {
         Self.timeRange(from: loadedTimeRanges) ?? .invalid
     }
 
+    var buffer: Float {
+        let duration = seekableTimeRange.duration
+        guard loadedTimeRange.end.isNumeric, duration.isNumeric, duration != .zero else { return 0 }
+        return Float(loadedTimeRange.end.seconds / duration.seconds)
+    }
+
     static func timeRange(from timeRanges: [NSValue]) -> CMTimeRange? {
         guard let firstRange = timeRanges.first?.timeRangeValue, !firstRange.isIndefinite,
               let lastRange = timeRanges.last?.timeRangeValue, !lastRange.isIndefinite else {
