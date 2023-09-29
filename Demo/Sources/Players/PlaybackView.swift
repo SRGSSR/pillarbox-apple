@@ -485,6 +485,8 @@ private struct TimeSlider: View {
     }
 }
 
+#endif
+
 private struct ErrorView: View {
     let description: String
     @ObservedObject var player: Player
@@ -500,8 +502,6 @@ private struct ErrorView: View {
         }
     }
 }
-
-#endif
 
 /// A playback view with standard controls. Requires an ancestor view to own the player to be used.
 /// Behavior: h-exp, v-exp
