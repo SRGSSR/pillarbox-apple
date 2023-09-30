@@ -148,8 +148,6 @@ private struct MainView: View {
     }
 }
 
-#endif
-
 private struct ControlsView: View {
     @ObservedObject var player: Player
     @ObservedObject var isBusyTracker: PropertyTracker<Bool>
@@ -165,59 +163,6 @@ private struct ControlsView: View {
         ._debugBodyCounter(color: .green)
         .animation(.defaultLinear, value: player.playbackState)
         .bind(progressTracker, to: player)
-    }
-}
-
-// Behavior: h-hug, v-hug
-private struct PlaybackMessageView: View {
-    let message: String
-
-    var body: some View {
-        Text(message)
-            .multilineTextAlignment(.center)
-            .foregroundColor(.white)
-            .padding()
-    }
-}
-
-// Behavior: h-hug, v-hug
-private struct PlaybackButton: View {
-    @ObservedObject var player: Player
-    @ObservedObject var isBusyTracker = PropertyTracker(keyPath: \.isBusy)
-
-    private var imageName: String {
-        if player.canReplay() {
-            return "arrow.counterclockwise.circle.fill"
-        }
-        else {
-            switch player.playbackState {
-            case .playing:
-                return "pause.circle.fill"
-            default:
-                return "play.circle.fill"
-            }
-        }
-    }
-
-    var body: some View {
-        Button(action: play) {
-            Image(systemName: imageName)
-                .resizable()
-                .tint(.white)
-        }
-        .aspectRatio(contentMode: .fit)
-        .frame(minWidth: 120, maxHeight: 90)
-        .opacity(isBusyTracker.value ? 0 : 1)
-        .animation(.defaultLinear, values: player.playbackState, player.canReplay())
-    }
-
-    private func play() {
-        if player.canReplay() {
-            player.replay()
-        }
-        else {
-            player.togglePlayPause()
-        }
     }
 }
 
@@ -356,8 +301,6 @@ private struct LiveLabel: View {
     }
 }
 
-#if os(iOS)
-
 // Behavior: h-exp, v-hug
 private struct TimeBar: View {
     @ObservedObject var player: Player
@@ -492,6 +435,59 @@ private struct TimeSlider: View {
 }
 
 #endif
+
+// Behavior: h-hug, v-hug
+private struct PlaybackMessageView: View {
+    let message: String
+
+    var body: some View {
+        Text(message)
+            .multilineTextAlignment(.center)
+            .foregroundColor(.white)
+            .padding()
+    }
+}
+
+// Behavior: h-hug, v-hug
+private struct PlaybackButton: View {
+    @ObservedObject var player: Player
+    @ObservedObject var isBusyTracker = PropertyTracker(keyPath: \.isBusy)
+
+    private var imageName: String {
+        if player.canReplay() {
+            return "arrow.counterclockwise.circle.fill"
+        }
+        else {
+            switch player.playbackState {
+            case .playing:
+                return "pause.circle.fill"
+            default:
+                return "play.circle.fill"
+            }
+        }
+    }
+
+    var body: some View {
+        Button(action: play) {
+            Image(systemName: imageName)
+                .resizable()
+                .tint(.white)
+        }
+        .aspectRatio(contentMode: .fit)
+        .frame(minWidth: 120, maxHeight: 90)
+        .opacity(isBusyTracker.value ? 0 : 1)
+        .animation(.defaultLinear, values: player.playbackState, player.canReplay())
+    }
+
+    private func play() {
+        if player.canReplay() {
+            player.replay()
+        }
+        else {
+            player.togglePlayPause()
+        }
+    }
+}
 
 private struct ErrorView: View {
     let description: String
