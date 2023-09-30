@@ -19,16 +19,6 @@ public extension Player {
         properties.presentationSize
     }
 
-    /// A Boolean describing whether the player is currently buffering.
-    var isBuffering: Bool {
-        properties.isBuffering
-    }
-
-    /// A Boolean describing whether the player is currently seeking to another position.
-    var isSeeking: Bool {
-        properties.isSeeking
-    }
-
     /// The duration of a chunk for the currently played item.
     var chunkDuration: CMTime {
         properties.chunkDuration

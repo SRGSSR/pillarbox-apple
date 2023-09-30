@@ -10,16 +10,18 @@ import MediaPlayer
 
 extension QueuePlayer {
     func propertiesPublisher() -> AnyPublisher<PlayerProperties, Never> {
-        Publishers.CombineLatest(
+        Publishers.CombineLatest3(
             playerItemPropertiesPublisher(),
-            playbackPropertiesPublisher()
+            playbackPropertiesPublisher(),
+            isSeekingPublisher()
         )
-        .map { playerItemProperties, playbackProperties in
+        .map { playerItemProperties, playbackProperties, isSeeking in
             .init(
                 itemProperties: playerItemProperties.itemProperties,
                 mediaSelectionProperties: playerItemProperties.mediaSelectionProperties,
                 timeProperties: playerItemProperties.timeProperties,
-                playbackProperties: playbackProperties
+                playbackProperties: playbackProperties,
+                isSeeking: isSeeking
             )
         }
         .removeDuplicates()
@@ -39,13 +41,12 @@ extension QueuePlayer {
     }
 
     private func playbackPropertiesPublisher() -> AnyPublisher<PlaybackProperties, Never> {
-        Publishers.CombineLatest4(
+        Publishers.CombineLatest3(
             publisher(for: \.rate),
-            isSeekingPublisher(),
             publisher(for: \.isExternalPlaybackActive),
             publisher(for: \.isMuted)
         )
-        .map { .init(rate: $0, isSeeking: $1, isExternalPlaybackActive: $2, isMuted: $3) }
+        .map { .init(rate: $0, isExternalPlaybackActive: $1, isMuted: $2) }
         .eraseToAnyPublisher()
     }
 }

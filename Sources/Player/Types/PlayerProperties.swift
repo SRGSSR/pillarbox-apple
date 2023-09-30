@@ -8,7 +8,13 @@ import CoreMedia
 
 public struct PlayerProperties: Equatable {
     static var empty: Self {
-        .init(itemProperties: .empty, mediaSelectionProperties: .empty, timeProperties: .empty, playbackProperties: .empty)
+        .init(
+            itemProperties: .empty,
+            mediaSelectionProperties: .empty,
+            timeProperties: .empty,
+            playbackProperties: .empty,
+            isSeeking: false
+        )
     }
 
     let itemProperties: ItemProperties
@@ -16,12 +22,10 @@ public struct PlayerProperties: Equatable {
     let timeProperties: TimeProperties
     let playbackProperties: PlaybackProperties
 
+    public let isSeeking: Bool
+
     public var rate: Float {
         playbackProperties.rate
-    }
-
-    public var isSeeking: Bool {
-        playbackProperties.isSeeking
     }
 
     public var isExternalPlaybackActive: Bool {
@@ -37,7 +41,15 @@ public struct PlayerProperties: Equatable {
     }
 
     public var isBuffering: Bool {
-        itemProperties.isBuffering
+        timeProperties.isBuffering
+    }
+
+    public var buffer: Float {
+        timeProperties.buffer
+    }
+
+    public var isBusy: Bool {
+        isBuffering || isSeeking
     }
 
     public var chunkDuration: CMTime {

@@ -84,11 +84,6 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.timeRange
     }
 
-    /// A Boolean describing whether the player is currently busy (buffering or seeking).
-    public var isBusy: Bool {
-        isBuffering || isSeeking
-    }
-
     /// The low-level system player.
     ///
     /// Exposed for specific read-only needs like interfacing with `AVPlayer`-based 3rd party APIs. Mutating the state

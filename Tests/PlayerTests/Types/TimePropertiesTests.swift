@@ -45,7 +45,8 @@ final class TimePropertiesTests: TestCase {
         expect(
             TimeProperties(
                 loadedTimeRanges: [],
-                seekableTimeRanges: [NSValue(timeRange: .finite)]
+                seekableTimeRanges: [NSValue(timeRange: .finite)],
+                isPlaybackLikelyToKeepUp: true
             ).buffer
         )
         .to(equal(0))
@@ -55,7 +56,8 @@ final class TimePropertiesTests: TestCase {
         expect(
             TimeProperties(
                 loadedTimeRanges: [NSValue(timeRange: .finite)],
-                seekableTimeRanges: [NSValue(timeRange: .finite)]
+                seekableTimeRanges: [NSValue(timeRange: .finite)],
+                isPlaybackLikelyToKeepUp: true
             ).buffer
         )
         .to(equal(1))

@@ -19,10 +19,6 @@ struct PlayerCoreProperties: Equatable {
         playbackProperties.rate
     }
 
-    var isSeeking: Bool {
-        playbackProperties.isSeeking
-    }
-
     var isExternalPlaybackActive: Bool {
         playbackProperties.isExternalPlaybackActive
     }
@@ -33,10 +29,6 @@ struct PlayerCoreProperties: Equatable {
 
     var playbackState: PlaybackState {
         .init(itemState: itemProperties.state, rate: rate)
-    }
-
-    var isBuffering: Bool {
-        itemProperties.isBuffering
     }
 
     var chunkDuration: CMTime {

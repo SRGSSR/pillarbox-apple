@@ -8,11 +8,12 @@ import CoreMedia
 
 struct TimeProperties: Equatable {
     static var empty: Self {
-        .init(loadedTimeRanges: [], seekableTimeRanges: [])
+        .init(loadedTimeRanges: [], seekableTimeRanges: [], isPlaybackLikelyToKeepUp: true)
     }
 
     let loadedTimeRanges: [NSValue]
     let seekableTimeRanges: [NSValue]
+    let isPlaybackLikelyToKeepUp: Bool
 
     var seekableTimeRange: CMTimeRange {
         Self.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
@@ -26,6 +27,10 @@ struct TimeProperties: Equatable {
         let duration = seekableTimeRange.duration
         guard loadedTimeRange.end.isNumeric, duration.isNumeric, duration != .zero else { return 0 }
         return Float(loadedTimeRange.end.seconds / duration.seconds)
+    }
+
+    var isBuffering: Bool {
+        !isPlaybackLikelyToKeepUp
     }
 
     static func timeRange(from timeRanges: [NSValue]) -> CMTimeRange? {
