@@ -28,7 +28,7 @@ extension AVPlayerItem {
                     presentationSize: isKnown ? presentationSize : nil
                 ),
                 mediaSelectionProperties: mediaSelectionProperties,
-                timeProperties: isKnown ? timeProperties : .empty
+                timeProperties: isKnown ? timeProperties : .buffering
             )
         }
         .removeDuplicates()

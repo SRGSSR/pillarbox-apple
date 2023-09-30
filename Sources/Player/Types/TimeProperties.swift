@@ -11,6 +11,10 @@ struct TimeProperties: Equatable {
         .init(loadedTimeRanges: [], seekableTimeRanges: [], isPlaybackLikelyToKeepUp: true)
     }
 
+    static var buffering: Self {
+        .init(loadedTimeRanges: [], seekableTimeRanges: [], isPlaybackLikelyToKeepUp: false)
+    }
+
     let loadedTimeRanges: [NSValue]
     let seekableTimeRanges: [NSValue]
     let isPlaybackLikelyToKeepUp: Bool

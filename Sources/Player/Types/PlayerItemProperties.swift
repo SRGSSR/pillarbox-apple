@@ -15,6 +15,14 @@ struct PlayerItemProperties: Equatable {
         )
     }
 
+    static var buffering: Self {
+        .init(
+            itemProperties: .empty,
+            mediaSelectionProperties: .empty,
+            timeProperties: .buffering
+        )
+    }
+
     let itemProperties: ItemProperties
     let mediaSelectionProperties: MediaSelectionProperties
     let timeProperties: TimeProperties
