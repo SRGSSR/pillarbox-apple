@@ -21,12 +21,14 @@ extension AVPlayerItem {
         )
         .map { state, isPlaybackLikelyToKeepUp, presentationSize, mediaSelectionProperties, timeProperties, duration, minimumTimeOffsetFromLive in
             let isKnown = (state != .unknown)
-            return PlayerItemProperties(
-                state: state,
-                isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp,
-                duration: isKnown ? duration : .invalid,
-                minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
-                presentationSize: isKnown ? presentationSize : nil,
+            return .init(
+                itemProperties: .init(
+                    state: state,
+                    isPlaybackLikelyToKeepUp: isPlaybackLikelyToKeepUp,
+                    duration: isKnown ? duration : .invalid,
+                    minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
+                    presentationSize: isKnown ? presentationSize : nil
+                ),
                 mediaSelectionProperties: mediaSelectionProperties,
                 timeProperties: isKnown ? timeProperties : .empty
             )

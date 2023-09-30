@@ -27,7 +27,7 @@ public final class BufferTracker: ObservableObject {
                 guard let player else { return Just(0).eraseToAnyPublisher() }
                 return player.queuePlayer
                     .propertiesPublisher()
-                    .map(\.itemProperties.timeProperties.buffer)
+                    .map(\.timeProperties.buffer)
                     .eraseToAnyPublisher()
             }
             .switchToLatest()

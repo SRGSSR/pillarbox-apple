@@ -42,7 +42,7 @@ final class QueuePlayerPublisherTests: TestCase {
 
     private static func seekableTimeRangePublisher(for player: QueuePlayer) -> AnyPublisher<CMTimeRange, Never> {
         player.propertiesPublisher()
-            .map(\.itemProperties.timeProperties.seekableTimeRange)
+            .map(\.timeProperties.seekableTimeRange)
             .removeDuplicates()
             .eraseToAnyPublisher()
     }

@@ -315,8 +315,7 @@ private extension Player {
         )
         .sink { [weak self] update, properties in
             guard let self else { return }
-            let timeProperties = properties.itemProperties.timeProperties
-            let streamType = StreamType(for: timeProperties.seekableTimeRange, itemDuration: properties.itemProperties.duration)
+            let streamType = StreamType(for: properties.timeProperties.seekableTimeRange, itemDuration: properties.itemProperties.duration)
             let areSkipsEnabled = update.items.count <= 1 && streamType != .live
             nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
             nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled

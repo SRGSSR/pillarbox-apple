@@ -76,6 +76,7 @@ private extension Player {
         queuePlayer.publisher(for: \.currentItem)
             .weakCapture(self)
             .map { item, player -> AnyPublisher<PlaybackSpeedUpdate, Never> in
+                // TODO: Use consolidated properties
                 if let item {
                     return Publishers.CombineLatest3(
                         item.propertiesPublisher(),
@@ -83,7 +84,7 @@ private extension Player {
                         player.periodicTimePublisher(forInterval: CMTime(value: 1, timescale: 1))
                     )
                     .compactMap { properties, timeProperties, time in
-                        guard let range = Self.playbackSpeedRange(for: timeProperties.seekableTimeRange, itemDuration: properties.duration, time: time) else {
+                        guard let range = Self.playbackSpeedRange(for: timeProperties.seekableTimeRange, itemDuration: properties.itemProperties.duration, time: time) else {
                             return nil
                         }
                         return .range(range)

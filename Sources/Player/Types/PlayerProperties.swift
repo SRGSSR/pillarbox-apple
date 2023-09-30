@@ -8,15 +8,29 @@ import CoreMedia
 
 public struct PlayerProperties: Equatable {
     static var empty: Self {
-        .init(itemProperties: .empty, rate: 0, isSeeking: false, isExternalPlaybackActive: false, isMuted: false)
+        .init(itemProperties: .empty, mediaSelectionProperties: .empty, timeProperties: .empty, playbackProperties: .empty)
     }
 
-    let itemProperties: PlayerItemProperties
+    let itemProperties: ItemProperties
+    let mediaSelectionProperties: MediaSelectionProperties
+    let timeProperties: TimeProperties
+    let playbackProperties: PlaybackProperties
 
-    public let rate: Float
-    public let isSeeking: Bool
-    public let isExternalPlaybackActive: Bool
-    public let isMuted: Bool
+    public var rate: Float {
+        playbackProperties.rate
+    }
+
+    public var isSeeking: Bool {
+        playbackProperties.isSeeking
+    }
+
+    public var isExternalPlaybackActive: Bool {
+        playbackProperties.isExternalPlaybackActive
+    }
+
+    public var isMuted: Bool {
+        playbackProperties.isMuted
+    }
 
     public var playbackState: PlaybackState {
         .init(itemState: itemProperties.state, rate: rate)

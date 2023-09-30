@@ -8,7 +8,7 @@ import AVFoundation
 import Combine
 
 extension AVPlayer {
-    func itemPropertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
+    func playerItemPropertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
         publisher(for: \.currentItem)
             .map { item in
                 guard let item else { return Just(PlayerItemProperties.empty).eraseToAnyPublisher() }
