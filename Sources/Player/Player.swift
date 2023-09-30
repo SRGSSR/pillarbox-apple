@@ -174,6 +174,7 @@ public final class Player: ObservableObject, Equatable {
 
     private func configureControlCenterPublishers() {
         guard !ProcessInfo.processInfo.isiOSAppOnMac else { return }
+        // TODO: Probably single publisher for both needs
         configureControlCenterMetadataUpdatePublisher()
         configureControlCenterRemoteCommandUpdatePublisher()
     }
@@ -308,14 +309,13 @@ private extension Player {
     }
 
     func configureControlCenterRemoteCommandUpdatePublisher() {
-        Publishers.CombineLatest3(
+        Publishers.CombineLatest(
             itemUpdatePublisher(),
-            queuePlayer.propertiesPublisher(),
-            queuePlayer.timePropertiesPublisher()
+            queuePlayer.propertiesPublisher()
         )
-        .sink { [weak self] update, properties, timeProperties in
+        .sink { [weak self] update, properties in
             guard let self else { return }
-
+            let timeProperties = properties.itemProperties.timeProperties
             let streamType = StreamType(for: timeProperties.seekableTimeRange, itemDuration: properties.itemProperties.duration)
             let areSkipsEnabled = update.items.count <= 1 && streamType != .live
             nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled

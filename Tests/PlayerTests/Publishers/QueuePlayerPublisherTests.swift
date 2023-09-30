@@ -40,6 +40,13 @@ final class QueuePlayerPublisherTests: TestCase {
             .eraseToAnyPublisher()
     }
 
+    private static func seekableTimeRangePublisher(for player: QueuePlayer) -> AnyPublisher<CMTimeRange, Never> {
+        player.propertiesPublisher()
+            .map(\.itemProperties.timeProperties.seekableTimeRange)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
     func testBufferingEmpty() {
         let player = QueuePlayer()
         expectAtLeastEqualPublished(
@@ -108,6 +115,31 @@ final class QueuePlayerPublisherTests: TestCase {
         expectAtLeastPublished(
             values: [.invalid, Stream.shortOnDemand.duration, .invalid],
             from: Self.durationPublisher(for: player),
+            to: beClose(within: 1)
+        ) {
+            player.play()
+        }
+    }
+
+    func testSeekableTimeRangeEmpty() {
+        let player = QueuePlayer()
+        expectAtLeastEqualPublished(
+            values: [.invalid],
+            from: Self.seekableTimeRangePublisher(for: player)
+        )
+    }
+
+    func testSeekableTimeRangeLifeCycle() {
+        let player = QueuePlayer(
+            playerItem: .init(url: Stream.shortOnDemand.url)
+        )
+        expectAtLeastPublished(
+            values: [
+                .invalid,
+                CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration),
+                .invalid
+            ],
+            from: Self.seekableTimeRangePublisher(for: player),
             to: beClose(within: 1)
         ) {
             player.play()

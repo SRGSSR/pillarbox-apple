@@ -26,15 +26,4 @@ extension AVPlayer {
             .switchToLatest()
             .eraseToAnyPublisher()
     }
-
-    func timePropertiesPublisher() -> AnyPublisher<TimeProperties, Never> {
-        publisher(for: \.currentItem)
-            .map { item in
-                guard let item else { return Just(TimeProperties.empty).eraseToAnyPublisher() }
-                return item.timePropertiesPublisher().eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
 }

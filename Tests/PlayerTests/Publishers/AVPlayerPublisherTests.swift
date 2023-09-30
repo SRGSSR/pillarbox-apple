@@ -17,13 +17,6 @@ final class AVPlayerPublisherTests: TestCase {
             .eraseToAnyPublisher()
     }
 
-    private static func seekableTimeRangePublisher(for player: AVPlayer) -> AnyPublisher<CMTimeRange, Never> {
-        player.timePropertiesPublisher()
-            .map(\.seekableTimeRange)
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-
     func testErrorEmpty() {
         let player = AVQueuePlayer()
         expectNothingPublished(from: Self.errorPublisher(for: player), during: .milliseconds(100))
@@ -39,30 +32,5 @@ final class AVPlayerPublisherTests: TestCase {
             to: beEqual,
             during: .milliseconds(500)
         )
-    }
-
-    func testTimeRangeEmpty() {
-        let player = AVQueuePlayer()
-        expectAtLeastEqualPublished(
-            values: [.invalid],
-            from: Self.seekableTimeRangePublisher(for: player)
-        )
-    }
-
-    func testTimeRangeLifeCycle() {
-        let player = AVQueuePlayer(
-            playerItem: .init(url: Stream.shortOnDemand.url)
-        )
-        expectAtLeastPublished(
-            values: [
-                .invalid,
-                CMTimeRange(start: .zero, duration: Stream.shortOnDemand.duration),
-                .invalid
-            ],
-            from: Self.seekableTimeRangePublisher(for: player),
-            to: beClose(within: 1)
-        ) {
-            player.play()
-        }
     }
 }

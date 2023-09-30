@@ -26,7 +26,8 @@ public final class BufferTracker: ObservableObject {
             .map { player -> AnyPublisher<Float, Never> in
                 guard let player else { return Just(0).eraseToAnyPublisher() }
                 return player.queuePlayer
-                    .currentItemBufferPublisher()
+                    .propertiesPublisher()
+                    .map(\.itemProperties.timeProperties.buffer)
                     .eraseToAnyPublisher()
             }
             .switchToLatest()

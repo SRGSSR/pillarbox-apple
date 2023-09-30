@@ -10,15 +10,16 @@ import MediaAccessibility
 
 extension AVPlayerItem {
     func propertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
-        Publishers.CombineLatest6(
+        Publishers.CombineLatest7(
             statePublisher(),
             publisher(for: \.isPlaybackLikelyToKeepUp),
             publisher(for: \.presentationSize),
             mediaSelectionPropertiesPublisher(),
+            timePropertiesPublisher(),
             publisher(for: \.duration),
             minimumTimeOffsetFromLivePublisher()
         )
-        .map { state, isPlaybackLikelyToKeepUp, presentationSize, mediaSelectionProperties, duration, minimumTimeOffsetFromLive in
+        .map { state, isPlaybackLikelyToKeepUp, presentationSize, mediaSelectionProperties, timeProperties, duration, minimumTimeOffsetFromLive in
             let isKnown = (state != .unknown)
             return PlayerItemProperties(
                 state: state,
@@ -26,7 +27,8 @@ extension AVPlayerItem {
                 duration: isKnown ? duration : .invalid,
                 minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
                 presentationSize: isKnown ? presentationSize : nil,
-                mediaSelectionProperties: mediaSelectionProperties
+                mediaSelectionProperties: mediaSelectionProperties,
+                timeProperties: isKnown ? timeProperties : .empty
             )
         }
         .removeDuplicates()
@@ -51,7 +53,19 @@ extension AVPlayerItem {
         .eraseToAnyPublisher()
     }
 
-   private func mediaSelectionPropertiesPublisher() -> AnyPublisher<MediaSelectionProperties, Never> {
+    func timePropertiesPublisher() -> AnyPublisher<TimeProperties, Never> {
+        Publishers.CombineLatest(
+            publisher(for: \.loadedTimeRanges),
+            publisher(for: \.seekableTimeRanges)
+        )
+        .map { loadedTimeRanges, seekableTimeRanges in
+            .init(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
+        }
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
+
+    private func mediaSelectionPropertiesPublisher() -> AnyPublisher<MediaSelectionProperties, Never> {
         Publishers.CombineLatest3(
             asset.mediaSelectionGroupsPublisher(),
             mediaSelectionPublisher(),
@@ -118,26 +132,6 @@ extension AVPlayerItem {
                 }
                 return ItemError.localizedError(from: error)
             }
-            .eraseToAnyPublisher()
-    }
-}
-
-extension AVPlayerItem {
-    func timePropertiesPublisher() -> AnyPublisher<TimeProperties, Never> {
-        statePublisher()
-            .map { [weak self] state in
-                guard let self, state != .unknown else { return Just(TimeProperties.empty).eraseToAnyPublisher() }
-                return Publishers.CombineLatest(
-                    publisher(for: \.loadedTimeRanges),
-                    publisher(for: \.seekableTimeRanges)
-                )
-                .map { loadedTimeRanges, seekableTimeRanges in
-                    .init(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
-                }
-                .eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 }
