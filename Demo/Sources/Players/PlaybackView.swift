@@ -17,7 +17,6 @@ private struct MainView: View {
     @Binding var layout: PlaybackView.Layout
 
     @StateObject private var visibilityTracker = VisibilityTracker()
-    @StateObject private var isBusyTracker = PropertyTracker(keyPath: \.isBusy)
 
     @State private var layoutInfo: LayoutInfo = .none
     @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
@@ -34,9 +33,8 @@ private struct MainView: View {
             topBar()
         }
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
-        .animation(.defaultLinear, values: isBusyTracker.value, isUserInterfaceHidden)
+        .animation(.defaultLinear, value: isUserInterfaceHidden)
         .bind(visibilityTracker, to: player)
-        .bind(isBusyTracker, to: player)
         ._debugBodyCounter()
     }
 
@@ -68,7 +66,6 @@ private struct MainView: View {
         ZStack {
             video()
             controls()
-            loadingIndicator()
         }
         .ignoresSafeArea()
         .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
@@ -94,6 +91,7 @@ private struct MainView: View {
         HStack {
             CloseButton()
             Spacer()
+            LoadingIndicator(player: player)
             VolumeButton(player: player)
         }
         .opacity(isUserInterfaceHidden ? 0 : 1)
@@ -122,17 +120,9 @@ private struct MainView: View {
             Color(white: 0, opacity: 0.3)
                 .opacity(isUserInterfaceHidden || (isInteracting && !areControlsAlwaysVisible) ? 0 : 1)
                 .ignoresSafeArea()
-            ControlsView(player: player, isBusyTracker: isBusyTracker)
+            ControlsView(player: player)
                 .opacity(isUserInterfaceHidden || isInteracting ? 0 : 1)
         }
-    }
-
-    @ViewBuilder
-    private func loadingIndicator() -> some View {
-        ProgressView()
-            .tint(.white)
-            .opacity(!isBusyTracker.value || (isInteracting && !areControlsAlwaysVisible) ? 0 : 1)
-            .controlSize(.large)
     }
 
     @ViewBuilder
@@ -150,14 +140,12 @@ private struct MainView: View {
 
 private struct ControlsView: View {
     @ObservedObject var player: Player
-    @ObservedObject var isBusyTracker: PropertyTracker<Bool>
-
     @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
 
     var body: some View {
         HStack(spacing: 30) {
             SkipBackwardButton(player: player)
-            PlaybackButton(player: player, isBusyTracker: isBusyTracker)
+            PlaybackButton(player: player)
             SkipForwardButton(player: player)
         }
         ._debugBodyCounter(color: .green)
@@ -268,9 +256,23 @@ private struct VolumeButton: View {
 }
 
 // Behavior: h-hug, v-hug
+private struct LoadingIndicator: View {
+    @ObservedObject var player: Player
+
+    @StateObject private var isBusyTracker = PropertyTracker(keyPath: \.isBusy)
+
+    var body: some View {
+        ProgressView()
+            .tint(.white)
+            .opacity(isBusyTracker.value ? 1 : 0)
+            .animation(.linear(duration: 0.2), value: isBusyTracker.value)
+            .bind(isBusyTracker, to: player)
+    }
+}
+
+// Behavior: h-hug, v-hug
 private struct LiveLabel: View {
     @ObservedObject var player: Player
-    @ObservedObject var progressTracker: ProgressTracker
 
     private var canSkipToLive: Bool {
         player.canSkipToDefault()
@@ -320,7 +322,7 @@ private struct TimeBar: View {
             routePickerView()
             HStack(spacing: 20) {
                 TimeSlider(player: player, progressTracker: progressTracker)
-                LiveLabel(player: player, progressTracker: progressTracker)
+                LiveLabel(player: player)
 
                 Group {
                     settingsMenu()
@@ -449,9 +451,8 @@ private struct PlaybackMessageView: View {
 // Behavior: h-hug, v-hug
 private struct PlaybackButton: View {
     @ObservedObject var player: Player
-    @ObservedObject var isBusyTracker = PropertyTracker(keyPath: \.isBusy)
 
-    private var imageName: String {
+    private var imageName: String? {
         if player.canReplay() {
             return "arrow.counterclockwise.circle.fill"
         }
@@ -459,21 +460,27 @@ private struct PlaybackButton: View {
             switch player.playbackState {
             case .playing:
                 return "pause.circle.fill"
-            default:
+            case .paused:
                 return "play.circle.fill"
+            default:
+                return nil
             }
         }
     }
 
     var body: some View {
         Button(action: play) {
-            Image(systemName: imageName)
-                .resizable()
-                .tint(.white)
+            if let imageName {
+                Image(systemName: imageName)
+                    .resizable()
+                    .tint(.white)
+            }
+            else {
+                Color.clear
+            }
         }
         .aspectRatio(contentMode: .fit)
         .frame(minWidth: 120, maxHeight: 90)
-        .opacity(isBusyTracker.value ? 0 : 1)
         .animation(.defaultLinear, values: player.playbackState, player.canReplay())
     }
 
