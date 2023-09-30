@@ -6,11 +6,23 @@
 
 import SwiftUI
 
-private struct SymbolPulseEffect: ViewModifier {
+private struct PulseSymbolEffect: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 17.0, tvOS 17.0, *) {
             content
                 .symbolEffect(.pulse)
+        }
+        else {
+            content
+        }
+    }
+}
+
+private struct ReplaceSymbolEffect: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 17.0, tvOS 17.0, *) {
+            content
+                .contentTransition(.symbolEffect(.replace))
         }
         else {
             content
@@ -36,7 +48,11 @@ extension View {
         )
     }
 
-    func symbolPulseEffect() -> some View {
-        modifier(SymbolPulseEffect())
+    func pulseSymbolEffect() -> some View {
+        modifier(PulseSymbolEffect())
+    }
+
+    func replaceSymbolEffect() -> some View {
+        modifier(ReplaceSymbolEffect())
     }
 }

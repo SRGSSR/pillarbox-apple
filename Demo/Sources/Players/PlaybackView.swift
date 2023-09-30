@@ -481,7 +481,7 @@ private struct PlaybackButton: View {
         }
         .aspectRatio(contentMode: .fit)
         .frame(minWidth: 120, maxHeight: 90)
-        .animation(.defaultLinear, values: player.playbackState, player.canReplay())
+        .replaceSymbolEffect()
     }
 
     private func play() {
