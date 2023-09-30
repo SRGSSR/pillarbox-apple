@@ -259,14 +259,14 @@ private struct VolumeButton: View {
 private struct LoadingIndicator: View {
     @ObservedObject var player: Player
 
-    @StateObject private var isBusyTracker = PropertyTracker(keyPath: \.isBusy)
+    @StateObject private var isBufferingTracker = PropertyTracker(keyPath: \.isBuffering)
 
     var body: some View {
         ProgressView()
             .tint(.white)
-            .opacity(isBusyTracker.value ? 1 : 0)
-            .animation(.linear(duration: 0.2), value: isBusyTracker.value)
-            .bind(isBusyTracker, to: player)
+            .opacity(isBufferingTracker.value ? 1 : 0)
+            .animation(.linear(duration: 0.2), value: isBufferingTracker.value)
+            .bind(isBufferingTracker, to: player)
     }
 }
 
