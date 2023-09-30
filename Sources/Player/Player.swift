@@ -19,7 +19,6 @@ public final class Player: ObservableObject, Equatable {
         PackageInfo.version
     }
 
-    @Published public private(set) var properties: PlayerProperties = .empty
     @Published public private(set) var error: (any Error)?
 
     /// The index of the current item in the queue.
@@ -28,8 +27,9 @@ public final class Player: ObservableObject, Equatable {
     /// A Boolean setting whether trackers must be enabled or not.
     @Published public var isTrackingEnabled = true
 
-    @Published var _playbackSpeed: PlaybackSpeed = .indefinite
+    @Published var properties: PlayerCoreProperties = .empty
     @Published var storedItems: Deque<PlayerItem>
+    @Published var _playbackSpeed: PlaybackSpeed = .indefinite
 
     @Published private var isActive = false {
         didSet {
@@ -47,6 +47,9 @@ public final class Player: ObservableObject, Equatable {
 
     /// The player configuration
     public let configuration: PlayerConfiguration
+
+    /// A publisher providing player updates as a consolidated stream.
+    public let propertiesPublisher: AnyPublisher<PlayerProperties, Never>
 
     /// A Boolean setting whether the audio output of the player must be muted.
     public var isMuted: Bool {
@@ -121,6 +124,7 @@ public final class Player: ObservableObject, Equatable {
     public init(items: [PlayerItem] = [], configuration: PlayerConfiguration = .init()) {
         storedItems = Deque(items)
 
+        propertiesPublisher = queuePlayer.propertiesPublisher()
         nowPlayingSession = MPNowPlayingSession(players: [queuePlayer])
 
         self.configuration = configuration
@@ -241,7 +245,9 @@ private extension Player {
 
 private extension Player {
     func configurePropertiesPublisher() {
-        queuePlayer.propertiesPublisher()
+        propertiesPublisher
+            .map(\.coreProperties)
+            .removeDuplicates()
             .receiveOnMainThread()
             .assign(to: &$properties)
     }

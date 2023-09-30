@@ -47,4 +47,12 @@ public struct PlayerProperties: Equatable {
     public var presentationSize: CGSize? {
         itemProperties.presentationSize
     }
+
+    var coreProperties: PlayerCoreProperties {
+        .init(
+            itemProperties: itemProperties,
+            mediaSelectionProperties: mediaSelectionProperties,
+            playbackProperties: playbackProperties
+        )
+    }
 }

@@ -12,7 +12,7 @@ struct PlaybackProperties: Equatable {
     }
 
     let rate: Float
-    let isSeeking: Bool
+    let isSeeking: Bool         // TODO: Must be moved outside since changing fast
     let isExternalPlaybackActive: Bool
     let isMuted: Bool
 }

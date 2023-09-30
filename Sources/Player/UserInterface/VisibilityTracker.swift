@@ -49,7 +49,7 @@ public final class VisibilityTracker: ObservableObject {
                 guard let player else {
                     return Empty().eraseToAnyPublisher()
                 }
-                return player.$properties
+                return player.propertiesPublisher
                     .map(\.playbackState)
                     .removeDuplicates()
                     .eraseToAnyPublisher()
