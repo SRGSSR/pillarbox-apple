@@ -156,9 +156,9 @@ private struct ControlsView: View {
 
     var body: some View {
         HStack(spacing: 30) {
-            SkipBackwardButton(player: player, progressTracker: progressTracker)
+            SkipBackwardButton(player: player)
             PlaybackButton(player: player, isBusyTracker: isBusyTracker)
-            SkipForwardButton(player: player, progressTracker: progressTracker)
+            SkipForwardButton(player: player)
         }
         ._debugBodyCounter(color: .green)
         .animation(.defaultLinear, value: player.playbackState)
@@ -169,7 +169,6 @@ private struct ControlsView: View {
 // Behavior: h-hug, v-hug
 private struct SkipBackwardButton: View {
     @ObservedObject var player: Player
-    @ObservedObject var progressTracker: ProgressTracker
 
     var body: some View {
         Button(action: skipBackward) {
@@ -191,7 +190,6 @@ private struct SkipBackwardButton: View {
 // Behavior: h-hug, v-hug
 private struct SkipForwardButton: View {
     @ObservedObject var player: Player
-    @ObservedObject var progressTracker: ProgressTracker
 
     var body: some View {
         Button(action: skipForward) {
