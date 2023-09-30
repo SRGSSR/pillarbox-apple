@@ -23,6 +23,7 @@ private struct StoryView: View {
         }
         .tint(.white)
         .animation(.defaultLinear, value: isBusyTracker.value)
+        .bind(isBusyTracker, to: player)
     }
 }
 
