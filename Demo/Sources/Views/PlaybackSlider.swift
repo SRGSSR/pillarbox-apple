@@ -15,7 +15,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     let maximumValueLabel: () -> ValueLabel
     let onEditingChanged: (Bool) -> Void
 
-    @StateObject private var propertyTracker = PropertyTracker(keyPath: \.buffer)
+    @StateObject private var propertyTracker = PropertyTracker(at: \.buffer)
     @GestureState private var gestureValue: DragGesture.Value?
     @State private var initialProgress: Float = 0
 

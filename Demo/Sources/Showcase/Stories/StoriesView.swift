@@ -11,7 +11,7 @@ import SwiftUI
 // Behavior: h-exp, v-exp
 private struct StoryView: View {
     @ObservedObject var player: Player
-    @StateObject private var isBusyTracker = PropertyTracker(keyPath: \.isBusy)
+    @StateObject private var isBusyTracker = PropertyTracker(at: \.isBusy)
 
     var body: some View {
         ZStack {

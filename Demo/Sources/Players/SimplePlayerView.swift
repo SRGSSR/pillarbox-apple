@@ -12,7 +12,7 @@ struct SimplePlayerView: View {
     let media: Media
 
     @StateObject private var player = Player(configuration: .externalPlaybackDisabled)
-    @StateObject private var isBusyTracker = PropertyTracker(keyPath: \.isBusy)
+    @StateObject private var isBusyTracker = PropertyTracker(at: \.isBusy)
 
     var body: some View {
         ZStack {

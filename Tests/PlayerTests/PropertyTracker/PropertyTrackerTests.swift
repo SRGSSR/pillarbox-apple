@@ -13,7 +13,7 @@ import Streams
 
 final class PropertyTrackerTests: TestCase {
     func testUnbound() {
-        let propertyTracker = PropertyTracker(keyPath: \.buffer)
+        let propertyTracker = PropertyTracker(at: \.buffer)
         expectAtLeastEqualPublished(
             values: [0],
             from: propertyTracker.$value
@@ -21,7 +21,7 @@ final class PropertyTrackerTests: TestCase {
     }
 
     func testEmptyPlayer() {
-        let propertyTracker = PropertyTracker(keyPath: \.buffer)
+        let propertyTracker = PropertyTracker(at: \.buffer)
         expectAtLeastEqualPublished(
             values: [0],
             from: propertyTracker.$value
@@ -31,7 +31,7 @@ final class PropertyTrackerTests: TestCase {
     }
 
     func testPlayerChange() {
-        let propertyTracker = PropertyTracker(keyPath: \.buffer)
+        let propertyTracker = PropertyTracker(at: \.buffer)
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         propertyTracker.player = player
@@ -48,7 +48,7 @@ final class PropertyTrackerTests: TestCase {
     }
 
     func testPlayerSetToNil() {
-        let propertyTracker = PropertyTracker(keyPath: \.buffer)
+        let propertyTracker = PropertyTracker(at: \.buffer)
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         propertyTracker.player = player

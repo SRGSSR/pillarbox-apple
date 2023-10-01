@@ -17,7 +17,7 @@ private struct SingleView: View {
     @ObservedObject var player: Player
     let action: () -> Void
 
-    @StateObject private var isBusyTracker = PropertyTracker(keyPath: \.isBusy)
+    @StateObject private var isBusyTracker = PropertyTracker(at: \.isBusy)
 
     var body: some View {
         ZStack {

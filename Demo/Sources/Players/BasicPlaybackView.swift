@@ -29,7 +29,7 @@ private struct TimeSlider: View {
 /// Behavior: h-exp, v-exp
 struct BasicPlaybackView: View {
     @ObservedObject var player: Player
-    @StateObject private var isBusyTracker = PropertyTracker(keyPath: \.isBusy)
+    @StateObject private var isBusyTracker = PropertyTracker(at: \.isBusy)
 
     var body: some View {
         ZStack {

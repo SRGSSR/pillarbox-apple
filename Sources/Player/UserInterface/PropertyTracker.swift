@@ -5,6 +5,7 @@
 //
 
 import Combine
+import Core
 import SwiftUI
 
 /// An observable object which tracks player properties.
@@ -22,7 +23,7 @@ public final class PropertyTracker<T>: ObservableObject where T: Equatable {
     @Published public private(set) var value: T
 
     /// Creates a property tracker.
-    public init(keyPath: KeyPath<PlayerProperties, T> = \.self) {
+    public init(at keyPath: KeyPath<PlayerProperties, T> = \.self) {
         value = PlayerProperties.empty[keyPath: keyPath]
         $player
             .map { player -> AnyPublisher<PlayerProperties, Never> in
@@ -32,8 +33,7 @@ public final class PropertyTracker<T>: ObservableObject where T: Equatable {
                     .eraseToAnyPublisher()
             }
             .switchToLatest()
-            .map(keyPath)
-            .removeDuplicates()
+            .slice(at: keyPath)
             .receiveOnMainThread()
             .assign(to: &$value)
     }
