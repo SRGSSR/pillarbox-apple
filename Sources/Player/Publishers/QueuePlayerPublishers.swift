@@ -48,6 +48,7 @@ extension QueuePlayer {
             publisher(for: \.isMuted)
         )
         .map { .init(rate: $0, isExternalPlaybackActive: $1, isMuted: $2) }
+        .removeDuplicates()
         .eraseToAnyPublisher()
     }
 }
