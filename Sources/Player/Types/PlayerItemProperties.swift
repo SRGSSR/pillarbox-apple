@@ -11,19 +11,29 @@ struct PlayerItemProperties: Equatable {
         .init(
             itemProperties: .empty,
             mediaSelectionProperties: .empty,
-            timeProperties: .empty
-        )
-    }
-
-    static var buffering: Self {
-        .init(
-            itemProperties: .empty,
-            mediaSelectionProperties: .empty,
-            timeProperties: .buffering
+            timeProperties: .empty,
+            isEmpty: true
         )
     }
 
     let itemProperties: ItemProperties
     let mediaSelectionProperties: MediaSelectionProperties
     let timeProperties: TimeProperties
+    let isEmpty: Bool
+
+    init(itemProperties: ItemProperties, mediaSelectionProperties: MediaSelectionProperties, timeProperties: TimeProperties) {
+        self.init(
+            itemProperties: itemProperties,
+            mediaSelectionProperties: mediaSelectionProperties,
+            timeProperties: timeProperties,
+            isEmpty: false
+        )
+    }
+
+    private init(itemProperties: ItemProperties, mediaSelectionProperties: MediaSelectionProperties, timeProperties: TimeProperties, isEmpty: Bool) {
+        self.itemProperties = itemProperties
+        self.mediaSelectionProperties = mediaSelectionProperties
+        self.timeProperties = timeProperties
+        self.isEmpty = isEmpty
+    }
 }

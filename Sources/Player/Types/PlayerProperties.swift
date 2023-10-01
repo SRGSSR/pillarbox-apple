@@ -13,6 +13,7 @@ public struct PlayerProperties: Equatable {
             mediaSelectionProperties: .empty,
             timeProperties: .empty,
             playbackProperties: .empty,
+            isEmpty: true,
             isSeeking: false
         )
     }
@@ -21,6 +22,7 @@ public struct PlayerProperties: Equatable {
     let mediaSelectionProperties: MediaSelectionProperties
     let timeProperties: TimeProperties
     let playbackProperties: PlaybackProperties
+    let isEmpty: Bool
 
     public let isSeeking: Bool
 
@@ -41,7 +43,7 @@ public struct PlayerProperties: Equatable {
     }
 
     public var isBuffering: Bool {
-        timeProperties.isBuffering
+        !isEmpty && !timeProperties.isPlaybackLikelyToKeepUp
     }
 
     public var buffer: Float {

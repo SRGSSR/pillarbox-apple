@@ -73,32 +73,23 @@ private extension Player {
     }
 
     func supportedPlaybackSpeedPublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
-        queuePlayer.publisher(for: \.currentItem)
-            .weakCapture(self)
-            .map { item, player -> AnyPublisher<PlaybackSpeedUpdate, Never> in
-                // TODO: Use consolidated properties
-                if let item {
-                    return Publishers.CombineLatest3(
-                        item.propertiesPublisher(),
-                        item.timePropertiesPublisher(),
-                        player.periodicTimePublisher(forInterval: CMTime(value: 1, timescale: 1))
-                    )
-                    .compactMap { properties, timeProperties, time in
-                        guard let range = Self.playbackSpeedRange(for: timeProperties.seekableTimeRange, itemDuration: properties.itemProperties.duration, time: time) else {
-                            return nil
-                        }
-                        return .range(range)
-                    }
-                    .eraseToAnyPublisher()
-                }
-                else {
-                    return Just(.range(nil))
-                        .eraseToAnyPublisher()
-                }
+        Publishers.CombineLatest(
+            queuePlayer.propertiesPublisher(),
+            periodicTimePublisher(forInterval: CMTime(value: 1, timescale: 1))
+        )
+        .compactMap { properties, time in
+            guard !properties.isEmpty else { return .range(nil) }
+            guard let range = Self.playbackSpeedRange(
+                for: properties.timeProperties.seekableTimeRange,
+                itemDuration: properties.itemProperties.duration,
+                time: time
+            ) else {
+                return nil
             }
-            .switchToLatest()
-            .removeDuplicates()
-            .eraseToAnyPublisher()
+            return .range(range)
+        }
+        .removeDuplicates()
+        .eraseToAnyPublisher()
     }
 
     // Publishes speed updates triggered from `AVPlayerViewController`. Not necessary on tvOS since the standard UI

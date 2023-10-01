@@ -11,10 +11,6 @@ struct TimeProperties: Equatable {
         .init(loadedTimeRanges: [], seekableTimeRanges: [], isPlaybackLikelyToKeepUp: true)
     }
 
-    static var buffering: Self {
-        .init(loadedTimeRanges: [], seekableTimeRanges: [], isPlaybackLikelyToKeepUp: false)
-    }
-
     let loadedTimeRanges: [NSValue]
     let seekableTimeRanges: [NSValue]
     let isPlaybackLikelyToKeepUp: Bool
@@ -31,10 +27,6 @@ struct TimeProperties: Equatable {
         let duration = seekableTimeRange.duration
         guard loadedTimeRange.end.isNumeric, duration.isNumeric, duration != .zero else { return 0 }
         return Float(loadedTimeRange.end.seconds / duration.seconds)
-    }
-
-    var isBuffering: Bool {
-        !isPlaybackLikelyToKeepUp
     }
 
     static func timeRange(from timeRanges: [NSValue]) -> CMTimeRange? {

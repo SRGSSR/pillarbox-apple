@@ -21,6 +21,7 @@ extension QueuePlayer {
                 mediaSelectionProperties: playerItemProperties.mediaSelectionProperties,
                 timeProperties: playerItemProperties.timeProperties,
                 playbackProperties: playbackProperties,
+                isEmpty: playerItemProperties.isEmpty,
                 isSeeking: isSeeking
             )
         }

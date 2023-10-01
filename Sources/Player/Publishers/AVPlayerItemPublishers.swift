@@ -28,7 +28,7 @@ extension AVPlayerItem {
                     presentationSize: isKnown ? presentationSize : nil
                 ),
                 mediaSelectionProperties: mediaSelectionProperties,
-                timeProperties: isKnown ? timeProperties : .buffering
+                timeProperties: isKnown ? timeProperties : .empty
             )
         }
         .removeDuplicates()
@@ -53,7 +53,7 @@ extension AVPlayerItem {
         .eraseToAnyPublisher()
     }
 
-    func timePropertiesPublisher() -> AnyPublisher<TimeProperties, Never> {
+    private func timePropertiesPublisher() -> AnyPublisher<TimeProperties, Never> {
         Publishers.CombineLatest3(
             publisher(for: \.loadedTimeRanges),
             publisher(for: \.seekableTimeRanges),
