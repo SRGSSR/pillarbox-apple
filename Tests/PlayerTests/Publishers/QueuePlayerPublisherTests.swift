@@ -49,16 +49,17 @@ final class QueuePlayerPublisherTests: TestCase {
 
     func testBufferingEmpty() {
         let player = QueuePlayer()
-        expectAtLeastEqualPublished(
+        expectEqualPublished(
             values: [false],
-            from: Self.bufferingPublisher(for: player)
+            from: Self.bufferingPublisher(for: player),
+            during: .milliseconds(500)
         )
     }
 
     func testBuffering() {
         let player = QueuePlayer(playerItem: .init(url: Stream.onDemand.url))
         expectEqualPublished(
-            values: [false, true, false],
+            values: [true, false],
             from: Self.bufferingPublisher(for: player),
             during: .milliseconds(500)
         )

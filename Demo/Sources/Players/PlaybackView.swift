@@ -265,7 +265,7 @@ private struct LoadingIndicator: View {
         ProgressView()
             .tint(.white)
             .opacity(isBufferingTracker.value ? 1 : 0)
-            .animation(.linear(duration: 0.2), value: isBufferingTracker.value)
+            .animation(.linear(duration: 0.1), value: isBufferingTracker.value)
             .bind(isBufferingTracker, to: player)
     }
 }
