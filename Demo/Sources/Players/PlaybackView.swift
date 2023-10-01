@@ -273,6 +273,7 @@ private struct LoadingIndicator: View {
 // Behavior: h-hug, v-hug
 private struct LiveLabel: View {
     @ObservedObject var player: Player
+    @ObservedObject var progressTracker: ProgressTracker
 
     private var canSkipToLive: Bool {
         player.canSkipToDefault()
@@ -322,7 +323,7 @@ private struct TimeBar: View {
             routePickerView()
             HStack(spacing: 20) {
                 TimeSlider(player: player, progressTracker: progressTracker)
-                LiveLabel(player: player)
+                LiveLabel(player: player, progressTracker: progressTracker)
 
                 Group {
                     settingsMenu()
