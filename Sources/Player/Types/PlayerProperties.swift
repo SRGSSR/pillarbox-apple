@@ -6,7 +6,7 @@
 
 import CoreMedia
 
-/// A type describing player propeerties.
+/// A type describing player properties.
 public struct PlayerProperties: Equatable {
     static var empty: Self {
         .init(
