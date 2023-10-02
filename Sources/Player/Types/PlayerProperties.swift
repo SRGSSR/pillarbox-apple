@@ -85,6 +85,12 @@ public struct PlayerProperties: Equatable {
         itemProperties.presentationSize
     }
 
+    /// The current media type.
+    public var mediaType: MediaType {
+        guard let presentationSize else { return .unknown }
+        return presentationSize == .zero ? .audio : .video
+    }
+
     var coreProperties: PlayerCoreProperties {
         .init(
             itemProperties: itemProperties,

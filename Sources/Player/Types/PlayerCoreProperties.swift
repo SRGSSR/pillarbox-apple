@@ -38,4 +38,9 @@ struct PlayerCoreProperties: Equatable {
     var presentationSize: CGSize? {
         itemProperties.presentationSize
     }
+
+    var mediaType: MediaType {
+        guard let presentationSize else { return .unknown }
+        return presentationSize == .zero ? .audio : .video
+    }
 }

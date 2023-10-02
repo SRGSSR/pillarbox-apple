@@ -67,12 +67,6 @@ public final class Player: ObservableObject, Equatable {
         StreamType(for: timeRange, itemDuration: itemDuration)
     }
 
-    /// The current media type.
-    public var mediaType: MediaType {
-        guard let presentationSize else { return .unknown }
-        return presentationSize == .zero ? .audio : .video
-    }
-
     /// The current time.
     public var time: CMTime {
         queuePlayer.currentTime().clamped(to: timeRange)

@@ -19,6 +19,11 @@ public extension Player {
         properties.presentationSize
     }
 
+    /// The current media type.
+    var mediaType: MediaType {
+        properties.mediaType
+    }
+
     /// The duration of a chunk for the currently played item.
     var chunkDuration: CMTime {
         properties.chunkDuration
