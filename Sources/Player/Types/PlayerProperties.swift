@@ -15,7 +15,7 @@ public struct PlayerProperties: Equatable {
             timeProperties: .empty,
             playbackProperties: .empty,
             isEmpty: true,
-            isSeeking: false
+            seekTime: nil
         )
     }
 
@@ -25,8 +25,13 @@ public struct PlayerProperties: Equatable {
     let playbackProperties: PlaybackProperties
     let isEmpty: Bool
 
+    /// The time at which the player is currently seeking, if any.
+    public let seekTime: CMTime?
+
     /// A Boolean describing whether the player is currently seeking to another position.
-    public let isSeeking: Bool
+    public var isSeeking: Bool {
+        seekTime != nil
+    }
 
     /// The player rate.
     public var rate: Float {

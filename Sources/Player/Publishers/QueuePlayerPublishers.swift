@@ -13,16 +13,16 @@ extension QueuePlayer {
         Publishers.CombineLatest3(
             playerItemPropertiesPublisher(),
             playbackPropertiesPublisher(),
-            isSeekingPublisher()
+            seekTimePublisher()
         )
-        .map { playerItemProperties, playbackProperties, isSeeking in
+        .map { playerItemProperties, playbackProperties, seekTime in
             .init(
                 itemProperties: playerItemProperties.itemProperties,
                 mediaSelectionProperties: playerItemProperties.mediaSelectionProperties,
                 timeProperties: playerItemProperties.timeProperties,
                 playbackProperties: playbackProperties,
                 isEmpty: playerItemProperties.isEmpty,
-                isSeeking: isSeeking
+                seekTime: seekTime
             )
         }
         .removeDuplicates()
@@ -81,23 +81,20 @@ extension QueuePlayer {
     }
 
     func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
-        Publishers.CombineLatest(
-            propertiesPublisher(),
-            seekTimePublisher()
-        )
-        .map { [weak self] properties, seekTime in
-            var nowPlayingInfo = NowPlayingInfo()
-            let streamType = StreamType(for: properties.timeProperties.seekableTimeRange, itemDuration: properties.itemProperties.duration)
-            if streamType != .unknown {
-                nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (streamType == .live)
-                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : properties.rate
-                if let time = seekTime ?? self?.currentTime(), time.isValid {
-                    nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - properties.timeProperties.seekableTimeRange.start).seconds
+        propertiesPublisher()
+            .map { [weak self] properties in
+                var nowPlayingInfo = NowPlayingInfo()
+                let streamType = StreamType(for: properties.timeProperties.seekableTimeRange, itemDuration: properties.itemProperties.duration)
+                if streamType != .unknown {
+                    nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (streamType == .live)
+                    nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : properties.rate
+                    if let time = properties.seekTime ?? self?.currentTime(), time.isValid {
+                        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - properties.timeProperties.seekableTimeRange.start).seconds
+                    }
+                    nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = properties.timeProperties.seekableTimeRange.duration.seconds
                 }
-                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = properties.timeProperties.seekableTimeRange.duration.seconds
+                return nowPlayingInfo
             }
-            return nowPlayingInfo
-        }
-        .eraseToAnyPublisher()
+            .eraseToAnyPublisher()
     }
 }
