@@ -79,22 +79,4 @@ extension QueuePlayer {
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
-
-    func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
-        propertiesPublisher()
-            .map { [weak self] properties in
-                var nowPlayingInfo = NowPlayingInfo()
-                let streamType = StreamType(for: properties.timeProperties.seekableTimeRange, itemDuration: properties.itemProperties.duration)
-                if streamType != .unknown {
-                    nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (streamType == .live)
-                    nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : properties.rate
-                    if let time = properties.seekTime ?? self?.currentTime(), time.isValid {
-                        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - properties.timeProperties.seekableTimeRange.start).seconds
-                    }
-                    nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = properties.timeProperties.seekableTimeRange.duration.seconds
-                }
-                return nowPlayingInfo
-            }
-            .eraseToAnyPublisher()
-    }
 }

@@ -46,6 +46,25 @@ extension Player {
             }
             .eraseToAnyPublisher()
     }
+
+    func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
+        propertiesPublisher
+            .map { [weak queuePlayer] properties in
+                var nowPlayingInfo = NowPlayingInfo()
+                let timeProperties = properties.timeProperties
+                let streamType = StreamType(for: timeProperties.seekableTimeRange, itemDuration: properties.itemProperties.duration)
+                if streamType != .unknown {
+                    nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (streamType == .live)
+                    nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : properties.rate
+                    if let time = properties.seekTime ?? queuePlayer?.currentTime(), time.isValid {
+                        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - timeProperties.seekableTimeRange.start).seconds
+                    }
+                    nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = timeProperties.seekableTimeRange.duration.seconds
+                }
+                return nowPlayingInfo
+            }
+            .eraseToAnyPublisher()
+    }
 }
 
 private extension Player {

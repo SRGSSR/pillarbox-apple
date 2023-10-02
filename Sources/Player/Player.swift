@@ -295,7 +295,7 @@ private extension Player {
     func configureControlCenterMetadataUpdatePublisher() {
         Publishers.CombineLatest3(
             nowPlayingInfoMetadataPublisher(),
-            queuePlayer.nowPlayingInfoPlaybackPublisher(),
+            nowPlayingInfoPlaybackPublisher(),
             $isActive
         )
         .receiveOnMainThread()
