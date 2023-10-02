@@ -53,7 +53,7 @@ private struct MediaSelectionMenuContent: View {
 
 @available(iOS 16.0, tvOS 17.0, *)
 private struct SettingsMenuContent: View {
-    @ObservedObject var player: Player
+    var player: Player
 
     var body: some View {
         playbackSpeedMenu()
