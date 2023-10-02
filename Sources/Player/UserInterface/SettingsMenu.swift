@@ -32,7 +32,9 @@ private struct PlaybackSpeedMenuContent: View {
 @available(iOS 16.0, tvOS 17.0, *)
 private struct MediaSelectionMenuContent: View {
     let characteristic: AVMediaCharacteristic
-    @ObservedObject var player: Player
+    let player: Player
+
+    @StateObject var propertyTracker = PropertyTracker(at: \.mediaSelectionProperties)
 
     var body: some View {
         Picker("", selection: player.mediaOption(for: characteristic)) {
@@ -41,6 +43,7 @@ private struct MediaSelectionMenuContent: View {
             }
         }
         .pickerStyle(.inline)
+        .bind(propertyTracker, to: player)
     }
 
     private var mediaOptions: [MediaSelectionOption] {
