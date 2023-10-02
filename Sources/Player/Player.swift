@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import Core
 import DequeModule
 import MediaPlayer
 import TimelaneCombine
@@ -240,8 +241,7 @@ private extension Player {
 private extension Player {
     func configurePropertiesPublisher() {
         propertiesPublisher
-            .map(\.coreProperties)
-            .removeDuplicates()
+            .slice(at: \.coreProperties)
             .receiveOnMainThread()
             .assign(to: &$properties)
     }
