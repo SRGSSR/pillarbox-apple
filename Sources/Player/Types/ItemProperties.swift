@@ -22,8 +22,4 @@ struct ItemProperties: Equatable {
     let minimumTimeOffsetFromLive: CMTime
 
     let presentationSize: CGSize?
-
-    var chunkDuration: CMTime {
-        CMTimeMultiplyByRatio(minimumTimeOffsetFromLive, multiplier: 1, divisor: 3)
-    }
 }

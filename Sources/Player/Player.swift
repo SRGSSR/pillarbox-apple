@@ -309,13 +309,12 @@ private extension Player {
         )
         .sink { [weak self] update, properties in
             guard let self else { return }
-            let streamType = StreamType(for: properties.seekableTimeRange, itemDuration: properties.duration)
-            let areSkipsEnabled = update.items.count <= 1 && streamType != .live
+            let areSkipsEnabled = update.items.count <= 1 && properties.streamType != .live
             nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
             nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
 
             let index = update.currentIndex()
-            nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: update.items, streamType: streamType)
+            nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: update.items, streamType: properties.streamType)
             nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: index, in: update.items)
         }
         .store(in: &cancellables)

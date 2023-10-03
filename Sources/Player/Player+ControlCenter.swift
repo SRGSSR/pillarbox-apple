@@ -51,9 +51,8 @@ extension Player {
         propertiesPublisher
             .map { [weak queuePlayer] properties in
                 var nowPlayingInfo = NowPlayingInfo()
-                let streamType = StreamType(for: properties.seekableTimeRange, itemDuration: properties.duration)
-                if streamType != .unknown {
-                    nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (streamType == .live)
+                if properties.streamType != .unknown {
+                    nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (properties.streamType == .live)
                     nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : properties.rate
                     if let time = properties.seekTime ?? queuePlayer?.currentTime(), time.isValid {
                         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - properties.seekableTimeRange.start).seconds

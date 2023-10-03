@@ -50,6 +50,11 @@ public struct PlayerProperties: Equatable {
         coreProperties.mediaType
     }
 
+    /// The type of stream currently being played.
+    public var streamType: StreamType {
+        StreamType(for: seekableTimeRange, itemDuration: duration)
+    }
+
     init(
         timeProperties: TimeProperties,
         coreProperties: PlayerCoreProperties,
