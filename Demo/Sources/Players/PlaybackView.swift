@@ -276,27 +276,31 @@ private struct LoadingIndicator: View {
 private struct LiveLabel: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
+    @State private var streamType: StreamType = .unknown
 
     private var canSkipToLive: Bool {
         player.canSkipToDefault()
     }
 
     private var liveButtonColor: Color {
-        canSkipToLive && player.streamType == .dvr ? .gray : .red
+        canSkipToLive && streamType == .dvr ? .gray : .red
     }
 
     var body: some View {
-        if player.streamType == .dvr || player.streamType == .live {
-            Button(action: skipToLive) {
-                Text("LIVE")
-                    .foregroundColor(.white)
-                    .padding(.vertical, 4)
-                    .padding(.horizontal, 6)
-                    .background(liveButtonColor)
-                    .cornerRadius(4)
+        Group {
+            if streamType == .dvr || streamType == .live {
+                Button(action: skipToLive) {
+                    Text("LIVE")
+                        .foregroundColor(.white)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 6)
+                        .background(liveButtonColor)
+                        .cornerRadius(4)
+                }
+                .disabled(!canSkipToLive)
             }
-            .disabled(!canSkipToLive)
         }
+        .onReceive(player: player, assign: \.streamType, to: $streamType)
     }
 
     private func skipToLive() {
@@ -382,21 +386,22 @@ private struct TimeSlider: View {
 
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
+    @State private var streamType: StreamType = .unknown
 
     private var formattedElapsedTime: String? {
-        guard player.streamType == .onDemand, let time = progressTracker.time, let timeRange = progressTracker.timeRange else {
+        guard streamType == .onDemand, let time = progressTracker.time, let timeRange = progressTracker.timeRange else {
             return nil
         }
         return Self.formattedTime((time - timeRange.start).seconds, duration: timeRange.duration.seconds)
     }
 
     private var formattedTotalTime: String? {
-        guard player.streamType == .onDemand, let timeRange = progressTracker.timeRange else { return nil }
+        guard streamType == .onDemand, let timeRange = progressTracker.timeRange else { return nil }
         return Self.formattedTime(timeRange.duration.seconds, duration: timeRange.duration.seconds)
     }
 
     private var isVisible: Bool {
-        progressTracker.isProgressAvailable && player.streamType != .unknown
+        progressTracker.isProgressAvailable && streamType != .unknown
     }
 
     var body: some View {
@@ -414,6 +419,7 @@ private struct TimeSlider: View {
         .shadow(color: .init(white: 0.2, opacity: 0.8), radius: 15)
         .opacity(isVisible ? 1 : 0)
         ._debugBodyCounter(color: .blue)
+        .onReceive(player: player, assign: \.streamType, to: $streamType)
     }
 
     private static func formattedTime(_ time: TimeInterval, duration: TimeInterval) -> String {

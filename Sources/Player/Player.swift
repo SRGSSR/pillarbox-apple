@@ -62,8 +62,7 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    /// The type of stream currently being played.
-    public var streamType: StreamType {
+    var streamType: StreamType {
         StreamType(for: timeRange, itemDuration: itemDuration)
     }
 
