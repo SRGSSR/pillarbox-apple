@@ -259,7 +259,7 @@ private struct VolumeButton: View {
 
 // Behavior: h-hug, v-hug
 private struct LoadingIndicator: View {
-    @ObservedObject var player: Player
+    let player: Player
 
     @StateObject private var isBufferingTracker = PropertyTracker(at: \.isBuffering)
 
