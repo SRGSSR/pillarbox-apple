@@ -15,8 +15,14 @@ public extension View {
     ///   - binding: The binding to which the value must be assigned.
     ///   - Returns: A view that fills the given binding when the player's publisher emits an
     ///   event.
-    func onReceive<T>(player: Player, assign keyPath: KeyPath<PlayerProperties, T>, to binding: Binding<T>) -> some View
+    @ViewBuilder
+    func onReceive<T>(player: Player?, assign keyPath: KeyPath<PlayerProperties, T>, to binding: Binding<T>) -> some View
         where T: Equatable {
-            onReceive(player.propertiesPublisher, assign: keyPath, to: binding)
+            if let player {
+                onReceive(player.propertiesPublisher, assign: keyPath, to: binding)
+            }
+            else {
+                self
+            }
     }
 }
