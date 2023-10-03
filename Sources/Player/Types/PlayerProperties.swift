@@ -10,20 +10,16 @@ import CoreMedia
 public struct PlayerProperties: Equatable {
     static var empty: Self {
         .init(
-            itemProperties: .empty,
             timeProperties: .empty,
-            playbackProperties: .empty,
-            mediaSelectionProperties: .empty,
+            coreProperties: .empty,
             isEmpty: true,
             seekTime: nil
         )
     }
 
-    private let itemProperties: ItemProperties
     private let timeProperties: TimeProperties
-    private let playbackProperties: PlaybackProperties
+    let coreProperties: PlayerCoreProperties
 
-    let mediaSelectionProperties: MediaSelectionProperties
     let isEmpty: Bool
 
     /// The time at which the player is currently seeking, if any.
@@ -36,7 +32,7 @@ public struct PlayerProperties: Equatable {
 
     /// The player playback state.
     public var playbackState: PlaybackState {
-        .init(itemState: itemProperties.state, rate: rate)
+        coreProperties.playbackState
     }
 
     /// A Boolean describing whether the player is currently buffering.
@@ -51,62 +47,19 @@ public struct PlayerProperties: Equatable {
 
     /// The current media type.
     public var mediaType: MediaType {
-        guard let presentationSize else { return .unknown }
-        return presentationSize == .zero ? .audio : .video
-    }
-
-    var coreProperties: PlayerCoreProperties {
-        .init(
-            itemProperties: itemProperties,
-            mediaSelectionProperties: mediaSelectionProperties,
-            playbackProperties: playbackProperties
-        )
+        coreProperties.mediaType
     }
 
     init(
-        itemProperties: ItemProperties,
         timeProperties: TimeProperties,
-        playbackProperties: PlaybackProperties,
-        mediaSelectionProperties: MediaSelectionProperties,
+        coreProperties: PlayerCoreProperties,
         isEmpty: Bool,
         seekTime: CMTime?
     ) {
-        self.itemProperties = itemProperties
         self.timeProperties = timeProperties
-        self.playbackProperties = playbackProperties
-        self.mediaSelectionProperties = mediaSelectionProperties
+        self.coreProperties = coreProperties
         self.isEmpty = isEmpty
         self.seekTime = seekTime
-    }
-}
-
-// MARK: ItemProperties
-extension PlayerProperties {
-    var state: ItemState {
-        itemProperties.state
-    }
-
-    /// The stream duration.
-    var duration: CMTime {
-        itemProperties.duration
-    }
-
-    var minimumTimeOffsetFromLive: CMTime {
-        itemProperties.minimumTimeOffsetFromLive
-    }
-
-    /// The current presentation size.
-    ///
-    /// Might be zero for audio content or `nil` when unknown.
-    public var presentationSize: CGSize? {
-        itemProperties.presentationSize
-    }
-
-    /// The duration of a chunk for the currently played item.
-    ///
-    /// Might be `.invalid` when no content is being played or when unknown.
-    public var chunkDuration: CMTime {
-        CMTimeMultiplyByRatio(minimumTimeOffsetFromLive, multiplier: 1, divisor: 3)
     }
 }
 
@@ -142,20 +95,50 @@ extension PlayerProperties {
     }
 }
 
+// MARK: ItemProperties
+extension PlayerProperties {
+    var state: ItemState {
+        coreProperties.state
+    }
+
+    /// The stream duration.
+    public var duration: CMTime {
+        coreProperties.duration
+    }
+
+    var minimumTimeOffsetFromLive: CMTime {
+        coreProperties.minimumTimeOffsetFromLive
+    }
+
+    /// The current presentation size.
+    ///
+    /// Might be zero for audio content or `nil` when unknown.
+    public var presentationSize: CGSize? {
+        coreProperties.presentationSize
+    }
+
+    /// The duration of a chunk for the currently played item.
+    ///
+    /// Might be `.invalid` when no content is being played or when unknown.
+    public var chunkDuration: CMTime {
+        coreProperties.chunkDuration
+    }
+}
+
 // MARK: PlaybackProperties
 public extension PlayerProperties {
     /// The player rate.
     var rate: Float {
-        playbackProperties.rate
+        coreProperties.rate
     }
 
     /// A Boolean describing whether the player is currently playing video in external playback mode.
     var isExternalPlaybackActive: Bool {
-        playbackProperties.isExternalPlaybackActive
+        coreProperties.isExternalPlaybackActive
     }
 
     /// A Boolean describing whether the player is currently muted.
     var isMuted: Bool {
-        playbackProperties.isMuted
+        coreProperties.isMuted
     }
 }

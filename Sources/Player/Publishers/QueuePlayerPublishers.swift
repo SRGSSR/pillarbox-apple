@@ -17,10 +17,12 @@ extension QueuePlayer {
         )
         .map { playerItemProperties, playbackProperties, seekTime in
             .init(
-                itemProperties: playerItemProperties.itemProperties,
                 timeProperties: playerItemProperties.timeProperties,
-                playbackProperties: playbackProperties,
-                mediaSelectionProperties: playerItemProperties.mediaSelectionProperties,
+                coreProperties: .init(
+                    itemProperties: playerItemProperties.itemProperties,
+                    mediaSelectionProperties: playerItemProperties.mediaSelectionProperties,
+                    playbackProperties: playbackProperties
+                ),
                 isEmpty: playerItemProperties.isEmpty,
                 seekTime: seekTime
             )
