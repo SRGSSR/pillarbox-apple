@@ -80,8 +80,8 @@ private extension Player {
         .compactMap { properties, time in
             guard !properties.isEmpty else { return .range(nil) }
             guard let range = Self.playbackSpeedRange(
-                for: properties.timeProperties.seekableTimeRange,
-                itemDuration: properties.itemProperties.duration,
+                for: properties.seekableTimeRange,
+                itemDuration: properties.duration,
                 time: time
             ) else {
                 return nil

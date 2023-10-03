@@ -106,7 +106,7 @@ public final class ProgressTracker: ObservableObject {
                     player.queuePlayer.propertiesPublisher()
                 )
                 .map { time, properties in
-                    Self.progress(for: time, in: properties.timeProperties.seekableTimeRange)
+                    Self.progress(for: time, in: properties.seekableTimeRange)
                 }
                 .prepend(Self.progress(for: player.time, in: player.timeRange))
                 .eraseToAnyPublisher()

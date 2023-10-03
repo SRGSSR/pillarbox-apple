@@ -21,28 +21,28 @@ final class QueuePlayerPublisherTests: TestCase {
 
     private static func presentationSizePublisher(for player: QueuePlayer) -> AnyPublisher<CGSize?, Never> {
         player.propertiesPublisher()
-            .map(\.itemProperties.presentationSize)
+            .map(\.presentationSize)
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
     private static func itemStatePublisher(for player: QueuePlayer) -> AnyPublisher<ItemState, Never> {
         player.propertiesPublisher()
-            .map(\.itemProperties.state)
+            .map(\.state)
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
     private static func durationPublisher(for player: QueuePlayer) -> AnyPublisher<CMTime, Never> {
         player.propertiesPublisher()
-            .map(\.itemProperties.duration)
+            .map(\.duration)
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
     private static func seekableTimeRangePublisher(for player: QueuePlayer) -> AnyPublisher<CMTimeRange, Never> {
         player.propertiesPublisher()
-            .map(\.timeProperties.seekableTimeRange)
+            .map(\.seekableTimeRange)
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
