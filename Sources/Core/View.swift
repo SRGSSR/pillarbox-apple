@@ -17,7 +17,7 @@ public extension View {
     ///   event.
     func onReceive<P, T>(_ publisher: P, assign keyPath: KeyPath<P.Output, T>, to binding: Binding<T>) -> some View
         where P: Publisher, P.Failure == Never, T: Equatable {
-            onReceive(publisher.slice(at: keyPath)) { output in
+            onReceive(publisher.slice(at: keyPath).receiveOnMainThread()) { output in
                 binding.wrappedValue = output
             }
     }
