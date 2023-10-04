@@ -6,7 +6,7 @@
 
 import CoreMedia
 
-struct PlayerCoreProperties: Equatable {
+struct CoreProperties: Equatable {
     static var empty: Self {
         .init(itemProperties: .empty, mediaSelectionProperties: .empty, playbackProperties: .empty)
     }
@@ -17,7 +17,7 @@ struct PlayerCoreProperties: Equatable {
 }
 
 // MARK: ItemProperties
-extension PlayerCoreProperties {
+extension CoreProperties {
     var state: ItemState {
         itemProperties.state
     }
@@ -58,7 +58,7 @@ extension PlayerCoreProperties {
 }
 
 // MARK: PlaybackProperties
-extension PlayerCoreProperties {
+extension CoreProperties {
     /// The player rate.
     var rate: Float {
         playbackProperties.rate

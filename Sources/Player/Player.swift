@@ -28,7 +28,7 @@ public final class Player: ObservableObject, Equatable {
     /// A Boolean setting whether trackers must be enabled or not.
     @Published public var isTrackingEnabled = true
 
-    @Published var properties: PlayerCoreProperties = .empty
+    @Published var properties: CoreProperties = .empty
     @Published var storedItems: Deque<PlayerItem>
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
 

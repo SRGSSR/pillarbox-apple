@@ -18,7 +18,7 @@ public struct PlayerProperties: Equatable {
     }
 
     private let timeProperties: TimeProperties
-    let coreProperties: PlayerCoreProperties
+    let coreProperties: CoreProperties
 
     let isEmpty: Bool
 
@@ -57,7 +57,7 @@ public struct PlayerProperties: Equatable {
 
     init(
         timeProperties: TimeProperties,
-        coreProperties: PlayerCoreProperties,
+        coreProperties: CoreProperties,
         isEmpty: Bool,
         seekTime: CMTime?
     ) {
