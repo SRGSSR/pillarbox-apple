@@ -54,7 +54,7 @@
          <EnvironmentVariable
             key = "PILLARBOX_DEBUG_BODY_COUNTER"
             value = ""
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
    </LaunchAction>

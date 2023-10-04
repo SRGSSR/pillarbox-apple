@@ -19,7 +19,7 @@ public extension Player {
     /// - Returns: `true` if possible.
     func canSkipForward() -> Bool {
         guard timeRange.isValidAndNotEmpty else { return false }
-        if itemDuration.isIndefinite {
+        if duration.isIndefinite {
             let currentTime = queuePlayer.targetSeekTime ?? time
             return canSeek(to: currentTime + forwardSkipTime)
         }

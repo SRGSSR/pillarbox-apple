@@ -28,7 +28,6 @@ public final class Player: ObservableObject, Equatable {
     /// A Boolean setting whether trackers must be enabled or not.
     @Published public var isTrackingEnabled = true
 
-    @Published var properties: CoreProperties = .empty
     @Published var storedItems: Deque<PlayerItem>
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
 
@@ -46,6 +45,15 @@ public final class Player: ObservableObject, Equatable {
 
     @Published private var currentTracker: CurrentTracker?
 
+    var properties: PlayerProperties = .empty {
+        willSet {
+            guard properties.coreProperties != newValue.coreProperties else {
+                return
+            }
+            objectWillChange.send()
+        }
+    }
+
     /// The player configuration
     public let configuration: PlayerConfiguration
 
@@ -62,20 +70,9 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    var streamType: StreamType {
-        StreamType(for: timeRange, itemDuration: itemDuration)
-    }
-
     /// The current time.
     public var time: CMTime {
         queuePlayer.currentTime().clamped(to: timeRange)
-    }
-
-    /// The available time range.
-    ///
-    /// `.invalid` when unknown.
-    public var timeRange: CMTimeRange {
-        queuePlayer.timeRange
     }
 
     /// The low-level system player.
@@ -84,13 +81,6 @@ public final class Player: ObservableObject, Equatable {
     /// of this player directly is not supported and leads to undefined behavior.
     public var systemPlayer: AVPlayer {
         queuePlayer
-    }
-
-    /// The current item duration.
-    ///
-    /// `.invalid` when unknown.
-    var itemDuration: CMTime {
-        queuePlayer.itemDuration
     }
 
     let queuePlayer = QueuePlayer()
@@ -234,9 +224,11 @@ private extension Player {
 private extension Player {
     func configurePropertiesPublisher() {
         propertiesPublisher
-            .slice(at: \.coreProperties)
             .receiveOnMainThread()
-            .assign(to: &$properties)
+            .sink { [weak self] properties in
+                self?.properties = properties
+            }
+            .store(in: &cancellables)
     }
 
     func configureErrorPublisher() {
