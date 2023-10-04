@@ -224,6 +224,7 @@ private extension Player {
 private extension Player {
     func configurePropertiesPublisher() {
         propertiesPublisher
+            .print("-->")
             .receiveOnMainThread()
             .sink { [weak self] properties in
                 self?.properties = properties
