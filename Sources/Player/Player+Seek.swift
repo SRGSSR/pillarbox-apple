@@ -45,8 +45,8 @@ public extension Player {
     /// - Parameter time: The time to seek to.
     /// - Returns: `true` if possible.
     func canSeek(to time: CMTime) -> Bool {
-        guard timeRange.isValidAndNotEmpty else { return false }
-        return timeRange.start <= time && time <= timeRange.end
+        guard seekableTimeRange.isValidAndNotEmpty else { return false }
+        return seekableTimeRange.start <= time && time <= seekableTimeRange.end
     }
 
     /// Seeks to a given position.
@@ -63,7 +63,7 @@ public extension Player {
         completion: @escaping (Bool) -> Void = { _ in }
     ) {
         // Mitigates issues arising when seeking to the very end of the range by introducing a small offset.
-        let time = position.time.clamped(to: timeRange, offset: CMTime(value: 1, timescale: 10))
+        let time = position.time.clamped(to: seekableTimeRange, offset: CMTime(value: 1, timescale: 10))
         guard time.isValid else {
             completion(true)
             return

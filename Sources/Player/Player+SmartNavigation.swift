@@ -66,7 +66,7 @@ private extension Player {
     static let startTimeThreshold: TimeInterval = 3
 
     func isFarFromStartTime() -> Bool {
-        time.isValid && timeRange.isValid && (time - timeRange.start).seconds >= Self.startTimeThreshold
+        time.isValid && seekableTimeRange.isValid && (time - seekableTimeRange.start).seconds >= Self.startTimeThreshold
     }
 
     func shouldSeekToStartTime() -> Bool {

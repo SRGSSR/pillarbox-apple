@@ -86,7 +86,7 @@ public final class ProgressTracker: ObservableObject {
     ///
     /// Non-`nil` returned ranges are guaranteed to be valid.
     public var timeRange: CMTimeRange? {
-        guard let timeRange = player?.timeRange, timeRange.isValidAndNotEmpty else { return nil }
+        guard let timeRange = player?.seekableTimeRange, timeRange.isValidAndNotEmpty else { return nil }
         return timeRange
     }
 
@@ -108,7 +108,7 @@ public final class ProgressTracker: ObservableObject {
                 .map { time, properties in
                     Self.progress(for: time, in: properties.seekableTimeRange)
                 }
-                .prepend(Self.progress(for: player.time, in: player.timeRange))
+                .prepend(Self.progress(for: player.time, in: player.seekableTimeRange))
                 .eraseToAnyPublisher()
             }
             .switchToLatest()

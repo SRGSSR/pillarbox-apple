@@ -39,13 +39,7 @@ public final class ComScoreTracker: PlayerItemTracker {
         )
         .sink { [weak self, weak player] state, properties in
             guard let self, let player else { return }
-            notify(
-                applicationState: state,
-                playbackState: properties.playbackState,
-                isSeeking: properties.isSeeking,
-                isBuffering: properties.isBuffering,
-                player: player
-            )
+            notify(applicationState: state, player: player, properties: properties)
         }
         .store(in: &cancellables)
 
@@ -68,18 +62,19 @@ public final class ComScoreTracker: PlayerItemTracker {
     }
 
     // swiftlint:disable:next cyclomatic_complexity
-    private func notify(applicationState: ApplicationState, playbackState: PlaybackState, isSeeking: Bool, isBuffering: Bool, player: Player) {
+    private func notify(applicationState: ApplicationState, player: Player, properties: PlayerProperties) {
         guard !metadata.labels.isEmpty else { return }
 
         AnalyticsListener.capture(streamingAnalytics.configuration())
-        streamingAnalytics.setProperties(for: player, streamType: metadata.streamType)
+        // TODO: Is the stream type can be retrieve from the player?
+        streamingAnalytics.setProperties(for: properties, time: player.time, streamType: metadata.streamType)
 
         guard applicationState == .foreground else {
             streamingAnalytics.notifyEvent(for: .paused, at: player.effectivePlaybackSpeed)
             return
         }
 
-        switch (isSeeking, isBuffering) {
+        switch (properties.isSeeking, properties.isBuffering) {
         case (true, true):
             streamingAnalytics.notifySeekStart()
             streamingAnalytics.notifyBufferStart()
@@ -90,7 +85,7 @@ public final class ComScoreTracker: PlayerItemTracker {
             streamingAnalytics.notifyBufferStart()
         case (false, false):
             streamingAnalytics.notifyBufferStop()
-            streamingAnalytics.notifyEvent(for: playbackState, at: player.effectivePlaybackSpeed)
+            streamingAnalytics.notifyEvent(for: properties.playbackState, at: player.effectivePlaybackSpeed)
         }
     }
 

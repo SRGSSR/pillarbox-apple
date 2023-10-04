@@ -28,7 +28,7 @@ public final class CommandersActTracker: PlayerItemTracker {
             .weakCapture(player)
             .sink { [weak self] properties, player in
                 guard let self else { return }
-                notify(playbackState: properties.playbackState, isSeeking: properties.isSeeking, player: player)
+                notify(properties: properties, player: player)
                 streamingAnalytics?.notify(isBuffering: properties.isBuffering)
             }
             .store(in: &cancellables)
@@ -47,12 +47,12 @@ public final class CommandersActTracker: PlayerItemTracker {
     }
 
     // swiftlint:disable:next cyclomatic_complexity
-    private func notify(playbackState: PlaybackState, isSeeking: Bool, player: Player) {
-        if isSeeking {
+    private func notify(properties: PlayerProperties, player: Player) {
+        if properties.isSeeking {
             streamingAnalytics?.notify(.seek)
         }
         else {
-            switch playbackState {
+            switch properties.playbackState {
             case .playing:
                 guard streamingAnalytics != nil else {
                     streamingAnalytics = CommandersActStreamingAnalytics(streamType: metadata.streamType) { [weak self, weak player] in
@@ -60,7 +60,7 @@ public final class CommandersActTracker: PlayerItemTracker {
                         return CommandersActStreamingAnalytics.EventData(
                             labels: labels(for: player),
                             time: player.time,
-                            range: player.timeRange
+                            range: properties.seekableTimeRange
                         )
                     }
                     break

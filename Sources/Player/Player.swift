@@ -72,7 +72,7 @@ public final class Player: ObservableObject, Equatable {
 
     /// The current time.
     public var time: CMTime {
-        queuePlayer.currentTime().clamped(to: timeRange)
+        queuePlayer.currentTime().clamped(to: seekableTimeRange)
     }
 
     /// The low-level system player.

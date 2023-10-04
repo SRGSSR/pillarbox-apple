@@ -117,7 +117,7 @@ final class ProgressTrackerProgressTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
 
-        expect(player.timeRange).toEventuallyNot(equal(.invalid))
+        expect(player.seekableTimeRange).toEventuallyNot(equal(.invalid))
         let time = CMTime(value: 20, timescale: 1)
 
         waitUntil { done in

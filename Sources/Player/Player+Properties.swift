@@ -33,14 +33,6 @@ public extension Player {
     var isExternalPlaybackActive: Bool {
         properties.isExternalPlaybackActive
     }
-
-    /// The available time range.
-    ///
-    /// `.invalid` when unknown.
-    var timeRange: CMTimeRange {
-        // TODO: Try to remove it! Used by analytics.
-        properties.seekableTimeRange
-    }
 }
 
 extension Player {
@@ -50,5 +42,9 @@ extension Player {
 
     var duration: CMTime {
         properties.duration
+    }
+
+    var seekableTimeRange: CMTimeRange {
+        properties.seekableTimeRange
     }
 }
