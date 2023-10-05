@@ -12,7 +12,7 @@ struct LinkView: View {
     let media: Media
 
     @StateObject private var player = Player(configuration: .externalPlaybackDisabled)
-    @State private var isBusy = false
+    @StateObject private var isBusyTracker = PropertyTracker(at: \.isBusy)
     @State private var isDisplayed = true
 
     var body: some View {
@@ -20,7 +20,7 @@ struct LinkView: View {
             ZStack {
                 BasicPlaybackView(player: isDisplayed ? player : Player())
                 ProgressView()
-                    .opacity(isBusy ? 1 : 0)
+                    .opacity(isBusyTracker.value ? 1 : 0)
             }
             Toggle("Content displayed", isOn: $isDisplayed)
                 .padding()
@@ -30,7 +30,7 @@ struct LinkView: View {
         }
         .onAppear(perform: play)
         .onForeground(perform: resume)
-        .onReceive(player: player, assign: \.isBusy, to: $isBusy)
+        .bind(isBusyTracker, to: player)
         .tracked(name: "link")
     }
 

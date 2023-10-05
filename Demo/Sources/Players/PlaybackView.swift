@@ -261,14 +261,14 @@ private struct VolumeButton: View {
 private struct LoadingIndicator: View {
     let player: Player
 
-    @State private var isBuffering = false
+    @StateObject private var isBufferingTracker = PropertyTracker(at: \.isBuffering)
 
     var body: some View {
         ProgressView()
             .tint(.white)
-            .opacity(isBuffering ? 1 : 0)
-            .animation(.linear(duration: 0.1), value: isBuffering)
-            .onReceive(player: player, assign: \.isBuffering, to: $isBuffering)
+            .opacity(isBufferingTracker.value ? 1 : 0)
+            .animation(.linear(duration: 0.1), value: isBufferingTracker.value)
+            .bind(isBufferingTracker, to: player)
     }
 }
 
@@ -276,19 +276,21 @@ private struct LoadingIndicator: View {
 private struct LiveLabel: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
+
     @State private var streamType: StreamType = .unknown
+    @StateObject private var streamTypeTracker = PropertyTracker(at: \.streamType)
 
     private var canSkipToLive: Bool {
         player.canSkipToDefault()
     }
 
     private var liveButtonColor: Color {
-        canSkipToLive && streamType == .dvr ? .gray : .red
+        canSkipToLive && streamTypeTracker.value == .dvr ? .gray : .red
     }
 
     var body: some View {
         Group {
-            if streamType == .dvr || streamType == .live {
+            if streamType == .dvr || streamTypeTracker.value == .live {
                 Button(action: skipToLive) {
                     Text("LIVE")
                         .foregroundColor(.white)
@@ -300,7 +302,7 @@ private struct LiveLabel: View {
                 .disabled(!canSkipToLive)
             }
         }
-        .onReceive(player: player, assign: \.streamType, to: $streamType)
+        .bind(streamTypeTracker, to: player)
     }
 
     private func skipToLive() {
@@ -386,22 +388,22 @@ private struct TimeSlider: View {
 
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
-    @State private var streamType: StreamType = .unknown
+    @StateObject private var streamTypeTracker = PropertyTracker(at: \.streamType)
 
     private var formattedElapsedTime: String? {
-        guard streamType == .onDemand, let time = progressTracker.time, let timeRange = progressTracker.timeRange else {
+        guard streamTypeTracker.value == .onDemand, let time = progressTracker.time, let timeRange = progressTracker.timeRange else {
             return nil
         }
         return Self.formattedTime((time - timeRange.start).seconds, duration: timeRange.duration.seconds)
     }
 
     private var formattedTotalTime: String? {
-        guard streamType == .onDemand, let timeRange = progressTracker.timeRange else { return nil }
+        guard streamTypeTracker.value == .onDemand, let timeRange = progressTracker.timeRange else { return nil }
         return Self.formattedTime(timeRange.duration.seconds, duration: timeRange.duration.seconds)
     }
 
     private var isVisible: Bool {
-        progressTracker.isProgressAvailable && streamType != .unknown
+        progressTracker.isProgressAvailable && streamTypeTracker.value != .unknown
     }
 
     var body: some View {
@@ -418,8 +420,8 @@ private struct TimeSlider: View {
         .tint(.white)
         .shadow(color: .init(white: 0.2, opacity: 0.8), radius: 15)
         .opacity(isVisible ? 1 : 0)
+        .bind(streamTypeTracker, to: player)
         ._debugBodyCounter(color: .blue)
-        .onReceive(player: player, assign: \.streamType, to: $streamType)
     }
 
     private static func formattedTime(_ time: TimeInterval, duration: TimeInterval) -> String {

@@ -14,7 +14,7 @@ import Streams
 
 final class ProgressTrackerSeekBehaviorTests: TestCase {
     private func isSeekingPublisher(for player: Player) -> AnyPublisher<Bool, Never> {
-        player.propertiesPublisher
+        player.$properties
             .map(\.isSeeking)
             .removeDuplicates()
             .eraseToAnyPublisher()

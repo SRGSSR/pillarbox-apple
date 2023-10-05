@@ -24,7 +24,7 @@ public final class CommandersActTracker: PlayerItemTracker {
     }
 
     public func enable(for player: Player) {
-        player.propertiesPublisher
+        player.$properties
             .weakCapture(player)
             .sink { [weak self] properties, player in
                 guard let self else { return }

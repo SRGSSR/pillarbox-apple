@@ -35,7 +35,7 @@ public final class ComScoreTracker: PlayerItemTracker {
 
         Publishers.CombineLatest(
             UIApplication.shared.applicationStatePublisher(),
-            player.propertiesPublisher
+            player.$properties
         )
         .sink { [weak self, weak player] state, properties in
             guard let self, let player else { return }

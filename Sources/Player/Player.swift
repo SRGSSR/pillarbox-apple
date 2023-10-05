@@ -20,6 +20,8 @@ public final class Player: ObservableObject, Equatable {
         PackageInfo.version
     }
 
+    @Published public private(set) var properties: PlayerProperties = .empty
+
     @Published public private(set) var error: (any Error)?
 
     /// The index of the current item in the queue.
@@ -45,20 +47,8 @@ public final class Player: ObservableObject, Equatable {
 
     @Published private var currentTracker: CurrentTracker?
 
-    var properties: PlayerProperties = .empty {
-        willSet {
-            guard properties.coreProperties != newValue.coreProperties else {
-                return
-            }
-            objectWillChange.send()
-        }
-    }
-
     /// The player configuration
     public let configuration: PlayerConfiguration
-
-    /// A publisher providing player updates as a consolidated stream.
-    public let propertiesPublisher: AnyPublisher<PlayerProperties, Never>
 
     /// A Boolean setting whether the audio output of the player must be muted.
     public var isMuted: Bool {
@@ -103,7 +93,6 @@ public final class Player: ObservableObject, Equatable {
     public init(items: [PlayerItem] = [], configuration: PlayerConfiguration = .init()) {
         storedItems = Deque(items)
 
-        propertiesPublisher = queuePlayer.propertiesPublisher()
         nowPlayingSession = MPNowPlayingSession(players: [queuePlayer])
 
         self.configuration = configuration
@@ -223,13 +212,9 @@ private extension Player {
 
 private extension Player {
     func configurePropertiesPublisher() {
-        propertiesPublisher
-            .print("-->")
+        queuePlayer.propertiesPublisher()
             .receiveOnMainThread()
-            .sink { [weak self] properties in
-                self?.properties = properties
-            }
-            .store(in: &cancellables)
+            .assign(to: &$properties)
     }
 
     func configureErrorPublisher() {

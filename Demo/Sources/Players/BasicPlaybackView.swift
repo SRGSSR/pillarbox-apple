@@ -29,7 +29,7 @@ private struct TimeSlider: View {
 /// Behavior: h-exp, v-exp
 struct BasicPlaybackView: View {
     @ObservedObject var player: Player
-    @State private var isBusy = false
+    @StateObject private var isBusyTracker = PropertyTracker(at: \.isBusy)
 
     var body: some View {
         ZStack {
@@ -40,9 +40,9 @@ struct BasicPlaybackView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
 #endif
             ProgressView()
-                .opacity(isBusy ? 1 : 0)
+                .opacity(isBusyTracker.value ? 1 : 0)
         }
-        .onReceive(player: player, assign: \.isBusy, to: $isBusy)
+        .bind(isBusyTracker, to: player)
     }
 }
 

@@ -12,7 +12,7 @@ struct BlurredView: View {
     let media: Media
 
     @StateObject private var player = Player(configuration: .externalPlaybackDisabled)
-    @State private var isBusy = false
+    @StateObject private var isBusyTracker = PropertyTracker(at: \.isBusy)
 
     var body: some View {
         ZStack {
@@ -21,7 +21,7 @@ struct BlurredView: View {
             VideoView(player: player)
                 .ignoresSafeArea()
             ProgressView()
-                .opacity(isBusy ? 1 : 0)
+                .opacity(isBusyTracker.value ? 1 : 0)
         }
         .background(.black)
         .overlay(alignment: .topLeading) {
@@ -29,7 +29,7 @@ struct BlurredView: View {
         }
         .onAppear(perform: play)
         .onForeground(perform: player.play)
-        .onReceive(player: player, assign: \.isBusy, to: $isBusy)
+        .bind(isBusyTracker, to: player)
         .tracked(name: "blurred")
     }
 

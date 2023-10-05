@@ -48,7 +48,7 @@ extension Player {
     }
 
     func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
-        propertiesPublisher
+        $properties
             .map { [weak queuePlayer] properties in
                 var nowPlayingInfo = NowPlayingInfo()
                 if properties.streamType != .unknown {
