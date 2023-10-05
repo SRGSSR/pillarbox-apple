@@ -24,6 +24,15 @@ struct SimplePlayerView: View {
             CloseButton()
         }
         .onAppear(perform: play)
+        .onReceive(player.propertiesPublisher()) { _ in
+
+        }
+        .onReceive(player.propertiesPublisher()) { _ in
+
+        }
+        .onReceive(player.propertiesPublisher()) { _ in
+
+        }
         .bind(isBusyTracker, to: player)
         .tracked(name: "simple-player")
     }

@@ -28,7 +28,7 @@ public final class PropertyTracker<T>: ObservableObject where T: Equatable {
         $player
             .map { player -> AnyPublisher<PlayerProperties, Never> in
                 guard let player else { return Just(.empty).eraseToAnyPublisher() }
-                return player.$properties.eraseToAnyPublisher()
+                return player.propertiesPublisher().eraseToAnyPublisher()
             }
             .switchToLatest()
             .slice(at: keyPath)

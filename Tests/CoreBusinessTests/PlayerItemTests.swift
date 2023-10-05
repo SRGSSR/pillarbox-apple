@@ -13,7 +13,7 @@ import XCTest
 
 final class PlayerItemTests: XCTestCase {
     private func playbackStatePublisher(for player: Player) -> AnyPublisher<PlaybackState, Never> {
-        player.$properties
+        player.propertiesPublisher()
             .map(\.playbackState)
             .removeDuplicates()
             .eraseToAnyPublisher()
