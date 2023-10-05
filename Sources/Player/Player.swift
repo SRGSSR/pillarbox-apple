@@ -219,7 +219,7 @@ private extension Player {
 
 private extension Player {
     func configurePropertiesPublisher() {
-        queuePlayer.propertiesPublisher()
+        propertiesPublisher
             .receiveOnMainThread()
             .assign(to: &$properties)
     }
@@ -289,7 +289,7 @@ private extension Player {
     func configureControlCenterRemoteCommandUpdatePublisher() {
         Publishers.CombineLatest(
             itemUpdatePublisher(),
-            queuePlayer.propertiesPublisher()
+            propertiesPublisher
         )
         .sink { [weak self] update, properties in
             guard let self else { return }

@@ -74,7 +74,7 @@ private extension Player {
 
     func supportedPlaybackSpeedPublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
         Publishers.CombineLatest(
-            queuePlayer.propertiesPublisher(),
+            propertiesPublisher,
             periodicTimePublisher(forInterval: CMTime(value: 1, timescale: 1))
         )
         .compactMap { properties, time in
