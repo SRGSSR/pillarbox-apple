@@ -289,8 +289,8 @@ private struct LiveLabel: View {
     }
 
     var body: some View {
-        Group {
-            if streamType == .dvr || streamTypeTracker.value == .live {
+        ZStack {
+            if streamTypeTracker.value == .dvr || streamTypeTracker.value == .live {
                 Button(action: skipToLive) {
                     Text("LIVE")
                         .foregroundColor(.white)
