@@ -20,8 +20,6 @@ public final class Player: ObservableObject, Equatable {
         PackageInfo.version
     }
 
-    @Published public private(set) var properties: PlayerProperties = .empty
-
     @Published public private(set) var error: (any Error)?
 
     /// The index of the current item in the queue.
@@ -51,6 +49,15 @@ public final class Player: ObservableObject, Equatable {
     public let configuration: PlayerConfiguration
 
     public let propertiesPublisher: AnyPublisher<PlayerProperties, Never>
+
+    var properties: PlayerProperties = .empty {
+        willSet {
+            guard properties.coreProperties != newValue.coreProperties else {
+                return
+            }
+            objectWillChange.send()
+        }
+    }
 
     /// A Boolean setting whether the audio output of the player must be muted.
     public var isMuted: Bool {
@@ -221,7 +228,8 @@ private extension Player {
     func configurePropertiesPublisher() {
         propertiesPublisher
             .receiveOnMainThread()
-            .assign(to: &$properties)
+            .weakAssign(to: \.properties, on: self)
+            .store(in: &cancellables)
     }
 
     func configureErrorPublisher() {

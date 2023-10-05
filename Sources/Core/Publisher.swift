@@ -112,3 +112,20 @@ public extension Publisher {
             .eraseToAnyPublisher()
     }
 }
+
+// Borrowed from https://www.swiftbysundell.com/articles/combine-self-cancellable-memory-management/
+public extension Publisher where Failure == Never {
+    /// Assigns each element from a publisher to a property on a weak object.
+    /// - Parameters:
+    ///   - keyPath: A key path that indicates the property to assign.
+    ///     in _The Swift Programming Language_ to learn how to use key paths to specify a property of an object.
+    ///   - object: The object that contains the property. The subscriber assigns the object’s property every time it receives a new value.
+    /// - Returns: An `AnyCancellable` instance. 
+    ///   Call `Cancellable/cancel()` on this instance when you no longer want the publisher to automatically assign the property.
+    ///   Deinitializing this instance will also cancel automatic assignment.
+    func weakAssign<T: AnyObject>(to keyPath: ReferenceWritableKeyPath<T, Output>, on object: T) -> AnyCancellable {
+        sink { [weak object] value in
+            object?[keyPath: keyPath] = value
+        }
+    }
+}
