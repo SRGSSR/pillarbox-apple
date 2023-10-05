@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 struct PlaybackProperties: Equatable {
     static var empty: Self {
         .init(rate: 0, isExternalPlaybackActive: false, isMuted: false)

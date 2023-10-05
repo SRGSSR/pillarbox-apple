@@ -6,7 +6,6 @@
 
 import AVFoundation
 import Combine
-import MediaPlayer
 
 extension QueuePlayer {
     func propertiesPublisher() -> AnyPublisher<PlayerProperties, Never> {
