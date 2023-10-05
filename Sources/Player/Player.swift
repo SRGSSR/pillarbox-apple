@@ -285,7 +285,6 @@ private extension Player {
             $isActive
         )
         .receiveOnMainThread()
-        .lane("control_center_update")
         .sink { [weak self] nowPlayingInfoMetadata, nowPlayingInfoPlayback, isActive in
             guard let self else { return }
             let nowPlayingInfo = isActive ? nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new } : [:]
