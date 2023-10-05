@@ -49,4 +49,14 @@ final class PlayerTests: TestCase {
         let player = Player(item: .mock(url: Stream.onDemand.url, withMetadataUpdateAfter: 1))
         expectNothingPublishedNext(from: player.queuePlayer.publisher(for: \.currentItem), during: .seconds(2))
     }
+
+    func testRetrieveCurrentValueOnSubscription() {
+        let player = Player(item: .simple(url: Stream.onDemand.url))
+        expect(player.properties.isBuffering).toEventually(beFalse())
+        expectEqualPublished(
+            values: [false],
+            from: player.propertiesPublisher.map(\.isBuffering).removeDuplicates(),
+            during: .seconds(1)
+        )
+    }
 }
