@@ -103,7 +103,7 @@ public final class Player: ObservableObject, Equatable {
         storedItems = Deque(items)
 
         propertiesPublisher = queuePlayer.propertiesPublisher()
-            .multicast { PassthroughSubject<PlayerProperties, Never>() }
+            .multicast { CurrentValueSubject<PlayerProperties, Never>(.empty) }
             .autoconnect()
             .eraseToAnyPublisher()
 
