@@ -17,7 +17,7 @@ private struct SingleView: View {
     @ObservedObject var player: Player
     let action: () -> Void
 
-    @StateObject private var isBusyTracker = PropertyTracker(at: \.isBusy)
+    @State private var isBusy = false
 
     var body: some View {
         ZStack {
@@ -25,9 +25,9 @@ private struct SingleView: View {
             playbackButton(player: player)
             routePickerView(player: player)
             ProgressView()
-                .opacity(isBusyTracker.value ? 1 : 0)
+                .opacity(isBusy ? 1 : 0)
         }
-        .bind(isBusyTracker, to: player)
+        .onReceive(player: player, assign: \.isBusy, to: $isBusy)
     }
 
     @ViewBuilder
@@ -46,7 +46,7 @@ private struct SingleView: View {
                 .frame(width: 50)
                 .tint(.white)
                 .shadow(radius: 5)
-                .opacity(isBusyTracker.value ? 0 : 1)
+                .opacity(isBusy ? 0 : 1)
         }
     }
 

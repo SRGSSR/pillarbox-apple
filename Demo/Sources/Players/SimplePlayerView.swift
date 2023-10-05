@@ -12,7 +12,7 @@ struct SimplePlayerView: View {
     let media: Media
 
     @StateObject private var player = Player(configuration: .externalPlaybackDisabled)
-    @StateObject private var isBusyTracker = PropertyTracker(at: \.isBusy)
+    @State private var isBusy = false
 
     var body: some View {
         ZStack {
@@ -24,14 +24,14 @@ struct SimplePlayerView: View {
             CloseButton()
         }
         .onAppear(perform: play)
-        .bind(isBusyTracker, to: player)
+        .onReceive(player: player, assign: \.isBusy, to: $isBusy)
         .tracked(name: "simple-player")
     }
 
     @ViewBuilder
     private func progressView() -> some View {
         ProgressView()
-            .opacity(isBusyTracker.value ? 1 : 0)
+            .opacity(isBusy ? 1 : 0)
     }
 
     @ViewBuilder
@@ -43,7 +43,7 @@ struct SimplePlayerView: View {
                 .frame(width: 50)
                 .tint(.white)
                 .shadow(radius: 5)
-                .opacity(isBusyTracker.value ? 0 : 1)
+                .opacity(isBusy ? 0 : 1)
         }
     }
 

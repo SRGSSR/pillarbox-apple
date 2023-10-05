@@ -45,11 +45,6 @@ public final class Player: ObservableObject, Equatable {
 
     @Published private var currentTracker: CurrentTracker?
 
-    /// The player configuration
-    public let configuration: PlayerConfiguration
-
-    public let propertiesPublisher: AnyPublisher<PlayerProperties, Never>
-
     var properties: PlayerProperties = .empty {
         willSet {
             guard properties.coreProperties != newValue.coreProperties else {
@@ -58,6 +53,12 @@ public final class Player: ObservableObject, Equatable {
             objectWillChange.send()
         }
     }
+
+    /// The player configuration
+    public let configuration: PlayerConfiguration
+
+    /// A publisher providing player updates as a consolidated stream.
+    public let propertiesPublisher: AnyPublisher<PlayerProperties, Never>
 
     /// A Boolean setting whether the audio output of the player must be muted.
     public var isMuted: Bool {

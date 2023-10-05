@@ -11,19 +11,19 @@ import SwiftUI
 // Behavior: h-exp, v-exp
 private struct StoryView: View {
     @ObservedObject var player: Player
-    @StateObject private var isBusyTracker = PropertyTracker(at: \.isBusy)
+    @State private var isBusy = false
 
     var body: some View {
         ZStack {
             VideoView(player: player, gravity: .resizeAspectFill)
                 .ignoresSafeArea()
             ProgressView()
-                .opacity(isBusyTracker.value ? 1 : 0)
+                .opacity(isBusy ? 1 : 0)
             TimeProgress(player: player)
         }
         .tint(.white)
-        .animation(.defaultLinear, value: isBusyTracker.value)
-        .bind(isBusyTracker, to: player)
+        .animation(.defaultLinear, value: isBusy)
+        .onReceive(player: player, assign: \.isBusy, to: $isBusy)
     }
 }
 
