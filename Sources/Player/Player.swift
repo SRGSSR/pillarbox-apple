@@ -50,13 +50,7 @@ public final class Player: ObservableObject, Equatable {
     /// The player configuration
     public let configuration: PlayerConfiguration
 
-    private let _propertiesPublisher: AnyPublisher<PlayerProperties, Never>
-
-    public func propertiesPublisher() -> AnyPublisher<PlayerProperties, Never> {
-        $properties.eraseToAnyPublisher()
-        // Goal: replace with _propertiesPublisher and have 3 updates only even if onReceive has been called several more times
-        //       in Simple player
-    }
+    public let propertiesPublisher: AnyPublisher<PlayerProperties, Never>
 
     /// A Boolean setting whether the audio output of the player must be muted.
     public var isMuted: Bool {
@@ -101,7 +95,11 @@ public final class Player: ObservableObject, Equatable {
     public init(items: [PlayerItem] = [], configuration: PlayerConfiguration = .init()) {
         storedItems = Deque(items)
 
-        _propertiesPublisher = queuePlayer.propertiesPublisher()
+        propertiesPublisher = queuePlayer.propertiesPublisher()
+            .multicast { PassthroughSubject<PlayerProperties, Never>() }
+            .autoconnect()
+            .eraseToAnyPublisher()
+
         nowPlayingSession = MPNowPlayingSession(players: [queuePlayer])
 
         self.configuration = configuration
