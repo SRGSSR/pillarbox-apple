@@ -10,23 +10,23 @@ import CoreMedia
 public struct PlayerProperties: Equatable {
     static var empty: Self {
         .init(
-            timeProperties: .empty,
             coreProperties: .empty,
+            timeProperties: .empty,
             isEmpty: true,
             seekTime: nil
         )
     }
 
-    private let timeProperties: TimeProperties
     let coreProperties: CoreProperties
+    private let timeProperties: TimeProperties
     let isEmpty: Bool
 
     /// The time at which the player is currently seeking, if any.
     public let seekTime: CMTime?
 
     init(
-        timeProperties: TimeProperties,
         coreProperties: CoreProperties,
+        timeProperties: TimeProperties,
         isEmpty: Bool,
         seekTime: CMTime?
     ) {
