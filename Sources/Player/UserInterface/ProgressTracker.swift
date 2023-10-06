@@ -103,10 +103,10 @@ public final class ProgressTracker: ObservableObject {
                 }
                 return Publishers.CombineLatest(
                     Self.currentTimePublisher(for: player, interval: interval, isInteracting: $isInteracting),
-                    player.propertiesPublisher
+                    player.propertiesPublisher.slice(at: \.seekableTimeRange)
                 )
-                .map { time, properties in
-                    Self.progress(for: time, in: properties.seekableTimeRange)
+                .map { time, seekableTimeRange in
+                    Self.progress(for: time, in: seekableTimeRange)
                 }
                 .prepend(Self.progress(for: player.time, in: player.seekableTimeRange))
                 .eraseToAnyPublisher()
