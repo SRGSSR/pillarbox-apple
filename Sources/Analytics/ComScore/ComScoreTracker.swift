@@ -66,7 +66,6 @@ public final class ComScoreTracker: PlayerItemTracker {
         guard !metadata.labels.isEmpty else { return }
 
         AnalyticsListener.capture(streamingAnalytics.configuration())
-        // TODO: Is the stream type can be retrieve from the player?
         streamingAnalytics.setProperties(for: properties, time: player.time, streamType: metadata.streamType)
 
         guard applicationState == .foreground else {
