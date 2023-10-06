@@ -55,7 +55,7 @@ final class PlayerTests: TestCase {
         expect(player.properties.isBuffering).toEventually(beFalse())
         expectEqualPublished(
             values: [false],
-            from: player.propertiesPublisher.map(\.isBuffering).removeDuplicates(),
+            from: player.propertiesPublisher.slice(at: \.isBuffering),
             during: .seconds(1)
         )
     }

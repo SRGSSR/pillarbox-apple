@@ -14,36 +14,31 @@ import Streams
 final class QueuePlayerPublisherTests: TestCase {
     private static func bufferingPublisher(for player: QueuePlayer) -> AnyPublisher<Bool, Never> {
         player.propertiesPublisher()
-            .map(\.isBuffering)
-            .removeDuplicates()
+            .slice(at: \.isBuffering)
             .eraseToAnyPublisher()
     }
 
     private static func presentationSizePublisher(for player: QueuePlayer) -> AnyPublisher<CGSize?, Never> {
         player.propertiesPublisher()
-            .map(\.presentationSize)
-            .removeDuplicates()
+            .slice(at: \.presentationSize)
             .eraseToAnyPublisher()
     }
 
     private static func itemStatePublisher(for player: QueuePlayer) -> AnyPublisher<ItemState, Never> {
         player.propertiesPublisher()
-            .map(\.state)
-            .removeDuplicates()
+            .slice(at: \.state)
             .eraseToAnyPublisher()
     }
 
     private static func durationPublisher(for player: QueuePlayer) -> AnyPublisher<CMTime, Never> {
         player.propertiesPublisher()
-            .map(\.duration)
-            .removeDuplicates()
+            .slice(at: \.duration)
             .eraseToAnyPublisher()
     }
 
     private static func seekableTimeRangePublisher(for player: QueuePlayer) -> AnyPublisher<CMTimeRange, Never> {
         player.propertiesPublisher()
-            .map(\.seekableTimeRange)
-            .removeDuplicates()
+            .slice(at: \.seekableTimeRange)
             .eraseToAnyPublisher()
     }
 

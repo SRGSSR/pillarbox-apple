@@ -50,8 +50,7 @@ public final class VisibilityTracker: ObservableObject {
                     return Empty().eraseToAnyPublisher()
                 }
                 return player.propertiesPublisher
-                    .map(\.playbackState)
-                    .removeDuplicates()
+                    .slice(at: \.playbackState)
                     .eraseToAnyPublisher()
             }
             .switchToLatest()
