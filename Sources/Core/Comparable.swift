@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 public extension Comparable {
     /// Clamps a comparable value to a given range.
     /// 

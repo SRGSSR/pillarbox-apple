@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// A media type.
 public enum MediaType {
     /// Unknown media type.

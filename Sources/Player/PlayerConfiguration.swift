@@ -5,7 +5,6 @@
 //
 
 import AVFoundation
-import CoreMedia
 
 /// A player configuration.
 public struct PlayerConfiguration {

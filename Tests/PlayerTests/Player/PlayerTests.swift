@@ -10,7 +10,6 @@ import Circumspect
 import CoreMedia
 import Nimble
 import Streams
-import XCTest
 
 final class PlayerTests: TestCase {
     func testDeallocation() {
@@ -31,17 +30,17 @@ final class PlayerTests: TestCase {
 
     func testTimesInEmptyRange() {
         let player = Player(item: .simple(url: Stream.live.url))
-        expect(player.timeRange).toEventuallyNot(equal(.invalid))
+        expect(player.seekableTimeRange).toEventuallyNot(equal(.invalid))
         player.play()
         expect(player.time).toNever(equal(.invalid), until: .seconds(1))
     }
 
     func testTimesStayInRange() {
         let player = Player(item: .simple(url: Stream.dvr.url))
-        expect(player.timeRange).toEventuallyNot(equal(.invalid))
+        expect(player.seekableTimeRange).toEventuallyNot(equal(.invalid))
         player.play()
         expect {
-            player.timeRange.start <= player.time && player.time <= player.timeRange.end
+            player.seekableTimeRange.start <= player.time && player.time <= player.seekableTimeRange.end
         }
         .toAlways(beTrue(), until: .seconds(1))
     }
@@ -49,5 +48,15 @@ final class PlayerTests: TestCase {
     func testMetadataUpdatesMustNotChangePlayerItem() {
         let player = Player(item: .mock(url: Stream.onDemand.url, withMetadataUpdateAfter: 1))
         expectNothingPublishedNext(from: player.queuePlayer.publisher(for: \.currentItem), during: .seconds(2))
+    }
+
+    func testRetrieveCurrentValueOnSubscription() {
+        let player = Player(item: .simple(url: Stream.onDemand.url))
+        expect(player.properties.isBuffering).toEventually(beFalse())
+        expectEqualPublished(
+            values: [false],
+            from: player.propertiesPublisher.slice(at: \.isBuffering),
+            during: .seconds(1)
+        )
     }
 }

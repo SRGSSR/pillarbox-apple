@@ -6,8 +6,8 @@
 
 @testable import Analytics
 
-import Foundation
 import Nimble
+import ObjectiveC
 
 final class CommandersActStreamingAnalyticsTests: CommandersActTestCase {
     func testDeallocation() {

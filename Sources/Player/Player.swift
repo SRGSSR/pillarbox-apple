@@ -20,43 +20,17 @@ public final class Player: ObservableObject, Equatable {
         PackageInfo.version
     }
 
-    /// The current playback state.
-    @Published public private(set) var playbackState: PlaybackState = .idle
-
-    /// The current presentation size.
-    ///
-    /// Might be zero for audio content or `nil` when unknown.
-    @Published public private(set) var presentationSize: CGSize?
-
-    /// A Boolean describing whether the player is currently buffering.
-    @Published public private(set) var isBuffering = false
-
-    /// A Boolean describing whether the player is currently seeking to another position.
-    @Published public private(set) var isSeeking = false
+    /// The last error received by the player.
+    @Published public private(set) var error: (any Error)?
 
     /// The index of the current item in the queue.
     @Published public private(set) var currentIndex: Int?
 
-    /// The duration of a chunk for the currently played item.
-    @Published public private(set) var chunkDuration: CMTime = .invalid
-
-    /// A Boolean describing whether the player is currently playing video in external playback mode.
-    @Published public private(set) var isExternalPlaybackActive = false
-
     /// A Boolean setting whether trackers must be enabled or not.
     @Published public var isTrackingEnabled = true
 
-    /// A Boolean setting whether the audio output of the player must be muted.
-    @Published public var isMuted = true {
-        didSet {
-            queuePlayer.isMuted = isMuted
-        }
-    }
-
-    @Published var _playbackSpeed: PlaybackSpeed = .indefinite
-    @Published var mediaSelectionContext: MediaSelectionContext = .empty
-    @Published var currentItem: CurrentItem = .good(nil)
     @Published var storedItems: Deque<PlayerItem>
+    @Published var _playbackSpeed: PlaybackSpeed = .indefinite
 
     @Published private var isActive = false {
         didSet {
@@ -72,35 +46,34 @@ public final class Player: ObservableObject, Equatable {
 
     @Published private var currentTracker: CurrentTracker?
 
-    /// The player configuration
-    public let configuration: PlayerConfiguration
-
-    /// The type of stream currently being played.
-    public var streamType: StreamType {
-        StreamType(for: timeRange, itemDuration: itemDuration)
+    var properties: PlayerProperties = .empty {
+        willSet {
+            guard properties.coreProperties != newValue.coreProperties else {
+                return
+            }
+            objectWillChange.send()
+        }
     }
 
-    /// The current media type.
-    public var mediaType: MediaType {
-        guard let presentationSize else { return .unknown }
-        return presentationSize == .zero ? .audio : .video
+    /// The player configuration.
+    public let configuration: PlayerConfiguration
+
+    /// A publisher providing player updates as a consolidated stream.
+    public let propertiesPublisher: AnyPublisher<PlayerProperties, Never>
+
+    /// A Boolean setting whether the audio output of the player must be muted.
+    public var isMuted: Bool {
+        get {
+            properties.isMuted
+        }
+        set {
+            queuePlayer.isMuted = newValue
+        }
     }
 
     /// The current time.
     public var time: CMTime {
-        queuePlayer.currentTime().clamped(to: timeRange)
-    }
-
-    /// The available time range.
-    ///
-    /// `.invalid` when unknown.
-    public var timeRange: CMTimeRange {
-        queuePlayer.timeRange
-    }
-
-    /// A Boolean describing whether the player is currently busy (buffering or seeking).
-    public var isBusy: Bool {
-        isBuffering || isSeeking
+        queuePlayer.currentTime().clamped(to: seekableTimeRange)
     }
 
     /// The low-level system player.
@@ -109,13 +82,6 @@ public final class Player: ObservableObject, Equatable {
     /// of this player directly is not supported and leads to undefined behavior.
     public var systemPlayer: AVPlayer {
         queuePlayer
-    }
-
-    /// The current item duration.
-    ///
-    /// `.invalid` when unknown.
-    var itemDuration: CMTime {
-        queuePlayer.itemDuration
     }
 
     let queuePlayer = QueuePlayer()
@@ -137,6 +103,11 @@ public final class Player: ObservableObject, Equatable {
     ///   - configuration: The configuration to apply to the player.
     public init(items: [PlayerItem] = [], configuration: PlayerConfiguration = .init()) {
         storedItems = Deque(items)
+
+        propertiesPublisher = queuePlayer.propertiesPublisher()
+            .multicast { CurrentValueSubject<PlayerProperties, Never>(.empty) }
+            .autoconnect()
+            .eraseToAnyPublisher()
 
         nowPlayingSession = MPNowPlayingSession(players: [queuePlayer])
 
@@ -202,18 +173,11 @@ public final class Player: ObservableObject, Equatable {
     }
 
     private func configurePublishedPropertyPublishers() {
-        configurePlaybackStatePublisher()
-        configureChunkDurationPublisher()
-        configureSeekingPublisher()
-        configureBufferingPublisher()
-        configureCurrentItemPublisher()
+        configurePropertiesPublisher()
+        configureErrorPublisher()
         configureCurrentIndexPublisher()
         configureCurrentTrackerPublisher()
-        configureExternalPlaybackPublisher()
-        configurePresentationSizePublisher()
-        configureMutedPublisher()
         configurePlaybackSpeedPublisher()
-        configureMediaSelectionContextPublisher()
     }
 
     deinit {
@@ -263,38 +227,27 @@ private extension Player {
 }
 
 private extension Player {
-    func configurePlaybackStatePublisher() {
-        queuePlayer.playbackStatePublisher()
+    func configurePropertiesPublisher() {
+        propertiesPublisher
             .receiveOnMainThread()
-            .lane("player_state")
-            .assign(to: &$playbackState)
+            .weakAssign(to: \.properties, on: self)
+            .store(in: &cancellables)
     }
 
-    func configureChunkDurationPublisher() {
-        queuePlayer.chunkDurationPublisher()
-            .receiveOnMainThread()
-            .lane("player_chunk_duration")
-            .assign(to: &$chunkDuration)
+    func configureErrorPublisher() {
+        Publishers.Merge(
+            queuePlayer.errorPublisher(),
+            resetErrorPublisher()
+        )
+        .receiveOnMainThread()
+        .assign(to: &$error)
     }
 
-    func configureSeekingPublisher() {
-        queuePlayer.seekingPublisher()
-            .receiveOnMainThread()
-            .lane("player_seeking")
-            .assign(to: &$isSeeking)
-    }
-
-    func configureBufferingPublisher() {
-        queuePlayer.bufferingPublisher()
-            .receiveOnMainThread()
-            .lane("player_buffering")
-            .assign(to: &$isBuffering)
-    }
-
-    func configureCurrentItemPublisher() {
-        queuePlayer.smoothCurrentItemPublisher()
-            .receiveOnMainThread()
-            .assign(to: &$currentItem)
+    private func resetErrorPublisher() -> AnyPublisher<Error?, Never> {
+        $storedItems
+            .filter { $0.isEmpty }
+            .map { _ in nil }
+            .eraseToAnyPublisher()
     }
 
     func configureCurrentIndexPublisher() {
@@ -315,24 +268,6 @@ private extension Player {
             .assign(to: &$currentTracker)
     }
 
-    func configureExternalPlaybackPublisher() {
-        queuePlayer.publisher(for: \.isExternalPlaybackActive)
-            .receiveOnMainThread()
-            .assign(to: &$isExternalPlaybackActive)
-    }
-
-    func configurePresentationSizePublisher() {
-        queuePlayer.presentationSizePublisher()
-            .receiveOnMainThread()
-            .assign(to: &$presentationSize)
-    }
-
-    func configureMutedPublisher() {
-        queuePlayer.publisher(for: \.isMuted)
-            .receiveOnMainThread()
-            .assign(to: &$isMuted)
-    }
-
     func configurePlaybackSpeedPublisher() {
         playbackSpeedUpdatePublisher()
             .scan(.indefinite) { speed, update in
@@ -342,23 +277,16 @@ private extension Player {
             .receiveOnMainThread()
             .assign(to: &$_playbackSpeed)
     }
-
-    func configureMediaSelectionContextPublisher() {
-        queuePlayer.currentItemMediaSelectionContextPublisher()
-            .receiveOnMainThread()
-            .assign(to: &$mediaSelectionContext)
-    }
 }
 
 private extension Player {
     func configureControlCenterMetadataUpdatePublisher() {
         Publishers.CombineLatest3(
             nowPlayingInfoMetadataPublisher(),
-            queuePlayer.nowPlayingInfoPlaybackPublisher(),
+            nowPlayingInfoPlaybackPublisher(),
             $isActive
         )
         .receiveOnMainThread()
-        .lane("control_center_update")
         .sink { [weak self] nowPlayingInfoMetadata, nowPlayingInfoPlayback, isActive in
             guard let self else { return }
             let nowPlayingInfo = isActive ? nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new } : [:]
@@ -368,23 +296,20 @@ private extension Player {
     }
 
     func configureControlCenterRemoteCommandUpdatePublisher() {
-        itemUpdatePublisher()
-            .map { update in
-                Publishers.CombineLatest3(
-                    Just(update.items),
-                    Just(update.currentIndex()),
-                    update.streamTypePublisher()
-                )
-            }
-            .switchToLatest()
-            .sink { [weak self] items, index, streamType in
-                guard let self else { return }
-                let areSkipsEnabled = items.count <= 1 && streamType != .live
-                nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
-                nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
-                nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: items, streamType: streamType)
-                nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: index, in: items)
-            }
-            .store(in: &cancellables)
+        Publishers.CombineLatest(
+            itemUpdatePublisher(),
+            propertiesPublisher
+        )
+        .sink { [weak self] update, properties in
+            guard let self else { return }
+            let areSkipsEnabled = update.items.count <= 1 && properties.streamType != .live
+            nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
+            nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
+
+            let index = update.currentIndex()
+            nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: update.items, streamType: properties.streamType)
+            nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: index, in: update.items)
+        }
+        .store(in: &cancellables)
     }
 }

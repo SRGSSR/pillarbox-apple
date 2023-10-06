@@ -20,9 +20,9 @@ class AVMediaSelectionOptionMock: AVMediaSelectionOption {
     private let _characteristics: [AVMediaCharacteristic]
 
     init(displayName: String, languageCode: String = "", characteristics: [AVMediaCharacteristic] = []) {
-        self._displayName = displayName
-        self._locale = Locale(identifier: languageCode)
-        self._characteristics = characteristics
+        _displayName = displayName
+        _locale = Locale(identifier: languageCode)
+        _characteristics = characteristics
         super.init()
     }
 

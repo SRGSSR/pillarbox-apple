@@ -6,11 +6,10 @@
 
 @testable import Player
 
-import AVFoundation
 import Circumspect
+import CoreMedia
 import Nimble
 import Streams
-import XCTest
 
 final class SeekTests: TestCase {
     func testSeekWhenEmpty() {
@@ -49,7 +48,7 @@ final class SeekTests: TestCase {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
         waitUntil { done in
-            player.seek(near(player.timeRange.start)) { finished in
+            player.seek(near(player.seekableTimeRange.start)) { finished in
                 expect(finished).to(beTrue())
                 done()
             }
@@ -60,7 +59,7 @@ final class SeekTests: TestCase {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
         waitUntil { done in
-            player.seek(near(player.timeRange.end)) { finished in
+            player.seek(near(player.seekableTimeRange.end)) { finished in
                 expect(finished).to(beTrue())
                 done()
             }
@@ -83,9 +82,9 @@ final class SeekTests: TestCase {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
         waitUntil { done in
-            player.seek(near(player.timeRange.end + CMTime(value: 10, timescale: 1))) { finished in
+            player.seek(near(player.seekableTimeRange.end + CMTime(value: 10, timescale: 1))) { finished in
                 expect(finished).to(beTrue())
-                expect(player.time).to(equal(player.timeRange.end, by: beClose(within: player.chunkDuration.seconds)))
+                expect(player.time).to(equal(player.seekableTimeRange.end, by: beClose(within: 1)))
                 done()
             }
         }
@@ -96,14 +95,14 @@ final class SeekTests: TestCase {
         expect(player.streamType).toEventually(equal(.onDemand))
         player.play()
         player.seek(near(CMTime(value: -10, timescale: 1)))
-        expect(player.time).toAlways(beGreaterThanOrEqualTo(player.timeRange.start), until: .seconds(1))
+        expect(player.time).toAlways(beGreaterThanOrEqualTo(player.seekableTimeRange.start), until: .seconds(1))
     }
 
     func testTimesDuringSeekAfterTimeRangeEnd() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
         player.play()
-        player.seek(near(player.timeRange.end + CMTime(value: 10, timescale: 1)))
-        expect(player.time).toEventually(equal(player.timeRange.end), timeout: .seconds(1))
+        player.seek(near(player.seekableTimeRange.end + CMTime(value: 10, timescale: 1)))
+        expect(player.time).toEventually(equal(player.seekableTimeRange.end), timeout: .seconds(1))
     }
 }

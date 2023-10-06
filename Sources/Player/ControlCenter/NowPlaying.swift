@@ -4,8 +4,10 @@
 //  License information is available from the LICENSE file.
 //
 
-import CoreMedia
 import UIKit
+
+/// A type providing Control Center metadata.
+public typealias NowPlayingInfo = [String: Any]
 
 /// Metadata providing information about what is currently being played.
 ///
@@ -29,18 +31,5 @@ public struct NowPlayingMetadata {
         self.subtitle = subtitle
         self.description = description
         self.image = image
-    }
-}
-
-/// A type providing Control Center metadata.
-public enum NowPlaying {
-    /// Standard now playing metadata.
-    public typealias Info = [String: Any]
-
-    /// A list of properties for the now playing item.
-    struct Properties {
-        let timeRange: CMTimeRange
-        let itemDuration: CMTime
-        let isBuffering: Bool
     }
 }

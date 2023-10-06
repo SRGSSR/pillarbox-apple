@@ -6,11 +6,9 @@
 
 @testable import Player
 
-import Combine
 import CoreMedia
 import Nimble
 import Streams
-import XCTest
 
 final class ProgressTrackerPlaybackStateTests: TestCase {
     func testInteractionPausesPlayback() {

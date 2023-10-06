@@ -6,8 +6,6 @@
 
 import Combine
 import ComScore
-import CoreMedia
-import Foundation
 import Player
 import UIKit
 
@@ -35,15 +33,13 @@ public final class ComScoreTracker: PlayerItemTracker {
         }
         .store(in: &cancellables)
 
-        Publishers.CombineLatest4(
+        Publishers.CombineLatest(
             UIApplication.shared.applicationStatePublisher(),
-            player.$playbackState,
-            player.$isSeeking,
-            player.$isBuffering
+            player.propertiesPublisher
         )
-        .weakCapture(player)
-        .sink { [weak self] state, player in
-            self?.notify(applicationState: state.0, playbackState: state.1, isSeeking: state.2, isBuffering: state.3, player: player)
+        .sink { [weak self, weak player] state, properties in
+            guard let self, let player else { return }
+            notify(applicationState: state, player: player, properties: properties)
         }
         .store(in: &cancellables)
 
@@ -66,18 +62,18 @@ public final class ComScoreTracker: PlayerItemTracker {
     }
 
     // swiftlint:disable:next cyclomatic_complexity
-    private func notify(applicationState: ApplicationState, playbackState: PlaybackState, isSeeking: Bool, isBuffering: Bool, player: Player) {
+    private func notify(applicationState: ApplicationState, player: Player, properties: PlayerProperties) {
         guard !metadata.labels.isEmpty else { return }
 
         AnalyticsListener.capture(streamingAnalytics.configuration())
-        streamingAnalytics.setProperties(for: player, streamType: metadata.streamType)
+        streamingAnalytics.setProperties(for: properties, time: player.time, streamType: metadata.streamType)
 
         guard applicationState == .foreground else {
             streamingAnalytics.notifyEvent(for: .paused, at: player.effectivePlaybackSpeed)
             return
         }
 
-        switch (isSeeking, isBuffering) {
+        switch (properties.isSeeking, properties.isBuffering) {
         case (true, true):
             streamingAnalytics.notifySeekStart()
             streamingAnalytics.notifyBufferStart()
@@ -88,7 +84,7 @@ public final class ComScoreTracker: PlayerItemTracker {
             streamingAnalytics.notifyBufferStart()
         case (false, false):
             streamingAnalytics.notifyBufferStop()
-            streamingAnalytics.notifyEvent(for: playbackState, at: player.effectivePlaybackSpeed)
+            streamingAnalytics.notifyEvent(for: properties.playbackState, at: player.effectivePlaybackSpeed)
         }
     }
 

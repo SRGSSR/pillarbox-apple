@@ -6,7 +6,6 @@
 
 import AVFoundation
 import Combine
-import Core
 
 /// An item to be inserted into a player.
 public final class PlayerItem: Equatable {

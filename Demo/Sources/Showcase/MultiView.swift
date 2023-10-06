@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Analytics
 import Player
 import SwiftUI
 
@@ -18,14 +17,17 @@ private struct SingleView: View {
     @ObservedObject var player: Player
     let action: () -> Void
 
+    @State private var isBusy = false
+
     var body: some View {
         ZStack {
             videoView(player: player)
             playbackButton(player: player)
             routePickerView(player: player)
             ProgressView()
-                .opacity(player.isBusy ? 1 : 0)
+                .opacity(isBusy ? 1 : 0)
         }
+        .onReceive(player: player, assign: \.isBusy, to: $isBusy)
     }
 
     @ViewBuilder
@@ -44,7 +46,7 @@ private struct SingleView: View {
                 .frame(width: 50)
                 .tint(.white)
                 .shadow(radius: 5)
-                .opacity(player.isBusy ? 0 : 1)
+                .opacity(isBusy ? 0 : 1)
         }
     }
 

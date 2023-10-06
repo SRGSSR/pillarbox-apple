@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Analytics
 import AVFoundation
 import Player
 import SwiftUI
@@ -121,7 +120,7 @@ struct SettingsView: View {
                 Text("Made with ")
                 Image(systemName: "heart.fill")
                     .foregroundColor(.red)
-                    .symbolPulseEffect()
+                    .pulseSymbolEffect()
                 Text(" in Switzerland")
             }
         }

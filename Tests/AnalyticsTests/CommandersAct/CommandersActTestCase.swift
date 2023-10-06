@@ -7,7 +7,7 @@
 @testable import Analytics
 
 import Circumspect
-import XCTest
+import Dispatch
 
 class CommandersActTestCase: TestCase {}
 

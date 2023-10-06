@@ -6,29 +6,15 @@
 
 @testable import Player
 
-import Circumspect
 import Nimble
-import XCTest
 
 final class PlaybackStateTests: TestCase {
-    func testEquality() {
-        expect(PlaybackState.idle).to(equal(.idle))
-        expect(PlaybackState.playing).to(equal(.playing))
-        expect(PlaybackState.paused).to(equal(.paused))
-        expect(PlaybackState.ended).to(equal(.ended))
-        expect(ItemState.failed(error: StructError())).to(equal(.failed(error: StructError())))
-    }
-
-    func testInequality() {
-        expect(PlaybackState.idle).notTo(equal(.playing))
-        expect(PlaybackState.failed(error: EnumError.error1)).notTo(equal(.failed(error: EnumError.error2)))
-    }
-
-    func testSimilarity() {
-        expect(PlaybackState.idle).to(equal(.idle))
-        expect(PlaybackState.playing).to(equal(.playing))
-        expect(PlaybackState.paused).to(equal(.paused))
-        expect(PlaybackState.ended).to(equal(.ended))
-        expect(ItemState.failed(error: StructError())).to(equal(.failed(error: StructError())))
+    func testAllCases() {
+        expect(PlaybackState(itemState: .unknown, rate: 0)).to(equal(.idle))
+        expect(PlaybackState(itemState: .unknown, rate: 1)).to(equal(.idle))
+        expect(PlaybackState(itemState: .readyToPlay, rate: 0)).to(equal(.paused))
+        expect(PlaybackState(itemState: .readyToPlay, rate: 1)).to(equal(.playing))
+        expect(PlaybackState(itemState: .ended, rate: 0)).to(equal(.ended))
+        expect(PlaybackState(itemState: .ended, rate: 1)).to(equal(.ended))
     }
 }

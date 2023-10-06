@@ -9,7 +9,6 @@
 import Circumspect
 import Nimble
 import UIKit
-import XCTest
 
 private class AutomaticMockViewController: UIViewController, PageViewTracking {
     private var pageName: String {
@@ -32,20 +31,6 @@ private class AutomaticMockViewController: UIViewController, PageViewTracking {
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-}
-
-private class AutomaticWithLevelsMockViewController: UIViewController, PageViewTracking {
-    private var pageName: String {
-        "automatic_with_levels"
-    }
-
-    var comScorePageView: ComScorePageView {
-        .init(name: pageName)
-    }
-
-    var commandersActPageView: CommandersActPageView {
-        .init(name: pageName, type: "type", levels: ["level1", "level2"])
     }
 }
 

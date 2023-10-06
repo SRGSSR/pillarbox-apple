@@ -6,95 +6,68 @@
 
 import AVFoundation
 import Combine
-import Core
 import MediaAccessibility
 
 extension AVPlayerItem {
-    func itemStatePublisher() -> AnyPublisher<ItemState, Never> {
-        Publishers.Merge3(
-            publisher(for: \.status)
-                .weakCapture(self)
-                .map { ItemState(for: $0.1) },
-            NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: self)
-                .map { _ in .ended },
-            NotificationCenter.default.weakPublisher(for: .AVPlayerItemFailedToPlayToEndTime, object: self)
-                .compactMap { ItemState(for: $0) }
+    func propertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
+        Publishers.CombineLatest6(
+            statePublisher()
+                .lane("player_item_state"),
+            publisher(for: \.presentationSize),
+            mediaSelectionPropertiesPublisher()
+                .lane("player_item_media_selection"),
+            timePropertiesPublisher(),
+            publisher(for: \.duration),
+            minimumTimeOffsetFromLivePublisher()
         )
+        .map { state, presentationSize, mediaSelectionProperties, timeProperties, duration, minimumTimeOffsetFromLive in
+            let isKnown = (state != .unknown)
+            return .init(
+                itemProperties: .init(
+                    state: state,
+                    duration: isKnown ? duration : .invalid,
+                    minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
+                    presentationSize: isKnown ? presentationSize : nil
+                ),
+                mediaSelectionProperties: mediaSelectionProperties,
+                timeProperties: isKnown ? timeProperties : .empty
+            )
+        }
+        .removeDuplicates()
         .eraseToAnyPublisher()
     }
 
-    func timeRangePublisher() -> AnyPublisher<CMTimeRange, Never> {
+    func statePublisher() -> AnyPublisher<ItemState, Never> {
+        Publishers.Merge(
+            publisher(for: \.status)
+                .map { status in
+                    switch status {
+                    case .readyToPlay:
+                        return .readyToPlay
+                    default:
+                        return .unknown
+                    }
+                },
+            NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: self)
+                .map { _ in .ended }
+        )
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
+
+    private func timePropertiesPublisher() -> AnyPublisher<TimeProperties, Never> {
         Publishers.CombineLatest3(
-            publisher(for: \.status),
             publisher(for: \.loadedTimeRanges),
             publisher(for: \.seekableTimeRanges)
+                .lane("player_item_seekable_time_ranges"),
+            publisher(for: \.isPlaybackLikelyToKeepUp)
         )
-        .map { status, loadedTimeRanges, seekableTimeRanges in
-            guard status == .readyToPlay else { return .invalid }
-            return Self.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
-        }
+        .map { .init(loadedTimeRanges: $0, seekableTimeRanges: $1, isPlaybackLikelyToKeepUp: $2) }
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
 
-    func loadedTimeRangePublisher() -> AnyPublisher<CMTimeRange, Never> {
-        Publishers.CombineLatest(
-            publisher(for: \.status),
-            publisher(for: \.loadedTimeRanges)
-        )
-        .map { status, loadedTimeRanges in
-            guard status == .readyToPlay else { return .invalid }
-            let start = loadedTimeRanges.first?.timeRangeValue.start ?? .zero
-            let end = loadedTimeRanges.last?.timeRangeValue.end ?? .zero
-            return CMTimeRangeFromTimeToTime(start: start, end: end)
-        }
-        .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
-
-    func durationPublisher() -> AnyPublisher<CMTime, Never> {
-        Publishers.CombineLatest(
-            publisher(for: \.status),
-            publisher(for: \.duration)
-        )
-        .map { status, duration in
-            status == .readyToPlay ? duration : .invalid
-        }
-        .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
-
-    func streamTypePublisher() -> AnyPublisher<StreamType, Never> {
-        Publishers.CombineLatest(
-            timeRangePublisher(),
-            durationPublisher()
-        )
-        .map { timeRange, duration in
-            StreamType(for: timeRange, itemDuration: duration)
-        }
-        .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
-
-    func bufferingPublisher() -> AnyPublisher<Bool, Never> {
-        Publishers.CombineLatest(
-            publisher(for: \.isPlaybackLikelyToKeepUp),
-            itemStatePublisher()
-        )
-        .map { isPlaybackLikelyToKeepUp, itemState in
-            switch itemState {
-            case .failed:
-                return false
-            default:
-                return !isPlaybackLikelyToKeepUp
-            }
-        }
-        .prepend(false)
-        .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
-
-    func mediaSelectionContextPublisher() -> AnyPublisher<MediaSelectionContext, Never> {
+    private func mediaSelectionPropertiesPublisher() -> AnyPublisher<MediaSelectionProperties, Never> {
         Publishers.CombineLatest3(
             asset.mediaSelectionGroupsPublisher(),
             mediaSelectionPublisher(),
@@ -103,9 +76,10 @@ extension AVPlayerItem {
                 .prepend(())
         )
         .map { groups, selection, _ in
-            MediaSelectionContext(groups: groups, selection: selection)
+            MediaSelectionProperties(groups: groups, selection: selection)
         }
         .prepend(.empty)
+        .removeDuplicates()
         .eraseToAnyPublisher()
     }
 
@@ -118,33 +92,48 @@ extension AVPlayerItem {
                     .eraseToAnyPublisher()
             }
             .switchToLatest()
+            .prepend(currentMediaSelection)
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
-    func nowPlayingInfoPropertiesPublisher() -> AnyPublisher<NowPlaying.Properties, Never> {
-        Publishers.CombineLatest3(
-            timeRangePublisher(),
-            durationPublisher(),
-            bufferingPublisher()
+    private func minimumTimeOffsetFromLivePublisher() -> AnyPublisher<CMTime, Never> {
+        asset.propertyPublisher(.minimumTimeOffsetFromLive)
+            .replaceError(with: .invalid)
+            .prepend(.invalid)
+            .eraseToAnyPublisher()
+    }
+}
+
+extension AVPlayerItem {
+    func errorPublisher() -> AnyPublisher<Error?, Never> {
+        Publishers.Merge(
+            intrinsicErrorPublisher(),
+            playbackErrorPublisher()
         )
-        .map { NowPlaying.Properties(timeRange: $0, itemDuration: $1, isBuffering: $2) }
+        .map { Optional($0) }
+        .prepend(nil)
         .eraseToAnyPublisher()
     }
 
-    func presentationSizePublisher() -> AnyPublisher<CGSize?, Never> {
+    private func intrinsicErrorPublisher() -> AnyPublisher<Error, Never> {
         publisher(for: \.status)
+            .filter { $0 == .failed }
             .weakCapture(self)
-            .map { status, item -> AnyPublisher<CGSize?, Never> in
-                guard status == .readyToPlay else {
-                    return Just(nil).eraseToAnyPublisher()
-                }
-                return item.publisher(for: \.presentationSize)
-                    .map { Optional($0) }
-                    .eraseToAnyPublisher()
+            .map { _, item in
+                ItemError.intrinsicError(for: item)
             }
-            .switchToLatest()
-            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    private func playbackErrorPublisher() -> AnyPublisher<Error, Never> {
+        NotificationCenter.default.weakPublisher(for: .AVPlayerItemFailedToPlayToEndTime, object: self)
+            .compactMap { notification in
+                guard let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error else {
+                    return nil
+                }
+                return ItemError.localizedError(from: error)
+            }
             .eraseToAnyPublisher()
     }
 }

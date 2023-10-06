@@ -5,8 +5,6 @@
 //
 
 import AVFoundation
-import CoreBusiness
-import Foundation
 
 // Apple streams are found at https://developer.apple.com/streaming/examples/
 // Unified Streaming streams are found at https://demo.unified-streaming.com/k8s/features/stable/#!/hls
@@ -50,11 +48,6 @@ enum URLTemplate {
         title: "Couleur 3 (live)",
         description: "Audio livestream - MP3",
         type: .url("http://stream.srg-ssr.ch/m/couleur3/mp3_128")
-    )
-    static let dvrAudioHLS = Template(
-        title: "Couleur 3 (DVR)",
-        description: "Audio livestream - HLS",
-        type: .url("https://lsaplus.swisstxt.ch/audio/couleur3_96.stream/playlist.m3u8")
     )
     static let appleBasic_4_3_HLS = Template(
         title: "Apple Basic 4:3",

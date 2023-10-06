@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 enum ExpectationError: Error {
     case incorrectResult
 }

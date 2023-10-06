@@ -5,7 +5,6 @@
 //
 
 import Analytics
-import Foundation
 import Nimble
 import XCTest
 

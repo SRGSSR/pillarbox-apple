@@ -25,7 +25,4 @@ public struct DRM: Decodable {
 
     /// The certificate URL.
     let certificateUrl: URL?
-
-    /// The license URL.
-    let licenseUrl: URL
 }

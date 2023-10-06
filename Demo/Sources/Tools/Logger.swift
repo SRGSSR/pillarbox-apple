@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import OSLog
+import os
 
 extension Logger {
     init(category: String) {

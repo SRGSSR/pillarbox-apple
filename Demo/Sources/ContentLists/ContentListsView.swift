@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Analytics
 import SRGDataProviderModel
 import SwiftUI
 
@@ -12,8 +11,6 @@ import SwiftUI
 struct ContentListsView: View {
     @AppStorage(UserDefaults.serverSettingKey)
     private var selectedServerSetting: ServerSetting = .production
-
-    @EnvironmentObject private var router: Router
 
     var body: some View {
         List {

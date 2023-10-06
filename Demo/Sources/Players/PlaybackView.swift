@@ -15,6 +15,7 @@ import SwiftUI
 private struct MainView: View {
     @ObservedObject var player: Player
     @Binding var layout: PlaybackView.Layout
+
     @StateObject private var visibilityTracker = VisibilityTracker()
 
     @State private var layoutInfo: LayoutInfo = .none
@@ -32,7 +33,7 @@ private struct MainView: View {
             topBar()
         }
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
-        .animation(.defaultLinear, values: player.isBusy, isUserInterfaceHidden)
+        .animation(.defaultLinear, value: isUserInterfaceHidden)
         .bind(visibilityTracker, to: player)
         ._debugBodyCounter()
     }
@@ -65,7 +66,6 @@ private struct MainView: View {
         ZStack {
             video()
             controls()
-            loadingIndicator()
         }
         .ignoresSafeArea()
         .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
@@ -91,6 +91,7 @@ private struct MainView: View {
         HStack {
             CloseButton()
             Spacer()
+            LoadingIndicator(player: player)
             VolumeButton(player: player)
         }
         .opacity(isUserInterfaceHidden ? 0 : 1)
@@ -125,14 +126,6 @@ private struct MainView: View {
     }
 
     @ViewBuilder
-    private func loadingIndicator() -> some View {
-        ProgressView()
-            .tint(.white)
-            .opacity(!player.isBusy || (isInteracting && !areControlsAlwaysVisible) ? 0 : 1)
-            .controlSize(.large)
-    }
-
-    @ViewBuilder
     private func image(name: String) -> some View {
         Image(systemName: name)
             .resizable()
@@ -144,8 +137,6 @@ private struct MainView: View {
             .padding(60)
     }
 }
-
-#endif
 
 private struct ControlsView: View {
     @ObservedObject var player: Player
@@ -160,59 +151,6 @@ private struct ControlsView: View {
         ._debugBodyCounter(color: .green)
         .animation(.defaultLinear, value: player.playbackState)
         .bind(progressTracker, to: player)
-    }
-}
-
-// Behavior: h-exp, v-exp
-private struct PlaybackMessageView: View {
-    let message: String
-
-    var body: some View {
-        Text(message)
-            .multilineTextAlignment(.center)
-            .foregroundColor(.white)
-            .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-}
-
-// Behavior: h-hug, v-hug
-private struct PlaybackButton: View {
-    @ObservedObject var player: Player
-
-    private var imageName: String {
-        if player.canReplay() {
-            return "arrow.counterclockwise.circle.fill"
-        }
-        else {
-            switch player.playbackState {
-            case .playing:
-                return "pause.circle.fill"
-            default:
-                return "play.circle.fill"
-            }
-        }
-    }
-
-    var body: some View {
-        Button(action: play) {
-            Image(systemName: imageName)
-                .resizable()
-                .tint(.white)
-        }
-        .aspectRatio(contentMode: .fit)
-        .frame(minWidth: 120, maxHeight: 90)
-        .opacity(player.isBusy ? 0 : 1)
-        .animation(.defaultLinear, values: player.playbackState, player.canReplay())
-    }
-
-    private func play() {
-        if player.canReplay() {
-            player.replay()
-        }
-        else {
-            player.togglePlayPause()
-        }
     }
 }
 
@@ -320,38 +258,55 @@ private struct VolumeButton: View {
 }
 
 // Behavior: h-hug, v-hug
+private struct LoadingIndicator: View {
+    let player: Player
+
+    @State private var isBuffering = false
+
+    var body: some View {
+        ProgressView()
+            .tint(.white)
+            .opacity(isBuffering ? 1 : 0)
+            .animation(.linear(duration: 0.1), value: isBuffering)
+            .onReceive(player: player, assign: \.isBuffering, to: $isBuffering)
+    }
+}
+
+// Behavior: h-hug, v-hug
 private struct LiveLabel: View {
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
+    @State private var streamType: StreamType = .unknown
 
     private var canSkipToLive: Bool {
         player.canSkipToDefault()
     }
 
     private var liveButtonColor: Color {
-        canSkipToLive && player.streamType == .dvr ? .gray : .red
+        canSkipToLive && streamType == .dvr ? .gray : .red
     }
 
     var body: some View {
-        if player.streamType == .dvr || player.streamType == .live {
-            Button(action: skipToLive) {
-                Text("LIVE")
-                    .foregroundColor(.white)
-                    .padding(.vertical, 4)
-                    .padding(.horizontal, 6)
-                    .background(liveButtonColor)
-                    .cornerRadius(4)
+        ZStack {
+            if streamType == .dvr || streamType == .live {
+                Button(action: skipToLive) {
+                    Text("LIVE")
+                        .foregroundColor(.white)
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 6)
+                        .background(liveButtonColor)
+                        .cornerRadius(4)
+                }
+                .disabled(!canSkipToLive)
             }
-            .disabled(!canSkipToLive)
         }
+        .onReceive(player: player, assign: \.streamType, to: $streamType)
     }
 
     private func skipToLive() {
         player.skipToDefault()
     }
 }
-
-#if os(iOS)
 
 // Behavior: h-exp, v-hug
 private struct TimeBar: View {
@@ -431,21 +386,22 @@ private struct TimeSlider: View {
 
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
+    @State private var streamType: StreamType = .unknown
 
     private var formattedElapsedTime: String? {
-        guard player.streamType == .onDemand, let time = progressTracker.time, let timeRange = progressTracker.timeRange else {
+        guard streamType == .onDemand, let time = progressTracker.time, let timeRange = progressTracker.timeRange else {
             return nil
         }
         return Self.formattedTime((time - timeRange.start).seconds, duration: timeRange.duration.seconds)
     }
 
     private var formattedTotalTime: String? {
-        guard player.streamType == .onDemand, let timeRange = progressTracker.timeRange else { return nil }
+        guard streamType == .onDemand, let timeRange = progressTracker.timeRange else { return nil }
         return Self.formattedTime(timeRange.duration.seconds, duration: timeRange.duration.seconds)
     }
 
     private var isVisible: Bool {
-        progressTracker.isProgressAvailable && player.streamType != .unknown
+        progressTracker.isProgressAvailable && streamType != .unknown
     }
 
     var body: some View {
@@ -463,6 +419,7 @@ private struct TimeSlider: View {
         .shadow(color: .init(white: 0.2, opacity: 0.8), radius: 15)
         .opacity(isVisible ? 1 : 0)
         ._debugBodyCounter(color: .blue)
+        .onReceive(player: player, assign: \.streamType, to: $streamType)
     }
 
     private static func formattedTime(_ time: TimeInterval, duration: TimeInterval) -> String {
@@ -488,6 +445,80 @@ private struct TimeSlider: View {
 
 #endif
 
+// Behavior: h-hug, v-hug
+private struct PlaybackMessageView: View {
+    let message: String
+
+    var body: some View {
+        Text(message)
+            .multilineTextAlignment(.center)
+            .foregroundColor(.white)
+            .padding()
+    }
+}
+
+// Behavior: h-hug, v-hug
+private struct PlaybackButton: View {
+    @ObservedObject var player: Player
+
+    private var imageName: String? {
+        if player.canReplay() {
+            return "arrow.counterclockwise.circle.fill"
+        }
+        else {
+            switch player.playbackState {
+            case .playing:
+                return "pause.circle.fill"
+            case .paused:
+                return "play.circle.fill"
+            default:
+                return nil
+            }
+        }
+    }
+
+    var body: some View {
+        Button(action: play) {
+            if let imageName {
+                Image(systemName: imageName)
+                    .resizable()
+                    .tint(.white)
+            }
+            else {
+                Color.clear
+            }
+        }
+        .aspectRatio(contentMode: .fit)
+        .frame(minWidth: 120, maxHeight: 90)
+        .replaceSymbolEffect()
+    }
+
+    private func play() {
+        if player.canReplay() {
+            player.replay()
+        }
+        else {
+            player.togglePlayPause()
+        }
+    }
+}
+
+private struct ErrorView: View {
+    let description: String
+    @ObservedObject var player: Player
+
+    var body: some View {
+        VStack {
+            PlaybackButton(player: player)
+            PlaybackMessageView(message: description)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .overlay(alignment: .topLeading) {
+            CloseButton()
+        }
+    }
+}
+
 /// A playback view with standard controls. Requires an ancestor view to own the player to be used.
 /// Behavior: h-exp, v-exp
 struct PlaybackView: View {
@@ -502,20 +533,16 @@ struct PlaybackView: View {
 
     var body: some View {
         ZStack {
-            if !player.items.isEmpty {
-                switch player.playbackState {
-                case let .failed(error: error):
-                    PlaybackMessageView(message: error.localizedDescription)
-                        .overlay(alignment: .topLeading) {
-                            CloseButton()
-                        }
-                default:
-                    videoView()
-                        .persistentSystemOverlays(.hidden)
-                }
+            if let error = player.error {
+                ErrorView(description: error.localizedDescription, player: player)
+            }
+            else if !player.items.isEmpty {
+                videoView()
+                    .persistentSystemOverlays(.hidden)
             }
             else {
                 PlaybackMessageView(message: "No content")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .overlay(alignment: .topLeading) {
                         CloseButton()
                     }

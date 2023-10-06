@@ -5,7 +5,7 @@
 //
 
 import Combine
-import Foundation
+import Dispatch
 
 public extension ObservableObject {
     /// Creates a publisher providing the value of an observable object at the specified key path each time the

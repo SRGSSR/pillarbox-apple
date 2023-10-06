@@ -5,7 +5,6 @@
 //
 
 import Combine
-import SRGDataProviderModel
 import SwiftUI
 
 /// Manages navigation using an associated router.
@@ -65,16 +64,12 @@ struct RoutedNavigationStack<Root>: View where Root: View {
 /// Manages application routes.
 ///
 /// You can manage navigation with a `RoutedNavigationStack` or retrieve the router through the environment
-/// to present or dismiss the associated modal.
+/// to present the associated modal.
 final class Router: ObservableObject {
     @Published fileprivate var path: [RouterDestination] = []
     @Published fileprivate var presented: RouterDestination?
 
     func present(_ destination: RouterDestination) {
         presented = destination
-    }
-
-    func dismiss() {
-        presented = nil
     }
 }

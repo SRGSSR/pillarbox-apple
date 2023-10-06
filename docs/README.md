@@ -53,9 +53,9 @@ struct PlayerView: View {
     private var buttonImage: String {
         switch player.playbackState {
         case .playing:
-            return "pause.fill"
+            return "pause.circle.fill"
         default:
-            return "play.fill"
+            return "play.circle.fill"
         }
     }
 

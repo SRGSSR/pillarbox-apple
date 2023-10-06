@@ -5,10 +5,8 @@
 //
 
 import Combine
-import Foundation
 import OrderedCollections
 import Player
-import UIKit
 
 final class StoriesViewModel: ObservableObject {
     private static let preloadDistance = 1

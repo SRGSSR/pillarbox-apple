@@ -15,7 +15,7 @@ public extension Player {
         case .onDemand, .live:
             return true
         case .dvr where chunkDuration.isValid:
-            return time < timeRange.end - chunkDuration
+            return time < seekableTimeRange.end - chunkDuration
         default:
             return false
         }
@@ -28,7 +28,7 @@ public extension Player {
     func skipToDefault(completion: @escaping (Bool) -> Void = { _ in }) {
         switch streamType {
         case .dvr:
-            seek(after(timeRange.end)) { finished in
+            seek(after(seekableTimeRange.end)) { finished in
                 completion(finished)
             }
         default:

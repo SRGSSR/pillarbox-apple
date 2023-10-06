@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// A comScore page view.
 public struct ComScorePageView {
     let name: String

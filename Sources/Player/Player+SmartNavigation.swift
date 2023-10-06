@@ -4,8 +4,9 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
+import CoreMedia
 import DequeModule
+import Foundation
 
 public extension Player {
     /// Checks whether returning to the previous content is possible.
@@ -65,7 +66,7 @@ private extension Player {
     static let startTimeThreshold: TimeInterval = 3
 
     func isFarFromStartTime() -> Bool {
-        time.isValid && timeRange.isValid && (time - timeRange.start).seconds >= Self.startTimeThreshold
+        time.isValid && seekableTimeRange.isValid && (time - seekableTimeRange.start).seconds >= Self.startTimeThreshold
     }
 
     func shouldSeekToStartTime() -> Bool {

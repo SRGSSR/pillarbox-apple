@@ -121,8 +121,6 @@ public extension XCTestCase {
     func collectOutput<P>(
         from publisher: P,
         during interval: DispatchTimeInterval = .seconds(20),
-        file: StaticString = #file,
-        line: UInt = #line,
         while executing: (() -> Void)? = nil
     ) -> [P.Output] where P: Publisher {
         var values: [P.Output] = []

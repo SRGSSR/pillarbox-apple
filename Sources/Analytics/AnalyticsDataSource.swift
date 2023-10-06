@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// A protocol for analytics data sources.
 public protocol AnalyticsDataSource: AnyObject {
     /// comScore global labels.

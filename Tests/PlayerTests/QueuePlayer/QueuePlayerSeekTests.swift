@@ -11,7 +11,6 @@ import Circumspect
 import Nimble
 import OrderedCollections
 import Streams
-import XCTest
 
 private class QueuePlayerMock: QueuePlayer {
     var seeks: Int = 0
@@ -269,5 +268,19 @@ final class QueuePlayerSeekTests: TestCase {
             }
         }
         expect(player.seeks).to(equal(2))
+    }
+
+    func testTargetSeekTimeWithMultipleSeeks() {
+        let item = AVPlayerItem(url: Stream.onDemand.url)
+        let player = QueuePlayer(playerItem: item)
+        expect(player.timeRange).toEventuallyNot(equal(.invalid))
+
+        let time1 = CMTime(value: 1, timescale: 1)
+        player.seek(to: time1)
+        expect(player.targetSeekTime).to(equal(time1))
+
+        let time2 = CMTime(value: 2, timescale: 1)
+        player.seek(to: time2)
+        expect(player.targetSeekTime).to(equal(time2))
     }
 }

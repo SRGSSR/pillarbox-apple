@@ -5,7 +5,6 @@
 //
 
 import Combine
-import Core
 import UIKit
 
 extension UIApplication {

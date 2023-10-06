@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// A vendor for which analytics are collected.
 public enum Vendor: String {
     /// SRF.

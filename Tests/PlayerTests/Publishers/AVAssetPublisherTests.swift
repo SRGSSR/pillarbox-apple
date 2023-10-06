@@ -10,7 +10,6 @@ import AVFoundation
 import Circumspect
 import Nimble
 import Streams
-import XCTest
 
 final class AVAssetPublisherTests: TestCase {
     func testFetch() throws {

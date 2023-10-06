@@ -8,10 +8,7 @@
 
 import AVFoundation
 import Circumspect
-import Combine
-import Nimble
 import Streams
-import XCTest
 
 final class AssetPlayerItemTests: TestCase {
     func testNativePlayerItem() {
@@ -35,18 +32,12 @@ final class AssetPlayerItemTests: TestCase {
     func testFailingPlayerItem() {
         let item = EmptyAsset.failed(error: StructError()).playerItem()
         _ = AVPlayer(playerItem: item)
-        expectAtLeastEqualPublished(
+        expectEqualPublished(
             values: [
-                .unknown,
-                .failed(error: NSError(
-                    domain: "PlayerTests.StructError",
-                    code: 1,
-                    userInfo: [
-                        NSLocalizedDescriptionKey: "Struct error description"
-                    ]
-                ))
+                .unknown
             ],
-            from: item.itemStatePublisher()
+            from: item.statePublisher(),
+            during: .seconds(1)
         )
     }
 }

@@ -5,7 +5,6 @@
 //
 
 import CoreMedia
-import Foundation
 
 /// A stream type.
 public enum StreamType {
@@ -18,14 +17,14 @@ public enum StreamType {
     /// Livestream with DVR.
     case dvr
 
-    init(for timeRange: CMTimeRange, itemDuration: CMTime) {
-        if !timeRange.isValid || !itemDuration.isValid {
+    init(for timeRange: CMTimeRange, duration: CMTime) {
+        if !duration.isValid {
             self = .unknown
         }
-        else if timeRange.isEmpty && !itemDuration.isNumeric {
+        else if timeRange.isEmpty && !duration.isNumeric {
             self = .live
         }
-        else if itemDuration.isIndefinite {
+        else if duration.isIndefinite {
             self = .dvr
         }
         else {

@@ -6,7 +6,7 @@
 
 @testable import Player
 
-import AVFoundation
+import Foundation
 
 typealias EmptyAsset = Asset<Never>
 
@@ -14,11 +14,6 @@ struct StructError: LocalizedError {
     var errorDescription: String? {
         "Struct error description"
     }
-}
-
-enum EnumError: Int, Error {
-    case error1 = 1
-    case error2
 }
 
 enum PlayerError {
@@ -62,4 +57,8 @@ extension UUID {
             """
         )!
     }
+}
+
+func beEqual(_ lhsError: Error?, _ rhsError: Error?) -> Bool {
+    lhsError as? NSError == rhsError as? NSError
 }

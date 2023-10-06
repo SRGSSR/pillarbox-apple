@@ -8,7 +8,6 @@
 
 import AVFoundation
 import Nimble
-import XCTest
 
 final class AVMediaSelectionOptionTests: TestCase {
     func testSortedOptions() {

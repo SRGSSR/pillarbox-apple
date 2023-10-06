@@ -8,9 +8,6 @@ import AVFoundation
 
 /// A protocol for media selection logic.
 protocol MediaSelector {
-    /// The associated selection group.
-    var group: AVMediaSelectionGroup { get }
-
     /// Creates the selector.
     init(group: AVMediaSelectionGroup)
 

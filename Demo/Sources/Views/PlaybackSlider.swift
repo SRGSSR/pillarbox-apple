@@ -10,17 +10,14 @@ import SwiftUI
 #if os(iOS)
 struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     @ObservedObject var progressTracker: ProgressTracker
+
     let minimumValueLabel: () -> ValueLabel
     let maximumValueLabel: () -> ValueLabel
     let onEditingChanged: (Bool) -> Void
 
-    @StateObject private var bufferTracker = BufferTracker()
     @GestureState private var gestureValue: DragGesture.Value?
     @State private var initialProgress: Float = 0
-
-    private var isBusy: Bool {
-        progressTracker.player?.isBusy ?? false
-    }
+    @State private var buffer: Float = 0
 
     var body: some View {
         HStack {
@@ -58,10 +55,10 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
             ZStack(alignment: .leading) {
                 rectangle(opacity: 0.1)
                     .background(.ultraThinMaterial)
-                rectangle(opacity: 0.3, width: geometry.size.width * CGFloat(bufferTracker.buffer))
+                rectangle(opacity: 0.3, width: geometry.size.width * CGFloat(buffer))
                 rectangle(width: geometry.size.width * CGFloat(progressTracker.progress))
             }
-            .animation(.linear(duration: 0.5), value: bufferTracker.buffer)
+            .animation(.linear(duration: 0.5), value: buffer)
             .gesture(
                 DragGesture(minimumDistance: 1)
                     .updating($gestureValue) { value, state, _ in
@@ -75,7 +72,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
         .frame(height: progressTracker.isInteracting ? 16 : 8)
         .cornerRadius(progressTracker.isInteracting ? 8 : 4)
         .animation(.easeInOut(duration: 0.4), value: progressTracker.isInteracting)
-        .bind(bufferTracker, to: progressTracker.player)
+        .onReceive(player: progressTracker.player, assign: \.buffer, to: $buffer)
     }
 
     private func updateProgress(for value: DragGesture.Value?, in geometry: GeometryProxy) {

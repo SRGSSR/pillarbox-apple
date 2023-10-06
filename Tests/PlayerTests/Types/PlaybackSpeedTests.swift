@@ -7,7 +7,6 @@
 @testable import Player
 
 import Nimble
-import XCTest
 
 final class PlaybackSpeedTests: TestCase {
     func testNoValueClampingToIndefiniteRange() {

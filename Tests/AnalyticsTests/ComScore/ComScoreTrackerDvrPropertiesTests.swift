@@ -10,7 +10,6 @@ import CoreMedia
 import Nimble
 import Player
 import Streams
-import XCTest
 
 private struct AssetMetadataMock: AssetMetadata {}
 
@@ -94,7 +93,7 @@ final class ComScoreTrackerDvrPropertiesTests: ComScoreTestCase {
                 expect(labels.ns_st_ldw).to(equal(Stream.dvr.duration.seconds))
             }
         ) {
-            player.seek(at(player.timeRange.end - CMTime(value: 4, timescale: 1)))
+            player.seek(at(player.time - CMTime(value: 4, timescale: 1)))
         }
     }
 }

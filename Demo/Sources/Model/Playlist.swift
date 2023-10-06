@@ -4,9 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import CoreBusiness
-import Foundation
-
 enum URLTemplates {
     static let videos: [Template] = [
         Template(

@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// A description of a playback context.
 public struct MediaComposition: Decodable {
     enum CodingKeys: String, CodingKey {

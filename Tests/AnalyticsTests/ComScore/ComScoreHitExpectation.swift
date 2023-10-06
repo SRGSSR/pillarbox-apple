@@ -5,7 +5,6 @@
 //
 
 import Analytics
-import Foundation
 
 /// Describes a comScore stream hit expectation.
 struct ComScoreHitExpectation {

@@ -6,10 +6,31 @@
 
 import AVFoundation
 import Combine
-import MediaPlayer
 
 extension QueuePlayer {
-    func seekingPublisher() -> AnyPublisher<Bool, Never> {
+    func propertiesPublisher() -> AnyPublisher<PlayerProperties, Never> {
+        Publishers.CombineLatest3(
+            playerItemPropertiesPublisher(),
+            playbackPropertiesPublisher(),
+            seekTimePublisher()
+        )
+        .map { playerItemProperties, playbackProperties, seekTime in
+            .init(
+                coreProperties: .init(
+                    itemProperties: playerItemProperties.itemProperties,
+                    mediaSelectionProperties: playerItemProperties.mediaSelectionProperties,
+                    playbackProperties: playbackProperties
+                ),
+                timeProperties: playerItemProperties.timeProperties,
+                isEmpty: playerItemProperties.isEmpty,
+                seekTime: seekTime
+            )
+        }
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
+
+    func isSeekingPublisher() -> AnyPublisher<Bool, Never> {
         Publishers.Merge(
             Self.notificationCenter.weakPublisher(for: .willSeek, object: self)
                 .map { _ in true },
@@ -17,6 +38,30 @@ extension QueuePlayer {
                 .map { _ in false }
         )
         .prepend(false)
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
+
+    private func playbackPropertiesPublisher() -> AnyPublisher<PlaybackProperties, Never> {
+        Publishers.CombineLatest3(
+            publisher(for: \.rate),
+            publisher(for: \.isExternalPlaybackActive),
+            publisher(for: \.isMuted)
+        )
+        .map { .init(rate: $0, isExternalPlaybackActive: $1, isMuted: $2) }
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
+}
+
+extension QueuePlayer {
+    /// Publishes the current time, smoothing out emitted values during seeks.
+    func smoothCurrentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
+        Publishers.CombineLatest(
+            seekTimePublisher(),
+            Publishers.PeriodicTimePublisher(for: self, interval: interval, queue: queue)
+        )
+        .map { $0 ?? $1 }
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
@@ -33,40 +78,6 @@ extension QueuePlayer {
         )
         .prepend(nil)
         .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
-
-    /// Publishes the current time, smoothing out emitted values during seeks.
-    func smoothCurrentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
-        Publishers.CombineLatest(
-            Publishers.PeriodicTimePublisher(for: self, interval: interval, queue: queue),
-            seekTimePublisher()
-        )
-        .map { time, seekTime in
-            seekTime ?? time
-        }
-        .eraseToAnyPublisher()
-    }
-
-    func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
-        Publishers.CombineLatest3(
-            nowPlayingInfoPropertiesPublisher(),
-            publisher(for: \.rate),
-            seekTimePublisher()
-        )
-        .map { [weak self] properties, rate, seekTime in
-            var nowPlayingInfo = NowPlaying.Info()
-            if let properties {
-                let isLive = StreamType(for: properties.timeRange, itemDuration: properties.itemDuration) == .live
-                nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = isLive
-                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : rate
-                if let time = seekTime ?? self?.currentTime(), time.isValid {
-                    nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - properties.timeRange.start).seconds
-                }
-                nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = properties.timeRange.duration.seconds
-            }
-            return nowPlayingInfo
-        }
         .eraseToAnyPublisher()
     }
 }

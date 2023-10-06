@@ -129,8 +129,8 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
         }
     }
 
-    func nowPlayingInfo() -> NowPlaying.Info {
-        var nowPlayingInfo = NowPlaying.Info()
+    func nowPlayingInfo() -> NowPlayingInfo {
+        var nowPlayingInfo = NowPlayingInfo()
         if let metadata = metadata?.nowPlayingMetadata() {
             nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
             nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle

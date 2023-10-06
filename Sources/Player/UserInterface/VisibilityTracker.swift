@@ -49,7 +49,9 @@ public final class VisibilityTracker: ObservableObject {
                 guard let player else {
                     return Empty().eraseToAnyPublisher()
                 }
-                return player.$playbackState.eraseToAnyPublisher()
+                return player.propertiesPublisher
+                    .slice(at: \.playbackState)
+                    .eraseToAnyPublisher()
             }
             .switchToLatest()
             .compactMap { [weak self] playbackState in

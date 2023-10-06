@@ -24,17 +24,12 @@ public final class CommandersActTracker: PlayerItemTracker {
     }
 
     public func enable(for player: Player) {
-        Publishers.CombineLatest(player.$playbackState, player.$isSeeking)
-            .map { (playbackState: $0, isSeeking: $1) }
+        player.propertiesPublisher
             .weakCapture(player)
-            .sink { [weak self] state, player in
-                self?.notify(playbackState: state.playbackState, isSeeking: state.isSeeking, player: player)
-            }
-            .store(in: &cancellables)
-
-        player.$isBuffering
-            .sink { [weak self] isBuffering in
-                self?.streamingAnalytics?.notify(isBuffering: isBuffering)
+            .sink { [weak self] properties, player in
+                guard let self else { return }
+                notify(properties: properties, player: player)
+                streamingAnalytics?.notify(isBuffering: properties.isBuffering)
             }
             .store(in: &cancellables)
 
@@ -52,12 +47,12 @@ public final class CommandersActTracker: PlayerItemTracker {
     }
 
     // swiftlint:disable:next cyclomatic_complexity
-    private func notify(playbackState: PlaybackState, isSeeking: Bool, player: Player) {
-        if isSeeking {
+    private func notify(properties: PlayerProperties, player: Player) {
+        if properties.isSeeking {
             streamingAnalytics?.notify(.seek)
         }
         else {
-            switch playbackState {
+            switch properties.playbackState {
             case .playing:
                 guard streamingAnalytics != nil else {
                     streamingAnalytics = CommandersActStreamingAnalytics(streamType: metadata.streamType) { [weak self, weak player] in
@@ -65,7 +60,7 @@ public final class CommandersActTracker: PlayerItemTracker {
                         return CommandersActStreamingAnalytics.EventData(
                             labels: labels(for: player),
                             time: player.time,
-                            range: player.timeRange
+                            range: properties.seekableTimeRange
                         )
                     }
                     break
@@ -75,8 +70,6 @@ public final class CommandersActTracker: PlayerItemTracker {
                 streamingAnalytics?.notify(.pause)
             case .ended:
                 streamingAnalytics?.notify(.eof)
-            case .failed:
-                streamingAnalytics?.notify(.stop)
             default:
                 break
             }

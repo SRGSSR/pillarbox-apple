@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 public extension RangeReplaceableCollection {
     /// Moves an item from a given index to another one in the receiver.
     /// 

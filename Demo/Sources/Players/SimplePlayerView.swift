@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Analytics
-import AVFoundation
 import Player
 import SwiftUI
 
@@ -14,6 +12,7 @@ struct SimplePlayerView: View {
     let media: Media
 
     @StateObject private var player = Player(configuration: .externalPlaybackDisabled)
+    @State private var isBusy = false
 
     var body: some View {
         ZStack {
@@ -25,13 +24,14 @@ struct SimplePlayerView: View {
             CloseButton()
         }
         .onAppear(perform: play)
+        .onReceive(player: player, assign: \.isBusy, to: $isBusy)
         .tracked(name: "simple-player")
     }
 
     @ViewBuilder
     private func progressView() -> some View {
         ProgressView()
-            .opacity(player.isBusy ? 1 : 0)
+            .opacity(isBusy ? 1 : 0)
     }
 
     @ViewBuilder
@@ -43,7 +43,7 @@ struct SimplePlayerView: View {
                 .frame(width: 50)
                 .tint(.white)
                 .shadow(radius: 5)
-                .opacity(player.isBusy ? 0 : 1)
+                .opacity(isBusy ? 0 : 1)
         }
     }
 

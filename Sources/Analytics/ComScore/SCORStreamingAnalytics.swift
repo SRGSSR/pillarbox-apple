@@ -9,17 +9,17 @@ import CoreMedia
 import Player
 
 extension SCORStreamingAnalytics {
-    private static func duration(for player: Player) -> Int {
-        player.timeRange.isValid ? Int(player.timeRange.duration.seconds.toMilliseconds) : 0
+    private static func duration(for properties: PlayerProperties) -> Int {
+        properties.seekableTimeRange.isValid ? Int(properties.seekableTimeRange.duration.seconds.toMilliseconds) : 0
     }
 
-    private static func position(for player: Player) -> Int {
-        player.time.isValid ? Int(player.time.seconds.toMilliseconds) : 0
+    private static func position(for time: CMTime) -> Int {
+        time.isValid ? Int(time.seconds.toMilliseconds) : 0
     }
 
-    private static func offset(for player: Player) -> Int {
-        guard player.timeRange.isValid, player.time.isValid else { return 0 }
-        let offset = player.timeRange.end - player.time
+    private static func offset(for properties: PlayerProperties, time: CMTime) -> Int {
+        guard properties.seekableTimeRange.isValid, time.isValid else { return 0 }
+        let offset = properties.seekableTimeRange.end - time
         return Int(offset.seconds.toMilliseconds)
     }
 
@@ -37,13 +37,13 @@ extension SCORStreamingAnalytics {
         }
     }
 
-    func setProperties(for player: Player, streamType: StreamType) {
+    func setProperties(for properties: PlayerProperties, time: CMTime, streamType: StreamType) {
         if streamType == .dvr {
-            start(fromDvrWindowOffset: Self.offset(for: player))
-            setDVRWindowLength(Self.duration(for: player))
+            start(fromDvrWindowOffset: Self.offset(for: properties, time: time))
+            setDVRWindowLength(Self.duration(for: properties))
         }
         else {
-            start(fromPosition: Self.position(for: player))
+            start(fromPosition: Self.position(for: time))
         }
     }
 }

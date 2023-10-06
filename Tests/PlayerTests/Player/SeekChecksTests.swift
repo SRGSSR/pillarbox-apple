@@ -6,10 +6,9 @@
 
 @testable import Player
 
-import AVFoundation
+import CoreMedia
 import Nimble
 import Streams
-import XCTest
 
 final class SeekChecksTests: TestCase {
     func testCannotSeekWithEmptyPlayer() {
@@ -32,13 +31,13 @@ final class SeekChecksTests: TestCase {
     func testCanSeekToTimeRangeStart() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.canSeek(to: player.timeRange.start)).to(beTrue())
+        expect(player.canSeek(to: player.seekableTimeRange.start)).to(beTrue())
     }
 
     func testCanSeekToTimeRangeEnd() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.canSeek(to: player.timeRange.end)).to(beTrue())
+        expect(player.canSeek(to: player.seekableTimeRange.end)).to(beTrue())
     }
 
     func testCannotSeekBeforeTimeRangeStart() {
@@ -50,6 +49,6 @@ final class SeekChecksTests: TestCase {
     func testCannotSeekAfterTimeRangeEnd() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.canSeek(to: player.timeRange.end + CMTime(value: 1, timescale: 1))).to(beFalse())
+        expect(player.canSeek(to: player.seekableTimeRange.end + CMTime(value: 1, timescale: 1))).to(beFalse())
     }
 }

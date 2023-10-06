@@ -5,7 +5,6 @@
 //
 
 import Analytics
-import Foundation
 
 /// Describes a Commanders Act stream hit expectation.
 struct CommandersActHitExpectation {

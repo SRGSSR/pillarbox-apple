@@ -5,7 +5,6 @@
 //
 
 import Combine
-import Core
 import CoreMedia
 import SwiftUI
 
@@ -87,7 +86,7 @@ public final class ProgressTracker: ObservableObject {
     ///
     /// Non-`nil` returned ranges are guaranteed to be valid.
     public var timeRange: CMTimeRange? {
-        guard let timeRange = player?.timeRange, timeRange.isValidAndNotEmpty else { return nil }
+        guard let timeRange = player?.seekableTimeRange, timeRange.isValidAndNotEmpty else { return nil }
         return timeRange
     }
 
@@ -104,12 +103,12 @@ public final class ProgressTracker: ObservableObject {
                 }
                 return Publishers.CombineLatest(
                     Self.currentTimePublisher(for: player, interval: interval, isInteracting: $isInteracting),
-                    player.queuePlayer.currentItemTimeRangePublisher()
+                    player.propertiesPublisher.slice(at: \.seekableTimeRange)
                 )
-                .map { time, timeRange in
-                    Self.progress(for: time, in: timeRange)
+                .map { time, seekableTimeRange in
+                    Self.progress(for: time, in: seekableTimeRange)
                 }
-                .prepend(Self.progress(for: player.time, in: player.timeRange))
+                .prepend(Self.progress(for: player.time, in: player.seekableTimeRange))
                 .eraseToAnyPublisher()
             }
             .switchToLatest()

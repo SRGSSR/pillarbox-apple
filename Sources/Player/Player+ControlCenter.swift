@@ -8,7 +8,7 @@ import Combine
 import MediaPlayer
 
 extension Player {
-    func updateControlCenter(nowPlayingInfo: NowPlaying.Info) {
+    func updateControlCenter(nowPlayingInfo: NowPlayingInfo) {
         if !nowPlayingInfo.isEmpty {
             if nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo == nil {
                 uninstallRemoteCommands()
@@ -29,11 +29,11 @@ extension Player {
         commandRegistrations = []
     }
 
-    func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
+    func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
         currentPublisher()
             .map { current in
                 guard let current else {
-                    return Just(NowPlaying.Info()).eraseToAnyPublisher()
+                    return Just(NowPlayingInfo()).eraseToAnyPublisher()
                 }
                 return current.item.$asset
                     .map { $0.nowPlayingInfo() }
@@ -43,6 +43,23 @@ extension Player {
             .removeDuplicates { lhs, rhs in
                 // swiftlint:disable:next legacy_objc_type
                 NSDictionary(dictionary: lhs).isEqual(to: rhs)
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
+        propertiesPublisher
+            .map { [weak queuePlayer] properties in
+                var nowPlayingInfo = NowPlayingInfo()
+                if properties.streamType != .unknown {
+                    nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (properties.streamType == .live)
+                    nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : properties.rate
+                    if let time = properties.seekTime ?? queuePlayer?.currentTime(), time.isValid {
+                        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - properties.seekableTimeRange.start).seconds
+                    }
+                    nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = properties.seekableTimeRange.duration.seconds
+                }
+                return nowPlayingInfo
             }
             .eraseToAnyPublisher()
     }

@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Analytics
 import Player
 import SwiftUI
 
@@ -13,6 +12,7 @@ struct LinkView: View {
     let media: Media
 
     @StateObject private var player = Player(configuration: .externalPlaybackDisabled)
+    @State private var isBusy = false
     @State private var isDisplayed = true
 
     var body: some View {
@@ -20,7 +20,7 @@ struct LinkView: View {
             ZStack {
                 BasicPlaybackView(player: isDisplayed ? player : Player())
                 ProgressView()
-                    .opacity(player.isBusy ? 1 : 0)
+                    .opacity(isBusy ? 1 : 0)
             }
             Toggle("Content displayed", isOn: $isDisplayed)
                 .padding()
@@ -30,6 +30,7 @@ struct LinkView: View {
         }
         .onAppear(perform: play)
         .onForeground(perform: resume)
+        .onReceive(player: player, assign: \.isBusy, to: $isBusy)
         .tracked(name: "link")
     }
 

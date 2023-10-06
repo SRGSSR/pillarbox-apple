@@ -9,7 +9,6 @@
 import AVFoundation
 import Nimble
 import Streams
-import XCTest
 
 final class TextStyleRulesTests: TestCase {
     private static var textStyleRules: [AVTextStyleRule] = {

@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// A protocol representing metadata associated with an asset.
 public protocol AssetMetadata {
     /// Returns metadata used to display what is currently being played.

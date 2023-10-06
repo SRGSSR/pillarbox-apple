@@ -11,7 +11,6 @@ import Combine
 import CoreMedia
 import Nimble
 import Streams
-import XCTest
 
 final class ProgressTrackerProgressAvailabilityTests: TestCase {
     func testUnbound() {
@@ -113,7 +112,7 @@ final class ProgressTrackerProgressAvailabilityTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
 
-        expect(player.timeRange).toEventuallyNot(equal(.invalid))
+        expect(player.seekableTimeRange).toEventuallyNot(equal(.invalid))
         let time = CMTime(value: 20, timescale: 1)
 
         waitUntil { done in

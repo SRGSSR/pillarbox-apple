@@ -5,7 +5,6 @@
 //
 
 import Combine
-import Foundation
 
 /// An adapter which instantiates and manages a tracker of a specified type.
 ///

@@ -5,9 +5,8 @@
 //
 
 import Analytics
-import AVFoundation
+import AVFAudio
 import Combine
-import Core
 import ShowTime
 import SRGDataProvider
 import UIKit

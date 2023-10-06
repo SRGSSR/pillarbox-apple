@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Analytics
-import Combine
 import Player
 import SwiftUI
 
@@ -14,6 +12,7 @@ struct BlurredView: View {
     let media: Media
 
     @StateObject private var player = Player(configuration: .externalPlaybackDisabled)
+    @State private var isBusy = false
 
     var body: some View {
         ZStack {
@@ -22,7 +21,7 @@ struct BlurredView: View {
             VideoView(player: player)
                 .ignoresSafeArea()
             ProgressView()
-                .opacity(player.isBusy ? 1 : 0)
+                .opacity(isBusy ? 1 : 0)
         }
         .background(.black)
         .overlay(alignment: .topLeading) {
@@ -30,6 +29,7 @@ struct BlurredView: View {
         }
         .onAppear(perform: play)
         .onForeground(perform: player.play)
+        .onReceive(player: player, assign: \.isBusy, to: $isBusy)
         .tracked(name: "blurred")
     }
 

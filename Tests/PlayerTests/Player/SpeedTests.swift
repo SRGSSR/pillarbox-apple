@@ -9,7 +9,6 @@
 import Circumspect
 import Nimble
 import Streams
-import XCTest
 
 final class SpeedTests: TestCase {
     func testEmpty() {
@@ -48,7 +47,7 @@ final class SpeedTests: TestCase {
 
     func testDvrInThePast() {
         let player = Player(item: .simple(url: Stream.dvr.url))
-        expect(player.timeRange).toEventuallyNot(equal(.invalid))
+        expect(player.seekableTimeRange).toEventuallyNot(equal(.invalid))
         waitUntil { done in
             player.seek(at(.init(value: 1, timescale: 1))) { _ in
                 done()
@@ -110,7 +109,7 @@ final class SpeedTests: TestCase {
     func testSpeedUpdateWhenApproachingLiveEdge() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         player.play()
-        expect(player.timeRange).toEventuallyNot(equal(.invalid))
+        expect(player.seekableTimeRange).toEventuallyNot(equal(.invalid))
         waitUntil { done in
             player.seek(at(.init(value: 10, timescale: 1))) { _ in
                 done()

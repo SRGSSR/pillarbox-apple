@@ -14,10 +14,10 @@ extension AVPlayer {
         currentItem?.timeRange ?? .invalid
     }
 
-    /// The current item duration.
+    /// The current duration.
     ///
     /// Returns `.invalid` when the duration is unknown.
-    var itemDuration: CMTime {
+    var duration: CMTime {
         guard let currentItem else { return .invalid }
         let duration = currentItem.duration
         if duration.isNumeric || currentItem.status == .readyToPlay {

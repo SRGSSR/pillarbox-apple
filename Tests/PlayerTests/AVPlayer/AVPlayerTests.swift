@@ -7,10 +7,8 @@
 @testable import Player
 
 import AVFoundation
-import Circumspect
 import Nimble
 import Streams
-import XCTest
 
 final class AVPlayerTests: TestCase {
     func testTimeRangeWhenEmpty() {
@@ -24,29 +22,29 @@ final class AVPlayerTests: TestCase {
         expect(player.timeRange).toEventually(equal(CMTimeRange(start: .zero, duration: Stream.onDemand.duration)))
     }
 
-    func testItemDurationWhenEmpty() {
+    func testDurationWhenEmpty() {
         let player = AVPlayer()
-        expect(player.itemDuration).to(equal(.invalid))
+        expect(player.duration).to(equal(.invalid))
     }
 
-    func testItemDurationForOnDemand() {
+    func testDurationForOnDemand() {
         let item = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVPlayer(playerItem: item)
-        expect(player.itemDuration).to(equal(.invalid))
-        expect(player.itemDuration).toEventually(equal(Stream.onDemand.duration))
+        expect(player.duration).to(equal(.invalid))
+        expect(player.duration).toEventually(equal(Stream.onDemand.duration))
     }
 
-    func testItemDurationForLive() {
+    func testDurationForLive() {
         let item = AVPlayerItem(url: Stream.live.url)
         let player = AVPlayer(playerItem: item)
-        expect(player.itemDuration).to(equal(.invalid))
-        expect(player.itemDuration).toEventually(equal(.indefinite))
+        expect(player.duration).to(equal(.invalid))
+        expect(player.duration).toEventually(equal(.indefinite))
     }
 
-    func testItemDurationForDvr() {
+    func testDurationForDvr() {
         let item = AVPlayerItem(url: Stream.dvr.url)
         let player = AVPlayer(playerItem: item)
-        expect(player.itemDuration).to(equal(.invalid))
-        expect(player.itemDuration).toEventually(equal(.indefinite))
+        expect(player.duration).to(equal(.invalid))
+        expect(player.duration).toEventually(equal(.indefinite))
     }
 }

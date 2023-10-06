@@ -5,7 +5,6 @@
 //
 
 import AVFoundation
-import Foundation
 import SwiftUI
 
 enum RouterDestination: Identifiable, Hashable {
@@ -63,10 +62,6 @@ enum RouterDestination: Identifiable, Hashable {
 }
 
 extension NavigationLink where Destination == Never {
-    init(_ titleKey: LocalizedStringKey, destination: RouterDestination) where Label == Text {
-        self.init(titleKey, value: destination)
-    }
-
     init<S>(_ title: S, destination: RouterDestination) where Label == Text, S: StringProtocol {
         self.init(title, value: destination)
     }

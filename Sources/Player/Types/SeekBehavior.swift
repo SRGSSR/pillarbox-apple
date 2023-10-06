@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// A behavior for progress updates during a seek operation.
 public enum SeekBehavior {
     /// A behavior updating progress immediately during a seek.

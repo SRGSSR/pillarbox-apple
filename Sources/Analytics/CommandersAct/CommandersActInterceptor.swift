@@ -6,7 +6,7 @@
 
 import Combine
 import Foundation
-import TCServerSide
+import TCCore
 
 /// A tool that intercepts Commanders Act requests and turns them into a hit stream.
 enum CommandersActInterceptor {

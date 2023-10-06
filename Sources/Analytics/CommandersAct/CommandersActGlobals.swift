@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// A struct representing global labels to send to Commanders Act.
 public struct CommandersActGlobals {
     let labels: [String: String]

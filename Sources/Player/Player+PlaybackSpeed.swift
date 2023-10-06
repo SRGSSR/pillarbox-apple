@@ -58,8 +58,8 @@ extension Player {
 }
 
 private extension Player {
-    static func playbackSpeedRange(for timeRange: CMTimeRange, itemDuration: CMTime, time: CMTime) -> ClosedRange<Float>? {
-        let streamType = StreamType(for: timeRange, itemDuration: itemDuration)
+    static func playbackSpeedRange(for timeRange: CMTimeRange, duration: CMTime, time: CMTime) -> ClosedRange<Float>? {
+        let streamType = StreamType(for: timeRange, duration: duration)
         switch streamType {
         case .live:
             return 1...1
@@ -73,29 +73,23 @@ private extension Player {
     }
 
     func supportedPlaybackSpeedPublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
-        queuePlayer.publisher(for: \.currentItem)
-            .weakCapture(self)
-            .map { item, player -> AnyPublisher<PlaybackSpeedUpdate, Never> in
-                if let item {
-                    return Publishers.CombineLatest3(
-                        item.timeRangePublisher(),
-                        item.durationPublisher(),
-                        player.periodicTimePublisher(forInterval: CMTime(value: 1, timescale: 1))
-                    )
-                    .compactMap { timeRange, itemDuration, time in
-                        guard let range = Self.playbackSpeedRange(for: timeRange, itemDuration: itemDuration, time: time) else { return nil }
-                        return .range(range)
-                    }
-                    .eraseToAnyPublisher()
-                }
-                else {
-                    return Just(.range(nil))
-                        .eraseToAnyPublisher()
-                }
+        Publishers.CombineLatest(
+            propertiesPublisher,
+            periodicTimePublisher(forInterval: CMTime(value: 1, timescale: 1))
+        )
+        .compactMap { properties, time in
+            guard !properties.isEmpty else { return .range(nil) }
+            guard let range = Self.playbackSpeedRange(
+                for: properties.seekableTimeRange,
+                duration: properties.duration,
+                time: time
+            ) else {
+                return nil
             }
-            .switchToLatest()
-            .removeDuplicates()
-            .eraseToAnyPublisher()
+            return .range(range)
+        }
+        .removeDuplicates()
+        .eraseToAnyPublisher()
     }
 
     // Publishes speed updates triggered from `AVPlayerViewController`. Not necessary on tvOS since the standard UI

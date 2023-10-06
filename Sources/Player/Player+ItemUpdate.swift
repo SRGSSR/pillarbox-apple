@@ -16,19 +16,11 @@ extension Player {
         func currentIndex() -> Int? {
             items.firstIndex { $0.matches(currentItem) }
         }
-
-        func streamTypePublisher() -> AnyPublisher<StreamType, Never> {
-            guard let currentItem else { return Just(.unknown).eraseToAnyPublisher() }
-            return currentItem.streamTypePublisher().eraseToAnyPublisher()
-        }
     }
 
     func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
-        Publishers.CombineLatest($storedItems, $currentItem)
-            .map { items, currentItem in
-                let playerItem = currentItem.smoothPlayerItem(in: items)
-                return ItemUpdate(items: items, currentItem: playerItem)
-            }
+        Publishers.CombineLatest($storedItems, queuePlayer.publisher(for: \.currentItem))
+            .map { ItemUpdate(items: $0, currentItem: $1) }
             .eraseToAnyPublisher()
     }
 }

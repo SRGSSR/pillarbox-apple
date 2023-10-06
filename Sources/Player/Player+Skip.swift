@@ -11,15 +11,15 @@ public extension Player {
     ///
     /// - Returns: `true` if possible.
     func canSkipBackward() -> Bool {
-        timeRange.isValidAndNotEmpty
+        seekableTimeRange.isValidAndNotEmpty
     }
 
     /// Checks whether skipping forward is possible.
     ///
     /// - Returns: `true` if possible.
     func canSkipForward() -> Bool {
-        guard timeRange.isValidAndNotEmpty else { return false }
-        if itemDuration.isIndefinite {
+        guard seekableTimeRange.isValidAndNotEmpty else { return false }
+        if duration.isIndefinite {
             let currentTime = queuePlayer.targetSeekTime ?? time
             return canSeek(to: currentTime + forwardSkipTime)
         }
@@ -65,7 +65,7 @@ private extension Player {
         assert(interval != .zero)
         let endTolerance = CMTime(value: 1, timescale: 1)
         let currentTime = queuePlayer.targetSeekTime ?? time
-        if interval < .zero || currentTime < timeRange.end - endTolerance {
+        if interval < .zero || currentTime < seekableTimeRange.end - endTolerance {
             seek(
                 to(currentTime + interval, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter),
                 smooth: false,

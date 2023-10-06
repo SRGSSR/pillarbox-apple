@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-struct MediaSelectionContext {
+struct MediaSelectionProperties: Equatable {
     static var empty: Self {
         self.init(groups: [:], selection: nil)
     }

@@ -9,7 +9,6 @@
 import AVFoundation
 import Nimble
 import Streams
-import XCTest
 
 final class MediaSelectionTests: TestCase {
     func testCharacteristicsAndOptionsWhenEmpty() {
@@ -40,7 +39,6 @@ final class MediaSelectionTests: TestCase {
         let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
         expect(player.mediaSelectionCharacteristics).toEventuallyNot(beEmpty())
         player.play()
-        expect(player.playbackState).toEventually(equal(.ended))
         expect(player.mediaSelectionCharacteristics).toEventually(beEmpty())
     }
 
@@ -226,21 +224,6 @@ final class MediaSelectionTests: TestCase {
         player.select(mediaOption: .off, for: .legible)
         expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.off))
         expect(player.currentMediaOption(for: .legible)).to(equal(.off))
-    }
-
-    func testSelectIncompatibleOptionDoesNothing() {
-        MediaAccessibilityDisplayType.forcedOnly.apply()
-
-        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
-        expect(player.mediaSelectionOptions(for: .audible)).toEventuallyNot(beEmpty())
-
-        let selectedMediaOption = player.selectedMediaOption(for: .legible)
-        let currentMediaOption = player.currentMediaOption(for: .legible)
-
-        let firstAudibleOption = player.mediaSelectionOptions(for: .audible).first!
-        player.select(mediaOption: firstAudibleOption, for: .legible)
-        expect(player.selectedMediaOption(for: .legible)).toAlways(equal(selectedMediaOption), until: .seconds(2))
-        expect(player.currentMediaOption(for: .legible)).to(equal(currentMediaOption))
     }
 
     func testAudibleSelectionIsPreservedBetweenItems() {

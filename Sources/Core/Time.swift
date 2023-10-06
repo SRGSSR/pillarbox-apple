@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
+import CoreMedia
 
 public extension CMTimeRange {
     /// Returns a Boolean value that indicates whether the time range is valid and not empty.

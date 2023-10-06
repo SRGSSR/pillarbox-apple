@@ -13,18 +13,6 @@ public struct Stream {
 
     /// The stream duration.
     public let duration: CMTime
-
-    /// Returns a stream identifying some item in a playlist, having a specific index.
-    ///
-    /// Not intended to be playable, mostly useful for testing playlist mutations.
-    /// - Parameter index: The index.
-    /// - Returns: The stream.
-    public static func item(numbered index: Int) -> Self {
-        .init(
-            url: URL(string: "https://www.server.com/item\(index).m3u8")!,
-            duration: .indefinite
-        )
-    }
 }
 
 public extension Stream {
@@ -127,30 +115,6 @@ public extension Stream {
     /// Not intended to be playable.
     static let custom: Self = .init(
         url: URL(string: "custom://arbitrary.server/some.m3u8")!,
-        duration: .indefinite
-    )
-
-    /// A stream identifying some item in a playlist.
-    ///
-    /// Not intended to be playable, mostly useful for testing playlist mutations.
-    static let item: Self = .init(
-        url: URL(string: "https://www.server.com/item.m3u8")!,
-        duration: .indefinite
-    )
-
-    /// A stream identifying an item inserted into a playlist.
-    ///
-    /// Not intended to be playable, mostly useful for testing playlist mutations.
-    static let insertedItem: Self = .init(
-        url: URL(string: "https://www.server.com/inserted.m3u8")!,
-        duration: .indefinite
-    )
-
-    /// A stream identifying a foreign item not belonging to a playlist.
-    ///
-    /// Not intended to be playable, mostly useful for testing playlist mutations.
-    static let foreignItem: Self = .init(
-        url: URL(string: "https://www.server.com/foreign.m3u8")!,
         duration: .indefinite
     )
 }

@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// A hit sent by the comScore SDK.
 ///
 /// Mainly used for development-oriented purposes (e.g. unit testing).

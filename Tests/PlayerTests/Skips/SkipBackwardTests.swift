@@ -10,7 +10,6 @@ import Circumspect
 import CoreMedia
 import Nimble
 import Streams
-import XCTest
 
 final class SkipBackwardTests: TestCase {
     func testSkipWhenEmpty() {

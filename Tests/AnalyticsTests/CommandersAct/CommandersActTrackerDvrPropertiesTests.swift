@@ -11,7 +11,6 @@ import CoreMedia
 import Nimble
 import Player
 import Streams
-import XCTest
 
 private struct AssetMetadataMock: AssetMetadata {}
 
@@ -98,7 +97,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
                 expect(labels.media_timeshift).to(beCloseTo(4, within: 2))
             }
         ) {
-            player.seek(at(player.timeRange.end - CMTime(value: 4, timescale: 1)))
+            player.seek(at(player.time - CMTime(value: 4, timescale: 1)))
         }
     }
 
