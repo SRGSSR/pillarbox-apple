@@ -58,7 +58,16 @@ public final class Player: ObservableObject, Equatable {
     /// The player configuration.
     public let configuration: PlayerConfiguration
 
-    /// A publisher providing player updates as a consolidated stream.
+    /// A publisher providing player property updates as a consolidated stream.
+    ///
+    /// Rarely changing player properties, like `mediaType` or `streamType`, can be directly observed and read from
+    /// a `Player` instance. Properties which change more often, like `isSeeking` or `buffer`, require an explicit,
+    /// subscription to be read. You have to register to the `propertiesPublisher` update stream, possibly restricting
+    /// observation to a key path using `Publisher.slice(at:)`. Current property values are automatically published
+    /// upon subscription.
+    ///
+    /// When implementing a custom SwiftUI user interface, you should use `View.onReceive(player:assign:to:)` to read
+    /// fast-paced property changes into corresponding local bindings.
     public let propertiesPublisher: AnyPublisher<PlayerProperties, Never>
 
     /// A Boolean setting whether the audio output of the player must be muted.
