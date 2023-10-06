@@ -85,7 +85,7 @@ class QueuePlayer: AVQueuePlayer {
 
     private func seek(safelyTo time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
         let endTimeRange = CMTimeRange(start: timeRange.end - CMTime(value: 18, timescale: 1), end: timeRange.end)
-        if itemDuration.isIndefinite || !endTimeRange.containsTime(time) {
+        if duration.isIndefinite || !endTimeRange.containsTime(time) {
             super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
         }
         else {
