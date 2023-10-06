@@ -55,7 +55,7 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    /// The player configuration
+    /// The player configuration.
     public let configuration: PlayerConfiguration
 
     /// A publisher providing player updates as a consolidated stream.
