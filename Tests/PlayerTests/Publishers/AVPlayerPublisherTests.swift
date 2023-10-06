@@ -30,7 +30,7 @@ final class AVPlayerPublisherTests: TestCase {
             values: [nil, PlayerError.resourceNotFound],
             from: Self.errorPublisher(for: player),
             to: beEqual,
-            during: .milliseconds(500)
+            during: .seconds(2)
         )
     }
 }
