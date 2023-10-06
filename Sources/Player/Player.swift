@@ -20,6 +20,7 @@ public final class Player: ObservableObject, Equatable {
         PackageInfo.version
     }
 
+    /// The last error received by the player.
     @Published public private(set) var error: (any Error)?
 
     /// The index of the current item in the queue.
