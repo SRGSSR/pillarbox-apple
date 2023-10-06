@@ -103,6 +103,10 @@ public extension PlayerProperties {
 }
 
 extension PlayerProperties {
+    var mediaSelectionProperties: MediaSelectionProperties {
+        coreProperties.mediaSelectionProperties
+    }
+
     var state: ItemState {
         coreProperties.state
     }
