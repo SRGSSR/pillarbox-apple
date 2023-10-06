@@ -56,9 +56,9 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
                 rectangle(opacity: 0.1)
                     .background(.ultraThinMaterial)
                 rectangle(opacity: 0.3, width: geometry.size.width * CGFloat(buffer))
+                    .animation(.linear(duration: 0.5), value: buffer)
                 rectangle(width: geometry.size.width * CGFloat(progressTracker.progress))
             }
-            .animation(.linear(duration: 0.5), value: buffer)
             .gesture(
                 DragGesture(minimumDistance: 1)
                     .updating($gestureValue) { value, state, _ in
