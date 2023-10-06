@@ -21,6 +21,7 @@ private struct MainView: View {
     @State private var layoutInfo: LayoutInfo = .none
     @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
     @State private var isInteracting = false
+    @State private var isBusy = false
 
     private var areControlsAlwaysVisible: Bool {
         player.isExternalPlaybackActive || player.mediaType == .audio
@@ -33,8 +34,9 @@ private struct MainView: View {
             topBar()
         }
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
-        .animation(.defaultLinear, value: isUserInterfaceHidden)
+        .animation(.defaultLinear, values: isBusy, isUserInterfaceHidden)
         .bind(visibilityTracker, to: player)
+        .onReceive(player: player, assign: \.isBusy, to: $isBusy)
         ._debugBodyCounter()
     }
 
@@ -66,6 +68,7 @@ private struct MainView: View {
         ZStack {
             video()
             controls()
+            loadingIndicator()
         }
         .ignoresSafeArea()
         .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
@@ -91,7 +94,6 @@ private struct MainView: View {
         HStack {
             CloseButton()
             Spacer()
-            LoadingIndicator(player: player)
             VolumeButton(player: player)
         }
         .opacity(isUserInterfaceHidden ? 0 : 1)
@@ -123,6 +125,14 @@ private struct MainView: View {
             ControlsView(player: player)
                 .opacity(isUserInterfaceHidden || isInteracting ? 0 : 1)
         }
+    }
+
+    @ViewBuilder
+    private func loadingIndicator() -> some View {
+        ProgressView()
+            .tint(.white)
+            .opacity(!isBusy || (isInteracting && !areControlsAlwaysVisible) ? 0 : 1)
+            .controlSize(.large)
     }
 
     @ViewBuilder
@@ -254,21 +264,6 @@ private struct VolumeButton: View {
 
     private func toggleMuted() {
         player.isMuted.toggle()
-    }
-}
-
-// Behavior: h-hug, v-hug
-private struct LoadingIndicator: View {
-    let player: Player
-
-    @State private var isBuffering = false
-
-    var body: some View {
-        ProgressView()
-            .tint(.white)
-            .opacity(isBuffering ? 1 : 0)
-            .animation(.linear(duration: 0.1), value: isBuffering)
-            .onReceive(player: player, assign: \.isBuffering, to: $isBuffering)
     }
 }
 
@@ -460,6 +455,7 @@ private struct PlaybackMessageView: View {
 // Behavior: h-hug, v-hug
 private struct PlaybackButton: View {
     @ObservedObject var player: Player
+    @State private var isBusy = false
 
     private var imageName: String? {
         if player.canReplay() {
@@ -490,7 +486,9 @@ private struct PlaybackButton: View {
         }
         .aspectRatio(contentMode: .fit)
         .frame(minWidth: 120, maxHeight: 90)
+        .opacity(isBusy ? 0 : 1)
         .replaceSymbolEffect()
+        .onReceive(player: player, assign: \.isBusy, to: $isBusy)
     }
 
     private func play() {
