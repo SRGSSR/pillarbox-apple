@@ -17,14 +17,14 @@ public enum StreamType {
     /// Livestream with DVR.
     case dvr
 
-    init(for timeRange: CMTimeRange, itemDuration: CMTime) {
-        if !itemDuration.isValid {
+    init(for timeRange: CMTimeRange, duration: CMTime) {
+        if !duration.isValid {
             self = .unknown
         }
-        else if timeRange.isEmpty && !itemDuration.isNumeric {
+        else if timeRange.isEmpty && !duration.isNumeric {
             self = .live
         }
-        else if itemDuration.isIndefinite {
+        else if duration.isIndefinite {
             self = .dvr
         }
         else {

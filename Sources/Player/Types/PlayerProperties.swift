@@ -19,41 +19,10 @@ public struct PlayerProperties: Equatable {
 
     private let timeProperties: TimeProperties
     let coreProperties: CoreProperties
-
     let isEmpty: Bool
 
     /// The time at which the player is currently seeking, if any.
     public let seekTime: CMTime?
-
-    /// A Boolean describing whether the player is currently seeking to another position.
-    public var isSeeking: Bool {
-        seekTime != nil
-    }
-
-    /// The player playback state.
-    public var playbackState: PlaybackState {
-        coreProperties.playbackState
-    }
-
-    /// A Boolean describing whether the player is currently buffering.
-    public var isBuffering: Bool {
-        !isEmpty && !timeProperties.isPlaybackLikelyToKeepUp
-    }
-
-    /// A Boolean describing whether the player is currently busy (buffering or seeking).
-    public var isBusy: Bool {
-        isBuffering || isSeeking
-    }
-
-    /// The current media type.
-    public var mediaType: MediaType {
-        coreProperties.mediaType
-    }
-
-    /// The type of stream currently being played.
-    public var streamType: StreamType {
-        StreamType(for: seekableTimeRange, itemDuration: duration)
-    }
 
     init(
         timeProperties: TimeProperties,
@@ -68,70 +37,55 @@ public struct PlayerProperties: Equatable {
     }
 }
 
-// MARK: TimeProperties
-extension PlayerProperties {
-    var loadedTimeRanges: [NSValue] {
-        timeProperties.loadedTimeRanges
+public extension PlayerProperties {
+    /// A Boolean describing whether the player is currently seeking to another position.
+    var isSeeking: Bool {
+        seekTime != nil
     }
 
-    var seekableTimeRanges: [NSValue] {
-        timeProperties.seekableTimeRanges
+    /// A Boolean describing whether the player is currently buffering.
+    var isBuffering: Bool {
+        !isEmpty && !timeProperties.isPlaybackLikelyToKeepUp
     }
 
-    var isPlaybackLikelyToKeepUp: Bool {
-        timeProperties.isPlaybackLikelyToKeepUp
+    /// A Boolean describing whether the player is currently busy (buffering or seeking).
+    var isBusy: Bool {
+        isBuffering || isSeeking
     }
 
-    /// The time range within which it is possible to seek.
-    public var seekableTimeRange: CMTimeRange {
-        timeProperties.seekableTimeRange
-    }
-
-    var loadedTimeRange: CMTimeRange {
-        timeProperties.loadedTimeRange
-    }
-
-    /// The buffer position.
-    ///
-    /// Returns a value between 0 and 1 indicating up to where content has been loaded and is available for
-    /// playback.
-    public var buffer: Float {
-        timeProperties.buffer
+    /// The type of stream currently being played.
+    var streamType: StreamType {
+        StreamType(for: seekableTimeRange, duration: coreProperties.duration)
     }
 }
 
-// MARK: ItemProperties
-extension PlayerProperties {
-    var state: ItemState {
-        coreProperties.state
-    }
+// MARK: CoreProperties
 
-    /// The stream duration.
-    public var duration: CMTime {
-        coreProperties.duration
-    }
-
-    var minimumTimeOffsetFromLive: CMTime {
-        coreProperties.minimumTimeOffsetFromLive
-    }
-
+public extension PlayerProperties {
     /// The current presentation size.
     ///
     /// Might be zero for audio content or `nil` when unknown.
-    public var presentationSize: CGSize? {
+    var presentationSize: CGSize? {
         coreProperties.presentationSize
     }
 
     /// The duration of a chunk for the currently played item.
     ///
     /// Might be `.invalid` when no content is being played or when unknown.
-    public var chunkDuration: CMTime {
+    var chunkDuration: CMTime {
         coreProperties.chunkDuration
     }
-}
 
-// MARK: PlaybackProperties
-public extension PlayerProperties {
+    /// The current media type.
+    var mediaType: MediaType {
+        coreProperties.mediaType
+    }
+
+    /// The player playback state.
+    var playbackState: PlaybackState {
+        coreProperties.playbackState
+    }
+
     /// The player rate.
     var rate: Float {
         coreProperties.rate
@@ -145,5 +99,32 @@ public extension PlayerProperties {
     /// A Boolean describing whether the player is currently muted.
     var isMuted: Bool {
         coreProperties.isMuted
+    }
+}
+
+extension PlayerProperties {
+    var state: ItemState {
+        coreProperties.state
+    }
+
+    var duration: CMTime {
+        coreProperties.duration
+    }
+}
+
+// MARK: TimeProperties
+
+public extension PlayerProperties {
+    /// The time range within which it is possible to seek.
+    var seekableTimeRange: CMTimeRange {
+        timeProperties.seekableTimeRange
+    }
+
+    /// The buffer position.
+    ///
+    /// Returns a value between 0 and 1 indicating up to where content has been loaded and is available for
+    /// playback.
+    var buffer: Float {
+        timeProperties.buffer
     }
 }

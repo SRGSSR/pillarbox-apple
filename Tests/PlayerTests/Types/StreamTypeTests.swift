@@ -11,10 +11,10 @@ import Nimble
 
 final class StreamTypeTests: TestCase {
     func testAllCases() {
-        expect(StreamType(for: .zero, itemDuration: .invalid)).to(equal(.unknown))
-        expect(StreamType(for: .zero, itemDuration: .indefinite)).to(equal(.live))
-        expect(StreamType(for: .finite, itemDuration: .indefinite)).to(equal(.dvr))
-        expect(StreamType(for: .zero, itemDuration: .zero)).to(equal(.onDemand))
+        expect(StreamType(for: .zero, duration: .invalid)).to(equal(.unknown))
+        expect(StreamType(for: .zero, duration: .indefinite)).to(equal(.live))
+        expect(StreamType(for: .finite, duration: .indefinite)).to(equal(.dvr))
+        expect(StreamType(for: .zero, duration: .zero)).to(equal(.onDemand))
     }
 }
 

@@ -24,7 +24,7 @@ final class QueuePlayerPublisherTests: TestCase {
             .eraseToAnyPublisher()
     }
 
-    private static func itemStatePublisher(for player: QueuePlayer) -> AnyPublisher<ItemState, Never> {
+    private static func statePublisher(for player: QueuePlayer) -> AnyPublisher<ItemState, Never> {
         player.propertiesPublisher()
             .slice(at: \.state)
             .eraseToAnyPublisher()
@@ -82,7 +82,7 @@ final class QueuePlayerPublisherTests: TestCase {
         let player = QueuePlayer()
         expectAtLeastEqualPublished(
             values: [.unknown],
-            from: Self.itemStatePublisher(for: player)
+            from: Self.statePublisher(for: player)
         )
     }
 
@@ -92,7 +92,7 @@ final class QueuePlayerPublisherTests: TestCase {
         )
         expectAtLeastEqualPublished(
             values: [.unknown, .readyToPlay, .ended, .unknown],
-            from: Self.itemStatePublisher(for: player)
+            from: Self.statePublisher(for: player)
         ) {
             player.play()
         }

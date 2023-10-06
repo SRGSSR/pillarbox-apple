@@ -58,8 +58,8 @@ extension Player {
 }
 
 private extension Player {
-    static func playbackSpeedRange(for timeRange: CMTimeRange, itemDuration: CMTime, time: CMTime) -> ClosedRange<Float>? {
-        let streamType = StreamType(for: timeRange, itemDuration: itemDuration)
+    static func playbackSpeedRange(for timeRange: CMTimeRange, duration: CMTime, time: CMTime) -> ClosedRange<Float>? {
+        let streamType = StreamType(for: timeRange, duration: duration)
         switch streamType {
         case .live:
             return 1...1
@@ -81,7 +81,7 @@ private extension Player {
             guard !properties.isEmpty else { return .range(nil) }
             guard let range = Self.playbackSpeedRange(
                 for: properties.seekableTimeRange,
-                itemDuration: properties.duration,
+                duration: properties.duration,
                 time: time
             ) else {
                 return nil
