@@ -2,6 +2,12 @@
 
 # Overview
 
+[![GitHub contributors](https://img.shields.io/github/contributors/SRGSSR/pillarbox-apple)](https://github.com/SRGSSR/pillarbox-apple/graphs/contributors)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/SRGSSR/pillarbox-apple)](https://github.com/SRGSSR/pillarbox-apple/pulls)
+[![GitHub issues](https://img.shields.io/github/issues/SRGSSR/pillarbox-apple)](https://github.com/SRGSSR/pillarbox-apple/issues)
+[![GitHub closed issues](https://img.shields.io/github/issues-closed/SRGSSR/pillarbox-apple)](https://github.com/votre-nom-utilisateur/votre-projet/issues?q=is%3Aissue+is%3Aclosed)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/SRGSSR/pillarbox-apple)](https://github.com/SRGSSR/pillarbox-apple)
+
 Pillarbox is the iOS and tvOS modern reactive SRG SSR player ecosystem implemented on top of AVFoundation and AVKit. Pillarbox has been designed with robustness, efficiency and flexibilty in mind, with full customization of:
 
 - Metadata and asset URL retrieval.
