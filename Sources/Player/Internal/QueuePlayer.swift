@@ -134,8 +134,6 @@ class QueuePlayer: AVQueuePlayer {
 
 extension AVQueuePlayer {
     func replaceItems(with items: [AVPlayerItem]) {
-        cancelPendingReplacements()
-
         guard self.items() != items else { return }
 
         if let firstItem = items.first {
@@ -147,7 +145,7 @@ extension AVQueuePlayer {
                 removeAll(from: 1)
             }
             if items.count > 1 {
-                perform(#selector(append(_:)), with: Array(items.suffix(from: 1)), afterDelay: 1, inModes: [.common])
+                append(Array(items.suffix(from: 1)))
             }
         }
         else {
@@ -157,20 +155,12 @@ extension AVQueuePlayer {
 
     private func removeAll(from index: Int) {
         guard items().count > index else { return }
-        items().suffix(from: index).forEach { item in
-            remove(item)
-        }
+        items().suffix(from: index).forEach { remove($0) }
     }
 
     @objc
     private func append(_ items: [AVPlayerItem]) {
-        items.forEach { item in
-            insert(item, after: nil)
-        }
-    }
-
-    func cancelPendingReplacements() {
-        RunLoop.cancelPreviousPerformRequests(withTarget: self)
+        items.forEach { insert($0, after: nil) }
     }
 }
 

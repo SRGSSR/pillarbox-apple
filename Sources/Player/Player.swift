@@ -190,7 +190,6 @@ public final class Player: ObservableObject, Equatable {
     }
 
     deinit {
-        queuePlayer.cancelPendingReplacements()
         uninstallRemoteCommands()
     }
 }
