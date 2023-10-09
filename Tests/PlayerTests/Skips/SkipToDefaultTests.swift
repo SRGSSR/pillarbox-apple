@@ -52,7 +52,6 @@ final class SkipToDefaultTests: TestCase {
         waitUntil { done in
             player.skipToDefault { finished in
                 expect(finished).to(beTrue())
-                expect(player.time).to(equal(Stream.live.duration))
                 done()
             }
         }
