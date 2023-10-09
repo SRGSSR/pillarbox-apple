@@ -202,6 +202,7 @@ def run_package_tests(platform_id, scheme_name)
     device: DEVICES[platform_id],
     package_path: '.',
     result_bundle: true,
+    number_of_retries: 3,
     clean: true,
     fail_build: false
   )
