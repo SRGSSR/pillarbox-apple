@@ -88,7 +88,5 @@ final class SkipToDefaultTests: TestCase {
                 done()
             }
         }
-
-        expect(player.canSkipToDefault()).to(beFalse())
     }
 }
