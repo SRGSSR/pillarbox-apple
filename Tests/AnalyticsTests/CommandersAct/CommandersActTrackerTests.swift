@@ -126,11 +126,11 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         player?.setDesiredPlaybackSpeed(2)
 
         player?.play()
-        expect(player?.time.seconds).toEventually(beGreaterThan(10))
+        expect(player?.time.seconds).toEventually(beGreaterThan(2))
 
         expectAtLeastHits(
             .stop { labels in
-                expect(labels.media_position).to(equal(10))
+                expect(labels.media_position).to(equal(2))
             }
         ) {
             player = nil
