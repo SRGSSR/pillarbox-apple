@@ -33,14 +33,25 @@ private struct PlaybackSpeedMenuContent: View {
 private struct MediaSelectionMenuContent: View {
     let characteristic: AVMediaCharacteristic
     @ObservedObject var player: Player
+    @State private var selection: MediaSelectionOption = .automatic
 
     var body: some View {
-        Picker("", selection: player.mediaOption(for: characteristic)) {
+        // TODO: Improvement.
+        // We are not directly using `mediaOption(for:)` because of its performance issues.
+        // Perhaps we should consider removing the observation of the entire player
+        // and focus on listening media selection updates.
+        Picker("", selection: $selection) {
             ForEach(mediaOptions, id: \.self) { option in
                 Text(option.displayName).tag(option)
             }
         }
         .pickerStyle(.inline)
+        .onAppear {
+            selection = player.selectedMediaOption(for: characteristic)
+        }
+        .onChange(of: selection) { value in
+            player.select(mediaOption: value, for: characteristic)
+        }
     }
 
     private var mediaOptions: [MediaSelectionOption] {
