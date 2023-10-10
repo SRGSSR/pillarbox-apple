@@ -43,10 +43,10 @@ private struct MediaSelectionMenuContent: View {
         }
         .pickerStyle(.inline)
         .onAppear {
-            selection = player.mediaOption(for: characteristic).wrappedValue
+            selection = player.selectedMediaOption(for: characteristic)
         }
         .onChange(of: selection) { value in
-            player.mediaOption(for: characteristic).wrappedValue = value
+            player.select(mediaOption: value, for: characteristic)
         }
     }
 
