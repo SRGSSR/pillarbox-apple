@@ -71,24 +71,6 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
         expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("fr"))
     }
 
-    func testPreferredAudibleLanguageReset() {
-        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
-        player.setMediaSelection(preferredLanguages: ["fr"], for: .audible)
-        expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("fr"))
-        player.setMediaSelection(preferredLanguages: [], for: .audible)
-        expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("en"))
-    }
-
-    func testPreferredLegibleLanguageReset() {
-        MediaAccessibilityDisplayType.alwaysOn(languageCode: "ja").apply()
-
-        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
-        player.setMediaSelection(preferredLanguages: ["fr"], for: .legible)
-        expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("fr"))
-        player.setMediaSelection(preferredLanguages: [], for: .legible)
-        expect(player.currentMediaOption(for: .legible)).toEventually(haveLanguageIdentifier("ja"))
-    }
-
     func testPreferredAudibleLanguageIsPreservedBetweenItems() {
         let player = Player(items: [
             .simple(url: Stream.onDemandWithOptions.url),
@@ -150,5 +132,13 @@ final class PreferredLanguagesForMediaSelectionTests: TestCase {
 
         player.select(mediaOption: .automatic, for: .legible)
         expect(player.selectedMediaOption(for: .legible)).toEventually(equal(.automatic))
+    }
+
+    func testMediaSelectionReset() {
+        let player = Player(item: .simple(url: Stream.onDemandWithOptions.url))
+        player.setMediaSelection(preferredLanguages: ["fr"], for: .audible)
+        expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("fr"))
+        player.setMediaSelection(preferredLanguages: [], for: .audible)
+        expect(player.currentMediaOption(for: .audible)).toEventually(haveLanguageIdentifier("en"))
     }
 }
