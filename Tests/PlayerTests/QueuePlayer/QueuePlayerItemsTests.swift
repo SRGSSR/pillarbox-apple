@@ -27,8 +27,7 @@ final class QueuePlayerItemsTests: TestCase {
         let item2 = AVPlayerItem(url: Stream.onDemand.url)
         let item3 = AVPlayerItem(url: Stream.onDemand.url)
         player.replaceItems(with: [item1, item2, item3])
-        expect(player.items()).to(equalDiff([item1]))
-        expect(player.items()).toEventually(equalDiff([item1, item2, item3]), timeout: .seconds(2))
+        expect(player.items()).to(equalDiff([item1, item2, item3]))
     }
 
     func testReplaceItemsWithOtherItems() {
@@ -39,8 +38,7 @@ final class QueuePlayerItemsTests: TestCase {
         let item4 = AVPlayerItem(url: Stream.onDemand.url)
         let item5 = AVPlayerItem(url: Stream.onDemand.url)
         player.replaceItems(with: [item4, item5])
-        expect(player.items()).to(equalDiff([item4]))
-        expect(player.items()).toEventually(equalDiff([item4, item5]), timeout: .seconds(2))
+        expect(player.items()).to(equalDiff([item4, item5]))
     }
 
     func testReplaceItemsWithPreservedCurrentItem() {
@@ -50,8 +48,7 @@ final class QueuePlayerItemsTests: TestCase {
         let player = QueuePlayer(items: [item1, item2, item3])
         let item4 = AVPlayerItem(url: Stream.onDemand.url)
         player.replaceItems(with: [item1, item4])
-        expect(player.items()).to(equalDiff([item1]))
-        expect(player.items()).toEventually(equalDiff([item1, item4]), timeout: .seconds(2))
+        expect(player.items()).to(equalDiff([item1, item4]))
     }
 
     func testReplaceItemsWithIdenticalItems() {
@@ -68,8 +65,7 @@ final class QueuePlayerItemsTests: TestCase {
         let item3 = AVPlayerItem(url: Stream.onDemand.url)
         let player = QueuePlayer(items: [item1, item2, item3])
         player.replaceItems(with: [item2, item3])
-        expect(player.items()).to(equalDiff([item2]))
-        expect(player.items()).toEventually(equalDiff([item2, item3]), timeout: .seconds(2))
+        expect(player.items()).to(equalDiff([item2, item3]))
     }
 
     func testReplaceItemsWithPreviousItems() {
@@ -78,8 +74,7 @@ final class QueuePlayerItemsTests: TestCase {
         let player = QueuePlayer(items: [item2, item3])
         let item1 = AVPlayerItem(url: Stream.onDemand.url)
         player.replaceItems(with: [item1, item2, item3])
-        expect(player.items()).to(equalDiff([item1]))
-        expect(player.items()).toEventually(equalDiff([item1, item2, item3]), timeout: .seconds(2))
+        expect(player.items()).to(equalDiff([item1, item2, item3]))
     }
 
     func testReplaceItemsLastReplacementWins() {
@@ -89,6 +84,6 @@ final class QueuePlayerItemsTests: TestCase {
         player.replaceItems(with: [item1, item2])
         player.replaceItems(with: [item1])
         expect(player.items()).to(equalDiff([item1]))
-        expect(player.items()).toNever(equalDiff([item1, item2]), until: .seconds(2))
+        expect(player.items()).toNever(equalDiff([item1, item2]), until: .milliseconds(500))
     }
 }
