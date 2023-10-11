@@ -37,7 +37,7 @@ ffmpeg, swiftlint, shellcheck and yamllint can easily be installed with [Homebre
 
 To avoid commits on draft pull requests triggering status checks we must use an [internal TeamCity setting](https://youtrack.jetbrains.com/issue/TW-64444) `teamcity.internal.pullRequests.github.ignoreDraft` [set](https://www.jetbrains.com/help/teamcity/server-startup-properties.html#TeamCity+Internal+Properties) to `true` as follows:
 
-1. Go under _Administration | Server Administration | Diagnostics | Internal Properties_.
+1. Go under _Administration / Server Administration / Diagnostics / Internal Properties_.
 2. Click _Edit internal properties_.
 
 TeamCity also offers support for [GitHub hooks](https://github.com/JetBrains/teamcity-commit-hooks) to avoid polling GitHub for new commits.
