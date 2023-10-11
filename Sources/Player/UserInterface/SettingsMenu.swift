@@ -36,10 +36,6 @@ private struct MediaSelectionMenuContent: View {
     @State private var selection: MediaSelectionOption = .automatic
 
     var body: some View {
-        // TODO: Improvement.
-        // We are not directly using `mediaOption(for:)` because of its performance issues.
-        // Perhaps we should consider removing the observation of the entire player
-        // and focus on listening media selection updates.
         Picker("", selection: $selection) {
             ForEach(mediaOptions, id: \.self) { option in
                 Text(option.displayName).tag(option)

@@ -79,18 +79,6 @@ public extension Player {
         queuePlayer.setMediaSelectionCriteria(updatedSelectionCriteria, forMediaCharacteristic: characteristic)
     }
 
-    /// A binding to read and write the current media selection for a characteristic.
-    ///
-    /// - Parameter characteristic: The characteristic.
-    /// - Returns: The binding.
-    func mediaOption(for characteristic: AVMediaCharacteristic) -> Binding<MediaSelectionOption> {
-        .init {
-            self.selectedMediaOption(for: characteristic)
-        } set: { newValue in
-            self.select(mediaOption: newValue, for: characteristic)
-        }
-    }
-
     /// The current media option for a characteristic.
     ///
     /// - Parameter characteristic: The characteristic.
