@@ -45,13 +45,20 @@ struct AudibleMediaSelector: MediaSelector {
     ) -> AVPlayerMediaSelectionCriteria? {
         guard let languageCode = option.languageCode else { return nil }
         if let selectionCriteria {
-            return selectionCriteria.adding(preferredLanguages: [languageCode])
+            return selectionCriteria.selectionCriteria(
+                byAdding: [languageCode],
+                with: audibleCharacteristics(for: option)
+            )
         }
         else {
             return AVPlayerMediaSelectionCriteria(
                 preferredLanguages: [languageCode],
-                preferredMediaCharacteristics: MAAudibleMediaCopyPreferredCharacteristics().takeRetainedValue() as? [AVMediaCharacteristic]
+                preferredMediaCharacteristics: audibleCharacteristics(for: option)
             )
         }
+    }
+
+    private func audibleCharacteristics(for option: AVMediaSelectionOption) -> [AVMediaCharacteristic] {
+        option.hasMediaCharacteristic(.describesVideoForAccessibility) ? [.describesVideoForAccessibility] : []
     }
 }

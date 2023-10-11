@@ -124,7 +124,10 @@ public extension Player {
                 preferredLanguages: Self.preferredLanguages(for: characteristic),
                 preferredMediaCharacteristics: Self.preferredMediaCharacteristics(for: characteristic)
             )
-            queuePlayer.setMediaSelectionCriteria(selectionCriteria.adding(preferredLanguages: languages), forMediaCharacteristic: characteristic)
+            queuePlayer.setMediaSelectionCriteria(
+                selectionCriteria.selectionCriteria(byAdding: languages),
+                forMediaCharacteristic: characteristic
+            )
         }
         else {
             queuePlayer.setMediaSelectionCriteria(nil, forMediaCharacteristic: characteristic)
