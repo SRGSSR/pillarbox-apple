@@ -20,6 +20,17 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
+    func playbackPropertiesPublisher() -> AnyPublisher<PlaybackProperties, Never> {
+        Publishers.CombineLatest3(
+            publisher(for: \.rate),
+            publisher(for: \.isExternalPlaybackActive),
+            publisher(for: \.isMuted)
+        )
+        .map { .init(rate: $0, isExternalPlaybackActive: $1, isMuted: $2) }
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
+
     func errorPublisher() -> AnyPublisher<Error?, Never> {
         publisher(for: \.currentItem)
             .compactMap { $0?.errorPublisher() }
