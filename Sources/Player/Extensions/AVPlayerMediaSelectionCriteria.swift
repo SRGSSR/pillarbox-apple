@@ -7,11 +7,15 @@
 import AVFoundation
 
 extension AVPlayerMediaSelectionCriteria {
-    func adding(preferredLanguages languages: [String]) -> Self {
-        let existingPreferredLanguages = preferredLanguages ?? []
+    func selectionCriteria(byAdding preferredLanguages: [String], with preferredMediaCharacteristics: [AVMediaCharacteristic]) -> Self {
+        let existingPreferredLanguages = self.preferredLanguages ?? []
         return Self(
-            preferredLanguages: (languages + existingPreferredLanguages).removeDuplicates(),
+            preferredLanguages: (preferredLanguages + existingPreferredLanguages).removeDuplicates(),
             preferredMediaCharacteristics: preferredMediaCharacteristics
         )
+    }
+
+    func selectionCriteria(byAdding preferredLanguages: [String]) -> Self {
+        selectionCriteria(byAdding: preferredLanguages, with: preferredMediaCharacteristics ?? [])
     }
 }
