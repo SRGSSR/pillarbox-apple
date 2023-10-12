@@ -33,21 +33,14 @@ private struct PlaybackSpeedMenuContent: View {
 private struct MediaSelectionMenuContent: View {
     let characteristic: AVMediaCharacteristic
     @ObservedObject var player: Player
-    @State private var selection: MediaSelectionOption = .automatic
 
     var body: some View {
-        Picker("", selection: $selection) {
+        Picker("", selection: player.mediaOption(for: characteristic)) {
             ForEach(mediaOptions, id: \.self) { option in
                 Text(option.displayName).tag(option)
             }
         }
         .pickerStyle(.inline)
-        .onAppear {
-            selection = player.selectedMediaOption(for: characteristic)
-        }
-        .onChange(of: selection) { value in
-            player.select(mediaOption: value, for: characteristic)
-        }
     }
 
     private var mediaOptions: [MediaSelectionOption] {
