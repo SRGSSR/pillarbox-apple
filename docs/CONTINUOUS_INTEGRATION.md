@@ -35,12 +35,7 @@ ffmpeg, swiftlint, shellcheck and yamllint can easily be installed with [Homebre
 
 ## TeamCity configuration
 
-To avoid commits on draft pull requests triggering status checks we must use an [internal TeamCity setting](https://youtrack.jetbrains.com/issue/TW-64444) `teamcity.internal.pullRequests.github.ignoreDraft` [set](https://www.jetbrains.com/help/teamcity/server-startup-properties.html#TeamCity+Internal+Properties) to `true` as follows:
-
-1. Go under _Administration | Server Administration | Diagnostics | Internal Properties_.
-2. Click _Edit internal properties_.
-
-TeamCity also offers support for [GitHub hooks](https://github.com/JetBrains/teamcity-commit-hooks) to avoid polling GitHub for new commits.
+TeamCity offers support for [GitHub hooks](https://github.com/JetBrains/teamcity-commit-hooks) to avoid polling GitHub for new commits.
 
 ## Private configuration
 
@@ -103,7 +98,7 @@ To have TeamCity run quality checks for GitHub pull requests and post the corres
 1. Create a TeamCity configuration called _Quality_.
 2. Add a _VCS Trigger_ on `+:pull/*` and `+:gh-readonly-queue/*`.
 3. Add a _Command Line_ build step which simply executes `make check-quality`.
-4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
+4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token). Check the _Ignore Drafts_ option to avoid triggering work for draft pull requests.
 5. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token).
 6. Add an _Agent Requirement_ ensuring that `tools.xcode.home` exists. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
@@ -114,7 +109,7 @@ To have TeamCity archive the demo (archive for all configurations without TestFl
 1. Create a TeamCity configuration called _Demo Archiving iOS_.
 2. Add a _VCS Trigger_ on `+:pull/*` and `+:gh-readonly-queue/*`.
 3. Add a _Command Line_ build step which simply executes `make archive-demo-ios`.
-4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
+4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token). Check the _Ignore Drafts_ option to avoid triggering work for draft pull requests.
 5. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token).
 6. Add an _Agent Requirement_ ensuring that `tools.xcode.home` exists. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
@@ -127,7 +122,7 @@ To have TeamCity build and validate the documentation for GitHub pull requests a
 1. Create a TeamCity configuration called _Documentation_.
 2. Add a _VCS Trigger_ on `+:gh-readonly-queue/*`.
 3. Add a _Command Line_ build step which simply executes `make doc`.
-4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
+4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token). Check the _Ignore Drafts_ option to avoid triggering work for draft pull requests.
 5. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token).
 6. Add an _Agent Requirement_ ensuring that `tools.xcode.home` exists. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
 
@@ -138,7 +133,7 @@ To have TeamCity run tests for GitHub pull requests and post the corresponding s
 1. Create a TeamCity configuration called _Tests iOS_.
 2. Add a _VCS Trigger_ on `+:gh-readonly-queue/*`.
 3. Add a _Command Line_ build step which simply executes `make test-ios`.
-4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token).
+4. Add a _Pull Requests_ build feature which monitors GitHub (requires a personal access token). Check the _Ignore Drafts_ option to avoid triggering work for draft pull requests.
 5. Add a _Commit status publisher_ build feature which posts to GitHub (requires a personal access token).
 6. Add an _XML report processing_ build feature formatting test output as _Ant JUnit_ and which monitors `+:fastlane/test_output/*.xml`.
 7. Add an _Agent Requirement_ ensuring that `tools.xcode.home` exists. Check that some agents are compatible and assignable (if agents are configured manually you might need to explicitly allow the configuration to be run).
