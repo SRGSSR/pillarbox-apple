@@ -57,7 +57,7 @@ public final class ComScoreTracker: PlayerItemTracker {
         streamingAnalytics.setProperties(for: properties, time: player.time, streamType: metadata.streamType)
 
         guard applicationState == .foreground else {
-            streamingAnalytics.notifyEvent(for: .paused, at: player.effectivePlaybackSpeed)
+            streamingAnalytics.notifyEvent(for: .paused, at: properties.rate)
             return
         }
 
@@ -72,7 +72,7 @@ public final class ComScoreTracker: PlayerItemTracker {
             streamingAnalytics.notifyBufferStart()
         case (false, false):
             streamingAnalytics.notifyBufferStop()
-            streamingAnalytics.notifyEvent(for: properties.playbackState, at: player.effectivePlaybackSpeed)
+            streamingAnalytics.notifyEvent(for: properties.playbackState, at: properties.rate)
         }
     }
 
