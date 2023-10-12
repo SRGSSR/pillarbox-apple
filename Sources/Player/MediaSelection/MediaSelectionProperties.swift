@@ -14,13 +14,15 @@ struct MediaSelectionProperties: Equatable {
     private let groups: [AVMediaCharacteristic: AVMediaSelectionGroup]
     let selection: AVMediaSelection?
 
-    var characteristics: Set<AVMediaCharacteristic> {
-        Set(groups.keys)
-    }
-
     init(groups: [AVMediaCharacteristic: AVMediaSelectionGroup], selection: AVMediaSelection?) {
         self.groups = groups
         self.selection = selection
+    }
+}
+
+extension MediaSelectionProperties {
+    var characteristics: Set<AVMediaCharacteristic> {
+        Set(groups.keys)
     }
 
     func group(for characteristic: AVMediaCharacteristic) -> AVMediaSelectionGroup? {
