@@ -189,4 +189,23 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             player.isTrackingEnabled = true
         }
     }
+
+    func testInitialPlaybackRate() {
+        let player = Player(item: .simple(
+            url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
+            trackerAdapters: [
+                ComScoreTracker.adapter { _ in .test }
+            ]
+        ))
+
+        expectAtLeastHits(
+            .play { labels in
+                expect(labels.ns_st_rt).to(equal(200))
+            }
+        ) {
+            player.setDesiredPlaybackSpeed(2)
+            player.play()
+        }
+    }
 }
