@@ -30,6 +30,10 @@ class QueuePlayer: AVQueuePlayer {
 
     private var pendingSeeks = Deque<Seek>()
 
+    // Starting with iOS 17 accessing media selection criteria might be slow. Use a cache for the lifetime of the
+    // player.
+    var mediaSelectionCriteria: [AVMediaCharacteristic: AVPlayerMediaSelectionCriteria?] = [:]
+
     private var targetSeek: Seek? {
         pendingSeeks.last
     }
@@ -129,6 +133,22 @@ class QueuePlayer: AVQueuePlayer {
 
     private func notifySeekEnd() {
         Self.notificationCenter.post(name: .didSeek, object: self)
+    }
+
+    override func mediaSelectionCriteria(forMediaCharacteristic mediaCharacteristic: AVMediaCharacteristic) -> AVPlayerMediaSelectionCriteria? {
+        if let cachedCriteria = mediaSelectionCriteria[mediaCharacteristic] {
+            return cachedCriteria
+        }
+        else {
+            let criteria = super.mediaSelectionCriteria(forMediaCharacteristic: mediaCharacteristic)
+            mediaSelectionCriteria[mediaCharacteristic] = criteria
+            return criteria
+        }
+    }
+
+    override func setMediaSelectionCriteria(_ criteria: AVPlayerMediaSelectionCriteria?, forMediaCharacteristic mediaCharacteristic: AVMediaCharacteristic) {
+        mediaSelectionCriteria[mediaCharacteristic] = criteria
+        super.setMediaSelectionCriteria(criteria, forMediaCharacteristic: mediaCharacteristic)
     }
 }
 
