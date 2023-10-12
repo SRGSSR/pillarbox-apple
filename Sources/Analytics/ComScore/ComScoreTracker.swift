@@ -76,10 +76,6 @@ public final class ComScoreTracker: PlayerItemTracker {
         }
     }
 
-    private func notifyPlaybackSpeedChange(speed: Float) {
-        streamingAnalytics.notifyChangePlaybackRate(speed)
-    }
-
     private func updateMetadata(with metadata: Metadata) {
         let builder = SCORStreamingContentMetadataBuilder()
         if let globals = Analytics.shared.comScoreGlobals {
