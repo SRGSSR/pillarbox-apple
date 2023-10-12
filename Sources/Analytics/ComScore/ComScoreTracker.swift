@@ -15,7 +15,7 @@ import UIKit
 ///
 /// Analytics have to be properly started for the tracker to collect data, see `Analytics.start(with:)`.
 public final class ComScoreTracker: PlayerItemTracker {
-    private var streamingAnalytics = SCORStreamingAnalytics()
+    private var streamingAnalytics = ComScoreStreamingAnalytics()
     private var cancellables = Set<AnyCancellable>()
     @Published private var metadata: Metadata = .empty
 
@@ -58,7 +58,7 @@ public final class ComScoreTracker: PlayerItemTracker {
 
     public func disable() {
         cancellables = []
-        streamingAnalytics = SCORStreamingAnalytics()
+        streamingAnalytics = ComScoreStreamingAnalytics()
     }
 
     // swiftlint:disable:next cyclomatic_complexity
