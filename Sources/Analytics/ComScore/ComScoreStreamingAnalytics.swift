@@ -12,9 +12,8 @@ final class ComScoreStreamingAnalytics: SCORStreamingAnalytics {
     private var oldRate: Float?
 
     override func notifyChangePlaybackRate(_ newRate: Float) {
-        if oldRate != newRate {
-            super.notifyChangePlaybackRate(newRate)
-        }
+        guard oldRate != newRate else { return }
+        super.notifyChangePlaybackRate(newRate)
         oldRate = newRate
     }
 }
