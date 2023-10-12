@@ -11,6 +11,7 @@ public struct ComScoreHit {
     /// A name describing a comScore hit.
     public enum Name: String {
         case play
+        case playrt
         case pause
         case end
         case view

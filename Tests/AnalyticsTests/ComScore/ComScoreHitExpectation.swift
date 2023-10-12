@@ -22,6 +22,11 @@ struct ComScoreHitExpectation {
         .init(name: .play, evaluate: evaluate)
     }
 
+    /// Playback rate.
+    static func playrt(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> Self {
+        .init(name: .playrt, evaluate: evaluate)
+    }
+
     /// Pause.
     static func pause(evaluate: @escaping (ComScoreLabels) -> Void = { _ in }) -> Self {
         .init(name: .pause, evaluate: evaluate)
