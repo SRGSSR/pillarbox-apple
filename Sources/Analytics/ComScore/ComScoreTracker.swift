@@ -42,18 +42,6 @@ public final class ComScoreTracker: PlayerItemTracker {
             notify(applicationState: state, player: player, properties: properties)
         }
         .store(in: &cancellables)
-
-        player.objectWillChange
-            .receive(on: DispatchQueue.main)
-            .map { _ in () }
-            .prepend(())
-            .weakCapture(player)
-            .map { $1.effectivePlaybackSpeed }
-            .removeDuplicates()
-            .sink { [weak self] speed in
-                self?.notifyPlaybackSpeedChange(speed: speed)
-            }
-            .store(in: &cancellables)
     }
 
     public func disable() {
