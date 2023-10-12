@@ -2,11 +2,7 @@
 
 # Overview
 
-[![GitHub contributors](https://img.shields.io/github/contributors/SRGSSR/pillarbox-apple)](https://github.com/SRGSSR/pillarbox-apple/graphs/contributors)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/SRGSSR/pillarbox-apple)](https://github.com/SRGSSR/pillarbox-apple/pulls)
-[![GitHub issues](https://img.shields.io/github/issues/SRGSSR/pillarbox-apple)](https://github.com/SRGSSR/pillarbox-apple/issues)
-[![GitHub closed issues](https://img.shields.io/github/issues-closed/SRGSSR/pillarbox-apple)](https://github.com/votre-nom-utilisateur/votre-projet/issues?q=is%3Aissue+is%3Aclosed)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/SRGSSR/pillarbox-apple)](https://github.com/SRGSSR/pillarbox-apple)
+[![GitHub releases](https://img.shields.io/github/v/release/SRGSSR/pillarbox-apple)](https://github.com/SRGSSR/pillarbox-apple/releases) [![platform](https://img.shields.io/badge/platfom-ios%20%7C%20tvos-blue)](https://github.com/SRGSSR/pillarbox-apple) [![SPM compatible](https://img.shields.io/badge/SPM-compatible-4BC51D.svg?style=flat)](https://swift.org/package-manager) [![GitHub license](https://img.shields.io/github/license/SRGSSR/pillarbox-apple)](../LICENSE)
 
 Pillarbox is the iOS and tvOS modern reactive SRG SSR player ecosystem implemented on top of AVFoundation and AVKit. Pillarbox has been designed with robustness, efficiency and flexibilty in mind, with full customization of:
 
@@ -82,8 +78,6 @@ struct PlayerView: View {
 With the expressiveness of SwiftUI, our rich playback API and the set of components at your disposal you will have a full-fledged player user interface in no time.
 
 # Compatibility
-
-[![GitHub releases](https://img.shields.io/github/v/release/SRGSSR/pillarbox-apple)](https://github.com/SRGSSR/pillarbox-apple/releases) [![platform](https://img.shields.io/badge/platfom-ios%20%7C%20tvos-blue)](https://github.com/SRGSSR/pillarbox-apple) [![SPM compatible](https://img.shields.io/badge/SPM-compatible-4BC51D.svg?style=flat)](https://swift.org/package-manager) [![GitHub license](https://img.shields.io/github/license/SRGSSR/pillarbox-apple)](../LICENSE)
 
 The library is suitable for applications running on iOS 16, tvOS 16 and above. The project is meant to be compiled with the latest Xcode version.
 
