@@ -68,7 +68,20 @@ public final class Player: ObservableObject, Equatable {
     ///
     /// When implementing a custom SwiftUI user interface, you should use `View.onReceive(player:assign:to:)` to read
     /// fast-paced property changes into corresponding local bindings.
-    public let propertiesPublisher: AnyPublisher<PlayerProperties, Never>
+    public lazy var propertiesPublisher: AnyPublisher<PlayerProperties, Never> = {
+        queuePlayer.propertiesPublisher()
+            .multicast { CurrentValueSubject<PlayerProperties, Never>(.empty) }
+            .autoconnect()
+            .eraseToAnyPublisher()
+    }()
+
+    lazy var itemUpdatePublisher: AnyPublisher<ItemUpdate, Never> = {
+        Publishers.CombineLatest($storedItems, queuePlayer.publisher(for: \.currentItem))
+            .map { ItemUpdate(items: $0, currentItem: $1) }
+            .multicast { CurrentValueSubject<ItemUpdate, Never>(.empty) }
+            .autoconnect()
+            .eraseToAnyPublisher()
+    }()
 
     /// A Boolean setting whether the audio output of the player must be muted.
     public var isMuted: Bool {
@@ -112,14 +125,7 @@ public final class Player: ObservableObject, Equatable {
     ///   - configuration: The configuration to apply to the player.
     public init(items: [PlayerItem] = [], configuration: PlayerConfiguration = .init()) {
         storedItems = Deque(items)
-
-        propertiesPublisher = queuePlayer.propertiesPublisher()
-            .multicast { CurrentValueSubject<PlayerProperties, Never>(.empty) }
-            .autoconnect()
-            .eraseToAnyPublisher()
-
         nowPlayingSession = MPNowPlayingSession(players: [queuePlayer])
-
         self.configuration = configuration
 
         configurePlayer()
@@ -305,7 +311,7 @@ private extension Player {
 
     func configureControlCenterRemoteCommandUpdatePublisher() {
         Publishers.CombineLatest(
-            itemUpdatePublisher(),
+            itemUpdatePublisher,
             propertiesPublisher
         )
         .sink { [weak self] update, properties in
