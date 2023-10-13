@@ -8,7 +8,17 @@ import ComScore
 import CoreMedia
 import Player
 
-extension SCORStreamingAnalytics {
+final class ComScoreStreamingAnalytics: SCORStreamingAnalytics {
+    private var oldRate: Float?
+
+    override func notifyChangePlaybackRate(_ newRate: Float) {
+        guard oldRate != newRate else { return }
+        super.notifyChangePlaybackRate(newRate)
+        oldRate = newRate
+    }
+}
+
+extension ComScoreStreamingAnalytics {
     private static func duration(for properties: PlayerProperties) -> Int {
         properties.seekableTimeRange.isValid ? Int(properties.seekableTimeRange.duration.seconds.toMilliseconds) : 0
     }

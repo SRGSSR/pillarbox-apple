@@ -30,18 +30,7 @@ public final class CommandersActTracker: PlayerItemTracker {
                 guard let self else { return }
                 notify(properties: properties, player: player)
                 streamingAnalytics?.notify(isBuffering: properties.isBuffering)
-            }
-            .store(in: &cancellables)
-
-        player.objectWillChange
-            .receive(on: DispatchQueue.main)
-            .map { _ in () }
-            .prepend(())
-            .weakCapture(player)
-            .map { $1.effectivePlaybackSpeed }
-            .removeDuplicates()
-            .sink { [weak self] speed in
-                self?.streamingAnalytics?.notifyPlaybackSpeed(speed)
+                streamingAnalytics?.notifyPlaybackSpeed(properties.rate)
             }
             .store(in: &cancellables)
     }

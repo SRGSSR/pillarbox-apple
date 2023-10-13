@@ -15,7 +15,7 @@ import UIKit
 ///
 /// Analytics have to be properly started for the tracker to collect data, see `Analytics.start(with:)`.
 public final class ComScoreTracker: PlayerItemTracker {
-    private var streamingAnalytics = SCORStreamingAnalytics()
+    private var streamingAnalytics = ComScoreStreamingAnalytics()
     private var cancellables = Set<AnyCancellable>()
     @Published private var metadata: Metadata = .empty
 
@@ -42,23 +42,11 @@ public final class ComScoreTracker: PlayerItemTracker {
             notify(applicationState: state, player: player, properties: properties)
         }
         .store(in: &cancellables)
-
-        player.objectWillChange
-            .receive(on: DispatchQueue.main)
-            .map { _ in () }
-            .prepend(())
-            .weakCapture(player)
-            .map { $1.effectivePlaybackSpeed }
-            .removeDuplicates()
-            .sink { [weak self] speed in
-                self?.notifyPlaybackSpeedChange(speed: speed)
-            }
-            .store(in: &cancellables)
     }
 
     public func disable() {
         cancellables = []
-        streamingAnalytics = SCORStreamingAnalytics()
+        streamingAnalytics = ComScoreStreamingAnalytics()
     }
 
     // swiftlint:disable:next cyclomatic_complexity
@@ -69,7 +57,7 @@ public final class ComScoreTracker: PlayerItemTracker {
         streamingAnalytics.setProperties(for: properties, time: player.time, streamType: metadata.streamType)
 
         guard applicationState == .foreground else {
-            streamingAnalytics.notifyEvent(for: .paused, at: player.effectivePlaybackSpeed)
+            streamingAnalytics.notifyEvent(for: .paused, at: properties.rate)
             return
         }
 
@@ -84,12 +72,8 @@ public final class ComScoreTracker: PlayerItemTracker {
             streamingAnalytics.notifyBufferStart()
         case (false, false):
             streamingAnalytics.notifyBufferStop()
-            streamingAnalytics.notifyEvent(for: properties.playbackState, at: player.effectivePlaybackSpeed)
+            streamingAnalytics.notifyEvent(for: properties.playbackState, at: properties.rate)
         }
-    }
-
-    private func notifyPlaybackSpeedChange(speed: Float) {
-        streamingAnalytics.notifyChangePlaybackRate(speed)
     }
 
     private func updateMetadata(with metadata: Metadata) {
