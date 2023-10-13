@@ -13,7 +13,7 @@ extension Player {
     }
 
     func currentPublisher() -> AnyPublisher<Current?, Never> {
-        itemUpdatePublisher()
+        itemUpdatePublisher
             .map { update in
                 guard let currentIndex = update.currentIndex() else { return nil }
                 return .init(item: update.items[currentIndex], index: currentIndex)

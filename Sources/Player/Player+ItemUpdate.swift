@@ -10,17 +10,15 @@ import DequeModule
 
 extension Player {
     struct ItemUpdate {
+        static var empty: Self {
+            .init(items: [], currentItem: nil)
+        }
+
         let items: Deque<PlayerItem>
         let currentItem: AVPlayerItem?
 
         func currentIndex() -> Int? {
             items.firstIndex { $0.matches(currentItem) }
         }
-    }
-
-    func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
-        Publishers.CombineLatest($storedItems, queuePlayer.publisher(for: \.currentItem))
-            .map { ItemUpdate(items: $0, currentItem: $1) }
-            .eraseToAnyPublisher()
     }
 }
