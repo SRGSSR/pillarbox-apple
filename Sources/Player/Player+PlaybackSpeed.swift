@@ -89,7 +89,6 @@ private extension Player {
 #if os(iOS)
         propertiesPublisher
             .slice(at: \.rate)
-            .removeDuplicates()
             .filter { rate in
                 rate != 0 && Thread.callStackSymbols.contains { symbol in
                     symbol.contains("AVPlayerController")
