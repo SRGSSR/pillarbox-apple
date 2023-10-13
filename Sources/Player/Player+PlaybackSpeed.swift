@@ -87,7 +87,9 @@ private extension Player {
     // does not provide speed controls.
     func avPlayerViewControllerPlaybackSpeedUpdatePublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
 #if os(iOS)
-        queuePlayer.publisher(for: \.rate)
+        propertiesPublisher
+            .slice(at: \.rate)
+            .removeDuplicates()
             .filter { rate in
                 rate != 0 && Thread.callStackSymbols.contains { symbol in
                     symbol.contains("AVPlayerController")
