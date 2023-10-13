@@ -58,17 +58,18 @@ extension Player {
 }
 
 private extension Player {
-    static func playbackSpeedRange(for timeRange: CMTimeRange, duration: CMTime, time: CMTime) -> ClosedRange<Float>? {
-        let streamType = StreamType(for: timeRange, duration: duration)
-        switch streamType {
+    private static func playbackSpeedUpdate(for properties: PlayerProperties, at time: CMTime) -> PlaybackSpeedUpdate? {
+        guard !properties.isEmpty else { return .range(nil) }
+        switch properties.streamType {
         case .live:
-            return 1...1
-        case .dvr where time > timeRange.end - CMTime(value: 5, timescale: 1):
-            return 0.1...1
+            return .range(1...1)
+        case .dvr where time > properties.seekableTimeRange.end - CMTime(value: 5, timescale: 1):
+            return .range(0.1...1)
         case .unknown:
+            // Updates must be suspended while the stream type is unknown
             return nil
         default:
-            return 0.1...2
+            return .range(0.1...2)
         }
     }
 
@@ -77,17 +78,7 @@ private extension Player {
             propertiesPublisher,
             periodicTimePublisher(forInterval: CMTime(value: 1, timescale: 1))
         )
-        .compactMap { properties, time in
-            guard !properties.isEmpty else { return .range(nil) }
-            guard let range = Self.playbackSpeedRange(
-                for: properties.seekableTimeRange,
-                duration: properties.duration,
-                time: time
-            ) else {
-                return nil
-            }
-            return .range(range)
-        }
+        .compactMap { Self.playbackSpeedUpdate(for: $0, at: $1) }
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
@@ -96,7 +87,8 @@ private extension Player {
     // does not provide speed controls.
     func avPlayerViewControllerPlaybackSpeedUpdatePublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
 #if os(iOS)
-        queuePlayer.publisher(for: \.rate)
+        propertiesPublisher
+            .slice(at: \.rate)
             .filter { rate in
                 rate != 0 && Thread.callStackSymbols.contains { symbol in
                     symbol.contains("AVPlayerController")

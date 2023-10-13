@@ -14,7 +14,9 @@ struct TimeProperties: Equatable {
     let loadedTimeRanges: [NSValue]
     let seekableTimeRanges: [NSValue]
     let isPlaybackLikelyToKeepUp: Bool
+}
 
+extension TimeProperties {
     var seekableTimeRange: CMTimeRange {
         Self.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
     }

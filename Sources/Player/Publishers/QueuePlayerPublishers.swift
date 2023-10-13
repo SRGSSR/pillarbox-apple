@@ -29,29 +29,6 @@ extension QueuePlayer {
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
-
-    func isSeekingPublisher() -> AnyPublisher<Bool, Never> {
-        Publishers.Merge(
-            Self.notificationCenter.weakPublisher(for: .willSeek, object: self)
-                .map { _ in true },
-            Self.notificationCenter.weakPublisher(for: .didSeek, object: self)
-                .map { _ in false }
-        )
-        .prepend(false)
-        .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
-
-    private func playbackPropertiesPublisher() -> AnyPublisher<PlaybackProperties, Never> {
-        Publishers.CombineLatest3(
-            publisher(for: \.rate),
-            publisher(for: \.isExternalPlaybackActive),
-            publisher(for: \.isMuted)
-        )
-        .map { .init(rate: $0, isExternalPlaybackActive: $1, isMuted: $2) }
-        .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
 }
 
 extension QueuePlayer {
