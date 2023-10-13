@@ -15,28 +15,22 @@ import Player
 ///
 /// Analytics have to be properly started for the tracker to collect data, see `Analytics.start(with:)`.
 public final class CommandersActTracker: PlayerItemTracker {
-    private var cancellables = Set<AnyCancellable>()
     private var streamingAnalytics: CommandersActStreamingAnalytics?
-    @Published private var metadata: Metadata = .empty
+    private var metadata: Metadata = .empty
+    private weak var player: Player?
 
-    public init(configuration: Void, metadataPublisher: AnyPublisher<Metadata, Never>) {
-        metadataPublisher.assign(to: &$metadata)
-    }
+    public init(configuration: Void) {}
 
     public func enable(for player: Player) {
-        player.propertiesPublisher
-            .weakCapture(player)
-            .sink { [weak self] properties, player in
-                guard let self else { return }
-                notify(properties: properties, player: player)
-                streamingAnalytics?.notify(isBuffering: properties.isBuffering)
-                streamingAnalytics?.notifyPlaybackSpeed(properties.rate)
-            }
-            .store(in: &cancellables)
+        self.player = player
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
-    private func notify(properties: PlayerProperties, player: Player) {
+    public func updateMetadata(with metadata: Metadata) {
+        self.metadata = metadata
+    }
+
+    // FIXME: Can likely be implemented in a better way
+    public func updateProperties(with properties: PlayerProperties) {
         if properties.isSeeking {
             streamingAnalytics?.notify(.seek)
         }
@@ -44,8 +38,10 @@ public final class CommandersActTracker: PlayerItemTracker {
             switch properties.playbackState {
             case .playing:
                 guard streamingAnalytics != nil else {
-                    streamingAnalytics = CommandersActStreamingAnalytics(streamType: metadata.streamType) { [weak self, weak player] in
+                    // FIXME: Maybe a delegate would be safer
+                    streamingAnalytics = CommandersActStreamingAnalytics(streamType: metadata.streamType) { [weak self] in
                         guard let self, let player else { return nil }
+                        // FIXME: We should not capture properties here since they might change
                         return CommandersActStreamingAnalytics.EventData(
                             labels: labels(for: player),
                             time: player.time,
@@ -63,11 +59,13 @@ public final class CommandersActTracker: PlayerItemTracker {
                 break
             }
         }
+        streamingAnalytics?.notify(isBuffering: properties.isBuffering)
+        streamingAnalytics?.notifyPlaybackSpeed(properties.rate)
     }
 
     public func disable() {
-        cancellables = []
         streamingAnalytics = nil
+        player = nil
     }
 }
 

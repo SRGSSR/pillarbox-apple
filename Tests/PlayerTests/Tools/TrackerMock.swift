@@ -7,6 +7,7 @@
 @testable import Player
 
 import Combine
+import CoreMedia
 
 final class TrackerMock<Metadata>: PlayerItemTracker where Metadata: Equatable {
     typealias StatePublisher = PassthroughSubject<State, Never>
@@ -26,18 +27,20 @@ final class TrackerMock<Metadata>: PlayerItemTracker where Metadata: Equatable {
     private let configuration: Configuration
     private var cancellables = Set<AnyCancellable>()
 
-    init(configuration: Configuration, metadataPublisher: AnyPublisher<Metadata, Never>) {
+    init(configuration: Configuration) {
         self.configuration = configuration
         configuration.statePublisher.send(.initialized)
-        metadataPublisher.sink { metadata in
-            configuration.statePublisher.send(.updated(metadata))
-        }
-        .store(in: &cancellables)
     }
 
     func enable(for player: Player) {
         configuration.statePublisher.send(.enabled)
     }
+
+    func updateMetadata(with metadata: Metadata) {
+        configuration.statePublisher.send(.updated(metadata))
+    }
+
+    func updateProperties(with properties: PlayerProperties) {}
 
     func disable() {
         configuration.statePublisher.send(.disabled)

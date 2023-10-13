@@ -9,9 +9,10 @@ import Combine
 /// An adapter which instantiates and manages a tracker of a specified type.
 ///
 /// An adapter transforms metadata delivered by a player item into the metadata format required by the tracker.
-public struct TrackerAdapter<M: AssetMetadata> {
+public class TrackerAdapter<M: AssetMetadata> {
     private let tracker: any PlayerItemTracker
     private let update: (M) -> Void
+    private var cancellables = Set<AnyCancellable>()
 
     /// Creates an adapter for a type of tracker with the provided mapping to its metadata format.
     /// 
@@ -20,12 +21,10 @@ public struct TrackerAdapter<M: AssetMetadata> {
     ///   - configuration: The tracker configuration.
     ///   - mapper: The metadata mapper.
     public init<T>(trackerType: T.Type, configuration: T.Configuration, mapper: ((M) -> T.Metadata)?) where T: PlayerItemTracker {
-        let metadataSubject = CurrentValueSubject<T.Metadata?, Never>(nil)
-        let metadataPublisher = metadataSubject.compactMap { $0 }.eraseToAnyPublisher()
-        let tracker = trackerType.init(configuration: configuration, metadataPublisher: metadataPublisher)
+        let tracker = trackerType.init(configuration: configuration)
         update = { metadata in
             if let mapper {
-                metadataSubject.send(mapper(metadata))
+                tracker.updateMetadata(with: mapper(metadata))
             }
         }
         self.tracker = tracker
@@ -33,6 +32,12 @@ public struct TrackerAdapter<M: AssetMetadata> {
 
     func enable(for player: Player) {
         tracker.enable(for: player)
+
+        player.propertiesPublisher
+            .sink { [weak self] properties in
+                self?.tracker.updateProperties(with: properties)
+            }
+            .store(in: &cancellables)
     }
 
     func update(metadata: M) {
@@ -40,6 +45,7 @@ public struct TrackerAdapter<M: AssetMetadata> {
     }
 
     func disable() {
+        cancellables = []
         tracker.disable()
     }
 }

@@ -6,6 +6,7 @@
 
 import Combine
 import ComScore
+import CoreMedia
 import Player
 import UIKit
 
@@ -16,46 +17,39 @@ import UIKit
 /// Analytics have to be properly started for the tracker to collect data, see `Analytics.start(with:)`.
 public final class ComScoreTracker: PlayerItemTracker {
     private var streamingAnalytics = ComScoreStreamingAnalytics()
-    private var cancellables = Set<AnyCancellable>()
-    @Published private var metadata: Metadata = .empty
+    private var metadata: Metadata = .empty
+    private weak var player: Player?
 
-    public init(configuration: Void, metadataPublisher: AnyPublisher<Metadata, Never>) {
-        metadataPublisher.assign(to: &$metadata)
-    }
+    public init(configuration: Void) {}
 
     public func enable(for player: Player) {
+        self.player = player
         streamingAnalytics.createPlaybackSession()
         streamingAnalytics.setMediaPlayerName("Pillarbox")
         streamingAnalytics.setMediaPlayerVersion(Player.version)
-
-        $metadata.sink { [weak self] metadata in
-            self?.updateMetadata(with: metadata)
-        }
-        .store(in: &cancellables)
-
-        Publishers.CombineLatest(
-            UIApplication.shared.applicationStatePublisher(),
-            player.propertiesPublisher
-        )
-        .sink { [weak self, weak player] state, properties in
-            guard let self, let player else { return }
-            notify(applicationState: state, player: player, properties: properties)
-        }
-        .store(in: &cancellables)
     }
 
-    public func disable() {
-        cancellables = []
-        streamingAnalytics = ComScoreStreamingAnalytics()
+    public func updateMetadata(with metadata: Metadata) {
+        let builder = SCORStreamingContentMetadataBuilder()
+        if let globals = Analytics.shared.comScoreGlobals {
+            builder.setCustomLabels(metadata.labels.merging(globals.labels) { _, new in new })
+        }
+        else {
+            builder.setCustomLabels(metadata.labels)
+        }
+        let contentMetadata = SCORStreamingContentMetadata(builder: builder)
+        streamingAnalytics.setMetadata(contentMetadata)
+        self.metadata = metadata
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
-    private func notify(applicationState: ApplicationState, player: Player, properties: PlayerProperties) {
-        guard !metadata.labels.isEmpty else { return }
+    public func updateProperties(with properties: PlayerProperties) {
+        guard !metadata.labels.isEmpty, let player else { return }
 
         AnalyticsListener.capture(streamingAnalytics.configuration())
         streamingAnalytics.setProperties(for: properties, time: player.time, streamType: metadata.streamType)
 
+        // FIXME: Lifecycle methods to handle application state changes
+        let applicationState = ApplicationState.foreground
         guard applicationState == .foreground else {
             streamingAnalytics.notifyEvent(for: .paused, at: properties.rate)
             return
@@ -76,16 +70,9 @@ public final class ComScoreTracker: PlayerItemTracker {
         }
     }
 
-    private func updateMetadata(with metadata: Metadata) {
-        let builder = SCORStreamingContentMetadataBuilder()
-        if let globals = Analytics.shared.comScoreGlobals {
-            builder.setCustomLabels(metadata.labels.merging(globals.labels) { _, new in new })
-        }
-        else {
-            builder.setCustomLabels(metadata.labels)
-        }
-        let contentMetadata = SCORStreamingContentMetadata(builder: builder)
-        streamingAnalytics.setMetadata(contentMetadata)
+    public func disable() {
+        streamingAnalytics = ComScoreStreamingAnalytics()
+        player = nil
     }
 }
 
