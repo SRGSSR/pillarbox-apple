@@ -15,7 +15,6 @@ final class CommandersActStreamingAnalytics {
 
     private let streamType: StreamType
     private let heartbeats: [Heartbeat]
-    private let update: () -> EventData?
 
     private var isBuffering = false
     private var playbackSpeed: Float = 1
@@ -30,10 +29,9 @@ final class CommandersActStreamingAnalytics {
         lastEvent == .play && !isBuffering
     }
 
-    init(streamType: StreamType, heartbeats: [Heartbeat] = [.pos(), .uptime()], update: @escaping () -> EventData?) {
+    init(streamType: StreamType, heartbeats: [Heartbeat] = [.pos(), .uptime()]) {
         self.streamType = streamType
         self.heartbeats = heartbeats
-        self.update = update
         sendEvent(.play)
     }
 
@@ -125,7 +123,7 @@ final class CommandersActStreamingAnalytics {
     }
 
     private func eventData() -> EventData {
-        update() ?? .empty
+        .empty
     }
 
     deinit {

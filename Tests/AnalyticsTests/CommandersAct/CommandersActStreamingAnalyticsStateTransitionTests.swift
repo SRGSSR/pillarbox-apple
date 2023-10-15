@@ -12,12 +12,12 @@ import Nimble
 final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTestCase {
     func testLifeCycle() {
         expectAtLeastHits(.play(), .stop()) {
-            _ = CommandersActStreamingAnalytics()
+            _ = CommandersActStreamingAnalytics(streamType: .unknown)
         }
     }
 
     func testPlayPlay() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         expect(analytics.lastEvent).to(equal(.play))
         expectNoHits(during: .seconds(2)) {
             analytics.notify(.play)
@@ -26,7 +26,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testPlayPause() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         expect(analytics.lastEvent).to(equal(.play))
         expectAtLeastHits(.pause()) {
             analytics.notify(.pause)
@@ -35,7 +35,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testPlaySeek() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         expect(analytics.lastEvent).to(equal(.play))
         expectAtLeastHits(.seek()) {
             analytics.notify(.seek)
@@ -44,7 +44,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testPlayEof() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         expect(analytics.lastEvent).to(equal(.play))
         expectAtLeastHits(.eof()) {
             analytics.notify(.eof)
@@ -53,7 +53,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testPlayStop() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         expect(analytics.lastEvent).to(equal(.play))
         expectAtLeastHits(.stop()) {
             analytics.notify(.stop)
@@ -63,12 +63,12 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
 
     func testPlayDeinit() {
         expectAtLeastHits(.play(), .stop()) {
-            _ = CommandersActStreamingAnalytics()
+            _ = CommandersActStreamingAnalytics(streamType: .unknown)
         }
     }
 
     func testPausePlay() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.pause)
         expectAtLeastHits(.play()) {
             analytics.notify(.play)
@@ -77,7 +77,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testPausePause() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.pause)
         expectNoHits(during: .seconds(2)) {
             analytics.notify(.pause)
@@ -86,7 +86,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testPauseSeek() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.pause)
         expectNoHits(during: .seconds(2)) {
             analytics.notify(.seek)
@@ -95,7 +95,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testPauseEof() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.pause)
         expectNoHits(during: .seconds(2)) {
             analytics.notify(.eof)
@@ -104,7 +104,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testPauseStop() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.pause)
         expectAtLeastHits(.stop()) {
             analytics.notify(.stop)
@@ -113,7 +113,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testPauseDeinit() {
-        var analytics: CommandersActStreamingAnalytics? = CommandersActStreamingAnalytics()
+        var analytics: CommandersActStreamingAnalytics? = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics?.notify(.pause)
         expectAtLeastHits(.stop()) {
             analytics = nil
@@ -121,7 +121,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testSeekPlay() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.seek)
         expectAtLeastHits(.play()) {
             analytics.notify(.play)
@@ -130,7 +130,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testSeekPause() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.seek)
         expectNoHits(during: .seconds(2)) {
             analytics.notify(.pause)
@@ -139,7 +139,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testSeekSeek() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.seek)
         expectNoHits(during: .seconds(2)) {
             analytics.notify(.seek)
@@ -148,7 +148,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testSeekEof() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.seek)
         expectNoHits(during: .seconds(2)) {
             analytics.notify(.eof)
@@ -157,7 +157,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testSeekStop() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.seek)
         expectAtLeastHits(.stop()) {
             analytics.notify(.stop)
@@ -166,7 +166,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testSeekDeinit() {
-        var analytics: CommandersActStreamingAnalytics? = CommandersActStreamingAnalytics()
+        var analytics: CommandersActStreamingAnalytics? = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics?.notify(.seek)
         expectAtLeastHits(.stop()) {
             analytics = nil
@@ -174,7 +174,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testEofPlay() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.eof)
         expectNoHits(during: .seconds(2)) {
             analytics.notify(.play)
@@ -183,7 +183,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testEofPause() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.eof)
         expectNoHits(during: .seconds(2)) {
             analytics.notify(.pause)
@@ -192,7 +192,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testEofSeek() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.eof)
         expectNoHits(during: .seconds(2)) {
             analytics.notify(.seek)
@@ -201,7 +201,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testEofEof() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.eof)
         expectNoHits(during: .seconds(2)) {
             analytics.notify(.eof)
@@ -210,7 +210,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testEofStop() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.eof)
         expectNoHits(during: .seconds(2)) {
             analytics.notify(.stop)
@@ -219,7 +219,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testEofDeinit() {
-        var analytics: CommandersActStreamingAnalytics? = CommandersActStreamingAnalytics()
+        var analytics: CommandersActStreamingAnalytics? = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics?.notify(.eof)
         expectNoHits(during: .seconds(2)) {
             analytics = nil
@@ -227,7 +227,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testStopPlay() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.stop)
         expectNoHits(during: .seconds(2)) {
             analytics.notify(.play)
@@ -236,7 +236,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testStopPause() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.stop)
         expectNoHits(during: .seconds(2)) {
             analytics.notify(.pause)
@@ -245,7 +245,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testStopSeek() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.stop)
         expectNoHits(during: .seconds(2)) {
             analytics.notify(.seek)
@@ -254,7 +254,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testStopEof() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.stop)
         expectNoHits(during: .seconds(2)) {
             analytics.notify(.eof)
@@ -263,7 +263,7 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testStopStop() {
-        let analytics = CommandersActStreamingAnalytics()
+        let analytics = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics.notify(.stop)
         expectNoHits(during: .seconds(2)) {
             analytics.notify(.stop)
@@ -272,18 +272,10 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
     }
 
     func testStopDeinit() {
-        var analytics: CommandersActStreamingAnalytics? = CommandersActStreamingAnalytics()
+        var analytics: CommandersActStreamingAnalytics? = CommandersActStreamingAnalytics(streamType: .unknown)
         analytics?.notify(.stop)
         expectNoHits(during: .seconds(2)) {
             analytics = nil
-        }
-    }
-}
-
-private extension CommandersActStreamingAnalytics {
-    convenience init() {
-        self.init(streamType: .unknown) {
-            .init(labels: [:], time: .zero, range: .zero)
         }
     }
 }

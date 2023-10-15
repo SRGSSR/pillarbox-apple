@@ -17,12 +17,12 @@ final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {
                 expect(labels.media_timeshift).to(equal(0))
             }
         ) {
-            _ = CommandersActStreamingAnalytics(streamType: .live) { .empty }
+            _ = CommandersActStreamingAnalytics(streamType: .live)
         }
     }
 
     func testPositionAfterPause() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .live) { .empty }
+        let analytics = CommandersActStreamingAnalytics(streamType: .live)
         wait(for: .seconds(3))
         expectAtLeastHits(
             .pause { labels in
@@ -35,7 +35,7 @@ final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedAfterPlay() {
-        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .live) { .empty }
+        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .live)
         _ = analytics
         wait(for: .seconds(1))
 
@@ -50,7 +50,7 @@ final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedAfterPlayAtNonStandardPlaybackSpeed() {
-        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .live) { .empty }
+        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .live)
         analytics?.notifyPlaybackSpeed(2)
         wait(for: .seconds(1))
 
@@ -65,7 +65,7 @@ final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedAfterPlayAtSeveralNonStandardPlaybackSpeeds() {
-        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .live) { .empty }
+        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .live)
         wait(for: .seconds(1))
         analytics?.notifyPlaybackSpeed(2)
         wait(for: .seconds(1))
@@ -81,7 +81,7 @@ final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedDuringBuffering() {
-        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .live) { .empty }
+        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .live)
 
         analytics?.notify(isBuffering: true)
         wait(for: .seconds(1))
@@ -97,7 +97,7 @@ final class CommandersActStreamingAnalyticsLiveTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedAfterPause() {
-        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .live) { .empty }
+        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .live)
 
         wait(for: .seconds(3))
         analytics?.notify(.pause)

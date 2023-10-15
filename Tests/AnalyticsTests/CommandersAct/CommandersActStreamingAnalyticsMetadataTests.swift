@@ -17,16 +17,12 @@ final class CommandersActStreamingAnalyticsMetadataTests: CommandersActTestCase 
                 expect(labels.media_title).to(equal("name"))
             }
         ) {
-            _ = CommandersActStreamingAnalytics(streamType: .onDemand) {
-                .init(labels: ["media_title": "name"], time: CMTime(value: 2, timescale: 1), range: .zero)
-            }
+            _ = CommandersActStreamingAnalytics(streamType: .onDemand)
         }
     }
 
     func testStopWhenDestroyed() {
-        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .live) {
-            .init(labels: ["media_title": "name"], time: .zero, range: .zero)
-        }
+        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .live)
         _ = analytics
         wait(for: .seconds(1))
 
