@@ -14,6 +14,9 @@ private struct UrlCacheView: View {
     var body: some View {
         HStack {
             Button("Clear URL cache", action: clearUrlCache)
+#if os(iOS)
+                .buttonStyle(.borderless)
+#endif
             Spacer()
             Text(urlCacheSize)
                 .font(.footnote)
