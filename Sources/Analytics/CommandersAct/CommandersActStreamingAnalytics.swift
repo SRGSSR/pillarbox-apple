@@ -11,7 +11,7 @@ import Player
 
 final class CommandersActStreamingAnalytics {
     var lastEvent: Event = .play
-    private var lastLabels: [String: String] = [:]
+    private var metadata: [String: String] = [:]
 
     private let streamType: StreamType
     private let heartbeats: [Heartbeat]
@@ -32,24 +32,19 @@ final class CommandersActStreamingAnalytics {
     init(streamType: StreamType, heartbeats: [Heartbeat] = [.pos(), .uptime()]) {
         self.streamType = streamType
         self.heartbeats = heartbeats
-        sendEvent(.play)
     }
 
-    func notify(isBuffering: Bool) {
-        updateTimeTracking(eventData: eventData())
-        self.isBuffering = isBuffering
+    func setMetadata(_ metadata: [String: String]) {
+        self.metadata = metadata
+    }
+
+    private func update(time: CMTime, range: CMTimeRange) {
+        lastEventTime = time
+        lastEventRange = range
+        lastEventDate = Date()
     }
 
     func notify(_ event: Event) {
-        notify(event, eventData: eventData())
-    }
-
-    func notifyPlaybackSpeed(_ playbackSpeed: Float) {
-        updateTimeTracking(eventData: eventData())
-        self.playbackSpeed = playbackSpeed
-    }
-
-    private func notify(_ event: Event, eventData: EventData) {
         guard event != lastEvent else { return }
 
         switch (lastEvent, event) {
@@ -60,19 +55,20 @@ final class CommandersActStreamingAnalytics {
         case (.eof, _), (.stop, _):
             return
         default:
-            sendEvent(event, eventData: eventData)
+            sendEvent(event)
         }
     }
 
-    private func sendEvent(_ event: Event) {
-        sendEvent(event, eventData: eventData())
+    func notify(isBuffering: Bool) {
+        self.isBuffering = isBuffering
     }
 
-    private func sendEvent(_ event: Event, eventData: EventData) {
-        updateTimeTracking(eventData: eventData)
+    func notifyPlaybackSpeed(_ playbackSpeed: Float) {
+        self.playbackSpeed = playbackSpeed
+    }
 
+    private func sendEvent(_ event: Event) {
         lastEvent = event
-        lastLabels = eventData.labels
 
         if event == .play {
             installHeartbeats()
@@ -83,53 +79,39 @@ final class CommandersActStreamingAnalytics {
 
         Analytics.shared.sendEvent(commandersAct: .init(
             name: event.rawValue,
-            labels: labels(eventData: eventData)
+            labels: labels()
         ))
     }
 
-    private func labels(eventData: EventData) -> [String: String] {
-        var labels = eventData.labels
+    private func labels() -> [String: String] {
+        var labels = metadata
         switch streamType {
         case .onDemand:
-            labels["media_position"] = String(Int(eventData.time.timeInterval()))
+            let interval = CMTime(seconds: Date().timeIntervalSince(lastEventDate), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+            labels["media_position"] = String(Int(eventTime(after: interval).timeInterval()))
         case .live:
             labels["media_position"] = String(Int(playbackDuration))
             labels["media_timeshift"] = "0"
         case .dvr:
+            let interval = CMTime(seconds: Date().timeIntervalSince(lastEventDate), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
             labels["media_position"] = String(Int(playbackDuration))
-            labels["media_timeshift"] = String(Int((eventData.range.end - eventData.time).timeInterval()))
+            labels["media_timeshift"] = String(Int((eventRange(after: interval).end - eventTime(after: interval)).timeInterval()))
         default:
             break
         }
         return labels
     }
 
-    private func updateTimeTracking(eventData: EventData) {
-        if lastEvent == .play, !isBuffering {
-            playbackDuration += Date().timeIntervalSince(lastEventDate)
-        }
-        lastEventTime = eventData.time
-        lastEventRange = eventData.range
-        lastEventDate = Date()
-    }
-
     private func eventTime(after interval: CMTime) -> CMTime {
-        let multiplier = (streamType == .onDemand) ? Float64(playbackSpeed) : 1
-        return isAdvancing ? lastEventTime + CMTimeMultiplyByFloat64(interval, multiplier: multiplier) : lastEventTime
+        isAdvancing ? lastEventTime + CMTimeMultiplyByFloat64(interval, multiplier: Float64(playbackSpeed)) : lastEventTime
     }
 
     private func eventRange(after interval: CMTime) -> CMTimeRange {
         isAdvancing ? .init(start: lastEventRange.start + interval, duration: lastEventRange.duration) : lastEventRange
     }
 
-    private func eventData() -> EventData {
-        .empty
-    }
-
     deinit {
-        let interval = CMTime(seconds: Date().timeIntervalSince(lastEventDate), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-        let eventData = EventData(labels: lastLabels, time: eventTime(after: interval), range: eventRange(after: interval))
-        notify(.stop, eventData: eventData)
+        notify(.stop)
     }
 }
 
@@ -140,16 +122,6 @@ extension CommandersActStreamingAnalytics {
         case seek
         case eof
         case stop
-    }
-
-    struct EventData {
-        var labels: [String: String]
-        var time: CMTime
-        var range: CMTimeRange
-
-        static var empty: Self {
-            .init(labels: [:], time: .zero, range: .zero)
-        }
     }
 
     struct Heartbeat {
@@ -216,11 +188,9 @@ private extension CommandersActStreamingAnalytics {
     }
 
     private func sendHeartbeat(_ heartbeat: Heartbeat) {
-        let eventData = eventData()
-        updateTimeTracking(eventData: eventData)
         Analytics.shared.sendEvent(commandersAct: .init(
             name: heartbeat.name,
-            labels: labels(eventData: eventData)
+            labels: labels()
         ))
     }
 }
