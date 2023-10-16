@@ -18,8 +18,7 @@ final class CommandersActStreamingAnalyticsHeartbeatLiveTests: CommandersActTest
 
     func testHeartbeatAfterPlay() {
         let analytics = CommandersActStreamingAnalytics(streamType: .live, heartbeats: Self.heartbeats)
-        _ = analytics
-
+        analytics.notify(.play)
         expectAtLeastHits(
             .pos { labels in
                 expect(labels.media_position).to(equal(1))
@@ -39,34 +38,43 @@ final class CommandersActStreamingAnalyticsHeartbeatLiveTests: CommandersActTest
         )
     }
 
+    func testNoHeartbeatInitially() {
+        let _ = CommandersActStreamingAnalytics(streamType: .live, heartbeats: Self.heartbeats)
+        expectNoHits(during: .seconds(2))
+    }
+
     func testNoHeartbeatAfterPause() {
         let analytics = CommandersActStreamingAnalytics(streamType: .live, heartbeats: Self.heartbeats)
+        analytics.notify(.play)
         analytics.notify(.pause)
         expectNoHits(during: .seconds(2))
     }
 
     func testNoHeartbeatAfterSeek() {
         let analytics = CommandersActStreamingAnalytics(streamType: .live, heartbeats: Self.heartbeats)
+        analytics.notify(.play)
         analytics.notify(.seek)
         expectNoHits(during: .seconds(2))
     }
 
     func testNoHeartbeatAfterEof() {
         let analytics = CommandersActStreamingAnalytics(streamType: .live, heartbeats: Self.heartbeats)
+        analytics.notify(.play)
         analytics.notify(.eof)
         expectNoHits(during: .seconds(2))
     }
 
     func testNoHeartbeatAfterStop() {
         let analytics = CommandersActStreamingAnalytics(streamType: .live, heartbeats: Self.heartbeats)
+        analytics.notify(.play)
         analytics.notify(.stop)
         expectNoHits(during: .seconds(2))
     }
 
     func testHeartbeatWhileBuffering() {
         let analytics = CommandersActStreamingAnalytics(streamType: .live, heartbeats: Self.heartbeats)
+        analytics.notify(.play)
         analytics.notify(isBuffering: true)
-
         expectAtLeastHits(
             .pos { labels in
                 expect(labels.media_position).to(equal(0))
