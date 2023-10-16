@@ -10,7 +10,7 @@ import Foundation
 import Player
 
 final class CommandersActStreamingAnalytics {
-    var lastEvent: Event = .pause
+    var lastEvent: Event = .none
     private var metadata: [String: String] = [:]
 
     private let streamType: StreamType
@@ -61,6 +61,8 @@ final class CommandersActStreamingAnalytics {
         case (.seek, .pause), (.seek, .eof):
             return
         case (.eof, _), (.stop, _):
+            return
+        case let (.none, event) where event != .play:
             return
         default:
             sendEvent(event)
@@ -131,6 +133,7 @@ final class CommandersActStreamingAnalytics {
 
 extension CommandersActStreamingAnalytics {
     enum Event: String {
+        case none
         case play
         case pause
         case seek
