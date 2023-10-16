@@ -29,6 +29,8 @@ final class CommandersActStreamingAnalytics {
         lastEvent == .play && !isBuffering
     }
 
+    // TODO: The stream type should be provided with a setter, not at initialization time. Heartbeats should
+    //       be adjusted accordingly.
     init(streamType: StreamType, heartbeats: [Heartbeat] = [.pos(), .uptime()]) {
         self.streamType = streamType
         self.heartbeats = heartbeats

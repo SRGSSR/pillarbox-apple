@@ -18,7 +18,7 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
 
     func testHeartbeatAfterPlay() {
         let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeats: Self.heartbeats)
-        _ = analytics
+        analytics.notify(.play)
         expectAtLeastHits(
             .pos { labels in
                 expect(labels.media_position).to(equal(1))
@@ -40,7 +40,7 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
 
     func testHeartbeatAfterPlayInPastConditions() {
         let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeats: Self.heartbeats)
-        _ = analytics
+        analytics.notify(.play)
         expectAtLeastHits(
             .pos { labels in
                 expect(labels.media_position).to(equal(1))
@@ -60,32 +60,42 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
         )
     }
 
+    func testNoHeartbeatInitially() {
+        _ = CommandersActStreamingAnalytics(streamType: .dvr, heartbeats: Self.heartbeats)
+        expectNoHits(during: .seconds(2))
+    }
+
     func testNoHeartbeatAfterPause() {
         let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeats: Self.heartbeats)
+        analytics.notify(.play)
         analytics.notify(.pause)
         expectNoHits(during: .seconds(2))
     }
 
     func testNoHeartbeatAfterSeek() {
         let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeats: Self.heartbeats)
+        analytics.notify(.play)
         analytics.notify(.seek)
         expectNoHits(during: .seconds(2))
     }
 
     func testNoHeartbeatAfterEof() {
         let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeats: Self.heartbeats)
+        analytics.notify(.play)
         analytics.notify(.eof)
         expectNoHits(during: .seconds(2))
     }
 
     func testNoHeartbeatAfterStop() {
         let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeats: Self.heartbeats)
+        analytics.notify(.play)
         analytics.notify(.stop)
         expectNoHits(during: .seconds(2))
     }
 
     func testHeartbeatWhileBuffering() {
         let analytics = CommandersActStreamingAnalytics(streamType: .dvr, heartbeats: Self.heartbeats)
+        analytics.notify(.play)
         analytics.notify(isBuffering: true)
 
         expectAtLeastHits(
