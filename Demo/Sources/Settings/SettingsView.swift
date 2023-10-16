@@ -20,6 +20,7 @@ private struct UrlCacheView: View {
             Spacer()
             Text(urlCacheSize)
                 .font(.footnote)
+                .foregroundColor(.red)
         }
         .onAppear {
             updateCacheSize()
