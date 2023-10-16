@@ -28,7 +28,7 @@ public final class CommandersActTracker: PlayerItemTracker {
     public func updateMetadata(with metadata: Metadata) {
         self.metadata = metadata
     }
-    
+
     public func updateProperties(with properties: PlayerProperties) {
         if properties.isSeeking {
             streamingAnalytics?.notify(.seek)

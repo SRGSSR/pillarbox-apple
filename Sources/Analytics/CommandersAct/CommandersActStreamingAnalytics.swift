@@ -10,7 +10,7 @@ import Foundation
 import Player
 
 final class CommandersActStreamingAnalytics {
-    var lastEvent: Event = .play
+    var lastEvent: Event = .pause
     private var metadata: [String: String] = [:]
 
     private let streamType: StreamType
@@ -21,9 +21,9 @@ final class CommandersActStreamingAnalytics {
     private var cancellables = Set<AnyCancellable>()
     private var playbackDuration: TimeInterval = 0
 
-    private var lastEventTime: CMTime = .zero
-    private var lastEventRange: CMTimeRange = .zero
-    private var lastEventDate = Date()
+    private var time: CMTime = .zero
+    private var range: CMTimeRange = .zero
+    private var date = Date()
 
     private var isAdvancing: Bool {
         lastEvent == .play && !isBuffering
@@ -38,10 +38,18 @@ final class CommandersActStreamingAnalytics {
         self.metadata = metadata
     }
 
-    private func update(time: CMTime, range: CMTimeRange) {
-        lastEventTime = time
-        lastEventRange = range
-        lastEventDate = Date()
+    private func update() {
+        let interval = CMTime(seconds: Date().timeIntervalSince(date), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        update(time: time(after: interval), range: range(after: interval))
+    }
+
+    func update(time: CMTime, range: CMTimeRange) {
+        if lastEvent == .play, !isBuffering {
+            playbackDuration += Date().timeIntervalSince(date)
+        }
+        self.time = time
+        self.range = range
+        date = Date()
     }
 
     func notify(_ event: Event) {
@@ -60,14 +68,17 @@ final class CommandersActStreamingAnalytics {
     }
 
     func notify(isBuffering: Bool) {
+        update()
         self.isBuffering = isBuffering
     }
 
     func notifyPlaybackSpeed(_ playbackSpeed: Float) {
+        update()
         self.playbackSpeed = playbackSpeed
     }
 
     private func sendEvent(_ event: Event) {
+        update()
         lastEvent = event
 
         if event == .play {
@@ -85,29 +96,32 @@ final class CommandersActStreamingAnalytics {
 
     private func labels() -> [String: String] {
         var labels = metadata
+        let interval = CMTime(seconds: Date().timeIntervalSince(date), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         switch streamType {
         case .onDemand:
-            let interval = CMTime(seconds: Date().timeIntervalSince(lastEventDate), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-            labels["media_position"] = String(Int(eventTime(after: interval).timeInterval()))
+            labels["media_position"] = String(Int(time(after: interval).timeInterval()))
         case .live:
-            labels["media_position"] = String(Int(playbackDuration))
+            labels["media_position"] = String(Int(playbackDuration(after: interval)))
             labels["media_timeshift"] = "0"
         case .dvr:
-            let interval = CMTime(seconds: Date().timeIntervalSince(lastEventDate), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-            labels["media_position"] = String(Int(playbackDuration))
-            labels["media_timeshift"] = String(Int((eventRange(after: interval).end - eventTime(after: interval)).timeInterval()))
+            labels["media_position"] = String(Int(playbackDuration(after: interval)))
+            labels["media_timeshift"] = String(Int((range(after: interval).end - time(after: interval)).timeInterval()))
         default:
             break
         }
         return labels
     }
 
-    private func eventTime(after interval: CMTime) -> CMTime {
-        isAdvancing ? lastEventTime + CMTimeMultiplyByFloat64(interval, multiplier: Float64(playbackSpeed)) : lastEventTime
+    private func time(after interval: CMTime) -> CMTime {
+        isAdvancing ? time + CMTimeMultiplyByFloat64(interval, multiplier: Float64(playbackSpeed)) : time
     }
 
-    private func eventRange(after interval: CMTime) -> CMTimeRange {
-        isAdvancing ? .init(start: lastEventRange.start + interval, duration: lastEventRange.duration) : lastEventRange
+    private func range(after interval: CMTime) -> CMTimeRange {
+        .init(start: range.start + interval, duration: range.duration)
+    }
+
+    private func playbackDuration(after interval: CMTime) -> TimeInterval {
+        isAdvancing ? playbackDuration + interval.seconds : playbackDuration
     }
 
     deinit {
