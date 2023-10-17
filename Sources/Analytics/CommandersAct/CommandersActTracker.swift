@@ -49,6 +49,7 @@ public final class CommandersActTracker: PlayerItemTracker {
                 break
             }
         }
+        streamingAnalytics?.update(time: player?.time ?? .zero, range: properties.seekableTimeRange)
         streamingAnalytics?.notify(isBuffering: properties.isBuffering)
         streamingAnalytics?.notifyPlaybackSpeed(properties.rate)
     }
