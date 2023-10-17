@@ -8,6 +8,35 @@ import AVFoundation
 import Player
 import SwiftUI
 
+private struct UrlCacheView: View {
+    @State private var urlCacheSize: String = ""
+
+    var body: some View {
+        HStack {
+            Button("Clear URL cache", action: clearUrlCache)
+#if os(iOS)
+                .buttonStyle(.borderless)
+#endif
+            Spacer()
+            Text(urlCacheSize)
+                .font(.footnote)
+                .foregroundColor(.red)
+        }
+        .onAppear {
+            updateCacheSize()
+        }
+    }
+
+    private func updateCacheSize() {
+        urlCacheSize = ByteCountFormatter.string(fromByteCount: Int64(URLCache.shared.currentDiskUsage), countStyle: .binary)
+    }
+
+    private func clearUrlCache() {
+        URLCache.shared.removeAllCachedResponses()
+        updateCacheSize()
+    }
+}
+
 struct SettingsView: View {
     @AppStorage(UserDefaults.presenterModeEnabledKey)
     private var isPresenterModeEnabled = false
@@ -104,7 +133,7 @@ struct SettingsView: View {
     private func debuggingSection() -> some View {
         Section {
             Button("Simulate memory warning", action: simulateMemoryWarning)
-            Button("Clear URL cache", action: clearUrlCache)
+            UrlCacheView()
         } header: {
             Text("Debugging")
         } footer: {
@@ -129,10 +158,6 @@ struct SettingsView: View {
 
     private func simulateMemoryWarning() {
         UIApplication.shared.perform(Selector(("_performMemoryWarning")))
-    }
-
-    private func clearUrlCache() {
-        URLCache.shared.removeAllCachedResponses()
     }
 }
 
