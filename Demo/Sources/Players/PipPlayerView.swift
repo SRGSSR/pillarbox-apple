@@ -66,7 +66,11 @@ struct PipPlayerView: View {
             PipMetadataView()
         }
         .onAppear(perform: model.play)
-        .onDisappear(perform: model.reset)
+        .onDisappear {
+            if !PictureInPicture.shared.isPictureInPictureActive {
+                model.reset()
+            }
+        }
     }
 }
 
@@ -132,12 +136,13 @@ private struct BottomBar: View {
     @ObservedObject private var player = PipPlayerViewModel.shared.player
     @ObservedObject private var pictureInPicture = PictureInPicture.shared
     @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 10))
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         HStack {
             Slider(progressTracker: progressTracker)
             if pictureInPicture.isPictureInPicturePossible {
-                Button(action: pictureInPicture.toggle) {
+                Button(action: startPictureInPicture) {
                     Image(systemName: pipImageName)
                 }
             }
@@ -145,6 +150,11 @@ private struct BottomBar: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         .padding()
         .bind(progressTracker, to: player)
+    }
+
+    private func startPictureInPicture() {
+        pictureInPicture.start()
+        dismiss()
     }
 
     private var pipImageName: String {

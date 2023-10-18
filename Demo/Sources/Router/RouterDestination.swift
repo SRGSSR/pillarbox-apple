@@ -12,7 +12,7 @@ enum RouterDestination: Identifiable, Hashable {
     case systemPlayer(media: Media)
     case simplePlayer(media: Media)
     case optInPlayer(media: Media)
-    case pipPlayer(media: Media)
+    case pipPlayer(media: Media?)
 
     case vanillaPlayer(item: AVPlayerItem)
 
@@ -38,8 +38,8 @@ enum RouterDestination: Identifiable, Hashable {
             return "simplePlayer_\(media.id)"
         case let .optInPlayer(media: media):
             return "optInPlayer_\(media.id)"
-        case let .pipPlayer(media: media):
-            return "pipPlayer_\(media.id)"
+        case .pipPlayer:
+            return "pipPlayer"
         case let .vanillaPlayer(item: item):
             return "vanillaPlayer\(item.hash)"
         case let .blurred(media: media):

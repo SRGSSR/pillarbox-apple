@@ -50,6 +50,10 @@ public struct VideoView: UIViewRepresentable {
             PictureInPicture.shared.assign(playerLayer: uiView.playerLayer)
         }
     }
+
+    public static func dismantleUIView(_ uiView: VideoLayerView, coordinator: ()) {
+        print("--> dismantle")
+    }
 }
 
 public extension VideoView {

@@ -5,6 +5,7 @@
 //
 
 import Combine
+import Player
 import SwiftUI
 
 /// Manages navigation using an associated router.
@@ -20,6 +21,19 @@ struct RoutedNavigationStack<Root>: View where Root: View {
                 }
                 .navigationDestination(for: RouterDestination.self) { destination in
                     view(for: destination)
+                }
+                .onPictureInPictureRestoration { completion in
+                    if #available(iOS 17, *) {
+                        withAnimation {
+                            router.presented = .pipPlayer(media: nil)
+                        } completion: {
+                            completion(true)
+                        }
+                    }
+                    else {
+                        router.presented = .pipPlayer(media: nil)
+                        completion(true)
+                    }
                 }
         }
         .environmentObject(router)

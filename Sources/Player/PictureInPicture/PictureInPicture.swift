@@ -6,8 +6,9 @@
 
 import AVKit
 import Combine
+import SwiftUI
 
-// TODO: Must relinquish the controller when PiP is not needed anymore
+// TODO: Must relinquish the controller / layer when PiP is not needed anymore
 
 public final class PictureInPicture: NSObject, ObservableObject {
     public static var shared = PictureInPicture()
@@ -16,6 +17,12 @@ public final class PictureInPicture: NSObject, ObservableObject {
 
     @Published public private(set) var isPictureInPicturePossible = false
     @Published public private(set) var isPictureInPictureActive = false
+
+    fileprivate var onWillStartAction: (() -> Void)?
+    fileprivate var onDidStartAction: (() -> Void)?
+    fileprivate var onRestorationAction: ((@escaping (Bool) -> Void) -> Void)?
+    fileprivate var onWillStopAction: (() -> Void)?
+    fileprivate var onDidStopAction: (() -> Void)?
 
     private override init() {
         super.init()
@@ -47,34 +54,55 @@ public final class PictureInPicture: NSObject, ObservableObject {
         controller?.stopPictureInPicture()
     }
 
-    public func toggle() {
-        if isPictureInPictureActive {
-            stop()
-        }
-        else {
-            start()
-        }
-    }
-
     func assign(playerLayer: AVPlayerLayer) {
         guard controller?.playerLayer != playerLayer else { return }
+        // TODO: Should likely wait until the layer is readyForDisplay
         DispatchQueue.main.async {
             self.controller = AVPictureInPictureController(playerLayer: playerLayer)
             self.controller?.delegate = self
         }
     }
+
+    func unassign() {
+
+    }
 }
 
 extension PictureInPicture: AVPictureInPictureControllerDelegate {
-    public func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+    public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        onWillStartAction?()
+    }
 
+    public func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        onDidStartAction?()
     }
 
     public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
+        if let onRestorationAction {
+            onRestorationAction(completionHandler)
+        }
+        else {
+            completionHandler(true)
+        }
+    }
 
+    public func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        onWillStopAction?()
     }
 
     public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        onDidStopAction?()
+    }
+}
 
+public extension View {
+    func onPictureInPictureStart(perform action: @escaping () -> Void) -> some View {
+        PictureInPicture.shared.onDidStartAction = action
+        return self
+    }
+
+    func onPictureInPictureRestoration(perform action: @escaping (@escaping (Bool) -> Void) -> Void) -> some View {
+        PictureInPicture.shared.onRestorationAction = action
+        return self
     }
 }
