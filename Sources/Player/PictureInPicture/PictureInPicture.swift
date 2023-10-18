@@ -30,9 +30,6 @@ public final class PictureInPicture: NSObject, ObservableObject {
         propertyPublisher(for: \.isPictureInPicturePossible)
             .receiveOnMainThread()
             .assign(to: &$isPossible)
-        propertyPublisher(for: \.isPictureInPictureActive)
-            .receiveOnMainThread()
-            .assign(to: &$isActive)
     }
 
     private func propertyPublisher(for keyPath: KeyPath<AVPictureInPictureController, Bool>) -> AnyPublisher<Bool, Never> {
@@ -70,6 +67,7 @@ public final class PictureInPicture: NSObject, ObservableObject {
 
 extension PictureInPicture: AVPictureInPictureControllerDelegate {
     public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        isActive = true
         onWillStartAction?()
     }
 
@@ -78,11 +76,15 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
     }
 
     public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
+        let completion = { result in
+            completionHandler(result)
+            self.isActive = false
+        }
         if let onRestorationAction {
-            onRestorationAction(completionHandler)
+            onRestorationAction(completion)
         }
         else {
-            completionHandler(true)
+            completion(true)
         }
     }
 
@@ -92,6 +94,7 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
 
     public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         onDidStopAction?()
+        isActive = false
     }
 }
 
