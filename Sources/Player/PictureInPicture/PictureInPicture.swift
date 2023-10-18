@@ -12,7 +12,7 @@ import Combine
 public final class PictureInPicture: NSObject, ObservableObject {
     public static var shared = PictureInPicture()
 
-    @Published private var controller: AVPictureInPictureController?
+    @objc dynamic private var controller: AVPictureInPictureController?
 
     @Published public private(set) var isPictureInPicturePossible = false
     @Published public private(set) var isPictureInPictureActive = false
@@ -20,16 +20,16 @@ public final class PictureInPicture: NSObject, ObservableObject {
     private override init() {
         super.init()
 
-        publisher(for: \.isPictureInPicturePossible)
+        propertyPublisher(for: \.isPictureInPicturePossible)
             .receiveOnMainThread()
             .assign(to: &$isPictureInPicturePossible)
-        publisher(for: \.isPictureInPictureActive)
+        propertyPublisher(for: \.isPictureInPictureActive)
             .receiveOnMainThread()
             .assign(to: &$isPictureInPictureActive)
     }
 
-    private func publisher(for keyPath: KeyPath<AVPictureInPictureController, Bool>) -> AnyPublisher<Bool, Never> {
-        $controller
+    private func propertyPublisher(for keyPath: KeyPath<AVPictureInPictureController, Bool>) -> AnyPublisher<Bool, Never> {
+        publisher(for: \.controller)
             .map { controller -> AnyPublisher<Bool, Never> in
                 guard let controller else { return Just(false).eraseToAnyPublisher() }
                 return controller.publisher(for: keyPath)
@@ -58,8 +58,10 @@ public final class PictureInPicture: NSObject, ObservableObject {
 
     func assign(playerLayer: AVPlayerLayer) {
         guard controller?.playerLayer != playerLayer else { return }
-        controller = AVPictureInPictureController(playerLayer: playerLayer)
-        controller?.delegate = self
+        DispatchQueue.main.async {
+            self.controller = AVPictureInPictureController(playerLayer: playerLayer)
+            self.controller?.delegate = self
+        }
     }
 }
 
