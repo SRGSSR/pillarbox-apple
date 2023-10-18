@@ -31,6 +31,7 @@ private final class PipPlayerViewModel: ObservableObject {
                     .eraseToAnyPublisher()
             }
             .switchToLatest()
+            .receiveOnMainThread()
             .assign(to: &$mediaComposition)
     }
 
@@ -76,6 +77,7 @@ private struct PipPlaybackView: View {
     var body: some View {
         ZStack {
             VideoView(player: player)
+                .enabledForPictureInPicture()
                 .ignoresSafeArea()
             ControlsView()
                 .opacity(visibilityTracker.isUserInterfaceHidden ? 0 : 1)
@@ -112,7 +114,7 @@ private struct ControlsView: View {
             Color(white: 0, opacity: 0.4)
                 .ignoresSafeArea()
             Button(action: player.togglePlayPause) {
-                Image(systemName: imageName)
+                Image(systemName: playbackButtonImageName)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(height: 90)
@@ -121,20 +123,32 @@ private struct ControlsView: View {
         }
     }
 
-    private var imageName: String {
+    private var playbackButtonImageName: String {
         player.playbackState == .playing ? "pause.circle.fill" : "play.circle.fill"
     }
 }
 
 private struct BottomBar: View {
     @ObservedObject private var player = PipPlayerViewModel.shared.player
+    @ObservedObject private var pictureInPicture = PictureInPicture.shared
     @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 10))
 
     var body: some View {
-        Slider(progressTracker: progressTracker)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-            .padding()
-            .bind(progressTracker, to: player)
+        HStack {
+            Slider(progressTracker: progressTracker)
+            if pictureInPicture.isPictureInPicturePossible {
+                Button(action: pictureInPicture.toggle) {
+                    Image(systemName: pipImageName)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+        .padding()
+        .bind(progressTracker, to: player)
+    }
+
+    private var pipImageName: String {
+        pictureInPicture.isPictureInPictureActive ? "pip.exit" : "pip.enter"
     }
 }
 

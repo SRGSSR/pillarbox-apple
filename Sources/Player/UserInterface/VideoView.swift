@@ -29,6 +29,7 @@ public final class VideoLayerView: UIView {
 public struct VideoView: UIViewRepresentable {
     @ObservedObject private var player: Player
     private let gravity: AVLayerVideoGravity
+    private var isEnabledForPictureInPicture = false
 
     public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect) {
         self.player = player
@@ -45,5 +46,16 @@ public struct VideoView: UIViewRepresentable {
     public func updateUIView(_ uiView: VideoLayerView, context: Context) {
         uiView.player = player.queuePlayer
         uiView.playerLayer.videoGravity = gravity
+        if isEnabledForPictureInPicture {
+            PictureInPicture.shared.assign(playerLayer: uiView.playerLayer)
+        }
+    }
+}
+
+public extension VideoView {
+    func enabledForPictureInPicture(_ enabled: Bool = true) -> Self {
+        var view = self
+        view.isEnabledForPictureInPicture = enabled
+        return view
     }
 }

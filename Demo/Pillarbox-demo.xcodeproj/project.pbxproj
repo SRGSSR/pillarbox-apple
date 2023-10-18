@@ -369,8 +369,8 @@
 		6F59E86929CF31E10093E6FB /* Players */ = {
 			isa = PBXGroup;
 			children = (
-				6F2D344B2ADFB9A800FE7740 /* PipPlayerView.swift */,
 				6F59E86E29CF31E10093E6FB /* BasicPlaybackView.swift */,
+				6F2D344B2ADFB9A800FE7740 /* PipPlayerView.swift */,
 				6F59E86B29CF31E10093E6FB /* PlaybackView.swift */,
 				6F59E86A29CF31E10093E6FB /* PlayerConfiguration.swift */,
 				6F59E87129CF31E10093E6FB /* PlayerLayout.swift */,
