@@ -37,6 +37,8 @@ struct RoutedNavigationStack<Root>: View where Root: View {
             SimplePlayerView(media: media)
         case let .optInPlayer(media: media):
             OptInView(media: media)
+        case let .pipPlayer(media: media):
+            PipPlayerView(media: media)
         case let .vanillaPlayer(item: item):
             VanillaPlayerView(item: item)
         case let .blurred(media: media):

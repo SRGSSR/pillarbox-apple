@@ -48,6 +48,11 @@ struct ShowcaseView: View {
                 subtitle: "An Instagram-inspired user experience",
                 destination: .stories
             )
+            cell(
+                title: "Picture in Picture",
+                subtitle: "A simple Picture in Picture implementation",
+                destination: .pipPlayer(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
+            )
         }
     }
 
