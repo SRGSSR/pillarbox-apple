@@ -91,7 +91,7 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
 
     public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         onDidStopAction?()
-        unassign()
+        // TODO: Cleanup if closed from PiP overlay, but not possible here since stop() must not remove controller entirely
     }
 }
 

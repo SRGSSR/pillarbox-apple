@@ -67,6 +67,9 @@ struct PipPlayerView: View {
             PipMetadataView()
         }
         .onAppear(perform: model.play)
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+            pictureInPicture.stop()
+        }
         .onDisappear {
             if !pictureInPicture.isActive {
                 model.reset()
@@ -74,6 +77,8 @@ struct PipPlayerView: View {
         }
     }
 }
+
+// TODO: Implement PiP for 2 players and manage router destinations
 
 private struct PipPlaybackView: View {
     @ObservedObject private var player = PipPlayerViewModel.shared.player
