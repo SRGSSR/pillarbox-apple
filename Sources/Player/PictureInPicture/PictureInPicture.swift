@@ -8,8 +8,6 @@ import AVKit
 import Combine
 import SwiftUI
 
-// TODO: Must relinquish the controller / layer when PiP is not needed anymore
-
 public final class PictureInPicture: NSObject, ObservableObject {
     public static var shared = PictureInPicture()
 
@@ -54,6 +52,7 @@ public final class PictureInPicture: NSObject, ObservableObject {
     func assign(playerLayer: AVPlayerLayer) {
         guard controller?.playerLayer != playerLayer else { return }
         // TODO: Should likely wait until the layer is readyForDisplay
+        // Dispatch to avoid update in body evaluation
         DispatchQueue.main.async {
             self.controller = AVPictureInPictureController(playerLayer: playerLayer)
             self.controller?.delegate = self
@@ -61,7 +60,8 @@ public final class PictureInPicture: NSObject, ObservableObject {
     }
 
     func unassign() {
-
+        controller = nil
+        isActive = false
     }
 }
 
@@ -94,7 +94,7 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
 
     public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         onDidStopAction?()
-        isActive = false
+        unassign()
     }
 }
 

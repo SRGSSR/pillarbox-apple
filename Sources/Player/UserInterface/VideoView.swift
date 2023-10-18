@@ -28,6 +28,7 @@ public final class VideoLayerView: UIView {
 /// Behavior: h-exp, v-exp
 public struct VideoView: UIViewRepresentable {
     @ObservedObject private var player: Player
+
     private let gravity: AVLayerVideoGravity
     private var isEnabledForPictureInPicture = false
 
@@ -52,7 +53,9 @@ public struct VideoView: UIViewRepresentable {
     }
 
     public static func dismantleUIView(_ uiView: VideoLayerView, coordinator: ()) {
-        print("--> dismantle")
+        if !PictureInPicture.shared.isActive {
+            PictureInPicture.shared.unassign()
+        }
     }
 }
 
