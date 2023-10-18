@@ -30,39 +30,32 @@ public struct VideoView: UIViewRepresentable {
     @ObservedObject private var player: Player
 
     private let gravity: AVLayerVideoGravity
-    private var isEnabledForPictureInPicture = false
+    private let supportsPictureInPicture: Bool
 
-    public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect) {
+    public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect, supportsPictureInPicture: Bool = false) {
         self.player = player
         self.gravity = gravity
+        self.supportsPictureInPicture = supportsPictureInPicture
     }
 
     public func makeUIView(context: Context) -> VideoLayerView {
         let view = VideoLayerView()
         view.backgroundColor = .clear
         view.player = player.queuePlayer
+        if supportsPictureInPicture {
+            PictureInPicture.shared.assign(playerLayer: view.playerLayer)
+        }
         return view
     }
 
     public func updateUIView(_ uiView: VideoLayerView, context: Context) {
         uiView.player = player.queuePlayer
         uiView.playerLayer.videoGravity = gravity
-        if isEnabledForPictureInPicture {
-            PictureInPicture.shared.assign(playerLayer: uiView.playerLayer)
-        }
     }
 
     public static func dismantleUIView(_ uiView: VideoLayerView, coordinator: ()) {
         if !PictureInPicture.shared.isActive {
             PictureInPicture.shared.unassign()
         }
-    }
-}
-
-public extension VideoView {
-    func enabledForPictureInPicture(_ enabled: Bool = true) -> Self {
-        var view = self
-        view.isEnabledForPictureInPicture = enabled
-        return view
     }
 }

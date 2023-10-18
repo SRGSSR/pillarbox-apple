@@ -52,11 +52,8 @@ public final class PictureInPicture: NSObject, ObservableObject {
     func assign(playerLayer: AVPlayerLayer) {
         guard controller?.playerLayer != playerLayer else { return }
         // TODO: Should likely wait until the layer is readyForDisplay
-        // Dispatch to avoid update in body evaluation
-        DispatchQueue.main.async {
-            self.controller = AVPictureInPictureController(playerLayer: playerLayer)
-            self.controller?.delegate = self
-        }
+        self.controller = AVPictureInPictureController(playerLayer: playerLayer)
+        self.controller?.delegate = self
     }
 
     func unassign() {

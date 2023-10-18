@@ -81,8 +81,7 @@ private struct PipPlaybackView: View {
 
     var body: some View {
         ZStack {
-            VideoView(player: player)
-                .enabledForPictureInPicture()
+            VideoView(player: player, supportsPictureInPicture: true)
                 .ignoresSafeArea()
             ControlsView()
                 .opacity(visibilityTracker.isUserInterfaceHidden ? 0 : 1)
