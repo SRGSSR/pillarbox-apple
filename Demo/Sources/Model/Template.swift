@@ -214,9 +214,9 @@ enum URNTemplate {
         type: .urn("urn:rts:audio:3262363")
     )
     static let onDemandAudio = Template(
-        title: "Il lavoro di TerraProject per una fotografia documentaria",
+        title: "Fuori dagli schemi",
         description: "On-demand audio stream",
-        type: .urn("urn:rsi:audio:8833144")
+        type: .urn("urn:rsi:audio:1837534")
     )
     static let expired = Template(
         title: "Expired URN",
