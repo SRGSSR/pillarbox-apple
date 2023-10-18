@@ -6,6 +6,9 @@
 
 import CoreBusiness
 import Player
+import SRGDataProvider
+import SRGDataProviderCombine
+import SRGDataProviderModel
 import SwiftUI
 
 private final class PipPlayerViewModel: ObservableObject {
@@ -13,17 +16,35 @@ private final class PipPlayerViewModel: ObservableObject {
     
     let player = Player()
 
-    private init() {}
+    @Published private var media: Media?
+    @Published private(set) var mediaComposition: SRGMediaComposition?
+
+    private init() {
+        $media
+            .map { media -> AnyPublisher<SRGMediaComposition?, Never> in
+                guard let media, case let .urn(urn, _) = media.type else {
+                    return Just(nil).eraseToAnyPublisher()
+                }
+                return SRGDataProvider.current!.mediaComposition(forUrn: urn)
+                    .map { $0 }
+                    .replaceError(with: nil)
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .assign(to: &$mediaComposition)
+    }
 
     func play() {
         player.play()
     }
 
     func reset() {
+        media = nil
         player.removeAllItems()
     }
 
     func replace(with media: Media) {
+        self.media = media
         player.removeAllItems()
         player.append(media.playerItem())
     }
@@ -39,14 +60,17 @@ struct PipPlayerView: View {
     }
 
     var body: some View {
-        PipPlaybackView()
-            .onAppear(perform: model.play)
-            .onDisappear(perform: model.reset)
+        VStack {
+            PipPlaybackView()
+            PipMetadataView()
+        }
+        .onAppear(perform: model.play)
+        .onDisappear(perform: model.reset)
     }
 }
 
 private struct PipPlaybackView: View {
-    @ObservedObject var player = PipPlayerViewModel.shared.player
+    @ObservedObject private var player = PipPlayerViewModel.shared.player
     @ObservedObject private var visibilityTracker = VisibilityTracker()
 
     var body: some View {
@@ -63,8 +87,25 @@ private struct PipPlaybackView: View {
     }
 }
 
+private struct PipMetadataView: View {
+    @ObservedObject private var model = PipPlayerViewModel.shared
+
+    var body: some View {
+        VStack {
+            if let mediaComposition = model.mediaComposition {
+                Text(mediaComposition.mainChapter.title)
+            }
+            else {
+                Text("No title")
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    }
+}
+
 private struct ControlsView: View {
-    @ObservedObject var player = PipPlayerViewModel.shared.player
+    @ObservedObject private var player = PipPlayerViewModel.shared.player
 
     var body: some View {
         ZStack {
@@ -86,7 +127,7 @@ private struct ControlsView: View {
 }
 
 private struct BottomBar: View {
-    @ObservedObject var player = PipPlayerViewModel.shared.player
+    @ObservedObject private var player = PipPlayerViewModel.shared.player
     @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 10))
 
     var body: some View {
