@@ -53,6 +53,7 @@ private final class PipPlayerViewModel: ObservableObject {
 
 struct PipPlayerView: View {
     @ObservedObject private var model = PipPlayerViewModel.shared
+    @Environment(\.pictureInPicture) private var pictureInPicture
 
     init(media: Media? = nil) {
         if let media {
@@ -67,7 +68,7 @@ struct PipPlayerView: View {
         }
         .onAppear(perform: model.play)
         .onDisappear {
-            if !PictureInPicture.shared.isPictureInPictureActive {
+            if !pictureInPicture.isActive {
                 model.reset()
             }
         }
@@ -134,14 +135,14 @@ private struct ControlsView: View {
 
 private struct BottomBar: View {
     @ObservedObject private var player = PipPlayerViewModel.shared.player
-    @ObservedObject private var pictureInPicture = PictureInPicture.shared
     @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 10))
+    @Environment(\.pictureInPicture) private var pictureInPicture
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         HStack {
             Slider(progressTracker: progressTracker)
-            if pictureInPicture.isPictureInPicturePossible {
+            if pictureInPicture.isPossible {
                 Button(action: startPictureInPicture) {
                     Image(systemName: pipImageName)
                 }
@@ -158,7 +159,7 @@ private struct BottomBar: View {
     }
 
     private var pipImageName: String {
-        pictureInPicture.isPictureInPictureActive ? "pip.exit" : "pip.enter"
+        pictureInPicture.isActive ? "pip.exit" : "pip.enter"
     }
 }
 

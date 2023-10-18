@@ -15,8 +15,8 @@ public final class PictureInPicture: NSObject, ObservableObject {
 
     @objc dynamic private var controller: AVPictureInPictureController?
 
-    @Published public private(set) var isPictureInPicturePossible = false
-    @Published public private(set) var isPictureInPictureActive = false
+    @Published public private(set) var isPossible = false
+    @Published public private(set) var isActive = false
 
     fileprivate var onWillStartAction: (() -> Void)?
     fileprivate var onDidStartAction: (() -> Void)?
@@ -29,10 +29,10 @@ public final class PictureInPicture: NSObject, ObservableObject {
 
         propertyPublisher(for: \.isPictureInPicturePossible)
             .receiveOnMainThread()
-            .assign(to: &$isPictureInPicturePossible)
+            .assign(to: &$isPossible)
         propertyPublisher(for: \.isPictureInPictureActive)
             .receiveOnMainThread()
-            .assign(to: &$isPictureInPictureActive)
+            .assign(to: &$isActive)
     }
 
     private func propertyPublisher(for keyPath: KeyPath<AVPictureInPictureController, Bool>) -> AnyPublisher<Bool, Never> {
@@ -104,5 +104,15 @@ public extension View {
     func onPictureInPictureRestoration(perform action: @escaping (@escaping (Bool) -> Void) -> Void) -> some View {
         PictureInPicture.shared.onRestorationAction = action
         return self
+    }
+}
+
+private struct PictureInPictureKey: EnvironmentKey {
+    static let defaultValue: PictureInPicture = .shared
+}
+
+public extension EnvironmentValues {
+    var pictureInPicture: PictureInPicture {
+        get { self[PictureInPictureKey.self] }
     }
 }
