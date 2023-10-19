@@ -42,14 +42,18 @@ public struct VideoView: UIViewRepresentable {
         let view = VideoLayerView()
         view.backgroundColor = .clear
         view.player = player.queuePlayer
-        if supportsPictureInPicture {
-            PictureInPicture.shared.assign(playerLayer: view.playerLayer)
-        }
         return view
     }
 
     public func updateUIView(_ uiView: VideoLayerView, context: Context) {
         uiView.player = player.queuePlayer
         uiView.playerLayer.videoGravity = gravity
+
+        // Defer to avoid update loop
+        if supportsPictureInPicture {
+            DispatchQueue.main.async {
+                PictureInPicture.shared.assign(playerLayer: uiView.playerLayer)
+            }
+        }
     }
 }

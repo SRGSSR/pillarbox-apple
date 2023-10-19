@@ -15,6 +15,7 @@ import SwiftUI
 private struct MainView: View {
     @ObservedObject var player: Player
     @Binding var layout: PlaybackView.Layout
+    let supportsPictureInPicture: Bool
 
     @StateObject private var visibilityTracker = VisibilityTracker()
 
@@ -109,7 +110,7 @@ private struct MainView: View {
                 image(name: "tv")
             }
             else {
-                VideoView(player: player, gravity: gravity, supportsPictureInPicture: true)
+                VideoView(player: player, gravity: gravity, supportsPictureInPicture: supportsPictureInPicture)
             }
         }
     }
@@ -545,6 +546,7 @@ struct PlaybackView: View {
 
     @ObservedObject private var player: Player
     @Binding private var layout: Layout
+    let supportsPictureInPicture: Bool
 
     var body: some View {
         ZStack {
@@ -570,9 +572,10 @@ struct PlaybackView: View {
         }
     }
 
-    init(player: Player, layout: Binding<Layout> = .constant(.inline)) {
+    init(player: Player, layout: Binding<Layout> = .constant(.inline), supportsPictureInPicture: Bool = false) {
         self.player = player
         _layout = layout
+        self.supportsPictureInPicture = supportsPictureInPicture
     }
 
     @ViewBuilder
@@ -581,7 +584,7 @@ struct PlaybackView: View {
 #if os(iOS)
             switch UserDefaults.standard.playerLayout {
             case .custom:
-                MainView(player: player, layout: $layout)
+                MainView(player: player, layout: $layout, supportsPictureInPicture: supportsPictureInPicture)
             case .system:
                 SystemVideoView(player: player)
                     .ignoresSafeArea()
