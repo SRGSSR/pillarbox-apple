@@ -53,7 +53,7 @@ private final class PipPlayerViewModel: ObservableObject {
 
 struct PipPlayerView: View {
     @ObservedObject private var model = PipPlayerViewModel.shared
-    @Environment(\.pictureInPicture) private var pictureInPicture
+    @ObservedObject private var pictureInPicture = PictureInPicture.shared
 
     init(media: Media? = nil) {
         if let media {
@@ -63,7 +63,7 @@ struct PipPlayerView: View {
 
     var body: some View {
         VStack {
-            PipPlaybackView()
+            PlaybackView(player: model.player)
             PipMetadataView()
         }
         .onAppear(perform: model.play)
@@ -78,28 +78,15 @@ struct PipPlayerView: View {
     }
 }
 
-// TODO: Implement PiP for 2 players and manage router destinations
-
-private struct PipPlaybackView: View {
-    @ObservedObject private var player = PipPlayerViewModel.shared.player
-    @ObservedObject private var visibilityTracker = VisibilityTracker()
-
-    var body: some View {
-        ZStack {
-            VideoView(player: player, supportsPictureInPicture: true)
-                .ignoresSafeArea()
-            ControlsView()
-                .opacity(visibilityTracker.isUserInterfaceHidden ? 0 : 1)
-        }
-        .tint(.white)
-        .onTapGesture(perform: visibilityTracker.toggle)
-        .animation(.linear(duration: 0.2), value: visibilityTracker.isUserInterfaceHidden)
-        .bind(visibilityTracker, to: player)
-    }
-}
+// TODO: 
+// - Implement PiP for 2 players and manage router destinations
+// - Implement PiP with 2x same content displayed (must be able to pick which view will then provide the layer to the
+//   PiP; likely need to have updateUIView update the PiP controller when this changes)
 
 private struct PipMetadataView: View {
     @ObservedObject private var model = PipPlayerViewModel.shared
+    @ObservedObject private var pictureInPicture = PictureInPicture.shared
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         VStack {
@@ -112,58 +99,6 @@ private struct PipMetadataView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-    }
-}
-
-private struct ControlsView: View {
-    @ObservedObject private var player = PipPlayerViewModel.shared.player
-
-    var body: some View {
-        ZStack {
-            Color(white: 0, opacity: 0.4)
-                .ignoresSafeArea()
-            Button(action: player.togglePlayPause) {
-                Image(systemName: playbackButtonImageName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(height: 90)
-            }
-            BottomBar()
-        }
-    }
-
-    private var playbackButtonImageName: String {
-        player.playbackState == .playing ? "pause.circle.fill" : "play.circle.fill"
-    }
-}
-
-private struct BottomBar: View {
-    @ObservedObject private var player = PipPlayerViewModel.shared.player
-    @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 10))
-    @Environment(\.pictureInPicture) private var pictureInPicture
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        HStack {
-            Slider(progressTracker: progressTracker)
-            if pictureInPicture.isPossible {
-                Button(action: startPictureInPicture) {
-                    Image(systemName: pipImageName)
-                }
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-        .padding()
-        .bind(progressTracker, to: player)
-    }
-
-    private func startPictureInPicture() {
-        pictureInPicture.start()
-        dismiss()
-    }
-
-    private var pipImageName: String {
-        pictureInPicture.isActive ? "pip.exit" : "pip.enter"
     }
 }
 

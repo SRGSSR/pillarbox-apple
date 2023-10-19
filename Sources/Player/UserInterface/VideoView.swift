@@ -52,10 +52,4 @@ public struct VideoView: UIViewRepresentable {
         uiView.player = player.queuePlayer
         uiView.playerLayer.videoGravity = gravity
     }
-
-    public static func dismantleUIView(_ uiView: VideoLayerView, coordinator: ()) {
-        if !PictureInPicture.shared.isActive {
-            PictureInPicture.shared.unassign()
-        }
-    }
 }

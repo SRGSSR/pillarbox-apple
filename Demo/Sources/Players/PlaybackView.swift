@@ -109,7 +109,7 @@ private struct MainView: View {
                 image(name: "tv")
             }
             else {
-                VideoView(player: player, gravity: gravity)
+                VideoView(player: player, gravity: gravity, supportsPictureInPicture: true)
             }
         }
     }
@@ -320,6 +320,9 @@ private struct TimeBar: View {
         seekBehavior: UserDefaults.standard.seekBehavior
     )
 
+    @ObservedObject private var pictureInPicture = PictureInPicture.shared
+    @Environment(\.dismiss) var dismiss
+
     private var prioritizesVideoDevices: Bool {
         player.mediaType == .video
     }
@@ -328,6 +331,13 @@ private struct TimeBar: View {
         HStack(spacing: 8) {
             routePickerView()
             HStack(spacing: 20) {
+                if pictureInPicture.isPossible {
+                    Button(action: startPictureInPicture) {
+                        Image(systemName: "pip.enter")
+                            .tint(.white)
+                    }
+                }
+
                 TimeSlider(player: player, progressTracker: progressTracker)
                 LiveLabel(player: player, progressTracker: progressTracker)
 
@@ -365,6 +375,11 @@ private struct TimeBar: View {
                 .aspectRatio(contentMode: .fit)
         }
         .menuOrder(.fixed)
+    }
+
+    private func startPictureInPicture() {
+        pictureInPicture.start()
+        dismiss()
     }
 }
 

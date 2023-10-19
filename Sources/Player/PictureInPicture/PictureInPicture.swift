@@ -106,13 +106,3 @@ public extension View {
         return self
     }
 }
-
-private struct PictureInPictureKey: EnvironmentKey {
-    static let defaultValue: PictureInPicture = .shared
-}
-
-public extension EnvironmentValues {
-    var pictureInPicture: PictureInPicture {
-        get { self[PictureInPictureKey.self] }
-    }
-}
