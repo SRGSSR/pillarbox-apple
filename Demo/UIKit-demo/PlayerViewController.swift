@@ -29,5 +29,28 @@ final class PlayerViewController: UIViewController {
             hostView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             hostView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
+
+        let closeButton = UIButton()
+        closeButton.setTitle("Close", for: .normal)
+        closeButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
+        view.addSubview(closeButton)
+
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            closeButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
+        ])
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if !PictureInPicture.shared.isActive {
+            // Could also reset but requires the ability to load the content again.
+            Self.player.pause()
+        }
+    }
+
+    @objc private func close(_ sender: Any) {
+        dismiss(animated: true)
     }
 }

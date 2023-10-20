@@ -22,7 +22,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 
 extension SceneDelegate: PictureInPictureDelegate {
-    func willStartPictureInPicture() {}
+    func willStartPictureInPicture() {
+        window?.rootViewController?.dismiss(animated: true)
+    }
     
     func didStartPictureInPicture() {}
     
