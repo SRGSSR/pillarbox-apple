@@ -14,8 +14,8 @@ import SwiftUI
 /// A bug in AVKit currently makes `SystemVideoView` leak resources after having interacted with the playback
 /// button on iOS 16. This issue has been reported to Apple as FB11934227.
 public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
-    private var videoOverlay: VideoOverlay
-    @ObservedObject private var player: Player
+    private let videoOverlay: VideoOverlay
+    private let player: Player
 
     public var body: some View {
         VideoPlayer(player: player.queuePlayer) {
