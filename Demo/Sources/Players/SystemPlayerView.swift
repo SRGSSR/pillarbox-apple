@@ -13,7 +13,7 @@ struct SystemPlayerView: View {
     @StateObject private var player = Player()
 
     var body: some View {
-        SystemVideoView(player: player)
+        SystemPipPlayerView(player: player)
             .ignoresSafeArea()
             .overlay(alignment: .topLeading) {
                 CloseButton()
