@@ -87,7 +87,6 @@ struct PipPlayerView: View {
 private struct PipMetadataView: View {
     @ObservedObject private var model = PipPlayerViewModel.shared
     @ObservedObject private var pictureInPicture = PictureInPicture.shared
-    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         VStack {
