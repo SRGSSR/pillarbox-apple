@@ -11,8 +11,18 @@ import SwiftUI
 struct SystemPipPlayerView: UIViewControllerRepresentable {
     let player: Player
 
-    func makeUIViewController(context: Context) -> AVPlayerViewController {
+    class Coordinator: NSObject, AVPlayerViewControllerDelegate {
+
+    }
+
+    func makeCoordinator() -> Coordinator {
         .init()
+    }
+
+    func makeUIViewController(context: Context) -> AVPlayerViewController {
+        let controller = AVPlayerViewController()
+        controller.allowsPictureInPicturePlayback = true
+        return controller
     }
 
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
