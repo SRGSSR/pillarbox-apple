@@ -8,6 +8,14 @@ import AVKit
 import Combine
 import SwiftUI
 
+public protocol PictureInPictureDelegate: AnyObject {
+    func willStartPictureInPicture()
+    func didStartPictureInPicture()
+    func restoreUserInterfaceForPictureInPictureStop(with completionHandler: @escaping (Bool) -> Void)
+    func willStopPictureInPicture()
+    func didStopPictureInPicture()
+}
+
 public final class PictureInPicture: NSObject, ObservableObject {
     public static var shared = PictureInPicture()
 
@@ -21,6 +29,8 @@ public final class PictureInPicture: NSObject, ObservableObject {
     fileprivate var onRestorationAction: ((@escaping (Bool) -> Void) -> Void)?
     fileprivate var onWillStopAction: (() -> Void)?
     fileprivate var onDidStopAction: (() -> Void)?
+
+    public weak var delegate: PictureInPictureDelegate?
 
     private override init() {
         super.init()
@@ -65,11 +75,22 @@ public final class PictureInPicture: NSObject, ObservableObject {
 extension PictureInPicture: AVPictureInPictureControllerDelegate {
     public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = true
-        onWillStartAction?()
+
+        if let onWillStartAction {
+            onWillStartAction()
+        }
+        else {
+            delegate?.willStartPictureInPicture()
+        }
     }
 
     public func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        onDidStartAction?()
+        if let onDidStartAction {
+            onDidStartAction()
+        }
+        else {
+            delegate?.didStartPictureInPicture()
+        }
     }
 
     public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
@@ -80,6 +101,9 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
         if let onRestorationAction {
             onRestorationAction(completion)
         }
+        else if let delegate {
+            delegate.restoreUserInterfaceForPictureInPictureStop(with: completion)
+        }
         else {
             completion(true)
         }
@@ -87,10 +111,12 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
 
     public func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         onWillStopAction?()
+        delegate?.willStopPictureInPicture()
     }
 
     public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         onDidStopAction?()
+        delegate?.didStopPictureInPicture()
         // TODO: Cleanup if closed from PiP overlay, but not possible here since stop() must not remove controller entirely
     }
 }
