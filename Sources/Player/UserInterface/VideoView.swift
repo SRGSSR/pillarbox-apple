@@ -23,7 +23,7 @@ public final class VideoLayerView: UIView {
 
     public override func layoutSubviews() {
         super.layoutSubviews()
-        playerLayer.frame = bounds
+        playerLayer.frame = layer.bounds
     }
 
     var player: AVPlayer? {
