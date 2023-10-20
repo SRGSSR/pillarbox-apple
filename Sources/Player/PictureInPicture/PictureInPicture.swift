@@ -60,10 +60,14 @@ public final class PictureInPicture: NSObject, ObservableObject {
     }
 
     func assign(playerLayer: AVPlayerLayer) {
-        guard controller?.playerLayer != playerLayer else { return }
+        guard controller == nil, controller?.playerLayer != playerLayer else { return }
         // TODO: Should likely wait until the layer is readyForDisplay
-        self.controller = AVPictureInPictureController(playerLayer: playerLayer)
-        self.controller?.delegate = self
+        controller = AVPictureInPictureController(playerLayer: playerLayer)
+        controller?.delegate = self
+    }
+
+    var playerLayer: AVPlayerLayer? {
+        controller?.playerLayer
     }
 
     func unassign() {

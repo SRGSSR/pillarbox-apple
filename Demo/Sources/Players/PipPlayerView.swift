@@ -55,8 +55,6 @@ struct PipPlayerView: View {
     @ObservedObject private var model = PipPlayerViewModel.shared
     @ObservedObject private var pictureInPicture = PictureInPicture.shared
 
-    @State private var isPiPSupportedByFirstView = true
-
     init(media: Media? = nil) {
         if let media {
             model.replace(with: media)
@@ -65,13 +63,9 @@ struct PipPlayerView: View {
 
     var body: some View {
         VStack {
-            PlaybackView(player: model.player, supportsPictureInPicture: isPiPSupportedByFirstView)
-            PlaybackView(player: model.player, supportsPictureInPicture: !isPiPSupportedByFirstView)
+            PlaybackView(player: model.player, supportsPictureInPicture: true)
+            PlaybackView(player: model.player)
             PipMetadataView()
-            Toggle(isOn: $isPiPSupportedByFirstView) {
-                Text("PiP in first view")
-            }
-            .padding()
         }
         .onAppear(perform: model.play)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
