@@ -23,15 +23,8 @@ struct RoutedNavigationStack<Root>: View where Root: View {
                     view(for: destination)
                 }
                 .onPictureInPictureRestoration { completion in
-                    if #available(iOS 17, *) {
-                        withAnimation {
-                            router.presented = .pipPlayer(media: nil)
-                        } completion: {
-                            completion(true)
-                        }
-                    }
-                    else {
-                        router.presented = .pipPlayer(media: nil)
+                    router.presented = .pipPlayer(media: nil)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                         completion(true)
                     }
                 }
