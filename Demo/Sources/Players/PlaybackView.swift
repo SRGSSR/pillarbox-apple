@@ -322,7 +322,6 @@ private struct TimeBar: View {
     )
 
     @ObservedObject private var pictureInPicture = PictureInPicture.shared
-    @Environment(\.dismiss) var dismiss
 
     private var prioritizesVideoDevices: Bool {
         player.mediaType == .video
@@ -380,7 +379,6 @@ private struct TimeBar: View {
 
     private func startPictureInPicture() {
         pictureInPicture.start()
-        dismiss()
     }
 }
 

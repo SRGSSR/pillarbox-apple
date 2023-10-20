@@ -54,6 +54,7 @@ private final class PipPlayerViewModel: ObservableObject {
 struct PipPlayerView: View {
     @ObservedObject private var model = PipPlayerViewModel.shared
     @ObservedObject private var pictureInPicture = PictureInPicture.shared
+    @Environment(\.dismiss) private var dismiss
 
     init(media: Media? = nil) {
         if let media {
@@ -66,6 +67,9 @@ struct PipPlayerView: View {
             PlaybackView(player: model.player, supportsPictureInPicture: true)
             PlaybackView(player: model.player)
             PipMetadataView()
+        }
+        .onPictureInPictureWillStart {
+            dismiss()
         }
         .onAppear(perform: model.play)
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in

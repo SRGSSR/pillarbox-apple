@@ -126,13 +126,28 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
 }
 
 public extension View {
-    func onPictureInPictureStart(perform action: @escaping () -> Void) -> some View {
+    func onPictureInPictureWillStart(perform action: @escaping () -> Void) -> some View {
+        PictureInPicture.shared.onWillStartAction = action
+        return self
+    }
+
+    func onPictureInPictureDidStart(perform action: @escaping () -> Void) -> some View {
         PictureInPicture.shared.onDidStartAction = action
         return self
     }
 
     func onPictureInPictureRestoration(perform action: @escaping (@escaping (Bool) -> Void) -> Void) -> some View {
         PictureInPicture.shared.onRestorationAction = action
+        return self
+    }
+
+    func onPictureInPictureWillStop(perform action: @escaping () -> Void) -> some View {
+        PictureInPicture.shared.onWillStopAction = action
+        return self
+    }
+
+    func onPictureInPictureDidStop(perform action: @escaping () -> Void) -> some View {
+        PictureInPicture.shared.onDidStopAction = action
         return self
     }
 }
