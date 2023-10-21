@@ -27,7 +27,7 @@ extension PictureInPictureView {
     @ViewBuilder
     private func playbackView() -> some View {
         ZStack {
-            VideoView(player: player, isPictureInPictureSupported: true)
+            VideoView(player: player, pictureInPicture: pictureInPicture)
             playbackButton()
         }
     }
