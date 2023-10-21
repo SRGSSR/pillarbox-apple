@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
+import AVKit
 import SwiftUI
 import UIKit
 
@@ -41,6 +41,9 @@ public struct VideoView: UIViewRepresentable {
         let view = VideoLayerView()
         view.backgroundColor = .clear
         view.player = player.queuePlayer
+        if let pictureInPicture {
+            pictureInPicture.append(controller: .init(contentSource: .init(playerLayer: view.playerLayer)))
+        }
         return view
     }
 

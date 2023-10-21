@@ -7,13 +7,14 @@
 import AVKit
 
 public class PictureInPicture: NSObject, ObservableObject {
-    private var controller: AVPictureInPictureController?
+    private var controllers: [AVPictureInPictureController] = []
 
     override public init() {
         super.init()
     }
 
-    func install(controller: AVPictureInPictureController) {
-        self.controller = controller
+    func append(controller: AVPictureInPictureController) {
+        controllers.append(controller)
+        print("--> Controller \(Unmanaged.passUnretained(controller).toOpaque()) added, total: \(controllers.count)")
     }
 }
