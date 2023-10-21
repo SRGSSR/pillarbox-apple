@@ -6,11 +6,14 @@
 
 import AVKit
 
-class PictureInPicture: NSObject {
-    let controller: AVPictureInPictureController
+public class PictureInPicture: NSObject, ObservableObject {
+    private var controller: AVPictureInPictureController?
 
-    init(controller: AVPictureInPictureController) {
-        self.controller = controller
+    override public init() {
         super.init()
+    }
+
+    func install(controller: AVPictureInPictureController) {
+        self.controller = controller
     }
 }

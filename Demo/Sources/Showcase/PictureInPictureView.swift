@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PictureInPictureView: View {
     @ObservedObject var player: Player
+    @ObservedObject var pictureInPicture: PictureInPicture
 
     var body: some View {
         VStack(spacing: 0) {
@@ -50,5 +51,5 @@ extension PictureInPictureView {
 }
 
 #Preview {
-    PictureInPictureView(player: Player())
+    PictureInPictureView(player: Player(), pictureInPicture: PictureInPicture())
 }

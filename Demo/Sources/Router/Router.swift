@@ -13,6 +13,7 @@ struct RoutedNavigationStack<Root>: View where Root: View {
     @ViewBuilder let root: () -> Root
     @StateObject private var router = Router()
     @StateObject private var player = Player()
+    private let pictureInPicture = PictureInPicture()
 
     var body: some View {
         NavigationStack(path: $router.path) {
@@ -56,7 +57,7 @@ struct RoutedNavigationStack<Root>: View where Root: View {
         case .stories:
             StoriesView()
         case .pip:
-            PictureInPictureView(player: player)
+            PictureInPictureView(player: player, pictureInPicture: pictureInPicture)
         case let .playlist(templates: templates):
             PlaylistView(templates: templates)
         case let .contentList(configuration: configuration):
