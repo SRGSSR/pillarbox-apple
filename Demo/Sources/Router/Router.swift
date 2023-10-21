@@ -5,12 +5,14 @@
 //
 
 import Combine
+import Player
 import SwiftUI
 
 /// Manages navigation using an associated router.
 struct RoutedNavigationStack<Root>: View where Root: View {
     @ViewBuilder let root: () -> Root
     @StateObject private var router = Router()
+    @StateObject private var player = Player()
 
     var body: some View {
         NavigationStack(path: $router.path) {
@@ -54,7 +56,7 @@ struct RoutedNavigationStack<Root>: View where Root: View {
         case .stories:
             StoriesView()
         case .pip:
-            PictureInPictureView()
+            PictureInPictureView(player: player)
         case let .playlist(templates: templates):
             PlaylistView(templates: templates)
         case let .contentList(configuration: configuration):
