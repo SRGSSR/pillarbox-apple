@@ -48,6 +48,11 @@ struct ShowcaseView: View {
                 subtitle: "An Instagram-inspired user experience",
                 destination: .stories
             )
+            cell(
+                title: "Picture in Picture",
+                subtitle: "Watch a video use while you use other apps.",
+                destination: .pip
+            )
         }
     }
 

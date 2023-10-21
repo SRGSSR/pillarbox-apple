@@ -53,6 +53,8 @@ struct RoutedNavigationStack<Root>: View where Root: View {
             TransitionView(media: media)
         case .stories:
             StoriesView()
+        case .pip:
+            PictureInPictureView()
         case let .playlist(templates: templates):
             PlaylistView(templates: templates)
         case let .contentList(configuration: configuration):

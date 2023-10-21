@@ -23,6 +23,7 @@ enum RouterDestination: Identifiable, Hashable {
     case transition(media: Media)
 
     case stories
+    case pip
     case playlist(templates: [Template])
 
     case contentList(configuration: ContentList.Configuration)
@@ -53,6 +54,8 @@ enum RouterDestination: Identifiable, Hashable {
             return "transition_\(media.id)"
         case .stories:
             return "stories"
+        case .pip:
+            return "pip"
         case .playlist:
             return "playlist"
         case let .contentList(configuration: configuration):
