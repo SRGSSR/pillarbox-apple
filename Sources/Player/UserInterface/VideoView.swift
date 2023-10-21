@@ -29,10 +29,12 @@ public final class VideoLayerView: UIView {
 public struct VideoView: UIViewRepresentable {
     @ObservedObject private var player: Player
     private let gravity: AVLayerVideoGravity
+    private let isPictureInPictureSupported: Bool
 
-    public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect) {
+    public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect, isPictureInPictureSupported: Bool = false) {
         self.player = player
         self.gravity = gravity
+        self.isPictureInPictureSupported = isPictureInPictureSupported
     }
 
     public func makeUIView(context: Context) -> VideoLayerView {
