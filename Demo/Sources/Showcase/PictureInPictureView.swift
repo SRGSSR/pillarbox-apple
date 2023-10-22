@@ -9,11 +9,12 @@ import SwiftUI
 
 struct PictureInPictureView: View {
     @ObservedObject var player: Player
-    @ObservedObject var pictureInPicture: PictureInPicture
+    let pictureInPictures: [PictureInPicture]
+    @Environment(\.dismiss) var dismiss: DismissAction
+    @EnvironmentObject var router: Router
 
     var body: some View {
         VStack(spacing: 0) {
-            playbackView()
             playbackView()
         }
         .background(.black)
@@ -26,9 +27,22 @@ struct PictureInPictureView: View {
 extension PictureInPictureView {
     @ViewBuilder
     private func playbackView() -> some View {
-        ZStack {
-            VideoView(player: player, pictureInPicture: pictureInPicture)
-            playbackButton()
+        VStack {
+            ForEach(pictureInPictures, id: \.self) { pip in
+                ZStack {
+                    VideoView(player: player, pictureInPicture: pip)
+                        .onPictureInPictureRestore(pip) { completion in
+                            DispatchQueue.main.async {
+                                router.present(.pip)
+                                completion(true)
+                            }
+                        }
+                    HStack {
+                        playbackButton()
+                        pictureInPictureButton(pictureInPicture: pip)
+                    }
+                }
+            }
         }
     }
 
@@ -44,6 +58,21 @@ extension PictureInPictureView {
         }
     }
 
+    @ViewBuilder
+    private func pictureInPictureButton(pictureInPicture: PictureInPicture) -> some View {
+        Button {
+            dismiss()
+            pictureInPicture.start()
+        } label: {
+            Image(systemName: "pip")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 50)
+                .tint(.white)
+                .shadow(radius: 5)
+        }
+    }
+
     private func play() {
         player.append(.youTube(videoId: "ApM_KEr1ktQ"))
         player.play()
@@ -51,5 +80,5 @@ extension PictureInPictureView {
 }
 
 #Preview {
-    PictureInPictureView(player: Player(), pictureInPicture: PictureInPicture())
+    PictureInPictureView(player: Player(), pictureInPictures: [PictureInPicture()])
 }

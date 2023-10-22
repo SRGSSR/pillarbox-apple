@@ -9,17 +9,27 @@ import SwiftUI
 import UIKit
 
 public final class VideoLayerView: UIView {
-    override public class var layerClass: AnyClass {
-        AVPlayerLayer.self
-    }
+    let playerLayer: AVPlayerLayer
 
     var player: AVPlayer? {
         get { playerLayer.player }
         set { playerLayer.player = newValue }
     }
 
-    var playerLayer: AVPlayerLayer {
-        layer as! AVPlayerLayer
+    init(playerLayer: AVPlayerLayer) {
+        self.playerLayer = playerLayer
+        super.init(frame: .zero)
+        layer.addSublayer(self.playerLayer)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        self.playerLayer.frame = bounds
     }
 }
 
@@ -38,12 +48,11 @@ public struct VideoView: UIViewRepresentable {
     }
 
     public func makeUIView(context: Context) -> VideoLayerView {
-        let view = VideoLayerView()
+        let layer = AVPlayerLayer(player: player.queuePlayer)
+        let view = VideoLayerView(playerLayer: pictureInPicture?.currentLayer ?? layer)
         view.backgroundColor = .clear
         view.player = player.queuePlayer
-        if let pictureInPicture {
-            pictureInPicture.append(controller: .init(contentSource: .init(playerLayer: view.playerLayer)))
-        }
+        pictureInPicture?.attach(playerLayer: view.playerLayer)
         return view
     }
 
