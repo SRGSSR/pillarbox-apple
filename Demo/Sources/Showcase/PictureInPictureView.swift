@@ -30,8 +30,8 @@ extension PictureInPictureView {
         ZStack {
             VideoView(player: player, pictureInPicture: pictureInPicture)
                 .onPictureInPictureRestore(pictureInPicture) { completion in
+                    router.present(.pip)
                     DispatchQueue.main.async {
-                        router.present(.pip)
                         completion(true)
                     }
                 }
