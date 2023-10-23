@@ -9,8 +9,12 @@ import SwiftUI
 
 // Behavior: h-exp, v-exp
 struct SystemPlayerView: View {
-    let media: Media
+    let media: Media?
     @StateObject private var player = Player()
+
+    init(media: Media? = nil) {
+        self.media = media
+    }
 
     var body: some View {
         SystemPipPlayerView(player: player)
@@ -23,7 +27,9 @@ struct SystemPlayerView: View {
     }
 
     private func play() {
-        player.append(media.playerItem())
+        if let media {
+            player.append(media.playerItem())
+        }
         player.play()
     }
 }

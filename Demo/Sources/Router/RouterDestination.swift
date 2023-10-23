@@ -9,7 +9,7 @@ import SwiftUI
 
 enum RouterDestination: Identifiable, Hashable {
     case player(media: Media)
-    case systemPlayer(media: Media)
+    case systemPlayer(media: Media?)
     case simplePlayer(media: Media)
     case optInPlayer(media: Media)
     case pipPlayer(media: Media?)
@@ -32,8 +32,8 @@ enum RouterDestination: Identifiable, Hashable {
         switch self {
         case let .player(media):
             return "player_\(media.id)"
-        case let .systemPlayer(media: media):
-            return "systemPlayer_\(media.id)"
+        case .systemPlayer:
+            return "systemPlayer"
         case let .simplePlayer(media: media):
             return "simplePlayer_\(media.id)"
         case let .optInPlayer(media: media):

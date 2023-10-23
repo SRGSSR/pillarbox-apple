@@ -5,23 +5,43 @@
 //
 
 import AVKit
+import Combine
 import Player
 import SwiftUI
+
+class SystemPictureInPicture: NSObject, AVPlayerViewControllerDelegate {
+    static let shared = SystemPictureInPicture()
+    private var window: UIWindow?
+    private var cancellables = Set<AnyCancellable>()
+
+    func playerViewControllerDidStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
+        window = playerViewController.view.window
+        playerViewController.dismiss(animated: true)
+    }
+
+    func playerViewController(_ playerViewController: AVPlayerViewController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
+        if let rootViewController = window?.rootViewController {
+            rootViewController.present(playerViewController, animated: true) {
+                completionHandler(true)
+            }
+        }
+        else {
+            completionHandler(true)
+        }
+    }
+}
 
 struct SystemPipPlayerView: UIViewControllerRepresentable {
     let player: Player
 
-    class Coordinator: NSObject, AVPlayerViewControllerDelegate {
-
-    }
-
-    func makeCoordinator() -> Coordinator {
-        .init()
+    func makeCoordinator() -> SystemPictureInPicture {
+        .shared
     }
 
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
         controller.allowsPictureInPicturePlayback = true
+        controller.delegate = context.coordinator
         return controller
     }
 
