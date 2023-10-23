@@ -29,7 +29,7 @@ private struct StoryView: View {
 
 // Behavior: h-exp, v-exp
 private struct TimeProgress: View {
-    @ObservedObject var player: Player
+    let player: Player
     @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 10))
 
     var body: some View {
