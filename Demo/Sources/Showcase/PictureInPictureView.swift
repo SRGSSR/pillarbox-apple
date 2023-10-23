@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PictureInPictureView: View {
     @ObservedObject var player: Player
-    let pictureInPictures: [PictureInPicture]
+    let pictureInPicture: PictureInPicture
     @Environment(\.dismiss) var dismiss: DismissAction
     @EnvironmentObject var router: Router
 
@@ -27,21 +27,17 @@ struct PictureInPictureView: View {
 extension PictureInPictureView {
     @ViewBuilder
     private func playbackView() -> some View {
-        VStack {
-            ForEach(pictureInPictures, id: \.self) { pip in
-                ZStack {
-                    VideoView(player: player, pictureInPicture: pip)
-                        .onPictureInPictureRestore(pip) { completion in
-                            DispatchQueue.main.async {
-                                router.present(.pip)
-                                completion(true)
-                            }
-                        }
-                    HStack {
-                        playbackButton()
-                        pictureInPictureButton(pictureInPicture: pip)
+        ZStack {
+            VideoView(player: player, pictureInPicture: pictureInPicture)
+                .onPictureInPictureRestore(pictureInPicture) { completion in
+                    DispatchQueue.main.async {
+                        router.present(.pip)
+                        completion(true)
                     }
                 }
+            HStack {
+                playbackButton()
+                pictureInPictureButton(pictureInPicture: pictureInPicture)
             }
         }
     }
@@ -80,5 +76,5 @@ extension PictureInPictureView {
 }
 
 #Preview {
-    PictureInPictureView(player: Player(), pictureInPictures: [PictureInPicture()])
+    PictureInPictureView(player: Player(), pictureInPicture: PictureInPicture())
 }
