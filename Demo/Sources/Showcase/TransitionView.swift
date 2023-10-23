@@ -9,7 +9,7 @@ import Player
 import SwiftUI
 
 private struct FullScreenView: View {
-    @ObservedObject var player: Player
+    let player: Player
 
     var body: some View {
         PlaybackView(player: player)
