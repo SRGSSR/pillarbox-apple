@@ -27,7 +27,7 @@ public final class VideoLayerView: UIView {
 /// 
 /// Behavior: h-exp, v-exp
 public struct VideoView: UIViewRepresentable {
-    @ObservedObject private var player: Player
+    private let player: Player
     private let gravity: AVLayerVideoGravity
 
     public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect) {
