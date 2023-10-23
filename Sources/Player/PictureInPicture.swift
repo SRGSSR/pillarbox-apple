@@ -12,10 +12,13 @@ public class PictureInPicture: NSObject, ObservableObject {
     public var willStartPictureInPicture: (() -> Void)?
     public var didStartPictureInPicture: (() -> Void)?
     public var restorePictureInPicture: ((_ completion: @escaping (Bool) -> Void) -> Void)?
+    public var didStopPictureInPicture: (() -> Void)?
 
     public var currentLayer: AVPlayerLayer? {
         controller?.playerLayer
     }
+
+    public private(set) var isActive = false
 
     public func start() {
         guard controller?.isPictureInPicturePossible == true else { print("--> Can't start picture in picture"); return }
@@ -38,6 +41,7 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
     }
 
     public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        isActive = true
         DispatchQueue.main.async {
             self.willStartPictureInPicture?()
         }
@@ -45,6 +49,7 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
     }
 
     public func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        isActive = true
         DispatchQueue.main.async {
             self.didStartPictureInPicture?()
         }
@@ -55,9 +60,18 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
         _ pictureInPictureController: AVPictureInPictureController,
         restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
     ) {
+        isActive = false
         DispatchQueue.main.async {
             self.restorePictureInPicture?(completionHandler)
         }
         print("--> Restore: \(Unmanaged.passUnretained(pictureInPictureController.playerLayer).toOpaque())")
+    }
+
+    public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        isActive = false
+        DispatchQueue.main.async {
+            self.didStopPictureInPicture?()
+        }
+        print("--> Stop: \(Unmanaged.passUnretained(pictureInPictureController.playerLayer).toOpaque())")
     }
 }

@@ -63,4 +63,23 @@ public extension View {
             pictureInPicture.restorePictureInPicture = restore
         }
     }
+
+    /// Sets the action to be performed when Picture in Picture did stop.
+    ///
+    /// - Parameters:
+    ///   - pictureInPicture: The `PictureInPicture` instance.
+    ///   - didStart: A closure to be executed when Picture in Picture has stopped.
+    /// - Returns: A modified View.
+    func onPictureInPictureDidStop(_ pictureInPicture: PictureInPicture, didStop: @escaping () -> Void) -> some View {
+        onAppear {
+            if pictureInPicture.isActive {
+                pictureInPicture.didStopPictureInPicture = didStop
+            }
+        }
+        .onDisappear {
+            if pictureInPicture.isActive == false {
+                didStop()
+            }
+        }
+    }
 }

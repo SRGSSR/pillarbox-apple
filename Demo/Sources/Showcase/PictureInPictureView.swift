@@ -18,9 +18,6 @@ struct PictureInPictureView: View {
             playbackView()
         }
         .background(.black)
-        .onAppear {
-            play()
-        }
     }
 }
 
@@ -28,13 +25,22 @@ extension PictureInPictureView {
     @ViewBuilder
     private func playbackView() -> some View {
         ZStack {
+            // swiftlint:disable:next trailing_closure
             VideoView(player: player, pictureInPicture: pictureInPicture)
+                .onAppear {
+                    if player.items.isEmpty {
+                        play()
+                    }
+                }
                 .onPictureInPictureRestore(pictureInPicture) { completion in
                     router.present(.pip)
                     DispatchQueue.main.async {
                         completion(true)
                     }
                 }
+                .onPictureInPictureDidStop(pictureInPicture, didStop: {
+                    player.removeAllItems()
+                })
             HStack {
                 playbackButton()
                 pictureInPictureButton(pictureInPicture: pictureInPicture)
