@@ -9,8 +9,9 @@ import Combine
 import Player
 import SwiftUI
 
-class SystemPictureInPicture: NSObject, AVPlayerViewControllerDelegate {
+final class SystemPictureInPicture: NSObject, AVPlayerViewControllerDelegate {
     static let shared = SystemPictureInPicture()
+
     private var window: UIWindow?
     private var cancellables = Set<AnyCancellable>()
 
@@ -34,14 +35,10 @@ class SystemPictureInPicture: NSObject, AVPlayerViewControllerDelegate {
 struct SystemPipPlayerView: UIViewControllerRepresentable {
     let player: Player
 
-    func makeCoordinator() -> SystemPictureInPicture {
-        .shared
-    }
-
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
         controller.allowsPictureInPicturePlayback = true
-        controller.delegate = context.coordinator
+        controller.delegate = SystemPictureInPicture.shared
         return controller
     }
 
