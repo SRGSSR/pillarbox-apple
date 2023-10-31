@@ -27,8 +27,8 @@ private final class VideoLayerView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
+    override func layoutSublayers(of layer: CALayer) {
+        super.layoutSublayers(of: layer)
         playerLayer.frame = layer.bounds
         playerLayer.removeAllAnimations()
     }
