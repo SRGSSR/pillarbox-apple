@@ -6,10 +6,8 @@
 
 import AVKit
 
-/// A service for managing Picture in Picture.
-public final class PictureInPicture: NSObject {
-    /// The shared service instance.
-    public static let shared = PictureInPicture()
+final class PictureInPicture: NSObject {
+    static let shared = PictureInPicture()
 
     private var controller: AVPictureInPictureController?
 
@@ -32,16 +30,11 @@ public final class PictureInPicture: NSObject {
         super.init()
     }
 
-    /// Starts Picture in Picture programmatically.
-    ///
-    /// Only begin PiP playback in response to explicit user interaction. The App Store review team rejects apps that
-    /// fail to follow this requirement.
-    public func start() {
+    func start() {
         controller?.startPictureInPicture()
     }
-
-    /// Stops Picture in Picture programmatically.
-    public func stop() {
+    
+    func stop() {
         controller?.stopPictureInPicture()
     }
 }
