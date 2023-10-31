@@ -39,16 +39,14 @@ private struct _VideoView: UIViewRepresentable {
     let supportsPictureInPicture: Bool
 
     func makeUIView(context: Context) -> VideoLayerView {
-        let view = if supportsPictureInPicture {
-            VideoLayerView(from: PictureInPicture.shared.playerLayer)
+        if supportsPictureInPicture {
+            let view = VideoLayerView(from: PictureInPicture.shared.playerLayer)
+            PictureInPicture.shared.playerLayer = view.playerLayer
+            return view
         }
         else {
-            VideoLayerView()
+            return VideoLayerView()
         }
-        view.backgroundColor = .clear
-        view.player = player.queuePlayer
-        PictureInPicture.shared.playerLayer = view.playerLayer
-        return view
     }
 
     func updateUIView(_ uiView: VideoLayerView, context: Context) {
