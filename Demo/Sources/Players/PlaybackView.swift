@@ -570,10 +570,6 @@ struct PlaybackView: View {
             case .system:
                 SystemVideoView(player: player)
                     .ignoresSafeArea()
-                    .overlay(alignment: .topLeading) {
-                        CloseButton()
-                            .offset(y: -5)
-                    }
             }
 #else
             SystemVideoView(player: player)

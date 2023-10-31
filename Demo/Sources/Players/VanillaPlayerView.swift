@@ -16,9 +16,6 @@ struct VanillaPlayerView: View {
     var body: some View {
         VideoPlayer(player: player)
             .ignoresSafeArea()
-            .overlay(alignment: .topLeading) {
-                CloseButton()
-            }
             .onAppear(perform: play)
     }
 
