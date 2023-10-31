@@ -34,16 +34,9 @@ public final class VideoLayerView: UIView {
 }
 
 private struct _VideoView: UIViewRepresentable {
-    @ObservedObject private var player: Player
-
-    private let gravity: AVLayerVideoGravity
-    private let supportsPictureInPicture: Bool
-
-    init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect, supportsPictureInPicture: Bool = false) {
-        self.player = player
-        self.gravity = gravity
-        self.supportsPictureInPicture = supportsPictureInPicture
-    }
+    let player: Player
+    let gravity: AVLayerVideoGravity
+    let supportsPictureInPicture: Bool
 
     func makeUIView(context: Context) -> VideoLayerView {
         let view = if supportsPictureInPicture {
@@ -68,8 +61,7 @@ private struct _VideoView: UIViewRepresentable {
 ///
 /// Behavior: h-exp, v-exp
 public struct VideoView: View {
-    @ObservedObject private var player: Player
-
+    private let player: Player
     private let gravity: AVLayerVideoGravity
     private let supportsPictureInPicture: Bool
 
