@@ -30,6 +30,7 @@ public final class VideoLayerView: UIView {
     override public func layoutSubviews() {
         super.layoutSubviews()
         playerLayer.frame = layer.bounds
+        playerLayer.removeAllAnimations()
     }
 }
 
