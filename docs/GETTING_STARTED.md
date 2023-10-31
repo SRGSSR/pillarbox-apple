@@ -270,7 +270,7 @@ Pillarbox makes it possible to easily integrate any kind of tracker, for example
 
 1. Create a new tracker class, say `CustomTracker`, and add conformance to the `PlayerItemTracker` protocol.
 2. The `PlayerItemTracker` protocol declares `Configuration` and `Metadata` associated types. If your tracker requires a configuration or metadata related to the item being tracked just create dedicated types which contain all required parameters. Use `Void` for any type that is not required for your tracker.
-3. Trackers are automatically instantiated by the item they are associated with. You therefore never instantiate a tracker directly but rather achieve the behavior you need by implementing `PlayerItemTracker` lifecycle methods instead:
+3. Trackers are automatically instantiated by the item they are associated with. You therefore never instantiate a tracker directly but rather achieve the behavior you need by implementing `PlayerItemTracker` life cycle methods instead:
   - When created `init(configuration:metadataPublisher:)` is called on your tracker with the configuration you provided as well as a publisher for the metadata type you chose. You can either use these values directly to setup your tracker or store them for later use.
   - Subscribe to player events which must be followed in `enable(for:)`. This method is called when the item to which the tracker is bound becomes the current one. Store the subscription tokens in your tracker and implement how the tracker should handle the events you subscribed to.
   - Metadata updates are automatically received from the `metadataPublisher`. You can combine this publisher with other publishers like `$playbackState` to achieve the behavior you need.

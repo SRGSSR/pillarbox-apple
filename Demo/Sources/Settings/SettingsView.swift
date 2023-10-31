@@ -162,7 +162,8 @@ struct SettingsView: View {
 }
 
 #Preview {
-    RoutedNavigationStack {
+    NavigationStack {
         SettingsView()
     }
+    .environmentObject(Router())
 }

@@ -73,7 +73,7 @@ private struct MediaEntryView: View {
     }
 
     private func play() {
-        router.present(.player(media: media))
+        router.presented = .player(media: media)
     }
 }
 
@@ -125,7 +125,7 @@ struct ExamplesView: View {
         Section(title) {
             ForEach(medias) { media in
                 Cell(title: media.title, subtitle: media.description) {
-                    router.present(.player(media: media))
+                    router.presented = .player(media: media)
                 }
             }
         }
@@ -133,7 +133,8 @@ struct ExamplesView: View {
 }
 
 #Preview {
-    RoutedNavigationStack {
+    NavigationStack {
         ExamplesView()
     }
+    .environmentObject(Router())
 }

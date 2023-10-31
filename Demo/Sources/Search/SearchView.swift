@@ -44,7 +44,7 @@ struct SearchView: View {
                 let title = MediaDescription.title(for: media)
                 Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
                     let media = Media(title: media.title, type: .urn(media.urn))
-                    router.present(.player(media: media))
+                    router.presented = .player(media: media)
                 }
                 .onAppear {
                     if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {
@@ -65,7 +65,8 @@ struct SearchView: View {
 }
 
 #Preview {
-    RoutedNavigationStack {
+    NavigationStack {
         SearchView()
     }
+    .environmentObject(Router())
 }

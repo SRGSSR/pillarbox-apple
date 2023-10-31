@@ -11,7 +11,7 @@ import SwiftUI
 private struct LoadedView: View {
     @ObservedObject var model: ContentListViewModel
     let contents: [ContentListViewModel.Content]
-    @State private var isPresented = false
+    @EnvironmentObject private var router: Router
 
     var body: some View {
         List(contents, id: \.self) { content in
@@ -23,12 +23,11 @@ private struct LoadedView: View {
                 }
         }
         .toolbar(content: toolbar)
-        .sheet(isPresented: $isPresented, content: playlist)
         .refreshable { await model.refresh() }
     }
 
     private func openPlaylist() {
-        isPresented.toggle()
+        router.presented = .playlist(templates: Array(templates().prefix(20)))
     }
 
     private func templates() -> [Template] {
@@ -36,11 +35,6 @@ private struct LoadedView: View {
             guard case let .media(media) = content else { return nil }
             return Template(title: media.title, description: MediaDescription.subtitle(for: media), type: .urn(media.urn))
         }
-    }
-
-    @ViewBuilder
-    private func playlist() -> some View {
-        PlaylistView(templates: Array(templates().prefix(20)))
     }
 
     @ViewBuilder
@@ -75,7 +69,7 @@ private struct ContentCell: View {
             let title = MediaDescription.title(for: media)
             Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
                 let media = Media(title: title, type: .urn(media.urn, server: serverSetting.server))
-                router.present(.player(media: media))
+                router.presented = .player(media: media)
             }
 #if os(iOS)
             .swipeActions { CopyButton(text: media.urn) }
@@ -119,7 +113,8 @@ struct ContentListView: View {
 }
 
 #Preview {
-    RoutedNavigationStack {
+    NavigationStack {
         ContentListView(configuration: .init(list: .tvLatestMedias, vendor: .RTS))
     }
+    .environmentObject(Router())
 }
