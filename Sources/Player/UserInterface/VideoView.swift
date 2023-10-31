@@ -9,41 +9,80 @@ import SwiftUI
 import UIKit
 
 public final class VideoLayerView: UIView {
-    override public class var layerClass: AnyClass {
-        AVPlayerLayer.self
-    }
+    let playerLayer: AVPlayerLayer
 
     var player: AVPlayer? {
         get { playerLayer.player }
         set { playerLayer.player = newValue }
     }
 
-    var playerLayer: AVPlayerLayer {
-        layer as! AVPlayerLayer
+    init(from playerLayer: AVPlayerLayer? = nil) {
+        self.playerLayer = playerLayer ?? .init()
+        super.init(frame: .zero)
+        layer.addSublayer(self.playerLayer)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        playerLayer.frame = layer.bounds
+    }
+}
+
+private struct _VideoView: UIViewRepresentable {
+    @ObservedObject private var player: Player
+
+    private let gravity: AVLayerVideoGravity
+    private let supportsPictureInPicture: Bool
+
+    init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect, supportsPictureInPicture: Bool = false) {
+        self.player = player
+        self.gravity = gravity
+        self.supportsPictureInPicture = supportsPictureInPicture
+    }
+
+    func makeUIView(context: Context) -> VideoLayerView {
+        let view = if supportsPictureInPicture {
+            VideoLayerView(from: PictureInPicture.shared.playerLayer)
+        }
+        else {
+            VideoLayerView()
+        }
+        view.backgroundColor = .clear
+        view.player = player.queuePlayer
+        PictureInPicture.shared.playerLayer = view.playerLayer
+        return view
+    }
+
+    func updateUIView(_ uiView: VideoLayerView, context: Context) {
+        uiView.player = player.queuePlayer
+        uiView.playerLayer.videoGravity = gravity
     }
 }
 
 /// A view displaying video content provided by an associated player.
-/// 
+///
 /// Behavior: h-exp, v-exp
-public struct VideoView: UIViewRepresentable {
-    private let player: Player
-    private let gravity: AVLayerVideoGravity
+public struct VideoView: View {
+    @ObservedObject private var player: Player
 
-    public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect) {
+    private let gravity: AVLayerVideoGravity
+    private let supportsPictureInPicture: Bool
+
+    public var body: some View {
+        _VideoView(player: player, gravity: gravity, supportsPictureInPicture: supportsPictureInPicture)
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                PictureInPicture.shared.stop()
+            }
+    }
+
+    public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect, supportsPictureInPicture: Bool = false) {
         self.player = player
         self.gravity = gravity
-    }
-
-    public func makeUIView(context: Context) -> VideoLayerView {
-        let view = VideoLayerView()
-        view.backgroundColor = .clear
-        view.player = player.queuePlayer
-        return view
-    }
-
-    public func updateUIView(_ uiView: VideoLayerView, context: Context) {
-        uiView.player = player.queuePlayer
-        uiView.playerLayer.videoGravity = gravity
+        self.supportsPictureInPicture = supportsPictureInPicture
     }
 }
