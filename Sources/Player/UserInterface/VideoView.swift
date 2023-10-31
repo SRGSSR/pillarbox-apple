@@ -8,7 +8,7 @@ import AVFoundation
 import SwiftUI
 import UIKit
 
-public final class VideoLayerView: UIView {
+private final class VideoLayerView: UIView {
     let playerLayer: AVPlayerLayer
 
     var player: AVPlayer? {
@@ -27,7 +27,7 @@ public final class VideoLayerView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override public func layoutSubviews() {
+    override func layoutSubviews() {
         super.layoutSubviews()
         playerLayer.frame = layer.bounds
         playerLayer.removeAllAnimations()
