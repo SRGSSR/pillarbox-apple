@@ -55,6 +55,11 @@ private struct _VideoView: UIViewRepresentable {
         uiView.player = player.queuePlayer
         uiView.playerLayer.videoGravity = gravity
     }
+
+    static func dismantleUIView(_ uiView: VideoLayerView, coordinator: ()) {
+        guard uiView.playerLayer == PictureInPicture.shared.playerLayer else { return }
+        PictureInPicture.shared.playerLayer = nil
+    }
 }
 
 /// A view displaying video content provided by an associated player.
