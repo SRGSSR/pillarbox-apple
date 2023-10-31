@@ -33,7 +33,7 @@ final class PictureInPicture: NSObject {
     func start() {
         controller?.startPictureInPicture()
     }
-    
+
     func stop() {
         controller?.stopPictureInPicture()
     }

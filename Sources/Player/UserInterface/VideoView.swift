@@ -29,8 +29,9 @@ private final class VideoLayerView: UIView {
 
     override func layoutSublayers(of layer: CALayer) {
         super.layoutSublayers(of: layer)
-        playerLayer.frame = layer.bounds
-        playerLayer.removeAllAnimations()
+        layer.synchronizeAnimations {
+            playerLayer.frame = layer.bounds
+        }
     }
 }
 
@@ -80,5 +81,20 @@ public struct VideoView: View {
         self.player = player
         self.gravity = gravity
         self.supportsPictureInPicture = supportsPictureInPicture
+    }
+}
+
+private extension CALayer {
+    func synchronizeAnimations(_ animations: () -> Void) {
+        CATransaction.begin()
+        if let positionAnimation = animation(forKey: "position") {
+            CATransaction.setAnimationDuration(positionAnimation.duration)
+            CATransaction.setAnimationTimingFunction(positionAnimation.timingFunction)
+        }
+        else {
+            CATransaction.disableActions()
+        }
+        animations()
+        CATransaction.commit()
     }
 }
