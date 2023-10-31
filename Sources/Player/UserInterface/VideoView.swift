@@ -39,7 +39,7 @@ private struct _VideoView: UIViewRepresentable {
     let gravity: AVLayerVideoGravity
     let supportsPictureInPicture: Bool
 
-    static func dismantleUIView(_ uiView: VideoLayerView, coordinator: ()) {
+    static func dismantleUIView(_ uiView: VideoLayerView, coordinator: Void) {
         guard uiView.playerLayer == PictureInPicture.shared.playerLayer else { return }
         PictureInPicture.shared.playerLayer = nil
     }
