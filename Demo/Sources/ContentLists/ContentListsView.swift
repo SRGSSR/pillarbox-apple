@@ -117,7 +117,8 @@ struct ContentListsView: View {
 }
 
 #Preview {
-    RoutedNavigationStack {
+    NavigationStack {
         ContentListsView()
     }
+    .environmentObject(Router())
 }

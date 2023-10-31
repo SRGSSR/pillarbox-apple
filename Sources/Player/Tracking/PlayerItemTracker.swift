@@ -9,7 +9,7 @@ import Combine
 /// A protocol for player item tracking implementation.
 ///
 /// If your application needs to track items being played, for example for analytics or diagnostics purposes, implement
-/// this protocol to hook into the playback lifecycle. This allows you to setup your tracker at and to relinquish
+/// this protocol to hook into the playback life cycle. This allows you to setup your tracker at and to relinquish
 /// associated resources when appropriate.
 ///
 /// The protocol provides two associated types through which your tracker can define any configuration or metadata it
@@ -36,12 +36,12 @@ public protocol PlayerItemTracker: AnyObject {
     ///   - metadataPublisher: The publisher that provides metadata updates.
     init(configuration: Configuration, metadataPublisher: AnyPublisher<Metadata, Never>)
 
-    /// The lifecycle method called when the tracker is enabled for a player.
+    /// The life cycle method called when the tracker is enabled for a player.
     ///
     /// - Parameter player: The player for which the tracker must be enabled.
     func enable(for player: Player)
 
-    /// The lifecycle method called when the tracker is disabled.
+    /// The life cycle method called when the tracker is disabled.
     func disable()
 }
 
