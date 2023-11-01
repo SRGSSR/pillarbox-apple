@@ -16,13 +16,8 @@ final class PictureInPicture: NSObject {
             controller?.playerLayer
         }
         set {
-            if let newValue {
-                guard controller?.playerLayer != newValue else { return }
-                controller = AVPictureInPictureController(playerLayer: newValue)
-            }
-            else {
-                controller = nil
-            }
+            guard controller?.playerLayer != newValue else { return }
+            controller = newValue.flatMap { AVPictureInPictureController(playerLayer: $0) }
         }
     }
 
