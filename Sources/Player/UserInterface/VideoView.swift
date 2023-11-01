@@ -71,10 +71,15 @@ public struct VideoView: View {
     private let isPictureInPictureSupported: Bool
 
     public var body: some View {
-        _VideoView(player: player, gravity: gravity, isPictureInPictureSupported: isPictureInPictureSupported)
-            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                PictureInPicture.shared.stop()
-            }
+        if isPictureInPictureSupported {
+            _VideoView(player: player, gravity: gravity, isPictureInPictureSupported: true)
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                    PictureInPicture.shared.stop()
+                }
+        }
+        else {
+            _VideoView(player: player, gravity: gravity, isPictureInPictureSupported: false)
+        }
     }
 
     public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect, isPictureInPictureSupported: Bool = false) {
