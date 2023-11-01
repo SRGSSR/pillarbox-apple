@@ -35,10 +35,9 @@ private final class VideoLayerView: UIView {
     }
 }
 
-private struct _VideoView: UIViewRepresentable {
+private struct _PictureInPictureSupportingVideoView: UIViewRepresentable {
     let player: Player
     let gravity: AVLayerVideoGravity
-    let isPictureInPictureSupported: Bool
 
     static func dismantleUIView(_ uiView: VideoLayerView, coordinator: Void) {
         guard uiView.playerLayer == PictureInPicture.shared.playerLayer else { return }
@@ -46,14 +45,23 @@ private struct _VideoView: UIViewRepresentable {
     }
 
     func makeUIView(context: Context) -> VideoLayerView {
-        if isPictureInPictureSupported {
-            let view = VideoLayerView(from: PictureInPicture.shared.playerLayer)
-            PictureInPicture.shared.playerLayer = view.playerLayer
-            return view
-        }
-        else {
-            return VideoLayerView()
-        }
+        let view = VideoLayerView(from: PictureInPicture.shared.playerLayer)
+        PictureInPicture.shared.playerLayer = view.playerLayer
+        return view
+    }
+
+    func updateUIView(_ uiView: VideoLayerView, context: Context) {
+        uiView.player = player.queuePlayer
+        uiView.playerLayer.videoGravity = gravity
+    }
+}
+
+private struct _VideoView: UIViewRepresentable {
+    let player: Player
+    let gravity: AVLayerVideoGravity
+
+    func makeUIView(context: Context) -> VideoLayerView {
+        .init()
     }
 
     func updateUIView(_ uiView: VideoLayerView, context: Context) {
@@ -72,13 +80,13 @@ public struct VideoView: View {
 
     public var body: some View {
         if isPictureInPictureSupported {
-            _VideoView(player: player, gravity: gravity, isPictureInPictureSupported: true)
+            _PictureInPictureSupportingVideoView(player: player, gravity: gravity)
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                     PictureInPicture.shared.stop()
                 }
         }
         else {
-            _VideoView(player: player, gravity: gravity, isPictureInPictureSupported: false)
+            _VideoView(player: player, gravity: gravity)
         }
     }
 
