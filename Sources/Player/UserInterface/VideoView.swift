@@ -38,7 +38,7 @@ private final class VideoLayerView: UIView {
 private struct _VideoView: UIViewRepresentable {
     let player: Player
     let gravity: AVLayerVideoGravity
-    let supportsPictureInPicture: Bool
+    let isPictureInPictureSupported: Bool
 
     static func dismantleUIView(_ uiView: VideoLayerView, coordinator: Void) {
         guard uiView.playerLayer == PictureInPicture.shared.playerLayer else { return }
@@ -46,7 +46,7 @@ private struct _VideoView: UIViewRepresentable {
     }
 
     func makeUIView(context: Context) -> VideoLayerView {
-        if supportsPictureInPicture {
+        if isPictureInPictureSupported {
             let view = VideoLayerView(from: PictureInPicture.shared.playerLayer)
             PictureInPicture.shared.playerLayer = view.playerLayer
             return view
@@ -68,19 +68,19 @@ private struct _VideoView: UIViewRepresentable {
 public struct VideoView: View {
     private let player: Player
     private let gravity: AVLayerVideoGravity
-    private let supportsPictureInPicture: Bool
+    private let isPictureInPictureSupported: Bool
 
     public var body: some View {
-        _VideoView(player: player, gravity: gravity, supportsPictureInPicture: supportsPictureInPicture)
+        _VideoView(player: player, gravity: gravity, isPictureInPictureSupported: isPictureInPictureSupported)
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                 PictureInPicture.shared.stop()
             }
     }
 
-    public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect, supportsPictureInPicture: Bool = false) {
+    public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect, isPictureInPictureSupported: Bool = false) {
         self.player = player
         self.gravity = gravity
-        self.supportsPictureInPicture = supportsPictureInPicture
+        self.isPictureInPictureSupported = isPictureInPictureSupported
     }
 }
 

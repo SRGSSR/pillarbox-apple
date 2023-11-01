@@ -109,7 +109,7 @@ private struct MainView: View {
                 image(name: "tv")
             }
             else {
-                VideoView(player: player, gravity: gravity, supportsPictureInPicture: true)
+                VideoView(player: player, gravity: gravity, isPictureInPictureSupported: true)
             }
         }
     }
