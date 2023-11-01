@@ -109,7 +109,7 @@ private struct MainView: View {
                 image(name: "tv")
             }
             else {
-                VideoView(player: player, gravity: gravity)
+                VideoView(player: player, gravity: gravity, isPictureInPictureSupported: true)
             }
         }
     }
@@ -570,10 +570,6 @@ struct PlaybackView: View {
             case .system:
                 SystemVideoView(player: player)
                     .ignoresSafeArea()
-                    .overlay(alignment: .topLeading) {
-                        CloseButton()
-                            .offset(y: -5)
-                    }
             }
 #else
             SystemVideoView(player: player)

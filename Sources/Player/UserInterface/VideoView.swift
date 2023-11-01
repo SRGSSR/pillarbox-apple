@@ -8,42 +8,106 @@ import AVFoundation
 import SwiftUI
 import UIKit
 
-public final class VideoLayerView: UIView {
-    override public class var layerClass: AnyClass {
-        AVPlayerLayer.self
-    }
+private final class VideoLayerView: UIView {
+    let playerLayer: AVPlayerLayer
 
     var player: AVPlayer? {
         get { playerLayer.player }
         set { playerLayer.player = newValue }
     }
 
-    var playerLayer: AVPlayerLayer {
-        layer as! AVPlayerLayer
+    init(from playerLayer: AVPlayerLayer? = nil) {
+        self.playerLayer = playerLayer ?? .init()
+        super.init(frame: .zero)
+        layer.addSublayer(self.playerLayer)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layoutSublayers(of layer: CALayer) {
+        super.layoutSublayers(of: layer)
+        layer.synchronizeAnimations {
+            playerLayer.frame = layer.bounds
+        }
+    }
+}
+
+private struct _PictureInPictureSupportingVideoView: UIViewRepresentable {
+    let player: Player
+    let gravity: AVLayerVideoGravity
+
+    static func dismantleUIView(_ uiView: VideoLayerView, coordinator: Void) {
+        guard uiView.playerLayer == PictureInPicture.shared.playerLayer else { return }
+        PictureInPicture.shared.playerLayer = nil
+    }
+
+    func makeUIView(context: Context) -> VideoLayerView {
+        let view = VideoLayerView(from: PictureInPicture.shared.playerLayer)
+        PictureInPicture.shared.playerLayer = view.playerLayer
+        return view
+    }
+
+    func updateUIView(_ uiView: VideoLayerView, context: Context) {
+        uiView.player = player.queuePlayer
+        uiView.playerLayer.videoGravity = gravity
+    }
+}
+
+private struct _VideoView: UIViewRepresentable {
+    let player: Player
+    let gravity: AVLayerVideoGravity
+
+    func makeUIView(context: Context) -> VideoLayerView {
+        .init()
+    }
+
+    func updateUIView(_ uiView: VideoLayerView, context: Context) {
+        uiView.player = player.queuePlayer
+        uiView.playerLayer.videoGravity = gravity
     }
 }
 
 /// A view displaying video content provided by an associated player.
-/// 
+///
 /// Behavior: h-exp, v-exp
-public struct VideoView: UIViewRepresentable {
+public struct VideoView: View {
     private let player: Player
     private let gravity: AVLayerVideoGravity
+    private let isPictureInPictureSupported: Bool
 
-    public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect) {
+    public var body: some View {
+        if isPictureInPictureSupported {
+            _PictureInPictureSupportingVideoView(player: player, gravity: gravity)
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                    PictureInPicture.shared.stop()
+                }
+        }
+        else {
+            _VideoView(player: player, gravity: gravity)
+        }
+    }
+
+    public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect, isPictureInPictureSupported: Bool = false) {
         self.player = player
         self.gravity = gravity
+        self.isPictureInPictureSupported = isPictureInPictureSupported
     }
+}
 
-    public func makeUIView(context: Context) -> VideoLayerView {
-        let view = VideoLayerView()
-        view.backgroundColor = .clear
-        view.player = player.queuePlayer
-        return view
-    }
-
-    public func updateUIView(_ uiView: VideoLayerView, context: Context) {
-        uiView.player = player.queuePlayer
-        uiView.playerLayer.videoGravity = gravity
+private extension CALayer {
+    func synchronizeAnimations(_ animations: () -> Void) {
+        CATransaction.begin()
+        if let positionAnimation = animation(forKey: "position") {
+            CATransaction.setAnimationDuration(positionAnimation.duration)
+            CATransaction.setAnimationTimingFunction(positionAnimation.timingFunction)
+        }
+        else {
+            CATransaction.disableActions()
+        }
+        animations()
+        CATransaction.commit()
     }
 }
