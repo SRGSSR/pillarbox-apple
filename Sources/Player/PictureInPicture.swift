@@ -21,10 +21,15 @@ public protocol PictureInPictureDelegate: AnyObject {
 public final class PictureInPicture: NSObject {
     public static let shared = PictureInPicture()
 
+    @Published public private(set) var isActive = false
+
     public weak var delegate: PictureInPictureDelegate?
 
-    private var controller: AVPictureInPictureController?
-    private var isActive = false
+    private var controller: AVPictureInPictureController? {
+        didSet {
+            isActive = controller?.isPictureInPictureActive ?? false
+        }
+    }
 
     private(set) var playerLayer: AVPlayerLayer? {
         get {
@@ -33,7 +38,6 @@ public final class PictureInPicture: NSObject {
         set {
             guard controller?.playerLayer != newValue else { return }
             controller = newValue.flatMap { AVPictureInPictureController(playerLayer: $0) }
-            isActive = controller?.isPictureInPictureActive ?? false
             controller?.delegate = self
         }
     }

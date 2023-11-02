@@ -259,12 +259,19 @@ private struct VolumeButton: View {
 }
 
 private struct PictureInPictureButton: View {
+    @State private var isActive = false
+
     var body: some View {
         Button(action: start) {
-            Image(systemName: "pip.enter")
+            Image(systemName: imageName)
                 .tint(.white)
                 .frame(width: 45, height: 45)
         }
+        .onReceive(PictureInPicture.shared.$isActive) { isActive = $0 }
+    }
+
+    private var imageName: String {
+        isActive ? "pip.exit" : "pip.enter"
     }
 
     private func start() {
