@@ -36,7 +36,12 @@ final class Router: ObservableObject {
     @Published var searchPath: [RouterDestination] = []
     @Published var settingsPath: [RouterDestination] = []
 
-    @Published var presented: RouterDestination?
+    @Published var presented: RouterDestination? {
+        didSet {
+            guard presented != nil else { return }
+            previousPresented = nil
+        }
+    }
 
     private var previousPresented: RouterDestination?
 
@@ -61,7 +66,10 @@ extension Router: PictureInPictureDelegate {
     }
 
     func pictureInPicture(_ pictureInPicture: PictureInPicture, restoreUserInterfaceForStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
-        presented = previousPresented
+        print("--> restore")
+        if let previousPresented, previousPresented != presented {
+            presented = previousPresented
+        }
         DispatchQueue.main.async {
             completionHandler(true)
         }
@@ -74,5 +82,4 @@ extension Router: PictureInPictureDelegate {
     func pictureInPictureDidStop(_ pictureInPicture: PictureInPicture) {
         print("--> did stop")
     }
-
 }
