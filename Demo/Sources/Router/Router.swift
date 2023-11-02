@@ -37,4 +37,32 @@ final class Router: ObservableObject {
     @Published var settingsPath: [RouterDestination] = []
 
     @Published var presented: RouterDestination?
+
+    init() {
+        PictureInPicture.shared.delegate = self
+    }
+}
+
+extension Router: PictureInPictureDelegate {
+    func pictureInPictureWillStart(_ pictureInPicture: PictureInPicture) {
+        print("--> will start")
+    }
+    
+    func pictureInPictureDidStart(_ pictureInPicture: PictureInPicture) {
+        print("--> did start")
+    }
+    
+    func pictureInPicture(_ pictureInPicture: PictureInPicture, restoreUserInterfaceForStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
+        print("--> restore")
+        completionHandler(true)
+    }
+    
+    func pictureInPictureWillStop(_ pictureInPicture: PictureInPicture) {
+        print("--> will stop")
+    }
+    
+    func pictureInPictureDidStop(_ pictureInPicture: PictureInPicture) {
+        print("--> did stop")
+    }
+
 }

@@ -6,8 +6,21 @@
 
 import AVKit
 
+public protocol PictureInPictureDelegate: AnyObject {
+    func pictureInPictureWillStart(_ pictureInPicture: PictureInPicture)
+    func pictureInPictureDidStart(_ pictureInPicture: PictureInPicture)
+    func pictureInPicture(
+        _ pictureInPicture: PictureInPicture,
+        restoreUserInterfaceForStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
+    )
+    func pictureInPictureWillStop(_ pictureInPicture: PictureInPicture)
+    func pictureInPictureDidStop(_ pictureInPicture: PictureInPicture)
+}
+
 public final class PictureInPicture: NSObject {
     public static let shared = PictureInPicture()
+
+    public weak var delegate: PictureInPictureDelegate?
 
     private var controller: AVPictureInPictureController?
 
@@ -37,23 +50,22 @@ public final class PictureInPicture: NSObject {
 
 extension PictureInPicture: AVPictureInPictureControllerDelegate {
     public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        print("--> will start")
+        delegate?.pictureInPictureWillStart(self)
     }
 
     public func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        print("--> did start")
+        delegate?.pictureInPictureDidStart(self)
     }
 
     public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
-        print("--> restore")
-        completionHandler(true)
+        delegate?.pictureInPicture(self, restoreUserInterfaceForStopWithCompletionHandler: completionHandler)
     }
 
     public func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        print("--> will stop")
+        delegate?.pictureInPictureWillStop(self)
     }
 
     public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        print("--> did stop")
+        delegate?.pictureInPictureDidStop(self)
     }
 }
