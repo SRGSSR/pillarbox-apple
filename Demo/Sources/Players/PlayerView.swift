@@ -10,12 +10,22 @@ import SwiftUI
 final class PlayerViewModel {
     var media: Media? {
         didSet {
-            guard media != oldValue, let playerItem = media?.playerItem() else { return }
-            player.items = [playerItem]
+            guard media != oldValue else { return }
+            if let playerItem = media?.playerItem() {
+                player.items = [playerItem]
+            }
+            else {
+                player.removeAllItems()
+            }
         }
     }
 
     let player = Player(configuration: .standard)
+
+    func reset() {
+        guard !PictureInPicture.shared.isActive else { return }
+        media = nil
+    }
 }
 
 /// A standalone player view with standard controls.
@@ -26,6 +36,7 @@ struct PlayerView: View {
     var body: some View {
         PlaybackView(player: Self.model.player)
             .onAppear(perform: PictureInPicture.shared.stop)
+            .onDisappear(perform: Self.model.reset)
             .tracked(name: "player")
     }
 
