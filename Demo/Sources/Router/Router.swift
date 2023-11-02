@@ -38,6 +38,8 @@ final class Router: ObservableObject {
 
     @Published var presented: RouterDestination?
 
+    private var previousPresented: RouterDestination?
+
     init() {
         PictureInPicture.shared.delegate = self
     }
@@ -46,6 +48,7 @@ final class Router: ObservableObject {
 extension Router: PictureInPictureDelegate {
     func pictureInPictureWillStart(_ pictureInPicture: PictureInPicture) {
         print("--> will start")
+        previousPresented = presented
         presented = nil
     }
     
@@ -58,8 +61,10 @@ extension Router: PictureInPictureDelegate {
     }
 
     func pictureInPicture(_ pictureInPicture: PictureInPicture, restoreUserInterfaceForStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
-        print("--> restore")
-        completionHandler(true)
+        presented = previousPresented
+        DispatchQueue.main.async {
+            completionHandler(true)
+        }
     }
     
     func pictureInPictureWillStop(_ pictureInPicture: PictureInPicture) {
