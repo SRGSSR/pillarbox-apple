@@ -46,6 +46,7 @@ final class Router: ObservableObject {
 extension Router: PictureInPictureDelegate {
     func pictureInPictureWillStart(_ pictureInPicture: PictureInPicture) {
         print("--> will start")
+        presented = nil
     }
     
     func pictureInPictureDidStart(_ pictureInPicture: PictureInPicture) {
