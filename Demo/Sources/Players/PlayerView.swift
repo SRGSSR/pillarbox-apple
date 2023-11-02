@@ -23,14 +23,7 @@ final class PlayerViewModel {
     let player = Player(configuration: .standard)
 
     func reset() {
-        if PictureInPicture.shared.isActive {
-            PictureInPicture.shared.reset = {
-                self.media = nil
-            }
-        }
-        else {
-            media = nil
-        }
+        media = nil
     }
 }
 
@@ -42,7 +35,7 @@ struct PlayerView: View {
     var body: some View {
         PlaybackView(player: Self.model.player)
             .onAppear(perform: PictureInPicture.shared.stop)
-            .onDisappear(perform: Self.model.reset)
+            .registerCleanupForInAppPictureInPicture(perform: Self.model.reset)
             .tracked(name: "player")
     }
 

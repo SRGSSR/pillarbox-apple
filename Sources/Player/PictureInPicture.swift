@@ -5,6 +5,7 @@
 //
 
 import AVKit
+import SwiftUI
 
 public protocol PictureInPictureDelegate: AnyObject {
     func pictureInPictureWillStart(_ pictureInPicture: PictureInPicture)
@@ -24,7 +25,7 @@ public final class PictureInPicture: NSObject {
     @Published public private(set) var isActive = false
 
     public weak var delegate: PictureInPictureDelegate?
-    public var reset: (() -> Void)?
+    var cleanup: (() -> Void)?
 
     private var isUsed = false
 
@@ -104,8 +105,21 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
     public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         delegate?.pictureInPictureDidStop(self)
         if !isUsed {
-            reset?()
+            cleanup?()
         }
-        reset = nil
+        cleanup = nil
+    }
+}
+
+public extension View {
+    func registerCleanupForInAppPictureInPicture(perform cleanup: @escaping () -> Void) -> some View {
+        onDisappear {
+            if PictureInPicture.shared.isActive {
+                PictureInPicture.shared.cleanup = cleanup
+            }
+            else {
+                cleanup()
+            }
+        }
     }
 }
