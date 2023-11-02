@@ -90,6 +90,7 @@ private struct MainView: View {
     private func topBar() -> some View {
         HStack {
             CloseButton()
+            PictureInPictureButton()
             Spacer()
             LoadingIndicator(player: player)
             VolumeButton(player: player)
@@ -254,6 +255,20 @@ private struct VolumeButton: View {
 
     private func toggleMuted() {
         player.isMuted.toggle()
+    }
+}
+
+private struct PictureInPictureButton: View {
+    var body: some View {
+        Button(action: start) {
+            Image(systemName: "pip.enter")
+                .tint(.white)
+                .frame(width: 45, height: 45)
+        }
+    }
+
+    private func start() {
+        PictureInPicture.shared.start()
     }
 }
 
