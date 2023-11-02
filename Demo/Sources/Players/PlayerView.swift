@@ -23,8 +23,14 @@ final class PlayerViewModel {
     let player = Player(configuration: .standard)
 
     func reset() {
-        guard !PictureInPicture.shared.isActive else { return }
-        media = nil
+        if PictureInPicture.shared.isActive {
+            PictureInPicture.shared.reset = {
+                self.media = nil
+            }
+        }
+        else {
+            media = nil
+        }
     }
 }
 

@@ -81,7 +81,7 @@ extension Router: PictureInPictureDelegate {
 
     // TODO: Still to address: Player not stopped when closing from PiP overlay, next playback resumes at the same location
 
-    func pictureInPictureDidStop(_ pictureInPicture: PictureInPicture, isUsed: Bool) {
-        print("--> did stop, used: \(isUsed)")
+    func pictureInPictureDidStop(_ pictureInPicture: PictureInPicture) {
+        print("--> did stop")
     }
 }

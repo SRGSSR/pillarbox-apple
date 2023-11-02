@@ -24,6 +24,9 @@ public final class PictureInPicture: NSObject {
     @Published public private(set) var isActive = false
 
     public weak var delegate: PictureInPictureDelegate?
+    public var reset: (() -> Void)?
+
+    private var isUsed = false
 
     private var controller: AVPictureInPictureController? {
         didSet {
@@ -48,9 +51,11 @@ public final class PictureInPicture: NSObject {
 
     func register(for playerLayer: AVPlayerLayer) {
         self.playerLayer = playerLayer
+        isUsed = true
     }
 
     func unregister(for playerLayer: AVPlayerLayer) {
+        isUsed = false
         guard self.playerLayer == playerLayer, !isActive else { return }
         self.playerLayer = nil
     }
@@ -98,5 +103,9 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
 
     public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         delegate?.pictureInPictureDidStop(self)
+        if !isUsed {
+            reset?()
+        }
+        reset = nil
     }
 }
