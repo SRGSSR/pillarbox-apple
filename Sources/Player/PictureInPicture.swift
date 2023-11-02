@@ -9,6 +9,7 @@ import AVKit
 public protocol PictureInPictureDelegate: AnyObject {
     func pictureInPictureWillStart(_ pictureInPicture: PictureInPicture)
     func pictureInPictureDidStart(_ pictureInPicture: PictureInPicture)
+    func pictureInPictureController(_ pictureInPicture: PictureInPicture, failedToStartWithError error: Error)
     func pictureInPicture(
         _ pictureInPicture: PictureInPicture,
         restoreUserInterfaceForStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
@@ -55,6 +56,10 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
 
     public func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         delegate?.pictureInPictureDidStart(self)
+    }
+
+    public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, failedToStartPictureInPictureWithError error: Error) {
+        delegate?.pictureInPictureController(self, failedToStartWithError: error)
     }
 
     public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {

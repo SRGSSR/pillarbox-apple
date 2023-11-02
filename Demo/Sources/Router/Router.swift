@@ -51,7 +51,11 @@ extension Router: PictureInPictureDelegate {
     func pictureInPictureDidStart(_ pictureInPicture: PictureInPicture) {
         print("--> did start")
     }
-    
+
+    func pictureInPictureController(_ pictureInPicture: PictureInPicture, failedToStartWithError error: Error) {
+        print("--> failed to start")
+    }
+
     func pictureInPicture(_ pictureInPicture: PictureInPicture, restoreUserInterfaceForStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
         print("--> restore")
         completionHandler(true)
