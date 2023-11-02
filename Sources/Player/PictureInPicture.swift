@@ -62,6 +62,15 @@ public final class PictureInPicture: NSObject {
     public func stop() {
         controller?.stopPictureInPicture()
     }
+
+    public func toggle() {
+        if isActive {
+            stop()
+        }
+        else {
+            start()
+        }
+    }
 }
 
 extension PictureInPicture: AVPictureInPictureControllerDelegate {
@@ -83,11 +92,11 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
     }
 
     public func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        isActive = false
         delegate?.pictureInPictureWillStop(self)
     }
 
     public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        isActive = false
         delegate?.pictureInPictureDidStop(self)
     }
 }

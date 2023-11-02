@@ -262,7 +262,7 @@ private struct PictureInPictureButton: View {
     @State private var isActive = false
 
     var body: some View {
-        Button(action: start) {
+        Button(action: PictureInPicture.shared.toggle) {
             Image(systemName: imageName)
                 .tint(.white)
                 .frame(width: 45, height: 45)
@@ -272,10 +272,6 @@ private struct PictureInPictureButton: View {
 
     private var imageName: String {
         isActive ? "pip.exit" : "pip.enter"
-    }
-
-    private func start() {
-        PictureInPicture.shared.start()
     }
 }
 
