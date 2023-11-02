@@ -24,20 +24,31 @@ public final class PictureInPicture: NSObject {
     public weak var delegate: PictureInPictureDelegate?
 
     private var controller: AVPictureInPictureController?
+    private var isActive = false
 
-    var playerLayer: AVPlayerLayer? {
+    private(set) var playerLayer: AVPlayerLayer? {
         get {
             controller?.playerLayer
         }
         set {
             guard controller?.playerLayer != newValue else { return }
             controller = newValue.flatMap { AVPictureInPictureController(playerLayer: $0) }
+            isActive = controller?.isPictureInPictureActive ?? false
             controller?.delegate = self
         }
     }
 
     override private init() {
         super.init()
+    }
+
+    func register(for playerLayer: AVPlayerLayer) {
+        self.playerLayer = playerLayer
+    }
+
+    func unregister(for playerLayer: AVPlayerLayer) {
+        guard self.playerLayer == playerLayer, !isActive else { return }
+        self.playerLayer = nil
     }
 
     public func start() {
@@ -51,6 +62,7 @@ public final class PictureInPicture: NSObject {
 
 extension PictureInPicture: AVPictureInPictureControllerDelegate {
     public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        isActive = true
         delegate?.pictureInPictureWillStart(self)
     }
 
@@ -71,6 +83,7 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
     }
 
     public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        isActive = false
         delegate?.pictureInPictureDidStop(self)
     }
 }
