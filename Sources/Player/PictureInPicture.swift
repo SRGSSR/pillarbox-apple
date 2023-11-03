@@ -52,18 +52,9 @@ public final class PictureInPicture: NSObject {
         super.init()
         configureIsPossiblePublisher()
     }
+}
 
-    private func configureIsPossiblePublisher() {
-        publisher(for: \.controller)
-            .map { controller in
-                guard let controller else { return Just(false).eraseToAnyPublisher() }
-                return controller.publisher(for: \.isPictureInPicturePossible).eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .receiveOnMainThread()
-            .assign(to: &$isPossible)
-    }
-
+extension PictureInPicture {
     func register(for playerLayer: AVPlayerLayer) {
         self.playerLayer = playerLayer
         isUsed = true
@@ -74,7 +65,22 @@ public final class PictureInPicture: NSObject {
         guard self.playerLayer == playerLayer, !isActive else { return }
         self.playerLayer = nil
     }
+}
 
+extension PictureInPicture {
+    private func configureIsPossiblePublisher() {
+        publisher(for: \.controller)
+            .map { controller in
+                guard let controller else { return Just(false).eraseToAnyPublisher() }
+                return controller.publisher(for: \.isPictureInPicturePossible).eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .receiveOnMainThread()
+            .assign(to: &$isPossible)
+    }
+}
+
+extension PictureInPicture {
     func start() {
         controller?.startPictureInPicture()
     }
