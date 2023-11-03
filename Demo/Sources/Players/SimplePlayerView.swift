@@ -16,7 +16,7 @@ struct SimplePlayerView: View {
 
     var body: some View {
         ZStack {
-            VideoView(player: player, pictureInPictureIdentifier: "\(Self.self)")
+            VideoView(player: player, isPictureInPictureSupported: true)
             progressView()
             playbackButton()
         }

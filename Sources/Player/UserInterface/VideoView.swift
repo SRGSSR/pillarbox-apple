@@ -36,25 +36,16 @@ private final class VideoLayerView: UIView {
 }
 
 private struct _PictureInPictureSupportingVideoView: UIViewRepresentable {
-    struct Coordinator {
-        let identifier: String
-    }
-
     let player: Player
     let gravity: AVLayerVideoGravity
-    let identifier: String
 
-    static func dismantleUIView(_ uiView: VideoLayerView, coordinator: Coordinator) {
-        PictureInPicture.shared.unregister(for: uiView.playerLayer, identifier: coordinator.identifier)
-    }
-
-    func makeCoordinator() -> Coordinator {
-        .init(identifier: identifier)
+    static func dismantleUIView(_ uiView: VideoLayerView, coordinator: Void) {
+        PictureInPicture.shared.unregister(for: uiView.playerLayer)
     }
 
     func makeUIView(context: Context) -> VideoLayerView {
-        let view = VideoLayerView(from: PictureInPicture.shared.playerLayer(for: identifier))
-        PictureInPicture.shared.register(for: view.playerLayer, identifier: identifier)
+        let view = VideoLayerView(from: PictureInPicture.shared.playerLayer)
+        PictureInPicture.shared.register(for: view.playerLayer)
         return view
     }
 
@@ -84,11 +75,11 @@ private struct _VideoView: UIViewRepresentable {
 public struct VideoView: View {
     private let player: Player
     private let gravity: AVLayerVideoGravity
-    private let pictureInPictureIdentifier: String?
+    private let isPictureInPictureSupported: Bool
 
     public var body: some View {
-        if let pictureInPictureIdentifier {
-            _PictureInPictureSupportingVideoView(player: player, gravity: gravity, identifier: pictureInPictureIdentifier)
+        if isPictureInPictureSupported {
+            _PictureInPictureSupportingVideoView(player: player, gravity: gravity)
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                     PictureInPicture.shared.stop()
                 }
@@ -98,10 +89,10 @@ public struct VideoView: View {
         }
     }
 
-    public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect, pictureInPictureIdentifier: String? = nil) {
+    public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect, isPictureInPictureSupported: Bool = false) {
         self.player = player
         self.gravity = gravity
-        self.pictureInPictureIdentifier = pictureInPictureIdentifier
+        self.isPictureInPictureSupported = isPictureInPictureSupported
     }
 }
 
