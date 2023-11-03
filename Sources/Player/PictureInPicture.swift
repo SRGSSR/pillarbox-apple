@@ -46,6 +46,7 @@ public final class PictureInPicture: NSObject {
 
     @Published private(set) var isPossible = false
     @Published private(set) var isActive = false
+    @Published private(set) var isInAppEnabled = false
 
     private weak var delegate: PictureInPictureDelegate?
     private var cleanup: (() -> Void)?
@@ -121,6 +122,7 @@ public extension PictureInPicture {
     func restoreFromInAppPictureInPicture() {
         acquire()
         stop()
+        isInAppEnabled = true
     }
 
     /// Enables in-app Picture in Picture playback.
@@ -136,6 +138,7 @@ public extension PictureInPicture {
             cleanup()
         }
         relinquish()
+        isInAppEnabled = false
     }
 }
 
