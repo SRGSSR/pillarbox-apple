@@ -136,6 +136,7 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
         delegate?.pictureInPictureDidStop(self)
         if !isUsed {
             release?()
+            playerLayer = nil
         }
         release = nil
     }
