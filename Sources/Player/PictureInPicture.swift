@@ -27,7 +27,7 @@ public final class PictureInPicture: NSObject {
     @Published private(set) var isActive = false
 
     public weak var delegate: PictureInPictureDelegate?
-    private var release: (() -> Void)?
+    private var cleanup: (() -> Void)?
 
     @objc private dynamic var controller: AVPictureInPictureController?
     private var referenceCount = 0
@@ -79,15 +79,21 @@ extension PictureInPicture {
         }
     }
 
-    func acquire(with release: @escaping () -> Void) {
-        self.release = release
+    func clean() {
+        cleanup?()
+        cleanup = nil
+    }
+}
+
+extension PictureInPicture {
+    func restoreFromInAppPictureInPicture() {
         acquire()
         stop()
     }
 
-    func clean() {
-        release?()
-        release = nil
+    func registerInAppPictureInPictureCleanup(perform cleanup: @escaping () -> Void) {
+        self.cleanup = cleanup
+        relinquish()
     }
 }
 

@@ -30,7 +30,7 @@ struct PlayerView: View {
 
     var body: some View {
         PlaybackView(player: Self.model.player)
-            .onPictureInPictureRelease {
+            .enabledForInAppPictureInPictureWithCleanup {
                 Self.model.media = nil
             }
             .tracked(name: "player")

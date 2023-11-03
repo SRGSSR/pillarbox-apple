@@ -30,12 +30,12 @@ public extension View {
     /// Register a closure to be executed for a view when Picture in Picture is not required anymore by this view.
     ///
     /// - Parameter release: The closure to be executed on release.
-    func onPictureInPictureRelease(perform release: @escaping () -> Void) -> some View {
+    func enabledForInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) -> some View {
         onAppear {
-            PictureInPicture.shared.acquire(with: release)
+            PictureInPicture.shared.restoreFromInAppPictureInPicture()
         }
         .onDisappear {
-            PictureInPicture.shared.relinquish()
+            PictureInPicture.shared.registerInAppPictureInPictureCleanup(perform: cleanup)
         }
     }
 }
