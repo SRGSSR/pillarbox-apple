@@ -52,21 +52,18 @@ final class Router: ObservableObject {
 
 extension Router: PictureInPictureDelegate {
     func pictureInPictureWillStart(_ pictureInPicture: PictureInPicture) {
-        print("--> will start")
         previousPresented = presented
         presented = nil
     }
 
-    func pictureInPictureDidStart(_ pictureInPicture: PictureInPicture) {
-        print("--> did start")
-    }
+    func pictureInPictureDidStart(_ pictureInPicture: PictureInPicture) {}
 
-    func pictureInPictureController(_ pictureInPicture: PictureInPicture, failedToStartWithError error: Error) {
-        print("--> failed to start")
-    }
+    func pictureInPictureController(_ pictureInPicture: PictureInPicture, failedToStartWithError error: Error) {}
 
-    func pictureInPicture(_ pictureInPicture: PictureInPicture, restoreUserInterfaceForStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
-        print("--> restore")
+    func pictureInPicture(
+        _ pictureInPicture: PictureInPicture,
+        restoreUserInterfaceForStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
+    ) {
         if let previousPresented, previousPresented != presented {
             presented = previousPresented
         }
@@ -75,11 +72,7 @@ extension Router: PictureInPictureDelegate {
         }
     }
 
-    func pictureInPictureWillStop(_ pictureInPicture: PictureInPicture) {
-        print("--> will stop")
-    }
+    func pictureInPictureWillStop(_ pictureInPicture: PictureInPicture) {}
 
-    func pictureInPictureDidStop(_ pictureInPicture: PictureInPicture) {
-        print("--> did stop")
-    }
+    func pictureInPictureDidStop(_ pictureInPicture: PictureInPicture) {}
 }
