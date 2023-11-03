@@ -37,8 +37,9 @@ public final class PictureInPicture: NSObject {
         }
     }
 
-    var identifier: String?
-    private(set) var playerLayer: AVPlayerLayer? {
+    private var identifier: String?
+
+    private var playerLayer: AVPlayerLayer? {
         get {
             controller?.playerLayer
         }
@@ -60,15 +61,23 @@ public final class PictureInPicture: NSObject {
 }
 
 extension PictureInPicture {
-    func register(for playerLayer: AVPlayerLayer) {
+    func playerLayer(for identifier: String) -> AVPlayerLayer? {
+        self.identifier == identifier ? playerLayer : nil
+    }
+}
+
+extension PictureInPicture {
+    func register(for playerLayer: AVPlayerLayer, identifier: String) {
         self.playerLayer = playerLayer
+        self.identifier = identifier
         isUsed = true
     }
 
     func unregister(for playerLayer: AVPlayerLayer) {
         isUsed = false
-        guard self.playerLayer == playerLayer, !isActive else { return }
+        guard self.playerLayer == playerLayer, !isActive else { return } // TODO: Check IDs
         self.playerLayer = nil
+        self.identifier = nil
     }
 }
 

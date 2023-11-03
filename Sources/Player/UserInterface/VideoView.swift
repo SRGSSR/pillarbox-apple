@@ -45,14 +45,8 @@ private struct _PictureInPictureSupportingVideoView: UIViewRepresentable {
     }
 
     func makeUIView(context: Context) -> VideoLayerView {
-        let view = if PictureInPicture.shared.identifier == identifier {
-            VideoLayerView(from: PictureInPicture.shared.playerLayer)
-        }
-        else {
-            VideoLayerView()
-        }
-
-        PictureInPicture.shared.register(for: view.playerLayer)
+        let view = VideoLayerView(from: PictureInPicture.shared.playerLayer(for: identifier))
+        PictureInPicture.shared.register(for: view.playerLayer, identifier: identifier)
         return view
     }
 
