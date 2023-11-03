@@ -80,16 +80,18 @@ extension PictureInPicture {
         }
         else {
             controller = AVPictureInPictureController(playerLayer: playerLayer)
-            controller?.delegate = self
-            referenceCount = 1
+            if let controller {
+                controller.delegate = self
+                referenceCount = 1
+            }
         }
     }
 
     func relinquish(for playerLayer: AVPlayerLayer) {
-        guard self.playerLayer === playerLayer else { return }
+        guard let controller, self.playerLayer === playerLayer else { return }
         referenceCount -= 1
         if referenceCount == 0 {
-            controller = nil
+            self.controller = nil
 
             // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
             DispatchQueue.main.async {
