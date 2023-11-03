@@ -27,7 +27,7 @@ public final class PictureInPicture: NSObject {
     @Published private(set) var isActive = false
 
     public weak var delegate: PictureInPictureDelegate?
-    var release: (() -> Void)?
+    private var release: (() -> Void)?
 
     @objc private dynamic var controller: AVPictureInPictureController?
     private var referenceCount = 0
@@ -74,9 +74,20 @@ extension PictureInPicture {
         if referenceCount == 0 {
             controller = nil
             DispatchQueue.main.async {
-                self.release?()
+                self.clean()
             }
         }
+    }
+
+    func acquire(with release: @escaping () -> Void) {
+        self.release = release
+        acquire()
+        stop()
+    }
+
+    func clean() {
+        release?()
+        release = nil
     }
 }
 
