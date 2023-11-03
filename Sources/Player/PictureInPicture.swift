@@ -31,8 +31,7 @@ public final class PictureInPicture: NSObject {
 
     private var isUsed = false
 
-    @objc
-    private dynamic var controller: AVPictureInPictureController? {
+    @objc private dynamic var controller: AVPictureInPictureController? {
         didSet {
             isActive = controller?.isPictureInPictureActive ?? false
         }
@@ -104,11 +103,17 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
         delegate?.pictureInPictureDidStart(self)
     }
 
-    public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, failedToStartPictureInPictureWithError error: Error) {
+    public func pictureInPictureController(
+        _ pictureInPictureController: AVPictureInPictureController,
+        failedToStartPictureInPictureWithError error: Error
+    ) {
         delegate?.pictureInPictureController(self, failedToStartWithError: error)
     }
 
-    public func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
+    public func pictureInPictureController(
+        _ pictureInPictureController: AVPictureInPictureController,
+        restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
+    ) {
         delegate?.pictureInPicture(self, restoreUserInterfaceForStopWithCompletionHandler: completionHandler)
     }
 

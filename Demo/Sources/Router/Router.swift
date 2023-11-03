@@ -56,7 +56,7 @@ extension Router: PictureInPictureDelegate {
         previousPresented = presented
         presented = nil
     }
-    
+
     func pictureInPictureDidStart(_ pictureInPicture: PictureInPicture) {
         print("--> did start")
     }
@@ -74,7 +74,7 @@ extension Router: PictureInPictureDelegate {
             completionHandler(true)
         }
     }
-    
+
     func pictureInPictureWillStop(_ pictureInPicture: PictureInPicture) {
         print("--> will stop")
     }

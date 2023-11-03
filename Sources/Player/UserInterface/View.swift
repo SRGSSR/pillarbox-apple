@@ -8,6 +8,7 @@ import SwiftUI
 
 public extension View {
     /// Assigns to a binding property a value emitted by the given player's publisher.
+    ///
     /// - Parameters:
     ///   - player: The player.
     ///   - keyPath: The key path to extract.
@@ -26,6 +27,9 @@ public extension View {
 }
 
 public extension View {
+    /// Register a closure to be executed for a view when Picture in Picture is not required anymore by this view.
+    ///
+    /// - Parameter release: The closure to be executed on release.
     func onPictureInPictureRelease(perform release: @escaping () -> Void) -> some View {
         onAppear {
             PictureInPicture.shared.stop()
