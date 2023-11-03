@@ -90,6 +90,7 @@ private struct MainView: View {
     private func topBar() -> some View {
         HStack {
             CloseButton()
+            PiPButton()
             Spacer()
             LoadingIndicator(player: player)
             VolumeButton(player: player)
@@ -109,7 +110,7 @@ private struct MainView: View {
                 image(name: "tv")
             }
             else {
-                VideoView(player: player, gravity: gravity, isPictureInPictureSupported: true)
+                VideoView(player: player, gravity: gravity, pictureInPictureIdentifier: "\(Self.self)")
             }
         }
     }
@@ -254,6 +255,16 @@ private struct VolumeButton: View {
 
     private func toggleMuted() {
         player.isMuted.toggle()
+    }
+}
+
+private struct PiPButton: View {
+    var body: some View {
+        PictureInPictureButton { isActive in
+            Image(systemName: isActive ? "pip.exit" : "pip.enter")
+                .tint(.white)
+                .frame(width: 45, height: 45)
+        }
     }
 }
 

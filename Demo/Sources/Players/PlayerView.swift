@@ -7,20 +7,37 @@
 import Player
 import SwiftUI
 
+final class PlayerViewModel {
+    var media: Media? {
+        didSet {
+            guard media != oldValue else { return }
+            if let playerItem = media?.playerItem() {
+                player.items = [playerItem]
+            }
+            else {
+                player.removeAllItems()
+            }
+        }
+    }
+
+    let player = Player(configuration: .standard)
+}
+
 /// A standalone player view with standard controls.
 /// Behavior: h-exp, v-exp
 struct PlayerView: View {
-    let media: Media
-    @StateObject private var player = Player(configuration: .standard)
+    static let model = PlayerViewModel()
 
     var body: some View {
-        PlaybackView(player: player)
-            .onAppear(perform: load)
+        PlaybackView(player: Self.model.player)
+            .onPictureInPictureRelease {
+                Self.model.media = nil
+            }
             .tracked(name: "player")
     }
 
-    private func load() {
-        player.append(media.playerItem())
+    init(media: Media) {
+        Self.model.media = media
     }
 }
 

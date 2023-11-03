@@ -36,5 +36,51 @@ final class Router: ObservableObject {
     @Published var searchPath: [RouterDestination] = []
     @Published var settingsPath: [RouterDestination] = []
 
-    @Published var presented: RouterDestination?
+    @Published var presented: RouterDestination? {
+        didSet {
+            guard presented != nil else { return }
+            previousPresented = nil
+        }
+    }
+
+    private var previousPresented: RouterDestination?
+
+    init() {
+        PictureInPicture.setDelegate(self)
+    }
+}
+
+extension Router: PictureInPictureDelegate {
+    func pictureInPictureWillStart(_ pictureInPicture: PictureInPicture) {
+        switch presented {
+        case .player:
+            previousPresented = presented
+            presented = nil
+        default:
+            break
+        }
+    }
+
+    func pictureInPictureDidStart(_ pictureInPicture: PictureInPicture) {}
+
+    func pictureInPictureController(_ pictureInPicture: PictureInPicture, failedToStartWithError error: Error) {}
+
+    func pictureInPicture(
+        _ pictureInPicture: PictureInPicture,
+        restoreUserInterfaceForStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
+    ) {
+        if let previousPresented, previousPresented != presented {
+            presented = previousPresented
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                completionHandler(true)
+            }
+        }
+        else {
+            completionHandler(true)
+        }
+    }
+
+    func pictureInPictureWillStop(_ pictureInPicture: PictureInPicture) {}
+
+    func pictureInPictureDidStop(_ pictureInPicture: PictureInPicture) {}
 }

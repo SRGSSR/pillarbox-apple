@@ -36,17 +36,25 @@ private final class VideoLayerView: UIView {
 }
 
 private struct _PictureInPictureSupportingVideoView: UIViewRepresentable {
+    struct Coordinator {
+        let identifier: String
+    }
+
     let player: Player
     let gravity: AVLayerVideoGravity
+    let identifier: String
 
-    static func dismantleUIView(_ uiView: VideoLayerView, coordinator: Void) {
-        guard uiView.playerLayer == PictureInPicture.shared.playerLayer else { return }
-        PictureInPicture.shared.playerLayer = nil
+    static func dismantleUIView(_ uiView: VideoLayerView, coordinator: Coordinator) {
+        PictureInPicture.shared.unregister(for: uiView.playerLayer, identifier: coordinator.identifier)
+    }
+
+    func makeCoordinator() -> Coordinator {
+        .init(identifier: identifier)
     }
 
     func makeUIView(context: Context) -> VideoLayerView {
-        let view = VideoLayerView(from: PictureInPicture.shared.playerLayer)
-        PictureInPicture.shared.playerLayer = view.playerLayer
+        let view = VideoLayerView(from: PictureInPicture.shared.playerLayer(for: identifier))
+        PictureInPicture.shared.register(for: view.playerLayer, identifier: identifier)
         return view
     }
 
@@ -76,11 +84,11 @@ private struct _VideoView: UIViewRepresentable {
 public struct VideoView: View {
     private let player: Player
     private let gravity: AVLayerVideoGravity
-    private let isPictureInPictureSupported: Bool
+    private let pictureInPictureIdentifier: String?
 
     public var body: some View {
-        if isPictureInPictureSupported {
-            _PictureInPictureSupportingVideoView(player: player, gravity: gravity)
+        if let pictureInPictureIdentifier {
+            _PictureInPictureSupportingVideoView(player: player, gravity: gravity, identifier: pictureInPictureIdentifier)
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                     PictureInPicture.shared.stop()
                 }
@@ -90,10 +98,10 @@ public struct VideoView: View {
         }
     }
 
-    public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect, isPictureInPictureSupported: Bool = false) {
+    public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect, pictureInPictureIdentifier: String? = nil) {
         self.player = player
         self.gravity = gravity
-        self.isPictureInPictureSupported = isPictureInPictureSupported
+        self.pictureInPictureIdentifier = pictureInPictureIdentifier
     }
 }
 
