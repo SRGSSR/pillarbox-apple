@@ -38,13 +38,20 @@ private final class VideoLayerView: UIView {
 private struct _PictureInPictureSupportingVideoView: UIViewRepresentable {
     let player: Player
     let gravity: AVLayerVideoGravity
+    let identifier: String
 
     static func dismantleUIView(_ uiView: VideoLayerView, coordinator: Void) {
         PictureInPicture.shared.unregister(for: uiView.playerLayer)
     }
 
     func makeUIView(context: Context) -> VideoLayerView {
-        let view = VideoLayerView(from: PictureInPicture.shared.playerLayer)
+        let view = if PictureInPicture.shared.identifier == identifier {
+            VideoLayerView(from: PictureInPicture.shared.playerLayer)
+        }
+        else {
+            VideoLayerView()
+        }
+
         PictureInPicture.shared.register(for: view.playerLayer)
         return view
     }
@@ -75,11 +82,11 @@ private struct _VideoView: UIViewRepresentable {
 public struct VideoView: View {
     private let player: Player
     private let gravity: AVLayerVideoGravity
-    private let isPictureInPictureSupported: Bool
+    private let pictureInPictureIdentifier: String?
 
     public var body: some View {
-        if isPictureInPictureSupported {
-            _PictureInPictureSupportingVideoView(player: player, gravity: gravity)
+        if let pictureInPictureIdentifier {
+            _PictureInPictureSupportingVideoView(player: player, gravity: gravity, identifier: pictureInPictureIdentifier)
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                     PictureInPicture.shared.stop()
                 }
@@ -89,10 +96,10 @@ public struct VideoView: View {
         }
     }
 
-    public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect, isPictureInPictureSupported: Bool = false) {
+    public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect, pictureInPictureIdentifier: String? = nil) {
         self.player = player
         self.gravity = gravity
-        self.isPictureInPictureSupported = isPictureInPictureSupported
+        self.pictureInPictureIdentifier = pictureInPictureIdentifier
     }
 }
 

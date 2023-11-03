@@ -7,7 +7,7 @@
 import Player
 import SwiftUI
 
-private enum PlayerPosition {
+private enum PlayerPosition: String {
     case top
     case bottom
 }
@@ -15,7 +15,7 @@ private enum PlayerPosition {
 /// Behavior: h-exp, v-exp
 private struct SingleView: View {
     @ObservedObject var player: Player
-    let isPictureInPictureSupported: Bool
+    let pictureInPictureIdentifier: String?
     let action: () -> Void
 
     @State private var isBusy = false
@@ -33,7 +33,7 @@ private struct SingleView: View {
 
     @ViewBuilder
     private func videoView(player: Player) -> some View {
-        VideoView(player: player, isPictureInPictureSupported: isPictureInPictureSupported)
+        VideoView(player: player, pictureInPictureIdentifier: pictureInPictureIdentifier)
             .accessibilityAddTraits(.isButton)
             .onTapGesture(perform: action)
     }
@@ -110,7 +110,7 @@ struct MultiView: View {
 
     @ViewBuilder
     private func playerView(player: Player, position: PlayerPosition) -> some View {
-        SingleView(player: player, isPictureInPictureSupported: activePosition == position) { activePosition = position }
+        SingleView(player: player, pictureInPictureIdentifier: activePosition == position ? position.rawValue : nil) { activePosition = position }
             .accessibilityAddTraits(.isButton)
             .saturation(activePosition == position ? 1 : 0)
     }

@@ -37,6 +37,7 @@ public final class PictureInPicture: NSObject {
         }
     }
 
+    var identifier: String?
     private(set) var playerLayer: AVPlayerLayer? {
         get {
             controller?.playerLayer
@@ -136,7 +137,6 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
         delegate?.pictureInPictureDidStop(self)
         if !isUsed {
             release?()
-            playerLayer = nil
         }
         release = nil
     }
