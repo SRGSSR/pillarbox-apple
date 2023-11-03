@@ -62,7 +62,15 @@ public final class PictureInPicture: NSObject {
 
 extension PictureInPicture {
     func playerLayer(for identifier: String) -> AVPlayerLayer? {
-        self.identifier == identifier ? playerLayer : nil
+        if self.identifier == identifier {
+            return playerLayer
+        }
+        else {
+            if isActive {
+                release?()
+            }
+            return nil
+        }
     }
 }
 
