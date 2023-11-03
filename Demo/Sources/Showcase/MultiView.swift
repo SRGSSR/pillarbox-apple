@@ -7,7 +7,7 @@
 import Player
 import SwiftUI
 
-private enum PlayerPosition: String {
+private enum PlayerPosition {
     case top
     case bottom
 }
