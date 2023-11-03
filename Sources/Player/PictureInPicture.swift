@@ -22,7 +22,7 @@ public protocol PictureInPictureDelegate: AnyObject {
 public final class PictureInPicture: NSObject {
     public static let shared = PictureInPicture()
 
-    @Published public private(set) var isActive = false
+    @Published private(set) var isActive = false
 
     public weak var delegate: PictureInPictureDelegate?
     var release: (() -> Void)?
@@ -61,15 +61,15 @@ public final class PictureInPicture: NSObject {
         self.playerLayer = nil
     }
 
-    public func start() {
+    func start() {
         controller?.startPictureInPicture()
     }
 
-    public func stop() {
+    func stop() {
         controller?.stopPictureInPicture()
     }
 
-    public func toggle() {
+    func toggle() {
         if isActive {
             stop()
         }
@@ -108,18 +108,5 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
             release?()
         }
         release = nil
-    }
-}
-
-public extension View {
-    func onRelease(perform release: @escaping () -> Void) -> some View {
-        onDisappear {
-            if PictureInPicture.shared.isActive {
-                PictureInPicture.shared.release = release
-            }
-            else {
-                release()
-            }
-        }
     }
 }

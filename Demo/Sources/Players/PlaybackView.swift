@@ -90,7 +90,7 @@ private struct MainView: View {
     private func topBar() -> some View {
         HStack {
             CloseButton()
-            PictureInPictureButton()
+            PiPButton()
             Spacer()
             LoadingIndicator(player: player)
             VolumeButton(player: player)
@@ -258,20 +258,13 @@ private struct VolumeButton: View {
     }
 }
 
-private struct PictureInPictureButton: View {
-    @State private var isActive = false
-
+private struct PiPButton: View {
     var body: some View {
-        Button(action: PictureInPicture.shared.toggle) {
-            Image(systemName: imageName)
+        PictureInPictureButton { isActive in
+            Image(systemName: isActive ? "pip.exit" : "pip.enter")
                 .tint(.white)
                 .frame(width: 45, height: 45)
         }
-        .onReceive(PictureInPicture.shared.$isActive) { isActive = $0 }
-    }
-
-    private var imageName: String {
-        isActive ? "pip.exit" : "pip.enter"
     }
 }
 

@@ -21,10 +21,6 @@ final class PlayerViewModel {
     }
 
     let player = Player(configuration: .standard)
-
-    func reset() {
-        media = nil
-    }
 }
 
 /// A standalone player view with standard controls.
@@ -34,7 +30,6 @@ struct PlayerView: View {
 
     var body: some View {
         PlaybackView(player: Self.model.player)
-            .onAppear(perform: PictureInPicture.shared.stop)
             .onRelease {
                 Self.model.media = nil
             }
