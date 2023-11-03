@@ -67,7 +67,7 @@ extension Router: PictureInPictureDelegate {
         if let previousPresented, previousPresented != presented {
             presented = previousPresented
         }
-        DispatchQueue.main.async {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
             completionHandler(true)
         }
     }
