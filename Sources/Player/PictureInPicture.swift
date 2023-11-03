@@ -21,7 +21,7 @@ public protocol PictureInPictureDelegate: AnyObject {
 }
 
 public final class PictureInPicture: NSObject {
-    public static let shared = PictureInPicture()
+    static let shared = PictureInPicture()
 
     @Published private(set) var isPossible = false
     @Published private(set) var isActive = false
@@ -51,6 +51,10 @@ public final class PictureInPicture: NSObject {
     override private init() {
         super.init()
         configureIsPossiblePublisher()
+    }
+
+    public static func setDelegate(_ delegate: PictureInPictureDelegate) {
+        shared.delegate = delegate
     }
 }
 

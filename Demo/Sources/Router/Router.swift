@@ -46,7 +46,7 @@ final class Router: ObservableObject {
     private var previousPresented: RouterDestination?
 
     init() {
-        PictureInPicture.shared.delegate = self
+        PictureInPicture.setDelegate(self)
     }
 }
 
