@@ -75,7 +75,8 @@ public final class PictureInPicture: NSObject {
 
 extension PictureInPicture {
     func acquire(for playerLayer: AVPlayerLayer) {
-        if self.playerLayer === playerLayer {
+        if let controller {
+            guard controller.playerLayer == playerLayer else { return }
             referenceCount += 1
         }
         else {
@@ -88,7 +89,7 @@ extension PictureInPicture {
     }
 
     func relinquish(for playerLayer: AVPlayerLayer) {
-        guard let controller, self.playerLayer === playerLayer else { return }
+        guard let controller, controller.playerLayer === playerLayer else { return }
         referenceCount -= 1
         if referenceCount == 0 {
             self.controller = nil
@@ -98,16 +99,6 @@ extension PictureInPicture {
                 self.clean()
             }
         }
-    }
-
-    func acquire() {
-        guard let playerLayer else { return }
-        acquire(for: playerLayer)
-    }
-
-    func relinquish() {
-        guard let playerLayer else { return }
-        relinquish(for: playerLayer)
     }
 
     func clean() {
@@ -122,7 +113,9 @@ public extension PictureInPicture {
     /// UIKit view controllers must call this method on view appearance to ensure playback can be automatically restored
     /// from Picture in Picture.
     func restoreFromInAppPictureInPicture() {
-        acquire()
+        if let playerLayer {
+            acquire(for: playerLayer)
+        }
         stop()
         isInAppEnabled = true
     }
@@ -138,8 +131,11 @@ public extension PictureInPicture {
         }
         else {
             cleanup()
+            self.cleanup = nil
         }
-        relinquish()
+        if let playerLayer {
+            relinquish(for: playerLayer)
+        }
         isInAppEnabled = false
     }
 }
@@ -179,7 +175,7 @@ extension PictureInPicture {
 extension PictureInPicture: AVPictureInPictureControllerDelegate {
     public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = true
-        acquire()
+        acquire(for: pictureInPictureController.playerLayer)
         delegate?.pictureInPictureWillStart(self)
     }
 
@@ -207,7 +203,7 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
     }
 
     public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        relinquish()
+        relinquish(for: pictureInPictureController.playerLayer)
         delegate?.pictureInPictureDidStop(self)
     }
 }
