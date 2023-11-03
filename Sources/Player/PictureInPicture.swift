@@ -27,6 +27,7 @@ public final class PictureInPicture: NSObject {
     @Published private(set) var isActive = false
 
     public weak var delegate: PictureInPictureDelegate?
+    var release: (() -> Void)?
 
     @objc private dynamic var controller: AVPictureInPictureController?
     private var referenceCount = 0
@@ -46,12 +47,36 @@ public final class PictureInPicture: NSObject {
 }
 
 extension PictureInPicture {
-    func register(for playerLayer: AVPlayerLayer) {
-
+    func acquire() {
+        guard let playerLayer else { return }
+        acquire(for: playerLayer)
     }
 
-    func unregister(for playerLayer: AVPlayerLayer) {
+    func relinquish() {
+        guard let playerLayer else { return }
+        relinquish(for: playerLayer)
+    }
 
+    func acquire(for playerLayer: AVPlayerLayer) {
+        if self.playerLayer === playerLayer {
+            referenceCount += 1
+        }
+        else {
+            controller = AVPictureInPictureController(playerLayer: playerLayer)
+            controller?.delegate = self
+            referenceCount = 1
+        }
+    }
+
+    func relinquish(for playerLayer: AVPlayerLayer) {
+        guard self.playerLayer === playerLayer else { return }
+        referenceCount -= 1
+        if referenceCount == 0 {
+            controller = nil
+            DispatchQueue.main.async {
+                self.release?()
+            }
+        }
     }
 }
 
@@ -90,6 +115,7 @@ extension PictureInPicture {
 extension PictureInPicture: AVPictureInPictureControllerDelegate {
     public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = true
+        acquire()
         delegate?.pictureInPictureWillStart(self)
     }
 
@@ -117,6 +143,7 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
     }
 
     public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        relinquish()
         delegate?.pictureInPictureDidStop(self)
     }
 }

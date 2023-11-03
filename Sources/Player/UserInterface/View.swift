@@ -32,10 +32,12 @@ public extension View {
     /// - Parameter release: The closure to be executed on release.
     func onPictureInPictureRelease(perform release: @escaping () -> Void) -> some View {
         onAppear {
+            PictureInPicture.shared.acquire()
+            PictureInPicture.shared.release = release
             PictureInPicture.shared.stop()
         }
         .onDisappear {
-            
+            PictureInPicture.shared.relinquish()
         }
     }
 }

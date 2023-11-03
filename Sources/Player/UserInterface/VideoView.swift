@@ -40,12 +40,12 @@ private struct _PictureInPictureSupportingVideoView: UIViewRepresentable {
     let gravity: AVLayerVideoGravity
 
     static func dismantleUIView(_ uiView: VideoLayerView, coordinator: Void) {
-        PictureInPicture.shared.unregister(for: uiView.playerLayer)
+        PictureInPicture.shared.relinquish(for: uiView.playerLayer)
     }
 
     func makeUIView(context: Context) -> VideoLayerView {
         let view = VideoLayerView(from: PictureInPicture.shared.playerLayer)
-        PictureInPicture.shared.register(for: view.playerLayer)
+        PictureInPicture.shared.acquire(for: view.playerLayer)
         return view
     }
 
