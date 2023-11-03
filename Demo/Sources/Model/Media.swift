@@ -20,7 +20,7 @@ struct Media: Hashable {
             .urn(urn, server: .production)
         }
     }
-    
+
     let title: String
     let description: String?
     let type: `Type`

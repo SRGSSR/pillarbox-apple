@@ -36,12 +36,20 @@ private final class VideoLayerView: UIView {
 }
 
 private struct _PictureInPictureSupportingVideoView: UIViewRepresentable {
+    struct Coordinator {
+        let identifier: String
+    }
+
     let player: Player
     let gravity: AVLayerVideoGravity
     let identifier: String
 
-    static func dismantleUIView(_ uiView: VideoLayerView, coordinator: Void) {
-        PictureInPicture.shared.unregister(for: uiView.playerLayer)
+    static func dismantleUIView(_ uiView: VideoLayerView, coordinator: Coordinator) {
+        PictureInPicture.shared.unregister(for: uiView.playerLayer, identifier: coordinator.identifier)
+    }
+
+    func makeCoordinator() -> Coordinator {
+        .init(identifier: identifier)
     }
 
     func makeUIView(context: Context) -> VideoLayerView {

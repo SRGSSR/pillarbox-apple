@@ -73,9 +73,9 @@ extension PictureInPicture {
         isUsed = true
     }
 
-    func unregister(for playerLayer: AVPlayerLayer) {
+    func unregister(for playerLayer: AVPlayerLayer, identifier: String) {
         isUsed = false
-        guard self.playerLayer == playerLayer, !isActive else { return } // TODO: Check IDs
+        guard self.identifier == identifier, !isActive else { return }
         self.playerLayer = nil
         self.identifier = nil
     }
