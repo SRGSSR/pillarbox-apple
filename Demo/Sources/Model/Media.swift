@@ -9,7 +9,7 @@ import Foundation
 import Player
 import YouTubeIdentifier
 
-struct Media: Hashable, Identifiable {
+struct Media: Hashable {
     enum `Type`: Hashable {
         case url(URL)
         case unbufferedUrl(URL)
@@ -20,8 +20,7 @@ struct Media: Hashable, Identifiable {
             .urn(urn, server: .production)
         }
     }
-
-    let id = UUID()
+    
     let title: String
     let description: String?
     let type: `Type`
