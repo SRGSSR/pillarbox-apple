@@ -5,6 +5,7 @@
 //
 
 import AVKit
+import Combine
 import SwiftUI
 
 public protocol PictureInPictureDelegate: AnyObject {
@@ -22,6 +23,7 @@ public protocol PictureInPictureDelegate: AnyObject {
 public final class PictureInPicture: NSObject {
     public static let shared = PictureInPicture()
 
+    @Published private(set) var isPossible = false
     @Published private(set) var isActive = false
 
     public weak var delegate: PictureInPictureDelegate?
@@ -29,7 +31,8 @@ public final class PictureInPicture: NSObject {
 
     private var isUsed = false
 
-    private var controller: AVPictureInPictureController? {
+    @objc
+    private dynamic var controller: AVPictureInPictureController? {
         didSet {
             isActive = controller?.isPictureInPictureActive ?? false
         }
@@ -48,6 +51,18 @@ public final class PictureInPicture: NSObject {
 
     override private init() {
         super.init()
+        configureIsPossiblePublisher()
+    }
+
+    private func configureIsPossiblePublisher() {
+        publisher(for: \.controller)
+            .map { controller in
+                guard let controller else { return Just(false).eraseToAnyPublisher() }
+                return controller.publisher(for: \.isPictureInPicturePossible).eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .receiveOnMainThread()
+            .assign(to: &$isPossible)
     }
 
     func register(for playerLayer: AVPlayerLayer) {

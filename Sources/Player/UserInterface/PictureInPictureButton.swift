@@ -8,6 +8,8 @@ import SwiftUI
 
 public struct PictureInPictureButton<Content>: View where Content: View {
     private let content: (Bool) -> Content
+    
+    @State private var isPossible = false
     @State private var isActive = false
 
     public init(@ViewBuilder content: @escaping (_ isActive: Bool) -> Content) {
@@ -15,9 +17,14 @@ public struct PictureInPictureButton<Content>: View where Content: View {
     }
 
     public var body: some View {
-        Button(action: PictureInPicture.shared.toggle) {
-            content(isActive)
+        ZStack {
+            if isPossible {
+                Button(action: PictureInPicture.shared.toggle) {
+                    content(isActive)
+                }
+                .onReceive(PictureInPicture.shared.$isActive) { isActive = $0 }
+            }
         }
-        .onReceive(PictureInPicture.shared.$isActive) { isActive = $0 }
+        .onReceive(PictureInPicture.shared.$isPossible) { isPossible = $0 }
     }
 }
