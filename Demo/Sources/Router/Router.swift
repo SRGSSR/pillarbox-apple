@@ -52,8 +52,13 @@ final class Router: ObservableObject {
 
 extension Router: PictureInPictureDelegate {
     func pictureInPictureWillStart(_ pictureInPicture: PictureInPicture) {
-        previousPresented = presented
-        presented = nil
+        switch presented {
+        case .player:
+            previousPresented = presented
+            presented = nil
+        default:
+            break
+        }
     }
 
     func pictureInPictureDidStart(_ pictureInPicture: PictureInPicture) {}
@@ -66,8 +71,11 @@ extension Router: PictureInPictureDelegate {
     ) {
         if let previousPresented, previousPresented != presented {
             presented = previousPresented
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                completionHandler(true)
+            }
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+        else {
             completionHandler(true)
         }
     }
