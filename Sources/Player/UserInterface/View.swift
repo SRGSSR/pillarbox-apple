@@ -35,12 +35,7 @@ public extension View {
             PictureInPicture.shared.stop()
         }
         .onDisappear {
-            if PictureInPicture.shared.isActive {
-                PictureInPicture.shared.release = release
-            }
-            else {
-                release()
-            }
+            
         }
     }
 }
