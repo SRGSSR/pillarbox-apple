@@ -26,7 +26,7 @@ public extension View {
 }
 
 public extension View {
-    func onRelease(perform release: @escaping () -> Void) -> some View {
+    func onPictureInPictureRelease(perform release: @escaping () -> Void) -> some View {
         onAppear {
             PictureInPicture.shared.stop()
         }
