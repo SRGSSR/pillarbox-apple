@@ -25,7 +25,7 @@ public final class PictureInPicture: NSObject {
     @Published public private(set) var isActive = false
 
     public weak var delegate: PictureInPictureDelegate?
-    var cleanup: (() -> Void)?
+    var release: (() -> Void)?
 
     private var isUsed = false
 
@@ -105,20 +105,20 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
     public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         delegate?.pictureInPictureDidStop(self)
         if !isUsed {
-            cleanup?()
+            release?()
         }
-        cleanup = nil
+        release = nil
     }
 }
 
 public extension View {
-    func registerCleanupForInAppPictureInPicture(perform cleanup: @escaping () -> Void) -> some View {
+    func onRelease(perform release: @escaping () -> Void) -> some View {
         onDisappear {
             if PictureInPicture.shared.isActive {
-                PictureInPicture.shared.cleanup = cleanup
+                PictureInPicture.shared.release = release
             }
             else {
-                cleanup()
+                release()
             }
         }
     }
