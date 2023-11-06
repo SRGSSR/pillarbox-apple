@@ -91,7 +91,7 @@ extension PictureInPicture {
     func relinquish(for playerLayer: AVPlayerLayer) {
         guard let controller, controller.playerLayer === playerLayer else { return }
         referenceCount -= 1
-        if referenceCount == 0 {
+        if referenceCount == 0, isPossible {
             self.controller = nil
 
             // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
@@ -113,9 +113,6 @@ public extension PictureInPicture {
     /// UIKit view controllers must call this method on view appearance to ensure playback can be automatically restored
     /// from Picture in Picture.
     func restoreFromInAppPictureInPicture() {
-        if let playerLayer {
-            acquire(for: playerLayer)
-        }
         stop()
         isInAppEnabled = true
     }
@@ -132,9 +129,6 @@ public extension PictureInPicture {
         else {
             cleanup()
             self.cleanup = nil
-        }
-        if let playerLayer {
-            relinquish(for: playerLayer)
         }
         isInAppEnabled = false
     }
