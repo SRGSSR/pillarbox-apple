@@ -25,10 +25,9 @@ struct RoutedNavigationStack<Root>: View where Root: View {
     }
 }
 
-/// Manages application routes.
+/// A router managing application presentation.
 ///
-/// You can manage navigation with a `RoutedNavigationStack` or retrieve the router through the environment
-/// to present the associated modal.
+/// You can manage navigation with a `RoutedNavigationStack` or use the router directly to present a single modal.
 final class Router: ObservableObject {
     @Published var examplesPath: [RouterDestination] = []
     @Published var showcasePath: [RouterDestination] = []

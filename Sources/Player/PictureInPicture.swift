@@ -8,46 +8,54 @@ import AVKit
 import Combine
 import SwiftUI
 
+/// A protocol describing the Picture in Picture life cycle.
+///
+/// Applications which require in-app Picture in Picture support must setup a delegate and rely on the Picture in
+/// Picture life cycle to dismiss and restore views as required.
 public protocol PictureInPictureDelegate: AnyObject {
+    /// Called when Picture in Picture is about to start.
+    ///
+    /// Use this method to save which view was presented before dismissing it. Use the saved view for later restoration.
     func pictureInPictureWillStart(_ pictureInPicture: PictureInPicture)
+
+    /// Called when Picture in Picture has started.
     func pictureInPictureDidStart(_ pictureInPicture: PictureInPicture)
+
+    /// Called when Picture in Picture failed to start.
     func pictureInPictureController(_ pictureInPicture: PictureInPicture, failedToStartWithError error: Error)
+
+    /// Called when the user interface will be restored from Picture in Picture.
+    ///
+    /// Use this method to present the original view which Picture in Picture was initiated from. The completion handler
+    /// must be called at the very end of the restoration with `true` to notify the system that restoration is complete.
     func pictureInPicture(
         _ pictureInPicture: PictureInPicture,
         restoreUserInterfaceForStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
     )
+
+    /// Called when Picture in Picture is about to stop.
     func pictureInPictureWillStop(_ pictureInPicture: PictureInPicture)
+
+    /// Called when Picture in Picture has stopped.
     func pictureInPictureDidStop(_ pictureInPicture: PictureInPicture)
 }
 
+/// Manages Picture in Picture.
 public final class PictureInPicture: NSObject {
     static let shared = PictureInPicture()
 
     @Published private(set) var isPossible = false
     @Published private(set) var isActive = false
+    @Published private(set) var isInAppEnabled = false
 
-    public weak var delegate: PictureInPictureDelegate?
-    var release: (() -> Void)?
+    private weak var delegate: PictureInPictureDelegate?
+    private var cleanup: (() -> Void)?
 
-    private var isUsed = false
+    @objc private dynamic var controller: AVPictureInPictureController?
+    private var referenceCount = 0
 
-    @objc private dynamic var controller: AVPictureInPictureController? {
-        didSet {
-            isActive = controller?.isPictureInPictureActive ?? false
-        }
-    }
-
-    private var identifier: String?
-
-    private var playerLayer: AVPlayerLayer? {
-        get {
-            controller?.playerLayer
-        }
-        set {
-            guard controller?.playerLayer != newValue else { return }
-            controller = newValue.flatMap { AVPictureInPictureController(playerLayer: $0) }
-            controller?.delegate = self
-        }
+    var playerLayer: AVPlayerLayer? {
+        controller?.playerLayer
     }
 
     override private init() {
@@ -55,42 +63,84 @@ public final class PictureInPicture: NSObject {
         configureIsPossiblePublisher()
     }
 
+    /// Sets a delegate for Picture in Picture.
+    ///
+    /// In-app Picture in Picture support requires your application to setup a delegate so a playback view supporting
+    /// Picture in Picture can be dismissed and restored at a later time, letting users navigate your app while
+    /// playback continues in the Picture in Picture overlay.
     public static func setDelegate(_ delegate: PictureInPictureDelegate) {
         shared.delegate = delegate
     }
 }
 
 extension PictureInPicture {
-    func playerLayer(for identifier: String) -> AVPlayerLayer? {
-        if self.identifier == identifier {
-            return playerLayer
+    func acquire(for playerLayer: AVPlayerLayer) {
+        if let controller {
+            guard controller.playerLayer == playerLayer else { return }
+            referenceCount += 1
         }
         else {
-            if isActive {
-                release?()
+            controller = AVPictureInPictureController(playerLayer: playerLayer)
+            if let controller {
+                controller.delegate = self
+                referenceCount = 1
             }
-            return nil
         }
     }
-}
 
-extension PictureInPicture {
-    func register(for playerLayer: AVPlayerLayer, identifier: String) {
-        self.playerLayer = playerLayer
-        self.identifier = identifier
-        isUsed = true
+    func relinquish(for playerLayer: AVPlayerLayer) {
+        guard let controller, controller.playerLayer === playerLayer else { return }
+        referenceCount -= 1
+        if referenceCount == 0 {
+            self.controller = nil
+
+            // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
+            DispatchQueue.main.async {
+                self.clean()
+            }
+        }
     }
 
-    func unregister(for playerLayer: AVPlayerLayer, identifier: String) {
-        isUsed = false
-        guard self.identifier == identifier, !isActive else { return }
-        self.playerLayer = nil
-        self.identifier = nil
+    func clean() {
+        cleanup?()
+        cleanup = nil
     }
 }
 
-extension PictureInPicture {
-    private func configureIsPossiblePublisher() {
+public extension PictureInPicture {
+    /// Restores from in-app Picture in Picture playback.
+    ///
+    /// UIKit view controllers must call this method on view appearance to ensure playback can be automatically restored
+    /// from Picture in Picture.
+    func restoreFromInAppPictureInPicture() {
+        if let playerLayer {
+            acquire(for: playerLayer)
+        }
+        isInAppEnabled = true
+    }
+
+    /// Enables in-app Picture in Picture playback.
+    ///
+    /// UIKit view controllers must call this method on view disappearance to register a cleanup closure which will
+    /// ensure resources which must be kept alive during Picture in Picture are properly cleaned up when Picture
+    /// in Picture does not require them anymore.
+    func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
+        if referenceCount != 0 {
+            self.cleanup = cleanup
+        }
+        else {
+            cleanup()
+            self.cleanup = nil
+        }
+        if let playerLayer {
+            relinquish(for: playerLayer)
+        }
+        isInAppEnabled = false
+    }
+}
+
+private extension PictureInPicture {
+    func configureIsPossiblePublisher() {
         publisher(for: \.controller)
             .map { controller in
                 guard let controller else { return Just(false).eraseToAnyPublisher() }
@@ -124,6 +174,7 @@ extension PictureInPicture {
 extension PictureInPicture: AVPictureInPictureControllerDelegate {
     public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = true
+        acquire(for: pictureInPictureController.playerLayer)
         delegate?.pictureInPictureWillStart(self)
     }
 
@@ -151,10 +202,7 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
     }
 
     public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        relinquish(for: pictureInPictureController.playerLayer)
         delegate?.pictureInPictureDidStop(self)
-        if !isUsed {
-            release?()
-        }
-        release = nil
     }
 }

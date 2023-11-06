@@ -27,20 +27,19 @@ public extension View {
 }
 
 public extension View {
-    /// Register a closure to be executed for a view when Picture in Picture is not required anymore by this view.
+    /// Enables the view for in-app Picture in Picture, registering a cleanup closure to be performed when resources
+    /// required by Picture in Picture initiated from the view are not needed anymore.
     ///
-    /// - Parameter release: The closure to be executed on release.
-    func onPictureInPictureRelease(perform release: @escaping () -> Void) -> some View {
+    /// - Parameter cleanup: A closure to clean resources associated with the view.
+    func enabledForInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) -> some View {
         onAppear {
+            PictureInPicture.shared.restoreFromInAppPictureInPicture()
+        }
+        .onDidAppear {
             PictureInPicture.shared.stop()
         }
         .onDisappear {
-            if PictureInPicture.shared.isActive {
-                PictureInPicture.shared.release = release
-            }
-            else {
-                release()
-            }
+            PictureInPicture.shared.enableInAppPictureInPictureWithCleanup(perform: cleanup)
         }
     }
 }
