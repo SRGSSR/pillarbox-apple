@@ -116,7 +116,6 @@ public extension PictureInPicture {
         if let playerLayer {
             acquire(for: playerLayer)
         }
-        stop()
         isInAppEnabled = true
     }
 

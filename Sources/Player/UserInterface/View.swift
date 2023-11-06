@@ -32,8 +32,11 @@ public extension View {
     ///
     /// - Parameter cleanup: A closure to clean resources associated with the view.
     func enabledForInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) -> some View {
-        onDidAppear {
+        onAppear {
             PictureInPicture.shared.restoreFromInAppPictureInPicture()
+        }
+        .onDidAppear {
+            PictureInPicture.shared.stop()
         }
         .onDisappear {
             PictureInPicture.shared.enableInAppPictureInPictureWithCleanup(perform: cleanup)
