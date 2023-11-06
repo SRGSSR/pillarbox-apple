@@ -91,7 +91,14 @@ public struct VideoView: View {
             _VideoView(player: player, gravity: gravity)
         }
     }
-
+    
+    /// Creates a view displaying video content.
+    ///
+    /// - Parameters:
+    ///   - player: The player whose content is displayed.
+    ///   - gravity: The mode used to display the content within the view frame.
+    ///   - isPictureInPictureSupported: A Boolean set to `true` if the view must be able to share its video layer for
+    ///     Picture in Picture.
     public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect, isPictureInPictureSupported: Bool = false) {
         self.player = player
         self.gravity = gravity
