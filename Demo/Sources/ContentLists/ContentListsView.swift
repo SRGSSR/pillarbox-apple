@@ -112,6 +112,7 @@ struct ContentListsView: View {
         } label: {
             Label("Server", systemImage: "server.rack")
         }
+        .pickerStyle(.inline)
     }
 #endif
 }

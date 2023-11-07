@@ -13,7 +13,7 @@ private struct PlaybackSpeedMenuContent: View {
     @ObservedObject var player: Player
 
     var body: some View {
-        Picker("", selection: player.playbackSpeed) {
+        Picker("Playback Speed", selection: player.playbackSpeed) {
             ForEach(playbackSpeeds, id: \.self) { speed in
                 Text("\(speed, specifier: "%g×")").tag(speed)
             }
@@ -34,8 +34,19 @@ private struct MediaSelectionMenuContent: View {
     let characteristic: AVMediaCharacteristic
     @ObservedObject var player: Player
 
+    private var title: String {
+        switch characteristic {
+        case .audible:
+            "Languages"
+        case .legible:
+            "Subtitles"
+        default:
+            ""
+        }
+    }
+
     var body: some View {
-        Picker("", selection: player.mediaOption(for: characteristic)) {
+        Picker(title, selection: player.mediaOption(for: characteristic)) {
             ForEach(mediaOptions, id: \.self) { option in
                 Text(option.displayName).tag(option)
             }
