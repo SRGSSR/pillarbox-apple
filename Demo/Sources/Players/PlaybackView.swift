@@ -579,7 +579,7 @@ struct PlaybackView: View {
             case .custom:
                 MainView(player: player, layout: $layout)
             case .system:
-                SystemVideoView(player: player)
+                SystemVideoView(player: player, isPictureInPictureSupported: true)
                     .ignoresSafeArea()
             }
 #else
