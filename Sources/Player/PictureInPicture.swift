@@ -54,6 +54,8 @@ public final class PictureInPicture: NSObject {
     @objc private dynamic var controller: AVPictureInPictureController?
     private var referenceCount = 0
 
+    private var playerViewController: AVPlayerViewController?
+
     var playerLayer: AVPlayerLayer? {
         controller?.playerLayer
     }
@@ -113,6 +115,8 @@ extension PictureInPicture {
 
 extension PictureInPicture {
     func acquire(for controller: AVPlayerViewController) {
+        playerViewController = controller
+        referenceCount = 1
     }
 
     func relinquish(for controller: AVPlayerViewController) {
