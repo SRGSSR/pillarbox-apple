@@ -7,21 +7,37 @@
 import Player
 import SwiftUI
 
+private final class PlayerViewModel {
+    var media: Media? {
+        didSet {
+            guard media != oldValue else { return }
+            if let playerItem = media?.playerItem() {
+                player.items = [playerItem]
+            }
+            else {
+                player.removeAllItems()
+            }
+        }
+    }
+
+    let player = Player(configuration: .standard)
+}
+
 // Behavior: h-exp, v-exp
 struct SystemPlayerView: View {
-    let media: Media
-    @StateObject private var player = Player()
+    private static let model = PlayerViewModel()
 
     var body: some View {
-        SystemVideoView(player: player, isPictureInPictureSupported: true)
+        SystemVideoView(player: Self.model.player, isPictureInPictureSupported: true)
             .ignoresSafeArea()
-            .onAppear(perform: play)
+            .enabledForInAppPictureInPictureWithCleanup {
+                Self.model.media = nil
+            }
             .tracked(name: "system-player")
     }
 
-    private func play() {
-        player.append(media.playerItem())
-        player.play()
+    init(media: Media) {
+        Self.model.media = media
     }
 }
 
