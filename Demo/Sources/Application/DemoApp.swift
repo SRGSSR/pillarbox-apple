@@ -22,7 +22,7 @@ struct DemoApp: App {
                 searchTab()
                 settingsTab()
             }
-            .modal(item: $router.presented) { presented in
+            .modal(destination: $router.presented) { presented in
                 presented.view()
             }
             .environmentObject(router)
