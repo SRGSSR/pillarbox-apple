@@ -10,7 +10,6 @@ import SwiftUI
 private struct _SystemVideoView: UIViewControllerRepresentable {
     let player: Player
     let gravity: AVLayerVideoGravity
-    let isPictureInPictureSupported: Bool
 
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         .init()
@@ -19,7 +18,23 @@ private struct _SystemVideoView: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
         uiViewController.player = player.systemPlayer
         uiViewController.videoGravity = gravity
-        uiViewController.allowsPictureInPicturePlayback = isPictureInPictureSupported
+        uiViewController.allowsPictureInPicturePlayback = false
+    }
+}
+
+// swiftlint:disable:next type_name
+private struct _PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable {
+    let player: Player
+    let gravity: AVLayerVideoGravity
+
+    func makeUIViewController(context: Context) -> AVPlayerViewController {
+        .init()
+    }
+
+    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
+        uiViewController.player = player.systemPlayer
+        uiViewController.videoGravity = gravity
+        uiViewController.allowsPictureInPicturePlayback = true
     }
 }
 
@@ -30,12 +45,19 @@ public struct SystemVideoView: View {
     private let isPictureInPictureSupported: Bool
 
     public var body: some View {
-        _SystemVideoView(player: player, gravity: gravity, isPictureInPictureSupported: isPictureInPictureSupported)
-#if os(tvOS)
-            .onDisappear {
-                // Avoid sound continuing in background on tvOS, see https://github.com/SRGSSR/pillarbox-apple/issues/520
-                player.pause()
+        ZStack {
+            if isPictureInPictureSupported {
+                _PictureInPictureSupportingSystemVideoView(player: player, gravity: gravity)
             }
+            else {
+                _SystemVideoView(player: player, gravity: gravity)
+            }
+        }
+#if os(tvOS)
+        .onDisappear {
+            // Avoid sound continuing in background on tvOS, see https://github.com/SRGSSR/pillarbox-apple/issues/520
+            player.pause()
+        }
 #endif
     }
 
