@@ -119,6 +119,7 @@ extension PictureInPicture {
             referenceCount += 1
         }
         else {
+            stop() // Force a stop in case of the PiP has already been started.
             playerViewController = controller
             playerViewController?.delegate = self
             referenceCount = 1
@@ -224,7 +225,15 @@ extension PictureInPicture {
     }
 
     func stop() {
-        controller?.stopPictureInPicture()
+        if let controller {
+            controller.stopPictureInPicture()
+        }
+        if let playerViewController {
+            let selector = NSSelectorFromString("\("stop")\("Picture")\("In")\("Picture")")
+            if playerViewController.responds(to: selector) {
+                playerViewController.perform(selector)
+            }
+        }
     }
 
     func toggle() {
