@@ -12,13 +12,14 @@ private struct _SystemVideoView: UIViewControllerRepresentable {
     let gravity: AVLayerVideoGravity
 
     func makeUIViewController(context: Context) -> AVPlayerViewController {
-        .init()
+        let controller = AVPlayerViewController()
+        controller.allowsPictureInPicturePlayback = false
+        return controller
     }
 
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
         uiViewController.player = player.systemPlayer
         uiViewController.videoGravity = gravity
-        uiViewController.allowsPictureInPicturePlayback = false
     }
 }
 
@@ -33,6 +34,7 @@ private struct _PictureInPictureSupportingSystemVideoView: UIViewControllerRepre
 
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = PictureInPicture.shared.playerViewController ?? .init()
+        controller.allowsPictureInPicturePlayback = true
         PictureInPicture.shared.acquire(for: controller)
         return controller
     }
@@ -40,7 +42,6 @@ private struct _PictureInPictureSupportingSystemVideoView: UIViewControllerRepre
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
         uiViewController.player = player.systemPlayer
         uiViewController.videoGravity = gravity
-        uiViewController.allowsPictureInPicturePlayback = true
     }
 }
 
