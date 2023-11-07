@@ -183,6 +183,9 @@ public extension PictureInPicture {
         if let playerLayer {
             acquire(for: playerLayer)
         }
+        if let playerViewController {
+            acquire(for: playerViewController)
+        }
         isInAppEnabled = true
     }
 
@@ -201,6 +204,9 @@ public extension PictureInPicture {
         }
         if let playerLayer {
             relinquish(for: playerLayer)
+        }
+        if let playerViewController {
+            relinquish(for: playerViewController)
         }
         isInAppEnabled = false
     }
