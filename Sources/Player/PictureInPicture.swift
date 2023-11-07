@@ -115,12 +115,27 @@ extension PictureInPicture {
 
 extension PictureInPicture {
     func acquire(for controller: AVPlayerViewController) {
-        playerViewController = controller
-        playerViewController?.delegate = self
-        referenceCount = 1
+        if controller === playerViewController {
+            referenceCount += 1
+        }
+        else {
+            playerViewController = controller
+            playerViewController?.delegate = self
+            referenceCount = 1
+        }
     }
 
     func relinquish(for controller: AVPlayerViewController) {
+        guard controller === playerViewController else { return }
+        referenceCount -= 1
+        if referenceCount == 0 {
+            self.playerViewController = nil
+
+            // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
+            DispatchQueue.main.async {
+                self.clean()
+            }
+        }
     }
 }
 
