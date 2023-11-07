@@ -230,15 +230,8 @@ extension PictureInPicture {
     }
 
     func stop() {
-        if let controller {
-            controller.stopPictureInPicture()
-        }
-        if let playerViewController {
-            let selector = NSSelectorFromString("\("stop")\("Picture")\("In")\("Picture")")
-            if playerViewController.responds(to: selector) {
-                playerViewController.perform(selector)
-            }
-        }
+        guard let controller else { return }
+        controller.stopPictureInPicture()
     }
 
     func toggle() {
