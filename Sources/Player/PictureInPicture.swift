@@ -54,7 +54,7 @@ public final class PictureInPicture: NSObject {
     @objc private dynamic var controller: AVPictureInPictureController?
     private var referenceCount = 0
 
-    private var playerViewController: AVPlayerViewController?
+    var playerViewController: AVPlayerViewController?
 
     var playerLayer: AVPlayerLayer? {
         controller?.playerLayer
@@ -119,7 +119,6 @@ extension PictureInPicture {
             referenceCount += 1
         }
         else {
-            stop() // Force a stop in case of the PiP has already been started.
             playerViewController = controller
             playerViewController?.delegate = self
             referenceCount = 1

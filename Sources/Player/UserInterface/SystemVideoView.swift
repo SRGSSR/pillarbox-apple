@@ -32,7 +32,7 @@ private struct _PictureInPictureSupportingSystemVideoView: UIViewControllerRepre
     }
 
     func makeUIViewController(context: Context) -> AVPlayerViewController {
-        let controller = AVPlayerViewController()
+        let controller = PictureInPicture.shared.playerViewController ?? .init()
         PictureInPicture.shared.acquire(for: controller)
         return controller
     }
