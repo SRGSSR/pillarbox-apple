@@ -126,19 +126,35 @@ extension PictureInPicture {
 
 extension PictureInPicture: AVPlayerViewControllerDelegate {
     public func playerViewControllerWillStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
+        acquire(for: playerViewController)
+        delegate?.pictureInPictureWillStart(self)
     }
+
     public func playerViewControllerDidStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
+        delegate?.pictureInPictureDidStart(self)
     }
+
+    public func playerViewController(
+        _ playerViewController: AVPlayerViewController,
+        failedToStartPictureInPictureWithError error: Error
+    ) {
+        delegate?.pictureInPictureController(self, failedToStartWithError: error)
+    }
+
     public func playerViewController(
         _ playerViewController: AVPlayerViewController,
         restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
     ) {
+        delegate?.pictureInPicture(self, restoreUserInterfaceForStopWithCompletionHandler: completionHandler)
     }
+
     public func playerViewControllerWillStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
+        delegate?.pictureInPictureWillStop(self)
     }
+
     public func playerViewControllerDidStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
-    }
-    public func playerViewController(_ playerViewController: AVPlayerViewController, failedToStartPictureInPictureWithError error: Error) {
+        relinquish(for: playerViewController)
+        delegate?.pictureInPictureDidStop(self)
     }
 }
 
