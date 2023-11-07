@@ -91,7 +91,7 @@ public struct VideoView: View {
             _VideoView(player: player, gravity: gravity)
         }
     }
-    
+
     /// Creates a view displaying video content.
     ///
     /// - Parameters:

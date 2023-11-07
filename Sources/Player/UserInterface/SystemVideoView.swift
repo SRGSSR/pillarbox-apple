@@ -27,8 +27,14 @@ private struct _PictureInPictureSupportingSystemVideoView: UIViewControllerRepre
     let player: Player
     let gravity: AVLayerVideoGravity
 
+    static func dismantleUIViewController(_ uiViewController: AVPlayerViewController, coordinator: ()) {
+        PictureInPicture.shared.relinquish(for: uiViewController)
+    }
+
     func makeUIViewController(context: Context) -> AVPlayerViewController {
-        .init()
+        let controller = AVPlayerViewController()
+        PictureInPicture.shared.acquire(for: controller)
+        return controller
     }
 
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {

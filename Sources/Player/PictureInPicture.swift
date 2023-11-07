@@ -73,6 +73,8 @@ public final class PictureInPicture: NSObject {
     }
 }
 
+// MARK: Acquire & Relinquish for AVPlayerLayer
+
 extension PictureInPicture {
     func acquire(for playerLayer: AVPlayerLayer) {
         if let controller {
@@ -104,6 +106,16 @@ extension PictureInPicture {
     func clean() {
         cleanup?()
         cleanup = nil
+    }
+}
+
+// MARK: Acquire & Relinquish for AVPlayerViewController
+
+extension PictureInPicture {
+    func acquire(for controller: AVPlayerViewController) {
+    }
+
+    func relinquish(for controller: AVPlayerViewController) {
     }
 }
 
