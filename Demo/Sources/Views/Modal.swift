@@ -8,6 +8,19 @@ import SwiftUI
 
 #if os(iOS)
 
+private struct ModalModifier<Item, Presented>: ViewModifier where Item: Identifiable, Presented: View {
+    let item: Binding<Item?>
+    @ViewBuilder let presented: (Item) -> Presented
+
+    func body(content: Content) -> some View {
+        content
+            .fullScreenCover(item: item) { item in
+                presented(item)
+                    .modifier(PresentedModifier())
+            }
+    }
+}
+
 private struct PresentedModifier: ViewModifier {
     @Environment(\.dismiss) private var dismiss
 
@@ -20,25 +33,6 @@ private struct PresentedModifier: ViewModifier {
                         dismiss()
                     }
             )
-    }
-}
-
-private struct ModalModifier<Item, Presented>: ViewModifier where Item: Identifiable, Presented: View {
-    let item: Binding<Item?>
-    @ViewBuilder let presented: (Item) -> Presented
-
-    func body(content: Content) -> some View {
-        switch UIDevice.current.userInterfaceIdiom {
-        case .pad:
-            content
-                .fullScreenCover(item: item) { item in
-                    presented(item)
-                        .modifier(PresentedModifier())
-                }
-        default:
-            content
-                .sheet(item: item, content: presented)
-        }
     }
 }
 

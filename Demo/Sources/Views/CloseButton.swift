@@ -11,16 +11,11 @@ struct CloseButton: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        switch UIDevice.current.userInterfaceIdiom {
-        case .pad:
-            Button(action: dismiss.callAsFunction) {
-                Image(systemName: "chevron.down")
-                    .tint(.white)
-                    .frame(width: 45, height: 45)
-            }
-            .shadow(color: .black, radius: 1)
-        default:
-            EmptyView()
+        Button(action: dismiss.callAsFunction) {
+            Image(systemName: "chevron.down")
+                .tint(.white)
+                .frame(width: 45, height: 45)
         }
+        .shadow(color: .black, radius: 1)
     }
 }
