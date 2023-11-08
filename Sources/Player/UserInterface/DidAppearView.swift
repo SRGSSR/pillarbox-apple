@@ -7,31 +7,31 @@
 import SwiftUI
 import UIKit
 
-private  final class DidAppearViewController: UIViewController {
+private  final class WillAppearViewController: UIViewController {
     var action: (() -> Void)?
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         action?()
     }
 }
 
-private struct DidAppearView: UIViewControllerRepresentable {
+private struct WillAppearView: UIViewControllerRepresentable {
     let action: () -> Void
 
-    func makeUIViewController(context: Context) -> DidAppearViewController {
+    func makeUIViewController(context: Context) -> WillAppearViewController {
         .init()
     }
 
-    func updateUIViewController(_ uiViewController: DidAppearViewController, context: Context) {
+    func updateUIViewController(_ uiViewController: WillAppearViewController, context: Context) {
         uiViewController.action = action
     }
 }
 
 extension View {
-    func onDidAppear(perform action: @escaping () -> Void) -> some View {
+    func onWillAppear(perform action: @escaping () -> Void) -> some View {
         background {
-            DidAppearView(action: action)
+            WillAppearView(action: action)
         }
     }
 }
