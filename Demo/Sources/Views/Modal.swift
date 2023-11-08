@@ -23,42 +23,31 @@ private struct PresentedModifier: ViewModifier {
     }
 }
 
-private struct ModalModifier<Presented>: ViewModifier where Presented: View {
-    let destination: Binding<RouterDestination?>
-    @ViewBuilder let presented: (RouterDestination) -> Presented
-
-    private var fullScreenCoverDestination: Binding<RouterDestination?> {
-        isFullScreenCover ? destination : .constant(nil)
-    }
-
-    private var sheetDestination: Binding<RouterDestination?> {
-        !isFullScreenCover ? destination : .constant(nil)
-    }
-
-    private var isFullScreenCover: Bool {
-        guard UIDevice.current.userInterfaceIdiom == .phone else { return true }
-        return destination.wrappedValue?.preferredModal == .fullScreenCover
-    }
+private struct ModalModifier<Item, Presented>: ViewModifier where Item: Identifiable, Presented: View {
+    let item: Binding<Item?>
+    @ViewBuilder let presented: (Item) -> Presented
 
     func body(content: Content) -> some View {
-        content
-            .fullScreenCover(item: fullScreenCoverDestination) { item in
-                presented(item)
-                    .modifier(PresentedModifier())
-            }
-            .sheet(item: sheetDestination, content: presented)
+        switch UIDevice.current.userInterfaceIdiom {
+        case .pad:
+            content
+                .fullScreenCover(item: item) { item in
+                    presented(item)
+                        .modifier(PresentedModifier())
+                }
+        default:
+            content
+                .sheet(item: item, content: presented)
+        }
     }
 }
 
 #endif
 
 extension View {
-    func modal<Content>(
-        destination: Binding<RouterDestination?>,
-        @ViewBuilder content: @escaping (RouterDestination) -> Content
-    ) -> some View where Content: View {
+    func modal<Item, Content>(item: Binding<Item?>, @ViewBuilder content: @escaping (Item) -> Content) -> some View where Item: Identifiable, Content: View {
 #if os(iOS)
-        modifier(ModalModifier(destination: destination, presented: content))
+        modifier(ModalModifier(item: item, presented: content))
 #else
         fullScreenCover(item: item, content: content)
 #endif

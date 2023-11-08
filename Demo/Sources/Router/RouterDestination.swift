@@ -7,11 +7,6 @@
 import AVFoundation
 import SwiftUI
 
-enum Modal {
-    case fullScreenCover
-    case sheet
-}
-
 enum RouterDestination: Identifiable, Hashable {
     case player(media: Media)
     case systemPlayer(media: Media)
@@ -62,15 +57,6 @@ enum RouterDestination: Identifiable, Hashable {
             return "playlist"
         case .contentList:
             return "contentList"
-        }
-    }
-
-    var preferredModal: Modal {
-        switch self {
-        case .systemPlayer:
-            return .fullScreenCover
-        default:
-            return .sheet
         }
     }
 
