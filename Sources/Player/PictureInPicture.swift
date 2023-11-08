@@ -87,21 +87,18 @@ public final class PictureInPicture: NSObject {
 
 extension PictureInPicture {
     func acquire(for playerLayer: AVPlayerLayer) {
-        if let controller {
-            guard controller.playerLayer == playerLayer else { return }
+        if controller?.playerLayer === playerLayer {
             referenceCount += 1
         }
         else {
             controller = AVPictureInPictureController(playerLayer: playerLayer)
-            if let controller {
-                controller.delegate = self
-                referenceCount = 1
-            }
+            controller?.delegate = self
+            referenceCount = 1
         }
     }
 
     func relinquish(for playerLayer: AVPlayerLayer) {
-        guard let controller, controller.playerLayer === playerLayer else { return }
+        guard controller?.playerLayer === playerLayer else { return }
         referenceCount -= 1
         if referenceCount == 0 {
             self.controller = nil
