@@ -7,6 +7,21 @@
 import AVKit
 import SwiftUI
 
+private class PlayerViewController: AVPlayerViewController {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isMovingToParent || isBeingPresented {
+            stop()
+        }
+    }
+
+    private func stop() {
+        guard allowsPictureInPicturePlayback else { return }
+        allowsPictureInPicturePlayback = false
+        allowsPictureInPicturePlayback = true
+    }
+}
+
 private struct _SystemVideoView: UIViewControllerRepresentable {
     let player: Player
     let gravity: AVLayerVideoGravity
@@ -33,7 +48,7 @@ private struct _PictureInPictureSupportingSystemVideoView: UIViewControllerRepre
     }
 
     func makeUIViewController(context: Context) -> AVPlayerViewController {
-        let controller = PictureInPicture.shared.playerViewController ?? .init()
+        let controller = PictureInPicture.shared.playerViewController ?? PlayerViewController()
         controller.allowsPictureInPicturePlayback = true
         PictureInPicture.shared.acquire(for: controller)
         return controller

@@ -233,10 +233,6 @@ extension PictureInPicture {
         if let controller {
             controller.stopPictureInPicture()
         }
-        if let playerViewController {
-            playerViewController.allowsPictureInPicturePlayback = false
-            playerViewController.allowsPictureInPicturePlayback = true
-        }
     }
 
     func toggle() {
