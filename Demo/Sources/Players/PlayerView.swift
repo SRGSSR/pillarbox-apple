@@ -17,6 +17,7 @@ struct PlayerView: View {
             .enabledForInAppPictureInPictureWithCleanup {
                 Self.model.media = nil
             }
+            .onAppear(perform: Self.model.play)
             .tracked(name: "player")
     }
 

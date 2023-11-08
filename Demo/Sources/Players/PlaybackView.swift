@@ -562,10 +562,6 @@ struct PlaybackView: View {
             }
         }
         .background(.black)
-        .onAppear {
-            player.becomeActive()
-            player.play()
-        }
     }
 
     init(player: Player, layout: Binding<Layout> = .constant(.inline), isPictureInPictureSupported: Bool = false) {

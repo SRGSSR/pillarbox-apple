@@ -117,6 +117,11 @@ final class PlaylistViewModel: ObservableObject {
         medias += Template.medias(from: templates)
     }
 
+    func play() {
+        player.becomeActive()
+        player.play()
+    }
+
     func shuffle() {
         items.shuffle()
     }

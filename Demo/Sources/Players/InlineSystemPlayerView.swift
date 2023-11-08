@@ -20,9 +20,10 @@ struct InlineSystemPlayerView: View {
             .enabledForInAppPictureInPictureWithCleanup {
                 Self.model.media = nil
             }
-            .tracked(name: "inline-system-player")
             .aspectRatio(16 / 9, contentMode: .fit)
             .padding(padding)
+            .onAppear(perform: Self.model.play)
+            .tracked(name: "inline-system-player")
     }
 
     init(media: Media) {
