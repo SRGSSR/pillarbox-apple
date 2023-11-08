@@ -42,6 +42,12 @@ public protocol PictureInPictureDelegate: AnyObject {
 
 /// Manages Picture in Picture.
 public final class PictureInPicture: NSObject {
+    enum Mode {
+        case unknown
+        case system(AVPlayerViewController)
+        case custom(AVPlayerLayer)
+    }
+
     static let shared = PictureInPicture()
 
     @Published private(set) var isPossible = false
@@ -59,6 +65,8 @@ public final class PictureInPicture: NSObject {
     var playerLayer: AVPlayerLayer? {
         controller?.playerLayer
     }
+
+    var mode: Mode = .unknown
 
     override private init() {
         super.init()
