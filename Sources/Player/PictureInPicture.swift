@@ -83,22 +83,37 @@ public final class PictureInPicture: NSObject {
     }
 }
 
-// MARK: Acquire & Relinquish for AVPlayerLayer
-
 extension PictureInPicture {
-    func acquire(for playerLayer: AVPlayerLayer) {
-        if controller?.playerLayer === playerLayer {
+    func acquire(with filter: () -> Bool, perform: () -> Void) {
+        if filter() {
             referenceCount += 1
         }
         else {
-            controller = AVPictureInPictureController(playerLayer: playerLayer)
-            controller?.delegate = self
+            perform()
             referenceCount = 1
         }
     }
 
-    func relinquish(for playerLayer: AVPlayerLayer) {
-        guard controller?.playerLayer === playerLayer else { return }
+    func acquire(for playerLayer: AVPlayerLayer) {
+        acquire {
+            controller?.playerLayer === playerLayer
+        } perform: {
+            controller = AVPictureInPictureController(playerLayer: playerLayer)
+            controller?.delegate = self
+        }
+    }
+
+    func acquire(for controller: AVPlayerViewController) {
+        acquire {
+            controller === playerViewController
+        } perform: {
+            playerViewController = controller
+            playerViewController?.delegate = self
+        }
+    }
+
+    func relinquish(with filter: () -> Bool) {
+        guard filter() else { return }
         referenceCount -= 1
         if referenceCount == 0 {
             self.controller = nil
@@ -110,37 +125,17 @@ extension PictureInPicture {
         }
     }
 
-    func clean() {
-        cleanup?()
-        cleanup = nil
-    }
-}
-
-// MARK: Acquire & Relinquish for AVPlayerViewController
-
-extension PictureInPicture {
-    func acquire(for controller: AVPlayerViewController) {
-        if controller === playerViewController {
-            referenceCount += 1
-        }
-        else {
-            playerViewController = controller
-            playerViewController?.delegate = self
-            referenceCount = 1
-        }
+    func relinquish(for playerLayer: AVPlayerLayer) {
+        relinquish { controller?.playerLayer === playerLayer }
     }
 
     func relinquish(for controller: AVPlayerViewController) {
-        guard controller === playerViewController else { return }
-        referenceCount -= 1
-        if referenceCount == 0 {
-            self.playerViewController = nil
+        relinquish { controller === playerViewController }
+    }
 
-            // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
-            DispatchQueue.main.async {
-                self.clean()
-            }
-        }
+    func clean() {
+        cleanup?()
+        cleanup = nil
     }
 }
 
