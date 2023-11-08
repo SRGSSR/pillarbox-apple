@@ -26,6 +26,10 @@ private final class PlayerViewModel {
 struct InlineSystemPlayerView: View {
     private static let model = PlayerViewModel()
 
+    private var padding: CGFloat {
+        UIDevice.current.userInterfaceIdiom == .phone ? 50 : 200
+    }
+
     var body: some View {
         SystemVideoView(player: Self.model.player, isPictureInPictureSupported: true)
             .ignoresSafeArea()
@@ -34,7 +38,7 @@ struct InlineSystemPlayerView: View {
             }
             .tracked(name: "inline-system-player")
             .aspectRatio(16 / 9, contentMode: .fit)
-            .padding(200)
+            .padding(padding)
     }
 
     init(media: Media) {
