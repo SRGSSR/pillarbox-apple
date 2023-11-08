@@ -291,4 +291,18 @@ extension PictureInPicture: AVPlayerViewControllerDelegate {
         relinquish(for: playerViewController)
         delegate?.pictureInPictureDidStop(self)
     }
+
+    public func playerViewController(
+        _ playerViewController: AVPlayerViewController,
+        willBeginFullScreenPresentationWithAnimationCoordinator coordinator: UIViewControllerTransitionCoordinator
+    ) {
+        acquire(for: playerViewController)
+    }
+
+    public func playerViewController(
+        _ playerViewController: AVPlayerViewController,
+        willEndFullScreenPresentationWithAnimationCoordinator coordinator: UIViewControllerTransitionCoordinator
+    ) {
+        relinquish(for: playerViewController)
+    }
 }
