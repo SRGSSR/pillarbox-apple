@@ -17,6 +17,7 @@ struct SystemPlayerView: View {
             .enabledForInAppPictureInPictureWithCleanup {
                 Self.model.media = nil
             }
+            .onAppear(perform: Self.model.play)
             .tracked(name: "system-player")
     }
 

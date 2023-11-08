@@ -20,4 +20,9 @@ final class PlayerViewModel {
     }
 
     let player = Player(configuration: .standard)
+
+    func play() {
+        player.becomeActive()
+        player.play()
+    }
 }
