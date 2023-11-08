@@ -258,6 +258,7 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
 
 extension PictureInPicture: AVPlayerViewControllerDelegate {
     public func playerViewControllerWillStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
+        isActive = true
         acquire(for: playerViewController)
         delegate?.pictureInPictureWillStart(self)
     }
@@ -281,6 +282,7 @@ extension PictureInPicture: AVPlayerViewControllerDelegate {
     }
 
     public func playerViewControllerWillStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
+        isActive = false
         delegate?.pictureInPictureWillStop(self)
     }
 
