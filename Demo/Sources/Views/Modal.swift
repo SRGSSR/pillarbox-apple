@@ -22,14 +22,15 @@ private struct ModalModifier<Item, Presented>: ViewModifier where Item: Identifi
 }
 
 private struct PresentedModifier: ViewModifier {
+    private let distance: CGFloat = 100
     @Environment(\.dismiss) private var dismiss
 
     func body(content: Content) -> some View {
         content
             .gesture(
-                DragGesture(minimumDistance: 100)
+                DragGesture(minimumDistance: distance)
                     .onEnded { value in
-                        guard value.translation.height > 0 else { return }
+                        guard value.translation.height > distance else { return }
                         dismiss()
                     }
             )
