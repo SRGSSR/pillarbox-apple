@@ -7,7 +7,7 @@
 import Player
 import SwiftUI
 
-final class PlayerViewModel {
+private final class PlayerViewModel {
     var media: Media? {
         didSet {
             guard media != oldValue else { return }
@@ -26,7 +26,7 @@ final class PlayerViewModel {
 /// A standalone player view with standard controls.
 /// Behavior: h-exp, v-exp
 struct PlayerView: View {
-    static let model = PlayerViewModel()
+    private static let model = PlayerViewModel()
 
     var body: some View {
         PlaybackView(player: Self.model.player)
