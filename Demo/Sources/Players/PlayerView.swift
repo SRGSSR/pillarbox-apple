@@ -29,7 +29,7 @@ struct PlayerView: View {
     private static let model = PlayerViewModel()
 
     var body: some View {
-        PlaybackView(player: Self.model.player)
+        PlaybackView(player: Self.model.player, isPictureInPictureSupported: true)
             .enabledForInAppPictureInPictureWithCleanup {
                 Self.model.media = nil
             }

@@ -15,6 +15,7 @@ import SwiftUI
 private struct MainView: View {
     @ObservedObject var player: Player
     @Binding var layout: PlaybackView.Layout
+    let isPictureInPictureSupported: Bool
 
     @StateObject private var visibilityTracker = VisibilityTracker()
 
@@ -110,7 +111,7 @@ private struct MainView: View {
                 image(name: "tv")
             }
             else {
-                VideoView(player: player, gravity: gravity, isPictureInPictureSupported: true)
+                VideoView(player: player, gravity: gravity, isPictureInPictureSupported: isPictureInPictureSupported)
             }
         }
     }
@@ -541,6 +542,7 @@ struct PlaybackView: View {
 
     @ObservedObject private var player: Player
     @Binding private var layout: Layout
+    let isPictureInPictureSupported: Bool
 
     var body: some View {
         ZStack {
@@ -566,9 +568,10 @@ struct PlaybackView: View {
         }
     }
 
-    init(player: Player, layout: Binding<Layout> = .constant(.inline)) {
+    init(player: Player, layout: Binding<Layout> = .constant(.inline), isPictureInPictureSupported: Bool = false) {
         self.player = player
         _layout = layout
+        self.isPictureInPictureSupported = isPictureInPictureSupported
     }
 
     @ViewBuilder
@@ -577,13 +580,13 @@ struct PlaybackView: View {
 #if os(iOS)
             switch UserDefaults.standard.playerLayout {
             case .custom:
-                MainView(player: player, layout: $layout)
+                MainView(player: player, layout: $layout, isPictureInPictureSupported: isPictureInPictureSupported)
             case .system:
-                SystemVideoView(player: player, isPictureInPictureSupported: true)
+                SystemVideoView(player: player, isPictureInPictureSupported: isPictureInPictureSupported)
                     .ignoresSafeArea()
             }
 #else
-            SystemVideoView(player: player)
+            SystemVideoView(player: player, isPictureInPictureSupported: isPictureInPictureSupported)
                 .ignoresSafeArea()
 #endif
         }
