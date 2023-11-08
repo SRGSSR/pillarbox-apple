@@ -27,6 +27,9 @@ private struct PresentedModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            // https://www.hackingwithswift.com/quick-start/swiftui/how-to-control-the-tappable-area-of-a-view-using-contentshape
+            .contentShape(Rectangle())
             .gesture(
                 DragGesture(minimumDistance: distance)
                     .onEnded { value in
