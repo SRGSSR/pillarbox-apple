@@ -139,40 +139,6 @@ extension PictureInPicture {
     }
 }
 
-extension PictureInPicture: AVPlayerViewControllerDelegate {
-    public func playerViewControllerWillStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
-        acquire(for: playerViewController)
-        delegate?.pictureInPictureWillStart(self)
-    }
-
-    public func playerViewControllerDidStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
-        delegate?.pictureInPictureDidStart(self)
-    }
-
-    public func playerViewController(
-        _ playerViewController: AVPlayerViewController,
-        failedToStartPictureInPictureWithError error: Error
-    ) {
-        delegate?.pictureInPictureController(self, failedToStartWithError: error)
-    }
-
-    public func playerViewController(
-        _ playerViewController: AVPlayerViewController,
-        restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
-    ) {
-        delegate?.pictureInPicture(self, restoreUserInterfaceForStopWithCompletionHandler: completionHandler)
-    }
-
-    public func playerViewControllerWillStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
-        delegate?.pictureInPictureWillStop(self)
-    }
-
-    public func playerViewControllerDidStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
-        relinquish(for: playerViewController)
-        delegate?.pictureInPictureDidStop(self)
-    }
-}
-
 public extension PictureInPicture {
     /// Restores from in-app Picture in Picture playback.
     ///
@@ -245,6 +211,8 @@ extension PictureInPicture {
     }
 }
 
+// MARK: Delegate for Picture in Picture controller
+
 extension PictureInPicture: AVPictureInPictureControllerDelegate {
     public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = true
@@ -277,6 +245,42 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
 
     public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         relinquish(for: pictureInPictureController.playerLayer)
+        delegate?.pictureInPictureDidStop(self)
+    }
+}
+
+// MARK: Delegate for player view controller
+
+extension PictureInPicture: AVPlayerViewControllerDelegate {
+    public func playerViewControllerWillStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
+        acquire(for: playerViewController)
+        delegate?.pictureInPictureWillStart(self)
+    }
+
+    public func playerViewControllerDidStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
+        delegate?.pictureInPictureDidStart(self)
+    }
+
+    public func playerViewController(
+        _ playerViewController: AVPlayerViewController,
+        failedToStartPictureInPictureWithError error: Error
+    ) {
+        delegate?.pictureInPictureController(self, failedToStartWithError: error)
+    }
+
+    public func playerViewController(
+        _ playerViewController: AVPlayerViewController,
+        restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
+    ) {
+        delegate?.pictureInPicture(self, restoreUserInterfaceForStopWithCompletionHandler: completionHandler)
+    }
+
+    public func playerViewControllerWillStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
+        delegate?.pictureInPictureWillStop(self)
+    }
+
+    public func playerViewControllerDidStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
+        relinquish(for: playerViewController)
         delegate?.pictureInPictureDidStop(self)
     }
 }
