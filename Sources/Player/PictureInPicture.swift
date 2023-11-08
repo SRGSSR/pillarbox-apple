@@ -289,6 +289,7 @@ extension PictureInPicture: AVPlayerViewControllerDelegate {
         delegate?.pictureInPictureDidStop(self)
     }
 
+#if os(iOS)
     public func playerViewController(
         _ playerViewController: AVPlayerViewController,
         willBeginFullScreenPresentationWithAnimationCoordinator coordinator: UIViewControllerTransitionCoordinator
@@ -302,4 +303,5 @@ extension PictureInPicture: AVPlayerViewControllerDelegate {
     ) {
         relinquish(for: playerViewController)
     }
+#endif
 }
