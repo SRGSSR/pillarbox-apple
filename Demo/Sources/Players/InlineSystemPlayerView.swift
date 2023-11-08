@@ -7,22 +7,6 @@
 import Player
 import SwiftUI
 
-private final class PlayerViewModel {
-    var media: Media? {
-        didSet {
-            guard media != oldValue else { return }
-            if let playerItem = media?.playerItem() {
-                player.items = [playerItem]
-            }
-            else {
-                player.removeAllItems()
-            }
-        }
-    }
-
-    let player = Player(configuration: .standard)
-}
-
 struct InlineSystemPlayerView: View {
     private static let model = PlayerViewModel()
 

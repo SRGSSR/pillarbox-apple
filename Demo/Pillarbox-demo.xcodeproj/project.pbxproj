@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0E4128BD2AFB7F2A00D67759 /* InlineSystemPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4128BC2AFB7F2A00D67759 /* InlineSystemPlayerView.swift */; };
+		0E4128BF2AFB959B00D67759 /* PlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4128BE2AFB959B00D67759 /* PlayerViewModel.swift */; };
 		0E6B995C29D43E4200D0276D /* OptInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6B995B29D43E4200D0276D /* OptInView.swift */; };
 		0EA8A9A72A6A7F940077E3E4 /* YouTubeKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0EA8A9A62A6A7F940077E3E4 /* YouTubeKit */; };
 		0EA8A9AA2A6A80430077E3E4 /* PlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8A9A92A6A80430077E3E4 /* PlayerItem.swift */; };
@@ -79,6 +80,7 @@
 
 /* Begin PBXFileReference section */
 		0E4128BC2AFB7F2A00D67759 /* InlineSystemPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineSystemPlayerView.swift; sourceTree = "<group>"; };
+		0E4128BE2AFB959B00D67759 /* PlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewModel.swift; sourceTree = "<group>"; };
 		0E6B995B29D43E4200D0276D /* OptInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptInView.swift; sourceTree = "<group>"; };
 		0EA8A9A92A6A80430077E3E4 /* PlayerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerItem.swift; sourceTree = "<group>"; };
 		0EA8A9AD2A6AF0AF0077E3E4 /* YouTubeMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeMetadata.swift; sourceTree = "<group>"; };
@@ -375,6 +377,7 @@
 				6F59E86A29CF31E10093E6FB /* PlayerConfiguration.swift */,
 				6F59E87129CF31E10093E6FB /* PlayerLayout.swift */,
 				6F59E87029CF31E10093E6FB /* PlayerView.swift */,
+				0E4128BE2AFB959B00D67759 /* PlayerViewModel.swift */,
 				6F59E86C29CF31E10093E6FB /* SimplePlayerView.swift */,
 				6F59E86D29CF31E10093E6FB /* SystemPlayerView.swift */,
 				6F59E86F29CF31E10093E6FB /* VanillaPlayerView.swift */,
@@ -573,6 +576,7 @@
 				6F59E88F29CF31E20093E6FB /* StoriesView.swift in Sources */,
 				6F59E88129CF31E10093E6FB /* Playlist.swift in Sources */,
 				6F59E87D29CF31E10093E6FB /* Vendor.swift in Sources */,
+				0E4128BF2AFB959B00D67759 /* PlayerViewModel.swift in Sources */,
 				6F59E88229CF31E10093E6FB /* Media.swift in Sources */,
 				6F59E87E29CF31E10093E6FB /* ServerSetting.swift in Sources */,
 				6F59E89E29CF31E20093E6FB /* PlayerView.swift in Sources */,
