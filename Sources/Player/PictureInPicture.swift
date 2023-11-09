@@ -12,7 +12,7 @@ import SwiftUI
 ///
 /// Applications which require in-app Picture in Picture support must setup a delegate and rely on the Picture in
 /// Picture life cycle to dismiss and restore views as required.
-public protocol PictureInPictureDelegate: AnyObject {
+public protocol PictureInPictureLifeCycle: AnyObject {
     /// Called when Picture in Picture is about to start.
     ///
     /// Use this method to save which view was presented before dismissing it. Use the saved view for later restoration.
@@ -54,7 +54,7 @@ public final class PictureInPicture: NSObject {
     @Published private(set) var isActive = false
     @Published private(set) var isInAppEnabled = false
 
-    private weak var delegate: PictureInPictureDelegate?
+    private weak var delegate: PictureInPictureLifeCycle?
     private var cleanup: (() -> Void)?
 
     @objc private dynamic var controller: AVPictureInPictureController?
@@ -78,7 +78,7 @@ public final class PictureInPicture: NSObject {
     /// In-app Picture in Picture support requires your application to setup a delegate so a playback view supporting
     /// Picture in Picture can be dismissed and restored at a later time, letting users navigate your app while
     /// playback continues in the Picture in Picture overlay.
-    public static func setDelegate(_ delegate: PictureInPictureDelegate) {
+    public static func setDelegate(_ delegate: PictureInPictureLifeCycle) {
         shared.delegate = delegate
     }
 }
