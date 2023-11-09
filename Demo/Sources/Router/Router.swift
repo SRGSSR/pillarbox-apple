@@ -50,7 +50,7 @@ final class Router: ObservableObject {
 }
 
 extension Router: PictureInPictureLifeCycle {
-    func pictureInPictureWillStart(_ pictureInPicture: PictureInPicture) {
+    func pictureInPictureWillStart() {
         switch presented {
         case .player, .systemPlayer:
             previousPresented = presented
@@ -62,26 +62,23 @@ extension Router: PictureInPictureLifeCycle {
         }
     }
 
-    func pictureInPictureDidStart(_ pictureInPicture: PictureInPicture) {}
+    func pictureInPictureDidStart() {}
 
-    func pictureInPictureController(_ pictureInPicture: PictureInPicture, failedToStartWithError error: Error) {}
+    func pictureInPictureControllerFailedToStart(with error: Error) {}
 
-    func pictureInPicture(
-        _ pictureInPicture: PictureInPicture,
-        restoreUserInterfaceForStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
-    ) {
+    func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void) {
         if let previousPresented, previousPresented != presented {
             presented = previousPresented
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                completionHandler(true)
+                completion(true)
             }
         }
         else {
-            completionHandler(true)
+            completion(true)
         }
     }
 
-    func pictureInPictureWillStop(_ pictureInPicture: PictureInPicture) {}
+    func pictureInPictureWillStop() {}
 
-    func pictureInPictureDidStop(_ pictureInPicture: PictureInPicture) {}
+    func pictureInPictureDidStop() {}
 }
