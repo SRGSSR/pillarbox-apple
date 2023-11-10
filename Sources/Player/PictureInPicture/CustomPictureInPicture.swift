@@ -98,13 +98,16 @@ public final class CustomPictureInPicture: NSObject {
     }
 
     func restoreFromInAppPictureInPicture() {
-        if let playerLayer {
-            acquire(for: playerLayer)
-        }
         isInAppEnabled = true
+
+        guard let playerLayer else { return }
+        acquire(for: playerLayer)
     }
 
     func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
+        isInAppEnabled = false
+
+        guard let playerLayer else { return }
         if referenceCount != 0 {
             self.cleanup = cleanup
         }
@@ -112,10 +115,7 @@ public final class CustomPictureInPicture: NSObject {
             cleanup()
             self.cleanup = nil
         }
-        if let playerLayer {
-            relinquish(for: playerLayer)
-        }
-        isInAppEnabled = false
+        relinquish(for: playerLayer)
     }
 }
 

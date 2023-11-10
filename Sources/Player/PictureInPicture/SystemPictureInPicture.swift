@@ -61,12 +61,12 @@ public final class SystemPictureInPicture: NSObject {
     }
 
     func restoreFromInAppPictureInPicture() {
-        if let playerViewController {
-            acquire(for: playerViewController)
-        }
+        guard let playerViewController else { return }
+        acquire(for: playerViewController)
     }
 
     func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
+        guard let playerViewController else { return }
         if referenceCount != 0 {
             self.cleanup = cleanup
         }
@@ -74,9 +74,7 @@ public final class SystemPictureInPicture: NSObject {
             cleanup()
             self.cleanup = nil
         }
-        if let playerViewController {
-            relinquish(for: playerViewController)
-        }
+        relinquish(for: playerViewController)
     }
 }
 
