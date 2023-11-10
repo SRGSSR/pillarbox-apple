@@ -18,8 +18,8 @@ public final class PictureInPicture: NSObject {
     /// Picture in Picture can be dismissed and restored at a later time, letting users navigate your app while
     /// playback continues in the Picture in Picture overlay.
     public static func setDelegate(_ delegate: PictureInPictureLifeCycle) {
-        CustomPictureInPicture.setDelegate(delegate)
-        SystemPictureInPicture.setDelegate(delegate)
+        CustomPictureInPicture.shared.delegate = delegate
+        SystemPictureInPicture.shared.delegate = delegate
     }
 
     /// Restores from in-app Picture in Picture playback.

@@ -16,10 +16,10 @@ public final class CustomPictureInPicture: NSObject {
     @Published private(set) var isActive = false
     @Published private(set) var isInAppEnabled = false
 
-    private weak var delegate: PictureInPictureLifeCycle?
-    private var cleanup: (() -> Void)?
-
     @objc private dynamic var controller: AVPictureInPictureController?
+    weak var delegate: PictureInPictureLifeCycle?
+
+    private var cleanup: (() -> Void)?
     private var referenceCount = 0
 
     var playerLayer: AVPlayerLayer? {
@@ -29,15 +29,6 @@ public final class CustomPictureInPicture: NSObject {
     override private init() {
         super.init()
         configureIsPossiblePublisher()
-    }
-
-    /// Sets a delegate for Picture in Picture.
-    ///
-    /// In-app Picture in Picture support requires your application to setup a delegate so a playback view supporting
-    /// Picture in Picture can be dismissed and restored at a later time, letting users navigate your app while
-    /// playback continues in the Picture in Picture overlay.
-    public static func setDelegate(_ delegate: PictureInPictureLifeCycle) {
-        shared.delegate = delegate
     }
 
     func start() {

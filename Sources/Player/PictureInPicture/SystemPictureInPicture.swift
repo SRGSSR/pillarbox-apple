@@ -12,23 +12,14 @@ import SwiftUI
 public final class SystemPictureInPicture: NSObject {
     static let shared = SystemPictureInPicture()
 
-    private weak var delegate: PictureInPictureLifeCycle?
-    private var cleanup: (() -> Void)?
-
     var playerViewController: AVPlayerViewController?
+    weak var delegate: PictureInPictureLifeCycle?
+
+    private var cleanup: (() -> Void)?
     private var referenceCount = 0
 
     override private init() {
         super.init()
-    }
-
-    /// Sets a delegate for Picture in Picture.
-    ///
-    /// In-app Picture in Picture support requires your application to setup a delegate so a playback view supporting
-    /// Picture in Picture can be dismissed and restored at a later time, letting users navigate your app while
-    /// playback continues in the Picture in Picture overlay.
-    public static func setDelegate(_ delegate: PictureInPictureLifeCycle) {
-        shared.delegate = delegate
     }
 
     func acquire(for controller: AVPlayerViewController) {
