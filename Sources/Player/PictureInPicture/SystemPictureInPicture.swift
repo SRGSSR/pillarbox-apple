@@ -40,7 +40,12 @@ public final class SystemPictureInPicture: NSObject {
         }
     }
 
-    func clean() {
+    func update(with player: AVPlayer) {
+        guard let currentPlayer = playerViewController?.player, currentPlayer !== player else { return }
+        clean()
+    }
+
+    private func clean() {
         // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
         DispatchQueue.main.async {
             self.cleanup?()

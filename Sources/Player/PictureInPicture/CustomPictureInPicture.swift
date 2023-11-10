@@ -66,7 +66,12 @@ public final class CustomPictureInPicture: NSObject {
         }
     }
 
-    func clean() {
+    func update(with player: AVPlayer) {
+        guard let currentPlayer = playerLayer?.player, currentPlayer !== player else { return }
+        clean()
+    }
+
+    private func clean() {
         DispatchQueue.main.async {
             self.cleanup?()
             self.cleanup = nil

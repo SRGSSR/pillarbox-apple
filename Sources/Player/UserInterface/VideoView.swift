@@ -50,9 +50,7 @@ private struct _PictureInPictureSupportingVideoView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: VideoLayerView, context: Context) {
-        if let currentPlayer = uiView.player, currentPlayer != player.queuePlayer {
-            PictureInPicture.shared.custom.clean()
-        }
+        PictureInPicture.shared.custom.update(with: player.queuePlayer)
         uiView.player = player.queuePlayer
         uiView.playerLayer.videoGravity = gravity
     }

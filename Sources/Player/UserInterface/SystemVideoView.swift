@@ -49,9 +49,7 @@ private struct _PictureInPictureSupportingSystemVideoView: UIViewControllerRepre
     }
 
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
-        if let currentPlayer = uiViewController.player, currentPlayer != player.queuePlayer {
-            PictureInPicture.shared.system.clean()
-        }
+        PictureInPicture.shared.system.update(with: player.queuePlayer)
         uiViewController.player = player.systemPlayer
         uiViewController.videoGravity = gravity
     }
