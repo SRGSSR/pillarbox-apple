@@ -60,13 +60,13 @@ public final class CustomPictureInPicture: NSObject {
     func relinquish(for playerLayer: AVPlayerLayer) {
         guard controller?.playerLayer === playerLayer else { return }
         referenceCount -= 1
-        if referenceCount == 0 {
-            controller = nil
 
-            // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
-            DispatchQueue.main.async {
-                self.clean()
-            }
+        guard referenceCount == 0 else { return }
+        controller = nil
+
+        // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
+        DispatchQueue.main.async {
+            self.clean()
         }
     }
 

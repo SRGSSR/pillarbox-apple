@@ -34,13 +34,13 @@ public final class SystemPictureInPicture: NSObject {
     func relinquish(for controller: AVPlayerViewController) {
         guard controller === playerViewController else { return }
         referenceCount -= 1
-        if referenceCount == 0 {
-            playerViewController = nil
 
-            // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
-            DispatchQueue.main.async {
-                self.clean()
-            }
+        guard referenceCount == 0 else { return }
+        playerViewController = nil
+
+        // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
+        DispatchQueue.main.async {
+            self.clean()
         }
     }
 
