@@ -16,6 +16,7 @@ struct ShowcaseView: View {
             playlistsSection()
             embeddingsSection()
             systemPlayerSection()
+            inlineSystemPlayerSection()
             vanillaPlayerSection()
             trackingSection()
         }
@@ -154,6 +155,16 @@ struct ShowcaseView: View {
             cell(
                 title: "Unknown",
                 destination: .systemPlayer(media: Media(from: URNTemplate.unknown))
+            )
+        }
+    }
+
+    @ViewBuilder
+    private func inlineSystemPlayerSection() -> some View {
+        Section("Inline system player (using Pillarbox)") {
+            cell(
+                title: "Video URN - On-demand",
+                destination: .inlineSystemPlayer(media: Media(from: URNTemplate.onDemandVideo))
             )
         }
     }

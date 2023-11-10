@@ -19,19 +19,19 @@ public struct PictureInPictureButton<Content>: View where Content: View {
 
     @State private var isPossible = false
     @State private var isActive = false
-    @State private var isInAppEnabled = false
+    @State private var isInAppPossible = false
 
     public var body: some View {
         ZStack {
-            if isPossible && isInAppEnabled {
-                Button(action: PictureInPicture.shared.toggle) {
+            if isPossible && isInAppPossible {
+                Button(action: PictureInPicture.shared.custom.toggle) {
                     content(isActive)
                 }
-                .onReceive(PictureInPicture.shared.$isActive) { isActive = $0 }
+                .onReceive(PictureInPicture.shared.custom.$isActive) { isActive = $0 }
             }
         }
-        .onReceive(PictureInPicture.shared.$isPossible) { isPossible = $0 }
-        .onReceive(PictureInPicture.shared.$isInAppEnabled) { isInAppEnabled = $0 }
+        .onReceive(PictureInPicture.shared.custom.$isPossible) { isPossible = $0 }
+        .onReceive(PictureInPicture.shared.custom.$isInAppPossible) { isInAppPossible = $0 }
     }
 
     /// Creates a Picture in Picture button.

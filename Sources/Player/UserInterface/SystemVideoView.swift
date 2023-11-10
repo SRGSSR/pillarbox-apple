@@ -7,49 +7,90 @@
 import AVKit
 import SwiftUI
 
+private class PlayerViewController: AVPlayerViewController {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isMovingToParent || isBeingPresented {
+            PictureInPicture.shared.system.stop()
+        }
+    }
+}
+
+private struct _SystemVideoView: UIViewControllerRepresentable {
+    let player: Player
+    let gravity: AVLayerVideoGravity
+
+    func makeUIViewController(context: Context) -> AVPlayerViewController {
+        let controller = AVPlayerViewController()
+        controller.allowsPictureInPicturePlayback = false
+        return controller
+    }
+
+    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
+        uiViewController.player = player.systemPlayer
+        uiViewController.videoGravity = gravity
+    }
+}
+
+// swiftlint:disable:next type_name
+private struct _PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable {
+    let player: Player
+    let gravity: AVLayerVideoGravity
+
+    static func dismantleUIViewController(_ uiViewController: AVPlayerViewController, coordinator: ()) {
+        PictureInPicture.shared.system.relinquish(for: uiViewController)
+    }
+
+    func makeUIViewController(context: Context) -> AVPlayerViewController {
+        let controller = PictureInPicture.shared.system.playerViewController ?? PlayerViewController()
+        controller.allowsPictureInPicturePlayback = true
+        PictureInPicture.shared.system.acquire(for: controller)
+        PictureInPicture.shared.mode = .system
+        return controller
+    }
+
+    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
+        PictureInPicture.shared.system.update(with: player.queuePlayer)
+        uiViewController.player = player.systemPlayer
+        uiViewController.videoGravity = gravity
+    }
+}
+
 /// A view providing the standard system playback user experience.
-///
-/// ### Remark
-///
-/// A bug in AVKit currently makes `SystemVideoView` leak resources after having interacted with the playback
-/// button on iOS 16. This issue has been reported to Apple as FB11934227.
-public struct SystemVideoView<VideoOverlay>: View where VideoOverlay: View {
+public struct SystemVideoView: View {
     private let player: Player
-    private let videoOverlay: VideoOverlay
+    private let gravity: AVLayerVideoGravity
+    private let isPictureInPictureSupported: Bool
 
     public var body: some View {
-        VideoPlayer(player: player.queuePlayer) {
-            videoOverlay
+        ZStack {
+            if isPictureInPictureSupported {
+                _PictureInPictureSupportingSystemVideoView(player: player, gravity: gravity)
+            }
+            else {
+                _SystemVideoView(player: player, gravity: gravity)
+            }
         }
 #if os(tvOS)
         .onDisappear {
-            // Avoid sound continuing in background on tvOS, see https://github.com/SRGSSR/pillarbox-apple/issues/520.
-            player.pause()
+            // Avoid sound continuing in background on tvOS, see https://github.com/SRGSSR/pillarbox-apple/issues/520
+            if !PictureInPicture.shared.system.isActive {
+                player.pause()
+            }
         }
 #endif
     }
 
-    /// Creates the view.
+    /// Creates a view displaying video content.
     ///
     /// - Parameters:
-    ///   - player: The player whose contents will be rendered.
-    ///   - videoOverlay: A closure returning an overlay view to be placed atop the player's content. This view is
-    ///     fully interactive, but is placed below the system-provided playback controls and will only receive unhandled
-    ///     events.
-    public init(player: Player, @ViewBuilder videoOverlay: () -> VideoOverlay) {
+    ///   - player: The player whose content is displayed.
+    ///   - gravity: The mode used to display the content within the view frame.
+    ///   - isPictureInPictureSupported: A Boolean set to `true` if the view must be able to share its video layer for
+    ///     Picture in Picture.
+    public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect, isPictureInPictureSupported: Bool = false) {
         self.player = player
-        self.videoOverlay = videoOverlay()
-    }
-}
-
-public extension SystemVideoView where VideoOverlay == EmptyView {
-    /// Creates the view.
-    /// 
-    /// - Parameters:
-    ///   - player: The player whose contents will be rendered.
-    init(player: Player) {
-        self.init(player: player) {
-            EmptyView()
-        }
+        self.gravity = gravity
+        self.isPictureInPictureSupported = isPictureInPictureSupported
     }
 }

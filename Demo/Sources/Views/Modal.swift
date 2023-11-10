@@ -8,37 +8,35 @@ import SwiftUI
 
 #if os(iOS)
 
-private struct PresentedModifier: ViewModifier {
-    @Environment(\.dismiss) private var dismiss
-
-    func body(content: Content) -> some View {
-        content
-            .gesture(
-                DragGesture(minimumDistance: 100)
-                    .onEnded { value in
-                        guard value.translation.height > 0 else { return }
-                        dismiss()
-                    }
-            )
-    }
-}
-
 private struct ModalModifier<Item, Presented>: ViewModifier where Item: Identifiable, Presented: View {
     let item: Binding<Item?>
     @ViewBuilder let presented: (Item) -> Presented
 
     func body(content: Content) -> some View {
-        switch UIDevice.current.userInterfaceIdiom {
-        case .pad:
-            content
-                .fullScreenCover(item: item) { item in
-                    presented(item)
-                        .modifier(PresentedModifier())
-                }
-        default:
-            content
-                .sheet(item: item, content: presented)
-        }
+        content
+            .fullScreenCover(item: item) { item in
+                presented(item)
+                    .modifier(PresentedModifier())
+            }
+    }
+}
+
+private struct PresentedModifier: ViewModifier {
+    private let distance: CGFloat = 100
+    @Environment(\.dismiss) private var dismiss
+
+    func body(content: Content) -> some View {
+        content
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            // https://www.hackingwithswift.com/quick-start/swiftui/how-to-control-the-tappable-area-of-a-view-using-contentshape
+            .contentShape(Rectangle())
+            .gesture(
+                DragGesture(minimumDistance: distance)
+                    .onEnded { value in
+                        guard value.translation.height > distance else { return }
+                        dismiss()
+                    }
+            )
     }
 }
 

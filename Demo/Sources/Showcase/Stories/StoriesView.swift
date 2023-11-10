@@ -55,10 +55,6 @@ struct StoriesView: View {
         .background(.black)
         .tabViewStyle(.page)
         .ignoresSafeArea()
-        .overlay(alignment: .topLeading) {
-            CloseButton()
-                .offset(y: 20)
-        }
         .tracked(name: "stories")
     }
 }

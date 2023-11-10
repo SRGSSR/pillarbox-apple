@@ -37,12 +37,14 @@ struct OptInView: View {
                 player.resignActive()
             }
         }
-        .onAppear(perform: load)
+        .onAppear(perform: play)
         .tracked(name: "tracking")
     }
 
-    private func load() {
+    private func play() {
         player.append(media.playerItem())
+        player.becomeActive()
+        player.play()
     }
 }
 

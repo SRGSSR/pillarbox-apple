@@ -35,8 +35,8 @@ public extension View {
         onAppear {
             PictureInPicture.shared.restoreFromInAppPictureInPicture()
         }
-        .onDidAppear {
-            PictureInPicture.shared.stop()
+        .onWillAppear {
+            PictureInPicture.shared.custom.stop()
         }
         .onDisappear {
             PictureInPicture.shared.enableInAppPictureInPictureWithCleanup(perform: cleanup)
