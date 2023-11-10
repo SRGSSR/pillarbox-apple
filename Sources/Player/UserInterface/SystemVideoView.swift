@@ -49,7 +49,7 @@ private struct _PictureInPictureSupportingSystemVideoView: UIViewControllerRepre
     }
 
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
-        if uiViewController.player != player.queuePlayer {
+        if let currentPlayer = uiViewController.player, currentPlayer != player.queuePlayer {
             PictureInPicture.shared.system.clean()
         }
         uiViewController.player = player.systemPlayer
