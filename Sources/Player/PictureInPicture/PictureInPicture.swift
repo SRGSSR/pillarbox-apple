@@ -10,11 +10,18 @@ import SwiftUI
 
 /// Manages Picture in Picture.
 public final class PictureInPicture {
+    enum Mode {
+        case custom
+        case system
+    }
+
     /// The shared instance managing Picture in Picture.
     public static let shared = PictureInPicture()
 
     let custom = CustomPictureInPicture()
     let system = SystemPictureInPicture()
+
+    var mode = Mode.custom
 
     /// Sets a delegate for Picture in Picture.
     ///
@@ -31,8 +38,12 @@ public final class PictureInPicture {
     /// UIKit view controllers must call this method on view appearance to ensure playback can be automatically restored
     /// from Picture in Picture.
     public func restoreFromInAppPictureInPicture() {
-        custom.restoreFromInAppPictureInPicture()
-        system.restoreFromInAppPictureInPicture()
+        switch mode {
+        case .custom:
+            custom.restoreFromInAppPictureInPicture()
+        case .system:
+            system.restoreFromInAppPictureInPicture()
+        }
     }
 
     /// Enables in-app Picture in Picture playback.
@@ -41,7 +52,11 @@ public final class PictureInPicture {
     /// ensure resources which must be kept alive during Picture in Picture are properly cleaned up when Picture
     /// in Picture does not require them anymore.
     public func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
-        custom.enableInAppPictureInPictureWithCleanup(perform: cleanup)
-        system.enableInAppPictureInPictureWithCleanup(perform: cleanup)
+        switch mode {
+        case .custom:
+            custom.enableInAppPictureInPictureWithCleanup(perform: cleanup)
+        case .system:
+            system.enableInAppPictureInPictureWithCleanup(perform: cleanup)
+        }
     }
 }

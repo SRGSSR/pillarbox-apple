@@ -45,6 +45,7 @@ private struct _PictureInPictureSupportingSystemVideoView: UIViewControllerRepre
         let controller = PictureInPicture.shared.system.playerViewController ?? PlayerViewController()
         controller.allowsPictureInPicturePlayback = true
         PictureInPicture.shared.system.acquire(for: controller)
+        PictureInPicture.shared.mode = .system
         return controller
     }
 
