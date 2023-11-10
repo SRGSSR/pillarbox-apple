@@ -11,14 +11,8 @@ private class PlayerViewController: AVPlayerViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if isMovingToParent || isBeingPresented {
-            stop()
+            SystemPictureInPicture.shared.stop()
         }
-    }
-
-    private func stop() {
-        guard allowsPictureInPicturePlayback else { return }
-        allowsPictureInPicturePlayback = false
-        allowsPictureInPicturePlayback = true
     }
 }
 

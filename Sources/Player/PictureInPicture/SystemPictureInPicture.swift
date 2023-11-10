@@ -22,6 +22,10 @@ public final class SystemPictureInPicture: NSObject {
         super.init()
     }
 
+    func stop() {
+        playerViewController?.stopPictureInPicture()
+    }
+
     func acquire(for controller: AVPlayerViewController) {
         if controller === playerViewController {
             referenceCount += 1
