@@ -62,7 +62,11 @@ public final class CustomPictureInPicture: NSObject {
         referenceCount -= 1
         if referenceCount == 0 {
             controller = nil
-            clean()
+
+            // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
+            DispatchQueue.main.async {
+                self.clean()
+            }
         }
     }
 
@@ -72,10 +76,8 @@ public final class CustomPictureInPicture: NSObject {
     }
 
     private func clean() {
-        DispatchQueue.main.async {
-            self.cleanup?()
-            self.cleanup = nil
-        }
+        cleanup?()
+        cleanup = nil
     }
 
     private func configureIsPossiblePublisher() {
@@ -104,8 +106,7 @@ public final class CustomPictureInPicture: NSObject {
             self.cleanup = cleanup
         }
         else {
-            cleanup()
-            self.cleanup = nil
+            clean()
         }
         relinquish(for: playerLayer)
     }

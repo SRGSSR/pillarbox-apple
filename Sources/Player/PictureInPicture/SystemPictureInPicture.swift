@@ -36,7 +36,11 @@ public final class SystemPictureInPicture: NSObject {
         referenceCount -= 1
         if referenceCount == 0 {
             playerViewController = nil
-            clean()
+
+            // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
+            DispatchQueue.main.async {
+                self.clean()
+            }
         }
     }
 
@@ -46,11 +50,8 @@ public final class SystemPictureInPicture: NSObject {
     }
 
     private func clean() {
-        // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
-        DispatchQueue.main.async {
-            self.cleanup?()
-            self.cleanup = nil
-        }
+        cleanup?()
+        cleanup = nil
     }
 
     func restoreFromInAppPictureInPicture() {
@@ -64,8 +65,7 @@ public final class SystemPictureInPicture: NSObject {
             self.cleanup = cleanup
         }
         else {
-            cleanup()
-            self.cleanup = nil
+            clean()
         }
         relinquish(for: playerViewController)
     }
