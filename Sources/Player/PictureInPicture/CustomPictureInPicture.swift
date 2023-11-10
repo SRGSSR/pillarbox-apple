@@ -14,7 +14,7 @@ public final class CustomPictureInPicture: NSObject {
 
     @Published private(set) var isPossible = false
     @Published private(set) var isActive = false
-    @Published private(set) var isInAppEnabled = false
+    @Published private(set) var isInAppPossible = false
 
     @objc private dynamic var controller: AVPictureInPictureController?
     weak var delegate: PictureInPictureLifeCycle?
@@ -63,7 +63,7 @@ public final class CustomPictureInPicture: NSObject {
         guard controller?.playerLayer === playerLayer else { return }
         referenceCount -= 1
         if referenceCount == 0 {
-            self.controller = nil
+            controller = nil
 
             // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
             DispatchQueue.main.async {
@@ -89,14 +89,14 @@ public final class CustomPictureInPicture: NSObject {
     }
 
     func restoreFromInAppPictureInPicture() {
-        isInAppEnabled = true
+        isInAppPossible = true
 
         guard let playerLayer else { return }
         acquire(for: playerLayer)
     }
 
     func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
-        isInAppEnabled = false
+        isInAppPossible = false
 
         guard let playerLayer else { return }
         if referenceCount != 0 {

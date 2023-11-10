@@ -37,7 +37,7 @@ public final class SystemPictureInPicture: NSObject {
         guard controller === playerViewController else { return }
         referenceCount -= 1
         if referenceCount == 0 {
-            self.playerViewController = nil
+            playerViewController = nil
 
             // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
             DispatchQueue.main.async {
