@@ -40,18 +40,18 @@ private struct _PictureInPictureSupportingVideoView: UIViewRepresentable {
     let gravity: AVLayerVideoGravity
 
     static func dismantleUIView(_ uiView: VideoLayerView, coordinator: Void) {
-        CustomPictureInPicture.shared.relinquish(for: uiView.playerLayer)
+        PictureInPicture.shared.custom.relinquish(for: uiView.playerLayer)
     }
 
     func makeUIView(context: Context) -> VideoLayerView {
-        let view = VideoLayerView(from: CustomPictureInPicture.shared.playerLayer)
-        CustomPictureInPicture.shared.acquire(for: view.playerLayer)
+        let view = VideoLayerView(from: PictureInPicture.shared.custom.playerLayer)
+        PictureInPicture.shared.custom.acquire(for: view.playerLayer)
         return view
     }
 
     func updateUIView(_ uiView: VideoLayerView, context: Context) {
         if uiView.player != player.queuePlayer {
-            CustomPictureInPicture.shared.clean()
+            PictureInPicture.shared.custom.clean()
         }
         uiView.player = player.queuePlayer
         uiView.playerLayer.videoGravity = gravity
@@ -84,7 +84,7 @@ public struct VideoView: View {
         if isPictureInPictureSupported {
             _PictureInPictureSupportingVideoView(player: player, gravity: gravity)
                 .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                    CustomPictureInPicture.shared.stop()
+                    PictureInPicture.shared.custom.stop()
                 }
         }
         else {

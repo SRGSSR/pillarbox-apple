@@ -10,8 +10,6 @@ import SwiftUI
 
 /// Manages Picture in Picture for `VideoView` instances.
 public final class CustomPictureInPicture: NSObject {
-    static let shared = CustomPictureInPicture()
-
     @Published private(set) var isPossible = false
     @Published private(set) var isActive = false
     @Published private(set) var isInAppPossible = false
@@ -26,7 +24,7 @@ public final class CustomPictureInPicture: NSObject {
         controller?.playerLayer
     }
 
-    override private init() {
+    override init() {
         super.init()
         configureIsPossiblePublisher()
     }

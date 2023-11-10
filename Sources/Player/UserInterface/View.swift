@@ -33,13 +33,13 @@ public extension View {
     /// - Parameter cleanup: A closure to clean resources associated with the view.
     func enabledForInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) -> some View {
         onAppear {
-            PictureInPicture.restoreFromInAppPictureInPicture()
+            PictureInPicture.shared.restoreFromInAppPictureInPicture()
         }
         .onWillAppear {
-            CustomPictureInPicture.shared.stop()
+            PictureInPicture.shared.custom.stop()
         }
         .onDisappear {
-            PictureInPicture.enableInAppPictureInPictureWithCleanup(perform: cleanup)
+            PictureInPicture.shared.enableInAppPictureInPictureWithCleanup(perform: cleanup)
         }
     }
 }

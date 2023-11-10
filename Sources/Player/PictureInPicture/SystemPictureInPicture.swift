@@ -10,17 +10,11 @@ import SwiftUI
 
 /// Manages Picture in Picture for `SystemVideoView` instances.
 public final class SystemPictureInPicture: NSObject {
-    static let shared = SystemPictureInPicture()
-
     var playerViewController: AVPlayerViewController?
     weak var delegate: PictureInPictureDelegate?
 
     private var cleanup: (() -> Void)?
     private var referenceCount = 0
-
-    override private init() {
-        super.init()
-    }
 
     func stop() {
         playerViewController?.stopPictureInPicture()

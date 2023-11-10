@@ -11,7 +11,7 @@ private class PlayerViewController: AVPlayerViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if isMovingToParent || isBeingPresented {
-            SystemPictureInPicture.shared.stop()
+            PictureInPicture.shared.system.stop()
         }
     }
 }
@@ -38,19 +38,19 @@ private struct _PictureInPictureSupportingSystemVideoView: UIViewControllerRepre
     let gravity: AVLayerVideoGravity
 
     static func dismantleUIViewController(_ uiViewController: AVPlayerViewController, coordinator: ()) {
-        SystemPictureInPicture.shared.relinquish(for: uiViewController)
+        PictureInPicture.shared.system.relinquish(for: uiViewController)
     }
 
     func makeUIViewController(context: Context) -> AVPlayerViewController {
-        let controller = SystemPictureInPicture.shared.playerViewController ?? PlayerViewController()
+        let controller = PictureInPicture.shared.system.playerViewController ?? PlayerViewController()
         controller.allowsPictureInPicturePlayback = true
-        SystemPictureInPicture.shared.acquire(for: controller)
+        PictureInPicture.shared.system.acquire(for: controller)
         return controller
     }
 
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
         if uiViewController.player != player.queuePlayer {
-            SystemPictureInPicture.shared.clean()
+            PictureInPicture.shared.system.clean()
         }
         uiViewController.player = player.systemPlayer
         uiViewController.videoGravity = gravity
