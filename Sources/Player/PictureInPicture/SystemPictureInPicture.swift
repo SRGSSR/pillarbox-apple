@@ -13,7 +13,7 @@ public final class SystemPictureInPicture: NSObject {
     static let shared = SystemPictureInPicture()
 
     var playerViewController: AVPlayerViewController?
-    weak var delegate: PictureInPictureLifeCycle?
+    weak var delegate: PictureInPictureDelegate?
 
     private var cleanup: (() -> Void)?
     private var referenceCount = 0

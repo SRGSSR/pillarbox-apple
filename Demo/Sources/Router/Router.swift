@@ -49,7 +49,7 @@ final class Router: ObservableObject {
     }
 }
 
-extension Router: PictureInPictureLifeCycle {
+extension Router: PictureInPictureDelegate {
     func pictureInPictureWillStart() {
         switch presented {
         case .player, .systemPlayer:

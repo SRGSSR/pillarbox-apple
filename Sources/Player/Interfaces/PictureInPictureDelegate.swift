@@ -6,11 +6,11 @@
 
 import Foundation
 
-/// A protocol describing the Picture in Picture life cycle.
+/// A protocol to respond to Picture in Picture life cycle events.
 ///
 /// Applications which require in-app Picture in Picture support must setup a delegate and rely on the Picture in
 /// Picture life cycle to dismiss and restore views as required.
-public protocol PictureInPictureLifeCycle: AnyObject {
+public protocol PictureInPictureDelegate: AnyObject {
     /// Called when Picture in Picture is about to start.
     ///
     /// Use this method to save which view was presented before dismissing it. Use the saved view for later restoration.
