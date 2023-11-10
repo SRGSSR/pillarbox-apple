@@ -17,7 +17,7 @@ public final class CustomPictureInPicture: NSObject {
     @objc private dynamic var controller: AVPictureInPictureController?
     weak var delegate: PictureInPictureDelegate?
 
-    private var cleanup: (() -> Void)?
+    private var deferredCleanup: (() -> Void)?
     private var referenceCount = 0
 
     var playerLayer: AVPlayerLayer? {
@@ -81,8 +81,8 @@ public final class CustomPictureInPicture: NSObject {
     }
 
     private func clean() {
-        cleanup?()
-        cleanup = nil
+        deferredCleanup?()
+        deferredCleanup = nil
     }
 
     private func configureIsPossiblePublisher() {
@@ -106,9 +106,15 @@ public final class CustomPictureInPicture: NSObject {
     func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
         isInAppPossible = false
 
-        guard let playerLayer else { return }
-        self.cleanup = cleanup
-        relinquish(for: playerLayer)
+        if referenceCount == 0 {
+            cleanup()
+        }
+        else {
+            deferredCleanup = cleanup
+            if let playerLayer {
+                relinquish(for: playerLayer)
+            }
+        }
     }
 }
 

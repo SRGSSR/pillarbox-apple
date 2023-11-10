@@ -13,7 +13,7 @@ public final class SystemPictureInPicture: NSObject {
     var playerViewController: AVPlayerViewController?
     weak var delegate: PictureInPictureDelegate?
 
-    private var cleanup: (() -> Void)?
+    private var deferredCleanup: (() -> Void)?
     private var referenceCount = 0
 
     func stop() {
@@ -50,8 +50,8 @@ public final class SystemPictureInPicture: NSObject {
     }
 
     private func clean() {
-        cleanup?()
-        cleanup = nil
+        deferredCleanup?()
+        deferredCleanup = nil
     }
 
     func restoreFromInAppPictureInPicture() {
@@ -60,14 +60,14 @@ public final class SystemPictureInPicture: NSObject {
     }
 
     func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
-        guard let playerViewController else { return }
-        relinquish(for: playerViewController)
-
-        if referenceCount != 0 {
-            self.cleanup = cleanup
+        if referenceCount == 0 {
+            cleanup()
         }
         else {
-            clean()
+            deferredCleanup = cleanup
+            if let playerViewController {
+                relinquish(for: playerViewController)
+            }
         }
     }
 }
