@@ -101,9 +101,8 @@ public final class CustomPictureInPicture: NSObject {
     func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
         isInAppPossible = false
 
-        guard isPossible else {
+        if !isPossible {
             cleanup()
-            return
         }
 
         guard let playerLayer else { return }
