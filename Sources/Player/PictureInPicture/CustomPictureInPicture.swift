@@ -8,44 +8,9 @@ import AVKit
 import Combine
 import SwiftUI
 
-/// A protocol describing the Picture in Picture life cycle.
-///
-/// Applications which require in-app Picture in Picture support must setup a delegate and rely on the Picture in
-/// Picture life cycle to dismiss and restore views as required.
-public protocol PictureInPictureLifeCycle: AnyObject {
-    /// Called when Picture in Picture is about to start.
-    ///
-    /// Use this method to save which view was presented before dismissing it. Use the saved view for later restoration.
-    func pictureInPictureWillStart()
-
-    /// Called when Picture in Picture has started.
-    func pictureInPictureDidStart()
-
-    /// Called when Picture in Picture failed to start.
-    func pictureInPictureControllerFailedToStart(with error: Error)
-
-    /// Called when the user interface will be restored from Picture in Picture.
-    ///
-    /// Use this method to present the original view which Picture in Picture was initiated from. The completion handler
-    /// must be called at the very end of the restoration with `true` to notify the system that restoration is complete.
-    func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void)
-
-    /// Called when Picture in Picture is about to stop.
-    func pictureInPictureWillStop()
-
-    /// Called when Picture in Picture has stopped.
-    func pictureInPictureDidStop()
-}
-
 /// Manages Picture in Picture.
-public final class PictureInPicture: NSObject {
-    enum Mode {
-        case unknown
-        case system(AVPlayerViewController)
-        case custom(AVPlayerLayer)
-    }
-
-    static let shared = PictureInPicture()
+public final class CustomPictureInPicture: NSObject {
+    static let shared = CustomPictureInPicture()
 
     @Published private(set) var isPossible = false
     @Published private(set) var isActive = false
@@ -62,8 +27,6 @@ public final class PictureInPicture: NSObject {
     var playerLayer: AVPlayerLayer? {
         controller?.playerLayer
     }
-
-    var mode: Mode = .unknown
 
     override private init() {
         super.init()
@@ -82,7 +45,7 @@ public final class PictureInPicture: NSObject {
 
 // MARK: Acquire & Relinquish for AVPlayerLayer
 
-extension PictureInPicture {
+extension CustomPictureInPicture {
     func acquire(for playerLayer: AVPlayerLayer) {
         if controller?.playerLayer === playerLayer {
             referenceCount += 1
@@ -115,7 +78,7 @@ extension PictureInPicture {
 
 // MARK: Acquire & Relinquish for AVPlayerViewController
 
-extension PictureInPicture {
+extension CustomPictureInPicture {
     func acquire(for controller: AVPlayerViewController) {
         if controller === playerViewController {
             referenceCount += 1
@@ -141,7 +104,7 @@ extension PictureInPicture {
     }
 }
 
-public extension PictureInPicture {
+public extension CustomPictureInPicture {
     /// Restores from in-app Picture in Picture playback.
     ///
     /// UIKit view controllers must call this method on view appearance to ensure playback can be automatically restored
@@ -179,7 +142,7 @@ public extension PictureInPicture {
     }
 }
 
-private extension PictureInPicture {
+private extension CustomPictureInPicture {
     func configureIsPossiblePublisher() {
         publisher(for: \.controller)
             .map { controller in
@@ -192,7 +155,7 @@ private extension PictureInPicture {
     }
 }
 
-extension PictureInPicture {
+extension CustomPictureInPicture {
     func start() {
         controller?.startPictureInPicture()
     }
@@ -215,7 +178,7 @@ extension PictureInPicture {
 
 // MARK: Delegate for Picture in Picture controller
 
-extension PictureInPicture: AVPictureInPictureControllerDelegate {
+extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
     public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = true
         acquire(for: pictureInPictureController.playerLayer)
@@ -253,7 +216,7 @@ extension PictureInPicture: AVPictureInPictureControllerDelegate {
 
 // MARK: Delegate for player view controller
 
-extension PictureInPicture: AVPlayerViewControllerDelegate {
+extension CustomPictureInPicture: AVPlayerViewControllerDelegate {
     public func playerViewControllerWillStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
         isActive = true
         acquire(for: playerViewController)
