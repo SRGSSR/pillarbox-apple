@@ -99,11 +99,16 @@ public final class CustomPictureInPicture: NSObject {
     }
 
     func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
+        if !isPossible {
+            cleanup()
+            return
+        }
+
         isInAppPossible = false
 
         guard let playerLayer else { return }
         relinquish(for: playerLayer)
-        
+
         if referenceCount != 0 {
             self.cleanup = cleanup
         }
