@@ -102,13 +102,14 @@ public final class CustomPictureInPicture: NSObject {
         isInAppPossible = false
 
         guard let playerLayer else { return }
+        relinquish(for: playerLayer)
+        
         if referenceCount != 0 {
             self.cleanup = cleanup
         }
         else {
             clean()
         }
-        relinquish(for: playerLayer)
     }
 }
 

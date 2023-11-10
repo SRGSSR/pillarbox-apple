@@ -61,13 +61,14 @@ public final class SystemPictureInPicture: NSObject {
 
     func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
         guard let playerViewController else { return }
+        relinquish(for: playerViewController)
+
         if referenceCount != 0 {
             self.cleanup = cleanup
         }
         else {
             clean()
         }
-        relinquish(for: playerViewController)
     }
 }
 
