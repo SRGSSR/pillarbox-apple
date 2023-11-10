@@ -52,8 +52,13 @@ public final class CustomPictureInPicture: NSObject {
         }
         else {
             controller = AVPictureInPictureController(playerLayer: playerLayer)
-            controller?.delegate = self
-            referenceCount = 1
+            if let controller {
+                controller.delegate = self
+                referenceCount = 1
+            }
+            else {
+                referenceCount = 0
+            }
         }
     }
 
