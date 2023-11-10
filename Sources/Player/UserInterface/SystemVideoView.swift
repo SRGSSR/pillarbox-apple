@@ -74,7 +74,7 @@ public struct SystemVideoView: View {
 #if os(tvOS)
         .onDisappear {
             // Avoid sound continuing in background on tvOS, see https://github.com/SRGSSR/pillarbox-apple/issues/520
-            if !PictureInPicture.shared.isActive {
+            if !PictureInPicture.shared.system.isActive {
                 player.pause()
             }
         }

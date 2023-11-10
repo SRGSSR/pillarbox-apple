@@ -10,6 +10,8 @@ import SwiftUI
 
 /// Manages Picture in Picture for `SystemVideoView` instances.
 public final class SystemPictureInPicture: NSObject {
+    private(set) var isActive = false
+
     var playerViewController: AVPlayerViewController?
     weak var delegate: PictureInPictureDelegate?
 
@@ -74,6 +76,7 @@ public final class SystemPictureInPicture: NSObject {
 
 extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
     public func playerViewControllerWillStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
+        isActive = true
         acquire(for: playerViewController)
         delegate?.pictureInPictureWillStart()
     }
@@ -97,6 +100,7 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
     }
 
     public func playerViewControllerWillStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
+        isActive = true
         delegate?.pictureInPictureWillStop()
     }
 
