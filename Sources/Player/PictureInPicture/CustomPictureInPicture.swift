@@ -96,13 +96,7 @@ public final class CustomPictureInPicture: NSObject {
             .receiveOnMainThread()
             .assign(to: &$isPossible)
     }
-}
 
-public extension CustomPictureInPicture {
-    /// Restores from in-app Picture in Picture playback.
-    ///
-    /// UIKit view controllers must call this method on view appearance to ensure playback can be automatically restored
-    /// from Picture in Picture.
     func restoreFromInAppPictureInPicture() {
         if let playerLayer {
             acquire(for: playerLayer)
@@ -110,11 +104,6 @@ public extension CustomPictureInPicture {
         isInAppEnabled = true
     }
 
-    /// Enables in-app Picture in Picture playback.
-    ///
-    /// UIKit view controllers must call this method on view disappearance to register a cleanup closure which will
-    /// ensure resources which must be kept alive during Picture in Picture are properly cleaned up when Picture
-    /// in Picture does not require them anymore.
     func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
         if referenceCount != 0 {
             self.cleanup = cleanup

@@ -24,14 +24,14 @@ public struct PictureInPictureButton<Content>: View where Content: View {
     public var body: some View {
         ZStack {
             if isPossible && isInAppEnabled {
-                Button(action: PictureInPicture.shared.toggle) {
+                Button(action: CustomPictureInPicture.shared.toggle) {
                     content(isActive)
                 }
-                .onReceive(PictureInPicture.shared.$isActive) { isActive = $0 }
+                .onReceive(CustomPictureInPicture.shared.$isActive) { isActive = $0 }
             }
         }
-        .onReceive(PictureInPicture.shared.$isPossible) { isPossible = $0 }
-        .onReceive(PictureInPicture.shared.$isInAppEnabled) { isInAppEnabled = $0 }
+        .onReceive(CustomPictureInPicture.shared.$isPossible) { isPossible = $0 }
+        .onReceive(CustomPictureInPicture.shared.$isInAppEnabled) { isInAppEnabled = $0 }
     }
 
     /// Creates a Picture in Picture button.
