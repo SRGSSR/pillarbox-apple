@@ -8,29 +8,18 @@ import AVKit
 import Combine
 import SwiftUI
 
-/// Manages Picture in Picture.
+/// Manages Picture in Picture for `SystemVideoView` instances.
 public final class SystemPictureInPicture: NSObject {
     static let shared = SystemPictureInPicture()
-
-    @Published private(set) var isPossible = false
-    @Published private(set) var isActive = false
-    @Published private(set) var isInAppEnabled = false
 
     private weak var delegate: PictureInPictureLifeCycle?
     private var cleanup: (() -> Void)?
 
-    @objc private dynamic var controller: AVPictureInPictureController?
-    private var referenceCount = 0
-
     var playerViewController: AVPlayerViewController?
-
-    var playerLayer: AVPlayerLayer? {
-        controller?.playerLayer
-    }
+    private var referenceCount = 0
 
     override private init() {
         super.init()
-        configureIsPossiblePublisher()
     }
 
     /// Sets a delegate for Picture in Picture.
@@ -41,44 +30,7 @@ public final class SystemPictureInPicture: NSObject {
     public static func setDelegate(_ delegate: PictureInPictureLifeCycle) {
         shared.delegate = delegate
     }
-}
 
-// MARK: Acquire & Relinquish for AVPlayerLayer
-
-extension SystemPictureInPicture {
-    func acquire(for playerLayer: AVPlayerLayer) {
-        if controller?.playerLayer === playerLayer {
-            referenceCount += 1
-        }
-        else {
-            controller = AVPictureInPictureController(playerLayer: playerLayer)
-            controller?.delegate = self
-            referenceCount = 1
-        }
-    }
-
-    func relinquish(for playerLayer: AVPlayerLayer) {
-        guard controller?.playerLayer === playerLayer else { return }
-        referenceCount -= 1
-        if referenceCount == 0 {
-            self.controller = nil
-
-            // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
-            DispatchQueue.main.async {
-                self.clean()
-            }
-        }
-    }
-
-    func clean() {
-        cleanup?()
-        cleanup = nil
-    }
-}
-
-// MARK: Acquire & Relinquish for AVPlayerViewController
-
-extension SystemPictureInPicture {
     func acquire(for controller: AVPlayerViewController) {
         if controller === playerViewController {
             referenceCount += 1
@@ -102,6 +54,11 @@ extension SystemPictureInPicture {
             }
         }
     }
+
+    func clean() {
+        cleanup?()
+        cleanup = nil
+    }
 }
 
 public extension SystemPictureInPicture {
@@ -110,13 +67,9 @@ public extension SystemPictureInPicture {
     /// UIKit view controllers must call this method on view appearance to ensure playback can be automatically restored
     /// from Picture in Picture.
     func restoreFromInAppPictureInPicture() {
-        if let playerLayer {
-            acquire(for: playerLayer)
-        }
         if let playerViewController {
             acquire(for: playerViewController)
         }
-        isInAppEnabled = true
     }
 
     /// Enables in-app Picture in Picture playback.
@@ -132,93 +85,14 @@ public extension SystemPictureInPicture {
             cleanup()
             self.cleanup = nil
         }
-        if let playerLayer {
-            relinquish(for: playerLayer)
-        }
         if let playerViewController {
             relinquish(for: playerViewController)
         }
-        isInAppEnabled = false
     }
 }
-
-private extension SystemPictureInPicture {
-    func configureIsPossiblePublisher() {
-        publisher(for: \.controller)
-            .map { controller in
-                guard let controller else { return Just(false).eraseToAnyPublisher() }
-                return controller.publisher(for: \.isPictureInPicturePossible).eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .receiveOnMainThread()
-            .assign(to: &$isPossible)
-    }
-}
-
-extension SystemPictureInPicture {
-    func start() {
-        controller?.startPictureInPicture()
-    }
-
-    func stop() {
-        if let controller {
-            controller.stopPictureInPicture()
-        }
-    }
-
-    func toggle() {
-        if isActive {
-            stop()
-        }
-        else {
-            start()
-        }
-    }
-}
-
-// MARK: Delegate for Picture in Picture controller
-
-extension SystemPictureInPicture: AVPictureInPictureControllerDelegate {
-    public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        isActive = true
-        acquire(for: pictureInPictureController.playerLayer)
-        delegate?.pictureInPictureWillStart()
-    }
-
-    public func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        delegate?.pictureInPictureDidStart()
-    }
-
-    public func pictureInPictureController(
-        _ pictureInPictureController: AVPictureInPictureController,
-        failedToStartPictureInPictureWithError error: Error
-    ) {
-        delegate?.pictureInPictureControllerFailedToStart(with: error)
-    }
-
-    public func pictureInPictureController(
-        _ pictureInPictureController: AVPictureInPictureController,
-        restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
-    ) {
-        delegate?.pictureInPictureRestoreUserInterfaceForStop(with: completionHandler)
-    }
-
-    public func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        isActive = false
-        delegate?.pictureInPictureWillStop()
-    }
-
-    public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        relinquish(for: pictureInPictureController.playerLayer)
-        delegate?.pictureInPictureDidStop()
-    }
-}
-
-// MARK: Delegate for player view controller
 
 extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
     public func playerViewControllerWillStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
-        isActive = true
         acquire(for: playerViewController)
         delegate?.pictureInPictureWillStart()
     }
@@ -242,7 +116,6 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
     }
 
     public func playerViewControllerWillStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
-        isActive = false
         delegate?.pictureInPictureWillStop()
     }
 

@@ -8,7 +8,7 @@ import AVKit
 import Combine
 import SwiftUI
 
-/// Manages Picture in Picture.
+/// Manages Picture in Picture for `VideoView` instances.
 public final class CustomPictureInPicture: NSObject {
     static let shared = CustomPictureInPicture()
 
@@ -21,8 +21,6 @@ public final class CustomPictureInPicture: NSObject {
 
     @objc private dynamic var controller: AVPictureInPictureController?
     private var referenceCount = 0
-
-    var playerViewController: AVPlayerViewController?
 
     var playerLayer: AVPlayerLayer? {
         controller?.playerLayer
@@ -41,11 +39,24 @@ public final class CustomPictureInPicture: NSObject {
     public static func setDelegate(_ delegate: PictureInPictureLifeCycle) {
         shared.delegate = delegate
     }
-}
 
-// MARK: Acquire & Relinquish for AVPlayerLayer
+    func start() {
+        controller?.startPictureInPicture()
+    }
 
-extension CustomPictureInPicture {
+    func stop() {
+        controller?.stopPictureInPicture()
+    }
+
+    func toggle() {
+        if isActive {
+            stop()
+        }
+        else {
+            start()
+        }
+    }
+
     func acquire(for playerLayer: AVPlayerLayer) {
         if controller?.playerLayer === playerLayer {
             referenceCount += 1
@@ -74,33 +85,16 @@ extension CustomPictureInPicture {
         cleanup?()
         cleanup = nil
     }
-}
 
-// MARK: Acquire & Relinquish for AVPlayerViewController
-
-extension CustomPictureInPicture {
-    func acquire(for controller: AVPlayerViewController) {
-        if controller === playerViewController {
-            referenceCount += 1
-        }
-        else {
-            playerViewController = controller
-            playerViewController?.delegate = self
-            referenceCount = 1
-        }
-    }
-
-    func relinquish(for controller: AVPlayerViewController) {
-        guard controller === playerViewController else { return }
-        referenceCount -= 1
-        if referenceCount == 0 {
-            self.playerViewController = nil
-
-            // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
-            DispatchQueue.main.async {
-                self.clean()
+    private func configureIsPossiblePublisher() {
+        publisher(for: \.controller)
+            .map { controller in
+                guard let controller else { return Just(false).eraseToAnyPublisher() }
+                return controller.publisher(for: \.isPictureInPicturePossible).eraseToAnyPublisher()
             }
-        }
+            .switchToLatest()
+            .receiveOnMainThread()
+            .assign(to: &$isPossible)
     }
 }
 
@@ -112,9 +106,6 @@ public extension CustomPictureInPicture {
     func restoreFromInAppPictureInPicture() {
         if let playerLayer {
             acquire(for: playerLayer)
-        }
-        if let playerViewController {
-            acquire(for: playerViewController)
         }
         isInAppEnabled = true
     }
@@ -135,48 +126,9 @@ public extension CustomPictureInPicture {
         if let playerLayer {
             relinquish(for: playerLayer)
         }
-        if let playerViewController {
-            relinquish(for: playerViewController)
-        }
         isInAppEnabled = false
     }
 }
-
-private extension CustomPictureInPicture {
-    func configureIsPossiblePublisher() {
-        publisher(for: \.controller)
-            .map { controller in
-                guard let controller else { return Just(false).eraseToAnyPublisher() }
-                return controller.publisher(for: \.isPictureInPicturePossible).eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .receiveOnMainThread()
-            .assign(to: &$isPossible)
-    }
-}
-
-extension CustomPictureInPicture {
-    func start() {
-        controller?.startPictureInPicture()
-    }
-
-    func stop() {
-        if let controller {
-            controller.stopPictureInPicture()
-        }
-    }
-
-    func toggle() {
-        if isActive {
-            stop()
-        }
-        else {
-            start()
-        }
-    }
-}
-
-// MARK: Delegate for Picture in Picture controller
 
 extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
     public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
@@ -212,58 +164,4 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
         relinquish(for: pictureInPictureController.playerLayer)
         delegate?.pictureInPictureDidStop()
     }
-}
-
-// MARK: Delegate for player view controller
-
-extension CustomPictureInPicture: AVPlayerViewControllerDelegate {
-    public func playerViewControllerWillStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
-        isActive = true
-        acquire(for: playerViewController)
-        delegate?.pictureInPictureWillStart()
-    }
-
-    public func playerViewControllerDidStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
-        delegate?.pictureInPictureDidStart()
-    }
-
-    public func playerViewController(
-        _ playerViewController: AVPlayerViewController,
-        failedToStartPictureInPictureWithError error: Error
-    ) {
-        delegate?.pictureInPictureControllerFailedToStart(with: error)
-    }
-
-    public func playerViewController(
-        _ playerViewController: AVPlayerViewController,
-        restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
-    ) {
-        delegate?.pictureInPictureRestoreUserInterfaceForStop(with: completionHandler)
-    }
-
-    public func playerViewControllerWillStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
-        isActive = false
-        delegate?.pictureInPictureWillStop()
-    }
-
-    public func playerViewControllerDidStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
-        relinquish(for: playerViewController)
-        delegate?.pictureInPictureDidStop()
-    }
-
-#if os(iOS)
-    public func playerViewController(
-        _ playerViewController: AVPlayerViewController,
-        willBeginFullScreenPresentationWithAnimationCoordinator coordinator: UIViewControllerTransitionCoordinator
-    ) {
-        acquire(for: playerViewController)
-    }
-
-    public func playerViewController(
-        _ playerViewController: AVPlayerViewController,
-        willEndFullScreenPresentationWithAnimationCoordinator coordinator: UIViewControllerTransitionCoordinator
-    ) {
-        relinquish(for: playerViewController)
-    }
-#endif
 }
