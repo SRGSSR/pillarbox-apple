@@ -22,6 +22,7 @@ Its robust player provides all essential playback features you might expect:
 - AirPlay compatibility.
 - Control center integration.
 - Multiple instance support.
+- Best-in-class Picture in Picture support.
 - The smoothest possible seek experience on Apple devices, with blazing-fast content navigation in streams enabled for trick play.
 - Playback speed controls.
 
