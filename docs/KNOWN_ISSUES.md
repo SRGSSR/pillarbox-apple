@@ -117,3 +117,13 @@ When approaching the end of the current item, and if there is a next item in the
 ### Workaround
 
 No workaround is available yet.
+
+## Slow seeking when Spatial audio is enabled for connected AirPods (FB13322077)
+
+Seeks might feel sluggish when Spatial audio is enabled for connected AirPods. This only happens when a player view supporting Picture is Picture is displayed while seeking is made.
+
+### Workaround
+
+No workaround is available yet.
+
+
