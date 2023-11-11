@@ -244,7 +244,7 @@ A player can be loaded with several items to create a playlist. The playlist can
 
 The player supports AirPlay and can be integrated with the Control Center:
 
-- For AirPlay support please ensure that your application audio session and background modes are configured appropriately.
+- For AirPlay support please ensure that your application audio session and background capabilities are configured appropriately.
 - Call `becomeActive()` on a player instance to enable AirPlay and Control Center support for it.
 - Call `resignActive()` on a player to disable AirPlay and Control Center support for it (if currently active).
 
@@ -292,6 +292,28 @@ Alternative adapter creation methods are available if your tracker has `Void` co
 ### Remark
 
 Some 3rd party trackers might require low-level access to the `AVPlayer` instance. The `Player` class exposes this player through the `systemPlayer` property. Even though the low-level player is therefore accessible you should never attempt to mutate its state directly. Changes might namely interfere with behavior expected by Pillarbox `Player` class, leading to undefined behavior.
+
+## Picture in Picture integration
+
+Pillarbox provides two modes of integration for Picture in Picture:
+
+- Basic integration, which enables Picture in Picture automatically when the application is sent to the background.
+- Advanced integration, which allows the user to navigate your application while playing content with Picture in Picture.
+
+No matter the integration mode you choose you must setup your application first so that it can support Picture in Picture.
+
+## Application setup
+
+For your application to be able to support Picture in Picture you must:
+
+- Add _Audio, AirPlay, and Picture in Picture_ to your target _Background Modes_ capabilities.
+- [Configure your audio session](https://developer.apple.com/documentation/avfaudio/avaudiosession) so that it uses the `.playback` category.
+
+## Basic integration
+
+Basic integration is as simple as setting the `isPictureInPictureSupported` Boolean to `true` on a `VideoView`.
+
+When backgrounding your application video playback automatically continues in Picture in Picture.
 
 ## Have fun
 
