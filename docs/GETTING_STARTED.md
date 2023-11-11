@@ -298,22 +298,43 @@ Some 3rd party trackers might require low-level access to the `AVPlayer` instanc
 Pillarbox provides two modes of integration for Picture in Picture:
 
 - Basic integration, which enables Picture in Picture automatically when the application is sent to the background.
-- Advanced integration, which allows the user to navigate your application while playing content with Picture in Picture.
+- Advanced integration, which in addition allows the user to navigate your application while playing content with Picture in Picture. This requires the addition of a dedicatd button with which Picture in Picture can be started interactively.
 
 No matter the integration mode you choose you must setup your application first so that it can support Picture in Picture.
 
-## Application setup
+### Application setup
 
 For your application to be able to support Picture in Picture you must:
 
 - Add _Audio, AirPlay, and Picture in Picture_ to your target _Background Modes_ capabilities.
 - [Configure your audio session](https://developer.apple.com/documentation/avfaudio/avaudiosession) so that it uses the `.playback` category.
 
-## Basic integration
+### Basic integration
 
-Basic integration is as simple as setting the `isPictureInPictureSupported` Boolean to `true` on a `VideoView`.
+Basic integration is as simple as enabling `isPictureInPictureSupported` for a `VideoView`.
 
-When backgrounding your application video playback automatically continues in Picture in Picture.
+#### Remark
+
+Basic integration is not supported for `SystemVideoView`.
+
+### Advanced integration
+
+Advanced integration is more involved and requires additional integration steps so that Picture in Picture can:
+
+- Dismiss and restore your player user interface when appropriate.
+- Continue playing even when the player user interface has been dismissed.
+
+Advanced integration is available both for `VideoView` as well as `SystemVideoView` and is achieved as follows:
+
+1. Enable `isPictureInPictureSupported` for a `VideoView` or `SystemVideoView`.
+2. Ensure your player view state can exist outside the view existence. One possible approach is to have a player view model which outlives its view, e.g. by storing it in a shared global state (e.g. a `static` property). The player view state should itself contain a `Player` instance for playback.
+3. Properly handle content updates in your shared player view state. Usually:
+    - When opening a content not being played, update your player to play the new item.
+    - When opening the same content already being played, avoid updating your player so that playback can continue uninterrupted.
+    - When clearing the content, remove all items currently in the player queue.
+4. To release resources when the player view is not needed anymore (when the player view is closed without activating Picture in Picture, or when Picture in Picture ends), apply the `enabledForInAppPictureInPictureWithCleanup(perform:)` modifier to the video view parent hierarchy, clearing your player view model state in its closure.
+5. `SystemVideoView` provides a Picture in Picture button automatically. For `VideoView`-based custom layouts add a `PictureInPictureButton` directly to your player interface.
+6. To dismiss / restore the player user interface when entering / exiting Picture in Picture, set a Picture in Picture life cycle delegate with the `PictureInPicture.setDelegate(_:)` method. A good candidate is any routing-aware class of your application. Dismiss the player view when Picture in Picture is about to start, and restore it when it ends, calling the required completion handler at the end of your restoration animation.
 
 ## Have fun
 
