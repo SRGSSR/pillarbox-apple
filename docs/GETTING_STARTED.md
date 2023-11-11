@@ -357,6 +357,12 @@ To test your integration:
 7. Tap on the Picture in Picture button. Playback should continue in Picture in Picture, within your application.
 8. Play another video. The player user interface should be restored with content transitioning to the new content.
 
+#### `SystemVideoView` inline display
+
+The above instructions assume you are using either `VideoView` in a custom layout, or `SystemVideoView` presented full screen.
+
+When `SystemVideoView` is presented inline, though, its close button is replaced with a maximization button to switch to full screen display. Picture in Picture can be displayed whether the inline player has been maximized or not, and for this reason your life cycle implementation should not dismiss the player view when Picture in Picture is about to start. Restoration implementation is still required, though.
+
 ## Have fun
 
 This is only a glimpse of what can be achieved with Pillarbox. Though the feature set is still limited you should already be able to implement pretty interesting playback experiences. Please have a look at the documentation (which can be built with Xcode _Product_ > _Build Documentation_) and check the demo and its various examples to better understand what is possible.
