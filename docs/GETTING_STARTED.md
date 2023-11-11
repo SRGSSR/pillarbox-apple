@@ -363,6 +363,10 @@ The above instructions assume you are using either `VideoView` in a custom layou
 
 When `SystemVideoView` is presented inline, though, its close button is replaced with a maximization button to switch to full screen display. Picture in Picture can be displayed whether the inline player has been maximized or not, and for this reason your life cycle implementation should not dismiss the player view when Picture in Picture is about to start. Restoration implementation is still required, though.
 
+#### Limitations
+
+Switching between a `VideoView` and a `SystemVideoView` for the content currently being played in Picture in Picture is not supported and leads to undefined behavior.
+
 ## Have fun
 
 This is only a glimpse of what can be achieved with Pillarbox. Though the feature set is still limited you should already be able to implement pretty interesting playback experiences. Please have a look at the documentation (which can be built with Xcode _Product_ > _Build Documentation_) and check the demo and its various examples to better understand what is possible.
