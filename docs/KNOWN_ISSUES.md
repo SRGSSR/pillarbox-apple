@@ -125,5 +125,3 @@ Seeks might feel sluggish when Spatial audio is enabled for connected AirPods. T
 ### Workaround
 
 No workaround is available yet.
-
-
