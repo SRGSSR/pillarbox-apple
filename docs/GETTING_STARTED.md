@@ -313,9 +313,17 @@ For your application to be able to support Picture in Picture you must:
 
 Basic integration is as simple as enabling `isPictureInPictureSupported` for a `VideoView`.
 
+#### Testing your intergation
+
+To test your integration: 
+
+1. Start playing a video in your player.
+2. Send your application to the background. Playback should continue in Picture in Picture.
+3. Return to your application. Playback should automatically continue in the application.
+
 #### Remark
 
-Basic integration is not supported for `SystemVideoView`.
+Basic integration is not supported for `SystemVideoView` and is therefore mostly intended for iOS applications.
 
 ### Advanced integration
 
@@ -335,6 +343,19 @@ Advanced integration is available both for `VideoView` as well as `SystemVideoVi
 4. To release resources when the player view is not needed anymore (when the player view is closed without activating Picture in Picture, or when Picture in Picture ends), apply the `enabledForInAppPictureInPictureWithCleanup(perform:)` modifier to the video view parent hierarchy, clearing your player view model state in its closure.
 5. `SystemVideoView` provides a Picture in Picture button automatically. For `VideoView`-based custom layouts add a `PictureInPictureButton` directly to your player interface.
 6. To dismiss / restore the player user interface when entering / exiting Picture in Picture, set a Picture in Picture life cycle delegate with the `PictureInPicture.setDelegate(_:)` method. A good candidate is any routing-aware class of your application. Dismiss the player view when Picture in Picture is about to start, and restore it when it ends, calling the required completion handler at the end of your restoration animation.
+
+#### Testing your integration
+
+To test your integration:
+
+1. Start playing a video in your player.
+2. Send your application to the background. Playback should continue in Picture in Picture.
+3. Return to your application. The player view should be dismissed and playback should still continue in the Picture in Picture overlay.
+4. Tap on the Picture in Picture restoration button. Your player user interface should be restored.
+5. Tap on the Picture in Picture button. Playback should continue in Picture in Picture, within your application.
+6. Play the same content already being played. The player user interface should be restored without playback interruption.
+7. Tap on the Picture in Picture button. Playback should continue in Picture in Picture, within your application.
+8. Play another video. The player user interface should be restored with content transitioning to the new content.
 
 ## Have fun
 
