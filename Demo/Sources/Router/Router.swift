@@ -55,7 +55,7 @@ extension Router: PictureInPictureDelegate {
         case .player, .systemPlayer:
             previousPresented = presented
             presented = nil
-        case .inlineSystemPlayer:
+        case .inlineSystemPlayer, .playlist:
             previousPresented = presented
         default:
             break
