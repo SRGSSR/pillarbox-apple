@@ -159,13 +159,21 @@ struct PlaylistView: View {
             Self.model.currentMedia = media
         }
     }
+    var medias: Binding<[Media]> {
+        Binding {
+            Self.model.medias
+        }
+        set: { medias in
+            Self.model.medias = medias
+        }
+    }
 
     var body: some View {
         VStack(spacing: 0) {
             PlaybackView(player: Self.model.player, layout: $layout, isPictureInPictureSupported: true)
             if layout != .maximized {
                 Toolbar(player: Self.model.player, model: Self.model)
-                List(.constant(Self.model.medias), id: \.self, editActions: .all, selection: selectedMedia) { $media in
+                List(medias, id: \.self, editActions: .all, selection: selectedMedia) { $media in
                     MediaCell(media: media, isPlaying: media == Self.model.currentMedia)
                 }
             }
