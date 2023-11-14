@@ -51,7 +51,7 @@ final class PlaylistViewModel: ObservableObject {
         }
     }
 
-    @Published private var items = OrderedDictionary<Media, PlayerItem>() {
+    @Published private(set) var items = OrderedDictionary<Media, PlayerItem>() {
         didSet {
             player.items = items.values.elements
         }

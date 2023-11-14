@@ -152,22 +152,14 @@ struct PlaylistView: View {
     let templates: [Template]
 
     @State private var currentMedia: Media? = Self.model.currentMedia
-
-    var medias: Binding<[Media]> {
-        Binding {
-            Self.model.medias
-        }
-        set: { medias in
-            Self.model.medias = medias
-        }
-    }
+    @State private var medias: [Media] = Self.model.medias
 
     var body: some View {
         VStack(spacing: 0) {
             PlaybackView(player: Self.model.player, layout: $layout, isPictureInPictureSupported: true)
             if layout != .maximized {
                 Toolbar(player: Self.model.player, model: Self.model)
-                List(medias, id: \.self, editActions: .all, selection: $currentMedia) { $media in
+                List($medias, id: \.self, editActions: .all, selection: $currentMedia) { $media in
                     MediaCell(media: media, isPlaying: media == currentMedia)
                 }
             }
@@ -185,6 +177,12 @@ struct PlaylistView: View {
         }
         .onReceive(Self.model.$currentMedia) { media in
             currentMedia = media
+        }
+        .onChange(of: medias) { medias in
+            Self.model.medias = medias
+        }
+        .onReceive(Self.model.$items) { items in
+            medias = Array(items.keys)
         }
         .tracked(name: "playlist")
     }
