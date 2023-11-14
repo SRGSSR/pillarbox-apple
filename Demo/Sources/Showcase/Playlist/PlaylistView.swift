@@ -153,7 +153,7 @@ struct PlaylistView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            PlaybackView(player: model.player, layout: $layout)
+            PlaybackView(player: model.player, layout: $layout, isPictureInPictureSupported: true)
             if layout != .maximized {
                 Toolbar(player: model.player, model: model)
                 List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
