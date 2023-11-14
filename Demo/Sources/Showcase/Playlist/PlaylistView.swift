@@ -149,7 +149,6 @@ private struct Toolbar: View {
 struct PlaylistView: View {
     private static let model = PlaylistViewModel()
     @State private var layout: PlaybackView.Layout = .minimized
-    let templates: [Template]
 
     @State private var currentMedia: Media? = Self.model.currentMedia
     @State private var medias: [Media] = Self.model.medias
@@ -166,11 +165,7 @@ struct PlaylistView: View {
         }
         .animation(.defaultLinear, value: layout)
         .onAppear {
-            Self.model.templates = templates
             Self.model.play()
-        }
-        .onChange(of: templates) { newValue in
-            Self.model.templates = newValue
         }
         .onChange(of: currentMedia) { media in
             Self.model.currentMedia = media
@@ -188,7 +183,6 @@ struct PlaylistView: View {
     }
 
     init(templates: [Template]) {
-        self.templates = templates
         Self.model.templates = templates
     }
 }
