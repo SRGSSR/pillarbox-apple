@@ -151,6 +151,7 @@ struct PlaylistView: View {
     @State private var layout: PlaybackView.Layout = .minimized
     let templates: [Template]
 
+    @State private var currentMedia: Media?
     var selectedMedia: Binding<Media?> {
         Binding {
             Self.model.currentMedia
@@ -174,7 +175,7 @@ struct PlaylistView: View {
             if layout != .maximized {
                 Toolbar(player: Self.model.player, model: Self.model)
                 List(medias, id: \.self, editActions: .all, selection: selectedMedia) { $media in
-                    MediaCell(media: media, isPlaying: media == Self.model.currentMedia)
+                    MediaCell(media: media, isPlaying: media == currentMedia)
                 }
             }
         }
@@ -185,6 +186,9 @@ struct PlaylistView: View {
         }
         .onChange(of: templates) { newValue in
             Self.model.templates = newValue
+        }
+        .onReceive(Self.model.$currentMedia) { media in
+            currentMedia = media
         }
         .tracked(name: "playlist")
     }
