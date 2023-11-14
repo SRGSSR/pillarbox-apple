@@ -149,8 +149,8 @@ private struct Toolbar: View {
 struct PlaylistView: View {
     private static let shared = PlaylistViewModel()
     @StateObject private var model = shared
-    @State var templates: [Template]
     @State private var layout: PlaybackView.Layout = .minimized
+    let templates: [Template]
 
     var body: some View {
         VStack(spacing: 0) {
