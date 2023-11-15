@@ -101,6 +101,7 @@ private struct Toolbar: View {
         .sheet(isPresented: $isSelectionPlaylistPresented) {
             PlaylistSelectionView(model: model)
         }
+        .contentShape(Rectangle())
     }
 
     @ViewBuilder
