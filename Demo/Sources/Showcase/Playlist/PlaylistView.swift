@@ -179,6 +179,9 @@ struct PlaylistView: View {
         .onReceive(Self.model.$items) { items in
             medias = Array(items.keys)
         }
+        .enabledForInAppPictureInPictureWithCleanup {
+            Self.model.trash()
+        }
         .tracked(name: "playlist")
     }
 
