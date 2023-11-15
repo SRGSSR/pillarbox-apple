@@ -148,46 +148,28 @@ private struct Toolbar: View {
 
 // Behavior: h-exp, v-exp
 struct PlaylistView: View {
-    private static let model = PlaylistViewModel()
+    private static let shared = PlaylistViewModel()
+    @ObservedObject private var model = shared
     @State private var layout: PlaybackView.Layout = .minimized
-
-    @State private var currentMedia: Media? = Self.model.currentMedia
-    @State private var medias: [Media] = Self.model.medias
 
     var body: some View {
         VStack(spacing: 0) {
-            PlaybackView(player: Self.model.player, layout: $layout, isPictureInPictureSupported: true)
+            PlaybackView(player: model.player, layout: $layout, isPictureInPictureSupported: true)
             if layout != .maximized {
-                Toolbar(player: Self.model.player, model: Self.model)
-                List($medias, id: \.self, editActions: .all, selection: $currentMedia) { $media in
-                    MediaCell(media: media, isPlaying: media == currentMedia)
+                Toolbar(player: model.player, model: model)
+                List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
+                    MediaCell(media: media, isPlaying: media == model.currentMedia)
                 }
             }
         }
         .animation(.defaultLinear, value: layout)
-        .onAppear {
-            Self.model.play()
-        }
-        .onChange(of: currentMedia) { media in
-            Self.model.currentMedia = media
-        }
-        .onReceive(Self.model.$currentMedia) { media in
-            currentMedia = media
-        }
-        .onChange(of: medias) { medias in
-            Self.model.medias = medias
-        }
-        .onReceive(Self.model.$items) { items in
-            medias = Array(items.keys)
-        }
-        .enabledForInAppPictureInPictureWithCleanup {
-            Self.model.trash()
-        }
+        .onAppear(perform: model.play)
+        .enabledForInAppPictureInPictureWithCleanup(perform: model.trash)
         .tracked(name: "playlist")
     }
 
     init(templates: [Template]) {
-        Self.model.templates = templates
+        model.templates = templates
     }
 }
 
