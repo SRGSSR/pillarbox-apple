@@ -427,7 +427,9 @@ private struct TimeSlider: View {
                 label(withText: formattedTotalTime)
             },
             onDragging: {
-                visibilityTracker.reset()
+                if UserDefaults.standard.seekBehavior == .deferred {
+                    visibilityTracker.reset()
+                }
             }
         )
         .foregroundColor(.white)
