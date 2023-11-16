@@ -543,6 +543,7 @@ struct PlaybackView: View {
     @ObservedObject private var player: Player
     @Binding private var layout: Layout
     let isPictureInPictureSupported: Bool
+    let playerLayout: PlayerLayout
 
     var body: some View {
         ZStack {
@@ -564,8 +565,14 @@ struct PlaybackView: View {
         .background(.black)
     }
 
-    init(player: Player, layout: Binding<Layout> = .constant(.inline), isPictureInPictureSupported: Bool = false) {
+    init(
+        player: Player,
+        playerLayout: PlayerLayout = UserDefaults.standard.playerLayout,
+        layout: Binding<Layout> = .constant(.inline),
+        isPictureInPictureSupported: Bool = false
+    ) {
         self.player = player
+        self.playerLayout = playerLayout
         _layout = layout
         self.isPictureInPictureSupported = isPictureInPictureSupported
     }
@@ -574,7 +581,7 @@ struct PlaybackView: View {
     private func videoView() -> some View {
         ZStack {
 #if os(iOS)
-            switch UserDefaults.standard.playerLayout {
+            switch playerLayout {
             case .custom:
                 MainView(player: player, layout: $layout, isPictureInPictureSupported: isPictureInPictureSupported)
             case .system:
