@@ -153,7 +153,7 @@ public final class ProgressTracker: ObservableObject {
     }
 
     private func pausePlaybackIfNeeded(with player: Player?) {
-        guard let player, player.playbackState == .playing else { return }
+        guard let player, player.playbackState == .playing, seekBehavior == .immediate else { return }
         player.pause()
         wasPaused = true
     }
