@@ -14,6 +14,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     let minimumValueLabel: () -> ValueLabel
     let maximumValueLabel: () -> ValueLabel
     let onEditingChanged: (Bool) -> Void
+    let onDragging: () -> Void
 
     @GestureState private var gestureValue: DragGesture.Value?
     @State private var initialProgress: Float = 0
@@ -33,12 +34,14 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
         progressTracker: ProgressTracker,
         @ViewBuilder minimumValueLabel: @escaping () -> ValueLabel,
         @ViewBuilder maximumValueLabel: @escaping () -> ValueLabel,
-        onEditingChanged: @escaping (Bool) -> Void = { _ in }
+        onEditingChanged: @escaping (Bool) -> Void = { _ in },
+        onDragging: @escaping () -> Void = {}
     ) {
         self.progressTracker = progressTracker
         self.minimumValueLabel = minimumValueLabel
         self.maximumValueLabel = maximumValueLabel
         self.onEditingChanged = onEditingChanged
+        self.onDragging = onDragging
     }
 
     @ViewBuilder
@@ -77,6 +80,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
 
     private func updateProgress(for value: DragGesture.Value?, in geometry: GeometryProxy) {
         if let value {
+            onDragging()
             if !progressTracker.isInteracting {
                 progressTracker.isInteracting = true
                 initialProgress = progressTracker.progress
