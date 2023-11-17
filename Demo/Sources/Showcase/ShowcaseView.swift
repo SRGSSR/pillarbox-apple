@@ -25,16 +25,10 @@ struct ShowcaseView: View {
     }
 
     @ViewBuilder
-    private func cell(
-        title: String,
-        subtitle: String? = nil,
-        destination: RouterDestination,
-        sourceCodeOf objectType: (any SourceCode.Type)? = nil
-    ) -> some View {
+    private func cell(title: String, subtitle: String? = nil, destination: RouterDestination) -> some View {
         Cell(title: title, subtitle: subtitle) {
             router.presented = destination
         }
-        .sourceCode(of: objectType)
     }
 
     @ViewBuilder
@@ -43,21 +37,23 @@ struct ShowcaseView: View {
             cell(
                 title: "Simple",
                 subtitle: "A basic video playback experience",
-                destination: .simplePlayer(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS)),
-                sourceCodeOf: SimplePlayerView.self
+                destination: .simplePlayer(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
             )
+            .sourceCode(of: SimplePlayerView.self)
+
             cell(
                 title: "Blurred",
                 subtitle: "A video displayed onto a blurred clone of itself",
-                destination: .blurred(media: Media(from: URLTemplate.dvrVideoHLS)),
-                sourceCodeOf: BlurredView.self
+                destination: .blurred(media: Media(from: URLTemplate.dvrVideoHLS))
             )
+            .sourceCode(of: BlurredView.self)
+
             cell(
                 title: "Stories",
                 subtitle: "An Instagram-inspired user experience",
-                destination: .stories,
-                sourceCodeOf: StoriesView.self
+                destination: .stories
             )
+            .sourceCode(of: StoriesView.self)
         }
     }
 
