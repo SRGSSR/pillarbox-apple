@@ -99,12 +99,15 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func embeddingsSection() -> some View {
+        // swiftlint:disable:next closure_body_length
         Section("Embeddings") {
             cell(
                 title: "Twins",
                 subtitle: "A video displayed twice",
                 destination: .twins(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
             )
+            .sourceCode(of: TwinsView.self)
+
             cell(
                 title: "Multi-instance",
                 subtitle: "Two videos played at the same time",
@@ -113,21 +116,28 @@ struct ShowcaseView: View {
                     media2: Media(from: URNTemplate.onDemandVideo)
                 )
             )
+            .sourceCode(of: MultiView.self)
+
             cell(
                 title: "Link",
                 subtitle: "A player which can be linked to a view",
                 destination: .link(media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS))
             )
+            .sourceCode(of: LinkView.self)
+
             cell(
                 title: "Wrapped",
                 subtitle: "A view whose player can be removed",
                 destination: .wrapped(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
             )
+            .sourceCode(of: WrappedView.self)
+
             cell(
                 title: "Transition",
                 subtitle: "A transition between two layouts sharing the same player",
                 destination: .transition(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
             )
+            .sourceCode(of: TransitionView.self)
         }
     }
 

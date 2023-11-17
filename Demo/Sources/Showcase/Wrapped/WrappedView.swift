@@ -49,6 +49,10 @@ struct WrappedView: View {
     }
 }
 
+extension WrappedView: SourceCode {
+    static var filePath: String { #file }
+}
+
 #Preview {
     WrappedView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
 }

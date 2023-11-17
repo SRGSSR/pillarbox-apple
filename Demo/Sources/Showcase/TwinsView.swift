@@ -64,6 +64,10 @@ private extension TwinsView {
     }
 }
 
+extension TwinsView: SourceCode {
+    static var filePath: String { #file }
+}
+
 #Preview {
     TwinsView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
 }
