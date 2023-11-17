@@ -32,6 +32,7 @@ extension View {
     func onWillAppear(perform action: @escaping () -> Void) -> some View {
         background {
             WillAppearView(action: action)
+                .allowsHitTesting(false)
         }
     }
 }

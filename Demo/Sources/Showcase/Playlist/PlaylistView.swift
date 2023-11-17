@@ -147,13 +147,17 @@ private struct Toolbar: View {
 
 // Behavior: h-exp, v-exp
 struct PlaylistView: View {
-    @State var templates: [Template]
-    @StateObject private var model = PlaylistViewModel()
+    private static let shared = PlaylistViewModel()
+    @ObservedObject private var model = shared
     @State private var layout: PlaybackView.Layout = .minimized
 
     var body: some View {
         VStack(spacing: 0) {
-            PlaybackView(player: model.player, layout: $layout)
+#if os(iOS)
+            PlaybackView(player: model.player, playerLayout: .custom, layout: $layout, isPictureInPictureSupported: true)
+#else
+            PlaybackView(player: model.player, layout: $layout, isPictureInPictureSupported: true)
+#endif
             if layout != .maximized {
                 Toolbar(player: model.player, model: model)
                 List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
@@ -162,14 +166,13 @@ struct PlaylistView: View {
             }
         }
         .animation(.defaultLinear, value: layout)
-        .onAppear {
-            model.templates = templates
-            model.play()
-        }
-        .onChange(of: templates) { newValue in
-            model.templates = newValue
-        }
+        .onAppear(perform: model.play)
+        .enabledForInAppPictureInPictureWithCleanup(perform: model.trash)
         .tracked(name: "playlist")
+    }
+
+    init(templates: [Template]) {
+        model.templates = templates
     }
 }
 
