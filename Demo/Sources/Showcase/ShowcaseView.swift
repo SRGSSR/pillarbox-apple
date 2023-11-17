@@ -173,6 +173,7 @@ struct ShowcaseView: View {
                 destination: .systemPlayer(media: Media(from: URNTemplate.unknown))
             )
         }
+        .sourceCode(of: SystemPlayerView.self)
     }
 
     @ViewBuilder
