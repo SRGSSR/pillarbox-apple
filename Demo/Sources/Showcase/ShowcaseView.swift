@@ -49,7 +49,8 @@ struct ShowcaseView: View {
             cell(
                 title: "Blurred",
                 subtitle: "A video displayed onto a blurred clone of itself",
-                destination: .blurred(media: Media(from: URLTemplate.dvrVideoHLS))
+                destination: .blurred(media: Media(from: URLTemplate.dvrVideoHLS)),
+                sourceCodeOf: BlurredView.self
             )
             cell(
                 title: "Stories",

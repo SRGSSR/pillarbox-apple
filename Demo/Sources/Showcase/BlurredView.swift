@@ -39,6 +39,10 @@ struct BlurredView: View {
     }
 }
 
+extension BlurredView: SourceCode {
+    static var filePath: String { #file }
+}
+
 #Preview {
     BlurredView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
 }
