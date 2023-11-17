@@ -34,3 +34,7 @@ struct InlineSystemPlayerView: View {
 extension InlineSystemPlayerView: SourceCode {
     static var filePath: String { #file }
 }
+
+#Preview {
+    InlineSystemPlayerView(media: Media(from: URLTemplate.appleAdvanced_16_9_TS_HLS))
+}
