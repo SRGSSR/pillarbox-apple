@@ -11,7 +11,7 @@ final class PlayerViewModel {
         didSet {
             guard media != oldValue else { return }
             if let playerItem = media?.playerItem() {
-                player.items = [playerItem]
+                player = Player(items: [playerItem], configuration: .standard)
             }
             else {
                 player.removeAllItems()
@@ -19,7 +19,7 @@ final class PlayerViewModel {
         }
     }
 
-    let player = Player(configuration: .standard)
+    private(set) var player = Player()
 
     func play() {
         player.becomeActive()
