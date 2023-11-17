@@ -26,10 +26,7 @@ protocol SourceCodeViewable {
 extension View {
     @ViewBuilder
     func sourceCode(of objectType: (any SourceCodeViewable.Type)?) -> some View {
-        if
-            let objectType,
-            let relativePath = objectType.filePath.split(separator: "pillarbox-apple").last {
-            let url = URL("https://github.com/SRGSSR/pillarbox-apple/blob/main").appending(path: relativePath)
+        if let objectType, let url = gitHubUrl(for: objectType) {
             swipeActions {
                 SourceCodeButton {
                     UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -39,5 +36,16 @@ extension View {
         else {
             self
         }
+    }
+
+    private func gitHubUrl(for objectType: any SourceCodeViewable.Type) -> URL? {
+        guard let relativePath = objectType.filePath.split(separator: "pillarbox-apple").last else { return nil }
+        var url = URL("github://github.com/SRGSSR/pillarbox-apple/blob/main").appending(path: relativePath)
+        if !UIApplication.shared.canOpenURL(url) {
+            var components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+            components.scheme = "https"
+            url = components.url!
+        }
+        return url
     }
 }
