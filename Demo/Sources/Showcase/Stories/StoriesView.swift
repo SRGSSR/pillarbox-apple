@@ -59,6 +59,10 @@ struct StoriesView: View {
     }
 }
 
+extension StoriesView: SourceCode {
+    static var filePath: String { #file }
+}
+
 #Preview {
     StoriesView()
 }

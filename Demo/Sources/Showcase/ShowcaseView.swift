@@ -55,7 +55,8 @@ struct ShowcaseView: View {
             cell(
                 title: "Stories",
                 subtitle: "An Instagram-inspired user experience",
-                destination: .stories
+                destination: .stories,
+                sourceCodeOf: StoriesView.self
             )
         }
     }
