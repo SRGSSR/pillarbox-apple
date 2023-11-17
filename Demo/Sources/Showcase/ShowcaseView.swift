@@ -98,6 +98,7 @@ struct ShowcaseView: View {
                 destination: .playlist(templates: [])
             )
         }
+        .sourceCode(of: PlaylistView.self)
     }
 
     @ViewBuilder
