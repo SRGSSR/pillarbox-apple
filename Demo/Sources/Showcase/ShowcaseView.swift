@@ -25,10 +25,16 @@ struct ShowcaseView: View {
     }
 
     @ViewBuilder
-    private func cell(title: String, subtitle: String? = nil, destination: RouterDestination) -> some View {
+    private func cell(
+        title: String,
+        subtitle: String? = nil,
+        destination: RouterDestination,
+        sourceCodeOf objectType: (any SourceCode.Type)? = nil
+    ) -> some View {
         Cell(title: title, subtitle: subtitle) {
             router.presented = destination
         }
+        .sourceCode(of: objectType)
     }
 
     @ViewBuilder
