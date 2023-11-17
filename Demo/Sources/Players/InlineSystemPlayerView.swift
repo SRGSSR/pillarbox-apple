@@ -30,3 +30,7 @@ struct InlineSystemPlayerView: View {
         Self.model.media = media
     }
 }
+
+extension InlineSystemPlayerView: SourceCode {
+    static var filePath: String { #file }
+}

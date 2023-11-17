@@ -183,6 +183,7 @@ struct ShowcaseView: View {
                 title: "Video URN - On-demand",
                 destination: .inlineSystemPlayer(media: Media(from: URNTemplate.onDemandVideo))
             )
+            .sourceCode(of: InlineSystemPlayerView.self)
         }
     }
 
