@@ -211,6 +211,7 @@ struct ShowcaseView: View {
                 destination: .vanillaPlayer(item: Template.playerItem(from: URLTemplate.unknown)!)
             )
         }
+        .sourceCode(of: VanillaPlayerView.self)
     }
 
     @ViewBuilder
