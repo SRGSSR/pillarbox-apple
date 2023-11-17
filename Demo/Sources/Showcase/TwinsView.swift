@@ -64,7 +64,7 @@ private extension TwinsView {
     }
 }
 
-extension TwinsView: SourceCode {
+extension TwinsView: SourceCodeViewable {
     static var filePath: String { #file }
 }
 

@@ -26,7 +26,7 @@ struct SystemPlayerView: View {
     }
 }
 
-extension SystemPlayerView: SourceCode {
+extension SystemPlayerView: SourceCodeViewable {
     static var filePath: String { #file }
 }
 

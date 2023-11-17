@@ -65,7 +65,7 @@ private extension Player {
     }
 }
 
-extension TransitionView: SourceCode {
+extension TransitionView: SourceCodeViewable {
     static var filePath: String { #file }
 }
 

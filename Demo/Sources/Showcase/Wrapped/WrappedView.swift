@@ -49,7 +49,7 @@ struct WrappedView: View {
     }
 }
 
-extension WrappedView: SourceCode {
+extension WrappedView: SourceCodeViewable {
     static var filePath: String { #file }
 }
 

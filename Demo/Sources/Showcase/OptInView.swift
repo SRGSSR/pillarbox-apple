@@ -48,7 +48,7 @@ struct OptInView: View {
     }
 }
 
-extension OptInView: SourceCode {
+extension OptInView: SourceCodeViewable {
     static var filePath: String { #file }
 }
 

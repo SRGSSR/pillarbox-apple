@@ -59,7 +59,7 @@ struct StoriesView: View {
     }
 }
 
-extension StoriesView: SourceCode {
+extension StoriesView: SourceCodeViewable {
     static var filePath: String { #file }
 }
 

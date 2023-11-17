@@ -176,7 +176,7 @@ struct PlaylistView: View {
     }
 }
 
-extension PlaylistView: SourceCode {
+extension PlaylistView: SourceCodeViewable {
     static var filePath: String { #file }
 }
 

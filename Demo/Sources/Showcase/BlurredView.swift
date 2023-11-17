@@ -39,7 +39,7 @@ struct BlurredView: View {
     }
 }
 
-extension BlurredView: SourceCode {
+extension BlurredView: SourceCodeViewable {
     static var filePath: String { #file }
 }
 

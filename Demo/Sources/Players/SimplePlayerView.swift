@@ -53,7 +53,7 @@ struct SimplePlayerView: View {
     }
 }
 
-extension SimplePlayerView: SourceCode {
+extension SimplePlayerView: SourceCodeViewable {
     static var filePath: String { #file }
 }
 

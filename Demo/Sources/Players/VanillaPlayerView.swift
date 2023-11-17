@@ -25,7 +25,7 @@ struct VanillaPlayerView: View {
     }
 }
 
-extension VanillaPlayerView: SourceCode {
+extension VanillaPlayerView: SourceCodeViewable {
     static var filePath: String { #file }
 }
 

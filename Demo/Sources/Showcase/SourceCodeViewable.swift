@@ -19,13 +19,13 @@ struct SourceCodeButton: View {
     }
 }
 
-protocol SourceCode {
+protocol SourceCodeViewable {
     static var filePath: String { get }
 }
 
 extension View {
     @ViewBuilder
-    func sourceCode(of objectType: (any SourceCode.Type)?) -> some View {
+    func sourceCode(of objectType: (any SourceCodeViewable.Type)?) -> some View {
         if
             let objectType,
             let relativePath = objectType.filePath.split(separator: "pillarbox-apple").last {

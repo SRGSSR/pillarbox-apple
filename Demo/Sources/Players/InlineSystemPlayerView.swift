@@ -31,7 +31,7 @@ struct InlineSystemPlayerView: View {
     }
 }
 
-extension InlineSystemPlayerView: SourceCode {
+extension InlineSystemPlayerView: SourceCodeViewable {
     static var filePath: String { #file }
 }
 

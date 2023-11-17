@@ -44,7 +44,7 @@ struct LinkView: View {
     }
 }
 
-extension LinkView: SourceCode {
+extension LinkView: SourceCodeViewable {
     static var filePath: String { #file }
 }
 

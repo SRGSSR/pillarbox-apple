@@ -125,7 +125,7 @@ struct MultiView: View {
     }
 }
 
-extension MultiView: SourceCode {
+extension MultiView: SourceCodeViewable {
     static var filePath: String { #file }
 }
 
