@@ -340,7 +340,7 @@ private struct TimeBar: View {
         HStack(spacing: 8) {
             routePickerView()
             HStack(spacing: 20) {
-                TimeSlider(player: player, progressTracker: progressTracker)
+                TimeSlider(player: player, progressTracker: progressTracker, visibilityTracker: visibilityTracker)
                 LiveLabel(player: player, progressTracker: progressTracker)
 
                 Group {
@@ -398,6 +398,7 @@ private struct TimeSlider: View {
 
     @ObservedObject var player: Player
     @ObservedObject var progressTracker: ProgressTracker
+    @ObservedObject var visibilityTracker: VisibilityTracker
     @State private var streamType: StreamType = .unknown
 
     private var formattedElapsedTime: String? {
@@ -424,6 +425,11 @@ private struct TimeSlider: View {
             },
             maximumValueLabel: {
                 label(withText: formattedTotalTime)
+            },
+            onDragging: {
+                if UserDefaults.standard.seekBehavior == .deferred {
+                    visibilityTracker.reset()
+                }
             }
         )
         .foregroundColor(.white)
