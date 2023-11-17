@@ -53,11 +53,11 @@ final class PlaylistViewModel: ObservableObject {
 
     @Published private var items = OrderedDictionary<Media, PlayerItem>() {
         didSet {
-            player.items = items.values.elements
+            newPlayer(with: items.values.elements)
         }
     }
 
-    let player = Player(configuration: .standard)
+    private(set) var player = Player()
 
     var medias: [Media] {
         get {
@@ -111,6 +111,16 @@ final class PlaylistViewModel: ObservableObject {
             }
         }
         return items
+    }
+
+    private func newPlayer(with items: [PlayerItem]) {
+        if items.isEmpty {
+            player.removeAllItems()
+        }
+        else {
+            player = Player(items: items, configuration: .standard)
+            configureCurrentItemPublisher()
+        }
     }
 
     func add(from templates: [Template]) {
