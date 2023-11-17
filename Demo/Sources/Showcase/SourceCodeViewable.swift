@@ -6,18 +6,15 @@
 
 import SwiftUI
 
-struct SourceCodeButton: View {
-    let perform: () -> Void
+private struct SourceCodeButton: View {
+    let action: () -> Void
 
     var body: some View {
-        Button {
-            perform()
-        } label: {
+        Button(action: action) {
             HStack {
                 Text("GitHub")
             }
         }
-        .tint(.secondary)
     }
 }
 
@@ -27,9 +24,9 @@ protocol SourceCodeViewable {
 
 extension View {
     @ViewBuilder
-    func sourceCode(of objectType: (any SourceCodeViewable.Type)?) -> some View {
+    func sourceCode<T>(of objectType: T.Type) -> some View where T: SourceCodeViewable {
 #if os(iOS)
-        if let objectType, let url = gitHubUrl(for: objectType) {
+        if let url = gitHubUrl(for: objectType) {
             swipeActions {
                 SourceCodeButton {
                     UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -44,7 +41,7 @@ extension View {
 #endif
     }
 
-    private func gitHubUrl(for objectType: any SourceCodeViewable.Type) -> URL? {
+    private func gitHubUrl<T>(for objectType: T.Type) -> URL? where T: SourceCodeViewable {
         guard let relativePath = objectType.filePath.split(separator: "pillarbox-apple").last else { return nil }
         var url = URL("github://github.com/SRGSSR/pillarbox-apple/blob/main").appending(path: relativePath)
         if !UIApplication.shared.canOpenURL(url) {
