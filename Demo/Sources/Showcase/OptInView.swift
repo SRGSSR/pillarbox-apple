@@ -48,6 +48,10 @@ struct OptInView: View {
     }
 }
 
+extension OptInView: SourceCode {
+    static var filePath: String { #file }
+}
+
 #Preview {
     OptInView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
 }

@@ -226,6 +226,7 @@ struct ShowcaseView: View {
                 destination: .optInPlayer(media: Media(from: URNTemplate.onDemandVerticalVideo))
             )
         }
+        .sourceCode(of: OptInView.self)
     }
 }
 
