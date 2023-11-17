@@ -15,7 +15,7 @@
 		0EA8A9AE2A6AF0AF0077E3E4 /* YouTubeMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8A9AD2A6AF0AF0077E3E4 /* YouTubeMetadata.swift */; };
 		0EA8E5D52A6D9AC700AB33BB /* YouTubeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8E5D42A6D9AC700AB33BB /* YouTubeError.swift */; };
 		0ECC5AD52A517A4C0064E701 /* PlaybackSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECC5AD42A517A4C0064E701 /* PlaybackSlider.swift */; };
-		0EDFF0DB2B0740DA005030B4 /* SourceCodeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDFF0DA2B0740DA005030B4 /* SourceCodeButton.swift */; };
+		0EDFF0DB2B0740DA005030B4 /* SourceCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDFF0DA2B0740DA005030B4 /* SourceCode.swift */; };
 		0EF42CB629AE513400553165 /* SRGDataProviderCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF42CB529AE513400553165 /* SRGDataProviderCombine */; };
 		6F02B3092AB870AD002D15DB /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 6F02B3082AB870AD002D15DB /* Localizable.xcstrings */; };
 		6F0B2E852A40EBAC00B69675 /* RouterDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E842A40EBAC00B69675 /* RouterDestination.swift */; };
@@ -87,7 +87,7 @@
 		0EA8A9AD2A6AF0AF0077E3E4 /* YouTubeMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeMetadata.swift; sourceTree = "<group>"; };
 		0EA8E5D42A6D9AC700AB33BB /* YouTubeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeError.swift; sourceTree = "<group>"; };
 		0ECC5AD42A517A4C0064E701 /* PlaybackSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackSlider.swift; sourceTree = "<group>"; };
-		0EDFF0DA2B0740DA005030B4 /* SourceCodeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceCodeButton.swift; sourceTree = "<group>"; };
+		0EDFF0DA2B0740DA005030B4 /* SourceCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceCode.swift; sourceTree = "<group>"; };
 		6F010340289946220021BA76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F02B3082AB870AD002D15DB /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pillarbox-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -312,7 +312,7 @@
 				0E6B995B29D43E4200D0276D /* OptInView.swift */,
 				6F59E85629CF31E10093E6FB /* Playlist */,
 				6F59E85A29CF31E10093E6FB /* ShowcaseView.swift */,
-				0EDFF0DA2B0740DA005030B4 /* SourceCodeButton.swift */,
+				0EDFF0DA2B0740DA005030B4 /* SourceCode.swift */,
 				6F59E85B29CF31E10093E6FB /* Stories */,
 				6FED426A2A96F4D3004D7724 /* TransitionView.swift */,
 				6F59E85929CF31E10093E6FB /* TwinsView.swift */,
@@ -568,7 +568,7 @@
 				6F59E8A329CF31E20093E6FB /* ExamplesView.swift in Sources */,
 				0E6B995C29D43E4200D0276D /* OptInView.swift in Sources */,
 				6F59E89C29CF31E20093E6FB /* BasicPlaybackView.swift in Sources */,
-				0EDFF0DB2B0740DA005030B4 /* SourceCodeButton.swift in Sources */,
+				0EDFF0DB2B0740DA005030B4 /* SourceCode.swift in Sources */,
 				6F59E87A29CF31E10093E6FB /* SearchViewModel.swift in Sources */,
 				6F59E88829CF31E20093E6FB /* UserDefaults.swift in Sources */,
 				0EA8A9AE2A6AF0AF0077E3E4 /* YouTubeMetadata.swift in Sources */,
