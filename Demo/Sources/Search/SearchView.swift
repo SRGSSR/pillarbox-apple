@@ -30,7 +30,7 @@ struct SearchView: View {
         .searchable(text: $model.text)
 #if os(iOS)
         .searchScopes($model.vendor) {
-            ForEach([SRGVendor.SRF, .RTS, .RSI, .RTR, .SWI], id: \.self) { vendor in
+            ForEach([SRGVendor.RSI, .RTR, .RTS, .SRF, .SWI], id: \.self) { vendor in
                 Text(vendor.name).tag(vendor)
             }
         }
