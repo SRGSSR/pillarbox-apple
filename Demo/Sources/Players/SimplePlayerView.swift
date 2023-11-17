@@ -53,6 +53,10 @@ struct SimplePlayerView: View {
     }
 }
 
+extension SimplePlayerView: SourceCode {
+    static var filePath: String { #file }
+}
+
 #Preview {
     SimplePlayerView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
 }

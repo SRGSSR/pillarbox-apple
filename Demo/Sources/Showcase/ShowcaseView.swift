@@ -43,7 +43,8 @@ struct ShowcaseView: View {
             cell(
                 title: "Simple",
                 subtitle: "A basic video playback experience",
-                destination: .simplePlayer(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
+                destination: .simplePlayer(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS)),
+                sourceCodeOf: SimplePlayerView.self
             )
             cell(
                 title: "Blurred",
