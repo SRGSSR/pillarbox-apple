@@ -13,7 +13,9 @@ struct SourceCodeButton: View {
         Button {
             perform()
         } label: {
-            Image(systemName: "globe")
+            HStack {
+                Text("GitHub")
+            }
         }
         .tint(.secondary)
     }
