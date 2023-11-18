@@ -48,6 +48,7 @@ final class PlayerConfigurationTests: TestCase {
         )
 
         let player = Player()
+        player.applyConfiguration(configuration)
 
         expect(player.configuration.allowsExternalPlayback).to(beFalse())
         expect(player.configuration.isSmartNavigationEnabled).to(beFalse())

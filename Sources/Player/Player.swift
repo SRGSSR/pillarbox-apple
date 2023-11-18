@@ -56,7 +56,7 @@ public final class Player: ObservableObject, Equatable {
     }
 
     /// The player configuration.
-    public let configuration: PlayerConfiguration
+    public private(set) var configuration: PlayerConfiguration
 
     /// A publisher providing player property updates as a consolidated stream.
     ///
@@ -166,6 +166,14 @@ public final class Player: ObservableObject, Equatable {
         guard Self.currentPlayer == self else { return }
         isActive = false
         Self.currentPlayer = nil
+    }
+
+    /// Apply a new configuration to the player.
+    ///
+    /// - Parameter newConfiguration: The new configuration to apply.
+    public func applyConfiguration(_ configuration: PlayerConfiguration) {
+        self.configuration = configuration
+        configurePlayer()
     }
 
     private func configurePlayer() {
