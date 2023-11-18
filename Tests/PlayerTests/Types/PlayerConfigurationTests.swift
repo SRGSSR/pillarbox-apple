@@ -40,4 +40,16 @@ final class PlayerConfigurationTests: TestCase {
         expect(player.configuration.backwardSkipInterval).to(equal(42))
         expect(player.configuration.forwardSkipInterval).to(equal(47))
     }
+
+    func testApplyPlayerConfigurationAfterInit() {
+        let configuration = PlayerConfiguration(
+            allowsExternalPlayback: false,
+            smartNavigationEnabled: false
+        )
+
+        let player = Player()
+
+        expect(player.configuration.allowsExternalPlayback).to(beFalse())
+        expect(player.configuration.isSmartNavigationEnabled).to(beFalse())
+    }
 }
