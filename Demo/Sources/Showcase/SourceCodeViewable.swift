@@ -42,8 +42,11 @@ extension View {
     }
 
     private func gitHubUrl<T>(for objectType: T.Type) -> URL? where T: SourceCodeViewable {
-        guard let relativePath = objectType.filePath.split(separator: "pillarbox-apple").last else { return nil }
-        var url = URL("github://github.com/SRGSSR/pillarbox-apple/blob/main").appending(path: relativePath)
+        let separator = "/Demo/"
+        guard let relativePath = objectType.filePath.split(separator: separator).last else { return nil }
+        var url = URL("github://github.com/SRGSSR/pillarbox-apple/blob/main")
+            .appending(path: separator)
+            .appending(path: relativePath)
         if !UIApplication.shared.canOpenURL(url) {
             var components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
             components.scheme = "https"
