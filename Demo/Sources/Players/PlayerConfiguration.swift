@@ -13,7 +13,6 @@ extension PlayerConfiguration {
         return .init(
             allowsExternalPlayback: userDefaults.allowsExternalPlaybackEnabled,
             usesExternalPlaybackWhileMirroring: !userDefaults.presenterModeEnabled,
-            audiovisualBackgroundPlaybackPolicy: userDefaults.audiovisualBackgroundPlaybackPolicy,
             smartNavigationEnabled: userDefaults.smartNavigationEnabled
         )
     }
@@ -22,7 +21,6 @@ extension PlayerConfiguration {
         let userDefaults = UserDefaults.standard
         return .init(
             allowsExternalPlayback: false,
-            audiovisualBackgroundPlaybackPolicy: userDefaults.audiovisualBackgroundPlaybackPolicy,
             smartNavigationEnabled: userDefaults.smartNavigationEnabled
         )
     }
