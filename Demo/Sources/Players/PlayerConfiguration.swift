@@ -11,7 +11,6 @@ extension PlayerConfiguration {
     static var standard: Self {
         let userDefaults = UserDefaults.standard
         return .init(
-            allowsExternalPlayback: userDefaults.allowsExternalPlaybackEnabled,
             usesExternalPlaybackWhileMirroring: !userDefaults.presenterModeEnabled,
             smartNavigationEnabled: userDefaults.smartNavigationEnabled
         )

@@ -48,9 +48,6 @@ struct SettingsView: View {
     private var playerLayout: PlayerLayout = .custom
 #endif
 
-    @AppStorage(UserDefaults.allowsExternalPlaybackKey)
-    private var allowsExternalPlayback = true
-
     @AppStorage(UserDefaults.smartNavigationEnabledKey)
     private var isSmartNavigationEnabled = true
 
@@ -91,7 +88,6 @@ struct SettingsView: View {
 #if os(iOS)
             playerLayoutPicker()
 #endif
-            Toggle("Allows external playback", isOn: $allowsExternalPlayback)
             Toggle(isOn: $isSmartNavigationEnabled) {
                 Text("Smart navigation")
                 Text("Improves playlist navigation so that it feels more natural.").font(.footnote)

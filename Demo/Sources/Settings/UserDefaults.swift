@@ -25,7 +25,6 @@ extension UserDefaults {
     static let playerLayoutKey = "playerLayout"
 #endif
 
-    static let allowsExternalPlaybackKey = "allowsExternalPlayback"
     static let smartNavigationEnabledKey = "smartNavigationEnabled"
     static let seekBehaviorSettingKey = "seekBehaviorSetting"
     static let serverSettingKey = "serverSetting"
@@ -39,10 +38,6 @@ extension UserDefaults {
         .init(rawValue: integer(forKey: Self.playerLayoutKey)) ?? .custom
     }
 #endif
-
-    @objc dynamic var allowsExternalPlaybackEnabled: Bool {
-        bool(forKey: Self.allowsExternalPlaybackKey)
-    }
 
     @objc dynamic var smartNavigationEnabled: Bool {
         bool(forKey: Self.smartNavigationEnabledKey)
@@ -69,7 +64,6 @@ extension UserDefaults {
         register(defaults: [
             Self.presenterModeEnabledKey: false,
             Self.seekBehaviorSettingKey: SeekBehaviorSetting.immediate.rawValue,
-            Self.allowsExternalPlaybackKey: true,
             Self.smartNavigationEnabledKey: true,
             Self.serverSettingKey: ServerSetting.production.rawValue
         ])
