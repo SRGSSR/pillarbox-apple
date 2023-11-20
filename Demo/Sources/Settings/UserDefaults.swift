@@ -25,10 +25,8 @@ extension UserDefaults {
     static let playerLayoutKey = "playerLayout"
 #endif
 
-    static let allowsExternalPlaybackKey = "allowsExternalPlayback"
     static let smartNavigationEnabledKey = "smartNavigationEnabled"
     static let seekBehaviorSettingKey = "seekBehaviorSetting"
-    static let audiovisualBackgroundPlaybackPolicyKey = "audiovisualBackgroundPlaybackPolicy"
     static let serverSettingKey = "serverSetting"
 
     @objc dynamic var presenterModeEnabled: Bool {
@@ -40,10 +38,6 @@ extension UserDefaults {
         .init(rawValue: integer(forKey: Self.playerLayoutKey)) ?? .custom
     }
 #endif
-
-    @objc dynamic var allowsExternalPlaybackEnabled: Bool {
-        bool(forKey: Self.allowsExternalPlaybackKey)
-    }
 
     @objc dynamic var smartNavigationEnabled: Bool {
         bool(forKey: Self.smartNavigationEnabledKey)
@@ -62,10 +56,6 @@ extension UserDefaults {
         .init(rawValue: integer(forKey: Self.seekBehaviorSettingKey)) ?? .immediate
     }
 
-    @objc dynamic var audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy {
-        .init(rawValue: integer(forKey: Self.audiovisualBackgroundPlaybackPolicyKey)) ?? .automatic
-    }
-
     @objc dynamic var serverSetting: ServerSetting {
         .init(rawValue: integer(forKey: Self.serverSettingKey)) ?? .production
     }
@@ -74,9 +64,7 @@ extension UserDefaults {
         register(defaults: [
             Self.presenterModeEnabledKey: false,
             Self.seekBehaviorSettingKey: SeekBehaviorSetting.immediate.rawValue,
-            Self.allowsExternalPlaybackKey: true,
             Self.smartNavigationEnabledKey: true,
-            Self.audiovisualBackgroundPlaybackPolicyKey: AVPlayerAudiovisualBackgroundPlaybackPolicy.automatic.rawValue,
             Self.serverSettingKey: ServerSetting.production.rawValue
         ])
     }

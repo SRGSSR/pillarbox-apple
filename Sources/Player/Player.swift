@@ -106,6 +106,17 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer
     }
 
+    /// A policy that determines how playback of audiovisual media continues when the app transitions
+    /// to the background.
+    public var audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy {
+        get {
+            queuePlayer.audiovisualBackgroundPlaybackPolicy
+        }
+        set {
+            queuePlayer.audiovisualBackgroundPlaybackPolicy = newValue
+        }
+    }
+
     let queuePlayer = QueuePlayer()
     let nowPlayingSession: MPNowPlayingSession
 
@@ -172,7 +183,6 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.allowsExternalPlayback = false
         queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
         queuePlayer.preventsDisplaySleepDuringVideoPlayback = configuration.preventsDisplaySleepDuringVideoPlayback
-        queuePlayer.audiovisualBackgroundPlaybackPolicy = configuration.audiovisualBackgroundPlaybackPolicy
     }
 
     private func configureControlCenterPublishers() {

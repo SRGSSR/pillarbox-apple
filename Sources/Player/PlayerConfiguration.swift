@@ -19,10 +19,6 @@ public struct PlayerConfiguration {
     /// A Boolean indicating whether video playback prevents display and device sleep.
     public let preventsDisplaySleepDuringVideoPlayback: Bool
 
-    /// A policy that determines how playback of audiovisual media continues when the app transitions
-    /// to the background.
-    public let audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy
-
     /// A Boolean controlling whether smart playlist navigation is enabled.
     ///
     /// See `returnToPrevious()` for more information.
@@ -39,7 +35,6 @@ public struct PlayerConfiguration {
         allowsExternalPlayback: Bool = true,
         usesExternalPlaybackWhileMirroring: Bool = false,
         preventsDisplaySleepDuringVideoPlayback: Bool = true,
-        audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic,
         smartNavigationEnabled: Bool = true,
         backwardSkipInterval: TimeInterval = 10,
         forwardSkipInterval: TimeInterval = 10
@@ -49,7 +44,6 @@ public struct PlayerConfiguration {
         self.allowsExternalPlayback = allowsExternalPlayback
         self.usesExternalPlaybackWhileMirroring = usesExternalPlaybackWhileMirroring
         self.preventsDisplaySleepDuringVideoPlayback = preventsDisplaySleepDuringVideoPlayback
-        self.audiovisualBackgroundPlaybackPolicy = audiovisualBackgroundPlaybackPolicy
         self.isSmartNavigationEnabled = smartNavigationEnabled
         self.backwardSkipInterval = backwardSkipInterval
         self.forwardSkipInterval = forwardSkipInterval

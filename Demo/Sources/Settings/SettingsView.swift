@@ -48,17 +48,11 @@ struct SettingsView: View {
     private var playerLayout: PlayerLayout = .custom
 #endif
 
-    @AppStorage(UserDefaults.allowsExternalPlaybackKey)
-    private var allowsExternalPlayback = true
-
     @AppStorage(UserDefaults.smartNavigationEnabledKey)
     private var isSmartNavigationEnabled = true
 
     @AppStorage(UserDefaults.seekBehaviorSettingKey)
     private var seekBehaviorSetting: SeekBehaviorSetting = .immediate
-
-    @AppStorage(UserDefaults.audiovisualBackgroundPlaybackPolicyKey)
-    private var audiovisualBackgroundPlaybackPolicyKey: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic
 
     private var version: String {
         Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
@@ -94,13 +88,11 @@ struct SettingsView: View {
 #if os(iOS)
             playerLayoutPicker()
 #endif
-            Toggle("Allows external playback", isOn: $allowsExternalPlayback)
             Toggle(isOn: $isSmartNavigationEnabled) {
                 Text("Smart navigation")
                 Text("Improves playlist navigation so that it feels more natural.").font(.footnote)
             }
             seekBehaviorPicker()
-            audiovisualBackgroundPlaybackPolicyPicker()
         }
     }
 
@@ -119,15 +111,6 @@ struct SettingsView: View {
         Picker("Seek behavior", selection: $seekBehaviorSetting) {
             Text("Immediate").tag(SeekBehaviorSetting.immediate)
             Text("Deferred").tag(SeekBehaviorSetting.deferred)
-        }
-    }
-
-    @ViewBuilder
-    private func audiovisualBackgroundPlaybackPolicyPicker() -> some View {
-        Picker("Audiovisual background policy", selection: $audiovisualBackgroundPlaybackPolicyKey) {
-            Text("Automatic").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.automatic)
-            Text("Continues if possible").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.continuesIfPossible)
-            Text("Pauses").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.pauses)
         }
     }
 
