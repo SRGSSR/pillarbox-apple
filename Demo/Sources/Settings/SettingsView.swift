@@ -57,9 +57,6 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.seekBehaviorSettingKey)
     private var seekBehaviorSetting: SeekBehaviorSetting = .immediate
 
-    @AppStorage(UserDefaults.audiovisualBackgroundPlaybackPolicyKey)
-    private var audiovisualBackgroundPlaybackPolicyKey: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic
-
     private var version: String {
         Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
     }
@@ -100,7 +97,6 @@ struct SettingsView: View {
                 Text("Improves playlist navigation so that it feels more natural.").font(.footnote)
             }
             seekBehaviorPicker()
-            audiovisualBackgroundPlaybackPolicyPicker()
         }
     }
 
@@ -119,15 +115,6 @@ struct SettingsView: View {
         Picker("Seek behavior", selection: $seekBehaviorSetting) {
             Text("Immediate").tag(SeekBehaviorSetting.immediate)
             Text("Deferred").tag(SeekBehaviorSetting.deferred)
-        }
-    }
-
-    @ViewBuilder
-    private func audiovisualBackgroundPlaybackPolicyPicker() -> some View {
-        Picker("Audiovisual background policy", selection: $audiovisualBackgroundPlaybackPolicyKey) {
-            Text("Automatic").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.automatic)
-            Text("Continues if possible").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.continuesIfPossible)
-            Text("Pauses").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.pauses)
         }
     }
 

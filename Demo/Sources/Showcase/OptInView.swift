@@ -4,31 +4,37 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import Player
 import SwiftUI
 
 struct OptInView: View {
     let media: Media
+
     @StateObject private var player = Player(configuration: .standard)
 
     @State private var isActive = true
+    @State private var audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic
 
     var body: some View {
         VStack {
             PlaybackView(player: player)
-            VStack(alignment: .leading) {
+                .background(.black)
+            List {
                 Toggle(isOn: $isActive) {
                     Text("Active")
                 }
-                Toggle(isOn: $player.isTrackingEnabled) {
-                    Text("Tracking")
+                audiovisualBackgroundPlaybackPolicyPicker()
+
+                Section {
+                    Toggle(isOn: $player.isTrackingEnabled) {
+                        Text("Tracking")
+                    }
+                } footer: {
+                    Text("Use a proxy tool to observe events.")
                 }
-                Label("Use a proxy tool to observe events.", systemImage: "eyes")
             }
-            .foregroundColor(.white)
-            .padding()
         }
-        .background(.black)
         .onChange(of: isActive) { newValue in
             if newValue {
                 player.becomeActive()
@@ -37,8 +43,20 @@ struct OptInView: View {
                 player.resignActive()
             }
         }
+        .onChange(of: audiovisualBackgroundPlaybackPolicy) { newValue in
+            player.audiovisualBackgroundPlaybackPolicy = newValue
+        }
         .onAppear(perform: play)
         .tracked(name: "tracking")
+    }
+
+    @ViewBuilder
+    private func audiovisualBackgroundPlaybackPolicyPicker() -> some View {
+        Picker("Audiovisual background policy", selection: $audiovisualBackgroundPlaybackPolicy) {
+            Text("Automatic").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.automatic)
+            Text("Continues if possible").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.continuesIfPossible)
+            Text("Pauses").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.pauses)
+        }
     }
 
     private func play() {
