@@ -39,16 +39,21 @@ struct ShowcaseView: View {
                 subtitle: "A basic video playback experience",
                 destination: .simplePlayer(media: Media(from: URLTemplate.appleAdvanced_16_9_HEVC_h264_HLS))
             )
+            .sourceCode(of: SimplePlayerView.self)
+
             cell(
                 title: "Blurred",
                 subtitle: "A video displayed onto a blurred clone of itself",
                 destination: .blurred(media: Media(from: URLTemplate.dvrVideoHLS))
             )
+            .sourceCode(of: BlurredView.self)
+
             cell(
                 title: "Stories",
                 subtitle: "An Instagram-inspired user experience",
                 destination: .stories
             )
+            .sourceCode(of: StoriesView.self)
         }
     }
 
@@ -89,16 +94,20 @@ struct ShowcaseView: View {
                 destination: .playlist(templates: [])
             )
         }
+        .sourceCode(of: PlaylistView.self)
     }
 
     @ViewBuilder
     private func embeddingsSection() -> some View {
+        // swiftlint:disable:next closure_body_length
         Section("Embeddings") {
             cell(
                 title: "Twins",
                 subtitle: "A video displayed twice",
                 destination: .twins(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
             )
+            .sourceCode(of: TwinsView.self)
+
             cell(
                 title: "Multi-instance",
                 subtitle: "Two videos played at the same time",
@@ -107,21 +116,28 @@ struct ShowcaseView: View {
                     media2: Media(from: URNTemplate.onDemandVideo)
                 )
             )
+            .sourceCode(of: MultiView.self)
+
             cell(
                 title: "Link",
                 subtitle: "A player which can be linked to a view",
                 destination: .link(media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS))
             )
+            .sourceCode(of: LinkView.self)
+
             cell(
                 title: "Wrapped",
                 subtitle: "A view whose player can be removed",
                 destination: .wrapped(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
             )
+            .sourceCode(of: WrappedView.self)
+
             cell(
                 title: "Transition",
                 subtitle: "A transition between two layouts sharing the same player",
                 destination: .transition(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
             )
+            .sourceCode(of: TransitionView.self)
         }
     }
 
@@ -157,6 +173,7 @@ struct ShowcaseView: View {
                 destination: .systemPlayer(media: Media(from: URNTemplate.unknown))
             )
         }
+        .sourceCode(of: SystemPlayerView.self)
     }
 
     @ViewBuilder
@@ -166,6 +183,7 @@ struct ShowcaseView: View {
                 title: "Video URN - On-demand",
                 destination: .inlineSystemPlayer(media: Media(from: URNTemplate.onDemandVideo))
             )
+            .sourceCode(of: InlineSystemPlayerView.self)
         }
     }
 
@@ -193,6 +211,7 @@ struct ShowcaseView: View {
                 destination: .vanillaPlayer(item: Template.playerItem(from: URLTemplate.unknown)!)
             )
         }
+        .sourceCode(of: VanillaPlayerView.self)
     }
 
     @ViewBuilder
@@ -207,6 +226,7 @@ struct ShowcaseView: View {
                 destination: .optInPlayer(media: Media(from: URNTemplate.onDemandVerticalVideo))
             )
         }
+        .sourceCode(of: OptInView.self)
     }
 }
 

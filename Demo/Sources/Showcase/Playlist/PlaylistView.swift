@@ -176,6 +176,10 @@ struct PlaylistView: View {
     }
 }
 
+extension PlaylistView: SourceCodeViewable {
+    static var filePath: String { #file }
+}
+
 #Preview {
     PlaylistView(templates: [
         URLTemplate.onDemandVideoLocalHLS,

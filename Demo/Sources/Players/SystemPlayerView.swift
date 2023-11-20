@@ -26,6 +26,10 @@ struct SystemPlayerView: View {
     }
 }
 
+extension SystemPlayerView: SourceCodeViewable {
+    static var filePath: String { #file }
+}
+
 #Preview {
     SystemPlayerView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
 }

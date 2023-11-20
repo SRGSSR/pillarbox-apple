@@ -65,6 +65,10 @@ private extension Player {
     }
 }
 
+extension TransitionView: SourceCodeViewable {
+    static var filePath: String { #file }
+}
+
 #Preview {
     TransitionView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
 }

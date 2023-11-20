@@ -30,3 +30,11 @@ struct InlineSystemPlayerView: View {
         Self.model.media = media
     }
 }
+
+extension InlineSystemPlayerView: SourceCodeViewable {
+    static var filePath: String { #file }
+}
+
+#Preview {
+    InlineSystemPlayerView(media: Media(from: URLTemplate.appleAdvanced_16_9_TS_HLS))
+}

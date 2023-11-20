@@ -44,6 +44,10 @@ struct LinkView: View {
     }
 }
 
+extension LinkView: SourceCodeViewable {
+    static var filePath: String { #file }
+}
+
 #Preview {
     LinkView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
 }

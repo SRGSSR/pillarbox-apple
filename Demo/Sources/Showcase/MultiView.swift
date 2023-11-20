@@ -125,6 +125,10 @@ struct MultiView: View {
     }
 }
 
+extension MultiView: SourceCodeViewable {
+    static var filePath: String { #file }
+}
+
 #Preview {
     MultiView(
         media1: Media(from: URNTemplate.onDemandHorizontalVideo),
