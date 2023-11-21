@@ -170,6 +170,9 @@
     "System player (using Pillarbox)" : {
 
     },
+    "TestFlight Builds" : {
+
+    },
     "Top" : {
 
     },
@@ -177,6 +180,9 @@
 
     },
     "Use a proxy tool to observe events." : {
+
+    },
+    "Version" : {
 
     },
     "Version %@ Build %@, Player %@" : {

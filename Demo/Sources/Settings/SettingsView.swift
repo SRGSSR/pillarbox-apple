@@ -67,9 +67,23 @@ struct SettingsView: View {
             applicationSection()
             playerSection()
             debuggingSection()
+            versionSection()
         }
         .navigationTitle("Settings")
         .tracked(name: "settings")
+    }
+
+    private static func testFlightUrl(forApplicationIdentifier applicationIdentifier: String) -> URL? {
+        var url = URL("itms-beta://beta.itunes.apple.com/v1/app/")
+            .appending(path: applicationIdentifier)
+#if os(iOS)
+        if !UIApplication.shared.canOpenURL(url) {
+            var components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+            components.scheme = "https"
+            url = components.url!
+        }
+#endif
+        return url
     }
 
     @ViewBuilder
@@ -121,13 +135,22 @@ struct SettingsView: View {
             UrlCacheView()
         } header: {
             Text("Debugging")
-        } footer: {
-            debuggingFooter()
         }
     }
 
     @ViewBuilder
-    private func debuggingFooter() -> some View {
+    private func versionSection() -> some View {
+        Section {
+            Button("TestFlight Builds", action: openTestFlight)
+        } header: {
+            Text("Version")
+        } footer: {
+            versionFooter()
+        }
+    }
+
+    @ViewBuilder
+    private func versionFooter() -> some View {
         VStack {
             Text("Version \(version) Build \(buildVersion), Player \(Player.version)")
             HStack(spacing: 0) {
@@ -143,6 +166,11 @@ struct SettingsView: View {
 
     private func simulateMemoryWarning() {
         UIApplication.shared.perform(Selector(("_performMemoryWarning")))
+    }
+
+    private func openTestFlight() {
+        guard let url = Self.testFlightUrl(forApplicationIdentifier: "1637569424") else { return }
+        UIApplication.shared.open(url)
     }
 }
 
