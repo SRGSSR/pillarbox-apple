@@ -39,6 +39,22 @@ private struct UrlCacheView: View {
     }
 }
 
+private struct InfoCell: View {
+    let title: String
+    let value: String
+
+    var body: some View {
+        HStack {
+            Text(title)
+            Spacer()
+            Text(value)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.trailing)
+                .lineLimit(2)
+        }
+    }
+}
+
 struct SettingsView: View {
     @AppStorage(UserDefaults.presenterModeEnabledKey)
     private var isPresenterModeEnabled = false
@@ -141,9 +157,11 @@ struct SettingsView: View {
     @ViewBuilder
     private func versionSection() -> some View {
         Section {
+            InfoCell(title: "Application", value: "\(version), build \(buildVersion)")
+            InfoCell(title: "Library", value: Player.version)
             Button("TestFlight Builds", action: openTestFlight)
         } header: {
-            Text("Version")
+            Text("Version information")
         } footer: {
             versionFooter()
         }
@@ -151,15 +169,12 @@ struct SettingsView: View {
 
     @ViewBuilder
     private func versionFooter() -> some View {
-        VStack {
-            Text("Version \(version) Build \(buildVersion), Player \(Player.version)")
-            HStack(spacing: 0) {
-                Text("Made with ")
-                Image(systemName: "heart.fill")
-                    .foregroundColor(.red)
-                    .pulseSymbolEffect()
-                Text(" in Switzerland")
-            }
+        HStack(spacing: 0) {
+            Text("Made with ")
+            Image(systemName: "heart.fill")
+                .foregroundColor(.red)
+                .pulseSymbolEffect()
+            Text(" in Switzerland")
         }
         .frame(maxWidth: .infinity)
     }

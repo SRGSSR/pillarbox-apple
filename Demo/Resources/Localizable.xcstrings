@@ -182,18 +182,8 @@
     "Use a proxy tool to observe events." : {
 
     },
-    "Version" : {
+    "Version information" : {
 
-    },
-    "Version %@ Build %@, Player %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Version %1$@ Build %2$@, Player %3$@"
-          }
-        }
-      }
     }
   },
   "version" : "1.0"
