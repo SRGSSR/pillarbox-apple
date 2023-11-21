@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Player
 import SwiftUI
 
 private struct SourceCodeButton: View {
@@ -15,6 +16,7 @@ private struct SourceCodeButton: View {
                 Text("GitHub")
             }
         }
+        .tint(.accentColor)
     }
 }
 
@@ -44,7 +46,8 @@ extension View {
     private func gitHubUrl<T>(for objectType: T.Type) -> URL? where T: SourceCodeViewable {
         let separator = "/Demo/"
         guard let relativePath = objectType.filePath.split(separator: separator).last else { return nil }
-        var url = URL("github://github.com/SRGSSR/pillarbox-apple/blob/main")
+        var url = URL("github://github.com/SRGSSR/pillarbox-apple/blob")
+            .appending(component: Player.version)
             .appending(path: separator)
             .appending(path: relativePath)
         if !UIApplication.shared.canOpenURL(url) {
