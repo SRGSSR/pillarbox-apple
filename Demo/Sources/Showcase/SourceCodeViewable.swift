@@ -7,6 +7,18 @@
 import Player
 import SwiftUI
 
+enum Github {
+    static func baseUrl() -> URL {
+        var url = URL("github://github.com")
+        if !UIApplication.shared.canOpenURL(url) {
+            var components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+            components.scheme = "https"
+            url = components.url!
+        }
+        return url
+    }
+}
+
 private struct SourceCodeButton: View {
     let action: () -> Void
 
@@ -46,15 +58,10 @@ extension View {
     private func gitHubUrl<T>(for objectType: T.Type) -> URL? where T: SourceCodeViewable {
         let separator = "/Demo/"
         guard let relativePath = objectType.filePath.split(separator: separator).last else { return nil }
-        var url = URL("github://github.com/SRGSSR/pillarbox-apple/blob")
+        return Github.baseUrl()
+            .appending(path: "SRGSSR/pillarbox-apple/blob")
             .appending(component: Player.version)
             .appending(path: separator)
             .appending(path: relativePath)
-        if !UIApplication.shared.canOpenURL(url) {
-            var components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
-            components.scheme = "https"
-            url = components.url!
-        }
-        return url
     }
 }

@@ -89,6 +89,7 @@ struct SettingsView: View {
             playerSection()
             debuggingSection()
             versionSection()
+            gitHubSection()
         }
         .navigationTitle("Settings")
         .tracked(name: "settings")
@@ -186,6 +187,17 @@ struct SettingsView: View {
             Text(" in Switzerland")
         }
         .frame(maxWidth: .infinity)
+    }
+
+    @ViewBuilder
+    private func gitHubSection() -> some View {
+        Section("GitHub") {
+            HStack {
+                Button("Project", action: {
+                    UIApplication.shared.open(Github.baseUrl().appending(path: "orgs/SRGSSR/projects/9"))
+                })
+            }
+        }
     }
 
     private func simulateMemoryWarning() {
