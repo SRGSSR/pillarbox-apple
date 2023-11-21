@@ -62,5 +62,7 @@
 	</array>
 	<key>UIUserInterfaceStyle</key>
 	<string>Automatic</string>
+	<key>AppleStoreApplicationIdentifier</key>
+	<string>$(APPLE_STORE_APPLICATION_IDENTIFIER)</string>
 </dict>
 </plist>

@@ -78,6 +78,11 @@ struct SettingsView: View {
         Bundle.main.infoDictionary!["CFBundleVersion"] as! String
     }
 
+    private var applicationIdentifier: String? {
+        let applicationIdentifier = Bundle.main.infoDictionary!["AppleStoreApplicationIdentifier"] as! String
+        return !applicationIdentifier.isEmpty ? applicationIdentifier : nil
+    }
+
     var body: some View {
         List {
             applicationSection()
@@ -159,7 +164,11 @@ struct SettingsView: View {
         Section {
             InfoCell(title: "Application", value: "\(version), build \(buildVersion)")
             InfoCell(title: "Library", value: Player.version)
-            Button("TestFlight Builds", action: openTestFlight)
+            if let applicationIdentifier {
+                Button("TestFlight builds") {
+                    openTestFlight(forApplicationIdentifier: applicationIdentifier)
+                }
+            }
         } header: {
             Text("Version information")
         } footer: {
@@ -183,8 +192,10 @@ struct SettingsView: View {
         UIApplication.shared.perform(Selector(("_performMemoryWarning")))
     }
 
-    private func openTestFlight() {
-        guard let url = Self.testFlightUrl(forApplicationIdentifier: "1637569424") else { return }
+    private func openTestFlight(forApplicationIdentifier applicationIdentifier: String?) {
+        guard let applicationIdentifier, let url = Self.testFlightUrl(forApplicationIdentifier: applicationIdentifier) else {
+            return
+        }
         UIApplication.shared.open(url)
     }
 }
