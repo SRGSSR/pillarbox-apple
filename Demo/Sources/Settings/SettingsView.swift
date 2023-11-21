@@ -39,6 +39,22 @@ private struct UrlCacheView: View {
     }
 }
 
+private struct InfoCell: View {
+    let title: String
+    let value: String
+
+    var body: some View {
+        HStack {
+            Text(title)
+            Spacer()
+            Text(value)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.trailing)
+                .lineLimit(2)
+        }
+    }
+}
+
 struct SettingsView: View {
     @AppStorage(UserDefaults.presenterModeEnabledKey)
     private var isPresenterModeEnabled = false
@@ -62,14 +78,33 @@ struct SettingsView: View {
         Bundle.main.infoDictionary!["CFBundleVersion"] as! String
     }
 
+    private var applicationIdentifier: String? {
+        let applicationIdentifier = Bundle.main.infoDictionary!["TestFlightApplicationIdentifier"] as! String
+        return !applicationIdentifier.isEmpty ? applicationIdentifier : nil
+    }
+
     var body: some View {
         List {
             applicationSection()
             playerSection()
             debuggingSection()
+            versionSection()
         }
         .navigationTitle("Settings")
         .tracked(name: "settings")
+    }
+
+    private static func testFlightUrl(forApplicationIdentifier applicationIdentifier: String) -> URL? {
+        var url = URL("itms-beta://beta.itunes.apple.com/v1/app/")
+            .appending(path: applicationIdentifier)
+#if os(iOS)
+        if !UIApplication.shared.canOpenURL(url) {
+            var components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+            components.scheme = "https"
+            url = components.url!
+        }
+#endif
+        return url
     }
 
     @ViewBuilder
@@ -121,28 +156,47 @@ struct SettingsView: View {
             UrlCacheView()
         } header: {
             Text("Debugging")
-        } footer: {
-            debuggingFooter()
         }
     }
 
     @ViewBuilder
-    private func debuggingFooter() -> some View {
-        VStack {
-            Text("Version \(version) Build \(buildVersion), Player \(Player.version)")
-            HStack(spacing: 0) {
-                Text("Made with ")
-                Image(systemName: "heart.fill")
-                    .foregroundColor(.red)
-                    .pulseSymbolEffect()
-                Text(" in Switzerland")
+    private func versionSection() -> some View {
+        Section {
+            InfoCell(title: "Application", value: "\(version), build \(buildVersion)")
+            InfoCell(title: "Library", value: Player.version)
+            if let applicationIdentifier {
+                Button("TestFlight builds") {
+                    openTestFlight(forApplicationIdentifier: applicationIdentifier)
+                }
             }
+        } header: {
+            Text("Version information")
+        } footer: {
+            versionFooter()
+        }
+    }
+
+    @ViewBuilder
+    private func versionFooter() -> some View {
+        HStack(spacing: 0) {
+            Text("Made with ")
+            Image(systemName: "heart.fill")
+                .foregroundColor(.red)
+                .pulseSymbolEffect()
+            Text(" in Switzerland")
         }
         .frame(maxWidth: .infinity)
     }
 
     private func simulateMemoryWarning() {
         UIApplication.shared.perform(Selector(("_performMemoryWarning")))
+    }
+
+    private func openTestFlight(forApplicationIdentifier applicationIdentifier: String?) {
+        guard let applicationIdentifier, let url = Self.testFlightUrl(forApplicationIdentifier: applicationIdentifier) else {
+            return
+        }
+        UIApplication.shared.open(url)
     }
 }
 

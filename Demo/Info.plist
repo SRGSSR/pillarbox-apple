@@ -62,5 +62,7 @@
 	</array>
 	<key>UIUserInterfaceStyle</key>
 	<string>Automatic</string>
+	<key>TestFlightApplicationIdentifier</key>
+	<string>$(TEST_FLIGHT_APPLICATION_IDENTIFIER)</string>
 </dict>
 </plist>

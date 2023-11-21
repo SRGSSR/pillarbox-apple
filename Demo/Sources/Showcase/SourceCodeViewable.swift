@@ -31,7 +31,7 @@ extension View {
         if let url = gitHubUrl(for: objectType) {
             swipeActions {
                 SourceCodeButton {
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    UIApplication.shared.open(url)
                 }
             }
         }
