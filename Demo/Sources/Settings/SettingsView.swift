@@ -88,8 +88,8 @@ struct SettingsView: View {
             applicationSection()
             playerSection()
             debuggingSection()
-            versionSection()
             gitHubSection()
+            versionSection()
         }
         .navigationTitle("Settings")
         .tracked(name: "settings")
