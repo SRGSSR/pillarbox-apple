@@ -79,7 +79,7 @@ struct SettingsView: View {
     }
 
     private var applicationIdentifier: String? {
-        let applicationIdentifier = Bundle.main.infoDictionary!["AppleStoreApplicationIdentifier"] as! String
+        let applicationIdentifier = Bundle.main.infoDictionary!["TestFlightApplicationIdentifier"] as! String
         return !applicationIdentifier.isEmpty ? applicationIdentifier : nil
     }
 
