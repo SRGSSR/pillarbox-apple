@@ -11,9 +11,8 @@ import SwiftUI
 /// The button is automatically hidden when Picture in Picture is not available. The body closure is provided a
 /// Boolean indicating when Picture in Picture is active.
 ///
-/// For the button to be visible one of its parent must be enabled for in-app Picture in Picture. In SwiftUI apps
-/// this is achieved by applying the `View.enabledForInAppPictureInPictureWithCleanup(perform:)` modifier. In UIKit
-/// apps `PictureInPicture.restoreFromInAppPictureInPicture()` must be called instead when the playback view appears.
+/// For the button to be visible one of its parent must be enabled for in-app Picture in Picture by applying the
+/// `View.enabledForInAppPictureInPictureWithCleanup(perform:)` modifier.
 public struct PictureInPictureButton<Content>: View where Content: View {
     private let content: (Bool) -> Content
 
