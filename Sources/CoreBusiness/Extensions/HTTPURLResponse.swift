@@ -11,7 +11,7 @@ extension HTTPURLResponse {
         // The `localizedString(forStatusCode:)` method always returns the English version (FB5751726). We can still use
         // this string as key to retrieve the correct translation from CFNetwork. If the status code is invalid the method
         // always returns "Server error".
-        return coreNetworkLocalizedString(forKey: localizedString(forStatusCode: statusCode))
+        coreNetworkLocalizedString(forKey: localizedString(forStatusCode: statusCode))
     }
 
     static func coreNetworkLocalizedString(forKey key: String) -> String {
