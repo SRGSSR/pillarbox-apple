@@ -192,11 +192,16 @@ struct SettingsView: View {
     @ViewBuilder
     private func gitHubSection() -> some View {
         Section("GitHub") {
-            HStack {
-                Button("Project", action: {
-                    UIApplication.shared.open(Github.baseUrl().appending(path: "orgs/SRGSSR/projects/9"))
-                })
-            }
+            Button("Project") { UIApplication.shared.open(Github.baseUrl().appending(path: "orgs/SRGSSR/projects/9")) }
+            Button("Source code") { UIApplication.shared.open(Github.baseUrl().appending(path: "srgssr/pillarbox-apple")) }
+                .swipeActions {
+                    Button("Web") { UIApplication.shared.open(Github.baseUrl().appending(path: "srgssr/pillarbox-web")) }
+                        .tint(.yellow)
+                    Button("Documentation") { UIApplication.shared.open(Github.baseUrl().appending(path: "srgssr/pillarbox-documentation")) }
+                        .tint(.red)
+                    Button("Android") { UIApplication.shared.open(Github.baseUrl().appending(path: "srgssr/pillarbox-android")) }
+                        .tint(.green)
+                }
         }
     }
 
