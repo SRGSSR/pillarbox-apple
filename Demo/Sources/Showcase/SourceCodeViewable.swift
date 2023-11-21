@@ -16,6 +16,7 @@ private struct SourceCodeButton: View {
                 Text("GitHub")
             }
         }
+        .tint(.accentColor)
     }
 }
 
