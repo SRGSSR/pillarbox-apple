@@ -191,6 +191,7 @@ struct SettingsView: View {
 
     @ViewBuilder
     private func gitHubSection() -> some View {
+#if os(iOS)
         Section("GitHub") {
             Button("Project") { UIApplication.shared.open(Github.baseUrl().appending(path: "orgs/SRGSSR/projects/9")) }
             Button("Source code") { UIApplication.shared.open(Github.baseUrl().appending(path: "srgssr/pillarbox-apple")) }
@@ -203,6 +204,9 @@ struct SettingsView: View {
                         .tint(.green)
                 }
         }
+#else
+        self
+#endif
     }
 
     private func simulateMemoryWarning() {
