@@ -38,6 +38,9 @@
     "Add a stream to the playlist" : {
 
     },
+    "Android" : {
+
+    },
     "Application" : {
 
     },
@@ -75,6 +78,9 @@
 
     },
     "Displays touches for presentation purposes." : {
+
+    },
+    "Documentation" : {
 
     },
     "Embeddings" : {
@@ -137,6 +143,9 @@
     "Presenter mode" : {
 
     },
+    "Project" : {
+
+    },
     "Search" : {
 
     },
@@ -156,6 +165,9 @@
 
     },
     "Smart navigation" : {
+
+    },
+    "Source code" : {
 
     },
     "Stop" : {
@@ -183,6 +195,9 @@
 
     },
     "Version information" : {
+
+    },
+    "Web" : {
 
     }
   },

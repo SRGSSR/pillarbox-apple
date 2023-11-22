@@ -88,6 +88,9 @@ struct SettingsView: View {
             applicationSection()
             playerSection()
             debuggingSection()
+#if os(iOS)
+            gitHubSection()
+#endif
             versionSection()
         }
         .navigationTitle("Settings")
@@ -187,6 +190,24 @@ struct SettingsView: View {
         }
         .frame(maxWidth: .infinity)
     }
+
+#if os(iOS)
+    @ViewBuilder
+    private func gitHubSection() -> some View {
+        Section("GitHub") {
+            Button("Project") { GitHub.open(.project) }
+            Button("Source code") { GitHub.open(.apple) }
+                .swipeActions {
+                    Button("Web") { GitHub.open(.web) }
+                        .tint(.yellow)
+                    Button("Documentation") { GitHub.open(.documentation) }
+                        .tint(.red)
+                    Button("Android") { GitHub.open(.android) }
+                        .tint(.green)
+                }
+        }
+    }
+#endif
 
     private func simulateMemoryWarning() {
         UIApplication.shared.perform(Selector(("_performMemoryWarning")))
