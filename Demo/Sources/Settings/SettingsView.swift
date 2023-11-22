@@ -193,14 +193,14 @@ struct SettingsView: View {
     private func gitHubSection() -> some View {
 #if os(iOS)
         Section("GitHub") {
-            Button("Project") { UIApplication.shared.open(Github.baseUrl().appending(path: "orgs/SRGSSR/projects/9")) }
-            Button("Source code") { UIApplication.shared.open(Github.baseUrl().appending(path: "srgssr/pillarbox-apple")) }
+            Button("Project") { GitHub.open(.project) }
+            Button("Source code") { GitHub.open(.apple) }
                 .swipeActions {
-                    Button("Web") { UIApplication.shared.open(Github.baseUrl().appending(path: "srgssr/pillarbox-web")) }
+                    Button("Web") { GitHub.open(.web) }
                         .tint(.yellow)
-                    Button("Documentation") { UIApplication.shared.open(Github.baseUrl().appending(path: "srgssr/pillarbox-documentation")) }
+                    Button("Documentation") { GitHub.open(.documentation) }
                         .tint(.red)
-                    Button("Android") { UIApplication.shared.open(Github.baseUrl().appending(path: "srgssr/pillarbox-android")) }
+                    Button("Android") { GitHub.open(.android) }
                         .tint(.green)
                 }
         }

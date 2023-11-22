@@ -7,7 +7,30 @@
 import Player
 import SwiftUI
 
-enum Github {
+enum GitHub {
+    enum Link {
+        case android
+        case apple
+        case documentation
+        case project
+        case web
+
+        var url: URL {
+            switch self {
+            case .android:
+                baseUrl().appending(path: "srgssr/pillarbox-android")
+            case .apple:
+                baseUrl().appending(path: "srgssr/pillarbox-apple")
+            case .documentation:
+                baseUrl().appending(path: "srgssr/pillarbox-documentation")
+            case .project:
+                baseUrl().appending(path: "orgs/SRGSSR/projects/9")
+            case .web:
+                baseUrl().appending(path: "srgssr/pillarbox-web")
+            }
+        }
+    }
+
     static func baseUrl() -> URL {
         var url = URL("github://github.com")
         if !UIApplication.shared.canOpenURL(url) {
@@ -16,6 +39,10 @@ enum Github {
             url = components.url!
         }
         return url
+    }
+
+    static func open(_ link: Link) {
+        UIApplication.shared.open(link.url)
     }
 }
 
@@ -58,7 +85,7 @@ extension View {
     private func gitHubUrl<T>(for objectType: T.Type) -> URL? where T: SourceCodeViewable {
         let separator = "/Demo/"
         guard let relativePath = objectType.filePath.split(separator: separator).last else { return nil }
-        return Github.baseUrl()
+        return GitHub.baseUrl()
             .appending(path: "SRGSSR/pillarbox-apple/blob")
             .appending(component: Player.version)
             .appending(path: separator)
