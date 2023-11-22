@@ -88,7 +88,9 @@ struct SettingsView: View {
             applicationSection()
             playerSection()
             debuggingSection()
+#if os(iOS)
             gitHubSection()
+#endif
             versionSection()
         }
         .navigationTitle("Settings")
@@ -204,8 +206,6 @@ struct SettingsView: View {
                         .tint(.green)
                 }
         }
-#else
-        self
 #endif
     }
 
