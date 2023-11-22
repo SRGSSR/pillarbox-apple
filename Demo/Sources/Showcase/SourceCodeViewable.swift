@@ -13,6 +13,7 @@ enum GitHub {
         case apple
         case documentation
         case project
+        case sourceCode(_ path: String)
         case web
 
         var url: URL {
@@ -25,13 +26,18 @@ enum GitHub {
                 baseUrl().appending(path: "srgssr/pillarbox-documentation")
             case .project:
                 baseUrl().appending(path: "orgs/SRGSSR/projects/9")
+            case let .sourceCode(path):
+                baseUrl()
+                    .appending(path: "SRGSSR/pillarbox-apple/blob")
+                    .appending(component: Player.version)
+                    .appending(path: path)
             case .web:
                 baseUrl().appending(path: "srgssr/pillarbox-web")
             }
         }
     }
 
-    static func baseUrl() -> URL {
+    private static func baseUrl() -> URL {
         var url = URL("github://github.com")
         if !UIApplication.shared.canOpenURL(url) {
             var components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
@@ -85,10 +91,6 @@ extension View {
     private func gitHubUrl<T>(for objectType: T.Type) -> URL? where T: SourceCodeViewable {
         let separator = "/Demo/"
         guard let relativePath = objectType.filePath.split(separator: separator).last else { return nil }
-        return GitHub.baseUrl()
-            .appending(path: "SRGSSR/pillarbox-apple/blob")
-            .appending(component: Player.version)
-            .appending(path: separator)
-            .appending(path: relativePath)
+        return GitHub.Link.sourceCode(separator + relativePath).url
     }
 }
