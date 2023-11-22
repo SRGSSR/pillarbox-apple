@@ -191,9 +191,9 @@ struct SettingsView: View {
         .frame(maxWidth: .infinity)
     }
 
+#if os(iOS)
     @ViewBuilder
     private func gitHubSection() -> some View {
-#if os(iOS)
         Section("GitHub") {
             Button("Project") { GitHub.open(.project) }
             Button("Source code") { GitHub.open(.apple) }
@@ -206,8 +206,8 @@ struct SettingsView: View {
                         .tint(.green)
                 }
         }
-#endif
     }
+#endif
 
     private func simulateMemoryWarning() {
         UIApplication.shared.perform(Selector(("_performMemoryWarning")))
