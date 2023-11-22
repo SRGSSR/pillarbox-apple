@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// A protocol to respond to Picture in Picture life cycle events.
 ///
 /// Applications which require in-app Picture in Picture support must setup a delegate and rely on the Picture in
