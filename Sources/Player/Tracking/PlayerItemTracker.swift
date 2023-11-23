@@ -47,6 +47,9 @@ public protocol PlayerItemTracker: AnyObject {
     /// A method called when player properties have changed.
     ///
     /// - Parameter properties: The updated properties.
+    ///
+    /// This method can be called quite often. Implementations should avoid performing significant costly work
+    /// unnecessarily.
     func updateProperties(with properties: PlayerProperties)
 
     /// A method called when the tracker is disabled.
