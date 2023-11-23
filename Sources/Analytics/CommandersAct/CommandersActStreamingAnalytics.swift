@@ -12,7 +12,8 @@ import Player
 final class CommandersActStreamingAnalytics {
     var lastEvent: Event = .none
 
-    private let heartbeats: [Heartbeat]
+    private let posInterval: TimeInterval
+    private let uptimeInterval: TimeInterval
 
     private var streamType: StreamType = .unknown
     private var isBuffering = false
@@ -29,8 +30,9 @@ final class CommandersActStreamingAnalytics {
         lastEvent == .play && !isBuffering
     }
 
-    init(heartbeats: [Heartbeat] = [.pos(), .uptime()]) {
-        self.heartbeats = heartbeats
+    init(posInterval: TimeInterval = 30, uptimeInterval: TimeInterval = 60) {
+        self.posInterval = posInterval
+        self.uptimeInterval = uptimeInterval
     }
 
     private func update() {
@@ -67,7 +69,10 @@ final class CommandersActStreamingAnalytics {
 
     func notify(streamType: StreamType) {
         update()
-        self.streamType = streamType
+        if self.streamType != streamType {
+            self.streamType = streamType
+            updateHeartbeatsIfNeeded()
+        }
     }
 
     func notify(isBuffering: Bool) {
@@ -87,18 +92,22 @@ final class CommandersActStreamingAnalytics {
     private func sendEvent(_ event: Event) {
         update()
         lastEvent = event
-
-        if event == .play {
-            installHeartbeats()
-        }
-        else {
-            uninstallHeartbeats()
-        }
+        updateHeartbeatsIfNeeded()
 
         Analytics.shared.sendEvent(commandersAct: .init(
             name: event.rawValue,
             labels: labels()
         ))
+    }
+
+    private func updateHeartbeatsIfNeeded() {
+        if lastEvent == .play {
+            uninstallHeartbeats()
+            installHeartbeats()
+        }
+        else {
+            uninstallHeartbeats()
+        }
     }
 
     private func labels() -> [String: String] {
@@ -150,19 +159,6 @@ extension CommandersActStreamingAnalytics {
         enum Kind: String {
             case pos
             case uptime
-
-            private var supportedStreamTypes: [StreamType] {
-                switch self {
-                case .pos:
-                    return [.onDemand, .live, .dvr]
-                case .uptime:
-                    return [.live, .dvr]
-                }
-            }
-
-            func isSupported(for streamType: StreamType) -> Bool {
-                supportedStreamTypes.contains(streamType)
-            }
         }
 
         private let kind: Kind
@@ -173,17 +169,16 @@ extension CommandersActStreamingAnalytics {
             kind.rawValue
         }
 
-        static func pos(delay: TimeInterval = 30, interval: TimeInterval = 30) -> Self {
+        static func pos(delay: TimeInterval, interval: TimeInterval) -> Self {
             .init(kind: .pos, delay: delay, interval: interval)
         }
 
-        static func uptime(delay: TimeInterval = 30, interval: TimeInterval = 60) -> Self {
+        static func uptime(delay: TimeInterval, interval: TimeInterval) -> Self {
             .init(kind: .uptime, delay: delay, interval: interval)
         }
 
-        func timer(for streamType: StreamType) -> AnyPublisher<Void, Never>? {
-            guard kind.isSupported(for: streamType) else { return nil }
-            return Timer.publish(every: interval, on: .main, in: .common)
+        func timer() -> AnyPublisher<Void, Never> {
+            Timer.publish(every: interval, on: .main, in: .common)
                 .autoconnect()
                 .map { _ in }
                 .prepend(())
@@ -194,10 +189,20 @@ extension CommandersActStreamingAnalytics {
 }
 
 private extension CommandersActStreamingAnalytics {
+    private func hearbeats() -> [Heartbeat] {
+        switch streamType {
+        case .onDemand:
+            [.pos(delay: posInterval, interval: posInterval)]
+        case .live, .dvr:
+            [.pos(delay: posInterval, interval: posInterval), .uptime(delay: posInterval, interval: uptimeInterval)]
+        default:
+            []
+        }
+    }
+
     func installHeartbeats() {
-        heartbeats.forEach { heartbeat in
-            guard let timer = heartbeat.timer(for: streamType) else { return }
-            timer
+        hearbeats().forEach { heartbeat in
+            heartbeat.timer()
                 .sink { [weak self] _ in
                     self?.sendHeartbeat(heartbeat)
                 }

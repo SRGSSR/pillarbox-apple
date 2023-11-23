@@ -11,13 +11,11 @@ import Nimble
 
 // swiftlint:disable:next type_name
 final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestCase {
-    private static var heartbeats: [CommandersActStreamingAnalytics.Heartbeat] = [
-        .pos(delay: 1, interval: 1),
-        .uptime(delay: 1, interval: 2)
-    ]
+    private static let posInterval: TimeInterval = 1
+    private static let uptimeInterval: TimeInterval = 2
 
     func testHeartbeatAfterPlay() {
-        let analytics = CommandersActStreamingAnalytics(heartbeats: Self.heartbeats)
+        let analytics = CommandersActStreamingAnalytics(posInterval: Self.posInterval, uptimeInterval: Self.uptimeInterval)
         analytics.notify(streamType: .dvr)
         analytics.notify(.play)
         expectAtLeastHits(
@@ -40,7 +38,7 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
     }
 
     func testHeartbeatAfterPlayInPastConditions() {
-        let analytics = CommandersActStreamingAnalytics(heartbeats: Self.heartbeats)
+        let analytics = CommandersActStreamingAnalytics(posInterval: Self.posInterval, uptimeInterval: Self.uptimeInterval)
         analytics.notify(streamType: .dvr)
         analytics.notify(.play)
         expectAtLeastHits(
@@ -63,13 +61,13 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
     }
 
     func testNoHeartbeatInitially() {
-        let analytics = CommandersActStreamingAnalytics(heartbeats: Self.heartbeats)
+        let analytics = CommandersActStreamingAnalytics(posInterval: Self.posInterval, uptimeInterval: Self.uptimeInterval)
         analytics.notify(streamType: .dvr)
         expectNoHits(during: .seconds(2))
     }
 
     func testNoHeartbeatAfterPause() {
-        let analytics = CommandersActStreamingAnalytics(heartbeats: Self.heartbeats)
+        let analytics = CommandersActStreamingAnalytics(posInterval: Self.posInterval, uptimeInterval: Self.uptimeInterval)
         analytics.notify(streamType: .dvr)
         analytics.notify(.play)
         analytics.notify(.pause)
@@ -77,7 +75,7 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
     }
 
     func testNoHeartbeatAfterSeek() {
-        let analytics = CommandersActStreamingAnalytics(heartbeats: Self.heartbeats)
+        let analytics = CommandersActStreamingAnalytics(posInterval: Self.posInterval, uptimeInterval: Self.uptimeInterval)
         analytics.notify(streamType: .dvr)
         analytics.notify(.play)
         analytics.notify(.seek)
@@ -85,7 +83,7 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
     }
 
     func testNoHeartbeatAfterEof() {
-        let analytics = CommandersActStreamingAnalytics(heartbeats: Self.heartbeats)
+        let analytics = CommandersActStreamingAnalytics(posInterval: Self.posInterval, uptimeInterval: Self.uptimeInterval)
         analytics.notify(streamType: .dvr)
         analytics.notify(.play)
         analytics.notify(.eof)
@@ -93,7 +91,7 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
     }
 
     func testNoHeartbeatAfterStop() {
-        let analytics = CommandersActStreamingAnalytics(heartbeats: Self.heartbeats)
+        let analytics = CommandersActStreamingAnalytics(posInterval: Self.posInterval, uptimeInterval: Self.uptimeInterval)
         analytics.notify(streamType: .dvr)
         analytics.notify(.play)
         analytics.notify(.stop)
@@ -101,7 +99,7 @@ final class CommandersActStreamingAnalyticsHeartbeatDvrTests: CommandersActTestC
     }
 
     func testHeartbeatWhileBuffering() {
-        let analytics = CommandersActStreamingAnalytics(heartbeats: Self.heartbeats)
+        let analytics = CommandersActStreamingAnalytics(posInterval: Self.posInterval, uptimeInterval: Self.uptimeInterval)
         analytics.notify(streamType: .dvr)
         analytics.notify(.play)
         analytics.notify(isBuffering: true)
