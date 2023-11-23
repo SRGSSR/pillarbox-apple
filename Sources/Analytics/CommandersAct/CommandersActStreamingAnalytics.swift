@@ -46,12 +46,13 @@ final class CommandersActStreamingAnalytics {
     }
 
     func update(time: CMTime, range: CMTimeRange) {
+        let date = Date()
         if lastEvent == .play, !isBuffering {
-            playbackDuration += Date().timeIntervalSince(date)
+            playbackDuration += date.timeIntervalSince(self.date)
         }
         self.time = time
         self.range = range
-        date = Date()
+        self.date = date
     }
 
     func notify(_ event: Event) {
