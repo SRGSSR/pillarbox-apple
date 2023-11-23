@@ -40,7 +40,7 @@ public protocol PlayerItemTracker: AnyObject {
     /// - Parameter player: The player for which the tracker must be enabled.
     func enable(for player: Player)
 
-    /// A method called when the tracker metadata is updated.
+    /// A method called when tracker metadata is updated.
     ///
     /// - Parameter metadata: The updated metadata.
     func updateMetadata(with metadata: Metadata)
@@ -48,9 +48,6 @@ public protocol PlayerItemTracker: AnyObject {
     /// A method called when player properties have changed.
     ///
     /// - Parameter properties: The updated properties.
-    ///
-    /// If you keep a reference to the player in your implementation, you should use available properties instead
-    /// as they will be more up to date.
     func updateProperties(with properties: PlayerProperties)
 
     /// A method called when the tracker is disabled.
