@@ -30,16 +30,20 @@ public final class CommandersActTracker: PlayerItemTracker {
     }
 
     public func updateProperties(with properties: PlayerProperties) {
+        if properties.playbackState == .playing, streamingAnalytics == nil {
+            streamingAnalytics = CommandersActStreamingAnalytics(streamType: metadata.streamType)
+        }
+
+        streamingAnalytics?.update(time: player?.time ?? .zero, range: properties.seekableTimeRange)
+        streamingAnalytics?.notify(isBuffering: properties.isBuffering)
+        streamingAnalytics?.notifyPlaybackSpeed(properties.rate)
+
         if properties.isSeeking {
             streamingAnalytics?.notify(.seek)
         }
         else {
             switch properties.playbackState {
             case .playing:
-                guard streamingAnalytics != nil else {
-                    streamingAnalytics = CommandersActStreamingAnalytics(streamType: metadata.streamType)
-                    break
-                }
                 streamingAnalytics?.notify(.play)
             case .paused:
                 streamingAnalytics?.notify(.pause)
@@ -49,9 +53,6 @@ public final class CommandersActTracker: PlayerItemTracker {
                 break
             }
         }
-        streamingAnalytics?.update(time: player?.time ?? .zero, range: properties.seekableTimeRange)
-        streamingAnalytics?.notify(isBuffering: properties.isBuffering)
-        streamingAnalytics?.notifyPlaybackSpeed(properties.rate)
     }
 
     public func disable() {
