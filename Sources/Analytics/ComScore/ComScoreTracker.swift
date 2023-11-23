@@ -17,7 +17,7 @@ import UIKit
 /// Analytics have to be properly started for the tracker to collect data, see `Analytics.start(with:)`.
 public final class ComScoreTracker: PlayerItemTracker {
     private var streamingAnalytics = ComScoreStreamingAnalytics()
-    private var metadata: Metadata = .empty
+    private var metadata: [String: String] = [:]
     private weak var player: Player?
 
     public init(configuration: Void) {}
@@ -29,13 +29,13 @@ public final class ComScoreTracker: PlayerItemTracker {
         streamingAnalytics.setMediaPlayerVersion(Player.version)
     }
 
-    public func updateMetadata(with metadata: Metadata) {
+    public func updateMetadata(with metadata: [String: String]) {
         let builder = SCORStreamingContentMetadataBuilder()
         if let globals = Analytics.shared.comScoreGlobals {
-            builder.setCustomLabels(metadata.labels.merging(globals.labels) { _, new in new })
+            builder.setCustomLabels(metadata.merging(globals.labels) { _, new in new })
         }
         else {
-            builder.setCustomLabels(metadata.labels)
+            builder.setCustomLabels(metadata)
         }
         let contentMetadata = SCORStreamingContentMetadata(builder: builder)
         streamingAnalytics.setMetadata(contentMetadata)
@@ -43,10 +43,10 @@ public final class ComScoreTracker: PlayerItemTracker {
     }
 
     public func updateProperties(with properties: PlayerProperties) {
-        guard !metadata.labels.isEmpty, let player else { return }
+        guard !metadata.isEmpty, let player else { return }
 
         AnalyticsListener.capture(streamingAnalytics.configuration())
-        streamingAnalytics.setProperties(for: properties, time: player.time, streamType: metadata.streamType)
+        streamingAnalytics.setProperties(for: properties, time: player.time, streamType: properties.streamType)
 
         // FIXME: Lifecycle methods to handle application state changes
         guard ApplicationState.foreground == .foreground else {
@@ -72,27 +72,5 @@ public final class ComScoreTracker: PlayerItemTracker {
     public func disable() {
         streamingAnalytics = ComScoreStreamingAnalytics()
         player = nil
-    }
-}
-
-public extension ComScoreTracker {
-    /// comScore tracker metadata.
-    struct Metadata {
-        let labels: [String: String]
-        let streamType: StreamType
-
-        static var empty: Self {
-            .init(labels: [:], streamType: .unknown)
-        }
-
-        /// Creates comScore metadata.
-        ///
-        /// - Parameters:
-        ///   - labels: The labels.
-        ///   - streamType: The stream type.
-        public init(labels: [String: String], streamType: StreamType) {
-            self.labels = labels
-            self.streamType = streamType
-        }
     }
 }

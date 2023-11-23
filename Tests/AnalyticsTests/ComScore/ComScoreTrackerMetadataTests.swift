@@ -19,10 +19,7 @@ final class ComScoreTrackerMetadataTests: ComScoreTestCase {
             metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in
-                    ComScoreTracker.Metadata(
-                        labels: ["meta_1": "custom-1", "meta_2": "42"],
-                        streamType: .unknown
-                    )
+                    ["meta_1": "custom-1", "meta_2": "42"]
                 }
             ]
         ))
@@ -43,9 +40,7 @@ final class ComScoreTrackerMetadataTests: ComScoreTestCase {
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter { _ in
-                    .empty
-                }
+                ComScoreTracker.adapter { _ in [:] }
             ]
         ))
 

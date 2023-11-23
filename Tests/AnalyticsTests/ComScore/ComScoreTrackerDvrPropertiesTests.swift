@@ -19,7 +19,7 @@ final class ComScoreTrackerDvrPropertiesTests: ComScoreTestCase {
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter { _ in .test(streamType: .onDemand) }
+                ComScoreTracker.adapter { _ in .test }
             ]
         ))
 
@@ -38,7 +38,7 @@ final class ComScoreTrackerDvrPropertiesTests: ComScoreTestCase {
             url: Stream.live.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter { _ in .test(streamType: .live) }
+                ComScoreTracker.adapter { _ in .test }
             ]
         ))
 
@@ -57,7 +57,7 @@ final class ComScoreTrackerDvrPropertiesTests: ComScoreTestCase {
             url: Stream.dvr.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter { _ in .test(streamType: .dvr) }
+                ComScoreTracker.adapter { _ in .test }
             ]
         ))
 
@@ -76,7 +76,7 @@ final class ComScoreTrackerDvrPropertiesTests: ComScoreTestCase {
             url: Stream.dvr.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                ComScoreTracker.adapter { _ in .test(streamType: .dvr) }
+                ComScoreTracker.adapter { _ in .test }
             ]
         ))
 
