@@ -52,8 +52,6 @@ public protocol PlayerItemTracker: AnyObject {
 
     /// A method called when the tracker is disabled.
     func disable()
-
-    // + suspend / resume methods
 }
 
 public extension PlayerItemTracker {
