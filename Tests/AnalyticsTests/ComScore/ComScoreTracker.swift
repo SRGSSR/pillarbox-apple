@@ -9,6 +9,6 @@ import Player
 
 extension [String: String] {
     static var test: Self {
-        ["key": "value"]
+        ["media_title": "name"]
     }
 }
