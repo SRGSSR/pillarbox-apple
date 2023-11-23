@@ -11,12 +11,12 @@ import Player
 
 final class CommandersActStreamingAnalytics {
     var lastEvent: Event = .none
-    private var metadata: [String: String] = [:]
 
-    private let streamType: StreamType = .onDemand
     private let heartbeats: [Heartbeat]
 
+    private var streamType: StreamType = .unknown
     private var isBuffering = false
+    private var metadata: [String: String] = [:]
     private var playbackSpeed: Float = 1
     private var cancellables = Set<AnyCancellable>()
     private var playbackDuration: TimeInterval = 0
@@ -63,6 +63,11 @@ final class CommandersActStreamingAnalytics {
         default:
             sendEvent(event)
         }
+    }
+
+    func notify(streamType: StreamType) {
+        update()
+        self.streamType = streamType
     }
 
     func notify(isBuffering: Bool) {

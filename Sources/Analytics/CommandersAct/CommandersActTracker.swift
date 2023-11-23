@@ -30,6 +30,8 @@ public final class CommandersActTracker: PlayerItemTracker {
     }
 
     public func updateProperties(with properties: PlayerProperties) {
+        streamingAnalytics.notify(streamType: properties.streamType)
+
         streamingAnalytics.setMetadata(value: "Pillarbox", forKey: "media_player_display")
         streamingAnalytics.setMetadata(value: Player.version, forKey: "media_player_version")
         metadata.forEach { key, value in
