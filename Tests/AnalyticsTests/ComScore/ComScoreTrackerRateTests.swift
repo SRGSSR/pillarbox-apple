@@ -6,7 +6,6 @@
 
 @testable import Analytics
 
-import CoreMedia
 import Nimble
 import Player
 import Streams

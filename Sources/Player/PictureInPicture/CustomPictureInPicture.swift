@@ -6,7 +6,6 @@
 
 import AVKit
 import Combine
-import SwiftUI
 
 /// Manages Picture in Picture for `VideoView` instances.
 public final class CustomPictureInPicture: NSObject {

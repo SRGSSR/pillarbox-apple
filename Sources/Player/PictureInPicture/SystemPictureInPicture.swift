@@ -5,8 +5,6 @@
 //
 
 import AVKit
-import Combine
-import SwiftUI
 
 /// Manages Picture in Picture for `SystemVideoView` instances.
 public final class SystemPictureInPicture: NSObject {

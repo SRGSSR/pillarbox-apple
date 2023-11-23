@@ -5,7 +5,6 @@
 //
 
 import AVFoundation
-import MediaAccessibility
 
 /// The default selector for audible options.
 struct AudibleMediaSelector: MediaSelector {
