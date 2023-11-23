@@ -7,7 +7,6 @@
 @testable import Player
 
 import Combine
-import CoreMedia
 
 final class TrackerMock<Metadata>: PlayerItemTracker where Metadata: Equatable {
     typealias StatePublisher = PassthroughSubject<State, Never>

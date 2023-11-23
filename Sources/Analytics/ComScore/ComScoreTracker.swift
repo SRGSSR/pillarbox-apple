@@ -6,7 +6,6 @@
 
 import Combine
 import ComScore
-import CoreMedia
 import Player
 import UIKit
 
@@ -40,6 +39,7 @@ public final class ComScoreTracker: PlayerItemTracker {
     }
 
     public func updateMetadata(with metadata: [String: String]) {
+        self.metadata = metadata
         let builder = SCORStreamingContentMetadataBuilder()
         if let globals = Analytics.shared.comScoreGlobals {
             builder.setCustomLabels(metadata.merging(globals.labels) { _, new in new })
@@ -49,7 +49,6 @@ public final class ComScoreTracker: PlayerItemTracker {
         }
         let contentMetadata = SCORStreamingContentMetadata(builder: builder)
         streamingAnalytics.setMetadata(contentMetadata)
-        self.metadata = metadata
     }
 
     public func updateProperties(with properties: PlayerProperties) {

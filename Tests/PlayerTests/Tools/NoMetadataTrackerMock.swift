@@ -7,7 +7,6 @@
 @testable import Player
 
 import Combine
-import CoreMedia
 
 final class NoMetadataTrackerMock: PlayerItemTracker {
     typealias StatePublisher = PassthroughSubject<State, Never>
