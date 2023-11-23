@@ -34,15 +34,10 @@ public final class CommandersActTracker: PlayerItemTracker {
 
         streamingAnalytics.setMetadata(value: "Pillarbox", forKey: "media_player_display")
         streamingAnalytics.setMetadata(value: Player.version, forKey: "media_player_version")
+        streamingAnalytics.setMetadata(for: player)
+
         metadata.forEach { key, value in
             streamingAnalytics.setMetadata(value: value, forKey: key)
-        }
-
-        if let player {
-            streamingAnalytics.setMetadata(value: volume(for: player), forKey: "media_volume")
-            streamingAnalytics.setMetadata(value: audioTrack(for: player), forKey: "media_audio_track")
-            streamingAnalytics.setMetadata(value: subtitleOn(for: player), forKey: "media_subtitles_on")
-            streamingAnalytics.setMetadata(value: subtitleSelection(for: player), forKey: "media_subtitle_selection")
         }
 
         streamingAnalytics.update(time: player?.time ?? .zero, range: properties.seekableTimeRange)
@@ -72,7 +67,15 @@ public final class CommandersActTracker: PlayerItemTracker {
     }
 }
 
-private extension CommandersActTracker {
+private extension CommandersActStreamingAnalytics {
+    func setMetadata(for player: Player?) {
+        guard let player else { return }
+        setMetadata(value: volume(for: player), forKey: "media_volume")
+        setMetadata(value: audioTrack(for: player), forKey: "media_audio_track")
+        setMetadata(value: subtitleOn(for: player), forKey: "media_subtitles_on")
+        setMetadata(value: subtitleSelection(for: player), forKey: "media_subtitle_selection")
+    }
+
     private func volume(for player: Player) -> String {
         guard !player.isMuted else { return "0" }
         return String(Int(AVAudioSession.sharedInstance().outputVolume * 100))

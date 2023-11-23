@@ -8,7 +8,7 @@
 
 import Nimble
 
-// swiftlint:disable:next type_name
+// swiftlint:disable:next type_name type_body_length
 final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTestCase {
     func testLifeCycle() {
         expectNoHits(during: .milliseconds(500)) {
