@@ -49,8 +49,7 @@ public final class ComScoreTracker: PlayerItemTracker {
         streamingAnalytics.setProperties(for: properties, time: player.time, streamType: metadata.streamType)
 
         // FIXME: Lifecycle methods to handle application state changes
-        let applicationState = ApplicationState.foreground
-        guard applicationState == .foreground else {
+        guard ApplicationState.foreground == .foreground else {
             streamingAnalytics.notifyEvent(for: .paused, at: properties.rate)
             return
         }
