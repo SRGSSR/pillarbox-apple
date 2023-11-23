@@ -15,8 +15,8 @@ import Player
 ///
 /// Analytics have to be properly started for the tracker to collect data, see `Analytics.start(with:)`.
 public final class CommandersActTracker: PlayerItemTracker {
-    private var streamingAnalytics: CommandersActStreamingAnalytics?
-    private var metadata: Metadata = .empty
+    private var streamingAnalytics = CommandersActStreamingAnalytics()
+    private var metadata: [String: String] = [:]
     private weak var player: Player?
 
     public init(configuration: Void) {}
@@ -25,43 +25,39 @@ public final class CommandersActTracker: PlayerItemTracker {
         self.player = player
     }
 
-    public func updateMetadata(with metadata: Metadata) {
+    public func updateMetadata(with metadata: [String: String]) {
         self.metadata = metadata
     }
 
     public func updateProperties(with properties: PlayerProperties) {
-        if properties.playbackState == .playing, streamingAnalytics == nil {
-            streamingAnalytics = CommandersActStreamingAnalytics(streamType: properties.streamType)
-        }
-
-        streamingAnalytics?.setMetadata(value: "Pillarbox", forKey: "media_player_display")
-        streamingAnalytics?.setMetadata(value: Player.version, forKey: "media_player_version")
-        metadata.labels.forEach { key, value in
-            streamingAnalytics?.setMetadata(value: value, forKey: key)
+        streamingAnalytics.setMetadata(value: "Pillarbox", forKey: "media_player_display")
+        streamingAnalytics.setMetadata(value: Player.version, forKey: "media_player_version")
+        metadata.forEach { key, value in
+            streamingAnalytics.setMetadata(value: value, forKey: key)
         }
 
         if let player {
-            streamingAnalytics?.setMetadata(value: volume(for: player), forKey: "media_volume")
-            streamingAnalytics?.setMetadata(value: audioTrack(for: player), forKey: "media_audio_track")
-            streamingAnalytics?.setMetadata(value: subtitleOn(for: player), forKey: "media_subtitles_on")
-            streamingAnalytics?.setMetadata(value: subtitleSelection(for: player), forKey: "media_subtitle_selection")
+            streamingAnalytics.setMetadata(value: volume(for: player), forKey: "media_volume")
+            streamingAnalytics.setMetadata(value: audioTrack(for: player), forKey: "media_audio_track")
+            streamingAnalytics.setMetadata(value: subtitleOn(for: player), forKey: "media_subtitles_on")
+            streamingAnalytics.setMetadata(value: subtitleSelection(for: player), forKey: "media_subtitle_selection")
         }
 
-        streamingAnalytics?.update(time: player?.time ?? .zero, range: properties.seekableTimeRange)
-        streamingAnalytics?.notify(isBuffering: properties.isBuffering)
-        streamingAnalytics?.notifyPlaybackSpeed(properties.rate)
+        streamingAnalytics.update(time: player?.time ?? .zero, range: properties.seekableTimeRange)
+        streamingAnalytics.notify(isBuffering: properties.isBuffering)
+        streamingAnalytics.notifyPlaybackSpeed(properties.rate)
 
         if properties.isSeeking {
-            streamingAnalytics?.notify(.seek)
+            streamingAnalytics.notify(.seek)
         }
         else {
             switch properties.playbackState {
             case .playing:
-                streamingAnalytics?.notify(.play)
+                streamingAnalytics.notify(.play)
             case .paused:
-                streamingAnalytics?.notify(.pause)
+                streamingAnalytics.notify(.pause)
             case .ended:
-                streamingAnalytics?.notify(.eof)
+                streamingAnalytics.notify(.eof)
             default:
                 break
             }
@@ -69,7 +65,7 @@ public final class CommandersActTracker: PlayerItemTracker {
     }
 
     public func disable() {
-        streamingAnalytics = nil
+        streamingAnalytics = CommandersActStreamingAnalytics()
         player = nil
     }
 }
@@ -108,28 +104,6 @@ private extension CommandersActTracker {
             return languageCode(from: option)
         default:
             return nil
-        }
-    }
-}
-
-public extension CommandersActTracker {
-    /// Commanders Act tracker metadata.
-    struct Metadata {
-        let labels: [String: String]
-        let streamType: StreamType
-
-        static var empty: Self {
-            .init(labels: [:], streamType: .unknown)
-        }
-
-        /// Creates Commanders Act metadata.
-        ///
-        /// - Parameters:
-        ///   - labels: The labels associated with the content being played.
-        ///   - streamType: The stream type.
-        public init(labels: [String: String], streamType: StreamType) {
-            self.labels = labels
-            self.streamType = streamType
         }
     }
 }

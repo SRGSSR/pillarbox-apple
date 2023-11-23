@@ -7,8 +7,8 @@
 import Analytics
 import Player
 
-extension ComScoreTracker.Metadata {
+extension [String: String] {
     static var test: Self {
-        ["meta": "data"]
+        ["key": "value"]
     }
 }

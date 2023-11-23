@@ -13,7 +13,7 @@ final class CommandersActStreamingAnalytics {
     var lastEvent: Event = .none
     private var metadata: [String: String] = [:]
 
-    private let streamType: StreamType
+    private let streamType: StreamType = .onDemand
     private let heartbeats: [Heartbeat]
 
     private var isBuffering = false
@@ -29,10 +29,7 @@ final class CommandersActStreamingAnalytics {
         lastEvent == .play && !isBuffering
     }
 
-    // TODO: The stream type should be provided with a setter, not at initialization time. Heartbeats should
-    //       be adjusted accordingly.
-    init(streamType: StreamType, heartbeats: [Heartbeat] = [.pos(), .uptime()]) {
-        self.streamType = streamType
+    init(heartbeats: [Heartbeat] = [.pos(), .uptime()]) {
         self.heartbeats = heartbeats
     }
 

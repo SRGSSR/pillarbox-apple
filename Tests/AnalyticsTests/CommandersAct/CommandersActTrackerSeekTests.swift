@@ -18,9 +18,7 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .onDemand)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 
@@ -44,9 +42,7 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .onDemand)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 
@@ -70,9 +66,7 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .onDemand)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 

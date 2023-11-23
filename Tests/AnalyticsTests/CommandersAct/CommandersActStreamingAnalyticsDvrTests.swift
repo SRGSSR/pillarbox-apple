@@ -14,7 +14,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     private static let range = CMTimeRange(start: CMTime(value: 2, timescale: 1), end: CMTime(value: 20, timescale: 1))
 
     func testInitialPosition() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .dvr)
+        let analytics = CommandersActStreamingAnalytics()
         expectAtLeastHits(
             .play { labels in
                 expect(labels.media_position).to(equal(0))
@@ -27,7 +27,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     }
 
     func testPositionAfterPause() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .dvr)
+        let analytics = CommandersActStreamingAnalytics()
         analytics.update(time: .init(value: 18, timescale: 1), range: Self.range)
         analytics.notify(.play)
         wait(for: .seconds(1))
@@ -42,7 +42,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedAfterPlay() {
-        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .dvr)
+        var analytics: CommandersActStreamingAnalytics? = .init()
         analytics?.update(time: .init(value: 15, timescale: 1), range: Self.range)
         analytics?.notify(.play)
         wait(for: .seconds(1))
@@ -58,7 +58,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedAfterPlayAtNonStandardPlaybackSpeed() {
-        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .dvr)
+        var analytics: CommandersActStreamingAnalytics? = .init()
         analytics?.update(time: .init(value: 15, timescale: 1), range: Self.range)
         analytics?.notifyPlaybackSpeed(2)
         analytics?.notify(.play)
@@ -75,7 +75,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedAfterPlayAtSeveralNonStandardPlaybackSpeeds() {
-        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .dvr)
+        var analytics: CommandersActStreamingAnalytics? = .init()
         analytics?.update(time: .init(value: 15, timescale: 1), range: Self.range)
         analytics?.notify(.play)
         wait(for: .seconds(1))
@@ -93,7 +93,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedDuringBuffering() {
-        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .dvr)
+        var analytics: CommandersActStreamingAnalytics? = .init()
         analytics?.update(time: .init(value: 15, timescale: 1), range: Self.range)
         analytics?.notify(.play)
         analytics?.notify(isBuffering: true)
@@ -110,7 +110,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedAfterPause() {
-        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .dvr)
+        var analytics: CommandersActStreamingAnalytics? = .init()
         analytics?.update(time: .init(value: 15, timescale: 1), range: Self.range)
         analytics?.notify(.play)
         wait(for: .seconds(1))
