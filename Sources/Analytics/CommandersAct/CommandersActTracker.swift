@@ -31,7 +31,7 @@ public final class CommandersActTracker: PlayerItemTracker {
 
     public func updateProperties(with properties: PlayerProperties) {
         if properties.playbackState == .playing, streamingAnalytics == nil {
-            streamingAnalytics = CommandersActStreamingAnalytics(streamType: metadata.streamType)
+            streamingAnalytics = CommandersActStreamingAnalytics(streamType: properties.streamType)
         }
 
         streamingAnalytics?.update(time: player?.time ?? .zero, range: properties.seekableTimeRange)
