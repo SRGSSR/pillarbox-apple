@@ -36,10 +36,6 @@ final class CommandersActStreamingAnalytics {
         self.heartbeats = heartbeats
     }
 
-    func setMetadata(_ metadata: [String: String]) {
-        self.metadata = metadata
-    }
-
     private func update() {
         let interval = CMTime(seconds: Date().timeIntervalSince(date), preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         update(time: time(after: interval), range: range(after: interval))
@@ -80,6 +76,10 @@ final class CommandersActStreamingAnalytics {
     func notifyPlaybackSpeed(_ playbackSpeed: Float) {
         update()
         self.playbackSpeed = playbackSpeed
+    }
+
+    func setMetadata(value: String?, forKey key: String) {
+        metadata[key] = value
     }
 
     private func sendEvent(_ event: Event) {
