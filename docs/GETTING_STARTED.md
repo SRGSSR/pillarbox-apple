@@ -366,6 +366,10 @@ When `SystemVideoView` is presented inline, though, its close button is replaced
 
 Switching between a `VideoView` and a `SystemVideoView` for the content currently being played in Picture in Picture is not supported and leads to undefined behavior.
 
+## Background video playback
+
+`Player` can be enabled for background video playback using `audiovisualBackgroundPlaybackPolicy`. For SRG SSR content, though, your application must not implement background video playback to avoid issues with comScore measurements. Please implement proper Picture in Picture support instead.
+
 ## Have fun
 
 This is only a glimpse of what can be achieved with Pillarbox. Though the feature set is still limited you should already be able to implement pretty interesting playback experiences. Please have a look at the documentation (which can be built with Xcode _Product_ > _Build Documentation_) and check the demo and its various examples to better understand what is possible.
