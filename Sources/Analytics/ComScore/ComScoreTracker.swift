@@ -16,15 +16,7 @@ import UIKit
 public final class ComScoreTracker: PlayerItemTracker {
     private var streamingAnalytics = ComScoreStreamingAnalytics()
     private var metadata: [String: String] = [:]
-    private var properties: PlayerProperties?
     private weak var player: Player?
-
-    private var applicationState: ApplicationState = .foreground {
-        didSet {
-            guard let properties else { return }
-            updateProperties(with: properties)
-        }
-    }
 
     public init(configuration: Void) {}
 
@@ -33,7 +25,6 @@ public final class ComScoreTracker: PlayerItemTracker {
         streamingAnalytics.createPlaybackSession()
         streamingAnalytics.setMediaPlayerName("Pillarbox")
         streamingAnalytics.setMediaPlayerVersion(Player.version)
-        registerApplicationStateNotifications()
     }
 
     public func updateMetadata(with metadata: [String: String]) {
@@ -50,21 +41,10 @@ public final class ComScoreTracker: PlayerItemTracker {
     }
 
     public func updateProperties(with properties: PlayerProperties) {
-        self.properties = properties
-        notify(with: properties)
-    }
-
-    // swiftlint:disable:next cyclomatic_complexity
-    private func notify(with properties: PlayerProperties) {
         guard !metadata.isEmpty, let player else { return }
 
         AnalyticsListener.capture(streamingAnalytics.configuration())
         streamingAnalytics.setProperties(for: properties, time: player.time, streamType: properties.streamType)
-
-        guard applicationState == .foreground else {
-            streamingAnalytics.notifyEvent(for: .paused, at: properties.rate)
-            return
-        }
 
         switch (properties.isSeeking, properties.isBuffering) {
         case (true, true):
@@ -82,45 +62,7 @@ public final class ComScoreTracker: PlayerItemTracker {
     }
 
     public func disable() {
-        unregisterApplicationStateNotifications()
         streamingAnalytics = ComScoreStreamingAnalytics()
         player = nil
-    }
-}
-
-private extension ComScoreTracker {
-    enum ApplicationState {
-        case foreground
-        case background
-    }
-
-    func registerApplicationStateNotifications() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(didEnterBackground(_:)),
-            name: UIApplication.didEnterBackgroundNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(didBecomeActive(_:)),
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil
-        )
-    }
-
-    func unregisterApplicationStateNotifications() {
-        NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
-    }
-
-    @objc
-    private func didEnterBackground(_ notification: Notification) {
-        applicationState = .background
-    }
-
-    @objc
-    private func didBecomeActive(_ notification: Notification) {
-        applicationState = .foreground
     }
 }
