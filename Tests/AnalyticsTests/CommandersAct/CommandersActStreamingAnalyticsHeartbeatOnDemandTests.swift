@@ -10,56 +10,53 @@ import CoreMedia
 
 // swiftlint:disable:next type_name
 final class CommandersActStreamingAnalyticsHeartbeatOnDemandTests: CommandersActTestCase {
-    private static let posInterval: TimeInterval = 1
-    private static let uptimeInterval: TimeInterval = 2
-
     func testNoHeartbeatInitially() {
-        let analytics = CommandersActStreamingAnalytics(posInterval: Self.posInterval, uptimeInterval: Self.uptimeInterval)
+        let analytics = CommandersActStreamingAnalytics(posInterval: 0.1, uptimeInterval: 0.2)
         analytics.notify(streamType: .onDemand)
-        expectNoHits(during: .seconds(2))
+        expectNoHits(during: .milliseconds(300))
     }
 
     func testHeartbeatAfterPlay() {
-        let analytics = CommandersActStreamingAnalytics(posInterval: Self.posInterval, uptimeInterval: Self.uptimeInterval)
+        let analytics = CommandersActStreamingAnalytics(posInterval: 0.1, uptimeInterval: 0.2)
         analytics.notify(streamType: .onDemand)
         analytics.notify(.play)
         expectAtLeastHits(.pos(), .pos())
     }
 
     func testNoHeartbeatAfterPause() {
-        let analytics = CommandersActStreamingAnalytics(posInterval: Self.posInterval, uptimeInterval: Self.uptimeInterval)
+        let analytics = CommandersActStreamingAnalytics(posInterval: 0.1, uptimeInterval: 0.2)
         analytics.notify(streamType: .onDemand)
         analytics.notify(.play)
         analytics.notify(.pause)
-        expectNoHits(during: .seconds(2))
+        expectNoHits(during: .milliseconds(300))
     }
 
     func testNoHeartbeatAfterSeek() {
-        let analytics = CommandersActStreamingAnalytics(posInterval: Self.posInterval, uptimeInterval: Self.uptimeInterval)
+        let analytics = CommandersActStreamingAnalytics(posInterval: 0.1, uptimeInterval: 0.2)
         analytics.notify(streamType: .onDemand)
         analytics.notify(.play)
         analytics.notify(.seek)
-        expectNoHits(during: .seconds(2))
+        expectNoHits(during: .milliseconds(300))
     }
 
     func testNoHeartbeatAfterEof() {
-        let analytics = CommandersActStreamingAnalytics(posInterval: Self.posInterval, uptimeInterval: Self.uptimeInterval)
+        let analytics = CommandersActStreamingAnalytics(posInterval: 0.1, uptimeInterval: 0.2)
         analytics.notify(streamType: .onDemand)
         analytics.notify(.play)
         analytics.notify(.eof)
-        expectNoHits(during: .seconds(2))
+        expectNoHits(during: .milliseconds(300))
     }
 
     func testNoHeartbeatAfterStop() {
-        let analytics = CommandersActStreamingAnalytics(posInterval: Self.posInterval, uptimeInterval: Self.uptimeInterval)
+        let analytics = CommandersActStreamingAnalytics(posInterval: 0.1, uptimeInterval: 0.2)
         analytics.notify(streamType: .onDemand)
         analytics.notify(.play)
         analytics.notify(.stop)
-        expectNoHits(during: .seconds(2))
+        expectNoHits(during: .milliseconds(300))
     }
 
     func testHeartbeatWhileBuffering() {
-        let analytics = CommandersActStreamingAnalytics(posInterval: Self.posInterval, uptimeInterval: Self.uptimeInterval)
+        let analytics = CommandersActStreamingAnalytics(posInterval: 0.1, uptimeInterval: 0.2)
         analytics.notify(streamType: .onDemand)
         analytics.notify(.play)
         analytics.notify(isBuffering: true)

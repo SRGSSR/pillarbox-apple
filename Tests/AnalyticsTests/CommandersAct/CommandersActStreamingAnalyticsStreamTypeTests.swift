@@ -11,24 +11,21 @@ import Nimble
 
 // swiftlint:disable:next type_name
 final class CommandersActStreamingAnalyticsStreamTypeTests: CommandersActTestCase {
-    private static let posInterval: TimeInterval = 1
-    private static let uptimeInterval: TimeInterval = 2
-
     func testNoHearbeatsForUnknownStreamType() {
-        let analytics = CommandersActStreamingAnalytics(posInterval: Self.posInterval, uptimeInterval: Self.uptimeInterval)
+        let analytics = CommandersActStreamingAnalytics(posInterval: 0.1, uptimeInterval: 0.2)
         analytics.notify(.play)
-        expectNoHits(during: .seconds(2))
+        expectNoHits(during: .milliseconds(200))
     }
 
     func testHearbeatsWhenStreamTypeIsFirstUpdatedDuringPlayback() {
-        let analytics = CommandersActStreamingAnalytics(posInterval: Self.posInterval, uptimeInterval: Self.uptimeInterval)
+        let analytics = CommandersActStreamingAnalytics(posInterval: 1, uptimeInterval: 2)
         analytics.notify(.play)
         analytics.notify(streamType: .onDemand)
         expectAtLeastHits(.pos(), .pos())
     }
 
     func testHeartbeatsWhenStreamTypeChangesDuringPlayback() {
-        let analytics = CommandersActStreamingAnalytics(posInterval: Self.posInterval, uptimeInterval: Self.uptimeInterval)
+        let analytics = CommandersActStreamingAnalytics(posInterval: 1, uptimeInterval: 2)
         analytics.notify(streamType: .onDemand)
         analytics.notify(.play)
         analytics.notify(streamType: .live)
