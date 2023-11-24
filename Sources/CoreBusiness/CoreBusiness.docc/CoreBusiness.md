@@ -1,6 +1,10 @@
 
 # ``CoreBusiness``
 
+@Metadata {
+    @PageColor(yellow)
+}
+
 The CoreBusiness library provides standard SRG SSR business integration:
 
 - Player items to load standard content delivered by the Integration Layer.

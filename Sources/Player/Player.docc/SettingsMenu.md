@@ -1,0 +1,5 @@
+# SettingsMenu
+
+@Metadata {
+    @PageColor(purple)
+}

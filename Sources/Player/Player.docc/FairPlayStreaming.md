@@ -1,0 +1,5 @@
+# FairPlayStreaming
+
+@Metadata {
+    @PageColor(purple)
+}
