@@ -40,3 +40,29 @@ The resulting player item can then be played in a Pillarbox `Player` instance. I
 ## Background video playback
 
 `Player` can be enabled for background video playback using `audiovisualBackgroundPlaybackPolicy`. For SRG SSR content, though, your application must not implement background video playback to avoid issues with comScore measurements. Please implement proper Picture in Picture support instead.
+
+## Topics
+
+### Essentials
+
+- <doc:Playback>
+- <doc:Playlists>
+- <doc:MediaSelection>
+
+### System Integration
+
+- <doc:AirPlay>
+- <doc:ControlCenter>
+- <doc:PictureInPicture>
+
+### User Interface
+
+- <doc:UserInterface>
+- <doc:SettingsMenu>
+- <doc:ProgressTracking>
+
+### Customization
+
+- <doc:FairPlayStreaming>
+- <doc:ResourceLoading>
+- <doc:Tracking>
