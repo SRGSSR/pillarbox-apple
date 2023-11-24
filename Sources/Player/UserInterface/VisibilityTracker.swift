@@ -14,6 +14,7 @@ import UIKit
 ///
 /// The tracker automatically provides meaningful default behaviors, most notably to automatically turn visibility off
 /// after a delay during playback. This mechanism is disabled when playback is paused or when VoiceOver is enabled.
+@available(iOS 16, *)
 @available(tvOS, unavailable)
 public final class VisibilityTracker: ObservableObject {
     private enum TriggerId {
@@ -141,6 +142,7 @@ public final class VisibilityTracker: ObservableObject {
     }
 }
 
+@available(iOS 16, *)
 @available(tvOS, unavailable)
 public extension View {
     /// Binds a visibility tracker to a player.

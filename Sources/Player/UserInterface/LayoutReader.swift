@@ -21,6 +21,7 @@ public struct LayoutInfo {
 }
 
 /// An internal view controller which can determine whether it covers its current context or is full screen.
+@available(iOS 16, *)
 @available(tvOS, unavailable)
 private final class LayoutReaderViewController: UIViewController, UIGestureRecognizerDelegate {
     var layoutInfo: Binding<LayoutInfo> = .constant(.none)
@@ -68,6 +69,7 @@ private final class LayoutReaderViewController: UIViewController, UIGestureRecog
     }
 }
 
+@available(iOS 16, *)
 @available(tvOS, unavailable)
 private struct LayoutReader: UIViewControllerRepresentable {
     @Binding private var layoutInfo: LayoutInfo
@@ -85,6 +87,7 @@ private struct LayoutReader: UIViewControllerRepresentable {
     }
 }
 
+@available(iOS 16, *)
 @available(tvOS, unavailable)
 public extension View {
     /// Read layout information.
@@ -98,6 +101,7 @@ public extension View {
     }
 }
 
+@available(iOS 16, *)
 @available(tvOS, unavailable)
 struct LayoutReader_Previews: PreviewProvider {
     private struct IgnoredSafeArea: View {
