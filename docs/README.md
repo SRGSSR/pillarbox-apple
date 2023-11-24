@@ -97,7 +97,7 @@ A few remarks:
 
 # Getting started
 
-To learn more how integration of Pillarbox into your project please have a look at our [getting started guide](GETTING_STARTED.md).
+To learn more about integration of Pillarbox into your project please have a look at our generated Xcode documentation.
 
 # Documentation
 
