@@ -4,24 +4,6 @@
 
 The following guide describes basic integration of the Pillarbox player into an application. This guide assumes SwiftUI usage, though Pillarbox can also be integrated into UIKit-based applications.
 
-## Imports
-
-To instantiate the player you must import the associated package first:
-
-```swift
-import Player
-```
-
-This package also provides basic user components to build a player user interface. To play SRG SSR content you must in addition import our `CoreBusiness` package:
-
-```swift
-import CoreBusiness
-```
-
-### Remark
-
-If you need to access `AVFoundation` APIs please import the associated framework directly, as Pillarbox dependencies are not automatically pulled when importing one of its packages.
-
 ## Player instantiation
 
 In your SwiftUI view simply instantiate and store a `Player` as a `@StateObject`. You can provide one or several player items at construction time, possibly from various sources:
