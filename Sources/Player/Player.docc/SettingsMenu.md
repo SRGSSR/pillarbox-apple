@@ -1,6 +1,8 @@
 # SettingsMenu
 
-<!--@START_MENU_TOKEN@-->Summary<!--@END_MENU_TOKEN@-->
+@Metadata {
+    @PageColor(purple)
+}
 
 ## Overview
 

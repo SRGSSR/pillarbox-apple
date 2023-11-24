@@ -224,16 +224,6 @@ You can also read the layout to check whether the view covers the full screen or
 
 A player can be loaded with several items to create a playlist. The playlist can be mutated at any time by inserting, deleting or moving items. Please refer to our extended playlist demo to discover what can be readily achieved with our current playlist API.
 
-## AirPlay and Control Center integration (iOS)
-
-The player supports AirPlay and can be integrated with the Control Center:
-
-- For AirPlay support please ensure that your application audio session and background capabilities are configured appropriately.
-- Call `becomeActive()` on a player instance to enable AirPlay and Control Center support for it.
-- Call `resignActive()` on a player to disable AirPlay and Control Center support for it (if currently active).
-
-You need to call `becomeActive()` when transitioning to an immersive player experience for which these integrations make sense. Calling `resignActive()` is most of the time superfluous, except when the same player instance is reused between an immersive playback user interface and a limited playback experience.
-
 ## Custom player items
 
 Pillarbox provides a way to retrieve a content URL and related metadata from any service:
