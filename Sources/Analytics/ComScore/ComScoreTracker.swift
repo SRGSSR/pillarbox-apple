@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Combine
 import ComScore
 import Player
 import UIKit
@@ -19,7 +18,6 @@ public final class ComScoreTracker: PlayerItemTracker {
     private var metadata: [String: String] = [:]
     private var properties: PlayerProperties?
     private weak var player: Player?
-    private var cancellables = Set<AnyCancellable>()
 
     private var applicationState: ApplicationState = .foreground {
         didSet {
