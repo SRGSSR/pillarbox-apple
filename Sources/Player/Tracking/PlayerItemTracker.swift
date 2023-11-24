@@ -31,17 +31,28 @@ public protocol PlayerItemTracker: AnyObject {
 
     /// Creates the tracker.
     ///
-    /// - Parameters:
-    ///   - configuration: The tracker configuration.
-    ///   - metadataPublisher: The publisher that provides metadata updates.
-    init(configuration: Configuration, metadataPublisher: AnyPublisher<Metadata, Never>)
+    /// - Parameter configuration: The tracker configuration.
+    init(configuration: Configuration)
 
-    /// The life cycle method called when the tracker is enabled for a player.
+    /// A method called when the tracker is enabled for a player.
     ///
     /// - Parameter player: The player for which the tracker must be enabled.
     func enable(for player: Player)
 
-    /// The life cycle method called when the tracker is disabled.
+    /// A method called when tracker metadata is updated.
+    ///
+    /// - Parameter metadata: The updated metadata.
+    func updateMetadata(with metadata: Metadata)
+
+    /// A method called when player properties have changed.
+    ///
+    /// - Parameter properties: The updated properties.
+    ///
+    /// This method can be called quite often. Implementations should avoid performing significant costly work
+    /// unnecessarily.
+    func updateProperties(with properties: PlayerProperties)
+
+    /// A method called when the tracker is disabled.
     func disable()
 }
 
@@ -94,7 +105,7 @@ public extension PlayerItemTracker where Configuration == Void {
 
 public extension PlayerItemTracker where Metadata == Void, Configuration == Void {
     /// Creates an adapter for the receiver.
-    /// 
+    ///
     /// - Returns: The tracker adapter.
     static func adapter<M>() -> TrackerAdapter<M> where M: AssetMetadata {
         TrackerAdapter(trackerType: Self.self, configuration: ()) { _ in }

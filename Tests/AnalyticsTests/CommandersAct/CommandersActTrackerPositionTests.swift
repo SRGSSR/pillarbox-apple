@@ -20,9 +20,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
             url: Stream.live.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .live)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 
@@ -44,9 +42,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
             url: Stream.dvr.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .dvr)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 
@@ -68,9 +64,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
             url: Stream.dvr.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .dvr)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 
@@ -94,9 +88,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
             url: Stream.live.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .live)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 
@@ -118,9 +110,7 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
             url: Stream.dvr.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .dvr)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 

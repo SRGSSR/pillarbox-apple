@@ -41,12 +41,8 @@ public extension PlayerItem {
             .switchToLatest()
             .eraseToAnyPublisher()
         return .init(publisher: publisher, trackerAdapters: [
-            ComScoreTracker.adapter { mediaMetadata in
-                ComScoreTracker.Metadata(labels: mediaMetadata.analyticsData, streamType: mediaMetadata.streamType)
-            },
-            CommandersActTracker.adapter { mediaMetadata in
-                CommandersActTracker.Metadata(labels: mediaMetadata.analyticsMetadata, streamType: mediaMetadata.streamType)
-            }
+            ComScoreTracker.adapter { $0.analyticsData },
+            CommandersActTracker.adapter { $0.analyticsMetadata }
         ] + trackerAdapters)
     }
 

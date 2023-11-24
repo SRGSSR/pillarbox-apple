@@ -29,9 +29,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
                 url: Stream.shortOnDemand.url,
                 metadata: AssetMetadataMock(),
                 trackerAdapters: [
-                    CommandersActTracker.adapter { _ in
-                        .test(streamType: .onDemand)
-                    }
+                    CommandersActTracker.adapter { _ in .test }
                 ]
             ))
             player?.setDesiredPlaybackSpeed(0.5)
@@ -44,9 +42,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
             url: Stream.shortOnDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .onDemand)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 
@@ -77,9 +73,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
                 url: Stream.shortOnDemand.url,
                 metadata: AssetMetadataMock(),
                 trackerAdapters: [
-                    CommandersActTracker.adapter { _ in
-                        .test(streamType: .onDemand)
-                    }
+                    CommandersActTracker.adapter { _ in .test }
                 ]
             ))
             player?.isMuted = true
@@ -92,9 +86,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
             url: Stream.onDemandWithOptions.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .onDemand)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 
@@ -116,9 +108,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
             url: Stream.onDemandWithOptions.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .onDemand)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 
@@ -141,9 +131,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
             url: Stream.onDemandWithOptions.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .onDemand)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 

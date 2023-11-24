@@ -11,17 +11,10 @@ import Nimble
 
 // swiftlint:disable:next type_name
 final class CommandersActStreamingAnalyticsHeartbeatLiveTests: CommandersActTestCase {
-    private static var heartbeats: [CommandersActStreamingAnalytics.Heartbeat] = [
-        .pos(delay: 1, interval: 1),
-        .uptime(delay: 1, interval: 2)
-    ]
-
     func testHeartbeatAfterPlay() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .live, heartbeats: Self.heartbeats) {
-            .init(labels: [:], time: .zero, range: .zero)
-        }
-        _ = analytics
-
+        let analytics = CommandersActStreamingAnalytics(posInterval: 1, uptimeInterval: 2)
+        analytics.notify(streamType: .live)
+        analytics.notify(.play)
         expectAtLeastHits(
             .pos { labels in
                 expect(labels.media_position).to(equal(1))
@@ -41,44 +34,49 @@ final class CommandersActStreamingAnalyticsHeartbeatLiveTests: CommandersActTest
         )
     }
 
+    func testNoHeartbeatInitially() {
+        let analytics = CommandersActStreamingAnalytics(posInterval: 0.1, uptimeInterval: 0.2)
+        analytics.notify(streamType: .live)
+        expectNoHits(during: .milliseconds(300))
+    }
+
     func testNoHeartbeatAfterPause() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .live, heartbeats: Self.heartbeats) {
-            .init(labels: [:], time: .zero, range: .zero)
-        }
+        let analytics = CommandersActStreamingAnalytics(posInterval: 0.1, uptimeInterval: 0.2)
+        analytics.notify(streamType: .live)
+        analytics.notify(.play)
         analytics.notify(.pause)
-        expectNoHits(during: .seconds(2))
+        expectNoHits(during: .milliseconds(300))
     }
 
     func testNoHeartbeatAfterSeek() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .live, heartbeats: Self.heartbeats) {
-            .init(labels: [:], time: .zero, range: .zero)
-        }
+        let analytics = CommandersActStreamingAnalytics(posInterval: 0.1, uptimeInterval: 0.2)
+        analytics.notify(streamType: .live)
+        analytics.notify(.play)
         analytics.notify(.seek)
-        expectNoHits(during: .seconds(2))
+        expectNoHits(during: .milliseconds(300))
     }
 
     func testNoHeartbeatAfterEof() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .live, heartbeats: Self.heartbeats) {
-            .init(labels: [:], time: .zero, range: .zero)
-        }
+        let analytics = CommandersActStreamingAnalytics(posInterval: 0.1, uptimeInterval: 0.2)
+        analytics.notify(streamType: .live)
+        analytics.notify(.play)
         analytics.notify(.eof)
-        expectNoHits(during: .seconds(2))
+        expectNoHits(during: .milliseconds(300))
     }
 
     func testNoHeartbeatAfterStop() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .live, heartbeats: Self.heartbeats) {
-            .init(labels: [:], time: .zero, range: .zero)
-        }
+        let analytics = CommandersActStreamingAnalytics(posInterval: 0.1, uptimeInterval: 0.2)
+        analytics.notify(streamType: .live)
+        analytics.notify(.play)
         analytics.notify(.stop)
-        expectNoHits(during: .seconds(2))
+        expectNoHits(during: .milliseconds(300))
     }
 
     func testHeartbeatWhileBuffering() {
-        let analytics = CommandersActStreamingAnalytics(streamType: .live, heartbeats: Self.heartbeats) {
-            .init(labels: [:], time: .zero, range: .zero)
-        }
+        let analytics = CommandersActStreamingAnalytics(posInterval: 0.1, uptimeInterval: 0.2)
+        analytics.notify(streamType: .live)
+        analytics.notify(.play)
         analytics.notify(isBuffering: true)
-
         expectAtLeastHits(
             .pos { labels in
                 expect(labels.media_position).to(equal(0))

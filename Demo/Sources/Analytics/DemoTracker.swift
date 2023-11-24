@@ -15,21 +15,21 @@ final class DemoTracker: PlayerItemTracker {
     }
 
     private static let logger = Logger(category: "DemoTracker")
-    private var cancellables = Set<AnyCancellable>()
     private let id = UUID()
 
-    init(configuration: Void, metadataPublisher: AnyPublisher<Metadata, Never>) {
+    init(configuration: Void) {
         Self.logger.debug("Init demo tracker \(self.id)")
-
-        metadataPublisher.sink { [id] metadata in
-            Self.logger.debug("Update demo tracker metadata for \(id): \(metadata.title)")
-        }
-        .store(in: &cancellables)
     }
 
     func enable(for player: Player) {
         Self.logger.debug("Enable demo tracker for \(self.id)")
     }
+
+    func updateMetadata(with metadata: Metadata) {
+        Self.logger.debug("Update demo tracker metadata for \(self.id): \(metadata.title)")
+    }
+
+    func updateProperties(with properties: PlayerProperties) {}
 
     func disable() {
         Self.logger.debug("Disable demo tracker for \(self.id)")

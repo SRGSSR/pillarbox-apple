@@ -20,9 +20,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .onDemand)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 
@@ -40,9 +38,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
             url: Stream.live.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .live)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 
@@ -60,9 +56,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
             url: Stream.dvr.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .dvr)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 
@@ -80,9 +74,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
             url: Stream.dvr.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .dvr)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 
@@ -106,9 +98,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
             url: Stream.dvr.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .dvr)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 
@@ -132,9 +122,7 @@ final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
             url: Stream.dvr.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .dvr)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
         expect(player?.playbackState).toEventually(equal(.paused))

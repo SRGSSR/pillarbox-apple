@@ -14,30 +14,28 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     private static let range = CMTimeRange(start: CMTime(value: 2, timescale: 1), end: CMTime(value: 20, timescale: 1))
 
     func testInitialPosition() {
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(streamType: .dvr)
         expectAtLeastHits(
             .play { labels in
                 expect(labels.media_position).to(equal(0))
                 expect(labels.media_timeshift).to(equal(2))
             }
         ) {
-            _ = CommandersActStreamingAnalytics(streamType: .dvr) {
-                .init(labels: [:], time: CMTime(value: 18, timescale: 1), range: Self.range)
-            }
+            analytics.update(time: .init(value: 18, timescale: 1), range: Self.range)
+            analytics.notify(.play)
         }
     }
 
     func testPositionAfterPause() {
-        var time = CMTime(value: 15, timescale: 1)
-        let analytics = CommandersActStreamingAnalytics(streamType: .dvr) {
-            .init(labels: [:], time: time, range: Self.range)
-        }
-
-        wait(for: .seconds(3))
-        time = CMTime(value: 18, timescale: 1)
-
+        let analytics = CommandersActStreamingAnalytics()
+        analytics.notify(streamType: .dvr)
+        analytics.update(time: .init(value: 18, timescale: 1), range: Self.range)
+        analytics.notify(.play)
+        wait(for: .seconds(1))
         expectAtLeastHits(
             .pause { labels in
-                expect(labels.media_position).to(equal(3))
+                expect(labels.media_position).to(equal(1))
                 expect(labels.media_timeshift).to(equal(2))
             }
         ) {
@@ -46,10 +44,10 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedAfterPlay() {
-        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .dvr) {
-            .init(labels: [:], time: CMTime(value: 15, timescale: 1), range: Self.range)
-        }
-        _ = analytics
+        var analytics: CommandersActStreamingAnalytics? = .init()
+        analytics?.notify(streamType: .dvr)
+        analytics?.update(time: .init(value: 15, timescale: 1), range: Self.range)
+        analytics?.notify(.play)
         wait(for: .seconds(1))
 
         expectAtLeastHits(
@@ -63,16 +61,17 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedAfterPlayAtNonStandardPlaybackSpeed() {
-        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .dvr) {
-            .init(labels: [:], time: CMTime(value: 15, timescale: 1), range: Self.range)
-        }
+        var analytics: CommandersActStreamingAnalytics? = .init()
+        analytics?.notify(streamType: .dvr)
+        analytics?.update(time: .init(value: 15, timescale: 1), range: Self.range)
         analytics?.notifyPlaybackSpeed(2)
+        analytics?.notify(.play)
         wait(for: .seconds(1))
 
         expectAtLeastHits(
             .stop { labels in
                 expect(labels.media_position).to(equal(1))
-                expect(labels.media_timeshift).to(equal(5))
+                expect(labels.media_timeshift).to(equal(3))
             }
         ) {
             analytics = nil
@@ -80,9 +79,10 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedAfterPlayAtSeveralNonStandardPlaybackSpeeds() {
-        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .dvr) {
-            .init(labels: [:], time: CMTime(value: 15, timescale: 1), range: Self.range)
-        }
+        var analytics: CommandersActStreamingAnalytics? = .init()
+        analytics?.notify(streamType: .dvr)
+        analytics?.update(time: .init(value: 15, timescale: 1), range: Self.range)
+        analytics?.notify(.play)
         wait(for: .seconds(1))
         analytics?.notifyPlaybackSpeed(2)
         wait(for: .seconds(1))
@@ -90,7 +90,7 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
         expectAtLeastHits(
             .stop { labels in
                 expect(labels.media_position).to(equal(2))
-                expect(labels.media_timeshift).to(equal(5))
+                expect(labels.media_timeshift).to(equal(3))
             }
         ) {
             analytics = nil
@@ -98,17 +98,17 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedDuringBuffering() {
-        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .dvr) {
-            .init(labels: [:], time: CMTime(value: 15, timescale: 1), range: Self.range)
-        }
-
+        var analytics: CommandersActStreamingAnalytics? = .init()
+        analytics?.notify(streamType: .dvr)
+        analytics?.update(time: .init(value: 15, timescale: 1), range: Self.range)
+        analytics?.notify(.play)
         analytics?.notify(isBuffering: true)
         wait(for: .seconds(1))
 
         expectAtLeastHits(
             .stop { labels in
                 expect(labels.media_position).to(equal(0))
-                expect(labels.media_timeshift).to(equal(5))
+                expect(labels.media_timeshift).to(equal(6))
             }
         ) {
             analytics = nil
@@ -116,20 +116,18 @@ final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     }
 
     func testPositionWhenDestroyedAfterPause() {
-        var time = CMTime(value: 15, timescale: 1)
-        var analytics: CommandersActStreamingAnalytics? = .init(streamType: .dvr) {
-            .init(labels: [:], time: time, range: Self.range)
-        }
-
-        wait(for: .seconds(3))
-        time = CMTime(value: 18, timescale: 1)
+        var analytics: CommandersActStreamingAnalytics? = .init()
+        analytics?.notify(streamType: .dvr)
+        analytics?.update(time: .init(value: 15, timescale: 1), range: Self.range)
+        analytics?.notify(.play)
+        wait(for: .seconds(1))
         analytics?.notify(.pause)
         wait(for: .seconds(1))
 
         expectAtLeastHits(
             .stop { labels in
-                expect(labels.media_position).to(equal(3))
-                expect(labels.media_timeshift).to(equal(2))
+                expect(labels.media_position).to(equal(1))
+                expect(labels.media_timeshift).to(equal(6))
             }
         ) {
             analytics = nil

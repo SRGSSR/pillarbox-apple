@@ -18,9 +18,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .onDemand)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 
@@ -51,9 +49,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .onDemand)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 
@@ -74,9 +70,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
             url: Stream.mediumOnDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .onDemand)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 
@@ -95,9 +89,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .onDemand)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
 
@@ -118,9 +110,7 @@ final class CommandersActTrackerTests: CommandersActTestCase {
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(),
             trackerAdapters: [
-                CommandersActTracker.adapter { _ in
-                    .test(streamType: .onDemand)
-                }
+                CommandersActTracker.adapter { _ in .test }
             ]
         ))
         player?.setDesiredPlaybackSpeed(2)

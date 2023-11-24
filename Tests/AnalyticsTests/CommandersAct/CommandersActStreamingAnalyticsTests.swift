@@ -11,7 +11,7 @@ import ObjectiveC
 
 final class CommandersActStreamingAnalyticsTests: CommandersActTestCase {
     func testDeallocation() {
-        var object: CommandersActStreamingAnalytics? = CommandersActStreamingAnalytics(streamType: .onDemand) { .empty }
+        var object: CommandersActStreamingAnalytics? = CommandersActStreamingAnalytics()
         weak var weakObject = object
         autoreleasepool {
             object = nil

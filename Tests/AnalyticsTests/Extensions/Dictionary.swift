@@ -4,7 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
-enum ApplicationState {
-    case foreground
-    case background
+extension [String: String] {
+    static var test: Self {
+        ["media_title": "name"]
+    }
 }
