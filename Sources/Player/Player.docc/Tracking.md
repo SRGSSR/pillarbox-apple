@@ -4,8 +4,6 @@
     @PageColor(purple)
 }
 
-## Overview
-
 ## Custom item tracking
 
 Pillarbox makes it possible to easily integrate any kind of tracker, for example to gather analytics, QoS data or to save the current playback position into a history. Proceed as follows to implement your own tracker:

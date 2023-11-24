@@ -4,8 +4,6 @@
     @PageColor(purple)
 }
 
-## Overview
-
 ## Video view
 
 Once you have a player you can display its contents in a `VideoView`, provided you are playing video content of course. Since the player is initialized in a paused state you probably want to call `play()` when the view appears:
