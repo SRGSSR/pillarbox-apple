@@ -1,4 +1,4 @@
-# ResourceLoading
+# Resource Loading
 
 @Metadata {
     @PageColor(purple)

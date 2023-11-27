@@ -1,4 +1,4 @@
-# MediaSelection
+# Media Selection
 
 @Metadata {
     @PageColor(purple)

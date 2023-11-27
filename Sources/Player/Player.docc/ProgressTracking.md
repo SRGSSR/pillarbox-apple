@@ -1,4 +1,4 @@
-# ProgressTracking
+# Progress Tracking
 
 @Metadata {
     @PageColor(purple)

@@ -1,4 +1,4 @@
-# PictureInPicture
+# Picture in Picture
 
 @Metadata {
     @PageColor(purple)
