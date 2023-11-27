@@ -199,7 +199,7 @@ struct SettingsView: View {
             Button("Source code") { GitHub.open(.apple) }
                 .swipeActions {
                     Button("Web") { GitHub.open(.web) }
-                        .tint(.yellow)
+                        .tint(.purple)
                     Button("Documentation") { GitHub.open(.documentation) }
                         .tint(.red)
                     Button("Android") { GitHub.open(.android) }
