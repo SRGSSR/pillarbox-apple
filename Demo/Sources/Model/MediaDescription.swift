@@ -34,12 +34,12 @@ enum MediaDescription {
     }
 
     static func subtitle(for media: SRGMedia) -> String {
-        let description = "\(date(for: media)) - \(duration(for: media)) \(icon(for: media))"
+        let description = "\(date(for: media)) | \(duration(for: media))"
         if let show = media.show {
-            return "\(show.title) - \(description)"
+            return "\(icon(for: media)) | \(show.title) | \(description)"
         }
         else {
-            return description
+            return "\(icon(for: media)) | \(description)"
         }
     }
 
