@@ -4,7 +4,7 @@
     @PageColor(purple)
 }
 
-The player supports AirPlay and can be integrated with the Control Center.
+Enable video and audio sharing to Apple TV or AirPlay‑enabled receivers.
 
 ## Overview
 

@@ -4,42 +4,17 @@
     @PageColor(purple)
 }
 
-The Player library provides advanced media playback capabilities.
+Create engaging audio and video playback experiences.
 
-## Player instantiation
+## Overview
 
-In your SwiftUI view simply instantiate and store a `Player` as a `@StateObject`. You can provide one or several player items at construction time, possibly from various sources:
+The Player framework provides a complete toolbox to add advanced audiovisual media capabilities to your app.
 
-```swift
-struct PlayerView: View {
-    @StateObject private var player = Player(items: [
-        .simple(url: URL(string: "https://server.com/stream.m3u8")!),
-        .urn("urn:rts:video:13444333")
-    ])
+Play content easily with a ``Player`` and display its content in the standard AVKit user interface with ``SystemVideoView``, or build an entirely custom user interface starting from a simple ``VideoView``. Play any kind of content from any source by implementing your own ``PlayerItem``s and ``Asset``s, no matter where your content comes from or how it must be played. Track playback with your own ``PlayerItemTracker``, whether for analytics purposes or Quality of Service (QoS) data collection.
 
-    // ...
-}
-```
+@Image(source: player-user-interface.png, alt: "A screenshot of a player user interface")
 
-You can also create an empty `Player` and update its item list at a later time.
-
-## Custom player items
-
-Pillarbox provides a way to retrieve a content URL and related metadata from any service:
-
-1. Write a publisher which retrieves the URL to be played as well as any required metadata you might need.
-2. Map the result of your publisher into an `Asset`. Three categories of assets are provided:
-   - Simple assets which can be played directly.
-   - Custom assets which require a custom resource loader delegate.
-   - Encrypted assets which require a FairPlay content key session delegate.
-3. If you want to provide asset metadata, most notably for tracker integration (see next section), just define a corresponding type and associate an instance with your asset.
-4. Create a `PlayerItem` with the corresponding initializer taking a publisher as argument.
-
-The resulting player item can then be played in a Pillarbox `Player` instance. It can also be shared so that other products can easily play content you provide.
-
-## Background video playback
-
-`Player` can be enabled for background video playback using `audiovisualBackgroundPlaybackPolicy`. For SRG SSR content, though, your application must not implement background video playback to avoid issues with comScore measurements. Please implement proper Picture in Picture support instead.
+The Player framework fully integrates with SwiftUI, embracing its declarative and reactive nature and letting you quickly iterate on your design ideas.
 
 ## Topics
 
