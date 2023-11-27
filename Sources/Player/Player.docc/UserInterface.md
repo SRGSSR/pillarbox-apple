@@ -4,7 +4,7 @@
     @PageColor(purple)
 }
 
-Display a user interface for content being played. 
+Display a user interface for content being played.
 
 ## Video view
 
