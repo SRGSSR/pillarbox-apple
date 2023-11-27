@@ -4,6 +4,8 @@
     @PageColor(purple)
 }
 
+Enable uninterrupted playback experiences in Picture in Picture.
+
 ## Overview
 
 Pillarbox provides two modes of integration for Picture in Picture:

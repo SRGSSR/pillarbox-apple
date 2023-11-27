@@ -4,7 +4,7 @@
     @PageColor(purple)
 }
 
-The player supports AirPlay and can be integrated with the Control Center.
+Enable playback steering from the Control Center.
 
 ## Overview
 
