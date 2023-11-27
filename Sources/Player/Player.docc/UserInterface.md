@@ -1,4 +1,4 @@
-# UserInterface
+# User Interface
 
 @Metadata {
     @PageColor(purple)

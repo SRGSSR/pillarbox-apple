@@ -1,4 +1,4 @@
-# FairPlayStreaming
+# FairPlay Streaming
 
 @Metadata {
     @PageColor(purple)

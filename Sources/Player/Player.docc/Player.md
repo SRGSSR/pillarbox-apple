@@ -21,23 +21,23 @@ The Player framework fully integrates with SwiftUI, embracing its declarative an
 ### Essentials
 
 - <doc:Playback>
-- <doc:Playlists>
 - <doc:MediaSelection>
+- <doc:Playlists>
 
 ### System Integration
 
-- <doc:AirPlay>
 - <doc:ControlCenter>
+- <doc:AirPlay>
 - <doc:PictureInPicture>
 
 ### User Interface
 
 - <doc:UserInterface>
-- <doc:SettingsMenu>
 - <doc:ProgressTracking>
+- <doc:SettingsMenu>
 
 ### Customization
 
-- <doc:FairPlayStreaming>
 - <doc:ResourceLoading>
+- <doc:FairPlayStreaming>
 - <doc:Tracking>

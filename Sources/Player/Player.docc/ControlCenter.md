@@ -1,4 +1,4 @@
-# ControlCenter
+# Control Center
 
 @Metadata {
     @PageColor(purple)
