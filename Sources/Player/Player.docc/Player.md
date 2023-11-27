@@ -16,6 +16,15 @@ Play content easily with a ``Player`` and display its content in the standard AV
 
 The Player framework fully integrates with SwiftUI, embracing its declarative and reactive nature and letting you quickly iterate on your design ideas.
 
+### Featured
+
+@Links(visualStyle: detailedGrid) {
+    - <doc:Playback>
+    - <doc:ResourceLoading>
+    - <doc:UserInterface>
+    - <doc:Tracking>
+}
+
 ## Topics
 
 ### Essentials
