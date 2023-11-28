@@ -13,6 +13,6 @@ bundle exec rubocop --format quiet
 echo "... checking Shell scripts..."
 shellcheck Scripts/*.sh hooks/* Artifacts/**/*.sh
 echo "... checking Markdown documentation..."
-markdownlint .
+markdownlint --ignore fastlane .
 echo "... checking YAML files..."
 yamllint .*.yml .github
