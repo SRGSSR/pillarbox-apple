@@ -50,7 +50,9 @@ In your SwiftUI view simply instantiate and store a ``Player`` as a @StateObject
 
 ## Custom player items
 
-Pillarbox provides a way to retrieve a content URL and related metadata from any service:
+The previous examples use a ``PlayerItem/simple(url:metadata:trackerAdapters:configuration:)`` player item, but you can create your own. 
+
+Here is how to retrieve a content URL and related metadata from any service:
 
 1. Write a publisher which retrieves the URL to be played as well as any required metadata you might need.
 2. Map the result of your publisher into an ``Asset``. Three categories of assets are provided:
@@ -64,4 +66,4 @@ The resulting player item can then be played in a Pillarbox ``Player`` instance.
 
 ## Background video playback
 
-``Player`` can be enabled for background video playback using `audiovisualBackgroundPlaybackPolicy`. For SRG SSR content, though, your application must not implement background video playback to avoid issues with comScore measurements. Please implement proper Picture in Picture support instead.
+``Player`` can be enabled for background video playback using `audiovisualBackgroundPlaybackPolicy`.
