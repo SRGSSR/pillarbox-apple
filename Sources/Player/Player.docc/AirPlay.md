@@ -8,7 +8,7 @@ Enable video and audio wireless sharing to Apple TV or AirPlay‑enabled receive
 
 ## Overview
 
-> Important: AirPlay can only be enabled in iOS apps.
+> Important: AirPlay integration is only meaningful for iOS apps.
 
 ``Player`` natively supports [AirPlay](https://developer.apple.com/airplay/) to compatible receivers. Enabling AirPlay in your app requires some general setup as well as activation on a player basis.
 
@@ -31,7 +31,7 @@ Note that enabling external playback is required but not sufficient for AirPlay 
 
 Several ``Player`` instances can coexist in an app but only one at most is able to share its content over AirPlay.
 
-When you want one player instance to take precedence and be able to use external playback, call ``Player/becomeActive()``. Any other instance which might be active will resign in the process.
+When you want one player instance to take precedence call ``Player/becomeActive()``. Any other instance which might be active will resign in the process.
 
 You can manually call ``Player/resignActive()`` to have a player resign. If not the player instance will automatically resign when deinitialized.
 
