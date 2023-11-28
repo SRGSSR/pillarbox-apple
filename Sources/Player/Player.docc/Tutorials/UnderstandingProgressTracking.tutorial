@@ -1,0 +1,29 @@
+@Tutorial(time: 20) {
+    @Intro(title: "Understanding progress tracking") {
+        This tutorial guides you through integration of a progress tracking in a custom player user interface, letting your users observe and interactively update the current playback progress. 
+    }
+    
+    @Section(title: "Create a new project and add import Player") {
+        @ContentAndMedia {
+            Create and configure an Xcode project that uses Player.
+        }
+        
+        @Steps {
+            @Step {
+                Create a new project using the iOS App template.
+            }
+            
+            @Step {
+                Enter "ProgressTracking" as the Product Name. 
+            }
+            
+            @Step {
+                Select "SwiftUI" from the Interface pop-up menu and "SwiftUI App" from the Life Cycle pop-up menu, then click Next. Choose a location to save the project on your Mac.
+            }
+
+            @Step {
+                Add the Player dependency to the project.
+            }
+        }
+    }
+}
