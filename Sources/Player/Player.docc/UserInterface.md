@@ -2,7 +2,7 @@
 
 @Metadata {
     @PageColor(purple)
-    @PageImage(purpose: card, source: "custom-user-interface", alt: "An image of a phone displaying some content.")
+    @PageImage(purpose: card, source: custom-user-interface, alt: "An image of a phone displaying some content.")
 }
 
 Display a user interface for content being played.

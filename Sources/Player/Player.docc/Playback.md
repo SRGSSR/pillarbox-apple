@@ -5,7 +5,7 @@
     @PageImage(purpose: card, source: reel, alt: "An image depicting a film reel.")
 }
 
-Play audio and video content.  
+Play audio and video content.
 
 ## Instantiation
 

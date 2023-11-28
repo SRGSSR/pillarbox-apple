@@ -2,6 +2,7 @@
 
 @Metadata {
     @PageColor(purple)
+    @PageImage(purpose: card, source: airplay, alt: "An image depicting the AirPlay video and audio logos.")
 }
 
 Enable video and audio wireless sharing to Apple TV or AirPlay‑enabled receivers.
