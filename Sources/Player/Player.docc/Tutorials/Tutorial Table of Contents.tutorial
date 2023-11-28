@@ -1,0 +1,15 @@
+@Tutorials(name: "Tutorials") {
+    @Intro(title: "Create a Custom User Interface") {
+        Learn how you create a custom player user interface for your app.
+        
+        @Image(source: custom-user-interface, alt: "An image of a phone displaying some content.")
+    }
+        
+    @Chapter(name: "Progress Tracking") {
+        Track playback progress and make it possible for users to update it interactively. 
+        
+        @Image(source: custom-user-interface, alt: "An image of a phone displaying some content.")
+        
+        @TutorialReference(tutorial: "doc:UnderstandingProgressTracking")
+    }
+}
