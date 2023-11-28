@@ -55,10 +55,7 @@ The previous examples use a ``PlayerItem/simple(url:metadata:trackerAdapters:con
 Here is how to retrieve a content URL and related metadata from any service:
 
 1. Write a publisher which retrieves the URL to be played as well as any required metadata you might need.
-2. Map the result of your publisher into an ``Asset``. Three categories of assets are provided:
-   - Simple assets which can be played directly.
-   - Custom assets which require a custom resource loader delegate.
-   - Encrypted assets which require a FairPlay content key session delegate.
+2. Map the result of your publisher into an ``Asset``.
 3. If you want to provide asset metadata, most notably for tracker integration (see next section), just define a corresponding type and associate an instance with your asset.
 4. Create a ``PlayerItem`` with the corresponding initializer taking a publisher as argument.
 

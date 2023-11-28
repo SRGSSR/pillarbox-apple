@@ -26,6 +26,12 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
 }
 
 /// An asset representing content to be played.
+///
+/// Three categories of assets are provided:
+///
+/// - Simple ``simple(url:metadata:configuration:)`` assets which can be played directly.
+/// - Custom ``custom(url:delegate:metadata:configuration:)`` assets which require a custom resource loader delegate.
+/// - Encrypted ``encrypted(url:delegate:metadata:configuration:)`` assets which require a FairPlay content key session delegate.
 public struct Asset<M>: Assetable where M: AssetMetadata {
     let id: UUID
     let resource: Resource
