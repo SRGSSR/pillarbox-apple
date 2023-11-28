@@ -92,3 +92,8 @@ In other words, you can ask your player on how to behave when the app goes into 
         ```
     }
 }
+
+## Playback speed
+
+The player also allows you to control the playback speed of the stream.
+You can adjust the speed at which the stream is played using the ``Player/Player/setDesiredPlaybackSpeed(_:)`` method.
