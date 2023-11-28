@@ -55,12 +55,12 @@ To support our worflow GitHub `main` branch protection settings must be configur
 
 1. Enable _Require a pull request before merging_, _Require approvals_ with 1 approval as well as _Require approval of the most recent reviewable push_.
 2. Enable _Require status checks to pass before merging_, _Require branches to be up to date before merging_ and the following required status checks:
-  - Demo Archiving iOS (Apple)
-  - Demo Archiving tvOS (Apple)
-  - Documentation (Apple)
-  - Quality (Apple)
-  - Tests iOS (Apple)
-  - Tests tvOS (Apple)
+  a. Demo Archiving iOS (Apple)
+  b. Demo Archiving tvOS (Apple)
+  c. Documentation (Apple)
+  d. Quality (Apple)
+  e. Tests iOS (Apple)
+  f. Tests tvOS (Apple)
 3. Enable _Require conversation resolution before merging_.
 4. Enable _Require signed commits_.
 5. Enable _Require linear history_.
@@ -82,8 +82,8 @@ Proper integration with GitHub requires the use of a dedicated continuous integr
 
 1. Ensure the bot has write access to the GitHub repository.
 2. Create a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) with the following minimal permissions:
-  - _public_repo_ since our repository is public.
-  - _read:org_ so that the pull request feature is able to read members of the organization. This way only PRs emerging from members trigger jobs (this is namely the default for the GitHub [pull request build feature](https://www.jetbrains.com/help/teamcity/pull-requests.html#Bitbucket+Cloud+Pull+Requests)).
+  a. _public_repo_ since our repository is public.
+  b. _read:org_ so that the pull request feature is able to read members of the organization. This way only PRs emerging from members trigger jobs (this is namely the default for the GitHub [pull request build feature](https://www.jetbrains.com/help/teamcity/pull-requests.html#Bitbucket+Cloud+Pull+Requests)).
 
 Of course a proper SSH setup is also required so that main and configuration repositories can be properly pulled by the continuous integration server.
 

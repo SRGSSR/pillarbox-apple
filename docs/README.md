@@ -1,3 +1,4 @@
+<!-- markdownlint-disable-next-line MD041 -->
 [![Pillarbox logo](README-images/logo.jpg)](https://github.com/SRGSSR/pillarbox-apple)
 
 # Overview

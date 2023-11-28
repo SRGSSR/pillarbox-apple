@@ -3,7 +3,6 @@
 source 'https://rubygems.org'
 
 gem 'fastlane'
-gem 'mdl'
 gem 'rubocop'
 gem 'xcode-install'
 
