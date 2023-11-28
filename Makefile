@@ -1,7 +1,7 @@
 #!/usr/bin/xcrun make -f
 
 CONFIGURATION_REPOSITORY_URL=https://github.com/SRGSSR/pillarbox-apple-configuration.git
-CONFIGURATION_COMMIT_SHA1=e9cd78f090b9e73a7595b90140182989d4d8c7ef
+CONFIGURATION_COMMIT_SHA1=c8e07347136a63bf8554577ecb7af00d784568cc
 
 .PHONY: all
 all: help
@@ -116,7 +116,7 @@ clean-imports:
 	@mkdir -p .build
 	@xcodebuild -scheme Pillarbox-Package -destination generic/platform=ios > ./.build/xcodebuild.log
 	@swiftlint analyze --fix --compiler-log-path ./.build/xcodebuild.log
-	@xcodebuild -scheme Pillarbox-demo -project ./Demo/Pillarbox-demo.xcodeproj -destination generic/platform=iOS > ./.build/xcodebuild.log 
+	@xcodebuild -scheme Pillarbox-demo -project ./Demo/Pillarbox-demo.xcodeproj -destination generic/platform=iOS > ./.build/xcodebuild.log
 	@swiftlint analyze --fix --compiler-log-path ./.build/xcodebuild.log
 	@echo "... done.\n"
 

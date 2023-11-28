@@ -12,6 +12,7 @@ The following tools are required for the best possible development experience:
 - [bundler](https://bundler.io)
 - [ffmpeg](https://ffmpeg.org)
 - [gem](https://rubygems.org)
+- [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli)
 - [Periphery](https://github.com/peripheryapp/periphery)
 - [Python](https://www.python.org)
 - [shellcheck](https://www.shellcheck.net)

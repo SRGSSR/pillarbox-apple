@@ -48,9 +48,9 @@ Advanced integration is available both for `VideoView` as well as `SystemVideoVi
 1. Enable `isPictureInPictureSupported` for a `VideoView` or `SystemVideoView`.
 2. Ensure your player view state can exist outside the view existence. One possible approach is to have a player view model which outlives its view, e.g. by storing it in a shared global state (e.g. a `static` property). The player view state should itself contain the `Player` instance used for playback.
 3. Properly handle content updates in your shared player view state. Usually:
-  - When opening a content not being played: Update your player with the new item.
-  - When opening the same content already being played: Avoid updating your player so that playback can continue uninterrupted.
-  - When clearing the content: Remove all items currently in the player queue.
+  a. When opening a content not being played: Update your player with the new item.
+  b. When opening the same content already being played: Avoid updating your player so that playback can continue uninterrupted.
+  c. When clearing the content: Remove all items currently in the player queue.
 4. To release resources when the player view is not needed anymore (i.e. when the player view is closed without activating Picture in Picture, or when Picture in Picture ends), apply the `enabledForInAppPictureInPictureWithCleanup(perform:)` modifier to the video view parent hierarchy, clearing your player view model state in its closure.
 5. `SystemVideoView` provides a Picture in Picture button automatically. For `VideoView`-based custom layouts you must add a `PictureInPictureButton` directly to your player interface.
 6. To dismiss / restore the player user interface when entering / exiting Picture in Picture, set a Picture in Picture life cycle delegate with the `PictureInPicture.setDelegate(_:)` method. A  generally good candidate is any routing-aware class of your application. Dismiss the player view when Picture in Picture is about to start, and restore it when it ends, calling the required completion handler at the end of your restoration animation.
