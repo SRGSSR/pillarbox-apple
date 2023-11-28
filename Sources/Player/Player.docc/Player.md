@@ -20,9 +20,15 @@ The Player framework fully integrates with SwiftUI, embracing its declarative an
 
 @Links(visualStyle: detailedGrid) {
     - <doc:Playback>
-    - <doc:ResourceLoading>
     - <doc:UserInterface>
     - <doc:Tracking>
+}
+
+### Asset Loading
+
+@Links(visualStyle: detailedGrid) {
+    - <doc:ResourceLoading>
+    - <doc:FairPlayStreaming>
 }
 
 ## Topics
