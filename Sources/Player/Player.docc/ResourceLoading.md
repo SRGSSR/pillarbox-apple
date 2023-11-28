@@ -11,7 +11,7 @@ Customize how assets are loaded.
 
 You can customize how an ``Asset`` delivered by a ``PlayerItem`` must be loaded. This involves implementing a custom [AVAssetResourceLoaderDelegate](https://developer.apple.com/documentation/avfoundation/avassetresourceloaderdelegate) which is provided to the asset at creation time.
 
-Implementing a custom resource loader delegate is usually not required, especially if the content to be played is pretty standard or if you are using ``FairPlayStreaming``.
+Implementing a custom resource loader delegate is usually not required, especially if the content to be played is natively supported or if you are using <doc:FairPlayStreaming>.
 
 ### Create a resource loader delegate
 

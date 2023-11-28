@@ -11,7 +11,7 @@ Play content protected with Apple FairPlay DRM.
 
 You can manage [FairPlay](https://developer.apple.com/streaming/fps/) decryption keys associated with an ``Asset`` delivered by a ``PlayerItem``. This involves implementing a custom [AVContentKeySessionDelegate](https://developer.apple.com/documentation/avfoundation/avcontentkeysessiondelegate) which is provided to the asset at creation time.
 
-If the resource you want to play needs to be loaded in a custom way but does not involve FairPlay, you should check ``ResourceLoading`` instead.
+If the resource you want to play needs to be loaded in a custom way but does not involve FairPlay please have a look at <doc:ResourceLoading> instead.
 
 ### Create a content key session delegate
 
