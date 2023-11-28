@@ -9,7 +9,7 @@ Play audio and video content.
 
 ## Create a Player
 
-In your SwiftUI view simply instantiate and store a ``Player`` as a @StateObject.
+In your SwiftUI view simply instantiate and store a ``Player/Player`` as a @StateObject.
 
 @TabNavigator {
     @Tab("Empty") {
@@ -59,8 +59,36 @@ Here is how to retrieve a content URL and related metadata from any service:
 3. If you want to provide asset metadata, most notably for tracker integration (see next section), just define a corresponding type and associate an instance with your asset.
 4. Create a ``PlayerItem`` with the corresponding initializer taking a publisher as argument.
 
-The resulting player item can then be played in the ``Player`` instance. It can also be shared so that other products can easily play content you provide.
+The resulting player item can then be played in the ``Player/Player`` instance. It can also be shared so that other products can easily play content you provide.
 
 ## Background video playback
 
-``Player`` can be enabled for background video playback using `audiovisualBackgroundPlaybackPolicy`.
+The player offers the capability for background video playback through the use of the ``Player/Player/audiovisualBackgroundPlaybackPolicy`` property.
+In other words, you can ask your player on how to behave when the app goes into the background.
+
+@TabNavigator {
+    @Tab("Automatic") {
+        Indicates that the system is free to decide. This is the default policy.
+        ```swift
+        let player = Player()
+        player.audiovisualBackgroundPlaybackPolicy = .automatic
+
+        ```
+    }
+    @Tab("Pauses") {
+        Indicates that the player must be paused on going to background.
+        ```swift
+        let player = Player()
+        player.audiovisualBackgroundPlaybackPolicy = .pauses
+
+        ```
+    }
+    @Tab("Continues if possible") {
+        Indicates that the player continues to play if possible in background.
+        ```swift
+        let player = Player()
+        player.audiovisualBackgroundPlaybackPolicy = .continuesIfPossible
+
+        ```
+    }
+}
