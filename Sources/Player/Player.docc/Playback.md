@@ -50,7 +50,7 @@ In your SwiftUI view simply instantiate and store a ``Player`` as a @StateObject
 
 ## Custom player items
 
-The previous examples use a ``PlayerItem/simple(url:metadata:trackerAdapters:configuration:)`` player item, but you can create your own. 
+The previous examples use a ``PlayerItem/simple(url:metadata:trackerAdapters:configuration:)`` player item, but you can create your own.
 
 Here is how to retrieve a content URL and related metadata from any service:
 
