@@ -2,6 +2,7 @@
 
 @Metadata {
     @PageColor(purple)
+    @PageImage(purpose: card, source: "tracking", alt: "An image of a graph.")
 }
 
 Track player items during playback.

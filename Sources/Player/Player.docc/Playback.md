@@ -2,6 +2,7 @@
 
 @Metadata {
     @PageColor(purple)
+    @PageImage(purpose: card, source: "pipes", alt: "An image depicting pipes.")
 }
 
 Play audio and video content.  
