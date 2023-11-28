@@ -59,7 +59,7 @@ Here is how to retrieve a content URL and related metadata from any service:
 3. If you want to provide asset metadata, most notably for tracker integration (see next section), just define a corresponding type and associate an instance with your asset.
 4. Create a ``PlayerItem`` with the corresponding initializer taking a publisher as argument.
 
-The resulting player item can then be played in a Pillarbox ``Player`` instance. It can also be shared so that other products can easily play content you provide.
+The resulting player item can then be played in the ``Player`` instance. It can also be shared so that other products can easily play content you provide.
 
 ## Background video playback
 
