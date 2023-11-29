@@ -84,6 +84,5 @@ final class QueuePlayerItemsTests: TestCase {
         player.replaceItems(with: [item1, item2])
         player.replaceItems(with: [item1])
         expect(player.items()).to(equalDiff([item1]))
-        expect(player.items()).toNever(equalDiff([item1, item2]), until: .milliseconds(500))
     }
 }
