@@ -10,9 +10,23 @@ import SwiftUI
 
 /// An observable object which tracks playback progress.
 ///
-/// Progress trackers can be instantiated in a SwiftUI view hierarchy to trigger local view updates at a specific
-/// pace, avoiding unnecessary refreshes in other parts of the view hierarchy that do not need to be periodically
-/// refreshed.
+/// A progress tracker is an [ObservableObject](https://developer.apple.com/documentation/combine/observableobject) 
+/// used to read and update the progress of an associated ``Player``. It is used as follows:
+///
+/// 1. Instantiate a `ProgressTracker` in your view hierarchy, setting up the refresh interval you need. You should
+///    instantiate a progress tracker in the narrowest possible view scope so that refreshes only affect a small
+///    portion of your view hierarchy, especially if the applied refresh interval is small.
+/// 2. Bind the progress tracker to a ``Player`` instance by applying the ``SwiftUI/View/bind(_:to:)-sneb``
+///    modifier.
+/// 3. The current progress can be retrieved from the ``progress`` property and displayed in any way you want. Use
+///    the ``range`` property to determine the currently available range, and ``isProgressAvailable`` to know whether
+///    progress should actually be displayed.
+/// 4. The current progress can be updated by mutating the ``progress`` property. Be sure to set the ``isInteracting``
+///    property to `true` while progress is updated interactively so that changes take precedence over reported values
+///    during the interaction.
+///
+/// The Player framework also provides automatic progress interaction integration with the SwiftUI standard slider, see
+/// ``SwiftUI/Slider/init(progressTracker:label:minimumValueLabel:maximumValueLabel:onEditingChanged:)``.
 public final class ProgressTracker: ObservableObject {
     /// The player to attach.
     ///
@@ -78,6 +92,10 @@ public final class ProgressTracker: ObservableObject {
         _progress != nil ? 0...1 : 0...0
     }
 
+    /// A Boolean reporting whether progress information is available.
+    ///
+    /// This Boolean is a recommendation you can use to entirely hide progress information in cases where it is not
+    /// meaningful (e.g. when loading content or for livestreams).
     public var isProgressAvailable: Bool {
         _progress != nil
     }
