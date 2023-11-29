@@ -2,27 +2,45 @@
     @Intro(title: "Creating a basic user interface") {
         Learn how you create a custom player user interface for your app. Discover how you can iterate on your ideas. Add basic playback controls and learn how to use playback state to adjust the appearance of your user interface. 
     }
-    
-    @Section(title: "Create a new project and import Player") {
+
+    @Section(title: "Play and Pause") {
         @ContentAndMedia {
-            Create and configure an Xcode project that uses Player.
+            Create a basic play and pause user interface by following these steps:
         }
-        
+
         @Steps {
             @Step {
-                Create a new project using the iOS App template.
+                Start by creating a player view.
             }
             
             @Step {
-                Enter "ProgressTracking" as the Product Name. 
+                Import the player package. 
             }
             
             @Step {
-                Select "SwiftUI" from the Interface pop-up menu and "SwiftUI App" from the Life Cycle pop-up menu, then click Next. Choose a location to save the project on your Mac.
+                Instantiate the player.
             }
 
             @Step {
-                Add the Player dependency to the project.
+                Add the video view to display the player content.
+            }
+
+            @Step {
+                Add a black background color and ignore safe area to get an immersive experience. 
+            }
+
+            @Step {
+                Add a button to play and pause the player.
+                At this step you are able to play and pause the player.
+                But the button has the wrong step.
+            }
+            
+            @Step {
+                Listen the player state.
+            }
+            
+            @Step {
+                Update the button to reflect the player state.
             }
         }
     }
