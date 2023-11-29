@@ -18,3 +18,14 @@ COMMON__BUNDLE_IDENTIFIER = Pillarbox-demo
 
 COMMON__BUNDLE_IDENTIFIER_SUFFIX[config=Nightly] = .nightly
 COMMON__BUNDLE_IDENTIFIER_SUFFIX[config=Debug] = .debug
+
+// Setup to enable platform suffixes to enable sources or resources for a specific platform only
+// See https://davedelong.com/blog/2018/07/25/conditional-compilation-in-swift-part-2/
+IOS_FILES = *~ios.*
+TVOS_FILES = *~tvos.*
+
+EXCLUDED_SOURCE_FILE_NAMES = $(IOS_FILES) $(TVOS_FILES)
+
+INCLUDED_SOURCE_FILE_NAMES =
+INCLUDED_SOURCE_FILE_NAMES[sdk=iphone*] = $(IOS_FILES)
+INCLUDED_SOURCE_FILE_NAMES[sdk=appletv*] = $(TVOS_FILES)

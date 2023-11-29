@@ -14,7 +14,7 @@ A player can manage the playback of a several media item from various locations 
 
 ## Create a Player
 
-In your [SwiftUI](https://developer.apple.com/documentation/swiftui) view simply instantiate and store a ``Player/Player`` as a [@StateObject](https://developer.apple.com/documentation/swiftui/stateobject).
+In your [SwiftUI](https://developer.apple.com/documentation/swiftui) view simply instantiate and store a ``Player`` as a [@StateObject](https://developer.apple.com/documentation/swiftui/stateobject).
 
 @TabNavigator {
     @Tab("Empty") {
@@ -71,7 +71,7 @@ Here is how to retrieve a content URL and related metadata from any service:
 3. If you want to provide asset metadata, most notably for tracker integration (see next section), just define a corresponding type and associate an instance with your asset.
 4. Create a ``PlayerItem`` with the corresponding initializer taking a publisher as argument.
 
-The resulting player item can then be played in the ``Player/Player`` instance. It can also be shared so that other products can easily play content you provide.
+The resulting player item can then be played in the ``Player`` instance. It can also be shared so that other products can easily play content you provide.
 
 ## Background video playback
 
@@ -81,7 +81,7 @@ In other words, you can ask your player on how to behave when the app goes into 
 ## Playback speed
 
 The player also allows you to control the playback speed of the stream.
-You can adjust the speed at which the stream is played using the ``Player/Player/setDesiredPlaybackSpeed(_:)`` method or by using ``Player/Player/playbackSpeed`` property.
+You can adjust the speed at which the stream is played using the ``Player/setDesiredPlaybackSpeed(_:)`` method or by using ``Player/playbackSpeed`` property.
 
 @TabNavigator {
     @Tab("Method") {
