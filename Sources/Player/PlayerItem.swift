@@ -7,7 +7,15 @@
 import AVFoundation
 import Combine
 
-/// An item to be inserted into a player.
+/// This class represents a playable item that can be inserted into a ``Player/Player``.
+///
+/// It provides convenient initialization methods for different types of assets:
+///
+/// - Simple assets which can be played from a simple URL.
+/// - Custom assets which require custom resource loading.
+/// - Encrypted assets which require a FairPlay content key session.
+///
+/// - Note: You can also create your own ``PlayerItem`` by extending the class.
 public final class PlayerItem: Equatable {
     @Published private(set) var asset: any Assetable
 

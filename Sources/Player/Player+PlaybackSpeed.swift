@@ -30,7 +30,7 @@ public extension Player {
 
     /// Sets the desired playback speed.
     ///
-    /// - Parameter playbackSpeed: The playback speed.
+    /// - Parameter playbackSpeed: The playback speed. The default value is 1.
     ///
     /// This value might not be applied immediately or might not be applicable at all. You must check
     /// `effectivePlaybackSpeed` to obtain the actually applied speed.
