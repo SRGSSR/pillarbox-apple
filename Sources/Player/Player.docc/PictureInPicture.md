@@ -4,7 +4,7 @@
     @PageColor(purple)
 }
 
-Enable uninterrupted playback experiences in Picture in Picture.
+Enable uninterrupted video playback experiences when multitasking.
 
 ## Overview
 

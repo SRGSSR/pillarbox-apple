@@ -1,6 +1,6 @@
 @Tutorial(time: 20) {
-    @Intro(title: "Understanding progress tracking") {
-        This tutorial guides you through integration of progress tracking in a custom player user interface, letting your users observe and interactively update the current playback progress. 
+    @Intro(title: "Integrating with the Control Center") {
+        Enable playback steering from the Control Center.
     }
     
     @Section(title: "Create a new project and add import Player") {
