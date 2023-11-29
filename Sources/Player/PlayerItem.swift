@@ -7,7 +7,7 @@
 import AVFoundation
 import Combine
 
-/// This class represents a playable item that can be inserted into a ``Player/Player``.
+/// This class represents a playable item that can be inserted into a ``Player``.
 ///
 /// It provides convenient initialization methods for different types of assets:
 ///
