@@ -7,6 +7,11 @@
 
 Play audio and video content.
 
+You use the player to manage the playback of a media item, for example starting and stopping playback, or even seeking to a particular time.
+A player can manage the playback of a several media item from various locations to play sequentially.
+
+- Important: Since the player is based on [AVFoundation](https://developer.apple.com/documentation/avfoundation), it can only read QuickTime movies, MP3 audio files, and audiovisual media served via HTTP Live Streaming.
+
 ## Create a Player
 
 In your [SwiftUI](https://developer.apple.com/documentation/swiftui) view simply instantiate and store a ``Player/Player`` as a [@StateObject](https://developer.apple.com/documentation/swiftui/stateobject).
