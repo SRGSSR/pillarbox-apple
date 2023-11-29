@@ -5,7 +5,7 @@
     @PageImage(purpose: card, source: "pipes", alt: "An image depicting pipes.")
 }
 
-Play audio and video content.  
+Play audio and video content.
 
 ## Create a Player
 
@@ -47,6 +47,13 @@ In your SwiftUI view simply instantiate and store a ``Player/Player`` as a @Stat
         ```
     }
 }
+
+## Configuration
+
+The player can be customized during the instantiation phase by providing a dedicated ``PlayerConfiguration`` object.
+It is crucial to note that the configuration is set only at the time of instantiation and remains constant throughout the player's entire lifecycle.
+
+- Tip: If you wish to apply a new configuration, you must create a new player instance with a newly created configuration.
 
 ## Custom player items
 
