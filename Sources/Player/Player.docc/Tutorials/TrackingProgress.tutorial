@@ -1,8 +1,8 @@
 @Tutorial(time: 20) {
-    @XcodeRequirement(title: "Xcode 15", destination: "https://developer.apple.com/download/")
-    
     @Intro(title: "Tracking progress") {
-        Track playback progress and make it possible for users to update it interactively. 
+        Track playback progress and make it possible for users to update it interactively.
+        
+        @Image(source: progress-tracking, alt: "An image depicting sliders.")
     }
     
     @Section(title: "Create a new project and add Player as a dependency") {
@@ -30,7 +30,7 @@
             }
 
             @Step {
-                Choose File > Add Package Dependencies and search for https://github.com/SRGSSR/pillarbox-apple.git, then click Add Package.
+                Choose File > Add Package Dependencies and search for [https://github.com/SRGSSR/pillarbox-apple.git](https://github.com/SRGSSR/pillarbox-apple.git), then click Add Package.
                 
                 @Image(source: xcode-add-package, alt: "A screenshot of the Xcode package setup screen.")
             }
@@ -45,39 +45,41 @@
     
     @Section(title: "Display progress in the player user interface") {
         @ContentAndMedia {
-            Create and configure an Xcode project that uses Player.
+            Create a basic player that is able to play a video. Display the video on screen and add a slider that displays and controls the current progress.
         }
         
         @Steps {
             @Step {
-                Create a new project using the iOS App template.
+                Add a ``Player`` to your `ContentView` and store it as a `@StateObject` associated with the view. Provide the player with a simple ``PlayerItem`` and a URL of your choice. 
                 
-                @Code(name: "ProgressTrackerTutorial.swift", file: progress-tracker-tutorial-1.swift) {
-                    @Image(source: airplay, alt: "A screenshot from the Xcode preview as it would appear on iPhone, with the text, Hello, World!, centered in the middle of the display.")
-                }
+                @Code(name: "ContentView.swift", file: progress-tracker-tutorial-1.swift)
             }
             
             @Step {
-                Enter "ProgressTracking" as the Product Name.
+                Add a ``VideoView`` to your `ContentView` body to display the player content. Call `play()` when the view appears.
                 
-                @Code(name: "ProgressTrackerTutorial.swift", file: progress-tracker-tutorial-2.swift) {
-                    @Image(source: control-center, alt: "A screenshot from the Xcode preview as it would appear on iPhone, with the text, Hello, World!, centered in the middle of the display.")
-                }
+                @Code(name: "ContentView.swift", file: progress-tracker-tutorial-2.swift)
             }
             
             @Step {
-                Select "SwiftUI" from the Interface pop-up menu and "SwiftUI App" from the Life Cycle pop-up menu, then click Next. Choose a location to save the project on your Mac.
+                Add a ``ProgressTracker`` to your `ContentView` and store it as a `@StateObject` associated with the view. Set its update interval to 1/10th of a second.
                 
-                @Code(name: "ProgressTrackerTutorial.swift", file: progress-tracker-tutorial-3.swift) {
-                    @Image(source: fairplay, alt: "A screenshot from the Xcode preview as it would appear on iPhone, with the text, Hello, World!, centered in the middle of the display.")
-                }
+                @Code(name: "ContentView.swift", file: progress-tracker-tutorial-3.swift)
             }
 
             @Step {
-                Add the Player dependency to the project.
+                Bind the progress tracker to the player using the `bind(_:to:)` modifier. 
                 
-                @Code(name: "ProgressTrackerTutorial.swift", file: progress-tracker-tutorial-4.swift) {
-                    @Image(source: reel, alt: "A screenshot from the Xcode preview as it would appear on iPhone, with the text, Hello, World!, centered in the middle of the display.")
+                @Code(name: "ContentView.swift", file: progress-tracker-tutorial-4.swift)
+            }
+            
+            @Step {
+                Use `Slider/init(progressTracker:)` to create a slider that reflects and controls the current progress. Add the slider as overlay with bottom alignment.
+                
+                Build and run the app to see the result. Observe that the slider automatically updates as playback progresses and that it can be used to move playback to another position.
+                
+                @Code(name: "ContentView.swift", file: progress-tracker-tutorial-5.swift) {
+                    @Image(source: tutorial-progress-tracker-result, alt: "A screenshot of an iPhone playing a video with a slider displaying the current progress.")
                 }
             }
         }

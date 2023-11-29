@@ -16,7 +16,7 @@
     @Chapter(name: "Tracking progress") {
         Track playback progress and make it possible for users to update it interactively. 
         
-        @Image(source: custom-user-interface, alt: "An image of a phone displaying some content.")
+        @Image(source: progress-tracking, alt: "An image depicting sliders.")
         
         @TutorialReference(tutorial: "doc:TrackingProgress")
     }
