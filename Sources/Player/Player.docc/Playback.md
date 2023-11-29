@@ -63,54 +63,40 @@ The resulting player item can then be played in the ``Player/Player`` instance. 
 
 ## Background video playback
 
-@Row {
-    @Column {
-        @Image(source: background-video-playback)
+The player offers the capability for background video playback through the use of the ``Player/Player/audiovisualBackgroundPlaybackPolicy`` property.
+In other words, you can ask your player on how to behave when the app goes into the background.
+
+@TabNavigator {
+    @Tab("Automatic") {
+        Indicates that the system is free to decide. This is the default policy.
+        ```swift
+        let player = Player()
+        player.audiovisualBackgroundPlaybackPolicy = .automatic
+
+        ```
     }
-    @Column(size: 2) {
-        The player offers the capability for background video playback through the use of the ``Player/Player/audiovisualBackgroundPlaybackPolicy`` property.
-        In other words, you can ask your player on how to behave when the app goes into the background.
+    @Tab("Pauses") {
+        Indicates that the player must be paused on going to background.
+        ```swift
+        let player = Player()
+        player.audiovisualBackgroundPlaybackPolicy = .pauses
 
-        @TabNavigator {
-            @Tab("Automatic") {
-                Indicates that the system is free to decide. This is the default policy.
-                ```swift
-                let player = Player()
-                player.audiovisualBackgroundPlaybackPolicy = .automatic
+        ```
+    }
+    @Tab("Continues if possible") {
+        Indicates that the player continues to play if possible in background.
+        ```swift
+        let player = Player()
+        player.audiovisualBackgroundPlaybackPolicy = .continuesIfPossible
 
-                ```
-            }
-            @Tab("Pauses") {
-                Indicates that the player must be paused on going to background.
-                ```swift
-                let player = Player()
-                player.audiovisualBackgroundPlaybackPolicy = .pauses
-
-                ```
-            }
-            @Tab("Continues if possible") {
-                Indicates that the player continues to play if possible in background.
-                ```swift
-                let player = Player()
-                player.audiovisualBackgroundPlaybackPolicy = .continuesIfPossible
-
-                ```
-            }
-        }
+        ```
     }
 }
 
 ## Playback speed
 
-@Row {
-    @Column(size: 10) {
-        The player also allows you to control the playback speed of the stream.
-        You can adjust the speed at which the stream is played using the ``Player/Player/setDesiredPlaybackSpeed(_:)`` method or by using ``Player/Player/playbackSpeed`` property.
-    }
-    @Column {
-        @Image(source: playback-speed)
-    }
-}
+The player also allows you to control the playback speed of the stream.
+You can adjust the speed at which the stream is played using the ``Player/Player/setDesiredPlaybackSpeed(_:)`` method or by using ``Player/Player/playbackSpeed`` property.
 
 @TabNavigator {
     @Tab("Method") {
@@ -130,7 +116,7 @@ The resulting player item can then be played in the ``Player/Player`` instance. 
             }
         }
         .pickerStyle(.inline)
-        
+
         ```
     }
 }
