@@ -102,7 +102,9 @@ To learn more about integration of Pillarbox into your project please have a loo
 
 # Documentation
 
-Follow the links below for further documentation:
+Documentation is available as a [DocC](https://developer.apple.com/documentation/docc) documentation catalog. This catalog must be built by opening the project with Xcode and selecting _Product_ > _Build Documentation_. You can then access it right from within the Xcode documentation window.
+
+Further documentation is also available by following the links below:
 
 - [Stream packaging advice](STREAM_PACKAGING_ADVICE.md)
 - [Known issues](KNOWN_ISSUES.md)
