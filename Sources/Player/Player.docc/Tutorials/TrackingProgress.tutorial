@@ -79,7 +79,7 @@
                 Build and run the app to see the result. Observe that the slider automatically updates as playback progresses and that it can be used to move playback to another position.
                 
                 @Code(name: "ContentView.swift", file: progress-tracker-tutorial-5.swift) {
-                    @Image(source: tutorial-progress-tracker-result, alt: "A screenshot of an iPhone playing a video with a slider displaying the current progress.")
+                    @Image(source: tutorial-progress-tracker-result, alt: "A screenshot of an iPhone playing a video with a slider to control the current progress.")
                 }
             }
         }
