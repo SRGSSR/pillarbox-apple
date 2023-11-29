@@ -11,35 +11,59 @@
         @Steps {
             @Step {
                 Start by creating a player view.
+                @Code(name: "PlayerView.swift", file: basic-ui-tutorial-1.swift) {
+                    @Image(source: basic-ui-tutorial-1.jpg, alt: "A screenshot from a iPhone simulator")
+                }
             }
             
             @Step {
-                Import the player package. 
+                Import the player package.
+                @Code(name: "PlayerView.swift", file: basic-ui-tutorial-2.swift) {
+                    @Image(source: basic-ui-tutorial-2.jpg, alt: "A screenshot from a iPhone simulator")
+                }
             }
             
             @Step {
                 Instantiate the player.
+                @Code(name: "PlayerView.swift", file: basic-ui-tutorial-3.swift) {
+                    @Image(source: basic-ui-tutorial-3.jpg, alt: "A screenshot from a iPhone simulator")
+                }
             }
 
             @Step {
                 Add the video view to display the player content.
+                @Code(name: "PlayerView.swift", file: basic-ui-tutorial-4.swift) {
+                    @Image(source: basic-ui-tutorial-4.jpg, alt: "A screenshot from a iPhone simulator")
+                }
             }
 
             @Step {
-                Add a black background color and ignore safe area to get an immersive experience. 
+                Add a black background color and ignore safe area to get an immersive experience.
+                @Code(name: "PlayerView.swift", file: basic-ui-tutorial-5.swift) {
+                    @Image(source: basic-ui-tutorial-5.jpg, alt: "A screenshot from a iPhone simulator")
+                }
             }
 
             @Step {
+                @Code(name: "PlayerView.swift", file: basic-ui-tutorial-6.swift) {
+                    @Image(source: basic-ui-tutorial-6.jpg, alt: "A screenshot from a iPhone simulator")
+                }
                 Add a button to play and pause the player.
                 At this step you are able to play and pause the player.
                 But the button has the wrong step.
             }
             
             @Step {
+                @Code(name: "PlayerView.swift", file: basic-ui-tutorial-7.swift) {
+                    @Image(source: basic-ui-tutorial-7.jpg, alt: "A screenshot from a iPhone simulator")
+                }
                 Listen the player state.
             }
             
             @Step {
+                @Code(name: "PlayerView.swift", file: basic-ui-tutorial-8.swift) {
+                    @Image(source: basic-ui-tutorial-8.jpg, alt: "A screenshot from a iPhone simulator")
+                }
                 Update the button to reflect the player state.
             }
         }
