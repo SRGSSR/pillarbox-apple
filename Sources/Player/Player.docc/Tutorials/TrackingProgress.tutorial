@@ -1,28 +1,44 @@
 @Tutorial(time: 20) {
+    @XcodeRequirement(title: "Xcode 15", destination: "https://developer.apple.com/download/")
+    
     @Intro(title: "Tracking progress") {
         Track playback progress and make it possible for users to update it interactively. 
     }
     
-    @Section(title: "Create a new project and add import Player") {
+    @Section(title: "Create a new project and add Player as a dependency") {
         @ContentAndMedia {
-            Create and configure an Xcode project that uses Player.
+            Create and configure an Xcode project that uses the Player framework.
         }
         
         @Steps {
             @Step {
-                Create a new project using the iOS App template.
+                Open Xcode and either click "Create New Project" in Xcode’s startup window, or choose File > New > Project.
+                
+                @Image(source: xcode-splash-screen, alt: "A screenshot of the Xcode splash screen.")
             }
             
             @Step {
-                Enter "ProgressTracking" as the Product Name. 
+                In the template selector, select iOS as the platform, select the "App" template, and then click Next.
+                
+                @Image(source: xcode-new-project, alt: "A screenshot of the Xcode project creation screen.")
             }
             
             @Step {
-                Select "SwiftUI" from the Interface pop-up menu and "SwiftUI App" from the Life Cycle pop-up menu, then click Next. Choose a location to save the project on your Mac.
+                Enter "Tutorial" as the product name, select "SwiftUI" for the interface and "Swift" for the language, and click Next. Choose a location to save the project on your Mac.
+                
+                @Image(source: xcode-new-project-settings, alt: "A screenshot of the Xcode new project settings screen.")
             }
 
             @Step {
-                Add the Player dependency to the project.
+                Choose File > Add Package Dependencies and search for https://github.com/SRGSSR/pillarbox-apple.git, then click Add Package.
+                
+                @Image(source: xcode-add-package, alt: "A screenshot of the Xcode package setup screen.")
+            }
+            
+            @Step {
+                Edit package products so that only Player is added to the Tutorial application.
+                
+                @Image(source: xcode-select-package-products, alt: "A screenshot of the Xcode package product selection screen.")
             }
         }
     }
