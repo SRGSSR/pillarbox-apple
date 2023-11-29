@@ -508,7 +508,6 @@ private struct PlaybackButton: View {
         }
         .aspectRatio(contentMode: .fit)
         .frame(minWidth: 120, maxHeight: 90)
-        .replaceSymbolEffect()
     }
 
     private func play() {

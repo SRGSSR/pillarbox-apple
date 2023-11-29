@@ -18,18 +18,6 @@ private struct PulseSymbolEffect: ViewModifier {
     }
 }
 
-private struct ReplaceSymbolEffect: ViewModifier {
-    func body(content: Content) -> some View {
-        if #available(iOS 17.0, tvOS 17.0, *) {
-            content
-                .contentTransition(.symbolEffect(.replace))
-        }
-        else {
-            content
-        }
-    }
-}
-
 extension View {
     /// Prevents touch propagation to views located below the receiver.
     func preventsTouchPropagation() -> some View {
@@ -50,9 +38,5 @@ extension View {
 
     func pulseSymbolEffect() -> some View {
         modifier(PulseSymbolEffect())
-    }
-
-    func replaceSymbolEffect() -> some View {
-        modifier(ReplaceSymbolEffect())
     }
 }

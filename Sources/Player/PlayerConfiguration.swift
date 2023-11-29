@@ -13,7 +13,7 @@ public struct PlayerConfiguration {
 
     /// A Boolean value that indicates whether the player allows switching to external playback when mirroring.
     ///
-    /// This property has no effect when `allowsExternalPlayback` is false.
+    /// This property has no effect when `allowsExternalPlayback` is `false`.
     public let usesExternalPlaybackWhileMirroring: Bool
 
     /// A Boolean indicating whether video playback prevents display and device sleep.
