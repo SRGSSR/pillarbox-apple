@@ -36,10 +36,10 @@ public final class PlayerItem: Equatable {
             .assign(to: &$asset)
     }
 
-    /// Creates a player item from a ``Asset``.
+    /// Creates a player item from an ``Asset``.
     ///
     /// - Parameters:
-    ///   - url: The URL to play.
+    ///   - asset: The asset to play.
     ///   - configuration: A closure to configure player items created from the receiver.
     public convenience init<M>(asset: Asset<M>, trackerAdapters: [TrackerAdapter<M>] = []) where M: AssetMetadata {
         self.init(publisher: Just(asset), trackerAdapters: trackerAdapters)
