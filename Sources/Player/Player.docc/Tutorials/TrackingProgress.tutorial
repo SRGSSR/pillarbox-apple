@@ -26,4 +26,44 @@
             }
         }
     }
+    
+    @Section(title: "Display progress in the player user interface") {
+        @ContentAndMedia {
+            Create and configure an Xcode project that uses Player.
+        }
+        
+        @Steps {
+            @Step {
+                Create a new project using the iOS App template.
+                
+                @Code(name: "ProgressTrackerTutorial.swift", file: progress-tracker-tutorial-1.swift) {
+                    @Image(source: airplay, alt: "A screenshot from the Xcode preview as it would appear on iPhone, with the text, Hello, World!, centered in the middle of the display.")
+                }
+            }
+            
+            @Step {
+                Enter "ProgressTracking" as the Product Name.
+                
+                @Code(name: "ProgressTrackerTutorial.swift", file: progress-tracker-tutorial-2.swift) {
+                    @Image(source: control-center, alt: "A screenshot from the Xcode preview as it would appear on iPhone, with the text, Hello, World!, centered in the middle of the display.")
+                }
+            }
+            
+            @Step {
+                Select "SwiftUI" from the Interface pop-up menu and "SwiftUI App" from the Life Cycle pop-up menu, then click Next. Choose a location to save the project on your Mac.
+                
+                @Code(name: "ProgressTrackerTutorial.swift", file: progress-tracker-tutorial-3.swift) {
+                    @Image(source: fairplay, alt: "A screenshot from the Xcode preview as it would appear on iPhone, with the text, Hello, World!, centered in the middle of the display.")
+                }
+            }
+
+            @Step {
+                Add the Player dependency to the project.
+                
+                @Code(name: "ProgressTrackerTutorial.swift", file: progress-tracker-tutorial-4.swift) {
+                    @Image(source: reel, alt: "A screenshot from the Xcode preview as it would appear on iPhone, with the text, Hello, World!, centered in the middle of the display.")
+                }
+            }
+        }
+    }
 }
