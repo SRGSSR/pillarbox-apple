@@ -9,7 +9,7 @@ Play audio and video content.
 
 ## Create a Player
 
-In your SwiftUI view simply instantiate and store a ``Player/Player`` as a @StateObject.
+In your [SwiftUI](https://developer.apple.com/documentation/swiftui) view simply instantiate and store a ``Player/Player`` as a [@StateObject](https://developer.apple.com/documentation/swiftui/stateobject).
 
 @TabNavigator {
     @Tab("Empty") {
