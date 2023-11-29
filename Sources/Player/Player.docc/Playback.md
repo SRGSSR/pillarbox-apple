@@ -75,35 +75,8 @@ The resulting player item can then be played in the ``Player/Player`` instance. 
 
 ## Background video playback
 
-The player offers the capability for background video playback through the use of the ``Player/Player/audiovisualBackgroundPlaybackPolicy`` property.
+The player offers the capability for background video playback through the use of the [audiovisualBackgroundPlaybackPolicy](https://developer.apple.com/documentation/avfoundation/avplayer/3787548-audiovisualbackgroundplaybackpol) property.
 In other words, you can ask your player on how to behave when the app goes into the background.
-
-@TabNavigator {
-    @Tab("Automatic") {
-        Indicates that the system is free to decide. This is the default policy.
-        ```swift
-        let player = Player()
-        player.audiovisualBackgroundPlaybackPolicy = .automatic
-
-        ```
-    }
-    @Tab("Pauses") {
-        Indicates that the player must be paused on going to background.
-        ```swift
-        let player = Player()
-        player.audiovisualBackgroundPlaybackPolicy = .pauses
-
-        ```
-    }
-    @Tab("Continues if possible") {
-        Indicates that the player continues to play if possible in background.
-        ```swift
-        let player = Player()
-        player.audiovisualBackgroundPlaybackPolicy = .continuesIfPossible
-
-        ```
-    }
-}
 
 ## Playback speed
 

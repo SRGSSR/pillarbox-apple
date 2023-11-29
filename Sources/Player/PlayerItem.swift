@@ -7,17 +7,13 @@
 import AVFoundation
 import Combine
 
-/// An item to be inserted into a player.
+/// This class represents a playable item that can be inserted into a ``Player/Player``.
 ///
-/// This class represents a playable item that can be inserted into a ``Player``.
-/// It provides convenient initialization methods for different types of assets, including simple media, custom resource loading, and encrypted content.
+/// It provides convenient initialization methods for different types of assets:
 ///
-/// Three provided items are as follows:
-///
-/// - Simple: ``simple(url:metadata:trackerAdapters:configuration:)``, which represents a playable item with a URL.
-/// - Custom: ``custom(url:delegate:metadata:trackerAdapters:configuration:)``, which represents an item with custom resource loading.
-/// - Encrypted: ``encrypted(url:delegate:metadata:trackerAdapters:configuration:)``, which represents an item loaded with a content key session, 
-/// suitable for playing encrypted content.
+/// - Simple assets which can be played from a simple URL.
+/// - Custom assets which require custom resource loading.
+/// - Encrypted assets which require a FairPlay content key session.
 ///
 /// - Note: You can also create your own ``PlayerItem`` by extending the class.
 public final class PlayerItem: Equatable {
