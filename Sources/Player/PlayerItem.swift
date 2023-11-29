@@ -21,7 +21,7 @@ public final class PlayerItem: Equatable {
 
     private let id = UUID()
 
-    /// Creates the item from an `Asset` publisher data source.
+    /// Creates the item from an ``Asset`` publisher data source.
     public init<P, M>(publisher: P, trackerAdapters: [TrackerAdapter<M>] = []) where P: Publisher, M: AssetMetadata, P.Output == Asset<M> {
         asset = Asset<M>.loading.withId(id).withTrackerAdapters(trackerAdapters)
         publisher
@@ -36,10 +36,10 @@ public final class PlayerItem: Equatable {
             .assign(to: &$asset)
     }
 
-    /// Creates a player item from a URL.
+    /// Creates a player item from an ``Asset``.
     ///
     /// - Parameters:
-    ///   - url: The URL to play.
+    ///   - asset: The asset to play.
     ///   - configuration: A closure to configure player items created from the receiver.
     public convenience init<M>(asset: Asset<M>, trackerAdapters: [TrackerAdapter<M>] = []) where M: AssetMetadata {
         self.init(publisher: Just(asset), trackerAdapters: trackerAdapters)
