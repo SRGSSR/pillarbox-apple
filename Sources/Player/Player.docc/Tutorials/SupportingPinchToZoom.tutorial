@@ -18,7 +18,9 @@
                 
                 We start our implementation from a basic video playback user interface.
                 
-                @Code(name: "ContentView.swift", file: pinch-to-zoom-tutorial-1.swift)
+                @Code(name: "ContentView.swift", file: pinch-to-zoom-tutorial-1.swift) {
+                    @Image(source: pinch-to-zoom-tutorial-1, alt: "A screenshot of an iPhone playing a video.")
+                }
             }
             
             @Step {
@@ -32,7 +34,9 @@
                 
                 Run the project to check that the zoom gesture is working correctly.
                 
-                @Code(name: "ContentView.swift", file: pinch-to-zoom-tutorial-3.swift)
+                @Code(name: "ContentView.swift", file: pinch-to-zoom-tutorial-3.swift) {
+                    @Image(source: pinch-to-zoom-tutorial-3, alt: "A screenshot of an iPhone playing a video.")
+                }
             }
         }
     }
