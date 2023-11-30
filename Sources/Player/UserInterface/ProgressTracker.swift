@@ -8,16 +8,21 @@ import Combine
 import CoreMedia
 import SwiftUI
 
-/// An observable object which tracks playback progress.
+/// An observable object tracking playback progress.
 ///
 /// A progress tracker is an [ObservableObject](https://developer.apple.com/documentation/combine/observableobject) 
-/// used to read and update the progress of an associated ``Player``. It is used as follows:
+/// used to read and update the progress of an associated ``Player``. It automatically provides current progress
+/// information as well as the available range for its values. It also ensures that interactive progress updates
+/// do not conflict with reported progress updates, ensuring a smooth user experience.
+///
+/// ## Usage
+///
+/// A progress tracker is used as follows:
 ///
 /// 1. Instantiate a `ProgressTracker` in your view hierarchy, setting up the refresh interval you need. You should
 ///    instantiate a progress tracker in the narrowest possible view scope so that refreshes only affect a small
 ///    portion of your view hierarchy, especially if the applied refresh interval is small.
-/// 2. Bind the progress tracker to a ``Player`` instance by applying the ``SwiftUI/View/bind(_:to:)-sneb``
-///    modifier.
+/// 2. Bind the progress tracker to a ``Player`` instance by applying the ``SwiftUI/View/bind(_:to:)-sneb`` modifier.
 /// 3. The current progress can be retrieved from the ``progress`` property and displayed in any way you want. Use
 ///    the ``range`` property to determine the currently available range, and ``isProgressAvailable`` to know whether
 ///    progress should actually be displayed.
@@ -27,6 +32,8 @@ import SwiftUI
 ///
 /// The Player framework also provides automatic progress interaction integration with the SwiftUI standard slider, see
 /// ``SwiftUI/Slider/init(progressTracker:label:minimumValueLabel:maximumValueLabel:onEditingChanged:)``.
+///
+/// > Note: For step-by-step integration instructions have a look at the associated <doc:TrackingProgress> tutorial.
 public final class ProgressTracker: ObservableObject {
     /// The player to attach.
     ///

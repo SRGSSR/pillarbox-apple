@@ -12,8 +12,34 @@ import UIKit
 
 /// An observable object tracking user interface visibility.
 ///
-/// The tracker automatically provides meaningful default behaviors, most notably to automatically turn visibility off
-/// after a delay during playback. This mechanism is disabled when playback is paused or when VoiceOver is enabled.
+/// A visibility tracker is an [ObservableObject](https://developer.apple.com/documentation/combine/observableobject)
+/// used to manage playback control visibility. It provides several standard behaviors that are usually expected from
+/// player user interfaces:
+///
+/// - Users should be able to toggle user interface visibility on or off with some kind of interaction (e.g. tapping
+///   the player interface itself).
+/// - The user interface must automatically hide after some delay when the player is actually playing content (except
+///   when VoiceOver has been enabled).
+/// - The user interface must be automatically revealed when playback is paused externally (e.g. by another app or
+///   through the Control Center) so that playback can be quickly resumed.
+///
+/// ## Usage
+///
+/// A visibility tracker is used as follows:
+///
+/// 1. Instantiate a `VisibilityTracker` in your view hierarchy. You can setup the initial visibility status as well
+///    as the delay after which controls must be automatically hidden during playback.
+/// 2. Bind the visibility tracker to a ``Player`` instance by applying the ``SwiftUI/View/bind(_:to:)-q4hv`` modifier.
+/// 3. Use ``isUserInterfaceHidden`` to adjust visibility of your user interface components based on the current
+///    visibility tracker recommendation.
+/// 4. Introduce an interaction (e.g. a tap gesture) that lets your users toggle user interface visibility on or off.
+///    Simply call ``toggle()`` from the action associated with this interaction.
+/// 5. Call ``reset()`` when a user interaction should prevent the user interface from being automatically hidden. You
+///    can for example call this method during slider interactions so that the user interface stays visible while the
+///    user is still moving the slider.
+///
+///
+/// > Note: For step-by-step integration instructions have a look at the associated <doc:TrackingVisibility> tutorial.
 @available(iOS 16, *)
 @available(tvOS, unavailable)
 public final class VisibilityTracker: ObservableObject {
