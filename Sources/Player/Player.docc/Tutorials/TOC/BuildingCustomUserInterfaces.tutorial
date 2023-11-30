@@ -4,41 +4,28 @@
         
         @Image(source: custom-user-interface, alt: "An image of a phone displaying some content.")
     }
-        
-    @Chapter(name: "Creating a basic user interface") {
-        Add basic playback controls and visual clues about the playback.
+    
+    @Chapter(name: "Creating a basic playback app") {
+        Create a basic playback app including Player as a dependency.
         
         @Image(source: custom-user-interface, alt: "An image of a phone displaying some content.")
         
+        @TutorialReference(tutorial: "doc:CreatingProjectWithPlayerDependency")
         @TutorialReference(tutorial: "doc:CreatingBasicUserInterface")
     }
     
-    @Chapter(name: "Tracking progress") {
-        Track playback progress and make it possible for users to update it interactively. 
+    @Chapter(name: "Adding standard playback user interface behaviors") {
+        Add conventional user interface behaviors to your custom user interface.   
         
-        @Image(source: progress-tracking, alt: "An image depicting sliders.")
+        @Image(source: custom-user-interface, alt: "An image of a phone displaying some content.")
         
         @TutorialReference(tutorial: "doc:TrackingProgress")
-    }
-    
-    @Chapter(name: "Tracking visibility") {
-        Manage visibility of playback controls.
-        
-        @Image(source: custom-user-interface, alt: "An image of a phone displaying some content.")
-        
         @TutorialReference(tutorial: "doc:TrackingVisibility")
-    }
-    
-    @Chapter(name: "Detecting full screen") {
-        Provide different features when your player is being displayed full screen or inline. 
-        
-        @Image(source: custom-user-interface, alt: "An image of a phone displaying some content.")
-        
         @TutorialReference(tutorial: "doc:DetectingFullScreen")
     }
     
-    @Chapter(name: "Optimizing custom layouts") {
-        Learn how you can optimize your layout to minimize unnecessary refreshes. 
+    @Chapter(name: "Iterating on custom user interfaces") {
+        Learn how you can quickky iterate on your custom user interfaces to better address your needs. 
         
         @Image(source: custom-user-interface, alt: "An image of a phone displaying some content.")
         

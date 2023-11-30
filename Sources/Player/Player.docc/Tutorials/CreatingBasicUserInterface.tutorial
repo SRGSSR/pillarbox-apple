@@ -3,7 +3,7 @@
         Learn how you create a custom player user interface for your app. Discover how you can iterate on your ideas. Add basic playback controls and learn how to use playback state to adjust the appearance of your user interface. 
     }
     
-    @Section(title: "Create a new project and add import Player") {
+    @Section(title: "Create a new project and import Player") {
         @ContentAndMedia {
             Create and configure an Xcode project that uses Player.
         }
