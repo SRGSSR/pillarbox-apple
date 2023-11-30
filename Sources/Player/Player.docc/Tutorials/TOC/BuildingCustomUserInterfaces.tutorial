@@ -4,6 +4,14 @@
         
         @Image(source: custom-user-interface, alt: "An image of a phone displaying some content.")
     }
+    
+    @Chapter(name: "Creating a project with the Player dependency") {
+        Create a project integrating Player as a Swift Package dependency.
+        
+        @Image(source: adding-package-dependency, alt: "An image depicting a settings gear.")
+        
+        @TutorialReference(tutorial: "doc:CreatingProjectWithPlayerDependency")
+    }
         
     @Chapter(name: "Creating a basic user interface") {
         Add basic playback controls and visual clues about the playback.
