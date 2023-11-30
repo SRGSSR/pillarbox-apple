@@ -21,7 +21,7 @@
 - ``range``
 - ``isProgressAvailable``
 
-### Connecting with time
+### Getting time information
 
 - ``time``
 - ``timeRange``
