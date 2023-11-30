@@ -2,13 +2,13 @@
     @Intro(title: "Playing Content") {
         Learn how to add basic audiovisual playback capabilities to an app.
         
-        @Image(source: custom-user-interface, alt: "An image of a phone displaying some content.")
+        @Image(source: custom-user-interfaces-tutorials-intro, alt: "An image of a phone displaying some content.")
     }
         
     @Chapter(name: "Loading and playing content") {
         Load content into a player and start playback. 
         
-        @Image(source: custom-user-interface, alt: "An image of a phone displaying some content.")
+        @Image(source: custom-user-interfaces-tutorials-intro, alt: "An image of a phone displaying some content.")
         
         @TutorialReference(tutorial: "doc:LoadingAndPlayingContent")
     }
@@ -16,7 +16,7 @@
     @Chapter(name: "Displaying content in the system player") {
         Use the system standard player interface to quickly display what is being played. 
         
-        @Image(source: custom-user-interface, alt: "An image of a phone displaying some content.")
+        @Image(source: custom-user-interfaces-tutorials-intro, alt: "An image of a phone displaying some content.")
         
         @TutorialReference(tutorial: "doc:DisplayingContentInSystemPlayer")
     }

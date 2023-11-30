@@ -2,7 +2,7 @@
 
 @Metadata {
     @PageColor(purple)
-    @PageImage(purpose: card, source: resource-loading, alt: "An image of a circle arrow in a cloud.")
+    @PageImage(purpose: card, source: resource-loading-article-card, alt: "An image of a circle arrow in a cloud.")
 }
 
 Customize how assets are loaded.

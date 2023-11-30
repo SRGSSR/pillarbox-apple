@@ -2,13 +2,13 @@
     @Intro(title: "Integrating With System Features") {
         Learn how you can integrate your player with standard system features.
         
-        @Image(source: custom-user-interface, alt: "An image of a phone displaying some content.")
+        @Image(source: custom-user-interfaces-tutorials-intro, alt: "An image of a phone displaying some content.")
     }
         
     @Chapter(name: "Integrating with the Control Center") {
         Enable playback steering from the Control Center. 
         
-        @Image(source: custom-user-interface, alt: "An image of a phone displaying some content.")
+        @Image(source: custom-user-interfaces-tutorials-intro, alt: "An image of a phone displaying some content.")
         
         @TutorialReference(tutorial: "doc:IntegratingWithControlCenter")
     }
@@ -16,7 +16,7 @@
     @Chapter(name: "Supporting AirPlay") {
         Enable video and audio sharing to Apple TV or AirPlay‑enabled receivers. 
         
-        @Image(source: custom-user-interface, alt: "An image of a phone displaying some content.")
+        @Image(source: custom-user-interfaces-tutorials-intro, alt: "An image of a phone displaying some content.")
         
         @TutorialReference(tutorial: "doc:SupportingAirPlay")
     }
@@ -24,7 +24,7 @@
     @Chapter(name: "Allowing Picture in Picture for Video Playback") {
         Enable uninterrupted video playback experiences when multitasking. 
         
-        @Image(source: custom-user-interface, alt: "An image of a phone displaying some content.")
+        @Image(source: custom-user-interfaces-tutorials-intro, alt: "An image of a phone displaying some content.")
         
         @TutorialReference(tutorial: "doc:SupportingBasicPictureInPicture")
         @TutorialReference(tutorial: "doc:EnablingInAppPictureInPicture")

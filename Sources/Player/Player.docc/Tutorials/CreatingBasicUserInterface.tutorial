@@ -1,6 +1,8 @@
 @Tutorial(time: 0) {
     @Intro(title: "Creating a basic user interface") {
-        Learn how you create a custom player user interface for your app. Discover how you can iterate on your ideas. Add basic playback controls and learn how to use playback state to adjust the appearance of your user interface. 
+        Learn how you create a custom player user interface for your app. Discover how you can iterate on your ideas. Add basic playback controls and learn how to use playback state to adjust the appearance of your user interface.
+        
+        @Image(source: creating-basic-user-interface-tutorial-intro, alt: "An image depicting a playback button.")
     }
 
     @Section(title: "Play and Pause") {
@@ -12,32 +14,32 @@
             @Step {
                 Start by creating a content view.
 
-                @Code(name: "ContentView.swift", file: basic-ui-play-pause-tutorial-1.swift) {
-                    @Image(source: basic-ui-play-pause-tutorial-1.jpg, alt: "A screenshot from an iPhone")
+                @Code(name: "ContentView.swift", file: creating-basic-user-interface-tutorial-1-1.swift) {
+                    @Image(source: creating-basic-user-interface-tutorial-1-1, alt: "A screenshot from an iPhone")
                 }
             }
             
             @Step {
                 Import the player package.
 
-                @Code(name: "ContentView.swift", file: basic-ui-play-pause-tutorial-2.swift) {
-                    @Image(source: basic-ui-play-pause-tutorial-2.jpg, alt: "A screenshot from an iPhone")
+                @Code(name: "ContentView.swift", file: creating-basic-user-interface-tutorial-1-2.swift) {
+                    @Image(source: creating-basic-user-interface-tutorial-1-2, alt: "A screenshot from an iPhone")
                 }
             }
             
             @Step {
                 Instantiate the player.
 
-                @Code(name: "ContentView.swift", file: basic-ui-play-pause-tutorial-3.swift) {
-                    @Image(source: basic-ui-play-pause-tutorial-3.jpg, alt: "A screenshot from an iPhone")
+                @Code(name: "ContentView.swift", file: creating-basic-user-interface-tutorial-1-3.swift) {
+                    @Image(source: creating-basic-user-interface-tutorial-1-3, alt: "A screenshot from an iPhone")
                 }
             }
 
             @Step {
                 Add the video view to display the player content.
 
-                @Code(name: "ContentView.swift", file: basic-ui-play-pause-tutorial-4.swift) {
-                    @Image(source: basic-ui-play-pause-tutorial-4.jpg, alt: "A screenshot from an iPhone")
+                @Code(name: "ContentView.swift", file: creating-basic-user-interface-tutorial-1-4.swift) {
+                    @Image(source: creating-basic-user-interface-tutorial-1-4, alt: "A screenshot from an iPhone")
                 }
             }
 
@@ -47,16 +49,16 @@
                 At this step you are able to play and pause the player.
                 But the button has the wrong state.
 
-                @Code(name: "ContentView.swift", file: basic-ui-play-pause-tutorial-5.swift) {
-                    @Image(source: basic-ui-play-pause-tutorial-5.jpg, alt: "A screenshot from an iPhone")
+                @Code(name: "ContentView.swift", file: creating-basic-user-interface-tutorial-1-5.swift) {
+                    @Image(source: creating-basic-user-interface-tutorial-1-5, alt: "A screenshot from an iPhone")
                 }
             }
             
             @Step {
                 Update the button to reflect the player state.
 
-                @Code(name: "ContentView.swift", file: basic-ui-play-pause-tutorial-6.swift) {
-                    @Image(source: basic-ui-play-pause-tutorial-6.jpg, alt: "A screenshot from an iPhone")
+                @Code(name: "ContentView.swift", file: creating-basic-user-interface-tutorial-1-6.swift) {
+                    @Image(source: creating-basic-user-interface-tutorial-1-6, alt: "A screenshot from an iPhone")
                 }
             }
         }
@@ -71,8 +73,8 @@
             @Step {
                 We can start by adding an horizontal stack that will contain all the buttons.
 
-                @Code(name: "ContentView.swift", file: basic-ui-seek-tutorial-1.swift) {
-                    @Image(source: basic-ui-seek-tutorial-1.jpg, alt: "A screenshot from an iPhone")
+                @Code(name: "ContentView.swift", file: creating-basic-user-interface-tutorial-2-1.swift) {
+                    @Image(source: creating-basic-user-interface-tutorial-2-1, alt: "A screenshot from an iPhone")
                 }
             }
             
@@ -82,16 +84,16 @@
                 At this step the button has no action.
                 So let's use the player to add backward action.
 
-                @Code(name: "ContentView.swift", file: basic-ui-seek-tutorial-2.swift) {
-                    @Image(source: basic-ui-seek-tutorial-2.jpg, alt: "A screenshot from an iPhone")
+                @Code(name: "ContentView.swift", file: creating-basic-user-interface-tutorial-2-2.swift) {
+                    @Image(source: creating-basic-user-interface-tutorial-2-2, alt: "A screenshot from an iPhone")
                 }
             }
             
             @Step {
                 Add the backward action.
 
-                @Code(name: "ContentView.swift", file: basic-ui-seek-tutorial-3.swift) {
-                    @Image(source: basic-ui-seek-tutorial-3.jpg, alt: "A screenshot from an iPhone")
+                @Code(name: "ContentView.swift", file: creating-basic-user-interface-tutorial-2-3.swift) {
+                    @Image(source: creating-basic-user-interface-tutorial-2-3, alt: "A screenshot from an iPhone")
                 }
             }
             
@@ -101,8 +103,8 @@
                 Great! We've added two buttons. 
                 However, as you can see, by default, the backward and forward actions seek -10 and +10 seconds, respectively.
 
-                @Code(name: "ContentView.swift", file: basic-ui-seek-tutorial-4.swift) {
-                    @Image(source: basic-ui-seek-tutorial-4.jpg, alt: "A screenshot from an iPhone")
+                @Code(name: "ContentView.swift", file: creating-basic-user-interface-tutorial-2-4.swift) {
+                    @Image(source: creating-basic-user-interface-tutorial-2-4, alt: "A screenshot from an iPhone")
                 }
             }
             
@@ -112,16 +114,16 @@
                 
                 Note that we don't use minus interval for the backward interval.
 
-                @Code(name: "ContentView.swift", file: basic-ui-seek-tutorial-5.swift) {
-                    @Image(source: basic-ui-seek-tutorial-5.jpg, alt: "A screenshot from an iPhone")
+                @Code(name: "ContentView.swift", file: creating-basic-user-interface-tutorial-2-5.swift) {
+                    @Image(source: creating-basic-user-interface-tutorial-2-5, alt: "A screenshot from an iPhone")
                 }
             }
             
             @Step {
                 Don't forget to update your UI consequently.
 
-                @Code(name: "ContentView.swift", file: basic-ui-seek-tutorial-6.swift) {
-                    @Image(source: basic-ui-seek-tutorial-6.jpg, alt: "A screenshot from an iPhone")
+                @Code(name: "ContentView.swift", file: creating-basic-user-interface-tutorial-2-6.swift) {
+                    @Image(source: creating-basic-user-interface-tutorial-2-6, alt: "A screenshot from an iPhone")
                 }
             }
         }

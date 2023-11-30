@@ -2,7 +2,7 @@
 
 @Metadata {
     @PageColor(purple)
-    @PageImage(purpose: card, source: control-center, alt: "An image depicting the Control Center icon.")
+    @PageImage(purpose: card, source: control-center-article-card, alt: "An image depicting the Control Center icon.")
 }
 
 Enable playback steering from the Control Center.
