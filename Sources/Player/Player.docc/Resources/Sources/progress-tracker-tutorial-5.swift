@@ -12,6 +12,14 @@ struct ContentView: View {
 
     var body: some View {
         VideoView(player: player)
+            .overlay(alignment: .bottom, content: slider)
             .onAppear(perform: player.play)
+            .bind(progressTracker, to: player)
+    }
+
+    @ViewBuilder
+    private func slider() -> some View {
+        Slider(progressTracker: progressTracker)
+            .padding()
     }
 }
