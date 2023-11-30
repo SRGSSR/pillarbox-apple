@@ -42,6 +42,7 @@
                     @Image(source: basic-ui-tutorial-5.jpg, alt: "A screenshot from an iPhone")
                 }
                 Add a button to play and pause the player.
+                
                 At this step you are able to play and pause the player.
                 But the button has the wrong state.
             }
@@ -49,13 +50,6 @@
             @Step {
                 @Code(name: "ContentView.swift", file: basic-ui-tutorial-6.swift) {
                     @Image(source: basic-ui-tutorial-6.jpg, alt: "A screenshot from an iPhone")
-                }
-                Listen the player state.
-            }
-            
-            @Step {
-                @Code(name: "ContentView.swift", file: basic-ui-tutorial-7.swift) {
-                    @Image(source: basic-ui-tutorial-7.jpg, alt: "A screenshot from an iPhone")
                 }
                 Update the button to reflect the player state.
             }
