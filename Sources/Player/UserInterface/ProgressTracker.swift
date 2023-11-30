@@ -8,6 +8,7 @@ import Combine
 import CoreMedia
 import SwiftUI
 
+
 /// An observable object which tracks playback progress.
 ///
 /// A progress tracker is an [ObservableObject](https://developer.apple.com/documentation/combine/observableobject) 
@@ -27,6 +28,8 @@ import SwiftUI
 ///
 /// The Player framework also provides automatic progress interaction integration with the SwiftUI standard slider, see
 /// ``SwiftUI/Slider/init(progressTracker:label:minimumValueLabel:maximumValueLabel:onEditingChanged:)``.
+///
+/// > Note: For step-by-step integration instructions have a look at the associated <doc:TrackingProgress> tutorial.
 public final class ProgressTracker: ObservableObject {
     /// The player to attach.
     ///
