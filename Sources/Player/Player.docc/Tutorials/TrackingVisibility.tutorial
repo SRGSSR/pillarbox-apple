@@ -1,28 +1,52 @@
-@Tutorial(time: 20) {
+@Tutorial(time: 10) {
     @Intro(title: "Tracking visibility") {
-        Manage visibility of playback controls. 
+        Implement meaningful behavior for the visibility of your user interface.
+        
+        @Image(source: visibility-tracking, alt: "An image depicting an eye.")
     }
     
-    @Section(title: "Create a new project and add import Player") {
+    @Section(title: "Add visibility tracking") {
         @ContentAndMedia {
-            Create and configure an Xcode project that uses Player.
+            Start from a player user interface that always displays controls. Add visibility tracking to have the user interface automatically disappear during playback. Make it possible for users to toggle the user interface on and off interactively.
         }
         
         @Steps {
             @Step {
-                Create a new project using the iOS App template.
+                Replace your `ContentView` code with the attached implementation. 
+                
+                We start our implementation from a basic player user interface, displaying a playback button layered on top of a semi-transparent overlay. The user interface cannot be hidden.
+                
+                @Code(name: "ContentView.swift", file: visibility-tracker-tutorial-1.swift) {
+                    @Image(source: tutorial-visibility-tracker, alt: "A screenshot of an iPhone playing a video with a button displayed on top of an overlay.")
+                }
             }
             
             @Step {
-                Enter "ProgressTracking" as the Product Name. 
+                Add a ``VisibilityTracker`` to your `ContentView` and store it as a `@StateObject` associated with the view.
+                
+                @Code(name: "ContentView.swift", file: visibility-tracker-tutorial-2.swift)
             }
             
             @Step {
-                Select "SwiftUI" from the Interface pop-up menu and "SwiftUI App" from the Life Cycle pop-up menu, then click Next. Choose a location to save the project on your Mac.
+                Bind the visibility tracker to the player using the `bind(_:to:)` modifier. This ensures the tracker is kept informed of the player state so that it ca adjust the user interface visibility appropriately.
+                
+                @Code(name: "ContentView.swift", file: visibility-tracker-tutorial-3.swift)
             }
 
             @Step {
-                Add the Player dependency to the project.
+                Use the `isUserInterfaceHidden` Boolean to animate the control overlay opacity between 0 and 1.
+                
+                @Code(name: "ContentView.swift", file: visibility-tracker-tutorial-4.swift)
+            }
+            
+            @Step {
+                Add a tap gesture recognizer that calls the visibility tracker `toggle()` method.
+                
+                Run the application and check that you can toggle the user interface on and off. Also note that the user interface automatically disappears after a while during playback.
+                
+                @Code(name: "ContentView.swift", file: visibility-tracker-tutorial-5.swift) {
+                    @Image(source: tutorial-visibility-tracker-result, alt: "A screenshot of an iPhone playing a video.")
+                }
             }
         }
     }

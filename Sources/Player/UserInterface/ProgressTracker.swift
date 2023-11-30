@@ -8,7 +8,6 @@ import Combine
 import CoreMedia
 import SwiftUI
 
-
 /// An observable object tracking playback progress.
 ///
 /// A progress tracker is an [ObservableObject](https://developer.apple.com/documentation/combine/observableobject) 
