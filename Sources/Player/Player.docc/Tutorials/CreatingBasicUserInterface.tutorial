@@ -55,4 +55,41 @@
             }
         }
     }
+    
+    @Section(title: "Backward and Forward Seek") {
+        @ContentAndMedia {
+            Now we can go further by managing the seek backward and the seek forward to navigate through the media stream.
+        }
+        
+        @Steps {
+            @Step {
+                We can start by adding a new button for the backward seek.
+                
+                At this step the button has no action.
+                So let's use the player to add backward action.
+            }
+            
+            @Step {
+                Add the backward action.
+            }
+            
+            @Step {
+                We can proceed in the same manner with the forward action.
+                
+                Great! We've added two buttons. 
+                However, as you can see, by default, the backward and forward actions seek -10 and +10 seconds, respectively.
+            }
+            
+            @Step {
+                To update this behavior, we can use the player configuration.
+                Let's add a configuration with new intervals, -5 seconds for the backward action and +15 seconds for the forward action.
+                
+                Note that we don't use minus interval for the backward interval.
+            }
+            
+            @Step {
+                Don't forget to update your UI consequently.
+            }
+        }
+    }
 }
