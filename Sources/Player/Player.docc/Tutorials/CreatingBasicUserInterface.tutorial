@@ -1,28 +1,63 @@
-@Tutorial(time: 20) {
+@Tutorial(time: 0) {
     @Intro(title: "Creating a basic user interface") {
         Learn how you create a custom player user interface for your app. Discover how you can iterate on your ideas. Add basic playback controls and learn how to use playback state to adjust the appearance of your user interface. 
     }
-    
-    @Section(title: "Create a new project and import Player") {
+
+    @Section(title: "Play and Pause") {
         @ContentAndMedia {
-            Create and configure an Xcode project that uses Player.
+            Create a basic play and pause user interface by following these steps:
         }
-        
+
         @Steps {
             @Step {
-                Create a new project using the iOS App template.
+                Start by creating a content view.
+                @Code(name: "ContentView.swift", file: basic-ui-tutorial-1.swift) {
+                    @Image(source: basic-ui-tutorial-1.jpg, alt: "A screenshot from an iPhone")
+                }
             }
             
             @Step {
-                Enter "ProgressTracking" as the Product Name. 
+                Import the player package.
+                @Code(name: "ContentView.swift", file: basic-ui-tutorial-2.swift) {
+                    @Image(source: basic-ui-tutorial-2.jpg, alt: "A screenshot from an iPhone")
+                }
             }
             
             @Step {
-                Select "SwiftUI" from the Interface pop-up menu and "SwiftUI App" from the Life Cycle pop-up menu, then click Next. Choose a location to save the project on your Mac.
+                Instantiate the player.
+                @Code(name: "ContentView.swift", file: basic-ui-tutorial-3.swift) {
+                    @Image(source: basic-ui-tutorial-3.jpg, alt: "A screenshot from an iPhone")
+                }
             }
 
             @Step {
-                Add the Player dependency to the project.
+                Add the video view to display the player content.
+                @Code(name: "ContentView.swift", file: basic-ui-tutorial-4.swift) {
+                    @Image(source: basic-ui-tutorial-4.jpg, alt: "A screenshot from an iPhone")
+                }
+            }
+
+            @Step {
+                @Code(name: "ContentView.swift", file: basic-ui-tutorial-5.swift) {
+                    @Image(source: basic-ui-tutorial-5.jpg, alt: "A screenshot from an iPhone")
+                }
+                Add a button to play and pause the player.
+                At this step you are able to play and pause the player.
+                But the button has the wrong state.
+            }
+            
+            @Step {
+                @Code(name: "ContentView.swift", file: basic-ui-tutorial-6.swift) {
+                    @Image(source: basic-ui-tutorial-6.jpg, alt: "A screenshot from an iPhone")
+                }
+                Listen the player state.
+            }
+            
+            @Step {
+                @Code(name: "ContentView.swift", file: basic-ui-tutorial-7.swift) {
+                    @Image(source: basic-ui-tutorial-7.jpg, alt: "A screenshot from an iPhone")
+                }
+                Update the button to reflect the player state.
             }
         }
     }
