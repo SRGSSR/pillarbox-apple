@@ -21,7 +21,7 @@
         
         @TutorialReference(tutorial: "doc:TrackingProgress")
         @TutorialReference(tutorial: "doc:TrackingVisibility")
-        @TutorialReference(tutorial: "doc:DetectingFullScreen")
+        @TutorialReference(tutorial: "doc:SupportingPinchToZoom")
     }
     
     @Chapter(name: "Iterating on custom user interfaces") {
