@@ -90,9 +90,12 @@ private struct LayoutReader: UIViewControllerRepresentable {
 @available(iOS 16, *)
 @available(tvOS, unavailable)
 public extension View {
-    /// Read layout information.
-    /// 
+    /// Read layout information for a view.
+    ///
     /// - Parameter layoutInfo: The layout information.
+    ///
+    /// Use this modifier to know whether a view covers its current context, the whole screen, or none. Playback user
+    /// interfaces can use this knowledge to adjust their behavior or displayed content appropriately.
     func readLayout(into layoutInfo: Binding<LayoutInfo>) -> some View {
         background {
             LayoutReader(layoutInfo: layoutInfo)
