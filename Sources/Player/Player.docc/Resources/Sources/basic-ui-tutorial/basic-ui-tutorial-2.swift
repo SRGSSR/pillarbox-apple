@@ -1,7 +1,7 @@
 import Player
 import SwiftUI
 
-private struct PlayerView: View {
+struct ContentView: View {
     var body: some View {
         ZStack {
         }
