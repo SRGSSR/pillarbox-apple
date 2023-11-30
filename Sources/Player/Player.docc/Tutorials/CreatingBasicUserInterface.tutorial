@@ -11,35 +11,35 @@
         @Steps {
             @Step {
                 Start by creating a content view.
-                @Code(name: "ContentView.swift", file: basic-ui-tutorial-1.swift) {
-                    @Image(source: basic-ui-tutorial-1.jpg, alt: "A screenshot from an iPhone")
+                @Code(name: "ContentView.swift", file: basic-ui-play-pause-tutorial-1.swift) {
+                    @Image(source: basic-ui-play-pause-tutorial-1.jpg, alt: "A screenshot from an iPhone")
                 }
             }
             
             @Step {
                 Import the player package.
-                @Code(name: "ContentView.swift", file: basic-ui-tutorial-2.swift) {
-                    @Image(source: basic-ui-tutorial-2.jpg, alt: "A screenshot from an iPhone")
+                @Code(name: "ContentView.swift", file: basic-ui-play-pause-tutorial-2.swift) {
+                    @Image(source: basic-ui-play-pause-tutorial-2.jpg, alt: "A screenshot from an iPhone")
                 }
             }
             
             @Step {
                 Instantiate the player.
-                @Code(name: "ContentView.swift", file: basic-ui-tutorial-3.swift) {
-                    @Image(source: basic-ui-tutorial-3.jpg, alt: "A screenshot from an iPhone")
+                @Code(name: "ContentView.swift", file: basic-ui-play-pause-tutorial-3.swift) {
+                    @Image(source: basic-ui-play-pause-tutorial-3.jpg, alt: "A screenshot from an iPhone")
                 }
             }
 
             @Step {
                 Add the video view to display the player content.
-                @Code(name: "ContentView.swift", file: basic-ui-tutorial-4.swift) {
-                    @Image(source: basic-ui-tutorial-4.jpg, alt: "A screenshot from an iPhone")
+                @Code(name: "ContentView.swift", file: basic-ui-play-pause-tutorial-4.swift) {
+                    @Image(source: basic-ui-play-pause-tutorial-4.jpg, alt: "A screenshot from an iPhone")
                 }
             }
 
             @Step {
-                @Code(name: "ContentView.swift", file: basic-ui-tutorial-5.swift) {
-                    @Image(source: basic-ui-tutorial-5.jpg, alt: "A screenshot from an iPhone")
+                @Code(name: "ContentView.swift", file: basic-ui-play-pause-tutorial-5.swift) {
+                    @Image(source: basic-ui-play-pause-tutorial-5.jpg, alt: "A screenshot from an iPhone")
                 }
                 Add a button to play and pause the player.
                 
@@ -48,8 +48,8 @@
             }
             
             @Step {
-                @Code(name: "ContentView.swift", file: basic-ui-tutorial-6.swift) {
-                    @Image(source: basic-ui-tutorial-6.jpg, alt: "A screenshot from an iPhone")
+                @Code(name: "ContentView.swift", file: basic-ui-play-pause-tutorial-6.swift) {
+                    @Image(source: basic-ui-play-pause-tutorial-6.jpg, alt: "A screenshot from an iPhone")
                 }
                 Update the button to reflect the player state.
             }
