@@ -90,9 +90,14 @@ private struct LayoutReader: UIViewControllerRepresentable {
 @available(iOS 16, *)
 @available(tvOS, unavailable)
 public extension View {
-    /// Read layout information.
-    /// 
+    /// Read layout information for a view.
+    ///
     /// - Parameter layoutInfo: The layout information.
+    ///
+    /// Use this modifier to know whether a view covers its current context, the whole screen, or none. Playback user
+    /// interfaces can use this knowledge to adjust their behavior or displayed content appropriately.
+    ///
+    /// > Note: For an example of use have a look at the <doc:SupportingPinchToZoom> tutorial.
     func readLayout(into layoutInfo: Binding<LayoutInfo>) -> some View {
         background {
             LayoutReader(layoutInfo: layoutInfo)
