@@ -486,7 +486,7 @@ private struct PlaybackButton: View {
         else {
             switch player.playbackState {
             case .playing:
-                return "ﬁpause.circle.fill"
+                return "pause.circle.fill"
             case .paused:
                 return "play.circle.fill"
             default:
