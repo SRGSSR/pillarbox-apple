@@ -97,7 +97,7 @@ public extension View {
     /// Use this modifier to know whether a view covers its current context, the whole screen, or none. Playback user
     /// interfaces can use this knowledge to adjust their behavior or displayed content appropriately.
     ///
-    /// > Note: For an example of use have a look at the <doc:SupportingPinchToZoom> tutorial.
+    /// > Note: For an example of use have a look at the <doc:supporting-pinch-to-zoom> tutorial.
     func readLayout(into layoutInfo: Binding<LayoutInfo>) -> some View {
         background {
             LayoutReader(layoutInfo: layoutInfo)

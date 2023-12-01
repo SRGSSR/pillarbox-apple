@@ -33,7 +33,7 @@ import SwiftUI
 /// The Player framework also provides automatic progress interaction integration with the SwiftUI standard slider, see
 /// ``SwiftUI/Slider/init(progressTracker:label:minimumValueLabel:maximumValueLabel:onEditingChanged:)``.
 ///
-/// > Note: For step-by-step integration instructions have a look at the associated <doc:TrackingProgress> tutorial.
+/// > Note: For step-by-step integration instructions have a look at the associated <doc:tracking-progress> tutorial.
 public final class ProgressTracker: ObservableObject {
     /// The player to attach.
     ///
