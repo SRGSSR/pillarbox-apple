@@ -20,6 +20,7 @@ The Player framework fully integrates with SwiftUI, embracing its declarative an
 
 @Links(visualStyle: detailedGrid) {
     - <doc:playback>
+    - <doc:state-observation>
     - <doc:user-interface>
     - <doc:tracking>
 }

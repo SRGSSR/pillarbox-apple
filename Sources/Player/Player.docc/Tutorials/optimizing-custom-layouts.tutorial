@@ -1,9 +1,57 @@
 @Tutorial(time: 20) {
     @Intro(title: "Optimizing custom layouts") {
-        Learn how you can optimize your layout to minimize unnecessary refreshes. 
+        Learn how you can optimize your layout to minimize unnecessary refreshes.
     }
     
-    @Section(title: "Create a new project and add import Player") {
+    @Section(title: "Learn to debug layouts") {
+        @ContentAndMedia {
+            Create and configure an Xcode project that uses Player.
+        }
+        
+        @Steps {
+            @Step {
+                Create a new project using the iOS App template.
+            }
+            
+            @Step {
+                Enter "ProgressTracking" as the Product Name. 
+            }
+            
+            @Step {
+                Select "SwiftUI" from the Interface pop-up menu and "SwiftUI App" from the Life Cycle pop-up menu, then click Next. Choose a location to save the project on your Mac.
+            }
+
+            @Step {
+                Add the Player dependency to the project.
+            }
+        }
+    }
+    
+    @Section(title: "Make updates locally") {
+        @ContentAndMedia {
+            Create and configure an Xcode project that uses Player.
+        }
+        
+        @Steps {
+            @Step {
+                Create a new project using the iOS App template.
+            }
+            
+            @Step {
+                Enter "ProgressTracking" as the Product Name. 
+            }
+            
+            @Step {
+                Select "SwiftUI" from the Interface pop-up menu and "SwiftUI App" from the Life Cycle pop-up menu, then click Next. Choose a location to save the project on your Mac.
+            }
+
+            @Step {
+                Add the Player dependency to the project.
+            }
+        }
+    }
+    
+    @Section(title: "Observe properties with more frequent updates") {
         @ContentAndMedia {
             Create and configure an Xcode project that uses Player.
         }

@@ -58,7 +58,7 @@ public final class Player: ObservableObject, Equatable {
     /// The player configuration.
     public let configuration: PlayerConfiguration
 
-    /// A publisher providing player property updates as a consolidated stream.
+    /// A shared publisher providing player property updates as a consolidated stream.
     ///
     /// Rarely changing player properties, like `mediaType` or `streamType`, can be directly observed and read from
     /// a `Player` instance. Properties which change more often, like `isSeeking` or `buffer`, require an explicit
