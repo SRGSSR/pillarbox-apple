@@ -1,5 +1,5 @@
 @Tutorial(time: 5) {
-    @Intro(title: "Creating a project with the Player dependency") {
+    @Intro(title: "Creating a project") {
         Create a project integrating Player as a Swift Package dependency.
         
         @Image(source: creating-project-intro, alt: "An image depicting a settings gear.")
