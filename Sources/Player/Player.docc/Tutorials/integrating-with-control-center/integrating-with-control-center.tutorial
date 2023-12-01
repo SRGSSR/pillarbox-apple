@@ -1,0 +1,62 @@
+@Tutorial(time: 5) {
+    @Intro(title: "Integrating with the Control Center") {
+        Enable control of playback directly from the Control Center.
+
+        @Image(source: integrating-with-control-center-card, alt: "An image depicting the Control Center.")
+    }
+    
+    @Section(title: "Control Center and Playback") {
+        @ContentAndMedia {
+            Bind the ``Player`` and the Control Center.
+        }
+
+        @Steps {
+            @Step {
+                Start the playback.
+
+                Excellent! The player is now active, but the Control Center is not yet aware.
+
+                @Code(name: "ContentView.swift", file: integrating-with-control-center-1-1.swift) {
+                    @Image(source: integrating-with-control-center-1-1, alt: "A screenshot from an iPhone")
+                }
+            }
+            
+            @Step {
+                Link the ``Player`` with the Control Center.
+
+                Great! Now the player is linked to the Control Center, and we can use the controls.
+                
+                @Code(name: "ContentView.swift", file: integrating-with-control-center-1-2.swift) {
+                    @Image(source: integrating-with-control-center-1-2, alt: "A screenshot from an iPhone")
+                }
+            }
+        }
+    }
+    
+    @Section(title: "Control Center and Metadata") {
+        @ContentAndMedia {
+            Provide metadata to the Control Center.
+        }
+        
+        @Steps {
+            @Step {
+                Add metadata to the ``Player``.
+                
+                By default the metadata is empty.
+                To populate the Control Center, additional steps are required.
+
+                @Code(name: "ContentView.swift", file: integrating-with-control-center-2-1.swift) {
+                    @Image(source: integrating-with-control-center-2-1, alt: "A screenshot from an iPhone")
+                }
+            }
+            
+            @Step {
+                Include a title, a subtitle, and an image.
+                
+                @Code(name: "ContentView.swift", file: integrating-with-control-center-2-2.swift) {
+                    @Image(source: integrating-with-control-center-2-2, alt: "A screenshot from an iPhone")
+                }
+            }
+        }
+    }
+}
