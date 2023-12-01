@@ -1,4 +1,4 @@
-@Tutorials(name: "CustomUserInterfaces") {
+@Tutorials(name: "custom-user-interfaces") {
     @Intro(title: "Building Custom User Interfaces") {
         Learn how you create a custom player user interface for your app.
         

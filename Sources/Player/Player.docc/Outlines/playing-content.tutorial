@@ -1,4 +1,4 @@
-@Tutorials(name: "Playback") {
+@Tutorials(name: "playback") {
     @Intro(title: "Playing Content") {
         Learn how to add basic audiovisual playback capabilities to an app.
         

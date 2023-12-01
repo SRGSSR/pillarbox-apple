@@ -1,4 +1,4 @@
-@Tutorials(name: "SystemFeatures") {
+@Tutorials(name: "system-features") {
     @Intro(title: "Integrating With System Features") {
         Learn how you can integrate your player with standard system features.
         
