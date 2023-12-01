@@ -4,11 +4,10 @@
 //  License information is available from the LICENSE file.
 //
 
-import Core
 import Player
 import SwiftUI
 
-struct ProgressTrackerTutorial: View {
+struct TrackingProgressTutorial: View {
     @StateObject private var player = Player(
         item: .simple(url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!)
     )
@@ -19,7 +18,6 @@ struct ProgressTrackerTutorial: View {
 
     var body: some View {
         VideoView(player: player)
-            ._debugBodyCounter()
             .overlay(alignment: .bottom, content: slider)
             .onAppear(perform: player.play)
             .bind(progressTracker, to: player)
@@ -28,11 +26,10 @@ struct ProgressTrackerTutorial: View {
     @ViewBuilder
     private func slider() -> some View {
         Slider(progressTracker: progressTracker)
-            ._debugBodyCounter(color: .blue)
             .padding()
     }
 }
 
 #Preview {
-    ProgressTrackerTutorial()
+    TrackingProgressTutorial()
 }
