@@ -15,6 +15,9 @@ public extension View {
     ///   - binding: The binding to which the value must be assigned.
     ///   - Returns: A view that fills the given binding when the player's publisher emits an
     ///   event.
+    ///
+    /// > Warning: Be careful to associate often updated state to local view scopes to avoid unnecessary view body refreshes. Please
+    /// refer to <doc:state-observation> for more information.
     @ViewBuilder
     func onReceive<T>(player: Player?, assign keyPath: KeyPath<PlayerProperties, T>, to binding: Binding<T>) -> some View where T: Equatable {
         if let player {
