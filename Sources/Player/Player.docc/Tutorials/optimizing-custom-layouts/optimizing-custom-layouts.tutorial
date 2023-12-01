@@ -32,7 +32,7 @@
             }
             
             @Step {
-                Transform the `slider()` method into the body of a new private `ProgressSlider` slider view. Move the progress tracker `StateObject` to this view as well. Remove the `bind(_:to:)` and overlay modifiers to have the code compile again.
+                Transform the `slider()` method into the body of a new private `ProgressSlider` view. Move the progress tracker `StateObject` to this view as well. Remove the `bind(_:to:)` and overlay modifiers so that the code compile again.
                 
                 @Code(name: "ContentView.swift", file: optimizing-custom-layouts-1-3.swift)
             }

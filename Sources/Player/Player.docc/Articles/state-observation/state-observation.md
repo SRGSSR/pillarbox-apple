@@ -9,11 +9,12 @@ Learn how to observe state associate with a player.
 
 ## Overview
 
-The Player framework heavily relies on Combine and its [ObservableObject](https://developer.apple.com/documentation/combine/observableobject) and published properties. This makes it possible for SwiftUI views to automatically observe and respond to change.
+The Player framework heavily relies on [Combine](https://developer.apple.com/documentation/combine)
+and its [ObservableObject](https://developer.apple.com/documentation/combine/observableobject) and published properties. This makes it possible for SwiftUI views to automatically observe and respond to change.
 
-Unsupervised property publishing can lead to an explosion of updates sent from an observable object, though, leading to potentially unnecessary SwiftUI view body refreshes, poor layout performance or energy consumption issues.
+Unsupervised property publishing can lead to an explosion of updates sent from an observable object, though, leading to potentially unnecessary SwiftUI view body refreshes, poor layout performance and energy consumption issues.
 
-For this reason ``Player`` only broadcasts essential state, for example whether it is playing or paused, or what kind of stream is being played. Observing updates for states than can be frequently refreshed requires explicit subscription.
+For this reason ``Player`` only broadcasts essential state, for example whether it is playing or paused, or what kind of stream is being played. Observing updates for states that can frequently change requires explicit subscription.
 
 ### Observe essential player state
 
@@ -47,15 +48,13 @@ For these reasons ``Player`` does not publish time updates automatically. Explic
 - ``Player/periodicTimePublisher(forInterval:queue:)`` for periodic time updates.
 - ``Player/boundaryTimePublisher(for:queue:)`` to detect time traversal.
 
-When implementing a user interface, though, use ``ProgressTracker`` to conveniently observe progress changes without the need for explicit subscription.
+When implementing a user interface use ``ProgressTracker`` to conveniently observe progress changes without the need for explicit subscriptions.
 
 ### Explicitly subscribe to frequent updates
 
-As for time updates discussed above, any other non-essential player state is not published and requires explicit subscription. This includes for example states derived from time range information, e.g. the stream type, or states which might be frequently updated, e.g. information about player buffering.
+As for time updates discussed above, any other non-essential player state is not published and requires explicit subscription. This includes states derived from time range information, for example the stream type, or states which might be frequently updated like the current buffer position. Code that needs to observe these properties can subscribe to ``Player/propertiesPublisher``.
 
-Code that needs to observe these properties can subscribe to a dedicated change stream via ``Player/propertiesPublisher``.
-
-When implementing a user interface, though, use ``SwiftUI/View/onReceive(player:assign:to:)`` to locally observe a specific property and store it into a view state. For example, to display when a player is busy (seeking or buffering), subscribe to the corresponding change stream:
+When implementing a user interface use ``SwiftUI/View/onReceive(player:assign:to:)`` to locally observe a specific property and store it into a view state. For example, to display when a player is busy (seeking or buffering), subscribe to the corresponding change stream:
 
 ```swift
 struct PlaybackView: View {
@@ -76,18 +75,16 @@ struct PlaybackView: View {
 }
 ```
 
-Check ``PlayerProperties`` for the list of all properties that can be observed this way.
+Check ``PlayerProperties`` for the list of all properties that are available for explicit observation.
 
 ### Optimize state observations
 
-Having your whole user interface refreshed every 1/10th of a second is not required if only a progress bar at the bottom requires periodic refreshes at this pace.
+Having your whole user interface refreshed every 1/10th of a second is not required if only a progress bar at the bottom requires periodic refreshes at this pace. This is why subscription to state update streams or use of `ProgressTracker` should occur in the smallest required view scope.
 
-This is why subscription to state update streams or use of `ProgressTracker` should occur in the smallest required view scope.
+Here are a few tips to help you identify and fix superfluous refreshes in your layouts:
 
-Here are a few tips to help you identify and fix potential issues in your layouts:
-
-- Use the `View/_debugBodyCounter()` modifier available from the Core framework to identify which views are refreshed too often unnecessarily.
-- Subdivide your view hierarchy into subviews so that ``ProgressTracker`` or explicit subscription to ``SwiftUI/View/onReceive(player:assign:to:)`` only affect a smaller portion of your view hierarchy.
+- Use the `View/_debugBodyCounter()` modifier available from the Core framework to identify which views are refreshed unnecessarily often.
+- Extract views that need higher refresh rates into subviews so that ``ProgressTracker`` or explicit subscriptions using ``SwiftUI/View/onReceive(player:assign:to:)`` only affect a smaller subset of your view hierarchy.
 - Use the `View/_debugBodyCounter()` modifier to check your layout again after optimization.
 
-> Note: For a concrete example have a look at the <doc:optimizing-custom-layouts> tutorial.
+> Note: For concrete optimization examples have a look at the <doc:optimizing-custom-layouts> tutorial.
