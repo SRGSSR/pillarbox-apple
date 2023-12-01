@@ -8,7 +8,7 @@
     @Chapter(name: "Creating a basic playback app") {
         Create a basic playback app including Player as a dependency.
         
-        @Image(source: building-custom-user-interfaces-intro, alt: "An image of a phone displaying some content.")
+        @Image(source: building-custom-user-interfaces-1, alt: "An image of a phone displaying some content.")
         
         @TutorialReference(tutorial: creating-project)
         @TutorialReference(tutorial: creating-basic-user-interface)
@@ -17,7 +17,7 @@
     @Chapter(name: "Adding standard playback user interface behaviors") {
         Add conventional user interface behaviors to your custom user interface.   
         
-        @Image(source: building-custom-user-interfaces-intro, alt: "An image of a phone displaying some content.")
+        @Image(source: building-custom-user-interfaces-2, alt: "An image of a phone displaying some content.")
         
         @TutorialReference(tutorial: tracking-progress)
         @TutorialReference(tutorial: tracking-visibility)
@@ -27,7 +27,7 @@
     @Chapter(name: "Iterating on custom user interfaces") {
         Learn how you can quickly iterate on your custom user interfaces to better address your needs. 
         
-        @Image(source: building-custom-user-interfaces-intro, alt: "An image of a phone displaying some content.")
+        @Image(source: building-custom-user-interfaces-3, alt: "An image of a phone displaying some content.")
         
         @TutorialReference(tutorial: optimizing-custom-layouts)
     }
