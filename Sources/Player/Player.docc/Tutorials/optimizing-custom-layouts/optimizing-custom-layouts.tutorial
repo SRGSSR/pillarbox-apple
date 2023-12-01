@@ -1,6 +1,6 @@
 @Tutorial(time: 20) {
     @Intro(title: "Optimizing custom layouts") {
-        Learn how you to rearrange your layout to minimize unnecessary refreshes.
+        Learn to rearrange your layout to minimize unnecessary refreshes.
     }
     
     @Section(title: "Isolate progress updates") {
@@ -55,50 +55,58 @@
         }
     }
     
-    @Section(title: "Display buffering status") {
+    @Section(title: "Display the buffer progress") {
         @ContentAndMedia {
-            Create and configure an Xcode project that uses Player.
+            Display the buffer progress by explicitly observing associated updates. Move observation to a local view scope to prevent unnecessary updates.
         }
         
         @Steps {
             @Step {
-                Create a new project using the iOS App template.
+                Replace your `ContentView` code with the attached implementation.
+                
+                We start our implementation from with a simple `VideoView`. At runtime you can observe that a few refreshes occur on the `VideoView` when playback starts.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-2-1.swift) {
+                    @Image(source: optimizing-custom-layouts-2-1, alt: "A screenshot of an iPhone playing a video.")
+                }
             }
             
             @Step {
-                Enter "ProgressTracking" as the Product Name. 
+                Apply the `onReceive(player:assign:to:)` modifier to listen to buffer changes. Store updates into a corresponding `Float` state.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-2-2.swift)
             }
             
             @Step {
-                Select "SwiftUI" from the Interface pop-up menu and "SwiftUI App" from the Life Cycle pop-up menu, then click Next. Choose a location to save the project on your Mac.
+                Display the progress below the `VideoView` using a `ProgressView`.
+                
+                At runtime you can observe that more refreshes occur on the `VideoView` when playback start, but also when more content is buffered.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-2-3.swift) {
+                    @Image(source: optimizing-custom-layouts-2-3, alt: "A screenshot of an iPhone playing a video.")
+                }
             }
 
             @Step {
-                Add the Player dependency to the project.
-            }
-        }
-    }
-    
-    @Section(title: "Observe properties with more frequent updates") {
-        @ContentAndMedia {
-            Create and configure an Xcode project that uses Player.
-        }
-        
-        @Steps {
-            @Step {
-                Create a new project using the iOS App template.
+                Extract the progress view into a new private `BufferingView` body. Move the buffer state to this new view as well. Remove the `onReceive(player:assign:to:)` modifier so that the code compiles.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-2-4.swift)
             }
             
             @Step {
-                Enter "ProgressTracking" as the Product Name. 
+                Apply the  `onReceive(player:assign:to:)` modifier in `BufferingView`, which requires the player to be received as parameter. Since nothing directly depends on player updates in the `ProgressSlider` body simply add a regular (non-observed) property.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-2-5.swift)
             }
             
             @Step {
-                Select "SwiftUI" from the Interface pop-up menu and "SwiftUI App" from the Life Cycle pop-up menu, then click Next. Choose a location to save the project on your Mac.
-            }
-
-            @Step {
-                Add the Player dependency to the project.
+                Insert the `BufferingView` into the view hierarchy.
+                
+                At runtime you can observe that a few refreshes occur on the `VideoView` when playback start, as was the case at the very beginning, and that refreshes during content buffering have disappeared.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-2-6.swift) {
+                    @Image(source: optimizing-custom-layouts-2-6, alt: "A screenshot of an iPhone playing a video.")
+                }
             }
         }
     }
