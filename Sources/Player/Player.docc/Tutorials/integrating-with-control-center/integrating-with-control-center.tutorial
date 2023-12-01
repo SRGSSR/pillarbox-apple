@@ -1,4 +1,4 @@
-@Tutorial(time: 20) {
+@Tutorial(time: 5) {
     @Intro(title: "Integrating with the Control Center") {
         Enable playback steering from the Control Center.
     }
@@ -20,12 +20,39 @@
             }
             
             @Step {
-                Link the player with the Control Center.
+                Link the ``Player`` with the Control Center.
 
                 Great! Now the player is linked to the Control Center, and you can use the controls.
                 
                 @Code(name: "ContentView.swift", file: integrating-with-control-center-1-2.swift) {
                     @Image(source: integrating-with-control-center-1-2, alt: "A screenshot from an iPhone")
+                }
+            }
+        }
+    }
+    
+    @Section(title: "Control Center and Metadata") {
+        @ContentAndMedia {
+            Provide metadata to the Control Center.
+        }
+        
+        @Steps {
+            @Step {
+                Add metadata to the ``Player``.
+                
+                By default the metadata is empty.
+                To populate the Control Center we have to do more.
+
+                @Code(name: "ContentView.swift", file: integrating-with-control-center-2-1.swift) {
+                    @Image(source: integrating-with-control-center-2-1, alt: "A screenshot from an iPhone")
+                }
+            }
+            
+            @Step {
+                Add a title, a subtitle and an image.
+                
+                @Code(name: "ContentView.swift", file: integrating-with-control-center-2-2.swift) {
+                    @Image(source: integrating-with-control-center-2-2, alt: "A screenshot from an iPhone")
                 }
             }
         }
