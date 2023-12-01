@@ -23,6 +23,7 @@ private struct BufferingView: View {
 
     var body: some View {
         ProgressView(value: buffer)
+            .padding()
             .onReceive(player: player, assign: \.buffer, to: $buffer)
     }
 }

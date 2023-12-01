@@ -21,5 +21,6 @@ private struct BufferingView: View {
 
     var body: some View {
         ProgressView(value: buffer)
+            .padding()
     }
 }

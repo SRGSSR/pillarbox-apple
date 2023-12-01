@@ -13,6 +13,7 @@ struct ContentView: View {
         VStack {
             VideoView(player: player)
             ProgressView(value: buffer)
+                .padding()
         }
         ._debugBodyCounter()
         .onReceive(player: player, assign: \.buffer, to: $buffer)
