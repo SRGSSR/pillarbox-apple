@@ -72,6 +72,7 @@
 		6F917C112887EA8E004113BA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F917C0D2887EA8E004113BA /* Preview Assets.xcassets */; };
 		6F985D792B18CCC9000A1483 /* PinchToZoomTutorial~ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F985D782B18CCC9000A1483 /* PinchToZoomTutorial~ios.swift */; };
 		6F9B5BC928CF8C530074B9E0 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 6F9B5BC828CF8C530074B9E0 /* OrderedCollections */; };
+		6FC4F4802B1A1BCE00BBAFC8 /* OptimizingCustomLayouts~ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC4F47F2B1A1BCE00BBAFC8 /* OptimizingCustomLayouts~ios.swift */; };
 		6FC5D6A22A6FA8D20012BC89 /* Modal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC5D6A12A6FA8D20012BC89 /* Modal.swift */; };
 		6FC5D6A42A6FACB20012BC89 /* CloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC5D6A32A6FACB20012BC89 /* CloseButton.swift */; };
 		6FCA4747292CBEC7008C2812 /* ShowTime in Frameworks */ = {isa = PBXBuildFile; productRef = 6FCA4746292CBEC7008C2812 /* ShowTime */; };
@@ -153,6 +154,7 @@
 		6F917C082887EA8E004113BA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6F917C0D2887EA8E004113BA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6F985D782B18CCC9000A1483 /* PinchToZoomTutorial~ios.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PinchToZoomTutorial~ios.swift"; sourceTree = "<group>"; };
+		6FC4F47F2B1A1BCE00BBAFC8 /* OptimizingCustomLayouts~ios.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OptimizingCustomLayouts~ios.swift"; sourceTree = "<group>"; };
 		6FC5D6A12A6FA8D20012BC89 /* Modal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modal.swift; sourceTree = "<group>"; };
 		6FC5D6A32A6FACB20012BC89 /* CloseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseButton.swift; sourceTree = "<group>"; };
 		6FCB9DDD29E024E900961B69 /* BlurredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurredView.swift; sourceTree = "<group>"; };
@@ -441,6 +443,7 @@
 		6F7EAA532B17755100194D03 /* Tutorials */ = {
 			isa = PBXGroup;
 			children = (
+				6FC4F47F2B1A1BCE00BBAFC8 /* OptimizingCustomLayouts~ios.swift */,
 				6F985D782B18CCC9000A1483 /* PinchToZoomTutorial~ios.swift */,
 				6F7EAA542B17755C00194D03 /* ProgressTrackerTutorial~ios.swift */,
 				6FD407882B189C0600D34BD1 /* VisibilityTrackerTutorial~ios.swift */,
@@ -634,6 +637,7 @@
 				6F59E89129CF31E20093E6FB /* WrappedView.swift in Sources */,
 				6F59E88629CF31E20093E6FB /* ContentListView.swift in Sources */,
 				6FC5D6A22A6FA8D20012BC89 /* Modal.swift in Sources */,
+				6FC4F4802B1A1BCE00BBAFC8 /* OptimizingCustomLayouts~ios.swift in Sources */,
 				6F59E89B29CF31E20093E6FB /* SystemPlayerView.swift in Sources */,
 				6F59E87B29CF31E10093E6FB /* DemoApp.swift in Sources */,
 				0E4128BD2AFB7F2A00D67759 /* InlineSystemPlayerView.swift in Sources */,

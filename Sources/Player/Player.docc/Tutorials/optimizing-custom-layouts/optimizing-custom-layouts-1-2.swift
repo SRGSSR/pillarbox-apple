@@ -1,14 +1,8 @@
-//
-//  Copyright (c) SRG SSR. All rights reserved.
-//
-//  License information is available from the LICENSE file.
-//
-
 import Core
 import Player
 import SwiftUI
 
-struct ProgressTrackerTutorial: View {
+struct ContentView: View {
     @StateObject private var player = Player(
         item: .simple(url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!)
     )
@@ -31,8 +25,4 @@ struct ProgressTrackerTutorial: View {
             ._debugBodyCounter(color: .blue)
             .padding()
     }
-}
-
-#Preview {
-    ProgressTrackerTutorial()
 }

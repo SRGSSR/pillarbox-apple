@@ -1,0 +1,105 @@
+@Tutorial(time: 20) {
+    @Intro(title: "Optimizing custom layouts") {
+        Learn how you to rearrange your layout to minimize unnecessary refreshes.
+    }
+    
+    @Section(title: "Isolate progress updates") {
+        @ContentAndMedia {
+            Start with an existing player user interface. Investigate view body updates. Rearrange the layout to minimize unnecessary refreshes.
+        }
+        
+        @Steps {
+            @Step {
+                Replace your `ContentView` code with the attached implementation.
+                
+                We start our implementation from the layout created in tutorial <doc:tracking-progress>.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-1-1.swift) {
+                    @Image(source: optimizing-custom-layouts-1-1, alt: "A screenshot of an iPhone playing a video.")
+                }
+            }
+            
+            @Step {
+                 Apply the `_debugBodyCounter(color:)` modifier on the `VideoView` and the `Slider`. 
+                 
+                 At runtime you can observe that both views are updated identically.
+                 
+                 > Tip: Body counters are automatically displayed in Xcode previews. In the simulator or on a device you must set the `PILLARBOX_DEBUG_BODY_COUNTER` environment variable before running the app.
+                 
+                 @Code(name: "ContentView.swift", file: optimizing-custom-layouts-1-2.swift) {
+                     @Image(source: optimizing-custom-layouts-1-2, alt: "A screenshot of an iPhone playing a video.")
+                 }
+            }
+            
+            @Step {
+                Transform the `slider()` method into the body of a new private `ProgressSlider` slider view. Move the progress tracker `StateObject` to this view as well. Remove the `bind(_:to:)` and overlay modifiers to have the code compile again.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-1-3.swift)
+            }
+
+            @Step {
+                The progress tracker still needs to be bound to a player to work. Since nothing directly depends on player updates in the `ProgressSlider` body simply add a regular (non-observed) property. Also restore the `bind(_:to_:)` modifier.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-1-4.swift)
+            }
+            
+            @Step {
+                Display the `ProgressSlider` as overlay again.
+                
+                At runtime you can observe that the slider is refreshed continuously while refreshes of the video view stop after a few times.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-1-5.swift) {
+                    @Image(source: optimizing-custom-layouts-1-5, alt: "A screenshot of an iPhone playing a video.")
+                }
+            }
+        }
+    }
+    
+    @Section(title: "Display buffering status") {
+        @ContentAndMedia {
+            Create and configure an Xcode project that uses Player.
+        }
+        
+        @Steps {
+            @Step {
+                Create a new project using the iOS App template.
+            }
+            
+            @Step {
+                Enter "ProgressTracking" as the Product Name. 
+            }
+            
+            @Step {
+                Select "SwiftUI" from the Interface pop-up menu and "SwiftUI App" from the Life Cycle pop-up menu, then click Next. Choose a location to save the project on your Mac.
+            }
+
+            @Step {
+                Add the Player dependency to the project.
+            }
+        }
+    }
+    
+    @Section(title: "Observe properties with more frequent updates") {
+        @ContentAndMedia {
+            Create and configure an Xcode project that uses Player.
+        }
+        
+        @Steps {
+            @Step {
+                Create a new project using the iOS App template.
+            }
+            
+            @Step {
+                Enter "ProgressTracking" as the Product Name. 
+            }
+            
+            @Step {
+                Select "SwiftUI" from the Interface pop-up menu and "SwiftUI App" from the Life Cycle pop-up menu, then click Next. Choose a location to save the project on your Mac.
+            }
+
+            @Step {
+                Add the Player dependency to the project.
+            }
+        }
+    }
+}
