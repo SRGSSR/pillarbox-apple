@@ -9,7 +9,9 @@ Enable playback steering from the Control Center.
 
 ## Overview
 
-> Important: Control Center integration is only meaningful for iOS apps.
+- Important: Control Center integration is only meaningful for iOS apps.
+
+- Note: For an example of use have a look at the <doc:integrating-with-control-center> tutorial.
 
 ``Player`` natively integrates with the iOS Control Center. Though most of this integration happens automatically your app is still responsible of activating the player instance which must be controlled by the Control Center. It must also provide the metadata (title, artwork image) associated with the ``PlayerItem`` currently being played.
 
