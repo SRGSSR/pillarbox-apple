@@ -12,7 +12,7 @@ struct PackageInfoPlugin: BuildToolPlugin {
     func createBuildCommands(context: PackagePlugin.PluginContext, target: PackagePlugin.Target) async throws -> [PackagePlugin.Command] {
         [
             .prebuildCommand(
-                displayName: "Provide package information as in a generate Swift file",
+                displayName: "Provide package information as a generated Swift file",
                 executable: try context.tool(named: "PackageInfo").path,
                 arguments: [
                     "\(target.directory.appending("../.."))",
