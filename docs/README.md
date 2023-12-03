@@ -110,7 +110,6 @@ Further documentation is also available by following the links below:
 - [Known issues](KNOWN_ISSUES.md)
 - [Development setup](DEVELOPMENT_SETUP.md)
 - [Continuous integration](CONTINUOUS_INTEGRATION.md)
-- [Test streams](TEST_STREAMS.md)
 
 # License
 
