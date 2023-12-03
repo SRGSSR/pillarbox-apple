@@ -269,7 +269,7 @@ extension Template {
             item.automaticallyPreservesTimeOffsetFromLive = true
             item.preferredForwardBufferDuration = 1
             return item
-        case .urn, .youTube:
+        case .urn:
             return nil
         }
     }
