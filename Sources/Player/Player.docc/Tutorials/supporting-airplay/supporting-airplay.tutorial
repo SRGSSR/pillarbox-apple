@@ -21,21 +21,35 @@
             
             @Step {
                 Instantiate the ``Player``.
-                @Image(source: supporting-airplay-1, alt: "A screenshot of a basic player.")
+                
+                @Code(name: "ContentView.swift", file: supporting-airplay-1.swift) {
+                    @Image(source: supporting-airplay-1, alt: "A screenshot of a basic player.")
+                }
             }
             
             @Step {
                 Add a ``RoutePickerView``.
-                @Image(source: supporting-airplay-2, alt: "A screenshot of a basic player with an AirPlay button.")
+                
+                @Code(name: "ContentView.swift", file: supporting-airplay-2.swift) {
+                    @Image(source: supporting-airplay-2, alt: "A screenshot of a basic player with an AirPlay button.")
+                }
             }
             
             @Step {
                 Make the player instance active and start the playback.
+                
+                @Code(name: "ContentView.swift", file: supporting-airplay-3.swift)
+            }
+            
+            @Step {
+                Now you can use the AirPlay Button.
+
                 @Image(source: supporting-airplay-3, alt: "A screenshot of the AirPlay router.")
             }
             
             @Step {
-                Enjoy!
+                And enjoy!
+
                 @Image(source: supporting-airplay-4, alt: "An image of AirPlay in action.")
             }
         }
