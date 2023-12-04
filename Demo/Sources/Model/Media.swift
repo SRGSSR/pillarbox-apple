@@ -7,14 +7,12 @@
 import CoreBusiness
 import Foundation
 import Player
-import YouTubeIdentifier
 
 struct Media: Hashable {
     enum `Type`: Hashable {
         case url(URL)
         case unbufferedUrl(URL)
         case urn(String, server: Server)
-        case youTube(String)
 
         static func urn(_ urn: String) -> Self {
             .urn(urn, server: .production)
@@ -42,16 +40,11 @@ struct Media: Hashable {
     func playerItem() -> PlayerItem {
         switch type {
         case let .url(url):
-            if let youTubeId = Self.youTubeId(from: url) {
-                return .youTube(videoId: youTubeId)
-            }
-            else {
-                return .simple(url: url, metadata: self, trackerAdapters: [
-                    DemoTracker.adapter { media in
-                        DemoTracker.Metadata(title: media.title)
-                    }
-                ])
-            }
+            return .simple(url: url, metadata: self, trackerAdapters: [
+                DemoTracker.adapter { media in
+                    DemoTracker.Metadata(title: media.title)
+                }
+            ])
         case let .unbufferedUrl(url):
             return .simple(
                 url: url,
@@ -71,16 +64,7 @@ struct Media: Hashable {
                     DemoTracker.Metadata(title: metadata.title)
                 }
             ])
-
-        case let .youTube(youTubeId):
-            return .youTube(videoId: youTubeId)
         }
-    }
-}
-
-private extension Media {
-    static func youTubeId(from url: URL) -> String? {
-        YouTubeIdentifier.extract(from: url)
     }
 }
 
