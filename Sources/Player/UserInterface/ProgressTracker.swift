@@ -15,6 +15,9 @@ import SwiftUI
 /// information as well as the available range for its values. It also ensures that interactive progress updates
 /// do not conflict with reported progress updates, ensuring a smooth user experience.
 ///
+/// > Warning: Progress trackers should be associated with local view scopes to avoid unnecessary view body refreshes. 
+/// Please refer to <doc:state-observation> for more information.
+///
 /// ## Usage
 ///
 /// A progress tracker is used as follows:

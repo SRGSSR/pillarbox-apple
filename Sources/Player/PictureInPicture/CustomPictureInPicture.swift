@@ -8,7 +8,7 @@ import AVKit
 import Combine
 
 /// Manages Picture in Picture for `VideoView` instances.
-public final class CustomPictureInPicture: NSObject {
+final class CustomPictureInPicture: NSObject {
     @Published private(set) var isPossible = false
     @Published private(set) var isActive = false
     @Published private(set) var isInAppPossible = false
@@ -118,36 +118,36 @@ public final class CustomPictureInPicture: NSObject {
 }
 
 extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
-    public func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+    func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = true
         acquire(for: pictureInPictureController.playerLayer)
         delegate?.pictureInPictureWillStart()
     }
 
-    public func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+    func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         delegate?.pictureInPictureDidStart()
     }
 
-    public func pictureInPictureController(
+    func pictureInPictureController(
         _ pictureInPictureController: AVPictureInPictureController,
         failedToStartPictureInPictureWithError error: Error
     ) {
         delegate?.pictureInPictureControllerFailedToStart(with: error)
     }
 
-    public func pictureInPictureController(
+    func pictureInPictureController(
         _ pictureInPictureController: AVPictureInPictureController,
         restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
     ) {
         delegate?.pictureInPictureRestoreUserInterfaceForStop(with: completionHandler)
     }
 
-    public func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+    func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = false
         delegate?.pictureInPictureWillStop()
     }
 
-    public func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+    func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         relinquish(for: pictureInPictureController.playerLayer)
         delegate?.pictureInPictureDidStop()
     }

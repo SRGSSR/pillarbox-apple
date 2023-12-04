@@ -7,7 +7,7 @@
 import Player
 import SwiftUI
 
-struct VisibilityTrackerTutorial: View {
+struct TrackingVisibilityTutorial: View {
     @StateObject private var player = Player(
         item: .simple(url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!)
     )
@@ -49,5 +49,5 @@ struct VisibilityTrackerTutorial: View {
 }
 
 #Preview {
-    VisibilityTrackerTutorial()
+    TrackingVisibilityTutorial()
 }

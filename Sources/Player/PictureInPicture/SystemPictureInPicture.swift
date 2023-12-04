@@ -7,7 +7,7 @@
 import AVKit
 
 /// Manages Picture in Picture for `SystemVideoView` instances.
-public final class SystemPictureInPicture: NSObject {
+final class SystemPictureInPicture: NSObject {
     private(set) var isActive = false
 
     var playerViewController: AVPlayerViewController?
@@ -73,49 +73,49 @@ public final class SystemPictureInPicture: NSObject {
 }
 
 extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
-    public func playerViewControllerWillStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
+    func playerViewControllerWillStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
         isActive = true
         acquire(for: playerViewController)
         delegate?.pictureInPictureWillStart()
     }
 
-    public func playerViewControllerDidStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
+    func playerViewControllerDidStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
         delegate?.pictureInPictureDidStart()
     }
 
-    public func playerViewController(
+    func playerViewController(
         _ playerViewController: AVPlayerViewController,
         failedToStartPictureInPictureWithError error: Error
     ) {
         delegate?.pictureInPictureControllerFailedToStart(with: error)
     }
 
-    public func playerViewController(
+    func playerViewController(
         _ playerViewController: AVPlayerViewController,
         restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
     ) {
         delegate?.pictureInPictureRestoreUserInterfaceForStop(with: completionHandler)
     }
 
-    public func playerViewControllerWillStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
+    func playerViewControllerWillStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
         isActive = true
         delegate?.pictureInPictureWillStop()
     }
 
-    public func playerViewControllerDidStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
+    func playerViewControllerDidStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
         relinquish(for: playerViewController)
         delegate?.pictureInPictureDidStop()
     }
 
 #if os(iOS)
-    public func playerViewController(
+    func playerViewController(
         _ playerViewController: AVPlayerViewController,
         willBeginFullScreenPresentationWithAnimationCoordinator coordinator: UIViewControllerTransitionCoordinator
     ) {
         acquire(for: playerViewController)
     }
 
-    public func playerViewController(
+    func playerViewController(
         _ playerViewController: AVPlayerViewController,
         willEndFullScreenPresentationWithAnimationCoordinator coordinator: UIViewControllerTransitionCoordinator
     ) {

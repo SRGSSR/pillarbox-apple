@@ -1,0 +1,113 @@
+@Tutorial(time: 20) {
+    @Intro(title: "Optimizing custom layouts") {
+        Learn to rearrange your layout to minimize unnecessary refreshes.
+    }
+    
+    @Section(title: "Isolate progress updates") {
+        @ContentAndMedia {
+            Start with an existing player user interface. Investigate view body updates. Rearrange the layout to minimize unnecessary refreshes.
+        }
+        
+        @Steps {
+            @Step {
+                Replace your `ContentView` code with the attached implementation.
+                
+                We start our implementation from the layout created in tutorial <doc:tracking-progress>.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-1-1.swift) {
+                    @Image(source: optimizing-custom-layouts-1-1, alt: "A screenshot of an iPhone playing a video.")
+                }
+            }
+            
+            @Step {
+                 Apply the `_debugBodyCounter(color:)` modifier on the `VideoView` and the `Slider`. 
+                 
+                 At runtime you can observe that both views are updated identically.
+                 
+                 > Tip: Body counters are automatically displayed in Xcode previews. In the simulator or on a device you must set the `PILLARBOX_DEBUG_BODY_COUNTER` environment variable before running the app.
+                 
+                 @Code(name: "ContentView.swift", file: optimizing-custom-layouts-1-2.swift) {
+                     @Image(source: optimizing-custom-layouts-1-2, alt: "A screenshot of an iPhone playing a video.")
+                 }
+            }
+            
+            @Step {
+                Transform the `slider()` method into the body of a new private `ProgressSlider` view. Move the progress tracker `StateObject` to this view as well. Remove the `bind(_:to:)` and overlay modifiers so that the code compile again.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-1-3.swift)
+            }
+
+            @Step {
+                The progress tracker still needs to be bound to a player to work. Since nothing directly depends on player updates in the `ProgressSlider` body simply add a regular (non-observed) property. Also restore the `bind(_:to_:)` modifier.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-1-4.swift)
+            }
+            
+            @Step {
+                Display the `ProgressSlider` as overlay again.
+                
+                At runtime you can observe that the slider is refreshed continuously while refreshes of the video view stop after a few times.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-1-5.swift) {
+                    @Image(source: optimizing-custom-layouts-1-5, alt: "A screenshot of an iPhone playing a video.")
+                }
+            }
+        }
+    }
+    
+    @Section(title: "Display the buffer progress") {
+        @ContentAndMedia {
+            Display the buffer progress by explicitly observing associated updates. Move observation to a local view scope to prevent unnecessary updates.
+        }
+        
+        @Steps {
+            @Step {
+                Replace your `ContentView` code with the attached implementation.
+                
+                We start our implementation from with a simple `VideoView`. At runtime you can observe that a few refreshes occur on the `VideoView` when playback starts.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-2-1.swift) {
+                    @Image(source: optimizing-custom-layouts-2-1, alt: "A screenshot of an iPhone playing a video.")
+                }
+            }
+            
+            @Step {
+                Apply the `onReceive(player:assign:to:)` modifier to listen to buffer changes. Store updates into a corresponding `Float` state.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-2-2.swift)
+            }
+            
+            @Step {
+                Display the progress below the `VideoView` using a `ProgressView`.
+                
+                At runtime you can observe that more refreshes occur on the `VideoView` when playback start, but also when more content is buffered.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-2-3.swift) {
+                    @Image(source: optimizing-custom-layouts-2-3, alt: "A screenshot of an iPhone playing a video.")
+                }
+            }
+
+            @Step {
+                Extract the progress view into a new private `BufferingView` body. Move the buffer state to this new view as well. Remove the `onReceive(player:assign:to:)` modifier so that the code compiles.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-2-4.swift)
+            }
+            
+            @Step {
+                Apply the  `onReceive(player:assign:to:)` modifier in `BufferingView`, which requires the player to be received as parameter. Since nothing directly depends on player updates in the `ProgressSlider` body simply add a regular (non-observed) property.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-2-5.swift)
+            }
+            
+            @Step {
+                Insert the `BufferingView` into the view hierarchy.
+                
+                At runtime you can observe that a few refreshes occur on the `VideoView` when playback start, as was the case at the very beginning, and that refreshes during content buffering have disappeared.
+                
+                @Code(name: "ContentView.swift", file: optimizing-custom-layouts-2-6.swift) {
+                    @Image(source: optimizing-custom-layouts-2-6, alt: "A screenshot of an iPhone playing a video.")
+                }
+            }
+        }
+    }
+}
