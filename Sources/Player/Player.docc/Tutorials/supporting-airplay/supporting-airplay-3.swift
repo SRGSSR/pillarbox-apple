@@ -14,9 +14,5 @@ struct ContentView: View {
                 .frame(width: 50)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
         }
-        .onAppear {
-            player.becomeActive()
-            player.play()
-        }
     }
 }

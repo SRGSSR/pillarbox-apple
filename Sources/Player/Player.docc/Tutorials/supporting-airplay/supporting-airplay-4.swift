@@ -9,6 +9,14 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             VideoView(player: player)
+            RoutePickerView()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 50)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+        }
+        .onAppear {
+            player.becomeActive()
+            player.play()
         }
     }
 }

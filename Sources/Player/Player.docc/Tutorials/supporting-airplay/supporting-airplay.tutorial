@@ -1,4 +1,4 @@
-@Tutorial(time: 20) {
+@Tutorial(time: 5) {
     @Intro(title: "Supporting AirPlay") {
         Enable video and audio sharing to Apple TV or AirPlay‑enabled receivers.
 
@@ -7,50 +7,60 @@
     
     @Section(title: "Setup the project") {
         @ContentAndMedia {
-            Configure the project to enable ``AirPlay``.
+            Configure the project to enable AirPlay.
         }
         
         @Steps {
             @Step {
-                Enable ``AirPlay`` in Xcode by enabling [background modes](https://developer.apple.com/documentation/avfoundation/media_playback/configuring_your_app_for_media_playback#4182619).
+                Enable AirPlay in Xcode by enabling [background modes](https://developer.apple.com/documentation/avfoundation/media_playback/configuring_your_app_for_media_playback#418261).
             }
             
             @Step {
                 Setup your [audio session category](https://developer.apple.com/documentation/avfoundation/streaming_and_airplay/supporting_airplay_in_your_app#2929254) to `.playback`.
+                
+                @Code(name: "file.swift", file: supporting-airplay-1.swift)
             }
-            
+        }
+    }
+    
+    @Section(title: "Add AirPlay Support") {
+        @ContentAndMedia {
+            Incorporate AirPlay feature into your application.
+        }
+        
+        @Steps {
             @Step {
                 Instantiate the ``Player``.
                 
-                @Code(name: "ContentView.swift", file: supporting-airplay-1.swift) {
-                    @Image(source: supporting-airplay-1, alt: "A screenshot of a basic player.")
+                @Code(name: "ContentView.swift", file: supporting-airplay-2.swift) {
+                    @Image(source: supporting-airplay-2, alt: "A screenshot of a basic player.")
                 }
             }
             
             @Step {
                 Add a ``RoutePickerView``.
                 
-                @Code(name: "ContentView.swift", file: supporting-airplay-2.swift) {
-                    @Image(source: supporting-airplay-2, alt: "A screenshot of a basic player with an AirPlay button.")
+                @Code(name: "ContentView.swift", file: supporting-airplay-3.swift) {
+                    @Image(source: supporting-airplay-3, alt: "A screenshot of a basic player with an AirPlay button.")
                 }
             }
             
             @Step {
                 Make the player instance active and start the playback.
                 
-                @Code(name: "ContentView.swift", file: supporting-airplay-3.swift)
+                @Code(name: "ContentView.swift", file: supporting-airplay-4.swift)
             }
             
             @Step {
                 Now you can use the AirPlay Button.
 
-                @Image(source: supporting-airplay-3, alt: "A screenshot of the AirPlay router.")
+                @Image(source: supporting-airplay-4, alt: "A screenshot of the AirPlay router.")
             }
             
             @Step {
-                And enjoy!
+                Enjoy the experience!
 
-                @Image(source: supporting-airplay-4, alt: "An image of AirPlay in action.")
+                @Image(source: supporting-airplay-5, alt: "An image of AirPlay in action.")
             }
         }
     }
