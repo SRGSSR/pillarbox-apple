@@ -41,4 +41,6 @@ If you want to build your own menu you can retrieve the media selection submenu 
 
 You can also build an entirely custom media selection user interface with the help of the media selection APIs listed above.
 
-## Stream packaging requirements 
+### Stream packaging requirements
+
+Automatic media selection requires content to be packaged according to standards discussed in <doc:stream-packaging-advice>.
