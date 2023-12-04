@@ -21,14 +21,22 @@
             
             @Step {
                 Instantiate the ``Player``.
+                @Image(source: supporting-airplay-1, alt: "A screenshot of a basic player.")
             }
             
             @Step {
                 Add a ``RoutePickerView``.
+                @Image(source: supporting-airplay-2, alt: "A screenshot of a basic player with an AirPlay button.")
             }
             
             @Step {
                 Make the player instance active and start the playback.
+                @Image(source: supporting-airplay-3, alt: "A screenshot of the AirPlay router.")
+            }
+            
+            @Step {
+                Enjoy!
+                @Image(source: supporting-airplay-4, alt: "An image of AirPlay in action.")
             }
         }
     }
