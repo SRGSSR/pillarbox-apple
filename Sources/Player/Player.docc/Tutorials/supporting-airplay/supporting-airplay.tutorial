@@ -1,0 +1,35 @@
+@Tutorial(time: 20) {
+    @Intro(title: "Supporting AirPlay") {
+        Enable video and audio sharing to Apple TV or AirPlay‑enabled receivers.
+
+        @Image(source: airplay-card, alt: "An image depicting the AirPlay video and audio logos.")
+    }
+    
+    @Section(title: "Setup the project") {
+        @ContentAndMedia {
+            Configure the project to enable ``AirPlay``.
+        }
+        
+        @Steps {
+            @Step {
+                Enable ``AirPlay`` in Xcode by enabling [background modes](https://developer.apple.com/documentation/avfoundation/media_playback/configuring_your_app_for_media_playback#4182619).
+            }
+            
+            @Step {
+                Setup your [audio session category](https://developer.apple.com/documentation/avfoundation/streaming_and_airplay/supporting_airplay_in_your_app#2929254) to `.playback`.
+            }
+            
+            @Step {
+                Instantiate the ``Player``.
+            }
+            
+            @Step {
+                Add a ``RoutePickerView``.
+            }
+            
+            @Step {
+                Make the player instance active and start the playback.
+            }
+        }
+    }
+}
