@@ -15,18 +15,18 @@ Pillarbox provides two modes of integration for Picture in Picture:
 
 No matter the integration mode you choose you must setup your application first so that it can support Picture in Picture.
 
-### Application setup
+### Configure your app
 
 For your application to be able to support Picture in Picture you must:
 
-- Add _Audio, AirPlay, and Picture in Picture_ to your target _Background Modes_ capabilities.
-- [Configure your audio session](https://developer.apple.com/documentation/avfaudio/avaudiosession) so that it uses the `.playback` category.
+1. Ensure your app [background modes](https://developer.apple.com/documentation/avfoundation/media_playback/configuring_your_app_for_media_playback#4182619) allow AirPlay.
+2. Setup your [audio session category](https://developer.apple.com/documentation/avfoundation/streaming_and_airplay/supporting_airplay_in_your_app#2929254) to `.playback`.
 
 ### Basic integration
 
-Basic integration is as simple as enabling `isPictureInPictureSupported` for a `VideoView`.
+Integrating the basic functionality is straightforward, you just need to enable the `isPictureInPictureSupported` parameter when initializing the ``VideoView`` using the ``VideoView/init(player:gravity:isPictureInPictureSupported:)`` constructor.
 
-`SystemVideoView` does not support basic integration.
+``SystemVideoView`` does not support basic integration.
 
 #### Testing your integration
 
@@ -43,17 +43,17 @@ Advanced integration is more involved and requires additional integration steps 
 - Dismiss and restore your player user interface when appropriate.
 - Continue playing even when the player user interface has been dismissed.
 
-Advanced integration is available both for `VideoView` as well as `SystemVideoView` and is usually achieved as follows:
+Advanced integration is available both for ``VideoView`` as well as ``SystemVideoView`` and is usually achieved as follows:
 
-1. Enable `isPictureInPictureSupported` for a `VideoView` or `SystemVideoView`.
-2. Ensure your player view state can exist outside the view existence. One possible approach is to have a player view model which outlives its view, e.g. by storing it in a shared global state (e.g. a `static` property). The player view state should itself contain the `Player` instance used for playback.
+1. Enable `isPictureInPictureSupported` for a ``VideoView`` or ``SystemVideoView``.
+2. Ensure your player view state can exist outside the view existence. One possible approach is to have a player view model which outlives its view, e.g. by storing it in a shared global state (e.g. a `static` property). The player view state should itself contain the ``Player`` instance used for playback.
 3. Properly handle content updates in your shared player view state. Usually:
   a. When opening a content not being played: Update your player with the new item.
   b. When opening the same content already being played: Avoid updating your player so that playback can continue uninterrupted.
   c. When clearing the content: Remove all items currently in the player queue.
-4. To release resources when the player view is not needed anymore (i.e. when the player view is closed without activating Picture in Picture, or when Picture in Picture ends), apply the `enabledForInAppPictureInPictureWithCleanup(perform:)` modifier to the video view parent hierarchy, clearing your player view model state in its closure.
-5. `SystemVideoView` provides a Picture in Picture button automatically. For `VideoView`-based custom layouts you must add a `PictureInPictureButton` directly to your player interface.
-6. To dismiss / restore the player user interface when entering / exiting Picture in Picture, set a Picture in Picture life cycle delegate with the `PictureInPicture.setDelegate(_:)` method. A  generally good candidate is any routing-aware class of your application. Dismiss the player view when Picture in Picture is about to start, and restore it when it ends, calling the required completion handler at the end of your restoration animation.
+4. To release resources when the player view is not needed anymore (i.e. when the player view is closed without activating Picture in Picture, or when Picture in Picture ends), apply the ``SwiftUI/View/enabledForInAppPictureInPictureWithCleanup(perform:)`` modifier to the video view parent hierarchy, clearing your player view model state in its closure.
+5. ``SystemVideoView`` provides a Picture in Picture button automatically. For ``VideoView``-based custom layouts you must add a ``PictureInPictureButton`` directly to your player interface.
+6. To dismiss / restore the player user interface when entering / exiting Picture in Picture, set a Picture in Picture life cycle delegate with the ``PictureInPicture/setDelegate(_:)`` method. A  generally good candidate is any routing-aware class of your application. Dismiss the player view when Picture in Picture is about to start, and restore it when it ends, calling the required completion handler at the end of your restoration animation.
 
 #### Testing your integration
 
@@ -68,12 +68,12 @@ To test your integration:
 7. Tap on the Picture in Picture button. Playback should continue in Picture in Picture, within your application.
 8. Play another video. The player user interface should be restored with playback transitioning to the new content.
 
-#### `SystemVideoView` inline display
+#### ``SystemVideoView`` inline display
 
-The above instructions assume you are using either `VideoView` in a custom layout, or `SystemVideoView` presented full screen.
+The above instructions assume you are using either `VideoView` in a custom layout, or ``SystemVideoView`` presented full screen.
 
-When `SystemVideoView` is presented inline, though, its close button is replaced with a maximization button to switch to full screen display. Picture in Picture can be enabled whether the inline player has been maximized or not, and for this reason any life cycle implementation for the inline system player should not dismiss the player view when Picture in Picture is about to start. Implementing view restoration is still required, though.
+When ``SystemVideoView`` is presented inline, though, its close button is replaced with a maximization button to switch to full screen display. Picture in Picture can be enabled whether the inline player has been maximized or not, and for this reason any life cycle implementation for the inline system player should not dismiss the player view when Picture in Picture is about to start. Implementing view restoration is still required, though.
 
 #### Limitations
 
-Switching between a `VideoView` and a `SystemVideoView` for the content currently being played in Picture in Picture is not supported and leads to undefined behavior.
+Switching between a ``VideoView`` and a ``SystemVideoView`` for the content currently being played in Picture in Picture is not supported and leads to undefined behavior.
