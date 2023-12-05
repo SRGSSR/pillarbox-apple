@@ -17,7 +17,7 @@ Enable video and audio wireless sharing to Apple TV or AirPlay‑enabled receive
 
 ### Configure your app
 
-For AirPlay to be available your app must be configured appropriately:
+For your application to be able to support AirPlay you must:
 
 1. Ensure your app [background modes](https://developer.apple.com/documentation/avfoundation/media_playback/configuring_your_app_for_media_playback#4182619) allow AirPlay.
 2. Setup your [audio session category](https://developer.apple.com/documentation/avfoundation/streaming_and_airplay/supporting_airplay_in_your_app#2929254) to `.playback`.
