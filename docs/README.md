@@ -106,7 +106,6 @@ Documentation is available as a [DocC](https://developer.apple.com/documentation
 
 Further documentation is also available by following the links below:
 
-- [Stream packaging advice](STREAM_PACKAGING_ADVICE.md)
 - [Known issues](KNOWN_ISSUES.md)
 - [Development setup](DEVELOPMENT_SETUP.md)
 - [Continuous integration](CONTINUOUS_INTEGRATION.md)

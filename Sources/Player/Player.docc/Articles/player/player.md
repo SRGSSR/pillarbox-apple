@@ -43,7 +43,8 @@ The Player framework fully integrates with SwiftUI, embracing its declarative an
 ### Essentials
 
 - <doc:playback>
-- <doc:media-selection>
+- <doc:state-observation>
+- <doc:selecting-subtitles-and-alternative-audio-tracks>
 - <doc:playlists>
 
 ### System Integration
@@ -61,3 +62,7 @@ The Player framework fully integrates with SwiftUI, embracing its declarative an
 - <doc:resource-loading>
 - <doc:fairplay-streaming>
 - <doc:tracking>
+
+### Technical Notes
+
+- <doc:stream-packaging-advice>
