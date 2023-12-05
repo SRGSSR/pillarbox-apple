@@ -9,6 +9,8 @@ Enable uninterrupted video playback experiences when multitasking.
 
 ## Overview
 
+- Note: For step-by-step integration instructions have a look at the associated <doc:supporting-basic-picture-in-picture> tutorial.
+
 Pillarbox provides two modes of integration for Picture in Picture:
 
 - Basic integration, which enables Picture in Picture automatically when the application is sent to the background.
