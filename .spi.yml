@@ -1,5 +1,8 @@
+---
 version: 1
 builder:
   configs:
     - platform: ios
-      documentation_targets: [Analytics, Circumspect, Core, CoreBusiness, Player]
+      documentation_targets: [
+        Analytics, Circumspect, Core, CoreBusiness, Player
+      ]
