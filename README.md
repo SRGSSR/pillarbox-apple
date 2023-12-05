@@ -1,5 +1,5 @@
 <!-- markdownlint-disable-next-line MD041 -->
-[![Pillarbox logo](README-images/logo.jpg)](https://github.com/SRGSSR/pillarbox-apple)
+[![Pillarbox logo](docs/README-images/logo.jpg)](https://github.com/SRGSSR/pillarbox-apple)
 
 # Overview
 
@@ -33,13 +33,13 @@ In addition Pillarbox provides the ability to play all SRG SSR content through a
 
 Here are a few examples of layouts which can be achieved using Pillarbox and SwiftUI, directly borrowed from our demo project:
 
-[![Showcase](README-images/showcase.png)](https://github.com/SRGSSR/pillarbox-apple)
+[![Showcase](docs/README-images/showcase.png)](https://github.com/SRGSSR/pillarbox-apple)
 
 From left to right:
 
-- Screenshots 1, 2 and 3: [Rich custom player user interface](../Demo/Sources/Players/PlaybackView.swift).
-- Screenshot 4: [Player with associated playlist](../Demo/Sources/Showcase/Playlist/PlaylistView.swift).
-- Screenshot 5: [Stories](../Demo/Sources/Showcase/Stories/StoriesView.swift).
+- Screenshots 1, 2 and 3: [Rich custom player user interface](Demo/Sources/Players/PlaybackView.swift).
+- Screenshot 4: [Player with associated playlist](Demo/Sources/Showcase/Playlist/PlaylistView.swift).
+- Screenshot 5: [Stories](Demo/Sources/Showcase/Stories/StoriesView.swift).
 
 # Code example
 
@@ -85,7 +85,7 @@ The library is suitable for applications running on iOS 16, tvOS 16 and above. T
 
 # Contributing
 
-If you want to contribute to the project have a look at our [contributing guide](CONTRIBUTING.md).
+If you want to contribute to the project have a look at our [contributing guide](docs/CONTRIBUTING.md).
 
 # Integration
 
@@ -106,10 +106,10 @@ Documentation is available as a [DocC](https://developer.apple.com/documentation
 
 Further documentation is also available by following the links below:
 
-- [Known issues](KNOWN_ISSUES.md)
-- [Development setup](DEVELOPMENT_SETUP.md)
-- [Continuous integration](CONTINUOUS_INTEGRATION.md)
+- [Known issues](docs/KNOWN_ISSUES.md)
+- [Development setup](docs/DEVELOPMENT_SETUP.md)
+- [Continuous integration](docs/CONTINUOUS_INTEGRATION.md)
 
 # License
 
-See the [LICENSE](../LICENSE) file for more information.
+See the [LICENSE](LICENSE) file for more information.
