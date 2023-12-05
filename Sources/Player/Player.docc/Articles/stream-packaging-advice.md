@@ -10,7 +10,7 @@ Learn to package streams for optimal compatibility with the Player framework.
 
 The optimal playback experience which can be obtained with the Player framework requires streams to be packaged accordingly. This most notably affects the ability of the player to automatically apply default media selections as well as the quality of its seek user experience.
 
-More information about automatic selection is available from <doc:selecting-subtitles-and-alternative-audio-tracks>.
+More information about automatic selection is available from <doc:subtitles-and-alternative-audio-tracks>.
 
 ### Automatic media option selection
 
