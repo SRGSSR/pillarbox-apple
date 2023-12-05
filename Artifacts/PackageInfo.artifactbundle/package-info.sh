@@ -6,13 +6,11 @@ if [ "$#" -ne 2 ]; then
 fi
 
 if ! VERSION=$(git --git-dir "$1/.git" describe --tags 2> /dev/null); then
-    echo "No tag was found in the specified directory or the directory is not a valid git repository."
-    exit 1
+    VERSION="0.0.0"
 fi
 
 if ! SHORT_VERSION=$(git --git-dir "$1/.git" describe --tags --abbrev=0 2> /dev/null); then
-    echo "No tag was found in the specified repository."
-    exit 1
+    SHORT_VERSION="0.0.0"
 fi
 
 GENERATED_FILE_PATH="$2/PackageInfo.swift"
