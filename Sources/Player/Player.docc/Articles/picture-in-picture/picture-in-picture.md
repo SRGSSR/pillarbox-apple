@@ -2,6 +2,7 @@
 
 @Metadata {
     @PageColor(purple)
+    @PageImage(purpose: card, source: picture-in-picture-card, alt: "An image of PiP.")
 }
 
 Enable uninterrupted video playback experiences when multitasking.
