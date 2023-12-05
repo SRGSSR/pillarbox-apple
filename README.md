@@ -81,7 +81,7 @@ With the expressiveness of SwiftUI, our rich playback API and the set of compone
 
 # Compatibility
 
-The library is suitable for applications running on iOS 16, tvOS 16 and above. The project is meant to be compiled with the latest Xcode version.
+The library is suitable for applications running on iOS 16, tvOS 16 and above. The project is meant to be compiled with the latest versions of Xcode and of the Swift compiler.
 
 # Contributing
 
