@@ -77,31 +77,3 @@ The resulting player item can then be played in the ``Player`` instance. It can 
 
 The player offers the capability for background video playback through the use of the [audiovisualBackgroundPlaybackPolicy](https://developer.apple.com/documentation/avfoundation/avplayer/3787548-audiovisualbackgroundplaybackpol) property.
 In other words, you can ask your player on how to behave when the app goes into the background.
-
-## Playback speed
-
-The player also allows you to control the playback speed of the stream.
-You can adjust the speed at which the stream is played using the ``Player/setDesiredPlaybackSpeed(_:)`` method or by using ``Player/playbackSpeed`` property.
-
-@TabNavigator {
-    @Tab("Method") {
-        ```swift
-        let player = Player()
-        player.setDesiredSpeed(2)
-
-        ```
-    }
-    @Tab("Property") {
-        ```swift
-        @ObservedObject var player: Player
-        
-        Picker("Playback Speed", selection: player.playbackSpeed) {
-            ForEach([0.25, 0.75, 1, 1.5. 2], id: \.self) { speed in
-                Text("\(speed, specifier: "%g×")").tag(speed)
-            }
-        }
-        .pickerStyle(.inline)
-
-        ```
-    }
-}
