@@ -1,4 +1,4 @@
-# Selecting Subtitles and Alternative Audio Tracks
+# Subtitles and Alternative Audio Tracks
 
 @Metadata {
     @PageColor(purple)
