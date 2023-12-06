@@ -6,18 +6,9 @@
 
 import Combine
 
-/// A protocol for player item tracking implementation.
+/// A protocol for custom player item tracking implementation.
 ///
-/// If your application needs to track items being played, for example for analytics or diagnostics purposes, implement
-/// this protocol to hook into the playback life cycle. This allows you to setup your tracker at and to relinquish
-/// associated resources when appropriate.
-///
-/// The protocol provides two associated types through which your tracker can define any configuration or metadata it
-/// requires. Trackers are never instantiated directly but rather using adapter methods which let you map metadata
-/// provided by a player item to the required tracker metadata.
-///
-/// This protocol can only be applied to reference types. This makes it possible to use initialization and
-/// deinitialization methods to perform tracking also when the item is currently not being played.
+/// For more information about implementing custom trackers please read <doc:tracking>.
 public protocol PlayerItemTracker: AnyObject {
     /// A type describing the configuration required by the tracker.
     ///
@@ -48,8 +39,7 @@ public protocol PlayerItemTracker: AnyObject {
     ///
     /// - Parameter properties: The updated properties.
     ///
-    /// This method can be called quite often. Implementations should avoid performing significant costly work
-    /// unnecessarily.
+    /// This method can be called quite often. Implementations should avoid performing significant work unnecessarily.
     func updateProperties(with properties: PlayerProperties)
 
     /// A method called when the tracker is disabled.

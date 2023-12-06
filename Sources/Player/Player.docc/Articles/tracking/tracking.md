@@ -7,32 +7,48 @@
 
 Track player items during playback.
 
-## Custom item tracking
+## Overview
 
-Pillarbox makes it possible to easily integrate any kind of tracker, for example to gather analytics, QoS data or to save the current playback position into a history. Proceed as follows to implement your own tracker:
+The Player framework offers a way to track an item during playback. This mechanism is mostly useful to gather analytics, perform Quality of Service (QoS) monitoring or save the current playback position into a local history, for example.
 
-1. Create a new tracker class, say `CustomTracker`, and add conformance to the `PlayerItemTracker` protocol.
-2. The `PlayerItemTracker` protocol declares `Configuration` and `Metadata` associated types. If your tracker requires a configuration or metadata related to the item being tracked just create dedicated types which contain all required parameters. Use `Void` for any type that is not required for your tracker.
-3. Trackers are automatically instantiated by the item they are associated with. You therefore never instantiate a tracker directly but rather achieve the behavior you need by implementing `PlayerItemTracker` life cycle methods instead:
-  a. The `init(configuration:)` initializer is called on your tracker at creation time with the configuration you provided. You can either use this configuration directly to setup your tracker or store it for later use.
-  b. The `enable(for:)` method is called when the item to which the tracker is bound becomes the current one.
-  c. Metadata updates are automatically reported by the `updateMetadata(with:)` method.
-  d. Player property updates are automatically reported by the `updateProperties(with:)` method. Even if your tracker stores the player somehow you should rather use this method as the properties it publishes are guaranteed to be up-to-date. Be careful that properties can change often and that your implementation should be as efficient as possible.
-  e. Perform any required cleanup in `disable()`, which is called when the item to which the tracker is bound stops being the current one.
-  f. You can perform any necessary final cleanup in `deinit` which is called when the player item and its trackers are discarded.
+You define which data is required by a tracker as well as its life cycle by creating a new class type and conforming it to the ``PlayerItemTracker`` protocol.
 
-Once you have a tracker you can attach it to any item. The only requirement is that metadata supplied as part of the asset retrieval process is transformed into metadata required by the tracker. This transformation requires the use of a dedicated adapter, simply created from your custom tracker type with the `adapter(configuration:mapper:)` method. The adapter is also where you can supply any configuration required by your tracker:
+### Design data required by your tracker
+
+The ``PlayerItemTracker`` protocol declares two associated types which you should define according to your tracker needs, likely using simple structs:
+
+- ``PlayerItemTracker/Metadata`` representing metadata required by the tracker. Metadata is updated each time an asset is delivered by the tracked ``PlayerItem``.
+- ``PlayerItemTracker/Configuration`` representing configuration parameters required by the tracker. These parameters are provided at creation time and do not depend on the item itself.  
+
+> Note: Use `Void` if any of these types is not relevant for your tracker.  
+
+### Respond to tracker life cycle events
+
+Once types associated with an item tracker have been defined, start implementing the tracker life cycle itself:
+
+1. ``PlayerItemTracker/init(configuration:)`` is called when the tracker and its item are created. This initializer receives an instance of the configuration type you defined above.
+2. ``PlayerItemTracker/enable(for:)`` is called when the associated item becomes the current one. You can perform player-related setup in this method, e.g. passing the underlying system player to a 3rd party SDK which requires it.
+3. ``PlayerItemTracker/updateMetadata(with:)`` is called when metadata is updated for the player item, following retrieval of a new ``Asset``. The method receives an instance of the metadata type you defined above.
+4. ``PlayerItemTracker/updateProperties(with:)`` is called when player properties change. Be careful that properties can change often and that your implementation should be as efficient as possible.
+5. ``PlayerItemTracker/disable()`` is called when the player item stops being the current one. Your implementation should perform any cleanup work associated with work previously done in ``PlayerItemTracker/enable(for:)``.
+6. Since item trackers are required to be classes you can use `deinit` to perform any necessary final cleanup when the tracker and its item are discarded.
+
+> Warning: Some 3rd party trackers might require low-level access to the `AVPlayer` instance, which can be obtained with ``Player/systemPlayer``.
+>
+> Even though the low-level player can be accessed you should never attempt to mutate its state directly. Changes might namely confuse the parent ``Player``, leading to undefined behavior.
+
+### Attach a tracker to an item
+
+You can attach any tracker to any item. The only requirement is that ``AssetMetadata`` supplied as part of the ``Asset`` retrieval process is transformed into ``PlayerItemTracker/Metadata`` required by the tracker.
+
+This transformation requires the use of a dedicated adapter, simply created from your custom tracker type using the ``PlayerItemTracker/adapter(configuration:mapper:)`` method. The adapter is also where you can supply any configuration required by your tracker:
 
 ```swift
 let item = PlayerItem.simple(url: url, metadata: CustomMetadata(), trackerAdapters: [
     CustomTracker.adapter(configuration: configuration) { metadata in
-        // Convert metadata into tracker metadata
+        // Convert `CustomMetadata` into tracker metadata
     }
 ]
 ```
 
-Alternative adapter creation methods are available if your tracker has `Void` configuration and / or metadata.
-
-### Remark
-
-Some 3rd party trackers might require low-level access to the `AVPlayer` instance. The `Player` class exposes this player through the `systemPlayer` property. Even though the low-level player is therefore accessible you should never attempt to mutate its state directly. Changes might namely interfere with behavior expected by Pillarbox `Player` class, leading to undefined behavior.
+Note that alternative adapter creation methods are available if your tracker has `Void` configuration and / or metadata.
