@@ -50,7 +50,7 @@ Your application should be validated before being submitted to production, at le
 ### Page Views
 
 - <doc:page-views>
-- <doc:web-content>
+- <doc:web-content-tracking>
 
 ### Events
 
