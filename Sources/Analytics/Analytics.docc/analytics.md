@@ -32,7 +32,7 @@ The Analytics framework always links against [AdSupport](https://developer.apple
 
 > Important: SRG SSR apps must not implement [App Tracking Transparency](https://developer.apple.com/documentation/apptrackingtransparency). This ensures that the IDFA can never be obtained.
 
- ### App Privacy details
+### App Privacy details
 
 When submitting an app to the App Store you must provide [App Privacy details](https://developer.apple.com/app-store/app-privacy-details/). The Analytics framework collects Identifiers (User ID) and usage data (Product Interaction) not linked to a user.
 

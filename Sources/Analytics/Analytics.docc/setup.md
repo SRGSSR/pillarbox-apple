@@ -37,6 +37,7 @@ let configuration = Analytics.Configuration(
     appSiteName: "app-site-name"
 )
 ```
+
 You must provide the vendor publishing the app, a source key as well as the site name your received for your app.
 
 > Note: The source key must be `.productionSourceKey` for apps in production. During development you should set it to `.developmentSourceKey` to avoid polluting measurements associated with the production source key.
