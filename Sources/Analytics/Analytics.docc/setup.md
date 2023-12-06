@@ -14,19 +14,19 @@ Before any measurements can take place you must start a tracker with a configura
 
 The following information is required to properly setup tracking for your app:
 
-- The product name, the same for all platforms on which your product is available.
+- The product name, identical for all platforms on which your product is available.
 - The app/site name, which might differ between platforms.
 
 Values suitable for your app are delivered by the GD ADI team. Please refer to our [internal wiki](https://confluence.srg.beecollaboration.com/display/INTFORSCHUNG/Guidance+Implementation+Apps) for more information.
 
 ### Configure your application manifest
 
-The name and version of your application are retrieved from the [app manifest](https://developer.apple.com/documentation/bundleresources/information_property_list). You should therefore configure your `Info.plist` file so that it contains the following key-value pairs:
+The name and version of your application are retrieved from the [app manifest](https://developer.apple.com/documentation/bundleresources/information_property_list). You must configure your `Info.plist` file so that it contains the following key-value pairs:
 
 - `CFBundleName` must contain the product name obtained for your app.
 - `CFBundleShortVersionString` must contain the application version.
 
-### Setup tracking
+### Start tracking
 
 The ``Analytics`` singleton needs to be started before any measurements can take place. First create a configuration with parameters tailored to your app:
 
@@ -46,7 +46,10 @@ Once you have a configuration simply start the tracker singleton from the `appli
 
 ```swift
 final class AppDelegate: NSObject, UIApplicationDelegate {
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+    func application(
+        _ application: UIApplication, 
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+    ) -> Bool {
         let configuration = Analytics.Configuration(
             vendor: .SRF,
             sourceKey: .productionSourceKey,

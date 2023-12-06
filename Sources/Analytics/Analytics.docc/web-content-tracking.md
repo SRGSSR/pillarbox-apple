@@ -10,9 +10,9 @@ Correctly track web content displayed by your app.
 
 Apps might display or embed web content in various ways, whether this content is part of the SRG SSR offering or external to the company (e.g. some arbitrary YouTube page).
 
-SRG SSR websites must themselves implement page view tracking in JavaScript, so that usage data can be properly collected when a browser (desktop or mobile Safari, Chrome, Edge, etc.) is used to navigate them. External websites, while not tracked themselves by the SRG SSR, often provide a (possibly convoluted) way to navigate to an SRG SSR website by following some series of hyperlinks.
+SRG SSR websites must themselves implement page view tracking in JavaScript, so that usage data can be properly collected when a browser (desktop or mobile Safari, Chrome, Edge, etc.) is used to navigate them. External websites, while not tracked themselves by the SRG SSR, most of the time provide a (possibly convoluted) way to navigate to an SRG SSR website by following some series of hyperlinks.
 
-> Important: To comply with Mediapulse guidelines, it is especially important that no tracked SRG SSR web content is displayed while a tracked app is running in the foreground. The reason is that two separate analytics sessions would then coexist for native and web content with overlapping measurements (e.g. session duration), which is strictly forbidden by Mediapulse.
+> Important: To comply with Mediapulse guidelines it is especially important that no tracked SRG SSR web content is displayed while a tracked app is running in the foreground. The reason is that two separate analytics sessions would then coexist for native and web content with overlapping measurements (e.g. session duration), which is strictly forbidden by Mediapulse.
 
 Ensuring that web content is correctly tracked in your app requires a few precautions discussed in this article.
 
@@ -30,12 +30,12 @@ Most of the time it is very difficult or nearly impossible to guarantee that, st
 
 In such cases you should present the web content with the device browser. This ensures your app is automatically sent to the background so that Mediapulse requirements are guaranteed to be fulfilled, no matter how the user navigates the web content.
 
-This approach works well for apps which present loosly related web content, for example a link to some article, to a user guide or to legal information pages.
+This approach works well for apps which present loosely related web content, for example a link to some article, to a user guide or to legal information pages.
 
-#### Examples
+#### Use cases
 
 - Mostly native application with documentation accessible via web pages.
-- Player application offering a few links to articles related to a media stemming from various sources.
+- Player application offering a few links to articles related to content being played.
 
 ### Display web content in app
 
@@ -45,7 +45,7 @@ If the web content you want to display belongs to the SRG SSR, it must provide a
 
 Note that only the first web navigation level is affected by this rule. As it is impossible to avoid reaching an SRG SSR web page starting from a random web page, Mediapulse namely agreed that levels deeper than the first one are allowed to be tracked.
 
-#### Examples
+#### Use cases
 
 - News application displaying articles from the companion website as HTML.
 - Login web page displayed using [Authentication Services](https://developer.apple.com/documentation/authenticationservices), which itself uses the in-app browser for presentation.

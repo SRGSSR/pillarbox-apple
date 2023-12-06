@@ -22,7 +22,7 @@ The Analytics framework lets you measure application usage in two ways:
 - <doc:page-views>
 - <doc:events>
 
-> Note: Streaming measurements are automatically collected when playing SRG SSR content using the CoreBusiness framework. Just ensure that tracking has been properly setup first.
+> Important: Streaming measurements are automatically collected when playing SRG SSR content using the CoreBusiness framework. Just ensure that tracking has been properly setup first. Please refer to <doc:setup> for more information.
 
 ### Transparency and data protection
 
@@ -32,11 +32,11 @@ To comply with the Swiss [New Federal Act on Data Protection (nFADP)](https://ww
 
 The Analytics framework always links against [AdSupport](https://developer.apple.com/documentation/adsupport) but the [IDFA](https://developer.apple.com/documentation/adsupport/asidentifiermanager/advertisingidentifier) is never used or shared by the Analytics framework.
 
-> Important: SRG SSR apps must not implement [App Tracking Transparency](https://developer.apple.com/documentation/apptrackingtransparency). This ensures that the IDFA can never be obtained.
+> Important: SRG SSR apps must not implement [App Tracking Transparency](https://developer.apple.com/documentation/apptrackingtransparency). This ensures that the IDFA can never be read unintentionally.
 
 ### App Privacy details
 
-When submitting an app to the App Store you must provide [App Privacy details](https://developer.apple.com/app-store/app-privacy-details/). The Analytics framework collects Identifiers (User ID) and usage data (Product Interaction) not linked to a user.
+When submitting an app to the App Store you must provide [App Privacy details](https://developer.apple.com/app-store/app-privacy-details/). The Analytics framework collects Identifiers (User ID) and usage data (Product Interaction) but never linked to a user.
 
 ### Validation
 

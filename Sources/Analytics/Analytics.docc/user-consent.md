@@ -8,13 +8,15 @@ Take into account user choices about the data they are willing to share.
 
 ## Overview
 
-The Analytics framework does not directly implement user consent management but provides a way to forward user consent settings to the Commanders Act and comScore SDKs so that user wishes can be properly taken into account at the data processing level.
+The Analytics framework does not directly implement user consent management but provides a way to forward user consent choices to the Commanders Act and comScore SDKs so that user wishes can be properly taken into account at the data processing level.
 
-> Note: If you observe network traffic with a proxy tool like Charles you can still observe that both the Commanders Act and comScore SDKs still perform network calls, even if the user does not provide any consent. This is expected behavior as user consent settings, send as part of network request payloads, will be taken into account server-side.
+> Note: Do not worry if you observe analytics-related network traffic with a proxy tool like [Charles](https://www.charlesproxy.com). The Analytics framework still sends data but user consent is transmitted in each request payload for server-side processing.
 
 ### Setup an analytics data source
 
-Provide an ``AnalyticsDataSource`` when starting the tracker. The app delegate from which the tracker must be started is a natural candidate for this role:
+User consent is sent with each analytic network call in globals set through a data source associated with the ``Analytics`` singleton.
+
+To send user consent choices you must therefore register an ``AnalyticsDataSource`` when starting the tracker. The app delegate from which the tracker must be started is usually a perfect candidate for this role:
 
 ```swift
 final class AppDelegate: NSObject, UIApplicationDelegate {
@@ -36,9 +38,9 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
 See <doc:setup> for more information about tracking setup.
 
-### Provide user content information in data source global labels
+### Provide user content choices
 
-Implement the ``AnalyticsDataSource``, which lets you return global analytics labels for comScore and Commanders Act respectively, as well as associated user consent information. With the application delegate as data source the implementation would look like:
+Implement the ``AnalyticsDataSource`` to provide user consent choices in globals:
 
 ```swift
 extension AppDelegate: AnalyticsDataSource {
@@ -56,6 +58,6 @@ extension AppDelegate: AnalyticsDataSource {
 }
 ```
 
-In the example above user consent has been hardcoded but a real implementation should check local user consent information to provide parameters matching the current settings.
+In the example above user consent has been hardcoded but a real implementation should check local user consent data to provide parameters matching the current user choices.
 
-> Warning: ``AnalyticsDataSource`` methods are called before any event is sent. Your implementation should therefore be as efficient as possible.
+> Warning: ``AnalyticsDataSource`` methods are called with each event sent. Your implementation should therefore be as efficient as possible.
