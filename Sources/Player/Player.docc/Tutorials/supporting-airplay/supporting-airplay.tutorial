@@ -2,7 +2,7 @@
     @Intro(title: "Supporting AirPlay") {
         Enable video and audio sharing to Apple TV or AirPlay‑enabled receivers.
 
-        @Image(source: airplay-card, alt: "An image depicting the AirPlay video and audio logos.")
+        @Image(source: supporting-airplay, alt: "An image depicting the AirPlay video and audio logos.")
     }
     
     @Section(title: "Setup the project") {

@@ -2,7 +2,7 @@
     @Intro(title: "Integrating with the Control Center") {
         Enable control of playback directly from the Control Center.
 
-        @Image(source: integrating-with-control-center-card, alt: "An image depicting the Control Center.")
+        @Image(source: integrating-with-control-center, alt: "An image depicting the Control Center.")
     }
     
     @Section(title: "Control Center and Playback") {
