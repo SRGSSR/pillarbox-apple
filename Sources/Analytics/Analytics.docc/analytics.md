@@ -36,6 +36,10 @@ The Analytics framework always links against [AdSupport](https://developer.apple
 
 When submitting an app to the App Store you must provide [App Privacy details](https://developer.apple.com/app-store/app-privacy-details/). The Analytics framework collects Identifiers (User ID) and usage data (Product Interaction) not linked to a user.
 
+### Validation
+
+Your application should be validated before being submitted to production, at least when significant changes to analytics are made. Please contact the GD ADI team for more information.
+
 ## Topics
 
 ### Essentials
