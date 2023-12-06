@@ -44,15 +44,17 @@ You must provide the vendor publishing the app, a source key as well as the site
 Once you have a configuration simply start the tracker singleton from the `application(_:didFinishLaunchingWithOptions:)` implementation of your [application delegate](https://developer.apple.com/documentation/uikit/uiapplicationdelegate):
 
 ```swift
-func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-    let configuration = Analytics.Configuration(
-        vendor: .SRF,
-        sourceKey: .productionSourceKey,
-        appSiteName: "app-site-name"
-    )
-    try? Analytics.shared.start(with: configuration)
-    
-    // ...
+final class AppDelegate: NSObject, UIApplicationDelegate {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        let configuration = Analytics.Configuration(
+            vendor: .SRF,
+            sourceKey: .productionSourceKey,
+            appSiteName: "app-site-name"
+        )
+        try? Analytics.shared.start(with: configuration)
+        
+        // ...
+    }
 }
 ```
 

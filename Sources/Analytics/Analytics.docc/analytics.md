@@ -10,8 +10,8 @@ Measure app usage according to SRG SSR requirements.
 
 The Analytics framework provides a toolbox to measure app usage according to SRG SSR requirements:
 
-- Analytics for internal usage, gathered through the [Commanders Act](https://www.commandersact.com) platform.
-- Analytics for [Mediapulse](https://www.mediapulse.ch), an organization charged with collecting media consumption data in Switzerland.
+- Analytics for internal usage, gathered using [Commanders Act](https://www.commandersact.com) analytics SDK.
+- Analytics for [Mediapulse](https://www.mediapulse.ch), an organization charged with collecting media consumption data in Switzerland. These measurements are forwarded using [comScore](https://www.comscore.com/) analytics SDK.
 
 ### Measure app usage
 
