@@ -1,4 +1,4 @@
-# Page views
+# Page Views
 
 @Metadata {
     @PageColor(green)

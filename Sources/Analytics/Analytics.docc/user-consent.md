@@ -1,4 +1,4 @@
-# User consent
+# User Consent
 
 @Metadata {
     @PageColor(green)
