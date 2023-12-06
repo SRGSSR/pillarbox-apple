@@ -4,6 +4,6 @@
     @PageColor(green)
 }
 
-Better understand how some of your app functionalities used.
+Better understand how your app functionalities are used.
 
 ## Overview
