@@ -13,6 +13,8 @@ The Analytics framework provides a toolbox to measure app usage according to SRG
 - Analytics for internal usage, gathered using [Commanders Act](https://www.commandersact.com) analytics SDK.
 - Analytics for [Mediapulse](https://www.mediapulse.ch), an organization charged with collecting media consumption data in Switzerland. These measurements are forwarded using [comScore](https://www.comscore.com/) analytics SDK.
 
+> Important: Proper measurements are critical. The GD ADI team or Mediapulse might reject your application or its measurements should you implement analytics incorrectly.
+
 ### Measure app usage
 
 The Analytics framework lets you measure application usage in two ways:
