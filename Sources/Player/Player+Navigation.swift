@@ -8,14 +8,14 @@ import AVFoundation
 import DequeModule
 
 public extension Player {
-    /// Checks whether returning to the previous item in the deque is possible.
+    /// Checks whether returning to the previous item in the queue is possible.
     ///
     /// - Returns: `true` if possible.
     func canReturnToPreviousItem() -> Bool {
         canReturnToItem(before: currentIndex, in: storedItems)
     }
 
-    /// Returns to the previous item in the deque.
+    /// Returns to the previous item in the queue.
     ///
     /// Skips failed items.
     func returnToPreviousItem() {
@@ -23,14 +23,14 @@ public extension Player {
         queuePlayer.replaceItems(with: AVPlayerItem.playerItems(from: returningItems))
     }
 
-    /// Checks whether moving to the next item in the deque is possible.
+    /// Checks whether moving to the next item in the queue is possible.
     ///
     /// - Returns: `true` if possible.
     func canAdvanceToNextItem() -> Bool {
         canAdvanceToItem(after: currentIndex, in: storedItems)
     }
 
-    /// Moves to the next item in the deque.
+    /// Moves to the next item in the queue.
     func advanceToNextItem() {
         guard canAdvanceToNextItem() else { return }
         queuePlayer.replaceItems(with: AVPlayerItem.playerItems(from: advancingItems))

@@ -35,10 +35,10 @@ public extension Player {
     /// - Parameters:
     ///   - item: The item to insert.
     ///   - beforeItem: The item before which insertion must take place. Pass `nil` to insert the item at the front
-    ///     of the deque.
+    ///     of the queue.
     /// - Returns: `true` iff the item could be inserted.
     ///
-    /// Does nothing if the item already belongs to the deque.
+    /// Does nothing if the item already belongs to the queue.
     @discardableResult
     func insert(_ item: PlayerItem, before beforeItem: PlayerItem?) -> Bool {
         guard canInsert(item, before: beforeItem) else { return false }
@@ -57,10 +57,10 @@ public extension Player {
     /// - Parameters:
     ///   - item: The item to insert.
     ///   - afterItem: The item after which insertion must take place. Pass `nil` to insert the item at the back of
-    ///     the deque. If this item does not exist the method does nothing.
+    ///     the queue. If this item does not exist the method does nothing.
     /// - Returns: `true` iff the item could be inserted.
     ///
-    /// Does nothing if the item already belongs to the deque.
+    /// Does nothing if the item already belongs to the queue.
     @discardableResult
     func insert(_ item: PlayerItem, after afterItem: PlayerItem?) -> Bool {
         guard canInsert(item, after: afterItem) else { return false }
@@ -74,7 +74,7 @@ public extension Player {
         return true
     }
 
-    /// Prepends an item to the deque.
+    /// Prepends an item to the queue.
     ///
     /// - Parameter item: The item to prepend.
     /// - Returns: `true` iff the item could be prepended.
@@ -83,7 +83,7 @@ public extension Player {
         insert(item, before: nil)
     }
 
-    /// Appends an item to the deque.
+    /// Appends an item to the queue.
     ///
     /// - Parameter item: The item to append.
     /// - Returns: `true` iff the item could be appended.
@@ -95,9 +95,9 @@ public extension Player {
     /// Moves an item before another one.
     ///
     /// - Parameters:
-    ///   - item: The item to move. The method does nothing if the item does not belong to the deque.
+    ///   - item: The item to move. The method does nothing if the item does not belong to the queue.
     ///   - beforeItem: The item before which the moved item must be relocated. Pass `nil` to move the item to the
-    ///     front of the deque. If the item does not belong to the deque the method does nothing.
+    ///     front of the queue. If the item does not belong to the queue the method does nothing.
     /// - Returns: `true` iff the item could be moved.
     @discardableResult
     func move(_ item: PlayerItem, before beforeItem: PlayerItem?) -> Bool {
@@ -119,7 +119,7 @@ public extension Player {
     /// - Parameters:
     ///   - item: The item to move.
     ///   - afterItem: The item after which the moved item must be relocated. Pass `nil` to move the item to the
-    ///     back of the deque. If the item does not belong to the deque the method does nothing.
+    ///     back of the queue. If the item does not belong to the queue the method does nothing.
     /// - Returns: `true` iff the item could be moved.
     @discardableResult
     func move(_ item: PlayerItem, after afterItem: PlayerItem?) -> Bool {
@@ -136,14 +136,14 @@ public extension Player {
         return true
     }
 
-    /// Removes an item from the deque.
+    /// Removes an item from the queue.
     ///
     /// - Parameter item: The item to remove.
     func remove(_ item: PlayerItem) {
         storedItems.removeAll { $0 === item }
     }
 
-    /// Removes all items from the deque.
+    /// Removes all items from the queue.
     func removeAllItems() {
         storedItems.removeAll()
     }

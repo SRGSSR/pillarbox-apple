@@ -46,7 +46,6 @@ The Player framework fully integrates with SwiftUI, embracing its declarative an
 - <doc:playback>
 - <doc:state-observation>
 - <doc:subtitles-and-alternative-audio-tracks>
-- <doc:playlists>
 - <doc:playback-speed>
 
 ### System Integration
