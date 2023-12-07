@@ -31,7 +31,8 @@ public class Analytics {
         ///
         /// - Parameters:
         ///   - vendor: The vendor which the application belongs to.
-        ///   - sourceKey: The source key.
+        ///   - sourceKey: The source key. Production apps should use `.productionSourceKey` while apps in development
+        ///     should use `.developmentSourceKey`.
         ///   - appSiteName: The app/site name.
         public init(vendor: Vendor, sourceKey: String, appSiteName: String) {
             self.vendor = vendor
@@ -107,4 +108,12 @@ public class Analytics {
             commandersActEvent.merging(globals: dataSource?.commandersActGlobals)
         )
     }
+}
+
+public extension String {
+    /// The source key for apps in production.
+    static let productionSourceKey = "1b30366c-9e8d-4720-8b12-4165f468f9ae"
+
+    /// The source key for apps in development.
+    static let developmentSourceKey = "39ae8f94-595c-4ca4-81f7-fb7748bd3f04"
 }
