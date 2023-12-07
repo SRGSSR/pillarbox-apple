@@ -1,5 +1,5 @@
 @Tutorials(name: "system-features") {
-    @Intro(title: "Integrating With System Features") {
+    @Intro(title: "Integrating with system features") {
         Learn how you can integrate your player with standard system features.
         
         @Image(source: building-custom-user-interfaces-intro, alt: "An image of a phone displaying some content.")
@@ -21,12 +21,11 @@
         @TutorialReference(tutorial: supporting-airplay)
     }
     
-    @Chapter(name: "Allowing Picture in Picture for Video Playback") {
+    @Chapter(name: "Supporting Picture in Picture for video playback") {
         Enable uninterrupted video playback experiences when multitasking. 
         
         @Image(source: building-custom-user-interfaces-intro, alt: "An image of a phone displaying some content.")
         
         @TutorialReference(tutorial: supporting-basic-picture-in-picture)
-        @TutorialReference(tutorial: enabling-in-app-picture-in-picture)
     }
 }
