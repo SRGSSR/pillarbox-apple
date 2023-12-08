@@ -1,4 +1,4 @@
-@Tutorial(time: 20) {
+@Tutorial(time: 15) {
     @Intro(title: "Optimizing custom layouts") {
         Learn to rearrange your layout to minimize unnecessary refreshes.
     }
