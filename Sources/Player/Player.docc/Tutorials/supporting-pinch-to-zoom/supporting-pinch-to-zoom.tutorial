@@ -1,4 +1,4 @@
-@Tutorial(time: 20) {
+@Tutorial(time: 6) {
     @Intro(title: "Supporting pinch to zoom") {
         Add a pinch gesture to let users zoom in and out of videos.
         
