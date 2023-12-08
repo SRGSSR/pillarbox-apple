@@ -1,4 +1,4 @@
-@Tutorial(time: 5) {
+@Tutorial(time: 3) {
     @Intro(title: "Creating a project") {
         Create a project integrating Player as a Swift Package dependency.
         
