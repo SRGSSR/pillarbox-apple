@@ -1,4 +1,4 @@
-@Tutorial(time: 20) {
+@Tutorial(time: 4) {
     @Intro(title: "Supporting basic Picture in Picture") {
         Learn how you can quickly add basic Picture in Picture support to an app.
         
