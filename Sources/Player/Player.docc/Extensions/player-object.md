@@ -85,6 +85,11 @@
 - ``canSeek(to:)``
 - ``seek(_:smooth:completion:)``
 - ``seek(to:completion:)``
+- ``after(_:)``
+- ``at(_:)``
+- ``before(_:)``
+- ``near(_:)``
+- ``to(_:toleranceBefore:toleranceAfter:)``
 
 ### Setup
 

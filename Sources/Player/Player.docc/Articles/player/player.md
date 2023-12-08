@@ -44,22 +44,58 @@ The Player framework fully integrates with SwiftUI, embracing its declarative an
 ### Essentials
 
 - <doc:playback>
+- <doc:playback-speed>
 - <doc:state-observation>
 - <doc:subtitles-and-alternative-audio-tracks>
-- <doc:playback-speed>
+
+- ``Asset``
+- ``MediaSelectionOption``
+- ``MediaType``
+- ``Player/Player``
+- ``PlayerConfiguration``
+- ``PlayerItem``
+- ``PlayerProperties``
+- ``PlaybackState``
+- ``Position``
+- ``SeekBehavior``
+- ``StreamType``
 
 ### System Integration
 
-- <doc:control-center>
 - <doc:airplay>
+- <doc:control-center>
 - <doc:picture-in-picture>
+
+- ``AssetMetadata``
+- ``NowPlayingInfo``
+- ``NowPlayingMetadata``
+- ``PictureInPicture``
+- ``PictureInPictureButton``
+- ``PictureInPictureDelegate``
+- ``ProgressTracker``
+- ``RoutePickerView``
+- ``TrackerAdapter``
+- ``VisibilityTracker``
 
 ### Customization
 
-- <doc:resource-loading>
 - <doc:fairplay-streaming>
+- <doc:resource-loading>
 - <doc:tracking>
+
+- ``PlayerItemTracker``
+- ``ProgressTracker``
+- ``TrackerAdapter``
+- ``VisibilityTracker``
 
 ### Technical Notes
 
 - <doc:stream-packaging-advice>
+
+### User Interface
+
+- <doc:creating-basic-user-interface>
+
+- ``LayoutInfo``
+- ``SystemVideoView``
+- ``VideoView``
