@@ -2,7 +2,7 @@
 
 @Metadata {
     @PageColor(purple)
-    @PageImage(purpose: card, source: tracking-card, alt: "An image of a graph.")
+    @PageImage(purpose: card, source: tracking-card, alt: "An image depicting a graph.")
 }
 
 Track player items during playback.
@@ -17,8 +17,8 @@ You define which data is required by a tracker as well as its life cycle by crea
 
 The ``PlayerItemTracker`` protocol declares two associated types which you should define according to your tracker needs, likely using simple structs:
 
-- ``PlayerItemTracker/Metadata`` representing metadata required by the tracker. Metadata is updated each time an asset is delivered by the tracked ``PlayerItem``.
-- ``PlayerItemTracker/Configuration`` representing configuration parameters required by the tracker. These parameters are provided at creation time and do not depend on the item itself.  
+- ``PlayerItemTracker/Metadata`` represents metadata required by the tracker. Metadata is updated each time an asset is delivered by the tracked ``PlayerItem``.
+- ``PlayerItemTracker/Configuration`` represents configuration parameters required by the tracker. These parameters are provided at creation time and do not depend on the item itself.  
 
 > Note: Use `Void` if any of these types is not relevant for your tracker.  
 
@@ -30,7 +30,7 @@ Once types associated with an item tracker have been defined, start implementing
 2. ``PlayerItemTracker/enable(for:)`` is called when the associated item becomes the current one. You can perform player-related setup in this method, e.g. passing the underlying system player to a 3rd party SDK which requires it.
 3. ``PlayerItemTracker/updateMetadata(with:)`` is called when metadata is updated for the player item, following retrieval of a new ``Asset``. The method receives an instance of the metadata type you defined above.
 4. ``PlayerItemTracker/updateProperties(with:)`` is called when player properties change. Be careful that properties can change often and that your implementation should be as efficient as possible.
-5. ``PlayerItemTracker/disable()`` is called when the player item stops being the current one. Your implementation should perform any cleanup work associated with work previously done in ``PlayerItemTracker/enable(for:)``.
+5. ``PlayerItemTracker/disable()`` is called when the player item stops being the current one. Your implementation should cleanup resources acquired in ``PlayerItemTracker/enable(for:)``.
 6. Since item trackers are required to be classes you can use `deinit` to perform any necessary final cleanup when the tracker and its item are discarded.
 
 > Warning: Some 3rd party trackers might require low-level access to the `AVPlayer` instance, which can be obtained with ``Player/systemPlayer``.
@@ -39,7 +39,7 @@ Once types associated with an item tracker have been defined, start implementing
 
 ### Attach a tracker to an item
 
-You can attach any tracker to any item. The only requirement is that ``AssetMetadata`` supplied as part of the ``Asset`` retrieval process is transformed into ``PlayerItemTracker/Metadata`` required by the tracker.
+You can attach a tracker to any item. The only requirement is that ``AssetMetadata`` supplied as part of the ``Asset`` retrieval process is transformed into ``PlayerItemTracker/Metadata`` required by the tracker.
 
 This transformation requires the use of a dedicated adapter, simply created from your custom tracker type using the ``PlayerItemTracker/adapter(configuration:mapper:)`` method. The adapter is also where you can supply any configuration required by your tracker:
 
