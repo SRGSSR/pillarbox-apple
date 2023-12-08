@@ -1,4 +1,4 @@
-@Tutorial(time: 5) {
+@Tutorial(time: 2) {
     @Intro(title: "Integrating with the Control Center") {
         Enable control of playback directly from the Control Center.
 
