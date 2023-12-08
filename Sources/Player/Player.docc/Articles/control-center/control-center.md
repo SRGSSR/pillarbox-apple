@@ -9,11 +9,11 @@ Enable playback steering from the Control Center.
 
 ## Overview
 
-- Important: Control Center integration is only meaningful for iOS apps.
+> Important: Control Center integration is only meaningful for iOS apps.
 
-- Note: For an example of use have a look at the <doc:integrating-with-control-center> tutorial.
+``Player`` natively integrates with the iOS Control Center. Most of this integration happens automatically but your app is still responsible of activating the player instance which must be associated with the Control Center. It must also provide the metadata (title, artwork image) associated with the ``PlayerItem`` currently being played.
 
-``Player`` natively integrates with the iOS Control Center. Though most of this integration happens automatically your app is still responsible of activating the player instance which must be controlled by the Control Center. It must also provide the metadata (title, artwork image) associated with the ``PlayerItem`` currently being played.
+> Note: For an example of use have a look at the <doc:integrating-with-control-center> tutorial.
 
 ### Provide player item metadata
 
@@ -22,8 +22,8 @@ The main responsibility of a ``PlayerItem`` loaded into a ``Player`` is to deliv
 To associate Control Center metadata with a player item:
 
 1. Create a type which represents your asset metadata and have it conform to ``AssetMetadata``.
-2. Implement the ``AssetMetadata/nowPlayingMetadata()`` method and return the ``NowPlayingMetadata`` which must be displayed in the Control Center when the item is currently being played.
-3. Implement a custom ``PlayerItem`` with a metadata publisher retrieving all metadata required before delivering an asset. Alternatively, and provided you have all metadata and the URL to be played readily available, you can simply use one of the available ``PlayerItem`` construction helpers, supplying the asset metadata to be used at creation time.
+2. Implement the ``AssetMetadata/nowPlayingMetadata()-7i4ih`` method and return the ``NowPlayingMetadata`` which must be displayed in the Control Center when the item is currently being played.
+3. Implement a custom ``PlayerItem`` with a metadata publisher retrieving all metadata required before delivering an asset. Alternatively, and provided you have all metadata and the URL to be played readily available, you can simply use one of the available ``PlayerItem`` construction helpers, supplying the asset metadata at creation time.
 
 ### Make a player instance active
 
@@ -31,4 +31,4 @@ Several ``Player`` instances can coexist in an app but only one at most is able 
 
 When you want one player instance to take precedence call ``Player/becomeActive()``. Any other instance which might be active will resign in the process.
 
-You can manually call ``Player/resignActive()`` to have a player resign. If not the player instance will automatically resign when deinitialized.
+You can manually call ``Player/resignActive()`` to have a player resign. Note that a player instance will automatically resign when deinitialized.
