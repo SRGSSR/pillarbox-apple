@@ -11,6 +11,7 @@ enum RouterDestination: Identifiable, Hashable {
     case player(media: Media)
     case systemPlayer(media: Media)
     case inlineSystemPlayer(media: Media)
+    case monoscopicPlayer(media: Media)
     case simplePlayer(media: Media)
     case optInPlayer(media: Media)
 
@@ -34,6 +35,8 @@ enum RouterDestination: Identifiable, Hashable {
             return "player"
         case .systemPlayer:
             return "systemPlayer"
+        case .monoscopicPlayer:
+            return "monoscopicPlayer"
         case .inlineSystemPlayer:
             return "inlineSystemPlayer"
         case .simplePlayer:
@@ -71,6 +74,8 @@ enum RouterDestination: Identifiable, Hashable {
             PlayerView(media: media)
         case let .systemPlayer(media: media):
             SystemPlayerView(media: media)
+        case let .monoscopicPlayer(media: media):
+            MonoscopicPlayerView(media: media)
         case let .inlineSystemPlayer(media: media):
             InlineSystemPlayerView(media: media)
         case let .simplePlayer(media: media):
