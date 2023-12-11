@@ -15,17 +15,19 @@ struct DemoApp: App {
 
     @SceneBuilder var body: some Scene {
         WindowGroup {
-            TabView {
-                examplesTab()
-                showcaseTab()
-                contentListsTab()
-                searchTab()
-                settingsTab()
+            NavigationStack {
+                TabView {
+                    examplesTab()
+                    showcaseTab()
+                    contentListsTab()
+                    searchTab()
+                    settingsTab()
+                }
+                .modal(item: $router.presented) { presented in
+                    presented.view()
+                }
+                .environmentObject(router)
             }
-            .modal(item: $router.presented) { presented in
-                presented.view()
-            }
-            .environmentObject(router)
         }
     }
 
