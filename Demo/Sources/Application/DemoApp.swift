@@ -15,20 +15,29 @@ struct DemoApp: App {
 
     @SceneBuilder var body: some Scene {
         WindowGroup {
+#if os(tvOS)
             NavigationStack {
-                TabView {
-                    examplesTab()
-                    showcaseTab()
-                    contentListsTab()
-                    searchTab()
-                    settingsTab()
-                }
-                .modal(item: $router.presented) { presented in
-                    presented.view()
-                }
-                .environmentObject(router)
+                tabs()
             }
+#else
+            tabs()
+#endif
         }
+    }
+
+    @ViewBuilder
+    private func tabs() -> some View {
+        TabView {
+            examplesTab()
+            showcaseTab()
+            contentListsTab()
+            searchTab()
+            settingsTab()
+        }
+        .modal(item: $router.presented) { presented in
+            presented.view()
+        }
+        .environmentObject(router)
     }
 
     @ViewBuilder
