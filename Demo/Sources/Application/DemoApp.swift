@@ -15,23 +15,18 @@ struct DemoApp: App {
 
     @SceneBuilder var body: some Scene {
         WindowGroup {
-            tabs()
+            TabView {
+                examplesTab()
+                showcaseTab()
+                contentListsTab()
+                searchTab()
+                settingsTab()
+            }
+            .modal(item: $router.presented) { presented in
+                presented.view()
+            }
+            .environmentObject(router)
         }
-    }
-
-    @ViewBuilder
-    private func tabs() -> some View {
-        TabView {
-            examplesTab()
-            showcaseTab()
-            contentListsTab()
-            searchTab()
-            settingsTab()
-        }
-        .modal(item: $router.presented) { presented in
-            presented.view()
-        }
-        .environmentObject(router)
     }
 
     @ViewBuilder
