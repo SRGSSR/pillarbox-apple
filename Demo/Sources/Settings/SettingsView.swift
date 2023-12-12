@@ -84,18 +84,16 @@ struct SettingsView: View {
     }
 
     var body: some View {
+#if os(iOS)
         List {
-            applicationSection()
-            playerSection()
-            debuggingSection()
-#if os(iOS)
-            gitHubSection()
-#endif
-            versionSection()
+            content()
         }
-        .tracked(name: "settings")
-#if os(iOS)
         .navigationTitle("Settings")
+#else
+        ScrollView {
+            content()
+                .padding(.horizontal, 50)
+        }
 #endif
     }
 
@@ -110,6 +108,20 @@ struct SettingsView: View {
         }
 #endif
         return url
+    }
+
+    @ViewBuilder
+    private func content() -> some View {
+        VStack(alignment: .leading) {
+            applicationSection()
+            playerSection()
+            debuggingSection()
+#if os(iOS)
+            gitHubSection()
+#endif
+            versionSection()
+        }
+        .tracked(name: "settings")
     }
 
     @ViewBuilder
