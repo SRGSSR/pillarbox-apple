@@ -40,6 +40,7 @@ struct SearchView: View {
     @ViewBuilder
     private func loadedView(_ medias: [SRGMedia]) -> some View {
         if !medias.isEmpty {
+#if os(iOS)
             List(medias, id: \.urn) { media in
                 let title = MediaDescription.title(for: media)
                 Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
@@ -51,12 +52,27 @@ struct SearchView: View {
                         model.loadMore()
                     }
                 }
-#if os(iOS)
                 .swipeActions { CopyButton(text: media.urn) }
-#endif
+                .scrollDismissesKeyboard(.immediately)
+                .refreshable { await model.refresh() }
             }
-            .scrollDismissesKeyboard(.immediately)
-            .refreshable { await model.refresh() }
+#else
+            ScrollView {
+                ForEach(medias, id: \.urn) { media in
+                    let title = MediaDescription.title(for: media)
+                    Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
+                        let media = Media(title: media.title, type: .urn(media.urn))
+                        router.presented = .player(media: media)
+                    }
+                    .padding(.horizontal, 50)
+                    .onAppear {
+                        if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {
+                            model.loadMore()
+                        }
+                    }
+                }
+            }
+#endif
         }
         else {
             RefreshableMessageView(model: model, message: "No results.", icon: .empty)
