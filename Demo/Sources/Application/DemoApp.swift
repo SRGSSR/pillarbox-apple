@@ -15,13 +15,7 @@ struct DemoApp: App {
 
     @SceneBuilder var body: some Scene {
         WindowGroup {
-#if os(tvOS)
-            NavigationStack {
-                tabs()
-            }
-#else
             tabs()
-#endif
         }
     }
 
