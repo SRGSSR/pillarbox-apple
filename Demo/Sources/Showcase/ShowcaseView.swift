@@ -11,7 +11,22 @@ struct ShowcaseView: View {
     @EnvironmentObject private var router: Router
 
     var body: some View {
+#if os(iOS)
         List {
+            content()
+        }
+        .navigationTitle("Showcase")
+#else
+        ScrollView {
+            content()
+                .padding(.horizontal, 50)
+        }
+#endif
+    }
+
+    @ViewBuilder
+    private func content() -> some View {
+        VStack(alignment: .leading) {
             layoutsSection()
             playlistsSection()
             embeddingsSection()
@@ -21,9 +36,6 @@ struct ShowcaseView: View {
             trackingSection()
         }
         .tracked(name: "showcase")
-#if os(iOS)
-        .navigationTitle("Showcase")
-#endif
     }
 
     @ViewBuilder
