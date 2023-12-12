@@ -20,8 +20,10 @@ struct ShowcaseView: View {
             vanillaPlayerSection()
             trackingSection()
         }
-        .navigationTitle("Showcase")
         .tracked(name: "showcase")
+#if os(iOS)
+        .navigationTitle("Showcase")
+#endif
     }
 
     @ViewBuilder

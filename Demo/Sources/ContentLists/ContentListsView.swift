@@ -25,8 +25,8 @@ struct ContentListsView: View {
             Self.latestAudiosSection(image: "music.note.list")
         }
         .tracked(name: "lists")
-        .navigationTitle("Lists (\(selectedServerSetting.title))")
 #if os(iOS)
+        .navigationTitle("Lists (\(selectedServerSetting.title))")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarTitleMenu {
             serverSettingsMenu()

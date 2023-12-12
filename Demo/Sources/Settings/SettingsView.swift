@@ -93,8 +93,10 @@ struct SettingsView: View {
 #endif
             versionSection()
         }
-        .navigationTitle("Settings")
         .tracked(name: "settings")
+#if os(iOS)
+        .navigationTitle("Settings")
+#endif
     }
 
     private static func testFlightUrl(forApplicationIdentifier applicationIdentifier: String) -> URL? {

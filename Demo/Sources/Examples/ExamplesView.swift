@@ -88,9 +88,11 @@ struct ExamplesView: View {
         }
         .scrollDismissesKeyboard(.immediately)
         .animation(.defaultLinear, value: model.protectedMedias)
-        .navigationTitle("Examples")
         .tracked(name: "examples")
         .refreshable { await model.refresh() }
+#if os(iOS)
+        .navigationTitle("Examples")
+#endif
     }
 
     @ViewBuilder
