@@ -24,14 +24,16 @@ struct ContentListsView: View {
         }
 #else
         ScrollView {
-            Self.content()
-                .padding(.horizontal, 50)
+            VStack(alignment: .leading) {
+                Self.content()
+                    .padding(.horizontal, 50)
+            }
         }
 #endif
     }
 
     private static func content() -> some View {
-        VStack(alignment: .leading) {
+        Group {
             Self.section(for: .tvTopics, image: "tv", vendors: [.RSI, .RTR, .RTS, .SRF, .SWI])
             Self.section(for: .tvLatestMedias, image: "play.tv", vendors: [.RSI, .RTR, .RTS, .SRF, .SWI])
             Self.section(for: .tvLivestreams, image: "livephoto.play", vendors: [.RSI, .RTR, .RTS, .SRF])

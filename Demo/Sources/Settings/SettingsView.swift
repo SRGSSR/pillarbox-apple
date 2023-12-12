@@ -91,8 +91,10 @@ struct SettingsView: View {
         .navigationTitle("Settings")
 #else
         ScrollView {
-            content()
-                .padding(.horizontal, 50)
+            VStack(alignment: .leading) {
+                content()
+                    .padding(.horizontal, 50)
+            }
         }
 #endif
     }
@@ -112,7 +114,7 @@ struct SettingsView: View {
 
     @ViewBuilder
     private func content() -> some View {
-        VStack(alignment: .leading) {
+        Group {
             applicationSection()
             playerSection()
             debuggingSection()
