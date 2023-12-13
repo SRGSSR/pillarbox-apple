@@ -11,20 +11,21 @@ import SceneKit
 import simd
 import UIKit
 
-enum Quaternion {
-    /// Rotates the specified quaternion around the x- and y-axis.
+public enum Quaternion {
+    /// Rotates the specified quaternion around the x- and y-axes.
     ///
     /// - Parameters:
     ///   - quaternion: The quaternion to rotate.
     ///   - wx: The angle around the x-axis.
     ///   - wy: The angle around the y-axis.
     /// - Returns: The rotated quaternion.
-    static func rotate(_ quaternion: SCNQuaternion, _ wx: Float, _ wy: Float) -> SCNQuaternion {
+    public static func rotate(_ quaternion: SCNQuaternion, _ wx: Float, _ wy: Float) -> SCNQuaternion {
         let simdQuaternion = simd_quaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w)
         let simdRotationAroundX = simd_quaternion(wx, simd_make_float3(1, 0, 0))
         let simdRotationAroundY = simd_quaternion(wy, simd_make_float3(0, 1, 0))
-        let vector = simd_imag(simd_mul(simdRotationAroundY, simd_mul(simdQuaternion, simdRotationAroundX)))
-        return SCNVector4(vector.x, vector.y, vector.z, simd_real(simdQuaternion))
+        let rotatedSimdQuaternion = simd_mul(simdRotationAroundY, simd_mul(simdQuaternion, simdRotationAroundX))
+        let vector = simd_imag(rotatedSimdQuaternion)
+        return SCNVector4(vector.x, vector.y, vector.z, simd_real(rotatedSimdQuaternion))
     }
     
     /// Creates a quaternion for a rotation around the specified axis.
@@ -35,7 +36,7 @@ enum Quaternion {
     ///   - y: The axis y-component.
     ///   - z: The axis z-component.
     /// - Returns: The quaternion.
-    static func quaternionWithAngleAndAxis(_ radians: Float, _ x: Float, _ y: Float, _ z: Float) -> SCNQuaternion {
+    public static func quaternionWithAngleAndAxis(_ radians: Float, _ x: Float, _ y: Float, _ z: Float) -> SCNQuaternion {
         let simdQuaternion = simd_quaternion(radians, simd_make_float3(x, y, z))
         let vector = simd_imag(simdQuaternion)
         return SCNVector4(vector.x, vector.y, vector.z, simd_real(simdQuaternion))
@@ -51,7 +52,7 @@ enum Quaternion {
     /// - Returns: The quaternion.
     ///
     /// See `CMAttitude` documentation for more information.
-    static func cameraOrientationForAttitude(_ attitude: CMAttitude, interfaceOrientation: UIInterfaceOrientation) -> SCNQuaternion {
+    public static func cameraOrientationForAttitude(_ attitude: CMAttitude, interfaceOrientation: UIInterfaceOrientation) -> SCNQuaternion {
         // Based on: https://gist.github.com/travisnewby/96ee1ac2bc2002f1d480
         // Also see https://stackoverflow.com/a/28784841/760435
         let quaternion = attitude.quaternion

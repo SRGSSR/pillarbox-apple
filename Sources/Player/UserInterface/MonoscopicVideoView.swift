@@ -30,8 +30,9 @@ private struct _MonoscopicVideoView: UIViewRepresentable {
     @ObservedObject var player: Player
     let rotation: SCNQuaternion
 
-    class Coordinator: NSObject, SCNSceneRendererDelegate {
+    class Coordinator {
         var player: Player?
+        var cameraNode: SCNNode?
     }
 
     func makeCoordinator() -> Coordinator {
@@ -42,28 +43,31 @@ private struct _MonoscopicVideoView: UIViewRepresentable {
         let view = SCNView()
         view.backgroundColor = .clear
         view.isPlaying = true
-        view.delegate = context.coordinator
         return view
     }
 
     func updateUIView(_ uiView: SCNView, context: Context) {
+        defer {
+            context.coordinator.cameraNode?.orientation = rotation
+        }
         guard player != context.coordinator.player, let presentationSize = player.presentationSize else { return }
         context.coordinator.player = player
-        uiView.scene = scene(for: player.systemPlayer, presentationSize: presentationSize)
+        uiView.scene = scene(for: player.systemPlayer, presentationSize: presentationSize, context: context)
     }
 
-    private func scene(for player: AVPlayer, presentationSize: CGSize) -> SCNScene {
+    private func scene(for player: AVPlayer, presentationSize: CGSize, context: Context) -> SCNScene {
         let scene = SCNScene()
-        scene.rootNode.addChildNode(cameraNode())
+        scene.rootNode.addChildNode(cameraNode(context: context))
         scene.rootNode.addChildNode(videoSphereNode(for: player, presentationSize: presentationSize))
         return scene
     }
 
-    private func cameraNode() -> SCNNode {
+    private func cameraNode(context: Context) -> SCNNode {
         let node = SCNNode()
         node.camera = .init()
         node.position = SCNVector3Zero
         node.orientation = Quaternion.quaternionWithAngleAndAxis(.pi, 1, 0, 0)
+        context.coordinator.cameraNode = node
         return node
     }
 
