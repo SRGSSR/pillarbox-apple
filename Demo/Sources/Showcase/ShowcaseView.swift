@@ -13,10 +13,12 @@ struct ShowcaseView: View {
     var body: some View {
         CustomList {
             content()
-                .padding(.horizontal, constant(iOS: 0, tvOS: 50))
+                .padding(.horizontal, constant(iOS: 0, tvOS: 20))
         }
 #if os(iOS)
         .navigationTitle("Showcase")
+#else
+        .ignoresSafeArea(.all, edges: .horizontal)
 #endif
     }
 

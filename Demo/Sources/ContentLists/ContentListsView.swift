@@ -15,7 +15,7 @@ struct ContentListsView: View {
     var body: some View {
         CustomList {
             Self.content()
-                .padding(.horizontal, constant(iOS: 0, tvOS: 50))
+                .padding(.horizontal, constant(iOS: 0, tvOS: 20))
         }
 #if os(iOS)
         .navigationTitle("Lists (\(selectedServerSetting.title))")
@@ -23,6 +23,8 @@ struct ContentListsView: View {
         .toolbarTitleMenu {
             serverSettingsMenu()
         }
+#else
+        .ignoresSafeArea(.all, edges: .horizontal)
 #endif
     }
 
