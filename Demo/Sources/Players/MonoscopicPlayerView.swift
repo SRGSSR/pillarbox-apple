@@ -12,15 +12,21 @@ struct MonoscopicPlayerView: View {
     let media: Media
 
     @StateObject private var player = Player()
-    @GestureState private var gestureValue: DragGesture.Value?
+    @State private var translation: CGSize = .zero
+    @State private var initialTranslation: CGSize = .zero
 
     var body: some View {
         GeometryReader { geometry in
-            MonoscopicVideoView(player: player, rotation: rotation(from: gestureValue, in: geometry))
+            MonoscopicVideoView(player: player, rotation: rotation(from: translation, in: geometry))
                 .gesture(
                     DragGesture()
-                        .updating($gestureValue) { value, state, _ in
-                            state = value
+                        .onChanged { value in
+                            translation = CGSize(
+                                width: initialTranslation.width + value.translation.width,
+                                height: initialTranslation.height + value.translation.height)
+                        }
+                        .onEnded { _ in
+                            initialTranslation = translation
                         }
                 )
         }
@@ -28,15 +34,10 @@ struct MonoscopicPlayerView: View {
         .onAppear(perform: play)
     }
 
-    private func rotation(from gestureValue: DragGesture.Value?, in geometry: GeometryProxy) -> SCNQuaternion {
-        if let gestureValue {
-            let wx = .pi / 2 * gestureValue.translation.height / geometry.size.height
-            let wy = -.pi / 2 * gestureValue.translation.width / geometry.size.width
-            return Quaternion.rotate(Quaternion.quaternionWithAngleAndAxis(.pi, 1, 0, 0), Float(wx), Float(wy))
-        }
-        else {
-            return Quaternion.quaternionWithAngleAndAxis(.pi, 1, 0, 0)
-        }
+    private func rotation(from translation: CGSize, in geometry: GeometryProxy) -> SCNQuaternion {
+        let wx = .pi / 2 * translation.height / geometry.size.height
+        let wy = -.pi / 2 * translation.width / geometry.size.width
+        return Quaternion.rotate(Quaternion.quaternionWithAngleAndAxis(.pi, 1, 0, 0), Float(wx), Float(wy))
     }
 
     private func play() {
