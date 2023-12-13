@@ -14,6 +14,7 @@ struct MonoscopicPlayerView: View {
 
     var body: some View {
         MonoscopicVideoView(player: player)
+            .ignoresSafeArea()
             .onAppear(perform: play)
     }
 

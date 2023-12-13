@@ -12,22 +12,30 @@ import SwiftUI
 /// A view displaying video content provided by an associated player.
 ///
 /// Behavior: h-exp, v-exp
-public struct MonoscopicVideoView: UIViewRepresentable {
-    @ObservedObject private var player: Player
+public struct MonoscopicVideoView: View {
+    let player: Player
 
-    public class Coordinator: NSObject, SCNSceneRendererDelegate {
-        var player: Player?
+    public var body: some View {
+        _MonoscopicVideoView(player: player)
     }
 
     public init(player: Player) {
         self.player = player
     }
+}
 
-    public func makeCoordinator() -> Coordinator {
+private struct _MonoscopicVideoView: UIViewRepresentable {
+    @ObservedObject var player: Player
+
+    class Coordinator: NSObject, SCNSceneRendererDelegate {
+        var player: Player?
+    }
+
+    func makeCoordinator() -> Coordinator {
         .init()
     }
 
-    public func makeUIView(context: Context) -> SCNView {
+    func makeUIView(context: Context) -> SCNView {
         let view = SCNView()
         view.backgroundColor = .clear
         view.isPlaying = true
@@ -35,7 +43,7 @@ public struct MonoscopicVideoView: UIViewRepresentable {
         return view
     }
 
-    public func updateUIView(_ uiView: SCNView, context: Context) {
+    func updateUIView(_ uiView: SCNView, context: Context) {
         guard player != context.coordinator.player, let presentationSize = player.presentationSize else { return }
         context.coordinator.player = player
         uiView.scene = scene(for: player.systemPlayer, presentationSize: presentationSize)
