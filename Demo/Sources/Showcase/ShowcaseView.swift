@@ -11,7 +11,18 @@ struct ShowcaseView: View {
     @EnvironmentObject private var router: Router
 
     var body: some View {
-        List {
+        CustomList {
+            content()
+                .padding(.horizontal, constant(iOS: 0, tvOS: 50))
+        }
+#if os(iOS)
+        .navigationTitle("Showcase")
+#endif
+    }
+
+    @ViewBuilder
+    private func content() -> some View {
+        Group {
             layoutsSection()
             playlistsSection()
             embeddingsSection()
@@ -20,7 +31,6 @@ struct ShowcaseView: View {
             vanillaPlayerSection()
             trackingSection()
         }
-        .navigationTitle("Showcase")
         .tracked(name: "showcase")
     }
 

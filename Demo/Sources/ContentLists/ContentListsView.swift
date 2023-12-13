@@ -13,7 +13,21 @@ struct ContentListsView: View {
     private var selectedServerSetting: ServerSetting = .production
 
     var body: some View {
-        List {
+        CustomList {
+            Self.content()
+                .padding(.horizontal, constant(iOS: 0, tvOS: 50))
+        }
+#if os(iOS)
+        .navigationTitle("Lists (\(selectedServerSetting.title))")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarTitleMenu {
+            serverSettingsMenu()
+        }
+#endif
+    }
+
+    private static func content() -> some View {
+        Group {
             Self.section(for: .tvTopics, image: "tv", vendors: [.RSI, .RTR, .RTS, .SRF, .SWI])
             Self.section(for: .tvLatestMedias, image: "play.tv", vendors: [.RSI, .RTR, .RTS, .SRF, .SWI])
             Self.section(for: .tvLivestreams, image: "livephoto.play", vendors: [.RSI, .RTR, .RTS, .SRF])
@@ -25,13 +39,6 @@ struct ContentListsView: View {
             Self.latestAudiosSection(image: "music.note.list")
         }
         .tracked(name: "lists")
-        .navigationTitle("Lists (\(selectedServerSetting.title))")
-#if os(iOS)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarTitleMenu {
-            serverSettingsMenu()
-        }
-#endif
     }
 
     @ViewBuilder
@@ -46,7 +53,14 @@ struct ContentListsView: View {
     private static func section(title: String, image: String? = nil, configurations: [ContentList.Configuration]) -> some View {
         Section {
             ForEach(configurations) { configuration in
+#if os(iOS)
                 NavigationLink(configuration.name, destination: .contentList(configuration: configuration))
+#else
+                NavigationLink(destination: RouterDestination.contentList(configuration: configuration).view()) {
+                    Text(configuration.name)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+#endif
             }
         } header: {
             HStack {

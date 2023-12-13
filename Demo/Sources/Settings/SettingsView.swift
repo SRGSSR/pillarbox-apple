@@ -13,14 +13,15 @@ private struct UrlCacheView: View {
 
     var body: some View {
         HStack {
-            Button("Clear URL cache", action: clearUrlCache)
-#if os(iOS)
-                .buttonStyle(.borderless)
-#endif
-            Spacer()
-            Text(urlCacheSize)
-                .font(.footnote)
-                .foregroundColor(.red)
+            Button(action: clearUrlCache) {
+                HStack {
+                    Text("Clear URL cache")
+                    Spacer()
+                    Text(urlCacheSize)
+                        .font(.footnote)
+                        .foregroundColor(.red)
+                }
+            }
         }
         .onAppear {
             updateCacheSize()
@@ -84,17 +85,13 @@ struct SettingsView: View {
     }
 
     var body: some View {
-        List {
-            applicationSection()
-            playerSection()
-            debuggingSection()
-#if os(iOS)
-            gitHubSection()
-#endif
-            versionSection()
+        CustomList {
+            content()
+                .padding(.horizontal, constant(iOS: 0, tvOS: 50))
         }
+#if os(iOS)
         .navigationTitle("Settings")
-        .tracked(name: "settings")
+#endif
     }
 
     private static func testFlightUrl(forApplicationIdentifier applicationIdentifier: String) -> URL? {
@@ -111,18 +108,35 @@ struct SettingsView: View {
     }
 
     @ViewBuilder
+    private func content() -> some View {
+        Group {
+            applicationSection()
+            playerSection()
+            debuggingSection()
+#if os(iOS)
+            gitHubSection()
+#endif
+            versionSection()
+        }
+        .tracked(name: "settings")
+    }
+
+    @ViewBuilder
     private func applicationSection() -> some View {
-        Section("Application") {
+        Section {
             Toggle(isOn: $isPresenterModeEnabled) {
                 Text("Presenter mode")
                 Text("Displays touches for presentation purposes.").font(.footnote)
             }
+        } header: {
+            Text("Application")
+                .padding(.vertical, constant(iOS: 0, tvOS: 15))
         }
     }
 
     @ViewBuilder
     private func playerSection() -> some View {
-        Section("Player") {
+        Section {
 #if os(iOS)
             playerLayoutPicker()
 #endif
@@ -131,6 +145,9 @@ struct SettingsView: View {
                 Text("Improves playlist navigation so that it feels more natural.").font(.footnote)
             }
             seekBehaviorPicker()
+        } header: {
+             Text("Player")
+                .padding(.vertical, constant(iOS: 0, tvOS: 15))
         }
     }
 
@@ -155,10 +172,14 @@ struct SettingsView: View {
     @ViewBuilder
     private func debuggingSection() -> some View {
         Section {
-            Button("Simulate memory warning", action: simulateMemoryWarning)
+            Button(action: simulateMemoryWarning) {
+                Text("Simulate memory warning")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
             UrlCacheView()
         } header: {
             Text("Debugging")
+                .padding(.vertical, constant(iOS: 0, tvOS: 15))
         }
     }
 
@@ -174,6 +195,7 @@ struct SettingsView: View {
             }
         } header: {
             Text("Version information")
+                .padding(.vertical, constant(iOS: 0, tvOS: 15))
         } footer: {
             versionFooter()
         }
@@ -189,6 +211,9 @@ struct SettingsView: View {
             Text(" in Switzerland")
         }
         .frame(maxWidth: .infinity)
+#if os(tvOS)
+        .focusable()
+#endif
     }
 
 #if os(iOS)

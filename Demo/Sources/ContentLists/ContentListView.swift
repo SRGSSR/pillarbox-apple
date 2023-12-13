@@ -14,16 +14,22 @@ private struct LoadedView: View {
     @EnvironmentObject private var router: Router
 
     var body: some View {
-        List(contents, id: \.self) { content in
-            ContentCell(content: content)
-                .onAppear {
-                    if let index = contents.firstIndex(of: content), contents.count - index < kPageSize {
-                        model.loadMore()
+        CustomList(data: contents) { content in
+            if let content {
+                ContentCell(content: content)
+                    .onAppear {
+                        if let index = contents.firstIndex(of: content), contents.count - index < kPageSize {
+                            model.loadMore()
+                        }
                     }
-                }
+                    .padding(.horizontal, constant(iOS: 0, tvOS: 50))
+            }
         }
+#if os(iOS)
         .toolbar(content: toolbar)
+        .navigationTitle("Examples")
         .refreshable { await model.refresh() }
+#endif
     }
 
     private func openPlaylist() {
@@ -58,12 +64,17 @@ private struct ContentCell: View {
     var body: some View {
         switch content {
         case let .topic(topic):
+#if os(iOS)
             NavigationLink(
                 topic.title,
                 destination: .contentList(configuration: .init(list: .latestMediasForTopic(topic), vendor: topic.vendor))
             )
-#if os(iOS)
             .swipeActions { CopyButton(text: topic.urn) }
+#else
+            NavigationLink(destination: RouterDestination.contentList(configuration: .init(list: .latestMediasForTopic(topic), vendor: topic.vendor)).view()) {
+                Text(topic.title)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
 #endif
         case let .media(media):
             let title = MediaDescription.title(for: media)
@@ -107,7 +118,9 @@ struct ContentListView: View {
         }
         .animation(.defaultLinear, value: model.state)
         .onAppear { model.configuration = configuration }
+#if os(iOS)
         .navigationTitle(configuration.list.name)
+#endif
         .tracked(name: configuration.list.pageName, levels: configuration.list.pageLevels)
     }
 }

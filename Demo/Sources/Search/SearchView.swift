@@ -25,10 +25,10 @@ struct SearchView: View {
             }
         }
         .animation(.defaultLinear, value: model.state)
-        .navigationTitle("Search")
         .tracked(name: "search")
         .searchable(text: $model.text)
 #if os(iOS)
+        .navigationTitle("Search")
         .searchScopes($model.vendor) {
             ForEach([SRGVendor.RSI, .RTR, .RTS, .SRF, .SWI], id: \.self) { vendor in
                 Text(vendor.name).tag(vendor)
@@ -40,23 +40,26 @@ struct SearchView: View {
     @ViewBuilder
     private func loadedView(_ medias: [SRGMedia]) -> some View {
         if !medias.isEmpty {
-            List(medias, id: \.urn) { media in
-                let title = MediaDescription.title(for: media)
-                Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
-                    let media = Media(title: media.title, type: .urn(media.urn))
-                    router.presented = .player(media: media)
-                }
-                .onAppear {
-                    if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {
-                        model.loadMore()
+            CustomList(data: medias) { media in
+                if let media {
+                    let title = MediaDescription.title(for: media)
+                    Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
+                        let media = Media(title: media.title, type: .urn(media.urn))
+                        router.presented = .player(media: media)
                     }
-                }
+                    .onAppear {
+                        if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {
+                            model.loadMore()
+                        }
+                    }
+                    .padding(.horizontal, constant(iOS: 0, tvOS: 50))
 #if os(iOS)
-                .swipeActions { CopyButton(text: media.urn) }
+                    .swipeActions { CopyButton(text: media.urn) }
+                    .refreshable { await model.refresh() }
 #endif
+                }
             }
             .scrollDismissesKeyboard(.immediately)
-            .refreshable { await model.refresh() }
         }
         else {
             RefreshableMessageView(model: model, message: "No results.", icon: .empty)

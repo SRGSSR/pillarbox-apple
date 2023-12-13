@@ -80,7 +80,19 @@ struct ExamplesView: View {
     @EnvironmentObject private var router: Router
 
     var body: some View {
-        List {
+        CustomList {
+            content()
+                .padding(.horizontal, constant(iOS: 0, tvOS: 50))
+        }
+#if os(iOS)
+        .navigationTitle("Examples")
+        .refreshable { await model.refresh() }
+#endif
+    }
+
+    @ViewBuilder
+    private func content() -> some View {
+        Group {
             MediaEntryView()
             srgSections()
             thirdPartySections()
@@ -88,9 +100,7 @@ struct ExamplesView: View {
         }
         .scrollDismissesKeyboard(.immediately)
         .animation(.defaultLinear, value: model.protectedMedias)
-        .navigationTitle("Examples")
         .tracked(name: "examples")
-        .refreshable { await model.refresh() }
     }
 
     @ViewBuilder

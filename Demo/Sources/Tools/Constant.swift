@@ -13,3 +13,11 @@ extension Animation {
         .linear(duration: 0.2)
     }
 }
+
+func constant<T>(iOS: T, tvOS: T) -> T {
+#if os(tvOS)
+    tvOS
+#else
+    iOS
+#endif
+}
