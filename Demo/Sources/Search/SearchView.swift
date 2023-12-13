@@ -40,39 +40,26 @@ struct SearchView: View {
     @ViewBuilder
     private func loadedView(_ medias: [SRGMedia]) -> some View {
         if !medias.isEmpty {
-#if os(iOS)
-            List(medias, id: \.urn) { media in
-                let title = MediaDescription.title(for: media)
-                Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
-                    let media = Media(title: media.title, type: .urn(media.urn))
-                    router.presented = .player(media: media)
-                }
-                .onAppear {
-                    if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {
-                        model.loadMore()
-                    }
-                }
-                .swipeActions { CopyButton(text: media.urn) }
-                .scrollDismissesKeyboard(.immediately)
-                .refreshable { await model.refresh() }
-            }
-#else
-            ScrollView {
-                ForEach(medias, id: \.urn) { media in
+            CustomList(data: medias) { media in
+                if let media {
                     let title = MediaDescription.title(for: media)
                     Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
                         let media = Media(title: media.title, type: .urn(media.urn))
                         router.presented = .player(media: media)
                     }
-                    .padding(.horizontal, 50)
                     .onAppear {
                         if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {
                             model.loadMore()
                         }
                     }
+                    .padding(.horizontal, constant(iOS: 0, tvOS: 50))
+#if os(iOS)
+                    .swipeActions { CopyButton(text: media.urn) }
+                    .refreshable { await model.refresh() }
+#endif
                 }
             }
-#endif
+            .scrollDismissesKeyboard(.immediately)
         }
         else {
             RefreshableMessageView(model: model, message: "No results.", icon: .empty)
