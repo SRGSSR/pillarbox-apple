@@ -12,6 +12,8 @@ struct MonoscopicPlayerView: View {
     let media: Media
 
     @StateObject private var player = Player()
+    @StateObject private var deviceRotation = DeviceRotation()
+
     @State private var translation: CGSize = .zero
     @State private var initialTranslation: CGSize = .zero
 
@@ -34,10 +36,19 @@ struct MonoscopicPlayerView: View {
         .onAppear(perform: play)
     }
 
+    private func defaultOrientation() -> SCNQuaternion {
+        if let attitude = deviceRotation.attitude, let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            return Quaternion.cameraOrientationForAttitude(attitude, interfaceOrientation: windowScene.interfaceOrientation)
+        }
+        else {
+            return Quaternion.quaternionWithAngleAndAxis(.pi, 1, 0, 0)
+        }
+    }
+
     private func rotation(from translation: CGSize, in geometry: GeometryProxy) -> SCNQuaternion {
         let wx = .pi / 2 * translation.height / geometry.size.height
         let wy = -.pi / 2 * translation.width / geometry.size.width
-        return Quaternion.rotate(Quaternion.quaternionWithAngleAndAxis(.pi, 1, 0, 0), Float(wx), Float(wy))
+        return Quaternion.rotate(defaultOrientation(), Float(wx), Float(wy))
     }
 
     private func play() {
