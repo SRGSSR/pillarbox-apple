@@ -97,8 +97,7 @@ private struct _MonoscopicVideoView: UIViewRepresentable {
     private func videoSphereNode(for player: AVPlayer, presentationSize: CGSize) -> SCNNode {
         let sphereNode = SCNNode(geometry: videoSphere(for: player, presentationSize: presentationSize))
         sphereNode.position = SCNVector3Zero
-        sphereNode.scale.z = -1
-        sphereNode.scale.y = -1
+        sphereNode.scale = SCNVector3(x: 1, y: -1, z: -1)
         return sphereNode
     }
 }
