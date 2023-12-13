@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import SceneKit
 import SpriteKit
 import SwiftUI
@@ -15,7 +16,7 @@ public struct MonoscopicVideoView: UIViewRepresentable {
     @ObservedObject private var player: Player
 
     public class Coordinator: NSObject, SCNSceneRendererDelegate {
-
+        var player: Player?
     }
 
     public init(player: Player) {
@@ -35,40 +36,52 @@ public struct MonoscopicVideoView: UIViewRepresentable {
     }
 
     public func updateUIView(_ uiView: SCNView, context: Context) {
-        if let presentationSize = player.presentationSize {
-            uiView.scene = scene(with: presentationSize)
-        }
-        else {
-            uiView.scene = nil
-        }
+        guard player != context.coordinator.player, let presentationSize = player.presentationSize else { return }
+        context.coordinator.player = player
+        uiView.scene = scene(for: player.systemPlayer, presentationSize: presentationSize)
     }
 
-    private func scene(with presentationSize: CGSize) -> SCNScene {
+    private func scene(for player: AVPlayer, presentationSize: CGSize) -> SCNScene {
         let scene = SCNScene()
+        scene.rootNode.addChildNode(cameraNode())
+        scene.rootNode.addChildNode(videoSphereNode(for: player, presentationSize: presentationSize))
+        return scene
+    }
 
-        let cameraNode = SCNNode()
-        cameraNode.camera = .init()
-        cameraNode.position = SCNVector3Zero
-        scene.rootNode.addChildNode(cameraNode)
+    private func cameraNode() -> SCNNode {
+        let node = SCNNode()
+        node.camera = .init()
+        node.position = SCNVector3Zero
+        return node
+    }
 
-        let videoScene = SKScene(size: presentationSize)
-        videoScene.backgroundColor = .clear
+    private func videoTextureNode(for player: AVPlayer, presentationSize: CGSize) -> SKNode {
+        let node = SKVideoNode(avPlayer: player)
+        node.size = presentationSize
+        node.position = CGPoint(x: presentationSize.width / 2, y: presentationSize.height / 2)
+        return node
+    }
 
-        let videoNode = SKVideoNode(avPlayer: player.systemPlayer)
-        videoNode.size = presentationSize
-        videoNode.position = CGPoint(x: presentationSize.width / 2, y: presentationSize.height / 2)
-        videoScene.addChild(videoNode)
+    private func videoScene(for player: AVPlayer, presentationSize: CGSize) -> SKScene? {
+        let scene = SKScene(size: presentationSize)
+        scene.backgroundColor = .clear
+        scene.addChild(videoTextureNode(for: player, presentationSize: presentationSize))
+        return scene
+    }
 
+    private func videoSphere(for player: AVPlayer, presentationSize: CGSize) -> SCNSphere {
         // Avoid small radii (< 5) and large ones (> 100), for which the result is incorrect. Anything in between seems fine.
         let sphere = SCNSphere(radius: 20)
         if let firstMaterial = sphere.firstMaterial {
             firstMaterial.isDoubleSided = true
-            firstMaterial.diffuse.contents = videoScene
+            firstMaterial.diffuse.contents = videoScene(for: player, presentationSize: presentationSize)
         }
+        return sphere
+    }
 
-        let sphereNode = SCNNode(geometry: sphere)
+    private func videoSphereNode(for player: AVPlayer, presentationSize: CGSize) -> SCNNode {
+        let sphereNode = SCNNode(geometry: videoSphere(for: player, presentationSize: presentationSize))
         sphereNode.position = SCNVector3Zero
-        scene.rootNode.addChildNode(sphereNode)
-        return scene
+        return sphereNode
     }
 }
