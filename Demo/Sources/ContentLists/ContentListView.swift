@@ -73,7 +73,7 @@ private struct ContentCell: View {
 #else
             NavigationLink(destination: RouterDestination.contentList(configuration: .init(list: .latestMediasForTopic(topic), vendor: topic.vendor)).view()) {
                 Text(topic.title)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(width: 300, height: 250, alignment: .leading)
             }
 #endif
         case let .media(media):
