@@ -172,7 +172,10 @@ struct SettingsView: View {
     @ViewBuilder
     private func debuggingSection() -> some View {
         Section {
-            Button("Simulate memory warning", action: simulateMemoryWarning)
+            Button(action: simulateMemoryWarning) {
+                Text("Simulate memory warning")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
             UrlCacheView()
         } header: {
             Text("Debugging")
