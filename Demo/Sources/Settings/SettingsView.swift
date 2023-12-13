@@ -129,17 +129,20 @@ struct SettingsView: View {
 
     @ViewBuilder
     private func applicationSection() -> some View {
-        Section("Application") {
+        Section {
             Toggle(isOn: $isPresenterModeEnabled) {
                 Text("Presenter mode")
                 Text("Displays touches for presentation purposes.").font(.footnote)
             }
+        } header: {
+            Text("Application")
+                .padding(.vertical, constant(iOS: 0, tvOS: 15))
         }
     }
 
     @ViewBuilder
     private func playerSection() -> some View {
-        Section("Player") {
+        Section {
 #if os(iOS)
             playerLayoutPicker()
 #endif
@@ -148,6 +151,9 @@ struct SettingsView: View {
                 Text("Improves playlist navigation so that it feels more natural.").font(.footnote)
             }
             seekBehaviorPicker()
+        } header: {
+             Text("Player")
+                .padding(.vertical, constant(iOS: 0, tvOS: 15))
         }
     }
 
@@ -179,6 +185,7 @@ struct SettingsView: View {
             UrlCacheView()
         } header: {
             Text("Debugging")
+                .padding(.vertical, constant(iOS: 0, tvOS: 15))
         }
     }
 
@@ -194,6 +201,7 @@ struct SettingsView: View {
             }
         } header: {
             Text("Version information")
+                .padding(.vertical, constant(iOS: 0, tvOS: 15))
         } footer: {
             versionFooter()
         }
