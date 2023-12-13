@@ -14,30 +14,22 @@ private struct LoadedView: View {
     @EnvironmentObject private var router: Router
 
     var body: some View {
-        #if os(iOS)
-        List(contents, id: \.self) { content in
-            ContentCell(content: content)
-                .onAppear {
-                    if let index = contents.firstIndex(of: content), contents.count - index < kPageSize {
-                        model.loadMore()
-                    }
-                }
-        }
-        .toolbar(content: toolbar)
-        .refreshable { await model.refresh() }
-        #else
-        ScrollView {
-            ForEach(contents, id: \.self) { content in
+        CustomList(data: contents) { content in
+            if let content {
                 ContentCell(content: content)
                     .onAppear {
                         if let index = contents.firstIndex(of: content), contents.count - index < kPageSize {
                             model.loadMore()
                         }
                     }
-                    .padding(.horizontal, 50)
+                    .padding(.horizontal, constant(iOS: 0, tvOS: 50))
             }
         }
-        #endif
+#if os(iOS)
+        .toolbar(content: toolbar)
+        .navigationTitle("Examples")
+        .refreshable { await model.refresh() }
+#endif
     }
 
     private func openPlaylist() {
