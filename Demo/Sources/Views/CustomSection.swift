@@ -6,16 +6,16 @@
 
 import SwiftUI
 
-struct CustomSection<Content>: View where Content: View {
-    let title: any StringProtocol
+struct CustomSection<Content, Header>: View where Content: View, Header: View {
     @ViewBuilder let content: () -> Content
+    @ViewBuilder let header: () -> Header
 
     var body: some View {
 #if os(iOS)
         Section {
             content()
         } header: {
-            Text(title)
+            header()
         }
 #else
         Section {
@@ -24,10 +24,20 @@ struct CustomSection<Content>: View where Content: View {
                     .padding(15)
             }
         } header: {
-            Text(title)
+            header()
                 .padding(.vertical, -15)
                 .padding(.top, 10)
         }
 #endif
+    }
+}
+
+extension CustomSection where Header == Text {
+    init(_ title: String, @ViewBuilder content: @escaping () -> Content) {
+        self.init {
+            content()
+        } header: {
+            Text(title)
+        }
     }
 }

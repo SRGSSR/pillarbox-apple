@@ -43,7 +43,7 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func layoutsSection() -> some View {
-        CustomSection(title: "Layouts") {
+        CustomSection("Layouts") {
             cell(
                 title: "Simple",
                 subtitle: "A basic video playback experience",
@@ -70,7 +70,7 @@ struct ShowcaseView: View {
     @ViewBuilder
     private func playlistsSection() -> some View {
         // swiftlint:disable:next closure_body_length
-        CustomSection(title: "Playlists") {
+        CustomSection("Playlists") {
             cell(
                 title: "Video URLs",
                 destination: .playlist(templates: URLTemplates.videos)
@@ -110,7 +110,7 @@ struct ShowcaseView: View {
     @ViewBuilder
     private func embeddingsSection() -> some View {
         // swiftlint:disable:next closure_body_length
-        CustomSection(title: "Embeddings") {
+        CustomSection("Embeddings") {
             cell(
                 title: "Twins",
                 subtitle: "A video displayed twice",
@@ -153,7 +153,7 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func systemPlayerSection() -> some View {
-        CustomSection(title: "System player (using Pillarbox)") {
+        CustomSection("System player (using Pillarbox)") {
             cell(
                 title: "Apple Basic 16:9",
                 destination: .systemPlayer(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS))
@@ -188,7 +188,7 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func inlineSystemPlayerSection() -> some View {
-        CustomSection(title: "Inline system player (using Pillarbox)") {
+        CustomSection("Inline system player (using Pillarbox)") {
             cell(
                 title: "Video URN - On-demand",
                 destination: .inlineSystemPlayer(media: Media(from: URNTemplate.onDemandVideo))
@@ -199,7 +199,7 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func vanillaPlayerSection() -> some View {
-        CustomSection(title: "System player (using AVPlayer)") {
+        CustomSection("System player (using AVPlayer)") {
             cell(
                 title: "Apple Basic 16:9",
                 destination: .vanillaPlayer(item: Template.playerItem(from: URLTemplate.appleBasic_16_9_TS_HLS)!)
@@ -226,7 +226,7 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func trackingSection() -> some View {
-        CustomSection(title: "Opt-in features") {
+        CustomSection("Opt-in features") {
             cell(
                 title: "Video URL",
                 destination: .optInPlayer(media: Media(from: URLTemplate.onDemandVideoMP4))
