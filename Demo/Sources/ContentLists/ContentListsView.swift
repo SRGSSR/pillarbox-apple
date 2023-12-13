@@ -51,14 +51,14 @@ struct ContentListsView: View {
 
     @ViewBuilder
     private static func section(title: String, image: String? = nil, configurations: [ContentList.Configuration]) -> some View {
-        Section {
+        CustomSection {
             ForEach(configurations) { configuration in
 #if os(iOS)
                 NavigationLink(configuration.name, destination: .contentList(configuration: configuration))
 #else
                 NavigationLink(destination: RouterDestination.contentList(configuration: configuration).view()) {
                     Text(configuration.name)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(width: 300, height: 250, alignment: .leading)
                 }
 #endif
             }
