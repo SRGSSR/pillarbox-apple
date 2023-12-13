@@ -85,6 +85,7 @@ struct ExamplesView: View {
             content()
         }
         .navigationTitle("Examples")
+        .refreshable { await model.refresh() }
 #else
         ScrollView {
             VStack(alignment: .leading) {
@@ -106,7 +107,6 @@ struct ExamplesView: View {
         .scrollDismissesKeyboard(.immediately)
         .animation(.defaultLinear, value: model.protectedMedias)
         .tracked(name: "examples")
-        .refreshable { await model.refresh() }
     }
 
     @ViewBuilder
