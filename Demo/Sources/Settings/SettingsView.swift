@@ -217,6 +217,9 @@ struct SettingsView: View {
             Text(" in Switzerland")
         }
         .frame(maxWidth: .infinity)
+#if os(tvOS)
+        .focusable()
+#endif
     }
 
 #if os(iOS)
