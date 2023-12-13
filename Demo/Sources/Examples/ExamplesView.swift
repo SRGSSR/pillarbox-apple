@@ -80,19 +80,13 @@ struct ExamplesView: View {
     @EnvironmentObject private var router: Router
 
     var body: some View {
-#if os(iOS)
-        List {
+        CustomList {
             content()
+                .padding(.horizontal, constant(iOS: 0, tvOS: 50))
         }
+#if os(iOS)
         .navigationTitle("Examples")
         .refreshable { await model.refresh() }
-#else
-        ScrollView {
-            VStack(alignment: .leading) {
-                content()
-                    .padding(.horizontal, 50)
-            }
-        }
 #endif
     }
 
