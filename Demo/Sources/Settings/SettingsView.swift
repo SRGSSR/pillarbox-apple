@@ -13,14 +13,15 @@ private struct UrlCacheView: View {
 
     var body: some View {
         HStack {
-            Button("Clear URL cache", action: clearUrlCache)
-#if os(iOS)
-                .buttonStyle(.borderless)
-#endif
-            Spacer()
-            Text(urlCacheSize)
-                .font(.footnote)
-                .foregroundColor(.red)
+            Button(action: clearUrlCache) {
+                HStack {
+                    Text("Clear URL cache")
+                    Spacer()
+                    Text(urlCacheSize)
+                        .font(.footnote)
+                        .foregroundColor(.red)
+                }
+            }
         }
         .onAppear {
             updateCacheSize()
