@@ -46,7 +46,7 @@ struct MonoscopicPlayerView: View {
     }
 
     private func rotation(from translation: CGSize, in geometry: GeometryProxy) -> SCNQuaternion {
-        let wx = .pi / 4 * translation.height / geometry.size.height
+        let wx = .pi / 2 * translation.height / geometry.size.height
         let wy = -.pi / 2 * translation.width / geometry.size.width
         return Quaternion.rotate(defaultOrientation(), Float(wx), Float(wy))
     }
