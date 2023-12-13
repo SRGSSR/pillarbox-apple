@@ -58,28 +58,26 @@ public enum Quaternion {
         let quaternion = attitude.quaternion
         let simdQuaternion = simd_quaternion(Float(quaternion.x), Float(quaternion.y), Float(quaternion.z), Float(quaternion.w))
         switch interfaceOrientation {
-        case .portrait:
+        case .portraitUpsideDown:
             let simdRotationQuaternion = simd_quaternion(.pi / 2, simd_make_float3(1, 0, 0))
             let simdRotatedQuaternion = simd_mul(simdRotationQuaternion, simdQuaternion)
             let vector = simd_imag(simdRotatedQuaternion)
-            return SCNVector4(x: vector.x, y: vector.y, z: vector.z, w: simd_real(simdRotatedQuaternion))
-        case .portraitUpsideDown:
-            let simdRotationQuaternion = simd_quaternion(-.pi / 2, simd_make_float3(1, 0, 0))
-            let simdRotatedQuaternion = simd_mul(simdRotationQuaternion, simdQuaternion)
-            let vector = simd_imag(simdRotatedQuaternion)
-            return SCNVector4(x: -vector.x, y: -vector.y, z: vector.z, w: simd_real(simdRotatedQuaternion))
+            return SCNQuaternion(x: -vector.x, y: -vector.y, z: vector.z, w: simd_real(simdRotatedQuaternion))
         case .landscapeLeft:
-            let simdRotationQuaternion = simd_quaternion(.pi / 2, simd_make_float3(0, 1, 0))
-            let simdRotatedQuaternion = simd_mul(simdRotationQuaternion, simdQuaternion)
-            let vector = simd_imag(simdRotatedQuaternion)
-            return SCNVector4(x: vector.y, y: -vector.x, z: vector.z, w: simd_real(simdRotatedQuaternion))
-        case .landscapeRight:
             let simdRotationQuaternion = simd_quaternion(-.pi / 2, simd_make_float3(0, 1, 0))
             let simdRotatedQuaternion = simd_mul(simdRotationQuaternion, simdQuaternion)
             let vector = simd_imag(simdRotatedQuaternion)
-            return SCNVector4(x: -vector.y, y: vector.x, z: vector.z, w: simd_real(simdRotatedQuaternion))
+            return SCNQuaternion(x: vector.y, y: -vector.x, z: vector.z, w: simd_real(simdRotatedQuaternion))
+        case .landscapeRight:
+            let simdRotationQuaternion = simd_quaternion(.pi / 2, simd_make_float3(0, 1, 0))
+            let simdRotatedQuaternion = simd_mul(simdRotationQuaternion, simdQuaternion)
+            let vector = simd_imag(simdRotatedQuaternion)
+            return SCNQuaternion(x: -vector.y, y: vector.x, z: vector.z, w: simd_real(simdRotatedQuaternion))
         default:
-            return SCNVector4Zero
+            let simdRotationQuaternion = simd_quaternion(-.pi / 2, simd_make_float3(1, 0, 0))
+            let simdRotatedQuaternion = simd_mul(simdRotationQuaternion, simdQuaternion)
+            let vector = simd_imag(simdRotatedQuaternion)
+            return SCNQuaternion(x: vector.x, y: vector.y, z: vector.z, w: simd_real(simdRotatedQuaternion))
         }
     }
 #endif

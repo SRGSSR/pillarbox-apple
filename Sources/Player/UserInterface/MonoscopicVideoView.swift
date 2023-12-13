@@ -14,21 +14,21 @@ import SwiftUI
 /// Behavior: h-exp, v-exp
 public struct MonoscopicVideoView: View {
     private let player: Player
-    private let rotation: SCNQuaternion
+    private let orientation: SCNQuaternion
 
     public var body: some View {
-        _MonoscopicVideoView(player: player, rotation: rotation)
+        _MonoscopicVideoView(player: player, orientation: orientation)
     }
 
-    public init(player: Player, rotation: SCNQuaternion) {
+    public init(player: Player, orientation: SCNQuaternion) {
         self.player = player
-        self.rotation = rotation
+        self.orientation = orientation
     }
 }
 
 private struct _MonoscopicVideoView: UIViewRepresentable {
     @ObservedObject var player: Player
-    let rotation: SCNQuaternion
+    let orientation: SCNQuaternion
 
     class Coordinator {
         var player: Player?
@@ -48,7 +48,7 @@ private struct _MonoscopicVideoView: UIViewRepresentable {
 
     func updateUIView(_ uiView: SCNView, context: Context) {
         defer {
-            context.coordinator.cameraNode?.orientation = rotation
+            context.coordinator.cameraNode?.orientation = orientation
         }
         guard player != context.coordinator.player, let presentationSize = player.presentationSize else { return }
         context.coordinator.player = player
@@ -97,6 +97,8 @@ private struct _MonoscopicVideoView: UIViewRepresentable {
     private func videoSphereNode(for player: AVPlayer, presentationSize: CGSize) -> SCNNode {
         let sphereNode = SCNNode(geometry: videoSphere(for: player, presentationSize: presentationSize))
         sphereNode.position = SCNVector3Zero
+        sphereNode.scale.z = -1
+        sphereNode.scale.y = -1
         return sphereNode
     }
 }
