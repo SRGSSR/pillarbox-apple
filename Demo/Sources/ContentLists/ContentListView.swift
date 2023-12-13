@@ -86,12 +86,17 @@ private struct ContentCell: View {
             .swipeActions { CopyButton(text: media.urn) }
 #endif
         case let .show(show):
+#if os(iOS)
             NavigationLink(
                 show.title,
                 destination: .contentList(configuration: .init(list: .latestMediasForShow(show), vendor: show.vendor))
             )
-#if os(iOS)
             .swipeActions { CopyButton(text: show.urn) }
+#else
+            NavigationLink(destination: RouterDestination.contentList(configuration: .init(list: .latestMediasForShow(show), vendor: show.vendor)).view()) {
+                Text(show.title)
+                    .frame(width: 300, height: 250, alignment: .leading)
+            }
 #endif
         }
     }
