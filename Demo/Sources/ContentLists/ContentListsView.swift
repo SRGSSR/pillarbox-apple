@@ -13,21 +13,15 @@ struct ContentListsView: View {
     private var selectedServerSetting: ServerSetting = .production
 
     var body: some View {
-#if os(iOS)
-        List {
+        CustomList {
             Self.content()
+                .padding(.horizontal, constant(iOS: 0, tvOS: 50))
         }
+#if os(iOS)
         .navigationTitle("Lists (\(selectedServerSetting.title))")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarTitleMenu {
             serverSettingsMenu()
-        }
-#else
-        ScrollView {
-            VStack(alignment: .leading) {
-                Self.content()
-                    .padding(.horizontal, 50)
-            }
         }
 #endif
     }
