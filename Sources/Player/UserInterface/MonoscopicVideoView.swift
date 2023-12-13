@@ -66,7 +66,6 @@ private struct _MonoscopicVideoView: UIViewRepresentable {
         let node = SCNNode()
         node.camera = .init()
         node.position = SCNVector3Zero
-        node.orientation = Quaternion.quaternionWithAngleAndAxis(.pi, 1, 0, 0)
         context.coordinator.cameraNode = node
         return node
     }
