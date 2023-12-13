@@ -21,7 +21,7 @@ struct MonoscopicPlayerView: View {
         GeometryReader { geometry in
             MonoscopicVideoView(player: player, rotation: rotation(from: translation, in: geometry))
                 .gesture(
-                    DragGesture()
+                    DragGesture(minimumDistance: 0)
                         .onChanged { value in
                             translation = CGSize(
                                 width: initialTranslation.width + value.translation.width,
