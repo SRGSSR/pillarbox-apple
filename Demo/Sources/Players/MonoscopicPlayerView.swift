@@ -5,6 +5,7 @@
 //
 
 import Player
+import SceneKit
 import SwiftUI
 
 struct MonoscopicPlayerView: View {
@@ -13,7 +14,7 @@ struct MonoscopicPlayerView: View {
     @StateObject private var player = Player()
 
     var body: some View {
-        MonoscopicVideoView(player: player)
+        MonoscopicVideoView(player: player, rotation: SCNVector4Zero)
             .ignoresSafeArea()
             .onAppear(perform: play)
     }

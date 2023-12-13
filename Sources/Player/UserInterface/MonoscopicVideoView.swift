@@ -13,19 +13,22 @@ import SwiftUI
 ///
 /// Behavior: h-exp, v-exp
 public struct MonoscopicVideoView: View {
-    let player: Player
+    private let player: Player
+    private let rotation: SCNQuaternion
 
     public var body: some View {
-        _MonoscopicVideoView(player: player)
+        _MonoscopicVideoView(player: player, rotation: rotation)
     }
 
-    public init(player: Player) {
+    public init(player: Player, rotation: SCNQuaternion) {
         self.player = player
+        self.rotation = rotation
     }
 }
 
 private struct _MonoscopicVideoView: UIViewRepresentable {
     @ObservedObject var player: Player
+    let rotation: SCNQuaternion
 
     class Coordinator: NSObject, SCNSceneRendererDelegate {
         var player: Player?
