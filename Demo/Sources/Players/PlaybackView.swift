@@ -550,9 +550,6 @@ struct PlaybackView: View {
     @ObservedObject private var player: Player
     @Binding private var layout: Layout
     let isPictureInPictureSupported: Bool
-#if os(iOS)
-    let playerLayout: PlayerLayout
-#endif
 
     var body: some View {
         ZStack {
@@ -574,37 +571,21 @@ struct PlaybackView: View {
         .background(.black)
     }
 
-#if os(iOS)
     init(
         player: Player,
-        playerLayout: PlayerLayout = UserDefaults.standard.playerLayout,
         layout: Binding<Layout> = .constant(.inline),
         isPictureInPictureSupported: Bool = false
     ) {
         self.player = player
-        self.playerLayout = playerLayout
         _layout = layout
         self.isPictureInPictureSupported = isPictureInPictureSupported
     }
-#else
-    init(player: Player, layout: Binding<Layout> = .constant(.inline), isPictureInPictureSupported: Bool = false) {
-        self.player = player
-        _layout = layout
-        self.isPictureInPictureSupported = isPictureInPictureSupported
-    }
-#endif
 
     @ViewBuilder
     private func videoView() -> some View {
         ZStack {
 #if os(iOS)
-            switch playerLayout {
-            case .custom:
-                MainView(player: player, layout: $layout, isPictureInPictureSupported: isPictureInPictureSupported)
-            case .system:
-                SystemVideoView(player: player, isPictureInPictureSupported: isPictureInPictureSupported)
-                    .ignoresSafeArea()
-            }
+            MainView(player: player, layout: $layout, isPictureInPictureSupported: isPictureInPictureSupported)
 #else
             SystemVideoView(player: player, isPictureInPictureSupported: isPictureInPictureSupported)
                 .ignoresSafeArea()

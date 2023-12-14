@@ -60,11 +60,6 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.presenterModeEnabledKey)
     private var isPresenterModeEnabled = false
 
-#if os(iOS)
-    @AppStorage(UserDefaults.playerLayoutKey)
-    private var playerLayout: PlayerLayout = .custom
-#endif
-
     @AppStorage(UserDefaults.smartNavigationEnabledKey)
     private var isSmartNavigationEnabled = true
 
@@ -139,9 +134,6 @@ struct SettingsView: View {
     @ViewBuilder
     private func playerSection() -> some View {
         Section {
-#if os(iOS)
-            playerLayoutPicker()
-#endif
             Toggle(isOn: $isSmartNavigationEnabled) {
                 Text("Smart navigation")
                 Text("Improves playlist navigation so that it feels more natural.").font(.footnote)
@@ -152,16 +144,6 @@ struct SettingsView: View {
                 .padding(.vertical, constant(iOS: 0, tvOS: 15))
         }
     }
-
-#if os(iOS)
-    @ViewBuilder
-    private func playerLayoutPicker() -> some View {
-        Picker("Layout", selection: $playerLayout) {
-            Text("Custom").tag(PlayerLayout.custom)
-            Text("System").tag(PlayerLayout.system)
-        }
-    }
-#endif
 
     @ViewBuilder
     private func seekBehaviorPicker() -> some View {
