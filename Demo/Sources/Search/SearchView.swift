@@ -52,6 +52,7 @@ struct SearchView: View {
                             model.loadMore()
                         }
                     }
+                    .padding(.horizontal, constant(iOS: 0, tvOS: 20))
 #if os(iOS)
                     .swipeActions { CopyButton(text: media.urn) }
                     .refreshable { await model.refresh() }
