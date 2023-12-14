@@ -45,6 +45,9 @@ struct RefreshableMessageView<Model>: View where Model: Refreshable {
                     .frame(width: geometry.size.width, height: geometry.size.height)
             }
             .refreshable { await model.refresh() }
+#if os(tvOS)
+            .focusable()
+#endif
         }
     }
 }
