@@ -15,7 +15,7 @@ struct ContentListsView: View {
     var body: some View {
         CustomList {
             Self.content()
-                .padding(.horizontal, constant(iOS: 0, tvOS: 50))
+                .padding(.horizontal, constant(iOS: 0, tvOS: 20))
         }
 #if os(iOS)
         .navigationTitle("Lists (\(selectedServerSetting.title))")
@@ -23,6 +23,8 @@ struct ContentListsView: View {
         .toolbarTitleMenu {
             serverSettingsMenu()
         }
+#else
+        .ignoresSafeArea(.all, edges: .horizontal)
 #endif
     }
 
@@ -51,14 +53,14 @@ struct ContentListsView: View {
 
     @ViewBuilder
     private static func section(title: String, image: String? = nil, configurations: [ContentList.Configuration]) -> some View {
-        Section {
+        CustomSection {
             ForEach(configurations) { configuration in
 #if os(iOS)
                 NavigationLink(configuration.name, destination: .contentList(configuration: configuration))
 #else
                 NavigationLink(destination: RouterDestination.contentList(configuration: configuration).view()) {
                     Text(configuration.name)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(width: 300, height: 250, alignment: .leading)
                 }
 #endif
             }

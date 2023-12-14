@@ -82,11 +82,13 @@ struct ExamplesView: View {
     var body: some View {
         CustomList {
             content()
-                .padding(.horizontal, constant(iOS: 0, tvOS: 50))
+                .padding(.horizontal, constant(iOS: 0, tvOS: 20))
         }
 #if os(iOS)
         .navigationTitle("Examples")
         .refreshable { await model.refresh() }
+#else
+        .ignoresSafeArea(.all, edges: .horizontal)
 #endif
     }
 
@@ -129,7 +131,7 @@ struct ExamplesView: View {
 
     @ViewBuilder
     private func section(title: String, medias: [Media]) -> some View {
-        Section(title) {
+        CustomSection(title) {
             ForEach(medias, id: \.self) { media in
                 Cell(title: media.title, subtitle: media.description) {
                     router.presented = .player(media: media)

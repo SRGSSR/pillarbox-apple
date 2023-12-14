@@ -24,7 +24,11 @@ struct Cell: View {
                         .foregroundColor(.secondary)
                 }
             }
+#if os(iOS)
             .frame(maxWidth: .infinity, alignment: .leading)
+#else
+            .frame(width: 300, height: 250, alignment: .leading)
+#endif
         }
     }
 
