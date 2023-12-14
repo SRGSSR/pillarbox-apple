@@ -22,7 +22,7 @@ private struct LoadedView: View {
                             model.loadMore()
                         }
                     }
-                    .padding(.horizontal, constant(iOS: 0, tvOS: 50))
+                    .padding(.horizontal, constant(iOS: 0, tvOS: 20))
             }
         }
 #if os(iOS)
