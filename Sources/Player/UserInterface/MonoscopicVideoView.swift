@@ -69,13 +69,6 @@ public struct MonoscopicVideoView: View {
     }
 }
 
-public extension SCNQuaternion {
-    /// The default orientation for monoscopic content.
-    ///
-    /// Corresponds to a user facing the content with no head tilting.
-    static let monoscopicDefault = SCNQuaternionWithAngleAndAxis(0, 1, 0, 0)
-}
-
 private extension _MonoscopicVideoView {
     private static let presentationSize = CGSize(width: 4096, height: 2048)
 
