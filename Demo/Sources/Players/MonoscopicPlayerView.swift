@@ -12,7 +12,7 @@ struct MonoscopicPlayerView: View {
     let media: Media
 
     @StateObject private var player = Player()
-    @StateObject private var deviceRotation = DeviceRotation()
+    @StateObject private var motionManager = MotionManager()
 
     @State private var translation: CGSize = .zero
     @State private var initialTranslation: CGSize = .zero
@@ -38,7 +38,7 @@ struct MonoscopicPlayerView: View {
     }
 
     private func baseOrientation() -> SCNQuaternion {
-        if let attitude = deviceRotation.attitude, let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+        if let attitude = motionManager.attitude, let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
             return Quaternion.cameraOrientationForAttitude(attitude, interfaceOrientation: windowScene.interfaceOrientation)
         }
         else {

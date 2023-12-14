@@ -11,6 +11,8 @@ import SceneKit
 import simd
 import UIKit
 
+// http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/.
+
 public enum Quaternion {
     /// Rotates the specified quaternion around the x- and y-axes.
     ///

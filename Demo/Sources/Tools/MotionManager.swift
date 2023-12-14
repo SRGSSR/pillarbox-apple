@@ -8,7 +8,7 @@ import Combine
 import CoreMotion
 import Player
 
-final class DeviceRotation: ObservableObject {
+final class MotionManager: ObservableObject {
     @Published private(set) var attitude: CMAttitude?
     private var motionManager = CMMotionManager()
 
