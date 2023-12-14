@@ -32,12 +32,11 @@ private struct _MonoscopicVideoView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: SCNView, context: Context) {
-        defer {
-            context.coordinator.cameraNode?.orientation = orientation
+        if player != context.coordinator.player {
+            context.coordinator.player = player
+            uiView.scene = scene(for: player.systemPlayer, context: context)
         }
-        guard player != context.coordinator.player else { return }
-        context.coordinator.player = player
-        uiView.scene = scene(for: player.systemPlayer, context: context)
+        context.coordinator.cameraNode?.orientation = orientation
     }
 
     private func scene(for player: AVPlayer, context: Context) -> SCNScene {
