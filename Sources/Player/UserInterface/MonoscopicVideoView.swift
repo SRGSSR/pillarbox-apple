@@ -15,7 +15,10 @@ private struct _MonoscopicVideoView: UIViewRepresentable {
         var cameraNode: SCNNode?
     }
 
-    static let presentationSize = CGSize(width: 4096, height: 2048)
+    struct SceneProperties {
+        let scene: SCNScene
+        let cameraNode: SCNNode
+    }
 
     @ObservedObject var player: Player
     let orientation: SCNQuaternion
@@ -33,57 +36,12 @@ private struct _MonoscopicVideoView: UIViewRepresentable {
 
     func updateUIView(_ uiView: SCNView, context: Context) {
         if player != context.coordinator.player {
+            let sceneProperties = Self.scene(for: player)
+            uiView.scene = sceneProperties.scene
             context.coordinator.player = player
-            uiView.scene = scene(for: player.systemPlayer, context: context)
+            context.coordinator.cameraNode = sceneProperties.cameraNode
         }
         context.coordinator.cameraNode?.orientation = orientation
-    }
-
-    private func scene(for player: AVPlayer, context: Context) -> SCNScene {
-        let scene = SCNScene()
-        scene.rootNode.addChildNode(cameraNode(context: context))
-        scene.rootNode.addChildNode(videoSphereNode(for: player))
-        return scene
-    }
-
-    private func cameraNode(context: Context) -> SCNNode {
-        let node = SCNNode()
-        node.camera = .init()
-        node.position = SCNVector3Zero
-        context.coordinator.cameraNode = node
-        return node
-    }
-
-    private func videoTextureNode(for player: AVPlayer) -> SKNode {
-        let node = SKVideoNode(avPlayer: player)
-        node.size = Self.presentationSize
-        node.position = CGPoint(x: Self.presentationSize.width / 2, y: Self.presentationSize.height / 2)
-        return node
-    }
-
-    private func videoScene(for player: AVPlayer) -> SKScene? {
-        let scene = SKScene(size: Self.presentationSize)
-        scene.backgroundColor = .clear
-        scene.addChild(videoTextureNode(for: player))
-        return scene
-    }
-
-    private func videoSphere(for player: AVPlayer) -> SCNSphere {
-        // Avoid small radii (< 5) and large ones (> 100), for which the result is incorrect. Anything in between seems fine.
-        let sphere = SCNSphere(radius: 20)
-        if let firstMaterial = sphere.firstMaterial {
-            firstMaterial.isDoubleSided = true
-            firstMaterial.diffuse.contents = videoScene(for: player)
-        }
-        return sphere
-    }
-
-    private func videoSphereNode(for player: AVPlayer) -> SCNNode {
-        let sphereNode = SCNNode(geometry: videoSphere(for: player))
-        sphereNode.position = SCNVector3Zero
-        // Flip the video content so that its correctly seen with the default orientation.
-        sphereNode.scale = SCNVector3(x: 1, y: -1, z: -1)
-        return sphereNode
     }
 }
 
@@ -117,4 +75,55 @@ public extension SCNQuaternion {
     ///
     /// Corresponds to a user facing the content with no head tilting.
     static let monoscopicDefault = SCNQuaternionWithAngleAndAxis(0, 1, 0, 0)
+}
+
+private extension _MonoscopicVideoView {
+    private static let presentationSize = CGSize(width: 4096, height: 2048)
+
+    static func scene(for player: Player) -> SceneProperties {
+        let scene = SCNScene()
+        let cameraNode = cameraNode()
+        scene.rootNode.addChildNode(cameraNode)
+        scene.rootNode.addChildNode(videoSphereNode(for: player))
+        return .init(scene: scene, cameraNode: cameraNode)
+    }
+
+    static func cameraNode() -> SCNNode {
+        let node = SCNNode()
+        node.camera = .init()
+        node.position = SCNVector3Zero
+        return node
+    }
+
+    static func videoTextureNode(for player: Player) -> SKNode {
+        let node = SKVideoNode(avPlayer: player.systemPlayer)
+        node.size = presentationSize
+        node.position = CGPoint(x: presentationSize.width / 2, y: presentationSize.height / 2)
+        return node
+    }
+
+    static func videoScene(for player: Player) -> SKScene? {
+        let scene = SKScene(size: presentationSize)
+        scene.backgroundColor = .clear
+        scene.addChild(videoTextureNode(for: player))
+        return scene
+    }
+
+    static func videoSphere(for player: Player) -> SCNSphere {
+        // Avoid small radii (< 5) and large ones (> 100), for which the result is incorrect. Anything in between seems fine.
+        let sphere = SCNSphere(radius: 20)
+        if let firstMaterial = sphere.firstMaterial {
+            firstMaterial.isDoubleSided = true
+            firstMaterial.diffuse.contents = videoScene(for: player)
+        }
+        return sphere
+    }
+
+    static func videoSphereNode(for player: Player) -> SCNNode {
+        let sphereNode = SCNNode(geometry: videoSphere(for: player))
+        sphereNode.position = SCNVector3Zero
+        // Flip the video content so that its correctly seen with the default orientation.
+        sphereNode.scale = SCNVector3(x: 1, y: -1, z: -1)
+        return sphereNode
+    }
 }
