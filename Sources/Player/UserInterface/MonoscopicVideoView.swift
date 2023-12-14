@@ -10,13 +10,13 @@ import SpriteKit
 import SwiftUI
 
 private struct _MonoscopicVideoView: UIViewRepresentable {
-    @ObservedObject var player: Player
-    let orientation: SCNQuaternion
-
     class Coordinator {
         var player: Player?
         var cameraNode: SCNNode?
     }
+
+    @ObservedObject var player: Player
+    let orientation: SCNQuaternion
 
     func makeCoordinator() -> Coordinator {
         .init()
@@ -100,6 +100,11 @@ public struct MonoscopicVideoView: View {
         _MonoscopicVideoView(player: player, orientation: orientation)
     }
 
+    /// Creates a view displaying video content.
+    ///
+    /// - Parameters:
+    ///   - player: The player whose content is displayed.
+    ///   - orientation: The orientation at which the content is seen.
     public init(player: Player, orientation: SCNQuaternion = .monoscopicDefault) {
         self.player = player
         self.orientation = orientation
