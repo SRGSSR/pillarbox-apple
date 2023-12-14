@@ -106,13 +106,15 @@ private struct MainView: View {
         switch player.mediaType {
         case .audio:
             image(name: "music.note.tv.fill")
-        default:
+        case .video:
             if player.isExternalPlaybackActive {
                 image(name: "tv")
             }
             else {
                 VideoView(player: player, gravity: gravity, isPictureInPictureSupported: isPictureInPictureSupported)
             }
+        case .unknown:
+            Color.clear
         }
     }
 
