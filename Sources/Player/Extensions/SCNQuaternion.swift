@@ -54,20 +54,23 @@ public func SCNQuaternionWithAngleAndAxis(_ radians: Float, _ x: Float, _ y: Flo
 
 #if os(iOS)
 
-/// Returns a quaternion matching the provided CoreMotion attitude, correctly taking into account device interface
-/// orientation.
+/// Returns a quaternion matching the provided CoreMotion attitude.
 ///
 /// - Parameters:
 ///   - attitude: The current device orientation in space, as returned by a `CMMotionManager` instance.
 ///   - interfaceOrientation: The interface orientation.
 /// - Returns: The quaternion.
 ///
+/// Unlike [`CMAttitude/quaternion`](https://developer.apple.com/documentation/coremotion/cmattitude/1616025-quaternion)
+/// this property takes the current user interface orientation into account. The method must therefore be called again
+/// should the user interface orientation change.
+///
 /// For a short introduction to quaternions please check http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/.
-public func SCNQuaternionForAttitude(_ attitude: CMAttitude, interfaceOrientation: UIInterfaceOrientation) -> SCNQuaternion {
+public func SCNQuaternionForAttitude(_ attitude: CMAttitude) -> SCNQuaternion {
     // Based on: https://gist.github.com/travisnewby/96ee1ac2bc2002f1d480. Also see https://stackoverflow.com/a/28784841/760435.
     let quaternion = attitude.quaternion
     let simdQuaternion = simd_quaternion(Float(quaternion.x), Float(quaternion.y), Float(quaternion.z), Float(quaternion.w))
-    switch interfaceOrientation {
+    switch UIApplication.shared.firstWindowScene?.interfaceOrientation {
     case .portraitUpsideDown:
         let simdRotationQuaternion = simd_quaternion(.pi / 2, simd_make_float3(1, 0, 0))
         let simdRotatedQuaternion = simd_mul(simdRotationQuaternion, simdQuaternion)
@@ -88,6 +91,12 @@ public func SCNQuaternionForAttitude(_ attitude: CMAttitude, interfaceOrientatio
         let simdRotatedQuaternion = simd_mul(simdRotationQuaternion, simdQuaternion)
         let vector = simd_imag(simdRotatedQuaternion)
         return SCNQuaternion(x: vector.x, y: vector.y, z: vector.z, w: simd_real(simdRotatedQuaternion))
+    }
+}
+
+private extension UIApplication {
+    var firstWindowScene: UIWindowScene? {
+        connectedScenes.first { $0 is UIWindowScene } as? UIWindowScene
     }
 }
 

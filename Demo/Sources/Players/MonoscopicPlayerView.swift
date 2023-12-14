@@ -48,8 +48,8 @@ struct MonoscopicPlayerView: View {
     }
 
     private func baseOrientation() -> SCNQuaternion {
-        if let attitude = motionManager.attitude, let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-            return SCNQuaternionForAttitude(attitude, interfaceOrientation: windowScene.interfaceOrientation)
+        if let attitude = motionManager.attitude {
+            return SCNQuaternionForAttitude(attitude)
         }
         else {
             return .monoscopicDefault
