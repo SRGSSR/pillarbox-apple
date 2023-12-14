@@ -42,7 +42,7 @@ struct MonoscopicPlayerView: View {
             return SCNQuaternionForAttitude(attitude, interfaceOrientation: windowScene.interfaceOrientation)
         }
         else {
-            return SCNQuaternionWithAngleAndAxis(0, 1, 0, 0)
+            return .monoscopicDefault
         }
     }
 

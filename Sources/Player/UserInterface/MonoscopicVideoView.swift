@@ -9,23 +9,6 @@ import SceneKit
 import SpriteKit
 import SwiftUI
 
-/// A view displaying video content provided by an associated player.
-///
-/// Behavior: h-exp, v-exp
-public struct MonoscopicVideoView: View {
-    private let player: Player
-    private let orientation: SCNQuaternion
-
-    public var body: some View {
-        _MonoscopicVideoView(player: player, orientation: orientation)
-    }
-
-    public init(player: Player, orientation: SCNQuaternion) {
-        self.player = player
-        self.orientation = orientation
-    }
-}
-
 private struct _MonoscopicVideoView: UIViewRepresentable {
     @ObservedObject var player: Player
     let orientation: SCNQuaternion
@@ -97,7 +80,35 @@ private struct _MonoscopicVideoView: UIViewRepresentable {
     private func videoSphereNode(for player: AVPlayer, presentationSize: CGSize) -> SCNNode {
         let sphereNode = SCNNode(geometry: videoSphere(for: player, presentationSize: presentationSize))
         sphereNode.position = SCNVector3Zero
+        // Flip the video content so that its correctly seen with the default orientation.
         sphereNode.scale = SCNVector3(x: 1, y: -1, z: -1)
         return sphereNode
     }
+}
+
+/// A view able to display 360° monoscopic video content provided by an associated player.
+///
+/// The video is projected onto a sphere with the viewer at its center. A quaternion makes it possible to control the
+/// orientation at which the content is seen.
+///
+/// Behavior: h-exp, v-exp
+public struct MonoscopicVideoView: View {
+    private let player: Player
+    private let orientation: SCNQuaternion
+
+    public var body: some View {
+        _MonoscopicVideoView(player: player, orientation: orientation)
+    }
+
+    public init(player: Player, orientation: SCNQuaternion = .monoscopicDefault) {
+        self.player = player
+        self.orientation = orientation
+    }
+}
+
+public extension SCNQuaternion {
+    /// The default orientation for monoscopic content.
+    ///
+    /// Corresponds to a user facing the content with no head tilting.
+    static let monoscopicDefault = SCNQuaternionWithAngleAndAxis(0, 1, 0, 0)
 }
