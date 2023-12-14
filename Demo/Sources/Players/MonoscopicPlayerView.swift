@@ -14,26 +14,36 @@ struct MonoscopicPlayerView: View {
     @StateObject private var player = Player()
     @StateObject private var motionManager = MotionManager()
 
+    @Environment(\.dismiss) var dismiss
+
     @State private var translation: CGSize = .zero
     @State private var initialTranslation: CGSize = .zero
 
     var body: some View {
         GeometryReader { geometry in
-            MonoscopicVideoView(player: player, orientation: orientation(from: translation, in: geometry))
-                .gesture(
-                    DragGesture(minimumDistance: 0)
-                        .onChanged { value in
-                            translation = CGSize(
-                                width: initialTranslation.width + value.translation.width,
-                                height: initialTranslation.height + value.translation.height
-                            )
-                        }
-                        .onEnded { _ in
-                            initialTranslation = translation
-                        }
-                )
+            ZStack {
+                MonoscopicVideoView(player: player, orientation: orientation(from: translation, in: geometry))
+                    .gesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { value in
+                                translation = CGSize(
+                                    width: initialTranslation.width + value.translation.width,
+                                    height: initialTranslation.height + value.translation.height
+                                )
+                            }
+                            .onEnded { _ in
+                                initialTranslation = translation
+                            }
+                    )
+                    .ignoresSafeArea()
+                Button(action: dismiss.callAsFunction) {
+                    Image(systemName: "xmark")
+                        .tint(.white)
+                }
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            }
         }
-        .ignoresSafeArea()
         .onAppear(perform: play)
     }
 
