@@ -43,7 +43,15 @@ extension CoreProperties {
 
     var mediaType: MediaType {
         guard let presentationSize else { return .unknown }
-        return presentationSize == .zero ? .audio : .video
+        if presentationSize == .zero {
+            return .audio
+        }
+        else if presentationSize.width / presentationSize.height >= 2 {
+            return .monoscopicVideo
+        }
+        else {
+            return .video
+        }
     }
 
     var playbackState: PlaybackState {

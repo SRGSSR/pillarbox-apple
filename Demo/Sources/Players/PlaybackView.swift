@@ -106,21 +106,22 @@ private struct MainView: View {
         switch player.mediaType {
         case .audio:
             image(name: "music.note.tv.fill")
-        default:
+        case .video:
             if player.isExternalPlaybackActive {
                 image(name: "tv")
             }
-            else if let presentationSize = player.presentationSize {
-                if presentationSize.width / presentationSize.height >= 2 {
-                    MonoscopicPlaybackView(player: player)
-                }
-                else {
-                    VideoView(player: player, gravity: gravity, isPictureInPictureSupported: isPictureInPictureSupported)
-                }
+            else {
+                VideoView(player: player, gravity: gravity, isPictureInPictureSupported: isPictureInPictureSupported)
+            }
+        case .monoscopicVideo:
+            if player.isExternalPlaybackActive {
+                image(name: "tv")
             }
             else {
-                Color.clear
+                MonoscopicPlaybackView(player: player)
             }
+        case .unknown:
+            Color.clear
         }
     }
 
