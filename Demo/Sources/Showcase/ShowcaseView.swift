@@ -29,7 +29,6 @@ struct ShowcaseView: View {
             embeddingsSection()
             systemPlayerSection()
             inlineSystemPlayerSection()
-            monoscopicPlayerSection()
             vanillaPlayerSection()
             trackingSection()
         }
@@ -197,21 +196,6 @@ struct ShowcaseView: View {
             )
             .sourceCode(of: InlineSystemPlayerView.self)
         }
-    }
-
-    @ViewBuilder
-    private func monoscopicPlayerSection() -> some View {
-        Section("Monoscopic 360° player") {
-            cell(
-                title: "Gothard",
-                destination: .monoscopicPlayer(media: Media(from: URLTemplate.gothard_360))
-            )
-            cell(
-                title: "Bitmovin",
-                destination: .monoscopicPlayer(media: Media(from: URLTemplate.bitmovin_360))
-            )
-        }
-        .sourceCode(of: MonoscopicPlayerView.self)
     }
 
     @ViewBuilder

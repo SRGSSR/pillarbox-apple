@@ -8,10 +8,8 @@ import Player
 import SceneKit
 import SwiftUI
 
-struct MonoscopicPlayerView: View {
-    let media: Media
-
-    @StateObject private var player = Player()
+struct MonoscopicPlaybackView: View {
+    @ObservedObject var player: Player
     @StateObject private var motionManager = MotionManager()
 
     @Environment(\.dismiss) var dismiss
@@ -21,30 +19,21 @@ struct MonoscopicPlayerView: View {
 
     var body: some View {
         GeometryReader { geometry in
-            ZStack {
-                MonoscopicVideoView(player: player, orientation: orientation(from: translation, in: geometry))
-                    .gesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { value in
-                                translation = CGSize(
-                                    width: initialTranslation.width + value.translation.width,
-                                    height: initialTranslation.height + value.translation.height
-                                )
-                            }
-                            .onEnded { _ in
-                                initialTranslation = translation
-                            }
-                    )
-                    .ignoresSafeArea()
-                Button(action: dismiss.callAsFunction) {
-                    Image(systemName: "xmark")
-                        .tint(.white)
-                }
-                .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            }
+            MonoscopicVideoView(player: player, orientation: orientation(from: translation, in: geometry))
+                .gesture(
+                    DragGesture(minimumDistance: 0)
+                        .onChanged { value in
+                            translation = CGSize(
+                                width: initialTranslation.width + value.translation.width,
+                                height: initialTranslation.height + value.translation.height
+                            )
+                        }
+                        .onEnded { _ in
+                            initialTranslation = translation
+                        }
+                )
+                .ignoresSafeArea()
         }
-        .onAppear(perform: play)
     }
 
     private func baseOrientation() -> SCNQuaternion {
@@ -61,17 +50,8 @@ struct MonoscopicPlayerView: View {
         let wy = .pi / 2 * translation.width / geometry.size.width
         return SCNQuaternionRotate(baseOrientation(), Float(wx), Float(wy))
     }
-
-    private func play() {
-        player.append(media.playerItem())
-        player.play()
-    }
-}
-
-extension MonoscopicPlayerView: SourceCodeViewable {
-    static var filePath: String { #file }
 }
 
 #Preview {
-    MonoscopicPlayerView(media: Media(from: URLTemplate.gothard_360))
+    MonoscopicPlaybackView(player: Player(item: Media(from: URLTemplate.gothard_360).playerItem()))
 }
