@@ -39,17 +39,17 @@ struct MonoscopicPlayerView: View {
 
     private func baseOrientation() -> SCNQuaternion {
         if let attitude = motionManager.attitude, let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-            return Quaternion.cameraOrientationForAttitude(attitude, interfaceOrientation: windowScene.interfaceOrientation)
+            return SCNQuaternionForAttitude(attitude, interfaceOrientation: windowScene.interfaceOrientation)
         }
         else {
-            return Quaternion.quaternionWithAngleAndAxis(0, 1, 0, 0)
+            return SCNQuaternionWithAngleAndAxis(0, 1, 0, 0)
         }
     }
 
     private func orientation(from translation: CGSize, in geometry: GeometryProxy) -> SCNQuaternion {
         let wx = .pi / 2 * translation.height / geometry.size.height
         let wy = .pi / 2 * translation.width / geometry.size.width
-        return Quaternion.rotate(baseOrientation(), Float(wx), Float(wy))
+        return SCNQuaternionRotate(baseOrientation(), Float(wx), Float(wy))
     }
 
     private func play() {
