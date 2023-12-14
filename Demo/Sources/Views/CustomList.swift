@@ -6,6 +6,28 @@
 
 import SwiftUI
 
+private struct CustomGrid<Content, Data>: View where Content: View, Data: Hashable {
+    let columns: Int = 4
+    let data: [Data]
+    @ViewBuilder let content: (Data?) -> Content
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 40) {
+            let rows = data.count / columns + 1
+            ForEach(0..<rows, id: \.self) { row in
+                HStack(spacing: 0) {
+                    ForEach(0..<columns, id: \.self) { column in
+                        let index = row * columns + column
+                        if index < data.count {
+                            content(data[index])
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 struct CustomList<Content, Data>: View where Content: View, Data: Hashable {
     let data: [Data]
     @ViewBuilder let content: (Data?) -> Content
@@ -20,10 +42,9 @@ struct CustomList<Content, Data>: View where Content: View, Data: Hashable {
 #else
         ScrollView {
             if !data.isEmpty {
-                LazyVGrid(columns: (0...3).map { _ in GridItem(.flexible()) }, spacing: 30) {
-                    ForEach(data, id: \.self, content: content)
-                }
-            } else {
+                CustomGrid(data: data, content: content)
+            }
+            else {
                 VStack(alignment: .leading) {
                     content(nil)
                 }
