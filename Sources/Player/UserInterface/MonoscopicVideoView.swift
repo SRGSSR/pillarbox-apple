@@ -30,7 +30,6 @@ private struct _MonoscopicVideoView: UIViewRepresentable {
     func makeUIView(context: Context) -> SCNView {
         let view = SCNView()
         view.backgroundColor = .clear
-        view.isPlaying = true
         return view
     }
 
