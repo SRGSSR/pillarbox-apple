@@ -12,7 +12,7 @@ import SwiftUI
 /// Boolean indicating when Picture in Picture is active.
 ///
 /// For the button to be visible one of its parent must be enabled for in-app Picture in Picture by applying the
-/// `View.enabledForInAppPictureInPictureWithCleanup(perform:)` modifier.
+/// `View.enabledForInAppPictureInPictureWithSetup(perform:cleanup)` modifier.
 public struct PictureInPictureButton<Content>: View where Content: View {
     private let content: (Bool) -> Content
 
