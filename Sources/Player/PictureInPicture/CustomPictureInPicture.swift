@@ -132,16 +132,18 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
     ) {
         delegate?.pictureInPictureRestoreUserInterfaceForStop { finished in
             completionHandler(finished)
-            print("--> did stop, finished = \(finished)")
+            print("--> did restore, finished = \(finished)")
         }
     }
 
     func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        print("--> will stop")
         isActive = false
         delegate?.pictureInPictureWillStop()
     }
 
     func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        print("--> did stop")
         relinquish(for: pictureInPictureController.playerLayer)
         delegate?.pictureInPictureDidStop()
     }
