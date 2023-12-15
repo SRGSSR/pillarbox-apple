@@ -57,7 +57,6 @@ final class SystemPictureInPicture: NSObject {
     func restoreFromInAppPictureInPictureWithSetup(perform setup: @escaping () -> Void) {
         guard let playerViewController else { return }
         acquire(for: playerViewController)
-        stop()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: setup)
     }
 
