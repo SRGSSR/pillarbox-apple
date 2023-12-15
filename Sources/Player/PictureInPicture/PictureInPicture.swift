@@ -36,6 +36,8 @@ public final class PictureInPicture {
         case .system:
             system.restoreFromInAppPictureInPicture()
         }
+        custom.stop()
+        system.stop()
     }
 
     func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
