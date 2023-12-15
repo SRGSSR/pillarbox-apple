@@ -8,8 +8,9 @@ import Player
 import SwiftUI
 
 struct InlineSystemPlayerView: View {
-    let media: Media
     private static let model = PlayerViewModel()
+
+    let media: Media
 
     private var padding: CGFloat {
         UIDevice.current.userInterfaceIdiom == .phone ? 50 : 200

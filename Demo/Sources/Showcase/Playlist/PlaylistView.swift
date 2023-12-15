@@ -147,9 +147,10 @@ private struct Toolbar: View {
 
 // Behavior: h-exp, v-exp
 struct PlaylistView: View {
+    private static let shared = PlaylistViewModel()
+
     let templates: [Template]
 
-    private static let shared = PlaylistViewModel()
     @ObservedObject private var model = shared
     @State private var layout: PlaybackView.Layout = .minimized
 

@@ -10,8 +10,9 @@ import SwiftUI
 /// A standalone player view with standard controls.
 /// Behavior: h-exp, v-exp
 struct PlayerView: View {
-    let media: Media
     private static let model = PlayerViewModel()
+
+    let media: Media
 
     var body: some View {
         PlaybackView(player: Self.model.player, isPictureInPictureSupported: true)

@@ -9,8 +9,9 @@ import SwiftUI
 
 // Behavior: h-exp, v-exp
 struct SystemPlayerView: View {
-    let media: Media
     private static let model = PlayerViewModel()
+
+    let media: Media
 
     var body: some View {
         SystemVideoView(player: Self.model.player, isPictureInPictureSupported: true)
