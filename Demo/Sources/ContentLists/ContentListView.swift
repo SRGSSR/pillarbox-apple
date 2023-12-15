@@ -91,7 +91,13 @@ private struct ContentCell: View {
                 let media = Media(title: title, type: .urn(media.urn, server: serverSetting.server))
                 router.presented = .player(media: media)
             } label: {
-                CardView(title: title, subtitle: MediaDescription.subtitle(for: media), image: media.image, style: MediaDescription.style(for: media))
+                CardView(
+                    title: media.show?.title,
+                    subtitle: media.title,
+                    image: media.image,
+                    mediaTypeSystemImage: MediaDescription.systemImage(for: media),
+                    duration: MediaDescription.duration(for: media)
+                )
             }
             .buttonStyle(.card)
 #endif
@@ -115,10 +121,11 @@ private struct ContentCell: View {
 #if os(tvOS)
 // Behavior: h-hug, v-exp
 struct CardView: View {
-    let title: String
+    let title: String?
     let subtitle: String?
     let image: SRGImage?
-    let style: MediaDescription.Style?
+    let mediaTypeSystemImage: String?
+    let duration: String?
 
     var body: some View {
         ZStack(alignment: .center) {
@@ -132,10 +139,10 @@ struct CardView: View {
                     EmptyView()
                 }
             }
+
             VStack {
-                Text(title)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-                    .padding(30)
+                CardTopTrailingView(duration: duration, mediaType: mediaTypeSystemImage)
+                CardBottomView(title: title, description: subtitle)
             }
             .background {
                 LinearGradient(gradient: Gradient(colors: [Color.clear, Color.black]), startPoint: .top, endPoint: .bottom)
@@ -144,13 +151,62 @@ struct CardView: View {
         .frame(width: 600, height: 300, alignment: .center)
     }
 
-    init(title: String, subtitle: String? = nil, image: SRGImage? = nil, style: MediaDescription.Style? = nil) {
+    init(title: String?, subtitle: String? = nil, image: SRGImage? = nil, mediaTypeSystemImage: String? = nil, duration: String? = nil) {
         self.title = title
         self.subtitle = subtitle
         self.image = image
-        self.style = style
+        self.mediaTypeSystemImage = mediaTypeSystemImage
+        self.duration = duration
     }
 }
+
+struct CardTopTrailingView: View {
+    let duration: String?
+    let mediaType: String?
+
+    var body: some View {
+        if let mediaType {
+            VStack {
+                Image(systemName: mediaType)
+                if let duration {
+                    Text(duration)
+                        .font(.caption2)
+                }
+            }
+            .tint(.white)
+            .shadow(color: .black, radius: 5)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+            .padding(30)
+        }
+    }
+}
+
+struct CardBottomView: View {
+    let title: String?
+    let description: String?
+
+    var body: some View {
+        VStack(spacing: 5) {
+            if let title {
+                Text(title)
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 30)
+                    .padding(.bottom, description == nil ? 30 : 0)
+                    .lineLimit(1)
+            }
+            if let description {
+                Text(description)
+                    .foregroundStyle(Color(uiColor: UIColor.lightGray))
+                    .font(.caption2)
+                    .padding(.horizontal, 50)
+                    .padding(.bottom, 30)
+                    .lineLimit(2)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+    }
+}
+
 #endif
 
 // Behavior: h-exp, v-exp
