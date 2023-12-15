@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import SRGDataProviderCombine
 import SRGDataProviderModel
 import SwiftUI
 
@@ -22,13 +23,14 @@ private struct LoadedView: View {
                             model.loadMore()
                         }
                     }
-                    .padding(.horizontal, constant(iOS: 0, tvOS: 50))
             }
         }
 #if os(iOS)
         .toolbar(content: toolbar)
         .navigationTitle("Examples")
         .refreshable { await model.refresh() }
+#else
+        .ignoresSafeArea(.all, edges: .horizontal)
 #endif
     }
 
@@ -72,9 +74,9 @@ private struct ContentCell: View {
             .swipeActions { CopyButton(text: topic.urn) }
 #else
             NavigationLink(destination: RouterDestination.contentList(configuration: .init(list: .latestMediasForTopic(topic), vendor: topic.vendor)).view()) {
-                Text(topic.title)
-                    .frame(width: 300, height: 250, alignment: .leading)
+                CardView(title: topic.title, image: topic.image)
             }
+            .buttonStyle(.card)
 #endif
         case let .media(media):
             let title = MediaDescription.title(for: media)
@@ -94,13 +96,45 @@ private struct ContentCell: View {
             .swipeActions { CopyButton(text: show.urn) }
 #else
             NavigationLink(destination: RouterDestination.contentList(configuration: .init(list: .latestMediasForShow(show), vendor: show.vendor)).view()) {
-                Text(show.title)
-                    .frame(width: 300, height: 250, alignment: .leading)
+                CardView(title: show.title, image: show.image)
             }
+            .buttonStyle(.card)
 #endif
         }
     }
 }
+
+#if os(tvOS)
+// Behavior: h-hug, v-exp
+struct CardView: View {
+    let title: String
+    let image: SRGImage?
+
+    var body: some View {
+        ZStack(alignment: .center) {
+            AsyncImage(url: SRGDataProvider.current!.url(for: image, size: .large)) { phase in
+                switch phase {
+                case .success(let image):
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                default:
+                    EmptyView()
+                }
+            }
+            VStack {
+                Text(title)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                    .padding(30)
+            }
+            .background {
+                LinearGradient(gradient: Gradient(colors: [Color.clear, Color.black]), startPoint: .top, endPoint: .bottom)
+            }
+        }
+        .frame(width: 600, alignment: .center)
+    }
+}
+#endif
 
 // Behavior: h-exp, v-exp
 struct ContentListView: View {
