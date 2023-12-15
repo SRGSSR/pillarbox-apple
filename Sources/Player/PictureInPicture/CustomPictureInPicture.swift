@@ -18,6 +18,7 @@ final class CustomPictureInPicture: NSObject {
 
     private var deferredCleanup: (() -> Void)?
     private var referenceCount = 0
+    private var pendingReferenceCount = 0
 
     var playerLayer: AVPlayerLayer? {
         controller?.playerLayer
@@ -46,15 +47,38 @@ final class CustomPictureInPicture: NSObject {
     }
 
     func acquire(for playerLayer: AVPlayerLayer?) {
-        referenceCount += 1
-        guard let playerLayer, controller?.playerLayer != playerLayer else { return }
-        controller = AVPictureInPictureController(playerLayer: playerLayer)
-        controller?.delegate = self
+        guard let playerLayer else {
+            pendingReferenceCount += 1
+            return
+        }
+
+        if controller?.playerLayer === playerLayer {
+            referenceCount += 1
+        }
+        else {
+            controller = AVPictureInPictureController(playerLayer: playerLayer)
+            if let controller {
+                controller.delegate = self
+                referenceCount = pendingReferenceCount + 1
+                pendingReferenceCount = 0
+            }
+            else {
+                referenceCount = 0
+            }
+        }
     }
 
     func relinquish(for playerLayer: AVPlayerLayer?) {
+        guard let playerLayer else {
+            pendingReferenceCount -= 1
+            return
+        }
+
+        guard controller?.playerLayer === playerLayer else { return }
         referenceCount -= 1
         guard referenceCount == 0 else { return }
+
+        pendingReferenceCount = 0
         controller = nil
 
         // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
