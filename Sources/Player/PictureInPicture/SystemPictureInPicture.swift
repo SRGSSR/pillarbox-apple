@@ -58,7 +58,7 @@ final class SystemPictureInPicture: NSObject {
         guard let playerViewController else { return }
         acquire(for: playerViewController)
         stop()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: setup)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01, execute: setup)
     }
 
     func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
