@@ -48,15 +48,18 @@ final class CustomPictureInPicture: NSObject {
     func acquire(for playerLayer: AVPlayerLayer) {
         if controller?.playerLayer === playerLayer {
             referenceCount += 1
+            print("--> ref count increased to \(referenceCount)")
         }
         else {
             controller = AVPictureInPictureController(playerLayer: playerLayer)
             if let controller {
                 controller.delegate = self
                 referenceCount = 1
+                print("--> ref count set to \(referenceCount)")
             }
             else {
                 referenceCount = 0
+                print("--> ref count set to \(referenceCount)")
             }
         }
     }
@@ -64,6 +67,7 @@ final class CustomPictureInPicture: NSObject {
     func relinquish(for playerLayer: AVPlayerLayer) {
         guard controller?.playerLayer === playerLayer else { return }
         referenceCount -= 1
+        print("--> ref count decreased to \(referenceCount)")
 
         guard referenceCount == 0 else { return }
         controller = nil
@@ -80,6 +84,7 @@ final class CustomPictureInPicture: NSObject {
     }
 
     private func clean() {
+        print("--> clean")
         deferredCleanup?()
         deferredCleanup = nil
     }
@@ -98,8 +103,12 @@ final class CustomPictureInPicture: NSObject {
     func restoreFromInAppPictureInPicture() {
         isInAppPossible = true
 
-        guard let playerLayer else { return }
-        acquire(for: playerLayer)
+        if let playerLayer {
+            acquire(for: playerLayer)
+        }
+        else {
+            print("--> Skipped acquire")
+        }
     }
 
     func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
@@ -112,6 +121,9 @@ final class CustomPictureInPicture: NSObject {
             deferredCleanup = cleanup
             if let playerLayer {
                 relinquish(for: playerLayer)
+            }
+            else {
+                print("--> Skipped relinquish")
             }
         }
     }
