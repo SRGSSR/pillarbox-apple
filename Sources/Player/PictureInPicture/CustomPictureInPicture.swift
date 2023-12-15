@@ -45,27 +45,17 @@ final class CustomPictureInPicture: NSObject {
         }
     }
 
-    func acquire(for playerLayer: AVPlayerLayer) {
-        if controller?.playerLayer === playerLayer {
-            referenceCount += 1
-            print("--> ref count increased to \(referenceCount)")
-        }
-        else {
+    func acquire(for playerLayer: AVPlayerLayer?) {
+        referenceCount += 1
+        print("--> ref count increased to \(referenceCount)")
+
+        if let playerLayer, controller?.playerLayer != playerLayer {
             controller = AVPictureInPictureController(playerLayer: playerLayer)
-            if let controller {
-                controller.delegate = self
-                referenceCount = 1
-                print("--> ref count set to \(referenceCount)")
-            }
-            else {
-                referenceCount = 0
-                print("--> ref count set to \(referenceCount)")
-            }
+            controller?.delegate = self
         }
     }
 
-    func relinquish(for playerLayer: AVPlayerLayer) {
-        guard controller?.playerLayer === playerLayer else { return }
+    func relinquish(for playerLayer: AVPlayerLayer?) {
         referenceCount -= 1
         print("--> ref count decreased to \(referenceCount)")
 
@@ -102,13 +92,7 @@ final class CustomPictureInPicture: NSObject {
 
     func restoreFromInAppPictureInPicture() {
         isInAppPossible = true
-
-        if let playerLayer {
-            acquire(for: playerLayer)
-        }
-        else {
-            print("--> Skipped acquire")
-        }
+        acquire(for: playerLayer)
     }
 
     func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
@@ -119,12 +103,7 @@ final class CustomPictureInPicture: NSObject {
         }
         else {
             deferredCleanup = cleanup
-            if let playerLayer {
-                relinquish(for: playerLayer)
-            }
-            else {
-                print("--> Skipped relinquish")
-            }
+            relinquish(for: playerLayer)
         }
     }
 }
