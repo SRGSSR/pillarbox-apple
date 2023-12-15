@@ -130,7 +130,10 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
         _ pictureInPictureController: AVPictureInPictureController,
         restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
     ) {
-        delegate?.pictureInPictureRestoreUserInterfaceForStop(with: completionHandler)
+        delegate?.pictureInPictureRestoreUserInterfaceForStop { finished in
+            completionHandler(finished)
+            print("--> did stop, finished = \(finished)")
+        }
     }
 
     func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
