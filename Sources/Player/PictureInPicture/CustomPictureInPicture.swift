@@ -47,16 +47,14 @@ final class CustomPictureInPicture: NSObject {
 
     func acquire(for playerLayer: AVPlayerLayer?) {
         referenceCount += 1
-        if let playerLayer, controller?.playerLayer != playerLayer {
-            controller = AVPictureInPictureController(playerLayer: playerLayer)
-            controller?.delegate = self
-        }
+        guard let playerLayer, controller?.playerLayer != playerLayer else { return }
+        controller = AVPictureInPictureController(playerLayer: playerLayer)
+        controller?.delegate = self
     }
 
     func relinquish(for playerLayer: AVPlayerLayer?) {
         referenceCount -= 1
         guard referenceCount == 0 else { return }
-
         controller = nil
 
         // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
