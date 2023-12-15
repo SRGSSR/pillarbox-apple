@@ -47,8 +47,6 @@ final class CustomPictureInPicture: NSObject {
 
     func acquire(for playerLayer: AVPlayerLayer?) {
         referenceCount += 1
-        print("--> ref count increased to \(referenceCount)")
-
         if let playerLayer, controller?.playerLayer != playerLayer {
             controller = AVPictureInPictureController(playerLayer: playerLayer)
             controller?.delegate = self
@@ -57,9 +55,8 @@ final class CustomPictureInPicture: NSObject {
 
     func relinquish(for playerLayer: AVPlayerLayer?) {
         referenceCount -= 1
-        print("--> ref count decreased to \(referenceCount)")
-
         guard referenceCount == 0 else { return }
+
         controller = nil
 
         // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
@@ -74,7 +71,6 @@ final class CustomPictureInPicture: NSObject {
     }
 
     private func clean() {
-        print("--> clean")
         deferredCleanup?()
         deferredCleanup = nil
     }
@@ -132,20 +128,15 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
         _ pictureInPictureController: AVPictureInPictureController,
         restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
     ) {
-        delegate?.pictureInPictureRestoreUserInterfaceForStop { finished in
-            completionHandler(finished)
-            print("--> did restore, finished = \(finished)")
-        }
+        delegate?.pictureInPictureRestoreUserInterfaceForStop(with: completionHandler)
     }
 
     func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        print("--> will stop")
         isActive = false
         delegate?.pictureInPictureWillStop()
     }
 
     func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        print("--> did stop")
         relinquish(for: pictureInPictureController.playerLayer)
         delegate?.pictureInPictureDidStop()
     }
