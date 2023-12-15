@@ -9,20 +9,19 @@ import SwiftUI
 
 // Behavior: h-exp, v-exp
 struct SystemPlayerView: View {
+    let media: Media
     private static let model = PlayerViewModel()
 
     var body: some View {
         SystemVideoView(player: Self.model.player, isPictureInPictureSupported: true)
             .ignoresSafeArea()
-            .enabledForInAppPictureInPictureWithCleanup {
+            .enabledForInAppPictureInPictureWithSetup {
+                Self.model.media = media
+            } cleanup: {
                 Self.model.media = nil
             }
             .onAppear(perform: Self.model.play)
             .tracked(name: "system-player")
-    }
-
-    init(media: Media) {
-        Self.model.media = media
     }
 }
 

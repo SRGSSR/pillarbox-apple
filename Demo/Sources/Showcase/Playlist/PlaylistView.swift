@@ -147,6 +147,8 @@ private struct Toolbar: View {
 
 // Behavior: h-exp, v-exp
 struct PlaylistView: View {
+    let templates: [Template]
+
     private static let shared = PlaylistViewModel()
     @ObservedObject private var model = shared
     @State private var layout: PlaybackView.Layout = .minimized
@@ -163,12 +165,12 @@ struct PlaylistView: View {
         }
         .animation(.defaultLinear, value: layout)
         .onAppear(perform: model.play)
-        .enabledForInAppPictureInPictureWithCleanup(perform: model.trash)
+        .enabledForInAppPictureInPictureWithSetup {
+            model.templates = templates
+        } cleanup: {
+            model.trash()
+        }
         .tracked(name: "playlist")
-    }
-
-    init(templates: [Template]) {
-        model.templates = templates
     }
 }
 

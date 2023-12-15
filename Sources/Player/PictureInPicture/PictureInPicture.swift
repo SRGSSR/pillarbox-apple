@@ -29,15 +29,15 @@ public final class PictureInPicture {
         system.delegate = delegate
     }
 
-    func restoreFromInAppPictureInPicture() {
+    func restoreFromInAppPictureInPictureWithSetup(perform setup: @escaping () -> Void) {
         switch mode {
         case .custom:
-            custom.restoreFromInAppPictureInPicture()
+            custom.restoreFromInAppPictureInPictureWithSetup(perform: setup)
+            system.stop()
         case .system:
-            system.restoreFromInAppPictureInPicture()
+            system.restoreFromInAppPictureInPictureWithSetup(perform: setup)
+            custom.stop()
         }
-        custom.stop()
-        system.stop()
     }
 
     func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {

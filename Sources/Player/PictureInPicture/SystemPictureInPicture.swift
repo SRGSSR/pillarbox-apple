@@ -54,9 +54,11 @@ final class SystemPictureInPicture: NSObject {
         deferredCleanup = nil
     }
 
-    func restoreFromInAppPictureInPicture() {
+    func restoreFromInAppPictureInPictureWithSetup(perform setup: @escaping () -> Void) {
         guard let playerViewController else { return }
         acquire(for: playerViewController)
+        stop()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: setup)
     }
 
     func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {

@@ -90,9 +90,11 @@ final class CustomPictureInPicture: NSObject {
             .assign(to: &$isPossible)
     }
 
-    func restoreFromInAppPictureInPicture() {
+    func restoreFromInAppPictureInPictureWithSetup(perform setup: @escaping () -> Void) {
         isInAppPossible = true
         acquire(for: playerLayer)
+        stop()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: setup)
     }
 
     func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {

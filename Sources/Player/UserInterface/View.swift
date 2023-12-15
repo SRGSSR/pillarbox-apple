@@ -34,9 +34,9 @@ public extension View {
     /// required by Picture in Picture initiated from the view are not needed anymore.
     ///
     /// - Parameter cleanup: A closure to clean resources associated with the view.
-    func enabledForInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) -> some View {
+    func enabledForInAppPictureInPictureWithSetup(perform setup: @escaping () -> Void, cleanup: @escaping () -> Void) -> some View {
         onAppear {
-            PictureInPicture.shared.restoreFromInAppPictureInPicture()
+            PictureInPicture.shared.restoreFromInAppPictureInPictureWithSetup(perform: setup)
         }
         .onDisappear {
             PictureInPicture.shared.enableInAppPictureInPictureWithCleanup(perform: cleanup)

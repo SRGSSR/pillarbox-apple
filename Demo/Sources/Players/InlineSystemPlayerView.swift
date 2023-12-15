@@ -8,6 +8,7 @@ import Player
 import SwiftUI
 
 struct InlineSystemPlayerView: View {
+    let media: Media
     private static let model = PlayerViewModel()
 
     private var padding: CGFloat {
@@ -17,17 +18,15 @@ struct InlineSystemPlayerView: View {
     var body: some View {
         SystemVideoView(player: Self.model.player, isPictureInPictureSupported: true)
             .ignoresSafeArea()
-            .enabledForInAppPictureInPictureWithCleanup {
+            .enabledForInAppPictureInPictureWithSetup {
+                Self.model.media = media
+            } cleanup: {
                 Self.model.media = nil
             }
             .aspectRatio(16 / 9, contentMode: .fit)
             .padding(padding)
             .onAppear(perform: Self.model.play)
             .tracked(name: "inline-system-player")
-    }
-
-    init(media: Media) {
-        Self.model.media = media
     }
 }
 
