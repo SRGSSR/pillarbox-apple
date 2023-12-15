@@ -93,6 +93,7 @@ final class CustomPictureInPicture: NSObject {
     func restoreFromInAppPictureInPicture() {
         isInAppPossible = true
         acquire(for: playerLayer)
+        stop()
     }
 
     func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
