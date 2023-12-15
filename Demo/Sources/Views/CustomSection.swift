@@ -20,13 +20,12 @@ struct CustomSection<Content, Header>: View where Content: View, Header: View {
 #else
         Section {
             ScrollView(.horizontal) {
-                HStack(spacing: 30, content: content)
-                    .padding(15)
+                HStack(spacing: 50, content: content)
+                    .padding(50)
             }
         } header: {
             header()
-                .padding(.vertical, -15)
-                .padding(.top, 10)
+                .padding(.bottom, -50)
         }
 #endif
     }

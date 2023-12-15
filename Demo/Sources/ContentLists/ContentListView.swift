@@ -126,6 +126,7 @@ struct CardView: View {
     let image: SRGImage?
     let mediaTypeSystemImage: String?
     let duration: String?
+    let size: CGSize
 
     var body: some View {
         ZStack(alignment: .center) {
@@ -148,15 +149,23 @@ struct CardView: View {
                 LinearGradient(gradient: Gradient(colors: [Color.clear, Color.black]), startPoint: .top, endPoint: .bottom)
             }
         }
-        .frame(width: 600, height: 350, alignment: .center)
+        .frame(width: size.width, height: size.height, alignment: .center)
     }
 
-    init(title: String?, subtitle: String? = nil, image: SRGImage? = nil, mediaTypeSystemImage: String? = nil, duration: String? = nil) {
+    init(
+        title: String?,
+        subtitle: String? = nil,
+        image: SRGImage? = nil,
+        mediaTypeSystemImage: String? = nil,
+        duration: String? = nil,
+        size: CGSize = .init(width: 570, height: 350)
+    ) {
         self.title = title
         self.subtitle = subtitle
         self.image = image
         self.mediaTypeSystemImage = mediaTypeSystemImage
         self.duration = duration
+        self.size = size
     }
 }
 
@@ -176,7 +185,8 @@ struct CardTopTrailingView: View {
             .tint(.white)
             .shadow(color: .black, radius: 5)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-            .padding(30)
+            .padding(.top, 20)
+            .padding(.trailing, 50)
         }
     }
 }
@@ -193,6 +203,8 @@ struct CardBottomView: View {
                     .padding(.horizontal, 30)
                     .padding(.bottom, description == nil ? 30 : 0)
                     .lineLimit(1)
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
             }
             if let description {
                 Text(description)
