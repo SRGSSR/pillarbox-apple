@@ -148,7 +148,7 @@ struct CardView: View {
                 LinearGradient(gradient: Gradient(colors: [Color.clear, Color.black]), startPoint: .top, endPoint: .bottom)
             }
         }
-        .frame(width: 600, height: 300, alignment: .center)
+        .frame(width: 600, height: 350, alignment: .center)
     }
 
     init(title: String?, subtitle: String? = nil, image: SRGImage? = nil, mediaTypeSystemImage: String? = nil, duration: String? = nil) {
