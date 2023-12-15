@@ -43,6 +43,11 @@ enum MediaDescription {
         }
     }
 
+    static func systemImage(for media: SRGMedia) -> String? {
+        guard media.mediaType != .none else { return nil }
+        return media.mediaType == .audio ? "headphones" : "movieclapper.fill"
+    }
+
     static func style(for media: SRGMedia) -> Style {
         media.timeAvailability(at: Date()) == .available ? .standard : .disabled
     }
