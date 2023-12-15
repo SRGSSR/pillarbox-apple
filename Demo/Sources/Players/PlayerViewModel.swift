@@ -12,7 +12,6 @@ final class PlayerViewModel {
         didSet {
             guard media != oldValue else { return }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                print("--> update media")
                 if let playerItem = self.media?.playerItem() {
                     self.player.items = [playerItem]
                 }
