@@ -4,18 +4,17 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
 import Player
 
 final class PlayerViewModel {
     var media: Media? {
         didSet {
             guard media != oldValue else { return }
-            if let playerItem = self.media?.playerItem() {
-                self.player.items = [playerItem]
+            if let playerItem = media?.playerItem() {
+                player.items = [playerItem]
             }
             else {
-                self.player.removeAllItems()
+                player.removeAllItems()
             }
         }
     }
