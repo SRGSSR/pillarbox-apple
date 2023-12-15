@@ -80,12 +80,20 @@ private struct ContentCell: View {
 #endif
         case let .media(media):
             let title = MediaDescription.title(for: media)
+#if os(iOS)
             Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
                 let media = Media(title: title, type: .urn(media.urn, server: serverSetting.server))
                 router.presented = .player(media: media)
             }
-#if os(iOS)
             .swipeActions { CopyButton(text: media.urn) }
+#else
+            Button {
+                let media = Media(title: title, type: .urn(media.urn, server: serverSetting.server))
+                router.presented = .player(media: media)
+            } label: {
+                CardView(title: title, subtitle: MediaDescription.subtitle(for: media), image: media.image, style: MediaDescription.style(for: media))
+            }
+            .buttonStyle(.card)
 #endif
         case let .show(show):
 #if os(iOS)
@@ -108,7 +116,9 @@ private struct ContentCell: View {
 // Behavior: h-hug, v-exp
 struct CardView: View {
     let title: String
+    let subtitle: String?
     let image: SRGImage?
+    let style: MediaDescription.Style?
 
     var body: some View {
         ZStack(alignment: .center) {
@@ -131,7 +141,14 @@ struct CardView: View {
                 LinearGradient(gradient: Gradient(colors: [Color.clear, Color.black]), startPoint: .top, endPoint: .bottom)
             }
         }
-        .frame(width: 600, alignment: .center)
+        .frame(width: 600, height: 300, alignment: .center)
+    }
+
+    init(title: String, subtitle: String? = nil, image: SRGImage? = nil, style: MediaDescription.Style? = nil) {
+        self.title = title
+        self.subtitle = subtitle
+        self.image = image
+        self.style = style
     }
 }
 #endif
