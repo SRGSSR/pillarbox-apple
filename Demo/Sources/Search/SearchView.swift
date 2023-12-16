@@ -43,9 +43,16 @@ struct SearchView: View {
             CustomList(data: medias) { media in
                 if let media {
                     let title = MediaDescription.title(for: media)
-                    Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
-                        let media = Media(title: media.title, type: .urn(media.urn))
-                        router.presented = .player(media: media)
+                    CustomNavigationLink(title: title, destination: .player(media: Media(title: media.title, type: .urn(media.urn)))) {
+                        MediaCardView(
+                            size: .init(width: 520, height: 300),
+                            title: media.show?.title,
+                            subtitle: media.title,
+                            image: media.image,
+                            type: MediaDescription.systemImage(for: media),
+                            duration: MediaDescription.duration(for: media),
+                            date: MediaDescription.date(for: media)
+                        )
                     }
                     .onAppear {
                         if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {
