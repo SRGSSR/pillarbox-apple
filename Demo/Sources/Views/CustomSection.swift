@@ -25,6 +25,7 @@ struct CustomSection<Content, Header>: View where Content: View, Header: View {
             }
         } header: {
             header()
+                .headerStyle()
                 .padding(.bottom, -50)
         }
 #endif
