@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import SRGDataProvider
 import SRGDataProviderModel
 import SwiftUI
 
@@ -42,17 +43,18 @@ struct SearchView: View {
         if !medias.isEmpty {
             CustomList(data: medias) { media in
                 if let media {
-                    let title = MediaDescription.title(for: media)
-                    CustomNavigationLink(title: title, destination: .player(media: Media(title: media.title, type: .urn(media.urn)))) {
-                        MediaCardView(
-                            size: .init(width: 520, height: 300),
-                            title: media.show?.title,
-                            subtitle: media.title,
-                            image: media.image,
-                            type: MediaDescription.systemImage(for: media),
-                            duration: MediaDescription.duration(for: media),
-                            date: MediaDescription.date(for: media)
-                        )
+                    Cell(
+                        size: .init(width: 520, height: 300),
+                        title: media.show?.title,
+                        subtitle: media.title,
+                        image: SRGDataProvider.current!.url(for: media.image, size: .large),
+                        type: MediaDescription.systemImage(for: media),
+                        duration: MediaDescription.duration(for: media),
+                        date: MediaDescription.date(for: media),
+                        style: MediaDescription.style(for: media)
+                    ) {
+                        let media = Media(title: media.title, type: .urn(media.urn))
+                        router.presented = .player(media: media)
                     }
                     .onAppear {
                         if let index = medias.firstIndex(of: media), medias.count - index < kPageSize {

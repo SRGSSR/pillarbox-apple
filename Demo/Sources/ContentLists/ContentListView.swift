@@ -70,41 +70,45 @@ private struct ContentCell: View {
                 title: topic.title,
                 destination: .contentList(configuration: .init(list: .latestMediasForTopic(topic), vendor: topic.vendor))
             ) {
-                MediaCardView(title: topic.title, image: topic.image)
+#if os(tvOS)
+                MediaCardView(
+                    title: topic.title,
+                    image: SRGDataProvider.current!.url(for: topic.image, size: .large)
+                )
+#endif
             }
 #if os(iOS)
             .swipeActions { CopyButton(text: topic.urn) }
 #endif
         case let .media(media):
             let title = MediaDescription.title(for: media)
+            Cell(
+                size: .init(width: 570, height: 350),
+                title: media.show?.title,
+                subtitle: media.title,
+                image: SRGDataProvider.current!.url(for: media.image, size: .large),
+                type: MediaDescription.systemImage(for: media),
+                duration: MediaDescription.duration(for: media),
+                date: MediaDescription.date(for: media),
+                style: MediaDescription.style(for: media)
+            ) {
+                let media = Media(title: title, type: .urn(media.urn, server: serverSetting.server))
+                router.presented = .player(media: media)
+            }
 #if os(iOS)
-            Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
-                let media = Media(title: title, type: .urn(media.urn, server: serverSetting.server))
-                router.presented = .player(media: media)
-            }
             .swipeActions { CopyButton(text: media.urn) }
-#else
-            Button {
-                let media = Media(title: title, type: .urn(media.urn, server: serverSetting.server))
-                router.presented = .player(media: media)
-            } label: {
-                MediaCardView(
-                    title: media.show?.title,
-                    subtitle: media.title,
-                    image: media.image,
-                    type: MediaDescription.systemImage(for: media),
-                    duration: MediaDescription.duration(for: media),
-                    date: MediaDescription.date(for: media)
-                )
-            }
-            .buttonStyle(.card)
 #endif
         case let .show(show):
             CustomNavigationLink(
                 title: show.title,
                 destination: .contentList(configuration: .init(list: .latestMediasForShow(show), vendor: show.vendor))
             ) {
-                MediaCardView(title: show.title, image: show.image)
+#if os(tvOS)
+                MediaCardView(
+                    title: show.title,
+                    image: SRGDataProvider.current!.url(for: show.image, size: .large)
+                )
+#endif
             }
 #if os(iOS)
             .swipeActions { CopyButton(text: show.urn) }

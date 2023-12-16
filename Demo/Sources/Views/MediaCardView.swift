@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import SRGDataProvider
-import SRGDataProviderModel
 import SwiftUI
 
 #if os(tvOS)
@@ -72,14 +70,14 @@ struct MediaCardView: View {
     let size: CGSize
     let title: String?
     let subtitle: String?
-    let image: SRGImage?
+    let image: URL?
     let type: String?
     let duration: String?
     let date: String?
 
     var body: some View {
         ZStack(alignment: .center) {
-            AsyncImage(url: SRGDataProvider.current!.url(for: image, size: .large)) { phase in
+            AsyncImage(url: image) { phase in
                 switch phase {
                 case .success(let image):
                     image
@@ -108,7 +106,7 @@ struct MediaCardView: View {
         size: CGSize = .init(width: 570, height: 350),
         title: String?,
         subtitle: String? = nil,
-        image: SRGImage? = nil,
+        image: URL? = nil,
         type: String? = nil,
         duration: String? = nil,
         date: String? = nil
