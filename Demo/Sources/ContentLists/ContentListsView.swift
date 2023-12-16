@@ -81,19 +81,10 @@ struct ContentListsView: View {
             HStack(spacing: constant(iOS: 10, tvOS: 20)) {
                 if let image {
                     Image(systemName: image)
-#if os(tvOS)
-                        .font(.headline)
-                        .foregroundStyle(.gray)
-#endif
                 }
                 Text(title)
-#if os(tvOS)
-                    .font(.headline)
-                    .foregroundStyle(.gray)
-                    .fontWeight(.semibold)
-#endif
             }
-            .padding(constant(iOS: 0, tvOS: 20))
+            .headerStyle()
         }
     }
 
@@ -154,6 +145,21 @@ struct ContentListsView: View {
         .pickerStyle(.inline)
     }
 #endif
+}
+
+private extension View {
+    @ViewBuilder
+    func headerStyle() -> some View {
+#if os(tvOS)
+        self
+            .font(.headline)
+            .foregroundStyle(.gray)
+            .fontWeight(.semibold)
+            .padding(20)
+#else
+        self
+#endif
+    }
 }
 
 #Preview {
