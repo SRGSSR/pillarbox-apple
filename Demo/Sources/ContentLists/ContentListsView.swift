@@ -59,20 +59,7 @@ struct ContentListsView: View {
 #else
                 NavigationLink(destination: RouterDestination.contentList(configuration: configuration).view()) {
                     Text(configuration.name)
-                        .frame(width: 450, height: 250, alignment: .center)
-                        .multilineTextAlignment(.center)
-                        .scaleEffect(0.5)
-                        .padding(10)
-                        .background {
-                            RadialGradient(
-                                colors: [Color(red: 175 / 255, green: 0, blue: 29 / 255, opacity: 1), .clear],
-                                center: .center,
-                                startRadius: 0,
-                                endRadius: 450
-                            )
-                        }
-                        .font(.title)
-                        .fontWeight(.black)
+                        .businessUnitStyle()
                 }
                 .buttonStyle(.card)
 #endif
@@ -160,6 +147,26 @@ private extension View {
         self
 #endif
     }
+
+#if os(tvOS)
+    func businessUnitStyle() -> some View {
+        self
+            .frame(width: 450, height: 250, alignment: .center)
+            .padding(10)
+            .scaleEffect(0.5)
+            .background(
+                RadialGradient(
+                    colors: [Color(red: 175 / 255, green: 0, blue: 29 / 255, opacity: 1), .clear],
+                    center: .center,
+                    startRadius: 0,
+                    endRadius: 450
+                )
+            )
+            .font(.title)
+            .fontWeight(.black)
+            .multilineTextAlignment(.center)
+    }
+#endif
 }
 
 #Preview {
