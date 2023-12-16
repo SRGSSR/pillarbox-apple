@@ -55,7 +55,7 @@ struct ContentListsView: View {
         CustomSection {
             ForEach(configurations) { configuration in
                 CustomNavigationLink(
-                    name: configuration.name,
+                    title: configuration.name,
                     destination: .contentList(configuration: configuration)
                 ) {
                     Text(configuration.name)

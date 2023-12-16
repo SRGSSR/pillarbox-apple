@@ -56,7 +56,7 @@ enum MediaDescription {
         media.timeAvailability(at: Date()) == .available ? .standard : .disabled
     }
 
-    private static func date(for media: SRGMedia) -> String {
+    static func date(for media: SRGMedia) -> String {
         dateFormatter.string(from: media.date)
     }
 

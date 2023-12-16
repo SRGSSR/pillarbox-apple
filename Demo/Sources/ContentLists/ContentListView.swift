@@ -66,17 +66,14 @@ private struct ContentCell: View {
     var body: some View {
         switch content {
         case let .topic(topic):
-#if os(iOS)
-            NavigationLink(
-                topic.title,
+            CustomNavigationLink(
+                title: topic.title,
                 destination: .contentList(configuration: .init(list: .latestMediasForTopic(topic), vendor: topic.vendor))
-            )
-            .swipeActions { CopyButton(text: topic.urn) }
-#else
-            NavigationLink(destination: RouterDestination.contentList(configuration: .init(list: .latestMediasForTopic(topic), vendor: topic.vendor)).view()) {
+            ) {
                 CardView(title: topic.title, image: topic.image)
             }
-            .buttonStyle(.card)
+#if os(iOS)
+            .swipeActions { CopyButton(text: topic.urn) }
 #endif
         case let .media(media):
             let title = MediaDescription.title(for: media)
@@ -95,38 +92,39 @@ private struct ContentCell: View {
                     title: media.show?.title,
                     subtitle: media.title,
                     image: media.image,
-                    mediaTypeSystemImage: MediaDescription.systemImage(for: media),
-                    duration: MediaDescription.duration(for: media)
+                    type: MediaDescription.systemImage(for: media),
+                    duration: MediaDescription.duration(for: media),
+                    date: MediaDescription.date(for: media)
                 )
             }
             .buttonStyle(.card)
 #endif
         case let .show(show):
-#if os(iOS)
-            NavigationLink(
-                show.title,
+            CustomNavigationLink(
+                title: show.title,
                 destination: .contentList(configuration: .init(list: .latestMediasForShow(show), vendor: show.vendor))
-            )
-            .swipeActions { CopyButton(text: show.urn) }
-#else
-            NavigationLink(destination: RouterDestination.contentList(configuration: .init(list: .latestMediasForShow(show), vendor: show.vendor)).view()) {
+            ) {
                 CardView(title: show.title, image: show.image)
             }
-            .buttonStyle(.card)
+#if os(iOS)
+            .swipeActions { CopyButton(text: show.urn) }
 #endif
         }
     }
 }
 
 #if os(tvOS)
-// Behavior: h-hug, v-exp
-struct CardView: View {
+// Behavior: h-hug, v-hug
+private struct CardView: View {
+    static let width: CGFloat = 570
+    static let height: CGFloat = 350
+
     let title: String?
     let subtitle: String?
     let image: SRGImage?
-    let mediaTypeSystemImage: String?
+    let type: String?
     let duration: String?
-    let size: CGSize
+    let date: String?
 
     var body: some View {
         ZStack(alignment: .center) {
@@ -140,60 +138,65 @@ struct CardView: View {
                     EmptyView()
                 }
             }
-
-            VStack {
-                CardTopTrailingView(duration: duration, mediaType: mediaTypeSystemImage)
-                CardBottomView(title: title, description: subtitle)
-            }
-            .background {
+            .overlay {
                 LinearGradient(gradient: Gradient(colors: [Color.clear, Color.black]), startPoint: .top, endPoint: .bottom)
             }
+            .frame(width: Self.width, height: Self.height, alignment: .center)
+
+            VStack {
+                CardTopTrailingView(duration: duration, type: type)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                Spacer()
+                CardBottomView(title: title, description: subtitle, date: date)
+            }
         }
-        .frame(width: size.width, height: size.height, alignment: .center)
+        .frame(width: Self.width, height: Self.height, alignment: .center)
     }
 
     init(
         title: String?,
         subtitle: String? = nil,
         image: SRGImage? = nil,
-        mediaTypeSystemImage: String? = nil,
+        type: String? = nil,
         duration: String? = nil,
-        size: CGSize = .init(width: 570, height: 350)
+        date: String? = nil
     ) {
         self.title = title
         self.subtitle = subtitle
         self.image = image
-        self.mediaTypeSystemImage = mediaTypeSystemImage
+        self.type = type
         self.duration = duration
-        self.size = size
+        self.date = date
     }
 }
 
-struct CardTopTrailingView: View {
+// Behavior: h-hug, v-hug
+private struct CardTopTrailingView: View {
     let duration: String?
-    let mediaType: String?
+    let type: String?
 
     var body: some View {
-        if let mediaType {
+        if let type {
             VStack {
-                Image(systemName: mediaType)
+                Image(systemName: type)
                 if let duration {
                     Text(duration)
                         .font(.caption2)
+                        .scaleEffect(0.7)
                 }
             }
             .tint(.white)
             .shadow(color: .black, radius: 5)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-            .padding(.top, 20)
-            .padding(.trailing, 50)
+            .padding()
         }
     }
 }
 
-struct CardBottomView: View {
+// Behavior: h-hug, v-hug
+private struct CardBottomView: View {
     let title: String?
     let description: String?
+    let date: String?
 
     var body: some View {
         VStack(spacing: 5) {
@@ -211,11 +214,17 @@ struct CardBottomView: View {
                     .foregroundStyle(Color(uiColor: UIColor.lightGray))
                     .font(.caption2)
                     .padding(.horizontal, 50)
-                    .padding(.bottom, 30)
+                    .padding(.bottom, date == nil ? 30 : 0)
                     .lineLimit(2)
             }
+            if let date {
+                Text(date)
+                    .foregroundStyle(Color(uiColor: UIColor.lightGray))
+                    .font(.caption2)
+                    .scaleEffect(0.7)
+                    .padding(.bottom, 10)
+            }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 }
 

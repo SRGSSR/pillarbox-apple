@@ -7,13 +7,13 @@
 import SwiftUI
 
 struct CustomNavigationLink<Content>: View where Content: View {
-    let name: String
+    let title: String
     let destination: RouterDestination
     @ViewBuilder let content: () -> Content
 
     var body: some View {
 #if os(iOS)
-        NavigationLink(name, destination: destination)
+        NavigationLink(title, destination: destination)
 #else
         NavigationLink(destination: destination.view()) {
             content()
