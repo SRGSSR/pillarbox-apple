@@ -54,15 +54,13 @@ struct ContentListsView: View {
     private static func section(title: String, image: String? = nil, configurations: [ContentList.Configuration]) -> some View {
         CustomSection {
             ForEach(configurations) { configuration in
-#if os(iOS)
-                NavigationLink(configuration.name, destination: .contentList(configuration: configuration))
-#else
-                NavigationLink(destination: RouterDestination.contentList(configuration: configuration).view()) {
+                CustomNavigationLink(
+                    name: configuration.name,
+                    destination: .contentList(configuration: configuration)
+                ) {
                     Text(configuration.name)
                         .businessUnitStyle()
                 }
-                .buttonStyle(.card)
-#endif
             }
         } header: {
             HStack(spacing: constant(iOS: 10, tvOS: 20)) {
@@ -148,8 +146,9 @@ private extension View {
 #endif
     }
 
-#if os(tvOS)
+    @ViewBuilder
     func businessUnitStyle() -> some View {
+#if os(tvOS)
         self
             .frame(width: 450, height: 250, alignment: .center)
             .padding(10)
@@ -165,8 +164,10 @@ private extension View {
             .font(.title)
             .fontWeight(.black)
             .multilineTextAlignment(.center)
-    }
+#else
+        self
 #endif
+    }
 }
 
 #Preview {
