@@ -69,9 +69,7 @@ private struct CardBottomView: View {
 
 // Behavior: h-hug, v-hug
 struct MediaCardView: View {
-    static let width: CGFloat = 570
-    static let height: CGFloat = 350
-
+    let size: CGSize
     let title: String?
     let subtitle: String?
     let image: SRGImage?
@@ -94,7 +92,7 @@ struct MediaCardView: View {
             .overlay {
                 LinearGradient(gradient: Gradient(colors: [Color.clear, Color.black]), startPoint: .top, endPoint: .bottom)
             }
-            .frame(width: Self.width, height: Self.height, alignment: .center)
+            .frame(width: size.width, height: size.height, alignment: .center)
 
             VStack {
                 CardTopTrailingView(duration: duration, type: type)
@@ -103,10 +101,11 @@ struct MediaCardView: View {
                 CardBottomView(title: title, description: subtitle, date: date)
             }
         }
-        .frame(width: Self.width, height: Self.height, alignment: .center)
+        .frame(width: size.width, height: size.height, alignment: .center)
     }
 
     init(
+        size: CGSize = .init(width: 570, height: 350),
         title: String?,
         subtitle: String? = nil,
         image: SRGImage? = nil,
@@ -114,6 +113,7 @@ struct MediaCardView: View {
         duration: String? = nil,
         date: String? = nil
     ) {
+        self.size = size
         self.title = title
         self.subtitle = subtitle
         self.image = image
