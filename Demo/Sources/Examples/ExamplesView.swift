@@ -17,20 +17,21 @@ private struct TextFieldView: View {
                 .autocapitalization(.none)
                 .autocorrectionDisabled()
 
+#if os(iOS)
             HStack(spacing: 0) {
                 Button(action: clear) {
                     Image(systemName: "xmark.circle.fill")
                 }
                 .tint(.white)
                 .opacity(text.isEmpty ? 0 : 1)
-#if os(iOS)
+
                 PasteButton(payloadType: URL.self) { url in
                     text = url.first?.absoluteString ?? ""
                 }
                 .labelStyle(.iconOnly)
                 .scaleEffect(x: 0.5, y: 0.5)
-#endif
             }
+#endif
         }
     }
 
