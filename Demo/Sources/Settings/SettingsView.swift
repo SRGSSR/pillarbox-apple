@@ -132,7 +132,7 @@ struct SettingsView: View {
             }
         } header: {
             Text("Application")
-                .padding(.vertical, constant(iOS: 0, tvOS: 15))
+                .headerStyle()
         }
     }
 
@@ -149,7 +149,7 @@ struct SettingsView: View {
             seekBehaviorPicker()
         } header: {
              Text("Player")
-                .padding(.vertical, constant(iOS: 0, tvOS: 15))
+                .headerStyle()
         }
     }
 
@@ -181,7 +181,7 @@ struct SettingsView: View {
             UrlCacheView()
         } header: {
             Text("Debugging")
-                .padding(.vertical, constant(iOS: 0, tvOS: 15))
+                .headerStyle()
         }
     }
 
@@ -197,7 +197,7 @@ struct SettingsView: View {
             }
         } header: {
             Text("Version information")
-                .padding(.vertical, constant(iOS: 0, tvOS: 15))
+                .headerStyle()
         } footer: {
             versionFooter()
         }
