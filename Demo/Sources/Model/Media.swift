@@ -21,11 +21,13 @@ struct Media: Hashable {
 
     let title: String
     let description: String?
+    let image: URL?
     let type: `Type`
 
-    init(title: String, description: String? = nil, type: `Type`) {
+    init(title: String, description: String? = nil, image: URL? = nil, type: `Type`) {
         self.title = title
         self.description = description
+        self.image = image
         self.type = type
     }
 
