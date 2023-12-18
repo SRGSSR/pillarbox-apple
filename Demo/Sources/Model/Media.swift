@@ -35,6 +35,7 @@ struct Media: Hashable {
         self.init(
             title: template.title,
             description: template.description,
+            image: template.image,
             type: template.type
         )
     }
