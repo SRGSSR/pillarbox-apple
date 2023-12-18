@@ -30,10 +30,12 @@ public extension View {
 }
 
 public extension View {
-    /// Enables the view for in-app Picture in Picture, registering a cleanup closure to be performed when resources
-    /// required by Picture in Picture initiated from the view are not needed anymore.
-    ///
-    /// - Parameter cleanup: A closure to clean resources associated with the view.
+    /// Enables the view for in-app Picture in Picture.
+    /// 
+    /// - Parameters:
+    ///   - setup: A closure to setup resources associated with the view when it appears.
+    ///   - cleanup: A closure to clean resources associated with the view when it disappears, or when Picture in Picture
+    ///     ends.
     func enabledForInAppPictureInPictureWithSetup(perform setup: @escaping () -> Void, cleanup: @escaping () -> Void) -> some View {
         onAppear {
             PictureInPicture.shared.restoreFromInAppPictureInPictureWithSetup(perform: setup)
