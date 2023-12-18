@@ -15,7 +15,6 @@ struct ContentListsView: View {
     var body: some View {
         CustomList {
             Self.content()
-                .padding(.horizontal, constant(iOS: 0, tvOS: 20))
         }
 #if os(iOS)
         .navigationTitle("Lists (\(selectedServerSetting.title))")
@@ -55,22 +54,22 @@ struct ContentListsView: View {
     private static func section(title: String, image: String? = nil, configurations: [ContentList.Configuration]) -> some View {
         CustomSection {
             ForEach(configurations) { configuration in
-#if os(iOS)
-                NavigationLink(configuration.name, destination: .contentList(configuration: configuration))
-#else
-                NavigationLink(destination: RouterDestination.contentList(configuration: configuration).view()) {
+                CustomNavigationLink(
+                    title: configuration.name,
+                    destination: .contentList(configuration: configuration)
+                ) {
                     Text(configuration.name)
-                        .frame(width: 300, height: 250, alignment: .leading)
+                        .businessUnitStyle()
                 }
-#endif
             }
         } header: {
-            HStack {
+            HStack(spacing: constant(iOS: 10, tvOS: 20)) {
                 if let image {
                     Image(systemName: image)
                 }
                 Text(title)
             }
+            .headerStyle()
         }
     }
 
@@ -131,6 +130,31 @@ struct ContentListsView: View {
         .pickerStyle(.inline)
     }
 #endif
+}
+
+private extension View {
+    @ViewBuilder
+    func businessUnitStyle() -> some View {
+#if os(tvOS)
+        self
+            .frame(width: 450, height: 250, alignment: .center)
+            .padding(10)
+            .scaleEffect(0.5)
+            .background(
+                RadialGradient(
+                    colors: [Color(red: 175 / 255, green: 0, blue: 29 / 255, opacity: 1), .clear],
+                    center: .center,
+                    startRadius: 0,
+                    endRadius: 450
+                )
+            )
+            .font(.title)
+            .fontWeight(.black)
+            .multilineTextAlignment(.center)
+#else
+        self
+#endif
+    }
 }
 
 #Preview {

@@ -43,16 +43,21 @@ enum MediaDescription {
         }
     }
 
+    static func duration(for media: SRGMedia) -> String {
+        minuteFormatter.string(from: max(media.duration / 1000, 60))!
+    }
+
+    static func systemImage(for media: SRGMedia) -> String? {
+        guard media.mediaType != .none else { return nil }
+        return media.mediaType == .audio ? "headphones" : "movieclapper.fill"
+    }
+
     static func style(for media: SRGMedia) -> Style {
         media.timeAvailability(at: Date()) == .available ? .standard : .disabled
     }
 
-    private static func date(for media: SRGMedia) -> String {
+    static func date(for media: SRGMedia) -> String {
         dateFormatter.string(from: media.date)
-    }
-
-    private static func duration(for media: SRGMedia) -> String {
-        minuteFormatter.string(from: max(media.duration / 1000, 60))!
     }
 
     private static func icon(for media: SRGMedia) -> String {

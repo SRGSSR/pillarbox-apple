@@ -8,33 +8,67 @@ import SwiftUI
 
 // Behavior: h-exp, v-hug
 struct Cell: View {
-    let title: String
+    let size: CGSize
+    let title: String?
     let subtitle: String?
+    let image: URL?
+    let type: String?
+    let duration: String?
+    let date: String?
     let style: MediaDescription.Style
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
+#if os(iOS)
             VStack(alignment: .leading) {
-                Text(title)
-                    .foregroundColor(Self.foregroundColor(for: style))
+                if let title {
+                    Text(title)
+                        .foregroundColor(Self.foregroundColor(for: style))
+                }
                 if let subtitle {
                     Text(subtitle)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
             }
-#if os(iOS)
+
             .frame(maxWidth: .infinity, alignment: .leading)
 #else
-            .frame(width: 300, height: 250, alignment: .leading)
+            MediaCardView(
+                size: size,
+                title: title,
+                subtitle: subtitle,
+                image: image,
+                type: type,
+                duration: duration,
+                date: date
+            )
 #endif
         }
+#if os(tvOS)
+        .buttonStyle(.card)
+#endif
     }
 
-    init(title: String, subtitle: String? = nil, style: MediaDescription.Style = .standard, action: @escaping () -> Void) {
+    init(
+        size: CGSize = .init(width: 450, height: 250),
+        title: String?,
+        subtitle: String? = nil,
+        image: URL? = nil,
+        type: String? = nil,
+        duration: String? = nil,
+        date: String? = nil,
+        style: MediaDescription.Style = .standard,
+        action: @escaping () -> Void
+    ) {
+        self.size = size
         self.title = title
         self.subtitle = subtitle
+        self.image = image
+        self.type = type
+        self.duration = duration
+        self.date = date
         self.style = style
         self.action = action
     }

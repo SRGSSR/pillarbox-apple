@@ -40,3 +40,18 @@ extension View {
         modifier(PulseSymbolEffect())
     }
 }
+
+extension View {
+    @ViewBuilder
+    func headerStyle() -> some View {
+#if os(tvOS)
+        self
+            .font(.headline)
+            .foregroundStyle(.gray)
+            .fontWeight(.semibold)
+            .padding(20)
+#else
+        self
+#endif
+    }
+}

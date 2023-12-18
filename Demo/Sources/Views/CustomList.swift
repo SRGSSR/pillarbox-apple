@@ -20,9 +20,10 @@ struct CustomList<Content, Data>: View where Content: View, Data: Hashable {
 #else
         ScrollView {
             if !data.isEmpty {
-                LazyVGrid(columns: (0...3).map { _ in GridItem(.flexible()) }, spacing: 30) {
+                LazyVGrid(columns: (0..<3).map { _ in GridItem(.flexible()) }, spacing: 50) {
                     ForEach(data, id: \.self, content: content)
                 }
+                .padding(.horizontal, 50)
             } else {
                 VStack(alignment: .leading) {
                     content(nil)

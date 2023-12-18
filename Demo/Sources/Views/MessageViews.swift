@@ -46,5 +46,8 @@ struct RefreshableMessageView<Model>: View where Model: Refreshable {
             }
             .refreshable { await model.refresh() }
         }
+#if os(tvOS)
+        .focusable()
+#endif
     }
 }

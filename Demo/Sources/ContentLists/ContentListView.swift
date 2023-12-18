@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import SRGDataProviderCombine
 import SRGDataProviderModel
 import SwiftUI
 
@@ -22,13 +23,14 @@ private struct LoadedView: View {
                             model.loadMore()
                         }
                     }
-                    .padding(.horizontal, constant(iOS: 0, tvOS: 50))
             }
         }
 #if os(iOS)
         .toolbar(content: toolbar)
         .navigationTitle("Examples")
         .refreshable { await model.refresh() }
+#else
+        .ignoresSafeArea(.all, edges: .horizontal)
 #endif
     }
 
@@ -64,21 +66,32 @@ private struct ContentCell: View {
     var body: some View {
         switch content {
         case let .topic(topic):
-#if os(iOS)
-            NavigationLink(
-                topic.title,
+            CustomNavigationLink(
+                title: topic.title,
                 destination: .contentList(configuration: .init(list: .latestMediasForTopic(topic), vendor: topic.vendor))
-            )
-            .swipeActions { CopyButton(text: topic.urn) }
-#else
-            NavigationLink(destination: RouterDestination.contentList(configuration: .init(list: .latestMediasForTopic(topic), vendor: topic.vendor)).view()) {
-                Text(topic.title)
-                    .frame(width: 300, height: 250, alignment: .leading)
+            ) {
+#if os(tvOS)
+                MediaCardView(
+                    title: topic.title,
+                    image: SRGDataProvider.current!.url(for: topic.image, size: .large)
+                )
+#endif
             }
+#if os(iOS)
+            .swipeActions { CopyButton(text: topic.urn) }
 #endif
         case let .media(media):
             let title = MediaDescription.title(for: media)
-            Cell(title: title, subtitle: MediaDescription.subtitle(for: media), style: MediaDescription.style(for: media)) {
+            Cell(
+                size: .init(width: 570, height: 350),
+                title: media.show?.title,
+                subtitle: media.title,
+                image: SRGDataProvider.current!.url(for: media.image, size: .large),
+                type: MediaDescription.systemImage(for: media),
+                duration: MediaDescription.duration(for: media),
+                date: MediaDescription.date(for: media),
+                style: MediaDescription.style(for: media)
+            ) {
                 let media = Media(title: title, type: .urn(media.urn, server: serverSetting.server))
                 router.presented = .player(media: media)
             }
@@ -86,17 +99,19 @@ private struct ContentCell: View {
             .swipeActions { CopyButton(text: media.urn) }
 #endif
         case let .show(show):
-#if os(iOS)
-            NavigationLink(
-                show.title,
+            CustomNavigationLink(
+                title: show.title,
                 destination: .contentList(configuration: .init(list: .latestMediasForShow(show), vendor: show.vendor))
-            )
-            .swipeActions { CopyButton(text: show.urn) }
-#else
-            NavigationLink(destination: RouterDestination.contentList(configuration: .init(list: .latestMediasForShow(show), vendor: show.vendor)).view()) {
-                Text(show.title)
-                    .frame(width: 300, height: 250, alignment: .leading)
+            ) {
+#if os(tvOS)
+                MediaCardView(
+                    title: show.title,
+                    image: SRGDataProvider.current!.url(for: show.image, size: .large)
+                )
+#endif
             }
+#if os(iOS)
+            .swipeActions { CopyButton(text: show.urn) }
 #endif
         }
     }

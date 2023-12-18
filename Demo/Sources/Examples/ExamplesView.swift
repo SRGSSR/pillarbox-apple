@@ -17,20 +17,21 @@ private struct TextFieldView: View {
                 .autocapitalization(.none)
                 .autocorrectionDisabled()
 
+#if os(iOS)
             HStack(spacing: 0) {
                 Button(action: clear) {
                     Image(systemName: "xmark.circle.fill")
                 }
                 .tint(.white)
                 .opacity(text.isEmpty ? 0 : 1)
-#if os(iOS)
+
                 PasteButton(payloadType: URL.self) { url in
                     text = url.first?.absoluteString ?? ""
                 }
                 .labelStyle(.iconOnly)
                 .scaleEffect(x: 0.5, y: 0.5)
-#endif
             }
+#endif
         }
     }
 
@@ -67,6 +68,7 @@ private struct MediaEntryView: View {
             }
         }
         .buttonStyle(.plain)
+        .padding(constant(iOS: 0, tvOS: 30))
     }
 
     private func play() {
@@ -82,7 +84,6 @@ struct ExamplesView: View {
     var body: some View {
         CustomList {
             content()
-                .padding(.horizontal, constant(iOS: 0, tvOS: 20))
         }
 #if os(iOS)
         .navigationTitle("Examples")
@@ -133,7 +134,7 @@ struct ExamplesView: View {
     private func section(title: String, medias: [Media]) -> some View {
         CustomSection(title) {
             ForEach(medias, id: \.self) { media in
-                Cell(title: media.title, subtitle: media.description) {
+                Cell(title: media.title, subtitle: media.description, image: media.image) {
                     router.presented = .player(media: media)
                 }
             }
