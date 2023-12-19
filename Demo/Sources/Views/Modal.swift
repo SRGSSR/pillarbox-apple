@@ -28,6 +28,7 @@ private struct PresentedModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .preventsTouchPropagation()
             .gesture(
                 DragGesture(minimumDistance: distance)
                     .onEnded { value in
