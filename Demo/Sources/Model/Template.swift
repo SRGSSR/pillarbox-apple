@@ -93,23 +93,23 @@ enum URLTemplate {
     )
     static let appleWWDCKeynote2023 = Template(
         title: "Apple WWDC Keynote 2023",
-        image: appleImage,
+        image: "https://www.apple.com/v/apple-events/home/ac/images/overview/recent-events/gallery/jun-2023__cjqmmqlyd21y_large_2x.jpg",
         type: .url("https://events-delivery.apple.com/0105cftwpxxsfrpdwklppzjhjocakrsk/m3u8/vod_index-PQsoJoECcKHTYzphNkXohHsQWACugmET.m3u8")
     )
     static let appleDolbyAtmos = Template(
         title: "Apple Dolby Atmos",
-        image: appleImage,
+        image: "https://is1-ssl.mzstatic.com/image/thumb/-6farfCY0YClFd7-z_qZbA/1000x563.jpg",
         type: .url("https://devstreaming-cdn.apple.com/videos/streaming/examples/adv_dv_atmos/main.m3u8")
     )
     static let appleTvMorningShowSeason1Trailer = Template(
         title: "The Morning Show - My Way: Season 1",
-        image: appleImage,
+        image: "https://is1-ssl.mzstatic.com/image/thumb/cZUkXfqYmSy57DBI5TiTMg/1000x563.jpg",
         // swiftlint:disable:next line_length
         type: .url("https://play-edge.itunes.apple.com/WebObjects/MZPlayLocal.woa/hls/subscription/playlist.m3u8?cc=CH&svcId=tvs.vds.4021&a=1522121579&isExternal=true&brandId=tvs.sbd.4000&id=518077009&l=en-GB&aec=UHD")
     )
     static let appleTvMorningShowSeason2Trailer = Template(
         title: "The Morning Show - Change: Season 2",
-        image: appleImage,
+        image: "https://is1-ssl.mzstatic.com/image/thumb/IxmmS1rQ7ouO-pKoJsVpGw/1000x563.jpg",
         // swiftlint:disable:next line_length
         type: .url("https://play-edge.itunes.apple.com/WebObjects/MZPlayLocal.woa/hls/subscription/playlist.m3u8?cc=CH&svcId=tvs.vds.4021&a=1568297173&isExternal=true&brandId=tvs.sbd.4000&id=518034010&l=en-GB&aec=UHD")
     )
@@ -129,16 +129,18 @@ enum URLTemplate {
         type: .url("http://localhost:8123/simple/unavailable/master.m3u8")
     )
 
-    private static let bitmovinImage: URL = "https://ventures.swisscom.com/wp-content/uploads/2021/04/swisscom-ventures-logo-bitmovin.png"
+    private static let bitmovinImage: URL = """
+    https://img.redbull.com/images/c_crop,w_3840,h_1920,x_0,y_0,f_auto,q_auto/c_scale,w_1200/redbullcom/tv/FO-1MR39KNMH2111/fo-1mr39knmh2111-featuremedia
+    """
 
     static let bitmovinOnDemandMultipleTracks = Template(
         title: "Multiple subtitles and audio tracks",
-        image: bitmovinImage,
+        image: "https://durian.blender.org/wp-content/uploads/2010/06/05.8b_comp_000272.jpg",
         type: .url("https://bitmovin-a.akamaihd.net/content/sintel/hls/playlist.m3u8")
     )
     static let bitmovinOnDemand_4K_HEVC = Template(
         title: "4K, HEVC",
-        image: bitmovinImage,
+        image: "https://peach.blender.org/wp-content/uploads/bbb-splash.png",
         type: .url("https://cdn.bitmovin.com/content/encoding_test_dash_hls/4k/hls/4k_profile/master.m3u8")
     )
     static let bitmovinOnDemandSingleAudio = Template(
@@ -157,74 +159,75 @@ enum URLTemplate {
         type: .url("https://bitmovin-a.akamaihd.net/content/MI201109210084_1/MI201109210084_mpeg-4_hd_high_1080p25_10mbits.mp4")
     )
 
-    private static let unifiedStreamingImage: URL = """
+    private static let unifiedStreamingImage_1: URL = "https://mango.blender.org/wp-content/gallery/4k-renders/01_thom_celia_bridge.jpg"
+    private static let unifiedStreamingImage_2: URL = """
     https://website-storage.unified-streaming.com/images/_1200x630_crop_center-center_none/default-facebook.png
     """
 
     static let unifiedStreamingOnDemand_fMP4 = Template(
         title: "Fragmented MP4",
-        image: unifiedStreamingImage,
+        image: unifiedStreamingImage_1,
         type: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8")
     )
     static let unifiedStreamingOnDemandKeyRotation = Template(
         title: "Key Rotation",
-        image: unifiedStreamingImage,
+        image: unifiedStreamingImage_2,
         type: .url("https://demo.unified-streaming.com/k8s/keyrotation/stable/keyrotation/keyrotation.isml/.m3u8")
     )
     static let unifiedStreamingOnDemandAlternateAudio = Template(
         title: "Alternate audio language",
-        image: unifiedStreamingImage,
+        image: unifiedStreamingImage_1,
         type: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-multi-lang.ism/.m3u8")
     )
     static let unifiedStreamingOnDemandAudioOnly = Template(
         title: "Audio only",
-        image: unifiedStreamingImage,
+        image: unifiedStreamingImage_1,
         type: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-multi-lang.ism/.m3u8?filter=(type!=%22video%22)")
     )
     static let unifiedStreamingOnDemandTrickplay = Template(
         title: "Trickplay",
-        image: unifiedStreamingImage,
+        image: unifiedStreamingImage_1,
         type: .url("https://demo.unified-streaming.com/k8s/features/stable/no-handler-origin/tears-of-steel/tears-of-steel-trickplay.m3u8")
     )
     static let unifiedStreamingOnDemandLimitedBandwidth = Template(
         title: "Limiting bandwidth use",
-        image: unifiedStreamingImage,
+        image: unifiedStreamingImage_1,
         type: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8?max_bitrate=800000")
     )
     static let unifiedStreamingOnDemandDynamicTrackSelection = Template(
         title: "Dynamic Track Selection",
-        image: unifiedStreamingImage,
+        image: unifiedStreamingImage_1,
         // swiftlint:disable:next line_length
         type: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8?filter=%28type%3D%3D%22audio%22%26%26systemBitrate%3C100000%29%7C%7C%28type%3D%3D%22video%22%26%26systemBitrate%3C1024000%29")
     )
     static let unifiedStreamingPureLive = Template(
         title: "Pure live",
-        image: unifiedStreamingImage,
+        image: unifiedStreamingImage_2,
         type: .url("https://demo.unified-streaming.com/k8s/live/stable/live.isml/.m3u8")
     )
     static let unifiedStreamingTimeshift = Template(
         title: "Timeshift (5 minutes)",
-        image: unifiedStreamingImage,
+        image: unifiedStreamingImage_2,
         type: .url("https://demo.unified-streaming.com/k8s/live/stable/live.isml/.m3u8?time_shift=300")
     )
     static let unifiedStreamingLiveAudio = Template(
         title: "Live audio",
-        image: unifiedStreamingImage,
+        image: unifiedStreamingImage_2,
         type: .url("https://demo.unified-streaming.com/k8s/live/stable/live.isml/.m3u8?filter=(type!=%22video%22)")
     )
     static let unifiedStreamingPureLiveScte35 = Template(
         title: "Pure live (scte35)",
-        image: unifiedStreamingImage,
+        image: unifiedStreamingImage_2,
         type: .url("https://demo.unified-streaming.com/k8s/live/stable/scte35.isml/.m3u8")
     )
     static let unifiedStreamingOnDemand_fMP4_Clear = Template(
         title: "fMP4, clear",
-        image: unifiedStreamingImage,
+        image: unifiedStreamingImage_1,
         type: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-fmp4.ism/.m3u8")
     )
     static let unifiedStreamingOnDemand_fMP4_HEVC_4K = Template(
         title: "fMP4, HEVC 4K",
-        image: unifiedStreamingImage,
+        image: unifiedStreamingImage_1,
         type: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-hevc.ism/.m3u8")
     )
 }
