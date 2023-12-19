@@ -50,11 +50,11 @@ private struct _MonoscopicVideoView: UIViewRepresentable {
 /// orientation at which the content is seen.
 ///
 /// Behavior: h-exp, v-exp
-public struct MonoscopicVideoView: View {
+struct MonoscopicVideoView: View {
     private let player: Player
     private let orientation: SCNQuaternion
 
-    public var body: some View {
+    var body: some View {
         _MonoscopicVideoView(player: player, orientation: orientation)
     }
 
@@ -63,7 +63,7 @@ public struct MonoscopicVideoView: View {
     /// - Parameters:
     ///   - player: The player whose content is displayed.
     ///   - orientation: The orientation at which the content is seen.
-    public init(player: Player, orientation: SCNQuaternion = .monoscopicDefault) {
+    init(player: Player, orientation: SCNQuaternion = .monoscopicDefault) {
         self.player = player
         self.orientation = orientation
     }

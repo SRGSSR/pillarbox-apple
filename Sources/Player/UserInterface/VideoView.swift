@@ -11,19 +11,26 @@ import SwiftUI
 ///
 /// Behavior: h-exp, v-exp
 public struct VideoView: View {
-    private let player: Player
+    @ObservedObject private var player: Player
     private let gravity: AVLayerVideoGravity
     private let isPictureInPictureSupported: Bool
 
     public var body: some View {
-        if isPictureInPictureSupported {
-            PictureInPictureSupportingVideoView(player: player, gravity: gravity)
-                .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                    PictureInPicture.shared.custom.stop()
-                }
-        }
-        else {
-            BasicVideoView(player: player, gravity: gravity)
+        switch player.mediaType {
+        case .monoscopicVideo:
+            MonoscopicVideoView(player: player)
+        case .video:
+            if isPictureInPictureSupported {
+                PictureInPictureSupportingVideoView(player: player, gravity: gravity)
+                    .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                        PictureInPicture.shared.custom.stop()
+                    }
+            }
+            else {
+                BasicVideoView(player: player, gravity: gravity)
+            }
+        default:
+            Color.clear
         }
     }
 
