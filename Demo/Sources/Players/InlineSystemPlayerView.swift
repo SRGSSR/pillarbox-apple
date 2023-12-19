@@ -15,7 +15,8 @@ struct InlineSystemPlayerView: View {
     }
 
     var body: some View {
-        SystemVideoView(player: Self.model.player, isPictureInPictureSupported: true)
+        SystemVideoView(player: Self.model.player)
+            .supportsPictureInPicture()
             .ignoresSafeArea()
             .enabledForInAppPictureInPictureWithCleanup {
                 Self.model.media = nil

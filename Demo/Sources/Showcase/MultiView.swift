@@ -33,7 +33,8 @@ private struct SingleView: View {
 
     @ViewBuilder
     private func videoView(player: Player) -> some View {
-        VideoView(player: player, isPictureInPictureSupported: isPictureInPictureSupported)
+        VideoView(player: player)
+            .supportsPictureInPicture(isPictureInPictureSupported)
             .accessibilityAddTraits(.isButton)
             .onTapGesture(perform: action)
     }

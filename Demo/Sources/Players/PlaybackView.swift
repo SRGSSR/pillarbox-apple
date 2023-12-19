@@ -104,7 +104,9 @@ private struct MainView: View {
     @ViewBuilder
     private func video() -> some View {
         ZStack {
-            VideoView(player: player, gravity: gravity, isPictureInPictureSupported: isPictureInPictureSupported)
+            VideoView(player: player)
+                .gravity(gravity)
+                .supportsPictureInPicture(isPictureInPictureSupported)
             if player.mediaType == .audio {
                 image(name: "music.note.tv.fill")
             }
@@ -583,7 +585,8 @@ struct PlaybackView: View {
 #if os(iOS)
             MainView(player: player, layout: $layout, isPictureInPictureSupported: isPictureInPictureSupported)
 #else
-            SystemVideoView(player: player, isPictureInPictureSupported: isPictureInPictureSupported)
+            SystemVideoView(player: player)
+                .supportsPictureInPicture(isPictureInPictureSupported)
                 .ignoresSafeArea()
 #endif
         }

@@ -62,8 +62,9 @@ struct MonoscopicVideoView: View {
     ///
     /// - Parameters:
     ///   - player: The player whose content is displayed.
-    ///   - orientation: The orientation at which the content is seen.
-    init(player: Player, orientation: SCNQuaternion = .monoscopicDefault) {
+    ///   - orientation: The orientation at which the content is seen. Use `.monoscopicDefault` to face the content
+    ///     without head-tilting.
+    init(player: Player, orientation: SCNQuaternion) {
         self.player = player
         self.orientation = orientation
     }

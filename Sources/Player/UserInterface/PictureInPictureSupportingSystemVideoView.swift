@@ -7,6 +7,7 @@
 import AVKit
 import SwiftUI
 
+// TODO: Could be handled at the same level as for custom PiP?
 private class PlayerViewController: AVPlayerViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
