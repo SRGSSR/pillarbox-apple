@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import SceneKit
 import SwiftUI
 
 /// A view displaying video content provided by an associated player.
@@ -15,11 +16,12 @@ public struct VideoView: View {
 
     fileprivate var gravity: AVLayerVideoGravity = .resizeAspect
     fileprivate var isPictureInPictureSupported = false
+    fileprivate var orientation: SCNQuaternion = .monoscopicDefault
 
     public var body: some View {
         switch player.mediaType {
         case .monoscopicVideo:
-            MonoscopicVideoView(player: player, orientation: .monoscopicDefault)
+            MonoscopicVideoView(player: player, orientation: orientation)
         case .video:
             if isPictureInPictureSupported {
                 PictureInPictureSupportingVideoView(player: player, gravity: gravity)
@@ -57,7 +59,7 @@ public extension VideoView {
 
     /// Configures Picture in Picture support for the video view.
     ///
-    /// - Parameter isPictureInPictureSupported: A Boolean set to `true` if the view must be able to share its video 
+    /// - Parameter isPictureInPictureSupported: A Boolean set to `true` if the view must be able to share its video
     ///   layer for Picture in Picture.
     ///
     /// Enabling Picture in Picture support is required but not sufficient for Picture in Picture to be available.
@@ -65,6 +67,18 @@ public extension VideoView {
     func supportsPictureInPicture(_ isPictureInPictureSupported: Bool = true) -> VideoView {
         var view = self
         view.isPictureInPictureSupported = isPictureInPictureSupported
+        return view
+    }
+    
+    /// Configures the orientation at which the content is seen.
+    ///
+    /// - Parameter orientation: The orientation.
+    ///
+    /// This parameter is only applied when monoscopic content is played. Use `.monoscopicDefault` to face the content
+    /// without head-tilting.
+    func orientation(_ orientation: SCNQuaternion) -> VideoView {
+        var view = self
+        view.orientation = orientation
         return view
     }
 }
