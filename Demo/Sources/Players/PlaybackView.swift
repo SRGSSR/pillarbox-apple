@@ -105,12 +105,19 @@ private struct MainView: View {
     @ViewBuilder
     private func video() -> some View {
         ZStack {
-            InteractiveVideoView(player: player, gravity: gravity, isPictureInPictureSupported: isPictureInPictureSupported)
             if player.mediaType == .audio {
                 image(name: "music.note.tv.fill")
             }
+            else if player.mediaType == .monoscopicVideo {
+                InteractiveVideoView(player: player)
+            }
             else if player.isExternalPlaybackActive {
                 image(name: "tv")
+            }
+            else {
+                VideoView(player: player)
+                    .gravity(gravity)
+                    .supportsPictureInPicture(isPictureInPictureSupported)
             }
         }
     }
@@ -157,9 +164,7 @@ private struct ControlsView: View {
 
 // Behavior: h-exp, v-exp
 struct InteractiveVideoView: View {
-    @ObservedObject var player: Player
-    let gravity: AVLayerVideoGravity
-    let isPictureInPictureSupported: Bool
+    let player: Player
 
     @StateObject private var motionManager = MotionManager()
     @State private var translation: CGSize = .zero
@@ -168,8 +173,6 @@ struct InteractiveVideoView: View {
     var body: some View {
         GeometryReader { geometry in
             VideoView(player: player)
-                .gravity(gravity)
-                .supportsPictureInPicture(isPictureInPictureSupported)
                 .orientation(orientation(from: translation, in: geometry))
                 .gesture(
                     DragGesture(minimumDistance: 1)
