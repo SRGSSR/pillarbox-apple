@@ -11,7 +11,7 @@ import SwiftUI
 struct SystemPlayerView: View {
     let media: Media
 
-    @StateObject private var model = PlayerViewModel.shared ?? PlayerViewModel()
+    @StateObject private var model = SystemPlayerViewModel.shared ?? SystemPlayerViewModel()
 
     var body: some View {
         SystemVideoView(player: model.player)
