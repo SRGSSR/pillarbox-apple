@@ -65,7 +65,7 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
     }
 
     func playerViewControllerWillStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
-        isActive = true
+        isActive = false
         delegate?.pictureInPictureWillStop()
     }
 
