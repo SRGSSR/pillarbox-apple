@@ -34,7 +34,7 @@ public func SCNQuaternionRotate(_ quaternion: SCNQuaternion, _ wx: Float, _ wy: 
     let simdRotationAroundY = simd_quaternion(wy, simd_make_float3(0, 1, 0))
     let rotatedSimdQuaternion = simd_mul(simdRotationAroundY, simd_mul(simdQuaternion, simdRotationAroundX))
     let vector = simd_imag(rotatedSimdQuaternion)
-    return SCNVector4(vector.x, vector.y, vector.z, simd_real(rotatedSimdQuaternion))
+    return SCNQuaternion(vector.x, vector.y, vector.z, simd_real(rotatedSimdQuaternion))
 }
 
 /// Creates a quaternion with some rotation around a specific axis.
@@ -51,7 +51,7 @@ public func SCNQuaternionRotate(_ quaternion: SCNQuaternion, _ wx: Float, _ wy: 
 public func SCNQuaternionWithAngleAndAxis(_ radians: Float, _ x: Float, _ y: Float, _ z: Float) -> SCNQuaternion {
     let simdQuaternion = simd_quaternion(radians, simd_make_float3(x, y, z))
     let vector = simd_imag(simdQuaternion)
-    return SCNVector4(vector.x, vector.y, vector.z, simd_real(simdQuaternion))
+    return SCNQuaternion(vector.x, vector.y, vector.z, simd_real(simdQuaternion))
 }
 
 #if os(iOS)
