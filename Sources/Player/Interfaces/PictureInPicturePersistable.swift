@@ -14,7 +14,7 @@ private var kPersisted: AnyObject?
 public protocol PictureInPicturePersistable: AnyObject {}
 
 extension PictureInPicturePersistable {
-    /// The currently persisted instance associated with Picture in Picture, if any.
+    /// The currently persisted instance, if any.
     public static var persisted: Self? {
         kPersisted as? Self
     }

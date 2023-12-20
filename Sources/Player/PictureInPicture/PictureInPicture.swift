@@ -16,9 +16,9 @@ public final class PictureInPicture {
 
     /// The Picture in Picture delegate.
     ///
-    /// In-app Picture in Picture support requires your application to setup a delegate so a playback view supporting
-    /// Picture in Picture can be dismissed and restored at a later time, letting users navigate your app while
-    /// playback continues in the Picture in Picture overlay.
+    /// In-app Picture in Picture support requires your application to setup a delegate so that a playback view
+    /// supporting Picture in Picture can be dismissed and restored at a later time, letting users navigate your app
+    /// while playback continues in the Picture in Picture overlay.
     public weak var delegate: PictureInPictureDelegate?
 
     weak var persistable: PictureInPicturePersistable?
@@ -59,21 +59,5 @@ extension PictureInPicture: PictureInPictureDelegate {
     public func pictureInPictureDidStop() {
         delegate?.pictureInPictureDidStop()
         persistable?.relinquish()
-    }
-}
-
-public extension View {
-    /// Enable in-app Picture in Picture support.
-    ///
-    /// - Parameter persistable: The object to persist during Picture in Picture.
-    ///
-    /// Apply this modifier where in-app Picture in Picture is desired. This ensures that resources required during
-    /// playback in Picture in Picture are properly persisted. Use `PictureInPicturePersistable.persisted` to retrieve
-    /// the persisted object for view restoration.
-    func enabledForInAppPictureInPicture(persisting persistable: PictureInPicturePersistable) -> some View {
-        onAppear {
-            PictureInPicture.shared.stop()
-            PictureInPicture.shared.persistable = persistable
-        }
     }
 }

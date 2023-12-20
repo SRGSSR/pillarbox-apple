@@ -27,4 +27,18 @@ public extension View {
             self
         }
     }
+    
+    /// Enable in-app Picture in Picture support.
+    ///
+    /// - Parameter persistable: The object to persist during Picture in Picture.
+    ///
+    /// Apply this modifier where in-app Picture in Picture is desired. This ensures that resources required during
+    /// playback in Picture in Picture are properly persisted. Use `PictureInPicturePersistable.persisted` to retrieve
+    /// the persisted object for view restoration.
+    func enabledForInAppPictureInPicture(persisting persistable: PictureInPicturePersistable) -> some View {
+        onAppear {
+            PictureInPicture.shared.stop()
+            PictureInPicture.shared.persistable = persistable
+        }
+    }
 }
