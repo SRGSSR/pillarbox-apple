@@ -37,6 +37,8 @@ public final class PictureInPicture {
 public extension View {
     func supportsInAppPictureInPicture(_ supporting: PictureInPictureSupporting) -> some View {
         onAppear {
+            print("--> supporting appears")
+            PictureInPicture.shared.custom.stop()
             PictureInPicture.shared.setSupporting(supporting)
         }
         .onDisappear {

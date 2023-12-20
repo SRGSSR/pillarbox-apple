@@ -15,6 +15,7 @@ final class PlayerViewModel: ObservableObject {
     @Published var media: Media? {
         didSet {
             guard media != oldValue else { return }
+            print("--> update media")
             if let playerItem = media?.playerItem() {
                 player.items = [playerItem]
             }
