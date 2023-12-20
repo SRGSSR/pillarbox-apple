@@ -597,7 +597,7 @@ struct PlaybackView: View {
 
     @ObservedObject private var player: Player
     @Binding private var layout: Layout
-    let isPictureInPictureSupported: Bool
+    fileprivate var isPictureInPictureSupported = false
 
     var body: some View {
         ZStack {
@@ -619,14 +619,9 @@ struct PlaybackView: View {
         .background(.black)
     }
 
-    init(
-        player: Player,
-        layout: Binding<Layout> = .constant(.inline),
-        isPictureInPictureSupported: Bool = false
-    ) {
+    init(player: Player, layout: Binding<Layout> = .constant(.inline)) {
         self.player = player
         _layout = layout
-        self.isPictureInPictureSupported = isPictureInPictureSupported
     }
 
     @ViewBuilder
@@ -640,6 +635,14 @@ struct PlaybackView: View {
                 .ignoresSafeArea()
 #endif
         }
+    }
+}
+
+extension PlaybackView {
+    func supportsPictureInPicture(_ isPictureInPictureSupported: Bool = true) -> PlaybackView {
+        var view = self
+        view.isPictureInPictureSupported = isPictureInPictureSupported
+        return view
     }
 }
 

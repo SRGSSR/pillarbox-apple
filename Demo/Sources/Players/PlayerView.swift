@@ -15,7 +15,8 @@ struct PlayerView: View {
     @StateObject private var model = PlayerViewModel.shared ?? PlayerViewModel()
 
     var body: some View {
-        PlaybackView(player: model.player, isPictureInPictureSupported: true)
+        PlaybackView(player: model.player)
+            .supportsPictureInPicture()
             .supportsInAppPictureInPicture(model)
             .onAppear(perform: play)
             .tracked(name: "player")
