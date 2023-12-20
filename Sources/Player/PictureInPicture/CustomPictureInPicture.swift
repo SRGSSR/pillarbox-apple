@@ -85,6 +85,7 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
         isActive = true
         acquire(for: pictureInPictureController.playerLayer)
         delegate?.pictureInPictureWillStart()
+        print("--> [setup]")
         print("--> will start, refcount = \(referenceCount)")
     }
 
@@ -117,5 +118,6 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
         relinquish(for: pictureInPictureController.playerLayer)
         delegate?.pictureInPictureDidStop()
         print("--> did stop, refcount = \(referenceCount)")
+        print("--> [cleanup]")
     }
 }
