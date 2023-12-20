@@ -9,6 +9,7 @@ import AVKit
 /// Manages Picture in Picture for `SystemVideoView` instances.
 final class SystemPictureInPicture: NSObject {
     private(set) var isActive = false
+    private(set) var isFullScreen = false
 
     var playerViewController: AVPlayerViewController?
 
@@ -79,6 +80,7 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
         _ playerViewController: AVPlayerViewController,
         willBeginFullScreenPresentationWithAnimationCoordinator coordinator: UIViewControllerTransitionCoordinator
     ) {
+        isFullScreen = true
         acquire(for: playerViewController)
     }
 
@@ -86,6 +88,7 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
         _ playerViewController: AVPlayerViewController,
         willEndFullScreenPresentationWithAnimationCoordinator coordinator: UIViewControllerTransitionCoordinator
     ) {
+        isFullScreen = false
         relinquish(for: playerViewController)
     }
 #endif

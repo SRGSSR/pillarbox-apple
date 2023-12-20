@@ -25,7 +25,7 @@ public struct SystemVideoView: View {
         }
         .onDisappear {
             // Avoid sound continuing in background, see https://github.com/SRGSSR/pillarbox-apple/issues/520
-            if !PictureInPicture.shared.system.isActive {
+            if !PictureInPicture.shared.system.isActive && !PictureInPicture.shared.system.isFullScreen {
                 player.pause()
             }
         }
