@@ -221,6 +221,33 @@
 			path = Router;
 			sourceTree = "<group>";
 		};
+		6F0E5CCF2B3393110031E313 /* InlinePlayer */ = {
+			isa = PBXGroup;
+			children = (
+				6F579CAB2B3383220044EB99 /* InlinePlayerViewModel.swift */,
+				0E4128BC2AFB7F2A00D67759 /* InlineSystemPlayerView.swift */,
+			);
+			path = InlinePlayer;
+			sourceTree = "<group>";
+		};
+		6F0E5CD02B33931B0031E313 /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				6F59E87029CF31E10093E6FB /* PlayerView.swift */,
+				0E4128BE2AFB959B00D67759 /* PlayerViewModel.swift */,
+			);
+			path = Player;
+			sourceTree = "<group>";
+		};
+		6F0E5CD12B3393320031E313 /* SystemPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				6F59E86D29CF31E10093E6FB /* SystemPlayerView.swift */,
+				6F579CA72B337DA30044EB99 /* SystemPlayerViewModel.swift */,
+			);
+			path = SystemPlayer;
+			sourceTree = "<group>";
+		};
 		6F45DB972893B772008ACCE6 /* Xcode */ = {
 			isa = PBXGroup;
 			children = (
@@ -384,16 +411,13 @@
 		6F59E86929CF31E10093E6FB /* Players */ = {
 			isa = PBXGroup;
 			children = (
+				6F0E5CD12B3393320031E313 /* SystemPlayer */,
+				6F0E5CD02B33931B0031E313 /* Player */,
+				6F0E5CCF2B3393110031E313 /* InlinePlayer */,
 				6F59E86E29CF31E10093E6FB /* BasicPlaybackView.swift */,
-				6F579CAB2B3383220044EB99 /* InlinePlayerViewModel.swift */,
-				0E4128BC2AFB7F2A00D67759 /* InlineSystemPlayerView.swift */,
 				6F59E86B29CF31E10093E6FB /* PlaybackView.swift */,
 				6F59E86A29CF31E10093E6FB /* PlayerConfiguration.swift */,
-				6F59E87029CF31E10093E6FB /* PlayerView.swift */,
-				0E4128BE2AFB959B00D67759 /* PlayerViewModel.swift */,
 				6F59E86C29CF31E10093E6FB /* SimplePlayerView.swift */,
-				6F59E86D29CF31E10093E6FB /* SystemPlayerView.swift */,
-				6F579CA72B337DA30044EB99 /* SystemPlayerViewModel.swift */,
 				6F59E86F29CF31E10093E6FB /* VanillaPlayerView.swift */,
 			);
 			path = Players;
