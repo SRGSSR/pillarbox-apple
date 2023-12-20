@@ -22,7 +22,7 @@ public struct VideoView: View {
         switch player.mediaType {
         case .monoscopicVideo:
             MonoscopicVideoView(player: player, orientation: orientation)
-        case .video:
+        default:
             if isPictureInPictureSupported {
                 PictureInPictureSupportingVideoView(player: player, gravity: gravity)
                     .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
@@ -32,8 +32,6 @@ public struct VideoView: View {
             else {
                 BasicVideoView(player: player, gravity: gravity)
             }
-        default:
-            Color.clear
         }
     }
 
