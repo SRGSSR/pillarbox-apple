@@ -34,7 +34,6 @@ struct InteractiveVideoView: View {
                             initialTranslation = translation
                         }
                 )
-                .ignoresSafeArea()
         }
     }
 
