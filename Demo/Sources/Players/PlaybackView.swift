@@ -309,16 +309,6 @@ private struct VolumeButton: View {
     }
 }
 
-private struct PiPButton: View {
-    var body: some View {
-        PictureInPictureButton { isActive in
-            Image(systemName: isActive ? "pip.exit" : "pip.enter")
-                .tint(.white)
-                .frame(width: 45, height: 45)
-        }
-    }
-}
-
 // Behavior: h-hug, v-hug
 private struct LoadingIndicator: View {
     let player: Player

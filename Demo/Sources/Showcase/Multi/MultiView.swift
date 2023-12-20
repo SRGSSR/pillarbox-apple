@@ -24,7 +24,10 @@ struct MultiView: View {
         }
         .persistDuringPictureInPicture(model)
         .overlay(alignment: .topLeading) {
-            CloseButton()
+            HStack {
+                CloseButton()
+                PiPButton()
+            }
         }
         .onAppear {
             model.media1 = media1
