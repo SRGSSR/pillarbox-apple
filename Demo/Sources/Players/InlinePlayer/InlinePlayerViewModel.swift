@@ -7,7 +7,7 @@
 import Combine
 import Player
 
-final class InlinePlayerViewModel: ObservableObject, PictureInPicturePersistable {
+final class InlinePlayerViewModel: ObservableObject {
     @Published var media: Media? {
         didSet {
             guard media != oldValue else { return }
@@ -27,3 +27,5 @@ final class InlinePlayerViewModel: ObservableObject, PictureInPicturePersistable
         player.play()
     }
 }
+
+extension InlinePlayerViewModel: PictureInPicturePersistable {}

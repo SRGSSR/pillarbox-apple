@@ -12,7 +12,7 @@ enum PlayerPosition {
     case bottom
 }
 
-final class MultiViewModel: ObservableObject, PictureInPicturePersistable {
+final class MultiViewModel: ObservableObject {
     @Published var media1: Media? {
         didSet {
             guard media1 != oldValue else { return }
@@ -68,3 +68,5 @@ final class MultiViewModel: ObservableObject, PictureInPicturePersistable {
         player2.play()
     }
 }
+
+extension MultiViewModel: PictureInPicturePersistable {}

@@ -8,7 +8,7 @@ import Combine
 import OrderedCollections
 import Player
 
-final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
+final class PlaylistViewModel: ObservableObject {
     static let standardTemplates = [
         URLTemplate.onDemandVideoHLS,
         URLTemplate.shortOnDemandVideoHLS,
@@ -145,3 +145,5 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
             .assign(to: &$currentMedia)
     }
 }
+
+extension PlaylistViewModel: PictureInPicturePersistable {}
