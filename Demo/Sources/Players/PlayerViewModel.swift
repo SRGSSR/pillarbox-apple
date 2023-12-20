@@ -7,7 +7,7 @@
 import Combine
 import Player
 
-final class PlayerViewModel: ObservableObject {
+final class PlayerViewModel: ObservableObject, PictureInPictureSupporting {
     @Published var media: Media? {
         didSet {
             guard media != oldValue else { return }
@@ -26,18 +26,5 @@ final class PlayerViewModel: ObservableObject {
     func play() {
         player.becomeActive()
         player.play()
-    }
-}
-
-private var sharedModel: PlayerViewModel?
-
-extension PlayerViewModel: PictureInPictureSupporting {
-    static var shared: PlayerViewModel? {
-        get {
-            sharedModel
-        }
-        set {
-            sharedModel = newValue
-        }
     }
 }

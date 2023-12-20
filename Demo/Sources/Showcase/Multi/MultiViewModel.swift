@@ -12,7 +12,7 @@ enum PlayerPosition {
     case bottom
 }
 
-final class MultiViewModel: ObservableObject {
+final class MultiViewModel: ObservableObject, PictureInPictureSupporting {
     @Published var media1: Media? {
         didSet {
             guard media1 != oldValue else { return }
@@ -66,18 +66,5 @@ final class MultiViewModel: ObservableObject {
 
         inactivePlayer.isTrackingEnabled = false
         inactivePlayer.isMuted = true
-    }
-}
-
-private var sharedModel: MultiViewModel?
-
-extension MultiViewModel: PictureInPictureSupporting {
-    static var shared: MultiViewModel? {
-        get {
-            sharedModel
-        }
-        set {
-            sharedModel = newValue
-        }
     }
 }

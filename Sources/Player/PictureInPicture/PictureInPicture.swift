@@ -6,17 +6,21 @@
 
 import SwiftUI
 
-public protocol PictureInPictureSupporting: AnyObject {
-    static var shared: Self? { get set }
-}
+private var kShared: AnyObject?
+
+public protocol PictureInPictureSupporting: AnyObject {}
 
 extension PictureInPictureSupporting {
+    public static var shared: Self? {
+        kShared as? Self
+    }
+
     func acquire() {
-        Self.shared = self
+        kShared = self
     }
 
     func relinquish() {
-        Self.shared = nil
+        kShared = nil
     }
 }
 
