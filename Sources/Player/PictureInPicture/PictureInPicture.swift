@@ -4,6 +4,13 @@
 //  License information is available from the LICENSE file.
 //
 
+import SwiftUI
+
+public protocol PictureInPictureSupporting: AnyObject {
+    func acquire()
+    func relinquish()
+}
+
 /// Manages Picture in Picture.
 public final class PictureInPicture {
     /// The shared instance managing Picture in Picture.
@@ -20,5 +27,20 @@ public final class PictureInPicture {
     public func setDelegate(_ delegate: PictureInPictureDelegate) {
         custom.delegate = delegate
         system.delegate = delegate
+    }
+
+    func setSupporting(_ supporting: PictureInPictureSupporting?) {
+        custom.supporting = supporting
+    }
+}
+
+public extension View {
+    func supportsInAppPictureInPicture(_ supporting: PictureInPictureSupporting) -> some View {
+        onAppear {
+            PictureInPicture.shared.setSupporting(supporting)
+        }
+        .onDisappear {
+            PictureInPicture.shared.setSupporting(nil)
+        }
     }
 }

@@ -12,10 +12,11 @@ import SwiftUI
 struct PlayerView: View {
     let media: Media
 
-    @StateObject private var model = PlayerViewModel()
+    @StateObject private var model = PlayerViewModel.shared
 
     var body: some View {
         PlaybackView(player: model.player, isPictureInPictureSupported: true)
+            .supportsInAppPictureInPicture(model)
             .onAppear(perform: play)
             .tracked(name: "player")
     }
