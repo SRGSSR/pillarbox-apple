@@ -52,7 +52,7 @@ final class Router: ObservableObject {
 extension Router: PictureInPictureDelegate {
     func pictureInPictureWillStart() {
         switch presented {
-        case .player, .systemPlayer, .playlist:
+        case .player, .systemPlayer, .playlist, .multi:
             previousPresented = presented
             presented = nil
         case .inlineSystemPlayer:
