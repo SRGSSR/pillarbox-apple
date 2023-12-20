@@ -42,6 +42,11 @@ public final class PictureInPicture {
         system.delegate = delegate
     }
 
+    func stop() {
+        custom.stop()
+        system.stop()
+    }
+
     func setSupporting(_ supporting: PictureInPictureSupporting?) {
         custom.supporting = supporting
         system.supporting = supporting
@@ -52,9 +57,7 @@ public extension View {
     func supportsInAppPictureInPicture(_ supporting: PictureInPictureSupporting) -> some View {
         onAppear {
             print("--> supporting appears")
-            PictureInPicture.shared.custom.stop()
-            PictureInPicture.shared.system.stop()
-
+            PictureInPicture.shared.stop()
             PictureInPicture.shared.setSupporting(supporting)
         }
         .onDisappear {
