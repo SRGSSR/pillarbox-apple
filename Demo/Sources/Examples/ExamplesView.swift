@@ -126,6 +126,7 @@ struct ExamplesView: View {
     @ViewBuilder
     private func miscellaneousSections() -> some View {
         section(title: "Aspect ratios", medias: model.aspectRatioMedias)
+        section(title: "360° videos", medias: model.threeSixtyMedias)
         section(title: "Unbuffered streams", medias: model.unbufferedMedias)
         section(title: "Corner cases", medias: model.cornerCaseMedias)
     }
