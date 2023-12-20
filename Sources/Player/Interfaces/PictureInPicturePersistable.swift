@@ -8,9 +8,9 @@ import SwiftUI
 
 private var kPersisted: AnyObject?
 
-/// A protocol to automatically mark a class as persistable during Picture in Picture playback.
+/// A protocol to automatically mark an object as persistable during Picture in Picture playback.
 ///
-/// The persisted instance, if any, can be retrieved from the `persisted` property.
+/// The persisted object, if any, can be retrieved from the `persisted` property.
 public protocol PictureInPicturePersistable: AnyObject {}
 
 extension PictureInPicturePersistable {

@@ -63,6 +63,13 @@ extension PictureInPicture: PictureInPictureDelegate {
 }
 
 public extension View {
+    /// Associates a persistable object with Picture in Picture.
+    ///
+    /// - Parameter persistable: The persistable object to associate.
+    ///
+    /// Apply this modifier where in-app Picture in Picture is desired. This ensures that resources required during
+    /// playback in Picture in Picture are properly persisted. Use `PictureInPicturePersistable.persisted` to retrieve
+    /// the persisted instance during view restoration.
     func persistDuringPictureInPicture(_ persistable: PictureInPicturePersistable) -> some View {
         onAppear {
             print("--> supporting appears")
