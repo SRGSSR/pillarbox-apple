@@ -26,7 +26,8 @@ public extension SCNQuaternion {
 ///   - wy: The angle around the y-axis.
 /// - Returns: The rotated quaternion.
 ///
-/// For a short introduction to quaternions please check http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/.
+/// Please read the following [tutorial](http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/.)
+/// for a short introduction to quaternions.
 public func SCNQuaternionRotate(_ quaternion: SCNQuaternion, _ wx: Float, _ wy: Float) -> SCNQuaternion {
     let simdQuaternion = simd_quaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w)
     let simdRotationAroundX = simd_quaternion(wx, simd_make_float3(1, 0, 0))
@@ -36,7 +37,7 @@ public func SCNQuaternionRotate(_ quaternion: SCNQuaternion, _ wx: Float, _ wy: 
     return SCNVector4(vector.x, vector.y, vector.z, simd_real(rotatedSimdQuaternion))
 }
 
-/// Creates a quaternion with a rotation around the specified axis.
+/// Creates a quaternion with some rotation around a specific axis.
 ///
 /// - Parameters:
 ///   - radians: The rotation angle.
@@ -45,7 +46,8 @@ public func SCNQuaternionRotate(_ quaternion: SCNQuaternion, _ wx: Float, _ wy: 
 ///   - z: The axis z-component.
 /// - Returns: The quaternion.
 ///
-/// For a short introduction to quaternions please check http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/.
+/// Please read the following [tutorial](http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/.)
+/// for a short introduction to quaternions.
 public func SCNQuaternionWithAngleAndAxis(_ radians: Float, _ x: Float, _ y: Float, _ z: Float) -> SCNQuaternion {
     let simdQuaternion = simd_quaternion(radians, simd_make_float3(x, y, z))
     let vector = simd_imag(simdQuaternion)
@@ -65,7 +67,8 @@ public func SCNQuaternionWithAngleAndAxis(_ radians: Float, _ x: Float, _ y: Flo
 /// this property takes the current user interface orientation into account. The method must therefore be called again
 /// should the user interface orientation change.
 ///
-/// For a short introduction to quaternions please check http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/.
+/// Please read the following [tutorial](http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/.)
+/// for a short introduction to quaternions.
 public func SCNQuaternionForAttitude(_ attitude: CMAttitude) -> SCNQuaternion {
     // Based on: https://gist.github.com/travisnewby/96ee1ac2bc2002f1d480. Also see https://stackoverflow.com/a/28784841/760435.
     let quaternion = attitude.quaternion

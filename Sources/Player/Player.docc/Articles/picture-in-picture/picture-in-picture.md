@@ -27,7 +27,7 @@ For your application to be able to support Picture in Picture you must:
 
 ### Basic integration
 
-To enable basic Picture in Picture integration simply instantiate a video view with ``VideoView/init(player:gravity:isPictureInPictureSupported:)``, setting the `isPictureInPictureSupported` parameter to `true`.
+To enable basic Picture in Picture integration simply instantiate a video view with ``VideoView/init(player:)``and apply the ``VideoView/supportsPictureInPicture(_:)`` modifier.
 
 > ``SystemVideoView`` does not support basic Picture in Picture integration.
 
@@ -52,9 +52,9 @@ Advanced integration is available both for ``VideoView`` as well as ``SystemVide
     - Update your player when a new content is being played.
     - Avoid updating your player when the same content is played so that playback can continue uninterrupted.
     - Remove all items currently in the player queue when content playback must stop.
-4. To release resources when the player view is not needed anymore (i.e. when the player view is closed without activating Picture in Picture, or when Picture in Picture ends), apply the ``SwiftUI/View/enabledForInAppPictureInPictureWithCleanup(perform:)`` modifier to the video view parent hierarchy, clearing your player view model state in its associated closure.
+4. To release resources when the player view is not needed anymore (i.e. when the player view is closed without activating Picture in Picture, or when Picture in Picture ends), apply the ``SwiftUI/View/enabledForInAppPictureInPicture(persisting:)`` modifier to the video view parent hierarchy, clearing your player view model state in its associated closure.
 5. ``SystemVideoView`` provides a Picture in Picture button automatically. In ``VideoView``-based custom layouts add a ``PictureInPictureButton``.
-6. To dismiss / restore the player user interface when entering / exiting Picture in Picture, set a Picture in Picture life cycle delegate with the ``PictureInPicture/setDelegate(_:)`` method. A  generally good candidate is any routing-aware class of your application. Dismiss the player view when Picture in Picture is about to start and restore it when it ends.
+6. To dismiss / restore the player user interface when entering / exiting Picture in Picture, set a Picture in Picture life cycle delegate with the ``PictureInPicture/delegate`` property. A  generally good candidate is any routing-aware class of your application. Dismiss the player view when Picture in Picture is about to start and restore it when it ends.
 
 > Warning: Switching between a ``VideoView`` and a ``SystemVideoView`` for the content currently being played in Picture in Picture is not supported and leads to undefined behavior.
 
