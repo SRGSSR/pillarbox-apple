@@ -11,7 +11,6 @@ final class InlinePlayerViewModel: ObservableObject, PictureInPicturePersistable
     @Published var media: Media? {
         didSet {
             guard media != oldValue else { return }
-            print("--> update media")
             if let playerItem = media?.playerItem() {
                 player.items = [playerItem]
             }
@@ -26,9 +25,5 @@ final class InlinePlayerViewModel: ObservableObject, PictureInPicturePersistable
     func play() {
         player.becomeActive()
         player.play()
-    }
-
-    deinit {
-        print("--> model deinit")
     }
 }

@@ -25,7 +25,6 @@ struct PlayerView: View {
     private func play() {
         model.media = media
         model.play()
-        print("--> Player appears")
     }
 }
 

@@ -72,7 +72,6 @@ public extension View {
     /// the persisted instance during view restoration.
     func persistDuringPictureInPicture(_ persistable: PictureInPicturePersistable) -> some View {
         onAppear {
-            print("--> supporting appears")
             PictureInPicture.shared.stop()
             PictureInPicture.shared.persistable = persistable
         }
