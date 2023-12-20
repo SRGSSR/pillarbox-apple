@@ -117,10 +117,12 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
         isActive = true
         acquire(for: pictureInPictureController.playerLayer)
         delegate?.pictureInPictureWillStart()
+        print("--> will start, refcount = \(referenceCount)")
     }
 
     func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         delegate?.pictureInPictureDidStart()
+        print("--> did start, refcount = \(referenceCount)")
     }
 
     func pictureInPictureController(
@@ -140,10 +142,12 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
     func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = false
         delegate?.pictureInPictureWillStop()
+        print("--> will stop, refcount = \(referenceCount)")
     }
 
     func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         relinquish(for: pictureInPictureController.playerLayer)
         delegate?.pictureInPictureDidStop()
+        print("--> did stop, refcount = \(referenceCount)")
     }
 }
