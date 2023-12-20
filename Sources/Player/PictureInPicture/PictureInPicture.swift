@@ -39,23 +39,23 @@ extension PictureInPicture: PictureInPictureDelegate {
         delegate?.pictureInPictureWillStart()
         supporting?.acquire()
     }
-    
+
     public func pictureInPictureDidStart() {
         delegate?.pictureInPictureDidStart()
     }
-    
+
     public func pictureInPictureControllerFailedToStart(with error: Error) {
         delegate?.pictureInPictureControllerFailedToStart(with: error)
     }
-    
+
     public func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void) {
         delegate?.pictureInPictureRestoreUserInterfaceForStop(with: completion)
     }
-    
+
     public func pictureInPictureWillStop() {
         delegate?.pictureInPictureWillStop()
     }
-    
+
     public func pictureInPictureDidStop() {
         delegate?.pictureInPictureDidStop()
         supporting?.relinquish()

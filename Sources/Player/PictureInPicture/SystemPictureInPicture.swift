@@ -33,7 +33,7 @@ final class SystemPictureInPicture: NSObject {
     func relinquish(for controller: AVPlayerViewController) {
         guard controller === playerViewController else { return }
         referenceCount -= 1
-        if referenceCount == 0  {
+        if referenceCount == 0 {
             playerViewController = nil
         }
     }

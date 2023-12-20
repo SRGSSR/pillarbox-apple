@@ -64,7 +64,7 @@ public extension VideoView {
         view.isPictureInPictureSupported = isPictureInPictureSupported
         return view
     }
-    
+
     /// Configures the orientation at which the content is seen.
     ///
     /// - Parameter orientation: The orientation.

@@ -45,11 +45,6 @@ final class MultiViewModel: ObservableObject, PictureInPictureSupporting {
         Self.make(activePlayer: player1, inactivePlayer: player2)
     }
 
-    func play() {
-        player1.play()
-        player2.play()
-    }
-
     private static func update(player: Player, with media: Media?) {
         if let playerItem = media?.playerItem() {
             player.items = [playerItem]
@@ -66,5 +61,10 @@ final class MultiViewModel: ObservableObject, PictureInPictureSupporting {
 
         inactivePlayer.isTrackingEnabled = false
         inactivePlayer.isMuted = true
+    }
+
+    func play() {
+        player1.play()
+        player2.play()
     }
 }
