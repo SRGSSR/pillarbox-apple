@@ -39,7 +39,8 @@ struct MultiView: View {
 
     @ViewBuilder
     private func playerView(player: Player, position: PlayerPosition) -> some View {
-        SingleView(player: player, isPictureInPictureSupported: model.activePosition == position)
+        SingleView(player: player)
+            .supportsPictureInPicture(model.activePosition == position)
             .onTapGesture {
                 model.activePosition = position
             }

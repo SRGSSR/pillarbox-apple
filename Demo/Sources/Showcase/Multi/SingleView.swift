@@ -10,9 +10,9 @@ import SwiftUI
 /// Behavior: h-exp, v-exp
 struct SingleView: View {
     @ObservedObject var player: Player
-    let isPictureInPictureSupported: Bool
 
     @State private var isBusy = false
+    fileprivate var isPictureInPictureSupported = false
 
     var body: some View {
         ZStack {
@@ -23,6 +23,10 @@ struct SingleView: View {
                 .opacity(isBusy ? 1 : 0)
         }
         .onReceive(player: player, assign: \.isBusy, to: $isBusy)
+    }
+
+    init(player: Player) {
+        self.player = player
     }
 
     @ViewBuilder
@@ -54,5 +58,13 @@ struct SingleView: View {
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
         }
+    }
+}
+
+extension SingleView {
+    func supportsPictureInPicture(_ isPictureInPictureSupported: Bool = true) -> SingleView {
+        var view = self
+        view.isPictureInPictureSupported = isPictureInPictureSupported
+        return view
     }
 }
