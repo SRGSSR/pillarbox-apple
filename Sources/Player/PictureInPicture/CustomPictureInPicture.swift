@@ -11,7 +11,6 @@ import Combine
 final class CustomPictureInPicture: NSObject {
     @Published private(set) var isPossible = false
     @Published private(set) var isActive = false
-    @Published private(set) var isInAppPossible = false
 
     @objc private dynamic var controller: AVPictureInPictureController?
     weak var delegate: PictureInPictureDelegate?
@@ -96,15 +95,11 @@ final class CustomPictureInPicture: NSObject {
     }
 
     func restoreFromInAppPictureInPicture() {
-        isInAppPossible = true
-
         guard let playerLayer else { return }
         acquire(for: playerLayer)
     }
 
     func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
-        isInAppPossible = false
-
         if referenceCount == 0 {
             cleanup()
         }
