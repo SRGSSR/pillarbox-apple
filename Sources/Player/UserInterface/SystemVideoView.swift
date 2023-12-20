@@ -57,9 +57,6 @@ public extension SystemVideoView {
     ///
     /// - Parameter isPictureInPictureSupported: A Boolean set to `true` if the view must be able to share its video
     ///   layer for Picture in Picture.
-    ///
-    /// Enabling Picture in Picture support is required but not sufficient for Picture in Picture to be available.
-    /// Other conditions have to be fulfilled (most notably the content must be a video).
     func supportsPictureInPicture(_ isPictureInPictureSupported: Bool = true) -> SystemVideoView {
         var view = self
         view.isPictureInPictureSupported = isPictureInPictureSupported
