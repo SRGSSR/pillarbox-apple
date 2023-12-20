@@ -10,19 +10,19 @@ import SwiftUI
 /// A standalone player view with standard controls.
 /// Behavior: h-exp, v-exp
 struct PlayerView: View {
-    private static let model = PlayerViewModel()
+    let media: Media
+
+    @StateObject private var model = PlayerViewModel()
 
     var body: some View {
-        PlaybackView(player: Self.model.player, isPictureInPictureSupported: true)
-            .enabledForInAppPictureInPictureWithCleanup {
-                Self.model.media = nil
-            }
-            .onAppear(perform: Self.model.play)
+        PlaybackView(player: model.player, isPictureInPictureSupported: true)
+            .onAppear(perform: play)
             .tracked(name: "player")
     }
 
-    init(media: Media) {
-        Self.model.media = media
+    private func play() {
+        model.media = media
+        model.play()
     }
 }
 
