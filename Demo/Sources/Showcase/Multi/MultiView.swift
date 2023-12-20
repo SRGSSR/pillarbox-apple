@@ -22,7 +22,7 @@ struct MultiView: View {
             }
             .background(.black)
         }
-        .persistDuringPictureInPicture(model)
+        .enabledForInAppPictureInPicture(persisting: model)
         .overlay(alignment: .topLeading) {
             HStack {
                 CloseButton()

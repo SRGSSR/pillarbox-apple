@@ -19,7 +19,7 @@ struct InlineSystemPlayerView: View {
     var body: some View {
         SystemVideoView(player: model.player)
             .supportsPictureInPicture()
-            .persistDuringPictureInPicture(model)
+            .enabledForInAppPictureInPicture(persisting: model)
             .ignoresSafeArea()
             .aspectRatio(16 / 9, contentMode: .fit)
             .padding(padding)

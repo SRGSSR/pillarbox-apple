@@ -168,7 +168,7 @@ struct PlaylistView: View {
             model.templates = templates
             model.play()
         }
-        .persistDuringPictureInPicture(model)
+        .enabledForInAppPictureInPicture(persisting: model)
         .tracked(name: "playlist")
     }
 }

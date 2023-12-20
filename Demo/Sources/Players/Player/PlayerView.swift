@@ -17,7 +17,7 @@ struct PlayerView: View {
     var body: some View {
         PlaybackView(player: model.player)
             .supportsPictureInPicture()
-            .persistDuringPictureInPicture(model)
+            .enabledForInAppPictureInPicture(persisting: model)
             .onAppear(perform: play)
             .tracked(name: "player")
     }

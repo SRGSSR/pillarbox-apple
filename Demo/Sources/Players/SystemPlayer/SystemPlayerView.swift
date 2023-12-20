@@ -16,7 +16,7 @@ struct SystemPlayerView: View {
     var body: some View {
         SystemVideoView(player: model.player)
             .supportsPictureInPicture()
-            .persistDuringPictureInPicture(model)
+            .enabledForInAppPictureInPicture(persisting: model)
             .ignoresSafeArea()
             .onAppear(perform: play)
             .tracked(name: "system-player")
