@@ -230,12 +230,17 @@ enum URLTemplate {
         image: unifiedStreamingImage_1,
         type: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-hevc.ism/.m3u8")
     )
+
+    private static let threeSixtyImage: URL = "https://www.rts.ch/2017/02/24/11/43/8414076.image/16x9"
+
     static let gothard_360 = Template(
         title: "Gothard 360°",
+        image: threeSixtyImage,
         type: .url("https://rts-vod-amd.akamaized.net/ww/8414077/78880679-f000-3e61-a636-5186eb5d8e10/master.m3u8")
     )
     static let bitmovin_360 = Template(
         title: "Bitmovin 360°",
+        image: threeSixtyImage,
         type: .url("https://cdn.bitmovin.com/content/assets/playhouse-vr/m3u8s/105560.m3u8")
     )
 }
