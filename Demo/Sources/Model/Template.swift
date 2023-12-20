@@ -231,11 +231,11 @@ enum URLTemplate {
         type: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-hevc.ism/.m3u8")
     )
     static let gothard_360 = Template(
-        title: "Gothard",
+        title: "Gothard 360°",
         type: .url("https://rts-vod-amd.akamaized.net/ww/8414077/78880679-f000-3e61-a636-5186eb5d8e10/master.m3u8")
     )
     static let bitmovin_360 = Template(
-        title: "Bitmovin",
+        title: "Bitmovin 360°",
         type: .url("https://cdn.bitmovin.com/content/assets/playhouse-vr/m3u8s/105560.m3u8")
     )
 }
