@@ -18,9 +18,6 @@ struct InlineSystemPlayerView: View {
         SystemVideoView(player: Self.model.player)
             .supportsPictureInPicture()
             .ignoresSafeArea()
-            .enabledForInAppPictureInPictureWithCleanup {
-                Self.model.media = nil
-            }
             .aspectRatio(16 / 9, contentMode: .fit)
             .padding(padding)
             .onAppear(perform: Self.model.play)

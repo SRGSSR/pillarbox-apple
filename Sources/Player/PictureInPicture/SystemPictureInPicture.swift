@@ -13,7 +13,6 @@ final class SystemPictureInPicture: NSObject {
     var playerViewController: AVPlayerViewController?
     weak var delegate: PictureInPictureDelegate?
 
-    private var deferredCleanup: (() -> Void)?
     private var referenceCount = 0
 
     func stop() {
@@ -37,38 +36,6 @@ final class SystemPictureInPicture: NSObject {
 
         guard referenceCount == 0 else { return }
         playerViewController = nil
-
-        // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
-        DispatchQueue.main.async {
-            self.clean()
-        }
-    }
-
-    func update(with player: AVPlayer) {
-        guard let currentPlayer = playerViewController?.player, currentPlayer !== player else { return }
-        clean()
-    }
-
-    private func clean() {
-        deferredCleanup?()
-        deferredCleanup = nil
-    }
-
-    func restoreFromInAppPictureInPicture() {
-        guard let playerViewController else { return }
-        acquire(for: playerViewController)
-    }
-
-    func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
-        if referenceCount == 0 {
-            cleanup()
-        }
-        else {
-            deferredCleanup = cleanup
-            if let playerViewController {
-                relinquish(for: playerViewController)
-            }
-        }
     }
 }
 

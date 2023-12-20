@@ -6,18 +6,11 @@
 
 /// Manages Picture in Picture.
 public final class PictureInPicture {
-    enum Mode {
-        case custom
-        case system
-    }
-
     /// The shared instance managing Picture in Picture.
     public static let shared = PictureInPicture()
 
     let custom = CustomPictureInPicture()
     let system = SystemPictureInPicture()
-
-    var mode = Mode.custom
 
     /// Sets a delegate for Picture in Picture.
     ///
@@ -27,23 +20,5 @@ public final class PictureInPicture {
     public func setDelegate(_ delegate: PictureInPictureDelegate) {
         custom.delegate = delegate
         system.delegate = delegate
-    }
-
-    func restoreFromInAppPictureInPicture() {
-        switch mode {
-        case .custom:
-            custom.restoreFromInAppPictureInPicture()
-        case .system:
-            system.restoreFromInAppPictureInPicture()
-        }
-    }
-
-    func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
-        switch mode {
-        case .custom:
-            custom.enableInAppPictureInPictureWithCleanup(perform: cleanup)
-        case .system:
-            system.enableInAppPictureInPictureWithCleanup(perform: cleanup)
-        }
     }
 }

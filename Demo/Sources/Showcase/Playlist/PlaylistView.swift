@@ -163,7 +163,6 @@ struct PlaylistView: View {
         }
         .animation(.defaultLinear, value: layout)
         .onAppear(perform: model.play)
-        .enabledForInAppPictureInPictureWithCleanup(perform: model.trash)
         .tracked(name: "playlist")
     }
 

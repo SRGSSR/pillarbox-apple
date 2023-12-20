@@ -14,8 +14,7 @@ final class CustomPictureInPicture: NSObject {
 
     @objc private dynamic var controller: AVPictureInPictureController?
     weak var delegate: PictureInPictureDelegate?
-
-    private var deferredCleanup: (() -> Void)?
+    
     private var referenceCount = 0
 
     var playerLayer: AVPlayerLayer? {
@@ -66,21 +65,6 @@ final class CustomPictureInPicture: NSObject {
 
         guard referenceCount == 0 else { return }
         controller = nil
-
-        // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
-        DispatchQueue.main.async {
-            self.clean()
-        }
-    }
-
-    func update(with player: AVPlayer) {
-        guard let currentPlayer = playerLayer?.player, currentPlayer !== player else { return }
-        clean()
-    }
-
-    private func clean() {
-        deferredCleanup?()
-        deferredCleanup = nil
     }
 
     private func configureIsPossiblePublisher() {
@@ -92,23 +76,6 @@ final class CustomPictureInPicture: NSObject {
             .switchToLatest()
             .receiveOnMainThread()
             .assign(to: &$isPossible)
-    }
-
-    func restoreFromInAppPictureInPicture() {
-        guard let playerLayer else { return }
-        acquire(for: playerLayer)
-    }
-
-    func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
-        if referenceCount == 0 {
-            cleanup()
-        }
-        else {
-            deferredCleanup = cleanup
-            if let playerLayer {
-                relinquish(for: playerLayer)
-            }
-        }
     }
 }
 

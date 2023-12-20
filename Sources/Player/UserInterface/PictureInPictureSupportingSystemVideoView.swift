@@ -30,12 +30,10 @@ struct PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable 
         let controller = PictureInPicture.shared.system.playerViewController ?? PlayerViewController()
         controller.allowsPictureInPicturePlayback = true
         PictureInPicture.shared.system.acquire(for: controller)
-        PictureInPicture.shared.mode = .system
         return controller
     }
 
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
-        PictureInPicture.shared.system.update(with: player.queuePlayer)
         uiViewController.player = player.systemPlayer
         uiViewController.videoGravity = gravity
     }

@@ -15,9 +15,6 @@ struct SystemPlayerView: View {
         SystemVideoView(player: Self.model.player)
             .supportsPictureInPicture()
             .ignoresSafeArea()
-            .enabledForInAppPictureInPictureWithCleanup {
-                Self.model.media = nil
-            }
             .onAppear(perform: Self.model.play)
             .tracked(name: "system-player")
     }
