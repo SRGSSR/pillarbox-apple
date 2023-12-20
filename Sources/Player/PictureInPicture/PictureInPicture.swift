@@ -30,7 +30,7 @@ public final class PictureInPicture {
 
     func stop() {
         custom.stop()
-        system.stop()
+        // For the system Picture in Picture see `PictureInPictureSupportingSystemVideoView` and `PlayerViewController`.
     }
 }
 

@@ -7,6 +7,17 @@
 import AVKit
 import SwiftUI
 
+private class PlayerViewController: AVPlayerViewController {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // We can use fine-grained presentation information to avoid stopping Picture in Picture when enabled
+        // from maximized layout.
+        if isMovingToParent || isBeingPresented {
+            PictureInPicture.shared.system.stop()
+        }
+    }
+}
+
 // swiftlint:disable:next type_name
 struct PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable {
     let player: Player
@@ -17,7 +28,7 @@ struct PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable 
     }
 
     func makeUIViewController(context: Context) -> AVPlayerViewController {
-        let controller = PictureInPicture.shared.system.playerViewController ?? AVPlayerViewController()
+        let controller = PictureInPicture.shared.system.playerViewController ?? PlayerViewController()
         controller.allowsPictureInPicturePlayback = true
         PictureInPicture.shared.system.acquire(for: controller)
         return controller
