@@ -8,10 +8,6 @@ import Combine
 import Player
 
 final class PlayerViewModel: ObservableObject {
-    static var shared: PlayerViewModel {
-        sharedModel ?? .init()
-    }
-
     @Published var media: Media? {
         didSet {
             guard media != oldValue else { return }
@@ -36,13 +32,12 @@ final class PlayerViewModel: ObservableObject {
 private var sharedModel: PlayerViewModel?
 
 extension PlayerViewModel: PictureInPictureSupporting {
-    func acquire() {
-        print("--> acquired!")
-        sharedModel = self
-    }
-
-    func relinquish() {
-        print("--> relinquished!")
-        sharedModel = nil
+    static var shared: PlayerViewModel? {
+        get {
+            sharedModel
+        }
+        set {
+            sharedModel = newValue
+        }
     }
 }

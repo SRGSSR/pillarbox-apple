@@ -12,7 +12,7 @@ import SwiftUI
 struct PlayerView: View {
     let media: Media
 
-    @StateObject private var model = PlayerViewModel.shared
+    @StateObject private var model = PlayerViewModel.shared ?? PlayerViewModel()
 
     var body: some View {
         PlaybackView(player: model.player, isPictureInPictureSupported: true)

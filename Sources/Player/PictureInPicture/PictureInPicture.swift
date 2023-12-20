@@ -7,8 +7,17 @@
 import SwiftUI
 
 public protocol PictureInPictureSupporting: AnyObject {
-    func acquire()
-    func relinquish()
+    static var shared: Self? { get set }
+}
+
+extension PictureInPictureSupporting {
+    func acquire() {
+        Self.shared = self
+    }
+
+    func relinquish() {
+        Self.shared = nil
+    }
 }
 
 /// Manages Picture in Picture.

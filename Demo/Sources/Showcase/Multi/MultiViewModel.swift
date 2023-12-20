@@ -13,10 +13,6 @@ enum PlayerPosition {
 }
 
 final class MultiViewModel: ObservableObject {
-    static var shared: MultiViewModel {
-        sharedModel ?? .init()
-    }
-
     @Published var media1: Media? {
         didSet {
             guard media1 != oldValue else { return }
@@ -76,11 +72,12 @@ final class MultiViewModel: ObservableObject {
 private var sharedModel: MultiViewModel?
 
 extension MultiViewModel: PictureInPictureSupporting {
-    func acquire() {
-        sharedModel = self
-    }
-
-    func relinquish() {
-        sharedModel = nil
+    static var shared: MultiViewModel? {
+        get {
+            sharedModel
+        }
+        set {
+            sharedModel = newValue
+        }
     }
 }

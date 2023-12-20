@@ -12,7 +12,7 @@ struct MultiView: View {
     let media1: Media
     let media2: Media
 
-    @StateObject private var model = MultiViewModel.shared
+    @StateObject private var model = MultiViewModel.shared ?? MultiViewModel()
 
     var body: some View {
         VStack(spacing: 10) {
