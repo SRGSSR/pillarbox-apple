@@ -44,6 +44,7 @@ public final class PictureInPicture {
 
     func setSupporting(_ supporting: PictureInPictureSupporting?) {
         custom.supporting = supporting
+        system.supporting = supporting
     }
 }
 

@@ -64,10 +64,10 @@ final class CustomPictureInPicture: NSObject {
     func relinquish(for playerLayer: AVPlayerLayer) {
         guard controller?.playerLayer === playerLayer else { return }
         referenceCount -= 1
-
-        guard referenceCount == 0 else { return }
-        controller = nil
-        print("--> cleaned PiP controller")
+        if referenceCount == 0 {
+            controller = nil
+            print("--> cleaned PiP controller")
+        }
     }
 
     private func configureIsPossiblePublisher() {
