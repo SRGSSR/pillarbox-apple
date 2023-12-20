@@ -60,8 +60,5 @@ public extension View {
             PictureInPicture.shared.stop()
             PictureInPicture.shared.setSupporting(supporting)
         }
-        .onDisappear {
-            PictureInPicture.shared.setSupporting(nil)
-        }
     }
 }

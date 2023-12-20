@@ -27,4 +27,8 @@ final class PlayerViewModel: ObservableObject, PictureInPictureSupporting {
         player.becomeActive()
         player.play()
     }
+
+    deinit {
+        print("--> model deinit")
+    }
 }
