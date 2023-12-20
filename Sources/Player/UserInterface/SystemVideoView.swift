@@ -11,8 +11,8 @@ import SwiftUI
 public struct SystemVideoView: View {
     private let player: Player
 
-    fileprivate var gravity: AVLayerVideoGravity = .resizeAspect
-    fileprivate var isPictureInPictureSupported = false
+    private var gravity: AVLayerVideoGravity = .resizeAspect
+    private var isPictureInPictureSupported = false
 
     public var body: some View {
         ZStack {

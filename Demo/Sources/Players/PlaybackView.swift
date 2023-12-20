@@ -542,7 +542,7 @@ struct PlaybackView: View {
 
     @ObservedObject private var player: Player
     @Binding private var layout: Layout
-    fileprivate var isPictureInPictureSupported = false
+    private var isPictureInPictureSupported = false
 
     var body: some View {
         ZStack {

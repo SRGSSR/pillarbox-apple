@@ -12,7 +12,7 @@ struct SingleView: View {
     @ObservedObject var player: Player
 
     @State private var isBusy = false
-    fileprivate var isPictureInPictureSupported = false
+    private var isPictureInPictureSupported = false
 
     var body: some View {
         ZStack {

@@ -14,9 +14,9 @@ import SwiftUI
 public struct VideoView: View {
     @ObservedObject private var player: Player
 
-    fileprivate var gravity: AVLayerVideoGravity = .resizeAspect
-    fileprivate var isPictureInPictureSupported = false
-    fileprivate var orientation: SCNQuaternion = .monoscopicDefault
+    private var gravity: AVLayerVideoGravity = .resizeAspect
+    private var isPictureInPictureSupported = false
+    private var orientation: SCNQuaternion = .monoscopicDefault
 
     public var body: some View {
         switch player.mediaType {
