@@ -53,6 +53,8 @@ public extension View {
         onAppear {
             print("--> supporting appears")
             PictureInPicture.shared.custom.stop()
+            PictureInPicture.shared.system.stop()
+
             PictureInPicture.shared.setSupporting(supporting)
         }
         .onDisappear {
