@@ -65,6 +65,7 @@ final class CustomPictureInPicture: NSObject {
 
         guard referenceCount == 0 else { return }
         controller = nil
+        print("--> cleaned PiP controller")
     }
 
     private func configureIsPossiblePublisher() {
