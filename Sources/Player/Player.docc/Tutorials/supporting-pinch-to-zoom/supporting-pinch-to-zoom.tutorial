@@ -24,7 +24,7 @@
             }
             
             @Step {
-                Users must be able to change the `VideoView` gravity between zoomed in (`.resizeAspect`) and zoomed out (`.resizeAspectFill`) states. Add a corresponding `AVLayerVideoGravity` view state to store the desired value, initialized with `.resizeAspect`. Provide this state to the `VideoView`.
+                Users must be able to change the `VideoView` gravity between zoomed in (`.resizeAspect`) and zoomed out (`.resizeAspectFill`) states. Add a corresponding `AVLayerVideoGravity` view state to store the desired value, initialized with `.resizeAspect`. Provide this state to the `VideoView` using the dedicated modifier.
                 
                 @Code(name: "ContentView.swift", file: supporting-pinch-to-zoom-1-2.swift)
             }
