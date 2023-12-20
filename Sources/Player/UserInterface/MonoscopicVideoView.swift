@@ -56,6 +56,9 @@ struct MonoscopicVideoView: View {
 
     var body: some View {
         _MonoscopicVideoView(player: player, orientation: orientation)
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+                pauseIfNeeded()
+            }
     }
 
     /// Creates a view displaying video content.
@@ -67,6 +70,12 @@ struct MonoscopicVideoView: View {
     init(player: Player, orientation: SCNQuaternion) {
         self.player = player
         self.orientation = orientation
+    }
+
+    private func pauseIfNeeded() {
+        // `SKVideoNode` does not apply background playback policies. We must apply them manually.
+        guard player.audiovisualBackgroundPlaybackPolicy != .continuesIfPossible else { return }
+        player.pause()
     }
 }
 
@@ -89,7 +98,7 @@ private extension _MonoscopicVideoView {
     }
 
     static func videoTextureNode(for player: Player) -> SKNode {
-        let node = SKVideoNode(avPlayer: player.systemPlayer)
+        let node = VideoNode(avPlayer: player.systemPlayer)
         node.size = presentationSize
         node.position = CGPoint(x: presentationSize.width / 2, y: presentationSize.height / 2)
         return node
