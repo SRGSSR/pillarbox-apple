@@ -10,7 +10,7 @@ import SwiftUI
 struct InlineSystemPlayerView: View {
     let media: Media
 
-    @StateObject private var model = InlinePlayerViewModel.shared ?? InlinePlayerViewModel()
+    @StateObject private var model = InlinePlayerViewModel.persisted ?? InlinePlayerViewModel()
 
     private var padding: CGFloat {
         UIDevice.current.userInterfaceIdiom == .phone ? 50 : 200
@@ -19,7 +19,7 @@ struct InlineSystemPlayerView: View {
     var body: some View {
         SystemVideoView(player: model.player)
             .supportsPictureInPicture()
-            .supportsInAppPictureInPicture(model)
+            .persistDuringPictureInPicture(model)
             .ignoresSafeArea()
             .aspectRatio(16 / 9, contentMode: .fit)
             .padding(padding)

@@ -8,7 +8,7 @@ import Combine
 import OrderedCollections
 import Player
 
-final class PlaylistViewModel: ObservableObject, PictureInPictureSupporting {
+final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     static let standardTemplates = [
         URLTemplate.onDemandVideoHLS,
         URLTemplate.shortOnDemandVideoHLS,

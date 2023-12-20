@@ -149,7 +149,7 @@ private struct Toolbar: View {
 struct PlaylistView: View {
     let templates: [Template]
 
-    @StateObject private var model = PlaylistViewModel.shared ?? PlaylistViewModel()
+    @StateObject private var model = PlaylistViewModel.persisted ?? PlaylistViewModel()
     @State private var layout: PlaybackView.Layout = .minimized
 
     var body: some View {
@@ -168,7 +168,7 @@ struct PlaylistView: View {
             model.templates = templates
             model.play()
         }
-        .supportsInAppPictureInPicture(model)
+        .persistDuringPictureInPicture(model)
         .tracked(name: "playlist")
     }
 }

@@ -12,7 +12,7 @@ struct MultiView: View {
     let media1: Media
     let media2: Media
 
-    @StateObject private var model = MultiViewModel.shared ?? MultiViewModel()
+    @StateObject private var model = MultiViewModel.persisted ?? MultiViewModel()
 
     var body: some View {
         VStack(spacing: 10) {
@@ -22,7 +22,7 @@ struct MultiView: View {
             }
             .background(.black)
         }
-        .supportsInAppPictureInPicture(model)
+        .persistDuringPictureInPicture(model)
         .overlay(alignment: .topLeading) {
             CloseButton()
         }

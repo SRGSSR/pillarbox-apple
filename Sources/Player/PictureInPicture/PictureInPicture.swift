@@ -21,7 +21,7 @@ public final class PictureInPicture {
     /// playback continues in the Picture in Picture overlay.
     public weak var delegate: PictureInPictureDelegate?
 
-    weak var supporting: PictureInPictureSupporting?
+    weak var persistable: PictureInPicturePersistable?
 
     private init() {
         custom.delegate = self
@@ -37,7 +37,7 @@ public final class PictureInPicture {
 extension PictureInPicture: PictureInPictureDelegate {
     public func pictureInPictureWillStart() {
         delegate?.pictureInPictureWillStart()
-        supporting?.acquire()
+        persistable?.acquire()
     }
 
     public func pictureInPictureDidStart() {
@@ -58,16 +58,16 @@ extension PictureInPicture: PictureInPictureDelegate {
 
     public func pictureInPictureDidStop() {
         delegate?.pictureInPictureDidStop()
-        supporting?.relinquish()
+        persistable?.relinquish()
     }
 }
 
 public extension View {
-    func supportsInAppPictureInPicture(_ supporting: PictureInPictureSupporting) -> some View {
+    func persistDuringPictureInPicture(_ persistable: PictureInPicturePersistable) -> some View {
         onAppear {
             print("--> supporting appears")
             PictureInPicture.shared.stop()
-            PictureInPicture.shared.supporting = supporting
+            PictureInPicture.shared.persistable = persistable
         }
     }
 }

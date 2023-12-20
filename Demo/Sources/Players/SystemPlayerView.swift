@@ -11,12 +11,12 @@ import SwiftUI
 struct SystemPlayerView: View {
     let media: Media
 
-    @StateObject private var model = SystemPlayerViewModel.shared ?? SystemPlayerViewModel()
+    @StateObject private var model = SystemPlayerViewModel.persisted ?? SystemPlayerViewModel()
 
     var body: some View {
         SystemVideoView(player: model.player)
             .supportsPictureInPicture()
-            .supportsInAppPictureInPicture(model)
+            .persistDuringPictureInPicture(model)
             .ignoresSafeArea()
             .onAppear(perform: play)
             .tracked(name: "system-player")

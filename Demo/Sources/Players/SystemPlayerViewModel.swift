@@ -7,7 +7,7 @@
 import Combine
 import Player
 
-final class SystemPlayerViewModel: ObservableObject, PictureInPictureSupporting {
+final class SystemPlayerViewModel: ObservableObject, PictureInPicturePersistable {
     @Published var media: Media? {
         didSet {
             guard media != oldValue else { return }
