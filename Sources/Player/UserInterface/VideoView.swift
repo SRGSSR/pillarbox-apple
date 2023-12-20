@@ -23,15 +23,18 @@ public struct VideoView: View {
         case .monoscopicVideo:
             MonoscopicVideoView(player: player, orientation: orientation)
         default:
-            if isPictureInPictureSupported {
-                PictureInPictureSupportingVideoView(player: player, gravity: gravity)
-                    .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                        PictureInPicture.shared.custom.stop()
-                    }
+            ZStack {
+                if isPictureInPictureSupported {
+                    PictureInPictureSupportingVideoView(player: player, gravity: gravity)
+                        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                            PictureInPicture.shared.custom.stop()
+                        }
+                }
+                else {
+                    BasicVideoView(player: player, gravity: gravity)
+                }
             }
-            else {
-                BasicVideoView(player: player, gravity: gravity)
-            }
+            .opacity(player.mediaType != .unknown ? 1 : 0)
         }
     }
 
