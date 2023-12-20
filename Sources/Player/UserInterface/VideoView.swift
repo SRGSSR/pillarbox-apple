@@ -27,6 +27,8 @@ public struct VideoView: View {
                 if isPictureInPictureSupported {
                     PictureInPictureSupportingVideoView(player: player, gravity: gravity)
                         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                            // When returning from basic Picture in Picture we must force a stop so that the PiP overlay
+                            // is merged back into the player view.
                             PictureInPicture.shared.custom.stop()
                         }
                 }

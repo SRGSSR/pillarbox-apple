@@ -21,6 +21,7 @@ public final class PictureInPicture {
     /// while playback continues in the Picture in Picture overlay.
     public weak var delegate: PictureInPictureDelegate?
 
+    // Weak so that not retained if not explicitly acquired.
     weak var persistable: PictureInPicturePersistable?
 
     private init() {
@@ -30,7 +31,8 @@ public final class PictureInPicture {
 
     func stop() {
         custom.stop()
-        // For the system Picture in Picture see `PictureInPictureSupportingSystemVideoView` and `PlayerViewController`.
+        // No stop here for system Picture in Picture see `PictureInPictureSupportingSystemVideoView` and
+        // `PlayerViewController`.
     }
 }
 

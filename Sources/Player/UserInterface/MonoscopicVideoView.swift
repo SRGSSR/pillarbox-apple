@@ -80,6 +80,8 @@ struct MonoscopicVideoView: View {
 }
 
 private extension _MonoscopicVideoView {
+    // Picking a sufficiently large 2:1 resolution is enough for a sharp image (depending on the source). There is
+    // no need to fetch the actual content resolution, which would lead to unnecessary complications.
     private static let presentationSize = CGSize(width: 4096, height: 2048)
 
     static func scene(for player: Player) -> SceneProperties {
