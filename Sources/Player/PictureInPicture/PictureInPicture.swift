@@ -6,24 +6,6 @@
 
 import SwiftUI
 
-private var kShared: AnyObject?
-
-public protocol PictureInPictureSupporting: AnyObject {}
-
-extension PictureInPictureSupporting {
-    public static var shared: Self? {
-        kShared as? Self
-    }
-
-    func acquire() {
-        kShared = self
-    }
-
-    func relinquish() {
-        kShared = nil
-    }
-}
-
 /// Manages Picture in Picture.
 public final class PictureInPicture {
     /// The shared instance managing Picture in Picture.
@@ -32,24 +14,51 @@ public final class PictureInPicture {
     let custom = CustomPictureInPicture()
     let system = SystemPictureInPicture()
 
-    /// Sets a delegate for Picture in Picture.
+    /// The Picture in Picture delegate.
     ///
     /// In-app Picture in Picture support requires your application to setup a delegate so a playback view supporting
     /// Picture in Picture can be dismissed and restored at a later time, letting users navigate your app while
     /// playback continues in the Picture in Picture overlay.
-    public func setDelegate(_ delegate: PictureInPictureDelegate) {
-        custom.delegate = delegate
-        system.delegate = delegate
+    public weak var delegate: PictureInPictureDelegate?
+
+    weak var supporting: PictureInPictureSupporting?
+
+    private init() {
+        custom.delegate = self
+        system.delegate = self
     }
 
     func stop() {
         custom.stop()
         system.stop()
     }
+}
 
-    func setSupporting(_ supporting: PictureInPictureSupporting?) {
-        custom.supporting = supporting
-        system.supporting = supporting
+extension PictureInPicture: PictureInPictureDelegate {
+    public func pictureInPictureWillStart() {
+        delegate?.pictureInPictureWillStart()
+        supporting?.acquire()
+    }
+    
+    public func pictureInPictureDidStart() {
+        delegate?.pictureInPictureDidStart()
+    }
+    
+    public func pictureInPictureControllerFailedToStart(with error: Error) {
+        delegate?.pictureInPictureControllerFailedToStart(with: error)
+    }
+    
+    public func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void) {
+        delegate?.pictureInPictureRestoreUserInterfaceForStop(with: completion)
+    }
+    
+    public func pictureInPictureWillStop() {
+        delegate?.pictureInPictureWillStop()
+    }
+    
+    public func pictureInPictureDidStop() {
+        delegate?.pictureInPictureDidStop()
+        supporting?.relinquish()
     }
 }
 
@@ -58,7 +67,7 @@ public extension View {
         onAppear {
             print("--> supporting appears")
             PictureInPicture.shared.stop()
-            PictureInPicture.shared.setSupporting(supporting)
+            PictureInPicture.shared.supporting = supporting
         }
     }
 }

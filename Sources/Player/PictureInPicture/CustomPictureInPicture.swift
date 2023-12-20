@@ -15,8 +15,6 @@ final class CustomPictureInPicture: NSObject {
     @objc private dynamic var controller: AVPictureInPictureController?
 
     weak var delegate: PictureInPictureDelegate?
-    weak var supporting: PictureInPictureSupporting?
-
     private var referenceCount = 0
 
     var playerLayer: AVPlayerLayer? {
@@ -88,7 +86,6 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
         acquire(for: pictureInPictureController.playerLayer)
         delegate?.pictureInPictureWillStart()
         print("--> [setup]")
-        supporting?.acquire()
         print("--> will start, refcount = \(referenceCount)")
     }
 
@@ -122,6 +119,5 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
         delegate?.pictureInPictureDidStop()
         print("--> did stop, refcount = \(referenceCount)")
         print("--> [cleanup]")
-        supporting?.relinquish()
     }
 }

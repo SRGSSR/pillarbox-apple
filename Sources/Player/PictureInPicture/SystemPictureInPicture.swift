@@ -11,10 +11,8 @@ final class SystemPictureInPicture: NSObject {
     private(set) var isActive = false
 
     var playerViewController: AVPlayerViewController?
-    
-    weak var delegate: PictureInPictureDelegate?
-    weak var supporting: PictureInPictureSupporting?
 
+    weak var delegate: PictureInPictureDelegate?
     private var referenceCount = 0
 
     func stop() {
@@ -46,7 +44,6 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
         isActive = true
         acquire(for: playerViewController)
         delegate?.pictureInPictureWillStart()
-        supporting?.acquire()
     }
 
     func playerViewControllerDidStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
@@ -75,7 +72,6 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
     func playerViewControllerDidStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
         relinquish(for: playerViewController)
         delegate?.pictureInPictureDidStop()
-        supporting?.relinquish()
     }
 
 #if os(iOS)
