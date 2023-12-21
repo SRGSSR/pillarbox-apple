@@ -354,11 +354,9 @@ private struct TimeBar: View {
 
     @ViewBuilder
     private func routePickerView() -> some View {
-        if player.configuration.allowsExternalPlayback {
-            RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices)
-                .tint(.white)
-                .aspectRatio(contentMode: .fit)
-        }
+        RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices)
+            .tint(.white)
+            .aspectRatio(contentMode: .fit)
     }
 
     @ViewBuilder
