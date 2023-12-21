@@ -10,6 +10,9 @@ import SwiftUI
 ///
 /// The button is automatically hidden when Picture in Picture is not available. The body closure is provided a
 /// Boolean indicating when Picture in Picture is active.
+///
+/// For the button to be visible one of its parents must be enabled for in-app Picture in Picture by applying the
+/// `View/enabledForInAppPictureInPicture(persisting:)` modifier.
 public struct PictureInPictureButton<Content>: View where Content: View {
     private let content: (Bool) -> Content
 
@@ -18,7 +21,7 @@ public struct PictureInPictureButton<Content>: View where Content: View {
 
     public var body: some View {
         ZStack {
-            if isPossible {
+            if isPossible && PictureInPicture.shared.persistable != nil {
                 Button(action: PictureInPicture.shared.custom.toggle) {
                     content(isActive)
                 }

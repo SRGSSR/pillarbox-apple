@@ -125,6 +125,9 @@
     "Pauses" : {
 
     },
+    "Picture in Picture" : {
+
+    },
     "Play" : {
 
     },
@@ -165,9 +168,6 @@
 
     },
     "Stop" : {
-
-    },
-    "Supports Picture in Picture" : {
 
     },
     "Swap" : {
