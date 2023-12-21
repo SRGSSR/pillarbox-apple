@@ -63,7 +63,7 @@ struct MonoscopicVideoView: View {
 
     var body: some View {
         _MonoscopicVideoView(player: player, orientation: orientation)
-            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
                 pauseIfNeeded()
             }
     }
