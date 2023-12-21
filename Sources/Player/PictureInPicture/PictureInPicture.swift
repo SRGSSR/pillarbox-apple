@@ -40,10 +40,12 @@ extension PictureInPicture: PictureInPictureDelegate {
     public func pictureInPictureWillStart() {
         delegate?.pictureInPictureWillStart()
         persistable?.acquire()
+        persistable?.pictureInPictureWillStart()
     }
 
     public func pictureInPictureDidStart() {
         delegate?.pictureInPictureDidStart()
+        persistable?.pictureInPictureDidStart()
     }
 
     public func pictureInPictureControllerFailedToStart(with error: Error) {
@@ -56,10 +58,12 @@ extension PictureInPicture: PictureInPictureDelegate {
 
     public func pictureInPictureWillStop() {
         delegate?.pictureInPictureWillStop()
+        persistable?.pictureInPictureWillStop()
     }
 
     public func pictureInPictureDidStop() {
         delegate?.pictureInPictureDidStop()
+        persistable?.pictureInPictureDidStop()
         persistable?.relinquish()
     }
 }
