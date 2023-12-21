@@ -47,7 +47,7 @@ Advanced integration is more involved and requires additional integration steps 
 Advanced integration is available both for ``VideoView`` as well as ``SystemVideoView`` and is usually achieved as follows:
 
 1. Apply ``VideoView/supportsPictureInPicture(_:)`` on your ``VideoView`` or ``SystemVideoView/supportsPictureInPicture(_:)`` on your ``SystemVideoView``.
-2. Ensure your player view state is persisted even when the player view is not displayed by conforming the associated class to ``PictureInPicturePersistable``. Usually you should have some kind of view model containing not only the ``Player`` needed to play the content, but also useful state associated with the view.
+2. Ensure your player view state is persisted even when the player view is not displayed by conforming the associated class to ``PictureInPicturePersistable``. No method needs to be implemented.
 3. Properly handle content updates in your shared player view state. This usually means you should:
     - Update your player when a new content is being played.
     - Avoid updating your player when the same content is played so that playback can continue uninterrupted.

@@ -72,6 +72,7 @@ The Player framework fully integrates with SwiftUI, embracing its declarative an
 - ``PictureInPicture``
 - ``PictureInPictureButton``
 - ``PictureInPictureDelegate``
+- ``PictureInPicturePersistable``
 - ``ProgressTracker``
 - ``RoutePickerView``
 - ``TrackerAdapter``
@@ -88,10 +89,6 @@ The Player framework fully integrates with SwiftUI, embracing its declarative an
 - ``TrackerAdapter``
 - ``VisibilityTracker``
 
-### Technical Notes
-
-- <doc:stream-packaging-advice>
-
 ### User Interface
 
 - <doc:creating-basic-user-interface>
@@ -99,3 +96,13 @@ The Player framework fully integrates with SwiftUI, embracing its declarative an
 - ``LayoutInfo``
 - ``SystemVideoView``
 - ``VideoView``
+
+### Monoscopic Video Support
+
+- ``SCNQuaternionForAttitude(_:)``
+- ``SCNQuaternionRotate(_:_:_:)``
+- ``SCNQuaternionWithAngleAndAxis(_:_:_:_:)``
+
+### Technical Notes
+
+- <doc:stream-packaging-advice>
