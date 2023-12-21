@@ -23,11 +23,18 @@ private struct _MonoscopicVideoView: UIViewRepresentable {
     @ObservedObject var player: Player
     let orientation: SCNQuaternion
 
+    static func dismantleUIView(_ uiView: SCNView, coordinator: Coordinator) {
+        if let player = coordinator.player {
+            DisplaySleep.shared.allow(for: player)
+        }
+    }
+
     func makeCoordinator() -> Coordinator {
         .init()
     }
 
     func makeUIView(context: Context) -> SCNView {
+        DisplaySleep.shared.prevent(for: player)
         let view = SCNView()
         view.backgroundColor = .clear
         return view
