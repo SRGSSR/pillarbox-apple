@@ -18,7 +18,6 @@ struct SingleView: View {
         ZStack {
             videoView(player: player)
             playbackButton(player: player)
-            routePickerView(player: player)
             ProgressView()
                 .opacity(isBusy ? 1 : 0)
         }
@@ -46,17 +45,6 @@ struct SingleView: View {
                 .tint(.white)
                 .shadow(radius: 5)
                 .opacity(isBusy ? 0 : 1)
-        }
-    }
-
-    @ViewBuilder
-    private func routePickerView(player: Player) -> some View {
-        if player.configuration.allowsExternalPlayback {
-            RoutePickerView()
-                .tint(.white)
-                .frame(width: 45, height: 45)
-                .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
         }
     }
 }

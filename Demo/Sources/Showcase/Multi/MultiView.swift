@@ -25,6 +25,7 @@ struct MultiView: View {
         .overlay(alignment: .topLeading) {
             HStack {
                 CloseButton()
+                routePickerView()
                 PiPButton()
             }
         }
@@ -52,6 +53,13 @@ struct MultiView: View {
         Button(action: model.swap) {
             Label("Swap", systemImage: "rectangle.2.swap")
         }
+    }
+
+    @ViewBuilder
+    private func routePickerView() -> some View {
+        RoutePickerView(prioritizesVideoDevices: true)
+            .tint(.white)
+            .frame(width: 45, height: 45)
     }
 }
 
