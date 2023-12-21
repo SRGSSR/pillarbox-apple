@@ -27,20 +27,6 @@ public protocol PictureInPicturePersistable: AnyObject {
     func pictureInPictureDidStop()
 }
 
-public extension PictureInPicturePersistable {
-    /// Default implementation. Does nothing.
-    func pictureInPictureWillStart() {}
-
-    /// Default implementation. Does nothing.
-    func pictureInPictureDidStart() {}
-
-    /// Default implementation. Does nothing.
-    func pictureInPictureWillStop() {}
-
-    /// Default implementation. Does nothing.
-    func pictureInPictureDidStop() {}
-}
-
 extension PictureInPicturePersistable {
     /// The currently persisted instance, if any.
     public static var persisted: Self? {

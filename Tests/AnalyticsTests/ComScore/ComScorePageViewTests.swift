@@ -23,6 +23,10 @@ private class AutomaticMockViewController: UIViewController, PageViewTracking {
         .init(name: pageName, type: "type")
     }
 
+    var isTrackedAutomatically: Bool {
+        true
+    }
+
     init(title: String? = nil) {
         super.init(nibName: nil, bundle: nil)
         self.title = title

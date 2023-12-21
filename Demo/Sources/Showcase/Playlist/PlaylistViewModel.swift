@@ -146,4 +146,12 @@ final class PlaylistViewModel: ObservableObject {
     }
 }
 
-extension PlaylistViewModel: PictureInPicturePersistable {}
+extension PlaylistViewModel: PictureInPicturePersistable {
+    func pictureInPictureWillStart() {}
+
+    func pictureInPictureDidStart() {}
+
+    func pictureInPictureWillStop() {}
+
+    func pictureInPictureDidStop() {}
+}

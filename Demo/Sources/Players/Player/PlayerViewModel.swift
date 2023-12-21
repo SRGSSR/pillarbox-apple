@@ -28,4 +28,12 @@ final class PlayerViewModel: ObservableObject {
     }
 }
 
-extension PlayerViewModel: PictureInPicturePersistable {}
+extension PlayerViewModel: PictureInPicturePersistable {
+    func pictureInPictureWillStart() {}
+
+    func pictureInPictureDidStart() {}
+
+    func pictureInPictureWillStop() {}
+
+    func pictureInPictureDidStop() {}
+}

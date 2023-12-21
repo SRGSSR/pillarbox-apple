@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-private final class TrackerViewController: UIViewController, PageViewTracking {
+private final class TrackerViewController: UIViewController {
     let comScorePageView: ComScorePageView
     let commandersActPageView: CommandersActPageView
 
@@ -44,5 +44,11 @@ public extension View {
             PageTrackingView(comScore: comScore, commandersAct: commandersAct)
                 .allowsHitTesting(false)
         }
+    }
+}
+
+extension TrackerViewController: PageViewTracking {
+    var isTrackedAutomatically: Bool {
+        true
     }
 }
