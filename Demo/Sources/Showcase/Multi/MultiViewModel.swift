@@ -46,6 +46,24 @@ final class MultiViewModel: ObservableObject {
         isSwapped ? player1 : player2
     }
 
+    private var activePlayer: Player {
+        switch activePosition {
+        case .top:
+            return topPlayer
+        case .bottom:
+            return bottomPlayer
+        }
+    }
+
+    private var inactivePlayer: Player {
+        switch activePosition {
+        case .top:
+            return bottomPlayer
+        case .bottom:
+            return topPlayer
+        }
+    }
+
     @Published private var isSwapped = false {
         didSet {
             switch activePosition {
@@ -92,4 +110,8 @@ final class MultiViewModel: ObservableObject {
     }
 }
 
-extension MultiViewModel: PictureInPicturePersistable {}
+extension MultiViewModel: PictureInPicturePersistable {
+    func pictureInPictureDidStart() {
+        inactivePlayer.pause()
+    }
+}
