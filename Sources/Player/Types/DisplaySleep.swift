@@ -6,11 +6,11 @@
 
 import UIKit
 
-/// Manages display sleep prevention globally for the Player framework.
+/// Manages display sleep prevention.
 ///
 /// There is no real reliable way to manage `isIdleTimerDisabled` as soon as 3rd party code is involved, but this
-/// class at least implements correct reference counting for the Player framework and ensures the timer is enabled
-/// in the nominal case, as suggested in `isIdleTimerDisabled` documentation.
+/// class at least implements correct reference counting for the Player framework. This ensures that the idle timer
+/// is enabled most of the time, as written in `isIdleTimerDisabled` documentation.
 final class DisplaySleep {
     static let shared = DisplaySleep()
 
