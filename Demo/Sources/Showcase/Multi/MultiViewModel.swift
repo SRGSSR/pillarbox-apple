@@ -31,9 +31,9 @@ final class MultiViewModel: ObservableObject {
         didSet {
             switch activePosition {
             case .top:
-                Self.make(activePlayer: player1, inactivePlayer: player2)
+                Self.make(activePlayer: topPlayer, inactivePlayer: bottomPlayer)
             case .bottom:
-                Self.make(activePlayer: player2, inactivePlayer: player1)
+                Self.make(activePlayer: bottomPlayer, inactivePlayer: topPlayer)
             }
         }
     }
