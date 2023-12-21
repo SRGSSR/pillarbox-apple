@@ -46,7 +46,16 @@ final class MultiViewModel: ObservableObject {
         isSwapped ? player1 : player2
     }
 
-    @Published private var isSwapped = false
+    @Published private var isSwapped = false {
+        didSet {
+            switch activePosition {
+            case .top:
+                activePosition = .bottom
+            case .bottom:
+                activePosition = .top
+            }
+        }
+    }
 
     let player1 = Player(configuration: .standard)
     let player2 = Player(configuration: .standard)
