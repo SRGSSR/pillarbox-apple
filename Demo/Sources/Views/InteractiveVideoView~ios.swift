@@ -38,7 +38,7 @@ struct InteractiveVideoView: View {
     }
 
     private func baseOrientation() -> SCNQuaternion {
-        if let attitude = motionManager.attitude {
+        if !ProcessInfo.processInfo.isiOSAppOnMac, let attitude = motionManager.attitude {
             return SCNQuaternionForAttitude(attitude)
         }
         else {
