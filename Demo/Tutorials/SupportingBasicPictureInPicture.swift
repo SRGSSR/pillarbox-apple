@@ -21,4 +21,3 @@ struct SupportingBasicPictureInPicture: View {
         .onAppear(perform: player.play)
     }
 }
-
