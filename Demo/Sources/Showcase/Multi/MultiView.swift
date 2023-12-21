@@ -16,12 +16,11 @@ struct MultiView: View {
 
     var body: some View {
         VStack(spacing: 10) {
-            Group {
-                playerView(player: model.player1, position: .top)
-                playerView(player: model.player2, position: .bottom)
-            }
-            .background(.black)
+            playerView(player: model.topPlayer, position: .top)
+            swapButton()
+            playerView(player: model.bottomPlayer, position: .bottom)
         }
+        .background(.black)
         .enabledForInAppPictureInPicture(persisting: model)
         .overlay(alignment: .topLeading) {
             HStack {
@@ -46,6 +45,13 @@ struct MultiView: View {
             }
             .accessibilityAddTraits(.isButton)
             .saturation(model.activePosition == position ? 1 : 0)
+    }
+
+    @ViewBuilder
+    private func swapButton() -> some View {
+        Button(action: model.swap) {
+            Label("Swap", systemImage: "rectangle.2.swap")
+        }
     }
 }
 

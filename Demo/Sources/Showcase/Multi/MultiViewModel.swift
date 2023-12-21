@@ -38,6 +38,16 @@ final class MultiViewModel: ObservableObject {
         }
     }
 
+    var topPlayer: Player {
+        isSwapped ? player2 : player1
+    }
+
+    var bottomPlayer: Player {
+        isSwapped ? player1 : player2
+    }
+
+    @Published private var isSwapped = false
+
     let player1 = Player(configuration: .standard)
     let player2 = Player(configuration: .standard)
 
@@ -66,6 +76,10 @@ final class MultiViewModel: ObservableObject {
     func play() {
         player1.play()
         player2.play()
+    }
+
+    func swap() {
+        isSwapped.toggle()
     }
 }
 
