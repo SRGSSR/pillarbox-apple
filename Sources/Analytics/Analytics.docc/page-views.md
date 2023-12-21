@@ -83,10 +83,14 @@ extension HomeViewController: PageViewTracking {
             levels: ["main"]
         )
     }
+
+    var isTrackedAutomatically: Bool {
+        true
+    }
 }
 ```
 
-Page views will be automatically recorded for `PageViewTracking`-conforming view controllers without any additional work. Note that this process occurs when a view controller `viewDidAppear(_:)` method is called.
+With automatic tracking enabled page views will be recorded for `PageViewTracking`-conforming view controllers without any additional work. Note that this process occurs when a view controller `viewDidAppear(_:)` method is called.
 
 > Tip: If your view controller lacks the required data when its associated view appears you can disable automatic tracking and manually trigger a page view later using ``UIKit/UIViewController/trackPageView()``.
 
