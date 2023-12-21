@@ -14,15 +14,20 @@ struct OptInView: View {
     @StateObject private var player = Player(configuration: .standard)
 
     @State private var isActive = true
+    @State private var isPictureInPictureSupported = true
     @State private var audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic
 
     var body: some View {
         VStack {
             PlaybackView(player: player)
+                .supportsPictureInPicture(isPictureInPictureSupported)
                 .background(.black)
             List {
                 Toggle(isOn: $isActive) {
                     Text("Active")
+                }
+                Toggle(isOn: $isPictureInPictureSupported) {
+                    Text("Picture in Picture")
                 }
                 audiovisualBackgroundPlaybackPolicyPicker()
 
