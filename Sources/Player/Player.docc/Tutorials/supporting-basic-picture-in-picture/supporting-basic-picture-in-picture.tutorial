@@ -38,9 +38,7 @@
             }
             
             @Step {
-                Ask the ``VideoView`` to activate Picture in Picture.
-                
-                > Tip: You can also use the ``SystemVideoView``. If that's the case, you can ignore the next step.
+                Enable Picture in Picture support for the ``VideoView``.
                 
                 @Code(name: "ContentView.swift", file: supporting-basic-picture-in-picture-2-2.swift)
             }
@@ -48,7 +46,7 @@
             @Step {
                 Ignore the safe area.
                 
-                > Important: In iOS and iPadOS, PiP playback starts automatically if your video is playing in full-screen mode and the user exits the app.
+                > Note: On iOS and iPadOS Picture in Picture might be automatically enabled when users leave your app.
                 
                 @Code(name: "ContentView.swift", file: supporting-basic-picture-in-picture-2-3.swift)
             }
