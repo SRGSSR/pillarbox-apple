@@ -130,6 +130,16 @@ struct ShowcaseView: View {
             .sourceCode(of: MultiView.self)
 
             cell(
+                title: "Multi-instance with mixed content",
+                subtitle: "Two videos played at the same time",
+                destination: .multi(
+                    media1: Media(from: URNTemplate.onDemandHorizontalVideo),
+                    media2: Media(from: URLTemplate.gothard_360)
+                )
+            )
+            .sourceCode(of: MultiView.self)
+
+            cell(
                 title: "Link",
                 subtitle: "A player which can be linked to a view",
                 destination: .link(media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS))
