@@ -76,6 +76,70 @@ struct PlaybackView: View {
 
 Check ``PlayerProperties`` for the list of all properties that are available for explicit observation.
 
+### Use SwiftUI property wrappers wisely
+
+With SwiftUI it is especially important to [properly annotate](https://developer.apple.com/documentation/swiftui/model-data) properties so that changes to your models correctly drive updates to your user interface.
+
+Since ``Player`` is an [`ObservableObject`](https://developer.apple.com/documentation/combine/observableobject) the usual rules apply. Here is a quick summary that might prove helpful.
+
+#### Player neither owned nor observed by a view
+
+Receive the player as a `let` constant:
+
+```swift
+struct Widget: View {
+    let player: Player
+
+    var body: some View {
+        // Not updated when the player publishes changes
+    }
+}
+```
+
+#### Player owned but not observed by a view
+
+Store the player in a `@State`:
+
+```swift
+struct PlayerInterface: View {
+    @State var player = Player(item: .urn("urn:rts:video:13444390"))
+
+    var body: some View {
+        // Not updated when the player publishes changes
+    }
+}
+```
+
+> Warning: On iOS / tvOS 17.0 and 17.1 this code [leaks](https://developer.apple.com/forums/thread/736110?login=true&page=1#769898022) when `PlayerInterface` is displayed in a modal. Should you need to support these platforms you can safely replace `@State` with `@StateObject` since ``Player`` has been optimized to minimize updates anyway.
+
+#### Player not owned but observed by a view
+
+Receive the player as an `@ObservedObject`:
+
+```swift
+struct Widget: View {
+    @ObservedObject var player: Player
+
+    var body: some View {
+        // Updated when the player publishes changes
+    }
+}
+```
+
+#### Player owned and observed by a view
+
+Store the player in a `@StateObject`:
+
+```swift
+struct PlayerInterface: View {
+    @StateObject var player = Player(item: .urn("urn:rts:video:13444390"))
+
+    var body: some View {
+        // Updated when the player publishes changes
+    }
+}
+```
+
 ### Optimize state observations
 
 Having your whole user interface refreshed every 1/10th of a second is not required if only a progress bar at the bottom requires periodic refreshes at this pace. This is why subscription to state update streams or use of ``ProgressTracker`` should occur in the smallest required view scope.
