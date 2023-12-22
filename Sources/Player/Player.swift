@@ -207,6 +207,10 @@ public final class Player: ObservableObject, Equatable {
 
     deinit {
         uninstallRemoteCommands()
+        
+        // Avoid sound continuing in background when the underlying `AVQueuePlayer` is kept for a little while longer, 
+        // see https://github.com/SRGSSR/pillarbox-apple/issues/520
+        queuePlayer.volume = 0
     }
 }
 

@@ -23,12 +23,6 @@ public struct SystemVideoView: View {
                 BasicSystemVideoView(player: player, gravity: gravity)
             }
         }
-        .onDisappear {
-            // Avoid sound continuing in background, see https://github.com/SRGSSR/pillarbox-apple/issues/520
-            if !PictureInPicture.shared.system.isActive && !PictureInPicture.shared.system.isFullScreen {
-                player.pause()
-            }
-        }
     }
 
     /// Creates a view displaying video content.
