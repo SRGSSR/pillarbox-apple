@@ -35,7 +35,7 @@ struct TransitionView: View {
                 isPresented.toggle()
             }
             .onAppear(perform: play)
-            .sheet(isPresented: $isPresented) {
+            .fullScreenCover(isPresented: $isPresented) {
                 FullScreenView(player: player)
             }
     }
