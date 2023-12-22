@@ -322,12 +322,14 @@ struct Template: Hashable {
     let description: String?
     let image: URL?
     let type: Media.`Type`
+    let isMonoscopic: Bool
 
-    init(title: String, description: String? = nil, image: URL? = nil, type: Media.`Type`) {
+    init(title: String, description: String? = nil, image: URL? = nil, type: Media.`Type`, isMonoscopic: Bool = false) {
         self.title = title
         self.description = description
         self.image = image
         self.type = type
+        self.isMonoscopic = isMonoscopic
     }
 
     static func medias(from templates: [Self]) -> [Media] {

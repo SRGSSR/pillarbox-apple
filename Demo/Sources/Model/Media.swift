@@ -23,12 +23,14 @@ struct Media: Hashable {
     let description: String?
     let image: URL?
     let type: `Type`
+    let isMonoscopic: Bool
 
-    init(title: String, description: String? = nil, image: URL? = nil, type: `Type`) {
+    init(title: String, description: String? = nil, image: URL? = nil, type: `Type`, isMonoscopic: Bool = false) {
         self.title = title
         self.description = description
         self.image = image
         self.type = type
+        self.isMonoscopic = isMonoscopic
     }
 
     init(from template: Template) {
@@ -36,7 +38,8 @@ struct Media: Hashable {
             title: template.title,
             description: template.description,
             image: template.image,
-            type: template.type
+            type: template.type,
+            isMonoscopic: template.isMonoscopic
         )
     }
 
