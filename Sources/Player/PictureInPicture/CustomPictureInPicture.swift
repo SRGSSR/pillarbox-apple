@@ -44,7 +44,7 @@ final class CustomPictureInPicture: NSObject {
     }
 
     func acquire(for playerLayer: AVPlayerLayer) {
-        if controller?.playerLayer === playerLayer {
+        if self.playerLayer === playerLayer {
             referenceCount += 1
         }
         else {
@@ -60,7 +60,7 @@ final class CustomPictureInPicture: NSObject {
     }
 
     func relinquish(for playerLayer: AVPlayerLayer) {
-        guard controller?.playerLayer === playerLayer else { return }
+        guard self.playerLayer === playerLayer else { return }
         referenceCount -= 1
         if referenceCount == 0 {
             controller = nil
