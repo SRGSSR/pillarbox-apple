@@ -19,23 +19,21 @@ public struct VideoView: View {
     private var viewport: Viewport = .standard
 
     public var body: some View {
-        ZStack {
-            switch viewport {
-            case .standard:
-                if isPictureInPictureSupported {
-                    PictureInPictureSupportingVideoView(player: player, gravity: gravity)
-                        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                            // When returning from basic Picture in Picture we must force a stop so that the PiP overlay
-                            // is merged back into the player view.
-                            PictureInPicture.shared.custom.stop()
-                        }
-                }
-                else {
-                    BasicVideoView(player: player, gravity: gravity)
-                }
-            case let .monoscopic(orientation):
-                MonoscopicVideoView(player: player, orientation: orientation)
+        switch viewport {
+        case .standard:
+            if isPictureInPictureSupported {
+                PictureInPictureSupportingVideoView(player: player, gravity: gravity)
+                    .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                        // When returning from basic Picture in Picture we must force a stop so that the PiP overlay
+                        // is merged back into the player view.
+                        PictureInPicture.shared.custom.stop()
+                    }
             }
+            else {
+                BasicVideoView(player: player, gravity: gravity)
+            }
+        case let .monoscopic(orientation):
+            MonoscopicVideoView(player: player, orientation: orientation)
         }
     }
 
