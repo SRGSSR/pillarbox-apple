@@ -27,7 +27,7 @@ public extension SCNQuaternion {
 /// - Returns: The rotated quaternion.
 ///
 /// Please read the following [tutorial](http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/.)
-/// for a short introduction to quaternions.
+/// for a short introduction to quaternions. The topic is covered more extensively in the [3D Math Primer book](https://gamemath.com/book/orient.html).
 public func SCNQuaternionRotate(_ quaternion: SCNQuaternion, _ wx: Float, _ wy: Float) -> SCNQuaternion {
     let simdQuaternion = simd_quaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w)
     let simdRotationAroundX = simd_quaternion(wx, simd_make_float3(1, 0, 0))
@@ -47,7 +47,7 @@ public func SCNQuaternionRotate(_ quaternion: SCNQuaternion, _ wx: Float, _ wy: 
 /// - Returns: The quaternion.
 ///
 /// Please read the following [tutorial](http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/.)
-/// for a short introduction to quaternions.
+/// for a short introduction to quaternions. The topic is covered more extensively in the [3D Math Primer book](https://gamemath.com/book/orient.html).
 public func SCNQuaternionWithAngleAndAxis(_ radians: Float, _ x: Float, _ y: Float, _ z: Float) -> SCNQuaternion {
     let simdQuaternion = simd_quaternion(radians, simd_make_float3(x, y, z))
     let vector = simd_imag(simdQuaternion)
@@ -68,7 +68,7 @@ public func SCNQuaternionWithAngleAndAxis(_ radians: Float, _ x: Float, _ y: Flo
 /// should the user interface orientation change.
 ///
 /// Please read the following [tutorial](http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/.)
-/// for a short introduction to quaternions.
+/// for a short introduction to quaternions. The topic is covered more extensively in the [3D Math Primer book](https://gamemath.com/book/orient.html).
 public func SCNQuaternionForAttitude(_ attitude: CMAttitude) -> SCNQuaternion {
     // Based on: https://gist.github.com/travisnewby/96ee1ac2bc2002f1d480. Also see https://stackoverflow.com/a/28784841/760435.
     let quaternion = attitude.quaternion
