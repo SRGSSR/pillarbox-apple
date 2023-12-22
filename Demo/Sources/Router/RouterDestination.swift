@@ -8,7 +8,7 @@ import AVFoundation
 import SwiftUI
 
 enum RouterDestination: Identifiable, Hashable {
-    case player(media: Media)
+    case player(media: Media, isPictureInPictureSupported: Bool)
     case systemPlayer(media: Media)
     case inlineSystemPlayer(media: Media)
     case simplePlayer(media: Media)
@@ -63,12 +63,17 @@ enum RouterDestination: Identifiable, Hashable {
         }
     }
 
+    static func player(media: Media) -> Self {
+        .player(media: media, isPictureInPictureSupported: true)
+    }
+
     @ViewBuilder
     func view() -> some View {
         // swiftlint:disable:previous cyclomatic_complexity
         switch self {
-        case let .player(media: media):
+        case let .player(media: media, isPictureInPictureSupported: isPictureInPictureSupported):
             PlayerView(media: media)
+                .supportsPictureInPicture(isPictureInPictureSupported)
         case let .systemPlayer(media: media):
             SystemPlayerView(media: media)
         case let .inlineSystemPlayer(media: media):

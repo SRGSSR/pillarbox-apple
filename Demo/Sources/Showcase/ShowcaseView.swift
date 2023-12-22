@@ -44,6 +44,7 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func layoutsSection() -> some View {
+        // swiftlint:disable:next closure_body_length
         CustomSection("Layouts") {
             cell(
                 title: "Simple",
@@ -65,6 +66,23 @@ struct ShowcaseView: View {
                 destination: .stories
             )
             .sourceCode(of: StoriesView.self)
+
+            cell(
+                title: "Custom (with PiP support)",
+                subtitle: "The custom player layout used throughout the demo",
+                destination: .player(media: Media(from: URLTemplate.dvrVideoHLS))
+            )
+            .sourceCode(of: PlayerView.self)
+
+            cell(
+                title: "Custom (without PiP support)",
+                subtitle: "The custom player layout used throughout the demo, but without PiP support",
+                destination: .player(
+                    media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS),
+                    isPictureInPictureSupported: false
+                )
+            )
+            .sourceCode(of: PlayerView.self)
         }
     }
 
