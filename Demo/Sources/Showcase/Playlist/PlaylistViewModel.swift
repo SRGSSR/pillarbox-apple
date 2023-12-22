@@ -34,7 +34,7 @@ final class PlaylistViewModel: ObservableObject {
         URLTemplate.appleTvMorningShowSeason1Trailer,
         URLTemplate.appleTvMorningShowSeason2Trailer,
         URLTemplate.uhdVideoHLS,
-        URLTemplate.gothard_360,
+        URNTemplate.gothard_360,
         URLTemplate.bitmovin_360,
         URNTemplate.expired,
         URNTemplate.unknown

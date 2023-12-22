@@ -75,7 +75,7 @@ final class ExamplesViewModel: ObservableObject {
     ])
 
     let threeSixtyMedias = Template.medias(from: [
-        URLTemplate.gothard_360,
+        URNTemplate.gothard_360,
         URLTemplate.bitmovin_360
     ])
 

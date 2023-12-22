@@ -134,7 +134,7 @@ struct ShowcaseView: View {
                 subtitle: "Two videos played at the same time",
                 destination: .multi(
                     media1: Media(from: URNTemplate.onDemandHorizontalVideo),
-                    media2: Media(from: URLTemplate.gothard_360)
+                    media2: Media(from: URNTemplate.gothard_360)
                 )
             )
             .sourceCode(of: MultiView.self)
