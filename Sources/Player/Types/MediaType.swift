@@ -10,8 +10,6 @@ public enum MediaType {
     case unknown
     /// Audio.
     case audio
-    /// Standard video.
+    /// Video.
     case video
-    /// Monoscopic video.
-    case monoscopicVideo
 }

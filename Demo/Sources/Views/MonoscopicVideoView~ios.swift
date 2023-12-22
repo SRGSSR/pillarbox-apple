@@ -8,9 +8,9 @@ import Player
 import SceneKit
 import SwiftUI
 
-/// An interactive that allows navigation for 360° monoscopic videos, either with drag gestures or by chaging the
+/// An interactive that allows navigation of 360° monoscopic videos, either using drag gestures or by changing the
 /// device orientation.
-struct InteractiveVideoView: View {
+struct MonoscopicVideoView: View {
     let player: Player
 
     @StateObject private var motionManager = MotionManager()
@@ -20,7 +20,7 @@ struct InteractiveVideoView: View {
     var body: some View {
         GeometryReader { geometry in
             VideoView(player: player)
-                .orientation(orientation(from: translation, in: geometry))
+                .viewport(.monoscopic(orientation: orientation(from: translation, in: geometry)))
                 .gesture(
                     // Use non-zero minimum distance to avoid conflicts with single taps.
                     DragGesture(minimumDistance: 1)

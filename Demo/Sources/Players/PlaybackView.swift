@@ -15,6 +15,7 @@ import SwiftUI
 private struct MainView: View {
     @ObservedObject var player: Player
     @Binding var layout: PlaybackView.Layout
+    let isMonoscopic: Bool
     let isPictureInPictureSupported: Bool
 
     @StateObject private var visibilityTracker = VisibilityTracker()
@@ -107,11 +108,11 @@ private struct MainView: View {
             if player.mediaType == .audio {
                 image(name: "music.note.tv.fill")
             }
-            else if player.mediaType == .monoscopicVideo {
-                InteractiveVideoView(player: player)
-            }
             else if player.isExternalPlaybackActive {
                 image(name: "tv")
+            }
+            else if isMonoscopic {
+                MonoscopicVideoView(player: player)
             }
             else {
                 VideoView(player: player)
@@ -540,6 +541,8 @@ struct PlaybackView: View {
 
     @ObservedObject private var player: Player
     @Binding private var layout: Layout
+
+    private var isMonoscopic = false
     private var isPictureInPictureSupported = false
 
     var body: some View {
@@ -571,7 +574,12 @@ struct PlaybackView: View {
     private func mainView() -> some View {
         ZStack {
 #if os(iOS)
-            MainView(player: player, layout: $layout, isPictureInPictureSupported: isPictureInPictureSupported)
+            MainView(
+                player: player,
+                layout: $layout,
+                isMonoscopic: isMonoscopic,
+                isPictureInPictureSupported: isPictureInPictureSupported
+            )
 #else
             SystemVideoView(player: player)
                 .supportsPictureInPicture(isPictureInPictureSupported)
@@ -582,6 +590,12 @@ struct PlaybackView: View {
 }
 
 extension PlaybackView {
+    func monoscopic(_ isMonoscopic: Bool = true) -> PlaybackView {
+        var view = self
+        view.isMonoscopic = isMonoscopic
+        return view
+    }
+
     func supportsPictureInPicture(_ isPictureInPictureSupported: Bool = true) -> PlaybackView {
         var view = self
         view.isPictureInPictureSupported = isPictureInPictureSupported

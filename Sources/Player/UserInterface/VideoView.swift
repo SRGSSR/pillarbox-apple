@@ -12,18 +12,16 @@ import SwiftUI
 ///
 /// Behavior: h-exp, v-exp
 public struct VideoView: View {
-    @ObservedObject private var player: Player
+    private let player: Player
 
     private var gravity: AVLayerVideoGravity = .resizeAspect
     private var isPictureInPictureSupported = false
-    private var orientation: SCNQuaternion = .monoscopicDefault
+    private var viewport: Viewport = .standard
 
     public var body: some View {
-        switch player.mediaType {
-        case .monoscopicVideo:
-            MonoscopicVideoView(player: player, orientation: orientation)
-        default:
-            ZStack {
+        ZStack {
+            switch viewport {
+            case .standard:
                 if isPictureInPictureSupported {
                     PictureInPictureSupportingVideoView(player: player, gravity: gravity)
                         .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
@@ -35,8 +33,9 @@ public struct VideoView: View {
                 else {
                     BasicVideoView(player: player, gravity: gravity)
                 }
+            case let .monoscopic(orientation):
+                MonoscopicVideoView(player: player, orientation: orientation)
             }
-            .opacity(player.mediaType != .unknown ? 1 : 0)
         }
     }
 
@@ -70,15 +69,12 @@ public extension VideoView {
         return view
     }
 
-    /// Configures the orientation at which the content is seen.
+    /// Configures the viewport of the video view.
     ///
-    /// - Parameter orientation: The orientation.
-    ///
-    /// This parameter is only applied when monoscopic content is played. Use `.monoscopicDefault` to face the content
-    /// without head-tilting.
-    func orientation(_ orientation: SCNQuaternion) -> VideoView {
+    /// - Parameter viewport: The viewport.
+    func viewport(_ viewport: Viewport) -> VideoView {
         var view = self
-        view.orientation = orientation
+        view.viewport = viewport
         return view
     }
 }
