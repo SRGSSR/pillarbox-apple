@@ -48,7 +48,7 @@ struct MonoscopicVideoView: View {
 
     private func orientation(from translation: CGSize, in geometry: GeometryProxy) -> SCNQuaternion {
         let wx = .pi / 2 * translation.height / geometry.size.height
-        let wy = .pi / 2 * translation.width / geometry.size.width
+        let wy = .pi * translation.width / geometry.size.width
         return SCNQuaternionRotate(baseOrientation(), Float(wx), Float(wy))
     }
 }
