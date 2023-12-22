@@ -46,6 +46,14 @@ final class MultiViewModel: ObservableObject {
         isSwapped ? player1 : player2
     }
 
+    private var isMedia1Monoscopic: Bool {
+        media1?.isMonoscopic ?? false
+    }
+
+    private var isMedia2Monoscopic: Bool {
+        media2?.isMonoscopic ?? false
+    }
+
     private var activePlayer: Player {
         switch activePosition {
         case .top:
@@ -107,6 +115,15 @@ final class MultiViewModel: ObservableObject {
 
     func swap() {
         isSwapped.toggle()
+    }
+
+    func isMonoscopic(at position: PlayerPosition) -> Bool {
+        switch position {
+        case .top:
+            return isSwapped ? isMedia2Monoscopic : isMedia1Monoscopic
+        case .bottom:
+            return isSwapped ? isMedia1Monoscopic : isMedia2Monoscopic
+        }
     }
 }
 
