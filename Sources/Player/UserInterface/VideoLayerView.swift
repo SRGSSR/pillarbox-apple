@@ -15,8 +15,8 @@ final class VideoLayerView: UIView {
         set { playerLayer.player = newValue }
     }
 
-    init(from playerLayer: AVPlayerLayer? = nil) {
-        self.playerLayer = playerLayer ?? .init()
+    init() {
+        self.playerLayer = PictureInPicture.shared.custom.playerLayer ?? .init()
         super.init(frame: .zero)
         layer.addSublayer(self.playerLayer)
     }
