@@ -286,11 +286,6 @@ enum URNTemplate {
         image: "https://img.rts.ch/articles/2017/image/cxsqgp-25867841.image?w=640&h=640",
         type: .urn("urn:rts:audio:3262363")
     )
-    static let onDemandAudio = Template(
-        title: "Il lavoro di TerraProject per una fotografia documentaria",
-        description: "On-demand audio stream",
-        type: .urn("urn:rsi:audio:8833144")
-    )
     static let expired = Template(
         title: "Expired URN",
         description: "Content that is not available anymore",

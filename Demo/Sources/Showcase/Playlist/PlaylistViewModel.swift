@@ -24,7 +24,6 @@ final class PlaylistViewModel: ObservableObject {
         URNTemplate.liveVideo,
         URNTemplate.dvrVideo,
         URNTemplate.dvrAudio,
-        URNTemplate.onDemandAudio,
         URLTemplate.appleBasic_4_3_HLS,
         URLTemplate.appleBasic_16_9_TS_HLS,
         URLTemplate.appleAdvanced_16_9_TS_HLS,
