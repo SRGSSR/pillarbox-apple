@@ -581,9 +581,16 @@ struct PlaybackView: View {
                 isPictureInPictureSupported: isPictureInPictureSupported
             )
 #else
-            SystemVideoView(player: player)
-                .supportsPictureInPicture(isPictureInPictureSupported)
-                .ignoresSafeArea()
+            if isMonoscopic {
+                VideoView(player: player)
+                    .viewport(.monoscopic(orientation: .monoscopicDefault))
+                    .ignoresSafeArea()
+            }
+            else {
+                SystemVideoView(player: player)
+                    .supportsPictureInPicture(isPictureInPictureSupported)
+                    .ignoresSafeArea()
+            }
 #endif
         }
     }
