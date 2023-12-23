@@ -610,10 +610,6 @@ extension PlaybackView {
     }
 }
 
-extension PlayerView: SourceCodeViewable {
-    static var filePath: String { #file }
-}
-
 #Preview {
     PlaybackView(player: Player(item: Media(from: URLTemplate.onDemandVideoLocalHLS).playerItem()))
 }

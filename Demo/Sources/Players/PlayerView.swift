@@ -50,6 +50,10 @@ extension PlayerView {
     }
 }
 
+extension PlayerView: SourceCodeViewable {
+    static var filePath: String { #file }
+}
+
 #Preview {
     PlayerView(media: Media(from: URLTemplate.onDemandVideoLocalHLS))
 }
