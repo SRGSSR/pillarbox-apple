@@ -43,7 +43,7 @@ public struct VideoView: View {
             // we need to detach the player from its layer if managed by custom PiP.
             PictureInPicture.shared.system.detach(from: player.queuePlayer)
             PictureInPicture.shared.system.stop()
-            
+
             PictureInPicture.shared.custom.stop()
         }
     }

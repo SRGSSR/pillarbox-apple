@@ -10,7 +10,7 @@ import SwiftUI
 struct InlineSystemPlayerView: View {
     let media: Media
 
-    @StateObject private var model = InlinePlayerViewModel.persisted ?? InlinePlayerViewModel()
+    @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
 
     private var padding: CGFloat {
         UIDevice.current.userInterfaceIdiom == .phone ? 50 : 200
