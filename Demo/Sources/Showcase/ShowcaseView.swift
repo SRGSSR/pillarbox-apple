@@ -8,6 +8,7 @@ import SwiftUI
 
 // Behavior: h-exp, v-exp
 struct ShowcaseView: View {
+    // swiftlint:disable:previous type_body_length
     @EnvironmentObject private var router: Router
 
     var body: some View {
@@ -25,6 +26,7 @@ struct ShowcaseView: View {
     private func content() -> some View {
         Group {
             layoutsSection()
+            pictureInPictureSection()
             playlistsSection()
             embeddingsSection()
             systemPlayerSection()
@@ -44,7 +46,6 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func layoutsSection() -> some View {
-        // swiftlint:disable:next closure_body_length
         CustomSection("Layouts") {
             cell(
                 title: "Simple",
@@ -66,23 +67,41 @@ struct ShowcaseView: View {
                 destination: .stories
             )
             .sourceCode(of: StoriesView.self)
+        }
+    }
 
+    @ViewBuilder
+    private func pictureInPictureSection() -> some View {
+        CustomSection("Picture in Picture (PiP)") {
             cell(
                 title: "Custom (with PiP support)",
-                subtitle: "The custom player layout used throughout the demo",
                 destination: .player(media: Media(from: URLTemplate.dvrVideoHLS))
             )
             .sourceCode(of: PlayerView.self)
 
             cell(
                 title: "Custom (without PiP support)",
-                subtitle: "The custom player layout used throughout the demo, but without PiP support",
                 destination: .player(
                     media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS),
                     isPictureInPictureSupported: false
                 )
             )
             .sourceCode(of: PlayerView.self)
+
+            cell(
+                title: "System (with PiP support)",
+                destination: .systemPlayer(media: Media(from: URLTemplate.dvrVideoHLS))
+            )
+            .sourceCode(of: SystemPlayerView.self)
+
+            cell(
+                title: "System (without PiP support)",
+                destination: .systemPlayer(
+                    media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS),
+                    isPictureInPictureSupported: false
+                )
+            )
+            .sourceCode(of: SystemPlayerView.self)
         }
     }
 

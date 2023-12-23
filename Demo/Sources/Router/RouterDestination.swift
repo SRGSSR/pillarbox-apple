@@ -9,7 +9,7 @@ import SwiftUI
 
 enum RouterDestination: Identifiable, Hashable {
     case player(media: Media, isPictureInPictureSupported: Bool)
-    case systemPlayer(media: Media)
+    case systemPlayer(media: Media, isPictureInPictureSupported: Bool)
     case inlineSystemPlayer(media: Media)
     case simplePlayer(media: Media)
     case optInPlayer(media: Media)
@@ -67,6 +67,10 @@ enum RouterDestination: Identifiable, Hashable {
         .player(media: media, isPictureInPictureSupported: true)
     }
 
+    static func systemPlayer(media: Media) -> Self {
+        .systemPlayer(media: media, isPictureInPictureSupported: true)
+    }
+
     @ViewBuilder
     func view() -> some View {
         // swiftlint:disable:previous cyclomatic_complexity
@@ -74,8 +78,9 @@ enum RouterDestination: Identifiable, Hashable {
         case let .player(media: media, isPictureInPictureSupported: isPictureInPictureSupported):
             PlayerView(media: media)
                 .supportsPictureInPicture(isPictureInPictureSupported)
-        case let .systemPlayer(media: media):
+        case let .systemPlayer(media: media, isPictureInPictureSupported: isPictureInPictureSupported):
             SystemPlayerView(media: media)
+                .supportsPictureInPicture(isPictureInPictureSupported)
         case let .inlineSystemPlayer(media: media):
             InlineSystemPlayerView(media: media)
         case let .simplePlayer(media: media):
