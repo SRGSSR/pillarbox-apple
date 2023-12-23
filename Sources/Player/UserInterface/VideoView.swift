@@ -12,7 +12,7 @@ import SwiftUI
 ///
 /// Behavior: h-exp, v-exp
 public struct VideoView: View {
-    private let player: Player
+    @ObservedObject private var player: Player
 
     private var gravity: AVLayerVideoGravity = .resizeAspect
     private var isPictureInPictureSupported = false
@@ -43,6 +43,7 @@ public struct VideoView: View {
                     }
             }
         }
+        .opacity(player.mediaType != .unknown ? 1 : 0)
         .onAppear {
             PictureInPicture.shared.system.detach(from: player.queuePlayer)
             PictureInPicture.shared.system.stop()

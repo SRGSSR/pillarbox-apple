@@ -562,7 +562,6 @@ struct PlaybackView: View {
                     }
             }
         }
-        .background(.black)
     }
 
     init(player: Player, layout: Binding<Layout> = .constant(.inline)) {
@@ -593,6 +592,7 @@ struct PlaybackView: View {
             }
 #endif
         }
+        .background(.black)
     }
 }
 
