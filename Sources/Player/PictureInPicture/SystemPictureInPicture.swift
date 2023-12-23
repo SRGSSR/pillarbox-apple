@@ -37,6 +37,11 @@ final class SystemPictureInPicture: NSObject {
             playerViewController = nil
         }
     }
+
+    func detach(from player: AVPlayer) {
+        guard playerViewController?.player === player else { return }
+        playerViewController?.player = nil
+    }
 }
 
 extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
