@@ -21,12 +21,12 @@ public struct SystemVideoView: View {
             }
             else {
                 BasicSystemVideoView(player: player, gravity: gravity)
+                    .onAppear {
+                        PictureInPicture.shared.system.detach(from: player.queuePlayer)
+                    }
             }
         }
         .onAppear {
-            // Avoid player sharing between a custom video view (whose layer we control) and the system view (whose
-            // layer we cannot access). To avoid PiP being stopped pausing playback in the custom view during restoration,
-            // we need to detach the player from its layer if managed by custom PiP.
             PictureInPicture.shared.custom.detach(from: player.queuePlayer)
             PictureInPicture.shared.custom.stop()
 

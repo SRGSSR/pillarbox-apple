@@ -63,13 +63,6 @@ struct MonoscopicVideoView: View {
 
     var body: some View {
         _MonoscopicVideoView(player: player, orientation: orientation)
-            .onAppear {
-                // Unlike what is done for a standard video view in `VideoLayerView`, `SKVideoNode` does not provide access
-                // to its player layer. To avoid having the same player used in two different layers, one of them under
-                // the control of `CustomPictureInPicture`, the only choice we have is to detach the player so that Picture
-                // in Picture being stopped (e.g. during restoration) will not pause playback in the video node.
-                PictureInPicture.shared.custom.detach(from: player.queuePlayer)
-            }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
                 pauseIfNeeded()
             }
