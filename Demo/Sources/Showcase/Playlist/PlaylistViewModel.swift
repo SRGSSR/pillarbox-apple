@@ -75,6 +75,7 @@ final class PlaylistViewModel: ObservableObject {
 
     var templates: [Template] = [] {
         didSet {
+            guard medias.isEmpty else { return }
             medias = Template.medias(from: templates)
         }
     }
