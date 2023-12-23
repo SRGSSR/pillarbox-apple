@@ -16,6 +16,10 @@ final class VideoLayerView: UIView {
     }
 
     init() {
+        // Always reuse any player layer available from Picture in Picture, even if the parent video view will not
+        // support Picture in Picture. This ensures smooth animation when Picture in Picture is stopped, in all cases.
+        // Moreover, if a player layer in Picture in Picture shares the same player with another layer in the app,
+        // stopping Picture in Picture pauses the player, which would interfere with playback in the other layer.
         self.playerLayer = PictureInPicture.shared.custom.playerLayer ?? .init()
         super.init(frame: .zero)
         layer.addSublayer(self.playerLayer)

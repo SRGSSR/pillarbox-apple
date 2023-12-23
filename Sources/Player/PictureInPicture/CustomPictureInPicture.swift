@@ -67,6 +67,11 @@ final class CustomPictureInPicture: NSObject {
         }
     }
 
+    func detach(from player: AVPlayer) {
+        guard playerLayer?.player === player else { return }
+        playerLayer?.player = nil
+    }
+
     private func configureIsPossiblePublisher() {
         publisher(for: \.controller)
             .map { controller in
