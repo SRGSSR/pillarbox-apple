@@ -23,6 +23,10 @@ public struct SystemVideoView: View {
                 BasicSystemVideoView(player: player, gravity: gravity)
             }
         }
+        .onAppear {
+            PictureInPicture.shared.custom.stop()
+            // For the system PiP this must be handled internally by `PictureInPictureSupportingSystemVideoView`.
+        }
     }
 
     /// Creates a view displaying video content.
