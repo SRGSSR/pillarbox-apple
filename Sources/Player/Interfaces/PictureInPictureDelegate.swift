@@ -23,7 +23,7 @@ public protocol PictureInPictureDelegate: AnyObject {
     /// Called when the user interface will be restored from Picture in Picture.
     ///
     /// Use this method to present the original view which Picture in Picture was initiated from. The completion handler
-    /// must be called at the very end of the restoration with `true` to notify the system that restoration is complete.
+    /// must be called with `true` when the Picture in Picture overlay restoration animation must start.
     func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void)
 
     /// Called when Picture in Picture is about to stop.

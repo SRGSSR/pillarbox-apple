@@ -69,9 +69,7 @@ extension Router: PictureInPictureDelegate {
     func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void) {
         if let previousPresented, previousPresented != presented {
             presented = previousPresented
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                completion(true)
-            }
+            completion(true)
         }
         else {
             completion(true)

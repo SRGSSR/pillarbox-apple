@@ -53,7 +53,14 @@ extension PictureInPicture: PictureInPictureDelegate {
     }
 
     public func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void) {
-        delegate?.pictureInPictureRestoreUserInterfaceForStop(with: completion)
+        delegate?.pictureInPictureRestoreUserInterfaceForStop { finished in
+            // The Picture in Picture overlay restoration animation should always occur slightly after the playback
+            // user interface restoration animation starts, otherwise the restoration animation will be dropped (likely
+            // because otherwise the video frame into which the PiP overlay should return cannot be determined).
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                completion(finished)
+            }
+        }
     }
 
     public func pictureInPictureWillStop() {
