@@ -70,7 +70,12 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
         _ playerViewController: AVPlayerViewController,
         restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
     ) {
-        delegate?.pictureInPictureRestoreUserInterfaceForStop(with: completionHandler)
+        if let delegate {
+            delegate.pictureInPictureRestoreUserInterfaceForStop(with: completionHandler)
+        }
+        else {
+            completionHandler(true)
+        }
     }
 
     func playerViewControllerWillStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
