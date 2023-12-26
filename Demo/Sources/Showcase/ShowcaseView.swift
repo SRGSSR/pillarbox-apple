@@ -229,6 +229,13 @@ struct ShowcaseView: View {
             .sourceCode(of: PlayerView.self)
 
             cell(
+                title: "Gothard 360°",
+                subtitle: "With PiP support (but unavailable)",
+                destination: .player(media: Media(from: URNTemplate.gothard_360))
+            )
+            .sourceCode(of: PlayerView.self)
+
+            cell(
                 title: "Couleur 3 (DVR)",
                 subtitle: "Without PiP support",
                 destination: .player(
@@ -243,6 +250,16 @@ struct ShowcaseView: View {
                 subtitle: "Without PiP support",
                 destination: .player(
                     media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS),
+                    isPictureInPictureSupported: false
+                )
+            )
+            .sourceCode(of: PlayerView.self)
+
+            cell(
+                title: "Gothard 360°",
+                subtitle: "Without PiP support",
+                destination: .player(
+                    media: Media(from: URNTemplate.gothard_360),
                     isPictureInPictureSupported: false
                 )
             )
