@@ -26,11 +26,12 @@ struct ShowcaseView: View {
     private func content() -> some View {
         Group {
             layoutsSection()
-            pictureInPictureSection()
             playlistsSection()
             embeddingsSection()
             systemPlayerSection()
             inlineSystemPlayerSection()
+            customPictureInPictureSection()
+            systemPictureInPictureSection()
             vanillaPlayerSection()
             trackingSection()
         }
@@ -67,41 +68,6 @@ struct ShowcaseView: View {
                 destination: .stories
             )
             .sourceCode(of: StoriesView.self)
-        }
-    }
-
-    @ViewBuilder
-    private func pictureInPictureSection() -> some View {
-        CustomSection("Picture in Picture (PiP)") {
-            cell(
-                title: "Custom (with PiP support)",
-                destination: .player(media: Media(from: URLTemplate.dvrVideoHLS))
-            )
-            .sourceCode(of: PlayerView.self)
-
-            cell(
-                title: "Custom (without PiP support)",
-                destination: .player(
-                    media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS),
-                    isPictureInPictureSupported: false
-                )
-            )
-            .sourceCode(of: PlayerView.self)
-
-            cell(
-                title: "System (with PiP support)",
-                destination: .systemPlayer(media: Media(from: URLTemplate.dvrVideoHLS))
-            )
-            .sourceCode(of: SystemPlayerView.self)
-
-            cell(
-                title: "System (without PiP support)",
-                destination: .systemPlayer(
-                    media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS),
-                    isPictureInPictureSupported: false
-                )
-            )
-            .sourceCode(of: SystemPlayerView.self)
         }
     }
 
@@ -242,6 +208,84 @@ struct ShowcaseView: View {
                 destination: .inlineSystemPlayer(media: Media(from: URNTemplate.onDemandVideo))
             )
             .sourceCode(of: InlineSystemPlayerView.self)
+        }
+    }
+
+    @ViewBuilder
+    private func customPictureInPictureSection() -> some View {
+        CustomSection("Custom Player and Picture in Picture (PiP) support") {
+            cell(
+                title: "Couleur 3",
+                subtitle: "With PiP support",
+                destination: .player(media: Media(from: URLTemplate.dvrVideoHLS))
+            )
+            .sourceCode(of: PlayerView.self)
+
+            cell(
+                title: "Apple Advanced 16:9 (fMP4)",
+                subtitle: "With PiP support",
+                destination: .player(media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS))
+            )
+            .sourceCode(of: PlayerView.self)
+
+            cell(
+                title: "Couleur 3",
+                subtitle: "Without PiP support",
+                destination: .player(
+                    media: Media(from: URLTemplate.dvrVideoHLS),
+                    isPictureInPictureSupported: false
+                )
+            )
+            .sourceCode(of: PlayerView.self)
+
+            cell(
+                title: "Apple Advanced 16:9 (fMP4)",
+                subtitle: "Without PiP support",
+                destination: .player(
+                    media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS),
+                    isPictureInPictureSupported: false
+                )
+            )
+            .sourceCode(of: PlayerView.self)
+        }
+    }
+
+    @ViewBuilder
+    private func systemPictureInPictureSection() -> some View {
+        CustomSection("System Player and Picture in Picture (PiP) support") {
+            cell(
+                title: "Couleur 3",
+                subtitle: "With PiP support",
+                destination: .systemPlayer(media: Media(from: URLTemplate.dvrVideoHLS))
+            )
+            .sourceCode(of: SystemPlayerView.self)
+
+            cell(
+                title: "Apple Advanced 16:9 (fMP4)",
+                subtitle: "With PiP support",
+                destination: .systemPlayer(media: Media(from: URLTemplate.dvrVideoHLS))
+            )
+            .sourceCode(of: SystemPlayerView.self)
+
+            cell(
+                title: "Couleur 3",
+                subtitle: "Without PiP support",
+                destination: .systemPlayer(
+                    media: Media(from: URLTemplate.dvrVideoHLS),
+                    isPictureInPictureSupported: false
+                )
+            )
+            .sourceCode(of: SystemPlayerView.self)
+
+            cell(
+                title: "Apple Advanced 16:9 (fMP4)",
+                subtitle: "Without PiP support",
+                destination: .systemPlayer(
+                    media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS),
+                    isPictureInPictureSupported: false
+                )
+            )
+            .sourceCode(of: SystemPlayerView.self)
         }
     }
 

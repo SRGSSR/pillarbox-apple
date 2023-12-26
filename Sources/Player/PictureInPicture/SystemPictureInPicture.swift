@@ -37,7 +37,7 @@ final class SystemPictureInPicture: NSObject {
             playerViewController = nil
         }
     }
-    
+
     func onAppear(with player: AVPlayer, isPictureInPictureSupported: Bool) {
         if !isPictureInPictureSupported {
             detach(with: player)
