@@ -281,7 +281,7 @@ struct ShowcaseView: View {
             cell(
                 title: "Apple Advanced 16:9 (fMP4)",
                 subtitle: "With PiP support",
-                destination: .systemPlayer(media: Media(from: URLTemplate.dvrVideoHLS))
+                destination: .systemPlayer(media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS))
             )
             .sourceCode(of: SystemPlayerView.self)
 
