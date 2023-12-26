@@ -204,8 +204,8 @@ struct ShowcaseView: View {
     private func inlineSystemPlayerSection() -> some View {
         CustomSection("Inline system player (using Pillarbox)") {
             cell(
-                title: "Video URN - On-demand",
-                destination: .inlineSystemPlayer(media: Media(from: URNTemplate.onDemandVideo))
+                title: "Couleur 3",
+                destination: .inlineSystemPlayer(media: Media(from: URLTemplate.dvrVideoHLS))
             )
             .sourceCode(of: InlineSystemPlayerView.self)
         }
