@@ -68,11 +68,11 @@ final class CustomPictureInPicture: NSObject {
     }
 
     func onAppear(with player: AVPlayer, isPictureInPictureSupported: Bool) {
-        if isPictureInPictureSupported {
-            stop()
+        if !isPictureInPictureSupported {
+            detach(with: player)
         }
         else {
-            detach(with: player)
+            stop()
         }
     }
 
@@ -80,7 +80,7 @@ final class CustomPictureInPicture: NSObject {
     /// it.
     ///
     /// See https://github.com/SRGSSR/pillarbox-apple/issues/612 for more information.
-    private func detach(with player: AVPlayer) {
+    func detach(with player: AVPlayer) {
         guard playerLayer?.player === player else { return }
         playerLayer?.player = nil
     }

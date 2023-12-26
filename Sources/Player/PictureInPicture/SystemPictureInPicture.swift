@@ -39,10 +39,7 @@ final class SystemPictureInPicture: NSObject {
     }
     
     func onAppear(with player: AVPlayer, isPictureInPictureSupported: Bool) {
-        if isPictureInPictureSupported {
-            stop()
-        }
-        else {
+        if !isPictureInPictureSupported {
             detach(with: player)
         }
     }
@@ -51,7 +48,7 @@ final class SystemPictureInPicture: NSObject {
     /// it.
     ///
     /// See https://github.com/SRGSSR/pillarbox-apple/issues/612 for more information.
-    private func detach(with player: AVPlayer) {
+    func detach(with player: AVPlayer) {
         guard playerViewController?.player === player else { return }
         playerViewController?.player = nil
     }

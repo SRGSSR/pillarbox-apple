@@ -41,6 +41,7 @@ public struct VideoView: View {
         }
         .opacity(player.mediaType != .unknown ? 1 : 0)
         .onAppear {
+            PictureInPicture.shared.system.detach(with: player.queuePlayer)
             PictureInPicture.shared.custom.onAppear(
                 with: player.queuePlayer,
                 isPictureInPictureSupported: isPictureInPictureEffectivelySupported

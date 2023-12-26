@@ -29,13 +29,10 @@ enum RouterDestination: Identifiable, Hashable {
     case contentList(configuration: ContentList.Configuration)
 
     var id: String {
+        // Treat players using the same view model as equivalent.
         switch self {
-        case .player:
+        case .player, .systemPlayer, .inlineSystemPlayer:
             return "player"
-        case .systemPlayer:
-            return "systemPlayer"
-        case .inlineSystemPlayer:
-            return "inlineSystemPlayer"
         case .simplePlayer:
             return "simplePlayer"
         case .optInPlayer:

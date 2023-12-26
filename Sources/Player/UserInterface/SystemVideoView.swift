@@ -24,6 +24,7 @@ public struct SystemVideoView: View {
             }
         }
         .onAppear {
+            PictureInPicture.shared.custom.detach(with: player.queuePlayer)
             PictureInPicture.shared.system.onAppear(
                 with: player.queuePlayer,
                 isPictureInPictureSupported: isPictureInPictureSupported
