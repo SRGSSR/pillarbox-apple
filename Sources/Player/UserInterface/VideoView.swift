@@ -22,33 +22,38 @@ public struct VideoView: View {
         ZStack {
             switch viewport {
             case .standard:
-                if isPictureInPictureSupported {
-                    PictureInPictureSupportingVideoView(player: player, gravity: gravity)
-                        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                            // When returning from basic Picture in Picture we must force a stop so that the PiP overlay
-                            // is merged back into the player view.
-                            PictureInPicture.shared.custom.stop()
-                        }
-                }
-                else {
-                    BasicVideoView(player: player, gravity: gravity)
-                        .onAppear {
-                            PictureInPicture.shared.custom.detach(from: player.queuePlayer)
-                        }
+                ZStack {
+                    if isPictureInPictureSupported {
+                        PictureInPictureSupportingVideoView(player: player, gravity: gravity)
+                            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                                // When returning from basic Picture in Picture we must force a stop so that the PiP overlay
+                                // is merged back into the player view.
+                                PictureInPicture.shared.custom.stop()
+                            }
+                    }
+                    else {
+                        BasicVideoView(player: player, gravity: gravity)
+                    }
                 }
             case let .monoscopic(orientation):
                 MonoscopicVideoView(player: player, orientation: orientation)
-                    .onAppear {
-                        PictureInPicture.shared.custom.detach(from: player.queuePlayer)
-                    }
             }
         }
         .opacity(player.mediaType != .unknown ? 1 : 0)
         .onAppear {
-            PictureInPicture.shared.system.detach(from: player.queuePlayer)
-            PictureInPicture.shared.system.stop()
+            PictureInPicture.shared.custom.onAppear(
+                with: player.queuePlayer,
+                isPictureInPictureSupported: isPictureInPictureEffectivelySupported
+            )
+        }
+    }
 
-            PictureInPicture.shared.custom.stop()
+    private var isPictureInPictureEffectivelySupported: Bool {
+        switch viewport {
+        case .standard:
+            return isPictureInPictureSupported
+        case .monoscopic:
+            return false
         }
     }
 

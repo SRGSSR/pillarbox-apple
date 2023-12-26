@@ -21,16 +21,13 @@ public struct SystemVideoView: View {
             }
             else {
                 BasicSystemVideoView(player: player, gravity: gravity)
-                    .onAppear {
-                        PictureInPicture.shared.system.detach(from: player.queuePlayer)
-                    }
             }
         }
         .onAppear {
-            PictureInPicture.shared.custom.detach(from: player.queuePlayer)
-            PictureInPicture.shared.custom.stop()
-
-            // For the system PiP the stop is handled internally by `PictureInPictureSupportingSystemVideoView`.
+            PictureInPicture.shared.system.onAppear(
+                with: player.queuePlayer,
+                isPictureInPictureSupported: isPictureInPictureSupported
+            )
         }
     }
 

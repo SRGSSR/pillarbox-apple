@@ -67,13 +67,16 @@ final class CustomPictureInPicture: NSObject {
         }
     }
 
-    /// Detaches the Picture in Picture layer from the provided player if matching.
-    ///
-    /// This is required to avoid unnecessary pauses when transitioning between two contents via Picture in Picture.
-    /// See https://github.com/SRGSSR/pillarbox-apple/issues/612 for more information.
-    func detach(from player: AVPlayer) {
+    func onAppear(with player: AVPlayer, isPictureInPictureSupported: Bool) {
         guard playerLayer?.player === player else { return }
-        playerLayer?.player = nil
+        if isPictureInPictureSupported {
+            stop()
+        }
+        else {
+            /// Avoid unnecessary pauses when transitioning via Picture in Picture to a view which does not support
+            /// it. See https://github.com/SRGSSR/pillarbox-apple/issues/612 for more information.
+            playerLayer?.player = nil
+        }
     }
 
     private func configureIsPossiblePublisher() {

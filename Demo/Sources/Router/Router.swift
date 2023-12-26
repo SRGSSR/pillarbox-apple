@@ -37,8 +37,11 @@ final class Router: ObservableObject {
 
     @Published var presented: RouterDestination? {
         didSet {
-            guard presented != nil else { return }
-            previousPresented = nil
+            // `.modal(item:content:)` requires identifiable items. We must update any previously presented destination
+            // if a new one with the same identity is presented, otherwise the oldest presented destination will be
+            // incorrectly restored.
+            guard previousPresented?.id == presented?.id else { return }
+            previousPresented = presented
         }
     }
 

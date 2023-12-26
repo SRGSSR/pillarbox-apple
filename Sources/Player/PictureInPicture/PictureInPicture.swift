@@ -28,12 +28,6 @@ public final class PictureInPicture {
         custom.delegate = self
         system.delegate = self
     }
-
-    func stop() {
-        custom.stop()
-        // No stop here for system Picture in Picture see `PictureInPictureSupportingSystemVideoView` and
-        // `PlayerViewController`.
-    }
 }
 
 extension PictureInPicture: PictureInPictureDelegate {
