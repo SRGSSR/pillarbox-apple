@@ -68,15 +68,21 @@ final class CustomPictureInPicture: NSObject {
     }
 
     func onAppear(with player: AVPlayer, isPictureInPictureSupported: Bool) {
-        guard playerLayer?.player === player else { return }
         if isPictureInPictureSupported {
             stop()
         }
         else {
-            /// Avoid unnecessary pauses when transitioning via Picture in Picture to a view which does not support
-            /// it. See https://github.com/SRGSSR/pillarbox-apple/issues/612 for more information.
-            playerLayer?.player = nil
+            detach(with: player)
         }
+    }
+
+    /// Avoid unnecessary pauses when transitioning via Picture in Picture to a view which does not support
+    /// it.
+    ///
+    /// See https://github.com/SRGSSR/pillarbox-apple/issues/612 for more information.
+    private func detach(with player: AVPlayer) {
+        guard playerLayer?.player === player else { return }
+        playerLayer?.player = nil
     }
 
     private func configureIsPossiblePublisher() {

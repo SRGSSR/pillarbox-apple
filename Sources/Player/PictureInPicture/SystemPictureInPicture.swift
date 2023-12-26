@@ -39,15 +39,21 @@ final class SystemPictureInPicture: NSObject {
     }
     
     func onAppear(with player: AVPlayer, isPictureInPictureSupported: Bool) {
-        guard playerViewController?.player === player else { return }
         if isPictureInPictureSupported {
             stop()
         }
         else {
-            /// Avoid unnecessary pauses when transitioning via Picture in Picture to a view which does not support
-            /// it. See https://github.com/SRGSSR/pillarbox-apple/issues/612 for more information.
-            playerViewController?.player = nil
+            detach(with: player)
         }
+    }
+
+    /// Avoid unnecessary pauses when transitioning via Picture in Picture to a view which does not support
+    /// it.
+    ///
+    /// See https://github.com/SRGSSR/pillarbox-apple/issues/612 for more information.
+    private func detach(with player: AVPlayer) {
+        guard playerViewController?.player === player else { return }
+        playerViewController?.player = nil
     }
 }
 
