@@ -204,7 +204,7 @@ struct ShowcaseView: View {
     private func inlineSystemPlayerSection() -> some View {
         CustomSection("Inline system player (using Pillarbox)") {
             cell(
-                title: "Couleur 3",
+                title: "Couleur 3 (DVR)",
                 destination: .inlineSystemPlayer(media: Media(from: URLTemplate.dvrVideoHLS))
             )
             .sourceCode(of: InlineSystemPlayerView.self)
@@ -215,7 +215,7 @@ struct ShowcaseView: View {
     private func customPictureInPictureSection() -> some View {
         CustomSection("Custom Player and Picture in Picture (PiP) support") {
             cell(
-                title: "Couleur 3",
+                title: "Couleur 3 (DVR)",
                 subtitle: "With PiP support",
                 destination: .player(media: Media(from: URLTemplate.dvrVideoHLS))
             )
@@ -229,7 +229,7 @@ struct ShowcaseView: View {
             .sourceCode(of: PlayerView.self)
 
             cell(
-                title: "Couleur 3",
+                title: "Couleur 3 (DVR)",
                 subtitle: "Without PiP support",
                 destination: .player(
                     media: Media(from: URLTemplate.dvrVideoHLS),
@@ -254,7 +254,7 @@ struct ShowcaseView: View {
     private func systemPictureInPictureSection() -> some View {
         CustomSection("System Player and Picture in Picture (PiP) support") {
             cell(
-                title: "Couleur 3",
+                title: "Couleur 3 (DVR)",
                 subtitle: "With PiP support",
                 destination: .systemPlayer(media: Media(from: URLTemplate.dvrVideoHLS))
             )
@@ -268,7 +268,7 @@ struct ShowcaseView: View {
             .sourceCode(of: SystemPlayerView.self)
 
             cell(
-                title: "Couleur 3",
+                title: "Couleur 3 (DVR)",
                 subtitle: "Without PiP support",
                 destination: .systemPlayer(
                     media: Media(from: URLTemplate.dvrVideoHLS),
