@@ -213,6 +213,7 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func customPictureInPictureSection() -> some View {
+        // swiftlint:disable:next closure_body_length
         CustomSection("Custom Player and Picture in Picture (PiP) support") {
             cell(
                 title: "Couleur 3 (DVR)",
