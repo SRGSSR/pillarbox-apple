@@ -35,15 +35,7 @@ final class Router: ObservableObject {
     @Published var searchPath: [RouterDestination] = []
     @Published var settingsPath: [RouterDestination] = []
 
-    @Published var presented: RouterDestination? {
-        didSet {
-            // `.modal(item:content:)` requires identifiable items. We must update any previously presented destination
-            // if a new one with the same identity is presented, otherwise the oldest presented destination will be
-            // incorrectly restored.
-            guard previousPresented?.id == presented?.id else { return }
-            previousPresented = presented
-        }
-    }
+    @Published var presented: RouterDestination?
 
     private var previousPresented: RouterDestination?
 
@@ -79,7 +71,9 @@ extension Router: PictureInPictureDelegate {
         }
     }
 
-    func pictureInPictureWillStop() {}
+    func pictureInPictureWillStop() {
+        previousPresented = nil
+    }
 
     func pictureInPictureDidStop() {}
 }
