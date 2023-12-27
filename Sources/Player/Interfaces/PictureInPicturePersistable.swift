@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-private var kPersisted: AnyObject?
+var kPersisted: PictureInPicturePersistable?
 
 /// A protocol to automatically mark an object as persistable during Picture in Picture playback.
 ///
