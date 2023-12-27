@@ -24,6 +24,9 @@ public final class PictureInPicture {
     // Weak so that not retained if not explicitly acquired.
     weak var persistable: PictureInPicturePersistable?
 
+    // Strong to retain when acquired.
+    private(set) var persisted: PictureInPicturePersistable?
+
     private init() {
         custom.delegate = self
         system.delegate = self
@@ -33,13 +36,14 @@ public final class PictureInPicture {
 extension PictureInPicture: PictureInPictureDelegate {
     public func pictureInPictureWillStart() {
         delegate?.pictureInPictureWillStart()
-        persistable?.acquire()
-        kPersisted?.pictureInPictureWillStart()
+
+        persisted = persistable
+        persisted?.pictureInPictureWillStart()
     }
 
     public func pictureInPictureDidStart() {
         delegate?.pictureInPictureDidStart()
-        kPersisted?.pictureInPictureDidStart()
+        persisted?.pictureInPictureDidStart()
     }
 
     public func pictureInPictureControllerFailedToStart(with error: Error) {
@@ -64,12 +68,12 @@ extension PictureInPicture: PictureInPictureDelegate {
 
     public func pictureInPictureWillStop() {
         delegate?.pictureInPictureWillStop()
-        kPersisted?.pictureInPictureWillStop()
+        persisted?.pictureInPictureWillStop()
     }
 
     public func pictureInPictureDidStop() {
         delegate?.pictureInPictureDidStop()
-        kPersisted?.pictureInPictureDidStop()
-        kPersisted?.relinquish()
+        persisted?.pictureInPictureDidStop()
+        persisted = nil
     }
 }

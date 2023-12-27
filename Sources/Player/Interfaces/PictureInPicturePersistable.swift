@@ -6,8 +6,6 @@
 
 import SwiftUI
 
-var kPersisted: PictureInPicturePersistable?
-
 /// A protocol to automatically mark an object as persistable during Picture in Picture playback.
 ///
 /// The persisted object, if any, can be retrieved from the `persisted` property. Your persisted object can also be
@@ -30,14 +28,6 @@ public protocol PictureInPicturePersistable: AnyObject {
 extension PictureInPicturePersistable {
     /// The currently persisted instance, if any.
     public static var persisted: Self? {
-        kPersisted as? Self
-    }
-
-    func acquire() {
-        kPersisted = self
-    }
-
-    func relinquish() {
-        kPersisted = nil
+        PictureInPicture.shared.persisted as? Self
     }
 }
