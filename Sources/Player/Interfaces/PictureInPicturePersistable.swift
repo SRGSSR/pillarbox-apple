@@ -6,9 +6,9 @@
 
 import SwiftUI
 
-/// A protocol to automatically mark an object as persistable during Picture in Picture playback.
+/// A protocol to for objects persisted during Picture in Picture playback.
 ///
-/// The persisted object, if any, can be retrieved from the `persisted` property. Your persisted object can also be
+/// The persisted object, if any, can be retrieved from the `persisted` property. The persisted object can also be
 /// notified about the Picture in Picture lifecycle, e.g to perform some bookkeeping work or to pause / resume
 /// processes.
 public protocol PictureInPicturePersistable: AnyObject {
