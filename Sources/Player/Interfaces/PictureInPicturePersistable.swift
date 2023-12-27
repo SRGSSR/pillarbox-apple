@@ -25,9 +25,9 @@ public protocol PictureInPicturePersistable: AnyObject {
     func pictureInPictureDidStop()
 }
 
-extension PictureInPicturePersistable {
+public extension PictureInPicturePersistable {
     /// The currently persisted instance, if any.
-    public static var persisted: Self? {
+    static var persisted: Self? {
         PictureInPicture.shared.persisted as? Self
     }
 }
