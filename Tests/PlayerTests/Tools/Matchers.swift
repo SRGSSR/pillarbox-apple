@@ -7,11 +7,11 @@
 import Nimble
 
 /// A Nimble matcher that checks language identifiers.
-func haveLanguageIdentifier<T>(_ identifier: String) -> Nimble.Predicate<T> where T: LanguageIdentifiable {
+func haveLanguageIdentifier<T>(_ identifier: String) -> Matcher<T> where T: LanguageIdentifiable {
     let message = "have language identifier \(identifier)"
     return .define { actualExpression in
         let actualIdentifier = try actualExpression.evaluate()?.languageIdentifier
-        return PredicateResult(
+        return MatcherResult(
             bool: actualIdentifier == identifier,
             message: .expectedCustomValueTo(message, actual: actualIdentifier ?? "nil")
         )
