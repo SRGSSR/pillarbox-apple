@@ -29,15 +29,15 @@ struct ContentListsView: View {
 
     private static func content() -> some View {
         Group {
-            Self.section(for: .tvTopics, image: "tv", vendors: [.RSI, .RTR, .RTS, .SRF, .SWI])
-            Self.section(for: .tvLatestMedias, image: "play.tv", vendors: [.RSI, .RTR, .RTS, .SRF, .SWI])
-            Self.section(for: .tvLivestreams, image: "livephoto.play", vendors: [.RSI, .RTR, .RTS, .SRF])
-            Self.section(for: .tvShows, image: "rectangle.on.rectangle.angled", vendors: [.RSI, .RTR, .RTS, .SRF])
-            Self.section(for: .liveCenterVideos, image: "sportscourt", vendors: [.RSI, .RTS, .SRF])
-            Self.section(for: .tvScheduledLivestreams, image: "globe", vendors: [.RSI, .RTR, .RTS, .SRF])
-            Self.section(for: .radioLivestreams, image: "antenna.radiowaves.left.and.right", vendors: [.RSI, .RTR, .RTS, .SRF])
-            Self.radioShows(image: "waveform")
-            Self.latestAudiosSection(image: "music.note.list")
+            section(for: .tvTopics, image: "tv", vendors: [.RSI, .RTR, .RTS, .SRF, .SWI])
+            section(for: .tvLatestMedias, image: "play.tv", vendors: [.RSI, .RTR, .RTS, .SRF, .SWI])
+            section(for: .tvLivestreams, image: "livephoto.play", vendors: [.RSI, .RTR, .RTS, .SRF])
+            section(for: .tvShows, image: "rectangle.on.rectangle.angled", vendors: [.RSI, .RTR, .RTS, .SRF])
+            section(for: .liveCenterVideos, image: "sportscourt", vendors: [.RSI, .RTS, .SRF])
+            section(for: .tvScheduledLivestreams, image: "globe", vendors: [.RSI, .RTR, .RTS, .SRF])
+            section(for: .radioLivestreams, image: "antenna.radiowaves.left.and.right", vendors: [.RSI, .RTR, .RTS, .SRF])
+            radioShows(image: "waveform")
+            latestAudiosSection(image: "music.note.list")
         }
         .tracked(name: "lists")
     }
@@ -136,8 +136,7 @@ private extension View {
     @ViewBuilder
     func businessUnitStyle() -> some View {
 #if os(tvOS)
-        self
-            .frame(width: 450, height: 250, alignment: .center)
+        frame(width: 450, height: 250, alignment: .center)
             .padding(10)
             .scaleEffect(0.5)
             .background(
