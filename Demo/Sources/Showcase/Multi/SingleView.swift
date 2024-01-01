@@ -13,7 +13,7 @@ struct SingleView: View {
 
     @State private var isBusy = false
     private var isMonoscopic = false
-    private var isPictureInPictureSupported = false
+    private var supportsPictureInPicture = false
 
     var body: some View {
         ZStack {
@@ -37,7 +37,7 @@ struct SingleView: View {
     private func videoView(player: Player) -> some View {
         VideoView(player: player)
             .viewport(viewport)
-            .supportsPictureInPicture(isPictureInPictureSupported)
+            .supportsPictureInPicture(supportsPictureInPicture)
             .accessibilityAddTraits(.isButton)
     }
 
@@ -62,9 +62,9 @@ extension SingleView {
         return view
     }
 
-    func supportsPictureInPicture(_ isPictureInPictureSupported: Bool = true) -> SingleView {
+    func supportsPictureInPicture(_ supportsPictureInPicture: Bool = true) -> SingleView {
         var view = self
-        view.isPictureInPictureSupported = isPictureInPictureSupported
+        view.supportsPictureInPicture = supportsPictureInPicture
         return view
     }
 }

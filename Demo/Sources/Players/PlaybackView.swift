@@ -16,7 +16,7 @@ private struct MainView: View {
     @ObservedObject var player: Player
     @Binding var layout: PlaybackView.Layout
     let isMonoscopic: Bool
-    let isPictureInPictureSupported: Bool
+    let supportsPictureInPicture: Bool
 
     @StateObject private var visibilityTracker = VisibilityTracker()
 
@@ -117,7 +117,7 @@ private struct MainView: View {
             else {
                 VideoView(player: player)
                     .gravity(gravity)
-                    .supportsPictureInPicture(isPictureInPictureSupported)
+                    .supportsPictureInPicture(supportsPictureInPicture)
             }
         }
     }
@@ -543,7 +543,7 @@ struct PlaybackView: View {
     @Binding private var layout: Layout
 
     private var isMonoscopic = false
-    private var isPictureInPictureSupported = false
+    private var supportsPictureInPicture = false
 
     var body: some View {
         ZStack {
@@ -578,7 +578,7 @@ struct PlaybackView: View {
                 player: player,
                 layout: $layout,
                 isMonoscopic: isMonoscopic,
-                isPictureInPictureSupported: isPictureInPictureSupported
+                supportsPictureInPicture: supportsPictureInPicture
             )
 #else
             if isMonoscopic {
@@ -588,7 +588,7 @@ struct PlaybackView: View {
             }
             else {
                 SystemVideoView(player: player)
-                    .supportsPictureInPicture(isPictureInPictureSupported)
+                    .supportsPictureInPicture(supportsPictureInPicture)
                     .ignoresSafeArea()
             }
 #endif
@@ -603,9 +603,9 @@ extension PlaybackView {
         return view
     }
 
-    func supportsPictureInPicture(_ isPictureInPictureSupported: Bool = true) -> PlaybackView {
+    func supportsPictureInPicture(_ supportsPictureInPicture: Bool = true) -> PlaybackView {
         var view = self
-        view.isPictureInPictureSupported = isPictureInPictureSupported
+        view.supportsPictureInPicture = supportsPictureInPicture
         return view
     }
 }

@@ -241,7 +241,7 @@ struct ShowcaseView: View {
                 subtitle: "Without PiP support",
                 destination: .player(
                     media: Media(from: URLTemplate.dvrVideoHLS),
-                    isPictureInPictureSupported: false
+                    supportsPictureInPicture: false
                 )
             )
             .sourceCode(of: PlayerView.self)
@@ -251,7 +251,7 @@ struct ShowcaseView: View {
                 subtitle: "Without PiP support",
                 destination: .player(
                     media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS),
-                    isPictureInPictureSupported: false
+                    supportsPictureInPicture: false
                 )
             )
             .sourceCode(of: PlayerView.self)
@@ -261,7 +261,7 @@ struct ShowcaseView: View {
                 subtitle: "Without PiP support",
                 destination: .player(
                     media: Media(from: URNTemplate.gothard_360),
-                    isPictureInPictureSupported: false
+                    supportsPictureInPicture: false
                 )
             )
             .sourceCode(of: PlayerView.self)
@@ -290,7 +290,7 @@ struct ShowcaseView: View {
                 subtitle: "Without PiP support",
                 destination: .systemPlayer(
                     media: Media(from: URLTemplate.dvrVideoHLS),
-                    isPictureInPictureSupported: false
+                    supportsPictureInPicture: false
                 )
             )
             .sourceCode(of: SystemPlayerView.self)
@@ -300,7 +300,7 @@ struct ShowcaseView: View {
                 subtitle: "Without PiP support",
                 destination: .systemPlayer(
                     media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS),
-                    isPictureInPictureSupported: false
+                    supportsPictureInPicture: false
                 )
             )
             .sourceCode(of: SystemPlayerView.self)

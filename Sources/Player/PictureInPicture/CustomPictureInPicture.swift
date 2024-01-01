@@ -67,8 +67,8 @@ final class CustomPictureInPicture: NSObject {
         }
     }
 
-    func onAppear(with player: AVPlayer, isPictureInPictureSupported: Bool) {
-        if !isPictureInPictureSupported {
+    func onAppear(with player: AVPlayer, supportsPictureInPicture: Bool) {
+        if !supportsPictureInPicture {
             detach(with: player)
         }
         else {

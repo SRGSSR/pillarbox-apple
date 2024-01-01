@@ -15,7 +15,7 @@ public struct VideoView: View {
     @ObservedObject private var player: Player
 
     private var gravity: AVLayerVideoGravity = .resizeAspect
-    private var isPictureInPictureSupported = false
+    private var supportsPictureInPicture = false
     private var viewport: Viewport = .standard
 
     public var body: some View {
@@ -23,7 +23,7 @@ public struct VideoView: View {
             switch viewport {
             case .standard:
                 ZStack {
-                    if isPictureInPictureSupported {
+                    if supportsPictureInPicture {
                         PictureInPictureSupportingVideoView(player: player, gravity: gravity)
                             .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                                 // When returning from basic Picture in Picture we must force a stop so that the PiP overlay
@@ -44,7 +44,7 @@ public struct VideoView: View {
             PictureInPicture.shared.system.detach(with: player.queuePlayer)
             PictureInPicture.shared.custom.onAppear(
                 with: player.queuePlayer,
-                isPictureInPictureSupported: isPictureInPictureEffectivelySupported
+                supportsPictureInPicture: isPictureInPictureEffectivelySupported
             )
         }
     }
@@ -52,7 +52,7 @@ public struct VideoView: View {
     private var isPictureInPictureEffectivelySupported: Bool {
         switch viewport {
         case .standard:
-            return isPictureInPictureSupported
+            return supportsPictureInPicture
         case .monoscopic:
             return false
         }
@@ -80,11 +80,11 @@ public extension VideoView {
 
     /// Configures Picture in Picture support for the video view.
     ///
-    /// - Parameter isPictureInPictureSupported: A Boolean set to `true` if the view must be able to share its video
+    /// - Parameter supportsPictureInPicture: A Boolean set to `true` if the view must be able to share its video
     ///   layer for Picture in Picture.
-    func supportsPictureInPicture(_ isPictureInPictureSupported: Bool = true) -> VideoView {
+    func supportsPictureInPicture(_ supportsPictureInPicture: Bool = true) -> VideoView {
         var view = self
-        view.isPictureInPictureSupported = isPictureInPictureSupported
+        view.supportsPictureInPicture = supportsPictureInPicture
         return view
     }
 

@@ -12,11 +12,11 @@ struct SystemPlayerView: View {
     let media: Media
 
     @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
-    private var isPictureInPictureSupported = false
+    private var supportsPictureInPicture = false
 
     var body: some View {
         SystemVideoView(player: model.player)
-            .supportsPictureInPicture(isPictureInPictureSupported)
+            .supportsPictureInPicture(supportsPictureInPicture)
             .enabledForInAppPictureInPicture(persisting: model)
             .ignoresSafeArea()
             .onAppear(perform: play)
@@ -34,9 +34,9 @@ struct SystemPlayerView: View {
 }
 
 extension SystemPlayerView {
-    func supportsPictureInPicture(_ isPictureInPictureSupported: Bool = true) -> SystemPlayerView {
+    func supportsPictureInPicture(_ supportsPictureInPicture: Bool = true) -> SystemPlayerView {
         var view = self
-        view.isPictureInPictureSupported = isPictureInPictureSupported
+        view.supportsPictureInPicture = supportsPictureInPicture
         return view
     }
 }

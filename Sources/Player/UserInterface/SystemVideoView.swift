@@ -12,11 +12,11 @@ public struct SystemVideoView: View {
     private let player: Player
 
     private var gravity: AVLayerVideoGravity = .resizeAspect
-    private var isPictureInPictureSupported = false
+    private var supportsPictureInPicture = false
 
     public var body: some View {
         ZStack {
-            if isPictureInPictureSupported {
+            if supportsPictureInPicture {
                 PictureInPictureSupportingSystemVideoView(player: player, gravity: gravity)
             }
             else {
@@ -27,7 +27,7 @@ public struct SystemVideoView: View {
             PictureInPicture.shared.custom.detach(with: player.queuePlayer)
             PictureInPicture.shared.system.onAppear(
                 with: player.queuePlayer,
-                isPictureInPictureSupported: isPictureInPictureSupported
+                supportsPictureInPicture: supportsPictureInPicture
             )
         }
     }
@@ -54,11 +54,11 @@ public extension SystemVideoView {
 
     /// Configures Picture in Picture support for the video view.
     ///
-    /// - Parameter isPictureInPictureSupported: A Boolean set to `true` if the view must be able to share its video
+    /// - Parameter supportsPictureInPicture: A Boolean set to `true` if the view must be able to share its video
     ///   layer for Picture in Picture.
-    func supportsPictureInPicture(_ isPictureInPictureSupported: Bool = true) -> SystemVideoView {
+    func supportsPictureInPicture(_ supportsPictureInPicture: Bool = true) -> SystemVideoView {
         var view = self
-        view.isPictureInPictureSupported = isPictureInPictureSupported
+        view.supportsPictureInPicture = supportsPictureInPicture
         return view
     }
 }

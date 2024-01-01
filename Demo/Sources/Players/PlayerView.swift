@@ -15,12 +15,12 @@ struct PlayerView: View {
     @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
 
     private var isMonoscopic = false
-    private var isPictureInPictureSupported = false
+    private var supportsPictureInPicture = false
 
     var body: some View {
         PlaybackView(player: model.player)
             .monoscopic(media.isMonoscopic)
-            .supportsPictureInPicture(isPictureInPictureSupported)
+            .supportsPictureInPicture(supportsPictureInPicture)
             .enabledForInAppPictureInPicture(persisting: model)
             .onAppear(perform: play)
             .tracked(name: "player")
@@ -43,9 +43,9 @@ extension PlayerView {
         return view
     }
 
-    func supportsPictureInPicture(_ isPictureInPictureSupported: Bool = true) -> PlayerView {
+    func supportsPictureInPicture(_ supportsPictureInPicture: Bool = true) -> PlayerView {
         var view = self
-        view.isPictureInPictureSupported = isPictureInPictureSupported
+        view.supportsPictureInPicture = supportsPictureInPicture
         return view
     }
 }

@@ -8,8 +8,8 @@ import AVFoundation
 import SwiftUI
 
 enum RouterDestination: Identifiable, Hashable {
-    case player(media: Media, isPictureInPictureSupported: Bool)
-    case systemPlayer(media: Media, isPictureInPictureSupported: Bool)
+    case player(media: Media, supportsPictureInPicture: Bool)
+    case systemPlayer(media: Media, supportsPictureInPicture: Bool)
     case inlineSystemPlayer(media: Media)
     case simplePlayer(media: Media)
     case optInPlayer(media: Media)
@@ -61,23 +61,23 @@ enum RouterDestination: Identifiable, Hashable {
     }
 
     static func player(media: Media) -> Self {
-        .player(media: media, isPictureInPictureSupported: true)
+        .player(media: media, supportsPictureInPicture: true)
     }
 
     static func systemPlayer(media: Media) -> Self {
-        .systemPlayer(media: media, isPictureInPictureSupported: true)
+        .systemPlayer(media: media, supportsPictureInPicture: true)
     }
 
     @ViewBuilder
     func view() -> some View {
         // swiftlint:disable:previous cyclomatic_complexity
         switch self {
-        case let .player(media: media, isPictureInPictureSupported: isPictureInPictureSupported):
+        case let .player(media: media, supportsPictureInPicture: supportsPictureInPicture):
             PlayerView(media: media)
-                .supportsPictureInPicture(isPictureInPictureSupported)
-        case let .systemPlayer(media: media, isPictureInPictureSupported: isPictureInPictureSupported):
+                .supportsPictureInPicture(supportsPictureInPicture)
+        case let .systemPlayer(media: media, supportsPictureInPicture: supportsPictureInPicture):
             SystemPlayerView(media: media)
-                .supportsPictureInPicture(isPictureInPictureSupported)
+                .supportsPictureInPicture(supportsPictureInPicture)
         case let .inlineSystemPlayer(media: media):
             InlineSystemPlayerView(media: media)
         case let .simplePlayer(media: media):
