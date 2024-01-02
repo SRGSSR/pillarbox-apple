@@ -34,6 +34,7 @@ struct ShowcaseView: View {
             systemPictureInPictureSection()
             vanillaPlayerSection()
             trackingSection()
+            webViewSection()
         }
         .tracked(name: "showcase")
     }
@@ -347,6 +348,13 @@ struct ShowcaseView: View {
             )
         }
         .sourceCode(of: OptInView.self)
+    }
+    @ViewBuilder
+    private func webViewSection() -> some View {
+        CustomSection("Web") {
+            cell(title: "Pillarbox App", destination: .webView)
+        }
+        .sourceCode(of: WebView.self)
     }
 }
 

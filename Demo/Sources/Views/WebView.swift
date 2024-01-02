@@ -18,3 +18,7 @@ struct WebView: UIViewRepresentable {
 
     func updateUIView(_ uiView: UIViewType, context: Context) {}
 }
+
+extension WebView: SourceCodeViewable {
+    static var filePath: String { #file }
+}

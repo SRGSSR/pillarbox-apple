@@ -28,6 +28,8 @@ enum RouterDestination: Identifiable, Hashable {
 
     case contentList(configuration: ContentList.Configuration)
 
+    case webView
+
     var id: String {
         // Treat players using the same view model as equivalent.
         switch self {
@@ -57,6 +59,8 @@ enum RouterDestination: Identifiable, Hashable {
             return "playlist"
         case .contentList:
             return "contentList"
+        case .webView:
+            return "webView"
         }
     }
 
@@ -104,6 +108,8 @@ enum RouterDestination: Identifiable, Hashable {
             PlaylistView(templates: templates)
         case let .contentList(configuration: configuration):
             ContentListView(configuration: configuration)
+        case .webView:
+            WebView(url: "https://srgssr.github.io/pillarbox-web/")
         }
     }
 }
