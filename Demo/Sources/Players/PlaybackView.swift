@@ -142,24 +142,21 @@ private struct MainView: View {
 
 private struct ControlsView: View {
     @ObservedObject var player: Player
-    @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
 
     var body: some View {
         HStack(spacing: 30) {
-            SkipBackwardButton(player: player, progressTracker: progressTracker)
+            SkipBackwardButton(player: player)
             PlaybackButton(player: player)
-            SkipForwardButton(player: player, progressTracker: progressTracker)
+            SkipForwardButton(player: player)
         }
         ._debugBodyCounter(color: .green)
         .animation(.defaultLinear, value: player.playbackState)
-        .bind(progressTracker, to: player)
     }
 }
 
 // Behavior: h-hug, v-hug
 private struct SkipBackwardButton: View {
     @ObservedObject var player: Player
-    @ObservedObject var progressTracker: ProgressTracker
 
     var body: some View {
         Button(action: skipBackward) {
@@ -181,8 +178,7 @@ private struct SkipBackwardButton: View {
 // Behavior: h-hug, v-hug
 private struct SkipForwardButton: View {
     @ObservedObject var player: Player
-    @ObservedObject var progressTracker: ProgressTracker
-
+  
     var body: some View {
         Button(action: skipForward) {
             Image(systemName: "goforward.10")
@@ -287,7 +283,6 @@ private struct LoadingIndicator: View {
 // Behavior: h-hug, v-hug
 private struct LiveLabel: View {
     @ObservedObject var player: Player
-    @ObservedObject var progressTracker: ProgressTracker
     @State private var streamType: StreamType = .unknown
 
     private var canSkipToLive: Bool {
@@ -341,7 +336,7 @@ private struct TimeBar: View {
             routePickerView()
             HStack(spacing: 20) {
                 TimeSlider(player: player, progressTracker: progressTracker, visibilityTracker: visibilityTracker)
-                LiveLabel(player: player, progressTracker: progressTracker)
+                LiveLabel(player: player)
 
                 Group {
                     settingsMenu()
