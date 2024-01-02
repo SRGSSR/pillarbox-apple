@@ -8,7 +8,7 @@ import Combine
 import OrderedCollections
 import Player
 
-final class PlaylistViewModel: ObservableObject {
+final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     static let standardTemplates = [
         URLTemplate.onDemandVideoHLS,
         URLTemplate.shortOnDemandVideoHLS,
@@ -24,7 +24,6 @@ final class PlaylistViewModel: ObservableObject {
         URNTemplate.liveVideo,
         URNTemplate.dvrVideo,
         URNTemplate.dvrAudio,
-        URNTemplate.onDemandAudio,
         URLTemplate.appleBasic_4_3_HLS,
         URLTemplate.appleBasic_16_9_TS_HLS,
         URLTemplate.appleAdvanced_16_9_TS_HLS,
@@ -35,6 +34,8 @@ final class PlaylistViewModel: ObservableObject {
         URLTemplate.appleTvMorningShowSeason1Trailer,
         URLTemplate.appleTvMorningShowSeason2Trailer,
         URLTemplate.uhdVideoHLS,
+        URNTemplate.gothard_360,
+        URLTemplate.bitmovin_360,
         URNTemplate.expired,
         URNTemplate.unknown
     ]
@@ -74,6 +75,7 @@ final class PlaylistViewModel: ObservableObject {
 
     var templates: [Template] = [] {
         didSet {
+            guard medias.isEmpty else { return }
             medias = Template.medias(from: templates)
         }
     }

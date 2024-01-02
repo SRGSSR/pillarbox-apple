@@ -10,7 +10,8 @@ struct ContentView: View {
     @State private var gravity: AVLayerVideoGravity = .resizeAspect
 
     var body: some View {
-        VideoView(player: player, gravity: gravity)
+        VideoView(player: player)
+            .gravity(gravity)
             .gesture(magnificationGesture())
             .onAppear(perform: player.play)
     }

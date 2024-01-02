@@ -7,7 +7,6 @@
 import Player
 import SwiftUI
 
-#if os(iOS)
 struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     @ObservedObject var progressTracker: ProgressTracker
 
@@ -108,4 +107,3 @@ extension PlaybackSlider where ValueLabel == EmptyView {
         .padding(.horizontal, 5)
         .preferredColorScheme(.dark)
 }
-#endif

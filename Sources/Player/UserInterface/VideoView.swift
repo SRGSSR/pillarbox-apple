@@ -5,117 +5,95 @@
 //
 
 import AVFoundation
+import SceneKit
 import SwiftUI
-import UIKit
-
-private final class VideoLayerView: UIView {
-    let playerLayer: AVPlayerLayer
-
-    var player: AVPlayer? {
-        get { playerLayer.player }
-        set { playerLayer.player = newValue }
-    }
-
-    init(from playerLayer: AVPlayerLayer? = nil) {
-        self.playerLayer = playerLayer ?? .init()
-        super.init(frame: .zero)
-        layer.addSublayer(self.playerLayer)
-    }
-
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func layoutSublayers(of layer: CALayer) {
-        super.layoutSublayers(of: layer)
-        layer.synchronizeAnimations {
-            playerLayer.frame = layer.bounds
-        }
-    }
-}
-
-private struct _PictureInPictureSupportingVideoView: UIViewRepresentable {
-    let player: Player
-    let gravity: AVLayerVideoGravity
-
-    static func dismantleUIView(_ uiView: VideoLayerView, coordinator: Void) {
-        PictureInPicture.shared.custom.relinquish(for: uiView.playerLayer)
-    }
-
-    func makeUIView(context: Context) -> VideoLayerView {
-        let view = VideoLayerView(from: PictureInPicture.shared.custom.playerLayer)
-        PictureInPicture.shared.custom.acquire(for: view.playerLayer)
-        PictureInPicture.shared.mode = .custom
-        return view
-    }
-
-    func updateUIView(_ uiView: VideoLayerView, context: Context) {
-        PictureInPicture.shared.custom.update(with: player.queuePlayer)
-        uiView.player = player.queuePlayer
-        uiView.playerLayer.videoGravity = gravity
-    }
-}
-
-private struct _VideoView: UIViewRepresentable {
-    let player: Player
-    let gravity: AVLayerVideoGravity
-
-    func makeUIView(context: Context) -> VideoLayerView {
-        .init()
-    }
-
-    func updateUIView(_ uiView: VideoLayerView, context: Context) {
-        uiView.player = player.queuePlayer
-        uiView.playerLayer.videoGravity = gravity
-    }
-}
 
 /// A view displaying video content provided by an associated player.
 ///
 /// Behavior: h-exp, v-exp
 public struct VideoView: View {
-    private let player: Player
-    private let gravity: AVLayerVideoGravity
-    private let isPictureInPictureSupported: Bool
+    @ObservedObject private var player: Player
+
+    private var gravity: AVLayerVideoGravity = .resizeAspect
+    private var supportsPictureInPicture = false
+    private var viewport: Viewport = .standard
 
     public var body: some View {
-        if isPictureInPictureSupported {
-            _PictureInPictureSupportingVideoView(player: player, gravity: gravity)
-                .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
-                    PictureInPicture.shared.custom.stop()
+        ZStack {
+            switch viewport {
+            case .standard:
+                ZStack {
+                    if supportsPictureInPicture {
+                        PictureInPictureSupportingVideoView(player: player, gravity: gravity)
+                            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                                // When returning from basic Picture in Picture we must force a stop so that the PiP overlay
+                                // is merged back into the player view.
+                                PictureInPicture.shared.custom.stop()
+                            }
+                    }
+                    else {
+                        BasicVideoView(player: player, gravity: gravity)
+                    }
                 }
+            case let .monoscopic(orientation):
+                MonoscopicVideoView(player: player, orientation: orientation)
+            }
         }
-        else {
-            _VideoView(player: player, gravity: gravity)
+        .opacity(player.mediaType != .unknown ? 1 : 0)
+        .onAppear {
+            PictureInPicture.shared.system.detach(with: player.queuePlayer)
+            PictureInPicture.shared.custom.onAppear(
+                with: player.queuePlayer,
+                supportsPictureInPicture: isPictureInPictureEffectivelySupported
+            )
+        }
+    }
+
+    private var isPictureInPictureEffectivelySupported: Bool {
+        switch viewport {
+        case .standard:
+            return supportsPictureInPicture
+        case .monoscopic:
+            return false
         }
     }
 
     /// Creates a view displaying video content.
     ///
-    /// - Parameters:
-    ///   - player: The player whose content is displayed.
-    ///   - gravity: The mode used to display the content within the view frame.
-    ///   - isPictureInPictureSupported: A Boolean set to `true` if the view must be able to share its video layer for
-    ///     Picture in Picture.
-    public init(player: Player, gravity: AVLayerVideoGravity = .resizeAspect, isPictureInPictureSupported: Bool = false) {
+    /// - Parameter player: The player whose content is displayed.
+    public init(player: Player) {
         self.player = player
-        self.gravity = gravity
-        self.isPictureInPictureSupported = isPictureInPictureSupported
     }
 }
 
-private extension CALayer {
-    func synchronizeAnimations(_ animations: () -> Void) {
-        CATransaction.begin()
-        if let positionAnimation = animation(forKey: "position") {
-            CATransaction.setAnimationDuration(positionAnimation.duration)
-            CATransaction.setAnimationTimingFunction(positionAnimation.timingFunction)
-        }
-        else {
-            CATransaction.disableActions()
-        }
-        animations()
-        CATransaction.commit()
+public extension VideoView {
+    /// Configures the mode used to display the content within the view frame.
+    ///
+    /// - Parameter gravity: The mode to use.
+    ///
+    /// This parameter is only applied if the content supports it (most notably video content).
+    func gravity(_ gravity: AVLayerVideoGravity) -> VideoView {
+        var view = self
+        view.gravity = gravity
+        return view
+    }
+
+    /// Configures Picture in Picture support for the video view.
+    ///
+    /// - Parameter supportsPictureInPicture: A Boolean set to `true` if the view must be able to share its video
+    ///   layer for Picture in Picture.
+    func supportsPictureInPicture(_ supportsPictureInPicture: Bool = true) -> VideoView {
+        var view = self
+        view.supportsPictureInPicture = supportsPictureInPicture
+        return view
+    }
+
+    /// Configures the viewport of the video view.
+    ///
+    /// - Parameter viewport: The viewport.
+    func viewport(_ viewport: Viewport) -> VideoView {
+        var view = self
+        view.viewport = viewport
+        return view
     }
 }

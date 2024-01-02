@@ -28,17 +28,6 @@ final class ExamplesViewModel: ObservableObject {
         URNTemplate.dvrAudio
     ])
 
-    let aspectRatioMedias = Template.medias(from: [
-        URNTemplate.onDemandHorizontalVideo,
-        URNTemplate.onDemandSquareVideo,
-        URNTemplate.onDemandVerticalVideo
-    ])
-
-    let unbufferedMedias = Template.medias(from: [
-        UnbufferedURLTemplate.liveVideo,
-        UnbufferedURLTemplate.liveAudio
-    ])
-
     let appleMedias = Template.medias(from: [
         URLTemplate.appleBasic_4_3_HLS,
         URLTemplate.appleBasic_16_9_TS_HLS,
@@ -79,6 +68,22 @@ final class ExamplesViewModel: ObservableObject {
         URLTemplate.unifiedStreamingOnDemand_fMP4_HEVC_4K
     ])
 
+    let aspectRatioMedias = Template.medias(from: [
+        URNTemplate.onDemandHorizontalVideo,
+        URNTemplate.onDemandSquareVideo,
+        URNTemplate.onDemandVerticalVideo
+    ])
+
+    let threeSixtyMedias = Template.medias(from: [
+        URNTemplate.gothard_360,
+        URLTemplate.bitmovin_360
+    ])
+
+    let unbufferedMedias = Template.medias(from: [
+        UnbufferedURLTemplate.liveVideo,
+        UnbufferedURLTemplate.liveAudio
+    ])
+
     let cornerCaseMedias = Template.medias(from: [
         URNTemplate.expired,
         URNTemplate.unknown
@@ -113,7 +118,8 @@ final class ExamplesViewModel: ObservableObject {
                         title: title(of: media),
                         description: "DRM-protected video",
                         image: SRGDataProvider.current!.url(for: media.show?.image, size: .large),
-                        type: .urn(media.urn)
+                        type: .urn(media.urn),
+                        isMonoscopic: media.isMonoscopic
                     )
                 }
             }
@@ -130,7 +136,8 @@ final class ExamplesViewModel: ObservableObject {
                         title: media.title,
                         description: "Token-protected video",
                         image: SRGDataProvider.current!.url(for: media.image, size: .large),
-                        type: .urn(media.urn)
+                        type: .urn(media.urn),
+                        isMonoscopic: media.isMonoscopic
                     )
                 }
             }

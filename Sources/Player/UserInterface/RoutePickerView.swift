@@ -12,7 +12,7 @@ import SwiftUI
 /// Behavior: h-exp, v-exp
 public struct RoutePickerView: UIViewRepresentable {
     private var prioritizesVideoDevices: Bool
-    fileprivate var activeTintColor: Color?
+    private var activeTintColor: Color?
 
     /// Creates a route picker button.
     ///

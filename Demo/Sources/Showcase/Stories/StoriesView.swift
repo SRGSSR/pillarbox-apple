@@ -15,7 +15,8 @@ private struct StoryView: View {
 
     var body: some View {
         ZStack {
-            VideoView(player: player, gravity: .resizeAspectFill)
+            VideoView(player: player)
+                .gravity(.resizeAspectFill)
                 .ignoresSafeArea()
             ProgressView()
                 .opacity(isBusy ? 1 : 0)

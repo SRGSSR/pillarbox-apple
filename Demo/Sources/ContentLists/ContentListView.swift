@@ -41,7 +41,12 @@ private struct LoadedView: View {
     private func templates() -> [Template] {
         contents.compactMap { content -> Template? in
             guard case let .media(media) = content else { return nil }
-            return Template(title: media.title, description: MediaDescription.subtitle(for: media), type: .urn(media.urn))
+            return Template(
+                title: media.title,
+                description: MediaDescription.subtitle(for: media),
+                type: .urn(media.urn),
+                isMonoscopic: media.isMonoscopic
+            )
         }
     }
 
@@ -92,7 +97,11 @@ private struct ContentCell: View {
                 date: MediaDescription.date(for: media),
                 style: MediaDescription.style(for: media)
             ) {
-                let media = Media(title: title, type: .urn(media.urn, server: serverSetting.server))
+                let media = Media(
+                    title: title,
+                    type: .urn(media.urn, server: serverSetting.server),
+                    isMonoscopic: media.isMonoscopic
+                )
                 router.presented = .player(media: media)
             }
 #if os(iOS)

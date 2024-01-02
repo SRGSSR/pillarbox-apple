@@ -8,8 +8,8 @@ import AVFoundation
 import SwiftUI
 
 enum RouterDestination: Identifiable, Hashable {
-    case player(media: Media)
-    case systemPlayer(media: Media)
+    case player(media: Media, supportsPictureInPicture: Bool)
+    case systemPlayer(media: Media, supportsPictureInPicture: Bool)
     case inlineSystemPlayer(media: Media)
     case simplePlayer(media: Media)
     case optInPlayer(media: Media)
@@ -29,13 +29,10 @@ enum RouterDestination: Identifiable, Hashable {
     case contentList(configuration: ContentList.Configuration)
 
     var id: String {
+        // Treat players using the same view model as equivalent.
         switch self {
-        case .player:
+        case .player, .systemPlayer, .inlineSystemPlayer:
             return "player"
-        case .systemPlayer:
-            return "systemPlayer"
-        case .inlineSystemPlayer:
-            return "inlineSystemPlayer"
         case .simplePlayer:
             return "simplePlayer"
         case .optInPlayer:
@@ -63,14 +60,24 @@ enum RouterDestination: Identifiable, Hashable {
         }
     }
 
+    static func player(media: Media) -> Self {
+        .player(media: media, supportsPictureInPicture: true)
+    }
+
+    static func systemPlayer(media: Media) -> Self {
+        .systemPlayer(media: media, supportsPictureInPicture: true)
+    }
+
     @ViewBuilder
     func view() -> some View {
         // swiftlint:disable:previous cyclomatic_complexity
         switch self {
-        case let .player(media: media):
+        case let .player(media: media, supportsPictureInPicture: supportsPictureInPicture):
             PlayerView(media: media)
-        case let .systemPlayer(media: media):
+                .supportsPictureInPicture(supportsPictureInPicture)
+        case let .systemPlayer(media: media, supportsPictureInPicture: supportsPictureInPicture):
             SystemPlayerView(media: media)
+                .supportsPictureInPicture(supportsPictureInPicture)
         case let .inlineSystemPlayer(media: media):
             InlineSystemPlayerView(media: media)
         case let .simplePlayer(media: media):

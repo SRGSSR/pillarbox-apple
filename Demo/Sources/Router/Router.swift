@@ -35,24 +35,19 @@ final class Router: ObservableObject {
     @Published var searchPath: [RouterDestination] = []
     @Published var settingsPath: [RouterDestination] = []
 
-    @Published var presented: RouterDestination? {
-        didSet {
-            guard presented != nil else { return }
-            previousPresented = nil
-        }
-    }
+    @Published var presented: RouterDestination?
 
     private var previousPresented: RouterDestination?
 
     init() {
-        PictureInPicture.shared.setDelegate(self)
+        PictureInPicture.shared.delegate = self
     }
 }
 
 extension Router: PictureInPictureDelegate {
     func pictureInPictureWillStart() {
         switch presented {
-        case .player, .systemPlayer, .playlist:
+        case .player, .systemPlayer, .playlist, .multi:
             previousPresented = presented
             presented = nil
         case .inlineSystemPlayer:
@@ -69,16 +64,16 @@ extension Router: PictureInPictureDelegate {
     func pictureInPictureRestoreUserInterfaceForStop(with completion: @escaping (Bool) -> Void) {
         if let previousPresented, previousPresented != presented {
             presented = previousPresented
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                completion(true)
-            }
+            completion(true)
         }
         else {
             completion(true)
         }
     }
 
-    func pictureInPictureWillStop() {}
+    func pictureInPictureWillStop() {
+        previousPresented = nil
+    }
 
     func pictureInPictureDidStop() {}
 }

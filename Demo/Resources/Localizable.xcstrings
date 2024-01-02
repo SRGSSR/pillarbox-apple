@@ -68,9 +68,6 @@
     "Continues if possible" : {
 
     },
-    "Custom" : {
-
-    },
     "Debugging" : {
 
     },
@@ -104,9 +101,6 @@
     "Inline system player (using Pillarbox)" : {
 
     },
-    "Layout" : {
-
-    },
     "Layouts" : {
 
     },
@@ -129,6 +123,9 @@
 
     },
     "Pauses" : {
+
+    },
+    "Picture in Picture" : {
 
     },
     "Play" : {
@@ -173,7 +170,7 @@
     "Stop" : {
 
     },
-    "System" : {
+    "Swap" : {
 
     },
     "System player (using AVPlayer)" : {

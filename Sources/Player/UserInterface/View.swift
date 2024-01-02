@@ -27,22 +27,17 @@ public extension View {
             self
         }
     }
-}
 
-public extension View {
-    /// Enables the view for in-app Picture in Picture, registering a cleanup closure to be performed when resources
-    /// required by Picture in Picture initiated from the view are not needed anymore.
+    /// Enable in-app Picture in Picture support.
     ///
-    /// - Parameter cleanup: A closure to clean resources associated with the view.
-    func enabledForInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) -> some View {
+    /// - Parameter persistable: The object to persist during Picture in Picture.
+    ///
+    /// Apply this modifier where in-app Picture in Picture is desired. This ensures that resources required during
+    /// playback in Picture in Picture are properly persisted. Use `PictureInPicturePersistable.persisted` to retrieve
+    /// the persisted object for view restoration.
+    func enabledForInAppPictureInPicture(persisting persistable: PictureInPicturePersistable) -> some View {
         onAppear {
-            PictureInPicture.shared.restoreFromInAppPictureInPicture()
-        }
-        .onWillAppear {
-            PictureInPicture.shared.custom.stop()
-        }
-        .onDisappear {
-            PictureInPicture.shared.enableInAppPictureInPictureWithCleanup(perform: cleanup)
+            PictureInPicture.shared.persistable = persistable
         }
     }
 }

@@ -16,7 +16,8 @@ struct BlurredView: View {
 
     var body: some View {
         ZStack {
-            VideoView(player: player, gravity: .resizeAspectFill)
+            VideoView(player: player)
+                .gravity(.resizeAspectFill)
                 .blur(radius: 20)
             VideoView(player: player)
                 .ignoresSafeArea()

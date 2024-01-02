@@ -125,3 +125,11 @@ Seeks might feel sluggish when Spatial audio is enabled for connected AirPods. T
 ### Workaround
 
 No workaround is available yet.
+
+## Playback is paused when switching between 360° and standard videos in a playlist
+
+Playback is paused when switching between 360° and standard videos in a playlist. This results from the deallocation of video nodes in monoscopic scenes.
+
+### Workaround
+
+Playback can be resumed, either programmatically or by providing the user with playback controls.

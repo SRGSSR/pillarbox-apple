@@ -6,6 +6,14 @@
 
 import AVFoundation
 
+private let kAppleImage = URL("https://www.apple.com/newsroom/images/default/apple-logo-og.jpg?202312141200")
+private let kBitmovinImage = URL("""
+    https://img.redbull.com/images/c_crop,w_3840,h_1920,x_0,y_0,f_auto,q_auto/c_scale,w_1200/redbullcom/tv/FO-1MR39KNMH2111/fo-1mr39knmh2111-featuremedia
+    """)
+private let kThreeSixtyImage = URL("https://www.rts.ch/2017/02/24/11/43/8414076.image/16x9")
+private let kUnifiedStreamingImage1 = URL("https://mango.blender.org/wp-content/gallery/4k-renders/01_thom_celia_bridge.jpg")
+private let kUnifiedStreamingImage2 = URL("https://website-storage.unified-streaming.com/images/_1200x630_crop_center-center_none/default-facebook.png")
+
 // Apple streams are found at https://developer.apple.com/streaming/examples/
 // Unified Streaming streams are found at https://demo.unified-streaming.com/k8s/features/stable/#!/hls
 enum URLTemplate {
@@ -58,37 +66,34 @@ enum URLTemplate {
         image: "https://img.rts.ch/articles/2017/image/cxsqgp-25867841.image?w=640&h=640",
         type: .url("http://stream.srg-ssr.ch/m/couleur3/mp3_128")
     )
-
-    private static let appleImage: URL = "https://www.apple.com/newsroom/images/default/apple-logo-og.jpg?202312141200"
-
     static let appleBasic_4_3_HLS = Template(
         title: "Apple Basic 4:3",
         description: "4x3 aspect ratio, H.264 @ 30Hz",
-        image: appleImage,
+        image: kAppleImage,
         type: .url("https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8")
     )
     static let appleBasic_16_9_TS_HLS = Template(
         title: "Apple Basic 16:9",
         description: "16x9 aspect ratio, H.264 @ 30Hz",
-        image: appleImage,
+        image: kAppleImage,
         type: .url("https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8")
     )
     static let appleAdvanced_16_9_TS_HLS = Template(
         title: "Apple Advanced 16:9 (TS)",
         description: "16x9 aspect ratio, H.264 @ 30Hz and 60Hz, Transport stream",
-        image: appleImage,
+        image: kAppleImage,
         type: .url("https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")
     )
     static let appleAdvanced_16_9_fMP4_HLS = Template(
         title: "Apple Advanced 16:9 (fMP4)",
         description: "16x9 aspect ratio, H.264 @ 30Hz and 60Hz, Fragmented MP4",
-        image: appleImage,
+        image: kAppleImage,
         type: .url("https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8")
     )
     static let appleAdvanced_16_9_HEVC_h264_HLS = Template(
         title: "Apple Advanced 16:9 (HEVC/H.264)",
         description: "16x9 aspect ratio, H.264 and HEVC @ 30Hz and 60Hz",
-        image: appleImage,
+        image: kAppleImage,
         type: .url("https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_adv_example_hevc/master.m3u8")
     )
     static let appleWWDCKeynote2023 = Template(
@@ -128,11 +133,6 @@ enum URLTemplate {
         title: "Unknown URL",
         type: .url("http://localhost:8123/simple/unavailable/master.m3u8")
     )
-
-    private static let bitmovinImage: URL = """
-    https://img.redbull.com/images/c_crop,w_3840,h_1920,x_0,y_0,f_auto,q_auto/c_scale,w_1200/redbullcom/tv/FO-1MR39KNMH2111/fo-1mr39knmh2111-featuremedia
-    """
-
     static let bitmovinOnDemandMultipleTracks = Template(
         title: "Multiple subtitles and audio tracks",
         image: "https://durian.blender.org/wp-content/uploads/2010/06/05.8b_comp_000272.jpg",
@@ -145,90 +145,90 @@ enum URLTemplate {
     )
     static let bitmovinOnDemandSingleAudio = Template(
         title: "VoD, single audio track",
-        image: bitmovinImage,
+        image: kBitmovinImage,
         type: .url("https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8")
     )
     static let bitmovinOnDemandAES128 = Template(
         title: "AES-128",
-        image: bitmovinImage,
+        image: kBitmovinImage,
         type: .url("https://bitmovin-a.akamaihd.net/content/art-of-motion_drm/m3u8s/11331.m3u8")
     )
     static let bitmovinOnDemandProgressive = Template(
         title: "AVC Progressive",
-        image: bitmovinImage,
+        image: kBitmovinImage,
         type: .url("https://bitmovin-a.akamaihd.net/content/MI201109210084_1/MI201109210084_mpeg-4_hd_high_1080p25_10mbits.mp4")
     )
-
-    private static let unifiedStreamingImage_1: URL = "https://mango.blender.org/wp-content/gallery/4k-renders/01_thom_celia_bridge.jpg"
-    private static let unifiedStreamingImage_2: URL = """
-    https://website-storage.unified-streaming.com/images/_1200x630_crop_center-center_none/default-facebook.png
-    """
-
     static let unifiedStreamingOnDemand_fMP4 = Template(
         title: "Fragmented MP4",
-        image: unifiedStreamingImage_1,
+        image: kUnifiedStreamingImage1,
         type: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8")
     )
     static let unifiedStreamingOnDemandKeyRotation = Template(
         title: "Key Rotation",
-        image: unifiedStreamingImage_2,
+        image: kUnifiedStreamingImage2,
         type: .url("https://demo.unified-streaming.com/k8s/keyrotation/stable/keyrotation/keyrotation.isml/.m3u8")
     )
     static let unifiedStreamingOnDemandAlternateAudio = Template(
         title: "Alternate audio language",
-        image: unifiedStreamingImage_1,
+        image: kUnifiedStreamingImage1,
         type: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-multi-lang.ism/.m3u8")
     )
     static let unifiedStreamingOnDemandAudioOnly = Template(
         title: "Audio only",
-        image: unifiedStreamingImage_1,
+        image: kUnifiedStreamingImage1,
         type: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-multi-lang.ism/.m3u8?filter=(type!=%22video%22)")
     )
     static let unifiedStreamingOnDemandTrickplay = Template(
         title: "Trickplay",
-        image: unifiedStreamingImage_1,
+        image: kUnifiedStreamingImage1,
         type: .url("https://demo.unified-streaming.com/k8s/features/stable/no-handler-origin/tears-of-steel/tears-of-steel-trickplay.m3u8")
     )
     static let unifiedStreamingOnDemandLimitedBandwidth = Template(
         title: "Limiting bandwidth use",
-        image: unifiedStreamingImage_1,
+        image: kUnifiedStreamingImage1,
         type: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8?max_bitrate=800000")
     )
     static let unifiedStreamingOnDemandDynamicTrackSelection = Template(
         title: "Dynamic Track Selection",
-        image: unifiedStreamingImage_1,
+        image: kUnifiedStreamingImage1,
         // swiftlint:disable:next line_length
         type: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8?filter=%28type%3D%3D%22audio%22%26%26systemBitrate%3C100000%29%7C%7C%28type%3D%3D%22video%22%26%26systemBitrate%3C1024000%29")
     )
     static let unifiedStreamingPureLive = Template(
         title: "Pure live",
-        image: unifiedStreamingImage_2,
+        image: kUnifiedStreamingImage2,
         type: .url("https://demo.unified-streaming.com/k8s/live/stable/live.isml/.m3u8")
     )
     static let unifiedStreamingTimeshift = Template(
         title: "Timeshift (5 minutes)",
-        image: unifiedStreamingImage_2,
+        image: kUnifiedStreamingImage2,
         type: .url("https://demo.unified-streaming.com/k8s/live/stable/live.isml/.m3u8?time_shift=300")
     )
     static let unifiedStreamingLiveAudio = Template(
         title: "Live audio",
-        image: unifiedStreamingImage_2,
+        image: kUnifiedStreamingImage2,
         type: .url("https://demo.unified-streaming.com/k8s/live/stable/live.isml/.m3u8?filter=(type!=%22video%22)")
     )
     static let unifiedStreamingPureLiveScte35 = Template(
         title: "Pure live (scte35)",
-        image: unifiedStreamingImage_2,
+        image: kUnifiedStreamingImage2,
         type: .url("https://demo.unified-streaming.com/k8s/live/stable/scte35.isml/.m3u8")
     )
     static let unifiedStreamingOnDemand_fMP4_Clear = Template(
         title: "fMP4, clear",
-        image: unifiedStreamingImage_1,
+        image: kUnifiedStreamingImage1,
         type: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-fmp4.ism/.m3u8")
     )
     static let unifiedStreamingOnDemand_fMP4_HEVC_4K = Template(
         title: "fMP4, HEVC 4K",
-        image: unifiedStreamingImage_1,
+        image: kUnifiedStreamingImage1,
         type: .url("https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel-hevc.ism/.m3u8")
+    )
+    static let bitmovin_360 = Template(
+        title: "Bitmovin 360°",
+        image: kThreeSixtyImage,
+        type: .url("https://cdn.bitmovin.com/content/assets/playhouse-vr/m3u8s/105560.m3u8"),
+        isMonoscopic: true
     )
 }
 
@@ -271,10 +271,11 @@ enum URNTemplate {
         image: "https://img.rts.ch/articles/2017/image/cxsqgp-25867841.image?w=640&h=640",
         type: .urn("urn:rts:audio:3262363")
     )
-    static let onDemandAudio = Template(
-        title: "Il lavoro di TerraProject per una fotografia documentaria",
-        description: "On-demand audio stream",
-        type: .urn("urn:rsi:audio:8833144")
+    static let gothard_360 = Template(
+        title: "Gothard 360°",
+        image: kThreeSixtyImage,
+        type: .urn("urn:rts:video:8414077"),
+        isMonoscopic: true
     )
     static let expired = Template(
         title: "Expired URN",
@@ -309,12 +310,14 @@ struct Template: Hashable {
     let description: String?
     let image: URL?
     let type: Media.`Type`
+    let isMonoscopic: Bool
 
-    init(title: String, description: String? = nil, image: URL? = nil, type: Media.`Type`) {
+    init(title: String, description: String? = nil, image: URL? = nil, type: Media.`Type`, isMonoscopic: Bool = false) {
         self.title = title
         self.description = description
         self.image = image
         self.type = type
+        self.isMonoscopic = isMonoscopic
     }
 
     static func medias(from templates: [Self]) -> [Media] {

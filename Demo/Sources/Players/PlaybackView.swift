@@ -15,7 +15,8 @@ import SwiftUI
 private struct MainView: View {
     @ObservedObject var player: Player
     @Binding var layout: PlaybackView.Layout
-    let isPictureInPictureSupported: Bool
+    let isMonoscopic: Bool
+    let supportsPictureInPicture: Bool
 
     @StateObject private var visibilityTracker = VisibilityTracker()
 
@@ -103,15 +104,20 @@ private struct MainView: View {
 
     @ViewBuilder
     private func video() -> some View {
-        switch player.mediaType {
-        case .audio:
-            image(name: "music.note.tv.fill")
-        default:
-            if player.isExternalPlaybackActive {
+        ZStack {
+            if player.mediaType == .audio {
+                image(name: "music.note.tv.fill")
+            }
+            else if player.isExternalPlaybackActive {
                 image(name: "tv")
             }
+            else if isMonoscopic {
+                MonoscopicVideoView(player: player)
+            }
             else {
-                VideoView(player: player, gravity: gravity, isPictureInPictureSupported: isPictureInPictureSupported)
+                VideoView(player: player)
+                    .gravity(gravity)
+                    .supportsPictureInPicture(supportsPictureInPicture)
             }
         }
     }
@@ -259,16 +265,6 @@ private struct VolumeButton: View {
     }
 }
 
-private struct PiPButton: View {
-    var body: some View {
-        PictureInPictureButton { isActive in
-            Image(systemName: isActive ? "pip.exit" : "pip.enter")
-                .tint(.white)
-                .frame(width: 45, height: 45)
-        }
-    }
-}
-
 // Behavior: h-hug, v-hug
 private struct LoadingIndicator: View {
     let player: Player
@@ -359,11 +355,9 @@ private struct TimeBar: View {
 
     @ViewBuilder
     private func routePickerView() -> some View {
-        if player.configuration.allowsExternalPlayback {
-            RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices)
-                .tint(.white)
-                .aspectRatio(contentMode: .fit)
-        }
+        RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices)
+            .tint(.white)
+            .aspectRatio(contentMode: .fit)
     }
 
     @ViewBuilder
@@ -547,10 +541,9 @@ struct PlaybackView: View {
 
     @ObservedObject private var player: Player
     @Binding private var layout: Layout
-    let isPictureInPictureSupported: Bool
-#if os(iOS)
-    let playerLayout: PlayerLayout
-#endif
+
+    private var isMonoscopic = false
+    private var supportsPictureInPicture = false
 
     var body: some View {
         ZStack {
@@ -558,7 +551,7 @@ struct PlaybackView: View {
                 ErrorView(description: error.localizedDescription, player: player)
             }
             else if !player.items.isEmpty {
-                videoView()
+                mainView()
                     .persistentSystemOverlays(.hidden)
             }
             else {
@@ -572,42 +565,48 @@ struct PlaybackView: View {
         .background(.black)
     }
 
-#if os(iOS)
-    init(
-        player: Player,
-        playerLayout: PlayerLayout = UserDefaults.standard.playerLayout,
-        layout: Binding<Layout> = .constant(.inline),
-        isPictureInPictureSupported: Bool = false
-    ) {
-        self.player = player
-        self.playerLayout = playerLayout
-        _layout = layout
-        self.isPictureInPictureSupported = isPictureInPictureSupported
-    }
-#else
-    init(player: Player, layout: Binding<Layout> = .constant(.inline), isPictureInPictureSupported: Bool = false) {
+    init(player: Player, layout: Binding<Layout> = .constant(.inline)) {
         self.player = player
         _layout = layout
-        self.isPictureInPictureSupported = isPictureInPictureSupported
     }
-#endif
 
     @ViewBuilder
-    private func videoView() -> some View {
+    private func mainView() -> some View {
         ZStack {
 #if os(iOS)
-            switch playerLayout {
-            case .custom:
-                MainView(player: player, layout: $layout, isPictureInPictureSupported: isPictureInPictureSupported)
-            case .system:
-                SystemVideoView(player: player, isPictureInPictureSupported: isPictureInPictureSupported)
+            MainView(
+                player: player,
+                layout: $layout,
+                isMonoscopic: isMonoscopic,
+                supportsPictureInPicture: supportsPictureInPicture
+            )
+#else
+            if isMonoscopic {
+                VideoView(player: player)
+                    .viewport(.monoscopic(orientation: .monoscopicDefault))
                     .ignoresSafeArea()
             }
-#else
-            SystemVideoView(player: player, isPictureInPictureSupported: isPictureInPictureSupported)
-                .ignoresSafeArea()
+            else {
+                SystemVideoView(player: player)
+                    .supportsPictureInPicture(supportsPictureInPicture)
+                    .ignoresSafeArea()
+            }
 #endif
         }
+    }
+}
+
+extension PlaybackView {
+    func monoscopic(_ isMonoscopic: Bool = true) -> PlaybackView {
+        var view = self
+        view.isMonoscopic = isMonoscopic
+        return view
+    }
+
+    func supportsPictureInPicture(_ supportsPictureInPicture: Bool = true) -> PlaybackView {
+        var view = self
+        view.supportsPictureInPicture = supportsPictureInPicture
+        return view
     }
 }
 

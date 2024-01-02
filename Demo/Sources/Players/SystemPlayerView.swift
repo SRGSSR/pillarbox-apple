@@ -9,20 +9,35 @@ import SwiftUI
 
 // Behavior: h-exp, v-exp
 struct SystemPlayerView: View {
-    private static let model = PlayerViewModel()
+    let media: Media
+
+    @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
+    private var supportsPictureInPicture = false
 
     var body: some View {
-        SystemVideoView(player: Self.model.player, isPictureInPictureSupported: true)
+        SystemVideoView(player: model.player)
+            .supportsPictureInPicture(supportsPictureInPicture)
+            .enabledForInAppPictureInPicture(persisting: model)
             .ignoresSafeArea()
-            .enabledForInAppPictureInPictureWithCleanup {
-                Self.model.media = nil
-            }
-            .onAppear(perform: Self.model.play)
+            .onAppear(perform: play)
             .tracked(name: "system-player")
     }
 
     init(media: Media) {
-        Self.model.media = media
+        self.media = media
+    }
+
+    private func play() {
+        model.media = media
+        model.play()
+    }
+}
+
+extension SystemPlayerView {
+    func supportsPictureInPicture(_ supportsPictureInPicture: Bool = true) -> SystemPlayerView {
+        var view = self
+        view.supportsPictureInPicture = supportsPictureInPicture
+        return view
     }
 }
 

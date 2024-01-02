@@ -8,6 +8,7 @@ import SwiftUI
 
 // Behavior: h-exp, v-exp
 struct ShowcaseView: View {
+    // swiftlint:disable:previous type_body_length
     @EnvironmentObject private var router: Router
 
     var body: some View {
@@ -29,6 +30,8 @@ struct ShowcaseView: View {
             embeddingsSection()
             systemPlayerSection()
             inlineSystemPlayerSection()
+            customPictureInPictureSection()
+            systemPictureInPictureSection()
             vanillaPlayerSection()
             trackingSection()
         }
@@ -130,6 +133,16 @@ struct ShowcaseView: View {
             .sourceCode(of: MultiView.self)
 
             cell(
+                title: "Multi-instance with mixed content",
+                subtitle: "Two videos played at the same time",
+                destination: .multi(
+                    media1: Media(from: URNTemplate.onDemandHorizontalVideo),
+                    media2: Media(from: URNTemplate.gothard_360)
+                )
+            )
+            .sourceCode(of: MultiView.self)
+
+            cell(
                 title: "Link",
                 subtitle: "A player which can be linked to a view",
                 destination: .link(media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS))
@@ -191,10 +204,106 @@ struct ShowcaseView: View {
     private func inlineSystemPlayerSection() -> some View {
         CustomSection("Inline system player (using Pillarbox)") {
             cell(
-                title: "Video URN - On-demand",
-                destination: .inlineSystemPlayer(media: Media(from: URNTemplate.onDemandVideo))
+                title: "Couleur 3 (DVR)",
+                destination: .inlineSystemPlayer(media: Media(from: URLTemplate.dvrVideoHLS))
             )
             .sourceCode(of: InlineSystemPlayerView.self)
+        }
+    }
+
+    @ViewBuilder
+    private func customPictureInPictureSection() -> some View {
+        // swiftlint:disable:next closure_body_length
+        CustomSection("Custom Player and Picture in Picture (PiP) support") {
+            cell(
+                title: "Couleur 3 (DVR)",
+                subtitle: "With PiP support",
+                destination: .player(media: Media(from: URLTemplate.dvrVideoHLS))
+            )
+            .sourceCode(of: PlayerView.self)
+
+            cell(
+                title: "Apple Advanced 16:9 (fMP4)",
+                subtitle: "With PiP support",
+                destination: .player(media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS))
+            )
+            .sourceCode(of: PlayerView.self)
+
+            cell(
+                title: "Gothard 360°",
+                subtitle: "With PiP support (but unavailable)",
+                destination: .player(media: Media(from: URNTemplate.gothard_360))
+            )
+            .sourceCode(of: PlayerView.self)
+
+            cell(
+                title: "Couleur 3 (DVR)",
+                subtitle: "Without PiP support",
+                destination: .player(
+                    media: Media(from: URLTemplate.dvrVideoHLS),
+                    supportsPictureInPicture: false
+                )
+            )
+            .sourceCode(of: PlayerView.self)
+
+            cell(
+                title: "Apple Advanced 16:9 (fMP4)",
+                subtitle: "Without PiP support",
+                destination: .player(
+                    media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS),
+                    supportsPictureInPicture: false
+                )
+            )
+            .sourceCode(of: PlayerView.self)
+
+            cell(
+                title: "Gothard 360°",
+                subtitle: "Without PiP support",
+                destination: .player(
+                    media: Media(from: URNTemplate.gothard_360),
+                    supportsPictureInPicture: false
+                )
+            )
+            .sourceCode(of: PlayerView.self)
+        }
+    }
+
+    @ViewBuilder
+    private func systemPictureInPictureSection() -> some View {
+        CustomSection("System Player and Picture in Picture (PiP) support") {
+            cell(
+                title: "Couleur 3 (DVR)",
+                subtitle: "With PiP support",
+                destination: .systemPlayer(media: Media(from: URLTemplate.dvrVideoHLS))
+            )
+            .sourceCode(of: SystemPlayerView.self)
+
+            cell(
+                title: "Apple Advanced 16:9 (fMP4)",
+                subtitle: "With PiP support",
+                destination: .systemPlayer(media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS))
+            )
+            .sourceCode(of: SystemPlayerView.self)
+
+            cell(
+                title: "Couleur 3 (DVR)",
+                subtitle: "Without PiP support",
+                destination: .systemPlayer(
+                    media: Media(from: URLTemplate.dvrVideoHLS),
+                    supportsPictureInPicture: false
+                )
+            )
+            .sourceCode(of: SystemPlayerView.self)
+
+            cell(
+                title: "Apple Advanced 16:9 (fMP4)",
+                subtitle: "Without PiP support",
+                destination: .systemPlayer(
+                    media: Media(from: URLTemplate.appleAdvanced_16_9_fMP4_HLS),
+                    supportsPictureInPicture: false
+                )
+            )
+            .sourceCode(of: SystemPlayerView.self)
         }
     }
 

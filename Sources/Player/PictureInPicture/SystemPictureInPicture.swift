@@ -11,9 +11,8 @@ final class SystemPictureInPicture: NSObject {
     private(set) var isActive = false
 
     var playerViewController: AVPlayerViewController?
-    weak var delegate: PictureInPictureDelegate?
 
-    private var deferredCleanup: (() -> Void)?
+    weak var delegate: PictureInPictureDelegate?
     private var referenceCount = 0
 
     func stop() {
@@ -34,41 +33,24 @@ final class SystemPictureInPicture: NSObject {
     func relinquish(for controller: AVPlayerViewController) {
         guard controller === playerViewController else { return }
         referenceCount -= 1
-
-        guard referenceCount == 0 else { return }
-        playerViewController = nil
-
-        // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
-        DispatchQueue.main.async {
-            self.clean()
-        }
-    }
-
-    func update(with player: AVPlayer) {
-        guard let currentPlayer = playerViewController?.player, currentPlayer !== player else { return }
-        clean()
-    }
-
-    private func clean() {
-        deferredCleanup?()
-        deferredCleanup = nil
-    }
-
-    func restoreFromInAppPictureInPicture() {
-        guard let playerViewController else { return }
-        acquire(for: playerViewController)
-    }
-
-    func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
         if referenceCount == 0 {
-            cleanup()
+            playerViewController = nil
         }
-        else {
-            deferredCleanup = cleanup
-            if let playerViewController {
-                relinquish(for: playerViewController)
-            }
+    }
+
+    func onAppear(with player: AVPlayer, supportsPictureInPicture: Bool) {
+        if !supportsPictureInPicture {
+            detach(with: player)
         }
+    }
+
+    /// Avoid unnecessary pauses when transitioning via Picture in Picture to a view which does not support
+    /// it.
+    ///
+    /// See https://github.com/SRGSSR/pillarbox-apple/issues/612 for more information.
+    func detach(with player: AVPlayer) {
+        guard playerViewController?.player === player else { return }
+        playerViewController?.player = nil
     }
 }
 
@@ -94,11 +76,16 @@ extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
         _ playerViewController: AVPlayerViewController,
         restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
     ) {
-        delegate?.pictureInPictureRestoreUserInterfaceForStop(with: completionHandler)
+        if let delegate {
+            delegate.pictureInPictureRestoreUserInterfaceForStop(with: completionHandler)
+        }
+        else {
+            completionHandler(true)
+        }
     }
 
     func playerViewControllerWillStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
-        isActive = true
+        isActive = false
         delegate?.pictureInPictureWillStop()
     }
 

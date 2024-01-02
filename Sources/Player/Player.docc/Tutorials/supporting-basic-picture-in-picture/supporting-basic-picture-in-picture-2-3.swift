@@ -8,7 +8,8 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            VideoView(player: player, isPictureInPictureSupported: true)
+            VideoView(player: player)
+                .supportsPictureInPicture()
         }
         .ignoresSafeArea()
         .onAppear(perform: player.play)

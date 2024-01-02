@@ -147,17 +147,15 @@ private struct Toolbar: View {
 
 // Behavior: h-exp, v-exp
 struct PlaylistView: View {
-    private static let shared = PlaylistViewModel()
-    @ObservedObject private var model = shared
+    let templates: [Template]
+
+    @StateObject private var model = PlaylistViewModel.persisted ?? PlaylistViewModel()
     @State private var layout: PlaybackView.Layout = .minimized
 
     var body: some View {
         VStack(spacing: 0) {
-#if os(iOS)
-            PlaybackView(player: model.player, playerLayout: .custom, layout: $layout, isPictureInPictureSupported: true)
-#else
-            PlaybackView(player: model.player, layout: $layout, isPictureInPictureSupported: true)
-#endif
+            PlaybackView(player: model.player, layout: $layout)
+                .supportsPictureInPicture()
             if layout != .maximized {
                 Toolbar(player: model.player, model: model)
                 List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
@@ -166,13 +164,12 @@ struct PlaylistView: View {
             }
         }
         .animation(.defaultLinear, value: layout)
-        .onAppear(perform: model.play)
-        .enabledForInAppPictureInPictureWithCleanup(perform: model.trash)
+        .onAppear {
+            model.templates = templates
+            model.play()
+        }
+        .enabledForInAppPictureInPicture(persisting: model)
         .tracked(name: "playlist")
-    }
-
-    init(templates: [Template]) {
-        model.templates = templates
     }
 }
 

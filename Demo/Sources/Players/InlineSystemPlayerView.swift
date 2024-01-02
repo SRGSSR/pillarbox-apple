@@ -8,26 +8,28 @@ import Player
 import SwiftUI
 
 struct InlineSystemPlayerView: View {
-    private static let model = PlayerViewModel()
+    let media: Media
+
+    @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
 
     private var padding: CGFloat {
         UIDevice.current.userInterfaceIdiom == .phone ? 50 : 200
     }
 
     var body: some View {
-        SystemVideoView(player: Self.model.player, isPictureInPictureSupported: true)
+        SystemVideoView(player: model.player)
+            .supportsPictureInPicture()
+            .enabledForInAppPictureInPicture(persisting: model)
             .ignoresSafeArea()
-            .enabledForInAppPictureInPictureWithCleanup {
-                Self.model.media = nil
-            }
             .aspectRatio(16 / 9, contentMode: .fit)
             .padding(padding)
-            .onAppear(perform: Self.model.play)
+            .onAppear(perform: play)
             .tracked(name: "inline-system-player")
     }
 
-    init(media: Media) {
-        Self.model.media = media
+    private func play() {
+        model.media = media
+        model.play()
     }
 }
 

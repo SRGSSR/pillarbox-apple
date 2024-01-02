@@ -27,7 +27,7 @@ For your application to be able to support Picture in Picture you must:
 
 ### Basic integration
 
-To enable basic Picture in Picture integration simply instantiate a video view with ``VideoView/init(player:gravity:isPictureInPictureSupported:)``, setting the `isPictureInPictureSupported` parameter to `true`.
+To enable basic Picture in Picture integration simply instantiate a video view with ``VideoView/init(player:)``and apply the ``VideoView/supportsPictureInPicture(_:)`` modifier.
 
 > ``SystemVideoView`` does not support basic Picture in Picture integration.
 
@@ -46,15 +46,16 @@ Advanced integration is more involved and requires additional integration steps 
 
 Advanced integration is available both for ``VideoView`` as well as ``SystemVideoView`` and is usually achieved as follows:
 
-1. Enable `isPictureInPictureSupported` for a ``VideoView`` or ``SystemVideoView`` at construction time.
-2. Ensure your player view state is persisted even when the player view is not displayed. One possible approach is to have a player view model which outlives its view, e.g. by storing it using a shared global state (e.g. a `static` property). The player view state should itself contain the ``Player`` instance used for playback.
+1. Apply ``VideoView/supportsPictureInPicture(_:)`` on your ``VideoView`` or ``SystemVideoView/supportsPictureInPicture(_:)`` on your ``SystemVideoView``.
+2. Ensure your player view state is persisted even when the player view is not displayed by conforming the associated class to ``PictureInPicturePersistable``. No method needs to be implemented.
 3. Properly handle content updates in your shared player view state. This usually means you should:
     - Update your player when a new content is being played.
     - Avoid updating your player when the same content is played so that playback can continue uninterrupted.
     - Remove all items currently in the player queue when content playback must stop.
-4. To release resources when the player view is not needed anymore (i.e. when the player view is closed without activating Picture in Picture, or when Picture in Picture ends), apply the ``SwiftUI/View/enabledForInAppPictureInPictureWithCleanup(perform:)`` modifier to the video view parent hierarchy, clearing your player view model state in its associated closure.
-5. ``SystemVideoView`` provides a Picture in Picture button automatically. In ``VideoView``-based custom layouts add a ``PictureInPictureButton``.
-6. To dismiss / restore the player user interface when entering / exiting Picture in Picture, set a Picture in Picture life cycle delegate with the ``PictureInPicture/setDelegate(_:)`` method. A  generally good candidate is any routing-aware class of your application. Dismiss the player view when Picture in Picture is about to start and restore it when it ends.
+4. To ensure your player state is persisted during Picture in Picture playback apply the ``SwiftUI/View/enabledForInAppPictureInPicture(persisting:)`` modifier, passing it the persistable state prepared above.
+5. Update your player view instantiation so that persisted state is recovered from ``PictureInPicturePersistable/persisted`` if available, otherwise create a new state.
+6. ``SystemVideoView`` provides a Picture in Picture button automatically. In ``VideoView``-based custom layouts add a ``PictureInPictureButton``.
+7. To dismiss / restore the player user interface when entering / exiting Picture in Picture, set a Picture in Picture life cycle delegate with the ``PictureInPicture/delegate`` property. A  generally good candidate is any routing-aware class of your application. Dismiss the player view when Picture in Picture is about to start and restore it when it ends.
 
 > Warning: Switching between a ``VideoView`` and a ``SystemVideoView`` for the content currently being played in Picture in Picture is not supported and leads to undefined behavior.
 

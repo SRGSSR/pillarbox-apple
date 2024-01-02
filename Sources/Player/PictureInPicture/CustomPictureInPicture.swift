@@ -11,12 +11,10 @@ import Combine
 final class CustomPictureInPicture: NSObject {
     @Published private(set) var isPossible = false
     @Published private(set) var isActive = false
-    @Published private(set) var isInAppPossible = false
 
     @objc private dynamic var controller: AVPictureInPictureController?
-    weak var delegate: PictureInPictureDelegate?
 
-    private var deferredCleanup: (() -> Void)?
+    weak var delegate: PictureInPictureDelegate?
     private var referenceCount = 0
 
     var playerLayer: AVPlayerLayer? {
@@ -46,7 +44,7 @@ final class CustomPictureInPicture: NSObject {
     }
 
     func acquire(for playerLayer: AVPlayerLayer) {
-        if controller?.playerLayer === playerLayer {
+        if self.playerLayer === playerLayer {
             referenceCount += 1
         }
         else {
@@ -62,26 +60,29 @@ final class CustomPictureInPicture: NSObject {
     }
 
     func relinquish(for playerLayer: AVPlayerLayer) {
-        guard controller?.playerLayer === playerLayer else { return }
+        guard self.playerLayer === playerLayer else { return }
         referenceCount -= 1
-
-        guard referenceCount == 0 else { return }
-        controller = nil
-
-        // Wait until the next run loop to avoid cleanup possibly triggering body updates for discarded views.
-        DispatchQueue.main.async {
-            self.clean()
+        if referenceCount == 0 {
+            controller = nil
         }
     }
 
-    func update(with player: AVPlayer) {
-        guard let currentPlayer = playerLayer?.player, currentPlayer !== player else { return }
-        clean()
+    func onAppear(with player: AVPlayer, supportsPictureInPicture: Bool) {
+        if !supportsPictureInPicture {
+            detach(with: player)
+        }
+        else {
+            stop()
+        }
     }
 
-    private func clean() {
-        deferredCleanup?()
-        deferredCleanup = nil
+    /// Avoid unnecessary pauses when transitioning via Picture in Picture to a view which does not support
+    /// it.
+    ///
+    /// See https://github.com/SRGSSR/pillarbox-apple/issues/612 for more information.
+    func detach(with player: AVPlayer) {
+        guard playerLayer?.player === player else { return }
+        playerLayer?.player = nil
     }
 
     private func configureIsPossiblePublisher() {
@@ -93,27 +94,6 @@ final class CustomPictureInPicture: NSObject {
             .switchToLatest()
             .receiveOnMainThread()
             .assign(to: &$isPossible)
-    }
-
-    func restoreFromInAppPictureInPicture() {
-        isInAppPossible = true
-
-        guard let playerLayer else { return }
-        acquire(for: playerLayer)
-    }
-
-    func enableInAppPictureInPictureWithCleanup(perform cleanup: @escaping () -> Void) {
-        isInAppPossible = false
-
-        if referenceCount == 0 {
-            cleanup()
-        }
-        else {
-            deferredCleanup = cleanup
-            if let playerLayer {
-                relinquish(for: playerLayer)
-            }
-        }
     }
 }
 
@@ -139,7 +119,12 @@ extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
         _ pictureInPictureController: AVPictureInPictureController,
         restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
     ) {
-        delegate?.pictureInPictureRestoreUserInterfaceForStop(with: completionHandler)
+        if let delegate {
+            delegate.pictureInPictureRestoreUserInterfaceForStop(with: completionHandler)
+        }
+        else {
+            completionHandler(true)
+        }
     }
 
     func pictureInPictureControllerWillStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {

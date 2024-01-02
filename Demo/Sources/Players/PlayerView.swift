@@ -10,20 +10,48 @@ import SwiftUI
 /// A standalone player view with standard controls.
 /// Behavior: h-exp, v-exp
 struct PlayerView: View {
-    private static let model = PlayerViewModel()
+    let media: Media
+
+    @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
+
+    private var isMonoscopic = false
+    private var supportsPictureInPicture = false
 
     var body: some View {
-        PlaybackView(player: Self.model.player, isPictureInPictureSupported: true)
-            .enabledForInAppPictureInPictureWithCleanup {
-                Self.model.media = nil
-            }
-            .onAppear(perform: Self.model.play)
+        PlaybackView(player: model.player)
+            .monoscopic(media.isMonoscopic)
+            .supportsPictureInPicture(supportsPictureInPicture)
+            .enabledForInAppPictureInPicture(persisting: model)
+            .onAppear(perform: play)
             .tracked(name: "player")
     }
 
     init(media: Media) {
-        Self.model.media = media
+        self.media = media
     }
+
+    private func play() {
+        model.media = media
+        model.play()
+    }
+}
+
+extension PlayerView {
+    func monoscopic(_ isMonoscopic: Bool = true) -> PlayerView {
+        var view = self
+        view.isMonoscopic = isMonoscopic
+        return view
+    }
+
+    func supportsPictureInPicture(_ supportsPictureInPicture: Bool = true) -> PlayerView {
+        var view = self
+        view.supportsPictureInPicture = supportsPictureInPicture
+        return view
+    }
+}
+
+extension PlayerView: SourceCodeViewable {
+    static var filePath: String { #file }
 }
 
 #Preview {
