@@ -7,7 +7,7 @@
 import SwiftUI
 import WebKit
 
-struct WebView: UIViewRepresentable {
+private struct _WebView: UIViewRepresentable {
     let url: URL
 
     func makeUIView(context: Context) -> some UIView {
@@ -17,6 +17,18 @@ struct WebView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: UIViewType, context: Context) {}
+}
+
+struct WebView: View {
+    let url: URL
+
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            _WebView(url: url)
+            CloseButton()
+        }
+        .ignoresSafeArea(edges: .bottom)
+    }
 }
 
 extension WebView: SourceCodeViewable {
