@@ -7,7 +7,7 @@
 import Combine
 import Player
 
-final class PlayerViewModel: ObservableObject {
+final class PlayerViewModel: ObservableObject, PictureInPicturePersistable {
     @Published var media: Media? {
         didSet {
             guard media != oldValue else { return }
@@ -26,14 +26,4 @@ final class PlayerViewModel: ObservableObject {
         player.becomeActive()
         player.play()
     }
-}
-
-extension PlayerViewModel: PictureInPicturePersistable {
-    func pictureInPictureWillStart() {}
-
-    func pictureInPictureDidStart() {}
-
-    func pictureInPictureWillStop() {}
-
-    func pictureInPictureDidStop() {}
 }

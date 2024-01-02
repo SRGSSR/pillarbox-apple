@@ -30,4 +30,16 @@ public extension PictureInPicturePersistable {
     static var persisted: Self? {
         PictureInPicture.shared.persisted as? Self
     }
+
+    /// Default implementation. Does nothing.
+    func pictureInPictureWillStart() {}
+
+    /// Default implementation. Does nothing.
+    func pictureInPictureDidStart() {}
+
+    /// Default implementation. Does nothing.
+    func pictureInPictureWillStop() {}
+
+    /// Default implementation. Does nothing.
+    func pictureInPictureDidStop() {}
 }

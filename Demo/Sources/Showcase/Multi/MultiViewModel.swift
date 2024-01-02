@@ -128,13 +128,7 @@ final class MultiViewModel: ObservableObject {
 }
 
 extension MultiViewModel: PictureInPicturePersistable {
-    func pictureInPictureWillStart() {}
-
     func pictureInPictureDidStart() {
         inactivePlayer.pause()
     }
-
-    func pictureInPictureWillStop() {}
-
-    func pictureInPictureDidStop() {}
 }

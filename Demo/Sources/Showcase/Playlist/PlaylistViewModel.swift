@@ -8,7 +8,7 @@ import Combine
 import OrderedCollections
 import Player
 
-final class PlaylistViewModel: ObservableObject {
+final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     static let standardTemplates = [
         URLTemplate.onDemandVideoHLS,
         URLTemplate.shortOnDemandVideoHLS,
@@ -144,14 +144,4 @@ final class PlaylistViewModel: ObservableObject {
             }
             .assign(to: &$currentMedia)
     }
-}
-
-extension PlaylistViewModel: PictureInPicturePersistable {
-    func pictureInPictureWillStart() {}
-
-    func pictureInPictureDidStart() {}
-
-    func pictureInPictureWillStop() {}
-
-    func pictureInPictureDidStop() {}
 }

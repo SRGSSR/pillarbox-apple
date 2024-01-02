@@ -19,8 +19,15 @@ public protocol PageViewTracking {
     /// The Commanders Act page view data.
     var commandersActPageView: CommandersActPageView { get }
 
-    /// A Boolean to enable or disable automatic tracking.
+    /// A Boolean to enable or disable automatic tracking. Defaults to `true`.
     var isTrackedAutomatically: Bool { get }
+}
+
+public extension PageViewTracking {
+    /// The default automatic tracking setting.
+    var isTrackedAutomatically: Bool {
+        true
+    }
 }
 
 extension UIViewController {
