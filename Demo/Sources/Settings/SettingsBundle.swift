@@ -7,7 +7,7 @@
 import Combine
 import Foundation
 
-class SettingsBundle: ObservableObject {
+final class SettingsBundle: ObservableObject {
     @Published private(set) var showsWebDemo = false
 
     init() {

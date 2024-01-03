@@ -354,7 +354,7 @@ struct ShowcaseView: View {
     private func webViewSection() -> some View {
         if settingBundle.showsWebDemo {
             CustomSection("Web") {
-                cell(title: "Pillarbox App", destination: .webView(url: "https://srgssr.github.io/pillarbox-web/"))
+                cell(title: "Pillarbox Demo", destination: .webView(url: "https://srgssr.github.io/pillarbox-web/"))
             }
             .sourceCode(of: WebView.self)
         }
