@@ -89,8 +89,8 @@ private struct ContentCell: View {
             let title = MediaDescription.title(for: media)
             Cell(
                 size: .init(width: 570, height: 350),
-                title: media.show?.title,
-                subtitle: media.title,
+                title: constant(iOS: title, tvOS: media.show?.title),
+                subtitle: constant(iOS: MediaDescription.subtitle(for: media), tvOS: media.title),
                 image: SRGDataProvider.current!.url(for: media.image, size: .large),
                 type: MediaDescription.systemImage(for: media),
                 duration: MediaDescription.duration(for: media),
