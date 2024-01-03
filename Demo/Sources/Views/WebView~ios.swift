@@ -5,8 +5,6 @@
 //
 
 import SwiftUI
-
-#if os(iOS)
 import WebKit
 
 private struct _WebView: UIViewRepresentable {
@@ -20,19 +18,16 @@ private struct _WebView: UIViewRepresentable {
 
     func updateUIView(_ uiView: UIViewType, context: Context) {}
 }
-#endif
 
 struct WebView: View {
     let url: URL
 
     var body: some View {
-        ZStack(alignment: .topLeading) {
-#if os(iOS)
-            _WebView(url: url)
-#endif
-            CloseButton()
-        }
-        .ignoresSafeArea(edges: .bottom)
+        _WebView(url: url)
+            .ignoresSafeArea(edges: .bottom)
+            .overlay(alignment: .topLeading) {
+                CloseButton()
+            }
     }
 }
 

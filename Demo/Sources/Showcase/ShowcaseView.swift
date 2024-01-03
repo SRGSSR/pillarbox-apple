@@ -35,7 +35,9 @@ struct ShowcaseView: View {
             systemPictureInPictureSection()
             vanillaPlayerSection()
             trackingSection()
+#if os(iOS)
             webViewSection()
+#endif
         }
         .tracked(name: "showcase")
     }
@@ -350,6 +352,8 @@ struct ShowcaseView: View {
         }
         .sourceCode(of: OptInView.self)
     }
+
+#if os(iOS)
     @ViewBuilder
     private func webViewSection() -> some View {
         if settingBundle.showsWebDemo {
@@ -359,6 +363,7 @@ struct ShowcaseView: View {
             .sourceCode(of: WebView.self)
         }
     }
+#endif
 }
 
 #Preview {
