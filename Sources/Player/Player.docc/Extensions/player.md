@@ -1,4 +1,4 @@
-# ``Player/Player``
+# ``PillarboxPlayer/Player``
 
 ## Topics
 

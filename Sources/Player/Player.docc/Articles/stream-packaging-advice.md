@@ -4,11 +4,11 @@
     @PageColor(purple)
 }
 
-Package streams for optimal compatibility with the Player framework.
+Package streams for optimal compatibility with the PillarboxPlayer framework.
 
 ## Overview
 
-The optimal playback experience which can be obtained with the Player framework requires streams to be packaged accordingly. This most notably affects the ability of the player to automatically apply default media selections as well as the quality of its scrubbing user experience.
+The optimal playback experience which can be obtained with the PillarboxPlayer framework requires streams to be packaged accordingly. This most notably affects the ability of the player to automatically apply default media selections as well as the quality of its scrubbing user experience.
 
 More information about automatic selection is available from <doc:subtitles-and-alternative-audio-tracks>.
 
