@@ -45,8 +45,8 @@ struct SearchView: View {
                 if let media {
                     Cell(
                         size: .init(width: 520, height: 300),
-                        title: media.show?.title,
-                        subtitle: media.title,
+                        title: constant(iOS: MediaDescription.title(for: media), tvOS: media.show?.title),
+                        subtitle: constant(iOS: MediaDescription.subtitle(for: media), tvOS: media.title),
                         image: SRGDataProvider.current!.url(for: media.image, size: .large),
                         type: MediaDescription.systemImage(for: media),
                         duration: MediaDescription.duration(for: media),

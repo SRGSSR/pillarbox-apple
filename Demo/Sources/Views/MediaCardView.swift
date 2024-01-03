@@ -53,6 +53,7 @@ private struct CardBottomView: View {
                     .padding(.horizontal, 50)
                     .padding(.bottom, date == nil ? 30 : 0)
                     .lineLimit(2)
+                    .multilineTextAlignment(.center)
             }
             if let date {
                 Text(date)
