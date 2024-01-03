@@ -10,24 +10,30 @@ import WebKit
 private struct _WebView: UIViewRepresentable {
     let url: URL
 
-    func makeUIView(context: Context) -> some UIView {
+    func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView(frame: .zero)
         webView.load(.init(url: url))
         return webView
     }
 
-    func updateUIView(_ uiView: UIViewType, context: Context) {}
+    func updateUIView(_ uiView: WKWebView, context: Context) {}
 }
 
 struct WebView: View {
     let url: URL
 
     var body: some View {
-        _WebView(url: url)
-            .ignoresSafeArea(edges: .bottom)
-            .overlay(alignment: .topLeading) {
-                CloseButton()
-            }
+        NavigationStack {
+            _WebView(url: url)
+                .ignoresSafeArea()
+                .navigationTitle("Web")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        CloseButton()
+                    }
+                }
+        }
     }
 }
 
