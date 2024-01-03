@@ -8,14 +8,14 @@ import Combine
 import Foundation
 
 final class SettingsBundle: ObservableObject {
-    @Published private(set) var showsWebDemo = false
+    @Published private(set) var showsHiddenFeatures = false
 
     init() {
         NotificationCenter.default
             .publisher(for: UserDefaults.didChangeNotification)
             .map { _ in
-                UserDefaults.standard.bool(forKey: "shows_web_demo")
+                UserDefaults.standard.bool(forKey: "hidden_features")
             }
-            .assign(to: &$showsWebDemo)
+            .assign(to: &$showsHiddenFeatures)
     }
 }

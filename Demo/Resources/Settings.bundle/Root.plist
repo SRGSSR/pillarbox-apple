@@ -10,9 +10,9 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Web Demo</string>
+			<string>Hidden features</string>
 			<key>Key</key>
-			<string>shows_web_demo</string>
+			<string>hidden_features</string>
 			<key>DefaultValue</key>
 			<false/>
 		</dict>
