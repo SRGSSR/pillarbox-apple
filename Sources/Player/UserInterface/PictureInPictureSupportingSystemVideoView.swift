@@ -30,6 +30,7 @@ struct PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable 
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = PictureInPicture.shared.system.playerViewController ?? PlayerViewController()
         controller.allowsPictureInPicturePlayback = true
+        controller.speeds = AVPlaybackSpeed.systemDefaultSpeeds
         PictureInPicture.shared.system.acquire(for: controller)
         return controller
     }
