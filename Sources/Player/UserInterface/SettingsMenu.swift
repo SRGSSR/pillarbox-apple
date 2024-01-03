@@ -109,6 +109,11 @@ private struct SettingsMenuContent: View {
     }
 }
 
+public extension Player {
+    /// Default speeds.
+    static let defaultSpeeds = Set<Float>([0.5, 1, 1.25, 1.5, 2])
+}
+
 @available(iOS 16.0, tvOS 17.0, *)
 public extension Player {
     /// Returns content for a standard player settings menu.
@@ -125,7 +130,7 @@ public extension Player {
     ///
     /// The returned view is meant to be used as content of a `Menu`. Using it for any other purpose has undefined
     /// behavior.
-    func playbackSpeedMenu(speeds: Set<Float> = [0.5, 1, 1.25, 1.5, 2]) -> some View {
+    func playbackSpeedMenu(speeds: Set<Float> = defaultSpeeds) -> some View {
         PlaybackSpeedMenuContent(speeds: speeds, player: self)
     }
 

@@ -37,5 +37,6 @@ struct PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable 
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
         uiViewController.player = player.systemPlayer
         uiViewController.videoGravity = gravity
+        uiViewController.speeds = Player.defaultSpeeds.sorted().map { AVPlaybackSpeed(rate: $0, localizedName: "\($0)") }
     }
 }
