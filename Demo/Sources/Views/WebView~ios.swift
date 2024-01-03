@@ -4,37 +4,26 @@
 //  License information is available from the LICENSE file.
 //
 
+import SafariServices
 import SwiftUI
-import WebKit
-
-private struct _WebView: UIViewRepresentable {
-    let url: URL
-
-    func makeUIView(context: Context) -> WKWebView {
-        let webView = WKWebView(frame: .zero)
-        webView.load(.init(url: url))
-        return webView
-    }
-
-    func updateUIView(_ uiView: WKWebView, context: Context) {}
-}
 
 struct WebView: View {
     let url: URL
 
     var body: some View {
-        NavigationStack {
-            _WebView(url: url)
-                .ignoresSafeArea()
-                .navigationTitle("Web")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        CloseButton()
-                    }
-                }
-        }
+        SafariWebView(url: url)
+            .ignoresSafeArea()
     }
+}
+
+private struct SafariWebView: UIViewControllerRepresentable {
+    let url: URL
+
+    func makeUIViewController(context: Context) -> SFSafariViewController {
+        .init(url: url)
+    }
+
+    func updateUIViewController(_ uiViewController: SFSafariViewController, context: Context) {}
 }
 
 extension WebView: SourceCodeViewable {
