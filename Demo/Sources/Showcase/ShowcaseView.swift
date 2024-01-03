@@ -10,6 +10,7 @@ import SwiftUI
 struct ShowcaseView: View {
     // swiftlint:disable:previous type_body_length
     @EnvironmentObject private var router: Router
+    @StateObject private var settingBundle = SettingsBundle()
 
     var body: some View {
         CustomList {
@@ -34,6 +35,9 @@ struct ShowcaseView: View {
             systemPictureInPictureSection()
             vanillaPlayerSection()
             trackingSection()
+#if os(iOS)
+            webViewSection()
+#endif
         }
         .tracked(name: "showcase")
     }
@@ -348,6 +352,18 @@ struct ShowcaseView: View {
         }
         .sourceCode(of: OptInView.self)
     }
+
+#if os(iOS)
+    @ViewBuilder
+    private func webViewSection() -> some View {
+        if settingBundle.showsHiddenFeatures {
+            CustomSection("Web") {
+                cell(title: "Pillarbox Demo", destination: .webView(url: "https://srgssr.github.io/pillarbox-web/"))
+            }
+            .sourceCode(of: WebView.self)
+        }
+    }
+#endif
 }
 
 #Preview {

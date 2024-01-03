@@ -28,6 +28,10 @@ enum RouterDestination: Identifiable, Hashable {
 
     case contentList(configuration: ContentList.Configuration)
 
+#if os(iOS)
+    case webView(url: URL)
+#endif
+
     var id: String {
         // Treat players using the same view model as equivalent.
         switch self {
@@ -57,6 +61,10 @@ enum RouterDestination: Identifiable, Hashable {
             return "playlist"
         case .contentList:
             return "contentList"
+#if os(iOS)
+        case .webView:
+            return "webView"
+#endif
         }
     }
 
@@ -104,6 +112,10 @@ enum RouterDestination: Identifiable, Hashable {
             PlaylistView(templates: templates)
         case let .contentList(configuration: configuration):
             ContentListView(configuration: configuration)
+#if os(iOS)
+        case let .webView(url: url):
+            WebView(url: url)
+#endif
         }
     }
 }

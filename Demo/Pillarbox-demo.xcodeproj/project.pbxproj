@@ -16,6 +16,9 @@
 		0EDFF0DB2B0740DA005030B4 /* SourceCodeViewable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDFF0DA2B0740DA005030B4 /* SourceCodeViewable.swift */; };
 		0EE2A3AE2B29D6D000BAAD65 /* CustomList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE2A3AD2B29D6D000BAAD65 /* CustomList.swift */; };
 		0EE2A3B02B29F82200BAAD65 /* CustomSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE2A3AF2B29F82200BAAD65 /* CustomSection.swift */; };
+		0EF2A5452B443FEF00F01804 /* WebView~ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2A5442B443FEF00F01804 /* WebView~ios.swift */; };
+		0EF2A5472B444ACD00F01804 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0EF2A5462B444ACD00F01804 /* Settings.bundle */; };
+		0EF2A5492B44500800F01804 /* SettingsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2A5482B44500800F01804 /* SettingsBundle.swift */; };
 		0EF42CB629AE513400553165 /* SRGDataProviderCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF42CB529AE513400553165 /* SRGDataProviderCombine */; };
 		6F02B3092AB870AD002D15DB /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 6F02B3082AB870AD002D15DB /* Localizable.xcstrings */; };
 		6F0B2E852A40EBAC00B69675 /* RouterDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E842A40EBAC00B69675 /* RouterDestination.swift */; };
@@ -99,6 +102,9 @@
 		0EDFF0DA2B0740DA005030B4 /* SourceCodeViewable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceCodeViewable.swift; sourceTree = "<group>"; };
 		0EE2A3AD2B29D6D000BAAD65 /* CustomList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomList.swift; sourceTree = "<group>"; };
 		0EE2A3AF2B29F82200BAAD65 /* CustomSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSection.swift; sourceTree = "<group>"; };
+		0EF2A5442B443FEF00F01804 /* WebView~ios.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebView~ios.swift"; sourceTree = "<group>"; };
+		0EF2A5462B444ACD00F01804 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		0EF2A5482B44500800F01804 /* SettingsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsBundle.swift; sourceTree = "<group>"; };
 		6F010340289946220021BA76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F02B3082AB870AD002D15DB /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pillarbox-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -309,6 +315,7 @@
 			children = (
 				6F59E85229CF31E10093E6FB /* SettingsView.swift */,
 				6F59E85329CF31E10093E6FB /* UserDefaults.swift */,
+				0EF2A5482B44500800F01804 /* SettingsBundle.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -376,13 +383,14 @@
 				0EE2A3AD2B29D6D000BAAD65 /* CustomList.swift */,
 				0E48F3FB2B2DBAD4001982BB /* CustomNavigationLink.swift */,
 				0EE2A3AF2B29F82200BAAD65 /* CustomSection.swift */,
-				6F0E5CD42B33A41F0031E313 /* MonoscopicVideoView~ios.swift */,
 				0E011D192B2DF9BE00DAAD3D /* MediaCardView.swift */,
 				6F59E86829CF31E10093E6FB /* MessageViews.swift */,
 				6FC5D6A12A6FA8D20012BC89 /* Modal.swift */,
+				6F0E5CD42B33A41F0031E313 /* MonoscopicVideoView~ios.swift */,
 				6F0E5CD22B3394EA0031E313 /* PiPButton.swift */,
 				0ECC5AD42A517A4C0064E701 /* PlaybackSlider~ios.swift */,
 				6FE324B229E4657D007501CF /* View.swift */,
+				0EF2A5442B443FEF00F01804 /* WebView~ios.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -465,6 +473,7 @@
 			children = (
 				6F917C082887EA8E004113BA /* Assets.xcassets */,
 				6F02B3082AB870AD002D15DB /* Localizable.xcstrings */,
+				0EF2A5462B444ACD00F01804 /* Settings.bundle */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -580,6 +589,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EF2A5472B444ACD00F01804 /* Settings.bundle in Resources */,
 				6F917C112887EA8E004113BA /* Preview Assets.xcassets in Resources */,
 				6F917C0E2887EA8E004113BA /* Assets.xcassets in Resources */,
 				6F02B3092AB870AD002D15DB /* Localizable.xcstrings in Resources */,
@@ -621,6 +631,7 @@
 				6F59E87D29CF31E10093E6FB /* Vendor.swift in Sources */,
 				6F26F35E2B33B73900392ED4 /* SupportingBasicPictureInPicture.swift in Sources */,
 				0E4128BF2AFB959B00D67759 /* PlayerViewModel.swift in Sources */,
+				0EF2A5492B44500800F01804 /* SettingsBundle.swift in Sources */,
 				6FAD51142B331AAD0078FE08 /* SingleView.swift in Sources */,
 				6F7EAA552B17755C00194D03 /* TrackingProgressTutorial~ios.swift in Sources */,
 				6F59E88229CF31E10093E6FB /* Media.swift in Sources */,
@@ -630,6 +641,7 @@
 				6F59E88029CF31E10093E6FB /* RadioChannel.swift in Sources */,
 				6F0E5CD32B3394EA0031E313 /* PiPButton.swift in Sources */,
 				6F59E89629CF31E20093E6FB /* Cell.swift in Sources */,
+				0EF2A5452B443FEF00F01804 /* WebView~ios.swift in Sources */,
 				6F59E89A29CF31E20093E6FB /* SimplePlayerView.swift in Sources */,
 				6F59E89329CF31E20093E6FB /* LinkView.swift in Sources */,
 				6F59E89529CF31E20093E6FB /* CopyButton.swift in Sources */,
