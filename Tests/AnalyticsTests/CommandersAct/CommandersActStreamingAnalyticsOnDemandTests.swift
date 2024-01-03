@@ -4,11 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Analytics
+@testable import PillarboxAnalytics
 
-import Circumspect
 import CoreMedia
 import Nimble
+import PillarboxCircumspect
 
 // swiftlint:disable:next type_name
 final class CommandersActStreamingAnalyticsOnDemandTests: CommandersActTestCase {

@@ -4,10 +4,10 @@
 //  License information is available from the LICENSE file.
 //
 
-import Analytics
 import AVFoundation
 import Combine
-import Player
+import PillarboxAnalytics
+import PillarboxPlayer
 
 public extension PlayerItem {
     /// Creates a player item from a URN.

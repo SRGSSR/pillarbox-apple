@@ -7,7 +7,7 @@
 // ⚠️ This Playground does not compile with the Pillarbox-demo scheme selected.
 
 import AVFoundation
-import Player
+import PillarboxPlayer
 import PlaygroundSupport
 import SwiftUI
 

@@ -7,7 +7,7 @@
 import Combine
 import Foundation
 import os
-import Player
+import PillarboxPlayer
 
 final class DemoTracker: PlayerItemTracker {
     struct Metadata {

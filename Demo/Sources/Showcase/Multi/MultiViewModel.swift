@@ -5,7 +5,7 @@
 //
 
 import Combine
-import Player
+import PillarboxPlayer
 
 enum PlayerPosition {
     case top

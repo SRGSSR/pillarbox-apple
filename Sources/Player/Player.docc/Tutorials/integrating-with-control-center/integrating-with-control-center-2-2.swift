@@ -1,4 +1,4 @@
-import Player
+import PillarboxPlayer
 import SwiftUI
 
 private struct Metadata: AssetMetadata {

@@ -4,13 +4,13 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Player
+@testable import PillarboxPlayer
 
 import AVFoundation
-import Circumspect
 import Nimble
 import OrderedCollections
-import Streams
+import PillarboxCircumspect
+import PillarboxStreams
 
 private class QueuePlayerMock: QueuePlayer {
     var seeks: Int = 0

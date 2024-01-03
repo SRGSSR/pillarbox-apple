@@ -6,9 +6,9 @@
 
 import AVFoundation
 import Combine
-import Core
 import DequeModule
 import MediaPlayer
+import PillarboxCore
 import TimelaneCombine
 
 /// An observable audio / video player maintaining its items as a double-ended queue.

@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Analytics
+@testable import PillarboxAnalytics
 
 import Nimble
 import ObjectiveC

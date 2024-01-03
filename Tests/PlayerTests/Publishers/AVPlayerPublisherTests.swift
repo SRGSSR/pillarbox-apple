@@ -4,11 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Player
+@testable import PillarboxPlayer
 
 import AVFoundation
 import Combine
-import Streams
+import PillarboxStreams
 
 final class AVPlayerPublisherTests: TestCase {
     private static func errorPublisher(for player: AVPlayer) -> AnyPublisher<Error?, Never> {

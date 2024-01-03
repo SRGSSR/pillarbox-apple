@@ -6,7 +6,7 @@
 
 import AVFoundation
 import Foundation
-import Player
+import PillarboxPlayer
 
 @objc
 enum SeekBehaviorSetting: Int {

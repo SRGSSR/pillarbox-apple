@@ -5,8 +5,8 @@
 //
 
 import Combine
-import Core
 import Foundation
+import PillarboxCore
 import SwiftUI
 import UIKit
 

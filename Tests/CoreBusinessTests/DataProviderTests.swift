@@ -4,9 +4,9 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import CoreBusiness
+@testable import PillarboxCoreBusiness
 
-import Circumspect
+import PillarboxCircumspect
 import XCTest
 
 final class DataProviderTests: XCTestCase {

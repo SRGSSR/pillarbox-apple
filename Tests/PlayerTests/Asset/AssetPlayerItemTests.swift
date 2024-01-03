@@ -4,11 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Player
+@testable import PillarboxPlayer
 
 import AVFoundation
-import Circumspect
-import Streams
+import PillarboxCircumspect
+import PillarboxStreams
 
 final class AssetPlayerItemTests: TestCase {
     func testNativePlayerItem() {

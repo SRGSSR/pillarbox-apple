@@ -4,11 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Player
+@testable import PillarboxPlayer
 
 import CoreMedia
 import Nimble
-import Streams
+import PillarboxStreams
 
 final class SkipToDefaultTests: TestCase {
     func testSkipWhenEmpty() {

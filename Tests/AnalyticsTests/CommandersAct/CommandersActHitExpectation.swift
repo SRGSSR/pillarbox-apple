@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import Analytics
+import PillarboxAnalytics
 
 /// Describes a Commanders Act stream hit expectation.
 struct CommandersActHitExpectation {

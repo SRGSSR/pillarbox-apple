@@ -5,7 +5,7 @@
 //
 
 import AVFoundation
-import Player
+import PillarboxPlayer
 import SwiftUI
 
 // Behavior: h-exp, v-exp

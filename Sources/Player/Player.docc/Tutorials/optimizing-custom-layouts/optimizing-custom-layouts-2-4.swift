@@ -1,5 +1,5 @@
-import Core
-import Player
+import PillarboxCore
+import PillarboxPlayer
 import SwiftUI
 
 struct ContentView: View {

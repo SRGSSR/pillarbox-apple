@@ -4,9 +4,9 @@
 //  License information is available from the LICENSE file.
 //
 
-import Analytics
 import AVFAudio
 import Combine
+import PillarboxAnalytics
 import ShowTime
 import SRGDataProvider
 import UIKit

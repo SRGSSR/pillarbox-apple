@@ -5,7 +5,7 @@
 //
 
 import Combine
-import Player
+import PillarboxPlayer
 
 final class WrappedViewModel: ObservableObject {
     @Published var player = Player(configuration: .externalPlaybackDisabled)

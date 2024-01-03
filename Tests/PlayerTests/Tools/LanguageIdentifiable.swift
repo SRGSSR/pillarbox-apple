@@ -5,7 +5,7 @@
 //
 
 import AVFoundation
-import Player
+import PillarboxPlayer
 
 protocol LanguageIdentifiable {
     var languageIdentifier: String? { get }

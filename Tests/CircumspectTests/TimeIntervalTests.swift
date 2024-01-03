@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Circumspect
+@testable import PillarboxCircumspect
 
 import Dispatch
 import Nimble

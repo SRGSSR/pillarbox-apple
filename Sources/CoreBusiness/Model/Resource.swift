@@ -5,7 +5,7 @@
 //
 
 import Foundation
-import Player
+import PillarboxPlayer
 
 /// A description of a playable resource.
 public struct Resource: Decodable {

@@ -7,7 +7,7 @@
 import Combine
 import CoreMedia
 import Foundation
-import Player
+import PillarboxPlayer
 
 final class CommandersActStreamingAnalytics {
     var lastEvent: Event = .none

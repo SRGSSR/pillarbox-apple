@@ -6,7 +6,7 @@
 
 import ComScore
 import CoreMedia
-import Player
+import PillarboxPlayer
 
 final class ComScoreStreamingAnalytics: SCORStreamingAnalytics {
     private var oldRate: Float?

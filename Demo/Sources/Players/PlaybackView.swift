@@ -6,7 +6,7 @@
 
 import AVFoundation
 import CoreMedia
-import Player
+import PillarboxPlayer
 import SwiftUI
 
 #if os(iOS)

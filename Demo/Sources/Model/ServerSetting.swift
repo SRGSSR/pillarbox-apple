@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import CoreBusiness
+import PillarboxCoreBusiness
 import SRGDataProvider
 
 @objc

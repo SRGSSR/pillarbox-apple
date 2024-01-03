@@ -11,23 +11,23 @@ let package = Package(
     products: [
         .library(
             name: "Analytics",
-            targets: ["Analytics"]
+            targets: ["PillarboxAnalytics"]
         ),
         .library(
             name: "Circumspect",
-            targets: ["Circumspect"]
+            targets: ["PillarboxCircumspect"]
         ),
         .library(
             name: "Core",
-            targets: ["Core"]
+            targets: ["PillarboxCore"]
         ),
         .library(
             name: "CoreBusiness",
-            targets: ["CoreBusiness"]
+            targets: ["PillarboxCoreBusiness"]
         ),
         .library(
             name: "Player",
-            targets: ["Player"]
+            targets: ["PillarboxPlayer"]
         )
     ],
     dependencies: [
@@ -40,13 +40,14 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Analytics",
+            name: "PillarboxAnalytics",
             dependencies: [
-                .target(name: "Player"),
+                .target(name: "PillarboxPlayer"),
                 .product(name: "ComScore", package: "Comscore-Swift-Package-Manager"),
                 .product(name: "TCCore", package: "iOSV5"),
                 .product(name: "TCServerSide", package: "iOSV5")
             ],
+            path: "Sources/Analytics",
             linkerSettings: [
                 .linkedFramework("AdSupport")
             ],
@@ -54,12 +55,16 @@ let package = Package(
                 .plugin(name: "PackageInfoPlugin")
             ]
         ),
-        .target(name: "Core"),
         .target(
-            name: "CoreBusiness",
+            name: "PillarboxCore",
+            path: "Sources/Core"
+        ),
+        .target(
+            name: "PillarboxCoreBusiness",
             dependencies: [
-                .target(name: "Analytics")
+                .target(name: "PillarboxAnalytics")
             ],
+            path: "Sources/CoreBusiness",
             resources: [
                 .process("Resources")
             ],
@@ -68,19 +73,21 @@ let package = Package(
             ]
         ),
         .target(
-            name: "Circumspect",
+            name: "PillarboxCircumspect",
             dependencies: [
                 .product(name: "Difference", package: "Difference"),
                 .product(name: "Nimble", package: "Nimble")
-            ]
+            ],
+            path: "Sources/Circumspect"
         ),
         .target(
-            name: "Player",
+            name: "PillarboxPlayer",
             dependencies: [
-                .target(name: "Core"),
+                .target(name: "PillarboxCore"),
                 .product(name: "DequeModule", package: "swift-collections"),
                 .product(name: "TimelaneCombine", package: "TimelaneCombine")
             ],
+            path: "Sources/Player",
             resources: [
                 .process("Resources")
             ],
@@ -89,7 +96,8 @@ let package = Package(
             ]
         ),
         .target(
-            name: "Streams",
+            name: "PillarboxStreams",
+            path: "Sources/Streams",
             resources: [
                 .process("Resources")
             ]
@@ -105,37 +113,37 @@ let package = Package(
         .testTarget(
             name: "AnalyticsTests",
             dependencies: [
-                .target(name: "Analytics"),
-                .target(name: "Circumspect"),
-                .target(name: "Streams")
+                .target(name: "PillarboxAnalytics"),
+                .target(name: "PillarboxCircumspect"),
+                .target(name: "PillarboxStreams")
             ]
         ),
         .testTarget(
             name: "CircumspectTests",
             dependencies: [
-                .target(name: "Circumspect")
+                .target(name: "PillarboxCircumspect")
             ]
         ),
         .testTarget(
             name: "CoreTests",
             dependencies: [
-                .target(name: "Circumspect"),
-                .target(name: "Core")
+                .target(name: "PillarboxCircumspect"),
+                .target(name: "PillarboxCore")
             ]
         ),
         .testTarget(
             name: "CoreBusinessTests",
             dependencies: [
-                .target(name: "Circumspect"),
-                .target(name: "CoreBusiness")
+                .target(name: "PillarboxCircumspect"),
+                .target(name: "PillarboxCoreBusiness")
             ]
         ),
         .testTarget(
             name: "PlayerTests",
             dependencies: [
-                .target(name: "Circumspect"),
-                .target(name: "Player"),
-                .target(name: "Streams"),
+                .target(name: "PillarboxCircumspect"),
+                .target(name: "PillarboxPlayer"),
+                .target(name: "PillarboxStreams"),
                 .product(name: "OrderedCollections", package: "swift-collections")
             ]
         )
