@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import Player
+import PillarboxPlayer
 import UIKit
 
 /// Metadata associated with content loaded from a URN.

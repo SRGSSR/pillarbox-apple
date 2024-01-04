@@ -4,10 +4,10 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Player
+@testable import PillarboxPlayer
 
 import Nimble
-import Streams
+import PillarboxStreams
 
 final class NavigationSmartForwardTests: TestCase {
     func testAdvanceForOnDemandWithNextItem() {

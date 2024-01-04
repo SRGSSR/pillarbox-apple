@@ -5,7 +5,7 @@
 //
 
 import ComScore
-import Player
+import PillarboxPlayer
 import UIKit
 
 /// A comScore tracker for streaming.

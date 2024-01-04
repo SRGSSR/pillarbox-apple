@@ -9,7 +9,7 @@ Learn how to observe state associated with a player.
 
 ## Overview
 
-The Player framework heavily relies on [Combine](https://developer.apple.com/documentation/combine),  [`ObservableObject`](https://developer.apple.com/documentation/combine/observableobject) and published properties. This makes it possible for SwiftUI views to automatically observe and respond to change.
+The PillarboxPlayer framework heavily relies on [Combine](https://developer.apple.com/documentation/combine),  [`ObservableObject`](https://developer.apple.com/documentation/combine/observableobject) and published properties. This makes it possible for SwiftUI views to automatically observe and respond to change.
 
 Unsupervised property publishing can lead to an explosion of updates sent from an observable object, though, leading to potentially unnecessary SwiftUI view body refreshes, poor layout performance and energy consumption issues.
 
@@ -146,7 +146,7 @@ Having your whole user interface refreshed every 1/10th of a second is not requi
 
 Here are a few tips to help you identify and fix superfluous refreshes in your layouts:
 
-- Use the `View/_debugBodyCounter()` modifier available from the Core framework to identify which views are refreshed unnecessarily often.
+- Use the `View/_debugBodyCounter()` modifier available from the PillarboxCore framework to identify which views are refreshed unnecessarily often.
 - Extract views that require higher refresh rates into subviews so that ``ProgressTracker`` or explicit subscriptions using ``SwiftUI/View/onReceive(player:assign:to:)`` only affect smaller subsets of your view hierarchy.
 - Use the `View/_debugBodyCounter()` modifier to check your layout again after optimization.
 

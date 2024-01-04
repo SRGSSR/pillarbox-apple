@@ -4,10 +4,10 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Analytics
+@testable import PillarboxAnalytics
 
-import Circumspect
 import Nimble
+import PillarboxCircumspect
 
 final class CommandersActEventTests: CommandersActTestCase {
     func testMergingWithGlobals() {

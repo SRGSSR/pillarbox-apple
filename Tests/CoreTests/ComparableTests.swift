@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Core
+@testable import PillarboxCore
 
 import Nimble
 import XCTest

@@ -5,7 +5,7 @@
 //
 
 import Combine
-import Player
+import PillarboxPlayer
 import SwiftUI
 
 /// Manages navigation using an associated router.

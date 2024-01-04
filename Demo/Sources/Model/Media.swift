@@ -4,9 +4,9 @@
 //  License information is available from the LICENSE file.
 //
 
-import CoreBusiness
 import Foundation
-import Player
+import PillarboxCoreBusiness
+import PillarboxPlayer
 
 struct Media: Hashable {
     enum `Type`: Hashable {

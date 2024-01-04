@@ -4,12 +4,12 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Player
+@testable import PillarboxPlayer
 
 import AVFoundation
-import Circumspect
 import Combine
-import Streams
+import PillarboxCircumspect
+import PillarboxStreams
 
 final class QueuePlayerPublisherTests: TestCase {
     private static func bufferingPublisher(for player: QueuePlayer) -> AnyPublisher<Bool, Never> {

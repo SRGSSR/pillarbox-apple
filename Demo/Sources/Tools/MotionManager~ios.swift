@@ -6,7 +6,7 @@
 
 import Combine
 import CoreMotion
-import Player
+import PillarboxPlayer
 
 final class MotionManager: ObservableObject {
     @Published private(set) var attitude: CMAttitude?

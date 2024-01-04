@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import CoreBusiness
+@testable import PillarboxCoreBusiness
 
 import Foundation
 import UIKit

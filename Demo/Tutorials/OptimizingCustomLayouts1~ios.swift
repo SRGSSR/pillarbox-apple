@@ -4,8 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
-import Core
-import Player
+import PillarboxCore
+import PillarboxPlayer
 import SwiftUI
 
 private struct ProgressSlider: View {

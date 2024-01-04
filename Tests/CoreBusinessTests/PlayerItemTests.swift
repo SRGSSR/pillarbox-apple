@@ -4,11 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import CoreBusiness
+@testable import PillarboxCoreBusiness
 
-import Circumspect
 import Combine
-import Player
+import PillarboxCircumspect
+import PillarboxPlayer
 import XCTest
 
 final class PlayerItemTests: XCTestCase {

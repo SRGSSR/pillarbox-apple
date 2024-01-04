@@ -1,4 +1,4 @@
-# ``Player/VisibilityTracker``
+# ``PillarboxPlayer/VisibilityTracker``
 
 ## Topics
 
@@ -9,7 +9,7 @@
 ### Binding to a player
 
 - ``player``
-- ``SwiftUI/View/bind(_:to:)-q4hv``
+- ``SwiftUI/View/bind(_:to:)-wthx``
 
 ### Getting and updating user interface visibility
 

@@ -4,8 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
-import Analytics
 import Nimble
+import PillarboxAnalytics
 import XCTest
 
 private final class TestCaseDataSource: AnalyticsDataSource {

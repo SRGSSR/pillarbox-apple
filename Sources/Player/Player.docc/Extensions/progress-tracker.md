@@ -1,4 +1,4 @@
-# ``Player/ProgressTracker``
+# ``PillarboxPlayer/ProgressTracker``
 
 ## Topics
 
@@ -9,7 +9,7 @@
 ### Binding to a player
 
 - ``player``
-- ``SwiftUI/View/bind(_:to:)-sneb``
+- ``SwiftUI/View/bind(_:to:)-8fqem``
 
 ### Getting and updating progress
 

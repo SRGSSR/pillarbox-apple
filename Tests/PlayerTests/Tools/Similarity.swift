@@ -4,11 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Player
+@testable import PillarboxPlayer
 
 import AVFoundation
-import Circumspect
 import CoreMedia
+import PillarboxCircumspect
 
 extension Asset: Similar {
     public static func ~~ (lhs: Self, rhs: Self) -> Bool {

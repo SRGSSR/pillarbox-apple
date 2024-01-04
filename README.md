@@ -46,7 +46,7 @@ From left to right:
 With Pillarbox creating a custom video player user interface has never been easier. Simply instantiate a `Player` and start building your user interface in SwiftUI right away:
 
 ```swift
-import Player
+import PillarboxPlayer
 import SwiftUI
 
 struct PlayerView: View {

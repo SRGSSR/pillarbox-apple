@@ -4,8 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
-import Circumspect
 import Foundation
+import PillarboxCircumspect
 
 struct StructError: Error {}
 

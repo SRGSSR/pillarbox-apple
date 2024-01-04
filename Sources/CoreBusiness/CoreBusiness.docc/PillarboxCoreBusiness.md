@@ -1,24 +1,24 @@
 
-# ``CoreBusiness``
+# ``PillarboxCoreBusiness``
 
 @Metadata {
     @PageColor(yellow)
 }
 
-Play SRG SSR content with the Player framework.
+Play SRG SSR content with the PillarboxPlayer framework.
 
 ## Overview
 
-The CoreBusiness framework provides standard SRG SSR business integration:
+The PillarboxCoreBusiness framework provides standard SRG SSR business integration:
 
 - Player items to load content delivered by the Integration Layer.
 - Streaming analytics according to SRG SSR requirements.
 
-> Important: Streaming measurements are automatically collected when playing SRG SSR content using the CoreBusiness framework. Just ensure that tracking has been properly setup first. Please refer to the Analytics documentation for more information.
+> Important: Streaming measurements are automatically collected when playing SRG SSR content using the PillarboxCoreBusiness framework. Just ensure that tracking has been properly setup first. Please refer to the Analytics documentation for more information.
 
 ### Play SRG SSR content
 
-To play an SRG SSR content simply create a `PlayerItem` with ``Player/PlayerItem/urn(_:server:trackerAdapters:)``, passing the URN of the content as parameter. Then load it into a `Player`.
+To play an SRG SSR content simply create a `PlayerItem` with ``PillarboxPlayer/PlayerItem/urn(_:server:trackerAdapters:)``, passing the URN of the content as parameter. Then load it into a `Player`.
 
 You can optionally change the server or add additional custom player item trackers. Standard SRG SSR trackers cannot be disabled.
 

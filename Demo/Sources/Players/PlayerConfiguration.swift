@@ -5,7 +5,7 @@
 //
 
 import Foundation
-import Player
+import PillarboxPlayer
 
 extension PlayerConfiguration {
     static var standard: Self {

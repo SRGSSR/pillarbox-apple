@@ -4,10 +4,10 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Core
+@testable import PillarboxCore
 
-import Circumspect
 import Nimble
+import PillarboxCircumspect
 import XCTest
 
 final class NotificationPublisherDeallocationTests: XCTestCase {

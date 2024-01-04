@@ -4,11 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Analytics
+@testable import PillarboxAnalytics
 
-import Circumspect
 import CoreMedia
 import Nimble
+import PillarboxCircumspect
 
 final class CommandersActStreamingAnalyticsDvrTests: CommandersActTestCase {
     private static let range = CMTimeRange(start: CMTime(value: 2, timescale: 1), end: CMTime(value: 20, timescale: 1))

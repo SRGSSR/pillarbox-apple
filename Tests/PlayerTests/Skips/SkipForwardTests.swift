@@ -4,13 +4,13 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Player
+@testable import PillarboxPlayer
 
-import Circumspect
 import Combine
 import CoreMedia
 import Nimble
-import Streams
+import PillarboxCircumspect
+import PillarboxStreams
 
 final class SkipForwardTests: TestCase {
     private func isSeekingPublisher(for player: Player) -> AnyPublisher<Bool, Never> {

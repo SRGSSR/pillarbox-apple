@@ -7,7 +7,7 @@
 import AVFoundation
 import Combine
 import Foundation
-import Player
+import PillarboxPlayer
 
 /// A Commanders Act tracker for streaming.
 ///

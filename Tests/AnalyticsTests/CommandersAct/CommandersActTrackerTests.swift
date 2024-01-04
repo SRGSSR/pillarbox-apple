@@ -4,11 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Analytics
+@testable import PillarboxAnalytics
 
 import Nimble
-import Player
-import Streams
+import PillarboxPlayer
+import PillarboxStreams
 
 private struct AssetMetadataMock: AssetMetadata {}
 

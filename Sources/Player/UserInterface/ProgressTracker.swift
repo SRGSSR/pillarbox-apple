@@ -25,7 +25,7 @@ import SwiftUI
 /// 1. Instantiate a `ProgressTracker` in your view hierarchy, setting up the refresh interval you need. You should
 ///    instantiate a progress tracker in the narrowest possible view scope so that refreshes only affect a small
 ///    portion of your view hierarchy, especially if the applied refresh interval is small.
-/// 2. Bind the progress tracker to a ``Player`` instance by applying the ``SwiftUI/View/bind(_:to:)-sneb`` modifier.
+/// 2. Bind the progress tracker to a ``Player`` instance by applying the ``SwiftUI/View/bind(_:to:)-8fqem`` modifier.
 /// 3. The current progress can be retrieved from the ``progress`` property and displayed in any way you want. Use
 ///    the ``range`` property to determine the currently available range, and ``isProgressAvailable`` to know whether
 ///    progress should actually be displayed.
@@ -33,8 +33,8 @@ import SwiftUI
 ///    property to `true` while progress is updated interactively so that changes take precedence over reported values
 ///    during the interaction.
 ///
-/// The Player framework also provides automatic progress interaction integration with the SwiftUI standard slider, see
-/// ``SwiftUI/Slider/init(progressTracker:label:minimumValueLabel:maximumValueLabel:onEditingChanged:)``.
+/// The PillarboxPlayer framework also provides automatic progress interaction integration with the SwiftUI standard
+/// slider, see ``SwiftUI/Slider/init(progressTracker:label:minimumValueLabel:maximumValueLabel:onEditingChanged:)``.
 ///
 /// > Note: For step-by-step integration instructions have a look at the associated <doc:tracking-progress> tutorial.
 public final class ProgressTracker: ObservableObject {

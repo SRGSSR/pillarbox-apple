@@ -6,7 +6,7 @@
 
 import Combine
 import OrderedCollections
-import Player
+import PillarboxPlayer
 
 final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     static let standardTemplates = [

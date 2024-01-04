@@ -4,11 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Player
+@testable import PillarboxPlayer
 
-import Circumspect
 import MediaPlayer
-import Streams
+import PillarboxCircumspect
+import PillarboxStreams
 
 final class NowPlayingInfoMetadataPublisherTests: TestCase {
     func testEmpty() {

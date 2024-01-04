@@ -6,7 +6,7 @@
 
 import AVFoundation
 import Combine
-import Core
+import PillarboxCore
 
 extension AVAsset {
     /// A publisher emitting values for a given asset property.

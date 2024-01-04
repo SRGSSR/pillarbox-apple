@@ -5,7 +5,7 @@
 //
 
 import Combine
-import Player
+import PillarboxPlayer
 
 final class PlayerViewModel: ObservableObject, PictureInPicturePersistable {
     @Published var media: Media? {

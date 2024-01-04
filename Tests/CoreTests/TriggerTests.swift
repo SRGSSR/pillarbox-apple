@@ -4,10 +4,10 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Core
+@testable import PillarboxCore
 
-import Circumspect
 import Combine
+import PillarboxCircumspect
 import XCTest
 
 final class TriggerTests: XCTestCase {

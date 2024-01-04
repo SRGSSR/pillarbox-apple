@@ -5,7 +5,7 @@
 //
 
 import AVFoundation
-import Player
+import PillarboxPlayer
 
 final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
     private let certificateUrl: URL

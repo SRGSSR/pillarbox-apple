@@ -4,11 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import Player
+@testable import PillarboxPlayer
 
 import AVFoundation
 import Nimble
-import Streams
+import PillarboxStreams
 
 // swiftlint:disable:next type_name
 final class AVAssetMediaSelectionGroupsPublisherTests: TestCase {

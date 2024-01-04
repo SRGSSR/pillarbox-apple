@@ -6,7 +6,7 @@
 
 import Combine
 import OrderedCollections
-import Player
+import PillarboxPlayer
 
 final class StoriesViewModel: ObservableObject {
     private static let preloadDistance = 1
