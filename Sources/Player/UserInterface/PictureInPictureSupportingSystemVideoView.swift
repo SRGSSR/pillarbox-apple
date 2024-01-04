@@ -30,7 +30,6 @@ struct PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable 
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = PictureInPicture.shared.system.playerViewController ?? PlayerViewController()
         controller.allowsPictureInPicturePlayback = true
-        controller.speeds = AVPlaybackSpeed.systemDefaultSpeeds
         PictureInPicture.shared.system.acquire(for: controller)
         return controller
     }
@@ -38,5 +37,24 @@ struct PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable 
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
         uiViewController.player = player.systemPlayer
         uiViewController.videoGravity = gravity
+        configureSpeeds(controller: uiViewController)
+    }
+
+    private func configureSpeeds(controller: AVPlayerViewController) {
+        let speedActions = AVPlaybackSpeed.systemDefaultSpeeds.map(\.rate).map { speed in
+            UIAction(title: String(format: "%g×", speed), state: player.effectivePlaybackSpeed == speed ? .on : .off) { action in
+                player.setDesiredPlaybackSpeed(speed)
+                action.state = .on
+            }
+        }
+
+        controller.transportBarCustomMenuItems = [
+            UIMenu(
+                title: "Speed",
+                image: UIImage(systemName: "speedometer"),
+                options: [.singleSelection],
+                children: speedActions
+            )
+        ]
     }
 }
