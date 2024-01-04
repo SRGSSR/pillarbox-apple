@@ -5,7 +5,6 @@
 //
 
 import AVKit
-import Combine
 import SwiftUI
 
 private class PlayerViewController: AVPlayerViewController {
@@ -19,46 +18,19 @@ private class PlayerViewController: AVPlayerViewController {
     }
 }
 
-class AVPlayerViewControllerCoordinator {
-    let player: Player
-    let controller: AVPlayerViewController
-    private var cancellables = Set<AnyCancellable>()
-
-    init(player: Player, controller: AVPlayerViewController) {
-        self.player = player
-        self.controller = controller
-        configurePlaybackSpeedPublisher()
-    }
-
-    func configurePlaybackSpeedPublisher() {
-        Publishers.CombineLatest(
-            player.propertiesPublisher.slice(at: \.rate),
-            player.propertiesPublisher.slice(at: \.mediaType)
-        )
-        .sink { [weak self] _ in
-            let maxRate = self?.player.playbackSpeedRange.upperBound ?? 1
-            self?.controller.speeds = AVPlaybackSpeed.systemDefaultSpeeds.filter { $0.rate <= maxRate }
-        }
-        .store(in: &cancellables)
-    }
-}
-
 // swiftlint:disable:next type_name
 struct PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable {
     let player: Player
     let gravity: AVLayerVideoGravity
 
-    static func dismantleUIViewController(_ uiViewController: AVPlayerViewController, coordinator: AVPlayerViewControllerCoordinator) {
+    static func dismantleUIViewController(_ uiViewController: AVPlayerViewController, coordinator: ()) {
         PictureInPicture.shared.system.relinquish(for: uiViewController)
     }
 
-    func makeCoordinator() -> AVPlayerViewControllerCoordinator {
-        .init(player: player, controller: PictureInPicture.shared.system.playerViewController ?? PlayerViewController())
-    }
-
     func makeUIViewController(context: Context) -> AVPlayerViewController {
-        let controller = context.coordinator.controller
+        let controller = PictureInPicture.shared.system.playerViewController ?? PlayerViewController()
         controller.allowsPictureInPicturePlayback = true
+        controller.speeds = AVPlaybackSpeed.systemDefaultSpeeds
         PictureInPicture.shared.system.acquire(for: controller)
         return controller
     }
