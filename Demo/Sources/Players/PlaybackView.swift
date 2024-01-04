@@ -120,6 +120,7 @@ private struct MainView: View {
                     .supportsPictureInPicture(supportsPictureInPicture)
             }
         }
+        .animation(.easeInOut(duration: 0.2), values: player.mediaType, player.isExternalPlaybackActive)
     }
 
     @ViewBuilder
