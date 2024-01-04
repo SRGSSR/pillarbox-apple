@@ -1,3 +1,3 @@
 # ``PillarboxCore``
 
-The PillarboxCore library provides common tools which might be useful for applications using Pillarbox.
+The PillarboxCore framework provides common tools which might be useful for applications using Pillarbox.
