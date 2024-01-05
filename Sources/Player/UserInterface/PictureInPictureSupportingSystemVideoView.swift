@@ -70,13 +70,20 @@ extension PictureInPictureSupportingSystemVideoView {
             self.controller = controller
 
 #if os(tvOS)
-            Publishers.CombineLatest(
+            Publishers.CombineLatest3(
                 player.propertiesPublisher.slice(at: \.rate),
-                player.playbackSpeedUpdatePublisher()
+                player.playbackSpeedUpdatePublisher(),
+                player.propertiesPublisher.slice(at: \.streamType)
             )
             .receiveOnMainThread()
-            .sink { [weak self] _ in
-                self?.configureSpeeds(controller: controller)
+            .sink { [weak self] _, _, streamType in
+                if streamType == .live {
+                    self?.cancellables = []
+                    controller.transportBarCustomMenuItems = []
+                }
+                else {
+                    self?.configureSpeeds(controller: controller)
+                }
             }
             .store(in: &cancellables)
 #endif
