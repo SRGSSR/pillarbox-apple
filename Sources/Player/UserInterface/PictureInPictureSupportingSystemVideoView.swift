@@ -59,6 +59,12 @@ extension PictureInPictureSupportingSystemVideoView {
             self.controller = controller
 
 #if os(tvOS)
+            configurePlaybackSpeedPublisher(player: player, controller: controller)
+#endif
+        }
+
+#if os(tvOS)
+        private func configurePlaybackSpeedPublisher(player: Player, controller: AVPlayerViewController) {
             Publishers.CombineLatest(
                 player.playbackSpeedUpdatePublisher(),
                 player.$_playbackSpeed
@@ -73,10 +79,8 @@ extension PictureInPictureSupportingSystemVideoView {
                 }
             }
             .store(in: &cancellables)
-#endif
         }
 
-#if os(tvOS)
         private static func allowedSpeeds(from range: ClosedRange<Float>) -> Set<Float> {
             Set(
                 AVPlaybackSpeed.systemDefaultSpeeds
