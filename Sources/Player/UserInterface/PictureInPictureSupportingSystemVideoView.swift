@@ -70,8 +70,7 @@ extension PictureInPictureSupportingSystemVideoView {
             self.controller = controller
 
 #if os(tvOS)
-            Publishers.CombineLatest3(
-                player.propertiesPublisher.slice(at: \.rate),
+            Publishers.CombineLatest(
                 player.propertiesPublisher.slice(at: \.streamType),
                 player.playbackSpeedUpdatePublisher()
             )
@@ -88,7 +87,7 @@ extension PictureInPictureSupportingSystemVideoView {
 #endif
         }
 
-        @available(iOS, unavailable)
+#if os(tvOS)
         func configureSpeeds(controller: AVPlayerViewController) {
             let speedActions = allowedSpeeds.sorted().map { speed in
                 let isSelected = self.player.playbackState == .paused ? self.player.effectivePlaybackSpeed == speed : self.player.systemPlayer.rate == speed
@@ -107,5 +106,6 @@ extension PictureInPictureSupportingSystemVideoView {
                 )
             ]
         }
+#endif
     }
 }
