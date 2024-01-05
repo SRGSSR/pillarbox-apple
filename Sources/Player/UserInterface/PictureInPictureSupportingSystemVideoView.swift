@@ -52,17 +52,6 @@ extension PictureInPictureSupportingSystemVideoView {
         let controller: AVPlayerViewController
 #if os(tvOS)
         private var cancellables = Set<AnyCancellable>()
-
-        private var allowedSpeeds: Set<Float> {
-            let range = player.playbackSpeedRange
-            return Set(
-                AVPlaybackSpeed.systemDefaultSpeeds
-                    .map(\.rate)
-                    .filter { rate in
-                        range.lowerBound <= rate && rate <= range.upperBound
-                    }
-            )
-        }
 #endif
 
         init(player: Player, controller: AVPlayerViewController) {
@@ -70,26 +59,43 @@ extension PictureInPictureSupportingSystemVideoView {
             self.controller = controller
 
 #if os(tvOS)
-            player.playbackSpeedUpdatePublisher()
-                .receiveOnMainThread()
-                .sink { [weak self] speed in
-                    if case .range(1...1) = speed {
-                        controller.transportBarCustomMenuItems = []
-                    }
-                    else {
-                        self?.configureSpeeds(controller: controller)
-                    }
+            Publishers.CombineLatest(
+                player.playbackSpeedUpdatePublisher(),
+                player.$_playbackSpeed
+            )
+            .receiveOnMainThread()
+            .sink { speedUpdate, speed in
+                if case .range(1...1) = speedUpdate {
+                    controller.transportBarCustomMenuItems = []
                 }
-                .store(in: &cancellables)
+                else if case let .range(range) = speedUpdate, let range {
+                    Self.configureSpeeds(for: player, controller: controller, range: range, speed: speed.effectiveValue)
+                }
+            }
+            .store(in: &cancellables)
 #endif
         }
 
 #if os(tvOS)
-        func configureSpeeds(controller: AVPlayerViewController) {
-            let speedActions = allowedSpeeds.sorted().map { speed in
-                let isSelected = self.player.playbackState == .paused ? self.player.effectivePlaybackSpeed == speed : self.player.systemPlayer.rate == speed
-                return UIAction(title: String(format: "%g×", speed), state: isSelected ? .on : .off) { [weak self] action in
-                    self?.player.playbackSpeed.wrappedValue = speed
+        private static func allowedSpeeds(from range: ClosedRange<Float>) -> Set<Float> {
+            Set(
+                AVPlaybackSpeed.systemDefaultSpeeds
+                    .map(\.rate)
+                    .filter { rate in
+                        range.lowerBound <= rate && rate <= range.upperBound
+                    }
+            )
+        }
+
+        private static func configureSpeeds(
+            for player: Player,
+            controller: AVPlayerViewController,
+            range: ClosedRange<Float>,
+            speed: Float
+        ) {
+            let speedActions = allowedSpeeds(from: range).sorted().map { allowedSpeed in
+                UIAction(title: String(format: "%g×", allowedSpeed), state: speed == allowedSpeed ? .on : .off) { [weak player] action in
+                    player?.playbackSpeed.wrappedValue = allowedSpeed
                     action.state = .on
                 }
             }
