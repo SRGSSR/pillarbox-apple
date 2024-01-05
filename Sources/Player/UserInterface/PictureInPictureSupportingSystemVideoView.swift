@@ -98,7 +98,7 @@ extension PictureInPictureSupportingSystemVideoView {
 
             controller.transportBarCustomMenuItems = [
                 UIMenu(
-                    title: "Speed",
+                    title: "Playback Speed",
                     image: UIImage(systemName: "speedometer"),
                     options: [.singleSelection],
                     children: speedActions
