@@ -10,6 +10,9 @@ public extension Player {
     /// Returns whether the current player item player can be returned to its default position.
     ///
     /// - Returns: `true` if skipping to the default position is possible.
+    ///
+    /// For a livestream supporting DVR this methods can be used to check whether the stream is played at the live
+    /// edge or not.
     func canSkipToDefault() -> Bool {
         switch streamType {
         case .onDemand, .live:
@@ -25,6 +28,8 @@ public extension Player {
     /// 
     /// - Parameter completion: A completion called when skipping ends. The provided Boolean informs
     ///   whether the skip could finish without being cancelled.
+    ///
+    /// For a livestream supporting DVR the default position corresponds to the live edge.
     func skipToDefault(completion: @escaping (Bool) -> Void = { _ in }) {
         switch streamType {
         case .dvr:
