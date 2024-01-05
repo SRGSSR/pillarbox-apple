@@ -11,7 +11,7 @@ public extension Player {
     ///
     /// - Returns: `true` if skipping to the default position is possible.
     ///
-    /// For a livestream supporting DVR this methods can be used to check whether the stream is played at the live
+    /// For a livestream supporting DVR this method can be used to check whether the stream is played at the live
     /// edge or not.
     func canSkipToDefault() -> Bool {
         switch streamType {
