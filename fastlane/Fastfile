@@ -19,8 +19,8 @@ TESTFLIGHT_PLATFORMS = {
 }.freeze
 
 DEVICES = {
-  ios: 'iPhone 14',
-  tvos: 'Apple TV'
+  ios: 'iPhone 15',
+  tvos: 'Apple TV (17.0)'
 }.freeze
 
 ICON_GLOBS = {
