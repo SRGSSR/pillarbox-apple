@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Circumspect"
-               BuildableName = "Circumspect"
-               BlueprintName = "Circumspect"
+               BlueprintIdentifier = "PillarboxCircumspect"
+               BuildableName = "PillarboxCircumspect"
+               BlueprintName = "PillarboxCircumspect"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -65,9 +65,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "Circumspect"
-            BuildableName = "Circumspect"
-            BlueprintName = "Circumspect"
+            BlueprintIdentifier = "PillarboxCircumspect"
+            BuildableName = "PillarboxCircumspect"
+            BlueprintName = "PillarboxCircumspect"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

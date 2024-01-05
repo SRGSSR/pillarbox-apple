@@ -10,23 +10,23 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "Analytics",
+            name: "PillarboxAnalytics",
             targets: ["PillarboxAnalytics"]
         ),
         .library(
-            name: "Circumspect",
+            name: "PillarboxCircumspect",
             targets: ["PillarboxCircumspect"]
         ),
         .library(
-            name: "Core",
+            name: "PillarboxCore",
             targets: ["PillarboxCore"]
         ),
         .library(
-            name: "CoreBusiness",
+            name: "PillarboxCoreBusiness",
             targets: ["PillarboxCoreBusiness"]
         ),
         .library(
-            name: "Player",
+            name: "PillarboxPlayer",
             targets: ["PillarboxPlayer"]
         )
     ],
