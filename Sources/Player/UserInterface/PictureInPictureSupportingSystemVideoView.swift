@@ -91,11 +91,10 @@ extension PictureInPictureSupportingSystemVideoView {
         @available(iOS, unavailable)
         func configureSpeeds(controller: AVPlayerViewController) {
             let speedActions = allowedSpeeds.sorted().map { speed in
-                UIAction(title: String(format: "%g×", speed), state: self.player.effectivePlaybackSpeed == speed ? .on : .off) { [weak self] action in
+                let isSelected = self.player.playbackState == .paused ? self.player.effectivePlaybackSpeed == speed : self.player.systemPlayer.rate == speed
+                return UIAction(title: String(format: "%g×", speed), state: isSelected ? .on : .off) { [weak self] action in
                     self?.player.playbackSpeed.wrappedValue = speed
-                    if speed == self?.player.effectivePlaybackSpeed {
-                        action.state = .on
-                    }
+                    action.state = .on
                 }
             }
 
