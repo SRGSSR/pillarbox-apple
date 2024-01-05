@@ -70,15 +70,13 @@ extension PictureInPictureSupportingSystemVideoView {
             self.controller = controller
 
 #if os(tvOS)
-            Publishers.CombineLatest3(
+            Publishers.CombineLatest(
                 player.propertiesPublisher.slice(at: \.rate),
-                player.playbackSpeedUpdatePublisher(),
-                player.propertiesPublisher.slice(at: \.streamType)
+                player.playbackSpeedUpdatePublisher()
             )
             .receiveOnMainThread()
-            .sink { [weak self] _, _, streamType in
-                if streamType == .live {
-                    self?.cancellables = []
+            .sink { [weak self] _ in
+                if self?.player.playbackSpeedRange == 1...1 {
                     controller.transportBarCustomMenuItems = []
                 }
                 else {
@@ -96,9 +94,6 @@ extension PictureInPictureSupportingSystemVideoView {
                     self?.player.playbackSpeed.wrappedValue = speed
                     if speed == self?.player.systemPlayer.rate {
                         action.state = .on
-                    } else {
-                        // When the selected speed cannot be applied, we invoke the current methods to redraw the menu, preventing no selected item.
-                        self?.configureSpeeds(controller: controller)
                     }
                 }
             }
