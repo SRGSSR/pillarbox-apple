@@ -52,6 +52,17 @@ extension PictureInPictureSupportingSystemVideoView {
         let controller: AVPlayerViewController
 #if os(tvOS)
         private var cancellables = Set<AnyCancellable>()
+
+        private var allowedSpeeds: Set<Float> {
+            let range = player.playbackSpeedRange
+            return Set(
+                AVPlaybackSpeed.systemDefaultSpeeds
+                    .map(\.rate)
+                    .filter { rate in
+                        range.lowerBound <= rate && rate <= range.upperBound
+                    }
+            )
+        }
 #endif
 
         init(player: Player, controller: AVPlayerViewController) {
@@ -59,30 +70,31 @@ extension PictureInPictureSupportingSystemVideoView {
             self.controller = controller
 
 #if os(tvOS)
-            player.propertiesPublisher.slice(at: \.rate)
-                .receiveOnMainThread()
-                .sink { [weak self] _ in
-                    self?.configureSpeeds(controller: controller)
-                }
-                .store(in: &cancellables)
+            Publishers.CombineLatest(
+                player.propertiesPublisher.slice(at: \.rate),
+                player.playbackSpeedUpdatePublisher()
+            )
+            .receiveOnMainThread()
+            .sink { [weak self] _ in
+                self?.configureSpeeds(controller: controller)
+            }
+            .store(in: &cancellables)
 #endif
         }
 
         @available(iOS, unavailable)
         func configureSpeeds(controller: AVPlayerViewController) {
-            let speedActions = AVPlaybackSpeed.systemDefaultSpeeds
-                .map(\.rate)
-                .map { [weak self] speed in
-                    UIAction(title: String(format: "%g×", speed), state: self?.player.systemPlayer.rate == speed ? .on : .off) { action in
-                        self?.player.playbackSpeed.wrappedValue = speed
-                        if speed == self?.player.systemPlayer.rate {
-                            action.state = .on
-                        } else {
-                            // When the selected speed cannot be applied, we invoke the current methods to redraw the menu, preventing no selected item.
-                            self?.configureSpeeds(controller: controller)
-                        }
+            let speedActions = allowedSpeeds.sorted().map { [weak self] speed in
+                UIAction(title: String(format: "%g×", speed), state: self?.player.systemPlayer.rate == speed ? .on : .off) { action in
+                    self?.player.playbackSpeed.wrappedValue = speed
+                    if speed == self?.player.systemPlayer.rate {
+                        action.state = .on
+                    } else {
+                        // When the selected speed cannot be applied, we invoke the current methods to redraw the menu, preventing no selected item.
+                        self?.configureSpeeds(controller: controller)
                     }
                 }
+            }
 
             controller.transportBarCustomMenuItems = [
                 UIMenu(
