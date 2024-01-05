@@ -5,6 +5,7 @@
 //
 
 import AVKit
+import Combine
 import SwiftUI
 
 private class PlayerViewController: AVPlayerViewController {
@@ -42,9 +43,6 @@ struct PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable 
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {
         uiViewController.player = player.systemPlayer
         uiViewController.videoGravity = gravity
-#if os(tvOS)
-        context.coordinator.configureSpeeds(controller: uiViewController)
-#endif
     }
 }
 
@@ -52,20 +50,39 @@ extension PictureInPictureSupportingSystemVideoView {
     class Coordinator {
         let player: Player
         let controller: AVPlayerViewController
+#if os(tvOS)
+        private var cancellables = Set<AnyCancellable>()
+#endif
 
         init(player: Player, controller: AVPlayerViewController) {
             self.player = player
             self.controller = controller
+
+#if os(tvOS)
+            player.propertiesPublisher.slice(at: \.rate)
+                .receiveOnMainThread()
+                .sink { [weak self] _ in
+                    self?.configureSpeeds(controller: controller)
+                }
+                .store(in: &cancellables)
+#endif
         }
 
         @available(iOS, unavailable)
         func configureSpeeds(controller: AVPlayerViewController) {
-            let speedActions = AVPlaybackSpeed.systemDefaultSpeeds.map(\.rate).map { [weak self] speed in
-                UIAction(title: String(format: "%g×", speed), state: self?.player.effectivePlaybackSpeed == speed ? .on : .off) { action in
-                    self?.player.setDesiredPlaybackSpeed(speed)
-                    action.state = .on
+            let speedActions = AVPlaybackSpeed.systemDefaultSpeeds
+                .map(\.rate)
+                .map { [weak self] speed in
+                    UIAction(title: String(format: "%g×", speed), state: self?.player.systemPlayer.rate == speed ? .on : .off) { action in
+                        self?.player.playbackSpeed.wrappedValue = speed
+                        if speed == self?.player.systemPlayer.rate {
+                            action.state = .on
+                        } else {
+                            // When the selected speed cannot be applied, we invoke the current methods to redraw the menu, preventing no selected item.
+                            self?.configureSpeeds(controller: controller)
+                        }
+                    }
                 }
-            }
 
             controller.transportBarCustomMenuItems = [
                 UIMenu(
