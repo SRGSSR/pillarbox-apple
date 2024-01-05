@@ -33,7 +33,7 @@
         
     @Section(title: "Add the Player dependency") {
         @ContentAndMedia {
-            Add Player as a Swift Package dependency to your project.
+            Add PillarboxPlayer as a Swift Package dependency to your project.
         }
         
         @Steps {
@@ -44,7 +44,7 @@
             }
             
             @Step {
-                Edit package products so that only Player is added to the Tutorial application.
+                Edit package products so that only PillarboxPlayer is added to the Tutorial application.
                 
                 @Image(source: creating-project-2-2, alt: "A screenshot of the Xcode package product selection screen.")
             }
