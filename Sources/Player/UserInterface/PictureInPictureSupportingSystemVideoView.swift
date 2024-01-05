@@ -70,8 +70,9 @@ extension PictureInPictureSupportingSystemVideoView {
             self.controller = controller
 
 #if os(tvOS)
-            Publishers.CombineLatest(
+            Publishers.CombineLatest3(
                 player.propertiesPublisher.slice(at: \.rate),
+                player.propertiesPublisher.slice(at: \.streamType),
                 player.playbackSpeedUpdatePublisher()
             )
             .receiveOnMainThread()
