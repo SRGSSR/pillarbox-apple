@@ -117,7 +117,7 @@ Xcode _Text Editing_ settings should be configured as follows:
 
 ## Xcode previews
 
-Please ensure that the target an Xcode preview belongs to is selected before attempting to render an Xcode preview (otherwise rendering will crash). Note that attempting to use the `Pillarbox-Package` umbrella target does not work.
+Please ensure that the target an Xcode preview belongs to is selected before attempting to render an Xcode preview (otherwise rendering will crash). Note that attempting to use the `Pillarbox` umbrella target does not work.
 
 ## Code signing
 

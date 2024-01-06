@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Analytics"
-               BuildableName = "Analytics"
-               BlueprintName = "Analytics"
+               BlueprintIdentifier = "PillarboxCoreBusiness"
+               BuildableName = "PillarboxCoreBusiness"
+               BlueprintName = "PillarboxCoreBusiness"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -37,9 +37,9 @@
             testExecutionOrdering = "random">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AnalyticsTests"
-               BuildableName = "AnalyticsTests"
-               BlueprintName = "AnalyticsTests"
+               BlueprintIdentifier = "CoreBusinessTests"
+               BuildableName = "CoreBusinessTests"
+               BlueprintName = "CoreBusinessTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
@@ -65,9 +65,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "Analytics"
-            BuildableName = "Analytics"
-            BlueprintName = "Analytics"
+            BlueprintIdentifier = "PillarboxCoreBusiness"
+            BuildableName = "PillarboxCoreBusiness"
+            BlueprintName = "PillarboxCoreBusiness"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

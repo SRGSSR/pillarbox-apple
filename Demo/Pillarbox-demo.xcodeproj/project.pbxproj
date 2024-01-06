@@ -21,6 +21,7 @@
 		0EF2A5492B44500800F01804 /* SettingsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF2A5482B44500800F01804 /* SettingsBundle.swift */; };
 		0EF42CB629AE513400553165 /* SRGDataProviderCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 0EF42CB529AE513400553165 /* SRGDataProviderCombine */; };
 		6F02B3092AB870AD002D15DB /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 6F02B3082AB870AD002D15DB /* Localizable.xcstrings */; };
+		6F09A2922B48744000700365 /* PillarboxCoreBusiness in Frameworks */ = {isa = PBXBuildFile; productRef = 6F09A2912B48744000700365 /* PillarboxCoreBusiness */; };
 		6F0B2E852A40EBAC00B69675 /* RouterDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E842A40EBAC00B69675 /* RouterDestination.swift */; };
 		6F0B2E8B2A40EE0700B69675 /* ContentList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E8A2A40EE0700B69675 /* ContentList.swift */; };
 		6F0E5CD32B3394EA0031E313 /* PiPButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E5CD22B3394EA0031E313 /* PiPButton.swift */; };
@@ -69,7 +70,6 @@
 		6F59E8A329CF31E20093E6FB /* ExamplesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E87729CF31E10093E6FB /* ExamplesView.swift */; };
 		6F59E8A429CF31E20093E6FB /* ExamplesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E87829CF31E10093E6FB /* ExamplesViewModel.swift */; };
 		6F6643D92A61140600BFD644 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6643D82A61140600BFD644 /* URL.swift */; };
-		6F7A2B2B2A707748005701C7 /* CoreBusiness in Frameworks */ = {isa = PBXBuildFile; productRef = 6F7A2B2A2A707748005701C7 /* CoreBusiness */; };
 		6F7EAA552B17755C00194D03 /* TrackingProgressTutorial~ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7EAA542B17755C00194D03 /* TrackingProgressTutorial~ios.swift */; };
 		6F8459F22A38543400A7B5F2 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8459F12A38543400A7B5F2 /* Signal.swift */; };
 		6F8600FC2B358BC0005CBCC5 /* SRGMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8600FB2B358BC0005CBCC5 /* SRGMedia.swift */; };
@@ -118,7 +118,6 @@
 		6F45DB9D2893B773008ACCE6 /* Demo.nightly.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Demo.nightly.xcconfig; sourceTree = "<group>"; };
 		6F45DB9E2893B773008ACCE6 /* Demo.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Demo.debug.xcconfig; sourceTree = "<group>"; };
 		6F45DB9F2893B773008ACCE6 /* Demo.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Demo.release.xcconfig; sourceTree = "<group>"; };
-		6F56C23F28E890140056458F /* Pillarbox.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Pillarbox.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		6F59E84029CF31E10093E6FB /* SearchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		6F59E84129CF31E10093E6FB /* SearchViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		6F59E84329CF31E10093E6FB /* DemoApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoApp.swift; sourceTree = "<group>"; };
@@ -188,10 +187,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F7A2B2B2A707748005701C7 /* CoreBusiness in Frameworks */,
 				6FCA4747292CBEC7008C2812 /* ShowTime in Frameworks */,
 				0EF42CB629AE513400553165 /* SRGDataProviderCombine in Frameworks */,
 				6F9B5BC928CF8C530074B9E0 /* OrderedCollections in Frameworks */,
+				6F09A2922B48744000700365 /* PillarboxCoreBusiness in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,7 +200,6 @@
 		6F05B8CC2887E934005D75E3 = {
 			isa = PBXGroup;
 			children = (
-				6F56C23F28E890140056458F /* Pillarbox.playground */,
 				6F010340289946220021BA76 /* Info.plist */,
 				6F7A2B242A7076FA005701C7 /* Packages */,
 				6F917C092887EA8E004113BA /* Sources */,
@@ -536,7 +534,7 @@
 				6F9B5BC828CF8C530074B9E0 /* OrderedCollections */,
 				6FCA4746292CBEC7008C2812 /* ShowTime */,
 				0EF42CB529AE513400553165 /* SRGDataProviderCombine */,
-				6F7A2B2A2A707748005701C7 /* CoreBusiness */,
+				6F09A2912B48744000700365 /* PillarboxCoreBusiness */,
 			);
 			productName = PillarboxDemo;
 			productReference = 6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */;
@@ -1002,9 +1000,9 @@
 			package = 0EF42CB429AE513400553165 /* XCRemoteSwiftPackageReference "srgdataprovider-apple" */;
 			productName = SRGDataProviderCombine;
 		};
-		6F7A2B2A2A707748005701C7 /* CoreBusiness */ = {
+		6F09A2912B48744000700365 /* PillarboxCoreBusiness */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = CoreBusiness;
+			productName = PillarboxCoreBusiness;
 		};
 		6F9B5BC828CF8C530074B9E0 /* OrderedCollections */ = {
 			isa = XCSwiftPackageProductDependency;
