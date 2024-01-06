@@ -11,8 +11,18 @@ struct BasicSystemVideoView: UIViewControllerRepresentable {
     let player: Player
     let gravity: AVLayerVideoGravity
 
+#if os(tvOS)
+    func makeCoordinator() -> AVPlayerViewControllerSpeedCoordinator {
+        .init(player: player, controller: AVPlayerViewController())
+    }
+#endif
+
     func makeUIViewController(context: Context) -> AVPlayerViewController {
+#if os(tvOS)
+        let controller = context.coordinator.controller
+#else
         let controller = AVPlayerViewController()
+#endif
         controller.allowsPictureInPicturePlayback = false
         return controller
     }

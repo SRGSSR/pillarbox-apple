@@ -38,6 +38,7 @@ class AVPlayerViewControllerSpeedCoordinator {
     }
 }
 
+@available(iOS, unavailable)
 extension AVPlayerViewControllerSpeedCoordinator {
     private static func allowedSpeeds(from range: ClosedRange<Float>) -> Set<Float> {
         Set(
