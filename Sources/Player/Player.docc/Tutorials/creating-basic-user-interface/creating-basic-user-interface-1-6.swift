@@ -10,7 +10,7 @@ struct ContentView: View {
         ZStack {
             VideoView(player: player)
             Button(action: player.togglePlayPause) {
-                Image(systemName: player.playbackState == .playing ? "pause.circle.fill" : "play.circle.fill")
+                Image(systemName: player.rate == 0 ? "play.circle.fill" : "pause.circle.fill")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 50)
