@@ -54,20 +54,11 @@ struct PlayerView: View {
         item: .simple(url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!)
     )
 
-    private var buttonImage: String {
-        switch player.playbackState {
-        case .playing:
-            return "pause.circle.fill"
-        default:
-            return "play.circle.fill"
-        }
-    }
-
     var body: some View {
         ZStack {
             VideoView(player: player)
             Button(action: player.togglePlayPause) {
-                Image(systemName: buttonImage)
+                Image(systemName: player.rate == 0 ? "play.circle.fill" : "pause.circle.fill")
                     .resizable()
                     .frame(width: 80, height: 80)
             }
