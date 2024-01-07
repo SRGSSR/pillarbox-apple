@@ -21,20 +21,18 @@ final class AVPlayerViewControllerSpeedCoordinator {
     }
 
     private func configurePlaybackSpeedPublisher(player: Player, controller: AVPlayerViewController) {
-        Publishers.CombineLatest(
-            player.playbackSpeedUpdatePublisher(),
-            player.$_playbackSpeed
-        )
-        .receiveOnMainThread()
-        .sink { speedUpdate, speed in
-            if case .range(1...1) = speedUpdate {
-                controller.transportBarCustomMenuItems = []
+        player.$_playbackSpeed
+            .receiveOnMainThread()
+            .sink { speed in
+                guard let range = speed.range else { return }
+                if range == 1...1 {
+                    controller.transportBarCustomMenuItems = []
+                }
+                else {
+                    Self.configureSpeeds(for: player, controller: controller, range: range, speed: speed.effectiveValue)
+                }
             }
-            else if case let .range(range) = speedUpdate, let range {
-                Self.configureSpeeds(for: player, controller: controller, range: range, speed: speed.effectiveValue)
-            }
-        }
-        .store(in: &cancellables)
+            .store(in: &cancellables)
     }
 }
 
