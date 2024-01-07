@@ -9,7 +9,7 @@ import Combine
 import UIKit
 
 @available(iOS, unavailable)
-class AVPlayerViewControllerSpeedCoordinator {
+final class AVPlayerViewControllerSpeedCoordinator {
     let player: Player
     let controller: AVPlayerViewController
     private var cancellables = Set<AnyCancellable>()
@@ -39,18 +39,16 @@ class AVPlayerViewControllerSpeedCoordinator {
 }
 
 @available(iOS, unavailable)
-extension AVPlayerViewControllerSpeedCoordinator {
-    private static func allowedSpeeds(from range: ClosedRange<Float>) -> Set<Float> {
+private extension AVPlayerViewControllerSpeedCoordinator {
+    static func allowedSpeeds(from range: ClosedRange<Float>) -> Set<Float> {
         Set(
             AVPlaybackSpeed.systemDefaultSpeeds
                 .map(\.rate)
-                .filter { rate in
-                    range.lowerBound <= rate && rate <= range.upperBound
-                }
+                .filter { range.contains($0) }
         )
     }
 
-    private static func configureSpeeds(
+    static func configureSpeeds(
         for player: Player,
         controller: AVPlayerViewController,
         range: ClosedRange<Float>,
@@ -62,7 +60,6 @@ extension AVPlayerViewControllerSpeedCoordinator {
                 action.state = .on
             }
         }
-
         controller.transportBarCustomMenuItems = [
             UIMenu(
                 title: "Playback Speed",

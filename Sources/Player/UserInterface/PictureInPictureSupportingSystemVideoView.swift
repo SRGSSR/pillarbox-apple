@@ -20,19 +20,21 @@ private class PlayerViewController: AVPlayerViewController {
 
 // swiftlint:disable:next type_name
 struct PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable {
+#if os(iOS)
+    typealias Coordinator = Void
+#else
+    typealias Coordinator = AVPlayerViewControllerSpeedCoordinator
+#endif
+
     let player: Player
     let gravity: AVLayerVideoGravity
 
-#if os(iOS)
     static func dismantleUIViewController(_ uiViewController: AVPlayerViewController, coordinator: ()) {
         PictureInPicture.shared.system.relinquish(for: uiViewController)
     }
-#else
-    static func dismantleUIViewController(_ uiViewController: AVPlayerViewController, coordinator: AVPlayerViewControllerSpeedCoordinator) {
-        PictureInPicture.shared.system.relinquish(for: uiViewController)
-    }
 
-    func makeCoordinator() -> AVPlayerViewControllerSpeedCoordinator {
+#if os(tvOS)
+    func makeCoordinator() -> Coordinator {
         .init(
             player: player,
             controller: PictureInPicture.shared.system.playerViewController ?? PlayerViewController()
