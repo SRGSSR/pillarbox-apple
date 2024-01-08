@@ -21,7 +21,7 @@ final class AVPlayerViewControllerSpeedCoordinator {
     }
 
     private func configurePlaybackSpeedPublisher(player: Player, controller: AVPlayerViewController) {
-        player.$_playbackSpeed
+        player.playbackSpeedPublisher()
             .receiveOnMainThread()
             .sink { speed in
                 guard let range = speed.range else { return }
