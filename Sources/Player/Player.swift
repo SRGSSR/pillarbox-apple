@@ -117,6 +117,9 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
+    /// A Boolean value indicating whether playback is currently playing.
+    public var isPlaybackActive: Bool { rate != 0 }
+
     let queuePlayer = QueuePlayer()
     let nowPlayingSession: MPNowPlayingSession
 
