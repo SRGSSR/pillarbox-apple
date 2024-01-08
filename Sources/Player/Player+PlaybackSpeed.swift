@@ -50,6 +50,15 @@ extension Player {
         .eraseToAnyPublisher()
     }
 
+    func playbackSpeedPublisher() -> AnyPublisher<PlaybackSpeed, Never> {
+        playbackSpeedUpdatePublisher()
+            .scan(.indefinite) { speed, update in
+                speed.updated(with: update)
+            }
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
     func desiredPlaybackSpeedUpdatePublisher() -> AnyPublisher<PlaybackSpeedUpdate, Never> {
         desiredPlaybackSpeedPublisher
             .map { .value($0) }
