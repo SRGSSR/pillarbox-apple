@@ -10,28 +10,36 @@ import UIKit
 
 @available(iOS, unavailable)
 final class AVPlayerViewControllerSpeedCoordinator {
-    let player: Player
-    let controller: AVPlayerViewController
-    private var cancellables = Set<AnyCancellable>()
+    var player: Player? {
+        didSet {
+            configurePlaybackSpeedPublisher(player: player, controller: controller)
+        }
+    }
+    var controller: AVPlayerViewController? {
+        didSet {
+            configurePlaybackSpeedPublisher(player: player, controller: controller)
+        }
+    }
+    private var cancellable: AnyCancellable?
 
-    init(player: Player, controller: AVPlayerViewController) {
-        self.player = player
-        self.controller = controller
-        configurePlaybackSpeedPublisher(player: player, controller: controller)
+    private func configurePlaybackSpeedPublisher(player: Player?, controller: AVPlayerViewController?) {
+        guard let player, let controller else {
+            cancellable = nil
+            return
+        }
+        cancellable = menuItemsPublisher()
+            .receiveOnMainThread()
+            .assign(to: \.transportBarCustomMenuItems, on: controller)
     }
 
-    private func configurePlaybackSpeedPublisher(player: Player, controller: AVPlayerViewController) {
-        player.playbackSpeedPublisher()
-            .receiveOnMainThread()
-            .sink { speed in
-                if let range = speed.range, range != 1...1 {
-                    controller.transportBarCustomMenuItems = Self.speedMenuItems(for: player, range: range, speed: speed.effectiveValue)
-                }
-                else {
-                    controller.transportBarCustomMenuItems = []
-                }
+    private func menuItemsPublisher() -> AnyPublisher<[UIMenuElement], Never> {
+        guard let player else { return Just([]).eraseToAnyPublisher() }
+        return player.playbackSpeedPublisher()
+            .map { speed in
+                guard let range = speed.range, range != 1...1 else { return [] }
+                return Self.speedMenuItems(for: player, range: range, speed: speed.effectiveValue)
             }
-            .store(in: &cancellables)
+            .eraseToAnyPublisher()
     }
 }
 
