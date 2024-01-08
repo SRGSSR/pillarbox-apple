@@ -297,11 +297,7 @@ private extension Player {
     }
 
     func configurePlaybackSpeedPublisher() {
-        playbackSpeedUpdatePublisher()
-            .scan(.indefinite) { speed, update in
-                speed.updated(with: update)
-            }
-            .removeDuplicates()
+        playbackSpeedPublisher()
             .receiveOnMainThread()
             .assign(to: &$_playbackSpeed)
     }
