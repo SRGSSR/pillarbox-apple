@@ -15,11 +15,13 @@ final class AVPlayerViewControllerSpeedCoordinator {
             configurePlaybackSpeedPublisher(player: player, controller: controller)
         }
     }
+
     var controller: AVPlayerViewController? {
         didSet {
             configurePlaybackSpeedPublisher(player: player, controller: controller)
         }
     }
+
     private var cancellable: AnyCancellable?
 
     private func configurePlaybackSpeedPublisher(player: Player?, controller: AVPlayerViewController?) {
@@ -27,19 +29,13 @@ final class AVPlayerViewControllerSpeedCoordinator {
             cancellable = nil
             return
         }
-        cancellable = menuItemsPublisher()
-            .receiveOnMainThread()
-            .assign(to: \.transportBarCustomMenuItems, on: controller)
-    }
-
-    private func menuItemsPublisher() -> AnyPublisher<[UIMenuElement], Never> {
-        guard let player else { return Just([]).eraseToAnyPublisher() }
-        return player.playbackSpeedPublisher()
+        cancellable = player.playbackSpeedPublisher()
             .map { speed in
                 guard let range = speed.range, range != 1...1 else { return [] }
                 return Self.speedMenuItems(for: player, range: range, speed: speed.effectiveValue)
             }
-            .eraseToAnyPublisher()
+            .receiveOnMainThread()
+            .assign(to: \.transportBarCustomMenuItems, on: controller)
     }
 }
 
