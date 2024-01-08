@@ -24,12 +24,11 @@ final class AVPlayerViewControllerSpeedCoordinator {
         player.playbackSpeedPublisher()
             .receiveOnMainThread()
             .sink { speed in
-                guard let range = speed.range else { return }
-                if range == 1...1 {
-                    controller.transportBarCustomMenuItems = []
+                if let range = speed.range, range != 1...1 {
+                    controller.transportBarCustomMenuItems = Self.speedMenuItems(for: player, range: range, speed: speed.effectiveValue)
                 }
                 else {
-                    Self.configureSpeeds(for: player, controller: controller, range: range, speed: speed.effectiveValue)
+                    controller.transportBarCustomMenuItems = []
                 }
             }
             .store(in: &cancellables)
@@ -46,19 +45,18 @@ private extension AVPlayerViewControllerSpeedCoordinator {
         )
     }
 
-    static func configureSpeeds(
+    static func speedMenuItems(
         for player: Player,
-        controller: AVPlayerViewController,
         range: ClosedRange<Float>,
         speed: Float
-    ) {
+    ) -> [UIMenuElement] {
         let speedActions = allowedSpeeds(from: range).sorted().map { allowedSpeed in
             UIAction(title: String(format: "%g×", allowedSpeed), state: speed == allowedSpeed ? .on : .off) { [weak player] action in
                 player?.playbackSpeed.wrappedValue = allowedSpeed
                 action.state = .on
             }
         }
-        controller.transportBarCustomMenuItems = [
+        return [
             UIMenu(
                 title: "Playback Speed",
                 image: UIImage(systemName: "speedometer"),
