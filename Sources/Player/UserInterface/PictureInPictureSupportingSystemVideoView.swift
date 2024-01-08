@@ -29,7 +29,7 @@ struct PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable 
     let player: Player
     let gravity: AVLayerVideoGravity
 
-    static func dismantleUIViewController(_ uiViewController: AVPlayerViewController, coordinator: ()) {
+    static func dismantleUIViewController(_ uiViewController: AVPlayerViewController, coordinator: Coordinator) {
         PictureInPicture.shared.system.relinquish(for: uiViewController)
     }
 
