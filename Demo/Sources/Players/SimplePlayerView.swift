@@ -37,7 +37,7 @@ struct SimplePlayerView: View {
     @ViewBuilder
     private func playbackButton() -> some View {
         Button(action: player.togglePlayPause) {
-            Image(systemName: !player.isPlaybackActive ? "play.circle.fill" : "pause.circle.fill")
+            Image(systemName: player.isPlaybackActive ? "pause.circle.fill" : "play.circle.fill")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 50)

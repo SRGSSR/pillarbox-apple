@@ -478,11 +478,11 @@ private struct PlaybackButton: View {
         if player.canReplay() {
             return "arrow.counterclockwise.circle.fill"
         }
-        else if !player.isPlaybackActive {
-            return "play.circle.fill"
+        else if player.isPlaybackActive {
+            return "pause.circle.fill"
         }
         else {
-            return "pause.circle.fill"
+            return "play.circle.fill"
         }
     }
 

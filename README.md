@@ -58,7 +58,7 @@ struct PlayerView: View {
         ZStack {
             VideoView(player: player)
             Button(action: player.togglePlayPause) {
-                Image(systemName: !player.isPlaybackActive ? "play.circle.fill" : "pause.circle.fill")
+                Image(systemName: player.isPlaybackActive ? "pause.circle.fill" : "play.circle.fill")
                     .resizable()
                     .frame(width: 80, height: 80)
             }
