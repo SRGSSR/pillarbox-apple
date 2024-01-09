@@ -6,6 +6,17 @@
 
 import AVFoundation
 
+public extension AVPlayerItem {
+    /// Seeks to a given position.
+    ///
+    /// - Parameter position: The position to seek to.
+    ///
+    /// This method can be used to start an `AVPlayerItem` at some position.
+    func seek(_ position: Position) {
+        seek(to: position.time, toleranceBefore: position.toleranceBefore, toleranceAfter: position.toleranceAfter, completionHandler: nil)
+    }
+}
+
 extension AVPlayerItem {
     var timeRange: CMTimeRange {
         TimeProperties.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
