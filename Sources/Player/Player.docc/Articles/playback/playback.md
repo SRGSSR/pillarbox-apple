@@ -33,8 +33,8 @@ You create a player with or without associated items to be played. Since ``Playe
 
         ```swift
         struct PlayerView: View {
-            @StateObject private var player = Player(item:
-                .simple(url: URL(string: "https://server.com/stream.m3u8")!)
+            @StateObject private var player = Player(
+                item: .simple(url: URL(string: "https://server.com/stream.m3u8")!)
             )
         }
         ```
@@ -76,20 +76,39 @@ The resulting player item can then be played with ``Player`` instance, possibly 
 
 A player loaded with content starts in a paused state. To actually start playback you have to call ``Player/play()``, usually when the associated view appears. For example a very basic layout able to display video content would look like:
 
-<!-- markdownlint-disable MD046 -->
-```swift
-struct PlayerView: View {
-    @StateObject private var player = Player(item:
-        .simple(url: URL(string: "https://server.com/stream.m3u8")!)
-    )
+@TabNavigator {
+    @Tab("Start at the default position") {
+        ```swift
+        struct PlayerView: View {
+            @StateObject private var player = Player(
+                item: .simple(url: URL(string: "https://server.com/stream.m3u8")!)
+            )
 
-    var body: some View {
-        VideoView(player: player)
-            .onAppear(perform: player.play)
+            var body: some View {
+                VideoView(player: player)
+                    .onAppear(perform: player.play)
+            }
+        }
+        ```
+    }
+
+    @Tab("Start at a given position") {
+        ```swift
+        struct PlayerView: View {
+            @StateObject private var player = Player(
+                item: .simple(url: URL(string: "https://server.com/stream.m3u8")!) { item in
+                    item.seek(at(.init(value: 10, timescale: 1)))
+                }
+            )
+
+            var body: some View {
+                VideoView(player: player)
+                    .onAppear(perform: player.play)
+            }
+        }
+        ```
     }
 }
-```
-<!-- markdownlint-restore -->
 
 ## Play video in the background
 
