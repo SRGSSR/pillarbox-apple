@@ -76,6 +76,7 @@ The resulting player item can then be played with ``Player`` instance, possibly 
 
 A player loaded with content starts in a paused state. To actually start playback you have to call ``Player/play()``, usually when the associated view appears. For example a very basic layout able to display video content would look like:
 
+<!-- markdownlint-disable MD034 -->
 @TabNavigator {
     @Tab("Start at the default position") {
         ```swift
@@ -109,6 +110,7 @@ A player loaded with content starts in a paused state. To actually start playbac
         ```
     }
 }
+<!-- markdownlint-restore -->
 
 ## Play video in the background
 

@@ -107,16 +107,16 @@ final class SeekTests: TestCase {
     }
 
     func testOnDemandStartAtTime() {
-        let player = Player(item: .simple(url: Stream.onDemand.url, configuration: { item in
+        let player = Player(item: .simple(url: Stream.onDemand.url) { item in
             item.seek(at(.init(value: 10, timescale: 1)))
-        }))
+        })
         expect(player.time.seconds).toEventually(equal(10), timeout: .seconds(1))
     }
 
     func testDvrStartAtTime() {
-        let player = Player(item: .simple(url: Stream.dvr.url, configuration: { item in
+        let player = Player(item: .simple(url: Stream.dvr.url) { item in
             item.seek(at(.init(value: 10, timescale: 1)))
-        }))
+        })
         expect(player.time.seconds).toEventually(equal(10), timeout: .seconds(1))
     }
 }
