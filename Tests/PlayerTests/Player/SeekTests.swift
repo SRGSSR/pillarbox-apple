@@ -105,4 +105,18 @@ final class SeekTests: TestCase {
         player.seek(near(player.seekableTimeRange.end + CMTime(value: 10, timescale: 1)))
         expect(player.time).toEventually(equal(player.seekableTimeRange.end), timeout: .seconds(1))
     }
+
+    func testOnDemandStartAtTime() {
+        let player = Player(item: .simple(url: Stream.onDemand.url, configuration: { item in
+            item.seek(to: .init(value: 10, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero, completionHandler: nil)
+        }))
+        expect(player.time.seconds).toEventually(equal(10), timeout: .seconds(1))
+    }
+
+    func testDvrStartAtTime() {
+        let player = Player(item: .simple(url: Stream.dvr.url, configuration: { item in
+            item.seek(to: .init(value: 10, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero, completionHandler: nil)
+        }))
+        expect(player.time.seconds).toEventually(equal(10), timeout: .seconds(1))
+    }
 }
