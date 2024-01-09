@@ -245,7 +245,7 @@ extension Asset {
 }
 
 extension AVPlayerItem {
-    /// An identifier to identify player items delivered by the same data source.
+    /// An identifier for player items delivered by the same data source.
     var id: UUID? {
         get {
             objc_getAssociatedObject(self, &kIdKey) as? UUID
@@ -255,7 +255,7 @@ extension AVPlayerItem {
         }
     }
 
-    /// Assigns an identifier to identify player items delivered by the same data source.
+    /// Assigns an identifier for player items delivered by the same data source.
     /// 
     /// - Parameter id: The id to assign.
     /// - Returns: The receiver with the id assigned to it.
