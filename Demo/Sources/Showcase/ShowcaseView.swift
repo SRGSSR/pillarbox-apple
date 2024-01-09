@@ -30,7 +30,7 @@ struct ShowcaseView: View {
             playlistsSection()
             embeddingsSection()
             systemPlayerSection()
-            inlineSystemPlayerSection()
+            miscellaneousPlayerFeaturesSection()
             customPictureInPictureSection()
             systemPictureInPictureSection()
             vanillaPlayerSection()
@@ -205,13 +205,21 @@ struct ShowcaseView: View {
     }
 
     @ViewBuilder
-    private func inlineSystemPlayerSection() -> some View {
-        CustomSection("Inline system player (using Pillarbox)") {
+    private func miscellaneousPlayerFeaturesSection() -> some View {
+        CustomSection("Miscellaneous player features (using Pillarbox)") {
             cell(
                 title: "Couleur 3 (DVR)",
+                subtitle: "Inline system playback view",
                 destination: .inlineSystemPlayer(media: Media(from: URLTemplate.dvrVideoHLS))
             )
             .sourceCode(of: InlineSystemPlayerView.self)
+
+            cell(
+                title: "19h30 - La nature peut enfin se reposer...",
+                subtitle: "Playback start at a given time",
+                destination: .startAtGivenTime
+            )
+            .sourceCode(of: StartAtGivenTimeView.self)
         }
     }
 
