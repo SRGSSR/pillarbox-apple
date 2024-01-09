@@ -15,12 +15,15 @@ public extension PlayerItem {
     /// - Parameters:
     ///   - urn: The URN to play.
     ///   - server: The server which the URN is played from.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - configuration: A closure to configure player items created from the receiver.
     ///
-    /// The item is automatically tracked according to SRG SSR analytics standards.
+    /// In addition the item is automatically tracked according to SRG SSR analytics standards.
     static func urn(
         _ urn: String,
         server: Server = .production,
-        trackerAdapters: [TrackerAdapter<MediaMetadata>] = []
+        trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         let dataProvider = DataProvider(server: server)
         let publisher = dataProvider.playableMediaCompositionPublisher(forUrn: urn)
@@ -35,7 +38,7 @@ public extension PlayerItem {
                     .prepend(nil)
                     .map { image in
                         let metadata = MediaMetadata(mediaComposition: mediaComposition, resource: resource, image: image)
-                        return Self.asset(for: metadata)
+                        return Self.asset(for: metadata, configuration: configuration)
                     }
             }
             .switchToLatest()
@@ -46,9 +49,9 @@ public extension PlayerItem {
         ] + trackerAdapters)
     }
 
-    private static func asset(for metadata: MediaMetadata) -> Asset<MediaMetadata> {
+    private static func asset(for metadata: MediaMetadata, configuration: @escaping (AVPlayerItem) -> Void) -> Asset<MediaMetadata> {
         let resource = metadata.resource
-        let configuration = assetConfiguration(for: resource)
+        let configuration = assetConfiguration(for: resource, configuration: configuration)
 
         if let certificateUrl = resource.drms.first(where: { $0.type == .fairPlay })?.certificateUrl {
             return .encrypted(
@@ -74,11 +77,15 @@ public extension PlayerItem {
         }
     }
 
-    private static func assetConfiguration(for resource: Resource) -> ((AVPlayerItem) -> Void) {
+    private static func assetConfiguration(for resource: Resource, configuration: @escaping (AVPlayerItem) -> Void) -> ((AVPlayerItem) -> Void) {
         { item in
-            guard resource.streamType == .live else { return }
+            configuration(item)
+
             // Limit buffering and force the player to return to the live edge when re-buffering. This ensures
             // livestreams cannot be paused and resumed in the past, as requested by business people.
+            //
+            // This setup is performed after any custom configuration to avoid being overridden.
+            guard resource.streamType == .live else { return }
             item.automaticallyPreservesTimeOffsetFromLive = true
             item.preferredForwardBufferDuration = 1
         }

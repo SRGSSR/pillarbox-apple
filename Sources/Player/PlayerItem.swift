@@ -40,7 +40,7 @@ public final class PlayerItem: Equatable {
     ///
     /// - Parameters:
     ///   - asset: The asset to play.
-    ///   - configuration: A closure to configure player items created from the receiver.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     public convenience init<M>(asset: Asset<M>, trackerAdapters: [TrackerAdapter<M>] = []) where M: AssetMetadata {
         self.init(publisher: Just(asset), trackerAdapters: trackerAdapters)
     }
