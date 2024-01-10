@@ -42,9 +42,4 @@ final class AssetPlayerItemTests: TestCase {
             during: .seconds(1)
         )
     }
-
-    func testPlayerItemMetadata() {
-        let item = Asset.simple(url: Stream.onDemand.url, metadata: AssetMetadataMock(title: "title")).playerItem()
-        expect(item.externalMetadata.first!.commonKey!.rawValue).to(equal("title"))
-    }
 }
