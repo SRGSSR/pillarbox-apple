@@ -250,7 +250,7 @@ private extension Asset {
         [
             .commonIdentifierTitle: metadata?.title as Any,
             .iTunesMetadataTrackSubTitle: metadata?.subtitle as Any,
-            .commonIdentifierArtwork: metadata?.image as Any,
+            .commonIdentifierArtwork: metadata?.image?.pngData() as Any,
             .commonIdentifierDescription: metadata?.description as Any
         ]
         .compactMap { Self.createMetadataItem(for: $0, value: $1) }
