@@ -20,6 +20,7 @@ struct BasicSystemVideoView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
         controller.allowsPictureInPicturePlayback = false
+        controller.playbackControlsIncludeInfoViews = true
         return controller
     }
 
