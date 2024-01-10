@@ -150,9 +150,12 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
 
     func playerItem() -> AVPlayerItem {
         let item = resource.playerItem().withId(id)
-        item.externalMetadata = Self.createMetadataItems(for: metadata?.nowPlayingMetadata())
         configuration(item)
         return item
+    }
+
+    func update(item: AVPlayerItem) {
+        item.externalMetadata = Self.createMetadataItems(for: metadata?.nowPlayingMetadata())
     }
 }
 
