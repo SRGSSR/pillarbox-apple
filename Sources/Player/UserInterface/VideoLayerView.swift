@@ -28,23 +28,24 @@ final class VideoLayerView: UIView {
 
     override func layoutSublayers(of layer: CALayer) {
         super.layoutSublayers(of: layer)
-        layer.synchronizeAnimations {
+        layer.synchronizeLayoutChanges {
             playerLayer.frame = layer.bounds
         }
     }
 }
 
 private extension CALayer {
-    func synchronizeAnimations(_ animations: () -> Void) {
-        CATransaction.begin()
+    func synchronizeLayoutChanges(_ changes: () -> Void) {
         if let positionAnimation = animation(forKey: "position") {
+            CATransaction.begin()
             CATransaction.setAnimationDuration(positionAnimation.duration)
             CATransaction.setAnimationTimingFunction(positionAnimation.timingFunction)
+            changes()
+            CATransaction.commit()
         }
         else {
-            CATransaction.disableActions()
+            changes()
+            sublayers?.forEach { $0.removeAllAnimations() }
         }
-        animations()
-        CATransaction.commit()
     }
 }
