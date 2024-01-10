@@ -17,6 +17,7 @@ struct StartAtGivenTimeView: View {
 
     var body: some View {
         SystemVideoView(player: player)
+            .ignoresSafeArea()
             .onAppear(perform: player.play)
     }
 }
