@@ -7,7 +7,9 @@
 @testable import PillarboxPlayer
 
 import AVFoundation
+import Nimble
 import PillarboxCircumspect
+import PillarboxCoreBusiness
 import PillarboxStreams
 
 final class AssetPlayerItemTests: TestCase {
@@ -39,5 +41,10 @@ final class AssetPlayerItemTests: TestCase {
             from: item.statePublisher(),
             during: .seconds(1)
         )
+    }
+
+    func testPlayerItemMetadata() {
+        let item = Asset.simple(url: Stream.onDemand.url, metadata: AssetMetadataMock(title: "title")).playerItem()
+        expect(item.externalMetadata.first!.commonKey!.rawValue).to(equal("title"))
     }
 }

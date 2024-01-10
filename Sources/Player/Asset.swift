@@ -151,6 +151,7 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
     func playerItem() -> AVPlayerItem {
         let item = resource.playerItem().withId(id)
         configuration(item)
+        item.externalMetadata = Self.externalMetadata(from: metadata)
         return item
     }
 }
@@ -241,6 +242,46 @@ extension Asset {
             configuration: { _ in },
             trackerAdapters: []
         )
+    }
+}
+
+private extension Asset {
+    static func externalMetadata(from metadata: AssetMetadata?) -> [AVMetadataItem] {
+        guard let metadata = metadata?.nowPlayingMetadata() else { return [] }
+        var externalMetadata: [AVMetadataItem] = []
+        if let title = metadata.title {
+            let itemMetadata = AVMutableMetadataItem()
+            itemMetadata.identifier = .commonIdentifierTitle
+            // swiftlint:disable:next legacy_objc_type
+            itemMetadata.value = NSString(string: title)
+            itemMetadata.extendedLanguageTag = "und"
+            externalMetadata.append(itemMetadata)
+        }
+        if let subtitle = metadata.subtitle {
+            let itemMetadata = AVMutableMetadataItem()
+            itemMetadata.identifier = .iTunesMetadataTrackSubTitle
+            // swiftlint:disable:next legacy_objc_type
+            itemMetadata.value = NSString(string: subtitle)
+            itemMetadata.extendedLanguageTag = "und"
+            externalMetadata.append(itemMetadata)
+        }
+        if let description = metadata.description {
+            let itemMetadata = AVMutableMetadataItem()
+            itemMetadata.identifier = .commonIdentifierDescription
+            // swiftlint:disable:next legacy_objc_type
+            itemMetadata.value = NSString(string: description)
+            itemMetadata.extendedLanguageTag = "und"
+            externalMetadata.append(itemMetadata)
+        }
+        if let image = metadata.image {
+            let itemMetadata = AVMutableMetadataItem()
+            itemMetadata.identifier = .commonIdentifierArtwork
+            // swiftlint:disable:next legacy_objc_type
+            itemMetadata.value = image.pngData() as? NSData
+            itemMetadata.extendedLanguageTag = "und"
+            externalMetadata.append(itemMetadata)
+        }
+        return externalMetadata
     }
 }
 
