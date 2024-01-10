@@ -26,10 +26,6 @@ Most of these tools can easily be installed with [Homebrew](https://brew.sh).
 
 The project provides a demo application which can be run to test features offered by the Pillarbox package.
 
-## Playground
-
-A playground can be used to visualize Swift body refreshes.
-
 ## Unit tests
 
 Unit tests are provided with the Pillarbox package. Since Apple players [cannot play local manifests](https://developer.apple.com/forums/thread/69357?answerId=202051022#202051022) we are using Python to run a simple [web server](https://docs.python.org/3/library/http.server.html) serving various [test streams](TEST_STREAM_GENERATION.md) from a local directory.
