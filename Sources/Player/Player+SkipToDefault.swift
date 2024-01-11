@@ -33,11 +33,11 @@ public extension Player {
     func skipToDefault(completion: @escaping (Bool) -> Void = { _ in }) {
         switch streamType {
         case .dvr:
-            seek(after(seekableTimeRange.end)) { finished in
+            seek(after(seekableTimeRange.end), smooth: false) { finished in
                 completion(finished)
             }
         default:
-            seek(near(.zero)) { finished in
+            seek(near(.zero), smooth: false) { finished in
                 completion(finished)
             }
         }
