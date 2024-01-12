@@ -215,11 +215,11 @@ struct ShowcaseView: View {
             .sourceCode(of: InlineSystemPlayerView.self)
 
             cell(
-                title: "19h30 - La nature peut enfin se reposer...",
-                subtitle: "Playback start at a given time",
-                destination: .startAtGivenTime
+                title: "Apple Basic 16:9",
+                subtitle: "Playback start at 10 minutes",
+                destination: .player(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS, startTime: .init(value: 10 * 60, timescale: 1)))
             )
-            .sourceCode(of: StartAtGivenTimeView.self)
+            .sourceCode(of: PlayerView.self)
         }
     }
 

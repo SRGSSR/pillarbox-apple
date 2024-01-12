@@ -14,8 +14,6 @@ enum RouterDestination: Identifiable, Hashable {
     case simplePlayer(media: Media)
     case optInPlayer(media: Media)
 
-    case startAtGivenTime
-
     case vanillaPlayer(item: AVPlayerItem)
 
     case blurred(media: Media)
@@ -43,8 +41,6 @@ enum RouterDestination: Identifiable, Hashable {
             return "simplePlayer"
         case .optInPlayer:
             return "optInPlayer"
-        case .startAtGivenTime:
-            return "startAtGivenTime"
         case .vanillaPlayer:
             return "vanillaPlayer"
         case .blurred:
@@ -96,8 +92,6 @@ enum RouterDestination: Identifiable, Hashable {
             SimplePlayerView(media: media)
         case let .optInPlayer(media: media):
             OptInView(media: media)
-        case .startAtGivenTime:
-            StartAtGivenTimeView()
         case let .vanillaPlayer(item: item):
             VanillaPlayerView(item: item)
         case let .blurred(media: media):
