@@ -7,9 +7,7 @@
 @testable import PillarboxPlayer
 
 import AVFoundation
-import Nimble
 import PillarboxCircumspect
-import PillarboxCoreBusiness
 import PillarboxStreams
 
 final class AssetPlayerItemTests: TestCase {
