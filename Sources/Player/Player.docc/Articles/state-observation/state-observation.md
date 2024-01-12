@@ -29,7 +29,7 @@ struct PlaybackView: View {
         VStack {
             VideoView(player: player)
             Button(action: player.togglePlayPause) {
-                Text(player.isRunning ? "Pause" : "Play")
+                Text(player.shouldPlay ? "Pause" : "Play")
             }
         }
     }

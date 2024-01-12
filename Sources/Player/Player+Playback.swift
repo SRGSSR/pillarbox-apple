@@ -7,21 +7,16 @@
 public extension Player {
     /// Resumes playback.
     func play() {
-        queuePlayer.play()
+        shouldPlay = true
     }
 
     /// Pauses playback.
     func pause() {
-        queuePlayer.pause()
+        shouldPlay = false
     }
 
     /// Toggles playback between play and pause.
     func togglePlayPause() {
-        if isRunning {
-            queuePlayer.pause()
-        }
-        else {
-            queuePlayer.play()
-        }
+        shouldPlay.toggle()
     }
 }

@@ -117,9 +117,19 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    /// A Boolean value indicating whether playback is currently playing.
-    public var isRunning: Bool {
-        rate != 0
+    /// A Boolean value whether the player should play content when possible.
+    public var shouldPlay: Bool {
+        get {
+            queuePlayer.rate != 0
+        }
+        set {
+            if newValue {
+                queuePlayer.rate = queuePlayer.defaultRate
+            }
+            else {
+                queuePlayer.rate = 0
+            }
+        }
     }
 
     let queuePlayer = QueuePlayer()
