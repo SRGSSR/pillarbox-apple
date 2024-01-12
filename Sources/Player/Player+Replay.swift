@@ -9,7 +9,13 @@ public extension Player {
     ///
     /// - Returns: `true` if possible.
     func canReplay() -> Bool {
-        !storedItems.isEmpty && queuePlayer.items().isEmpty
+        guard !storedItems.isEmpty else { return false }
+        if let lastItem = queuePlayer.items().last {
+            return lastItem.error != nil
+        }
+        else {
+            return true
+        }
     }
 
     /// Replays the content from the start, resuming playback automatically.
