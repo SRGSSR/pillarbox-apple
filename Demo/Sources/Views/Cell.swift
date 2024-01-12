@@ -11,7 +11,7 @@ struct Cell: View {
     let size: CGSize
     let title: String?
     let subtitle: String?
-    let image: URL?
+    let imageUrl: URL?
     let type: String?
     let duration: String?
     let date: String?
@@ -39,7 +39,7 @@ struct Cell: View {
                 size: size,
                 title: title,
                 subtitle: subtitle,
-                image: image,
+                imageUrl: imageUrl,
                 type: type,
                 duration: duration,
                 date: date
@@ -55,7 +55,7 @@ struct Cell: View {
         size: CGSize = .init(width: 450, height: 250),
         title: String?,
         subtitle: String? = nil,
-        image: URL? = nil,
+        imageUrl: URL? = nil,
         type: String? = nil,
         duration: String? = nil,
         date: String? = nil,
@@ -65,7 +65,7 @@ struct Cell: View {
         self.size = size
         self.title = title
         self.subtitle = subtitle
-        self.image = image
+        self.imageUrl = imageUrl
         self.type = type
         self.duration = duration
         self.date = date

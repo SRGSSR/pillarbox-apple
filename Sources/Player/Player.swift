@@ -233,10 +233,10 @@ private extension Player {
     func configureQueueUpdatePublisher() {
         assetsPublisher()
             .withPrevious()
-            .map { [queuePlayer] sources in
+            .map { [queuePlayer] assets in
                 AVPlayerItem.playerItems(
-                    for: sources.current,
-                    replacing: sources.previous ?? [],
+                    for: assets.current,
+                    replacing: assets.previous ?? [],
                     currentItem: queuePlayer.currentItem
                 )
             }

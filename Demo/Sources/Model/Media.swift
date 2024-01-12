@@ -45,7 +45,7 @@ struct Media: Hashable {
         self.init(
             title: template.title,
             description: template.description,
-            imageUrl: template.image,
+            imageUrl: template.imageUrl,
             type: template.type,
             isMonoscopic: template.isMonoscopic,
             startTime: startTime
