@@ -44,7 +44,8 @@ extension AVPlayerItem {
         if let currentIndex = matchingIndex(for: currentItem, in: currentAssets) {
             let currentAsset = currentAssets[currentIndex]
             if findAsset(currentAsset, in: previousAssets) {
-                return [currentItem.withMetadata(from: currentAsset)] + playerItems(from: Array(currentAssets.suffix(from: currentIndex + 1)))
+                currentAsset.update(item: currentItem)
+                return [currentItem] + playerItems(from: Array(currentAssets.suffix(from: currentIndex + 1)))
             }
             else {
                 return playerItems(from: Array(currentAssets.suffix(from: currentIndex)))
@@ -59,7 +60,7 @@ extension AVPlayerItem {
     }
 
     static func playerItems(from assets: [any Assetable]) -> [AVPlayerItem] {
-        assets.map { $0.playerItem().withMetadata(from: $0) }
+        assets.map { $0.playerItem() }
     }
 
     private static func matchingIndex(for item: AVPlayerItem, in assets: [any Assetable]) -> Int? {
@@ -87,12 +88,5 @@ extension AVPlayerItem {
     private static func firstCommonIndex(in assets: [any Assetable], matching other: [any Assetable], after item: AVPlayerItem) -> Int? {
         guard let matchIndex = matchingIndex(for: item, in: other) else { return nil }
         return firstMatchingIndex(for: Array(other.suffix(from: matchIndex + 1)), in: assets)
-    }
-}
-
-private extension AVPlayerItem {
-    func withMetadata(from asset: Assetable) -> AVPlayerItem {
-        asset.update(item: self)
-        return self
     }
 }

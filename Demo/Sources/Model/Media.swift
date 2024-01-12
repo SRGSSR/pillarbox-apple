@@ -5,9 +5,11 @@
 //
 
 import CoreMedia
+import Combine
 import Foundation
 import PillarboxCoreBusiness
 import PillarboxPlayer
+import UIKit
 
 struct Media: Hashable {
     enum `Type`: Hashable {
