@@ -133,6 +133,10 @@ enum URLTemplate {
         title: "Unknown URL",
         type: .url("http://localhost:8123/simple/unavailable/master.m3u8")
     )
+    static let unauthorized = Template(
+        title: "Unauthorized URL",
+        type: .url("https://httpbin.org/status/403")
+    )
     static let bitmovinOnDemandMultipleTracks = Template(
         title: "Multiple subtitles and audio tracks",
         image: "https://durian.blender.org/wp-content/uploads/2010/06/05.8b_comp_000272.jpg",
