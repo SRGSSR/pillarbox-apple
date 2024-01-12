@@ -31,6 +31,9 @@ public struct Position {
 ///   - toleranceBefore: The tolerance allowed before the time to reach.
 ///   - toleranceAfter: The tolerance allowed after the time to reach.
 /// - Returns: A position.
+///
+/// Larger tolerances let the player seek to an approximate location more efficiently. Smaller tolerances may incur
+/// additional decoding delay, possibly impacting seek performance.
 public func to(_ time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) -> Position {
     .init(time: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter)
 }
@@ -39,6 +42,8 @@ public func to(_ time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime) 
 ///
 /// - Parameter time: The time to reach.
 /// - Returns: A position.
+///
+/// Precise positions may involve additional decoding delay, possibly impacting seek performance.
 public func at(_ time: CMTime) -> Position {
     .init(time: time, toleranceBefore: .zero, toleranceAfter: .zero)
 }
