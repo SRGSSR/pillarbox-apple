@@ -151,7 +151,12 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
     func playerItem() -> AVPlayerItem {
         let item = resource.playerItem().withId(id)
         configuration(item)
+        update(item: item)
         return item
+    }
+
+    func update(item: AVPlayerItem) {
+        item.externalMetadata = Self.externalMetadata(from: metadata?.nowPlayingMetadata())
     }
 }
 
@@ -241,6 +246,27 @@ extension Asset {
             configuration: { _ in },
             trackerAdapters: []
         )
+    }
+}
+
+private extension Asset {
+    static func externalMetadata(from metadata: NowPlayingMetadata?) -> [AVMetadataItem] {
+        [
+            metadataItem(for: .commonIdentifierTitle, value: metadata?.title),
+            metadataItem(for: .iTunesMetadataTrackSubTitle, value: metadata?.subtitle),
+            metadataItem(for: .commonIdentifierArtwork, value: metadata?.image?.pngData()),
+            metadataItem(for: .commonIdentifierDescription, value: metadata?.description)
+        ]
+        .compactMap { $0 }
+    }
+
+    private static func metadataItem<T>(for identifier: AVMetadataIdentifier, value: T?) -> AVMetadataItem? {
+        guard let value else { return nil }
+        let item = AVMutableMetadataItem()
+        item.identifier = identifier
+        item.value = value as? NSCopying & NSObjectProtocol
+        item.extendedLanguageTag = "und"
+        return item.copy() as? AVMetadataItem
     }
 }
 

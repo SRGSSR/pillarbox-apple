@@ -71,14 +71,14 @@ struct MediaCardView: View {
     let size: CGSize
     let title: String?
     let subtitle: String?
-    let image: URL?
+    let imageUrl: URL?
     let type: String?
     let duration: String?
     let date: String?
 
     var body: some View {
         ZStack(alignment: .center) {
-            AsyncImage(url: image) { phase in
+            AsyncImage(url: imageUrl) { phase in
                 switch phase {
                 case .success(let image):
                     image
@@ -107,7 +107,7 @@ struct MediaCardView: View {
         size: CGSize = .init(width: 570, height: 350),
         title: String?,
         subtitle: String? = nil,
-        image: URL? = nil,
+        imageUrl: URL? = nil,
         type: String? = nil,
         duration: String? = nil,
         date: String? = nil
@@ -115,7 +115,7 @@ struct MediaCardView: View {
         self.size = size
         self.title = title
         self.subtitle = subtitle
-        self.image = image
+        self.imageUrl = imageUrl
         self.type = type
         self.duration = duration
         self.date = date

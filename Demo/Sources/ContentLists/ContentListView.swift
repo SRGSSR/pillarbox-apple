@@ -78,7 +78,7 @@ private struct ContentCell: View {
 #if os(tvOS)
                 MediaCardView(
                     title: topic.title,
-                    image: SRGDataProvider.current!.url(for: topic.image, size: .large)
+                    imageUrl: SRGDataProvider.current!.url(for: topic.image, size: .large)
                 )
 #endif
             }
@@ -91,7 +91,7 @@ private struct ContentCell: View {
                 size: .init(width: 570, height: 350),
                 title: constant(iOS: title, tvOS: media.show?.title),
                 subtitle: constant(iOS: MediaDescription.subtitle(for: media), tvOS: media.title),
-                image: SRGDataProvider.current!.url(for: media.image, size: .large),
+                imageUrl: SRGDataProvider.current!.url(for: media.image, size: .large),
                 type: MediaDescription.systemImage(for: media),
                 duration: MediaDescription.duration(for: media),
                 date: MediaDescription.date(for: media),
@@ -115,7 +115,7 @@ private struct ContentCell: View {
 #if os(tvOS)
                 MediaCardView(
                     title: show.title,
-                    image: SRGDataProvider.current!.url(for: show.image, size: .large)
+                    imageUrl: SRGDataProvider.current!.url(for: show.image, size: .large)
                 )
 #endif
             }

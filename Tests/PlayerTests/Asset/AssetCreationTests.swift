@@ -59,6 +59,7 @@ final class AssetCreationTests: TestCase {
         expect(asset.resource).to(equal(.custom(url: Stream.onDemand.url, delegate: delegate)))
         expect(asset.nowPlayingInfo()).notTo(beEmpty())
         expect(asset.playerItem().preferredForwardBufferDuration).to(equal(4))
+        expect(asset.playerItem().externalMetadata).toNot(beEmpty())
     }
 
     func testCustomAssetWithoutConfiguration() {
