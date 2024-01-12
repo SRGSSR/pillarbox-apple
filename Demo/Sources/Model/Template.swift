@@ -131,10 +131,12 @@ enum URLTemplate {
     )
     static let unknown = Template(
         title: "Unknown URL",
+        description: "Content that does not exist",
         type: .url("http://localhost:8123/simple/unavailable/master.m3u8")
     )
     static let unauthorized = Template(
         title: "Unauthorized URL",
+        description: "Content which cannot be accessed",
         type: .url("https://httpbin.org/status/403")
     )
     static let bitmovinOnDemandMultipleTracks = Template(
