@@ -17,7 +17,7 @@ public extension Player {
 
     /// Toggles playback between play and pause.
     func togglePlayPause() {
-        if isRunning {
+        if shouldPlay {
             queuePlayer.pause()
         }
         else {

@@ -71,13 +71,13 @@ public extension View {
         ProcessInfo.processInfo.environment["PILLARBOX_DEBUG_BODY_COUNTER"] != nil
     }
 
-    private var isRunningInXcodePreviews: Bool {
+    private var shouldPlayInXcodePreviews: Bool {
         ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != nil
     }
 
     @ViewBuilder
     private func debugBodyCounterOverlay(color: UIColor) -> some View {
-        if isDebuggingEnabled || isRunningInXcodePreviews {
+        if isDebuggingEnabled || shouldPlayInXcodePreviews {
             BodyCounterView(color: color)
                 .allowsHitTesting(false)
         }

@@ -11,7 +11,7 @@ struct ContentView: View {
             VideoView(player: player)
             HStack(spacing: 20) {
                 Button(action: player.togglePlayPause) {
-                    Image(systemName: player.isRunning ? "pause.circle.fill" : "play.circle.fill")
+                    Image(systemName: player.shouldPlay ? "pause.circle.fill" : "play.circle.fill")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 50)

@@ -478,7 +478,7 @@ private struct PlaybackButton: View {
         if player.canReplay() {
             return "arrow.counterclockwise.circle.fill"
         }
-        else if player.isRunning {
+        else if player.shouldPlay {
             return "pause.circle.fill"
         }
         else {

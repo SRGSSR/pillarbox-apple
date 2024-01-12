@@ -118,7 +118,7 @@ public final class Player: ObservableObject, Equatable {
     }
 
     /// A Boolean value indicating whether playback is currently playing.
-    public var isRunning: Bool {
+    public var shouldPlay: Bool {
         rate != 0
     }
 
