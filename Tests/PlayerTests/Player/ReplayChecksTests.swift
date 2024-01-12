@@ -26,8 +26,15 @@ final class ReplayChecksTests: TestCase {
         expect(player.canReplay()).toEventually(beTrue())
     }
 
-    func testWithOneBadItem() {
+    func testWithOneBadItemConsumed() {
+        // This item is consumed by the player when failing.
         let player = Player(item: .simple(url: Stream.unavailable.url))
+        expect(player.canReplay()).toEventually(beTrue())
+    }
+
+    func testWithOneBadItemNotConsumed() {
+        // This item is not consumed by the player when failing (for an unknown reason).
+        let player = Player(item: .simple(url: Stream.unauthorized.url))
         expect(player.canReplay()).toEventually(beTrue())
     }
 

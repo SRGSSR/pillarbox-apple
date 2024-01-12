@@ -117,4 +117,10 @@ public extension Stream {
         url: URL(string: "custom://arbitrary.server/some.m3u8")!,
         duration: .indefinite
     )
+
+    /// An unauthorized stream.
+    static let unauthorized: Self = .init(
+        url: URL(string: "https://httpbin.org/status/403")!,
+        duration: .indefinite
+    )
 }
