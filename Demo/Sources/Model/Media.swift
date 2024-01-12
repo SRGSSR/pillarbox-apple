@@ -4,9 +4,9 @@
 //  License information is available from the LICENSE file.
 //
 
-import CoreMedia
 import AVFoundation
 import Combine
+import CoreMedia
 import Foundation
 import PillarboxCoreBusiness
 import PillarboxPlayer
@@ -31,7 +31,15 @@ struct Media: Hashable {
     let isMonoscopic: Bool
     let startTime: CMTime
 
-    init(title: String, description: String? = nil, imageUrl: URL? = nil, image: UIImage? = nil, type: `Type`, isMonoscopic: Bool = false, startTime: CMTime = .zero) {
+    init(
+        title: String,
+        description: String? = nil,
+        imageUrl: URL? = nil,
+        image: UIImage? = nil,
+        type: `Type`,
+        isMonoscopic: Bool = false,
+        startTime: CMTime = .zero
+    ) {
         self.title = title
         self.description = description
         self.imageUrl = imageUrl
