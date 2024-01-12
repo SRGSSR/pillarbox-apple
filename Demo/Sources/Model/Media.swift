@@ -25,17 +25,17 @@ struct Media: Hashable {
 
     let title: String
     let description: String?
-    let image: URL?
-    let uiImage: UIImage?
+    let imageUrl: URL?
+    let image: UIImage?
     let type: `Type`
     let isMonoscopic: Bool
     let startTime: CMTime
 
-    init(title: String, description: String? = nil, image: URL? = nil, uiImage: UIImage? = nil, type: `Type`, isMonoscopic: Bool = false, startTime: CMTime = .zero) {
+    init(title: String, description: String? = nil, imageUrl: URL? = nil, image: UIImage? = nil, type: `Type`, isMonoscopic: Bool = false, startTime: CMTime = .zero) {
         self.title = title
         self.description = description
+        self.imageUrl = imageUrl
         self.image = image
-        self.uiImage = uiImage
         self.type = type
         self.isMonoscopic = isMonoscopic
         self.startTime = startTime
@@ -45,7 +45,7 @@ struct Media: Hashable {
         self.init(
             title: template.title,
             description: template.description,
-            image: template.image,
+            imageUrl: template.image,
             type: template.type,
             isMonoscopic: template.isMonoscopic,
             startTime: startTime
@@ -78,7 +78,7 @@ struct Media: Hashable {
 
 extension Media: AssetMetadata {
     func nowPlayingMetadata() -> NowPlayingMetadata {
-        .init(title: title, subtitle: description, image: uiImage)
+        .init(title: title, subtitle: description, image: image)
     }
 
     private func playerItem(for url: URL, configuration: @escaping (AVPlayerItem) -> Void = { _ in }) -> PlayerItem {
@@ -87,11 +87,10 @@ extension Media: AssetMetadata {
                 .map { image in
                     .simple(
                         url: url,
-                        metadata: Media(title: title, description: description, uiImage: image, type: type),
+                        metadata: Media(title: title, description: description, image: image, type: type),
                         configuration: configuration
                     )
-                }
-                .eraseToAnyPublisher(),
+                },
             trackerAdapters: [
                 DemoTracker.adapter { media in
                     DemoTracker.Metadata(title: media.title)
@@ -101,8 +100,8 @@ extension Media: AssetMetadata {
     }
 
     private func imagePublisher() -> AnyPublisher<UIImage?, Never> {
-        guard let image else { return Just(nil).eraseToAnyPublisher() }
-        return URLSession.shared.dataTaskPublisher(for: image)
+        guard let imageUrl else { return Just(nil).eraseToAnyPublisher() }
+        return URLSession.shared.dataTaskPublisher(for: imageUrl)
             .map(\.data)
             .map { UIImage(data: $0) }
             .replaceError(with: nil)
