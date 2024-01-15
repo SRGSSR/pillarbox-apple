@@ -16,6 +16,7 @@ struct ShowcaseView: View {
         CustomList {
             content()
         }
+        .tracked(name: "showcase")
 #if os(iOS)
         .navigationTitle("Showcase")
 #else
@@ -25,21 +26,18 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func content() -> some View {
-        Group {
-            layoutsSection()
-            playlistsSection()
-            embeddingsSection()
-            systemPlayerSection()
-            miscellaneousPlayerFeaturesSection()
-            customPictureInPictureSection()
-            systemPictureInPictureSection()
-            vanillaPlayerSection()
-            trackingSection()
+        layoutsSection()
+        playlistsSection()
+        embeddingsSection()
+        systemPlayerSection()
+        miscellaneousPlayerFeaturesSection()
+        customPictureInPictureSection()
+        systemPictureInPictureSection()
+        vanillaPlayerSection()
+        trackingSection()
 #if os(iOS)
-            webViewSection()
+        webViewSection()
 #endif
-        }
-        .tracked(name: "showcase")
     }
 
     @ViewBuilder

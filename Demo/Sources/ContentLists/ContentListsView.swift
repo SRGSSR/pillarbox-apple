@@ -14,8 +14,9 @@ struct ContentListsView: View {
 
     var body: some View {
         CustomList {
-            Self.content()
+            content()
         }
+        .tracked(name: "lists")
 #if os(iOS)
         .navigationTitle("Lists (\(selectedServerSetting.title))")
         .navigationBarTitleDisplayMode(.inline)
@@ -27,23 +28,21 @@ struct ContentListsView: View {
 #endif
     }
 
-    private static func content() -> some View {
-        Group {
-            section(for: .tvTopics, image: "tv", vendors: [.RSI, .RTR, .RTS, .SRF, .SWI])
-            section(for: .tvLatestMedias, image: "play.tv", vendors: [.RSI, .RTR, .RTS, .SRF, .SWI])
-            section(for: .tvLivestreams, image: "livephoto.play", vendors: [.RSI, .RTR, .RTS, .SRF])
-            section(for: .tvShows, image: "rectangle.on.rectangle.angled", vendors: [.RSI, .RTR, .RTS, .SRF])
-            section(for: .liveCenterVideos, image: "sportscourt", vendors: [.RSI, .RTS, .SRF])
-            section(for: .tvScheduledLivestreams, image: "globe", vendors: [.RSI, .RTR, .RTS, .SRF])
-            section(for: .radioLivestreams, image: "antenna.radiowaves.left.and.right", vendors: [.RSI, .RTR, .RTS, .SRF])
-            radioShows(image: "waveform")
-            latestAudiosSection(image: "music.note.list")
-        }
-        .tracked(name: "lists")
+    @ViewBuilder
+    private func content() -> some View {
+        section(for: .tvTopics, image: "tv", vendors: [.RSI, .RTR, .RTS, .SRF, .SWI])
+        section(for: .tvLatestMedias, image: "play.tv", vendors: [.RSI, .RTR, .RTS, .SRF, .SWI])
+        section(for: .tvLivestreams, image: "livephoto.play", vendors: [.RSI, .RTR, .RTS, .SRF])
+        section(for: .tvShows, image: "rectangle.on.rectangle.angled", vendors: [.RSI, .RTR, .RTS, .SRF])
+        section(for: .liveCenterVideos, image: "sportscourt", vendors: [.RSI, .RTS, .SRF])
+        section(for: .tvScheduledLivestreams, image: "globe", vendors: [.RSI, .RTR, .RTS, .SRF])
+        section(for: .radioLivestreams, image: "antenna.radiowaves.left.and.right", vendors: [.RSI, .RTR, .RTS, .SRF])
+        radioShows(image: "waveform")
+        latestAudiosSection(image: "music.note.list")
     }
 
     @ViewBuilder
-    private static func section(for list: ContentList, image: String? = nil, vendors: [SRGVendor]) -> some View {
+    private func section(for list: ContentList, image: String? = nil, vendors: [SRGVendor]) -> some View {
         let configurations = vendors.map { vendor in
             ContentList.Configuration(list: list, vendor: vendor)
         }
@@ -51,7 +50,7 @@ struct ContentListsView: View {
     }
 
     @ViewBuilder
-    private static func section(title: String, image: String? = nil, configurations: [ContentList.Configuration]) -> some View {
+    private func section(title: String, image: String? = nil, configurations: [ContentList.Configuration]) -> some View {
         CustomSection {
             ForEach(configurations) { configuration in
                 CustomNavigationLink(
@@ -74,7 +73,7 @@ struct ContentListsView: View {
     }
 
     @ViewBuilder
-    private static func radioShows(image: String) -> some View {
+    private func radioShows(image: String) -> some View {
         section(title: "Radio Shows", image: image, configurations: [
             .init(list: .radioShows(radioChannel: .RSIReteUno), vendor: .RSI),
             .init(list: .radioShows(radioChannel: .RSIReteDue), vendor: .RSI),
@@ -95,7 +94,7 @@ struct ContentListsView: View {
     }
 
     @ViewBuilder
-    private static func latestAudiosSection(image: String) -> some View {
+    private func latestAudiosSection(image: String) -> some View {
         section(title: "Latest Audios", image: image, configurations: [
             .init(list: .radioLatestMedias(radioChannel: .RSIReteUno), vendor: .RSI),
             .init(list: .radioLatestMedias(radioChannel: .RSIReteDue), vendor: .RSI),

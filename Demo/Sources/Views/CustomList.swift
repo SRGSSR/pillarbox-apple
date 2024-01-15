@@ -35,7 +35,7 @@ struct CustomList<Content, Data>: View where Content: View, Data: Hashable {
 }
 
 extension CustomList where Data == Never {
-    init(content: @escaping () -> Content) {
+    init(@ViewBuilder content: @escaping () -> Content) {
         self.content = { _ in content() }
         data = []
     }

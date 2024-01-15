@@ -84,6 +84,7 @@ struct SettingsView: View {
             content()
                 .padding(.horizontal, constant(iOS: 0, tvOS: 20))
         }
+        .tracked(name: "settings")
 #if os(iOS)
         .navigationTitle("Settings")
 #else
@@ -106,16 +107,13 @@ struct SettingsView: View {
 
     @ViewBuilder
     private func content() -> some View {
-        Group {
-            applicationSection()
-            playerSection()
-            debuggingSection()
+        applicationSection()
+        playerSection()
+        debuggingSection()
 #if os(iOS)
-            gitHubSection()
+        gitHubSection()
 #endif
-            versionSection()
-        }
-        .tracked(name: "settings")
+        versionSection()
     }
 
     @ViewBuilder
