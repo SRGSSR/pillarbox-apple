@@ -84,7 +84,10 @@ struct ExamplesView: View {
     var body: some View {
         CustomList {
             content()
+                .scrollDismissesKeyboard(.immediately)
+                .animation(.defaultLinear, value: model.protectedMedias)
         }
+        .tracked(name: "examples")
 #if os(iOS)
         .navigationTitle("Examples")
         .refreshable { await model.refresh() }
@@ -95,15 +98,10 @@ struct ExamplesView: View {
 
     @ViewBuilder
     private func content() -> some View {
-        Group {
-            MediaEntryView()
-            srgSections()
-            thirdPartySections()
-            miscellaneousSections()
-        }
-        .scrollDismissesKeyboard(.immediately)
-        .animation(.defaultLinear, value: model.protectedMedias)
-        .tracked(name: "examples")
+        MediaEntryView()
+        srgSections()
+        thirdPartySections()
+        miscellaneousSections()
     }
 
     @ViewBuilder
