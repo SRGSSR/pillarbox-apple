@@ -208,4 +208,24 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             player.play()
         }
     }
+
+    func testOnDemandStartAtGivenPosition() {
+        let player = Player(item: .simple(
+            url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
+            trackerAdapters: [
+                ComScoreTracker.adapter { _ in .test }
+            ]
+        ) { item in
+            item.seek(at(.init(value: 100, timescale: 1)))
+        })
+
+        expectAtLeastHits(
+            .play { labels in
+                expect(labels.ns_st_po).to(beCloseTo(100, within: 0.5))
+            }
+        ) {
+            player.play()
+        }
+    }
 }

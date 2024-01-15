@@ -48,12 +48,12 @@ public final class CommandersActTracker: PlayerItemTracker {
             streamingAnalytics.notify(.seek)
         }
         else {
-            switch properties.playbackState {
-            case .playing:
+            switch (properties.playbackState, properties.isBuffering) {
+            case (.playing, false):
                 streamingAnalytics.notify(.play)
-            case .paused:
+            case (.paused, false):
                 streamingAnalytics.notify(.pause)
-            case .ended:
+            case (.ended, false):
                 streamingAnalytics.notify(.eof)
             default:
                 break

@@ -126,4 +126,24 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
             player = nil
         }
     }
+
+    func testOnDemandStartAtGivenPosition() {
+        let player = Player(item: .simple(
+            url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
+            trackerAdapters: [
+                CommandersActTracker.adapter { _ in .test }
+            ]
+        ) { item in
+            item.seek(at(.init(value: 100, timescale: 1)))
+        })
+
+        expectAtLeastHits(
+            .play { labels in
+                expect(labels.media_position).to(equal(100))
+            }
+        ) {
+            player.play()
+        }
+    }
 }
