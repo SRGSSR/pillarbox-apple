@@ -15,7 +15,7 @@ import PillarboxPlayer
 ///
 /// Analytics have to be properly started for the tracker to collect data, see `Analytics.start(with:)`.
 public final class CommandersActTracker: PlayerItemTracker {
-    private var streamingAnalytics = CommandersActStreamingAnalytics()
+    private lazy var streamingAnalytics = CommandersActStreamingAnalytics()
     private var metadata: [String: String] = [:]
     private weak var player: Player?
 
