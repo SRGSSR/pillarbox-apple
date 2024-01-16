@@ -16,6 +16,7 @@ extension Player {
         itemUpdatePublisher
             .map { update in
                 guard let currentIndex = update.currentIndex() else { return nil }
+                update.items[currentIndex].load()
                 return .init(item: update.items[currentIndex], index: currentIndex)
             }
             .removeDuplicates()

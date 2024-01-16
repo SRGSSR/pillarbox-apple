@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import PillarboxCore
 
 /// This class represents a playable item that can be inserted into a ``Player``.
 ///
@@ -17,6 +18,8 @@ import Combine
 ///
 /// - Note: You can also create your own ``PlayerItem`` by extending the class.
 public final class PlayerItem: Equatable {
+    private static let trigger = Trigger()
+
     @Published private(set) var asset: any Assetable
 
     private let id = UUID()
@@ -25,6 +28,7 @@ public final class PlayerItem: Equatable {
     public init<P, M>(publisher: P, trackerAdapters: [TrackerAdapter<M>] = []) where P: Publisher, M: AssetMetadata, P.Output == Asset<M> {
         asset = Asset<M>.loading.withId(id).withTrackerAdapters(trackerAdapters)
         publisher
+            .wait(untilOutputFrom: Self.trigger.signal(activatedBy: id))
             .catch { error in
                 Just(.failed(error: error))
             }
@@ -51,6 +55,10 @@ public final class PlayerItem: Equatable {
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
         asset.matches(playerItem)
+    }
+
+    func load() {
+        Self.trigger.activate(for: id)
     }
 }
 
