@@ -26,12 +26,13 @@ The continuous integration agents must have the following tools installed:
 - [gem](https://rubygems.org)
 - [bundler](https://bundler.io)
 - [ffmpeg](https://ffmpeg.org)
-- [swiftlint](https://github.com/realm/SwiftLint)
+- [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli)
+- [mint](https://github.com/yonaskolb/Mint)
 - [shellcheck](https://www.shellcheck.net)
 - [xcodes](https://github.com/RobotsAndPencils/xcodes)
 - [yamllint](https://github.com/adrienverge/yamllint)
 
-ffmpeg, swiftlint, shellcheck and yamllint can easily be installed with [Homebrew](https://brew.sh).
+Most of these tools can easily be installed with [Homebrew](https://brew.sh).
 
 ## TeamCity configuration
 

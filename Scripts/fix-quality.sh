@@ -2,4 +2,4 @@
 
 set -e
 
-swiftlint --fix && swiftlint
+mint run swiftlint --fix && mint run swiftlint
