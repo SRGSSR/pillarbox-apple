@@ -82,10 +82,21 @@ If you want to contribute to the project have a look at our [contributing guide]
 
 The library can be integrated using [Swift Package Manager](https://swift.org/package-manager) directly [within Xcode](https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app). You can also declare the library as a dependency of another one directly in the associated `Package.swift` manifest.
 
-A few remarks:
+If you want your application to run on Silicon Macs as an iPad application you must add `-weak_framework MediaPlayer` to your target _Other Linker Flags_ setting.
 
-- When building a project integrating Pillarbox for the first time, Xcode might ask you to trust our plugins. You should accept.
-- If you want your application to run on Silicon Macs as an iPad application you must add `-weak_framework MediaPlayer` to your target _Other Linker Flags_ setting.
+# Plugins
+
+The package provides a single plugin which automatically inserts correct versioning information into binaries. This plugin must be trusted interactively when a project integrating Pillarbox is built using Xcode for the first time.
+
+On a continuous integration server you must trust plugins automatically by setting an appropriate default:
+
+```shell
+defaults write com.apple.dt.Xcode IDESkipPackagePluginFingerprintValidatation -bool YES
+```
+
+If you are using Xcode Cloud this can be achieved with a [custom build script](https://developer.apple.com/documentation/xcode/writing-custom-build-scripts).
+
+If your project is built with `xcodebuild` directly the same effect can be achieved by passing the `-skipPackagePluginValidation` option.
 
 # Getting started
 
