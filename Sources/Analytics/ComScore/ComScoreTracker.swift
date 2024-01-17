@@ -14,7 +14,7 @@ import UIKit
 ///
 /// Analytics have to be properly started for the tracker to collect data, see `Analytics.start(with:)`.
 public final class ComScoreTracker: PlayerItemTracker {
-    private var streamingAnalytics = ComScoreStreamingAnalytics()
+    private lazy var streamingAnalytics = ComScoreStreamingAnalytics()
     private var metadata: [String: String] = [:]
     private weak var player: Player?
 
