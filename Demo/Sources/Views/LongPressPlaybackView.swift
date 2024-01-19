@@ -72,7 +72,7 @@ private struct ForwardArrowView: View {
 }
 
 struct LongPressPlaybackView<Content>: View where Content: View {
-    @State private var initialSpeed: Float = 0
+    @State private var speed: Float = 0
     @State private var isFinished = true
 
     let minimumPressDuration: TimeInterval
@@ -81,7 +81,10 @@ struct LongPressPlaybackView<Content>: View where Content: View {
 
     var body: some View {
         LongPressView(minimumPressDuration: minimumPressDuration, content: content) { finished in
-            player.setDesiredPlaybackSpeed(finished ? initialSpeed : 2)
+            if !finished {
+                speed = player.effectivePlaybackSpeed
+            }
+            player.setDesiredPlaybackSpeed(finished ? speed : 2)
             isFinished = finished
         }
         .overlay {
@@ -92,7 +95,7 @@ struct LongPressPlaybackView<Content>: View where Content: View {
             }
         }
         .onAppear {
-            initialSpeed = player.effectivePlaybackSpeed
+            speed = player.effectivePlaybackSpeed
         }
     }
 
