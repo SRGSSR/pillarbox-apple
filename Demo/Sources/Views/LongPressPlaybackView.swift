@@ -4,9 +4,10 @@
 //  License information is available from the LICENSE file.
 //
 
+import PillarboxPlayer
 import SwiftUI
 
-struct LongPressView<Content>: View where Content: View {
+private struct LongPressView<Content>: View where Content: View {
     @GestureState private var isLongPressing = false
     @State private var timer: Timer?
 
@@ -40,5 +41,28 @@ struct LongPressView<Content>: View where Content: View {
             .updating($isLongPressing) { value, state, _ in
                 state = value
             }
+    }
+}
+
+struct LongPressPlaybackView<Content>: View where Content: View {
+    @State private var initialSpeed: Float = 0
+
+    let minimumPressDuration: TimeInterval
+    let player: Player
+    @ViewBuilder let content: () -> Content
+
+    var body: some View {
+        LongPressView(minimumPressDuration: minimumPressDuration, content: content) { finished in
+            player.setDesiredPlaybackSpeed(finished ? initialSpeed : 2)
+        }
+        .onAppear {
+            initialSpeed = player.effectivePlaybackSpeed
+        }
+    }
+
+    init(minimumPressDuration: TimeInterval = 2, player: Player, content: @escaping () -> Content) {
+        self.minimumPressDuration = minimumPressDuration
+        self.player = player
+        self.content = content
     }
 }
