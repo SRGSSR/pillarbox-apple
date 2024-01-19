@@ -66,3 +66,11 @@ struct LongPressPlaybackView<Content>: View where Content: View {
         self.content = content
     }
 }
+
+extension View {
+    func longPressPlayback(_ player: Player) -> some View {
+        LongPressPlaybackView(player: player) {
+            self
+        }
+    }
+}

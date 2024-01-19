@@ -37,6 +37,7 @@ private struct MainView: View {
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
         .animation(.defaultLinear, value: isUserInterfaceHidden)
         .bind(visibilityTracker, to: player)
+        .longPressPlayback(player)
         ._debugBodyCounter()
     }
 
