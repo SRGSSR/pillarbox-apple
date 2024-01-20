@@ -38,8 +38,9 @@ private struct LongPressView<Content>: View where Content: View {
 
     private func longPressGesture() -> some Gesture {
         LongPressGesture(minimumDuration: .infinity, maximumDistance: .infinity)
-            .updating($isLongPressing) { value, state, _ in
+            .updating($isLongPressing) { value, state, transaction in
                 state = value
+                transaction.animation = .easeIn(duration: 2.0)
             }
     }
 }
