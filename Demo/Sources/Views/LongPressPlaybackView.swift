@@ -30,7 +30,7 @@ private struct LongPressView<Content>: View where Content: View {
             }
     }
 
-    init(minimumPressDuration: TimeInterval = 2, content: @escaping () -> Content, action: @escaping (_ finished: Bool) -> Void) {
+    init(minimumPressDuration: TimeInterval = 1, content: @escaping () -> Content, action: @escaping (_ finished: Bool) -> Void) {
         self.minimumPressDuration = minimumPressDuration
         self.content = content
         self.action = action
@@ -99,7 +99,7 @@ struct LongPressPlaybackView<Content>: View where Content: View {
         }
     }
 
-    init(minimumPressDuration: TimeInterval = 2, player: Player, content: @escaping () -> Content) {
+    init(minimumPressDuration: TimeInterval = 1, player: Player, content: @escaping () -> Content) {
         self.minimumPressDuration = minimumPressDuration
         self.player = player
         self.content = content
