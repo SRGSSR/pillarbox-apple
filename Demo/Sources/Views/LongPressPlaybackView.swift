@@ -108,6 +108,11 @@ struct LongPressPlaybackView<Content>: View where Content: View {
         }
         .onReceive(player: player, assign: \.isBusy, to: $isBusy)
         .onReceive(player: player, assign: \.playbackState, to: $playbackState)
+        .onChange(of: player.effectivePlaybackSpeed) { speed in
+            if isFinished {
+                self.speed = speed
+            }
+        }
     }
 
     init(minimumPressDuration: TimeInterval = 1, player: Player, content: @escaping () -> Content) {
