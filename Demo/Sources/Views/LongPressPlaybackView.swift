@@ -73,7 +73,7 @@ private struct ForwardArrowView: View {
 }
 
 struct LongPressPlaybackView<Content>: View where Content: View {
-    @State private var speed: Float = 0
+    @State private var speed: Float?
     @State private var isFinished = true
     @State private var isBusy = false
     @State private var playbackState: PlaybackState = .playing
@@ -94,7 +94,9 @@ struct LongPressPlaybackView<Content>: View where Content: View {
             if !finished {
                 speed = player.effectivePlaybackSpeed
             }
-            player.setDesiredPlaybackSpeed(finished ? speed : 2)
+            if let speed {
+                player.setDesiredPlaybackSpeed(finished ? speed : 2)
+            }
             isFinished = finished
         }
         .overlay {
