@@ -104,9 +104,6 @@ struct LongPressPlaybackView<Content>: View where Content: View {
                     .padding(.top)
             }
         }
-        .onAppear {
-            speed = player.effectivePlaybackSpeed
-        }
         .onReceive(player: player, assign: \.isBusy, to: $isBusy)
         .onReceive(player: player, assign: \.playbackState, to: $playbackState)
     }
