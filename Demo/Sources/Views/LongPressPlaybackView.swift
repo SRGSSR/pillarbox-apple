@@ -7,6 +7,7 @@
 import PillarboxPlayer
 import SwiftUI
 
+#if os(iOS)
 private struct LongPressView<Content>: View where Content: View {
     @GestureState private var isLongPressing = false
     @State private var timer: Timer?
@@ -121,11 +122,16 @@ struct LongPressPlaybackView<Content>: View where Content: View {
         self.content = content
     }
 }
+#endif
 
 extension View {
     func longPressPlayback(_ player: Player) -> some View {
+#if os(iOS)
         LongPressPlaybackView(player: player) {
             self
         }
+#else
+        self
+#endif
     }
 }
