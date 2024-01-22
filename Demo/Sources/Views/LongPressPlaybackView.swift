@@ -32,12 +32,6 @@ private struct LongPressView<Content>: View where Content: View {
             }
     }
 
-    init(minimumPressDuration: TimeInterval = 1, content: @escaping () -> Content, action: @escaping (_ finished: Bool) -> Void) {
-        self.minimumPressDuration = minimumPressDuration
-        self.content = content
-        self.action = action
-    }
-
     private func longPressGesture() -> some Gesture {
         LongPressGesture(minimumDuration: .infinity, maximumDistance: .infinity)
             .updating($isLongPressing) { value, state, transaction in
@@ -105,19 +99,13 @@ struct LongPressPlaybackView<Content>: View where Content: View {
             }
         }
     }
-
-    init(minimumPressDuration: TimeInterval = 1, player: Player, content: @escaping () -> Content) {
-        self.minimumPressDuration = minimumPressDuration
-        self.player = player
-        self.content = content
-    }
 }
 #endif
 
 extension View {
     func longPressPlayback(_ player: Player) -> some View {
 #if os(iOS)
-        LongPressPlaybackView(player: player) {
+        LongPressPlaybackView(minimumPressDuration: 1, player: player) {
             self
         }
 #else
