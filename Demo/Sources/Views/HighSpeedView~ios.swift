@@ -8,10 +8,11 @@ import PillarboxPlayer
 import SwiftUI
 
 struct HighSpeedView<Content>: View where Content: View {
+    private let highSpeed: Float = 2
     @State private var speed: Float?
 
     private var displaysCapsule: Bool {
-        player.playbackSpeedRange.contains(2) && player.playbackState == .playing && speed != 2
+        player.playbackSpeedRange.contains(highSpeed) && player.playbackState == .playing && speed != highSpeed
     }
 
     @ObservedObject var player: Player
@@ -21,7 +22,7 @@ struct HighSpeedView<Content>: View where Content: View {
         HighSpeedGestureView(content: content) { finished in
             if !finished {
                 speed = player.effectivePlaybackSpeed
-                player.setDesiredPlaybackSpeed(2)
+                player.setDesiredPlaybackSpeed(highSpeed)
             }
             else if let speed {
                 player.setDesiredPlaybackSpeed(speed)
@@ -30,7 +31,7 @@ struct HighSpeedView<Content>: View where Content: View {
         }
         .overlay(alignment: .top) {
             if speed != nil, displaysCapsule {
-                HighSpeedCapsule()
+                HighSpeedCapsule(speed: highSpeed)
                     .padding()
             }
         }
@@ -38,8 +39,9 @@ struct HighSpeedView<Content>: View where Content: View {
 }
 
 private struct HighSpeedCapsule: View {
+    let speed: Float
     var body: some View {
-        Text("2× \(Image(systemName: "forward.fill"))")
+        Text("\(speed)× \(Image(systemName: "forward.fill"))")
             .font(.footnote)
             .bold()
             .padding(.horizontal, 10)
