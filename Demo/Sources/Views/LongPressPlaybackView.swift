@@ -49,27 +49,15 @@ private struct LongPressView<Content>: View where Content: View {
 private struct LongPressPlaybackInfoView: View {
     var body: some View {
         HStack {
-            Text("x 2")
+            Text("2× \(Image(systemName: "forward.fill"))")
                 .font(.footnote)
                 .bold()
-            HStack(spacing: 3) {
-                ForwardArrowView()
-                ForwardArrowView()
-            }
         }
-        .padding(10)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
         .foregroundStyle(.white)
         .background(.black.opacity(0.7))
         .clipShape(RoundedRectangle(cornerRadius: .infinity))
-    }
-}
-
-private struct ForwardArrowView: View {
-    var body: some View {
-        Image(systemName: "arrowtriangle.forward.fill")
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 10)
     }
 }
 
