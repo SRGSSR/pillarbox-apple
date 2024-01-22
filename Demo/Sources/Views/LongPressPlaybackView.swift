@@ -77,11 +77,10 @@ struct LongPressPlaybackView<Content>: View where Content: View {
                 self.speed = nil
             }
         }
-        .overlay {
+        .overlay(alignment: .top) {
             if speed != nil, canSpeedUp {
                 LongPressPlaybackInfoView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                    .padding(.top)
+                    .padding()
             }
         }
     }
