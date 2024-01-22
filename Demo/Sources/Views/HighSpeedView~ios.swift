@@ -53,7 +53,7 @@ private struct HighSpeedGestureView<Content>: View where Content: View {
     }
 }
 
-struct HighSpeedView<Content>: View where Content: View {
+private struct HighSpeedView<Content>: View where Content: View {
     private let highSpeed: Float = 2
     @State private var speed: Float?
 
