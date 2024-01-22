@@ -19,9 +19,9 @@ private struct LongPressView<Content>: View where Content: View {
     var body: some View {
         content()
             .simultaneousGesture(longPressGesture())
-            .onChange(of: isLongPressing) { isChanged in
+            .onChange(of: isLongPressing) { isPressing in
                 timer?.invalidate()
-                if !isChanged {
+                if !isPressing {
                     action(true)
                 }
                 else {
