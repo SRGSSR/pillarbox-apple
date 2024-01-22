@@ -14,12 +14,11 @@ struct LongPressPlaybackView<Content>: View where Content: View {
         player.playbackSpeedRange.contains(2) && player.playbackState == .playing && speed != 2
     }
 
-    let minimumPressDuration: TimeInterval
     @ObservedObject var player: Player
     let content: () -> Content
 
     var body: some View {
-        LongPressView(minimumPressDuration: minimumPressDuration, content: content) { finished in
+        LongPressView(content: content) { finished in
             if !finished {
                 speed = player.effectivePlaybackSpeed
                 player.setDesiredPlaybackSpeed(2)
@@ -55,7 +54,6 @@ private struct LongPressView<Content>: View where Content: View {
     @GestureState private var isLongPressing = false
     @State private var timer: Timer?
 
-    let minimumPressDuration: TimeInterval
     let content: () -> Content
     let action: (_ finished: Bool) -> Void
 
@@ -68,7 +66,7 @@ private struct LongPressView<Content>: View where Content: View {
                     action(true)
                 }
                 else {
-                    timer = Timer.scheduledTimer(withTimeInterval: minimumPressDuration, repeats: false) { _ in
+                    timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { _ in
                         action(false)
                     }
                 }
@@ -85,7 +83,7 @@ private struct LongPressView<Content>: View where Content: View {
 
 extension View {
     func longPressPlayback(_ player: Player) -> some View {
-        LongPressPlaybackView(minimumPressDuration: 1, player: player) {
+        LongPressPlaybackView(player: player) {
             self
         }
     }
