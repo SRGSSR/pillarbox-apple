@@ -10,7 +10,7 @@ import SwiftUI
 struct HighSpeedView<Content>: View where Content: View {
     @State private var speed: Float?
 
-    private var canSpeedUp: Bool {
+    private var displaysCapsule: Bool {
         player.playbackSpeedRange.contains(2) && player.playbackState == .playing && speed != 2
     }
 
@@ -29,7 +29,7 @@ struct HighSpeedView<Content>: View where Content: View {
             }
         }
         .overlay(alignment: .top) {
-            if speed != nil, canSpeedUp {
+            if speed != nil, displaysCapsule {
                 HighSpeedCapsule()
                     .padding()
             }
