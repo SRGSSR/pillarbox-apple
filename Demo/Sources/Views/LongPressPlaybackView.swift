@@ -13,7 +13,7 @@ private struct LongPressView<Content>: View where Content: View {
     @State private var timer: Timer?
 
     let minimumPressDuration: TimeInterval
-    @ViewBuilder let content: () -> Content
+    let content: () -> Content
     let action: (_ finished: Bool) -> Void
 
     var body: some View {
@@ -77,7 +77,7 @@ struct LongPressPlaybackView<Content>: View where Content: View {
 
     let minimumPressDuration: TimeInterval
     let player: Player
-    @ViewBuilder let content: () -> Content
+    let content: () -> Content
 
     var body: some View {
         LongPressView(minimumPressDuration: minimumPressDuration, content: content) { finished in
