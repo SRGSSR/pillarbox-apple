@@ -71,6 +71,7 @@ struct LongPressPlaybackView<Content>: View where Content: View {
     private var canSpeedUp: Bool {
         player.playbackSpeedRange.contains(2)
     }
+
     private var isPlaying: Bool {
         playbackState == .playing
     }
