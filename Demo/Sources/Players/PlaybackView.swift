@@ -36,6 +36,7 @@ private struct MainView: View {
         }
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
         .animation(.defaultLinear, value: isUserInterfaceHidden)
+        .supportsHighSpeed(for: player)
         .bind(visibilityTracker, to: player)
         ._debugBodyCounter()
     }
