@@ -12,7 +12,7 @@
 		0E4128BF2AFB959B00D67759 /* PlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4128BE2AFB959B00D67759 /* PlayerViewModel.swift */; };
 		0E48F3FC2B2DBAD4001982BB /* CustomNavigationLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E48F3FB2B2DBAD4001982BB /* CustomNavigationLink.swift */; };
 		0E6B995C29D43E4200D0276D /* OptInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6B995B29D43E4200D0276D /* OptInView.swift */; };
-		0EB94A1F2B5AE29000FF3175 /* LongPressPlaybackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB94A1E2B5AE29000FF3175 /* LongPressPlaybackView.swift */; };
+		0EB94A1F2B5AE29000FF3175 /* LongPressPlaybackView~ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB94A1E2B5AE29000FF3175 /* LongPressPlaybackView~ios.swift */; };
 		0ECC5AD52A517A4C0064E701 /* PlaybackSlider~ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECC5AD42A517A4C0064E701 /* PlaybackSlider~ios.swift */; };
 		0EDFF0DB2B0740DA005030B4 /* SourceCodeViewable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDFF0DA2B0740DA005030B4 /* SourceCodeViewable.swift */; };
 		0EE2A3AE2B29D6D000BAAD65 /* CustomList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE2A3AD2B29D6D000BAAD65 /* CustomList.swift */; };
@@ -99,7 +99,7 @@
 		0E4128BE2AFB959B00D67759 /* PlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewModel.swift; sourceTree = "<group>"; };
 		0E48F3FB2B2DBAD4001982BB /* CustomNavigationLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationLink.swift; sourceTree = "<group>"; };
 		0E6B995B29D43E4200D0276D /* OptInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptInView.swift; sourceTree = "<group>"; };
-		0EB94A1E2B5AE29000FF3175 /* LongPressPlaybackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongPressPlaybackView.swift; sourceTree = "<group>"; };
+		0EB94A1E2B5AE29000FF3175 /* LongPressPlaybackView~ios.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LongPressPlaybackView~ios.swift"; sourceTree = "<group>"; };
 		0ECC5AD42A517A4C0064E701 /* PlaybackSlider~ios.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlaybackSlider~ios.swift"; sourceTree = "<group>"; };
 		0EDFF0DA2B0740DA005030B4 /* SourceCodeViewable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceCodeViewable.swift; sourceTree = "<group>"; };
 		0EE2A3AD2B29D6D000BAAD65 /* CustomList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomList.swift; sourceTree = "<group>"; };
@@ -383,7 +383,7 @@
 				0EE2A3AD2B29D6D000BAAD65 /* CustomList.swift */,
 				0E48F3FB2B2DBAD4001982BB /* CustomNavigationLink.swift */,
 				0EE2A3AF2B29F82200BAAD65 /* CustomSection.swift */,
-				0EB94A1E2B5AE29000FF3175 /* LongPressPlaybackView.swift */,
+				0EB94A1E2B5AE29000FF3175 /* LongPressPlaybackView~ios.swift */,
 				0E011D192B2DF9BE00DAAD3D /* MediaCardView.swift */,
 				6F59E86829CF31E10093E6FB /* MessageViews.swift */,
 				6FC5D6A12A6FA8D20012BC89 /* Modal.swift */,
@@ -642,7 +642,7 @@
 				6F59E88029CF31E10093E6FB /* RadioChannel.swift in Sources */,
 				6F0E5CD32B3394EA0031E313 /* PiPButton.swift in Sources */,
 				6F59E89629CF31E20093E6FB /* Cell.swift in Sources */,
-				0EB94A1F2B5AE29000FF3175 /* LongPressPlaybackView.swift in Sources */,
+				0EB94A1F2B5AE29000FF3175 /* LongPressPlaybackView~ios.swift in Sources */,
 				0EF2A5452B443FEF00F01804 /* WebView~ios.swift in Sources */,
 				6F59E89A29CF31E20093E6FB /* SimplePlayerView.swift in Sources */,
 				6F59E89329CF31E20093E6FB /* LinkView.swift in Sources */,
