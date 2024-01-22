@@ -7,41 +7,11 @@
 import PillarboxPlayer
 import SwiftUI
 
-struct HighSpeedView<Content>: View where Content: View {
-    private let highSpeed: Float = 2
-    @State private var speed: Float?
-
-    private var displaysCapsule: Bool {
-        player.playbackSpeedRange.contains(highSpeed) && player.playbackState == .playing && speed != highSpeed
-    }
-
-    @ObservedObject var player: Player
-    let content: () -> Content
-
-    var body: some View {
-        HighSpeedGestureView(content: content) { finished in
-            if !finished {
-                speed = player.effectivePlaybackSpeed
-                player.setDesiredPlaybackSpeed(highSpeed)
-            }
-            else if let speed {
-                player.setDesiredPlaybackSpeed(speed)
-                self.speed = nil
-            }
-        }
-        .overlay(alignment: .top) {
-            if speed != nil, displaysCapsule {
-                HighSpeedCapsule(speed: highSpeed)
-                    .padding()
-            }
-        }
-    }
-}
-
 private struct HighSpeedCapsule: View {
     let speed: Float
+
     var body: some View {
-        Text("\(speed)× \(Image(systemName: "forward.fill"))")
+        Text("\(speed, specifier: "%g×") \(Image(systemName: "forward.fill"))")
             .font(.footnote)
             .bold()
             .padding(.horizontal, 10)
@@ -80,6 +50,37 @@ private struct HighSpeedGestureView<Content>: View where Content: View {
             .updating($isLongPressing) { value, state, _ in
                 state = value
             }
+    }
+}
+
+struct HighSpeedView<Content>: View where Content: View {
+    private let highSpeed: Float = 2
+    @State private var speed: Float?
+
+    private var displaysCapsule: Bool {
+        speed != nil && speed != highSpeed && player.playbackSpeedRange.contains(highSpeed) && player.playbackState == .playing
+    }
+
+    @ObservedObject var player: Player
+    let content: () -> Content
+
+    var body: some View {
+        HighSpeedGestureView(content: content) { finished in
+            if !finished {
+                speed = player.effectivePlaybackSpeed
+                player.setDesiredPlaybackSpeed(highSpeed)
+            }
+            else if let speed {
+                player.setDesiredPlaybackSpeed(speed)
+                self.speed = nil
+            }
+        }
+        .overlay(alignment: .top) {
+            HighSpeedCapsule(speed: highSpeed)
+                .opacity(displaysCapsule ? 1 : 0)
+                .animation(.easeInOut(duration: 0.1), value: displaysCapsule)
+                .padding()
+        }
     }
 }
 

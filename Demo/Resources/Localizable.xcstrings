@@ -29,8 +29,15 @@
         }
       }
     },
-    "2× %@" : {
-
+    "%g× %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$g× %2$@"
+          }
+        }
+      }
     },
     "Active" : {
 
