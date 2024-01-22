@@ -59,7 +59,7 @@ struct LongPressPlaybackView<Content>: View where Content: View {
     @State private var speed: Float?
 
     private var canSpeedUp: Bool {
-        player.playbackSpeedRange.contains(2) && player.playbackState == .playing
+        player.playbackSpeedRange.contains(2) && player.playbackState == .playing && speed != 2
     }
 
     let minimumPressDuration: TimeInterval
