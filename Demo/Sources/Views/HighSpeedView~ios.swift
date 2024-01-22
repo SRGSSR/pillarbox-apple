@@ -7,7 +7,7 @@
 import PillarboxPlayer
 import SwiftUI
 
-struct LongPressPlaybackView<Content>: View where Content: View {
+struct HighSpeedView<Content>: View where Content: View {
     @State private var speed: Float?
 
     private var canSpeedUp: Bool {
@@ -18,7 +18,7 @@ struct LongPressPlaybackView<Content>: View where Content: View {
     let content: () -> Content
 
     var body: some View {
-        LongPressView(content: content) { finished in
+        HighSpeedGestureView(content: content) { finished in
             if !finished {
                 speed = player.effectivePlaybackSpeed
                 player.setDesiredPlaybackSpeed(2)
@@ -30,14 +30,14 @@ struct LongPressPlaybackView<Content>: View where Content: View {
         }
         .overlay(alignment: .top) {
             if speed != nil, canSpeedUp {
-                LongPressPlaybackInfoView()
+                HighSpeedCapsule()
                     .padding()
             }
         }
     }
 }
 
-private struct LongPressPlaybackInfoView: View {
+private struct HighSpeedCapsule: View {
     var body: some View {
         Text("2× \(Image(systemName: "forward.fill"))")
             .font(.footnote)
@@ -50,7 +50,7 @@ private struct LongPressPlaybackInfoView: View {
     }
 }
 
-private struct LongPressView<Content>: View where Content: View {
+private struct HighSpeedGestureView<Content>: View where Content: View {
     @GestureState private var isLongPressing = false
     @State private var timer: Timer?
 
@@ -82,8 +82,8 @@ private struct LongPressView<Content>: View where Content: View {
 }
 
 extension View {
-    func longPressPlayback(_ player: Player) -> some View {
-        LongPressPlaybackView(player: player) {
+    func supportsHighSpeed(for player: Player) -> some View {
+        HighSpeedView(player: player) {
             self
         }
     }
