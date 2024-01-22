@@ -57,44 +57,31 @@ private struct LongPressPlaybackInfoView: View {
 
 struct LongPressPlaybackView<Content>: View where Content: View {
     @State private var speed: Float?
-    @State private var isFinished = true
-    @State private var isBusy = false
-    @State private var playbackState: PlaybackState = .playing
 
     private var canSpeedUp: Bool {
-        player.playbackSpeedRange.contains(2)
-    }
-
-    private var isPlaying: Bool {
-        playbackState == .playing
+        player.playbackSpeedRange.contains(2) && player.playbackState == .playing
     }
 
     let minimumPressDuration: TimeInterval
-    let player: Player
+    @ObservedObject var player: Player
     let content: () -> Content
 
     var body: some View {
         LongPressView(minimumPressDuration: minimumPressDuration, content: content) { finished in
             if !finished {
                 speed = player.effectivePlaybackSpeed
+                player.setDesiredPlaybackSpeed(2)
             }
-            if let speed {
-                player.setDesiredPlaybackSpeed(finished ? speed : 2)
+            else if let speed {
+                player.setDesiredPlaybackSpeed(speed)
+                self.speed = nil
             }
-            isFinished = finished
         }
         .overlay {
-            if !isFinished, !isBusy, isPlaying, canSpeedUp {
+            if speed != nil, canSpeedUp {
                 LongPressPlaybackInfoView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                     .padding(.top)
-            }
-        }
-        .onReceive(player: player, assign: \.isBusy, to: $isBusy)
-        .onReceive(player: player, assign: \.playbackState, to: $playbackState)
-        .onChange(of: player.effectivePlaybackSpeed) { speed in
-            if isFinished {
-                self.speed = speed
             }
         }
     }
