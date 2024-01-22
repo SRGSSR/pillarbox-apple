@@ -23,7 +23,8 @@ private struct LongPressView<Content>: View where Content: View {
                 timer?.invalidate()
                 if !isChanged {
                     action(true)
-                } else {
+                }
+                else {
                     timer = Timer.scheduledTimer(withTimeInterval: minimumPressDuration, repeats: false) { _ in
                         action(false)
                     }
