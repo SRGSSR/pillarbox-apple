@@ -159,6 +159,7 @@ public final class Player: ObservableObject, Equatable {
         configureControlCenterPublishers()
         configureQueuePlayerUpdatePublishers()
         configurePublishedPropertyPublishers()
+        configureItemsLoadingPublisher()
     }
 
     /// Creates a player with a single item in its queue.
@@ -226,6 +227,19 @@ public final class Player: ObservableObject, Equatable {
         // Avoid sound continuing in background when the underlying `AVQueuePlayer` is kept for a little while longer, 
         // see https://github.com/SRGSSR/pillarbox-apple/issues/520
         queuePlayer.volume = 0
+    }
+}
+
+private extension Player {
+    func configureItemsLoadingPublisher() {
+        itemUpdatePublisher
+            .sink { update in
+                guard let currentIndex = update.currentIndex() else { return }
+                update.items.suffix(from: currentIndex).forEach { item in
+                    item.load()
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
