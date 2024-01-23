@@ -71,7 +71,7 @@ final class PlayerTrackingTests: TestCase {
         let publisher = TrackerMock<String>.StatePublisher()
 
         expectEqualPublished(
-            values: [.initialized, .updated("title"), .enabled],
+            values: [.initialized, .enabled, .updated("title")],
             from: publisher,
             during: .seconds(1)
         ) {
