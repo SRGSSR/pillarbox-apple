@@ -128,15 +128,3 @@ public extension Publisher where Failure == Never {
         }
     }
 }
-
-@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-public extension Publisher {
-    /** Make the upstream publisher wait until a second signal publisher emits some value.*/
-    func wait<S>(untilOutputFrom signal: S) -> AnyPublisher<Output, Failure> where S: Publisher, S.Failure == Never {
-        prepend(
-            Empty(completeImmediately: false)
-                .prefix(untilOutputFrom: signal)
-        )
-        .eraseToAnyPublisher()
-    }
-}
