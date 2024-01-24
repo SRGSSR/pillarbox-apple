@@ -10,8 +10,8 @@ import AVFoundation
 import PillarboxCircumspect
 import PillarboxStreams
 
-final class AssetPublisherTests: TestCase {
-    func testAssetLifeCycle() {
+final class PlayerItemAssetPublisherTests: TestCase {
+    func testLoad() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         expectAtLeastEqualPublished(values: [URL(string: "pillarbox://loading.m3u8")!, Stream.onDemand.url], from: item.$asset.map(\.resource.url)) {
             item.load()
