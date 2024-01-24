@@ -24,7 +24,7 @@ final class AssetableTests: TestCase {
             .loading.withId(UUID("B")),
             .loading.withId(UUID("C"))
         ]
-        let result = AVPlayerItem.playerItems(for: currentAssets, replacing: previousAssets, currentItem: nil)
+        let result = AVPlayerItem.playerItems(for: currentAssets, replacing: previousAssets, currentItem: nil, length: currentAssets.count)
         expect(result.count).to(equal(currentAssets.count))
         expect(zip(result, currentAssets)).to(allPass { item, asset in
             asset.matches(item)
@@ -47,7 +47,7 @@ final class AssetableTests: TestCase {
             .loading.withId(UUID("C"))
         ]
         let currentItem = currentItemAsset.playerItem()
-        let result = AVPlayerItem.playerItems(for: currentAssets, replacing: previousAssets, currentItem: currentItem)
+        let result = AVPlayerItem.playerItems(for: currentAssets, replacing: previousAssets, currentItem: currentItem, length: currentAssets.count)
         let expected = [
             currentItemAsset,
             .loading.withId(UUID("B")),
@@ -76,7 +76,7 @@ final class AssetableTests: TestCase {
             currentItemAsset
         ]
         let currentItem = currentItemAsset.playerItem()
-        let result = AVPlayerItem.playerItems(for: currentAssets, replacing: previousAssets, currentItem: currentItem)
+        let result = AVPlayerItem.playerItems(for: currentAssets, replacing: previousAssets, currentItem: currentItem, length: currentAssets.count)
         let expected = [
             currentItemAsset
         ]
@@ -97,7 +97,7 @@ final class AssetableTests: TestCase {
             .loading.withId(UUID("B"))
         ]
         let unknownItem = EmptyAsset.loading.withId(UUID("1")).playerItem()
-        let result = AVPlayerItem.playerItems(for: currentAssets, replacing: previousAssets, currentItem: unknownItem)
+        let result = AVPlayerItem.playerItems(for: currentAssets, replacing: previousAssets, currentItem: unknownItem, length: currentAssets.count)
         expect(result.count).to(equal(currentAssets.count))
         expect(zip(result, currentAssets)).to(allPass { item, asset in
             asset.matches(item)
@@ -118,7 +118,7 @@ final class AssetableTests: TestCase {
             .loading.withId(UUID("C"))
         ]
         let currentItem = currentItemAsset.playerItem()
-        let result = AVPlayerItem.playerItems(for: currentAssets, replacing: previousAssets, currentItem: currentItem)
+        let result = AVPlayerItem.playerItems(for: currentAssets, replacing: previousAssets, currentItem: currentItem, length: currentAssets.count)
         let expected = [
             otherAsset,
             .loading.withId(UUID("C"))
@@ -142,7 +142,7 @@ final class AssetableTests: TestCase {
             .loading.withId(UUID("3"))
         ]
         let currentItem = currentItemAsset.playerItem()
-        let result = AVPlayerItem.playerItems(for: currentAssets, replacing: previousAssets, currentItem: currentItem)
+        let result = AVPlayerItem.playerItems(for: currentAssets, replacing: previousAssets, currentItem: currentItem, length: currentAssets.count)
         expect(result.count).to(equal(currentAssets.count))
         expect(zip(result, currentAssets)).to(allPass { item, asset in
             asset.matches(item)

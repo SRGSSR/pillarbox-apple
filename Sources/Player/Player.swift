@@ -247,11 +247,12 @@ private extension Player {
     func configureQueueUpdatePublisher() {
         assetsPublisher()
             .withPrevious()
-            .map { [queuePlayer] assets in
+            .map { [queuePlayer, configuration] assets in
                 AVPlayerItem.playerItems(
                     for: assets.current,
                     replacing: assets.previous ?? [],
-                    currentItem: queuePlayer.currentItem
+                    currentItem: queuePlayer.currentItem,
+                    length: configuration.preloadedItems
                 )
             }
             .receiveOnMainThread()
