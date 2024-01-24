@@ -9,7 +9,7 @@
 import Nimble
 import PillarboxStreams
 
-final class PlayerItemLoadedTests: TestCase {
+final class PlayerItemTests: TestCase {
     func testSimpleItem() {
         let item = PlayerItem.simple(
             url: Stream.onDemand.url,
