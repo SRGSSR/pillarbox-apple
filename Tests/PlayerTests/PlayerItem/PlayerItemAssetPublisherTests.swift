@@ -11,6 +11,11 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class PlayerItemAssetPublisherTests: TestCase {
+    func testNoLoad() {
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        expectEqualPublished(values: [URL(string: "pillarbox://loading.m3u8")!], from: item.$asset.map(\.resource.url), during: .milliseconds(500))
+    }
+
     func testLoad() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         expectAtLeastEqualPublished(values: [URL(string: "pillarbox://loading.m3u8")!, Stream.onDemand.url], from: item.$asset.map(\.resource.url)) {
