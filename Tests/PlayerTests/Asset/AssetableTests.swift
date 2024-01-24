@@ -149,4 +149,18 @@ final class AssetableTests: TestCase {
         })
         expect(result.first).notTo(equal(currentItem))
     }
+
+    func testPlayerItemsLength() {
+        let previousAssets: [EmptyAsset] = [
+            .loading.withId(UUID("1")),
+            .loading.withId(UUID("2")),
+            .loading.withId(UUID("3"))
+        ]
+        let currentAssets: [EmptyAsset] = [
+            .loading.withId(UUID("A")),
+            .loading.withId(UUID("B"))
+        ]
+        let result = AVPlayerItem.playerItems(for: currentAssets, replacing: previousAssets, currentItem: nil, length: 2)
+        expect(result.count).to(equal(2))
+    }
 }
