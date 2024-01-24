@@ -31,6 +31,12 @@ public struct CommandersActLabels: Decodable {
     /// The value of `consent_services`.
     public let consent_services: String?
 
+    /// The Commanders Act contextual information.
+    public let context: CommandersActContext
+
+    /// The Commanders Act user information.
+    public let user: CommandersActUser
+
     // MARK: Page view labels
 
     /// The value of `navigation_property_type`.
@@ -122,6 +128,7 @@ private extension CommandersActLabels {
         case _media_timeshift = "media_timeshift"
         case _media_volume = "media_volume"
         case _media_subtitles_on = "media_subtitles_on"
+        case context
         case event_name
         case listener_session_id
         case media_title
@@ -147,5 +154,6 @@ private extension CommandersActLabels {
         case media_player_version
         case media_subtitle_selection
         case media_audio_track
+        case user
     }
 }

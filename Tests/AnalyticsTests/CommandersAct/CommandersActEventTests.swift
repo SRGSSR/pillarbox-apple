@@ -8,6 +8,7 @@
 
 import Nimble
 import PillarboxCircumspect
+import TCServerSide
 
 final class CommandersActEventTests: CommandersActTestCase {
     func testMergingWithGlobals() {
@@ -56,6 +57,18 @@ final class CommandersActEventTests: CommandersActTestCase {
                 name: "name",
                 labels: ["media_player_display": "value"]
             ))
+        }
+    }
+
+    func testUniqueIdentifier() {
+        let identifier = TCPredefinedVariables.sharedInstance().uniqueIdentifier()
+        expectAtLeastHits(
+            .custom(name: "name") { labels in
+                expect(labels.context.device.sdk_id).to(equal(identifier))
+                expect(labels.user.consistent_anonymous_id).to(equal(identifier))
+            }
+        ) {
+            Analytics.shared.sendEvent(commandersAct: .init(name: "name"))
         }
     }
 
