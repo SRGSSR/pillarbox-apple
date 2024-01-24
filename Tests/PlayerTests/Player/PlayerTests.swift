@@ -59,4 +59,22 @@ final class PlayerTests: TestCase {
             during: .seconds(1)
         )
     }
+
+    func testNumberOfPreloadedItems() {
+        let player = Player(
+            items: [
+                .simple(url: Stream.onDemand.url),
+                .simple(url: Stream.onDemand.url),
+                .simple(url: Stream.onDemand.url)
+            ],
+            configuration: .init(preloadedItems: 2)
+        )
+        let expectedItems = [
+            Stream.onDemand.url,
+            Stream.onDemand.url,
+            URL(string: "pillarbox://loading.m3u8")!
+        ]
+        expect(player.items.map(\.asset.resource.url)).toEventually(equal(expectedItems))
+        expect(player.items.map(\.asset.resource.url)).toAlways(equal(expectedItems), until: .seconds(1))
+    }
 }

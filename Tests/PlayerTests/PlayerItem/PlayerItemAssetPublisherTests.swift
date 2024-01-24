@@ -61,12 +61,3 @@ final class PlayerItemAssetPublisherTests: TestCase {
         }
     }
 }
-
-private extension Resource {
-    var url: URL {
-        switch self {
-        case let .simple(url: url), let .custom(url: url, delegate: _), let .encrypted(url: url, delegate: _):
-            url
-        }
-    }
-}

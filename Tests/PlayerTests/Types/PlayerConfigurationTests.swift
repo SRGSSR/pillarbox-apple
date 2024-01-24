@@ -18,7 +18,7 @@ final class PlayerConfigurationTests: TestCase {
         expect(player.configuration.isSmartNavigationEnabled).to(beTrue())
         expect(player.configuration.backwardSkipInterval).to(equal(10))
         expect(player.configuration.forwardSkipInterval).to(equal(10))
-        expect(player.configuration.preloadedItems).to(equal(1))
+        expect(player.configuration.preloadedItems).to(equal(2))
     }
 
     func testPlayerConfigurationInit() {
