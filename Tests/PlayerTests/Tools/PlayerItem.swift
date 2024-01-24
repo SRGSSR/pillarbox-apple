@@ -75,9 +75,7 @@ extension PlayerItem {
         return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
 
-    static func failed(after delay: TimeInterval = 0) -> Self {
-        let publisher = Just(Asset<Never>.failed(error: MockError.mock))
-            .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
-        return .init(publisher: publisher)
+    static func failed() -> Self {
+        .init(publisher: Just(Asset<Never>.failed(error: MockError.mock)))
     }
 }
