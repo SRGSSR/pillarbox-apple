@@ -18,6 +18,7 @@ final class PlayerConfigurationTests: TestCase {
         expect(player.configuration.isSmartNavigationEnabled).to(beTrue())
         expect(player.configuration.backwardSkipInterval).to(equal(10))
         expect(player.configuration.forwardSkipInterval).to(equal(10))
+        expect(player.configuration.preloadedItems).to(equal(1))
     }
 
     func testPlayerConfigurationInit() {
@@ -27,7 +28,8 @@ final class PlayerConfigurationTests: TestCase {
             preventsDisplaySleepDuringVideoPlayback: false,
             smartNavigationEnabled: false,
             backwardSkipInterval: 42,
-            forwardSkipInterval: 47
+            forwardSkipInterval: 47,
+            preloadedItems: 5
         )
         let player = Player(configuration: configuration)
         expect(player.configuration.allowsExternalPlayback).to(beFalse())
@@ -36,5 +38,6 @@ final class PlayerConfigurationTests: TestCase {
         expect(player.configuration.isSmartNavigationEnabled).to(beFalse())
         expect(player.configuration.backwardSkipInterval).to(equal(42))
         expect(player.configuration.forwardSkipInterval).to(equal(47))
+        expect(player.configuration.preloadedItems).to(equal(5))
     }
 }
