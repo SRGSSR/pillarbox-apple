@@ -41,6 +41,25 @@ final class PlayerItemAssetPublisherTests: TestCase {
             item.load()
         }
     }
+
+    func testReload() {
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        expectEqualPublished(
+            values: [URL(string: "pillarbox://loading.m3u8")!, Stream.onDemand.url],
+            from: item.$asset.map(\.resource.url),
+            during: .milliseconds(500)
+        ) {
+            item.load()
+        }
+
+        expectEqualPublishedNext(
+            values: [Stream.onDemand.url],
+            from: item.$asset.map(\.resource.url),
+            during: .milliseconds(500)
+        ) {
+            item.load()
+        }
+    }
 }
 
 private extension Resource {
