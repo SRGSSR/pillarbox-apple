@@ -13,8 +13,8 @@ final class CurrentTracker {
 
     init(item: PlayerItem, player: Player) {
         self.item = item
-        configureAssetPublisher(for: item)
         configureTrackingPublisher(player: player)
+        configureAssetPublisher(for: item)
     }
 
     private func configureTrackingPublisher(player: Player) {
