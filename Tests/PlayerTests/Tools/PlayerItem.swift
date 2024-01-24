@@ -13,6 +13,10 @@ enum MediaMock: String {
     case media1
 }
 
+enum MockError: Error {
+    case mock
+}
+
 extension PlayerItem {
     static func mock(
         url: URL,
@@ -69,5 +73,11 @@ extension PlayerItem {
                 Asset.simple(url: url, metadata: metadata)
             }
         return .init(publisher: publisher, trackerAdapters: trackerAdapters)
+    }
+
+    static func failed(after delay: TimeInterval = 0) -> Self {
+        let publisher = Just(Asset<Never>.failed(error: MockError.mock))
+            .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
+        return .init(publisher: publisher)
     }
 }
