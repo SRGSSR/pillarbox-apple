@@ -117,4 +117,19 @@ final class CurrentIndexTests: TestCase {
             try! player.setCurrentIndex(0)
         }
     }
+
+    func testPlayerPreloadedItemCount() {
+        let player = Player(items: [
+            PlayerItem.simple(url: Stream.onDemand.url),
+            PlayerItem.simple(url: Stream.onDemand.url),
+            PlayerItem.simple(url: Stream.onDemand.url),
+            PlayerItem.simple(url: Stream.onDemand.url),
+            PlayerItem.simple(url: Stream.onDemand.url)
+        ])
+
+        try! player.setCurrentIndex(2)
+
+        let items = player.queuePlayer.items()
+        expect(items.count).to(equal(player.configuration.preloadedItems))
+    }
 }
