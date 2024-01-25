@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CommandersAct/iOSV5.git",
       "state" : {
-        "revision" : "c80f2e0465f3e7f4a0e26125c535a059c785cb8a",
-        "version" : "5.4.3"
+        "revision" : "1350bca4163cfdd62d1508068601817d86d9f4a5",
+        "version" : "5.4.4"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Quick/Nimble.git",
       "state" : {
-        "revision" : "437d2a6d35b835adaae2a0cac49efe02ef4e0f35",
-        "version" : "13.1.2"
+        "revision" : "c1f3dd66222d5e7a1a20afc237f7e7bc432c564f",
+        "version" : "13.2.0"
       }
     },
     {

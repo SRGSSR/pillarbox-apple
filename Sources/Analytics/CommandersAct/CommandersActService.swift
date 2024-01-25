@@ -30,6 +30,11 @@ final class CommandersActService {
         serverSide.addPermanentData("navigation_app_site_name", withValue: configuration.appSiteName)
         serverSide.addPermanentData("navigation_device", withValue: Self.device())
         serverSide.enableRunningInBackground()
+
+        // Use the legacy V4 identifier as unique identifier in V5.
+        TCDevice.sharedInstance().sdkID = TCPredefinedVariables.sharedInstance().uniqueIdentifier()
+        TCPredefinedVariables.sharedInstance().useLegacyUniqueIDForAnonymousID()
+
         self.serverSide = serverSide
     }
 
