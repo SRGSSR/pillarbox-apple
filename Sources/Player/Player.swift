@@ -235,7 +235,7 @@ private extension Player {
         itemUpdatePublisher
             .withPrevious()
             .sink { [configuration] update in
-                ItemUpdate.diff(update.current, update.previous, length: configuration.preloadedItems).forEach { item in
+                ItemUpdate.updatedItems(current: update.current, previous: update.previous, length: configuration.preloadedItems).forEach { item in
                     item.load()
                 }
             }

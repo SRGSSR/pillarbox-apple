@@ -16,11 +16,11 @@ extension Player {
         let items: Deque<PlayerItem>
         let currentItem: AVPlayerItem?
 
-        static func diff(_ current: ItemUpdate, _ previous: ItemUpdate?, length: Int) -> [PlayerItem] {
-            guard let previous else { return current.queue(length: length) }
-            return current.queue(length: length).filter { item in
-                !previous.queue(length: length).contains(item)
-            }
+        static func updatedItems(current: Self, previous: Self?, length: Int) -> [PlayerItem] {
+            let currentQueue = current.queue(length: length)
+            guard let previous else { return currentQueue }
+            let previousQueue = previous.queue(length: length)
+            return currentQueue.filter { !previousQueue.contains($0) }
         }
 
         func currentIndex() -> Int? {
