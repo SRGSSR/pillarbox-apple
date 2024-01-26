@@ -5,10 +5,11 @@
 //
 
 @testable import PillarboxCoreBusiness
+@testable import PillarboxPlayer
 
 import Combine
+import Nimble
 import PillarboxCircumspect
-import PillarboxPlayer
 import XCTest
 
 final class PlayerItemTests: XCTestCase {
@@ -54,5 +55,14 @@ final class PlayerItemTests: XCTestCase {
             from: playbackStatePublisher(for: player),
             during: .seconds(1)
         )
+    }
+
+    func testLoadNotLooping() {
+        let item = PlayerItem.urn("urn:swisstxt:video:rts:1793518")
+        let player = Player(item: item)
+        let output = collectOutput(from: item.$asset.map(\.resource.url), during: .seconds(1)) {
+            player.play()
+        }
+        expect(output.count).to(equal(2))
     }
 }
