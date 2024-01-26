@@ -36,7 +36,6 @@ private struct MainView: View {
         }
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
         .animation(.defaultLinear, value: isUserInterfaceHidden)
-        .supportsHighSpeed(for: player)
         .bind(visibilityTracker, to: player)
         ._debugBodyCounter()
     }
@@ -80,6 +79,7 @@ private struct MainView: View {
             TapGesture()
                 .onEnded { _ in visibilityTracker.reset() }
         )
+        .supportsHighSpeed(for: player)
     }
 
     @ViewBuilder
