@@ -977,7 +977,7 @@
 			repositoryURL = "https://github.com/SRGSSR/srgdataprovider-apple.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 18.0.0;
+				minimumVersion = 19.0.0;
 			};
 		};
 		6F9B5BC728CF8C530074B9E0 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
