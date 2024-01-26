@@ -59,10 +59,8 @@ final class PlayerItemTests: XCTestCase {
 
     func testLoadNotLooping() {
         let item = PlayerItem.urn("urn:swisstxt:video:rts:1793518")
-        let player = Player(item: item)
-        let output = collectOutput(from: item.$asset.map(\.resource.url), during: .seconds(1)) {
-            player.play()
-        }
+        _ = Player(item: item)
+        let output = collectOutput(from: item.$asset, during: .seconds(1))
         expect(output.count).to(equal(2))
     }
 }
