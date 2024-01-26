@@ -233,9 +233,9 @@ public final class Player: ObservableObject, Equatable {
 private extension Player {
     func configureItemsLoadingPublisher() {
         itemUpdatePublisher
+            .withPrevious()
             .sink { [configuration] update in
-                guard let currentIndex = update.currentIndex() else { return }
-                update.items.suffix(from: currentIndex).prefix(configuration.preloadedItems).forEach { item in
+                ItemUpdate.diff(update.current, update.previous, length: configuration.preloadedItems).forEach { item in
                     item.load()
                 }
             }
