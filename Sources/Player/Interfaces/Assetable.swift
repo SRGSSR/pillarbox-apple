@@ -45,8 +45,7 @@ extension AVPlayerItem {
         assert(length > 1)
         guard let currentItem else {
             if let previousItem, let previousIndex = matchingIndex(for: previousItem, in: currentAssets) {
-                let index = max(previousIndex + 1, currentAssets.count)
-                return playerItems(from: Array(currentAssets.suffix(from: index).prefix(length)))
+                return playerItems(from: Array(currentAssets.suffix(from: previousIndex + 1).prefix(length)))
             }
             else {
                 return playerItems(from: Array(currentAssets.prefix(length)))
