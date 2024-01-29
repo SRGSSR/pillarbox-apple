@@ -249,13 +249,13 @@ private extension Player {
             assetsPublisher().withPrevious(),
             queuePlayer.publisher(for: \.currentItem).withPrevious(nil)
         )
-        .map { ($0.previous, $0.current, $1.previous) }
-        .map { [configuration, queuePlayer] previousAsset, currentAsset, previousItem in
+        .map { ($0.previous, $0.current, $1.previous, $1.current) }
+        .map { [configuration] previousAsset, currentAsset, previousItem, currentItem in
             AVPlayerItem.playerItems(
                 for: currentAsset,
                 replacing: previousAsset ?? [],
                 previousItem: previousItem,
-                currentItem: queuePlayer.currentItem,
+                currentItem: currentItem,
                 length: configuration.preloadedItems
             )
         }
