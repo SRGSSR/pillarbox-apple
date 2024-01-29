@@ -38,11 +38,21 @@ extension AVPlayerItem {
     static func playerItems(
         for currentAssets: [any Assetable],
         replacing previousAssets: [any Assetable],
+        previousItem: AVPlayerItem? = nil,
         currentItem: AVPlayerItem?,
         length: Int
     ) -> [AVPlayerItem] {
         assert(length > 1)
-        guard let currentItem else { return playerItems(from: Array(currentAssets.prefix(length))) }
+        guard let currentItem else {
+            if let previousItem, let previousIndex = matchingIndex(for: previousItem, in: currentAssets) {
+                let index = max(previousIndex + 1, currentAssets.count)
+                return playerItems(from: Array(currentAssets.suffix(from: index).prefix(length)))
+            }
+            else {
+                return playerItems(from: Array(currentAssets.prefix(length)))
+            }
+        }
+
         if let currentIndex = matchingIndex(for: currentItem, in: currentAssets) {
             let currentAsset = currentAssets[currentIndex]
             if findAsset(currentAsset, in: previousAssets) {

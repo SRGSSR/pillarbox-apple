@@ -245,21 +245,25 @@ private extension Player {
 
 private extension Player {
     func configureQueueUpdatePublisher() {
-        assetsPublisher()
-            .withPrevious()
-            .map { [queuePlayer, configuration] assets in
-                AVPlayerItem.playerItems(
-                    for: assets.current,
-                    replacing: assets.previous ?? [],
-                    currentItem: queuePlayer.currentItem,
-                    length: configuration.preloadedItems
-                )
-            }
-            .receiveOnMainThread()
-            .sink { [queuePlayer] items in
-                queuePlayer.replaceItems(with: items)
-            }
-            .store(in: &cancellables)
+        Publishers.CombineLatest(
+            assetsPublisher().withPrevious(),
+            queuePlayer.publisher(for: \.currentItem).withPrevious(nil)
+        )
+        .map { ($0.previous, $0.current, $1.previous) }
+        .map { [configuration, queuePlayer] previousAsset, currentAsset, previousItem in
+            AVPlayerItem.playerItems(
+                for: currentAsset,
+                replacing: previousAsset ?? [],
+                previousItem: previousItem,
+                currentItem: queuePlayer.currentItem,
+                length: configuration.preloadedItems
+            )
+        }
+        .receiveOnMainThread()
+        .sink { [queuePlayer] items in
+            queuePlayer.replaceItems(with: items)
+        }
+        .store(in: &cancellables)
     }
 
     func configureRateUpdatePublisher() {
