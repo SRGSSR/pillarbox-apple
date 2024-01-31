@@ -260,6 +260,23 @@ private extension Player {
                 queuePlayer.replaceItems(with: items)
             }
             .store(in: &cancellables)
+
+        queuePlayer.publisher(for: \.currentItem)
+            .compactMap { $0 }
+            .map { item in
+                NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: item)
+                    .map { _ in item }
+            }
+            .switchToLatest()
+            .receiveOnMainThread()
+            .sink { [weak self] item in
+                guard let self, let index = storedItems.firstIndex(where: { $0.matches(item) }) else { return }
+                let nextIndex = index + configuration.preloadedItems
+                guard nextIndex < storedItems.count else { return }
+                let playerItem = storedItems[nextIndex].asset.playerItem()
+                queuePlayer.insert(playerItem, after: nil)
+            }
+            .store(in: &cancellables)
     }
 
     func configureRateUpdatePublisher() {
