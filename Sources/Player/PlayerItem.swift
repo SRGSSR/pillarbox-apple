@@ -18,7 +18,7 @@ import PillarboxCore
 ///
 /// - Note: You can also create your own ``PlayerItem`` by extending the class.
 public final class PlayerItem: Equatable {
-    private static let trigger = Trigger()
+    static let trigger = Trigger()
 
     @Published private(set) var asset: any Assetable
 
@@ -26,7 +26,7 @@ public final class PlayerItem: Equatable {
 
     /// Creates the item from an ``Asset`` publisher data source.
     public init<P, M>(publisher: P, trackerAdapters: [TrackerAdapter<M>] = []) where P: Publisher, M: AssetMetadata, P.Output == Asset<M> {
-        asset = Asset<M>.loading.withId(id).withTrackerAdapters(trackerAdapters)
+        asset = Asset<M>.loading(id: id).withId(id).withTrackerAdapters(trackerAdapters)
         Publishers.Publish(onOutputFrom: Self.trigger.signal(activatedBy: id)) {
             publisher
                 .catch { error in
@@ -52,12 +52,12 @@ public final class PlayerItem: Equatable {
         lhs === rhs
     }
 
-    func matches(_ playerItem: AVPlayerItem?) -> Bool {
-        asset.matches(playerItem)
+    static func load(id: UUID) {
+        Self.trigger.activate(for: id)
     }
 
-    func load() {
-        Self.trigger.activate(for: id)
+    func matches(_ playerItem: AVPlayerItem?) -> Bool {
+        asset.matches(playerItem)
     }
 }
 

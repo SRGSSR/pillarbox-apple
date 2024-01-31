@@ -16,20 +16,8 @@ extension Player {
         let items: Deque<PlayerItem>
         let currentItem: AVPlayerItem?
 
-        static func updatedItems(current: Self, previous: Self?, length: Int) -> [PlayerItem] {
-            let currentQueue = current.queue(length: length)
-            guard let previous else { return currentQueue }
-            let previousQueue = previous.queue(length: length)
-            return currentQueue.filter { !previousQueue.contains($0) }
-        }
-
         func currentIndex() -> Int? {
             items.firstIndex { $0.matches(currentItem) }
-        }
-
-        func queue(length: Int) -> [PlayerItem] {
-            guard let index = currentIndex() else { return [] }
-            return Array(items.suffix(from: index).prefix(length))
         }
     }
 }

@@ -7,11 +7,18 @@
 import AVFoundation
 
 final class LoadingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
+    let id: UUID
+
+    init(id: UUID) {
+        self.id = id
+    }
+
     func resourceLoader(
         _ resourceLoader: AVAssetResourceLoader,
         shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest
     ) -> Bool {
-        true
+        PlayerItem.load(id: id)
+        return true
     }
 
     func resourceLoader(
