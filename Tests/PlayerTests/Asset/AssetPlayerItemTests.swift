@@ -21,7 +21,7 @@ final class AssetPlayerItemTests: TestCase {
     }
 
     func testLoadingPlayerItem() {
-        let item = EmptyAsset.loading.playerItem()
+        let item = EmptyAsset.loading(id: UUID()).playerItem()
         _ = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false],

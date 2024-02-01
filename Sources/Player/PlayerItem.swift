@@ -22,7 +22,7 @@ public final class PlayerItem: Equatable {
 
     @Published private(set) var asset: any Assetable
 
-    private let id = UUID()
+    let id = UUID()
 
     /// Creates the item from an ``Asset`` publisher data source.
     public init<P, M>(publisher: P, trackerAdapters: [TrackerAdapter<M>] = []) where P: Publisher, M: AssetMetadata, P.Output == Asset<M> {
