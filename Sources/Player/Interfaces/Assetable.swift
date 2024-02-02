@@ -16,13 +16,17 @@ protocol Assetable {
     func disable()
 
     func nowPlayingInfo() -> NowPlayingInfo
-    func playerItem() -> AVPlayerItem
+    func playerItem(fresh: Bool) -> AVPlayerItem
     func update(item: AVPlayerItem)
 }
 
 extension Assetable {
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
         id == playerItem?.id
+    }
+
+    func playerItem() -> AVPlayerItem {
+        playerItem(fresh: false)
     }
 }
 
@@ -61,8 +65,8 @@ extension AVPlayerItem {
         }
     }
 
-    static func playerItems(from assets: [any Assetable]) -> [AVPlayerItem] {
-        assets.map { $0.playerItem() }
+    static func playerItems(from assets: [any Assetable], fresh: Bool = false) -> [AVPlayerItem] {
+        assets.map { $0.playerItem(fresh: fresh) }
     }
 
     private static func matchingIndex(for item: AVPlayerItem, in assets: [any Assetable]) -> Int? {

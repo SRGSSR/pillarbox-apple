@@ -29,7 +29,7 @@ final class AVPlayerItemTests: TestCase {
             PlayerItem.simple(url: Stream.live.url)
         ]
         items.forEach { PlayerItem.load(id: $0.id) }
-        let urls = AVPlayerItem.playerItems(from: items, length: 3).compactMap { item -> URL? in
+        let urls = AVPlayerItem.playerItems(from: items, length: 3, fresh: false).compactMap { item -> URL? in
             guard let asset = item.asset as? AVURLAsset else { return nil }
             return asset.url
         }

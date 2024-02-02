@@ -250,10 +250,7 @@ private extension Player {
         queuePlayer.publisher(for: \.currentItem)
             .compactMap { $0 }
             .map { item in
-                Publishers.Merge(
-                    NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: item).map { _ in item },
-                    item.errorPublisher().compactMap { $0 }.map { _ in item }
-                )
+                item.statePublisher().filter { $0 == .ended }.map { _ in item }
             }
             .switchToLatest()
             .receiveOnMainThread()
@@ -261,8 +258,7 @@ private extension Player {
                 guard let self, let index = storedItems.firstIndex(where: { $0.matches(item) }) else { return }
                 let nextIndex = index + configuration.preloadedItems
                 guard nextIndex < storedItems.count else { return }
-                let playerItem = storedItems[nextIndex].asset.playerItem()
-                queuePlayer.insert(playerItem, after: nil)
+                queuePlayer.insert(storedItems[nextIndex].asset.playerItem(fresh: true), after: nil)
             }
             .store(in: &cancellables)
     }

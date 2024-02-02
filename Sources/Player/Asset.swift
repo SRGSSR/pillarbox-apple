@@ -148,11 +148,19 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
         return nowPlayingInfo
     }
 
-    func playerItem() -> AVPlayerItem {
-        let item = resource.playerItem().withId(id)
-        configuration(item)
-        update(item: item)
-        return item
+    func playerItem(fresh: Bool) -> AVPlayerItem {
+        if fresh, case let .custom(url, _) = resource, url.absoluteString.contains("failing.m3u8") {
+            let item = Resource.custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate(id: id)).playerItem().withId(id)
+            configuration(item)
+            update(item: item)
+            return item
+        }
+        else {
+            let item = resource.playerItem().withId(id)
+            configuration(item)
+            update(item: item)
+            return item
+        }
     }
 
     func update(item: AVPlayerItem) {
@@ -227,15 +235,7 @@ public extension Asset where M == Never {
 
 extension Asset {
     static var loading: Self {
-        let id = UUID()
-        // Provides a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-        return .init(
-            id: id,
-            resource: .custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate(id: id)),
-            metadata: nil,
-            configuration: { _ in },
-            trackerAdapters: []
-        )
+        loading(id: UUID())
     }
 
     static func loading(id: UUID) -> Self {
