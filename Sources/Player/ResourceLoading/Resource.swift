@@ -17,6 +17,15 @@ enum Resource {
 
     private static let logger = Logger(category: "Resource")
 
+    var isLoading: Bool {
+        switch self {
+        case .custom(url: let url, _):
+            url.absoluteString.contains("loading.m3u8")
+        default:
+            false
+        }
+    }
+
     func playerItem() -> AVPlayerItem {
         switch self {
         case let .simple(url: url):

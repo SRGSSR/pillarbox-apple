@@ -135,17 +135,20 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
         }
     }
 
-    func nowPlayingInfo() -> NowPlayingInfo {
-        var nowPlayingInfo = NowPlayingInfo()
+    func nowPlayingInfo() -> NowPlayingInfo? {
         if let metadata = metadata?.nowPlayingMetadata() {
+            var nowPlayingInfo = NowPlayingInfo()
             nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
             nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
             nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
             if let image = metadata.image {
                 nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
             }
+            return nowPlayingInfo
         }
-        return nowPlayingInfo
+        else {
+            return nil
+        }
     }
 
     func playerItem(fresh: Bool) -> AVPlayerItem {

@@ -21,10 +21,7 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
 
     func testImmediatelyAvailableWithoutMetadata() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
-        expectAtLeastSimilarPublished(
-            values: [[:]],
-            from: player.nowPlayingInfoMetadataPublisher()
-        )
+        expectNothingPublished(from: player.nowPlayingInfoMetadataPublisher(), during: .seconds(1))
     }
 
     func testAvailableAfterDelay() {
@@ -32,7 +29,7 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
             item: .mock(url: Stream.onDemand.url, loadedAfter: 0.5, withMetadata: AssetMetadataMock(title: "title"))
         )
         expectAtLeastSimilarPublished(
-            values: [[:], [MPMediaItemPropertyTitle: "title"]],
+            values: [[MPMediaItemPropertyTitle: "title"]],
             from: player.nowPlayingInfoMetadataPublisher()
         )
     }
@@ -81,7 +78,6 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
         let player = Player(item: .webServiceMock(media: .media1))
         expectAtLeastSimilarPublished(
             values: [
-                [:],
                 [
                     MPMediaItemPropertyTitle: "Title 1",
                     MPMediaItemPropertyArtist: "Subtitle 1",
@@ -94,22 +90,21 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
             values: [
                 [:],
                 [
-                    MPMediaItemPropertyTitle: "Title 1",
-                    MPMediaItemPropertyArtist: "Subtitle 1",
-                    MPMediaItemPropertyComments: "Description 1"
+                    MPMediaItemPropertyTitle: "Title 2",
+                    MPMediaItemPropertyArtist: "Subtitle 2",
+                    MPMediaItemPropertyComments: "Description 2"
                 ]
             ],
             from: player.nowPlayingInfoMetadataPublisher()
         ) {
-            player.removeAllItems()
-            player.append(.webServiceMock(media: .media1))
+            player.items = [.webServiceMock(media: .media2)]
         }
     }
 
     func testEntirePlayback() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url, metadata: AssetMetadataMock(title: "title")))
         expectAtLeastSimilarPublished(
-            values: [[MPMediaItemPropertyTitle: "title"], [:]],
+            values: [[MPMediaItemPropertyTitle: "title"]],
             from: player.nowPlayingInfoMetadataPublisher()
         ) {
             player.play()

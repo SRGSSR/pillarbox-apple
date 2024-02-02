@@ -11,6 +11,7 @@ import Foundation
 
 enum MediaMock: String {
     case media1
+    case media2
 }
 
 enum MockError: Error {
