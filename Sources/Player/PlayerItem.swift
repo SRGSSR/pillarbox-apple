@@ -36,6 +36,8 @@ public final class PlayerItem: Equatable {
         .map { [id] asset in
             asset.withId(id).withTrackerAdapters(trackerAdapters)
         }
+        // Mitigate instabilities arising when publisher involves `URLSession` publishers, see issue #206.
+        .receiveOnMainThread()
         .assign(to: &$asset)
     }
 
