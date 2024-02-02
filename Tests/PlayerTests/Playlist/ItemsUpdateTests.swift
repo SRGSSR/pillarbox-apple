@@ -6,6 +6,7 @@
 
 @testable import PillarboxPlayer
 
+import AVFoundation
 import Nimble
 import PillarboxCircumspect
 import PillarboxStreams
@@ -24,13 +25,13 @@ final class ItemsUpdateTests: TestCase {
 
     func testUpdateWithCurrentItemMustNotInterruptPlayback() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
-        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
-        let item3 = PlayerItem.simple(url: Stream.onDemand.url)
-        let item4 = PlayerItem.simple(url: Stream.onDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemandWithForcedAndUnforcedLegibleOptions.url)
+        let item3 = PlayerItem.simple(url: Stream.onDemandWithSingleAudibleOption.url)
+        let item4 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2, item3])
-        expectNothingPublishedNext(from: player.queuePlayer.publisher(for: \.currentItem), during: .seconds(2)) {
-            player.items = [item4, item3, item1]
-        }
+        expect(player.queuePlayer.currentItem?.url).toEventually(equal(Stream.onDemand.url))
+        player.items = [item4, item3, item1]
+        expect(player.queuePlayer.currentItem?.url).toAlways(equal(Stream.onDemand.url), until: .seconds(2))
     }
 
     func testUpdateWithoutCurrentItem() {
@@ -44,5 +45,11 @@ final class ItemsUpdateTests: TestCase {
         player.items = [item4, item5, item6]
         expect(player.items).to(equalDiff([item4, item5, item6]))
         expect(player.currentIndex).to(equal(0))
+    }
+}
+
+private extension AVPlayerItem {
+    var url: URL? {
+        (asset as? AVURLAsset)?.url
     }
 }

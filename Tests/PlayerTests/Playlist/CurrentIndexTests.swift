@@ -98,7 +98,7 @@ final class CurrentIndexTests: TestCase {
             return asset.url
         }
 
-        expectAtLeastEqualPublished(values: [Stream.onDemand.url, Stream.shortOnDemand.url], from: publisher) {
+        expectAtLeastEqualPublishedNext(values: [URL(string: "pillarbox://loading.m3u8")!, Stream.shortOnDemand.url], from: publisher) {
             try! player.setCurrentIndex(1)
         }
     }
@@ -111,9 +111,12 @@ final class CurrentIndexTests: TestCase {
     func testSetCurrentIndexToSameValue() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
-        let publisher = player.queuePlayer.publisher(for: \.currentItem)
+        let publisher = player.queuePlayer.publisher(for: \.currentItem).compactMap { item -> URL? in
+            guard let asset = item?.asset as? AVURLAsset else { return nil }
+            return asset.url
+        }
 
-        expectNothingPublishedNext(from: publisher, during: .seconds(1)) {
+        expectAtLeastEqualPublishedNext(values: [Stream.onDemand.url], from: publisher) {
             try! player.setCurrentIndex(0)
         }
     }
