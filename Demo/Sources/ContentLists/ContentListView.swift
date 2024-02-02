@@ -27,7 +27,6 @@ private struct LoadedView: View {
         }
 #if os(iOS)
         .toolbar(content: toolbar)
-        .navigationTitle("Examples")
         .refreshable { await model.refresh() }
 #else
         .ignoresSafeArea(.all, edges: .horizontal)
