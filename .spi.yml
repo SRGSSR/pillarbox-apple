@@ -4,5 +4,5 @@ builder:
   configs:
     - platform: ios
       documentation_targets: [
-        Analytics, Circumspect, Core, CoreBusiness, Player
+        PillarboxAnalytics, PillarboxCircumspect, PillarboxCore, PillarboxCoreBusiness, PillarboxPlayer
       ]
