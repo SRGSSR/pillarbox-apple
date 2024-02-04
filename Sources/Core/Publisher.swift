@@ -111,6 +111,17 @@ public extension Publisher {
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
+
+    /// Make the upstream publisher wait until a second signal publisher emits some value.
+    /// - Parameter signal: The signal publisher.
+    /// - Returns: A publisher emitting values after the signal publisher emits a value.
+    func wait<S>(untilOutputFrom signal: S) -> AnyPublisher<Output, Failure> where S: Publisher, S.Failure == Never {
+        prepend(
+            Empty(completeImmediately: false)
+                .prefix(untilOutputFrom: signal)
+        )
+        .eraseToAnyPublisher()
+    }
 }
 
 // Borrowed from https://www.swiftbysundell.com/articles/combine-self-cancellable-memory-management/
