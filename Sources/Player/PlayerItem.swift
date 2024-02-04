@@ -26,9 +26,10 @@ public final class PlayerItem: Equatable {
 
     /// Creates the item from an ``Asset`` publisher data source.
     public init<P, M>(publisher: P, trackerAdapters: [TrackerAdapter<M>] = []) where P: Publisher, M: AssetMetadata, P.Output == Asset<M> {
-        asset = Asset<M>.loading(id: id).withId(id).withTrackerAdapters(trackerAdapters)
-        Publishers.Publish(onOutputFrom: Self.trigger.signal(activatedBy: id)) {
+        asset = Asset<M>.loading.withId(id).withTrackerAdapters(trackerAdapters)
+        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: PlayerTriggerId.reset(id))) { [id] in
             publisher
+                .wait(untilOutputFrom: Self.trigger.signal(activatedBy: PlayerTriggerId.load(id)))
                 .catch { error in
                     Just(.failed(error: error))
                 }
@@ -55,7 +56,11 @@ public final class PlayerItem: Equatable {
     }
 
     static func load(id: UUID) {
-        Self.trigger.activate(for: id)
+        Self.trigger.activate(for: PlayerTriggerId.load(id))
+    }
+
+    static func reset(id: UUID) {
+        Self.trigger.activate(for: PlayerTriggerId.reset(id))
     }
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
