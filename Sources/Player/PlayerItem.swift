@@ -56,11 +56,15 @@ public final class PlayerItem: Equatable {
     }
 
     static func load(id: UUID) {
-        Self.trigger.activate(for: PlayerTriggerId.load(id))
+        DispatchQueue.main.async {
+            Self.trigger.activate(for: PlayerTriggerId.load(id))
+        }
     }
 
     static func reset(id: UUID) {
-        Self.trigger.activate(for: PlayerTriggerId.reset(id))
+        DispatchQueue.main.async {
+            Self.trigger.activate(for: PlayerTriggerId.reset(id))
+        }
     }
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {

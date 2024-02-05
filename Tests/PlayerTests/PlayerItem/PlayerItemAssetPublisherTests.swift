@@ -57,6 +57,7 @@ final class PlayerItemAssetPublisherTests: TestCase {
             from: item.$asset.map(\.resource.url),
             during: .milliseconds(500)
         ) {
+            PlayerItem.reset(id: item.id)
             PlayerItem.load(id: item.id)
         }
     }
