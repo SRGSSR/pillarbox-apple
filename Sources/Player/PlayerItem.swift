@@ -37,8 +37,6 @@ public final class PlayerItem: Equatable {
         .map { [id] asset in
             asset.withId(id).withTrackerAdapters(trackerAdapters)
         }
-        // Mitigate instabilities arising when publisher involves `URLSession` publishers, see issue #206.
-        .receiveOnMainThread()
         .assign(to: &$asset)
     }
 
@@ -56,15 +54,11 @@ public final class PlayerItem: Equatable {
     }
 
     static func load(id: UUID) {
-        DispatchQueue.main.async {
-            Self.trigger.activate(for: PlayerTriggerId.load(id))
-        }
+        Self.trigger.activate(for: PlayerTriggerId.load(id))
     }
 
     static func reset(id: UUID) {
-        DispatchQueue.main.async {
-            Self.trigger.activate(for: PlayerTriggerId.reset(id))
-        }
+        Self.trigger.activate(for: PlayerTriggerId.reset(id))
     }
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
