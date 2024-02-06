@@ -18,7 +18,7 @@ import PillarboxCore
 ///
 /// - Note: You can also create your own ``PlayerItem`` by extending the class.
 public final class PlayerItem: Equatable {
-    static let trigger = Trigger()
+    private static let trigger = Trigger()
 
     @Published private(set) var asset: any Assetable
 
@@ -37,6 +37,7 @@ public final class PlayerItem: Equatable {
         .map { [id] asset in
             asset.withId(id).withTrackerAdapters(trackerAdapters)
         }
+        .receive(on: DispatchQueue.main)
         .assign(to: &$asset)
     }
 
