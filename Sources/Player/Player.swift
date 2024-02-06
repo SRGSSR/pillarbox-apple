@@ -250,6 +250,21 @@ private extension Player {
         queuePlayer.publisher(for: \.currentItem)
             .compactMap { $0 }
             .map { item in
+                item.errorPublisher().compactMap { $0 }.map { _ in item }
+            }
+            .switchToLatest()
+            .receiveOnMainThread()
+            .sink { [weak self] item in
+                guard let self, let index = queuePlayer.items().firstIndex(of: item) else { return }
+                queuePlayer.items().suffix(from: index + 1).forEach { item in
+                    self.queuePlayer.remove(item)
+                }
+            }
+            .store(in: &cancellables)
+
+        queuePlayer.publisher(for: \.currentItem)
+            .compactMap { $0 }
+            .map { item in
                 item.statePublisher().filter { $0 == .ended }.map { _ in item }
             }
             .switchToLatest()
