@@ -157,7 +157,13 @@ enum URNTemplates {
         URLTemplate.appleTvMorningShowSeason2Trailer
     ]
 
-    static let videosWithOneError: [Template] = [
+    static let videosWithOneFailingUrl: [Template] = [
+        URLTemplate.shortOnDemandVideoHLS,
+        URLTemplate.unknown,
+        URLTemplate.onDemandVideoHLS
+    ]
+
+    static let videosWithOneFailingUrn: [Template] = [
         URLTemplate.shortOnDemandVideoHLS,
         URNTemplate.unknown,
         URLTemplate.onDemandVideoHLS
