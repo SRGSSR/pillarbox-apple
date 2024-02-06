@@ -66,7 +66,12 @@ extension AVPlayerItem {
     }
 
     static func playerItems(from assets: [any Assetable], fresh: Bool = false) -> [AVPlayerItem] {
-        assets.map { $0.playerItem(fresh: fresh) }
+        if let firstFailedItem = assets.firstIndex(where: { $0.resource.isError }) {
+            assets[...firstFailedItem].map { $0.playerItem(fresh: fresh) }
+        }
+        else {
+            assets.map { $0.playerItem(fresh: fresh) }
+        }
     }
 
     private static func matchingIndex(for item: AVPlayerItem, in assets: [any Assetable]) -> Int? {

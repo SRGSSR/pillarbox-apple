@@ -35,7 +35,7 @@ final class CurrentIndexTests: TestCase {
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)
         let item3 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2, item3])
-        expectAtLeastEqualPublished(values: [0, 1, 2, nil], from: player.$currentIndex) {
+        expectAtLeastEqualPublished(values: [0, 1, nil], from: player.$currentIndex) {
             player.play()
         }
     }
