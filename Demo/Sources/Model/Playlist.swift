@@ -169,9 +169,20 @@ enum URNTemplates {
         URLTemplate.onDemandVideoHLS
     ]
 
-    static let videosWithErrors: [Template] = [
-        URLTemplate.unknown,
+    static let videosWithFailingUrns: [Template] = [
         URNTemplate.unknown,
+        URNTemplate.expired
+    ]
+
+    static let videosWithFailingUrls: [Template] = [
+        URLTemplate.unknown,
+        URLTemplate.unauthorized
+    ]
+
+    static let videosWithMixedFailing: [Template] = [
+        URNTemplate.unknown,
+        URLTemplate.unknown,
+        URNTemplate.expired,
         URLTemplate.unauthorized
     ]
 

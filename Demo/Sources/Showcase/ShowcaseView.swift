@@ -106,8 +106,16 @@ struct ShowcaseView: View {
                 destination: .playlist(templates: URNTemplates.videosWithOneFailingUrn)
             )
             cell(
-                title: "Videos (all failing)",
-                destination: .playlist(templates: URNTemplates.videosWithErrors)
+                title: "Videos (all failing URLs)",
+                destination: .playlist(templates: URNTemplates.videosWithFailingUrls)
+            )
+            cell(
+                title: "Videos (all failing URNs)",
+                destination: .playlist(templates: URNTemplates.videosWithFailingUrns)
+            )
+            cell(
+                title: "Videos (all failing, URLs and URNs)",
+                destination: .playlist(templates: URNTemplates.videosWithMixedFailing)
             )
             cell(
                 title: "Empty",
