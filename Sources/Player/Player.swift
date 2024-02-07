@@ -235,19 +235,19 @@ private extension Player {
             assetsPublisher(),
             queuePlayer.publisher(for: \.currentItem)
         )
-        .withPrevious()
-        .filter { previous, current  in
+        .withPrevious(([], nil))
+        .filter { previous, current in
             if let currentItem = current.1 {
                 return !currentItem.isReplaced
             }
             else {
-                return previous?.1 == nil
+                return previous.1 == nil
             }
         }
         .map { [configuration] previous, current in
             AVPlayerItem.playerItems(
                 for: current.0,
-                replacing: previous?.0 ?? [],
+                replacing: previous.0,
                 currentItem: current.1,
                 length: configuration.preloadedItems
             )
