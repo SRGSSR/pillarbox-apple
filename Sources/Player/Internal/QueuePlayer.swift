@@ -164,7 +164,7 @@ extension AVQueuePlayer {
                 firstItem.isReplaced = false
             }
             removeAll(from: 1)
-            if items.count > 1, (firstItem.asset as? AVURLAsset)?.url.absoluteString.contains("failing.m3u8") == false {
+            if items.count > 1 {
                 append(Array(items.suffix(from: 1)))
             }
         }
