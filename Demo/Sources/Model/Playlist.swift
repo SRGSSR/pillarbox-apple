@@ -171,7 +171,8 @@ enum URNTemplates {
 
     static let videosWithErrors: [Template] = [
         URLTemplate.unknown,
-        URNTemplate.unknown
+        URNTemplate.unknown,
+        URLTemplate.unauthorized
     ]
 
     static let audios: [Template] = [
