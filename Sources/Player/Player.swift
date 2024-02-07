@@ -248,17 +248,26 @@ private extension Player {
             .store(in: &cancellables)
 
         queuePlayer.publisher(for: \.currentItem)
-            .compactMap { $0 }
-            .map { item in
-                item.statePublisher().filter { $0 == .ended }.map { _ in item }
+            .withPrevious(nil)
+            .filter { $0.current?.isReplaced != true }
+            .compactMap { [weak self, configuration] currentItem -> [AVPlayerItem]? in
+                guard let self else { return nil }
+                if currentItem.current == nil && currentItem.previous != nil {
+                    return []
+                }
+                else {
+                    let assets = storedItems.map(\.asset)
+                    return AVPlayerItem.playerItems(
+                        for: assets,
+                        replacing: assets,
+                        currentItem: currentItem.current,
+                        length: configuration.preloadedItems
+                    )
+                }
             }
-            .switchToLatest()
             .receiveOnMainThread()
-            .sink { [weak self] item in
-                guard let self, let index = storedItems.firstIndex(where: { $0.matches(item) }) else { return }
-                let nextIndex = index + configuration.preloadedItems
-                guard nextIndex < storedItems.count else { return }
-                queuePlayer.insert(storedItems[nextIndex].asset.playerItem(fresh: true), after: nil)
+            .sink { [queuePlayer] items in
+                queuePlayer.replaceItems(with: items)
             }
             .store(in: &cancellables)
     }
