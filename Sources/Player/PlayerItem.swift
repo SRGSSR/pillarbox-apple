@@ -59,12 +59,13 @@ public final class PlayerItem: Equatable {
         lhs === rhs
     }
 
-    static func load(id: UUID) {
+    static func load(for id: UUID) {
         Self.trigger.activate(for: TriggerId.load(id))
     }
 
-    static func reset(id: UUID) {
+    static func reload(for id: UUID) {
         Self.trigger.activate(for: TriggerId.reset(id))
+        Self.trigger.activate(for: TriggerId.load(id))
     }
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {

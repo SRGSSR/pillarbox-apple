@@ -156,15 +156,14 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
             let item = Resource.custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate()).playerItem().withId(id)
             configuration(item)
             update(item: item)
-            PlayerItem.reset(id: id)
-            PlayerItem.load(id: id)
+            PlayerItem.reload(for: id)
             return item
         }
         else {
             let item = resource.playerItem().withId(id)
             configuration(item)
             update(item: item)
-            PlayerItem.load(id: id)
+            PlayerItem.load(for: id)
             return item
         }
     }

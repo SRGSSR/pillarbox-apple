@@ -27,7 +27,7 @@ final class PlayerItemAssetPublisherTests: TestCase {
             from: item.$asset.map(\.resource.url),
             during: .milliseconds(500)
         ) {
-            PlayerItem.load(id: item.id)
+            PlayerItem.load(for: item.id)
         }
     }
 
@@ -38,7 +38,7 @@ final class PlayerItemAssetPublisherTests: TestCase {
             from: item.$asset.map(\.resource.url),
             during: .milliseconds(500)
         ) {
-            PlayerItem.load(id: item.id)
+            PlayerItem.load(for: item.id)
         }
     }
 
@@ -49,7 +49,7 @@ final class PlayerItemAssetPublisherTests: TestCase {
             from: item.$asset.map(\.resource.url),
             during: .milliseconds(500)
         ) {
-            PlayerItem.load(id: item.id)
+            PlayerItem.load(for: item.id)
         }
 
         expectEqualPublishedNext(
@@ -57,8 +57,7 @@ final class PlayerItemAssetPublisherTests: TestCase {
             from: item.$asset.map(\.resource.url),
             during: .milliseconds(500)
         ) {
-            PlayerItem.reset(id: item.id)
-            PlayerItem.load(id: item.id)
+            PlayerItem.reload(for: item.id)
         }
     }
 }
