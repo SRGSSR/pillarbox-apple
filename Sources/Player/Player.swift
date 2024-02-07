@@ -231,45 +231,32 @@ public final class Player: ObservableObject, Equatable {
 
 private extension Player {
     func configureQueueUpdatePublisher() {
-        assetsPublisher()
-            .withPrevious()
-            .map { [configuration, queuePlayer] previousAssets, currentAssets in
-                AVPlayerItem.playerItems(
-                    for: currentAssets,
-                    replacing: previousAssets ?? [],
-                    currentItem: queuePlayer.currentItem,
-                    length: configuration.preloadedItems
-                )
+        Publishers.CombineLatest(
+            assetsPublisher(),
+            queuePlayer.publisher(for: \.currentItem)
+        )
+        .withPrevious()
+        .filter { previous, current  in
+            if let currentItem = current.1 {
+                return !currentItem.isReplaced
             }
-            .receiveOnMainThread()
-            .sink { [queuePlayer] items in
-                queuePlayer.replaceItems(with: items)
+            else {
+                return previous?.1 == nil
             }
-            .store(in: &cancellables)
-
-        queuePlayer.publisher(for: \.currentItem)
-            .withPrevious(nil)
-            .filter { $0.current?.isReplaced != true }
-            .compactMap { [weak self, configuration] currentItem -> [AVPlayerItem]? in
-                guard let self else { return nil }
-                if currentItem.current == nil && currentItem.previous != nil {
-                    return []
-                }
-                else {
-                    let assets = storedItems.map(\.asset)
-                    return AVPlayerItem.playerItems(
-                        for: assets,
-                        replacing: assets,
-                        currentItem: currentItem.current,
-                        length: configuration.preloadedItems
-                    )
-                }
-            }
-            .receiveOnMainThread()
-            .sink { [queuePlayer] items in
-                queuePlayer.replaceItems(with: items)
-            }
-            .store(in: &cancellables)
+        }
+        .map { [configuration] previous, current in
+            AVPlayerItem.playerItems(
+                for: current.0,
+                replacing: previous?.0 ?? [],
+                currentItem: current.1,
+                length: configuration.preloadedItems
+            )
+        }
+        .receiveOnMainThread()
+        .sink { [queuePlayer] items in
+            queuePlayer.replaceItems(with: items)
+        }
+        .store(in: &cancellables)
     }
 
     func configureRateUpdatePublisher() {
