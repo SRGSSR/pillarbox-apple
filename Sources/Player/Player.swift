@@ -271,10 +271,9 @@ private extension Player {
             .receiveOnMainThread()
             .sink { [weak self] item in
                 guard let self, let index = storedItems.firstIndex(where: { $0.matches(item) }) else { return }
-                let itemsToCheck = storedItems.suffix(from: index + 1).prefix(configuration.preloadedItems)
-                let assetsToCheck = itemsToCheck.map(\.asset)
-                let playerItems = AVPlayerItem.playerItems(from: assetsToCheck, fresh: true)
-                queuePlayer.replaceItems(with: [item] + playerItems)
+                let nextIndex = index + configuration.preloadedItems
+                guard nextIndex < storedItems.count else { return }
+                queuePlayer.insert(storedItems[nextIndex].asset.playerItem(fresh: true), after: nil)
             }
             .store(in: &cancellables)
     }

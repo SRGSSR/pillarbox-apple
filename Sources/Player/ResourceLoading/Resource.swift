@@ -26,15 +26,6 @@ enum Resource {
         }
     }
 
-    var isError: Bool {
-        switch self {
-        case .custom(url: let url, _):
-            url.absoluteString.contains("failing.m3u8")
-        default:
-            false
-        }
-    }
-
     func playerItem() -> AVPlayerItem {
         switch self {
         case let .simple(url: url):
@@ -55,15 +46,6 @@ enum Resource {
             kContentKeySession.processContentKeyRequest(withIdentifier: nil, initializationData: nil)
             return AVPlayerItem(asset: asset)
 #endif
-        }
-    }
-}
-
-extension Resource {
-    var url: URL {
-        switch self {
-        case let .simple(url: url), let .custom(url: url, delegate: _), let .encrypted(url: url, delegate: _):
-            url
         }
     }
 }
