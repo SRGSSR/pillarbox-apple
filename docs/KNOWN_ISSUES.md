@@ -26,16 +26,6 @@ Seeking near the end of a content might sometimes confuse the player (image stuc
 
 No workaround is available yet.
 
-## Very fast playlist navigation during AirPlay playback might confuse the player
-
-When seeking between items very fast the receiver might get confused, not being able to cope with the number of demands and the associated network activity. As a result the receiver might get stuck.
-
-### Workaround
-
-We have mitigated AirPlay instabilities as much as possible so that fast navigation is possible in almost all practical cases. If an issue is encountered, though, closing and reopening the player should make playback possible again.
-
-In some extreme cases it might happen that the AirPlay receiver is unable to recover from heavy usage. If this happens restarting the receiver will make it usable again.
-
 ## DRM playback is sometimes not possible anymore
 
 It might happen that attempting to play DRM streams always ends with an error. The reason is likely an issue with key session management.
@@ -80,7 +70,7 @@ No workaround is available yet.
 
 ## Playback of a livestream in a playlist might fail if the previous item was played at a speed > 1
 
-When chaining an on-demand stream played at a speed > 1 to a livestream (without DVR) in a playlist, livestream playback might fail with a Core Media error. If there is an item after the livestream the livestream item will simply be skipped, otherwise the player will end in a failed state.
+When chaining an on-demand stream played at a speed > 1 to a livestream (without DVR) in a playlist, livestream playback might fail with a Core Media error. If there is an item after it the livestream item will simply be skipped, otherwise the player will end in a failed state.
 
 ### Workaround
 
