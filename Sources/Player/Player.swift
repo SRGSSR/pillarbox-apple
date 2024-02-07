@@ -238,7 +238,7 @@ private extension Player {
         .withPrevious()
         .filter { previous, current  in
             if let currentItem = current.1 {
-                return !currentItem.isReplaced && currentItem.error == nil
+                return !currentItem.isReplaced
             }
             else {
                 return previous?.1 == nil
