@@ -10,7 +10,7 @@ public extension Player {
     /// - Returns: `true` if possible.
     func canReplay() -> Bool {
         guard !storedItems.isEmpty else { return false }
-        if let lastItem = queuePlayer.items().last {
+        if let lastItem = queuePlayer.items().first {
             return lastItem.error != nil
         }
         else {
