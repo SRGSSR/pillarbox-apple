@@ -7,16 +7,11 @@
 import TCServerSide
 
 final class CommandersActService {
-    private static var isDesktopApp: Bool {
-        let processInfo = ProcessInfo.processInfo
-        return processInfo.isMacCatalystApp || processInfo.isiOSAppOnMac
-    }
-
     private var serverSide: ServerSide?
     private var vendor: Vendor?
 
     private static func device() -> String {
-        guard !isDesktopApp else { return "desktop" }
+        guard !ProcessInfo.processInfo.isDesktopApp else { return "desktop" }
         switch UIDevice.current.userInterfaceIdiom {
         case .phone:
             return "phone"
