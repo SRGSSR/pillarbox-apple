@@ -8,6 +8,11 @@ import AVFoundation
 import Combine
 import PillarboxCore
 
+private enum TriggerId: Hashable {
+    case load(UUID)
+    case reset(UUID)
+}
+
 /// This class represents a playable item that can be inserted into a ``Player``.
 ///
 /// It provides convenient initialization methods for different types of assets:
@@ -27,7 +32,7 @@ public final class PlayerItem: Equatable {
     /// Creates the item from an ``Asset`` publisher data source.
     public init<P, M>(publisher: P, trackerAdapters: [TrackerAdapter<M>] = []) where P: Publisher, M: AssetMetadata, P.Output == Asset<M> {
         asset = Asset<M>.loading.withId(id).withTrackerAdapters(trackerAdapters)
-        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: PlayerTriggerId.reset(id))) {
+        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) {
             publisher
                 .catch { error in
                     Just(.failed(error: error))
@@ -36,7 +41,7 @@ public final class PlayerItem: Equatable {
         .map { [id] asset in
             asset.withId(id).withTrackerAdapters(trackerAdapters)
         }
-        .wait(untilOutputFrom: Self.trigger.signal(activatedBy: PlayerTriggerId.load(id)))
+        .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))
         .receive(on: DispatchQueue.main)
         .assign(to: &$asset)
     }
@@ -55,11 +60,11 @@ public final class PlayerItem: Equatable {
     }
 
     static func load(id: UUID) {
-        Self.trigger.activate(for: PlayerTriggerId.load(id))
+        Self.trigger.activate(for: TriggerId.load(id))
     }
 
     static func reset(id: UUID) {
-        Self.trigger.activate(for: PlayerTriggerId.reset(id))
+        Self.trigger.activate(for: TriggerId.reset(id))
     }
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {

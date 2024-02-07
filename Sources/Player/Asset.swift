@@ -11,11 +11,6 @@ private var kIdKey: Void?
 
 private let kResourceLoaderQueue = DispatchQueue(label: "ch.srgssr.player.resource_loader")
 
-enum PlayerTriggerId: Hashable {
-    case load(UUID)
-    case reset(UUID)
-}
-
 /// An item which stores its own custom resource loader delegate.
 final class ResourceLoadedPlayerItem: AVPlayerItem {
     // swiftlint:disable:next weak_delegate
