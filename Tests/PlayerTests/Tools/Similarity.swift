@@ -12,9 +12,8 @@ import PillarboxCircumspect
 
 extension Asset: Similar {
     public static func ~~ (lhs: Self, rhs: Self) -> Bool {
-        if let lhsUrlAsset = lhs.playerItem().asset as? AVURLAsset,
-           let rhsUrlAsset = rhs.playerItem().asset as? AVURLAsset {
-            return lhsUrlAsset.url == rhsUrlAsset.url
+        if let lhsUrl = lhs.playerItem().url, let rhsUrl = rhs.playerItem().url {
+            return lhsUrl == rhsUrl
         }
         else {
             return false

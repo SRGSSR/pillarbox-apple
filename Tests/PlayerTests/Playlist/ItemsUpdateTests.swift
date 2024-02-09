@@ -47,9 +47,3 @@ final class ItemsUpdateTests: TestCase {
         expect(player.currentIndex).to(equal(0))
     }
 }
-
-private extension AVPlayerItem {
-    var url: URL? {
-        (asset as? AVURLAsset)?.url
-    }
-}

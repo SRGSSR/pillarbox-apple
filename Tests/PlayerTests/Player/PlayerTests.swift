@@ -48,10 +48,7 @@ final class PlayerTests: TestCase {
 
     func testMetadataUpdatesMustNotChangePlayerItem() {
         let player = Player(item: .mock(url: Stream.onDemand.url, withMetadataUpdateAfter: 1))
-        let publisher = player.queuePlayer.publisher(for: \.currentItem).compactMap { item -> URL? in
-            guard let asset = item?.asset as? AVURLAsset else { return nil }
-            return asset.url
-        }
+        let publisher = player.queuePlayer.publisher(for: \.currentItem).compactMap(\.?.url)
         expectEqualPublishedNext(values: [Stream.onDemand.url], from: publisher, during: .seconds(2))
     }
 
