@@ -233,17 +233,9 @@ private extension Player {
     func configureQueueUpdatePublisher() {
         Publishers.CombineLatest(
             assetsPublisher(),
-            queuePlayer.publisher(for: \.currentItem)
+            queuePlayer.smoothCurrentItemPublisher()
         )
         .withPrevious(([], nil))
-        .filter { previous, current in
-            if let currentItem = current.1 {
-                return !currentItem.isReplaced
-            }
-            else {
-                return previous.1 == nil
-            }
-        }
         .map { [configuration] previous, current in
             AVPlayerItem.playerItems(
                 for: current.0,

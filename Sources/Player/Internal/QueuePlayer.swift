@@ -127,12 +127,6 @@ class QueuePlayer: AVQueuePlayer {
         seek(to: time) { _ in }
     }
 
-    override func replaceCurrentItem(with item: AVPlayerItem?) {
-        item?.isReplaced = true
-        super.replaceCurrentItem(with: item)
-        item?.isReplaced = false
-    }
-
     private func notifySeekStart(at time: CMTime) {
         Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [SeekKey.time: time])
     }
