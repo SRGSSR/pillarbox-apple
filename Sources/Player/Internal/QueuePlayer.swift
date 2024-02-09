@@ -127,6 +127,12 @@ class QueuePlayer: AVQueuePlayer {
         seek(to: time) { _ in }
     }
 
+    override func replaceCurrentItem(with item: AVPlayerItem?) {
+        item?.isReplaced = true
+        super.replaceCurrentItem(with: item)
+        item?.isReplaced = false
+    }
+
     private func notifySeekStart(at time: CMTime) {
         Self.notificationCenter.post(name: .willSeek, object: self, userInfo: [SeekKey.time: time])
     }
@@ -159,9 +165,7 @@ extension AVQueuePlayer {
         if let firstItem = items.first {
             if firstItem !== self.items().first {
                 remove(firstItem)
-                firstItem.isReplaced = true
                 replaceCurrentItem(with: firstItem)
-                firstItem.isReplaced = false
             }
             removeAll(from: 1)
             if items.count > 1 {
