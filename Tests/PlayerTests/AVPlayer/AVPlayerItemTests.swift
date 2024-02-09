@@ -29,7 +29,7 @@ final class AVPlayerItemTests: TestCase {
             PlayerItem.simple(url: Stream.live.url)
         ]
         expect {
-            AVPlayerItem.playerItems(from: items, length: 3, fresh: false).compactMap(\.url)
+            AVPlayerItem.playerItems(from: items, length: 3, reload: false).compactMap(\.url)
         }
         .toEventually(equal([
             Stream.onDemand.url,

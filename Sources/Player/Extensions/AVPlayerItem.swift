@@ -30,8 +30,8 @@ extension AVPlayerItem {
         TimeProperties.timeRange(loadedTimeRanges: loadedTimeRanges, seekableTimeRanges: seekableTimeRanges)
     }
 
-    static func playerItems(from items: [PlayerItem], length: Int, fresh: Bool) -> [AVPlayerItem] {
-        playerItems(from: items.prefix(length).map(\.asset), fresh: fresh)
+    static func playerItems(from items: [PlayerItem], length: Int, reload: Bool) -> [AVPlayerItem] {
+        playerItems(from: items.prefix(length).map(\.asset), reload: reload)
     }
 }
 

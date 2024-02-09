@@ -151,8 +151,8 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
         }
     }
 
-    func playerItem(fresh: Bool) -> AVPlayerItem {
-        if fresh, resource.isFailing {
+    func playerItem(reload: Bool) -> AVPlayerItem {
+        if reload, resource.isFailing {
             let item = Resource.loading.playerItem().withId(id)
             configuration(item)
             update(item: item)
