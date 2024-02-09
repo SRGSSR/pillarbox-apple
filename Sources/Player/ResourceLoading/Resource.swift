@@ -19,8 +19,17 @@ enum Resource {
 
     var isLoading: Bool {
         switch self {
-        case .custom(url: let url, _):
-            url.absoluteString.contains("loading.m3u8")
+        case let .custom(url: url, _):
+            url == Self.loadingUrl
+        default:
+            false
+        }
+    }
+
+    var isFailing: Bool {
+        switch self {
+        case let .custom(url: url, _):
+            url == Self.failingUrl
         default:
             false
         }
@@ -51,14 +60,16 @@ enum Resource {
 }
 
 extension Resource {
+    // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
+    private static let loadingUrl = URL(string: "pillarbox://loading.m3u8")!
+    private static let failingUrl = URL(string: "pillarbox://failing.m3u8")!
+
     static var loading: Self {
-        // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-        .custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate())
+        .custom(url: loadingUrl, delegate: LoadingResourceLoaderDelegate())
     }
 
     static func failing(error: Error) -> Self {
-        // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-        .custom(url: URL(string: "pillarbox://failing.m3u8")!, delegate: FailedResourceLoaderDelegate(error: error))
+        .custom(url: failingUrl, delegate: FailedResourceLoaderDelegate(error: error))
     }
 }
 
