@@ -76,7 +76,7 @@ public final class Player: ObservableObject, Equatable {
     }()
 
     lazy var itemUpdatePublisher: AnyPublisher<ItemUpdate, Never> = {
-        Publishers.CombineLatest($storedItems, queuePlayer.smoothItemPublisher())
+        Publishers.CombineLatest($storedItems, queuePlayer.smoothCurrentItemPublisher())
             .map { ItemUpdate(items: $0, currentItem: $1) }
             .multicast { CurrentValueSubject<ItemUpdate, Never>(.empty) }
             .autoconnect()
@@ -207,7 +207,7 @@ public final class Player: ObservableObject, Equatable {
     }
 
     private func configureQueuePlayerUpdatePublishers() {
-        configureQueueUpdatePublisher()
+        configureQueueItemsPublisher()
         configureRateUpdatePublisher()
         configureTextStyleRulesUpdatePublisher()
     }
@@ -230,34 +230,13 @@ public final class Player: ObservableObject, Equatable {
 }
 
 private extension Player {
-    func configureQueueUpdatePublisher() {
-        // TODO: Create publisher with proper struct type  (assets + transition) for better readability
-        Publishers.CombineLatest(
-            assetsPublisher(),
-            queuePlayer.itemTransitionPublisher()
-        )
-        .withPrevious(([], .advance(to: nil)))
-        .compactMap { [configuration] previous, current in
-            // TODO: Probably a method on the new struct type mentioned above
-            switch current.1 {
-            case let .advance(item):
-                return AVPlayerItem.playerItems(
-                    for: current.0,
-                    replacing: previous.0,
-                    currentItem: item,
-                    length: configuration.preloadedItems
-                )
-            case let .stop(item):
-                return [item]
-            case .finish:
-                return nil
+    func configureQueueItemsPublisher() {
+        queueItemsPublisher()
+            .receiveOnMainThread()
+            .sink { [queuePlayer] items in
+                queuePlayer.replaceItems(with: items)
             }
-        }
-        .receiveOnMainThread()
-        .sink { [queuePlayer] items in
-            queuePlayer.replaceItems(with: items)
-        }
-        .store(in: &cancellables)
+            .store(in: &cancellables)
     }
 
     func configureRateUpdatePublisher() {

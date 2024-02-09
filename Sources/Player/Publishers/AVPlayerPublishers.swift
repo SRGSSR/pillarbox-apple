@@ -9,7 +9,8 @@ import Combine
 import PillarboxCore
 
 extension AVPlayer {
-    func smoothItemPublisher() -> AnyPublisher<AVPlayerItem?, Never> {
+    /// Publishes a stream of `AVPlayerItem` which preserves failed items.
+    func smoothCurrentItemPublisher() -> AnyPublisher<AVPlayerItem?, Never> {
         itemTransitionPublisher()
             .map { transition in
                 switch transition {
@@ -28,32 +29,7 @@ extension AVPlayer {
         publisher(for: \.currentItem)
             .removeDuplicates()
             .withPrevious(nil)
-            .map { item in
-                // TODO: Must deal with errors sent from current item as well, stop in this case
-                // TODO: Refactor, extract
-                if let currentItem = item.current {
-                    if let previousItem = item.previous, previousItem.error != nil {
-                        return .stop(on: previousItem)
-                    }
-                    else if currentItem.error == nil {
-                        return .advance(to: currentItem)
-                    }
-                    else {
-                        return .stop(on: currentItem)
-                    }
-                }
-                else if let previousItem = item.previous {
-                    if previousItem.error == nil {
-                        return .finish(with: previousItem)
-                    }
-                    else {
-                        return .stop(on: previousItem)
-                    }
-                }
-                else {
-                    return .advance(to: nil)
-                }
-            }
+            .map { ItemTransition.transition(from: $0.previous, to: $0.current) }
             .removeDuplicates()
             .eraseToAnyPublisher()
     }

@@ -90,7 +90,7 @@ final class CurrentIndexTests: TestCase {
         let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2])
         let publisher = player.queuePlayer.publisher(for: \.currentItem).compactMap(\.?.url)
-        expectEqualPublishedNext(values: [Resource.loadingUrl, Stream.shortOnDemand.url], from: publisher) {
+        expectEqualPublishedNext(values: [Resource.loadingUrl, Stream.shortOnDemand.url], from: publisher, during: .seconds(1)) {
             try! player.setCurrentIndex(1)
         }
     }
