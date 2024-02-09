@@ -74,12 +74,12 @@ final class PlayerTests: TestCase {
             ],
             configuration: .init(preloadedItems: 2)
         )
-        let expectedItems = [
-            Stream.onDemand.url,
-            Stream.onDemand.url,
-            URL(string: "pillarbox://loading.m3u8")!
+        let expectedResources: [Resource] = [
+            .simple(url: Stream.onDemand.url),
+            .simple(url: Stream.onDemand.url),
+            .loading
         ]
-        expect(player.items.map(\.asset.resource.url)).toEventually(equal(expectedItems))
-        expect(player.items.map(\.asset.resource.url)).toAlways(equal(expectedItems), until: .seconds(1))
+        expect(player.items.map(\.asset.resource)).toEventually(beSimilarTo(expectedResources))
+        expect(player.items.map(\.asset.resource)).toAlways(beSimilarTo(expectedResources), until: .seconds(1))
     }
 }
