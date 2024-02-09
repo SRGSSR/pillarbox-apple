@@ -60,7 +60,7 @@ final class PlayerItemTrackerTests: TestCase {
     func testFailedItem() {
         let player = Player()
         let publisher = NoMetadataTrackerMock.StatePublisher()
-        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled], from: publisher) {
+        expectEqualPublished(values: [.initialized, .enabled], from: publisher, during: .milliseconds(500)) {
             player.append(.simple(
                 url: Stream.unavailable.url,
                 trackerAdapters: [NoMetadataTrackerMock.adapter(statePublisher: publisher)]

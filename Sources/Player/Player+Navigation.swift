@@ -40,7 +40,6 @@ public extension Player {
     ///
     /// - Parameter index: The item index.
     func setCurrentIndex(_ index: Int) throws {
-        guard index != currentIndex else { return }
         guard (0..<storedItems.count).contains(index) else { throw PlaybackError.itemOutOfBounds }
         let playerItems = AVPlayerItem.playerItems(from: Array(storedItems.suffix(from: index)), length: configuration.preloadedItems, reload: true)
         queuePlayer.replaceItems(with: playerItems)

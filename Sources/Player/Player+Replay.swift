@@ -22,6 +22,6 @@ public extension Player {
     func replay() {
         guard canReplay() else { return }
         play()
-        try? setCurrentIndex(0)
+        try? setCurrentIndex(currentIndex ?? 0)
     }
 }

@@ -16,7 +16,7 @@ final class CurrentIndexTests: TestCase {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2])
-        expectAtLeastEqualPublished(values: [0, 1, nil], from: player.$currentIndex) {
+        expectEqualPublished(values: [0, 1, nil], from: player.$currentIndex, during: .seconds(3)) {
             player.play()
         }
     }
@@ -25,7 +25,7 @@ final class CurrentIndexTests: TestCase {
         let item1 = PlayerItem.simple(url: Stream.unavailable.url)
         let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2])
-        expectAtLeastEqualPublished(values: [0, nil], from: player.$currentIndex) {
+        expectEqualPublished(values: [0], from: player.$currentIndex, during: .milliseconds(500)) {
             player.play()
         }
     }
@@ -35,7 +35,7 @@ final class CurrentIndexTests: TestCase {
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)
         let item3 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2, item3])
-        expectAtLeastEqualPublished(values: [0, 1, nil], from: player.$currentIndex) {
+        expectEqualPublished(values: [0, 1], from: player.$currentIndex, during: .seconds(2)) {
             player.play()
         }
     }
@@ -44,14 +44,14 @@ final class CurrentIndexTests: TestCase {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)
         let player = Player(items: [item1, item2])
-        expectAtLeastEqualPublished(values: [0, 1, nil], from: player.$currentIndex) {
+        expectEqualPublished(values: [0, 1], from: player.$currentIndex, during: .seconds(2)) {
             player.play()
         }
     }
 
     func testCurrentIndexWithFailedItem() {
         let player = Player(item: .simple(url: Stream.unavailable.url))
-        expectAtLeastEqualPublished(values: [0, nil], from: player.$currentIndex)
+        expectEqualPublished(values: [0], from: player.$currentIndex, during: .milliseconds(500))
     }
 
     func testCurrentIndexWithEmptyPlayer() {
@@ -60,13 +60,10 @@ final class CurrentIndexTests: TestCase {
     }
 
     func testSlowFirstCurrentIndex() {
-        let item1 = PlayerItem.mock(url: Stream.shortOnDemand.url, loadedAfter: 2)
+        let item1 = PlayerItem.mock(url: Stream.shortOnDemand.url, loadedAfter: 1)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item1, item2])
-        expectAtLeastEqualPublished(
-            values: [0, 1],
-            from: player.$currentIndex
-        ) {
+        expectEqualPublished(values: [0, 1], from: player.$currentIndex, during: .seconds(3)) {
             player.play()
         }
     }
@@ -74,7 +71,7 @@ final class CurrentIndexTests: TestCase {
     func testCurrentIndexAfterPlayerEnded() {
         let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item])
-        expectAtLeastEqualPublished(values: [0], from: player.$currentIndex) {
+        expectEqualPublished(values: [0, nil], from: player.$currentIndex, during: .seconds(2)) {
             player.play()
         }
     }
@@ -83,7 +80,7 @@ final class CurrentIndexTests: TestCase {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2])
-        expectAtLeastEqualPublished(values: [0, 1], from: player.$currentIndex) {
+        expectEqualPublished(values: [0, 1], from: player.$currentIndex, during: .milliseconds(500)) {
             try! player.setCurrentIndex(1)
         }
     }
@@ -93,7 +90,7 @@ final class CurrentIndexTests: TestCase {
         let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2])
         let publisher = player.queuePlayer.publisher(for: \.currentItem).compactMap(\.?.url)
-        expectAtLeastEqualPublishedNext(values: [Resource.loadingUrl, Stream.shortOnDemand.url], from: publisher) {
+        expectEqualPublishedNext(values: [Resource.loadingUrl, Stream.shortOnDemand.url], from: publisher) {
             try! player.setCurrentIndex(1)
         }
     }
@@ -107,7 +104,7 @@ final class CurrentIndexTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         let publisher = player.queuePlayer.publisher(for: \.currentItem).compactMap(\.?.url)
-        expectAtLeastEqualPublishedNext(values: [Stream.onDemand.url], from: publisher) {
+        expectAtLeastEqualPublishedNext(values: [Resource.loadingUrl], from: publisher) {
             try! player.setCurrentIndex(0)
         }
     }

@@ -17,8 +17,8 @@ extension AVPlayer {
                     return item
                 case let .stop(on: item):
                     return item
-                case let .finish(with: item):
-                    return item
+                case .finish:
+                    return nil
                 }
             }
             .eraseToAnyPublisher()
@@ -26,8 +26,11 @@ extension AVPlayer {
 
     func itemTransitionPublisher() -> AnyPublisher<ItemTransition, Never> {
         publisher(for: \.currentItem)
+            .removeDuplicates()
             .withPrevious(nil)
             .map { item in
+                // TODO: Must deal with errors sent from current item as well, stop in this case
+                // TODO: Refactor, extract
                 if let currentItem = item.current {
                     if let previousItem = item.previous, previousItem.error != nil {
                         return .stop(on: previousItem)

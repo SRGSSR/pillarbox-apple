@@ -76,7 +76,7 @@ public final class Player: ObservableObject, Equatable {
     }()
 
     lazy var itemUpdatePublisher: AnyPublisher<ItemUpdate, Never> = {
-        Publishers.CombineLatest($storedItems, queuePlayer.publisher(for: \.currentItem))
+        Publishers.CombineLatest($storedItems, queuePlayer.smoothItemPublisher())
             .map { ItemUpdate(items: $0, currentItem: $1) }
             .multicast { CurrentValueSubject<ItemUpdate, Never>(.empty) }
             .autoconnect()
@@ -231,13 +231,14 @@ public final class Player: ObservableObject, Equatable {
 
 private extension Player {
     func configureQueueUpdatePublisher() {
-        // TODO: Create publisher with proper struct type for better readability
+        // TODO: Create publisher with proper struct type  (assets + transition) for better readability
         Publishers.CombineLatest(
             assetsPublisher(),
             queuePlayer.itemTransitionPublisher()
         )
         .withPrevious(([], .advance(to: nil)))
         .compactMap { [configuration] previous, current in
+            // TODO: Probably a method on the new struct type mentioned above
             switch current.1 {
             case let .advance(item):
                 return AVPlayerItem.playerItems(
