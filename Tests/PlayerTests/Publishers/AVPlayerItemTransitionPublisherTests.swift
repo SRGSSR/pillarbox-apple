@@ -24,7 +24,7 @@ final class AVPlayerItemTransitionPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVQueuePlayer(playerItem: item)
         expectEqualPublished(
-            values: [.advance(to: item), .finish(with: item)],
+            values: [.advance(to: item), .finish],
             from: player.itemTransitionPublisher(),
             during: .seconds(2)
         ) {
@@ -102,7 +102,7 @@ final class AVPlayerItemTransitionPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVQueuePlayer(playerItem: item)
         expectEqualPublished(
-            values: [.advance(to: item), .finish(with: item)],
+            values: [.advance(to: item), .finish],
             from: player.itemTransitionPublisher(),
             during: .milliseconds(100)
         ) {
