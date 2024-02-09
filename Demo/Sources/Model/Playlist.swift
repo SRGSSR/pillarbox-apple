@@ -4,8 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
-enum URLTemplates {
-    static let videos: [Template] = [
+enum Playlist {
+    static let videoUrls: [Template] = [
         Template(
             title: "Le R. - Légumes trop chers",
             description: "Playlist item 1",
@@ -63,10 +63,8 @@ enum URLTemplates {
             )
         )
     ]
-}
 
-enum URNTemplates {
-    static let videos: [Template] = [
+    static let videoUrns: [Template] = [
         Template(
             title: "Le R. - Légumes trop chers",
             description: "Playlist item 1",
@@ -109,7 +107,7 @@ enum URNTemplates {
         )
     ]
 
-    static let longVideos: [Template] = [
+    static let longVideoUrns: [Template] = [
         Template(
             title: "J'ai pas l'air malade mais… (#1)",
             description: "Playlist item 1",
@@ -157,6 +155,13 @@ enum URNTemplates {
         URLTemplate.appleTvMorningShowSeason2Trailer
     ]
 
+    static let audios: [Template] = [
+        Template(title: "Le Journal horaire 1", type: .urn("urn:rts:audio:13605286")),
+        Template(title: "Forum", type: .urn("urn:rts:audio:13598743")),
+        Template(title: "Vertigo", type: .urn("urn:rts:audio:13579611")),
+        Template(title: "Le Journal horaire 2", type: .urn("urn:rts:audio:13605216"))
+    ]
+
     static let videosWithOneFailingUrl: [Template] = [
         URLTemplate.shortOnDemandVideoHLS,
         URLTemplate.unknown,
@@ -164,32 +169,25 @@ enum URNTemplates {
     ]
 
     static let videosWithOneFailingUrn: [Template] = [
-        URLTemplate.shortOnDemandVideoHLS,
+        URNTemplate.onDemandVideo,
         URNTemplate.unknown,
-        URLTemplate.onDemandVideoHLS
+        URNTemplate.onDemandSquareVideo
     ]
 
-    static let videosWithFailingUrns: [Template] = [
+    static let videosWithOnlyFailingUrns: [Template] = [
         URNTemplate.unknown,
         URNTemplate.expired
     ]
 
-    static let videosWithFailingUrls: [Template] = [
+    static let videosWithOnlyFailingUrls: [Template] = [
         URLTemplate.unknown,
         URLTemplate.unauthorized
     ]
 
-    static let videosWithMixedFailing: [Template] = [
+    static let videosWithFailingUrlsAndUrns: [Template] = [
         URNTemplate.unknown,
         URLTemplate.unknown,
         URNTemplate.expired,
         URLTemplate.unauthorized
-    ]
-
-    static let audios: [Template] = [
-        Template(title: "Le Journal horaire 1", type: .urn("urn:rts:audio:13605286")),
-        Template(title: "Forum", type: .urn("urn:rts:audio:13598743")),
-        Template(title: "Vertigo", type: .urn("urn:rts:audio:13579611")),
-        Template(title: "Le Journal horaire 2", type: .urn("urn:rts:audio:13605216"))
     ]
 }
