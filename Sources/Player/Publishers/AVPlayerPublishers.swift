@@ -9,18 +9,46 @@ import Combine
 import PillarboxCore
 
 extension AVPlayer {
+    func smoothItemPublisher() -> AnyPublisher<AVPlayerItem?, Never> {
+        itemTransitionPublisher()
+            .map { transition in
+                switch transition {
+                case let .advance(to: item):
+                    return item
+                case let .stop(on: item):
+                    return item
+                case let .finish(with: item):
+                    return item
+                }
+            }
+            .eraseToAnyPublisher()
+    }
+
     func itemTransitionPublisher() -> AnyPublisher<ItemTransition, Never> {
         publisher(for: \.currentItem)
             .withPrevious(nil)
             .map { item in
-                if let currentItem = item.current, currentItem.error != nil {
-                    return .stop(currentItem)
+                if let currentItem = item.current {
+                    if let previousItem = item.previous, previousItem.error != nil {
+                        return .stop(on: previousItem)
+                    }
+                    else if currentItem.error == nil {
+                        return .advance(to: currentItem)
+                    }
+                    else {
+                        return .stop(on: currentItem)
+                    }
                 }
-                else if let previousItem = item.previous, previousItem.error != nil {
-                    return .stop(previousItem)
+                else if let previousItem = item.previous {
+                    if previousItem.error == nil {
+                        return .finish(with: previousItem)
+                    }
+                    else {
+                        return .stop(on: previousItem)
+                    }
                 }
                 else {
-                    return .advance(item.current ?? item.previous)
+                    return .advance(to: nil)
                 }
             }
             .removeDuplicates()

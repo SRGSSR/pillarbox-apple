@@ -14,7 +14,7 @@ final class AVPlayerItemTransitionPublisherTests: TestCase {
     func testWhenEmpty() {
         let player = AVQueuePlayer()
         expectEqualPublished(
-            values: [.advance(nil)],
+            values: [.advance(to: nil)],
             from: player.itemTransitionPublisher(),
             during: .milliseconds(100)
         )
@@ -24,7 +24,7 @@ final class AVPlayerItemTransitionPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVQueuePlayer(playerItem: item)
         expectEqualPublished(
-            values: [.advance(item)],
+            values: [.advance(to: item), .finish(with: item)],
             from: player.itemTransitionPublisher(),
             during: .seconds(2)
         ) {
@@ -37,7 +37,7 @@ final class AVPlayerItemTransitionPublisherTests: TestCase {
         let item2 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2])
         expectEqualPublished(
-            values: [.advance(item1), .advance(item2)],
+            values: [.advance(to: item1), .advance(to: item2)],
             from: player.itemTransitionPublisher(),
             during: .seconds(2)
         ) {
@@ -50,7 +50,7 @@ final class AVPlayerItemTransitionPublisherTests: TestCase {
         let item2 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2])
         expectEqualPublished(
-            values: [.advance(item1), .stop(item1)],
+            values: [.advance(to: item1), .stop(on: item1)],
             from: player.itemTransitionPublisher(),
             during: .seconds(2)
         ) {
@@ -64,7 +64,7 @@ final class AVPlayerItemTransitionPublisherTests: TestCase {
         let item3 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2, item3])
         expectEqualPublished(
-            values: [.advance(item1), .stop(item2)],
+            values: [.advance(to: item1), .stop(on: item2)],
             from: player.itemTransitionPublisher(),
             during: .seconds(2)
         ) {
@@ -77,7 +77,7 @@ final class AVPlayerItemTransitionPublisherTests: TestCase {
         let item2 = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVQueuePlayer(playerItem: item1)
         expectEqualPublished(
-            values: [.advance(item1), .advance(item2)],
+            values: [.advance(to: item1), .advance(to: item2)],
             from: player.itemTransitionPublisher(),
             during: .milliseconds(100)
         ) {
@@ -90,7 +90,7 @@ final class AVPlayerItemTransitionPublisherTests: TestCase {
         let item2 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2])
         expectEqualPublished(
-            values: [.advance(item1), .advance(item2)],
+            values: [.advance(to: item1), .advance(to: item2)],
             from: player.itemTransitionPublisher(),
             during: .milliseconds(100)
         ) {
@@ -102,7 +102,7 @@ final class AVPlayerItemTransitionPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.shortOnDemand.url)
         let player = AVQueuePlayer(playerItem: item)
         expectEqualPublished(
-            values: [.advance(item)],
+            values: [.advance(to: item), .finish(with: item)],
             from: player.itemTransitionPublisher(),
             during: .milliseconds(100)
         ) {

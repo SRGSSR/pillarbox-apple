@@ -8,8 +8,10 @@ import AVFoundation
 
 /// Action to be performed during an item transition.
 enum ItemTransition: Equatable {
-    /// Advance to the provided item.
-    case advance(AVPlayerItem?)
+    /// Advance to the provided item (or the beginning of the playlist if `nil`).
+    case advance(to: AVPlayerItem?)
     /// Stop on the provided item.
-    case stop(AVPlayerItem)
+    case stop(on: AVPlayerItem)
+    /// Finish playing all items.
+    case finish(with: AVPlayerItem)
 }

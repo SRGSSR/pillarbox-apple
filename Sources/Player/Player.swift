@@ -236,8 +236,8 @@ private extension Player {
             assetsPublisher(),
             queuePlayer.itemTransitionPublisher()
         )
-        .withPrevious(([], .advance(nil)))
-        .map { [configuration] previous, current in
+        .withPrevious(([], .advance(to: nil)))
+        .compactMap { [configuration] previous, current in
             switch current.1 {
             case let .advance(item):
                 return AVPlayerItem.playerItems(
@@ -248,6 +248,8 @@ private extension Player {
                 )
             case let .stop(item):
                 return [item]
+            case .finish:
+                return nil
             }
         }
         .receiveOnMainThread()
