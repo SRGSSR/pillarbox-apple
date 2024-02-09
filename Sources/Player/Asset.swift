@@ -240,25 +240,11 @@ public extension Asset where M == Never {
 
 extension Asset {
     static var loading: Self {
-        // Provides a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-        .init(
-            id: UUID(),
-            resource: .custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate()),
-            metadata: nil,
-            configuration: { _ in },
-            trackerAdapters: []
-        )
+        .init(id: UUID(), resource: .loading, metadata: nil, configuration: { _ in }, trackerAdapters: [])
     }
 
     static func failed(error: Error) -> Self {
-        // Provides a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-        .init(
-            id: UUID(),
-            resource: .custom(url: URL(string: "pillarbox://failing.m3u8")!, delegate: FailedResourceLoaderDelegate(error: error)),
-            metadata: nil,
-            configuration: { _ in },
-            trackerAdapters: []
-        )
+        .init(id: UUID(), resource: .failing(error: error), metadata: nil, configuration: { _ in }, trackerAdapters: [])
     }
 }
 

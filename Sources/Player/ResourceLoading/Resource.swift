@@ -50,6 +50,18 @@ enum Resource {
     }
 }
 
+extension Resource {
+    static var loading: Self {
+        // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
+        .custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate())
+    }
+
+    static func failing(error: Error) -> Self {
+        // Provide a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
+        .custom(url: URL(string: "pillarbox://failing.m3u8")!, delegate: FailedResourceLoaderDelegate(error: error))
+    }
+}
+
 extension Resource: Equatable {
     static func == (lhs: Resource, rhs: Resource) -> Bool {
         switch (lhs, rhs) {
