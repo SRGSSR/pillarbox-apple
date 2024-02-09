@@ -9,12 +9,20 @@ import Combine
 import PillarboxCore
 
 extension AVPlayer {
-    /// Publishes the current item while retaining the most recent value, even in presence of failure or when playback
-    /// ends.
-    func smoothCurrentItemPublisher() -> AnyPublisher<AVPlayerItem?, Never> {
+    func itemTransitionPublisher() -> AnyPublisher<ItemTransition, Never> {
         publisher(for: \.currentItem)
             .withPrevious(nil)
-            .map { $0.current ?? $0.previous }
+            .map { item in
+                if let currentItem = item.current, currentItem.error != nil {
+                    return .stop(currentItem)
+                }
+                else if let previousItem = item.previous, previousItem.error != nil {
+                    return .stop(previousItem)
+                }
+                else {
+                    return .advance(item.current ?? item.previous)
+                }
+            }
             .removeDuplicates()
             .eraseToAnyPublisher()
     }

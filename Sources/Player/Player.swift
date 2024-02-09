@@ -231,18 +231,24 @@ public final class Player: ObservableObject, Equatable {
 
 private extension Player {
     func configureQueueUpdatePublisher() {
+        // TODO: Create publisher with proper struct type for better readability
         Publishers.CombineLatest(
             assetsPublisher(),
-            queuePlayer.smoothCurrentItemPublisher()
+            queuePlayer.itemTransitionPublisher()
         )
-        .withPrevious(([], nil))
+        .withPrevious(([], .advance(nil)))
         .map { [configuration] previous, current in
-            AVPlayerItem.playerItems(
-                for: current.0,
-                replacing: previous.0,
-                currentItem: current.1,
-                length: configuration.preloadedItems
-            )
+            switch current.1 {
+            case let .advance(item):
+                return AVPlayerItem.playerItems(
+                    for: current.0,
+                    replacing: previous.0,
+                    currentItem: item,
+                    length: configuration.preloadedItems
+                )
+            case let .stop(item):
+                return [item]
+            }
         }
         .receiveOnMainThread()
         .sink { [queuePlayer] items in
