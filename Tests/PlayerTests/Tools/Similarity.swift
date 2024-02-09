@@ -22,6 +22,19 @@ extension Asset: Similar {
     }
 }
 
+extension Resource: Similar {
+    public static func ~~ (lhs: PillarboxPlayer.Resource, rhs: PillarboxPlayer.Resource) -> Bool {
+        switch (lhs, rhs) {
+        case let (.simple(url: lhsUrl), .simple(url: rhsUrl)),
+            let (.custom(url: lhsUrl, delegate: _), .custom(url: rhsUrl, delegate: _)),
+            let (.encrypted(url: lhsUrl, delegate: _), .encrypted(url: rhsUrl, delegate: _)):
+            return lhsUrl == rhsUrl
+        default:
+            return false
+        }
+    }
+}
+
 extension NowPlayingInfo: Similar {
     public static func ~~ (lhs: Self, rhs: Self) -> Bool {
         // swiftlint:disable:next legacy_objc_type

@@ -152,8 +152,8 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
     }
 
     func playerItem(fresh: Bool) -> AVPlayerItem {
-        if fresh, case let .custom(url, _) = resource, url.absoluteString.contains("failing.m3u8") {
-            let item = Resource.custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate()).playerItem().withId(id)
+        if fresh, resource.isFailing {
+            let item = Resource.loading.playerItem().withId(id)
             configuration(item)
             update(item: item)
             PlayerItem.reload(for: id)

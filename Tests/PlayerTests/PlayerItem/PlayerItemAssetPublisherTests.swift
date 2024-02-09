@@ -13,18 +13,18 @@ import PillarboxStreams
 final class PlayerItemAssetPublisherTests: TestCase {
     func testNoLoad() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
-        expectEqualPublished(
-            values: [URL(string: "pillarbox://loading.m3u8")!],
-            from: item.$asset.map(\.resource.url),
+        expectSimilarPublished(
+            values: [.loading],
+            from: item.$asset.map(\.resource),
             during: .milliseconds(500)
         )
     }
 
     func testLoad() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
-        expectEqualPublished(
-            values: [URL(string: "pillarbox://loading.m3u8")!, Stream.onDemand.url],
-            from: item.$asset.map(\.resource.url),
+        expectSimilarPublished(
+            values: [.loading, .simple(url: Stream.onDemand.url)],
+            from: item.$asset.map(\.resource),
             during: .milliseconds(500)
         ) {
             PlayerItem.load(for: item.id)
@@ -33,9 +33,9 @@ final class PlayerItemAssetPublisherTests: TestCase {
 
     func testFailure() {
         let item = PlayerItem.failed()
-        expectEqualPublished(
-            values: [URL(string: "pillarbox://loading.m3u8")!, URL(string: "pillarbox://failing.m3u8")!],
-            from: item.$asset.map(\.resource.url),
+        expectSimilarPublished(
+            values: [.loading, .failing(error: MockError.mock)],
+            from: item.$asset.map(\.resource),
             during: .milliseconds(500)
         ) {
             PlayerItem.load(for: item.id)
@@ -44,17 +44,17 @@ final class PlayerItemAssetPublisherTests: TestCase {
 
     func testReload() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
-        expectEqualPublished(
-            values: [URL(string: "pillarbox://loading.m3u8")!, Stream.onDemand.url],
-            from: item.$asset.map(\.resource.url),
+        expectSimilarPublished(
+            values: [.loading, .simple(url: Stream.onDemand.url)],
+            from: item.$asset.map(\.resource),
             during: .milliseconds(500)
         ) {
             PlayerItem.load(for: item.id)
         }
 
-        expectEqualPublishedNext(
-            values: [Stream.onDemand.url],
-            from: item.$asset.map(\.resource.url),
+        expectSimilarPublishedNext(
+            values: [.simple(url: Stream.onDemand.url)],
+            from: item.$asset.map(\.resource),
             during: .milliseconds(500)
         ) {
             PlayerItem.reload(for: item.id)
