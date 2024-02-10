@@ -20,14 +20,18 @@ extension Player {
     }
 
     func queueItemsPublisher() -> AnyPublisher<[AVPlayerItem], Never> {
-        Publishers.CombineLatest(
-            assetsPublisher(),
+        Publishers.Merge(
+            assetsPublisher()
+                .map { ItemQueueUpdate.assets($0) },
             queuePlayer.itemTransitionPublisher()
+                .map { ItemQueueUpdate.itemTransition($0) }
         )
-        .map { ItemQueueUpdate(assets: $0, transition: $1) }
-        .withPrevious(.initial)
+        .scan(ItemQueue.initial) { queue, update in
+            queue.updated(with: update)
+        }
+        .withPrevious(ItemQueue.initial)
         .compactMap { [configuration] previous, current in
-            switch current.transition {
+            switch current.itemTransition {
             case let .advance(item):
                 return AVPlayerItem.playerItems(
                     for: current.assets,
