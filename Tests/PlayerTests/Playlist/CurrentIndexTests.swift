@@ -89,7 +89,7 @@ final class CurrentIndexTests: TestCase {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2])
-        let publisher = player.queuePlayer.publisher(for: \.currentItem).compactMap(\.?.url)
+        let publisher = player.queuePlayer.currentItemPublisher().compactMap(\.?.url)
         expectEqualPublishedNext(values: [Resource.loadingUrl, Stream.shortOnDemand.url], from: publisher, during: .seconds(1)) {
             try! player.setCurrentIndex(1)
         }
@@ -103,7 +103,7 @@ final class CurrentIndexTests: TestCase {
     func testSetCurrentIndexToSameValue() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
-        let publisher = player.queuePlayer.publisher(for: \.currentItem).compactMap(\.?.url)
+        let publisher = player.queuePlayer.currentItemPublisher().compactMap(\.?.url)
         expectAtLeastEqualPublishedNext(values: [Resource.loadingUrl], from: publisher) {
             try! player.setCurrentIndex(0)
         }
