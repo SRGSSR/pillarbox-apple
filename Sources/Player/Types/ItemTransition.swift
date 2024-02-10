@@ -25,7 +25,7 @@ enum ItemTransition: Equatable {
         else if let currentItem {
             return .advance(to: currentItem)
         }
-        else if let previousItem {
+        else if previousItem != nil {
             return .finish
         }
         else {
