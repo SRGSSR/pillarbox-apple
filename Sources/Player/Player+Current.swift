@@ -24,7 +24,7 @@ extension Player {
             assetsPublisher(),
             queuePlayer.itemTransitionPublisher()
         )
-        .map { QueueUpdate(assets: $0, transition: $1) }
+        .map { ItemQueueUpdate(assets: $0, transition: $1) }
         .withPrevious(.initial)
         .compactMap { [configuration] previous, current in
             switch current.transition {

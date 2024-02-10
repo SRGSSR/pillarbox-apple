@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-struct QueueUpdate {
+struct ItemQueueUpdate {
     static var initial: Self {
         .init(assets: [], transition: .advance(to: nil))
     }
