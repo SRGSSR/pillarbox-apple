@@ -19,17 +19,17 @@ struct ItemQueue {
     let assets: [any Assetable]
     let itemTransition: ItemTransition
 
+    init(assets: [any Assetable], itemTransition: ItemTransition) {
+        self.assets = assets
+        self.itemTransition = !assets.isEmpty ? itemTransition : .advance(to: nil)
+    }
+
     func updated(with update: ItemQueueUpdate) -> Self {
         switch update {
         case let .assets(assets):
             return .init(assets: assets, itemTransition: itemTransition)
-        case let .itemTransition(transition):
-            if assets.isEmpty {
-                return .init(assets: [], itemTransition: .advance(to: nil))
-            }
-            else {
-                return .init(assets: assets, itemTransition: transition)
-            }
+        case let .itemTransition(itemTransition):
+            return .init(assets: assets, itemTransition: itemTransition)
         }
     }
 }
