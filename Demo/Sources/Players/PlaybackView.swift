@@ -79,7 +79,7 @@ private struct MainView: View {
             TapGesture()
                 .onEnded { _ in visibilityTracker.reset() }
         )
-        .supportsHighSpeed(for: player)
+        .supportsHighSpeed(!isMonoscopic, for: player)
     }
 
     @ViewBuilder

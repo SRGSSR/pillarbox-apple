@@ -85,9 +85,16 @@ private struct HighSpeedView<Content>: View where Content: View {
 }
 
 extension View {
-    func supportsHighSpeed(for player: Player) -> some View {
-        HighSpeedView(player: player) {
-            self
+    func supportsHighSpeed(_ supported: Bool = true, for player: Player) -> some View {
+        Group {
+            if supported {
+                HighSpeedView(player: player) {
+                    self
+                }
+            }
+            else {
+                self
+            }
         }
     }
 }
