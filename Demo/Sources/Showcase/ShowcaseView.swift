@@ -364,7 +364,14 @@ struct ShowcaseView: View {
     private func webViewSection() -> some View {
         if settingBundle.showsHiddenFeatures {
             CustomSection("Web") {
-                cell(title: "Pillarbox Demo", destination: .webView(url: "https://srgssr.github.io/pillarbox-web/"))
+                cell(
+                    title: "Player",
+                    destination: .webView(url: "https://srgssr.github.io/pillarbox-web/")
+                )
+                cell(
+                    title: "Demo",
+                    destination: .webView(url: "https://srgssr.github.io/pillarbox-web-demo/")
+                )
             }
             .sourceCode(of: WebView.self)
         }
