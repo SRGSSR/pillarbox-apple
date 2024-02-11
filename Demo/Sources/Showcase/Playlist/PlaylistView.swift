@@ -155,6 +155,7 @@ struct PlaylistView: View {
     var body: some View {
         VStack(spacing: 0) {
             PlaybackView(player: model.player, layout: $layout)
+                .monoscopic(model.isMonoscopic)
                 .supportsPictureInPicture()
             if layout != .maximized {
                 Toolbar(player: model.player, model: model)

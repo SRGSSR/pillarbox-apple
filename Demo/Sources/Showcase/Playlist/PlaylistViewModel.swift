@@ -84,6 +84,10 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
         medias.isEmpty
     }
 
+    var isMonoscopic: Bool {
+        currentMedia?.isMonoscopic ?? false
+    }
+
     var canReload: Bool {
         !templates.isEmpty
     }
