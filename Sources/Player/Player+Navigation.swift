@@ -20,7 +20,7 @@ public extension Player {
     /// Skips failed items.
     func returnToPreviousItem() {
         guard canReturnToPreviousItem() else { return }
-        queuePlayer.replaceItems(with: AVPlayerItem.playerItems(from: returningItems))
+        queuePlayer.replaceItems(with: AVPlayerItem.playerItems(from: returningItems, length: configuration.preloadedItems, reload: true))
     }
 
     /// Checks whether moving to the next item in the queue is possible.
@@ -33,16 +33,15 @@ public extension Player {
     /// Moves to the next item in the queue.
     func advanceToNextItem() {
         guard canAdvanceToNextItem() else { return }
-        queuePlayer.replaceItems(with: AVPlayerItem.playerItems(from: advancingItems))
+        queuePlayer.replaceItems(with: AVPlayerItem.playerItems(from: advancingItems, length: configuration.preloadedItems, reload: true))
     }
 
     /// Makes the item at the specified index become the current one.
     ///
     /// - Parameter index: The item index.
     func setCurrentIndex(_ index: Int) throws {
-        guard index != currentIndex else { return }
         guard (0..<storedItems.count).contains(index) else { throw PlaybackError.itemOutOfBounds }
-        let playerItems = AVPlayerItem.playerItems(from: Array(storedItems.suffix(from: index)))
+        let playerItems = AVPlayerItem.playerItems(from: Array(storedItems.suffix(from: index)), length: configuration.preloadedItems, reload: true)
         queuePlayer.replaceItems(with: playerItems)
     }
 }

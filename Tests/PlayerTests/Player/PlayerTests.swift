@@ -6,6 +6,7 @@
 
 @testable import PillarboxPlayer
 
+import AVFoundation
 import CoreMedia
 import Nimble
 import PillarboxCircumspect
@@ -47,7 +48,8 @@ final class PlayerTests: TestCase {
 
     func testMetadataUpdatesMustNotChangePlayerItem() {
         let player = Player(item: .mock(url: Stream.onDemand.url, withMetadataUpdateAfter: 1))
-        expectNothingPublishedNext(from: player.queuePlayer.publisher(for: \.currentItem), during: .seconds(2))
+        let publisher = player.queuePlayer.currentItemPublisher().compactMap(\.?.url)
+        expectEqualPublishedNext(values: [Stream.onDemand.url], from: publisher, during: .seconds(2))
     }
 
     func testRetrieveCurrentValueOnSubscription() {
@@ -58,5 +60,22 @@ final class PlayerTests: TestCase {
             from: player.propertiesPublisher.slice(at: \.isBuffering),
             during: .seconds(1)
         )
+    }
+
+    func testPreloadedItems() {
+        let player = Player(
+            items: [
+                .simple(url: Stream.onDemand.url),
+                .simple(url: Stream.onDemand.url),
+                .simple(url: Stream.onDemand.url)
+            ]
+        )
+        let expectedResources: [Resource] = [
+            .simple(url: Stream.onDemand.url),
+            .simple(url: Stream.onDemand.url),
+            .loading
+        ]
+        expect(player.items.map(\.asset.resource)).toEventually(beSimilarTo(expectedResources))
+        expect(player.items.map(\.asset.resource)).toAlways(beSimilarTo(expectedResources), until: .seconds(1))
     }
 }

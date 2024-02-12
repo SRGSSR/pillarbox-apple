@@ -23,7 +23,7 @@ public func equalDiff<T>(_ expectedValue: T?) -> Matcher<T> where T: Similar {
 }
 
 /// Matches against an expected similar value.
-public func equal<T>(_ expectedValue: T?) -> Matcher<T> where T: Similar {
+public func beSimilarTo<T>(_ expectedValue: T?) -> Matcher<T> where T: Similar {
     equal(expectedValue, by: ~~)
 }
 

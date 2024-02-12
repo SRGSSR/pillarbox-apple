@@ -30,6 +30,9 @@ public struct PlayerConfiguration {
     /// The backward skip interval in seconds.
     public let backwardSkipInterval: TimeInterval
 
+    /// The number of items to preload.
+    let preloadedItems = 2
+
     /// Creates a player configuration.
     public init(
         allowsExternalPlayback: Bool = true,

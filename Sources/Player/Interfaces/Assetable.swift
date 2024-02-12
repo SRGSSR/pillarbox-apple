@@ -15,14 +15,18 @@ protocol Assetable {
     func updateMetadata()
     func disable()
 
-    func nowPlayingInfo() -> NowPlayingInfo
-    func playerItem() -> AVPlayerItem
+    func nowPlayingInfo() -> NowPlayingInfo?
+    func playerItem(reload: Bool) -> AVPlayerItem
     func update(item: AVPlayerItem)
 }
 
 extension Assetable {
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
         id == playerItem?.id
+    }
+
+    func playerItem() -> AVPlayerItem {
+        playerItem(reload: false)
     }
 }
 
@@ -38,29 +42,31 @@ extension AVPlayerItem {
     static func playerItems(
         for currentAssets: [any Assetable],
         replacing previousAssets: [any Assetable],
-        currentItem: AVPlayerItem?
+        currentItem: AVPlayerItem?,
+        length: Int
     ) -> [AVPlayerItem] {
-        guard let currentItem else { return playerItems(from: currentAssets) }
+        assert(length > 1)
+        guard let currentItem else { return playerItems(from: Array(currentAssets.prefix(length))) }
         if let currentIndex = matchingIndex(for: currentItem, in: currentAssets) {
             let currentAsset = currentAssets[currentIndex]
             if findAsset(currentAsset, in: previousAssets) {
                 currentAsset.update(item: currentItem)
-                return [currentItem] + playerItems(from: Array(currentAssets.suffix(from: currentIndex + 1)))
+                return [currentItem] + playerItems(from: Array(currentAssets.suffix(from: currentIndex + 1).prefix(length - 1)))
             }
             else {
-                return playerItems(from: Array(currentAssets.suffix(from: currentIndex)))
+                return playerItems(from: Array(currentAssets.suffix(from: currentIndex).prefix(length)))
             }
         }
         else if let commonIndex = firstCommonIndex(in: currentAssets, matching: previousAssets, after: currentItem) {
-            return playerItems(from: Array(currentAssets.suffix(from: commonIndex)))
+            return playerItems(from: Array(currentAssets.suffix(from: commonIndex).prefix(length)))
         }
         else {
-            return playerItems(from: currentAssets)
+            return playerItems(from: Array(currentAssets.prefix(length)))
         }
     }
 
-    static func playerItems(from assets: [any Assetable]) -> [AVPlayerItem] {
-        assets.map { $0.playerItem() }
+    static func playerItems(from assets: [any Assetable], reload: Bool = false) -> [AVPlayerItem] {
+        assets.map { $0.playerItem(reload: reload) }
     }
 
     private static func matchingIndex(for item: AVPlayerItem, in assets: [any Assetable]) -> Int? {

@@ -26,9 +26,9 @@ final class ReplayTests: TestCase {
 
     func testWithOneBadItem() {
         let player = Player(item: .simple(url: Stream.unavailable.url))
-        expect(player.currentIndex).toEventually(beNil())
+        expect(player.currentIndex).toAlways(equal(0), until: .milliseconds(500))
         player.replay()
-        expect(player.currentIndex).toEventually(equal(0))
+        expect(player.currentIndex).toAlways(equal(0), until: .milliseconds(500))
     }
 
     func testWithManyGoodItems() {
@@ -48,9 +48,9 @@ final class ReplayTests: TestCase {
             .simple(url: Stream.unavailable.url)
         ])
         player.play()
-        expect(player.currentIndex).toEventually(beNil())
+        expect(player.currentIndex).toAlways(equal(0), until: .milliseconds(500))
         player.replay()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentIndex).toAlways(equal(0), until: .milliseconds(500))
     }
 
     func testWithOneGoodItemAndOneBadItem() {
@@ -59,9 +59,9 @@ final class ReplayTests: TestCase {
             .simple(url: Stream.unavailable.url)
         ])
         player.play()
-        expect(player.currentIndex).toEventually(beNil())
+        expect(player.currentIndex).toEventually(equal(1))
         player.replay()
-        expect(player.currentIndex).to(equal(0))
+        expect(player.currentIndex).to(equal(1))
     }
 
     func testResumePlaybackIfNeeded() {

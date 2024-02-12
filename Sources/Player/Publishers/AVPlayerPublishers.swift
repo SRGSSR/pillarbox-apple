@@ -6,10 +6,41 @@
 
 import AVFoundation
 import Combine
+import PillarboxCore
 
 extension AVPlayer {
-    func playerItemPropertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
+    func currentItemPublisher() -> AnyPublisher<AVPlayerItem?, Never> {
         publisher(for: \.currentItem)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    /// Publishes a stream of `AVPlayerItem` which preserves failed items.
+    func smoothCurrentItemPublisher() -> AnyPublisher<AVPlayerItem?, Never> {
+        itemTransitionPublisher()
+            .map { transition in
+                switch transition {
+                case let .advance(to: item):
+                    return item
+                case let .stop(on: item):
+                    return item
+                case .finish:
+                    return nil
+                }
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func itemTransitionPublisher() -> AnyPublisher<ItemTransition, Never> {
+        currentItemPublisher()
+            .withPrevious(nil)
+            .map { ItemTransition.transition(from: $0.previous, to: $0.current) }
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    func playerItemPropertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
+        currentItemPublisher()
             .map { item in
                 guard let item else { return Just(PlayerItemProperties.empty).eraseToAnyPublisher() }
                 return item.propertiesPublisher()
@@ -32,7 +63,7 @@ extension AVPlayer {
     }
 
     func errorPublisher() -> AnyPublisher<Error?, Never> {
-        publisher(for: \.currentItem)
+        currentItemPublisher()
             .compactMap { $0?.errorPublisher() }
             .switchToLatest()
             .eraseToAnyPublisher()

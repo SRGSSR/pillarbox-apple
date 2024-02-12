@@ -10,14 +10,14 @@ import AVFoundation
 import Combine
 import PillarboxStreams
 
-final class AVPlayerPublisherTests: TestCase {
+final class AVPlayerErrorPublisherTests: TestCase {
     private static func errorPublisher(for player: AVPlayer) -> AnyPublisher<Error?, Never> {
         player.errorPublisher()
             .removeDuplicates { $0 as? NSError == $1 as? NSError }
             .eraseToAnyPublisher()
     }
 
-    func testErrorEmpty() {
+    func testWhenEmpty() {
         let player = AVQueuePlayer()
         expectNothingPublished(from: Self.errorPublisher(for: player), during: .milliseconds(100))
     }

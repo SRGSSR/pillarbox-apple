@@ -135,24 +135,37 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
         }
     }
 
-    func nowPlayingInfo() -> NowPlayingInfo {
-        var nowPlayingInfo = NowPlayingInfo()
+    func nowPlayingInfo() -> NowPlayingInfo? {
         if let metadata = metadata?.nowPlayingMetadata() {
+            var nowPlayingInfo = NowPlayingInfo()
             nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
             nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
             nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
             if let image = metadata.image {
                 nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
             }
+            return nowPlayingInfo
         }
-        return nowPlayingInfo
+        else {
+            return nil
+        }
     }
 
-    func playerItem() -> AVPlayerItem {
-        let item = resource.playerItem().withId(id)
-        configuration(item)
-        update(item: item)
-        return item
+    func playerItem(reload: Bool) -> AVPlayerItem {
+        if reload, resource.isFailing {
+            let item = Resource.loading.playerItem().withId(id)
+            configuration(item)
+            update(item: item)
+            PlayerItem.reload(for: id)
+            return item
+        }
+        else {
+            let item = resource.playerItem().withId(id)
+            configuration(item)
+            update(item: item)
+            PlayerItem.load(for: id)
+            return item
+        }
     }
 
     func update(item: AVPlayerItem) {
@@ -227,25 +240,11 @@ public extension Asset where M == Never {
 
 extension Asset {
     static var loading: Self {
-        // Provides a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-        .init(
-            id: UUID(),
-            resource: .custom(url: URL(string: "pillarbox://loading.m3u8")!, delegate: LoadingResourceLoaderDelegate()),
-            metadata: nil,
-            configuration: { _ in },
-            trackerAdapters: []
-        )
+        .init(id: UUID(), resource: .loading, metadata: nil, configuration: { _ in }, trackerAdapters: [])
     }
 
     static func failed(error: Error) -> Self {
-        // Provides a playlist extension so that resource loader errors are correctly forwarded through the resource loader.
-        .init(
-            id: UUID(),
-            resource: .custom(url: URL(string: "pillarbox://failing.m3u8")!, delegate: FailedResourceLoaderDelegate(error: error)),
-            metadata: nil,
-            configuration: { _ in },
-            trackerAdapters: []
-        )
+        .init(id: UUID(), resource: .failing(error: error), metadata: nil, configuration: { _ in }, trackerAdapters: [])
     }
 }
 

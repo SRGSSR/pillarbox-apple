@@ -15,9 +15,10 @@ final class PlayerTrackingTests: TestCase {
         player.isTrackingEnabled = false
         let publisher = TrackerMock<String>.StatePublisher()
 
-        expectAtLeastEqualPublished(
+        expectEqualPublished(
             values: [.initialized, .updated("title")],
-            from: publisher
+            from: publisher,
+            during: .milliseconds(500)
         ) {
             player.append(
                 .simple(
@@ -70,7 +71,7 @@ final class PlayerTrackingTests: TestCase {
         let publisher = TrackerMock<String>.StatePublisher()
 
         expectEqualPublished(
-            values: [.initialized, .updated("title"), .enabled],
+            values: [.initialized, .enabled, .updated("title")],
             from: publisher,
             during: .seconds(1)
         ) {

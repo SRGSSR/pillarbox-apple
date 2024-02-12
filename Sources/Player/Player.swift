@@ -76,7 +76,7 @@ public final class Player: ObservableObject, Equatable {
     }()
 
     lazy var itemUpdatePublisher: AnyPublisher<ItemUpdate, Never> = {
-        Publishers.CombineLatest($storedItems, queuePlayer.publisher(for: \.currentItem))
+        Publishers.CombineLatest($storedItems, queuePlayer.smoothCurrentItemPublisher())
             .map { ItemUpdate(items: $0, currentItem: $1) }
             .multicast { CurrentValueSubject<ItemUpdate, Never>(.empty) }
             .autoconnect()
@@ -207,7 +207,7 @@ public final class Player: ObservableObject, Equatable {
     }
 
     private func configureQueuePlayerUpdatePublishers() {
-        configureQueueUpdatePublisher()
+        configureQueueItemsPublisher()
         configureRateUpdatePublisher()
         configureTextStyleRulesUpdatePublisher()
     }
@@ -230,16 +230,8 @@ public final class Player: ObservableObject, Equatable {
 }
 
 private extension Player {
-    func configureQueueUpdatePublisher() {
-        assetsPublisher()
-            .withPrevious()
-            .map { [queuePlayer] assets in
-                AVPlayerItem.playerItems(
-                    for: assets.current,
-                    replacing: assets.previous ?? [],
-                    currentItem: queuePlayer.currentItem
-                )
-            }
+    func configureQueueItemsPublisher() {
+        queueItemsPublisher()
             .receiveOnMainThread()
             .sink { [queuePlayer] items in
                 queuePlayer.replaceItems(with: items)
@@ -260,7 +252,7 @@ private extension Player {
     func configureTextStyleRulesUpdatePublisher() {
         Publishers.CombineLatest(
             textStyleRulesPublisher,
-            queuePlayer.publisher(for: \.currentItem)
+            queuePlayer.currentItemPublisher()
         )
         .sink { textStyleRules, item in
             item?.textStyleRules = textStyleRules

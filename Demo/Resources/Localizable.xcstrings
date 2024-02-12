@@ -30,6 +30,7 @@
       }
     },
     "%g× %@" : {
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {

@@ -36,4 +36,18 @@ final class ItemNavigationForwardTests: TestCase {
         player.advanceToNextItem()
         expect(player.currentIndex).to(equal(2))
     }
+
+    func testPlayerPreloadedItemCount() {
+        let player = Player(items: [
+            PlayerItem.simple(url: Stream.onDemand.url),
+            PlayerItem.simple(url: Stream.squareOnDemand.url),
+            PlayerItem.simple(url: Stream.mediumOnDemand.url),
+            PlayerItem.simple(url: Stream.onDemand.url),
+            PlayerItem.simple(url: Stream.shortOnDemand.url)
+        ])
+        player.advanceToNextItem()
+
+        let items = player.queuePlayer.items()
+        expect(items.count).to(equal(player.configuration.preloadedItems))
+    }
 }

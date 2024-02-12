@@ -34,7 +34,7 @@ private struct LoadedView: View {
     }
 
     private func openPlaylist() {
-        router.presented = .playlist(templates: Array(templates().prefix(20)))
+        router.presented = .playlist(templates: templates())
     }
 
     private func templates() -> [Template] {

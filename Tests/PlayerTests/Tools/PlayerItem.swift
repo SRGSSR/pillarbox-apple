@@ -11,6 +11,11 @@ import Foundation
 
 enum MediaMock: String {
     case media1
+    case media2
+}
+
+enum MockError: Error {
+    case mock
 }
 
 extension PlayerItem {
@@ -69,5 +74,9 @@ extension PlayerItem {
                 Asset.simple(url: url, metadata: metadata)
             }
         return .init(publisher: publisher, trackerAdapters: trackerAdapters)
+    }
+
+    static func failed() -> Self {
+        .init(publisher: Just(Asset<Never>.failed(error: MockError.mock)))
     }
 }

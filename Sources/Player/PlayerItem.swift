@@ -6,6 +6,12 @@
 
 import AVFoundation
 import Combine
+import PillarboxCore
+
+private enum TriggerId: Hashable {
+    case load(UUID)
+    case reset(UUID)
+}
 
 /// This class represents a playable item that can be inserted into a ``Player``.
 ///
@@ -17,23 +23,27 @@ import Combine
 ///
 /// - Note: You can also create your own ``PlayerItem`` by extending the class.
 public final class PlayerItem: Equatable {
+    private static let trigger = Trigger()
+
     @Published private(set) var asset: any Assetable
 
-    private let id = UUID()
+    let id = UUID()
 
     /// Creates the item from an ``Asset`` publisher data source.
     public init<P, M>(publisher: P, trackerAdapters: [TrackerAdapter<M>] = []) where P: Publisher, M: AssetMetadata, P.Output == Asset<M> {
         asset = Asset<M>.loading.withId(id).withTrackerAdapters(trackerAdapters)
-        publisher
-            .catch { error in
-                Just(.failed(error: error))
-            }
-            .map { [id] asset in
-                asset.withId(id).withTrackerAdapters(trackerAdapters)
-            }
-            // Mitigate instabilities arising when publisher involves `URLSession` publishers, see issue #206.
-            .receiveOnMainThread()
-            .assign(to: &$asset)
+        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) {
+            publisher
+                .catch { error in
+                    Just(.failed(error: error))
+                }
+        }
+        .map { [id] asset in
+            asset.withId(id).withTrackerAdapters(trackerAdapters)
+        }
+        .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))
+        .receive(on: DispatchQueue.main)
+        .assign(to: &$asset)
     }
 
     /// Creates a player item from an ``Asset``.
@@ -47,6 +57,15 @@ public final class PlayerItem: Equatable {
 
     public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
         lhs === rhs
+    }
+
+    static func load(for id: UUID) {
+        Self.trigger.activate(for: TriggerId.load(id))
+    }
+
+    static func reload(for id: UUID) {
+        Self.trigger.activate(for: TriggerId.reset(id))
+        Self.trigger.activate(for: TriggerId.load(id))
     }
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {

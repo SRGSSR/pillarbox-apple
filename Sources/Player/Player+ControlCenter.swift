@@ -36,7 +36,8 @@ extension Player {
                     return Just(NowPlayingInfo()).eraseToAnyPublisher()
                 }
                 return current.item.$asset
-                    .map { $0.nowPlayingInfo() }
+                    .filter { !$0.resource.isLoading }
+                    .compactMap { $0.nowPlayingInfo() }
                     .eraseToAnyPublisher()
             }
             .switchToLatest()

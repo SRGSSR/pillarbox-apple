@@ -79,31 +79,43 @@ struct ShowcaseView: View {
         CustomSection("Playlists") {
             cell(
                 title: "Video URLs",
-                destination: .playlist(templates: URLTemplates.videos)
+                destination: .playlist(templates: Playlist.videoUrls)
             )
             cell(
                 title: "Video URNs",
-                destination: .playlist(templates: URNTemplates.videos)
+                destination: .playlist(templates: Playlist.videoUrns)
             )
             cell(
                 title: "Long video URNs",
-                destination: .playlist(templates: URNTemplates.longVideos)
+                destination: .playlist(templates: Playlist.longVideoUrns)
             )
             cell(
                 title: "Videos with media selections",
-                destination: .playlist(templates: URNTemplates.videosWithMediaSelections)
+                destination: .playlist(templates: Playlist.videosWithMediaSelections)
             )
             cell(
                 title: "Audios",
-                destination: .playlist(templates: URNTemplates.audios)
+                destination: .playlist(templates: Playlist.audios)
             )
             cell(
-                title: "Videos (one failed item)",
-                destination: .playlist(templates: URNTemplates.videosWithOneError)
+                title: "Videos (URLs, one failing)",
+                destination: .playlist(templates: Playlist.videosWithOneFailingUrl)
             )
             cell(
-                title: "Videos (all failing)",
-                destination: .playlist(templates: URNTemplates.videosWithErrors)
+                title: "Videos (URNs, one failing)",
+                destination: .playlist(templates: Playlist.videosWithOneFailingUrn)
+            )
+            cell(
+                title: "Videos (URLs, all failing)",
+                destination: .playlist(templates: Playlist.videosWithOnlyFailingUrls)
+            )
+            cell(
+                title: "Videos (URNs, all failing)",
+                destination: .playlist(templates: Playlist.videosWithOnlyFailingUrns)
+            )
+            cell(
+                title: "Videos (URLs and URNs, all failing)",
+                destination: .playlist(templates: Playlist.videosWithFailingUrlsAndUrns)
             )
             cell(
                 title: "Empty",
