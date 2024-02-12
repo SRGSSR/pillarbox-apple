@@ -31,7 +31,7 @@ public struct PlayerConfiguration {
     public let backwardSkipInterval: TimeInterval
 
     /// The number of items to preload.
-    public let preloadedItems: Int
+    let preloadedItems = 2
 
     /// Creates a player configuration.
     public init(
@@ -40,18 +40,15 @@ public struct PlayerConfiguration {
         preventsDisplaySleepDuringVideoPlayback: Bool = true,
         smartNavigationEnabled: Bool = true,
         backwardSkipInterval: TimeInterval = 10,
-        forwardSkipInterval: TimeInterval = 10,
-        preloadedItems: Int = 2
+        forwardSkipInterval: TimeInterval = 10
     ) {
         assert(backwardSkipInterval > 0)
         assert(forwardSkipInterval > 0)
-        assert(preloadedItems > 1)
         self.allowsExternalPlayback = allowsExternalPlayback
         self.usesExternalPlaybackWhileMirroring = usesExternalPlaybackWhileMirroring
         self.preventsDisplaySleepDuringVideoPlayback = preventsDisplaySleepDuringVideoPlayback
         self.isSmartNavigationEnabled = smartNavigationEnabled
         self.backwardSkipInterval = backwardSkipInterval
         self.forwardSkipInterval = forwardSkipInterval
-        self.preloadedItems = max(2, preloadedItems)
     }
 }

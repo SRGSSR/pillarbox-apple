@@ -62,14 +62,13 @@ final class PlayerTests: TestCase {
         )
     }
 
-    func testNumberOfPreloadedItems() {
+    func testPreloadedItems() {
         let player = Player(
             items: [
                 .simple(url: Stream.onDemand.url),
                 .simple(url: Stream.onDemand.url),
                 .simple(url: Stream.onDemand.url)
-            ],
-            configuration: .init(preloadedItems: 2)
+            ]
         )
         let expectedResources: [Resource] = [
             .simple(url: Stream.onDemand.url),
