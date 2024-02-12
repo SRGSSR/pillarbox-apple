@@ -365,10 +365,6 @@ struct ShowcaseView: View {
         if settingBundle.showsHiddenFeatures {
             CustomSection("Web") {
                 cell(
-                    title: "Player",
-                    destination: .webView(url: "https://srgssr.github.io/pillarbox-web/")
-                )
-                cell(
                     title: "Demo",
                     destination: .webView(url: "https://srgssr.github.io/pillarbox-web-demo/")
                 )
