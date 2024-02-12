@@ -19,8 +19,8 @@ enum Resource {
 
     var isLoading: Bool {
         switch self {
-        case let .custom(url: url, _):
-            url == Self.loadingUrl
+        case let .custom(url: url, _) where url == Self.loadingUrl:
+            true
         default:
             false
         }
@@ -28,8 +28,8 @@ enum Resource {
 
     var isFailing: Bool {
         switch self {
-        case let .custom(url: url, _):
-            url == Self.failingUrl
+        case let .custom(url: url, _) where url == Self.failingUrl:
+            true
         default:
             false
         }
