@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-/// Action to be performed during an item transition.
+/// A transition between items in a playlist.
 enum ItemTransition: Equatable {
     /// Advance to the provided item (or the beginning of the playlist if `nil`).
     case advance(to: AVPlayerItem?)
