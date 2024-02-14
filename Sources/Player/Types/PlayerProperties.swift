@@ -35,6 +35,10 @@ public struct PlayerProperties: Equatable {
         self.isEmpty = isEmpty
         self.seekTime = seekTime
     }
+
+    public func match(id: UUID) -> Bool {
+        coreProperties.itemProperties.item?.id == id
+    }
 }
 
 public extension PlayerProperties {

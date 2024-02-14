@@ -36,11 +36,9 @@ public class TrackerAdapter<M: AssetMetadata> {
         tracker.enable(for: player)
 
         player.propertiesPublisher
-            .filter { [weak self] properties in
-                self?.id == properties.coreProperties.itemProperties.item?.id
-            }
             .sink { [weak self] properties in
-                self?.tracker.updateProperties(with: properties)
+                guard let self, properties.match(id: id) else { return }
+                tracker.updateProperties(with: properties)
             }
             .store(in: &cancellables)
     }

@@ -39,23 +39,6 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
     private let configuration: (AVPlayerItem) -> Void
     private let trackerAdapters: [TrackerAdapter<M>]
 
-    init(
-        id: UUID,
-        resource: Resource,
-        metadata: M?,
-        configuration: @escaping (AVPlayerItem) -> Void,
-        trackerAdapters: [TrackerAdapter<M>]
-    ) {
-        self.id = id
-        self.resource = resource
-        self.metadata = metadata
-        self.configuration = configuration
-        self.trackerAdapters = trackerAdapters
-        trackerAdapters.forEach { adapter in
-            adapter.id = id
-        }
-    }
-
     /// Returns a simple asset playable from a URL.
     /// 
     /// - Parameters:
@@ -123,6 +106,23 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
             configuration: configuration,
             trackerAdapters: []
         )
+    }
+
+    init(
+        id: UUID,
+        resource: Resource,
+        metadata: M?,
+        configuration: @escaping (AVPlayerItem) -> Void,
+        trackerAdapters: [TrackerAdapter<M>]
+    ) {
+        self.id = id
+        self.resource = resource
+        self.metadata = metadata
+        self.configuration = configuration
+        self.trackerAdapters = trackerAdapters
+        trackerAdapters.forEach { adapter in
+            adapter.id = id
+        }
     }
 
     func withTrackerAdapters(_ trackerAdapters: [TrackerAdapter<M>]) -> Self {
