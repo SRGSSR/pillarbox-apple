@@ -5,6 +5,7 @@
 //
 
 import Combine
+import Foundation
 
 /// An adapter which instantiates and manages a tracker of a specified type.
 ///
@@ -13,6 +14,7 @@ public class TrackerAdapter<M: AssetMetadata> {
     private let tracker: any PlayerItemTracker
     private let update: (M) -> Void
     private var cancellables = Set<AnyCancellable>()
+    var id = UUID()
 
     /// Creates an adapter for a type of tracker with the provided mapping to its metadata format.
     /// 
@@ -34,7 +36,9 @@ public class TrackerAdapter<M: AssetMetadata> {
         tracker.enable(for: player)
 
         player.propertiesPublisher
-            .filter { player.queuePlayer.currentItem === $0.coreProperties.itemProperties.item }
+            .filter { [weak self] properties in
+                self?.id == properties.coreProperties.itemProperties.item?.id
+            }
             .sink { [weak self] properties in
                 self?.tracker.updateProperties(with: properties)
             }
