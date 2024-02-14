@@ -20,10 +20,11 @@ extension AVPlayerItem {
             publisher(for: \.duration),
             minimumTimeOffsetFromLivePublisher()
         )
-        .map { state, presentationSize, mediaSelectionProperties, timeProperties, duration, minimumTimeOffsetFromLive in
+        .map { [weak self] state, presentationSize, mediaSelectionProperties, timeProperties, duration, minimumTimeOffsetFromLive in
             let isKnown = (state != .unknown)
             return .init(
                 itemProperties: .init(
+                    item: self,
                     state: state,
                     duration: isKnown ? duration : .invalid,
                     minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,

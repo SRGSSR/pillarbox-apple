@@ -34,6 +34,7 @@ public class TrackerAdapter<M: AssetMetadata> {
         tracker.enable(for: player)
 
         player.propertiesPublisher
+            .filter { player.queuePlayer.currentItem === $0.coreProperties.itemProperties.item }
             .sink { [weak self] properties in
                 self?.tracker.updateProperties(with: properties)
             }
