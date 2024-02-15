@@ -4,11 +4,13 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import CoreMedia
 
 struct ItemProperties: Equatable {
     static var empty: Self {
         .init(
+            item: nil,
             state: .unknown,
             duration: .invalid,
             minimumTimeOffsetFromLive: .invalid,
@@ -16,6 +18,7 @@ struct ItemProperties: Equatable {
         )
     }
 
+    let item: AVPlayerItem?
     let state: ItemState
 
     let duration: CMTime

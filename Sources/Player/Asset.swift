@@ -39,6 +39,20 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
     private let configuration: (AVPlayerItem) -> Void
     private let trackerAdapters: [TrackerAdapter<M>]
 
+    init(
+        id: UUID,
+        resource: Resource,
+        metadata: M?,
+        configuration: @escaping (AVPlayerItem) -> Void,
+        trackerAdapters: [TrackerAdapter<M>]
+    ) {
+        self.id = id
+        self.resource = resource
+        self.metadata = metadata
+        self.configuration = configuration
+        self.trackerAdapters = trackerAdapters.map { $0.withId(id) }
+    }
+
     /// Returns a simple asset playable from a URL.
     /// 
     /// - Parameters:

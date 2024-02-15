@@ -7,15 +7,15 @@
 @testable import PillarboxPlayer
 
 import Combine
+import Foundation
 
-final class TrackerMock<Metadata>: PlayerItemTracker where Metadata: Equatable {
+final class TrackerLifeCycleMock: PlayerItemTracker {
     typealias StatePublisher = PassthroughSubject<State, Never>
 
     enum State: Equatable {
         case initialized
         case enabled
         case disabled
-        case updated(Metadata)
         case deinitialized
     }
 
@@ -31,15 +31,13 @@ final class TrackerMock<Metadata>: PlayerItemTracker where Metadata: Equatable {
         configuration.statePublisher.send(.initialized)
     }
 
+    func updateMetadata(with metadata: Void) {}
+
+    func updateProperties(with properties: PlayerProperties) {}
+
     func enable(for player: Player) {
         configuration.statePublisher.send(.enabled)
     }
-
-    func updateMetadata(with metadata: Metadata) {
-        configuration.statePublisher.send(.updated(metadata))
-    }
-
-    func updateProperties(with properties: PlayerProperties) {}
 
     func disable() {
         configuration.statePublisher.send(.disabled)
@@ -50,8 +48,8 @@ final class TrackerMock<Metadata>: PlayerItemTracker where Metadata: Equatable {
     }
 }
 
-extension TrackerMock {
-    static func adapter<M>(statePublisher: StatePublisher, mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> where M: AssetMetadata {
-        adapter(configuration: Configuration(statePublisher: statePublisher), mapper: mapper)
+extension TrackerLifeCycleMock {
+    static func adapter(statePublisher: StatePublisher) -> TrackerAdapter<Never> {
+        adapter(configuration: Configuration(statePublisher: statePublisher))
     }
 }

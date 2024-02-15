@@ -321,7 +321,7 @@ private extension Player {
         .sink { [weak self] nowPlayingInfoMetadata, nowPlayingInfoPlayback, isActive in
             guard let self else { return }
             let nowPlayingInfo = isActive ? nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new } : [:]
-            self.updateControlCenter(nowPlayingInfo: nowPlayingInfo)
+            updateControlCenter(nowPlayingInfo: nowPlayingInfo)
         }
         .store(in: &cancellables)
     }
