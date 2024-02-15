@@ -16,6 +16,7 @@ final class TrackerMock<Metadata>: PlayerItemTracker where Metadata: Equatable {
         case enabled
         case disabled
         case updated(Metadata)
+        case properties
         case deinitialized
     }
 
@@ -39,7 +40,9 @@ final class TrackerMock<Metadata>: PlayerItemTracker where Metadata: Equatable {
         configuration.statePublisher.send(.updated(metadata))
     }
 
-    func updateProperties(with properties: PlayerProperties) {}
+    func updateProperties(with properties: PlayerProperties) {
+        configuration.statePublisher.send(.properties)
+    }
 
     func disable() {
         configuration.statePublisher.send(.disabled)

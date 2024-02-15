@@ -12,7 +12,7 @@ import PillarboxStreams
 final class PlayerItemTrackerTests: TestCase {
     func testPlayerItemLifeCycle() {
         let publisher = NoMetadataTrackerMock.StatePublisher()
-        expectAtLeastEqualPublished(values: [.initialized, .deinitialized], from: publisher) {
+        expectAtLeastEqualPublished(values: [.initialized, .deinitialized], from: publisher.removeDuplicates()) {
             _ = PlayerItem.simple(
                 url: Stream.shortOnDemand.url,
                 trackerAdapters: [NoMetadataTrackerMock.adapter(statePublisher: publisher)]
@@ -23,7 +23,7 @@ final class PlayerItemTrackerTests: TestCase {
     func testItemPlayback() {
         let player = Player()
         let publisher = NoMetadataTrackerMock.StatePublisher()
-        expectEqualPublished(values: [.initialized, .enabled], from: publisher, during: .seconds(2)) {
+        expectEqualPublished(values: [.initialized, .enabled, .properties], from: publisher.removeDuplicates(), during: .seconds(2)) {
             player.append(.simple(
                 url: Stream.onDemand.url,
                 trackerAdapters: [NoMetadataTrackerMock.adapter(statePublisher: publisher)]
@@ -35,7 +35,7 @@ final class PlayerItemTrackerTests: TestCase {
     func testItemEntirePlayback() {
         let player = Player()
         let publisher = NoMetadataTrackerMock.StatePublisher()
-        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled], from: publisher) {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .properties, .disabled], from: publisher.removeDuplicates()) {
             player.append(.simple(
                 url: Stream.shortOnDemand.url,
                 trackerAdapters: [NoMetadataTrackerMock.adapter(statePublisher: publisher)]
@@ -47,7 +47,7 @@ final class PlayerItemTrackerTests: TestCase {
     func testNetworkLoadedItemEntirePlayback() {
         let player = Player()
         let publisher = NoMetadataTrackerMock.StatePublisher()
-        expectAtLeastEqualPublished(values: [.initialized, .enabled, .disabled], from: publisher) {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .properties, .disabled], from: publisher.removeDuplicates()) {
             player.append(.mock(
                 url: Stream.shortOnDemand.url,
                 loadedAfter: 1,
@@ -60,7 +60,7 @@ final class PlayerItemTrackerTests: TestCase {
     func testFailedItem() {
         let player = Player()
         let publisher = NoMetadataTrackerMock.StatePublisher()
-        expectEqualPublished(values: [.initialized, .enabled], from: publisher, during: .milliseconds(500)) {
+        expectEqualPublished(values: [.initialized, .enabled, .properties], from: publisher.removeDuplicates(), during: .milliseconds(500)) {
             player.append(.simple(
                 url: Stream.unavailable.url,
                 trackerAdapters: [NoMetadataTrackerMock.adapter(statePublisher: publisher)]
@@ -72,7 +72,7 @@ final class PlayerItemTrackerTests: TestCase {
     func testMetadata() {
         let player = Player()
         let publisher = TrackerMock<String>.StatePublisher()
-        expectAtLeastEqualPublished(values: [.initialized, .enabled, .updated("title"), .disabled], from: publisher) {
+        expectAtLeastEqualPublished(values: [.initialized, .enabled, .properties, .updated("title"), .properties, .disabled], from: publisher.removeDuplicates()) {
             player.append(.simple(
                 url: Stream.shortOnDemand.url,
                 metadata: AssetMetadataMock(title: "title"),
@@ -86,12 +86,25 @@ final class PlayerItemTrackerTests: TestCase {
         let player = Player()
         let publisher = TrackerMock<String>.StatePublisher()
         expectAtLeastEqualPublished(
-            values: [.initialized, .enabled, .updated("title0"), .updated("title1"), .disabled],
-            from: publisher
+            values: [.initialized, .enabled, .properties, .updated("title0"), .properties, .updated("title1"), .properties, .disabled],
+            from: publisher.removeDuplicates()
         ) {
             player.append(.mock(url: Stream.shortOnDemand.url, withMetadataUpdateAfter: 1, trackerAdapters: [
                 TrackerMock.adapter(statePublisher: publisher) { $0.title }
             ]))
+            player.play()
+        }
+    }
+
+    func testItemTransition() {
+        let player = Player()
+        let publisher = NoMetadataTrackerMock.StatePublisher()
+        expectEqualPublished(values: [.initialized, .enabled, .properties, .disabled], from: publisher.removeDuplicates(), during: .seconds(5)) {
+            player.append(.simple(
+                url: Stream.shortOnDemand.url,
+                trackerAdapters: [NoMetadataTrackerMock.adapter(statePublisher: publisher)]
+            ))
+            player.append(.simple(url: Stream.onDemand.url))
             player.play()
         }
     }

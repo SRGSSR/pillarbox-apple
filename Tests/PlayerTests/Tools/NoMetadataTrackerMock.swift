@@ -16,6 +16,7 @@ final class NoMetadataTrackerMock: PlayerItemTracker {
         case enabled
         case disabled
         case updated
+        case properties
         case deinitialized
     }
 
@@ -35,7 +36,9 @@ final class NoMetadataTrackerMock: PlayerItemTracker {
         configuration.statePublisher.send(.updated)
     }
 
-    func updateProperties(with properties: PlayerProperties) {}
+    func updateProperties(with properties: PlayerProperties) {
+        configuration.statePublisher.send(.properties)
+    }
 
     func enable(for player: Player) {
         configuration.statePublisher.send(.enabled)
