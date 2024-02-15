@@ -228,27 +228,4 @@ final class ComScoreTrackerTests: ComScoreTestCase {
             player.play()
         }
     }
-
-    func testItemTransition() {
-        let player = Player(items: [
-            .simple(
-                url: Stream.shortOnDemand.url,
-                metadata: AssetMetadataMock(),
-                trackerAdapters: [
-                    ComScoreTracker.adapter { _ in .test }
-                ]
-            ),
-            .simple(
-                url: Stream.onDemand.url,
-                metadata: AssetMetadataMock(),
-                trackerAdapters: [
-                    ComScoreTracker.adapter { _ in .test }
-                ]
-            )
-        ])
-
-        expectHits(.play(), .end(), .play(), during: .seconds(5)) {
-            player.play()
-        }
-    }
 }

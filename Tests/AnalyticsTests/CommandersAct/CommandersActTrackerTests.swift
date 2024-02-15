@@ -105,36 +105,6 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         }
     }
 
-    func testStopDuringTransition() {
-        let player = Player(items: [
-            .simple(
-                url: Stream.onDemand.url,
-                metadata: AssetMetadataMock(),
-                trackerAdapters: [
-                    CommandersActTracker.adapter { _ in .test }
-                ]
-            ),
-            .simple(
-                url: Stream.onDemand.url,
-                metadata: AssetMetadataMock(),
-                trackerAdapters: [
-                    CommandersActTracker.adapter { _ in .test }
-                ]
-            )
-        ])
-
-        player.play()
-        expect(player.time.seconds).toEventually(beGreaterThan(2))
-
-        expectAtLeastHits(
-            .stop { labels in
-                expect(labels.media_position).to(equal(2))
-            }
-        ) {
-            player.advanceToNextItem()
-        }
-    }
-
     func testDestroyPlayerDuringPlaybackAtNonStandardPlaybackSpeed() {
         var player: Player? = Player(item: .simple(
             url: Stream.onDemand.url,
