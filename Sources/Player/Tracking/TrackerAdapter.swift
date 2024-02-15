@@ -31,7 +31,7 @@ public class TrackerAdapter<M: AssetMetadata> {
         }
         self.tracker = tracker
     }
-    
+
     func withId(_ id: UUID) -> Self {
         self.id = id
         return self
