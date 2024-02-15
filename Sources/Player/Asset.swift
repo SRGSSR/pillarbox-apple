@@ -50,10 +50,7 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
         self.resource = resource
         self.metadata = metadata
         self.configuration = configuration
-        self.trackerAdapters = trackerAdapters
-        trackerAdapters.forEach { adapter in
-            adapter.id = id
-        }
+        self.trackerAdapters = trackerAdapters.map { $0.withId(id) }
     }
 
     /// Returns a simple asset playable from a URL.
