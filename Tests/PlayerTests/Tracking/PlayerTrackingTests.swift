@@ -13,19 +13,14 @@ final class PlayerTrackingTests: TestCase {
     func testTrackingDisabled() {
         let player = Player()
         player.isTrackingEnabled = false
-        let publisher = TrackerMock<String>.StatePublisher()
+        let publisher = TrackerLifeCycleMock.StatePublisher()
 
-        expectEqualPublished(
-            values: [.initialized, .updated("title")],
-            from: publisher,
-            during: .milliseconds(500)
-        ) {
+        expectEqualPublished(values: [.initialized], from: publisher, during: .milliseconds(500)) {
             player.append(
                 .simple(
                     url: Stream.shortOnDemand.url,
-                    metadata: AssetMetadataMock(title: "title"),
                     trackerAdapters: [
-                        TrackerMock.adapter(statePublisher: publisher) { $0.title }
+                        TrackerLifeCycleMock.adapter(statePublisher: publisher)
                     ]
                 )
             )
@@ -37,19 +32,14 @@ final class PlayerTrackingTests: TestCase {
         let player = Player()
         player.isTrackingEnabled = false
 
-        let publisher = TrackerMock<String>.StatePublisher()
+        let publisher = TrackerLifeCycleMock.StatePublisher()
 
-        expectEqualPublished(
-            values: [.initialized, .updated("title")],
-            from: publisher,
-            during: .seconds(1)
-        ) {
+        expectEqualPublished(values: [.initialized], from: publisher, during: .seconds(1)) {
             player.append(
                 .simple(
                     url: Stream.shortOnDemand.url,
-                    metadata: AssetMetadataMock(title: "title"),
                     trackerAdapters: [
-                        TrackerMock.adapter(statePublisher: publisher) { $0.title }
+                        TrackerLifeCycleMock.adapter(statePublisher: publisher)
                     ]
                 )
             )
@@ -68,19 +58,14 @@ final class PlayerTrackingTests: TestCase {
         let player = Player()
         player.isTrackingEnabled = true
 
-        let publisher = TrackerMock<String>.StatePublisher()
+        let publisher = TrackerLifeCycleMock.StatePublisher()
 
-        expectEqualPublished(
-            values: [.initialized, .enabled, .updated("title")],
-            from: publisher,
-            during: .seconds(1)
-        ) {
+        expectEqualPublished(values: [.initialized, .enabled], from: publisher, during: .seconds(1)) {
             player.append(
                 .simple(
                     url: Stream.shortOnDemand.url,
-                    metadata: AssetMetadataMock(title: "title"),
                     trackerAdapters: [
-                        TrackerMock.adapter(statePublisher: publisher) { $0.title }
+                        TrackerLifeCycleMock.adapter(statePublisher: publisher)
                     ]
                 )
             )
@@ -96,9 +81,9 @@ final class PlayerTrackingTests: TestCase {
     }
 
     func testTrackingEnabledTwice() {
-        let publisher = NoMetadataTrackerMock.StatePublisher()
+        let publisher = TrackerLifeCycleMock.StatePublisher()
 
-        let player = Player(item: .simple(url: Stream.shortOnDemand.url, trackerAdapters: [NoMetadataTrackerMock.adapter(statePublisher: publisher)]))
+        let player = Player(item: .simple(url: Stream.shortOnDemand.url, trackerAdapters: [TrackerLifeCycleMock.adapter(statePublisher: publisher)]))
         player.isTrackingEnabled = true
 
         expectNothingPublished(from: publisher, during: .seconds(1)) {

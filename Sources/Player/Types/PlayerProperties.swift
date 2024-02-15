@@ -24,6 +24,10 @@ public struct PlayerProperties: Equatable {
     /// The time at which the player is currently seeking, if any.
     public let seekTime: CMTime?
 
+    var id: UUID {
+        coreProperties.itemProperties.item?.id ?? UUID()
+    }
+
     init(
         coreProperties: CoreProperties,
         timeProperties: TimeProperties,
@@ -34,10 +38,6 @@ public struct PlayerProperties: Equatable {
         self.coreProperties = coreProperties
         self.isEmpty = isEmpty
         self.seekTime = seekTime
-    }
-
-    public func match(id: UUID) -> Bool {
-        coreProperties.itemProperties.item?.id == id
     }
 }
 
