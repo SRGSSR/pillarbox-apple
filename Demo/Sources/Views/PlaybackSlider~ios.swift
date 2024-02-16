@@ -62,7 +62,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
                 rectangle(width: geometry.size.width * CGFloat(progressTracker.progress))
             }
             .gesture(
-                DragGesture(minimumDistance: 1)
+                DragGesture(minimumDistance: 0)
                     .updating($gestureValue) { value, state, _ in
                         state = value
                     }
