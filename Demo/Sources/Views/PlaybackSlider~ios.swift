@@ -62,7 +62,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
                 rectangle(width: geometry.size.width * CGFloat(progressTracker.progress))
             }
             .gesture(
-                DragGesture(minimumDistance: 1)
+                DragGesture(minimumDistance: 0)
                     .updating($gestureValue) { value, state, _ in
                         state = value
                     }
@@ -72,7 +72,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
             }
         }
         .frame(height: progressTracker.isInteracting ? 16 : 8)
-        .cornerRadius(progressTracker.isInteracting ? 8 : 4)
+        .clipShape(Capsule())
         .animation(.easeInOut(duration: 0.4), value: progressTracker.isInteracting)
         .onReceive(player: progressTracker.player, assign: \.buffer, to: $buffer)
     }
