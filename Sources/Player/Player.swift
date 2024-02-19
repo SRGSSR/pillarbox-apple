@@ -278,7 +278,8 @@ private extension Player {
     }
 
     private func resetErrorPublisher() -> AnyPublisher<Error?, Never> {
-        $storedItems
+        itemUpdatePublisher
+            .slice(at: \.items)
             .filter { $0.isEmpty }
             .map { _ in nil }
             .eraseToAnyPublisher()
