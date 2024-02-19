@@ -9,16 +9,6 @@ import Combine
 import PillarboxCore
 
 extension Player {
-    func currentPublisher() -> AnyPublisher<Current?, Never> {
-        itemUpdatePublisher
-            .map { update in
-                guard let currentIndex = update.currentIndex() else { return nil }
-                return .init(item: update.items[currentIndex], index: currentIndex)
-            }
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-
     func queueItemsPublisher() -> AnyPublisher<[AVPlayerItem], Never> {
         Publishers.Merge(
             assetsPublisher()

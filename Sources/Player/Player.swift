@@ -285,18 +285,21 @@ private extension Player {
     }
 
     func configureCurrentIndexPublisher() {
-        currentPublisher()
-            .map(\.?.index)
+        itemUpdatePublisher
+            .map { $0.currentIndex() }
+            .removeDuplicates()
             .receiveOnMainThread()
             .lane("player_current_index")
             .assign(to: &$currentIndex)
     }
 
     func configureCurrentTrackerPublisher() {
-        currentPublisher()
-            .map { [weak self] current in
-                guard let self, let current else { return nil }
-                return CurrentTracker(item: current.item, player: self)
+        itemUpdatePublisher
+            .map { $0.currentPlayerItem() }
+            .removeDuplicates()
+            .map { [weak self] item in
+                guard let self, let item else { return nil }
+                return CurrentTracker(item: item, player: self)
             }
             .receiveOnMainThread()
             .assign(to: &$currentTracker)

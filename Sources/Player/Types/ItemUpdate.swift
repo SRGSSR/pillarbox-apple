@@ -18,4 +18,8 @@ struct ItemUpdate {
     func currentIndex() -> Int? {
         items.firstIndex { $0.matches(currentItem) }
     }
+
+    func currentPlayerItem() -> PlayerItem? {
+        items.first { $0.matches(currentItem) }
+    }
 }
