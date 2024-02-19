@@ -15,11 +15,11 @@ struct ItemUpdate {
     let items: Deque<PlayerItem>
     let currentItem: AVPlayerItem?
 
-    func currentIndex() -> Int? {
+    var currentIndex: Int? {
         items.firstIndex { $0.matches(currentItem) }
     }
 
-    func currentPlayerItem() -> PlayerItem? {
+    var currentPlayerItem: PlayerItem? {
         items.first { $0.matches(currentItem) }
     }
 }

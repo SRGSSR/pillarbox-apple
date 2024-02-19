@@ -287,8 +287,7 @@ private extension Player {
 
     func configureCurrentIndexPublisher() {
         itemUpdatePublisher
-            .map { $0.currentIndex() }
-            .removeDuplicates()
+            .slice(at: \.currentIndex)
             .receiveOnMainThread()
             .lane("player_current_index")
             .assign(to: &$currentIndex)
@@ -296,8 +295,7 @@ private extension Player {
 
     func configureCurrentTrackerPublisher() {
         itemUpdatePublisher
-            .map { $0.currentPlayerItem() }
-            .removeDuplicates()
+            .slice(at: \.currentPlayerItem)
             .map { [weak self] item in
                 guard let self, let item else { return nil }
                 return CurrentTracker(item: item, player: self)
@@ -340,7 +338,7 @@ private extension Player {
             nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
             nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
 
-            let index = update.currentIndex()
+            let index = update.currentIndex
             nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: update.items, streamType: properties.streamType)
             nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: index, in: update.items)
         }
