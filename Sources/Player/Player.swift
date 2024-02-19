@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import CombineExt
 import DequeModule
 import MediaPlayer
 import PillarboxCore
@@ -70,16 +71,14 @@ public final class Player: ObservableObject, Equatable {
     /// fast-paced property changes into corresponding local bindings.
     public lazy var propertiesPublisher: AnyPublisher<PlayerProperties, Never> = {
         queuePlayer.propertiesPublisher()
-            .multicast { CurrentValueSubject<PlayerProperties, Never>(.empty) }
-            .autoconnect()
+            .share(replay: 1)
             .eraseToAnyPublisher()
     }()
 
     lazy var itemUpdatePublisher: AnyPublisher<ItemUpdate, Never> = {
         Publishers.CombineLatest($storedItems, queuePlayer.smoothCurrentItemPublisher())
             .map { ItemUpdate(items: $0, currentItem: $1) }
-            .multicast { CurrentValueSubject<ItemUpdate, Never>(.empty) }
-            .autoconnect()
+            .share(replay: 1)
             .eraseToAnyPublisher()
     }()
 
