@@ -348,14 +348,14 @@ private extension Player {
 
 private extension Player {
     func queueItemsPublisher() -> AnyPublisher<[AVPlayerItem], Never> {
-        itemQueuePublisher()
-            .withPrevious(ItemQueue.initial)
+        queuePublisher()
+            .withPrevious(Queue.initial)
             .compactMap { [configuration] previous, current in
                 switch current.itemTransition {
                 case let .go(item):
                     return AVPlayerItem.playerItems(
-                        for: current.assets,
-                        replacing: previous.assets,
+                        for: current.elements.map(\.asset),
+                        replacing: previous.elements.map(\.asset),
                         currentItem: item,
                         length: configuration.preloadedItems
                     )
@@ -368,24 +368,25 @@ private extension Player {
             .eraseToAnyPublisher()
     }
 
-    private func itemQueuePublisher() -> AnyPublisher<ItemQueue, Never> {
+    private func queuePublisher() -> AnyPublisher<Queue, Never> {
         Publishers.Merge(
-            assetsPublisher()
-                .map { ItemQueueUpdate.assets($0) },
+            queueElementsPublisher()
+                .map { QueueUpdate.elements($0) },
             queuePlayer.itemTransitionPublisher()
-                .map { ItemQueueUpdate.itemTransition($0) }
+                .map { QueueUpdate.itemTransition($0) }
         )
-        .scan(ItemQueue.initial) { queue, update in
+        .scan(Queue.initial) { queue, update in
             queue.updated(with: update)
         }
         .eraseToAnyPublisher()
     }
 
-    private func assetsPublisher() -> AnyPublisher<[any Assetable], Never> {
+    private func queueElementsPublisher() -> AnyPublisher<[QueueElement], Never> {
         $storedItems
             .map { items in
                 Publishers.AccumulateLatestMany(items.map { item in
                     item.$asset
+                        .map { QueueElement(item: item, asset: $0) }
                 })
             }
             .switchToLatest()
