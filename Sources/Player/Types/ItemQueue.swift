@@ -13,7 +13,7 @@ enum ItemQueueUpdate {
 
 struct ItemQueue {
     static var initial: Self {
-        .init(assets: [], itemTransition: .advance(to: nil))
+        .init(assets: [], itemTransition: .go(to: nil))
     }
 
     let assets: [any Assetable]
@@ -21,7 +21,7 @@ struct ItemQueue {
 
     init(assets: [any Assetable], itemTransition: ItemTransition) {
         self.assets = assets
-        self.itemTransition = !assets.isEmpty ? itemTransition : .advance(to: nil)
+        self.itemTransition = !assets.isEmpty ? itemTransition : .go(to: nil)
     }
 
     func updated(with update: ItemQueueUpdate) -> Self {

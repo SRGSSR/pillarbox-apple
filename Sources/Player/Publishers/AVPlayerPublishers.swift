@@ -20,7 +20,7 @@ extension AVPlayer {
         itemTransitionPublisher()
             .map { transition in
                 switch transition {
-                case let .advance(to: item):
+                case let .go(to: item):
                     return item
                 case let .stop(on: item):
                     return item

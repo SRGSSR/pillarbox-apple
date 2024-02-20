@@ -352,7 +352,7 @@ private extension Player {
             .withPrevious(ItemQueue.initial)
             .compactMap { [configuration] previous, current in
                 switch current.itemTransition {
-                case let .advance(item):
+                case let .go(item):
                     return AVPlayerItem.playerItems(
                         for: current.assets,
                         replacing: previous.assets,
