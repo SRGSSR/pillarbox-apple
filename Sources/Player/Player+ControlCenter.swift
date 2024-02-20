@@ -36,7 +36,7 @@ extension Player {
                     return NowPlayingInfo()
                 }
                 let asset = queue.elements[index].asset
-                return asset.resource.isLoading ? nil : asset.nowPlayingInfo()
+                return asset.resource.isLoading ? nil : asset.nowPlayingInfo(with: queue.error)
             }
             .removeDuplicates { lhs, rhs in
                 // swiftlint:disable:next legacy_objc_type

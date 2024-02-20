@@ -31,6 +31,20 @@ struct Queue {
         .init(elements: [], itemTransition: .go(to: nil))
     }
 
+    var currentIndex: Int? {
+        elements.firstIndex { $0.matches(itemTransition.playerItem) }
+    }
+
+    var currentItem: PlayerItem? {
+        guard let currentIndex else { return nil }
+        return elements[currentIndex].item
+    }
+
+    var error: Error? {
+        guard let item = itemTransition.playerItem else { return nil }
+        return ItemError.intrinsicError(for: item)
+    }
+
     let elements: [QueueElement]
     let itemTransition: ItemTransition
 
@@ -46,14 +60,5 @@ struct Queue {
         case let .itemTransition(itemTransition):
             return .init(elements: elements, itemTransition: itemTransition)
         }
-    }
-
-    var currentIndex: Int? {
-        elements.firstIndex { $0.matches(itemTransition.playerItem) }
-    }
-
-    var currentItem: PlayerItem? {
-        guard let currentIndex else { return nil }
-        return elements[currentIndex].item
     }
 }

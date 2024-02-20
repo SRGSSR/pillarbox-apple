@@ -15,7 +15,7 @@ protocol Assetable {
     func updateMetadata()
     func disable()
 
-    func nowPlayingInfo() -> NowPlayingInfo
+    func nowPlayingInfo(with error: Error?) -> NowPlayingInfo
     func playerItem(reload: Bool) -> AVPlayerItem
     func update(item: AVPlayerItem)
 }

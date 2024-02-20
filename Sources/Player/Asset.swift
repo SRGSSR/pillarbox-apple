@@ -149,11 +149,11 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
         }
     }
 
-    func nowPlayingInfo() -> NowPlayingInfo {
+    func nowPlayingInfo(with error: Error?) -> NowPlayingInfo {
         var nowPlayingInfo = NowPlayingInfo()
         if let metadata = metadata?.nowPlayingMetadata() {
             nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
-            nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
+            nowPlayingInfo[MPMediaItemPropertyArtist] = error?.localizedDescription ?? metadata.subtitle
             nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
             if let image = metadata.image {
                 nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
@@ -162,7 +162,7 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
         else {
             // Fill the title so that the Control Center can be enabled for the asset, even if it has no associated
             // metadata.
-            nowPlayingInfo[MPMediaItemPropertyTitle] = ""
+            nowPlayingInfo[MPMediaItemPropertyTitle] = error?.localizedDescription ?? ""
         }
         return nowPlayingInfo
     }

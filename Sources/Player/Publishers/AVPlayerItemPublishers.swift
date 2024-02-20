@@ -122,7 +122,7 @@ extension AVPlayerItem {
             .filter { $0 == .failed }
             .weakCapture(self)
             .map { _, item in
-                ItemError.intrinsicError(for: item)
+                ItemError.intrinsicError(for: item) ?? PlaybackError.unknown
             }
             .eraseToAnyPublisher()
     }
