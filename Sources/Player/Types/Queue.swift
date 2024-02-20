@@ -9,6 +9,16 @@ import AVFoundation
 struct QueueElement {
     let item: PlayerItem
     let asset: any Assetable
+
+    init(item: PlayerItem, asset: any Assetable) {
+        assert(item.id == asset.id)
+        self.item = item
+        self.asset = asset
+    }
+
+    func matches(_ playerItem: AVPlayerItem?) -> Bool {
+        item.matches(playerItem)
+    }
 }
 
 enum QueueUpdate {
@@ -36,5 +46,14 @@ struct Queue {
         case let .itemTransition(itemTransition):
             return .init(elements: elements, itemTransition: itemTransition)
         }
+    }
+
+    var currentIndex: Int? {
+        elements.firstIndex { $0.matches(itemTransition.playerItem) }
+    }
+
+    var currentItem: PlayerItem? {
+        guard let currentIndex else { return nil }
+        return elements[currentIndex].item
     }
 }

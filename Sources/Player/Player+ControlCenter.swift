@@ -31,7 +31,7 @@ extension Player {
 
     func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
         itemUpdatePublisher
-            .slice(at: \.currentPlayerItem)
+            .slice(at: \.currentItem)
             .map { item in
                 guard let item else {
                     return Just(NowPlayingInfo()).eraseToAnyPublisher()

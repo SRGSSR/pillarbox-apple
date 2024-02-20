@@ -75,9 +75,8 @@ public final class Player: ObservableObject, Equatable {
             .eraseToAnyPublisher()
     }()
 
-    lazy var itemUpdatePublisher: AnyPublisher<ItemUpdate, Never> = {
-        Publishers.CombineLatest($storedItems, queuePlayer.itemTransitionPublisher())
-            .map { ItemUpdate(items: $0, currentItem: $1.playerItem) }
+    lazy var itemUpdatePublisher: AnyPublisher<Queue, Never> = {
+        queuePublisher()
             .share(replay: 1)
             .eraseToAnyPublisher()
     }()
@@ -279,7 +278,7 @@ private extension Player {
 
     private func resetErrorPublisher() -> AnyPublisher<Error?, Never> {
         itemUpdatePublisher
-            .slice(at: \.items)
+            .map(\.elements)
             .filter { $0.isEmpty }
             .map { _ in nil }
             .eraseToAnyPublisher()
@@ -295,7 +294,7 @@ private extension Player {
 
     func configureCurrentTrackerPublisher() {
         itemUpdatePublisher
-            .slice(at: \.currentPlayerItem)
+            .slice(at: \.currentItem)
             .map { [weak self] item in
                 guard let self, let item else { return nil }
                 return CurrentTracker(item: item, player: self)
@@ -332,15 +331,16 @@ private extension Player {
             itemUpdatePublisher,
             propertiesPublisher
         )
-        .sink { [weak self] update, properties in
+        .sink { [weak self] queue, properties in
             guard let self else { return }
-            let areSkipsEnabled = update.items.count <= 1 && properties.streamType != .live
+            let areSkipsEnabled = queue.elements.count <= 1 && properties.streamType != .live
             nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
             nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
 
-            let index = update.currentIndex
-            nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: update.items, streamType: properties.streamType)
-            nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: index, in: update.items)
+            let index = queue.currentIndex
+            let items = Deque(queue.elements.map(\.item))
+            nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: items, streamType: properties.streamType)
+            nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: index, in: items)
         }
         .store(in: &cancellables)
     }
