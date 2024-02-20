@@ -380,4 +380,15 @@ private extension Player {
         }
         .eraseToAnyPublisher()
     }
+
+    private func assetsPublisher() -> AnyPublisher<[any Assetable], Never> {
+        $storedItems
+            .map { items in
+                Publishers.AccumulateLatestMany(items.map { item in
+                    item.$asset
+                })
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
 }
