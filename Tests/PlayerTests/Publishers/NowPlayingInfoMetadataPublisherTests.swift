@@ -21,7 +21,10 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
 
     func testImmediatelyAvailableWithoutMetadata() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
-        expectNothingPublished(from: player.nowPlayingInfoMetadataPublisher(), during: .seconds(1))
+        expectAtLeastSimilarPublished(
+            values: [[MPMediaItemPropertyTitle: ""]],
+            from: player.nowPlayingInfoMetadataPublisher()
+        )
     }
 
     func testAvailableAfterDelay() {

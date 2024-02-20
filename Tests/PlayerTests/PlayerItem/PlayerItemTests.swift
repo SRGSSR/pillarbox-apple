@@ -39,7 +39,7 @@ final class PlayerItemTests: TestCase {
         }
         PlayerItem.load(for: item.id)
         expect(item.asset.resource).toEventually(equal(.simple(url: Stream.onDemand.url)))
-        expect(item.asset.nowPlayingInfo()).to(beNil())
+        expect(item.asset.nowPlayingInfo()).notTo(beEmpty())
         expect(item.asset.playerItem().preferredForwardBufferDuration).to(equal(4))
     }
 
@@ -47,7 +47,7 @@ final class PlayerItemTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         PlayerItem.load(for: item.id)
         expect(item.asset.resource).toEventually(equal(.simple(url: Stream.onDemand.url)))
-        expect(item.asset.nowPlayingInfo()).to(beNil())
+        expect(item.asset.nowPlayingInfo()).notTo(beEmpty())
         expect(item.asset.playerItem().preferredForwardBufferDuration).to(equal(0))
     }
 
@@ -85,7 +85,7 @@ final class PlayerItemTests: TestCase {
         }
         PlayerItem.load(for: item.id)
         expect(item.asset.resource).toEventually(equal(.custom(url: Stream.onDemand.url, delegate: delegate)))
-        expect(item.asset.nowPlayingInfo()).to(beNil())
+        expect(item.asset.nowPlayingInfo()).notTo(beEmpty())
         expect(item.asset.playerItem().preferredForwardBufferDuration).to(equal(4))
     }
 
@@ -94,7 +94,7 @@ final class PlayerItemTests: TestCase {
         let item = PlayerItem.custom(url: Stream.onDemand.url, delegate: delegate)
         PlayerItem.load(for: item.id)
         expect(item.asset.resource).toEventually(equal(.custom(url: Stream.onDemand.url, delegate: delegate)))
-        expect(item.asset.nowPlayingInfo()).to(beNil())
+        expect(item.asset.nowPlayingInfo()).notTo(beEmpty())
         expect(item.asset.playerItem().preferredForwardBufferDuration).to(equal(0))
     }
 
@@ -132,7 +132,7 @@ final class PlayerItemTests: TestCase {
         }
         PlayerItem.load(for: item.id)
         expect(item.asset.resource).toEventually(equal(.encrypted(url: Stream.onDemand.url, delegate: delegate)))
-        expect(item.asset.nowPlayingInfo()).to(beNil())
+        expect(item.asset.nowPlayingInfo()).notTo(beEmpty())
         expect(item.asset.playerItem().preferredForwardBufferDuration).to(equal(4))
     }
 
@@ -141,7 +141,7 @@ final class PlayerItemTests: TestCase {
         let item = PlayerItem.encrypted(url: Stream.onDemand.url, delegate: delegate)
         PlayerItem.load(for: item.id)
         expect(item.asset.resource).toEventually(equal(.encrypted(url: Stream.onDemand.url, delegate: delegate)))
-        expect(item.asset.nowPlayingInfo()).to(beNil())
+        expect(item.asset.nowPlayingInfo()).notTo(beEmpty())
         expect(item.asset.playerItem().preferredForwardBufferDuration).to(equal(0))
     }
 }
