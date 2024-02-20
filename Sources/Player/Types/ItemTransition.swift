@@ -15,6 +15,17 @@ enum ItemTransition: Equatable {
     /// Finish playing all items.
     case finish
 
+    var playerItem: AVPlayerItem? {
+        switch self {
+        case let .go(to: item):
+            return item
+        case let .stop(on: item):
+            return item
+        case .finish:
+            return nil
+        }
+    }
+
     static func transition(from previousItem: AVPlayerItem?, to currentItem: AVPlayerItem?) -> Self {
         if let previousItem, previousItem.error != nil {
             return .stop(on: previousItem)

@@ -76,8 +76,8 @@ public final class Player: ObservableObject, Equatable {
     }()
 
     lazy var itemUpdatePublisher: AnyPublisher<ItemUpdate, Never> = {
-        Publishers.CombineLatest($storedItems, queuePlayer.smoothCurrentItemPublisher())
-            .map { ItemUpdate(items: $0, currentItem: $1) }
+        Publishers.CombineLatest($storedItems, queuePlayer.itemTransitionPublisher())
+            .map { ItemUpdate(items: $0, currentItem: $1.playerItem) }
             .share(replay: 1)
             .eraseToAnyPublisher()
     }()

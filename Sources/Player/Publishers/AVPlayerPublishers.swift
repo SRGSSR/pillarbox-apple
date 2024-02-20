@@ -15,22 +15,6 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    /// Publishes a stream of `AVPlayerItem` which preserves failed items.
-    func smoothCurrentItemPublisher() -> AnyPublisher<AVPlayerItem?, Never> {
-        itemTransitionPublisher()
-            .map { transition in
-                switch transition {
-                case let .go(to: item):
-                    return item
-                case let .stop(on: item):
-                    return item
-                case .finish:
-                    return nil
-                }
-            }
-            .eraseToAnyPublisher()
-    }
-
     func itemTransitionPublisher() -> AnyPublisher<ItemTransition, Never> {
         currentItemPublisher()
             .withPrevious(nil)
