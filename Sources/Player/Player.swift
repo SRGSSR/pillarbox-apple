@@ -206,7 +206,7 @@ public final class Player: ObservableObject, Equatable {
     }
 
     private func configureQueuePlayerUpdatePublishers() {
-        configureQueueItemsPublisher()
+        configureQueuePlayerItemsPublisher()
         configureRateUpdatePublisher()
         configureTextStyleRulesUpdatePublisher()
     }
@@ -229,8 +229,8 @@ public final class Player: ObservableObject, Equatable {
 }
 
 private extension Player {
-    func configureQueueItemsPublisher() {
-        queueItemsPublisher()
+    func configureQueuePlayerItemsPublisher() {
+        queuePlayerItemsPublisher()
             .receiveOnMainThread()
             .sink { [queuePlayer] items in
                 queuePlayer.replaceItems(with: items)
@@ -347,7 +347,7 @@ private extension Player {
 }
 
 private extension Player {
-    func queueItemsPublisher() -> AnyPublisher<[AVPlayerItem], Never> {
+    func queuePlayerItemsPublisher() -> AnyPublisher<[AVPlayerItem], Never> {
         queuePublisher()
             .withPrevious(Queue.initial)
             .compactMap { [configuration] previous, current in
