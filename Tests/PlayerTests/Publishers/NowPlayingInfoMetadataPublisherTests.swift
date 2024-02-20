@@ -107,7 +107,7 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
     func testEntirePlayback() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url, metadata: AssetMetadataMock(title: "title")))
         expectAtLeastSimilarPublished(
-            values: [[MPMediaItemPropertyTitle: "title"]],
+            values: [[MPMediaItemPropertyTitle: "title"], [:]],
             from: player.nowPlayingInfoMetadataPublisher()
         ) {
             player.play()
