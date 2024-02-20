@@ -113,4 +113,22 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
             player.play()
         }
     }
+
+    func testError() {
+        let player = Player(item: .simple(url: Stream.unavailable.url, metadata: AssetMetadataMock(title: "title")))
+        expectAtLeastSimilarPublished(
+            values: [
+                [
+                    MPMediaItemPropertyTitle: "title"
+                ],
+                [
+                    MPMediaItemPropertyTitle: "title",
+                    MPMediaItemPropertyArtist: "HTTP 404: File Not Found"
+                ]
+            ],
+            from: player.nowPlayingInfoMetadataPublisher()
+        ) {
+            player.play()
+        }
+    }
 }

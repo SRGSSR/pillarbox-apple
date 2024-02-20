@@ -28,6 +28,10 @@ extension Assetable {
     func playerItem() -> AVPlayerItem {
         playerItem(reload: false)
     }
+
+    func nowPlayingInfo() -> NowPlayingInfo {
+        nowPlayingInfo(with: nil)
+    }
 }
 
 extension AVPlayerItem {
