@@ -59,7 +59,7 @@ final class ItemsTests: TestCase {
         expect(player.currentIndex).to(beNil())
     }
 
-    func testAppendAfterAfterRemoveAll() {
+    func testAppendAfterRemoveAll() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         player.removeAllItems()
         player.append(.simple(url: Stream.onDemand.url))
