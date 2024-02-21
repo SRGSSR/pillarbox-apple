@@ -113,7 +113,6 @@ extension AVPlayerItem {
             playbackErrorPublisher()
         )
         .map { Optional($0) }
-        .prepend(nil) // TODO: To be removed!
         .eraseToAnyPublisher()
     }
 
