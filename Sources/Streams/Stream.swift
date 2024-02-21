@@ -101,6 +101,12 @@ public extension Stream {
         url: Bundle.module.url(forResource: "silence", withExtension: "mp3")!,
         duration: CMTime(value: 5, timescale: 1)
     )
+
+    /// An unavailable MP3 stream.
+    static let unavailableMp3: Self = .init(
+        url: URL(string: "http://localhost:8123/unavailable.mp3")!,
+        duration: .indefinite
+    )
 }
 
 public extension Stream {
