@@ -27,10 +27,10 @@ enum ItemTransition: Equatable {
     }
 
     static func transition(from previousItem: AVPlayerItem?, to currentItem: AVPlayerItem?) -> Self {
-        if let previousItem, previousItem.error != nil {
+        if let previousItem, previousItem.hasError {
             return .stop(on: previousItem)
         }
-        else if let currentItem, currentItem.error != nil {
+        else if let currentItem, currentItem.hasError {
             return .stop(on: currentItem)
         }
         else if let currentItem {
