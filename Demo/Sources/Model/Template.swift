@@ -134,6 +134,11 @@ enum URLTemplate {
         description: "Content that does not exist",
         type: .url("http://localhost:8123/simple/unavailable/master.m3u8")
     )
+    static let unavailableMp3 = Template(
+        title: "Unavailable MP3",
+        description: "MP3 that does not exist",
+        type: .url("http://localhost:8123/simple/unavailable.mp3")
+    )
     static let unauthorized = Template(
         title: "Unauthorized URL",
         description: "Content which cannot be accessed",

@@ -88,7 +88,8 @@ final class ExamplesViewModel: ObservableObject {
         URNTemplate.unknown,
         URNTemplate.expired,
         URLTemplate.unknown,
-        URLTemplate.unauthorized
+        URLTemplate.unauthorized,
+        URLTemplate.unavailableMp3
     ])
 
     @Published private(set) var protectedMedias = [Media]()

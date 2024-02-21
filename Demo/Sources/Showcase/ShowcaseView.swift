@@ -75,6 +75,7 @@ struct ShowcaseView: View {
 
     @ViewBuilder
     private func playlistsSection() -> some View {
+        // swiftlint:disable:previous function_body_length
         // swiftlint:disable:next closure_body_length
         CustomSection("Playlists") {
             cell(
@@ -100,6 +101,10 @@ struct ShowcaseView: View {
             cell(
                 title: "Videos (URLs, one failing)",
                 destination: .playlist(templates: Playlist.videosWithOneFailingUrl)
+            )
+            cell(
+                title: "Videos (URLs, one failing MP3)",
+                destination: .playlist(templates: Playlist.videosWithOneFailingMp3Url)
             )
             cell(
                 title: "Videos (URNs, one failing)",
