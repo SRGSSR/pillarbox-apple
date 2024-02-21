@@ -22,7 +22,7 @@ public final class Player: ObservableObject, Equatable {
     }
 
     /// The last error received by the player.
-    @Published public private(set) var error: (any Error)?
+    @Published public private(set) var error: Error?
 
     /// The index of the current item in the queue.
     @Published public private(set) var currentIndex: Int?
@@ -268,20 +268,10 @@ private extension Player {
     }
 
     func configureErrorPublisher() {
-        Publishers.Merge(
-            queuePlayer.errorPublisher(),
-            resetErrorPublisher()
-        )
-        .receiveOnMainThread()
-        .assign(to: &$error)
-    }
-
-    private func resetErrorPublisher() -> AnyPublisher<Error?, Never> {
         itemUpdatePublisher
-            .map(\.elements)
-            .filter { $0.isEmpty }
-            .map { _ in nil }
-            .eraseToAnyPublisher()
+            .map(\.error)
+            .receiveOnMainThread()
+            .assign(to: &$error)
     }
 
     func configureCurrentIndexPublisher() {
