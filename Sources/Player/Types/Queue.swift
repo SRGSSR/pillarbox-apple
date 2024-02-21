@@ -42,7 +42,7 @@ struct Queue {
 
     var error: Error? {
         guard let item = itemTransition.playerItem else { return nil }
-        return ItemError.intrinsicError(for: item)
+        return item.error
     }
 
     let elements: [QueueElement]

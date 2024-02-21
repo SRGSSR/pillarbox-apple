@@ -29,7 +29,7 @@ extension AVPlayerItem {
     }
 
     var hasError: Bool {
-        ItemError.intrinsicError(for: self) != nil
+        error != nil
     }
 
     static func playerItems(from items: [PlayerItem], length: Int, reload: Bool) -> [AVPlayerItem] {
