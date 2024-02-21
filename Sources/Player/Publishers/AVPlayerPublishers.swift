@@ -20,6 +20,7 @@ extension AVPlayer {
             .map { item -> AnyPublisher<AVPlayerItem?, Never> in
                 if let item {
                     return item.errorPublisher()
+                        .dropFirst() // TODO: To be removed!
                         .map { _ in item }
                         .prepend(item)
                         .eraseToAnyPublisher()
