@@ -338,7 +338,7 @@ private extension Player {
 
 private extension Player {
     func queuePlayerItemsPublisher() -> AnyPublisher<[AVPlayerItem], Never> {
-        queuePublisher()
+        itemUpdatePublisher
             .withPrevious(Queue.initial)
             .compactMap { [configuration] previous, current in
                 switch current.itemTransition {
