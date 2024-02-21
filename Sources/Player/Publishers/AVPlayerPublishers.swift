@@ -9,6 +9,14 @@ import Combine
 import PillarboxCore
 
 extension AVPlayer {
+    private static func errorPublisher(for item: AVPlayerItem?) -> AnyPublisher<AVPlayerItem?, Never> {
+        guard let item else { return Empty().eraseToAnyPublisher() }
+        return item.errorPublisher()
+            .dropFirst()
+            .map { _ in item }
+            .eraseToAnyPublisher()
+    }
+
     func currentItemPublisher() -> AnyPublisher<AVPlayerItem?, Never> {
         publisher(for: \.currentItem)
             .removeDuplicates()
@@ -17,6 +25,11 @@ extension AVPlayer {
 
     func itemTransitionPublisher() -> AnyPublisher<ItemTransition, Never> {
         currentItemPublisher()
+            .map { item in
+                Self.errorPublisher(for: item)
+                    .prepend(item)
+            }
+            .switchToLatest()
             .withPrevious(nil)
             .map { ItemTransition.transition(from: $0.previous, to: $0.current) }
             .removeDuplicates()
