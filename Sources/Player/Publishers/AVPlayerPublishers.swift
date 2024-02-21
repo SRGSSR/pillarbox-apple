@@ -58,11 +58,4 @@ extension AVPlayer {
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
-
-    func errorPublisher() -> AnyPublisher<Error?, Never> {
-        currentItemPublisher()
-            .compactMap { $0?.errorPublisher() }
-            .switchToLatest()
-            .eraseToAnyPublisher()
-    }
 }
