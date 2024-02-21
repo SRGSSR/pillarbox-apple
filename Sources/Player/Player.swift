@@ -154,9 +154,9 @@ public final class Player: ObservableObject, Equatable {
 
         configurePlayer()
 
-        configureControlCenterPublishers()
-        configureQueuePlayerUpdatePublishers()
+        configureControlCenterPublishers() // TODO: Should we move this line?
         configurePublishedPropertyPublishers()
+        configureQueuePlayerUpdatePublishers()
     }
 
     /// Creates a player with a single item in its queue.
