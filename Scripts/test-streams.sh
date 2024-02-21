@@ -73,8 +73,8 @@ function generate_simple_streams {
 
     local on_demand_corrupt_dir="$dest_dir/on_demand_corrupt"
     mkdir -p "$on_demand_corrupt_dir"
-    ffmpeg -stream_loop -1 -i "$src_dir/source_640x360.mp4" -stream_loop -1 -i "$src_dir/source_audio_eng.mp4" -t 2 -vcodec copy -acodec copy \
-        -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$on_demand_corrupt_dir/master.m3u8" > /dev/null 2>&1 && rm "$on_demand_corrupt_dir"/*.ts &
+    ffmpeg -stream_loop -1 -i "$src_dir/source_640x360.mp4" -stream_loop -1 -i "$src_dir/source_audio_eng.mp4" -t 10 -vcodec copy -acodec copy \
+        -f hls -hls_time 4 -hls_list_size 0 -hls_flags round_durations "$on_demand_corrupt_dir/master.m3u8" > /dev/null 2>&1 && rm "$on_demand_corrupt_dir/master1.ts" &
 
     local live_dir="$dest_dir/live"
     mkdir -p "$live_dir"
