@@ -270,7 +270,7 @@ private extension Player {
     func configureErrorPublisher() {
         itemUpdatePublisher
             .map(\.error)
-            .removeAllDuplicates { $0 as? NSError == $1 as? NSError }
+            .removeDuplicates { $0 as? NSError == $1 as? NSError }
             .receiveOnMainThread()
             .assign(to: &$error)
     }
