@@ -31,4 +31,14 @@ final class ErrorTests: TestCase {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expectNothingPublishedNext(from: player.$error, during: .milliseconds(500))
     }
+
+    func testInvalidStream() {
+        let player = Player(item: .simple(url: Stream.unavailable.url))
+        expectEqualPublishedNext(
+            values: [URLError.fileDoesNotExist],
+            from: Self.errorCodePublisher(for: player),
+            during: .milliseconds(500)
+        )
+    }
+
 }
