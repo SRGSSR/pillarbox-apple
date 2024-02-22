@@ -41,4 +41,10 @@ final class ErrorTests: TestCase {
         )
     }
 
+    func testReset() {
+        let player = Player(item: .simple(url: Stream.unavailable.url))
+        expect(player.error).toEventuallyNot(beNil())
+        player.removeAllItems()
+        expect(player.error).toEventually(beNil())
+    }
 }
