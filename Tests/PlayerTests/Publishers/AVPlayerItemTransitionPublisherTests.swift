@@ -101,6 +101,25 @@ final class AVPlayerItemTransitionPublisherTests: TestCase {
         }
     }
 
+    func testPlayableItemReplacingFailedM3u8Item() {
+        let item1 = AVPlayerItem(url: Stream.unavailable.url)
+        let player = AVQueuePlayer(playerItem: item1)
+        expectEqualPublished(
+            values: [.go(to: item1), .stop(on: item1)],
+            from: player.itemTransitionPublisher(),
+            during: .milliseconds(500)
+        )
+
+        let item2 = AVPlayerItem(url: Stream.onDemand.url)
+        expectEqualPublishedNext(
+            values: [.go(to: item2)],
+            from: player.itemTransitionPublisher(),
+            during: .milliseconds(500)
+        ) {
+            player.replaceCurrentItem(with: item2)
+        }
+    }
+
     func testReplaceCurrentItem() {
         let item1 = AVPlayerItem(url: Stream.onDemand.url)
         let item2 = AVPlayerItem(url: Stream.shortOnDemand.url)
