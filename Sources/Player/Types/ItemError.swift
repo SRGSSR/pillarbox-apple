@@ -8,7 +8,7 @@ import AVFoundation
 
 enum ItemError {
     /// Consolidates intrinsic error and error log information.
-    static func intrinsicError(for item: AVPlayerItem) -> Error? {
+    static func intrinsicError(for item: AVPlayerItem) -> Error {
         if let errorLog = item.errorLog(), let event = errorLog.events.last {
             return NSError(
                 domain: event.errorDomain,
@@ -20,7 +20,7 @@ enum ItemError {
             return localizedError(from: error)
         }
         else {
-            return nil
+            return PlaybackError.unknown
         }
     }
 
