@@ -97,6 +97,7 @@ final class AVPlayerItemTransitionPublisherTests: TestCase {
             from: player.itemTransitionPublisher(),
             during: .milliseconds(500)
         ) {
+            player.removeAllItems()
             player.replaceCurrentItem(with: item2)
         }
     }
