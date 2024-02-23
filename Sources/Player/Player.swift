@@ -351,7 +351,17 @@ private extension Player {
                         length: configuration.preloadedItems
                     )
                 case let .stop(item):
-                    return [item]
+                    if previous.elements.count == current.elements.count {
+                        return [item]
+                    }
+                    else {
+                        return AVPlayerItem.playerItems(
+                            for: current.elements.map(\.asset),
+                            replacing: previous.elements.map(\.asset),
+                            currentItem: item,
+                            length: configuration.preloadedItems
+                        )
+                    }
                 case .finish:
                     return nil
                 }
