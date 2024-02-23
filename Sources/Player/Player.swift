@@ -351,14 +351,14 @@ private extension Player {
             .withPrevious(Queue.initial)
             .compactMap { [configuration] previous, current in
                 switch current.itemTransition {
-                case let .go(item):
+                case let .go(to: item):
                     return AVPlayerItem.playerItems(
                         for: current.elements.map(\.asset),
                         replacing: previous.elements.map(\.asset),
                         currentItem: item,
                         length: configuration.preloadedItems
                     )
-                case let .stop(item):
+                case let .stop(on: item):
                     if previous.elements.count == current.elements.count {
                         return [item]
                     }
