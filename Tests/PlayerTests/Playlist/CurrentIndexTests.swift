@@ -49,6 +49,15 @@ final class CurrentIndexTests: TestCase {
         }
     }
 
+    func testCurrentIndexWithFirstItemRemoved() {
+        let item1 = PlayerItem.simple(url: Stream.unavailable.url)
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(items: [item1, item2])
+        expect(player.error).toEventuallyNot(beNil())
+        player.remove(item1)
+        expect(player.currentIndex).toAlways(equal(0), until: .seconds(1))
+    }
+
     func testCurrentIndexWithFailedItem() {
         let player = Player(item: .simple(url: Stream.unavailable.url))
         expectEqualPublished(values: [0], from: player.$currentIndex, during: .milliseconds(500))
