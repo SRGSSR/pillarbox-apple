@@ -194,6 +194,7 @@ enum Playlist {
         URNTemplate.unknown,
         URLTemplate.unknown,
         URNTemplate.expired,
-        URLTemplate.unauthorized
+        URLTemplate.unauthorized,
+        URLTemplate.unavailableMp3
     ]
 }
