@@ -31,7 +31,8 @@ final class ItemsUpdateTests: TestCase {
         let player = Player(items: [item1, item2, item3])
         expect(player.queuePlayer.currentItem?.url).toEventually(equal(Stream.onDemand.url))
         player.items = [item4, item3, item1]
-        expect(player.queuePlayer.currentItem?.url).toAlways(equal(Stream.onDemand.url), until: .seconds(2))
+        // TODO: `toAlways` issue - https://github.com/Quick/Nimble/issues/1120
+        expect(player.queuePlayer.currentItem!.url).toAlways(equal(Stream.onDemand.url), until: .seconds(2))
     }
 
     func testUpdateWithoutCurrentItem() {

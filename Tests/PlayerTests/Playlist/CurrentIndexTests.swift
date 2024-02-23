@@ -55,7 +55,7 @@ final class CurrentIndexTests: TestCase {
         let player = Player(items: [item1, item2])
         expect(player.error).toEventuallyNot(beNil())
         player.remove(item1)
-        expect(player.currentIndex).toAlways(equal(0), until: .seconds(1))
+        expect(player.currentIndex!).toAlways(equal(0), until: .seconds(1)) // TODO: https://github.com/Quick/Nimble/issues/1120
     }
 
     func testCurrentIndexWithFailedItem() {
