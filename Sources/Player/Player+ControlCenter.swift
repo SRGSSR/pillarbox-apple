@@ -30,7 +30,7 @@ extension Player {
     }
 
     func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
-        itemUpdatePublisher
+        queuePublisher
             .compactMap { queue in
                 guard let index = queue.currentIndex else {
                     return NowPlayingInfo()

@@ -75,10 +75,18 @@ public final class Player: ObservableObject, Equatable {
             .eraseToAnyPublisher()
     }()
 
-    lazy var itemUpdatePublisher: AnyPublisher<Queue, Never> = {
-        queuePublisher()
-            .share(replay: 1)
-            .eraseToAnyPublisher()
+    lazy var queuePublisher: AnyPublisher<Queue, Never> = {
+        Publishers.Merge(
+            queueElementsPublisher()
+                .map { QueueUpdate.elements($0) },
+            queuePlayer.itemTransitionPublisher()
+                .map { QueueUpdate.itemTransition($0) }
+        )
+        .scan(Queue.initial) { queue, update in
+            queue.updated(with: update)
+        }
+        .share(replay: 1)
+        .eraseToAnyPublisher()
     }()
 
     /// A Boolean setting whether the audio output of the player must be muted.
@@ -268,7 +276,7 @@ private extension Player {
     }
 
     func configureErrorPublisher() {
-        itemUpdatePublisher
+        queuePublisher
             .map(\.error)
             .removeDuplicates { $0 as? NSError == $1 as? NSError }
             .receiveOnMainThread()
@@ -276,7 +284,7 @@ private extension Player {
     }
 
     func configureCurrentIndexPublisher() {
-        itemUpdatePublisher
+        queuePublisher
             .slice(at: \.currentIndex)
             .receiveOnMainThread()
             .lane("player_current_index")
@@ -284,7 +292,7 @@ private extension Player {
     }
 
     func configureCurrentTrackerPublisher() {
-        itemUpdatePublisher
+        queuePublisher
             .slice(at: \.currentItem)
             .map { [weak self] item in
                 guard let self, let item else { return nil }
@@ -319,7 +327,7 @@ private extension Player {
 
     func configureControlCenterRemoteCommandUpdatePublisher() {
         Publishers.CombineLatest(
-            itemUpdatePublisher,
+            queuePublisher,
             propertiesPublisher
         )
         .sink { [weak self] queue, properties in
@@ -339,7 +347,7 @@ private extension Player {
 
 private extension Player {
     func queuePlayerItemsPublisher() -> AnyPublisher<[AVPlayerItem], Never> {
-        itemUpdatePublisher
+        queuePublisher
             .withPrevious(Queue.initial)
             .compactMap { [configuration] previous, current in
                 switch current.itemTransition {
@@ -367,19 +375,6 @@ private extension Player {
                 }
             }
             .eraseToAnyPublisher()
-    }
-
-    private func queuePublisher() -> AnyPublisher<Queue, Never> {
-        Publishers.Merge(
-            queueElementsPublisher()
-                .map { QueueUpdate.elements($0) },
-            queuePlayer.itemTransitionPublisher()
-                .map { QueueUpdate.itemTransition($0) }
-        )
-        .scan(Queue.initial) { queue, update in
-            queue.updated(with: update)
-        }
-        .eraseToAnyPublisher()
     }
 
     private func queueElementsPublisher() -> AnyPublisher<[QueueElement], Never> {
