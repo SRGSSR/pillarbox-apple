@@ -11,27 +11,40 @@ enum ItemTransition: Equatable {
     /// Go to the provided item (or the beginning of the playlist if `nil`).
     case go(to: AVPlayerItem?)
     /// Stop on the provided item.
-    case stop(on: AVPlayerItem)
+    case stop(on: AVPlayerItem, with: Error)
     /// Finish playing all items.
     case finish
 
-    var playerItem: AVPlayerItem? {
+    var update: ItemUpdate {
         switch self {
         case let .go(to: item):
-            return item
-        case let .stop(on: item):
-            return item
+            return .init(item: item, error: item?.error)
+        case let .stop(on: item, with: error):
+            return .init(item: item, error: error)
         case .finish:
-            return nil
+            return .empty
+        }
+    }
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        switch (lhs, rhs) {
+        case let (.go(to: lhsItem), .go(to: rhsItem)):
+            return lhsItem == rhsItem
+        case let (.stop(on: lhsItem, with: lhsError), .stop(on: rhsItem, with: rhsError)):
+            return lhsItem == rhsItem && lhsError as NSError == rhsError as NSError
+        case (.finish, .finish):
+            return true
+        default:
+            return false
         }
     }
 
     static func transition(from previousUpdate: ItemUpdate, to currentUpdate: ItemUpdate) -> Self {
-        if let previousItem = previousUpdate.item, previousUpdate.error != nil {
-            return .stop(on: previousItem)
+        if let previousItem = previousUpdate.item, let error = previousUpdate.error {
+            return .stop(on: previousItem, with: error)
         }
-        else if let currentItem = currentUpdate.item, currentUpdate.error != nil {
-            return .stop(on: currentItem)
+        else if let currentItem = currentUpdate.item, let error = currentUpdate.error {
+            return .stop(on: currentItem, with: error)
         }
         else if let currentItem = currentUpdate.item {
             return .go(to: currentItem)

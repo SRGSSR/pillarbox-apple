@@ -333,8 +333,10 @@ private extension Player {
         .sink { [weak self] queue, properties in
             guard let self else { return }
             let areSkipsEnabled = queue.elements.count <= 1 && properties.streamType != .live
-            nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
-            nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
+            let hasError = queue.error != nil
+            nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled && !hasError
+            nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled && !hasError
+            nowPlayingSession.remoteCommandCenter.changePlaybackPositionCommand.isEnabled = !hasError
 
             let index = queue.currentIndex
             let items = Deque(queue.elements.map(\.item))
@@ -358,7 +360,7 @@ private extension Player {
                         currentItem: item,
                         length: configuration.preloadedItems
                     )
-                case let .stop(on: item):
+                case let .stop(on: item, with: _):
                     if previous.elements.count == current.elements.count {
                         return [item]
                     }

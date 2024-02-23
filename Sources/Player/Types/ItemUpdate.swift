@@ -7,6 +7,10 @@
 import AVFoundation
 
 struct ItemUpdate {
+    static var empty: Self {
+        .init(item: nil, error: nil)
+    }
+
     let item: AVPlayerItem?
     let error: Error?
 

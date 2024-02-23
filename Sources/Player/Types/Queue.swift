@@ -32,7 +32,7 @@ struct Queue {
     }
 
     var currentIndex: Int? {
-        elements.firstIndex { $0.matches(itemTransition.playerItem) }
+        elements.firstIndex { $0.matches(itemTransition.update.item) }
     }
 
     var currentItem: PlayerItem? {
@@ -41,8 +41,7 @@ struct Queue {
     }
 
     var error: Error? {
-        guard let item = itemTransition.playerItem else { return nil }
-        return ItemError.intrinsicError(for: item)
+        itemTransition.update.error
     }
 
     let elements: [QueueElement]

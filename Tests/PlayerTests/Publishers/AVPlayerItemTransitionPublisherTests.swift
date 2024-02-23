@@ -10,6 +10,39 @@ import AVFoundation
 import Combine
 import PillarboxStreams
 
+private enum PlayerError {
+    static var mp3NotFound: NSError {
+        NSError(
+            domain: URLError.errorDomain,
+            code: URLError.fileDoesNotExist.rawValue,
+            userInfo: [
+                NSLocalizedDescriptionKey: "The requested URL was not found on this server.",
+                NSUnderlyingErrorKey: NSError(
+                    domain: "NSOSStatusErrorDomain",
+                    code: -12938
+                )
+            ]
+        )
+    }
+
+    static var m3u8NotFound: NSError {
+        NSError(
+            domain: URLError.errorDomain,
+            code: URLError.fileDoesNotExist.rawValue,
+            userInfo: [
+                NSLocalizedDescriptionKey: "The requested URL was not found on this server.",
+                NSUnderlyingErrorKey: NSError(
+                    domain: "CoreMediaErrorDomain",
+                    code: -12938,
+                    userInfo: [
+                        "NSDescription": "HTTP 404: File Not Found"
+                    ]
+                )
+            ]
+        )
+    }
+}
+
 final class AVPlayerItemTransitionPublisherTests: TestCase {
     func testWhenEmpty() {
         let player = AVQueuePlayer()
@@ -50,7 +83,7 @@ final class AVPlayerItemTransitionPublisherTests: TestCase {
         let item2 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2])
         expectEqualPublished(
-            values: [.go(to: item1), .stop(on: item1)],
+            values: [.go(to: item1), .stop(on: item1, with: PlayerError.m3u8NotFound)],
             from: player.itemTransitionPublisher(),
             during: .seconds(2)
         ) {
@@ -64,7 +97,7 @@ final class AVPlayerItemTransitionPublisherTests: TestCase {
         let item3 = AVPlayerItem(url: Stream.onDemand.url)
         let player = AVQueuePlayer(items: [item1, item2, item3])
         expectEqualPublished(
-            values: [.go(to: item1), .stop(on: item2)],
+            values: [.go(to: item1), .stop(on: item2, with: PlayerError.m3u8NotFound)],
             from: player.itemTransitionPublisher(),
             during: .seconds(2)
         ) {
@@ -76,7 +109,7 @@ final class AVPlayerItemTransitionPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.unavailableMp3.url)
         let player = AVQueuePlayer(playerItem: item)
         expectEqualPublished(
-            values: [.go(to: item), .stop(on: item)],
+            values: [.go(to: item), .stop(on: item, with: PlayerError.mp3NotFound)],
             from: player.itemTransitionPublisher(),
             during: .seconds(2)
         )
@@ -86,7 +119,7 @@ final class AVPlayerItemTransitionPublisherTests: TestCase {
         let item1 = AVPlayerItem(url: Stream.unavailableMp3.url)
         let player = AVQueuePlayer(playerItem: item1)
         expectEqualPublished(
-            values: [.go(to: item1), .stop(on: item1)],
+            values: [.go(to: item1), .stop(on: item1, with: PlayerError.mp3NotFound)],
             from: player.itemTransitionPublisher(),
             during: .milliseconds(500)
         )
@@ -105,7 +138,7 @@ final class AVPlayerItemTransitionPublisherTests: TestCase {
         let item1 = AVPlayerItem(url: Stream.unavailable.url)
         let player = AVQueuePlayer(playerItem: item1)
         expectEqualPublished(
-            values: [.go(to: item1), .stop(on: item1)],
+            values: [.go(to: item1), .stop(on: item1, with: PlayerError.m3u8NotFound)],
             from: player.itemTransitionPublisher(),
             during: .milliseconds(500)
         )
