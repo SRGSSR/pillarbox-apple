@@ -175,6 +175,7 @@ extension AVQueuePlayer {
     }
 
     private func removeAll(from index: Int) {
+        assert(index > 0, "The current item must not be removed")
         guard items().count > index else { return }
         items().suffix(from: index).forEach { remove($0) }
     }
