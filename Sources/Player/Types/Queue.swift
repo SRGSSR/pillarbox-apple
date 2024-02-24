@@ -30,7 +30,7 @@ struct Queue {
     static let initial = Self(elements: [], itemTransition: .go(to: nil))
 
     var currentIndex: Int? {
-        elements.firstIndex { $0.matches(itemTransition.update.item) }
+        elements.firstIndex { $0.matches(itemTransition.state.item) }
     }
 
     var currentItem: PlayerItem? {
@@ -39,7 +39,7 @@ struct Queue {
     }
 
     var error: Error? {
-        itemTransition.update.error
+        itemTransition.state.error
     }
 
     let elements: [QueueElement]

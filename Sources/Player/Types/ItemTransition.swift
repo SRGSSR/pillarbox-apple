@@ -15,7 +15,7 @@ enum ItemTransition: Equatable {
     /// Finish playing all items.
     case finish
 
-    var update: ItemUpdate {
+    var state: ItemState {
         switch self {
         case let .go(to: item):
             return .init(item: item, error: item?.error)
@@ -39,17 +39,17 @@ enum ItemTransition: Equatable {
         }
     }
 
-    static func transition(from previousUpdate: ItemUpdate, to currentUpdate: ItemUpdate) -> Self {
-        if let previousItem = previousUpdate.item, let error = previousUpdate.error {
+    static func transition(from previousState: ItemState, to currentState: ItemState) -> Self {
+        if let previousItem = previousState.item, let error = previousState.error {
             return .stop(on: previousItem, with: error)
         }
-        else if let currentItem = currentUpdate.item, let error = currentUpdate.error {
+        else if let currentItem = currentState.item, let error = currentState.error {
             return .stop(on: currentItem, with: error)
         }
-        else if let currentItem = currentUpdate.item {
+        else if let currentItem = currentState.item {
             return .go(to: currentItem)
         }
-        else if previousUpdate.item != nil {
+        else if previousState.item != nil {
             return .finish
         }
         else {

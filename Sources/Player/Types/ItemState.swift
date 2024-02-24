@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-struct ItemUpdate {
+struct ItemState {
     static let empty = Self(item: nil, error: nil)
 
     let item: AVPlayerItem?

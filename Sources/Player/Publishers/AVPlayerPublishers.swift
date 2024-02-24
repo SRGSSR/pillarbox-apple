@@ -16,7 +16,7 @@ extension AVPlayer {
     }
 
     func itemTransitionPublisher() -> AnyPublisher<ItemTransition, Never> {
-        itemUpdatePublisher()
+        itemStatePublisher()
             .withPrevious(.init(item: currentItem, error: currentItem?.error))
             .map { ItemTransition.transition(from: $0.previous, to: $0.current) }
             .removeDuplicates()
@@ -48,9 +48,9 @@ extension AVPlayer {
 }
 
 private extension AVPlayer {
-    private func itemUpdatePublisher() -> AnyPublisher<ItemUpdate, Never> {
+    private func itemStatePublisher() -> AnyPublisher<ItemState, Never> {
         currentItemPublisher()
-            .map { item -> AnyPublisher<ItemUpdate, Never> in
+            .map { item -> AnyPublisher<ItemState, Never> in
                 if let item {
                     if let error = item.error {
                         return Just(.init(item: item, error: error)).eraseToAnyPublisher()
