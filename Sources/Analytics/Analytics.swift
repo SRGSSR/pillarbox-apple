@@ -42,12 +42,10 @@ public class Analytics {
     }
 
     /// The singleton instance.
-    public static var shared = Analytics()
+    public static let shared = Analytics()
 
     /// The analytics version.
-    public static var version: String {
-        PackageInfo.version
-    }
+    public static let version = PackageInfo.version
 
     var comScoreGlobals: ComScoreGlobals? {
         dataSource?.comScoreGlobals

@@ -11,14 +11,12 @@ import Nimble
 import PillarboxStreams
 
 final class TextStyleRulesTests: TestCase {
-    private static var textStyleRules: [AVTextStyleRule] = {
-        [
-            .init(textMarkupAttributes: [
-                kCMTextMarkupAttribute_ForegroundColorARGB: [1, 1, 0, 0],
-                kCMTextMarkupAttribute_ItalicStyle: true
-            ])
-        ]
-    }()
+    private static let textStyleRules = [
+        AVTextStyleRule(textMarkupAttributes: [
+            kCMTextMarkupAttribute_ForegroundColorARGB: [1, 1, 0, 0],
+            kCMTextMarkupAttribute_ItalicStyle: true
+        ])
+    ]
 
     func testDefaultWithEmptyPlayer() {
         let player = Player()

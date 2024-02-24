@@ -7,9 +7,7 @@
 import CoreMedia
 
 struct TimeProperties: Equatable {
-    static var empty: Self {
-        .init(loadedTimeRanges: [], seekableTimeRanges: [], isPlaybackLikelyToKeepUp: false)
-    }
+    static let empty = Self(loadedTimeRanges: [], seekableTimeRanges: [], isPlaybackLikelyToKeepUp: false)
 
     let loadedTimeRanges: [NSValue]
     let seekableTimeRanges: [NSValue]

@@ -10,9 +10,7 @@ enum PlaybackSpeedUpdate: Equatable {
 }
 
 struct PlaybackSpeed: Equatable {
-    static var indefinite: Self {
-        .init(value: 1, range: nil)
-    }
+    static let indefinite = Self(value: 1, range: nil)
 
     let value: Float
     let range: ClosedRange<Float>?

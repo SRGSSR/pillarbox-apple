@@ -7,9 +7,7 @@
 import CoreMedia
 
 struct CoreProperties: Equatable {
-    static var empty: Self {
-        .init(itemProperties: .empty, mediaSelectionProperties: .empty, playbackProperties: .empty)
-    }
+    static let empty = Self(itemProperties: .empty, mediaSelectionProperties: .empty, playbackProperties: .empty)
 
     let itemProperties: ItemProperties
     let mediaSelectionProperties: MediaSelectionProperties

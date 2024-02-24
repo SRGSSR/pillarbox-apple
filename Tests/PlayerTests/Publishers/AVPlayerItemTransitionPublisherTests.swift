@@ -11,36 +11,32 @@ import Combine
 import PillarboxStreams
 
 private enum PlayerError {
-    static var mp3NotFound: NSError {
-        NSError(
-            domain: URLError.errorDomain,
-            code: URLError.fileDoesNotExist.rawValue,
-            userInfo: [
-                NSLocalizedDescriptionKey: "The requested URL was not found on this server.",
-                NSUnderlyingErrorKey: NSError(
-                    domain: "NSOSStatusErrorDomain",
-                    code: -12938
-                )
-            ]
-        )
-    }
+    static let mp3NotFound = NSError(
+        domain: URLError.errorDomain,
+        code: URLError.fileDoesNotExist.rawValue,
+        userInfo: [
+            NSLocalizedDescriptionKey: "The requested URL was not found on this server.",
+            NSUnderlyingErrorKey: NSError(
+                domain: "NSOSStatusErrorDomain",
+                code: -12938
+            )
+        ]
+    )
 
-    static var m3u8NotFound: NSError {
-        NSError(
-            domain: URLError.errorDomain,
-            code: URLError.fileDoesNotExist.rawValue,
-            userInfo: [
-                NSLocalizedDescriptionKey: "The requested URL was not found on this server.",
-                NSUnderlyingErrorKey: NSError(
-                    domain: "CoreMediaErrorDomain",
-                    code: -12938,
-                    userInfo: [
-                        "NSDescription": "HTTP 404: File Not Found"
-                    ]
-                )
-            ]
-        )
-    }
+    static let m3u8NotFound = NSError(
+        domain: URLError.errorDomain,
+        code: URLError.fileDoesNotExist.rawValue,
+        userInfo: [
+            NSLocalizedDescriptionKey: "The requested URL was not found on this server.",
+            NSUnderlyingErrorKey: NSError(
+                domain: "CoreMediaErrorDomain",
+                code: -12938,
+                userInfo: [
+                    "NSDescription": "HTTP 404: File Not Found"
+                ]
+            )
+        ]
+    )
 }
 
 final class AVPlayerItemTransitionPublisherTests: TestCase {

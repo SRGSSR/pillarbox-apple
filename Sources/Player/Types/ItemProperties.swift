@@ -8,15 +8,13 @@ import AVFoundation
 import CoreMedia
 
 struct ItemProperties: Equatable {
-    static var empty: Self {
-        .init(
-            item: nil,
-            state: .unknown,
-            duration: .invalid,
-            minimumTimeOffsetFromLive: .invalid,
-            presentationSize: nil
-        )
-    }
+    static let empty = Self(
+        item: nil,
+        state: .unknown,
+        duration: .invalid,
+        minimumTimeOffsetFromLive: .invalid,
+        presentationSize: nil
+    )
 
     let item: AVPlayerItem?
     let state: ItemState

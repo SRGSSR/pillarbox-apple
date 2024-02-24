@@ -7,9 +7,7 @@
 import AVFoundation
 
 struct MediaSelectionProperties: Equatable {
-    static var empty: Self {
-        self.init(groups: [:], selection: nil)
-    }
+    static let empty = Self(groups: [:], selection: nil)
 
     private let groups: [AVMediaCharacteristic: AVMediaSelectionGroup]
     let selection: AVMediaSelection?

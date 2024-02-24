@@ -5,14 +5,12 @@
 //
 
 struct PlayerItemProperties: Equatable {
-    static var empty: Self {
-        .init(
-            itemProperties: .empty,
-            mediaSelectionProperties: .empty,
-            timeProperties: .empty,
-            isEmpty: true
-        )
-    }
+    static let empty = Self(
+        itemProperties: .empty,
+        mediaSelectionProperties: .empty,
+        timeProperties: .empty,
+        isEmpty: true
+    )
 
     let itemProperties: ItemProperties
     let mediaSelectionProperties: MediaSelectionProperties

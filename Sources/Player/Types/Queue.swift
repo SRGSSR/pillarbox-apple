@@ -27,9 +27,7 @@ enum QueueUpdate {
 }
 
 struct Queue {
-    static var initial: Self {
-        .init(elements: [], itemTransition: .go(to: nil))
-    }
+    static let initial = Self(elements: [], itemTransition: .go(to: nil))
 
     var currentIndex: Int? {
         elements.firstIndex { $0.matches(itemTransition.update.item) }

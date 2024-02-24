@@ -72,7 +72,7 @@ struct OptInView: View {
 }
 
 extension OptInView: SourceCodeViewable {
-    static var filePath: String { #file }
+    static let filePath = #file
 }
 
 #Preview {

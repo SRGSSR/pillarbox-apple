@@ -17,9 +17,7 @@ public final class Player: ObservableObject, Equatable {
     private static weak var currentPlayer: Player?
 
     /// The player version.
-    public static var version: String {
-        PackageInfo.version
-    }
+    public static let version = PackageInfo.version
 
     /// The last error received by the player.
     @Published public private(set) var error: Error?

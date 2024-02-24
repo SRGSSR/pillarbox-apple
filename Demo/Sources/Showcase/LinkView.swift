@@ -45,7 +45,7 @@ struct LinkView: View {
 }
 
 extension LinkView: SourceCodeViewable {
-    static var filePath: String { #file }
+    static let filePath = #file
 }
 
 #Preview {

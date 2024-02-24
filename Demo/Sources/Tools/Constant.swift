@@ -9,9 +9,7 @@ import SwiftUI
 let kPageSize: UInt = 50
 
 extension Animation {
-    static var defaultLinear: Animation {
-        .linear(duration: 0.2)
-    }
+    static let defaultLinear = Self.linear(duration: 0.2)
 }
 
 func constant<T>(iOS: T, tvOS: T) -> T {

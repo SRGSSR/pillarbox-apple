@@ -27,5 +27,5 @@ private struct SafariWebView: UIViewControllerRepresentable {
 }
 
 extension WebView: SourceCodeViewable {
-    static var filePath: String { #file }
+    static let filePath = #file
 }

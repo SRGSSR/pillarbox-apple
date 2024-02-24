@@ -50,7 +50,7 @@ struct WrappedView: View {
 }
 
 extension WrappedView: SourceCodeViewable {
-    static var filePath: String { #file }
+    static let filePath = #file
 }
 
 #Preview {

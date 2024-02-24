@@ -5,7 +5,5 @@
 //
 
 extension [String: String] {
-    static var test: Self {
-        ["media_title": "name"]
-    }
+    static let test = ["media_title": "name"]
 }

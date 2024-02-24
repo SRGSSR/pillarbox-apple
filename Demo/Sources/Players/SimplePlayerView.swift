@@ -54,7 +54,7 @@ struct SimplePlayerView: View {
 }
 
 extension SimplePlayerView: SourceCodeViewable {
-    static var filePath: String { #file }
+    static let filePath = #file
 }
 
 #Preview {

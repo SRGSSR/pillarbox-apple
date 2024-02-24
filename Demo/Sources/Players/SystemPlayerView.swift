@@ -42,7 +42,7 @@ extension SystemPlayerView {
 }
 
 extension SystemPlayerView: SourceCodeViewable {
-    static var filePath: String { #file }
+    static let filePath = #file
 }
 
 #Preview {

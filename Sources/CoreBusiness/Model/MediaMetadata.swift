@@ -9,7 +9,7 @@ import UIKit
 
 /// Metadata associated with content loaded from a URN.
 public struct MediaMetadata: AssetMetadata {
-    private static var dateFormatter: DateFormatter = {
+    private static let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.timeZone = TimeZone(identifier: "Europe/Zurich")
         dateFormatter.dateStyle = .long

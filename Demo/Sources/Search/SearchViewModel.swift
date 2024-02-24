@@ -36,7 +36,7 @@ final class SearchViewModel: ObservableObject, Refreshable {
         case loadMore
     }
 
-    private static var settings: SRGMediaSearchSettings = {
+    private static let settings = {
         let settings = SRGMediaSearchSettings()
         settings.aggregationsEnabled = false
         return settings
