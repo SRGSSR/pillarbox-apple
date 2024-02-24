@@ -10,14 +10,14 @@ import CoreMedia
 struct ItemProperties: Equatable {
     static let empty = Self(
         item: nil,
-        state: .unknown,
+        status: .unknown,
         duration: .invalid,
         minimumTimeOffsetFromLive: .invalid,
         presentationSize: nil
     )
 
     let item: AVPlayerItem?
-    let state: ItemState
+    let status: ItemStatus
 
     let duration: CMTime
     let minimumTimeOffsetFromLive: CMTime

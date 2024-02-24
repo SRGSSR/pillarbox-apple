@@ -17,8 +17,8 @@ struct CoreProperties: Equatable {
 // MARK: ItemProperties
 
 extension CoreProperties {
-    var state: ItemState {
-        itemProperties.state
+    var itemStatus: ItemStatus {
+        itemProperties.status
     }
 
     var duration: CMTime {
@@ -45,7 +45,7 @@ extension CoreProperties {
     }
 
     var playbackState: PlaybackState {
-        .init(itemState: itemProperties.state, rate: rate)
+        .init(itemStatus: itemProperties.status, rate: rate)
     }
 }
 

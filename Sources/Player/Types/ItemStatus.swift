@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-enum ItemState: Equatable {
+enum ItemStatus: Equatable {
     case unknown
     case readyToPlay
     case ended

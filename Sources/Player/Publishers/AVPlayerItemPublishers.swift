@@ -11,8 +11,8 @@ import MediaAccessibility
 extension AVPlayerItem {
     func propertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
         Publishers.CombineLatest6(
-            statePublisher()
-                .lane("player_item_state"),
+            statusPublisher()
+                .lane("player_item_status"),
             publisher(for: \.presentationSize),
             mediaSelectionPropertiesPublisher()
                 .lane("player_item_media_selection"),
@@ -20,12 +20,12 @@ extension AVPlayerItem {
             publisher(for: \.duration),
             minimumTimeOffsetFromLivePublisher()
         )
-        .map { [weak self] state, presentationSize, mediaSelectionProperties, timeProperties, duration, minimumTimeOffsetFromLive in
-            let isKnown = (state != .unknown)
+        .map { [weak self] status, presentationSize, mediaSelectionProperties, timeProperties, duration, minimumTimeOffsetFromLive in
+            let isKnown = (status != .unknown)
             return .init(
                 itemProperties: .init(
                     item: self,
-                    state: state,
+                    status: status,
                     duration: isKnown ? duration : .invalid,
                     minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
                     presentationSize: isKnown ? presentationSize : nil
@@ -38,7 +38,7 @@ extension AVPlayerItem {
         .eraseToAnyPublisher()
     }
 
-    func statePublisher() -> AnyPublisher<ItemState, Never> {
+    func statusPublisher() -> AnyPublisher<ItemStatus, Never> {
         Publishers.Merge(
             publisher(for: \.status)
                 .map { status in

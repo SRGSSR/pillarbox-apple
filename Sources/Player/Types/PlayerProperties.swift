@@ -109,8 +109,8 @@ extension PlayerProperties {
         coreProperties.mediaSelectionProperties
     }
 
-    var state: ItemState {
-        coreProperties.state
+    var itemStatus: ItemStatus {
+        coreProperties.itemStatus
     }
 
     var duration: CMTime {
