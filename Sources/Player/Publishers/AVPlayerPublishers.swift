@@ -52,10 +52,15 @@ private extension AVPlayer {
         currentItemPublisher()
             .map { item -> AnyPublisher<ItemUpdate, Never> in
                 if let item {
-                    return item.errorPublisher()
-                        .map { .init(item: item, error: $0) }
-                        .prepend(.init(item: item, error: item.error))
-                        .eraseToAnyPublisher()
+                    if let error = item.error {
+                        return Just(.init(item: item, error: error)).eraseToAnyPublisher()
+                    }
+                    else {
+                        return item.errorPublisher()
+                            .map { .init(item: item, error: $0) }
+                            .prepend(.init(item: item, error: nil))
+                            .eraseToAnyPublisher()
+                    }
                 }
                 else {
                     return Just(.init(item: nil, error: nil)).eraseToAnyPublisher()

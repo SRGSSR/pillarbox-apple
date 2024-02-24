@@ -30,8 +30,8 @@ enum ItemTransition: Equatable {
         switch (lhs, rhs) {
         case let (.go(to: lhsItem), .go(to: rhsItem)):
             return lhsItem === rhsItem
-        case let (.stop(on: lhsItem, with: _), .stop(on: rhsItem, with: _)):
-            return lhsItem === rhsItem
+        case let (.stop(on: lhsItem, with: lhsError), .stop(on: rhsItem, with: rhsError)):
+            return lhsItem === rhsItem && lhsError as NSError == rhsError as NSError
         case (.finish, .finish):
             return true
         default:
