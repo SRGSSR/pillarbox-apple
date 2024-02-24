@@ -63,7 +63,7 @@ private extension AVPlayer {
                     }
                 }
                 else {
-                    return Just(.init(item: nil, error: nil)).eraseToAnyPublisher()
+                    return Just(.empty).eraseToAnyPublisher()
                 }
             }
             .switchToLatest()
