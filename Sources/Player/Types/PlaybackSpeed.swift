@@ -4,11 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-enum PlaybackSpeedUpdate: Equatable {
-    case value(Float)
-    case range(ClosedRange<Float>?)
-}
-
 struct PlaybackSpeed: Equatable {
     static let indefinite = Self(value: 1, range: nil)
 

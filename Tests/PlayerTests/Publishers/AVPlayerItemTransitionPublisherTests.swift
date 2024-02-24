@@ -39,6 +39,8 @@ private enum PlayerError {
     )
 }
 
+#if false
+
 final class AVPlayerItemTransitionPublisherTests: TestCase {
     func testWhenEmpty() {
         let player = AVQueuePlayer()
@@ -187,3 +189,5 @@ final class AVPlayerItemTransitionPublisherTests: TestCase {
         }
     }
 }
+
+#endif

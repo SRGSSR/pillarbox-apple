@@ -75,13 +75,15 @@ public final class Player: ObservableObject, Equatable {
 
     lazy var queuePublisher: AnyPublisher<Queue, Never> = {
         Publishers.Merge(
-            queueElementsPublisher()
-                .map { QueueUpdate.elements($0) },
-            queuePlayer.itemTransitionPublisher()
-                .map { QueueUpdate.itemTransition($0) }
+            elementsQueueUpdatePublisher(),
+            itemStateQueueUpdatePublisher()
         )
-        .scan(Queue.initial) { queue, update in
+        .scan(.empty) { queue, update -> Queue in
             queue.updated(with: update)
+        }
+        .map { queue in
+            print("--> queue updated to \(queue)")
+            return queue
         }
         .share(replay: 1)
         .eraseToAnyPublisher()
@@ -235,9 +237,19 @@ public final class Player: ObservableObject, Equatable {
 
 private extension Player {
     func configureQueuePlayerItemsPublisher() {
-        queuePlayerItemsPublisher()
+        queuePublisher
+            .withPrevious(Queue.empty)
+            .compactMap { [configuration] previous, current in
+                Queue.playerItems(
+                    from: previous,
+                    to: current,
+                    length: configuration.preloadedItems
+                )
+            }
+            .removeDuplicates()
             .receiveOnMainThread()
             .sink { [queuePlayer] items in
+                print("--> intend to replace with \(items)")
                 queuePlayer.replaceItems(with: items)
             }
             .store(in: &cancellables)
@@ -275,7 +287,7 @@ private extension Player {
 
     func configureErrorPublisher() {
         queuePublisher
-            .map(\.error)
+            .map(\.displayableError)
             .removeDuplicates { $0 as? NSError == $1 as? NSError }
             .receiveOnMainThread()
             .assign(to: &$error)
@@ -283,7 +295,7 @@ private extension Player {
 
     func configureCurrentIndexPublisher() {
         queuePublisher
-            .slice(at: \.currentIndex)
+            .slice(at: \.index)
             .receiveOnMainThread()
             .lane("player_current_index")
             .assign(to: &$currentIndex)
@@ -291,7 +303,7 @@ private extension Player {
 
     func configureCurrentTrackerPublisher() {
         queuePublisher
-            .slice(at: \.currentItem)
+            .slice(at: \.item)
             .map { [weak self] item in
                 guard let self, let item else { return nil }
                 return CurrentTracker(item: item, player: self)
@@ -336,56 +348,11 @@ private extension Player {
             nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled && !hasError && canSkipBackward()
             nowPlayingSession.remoteCommandCenter.changePlaybackPositionCommand.isEnabled = !hasError
 
-            let index = queue.currentIndex
+            let index = queue.index
             let items = Deque(queue.elements.map(\.item))
             nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: items, streamType: properties.streamType)
             nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: index, in: items)
         }
         .store(in: &cancellables)
-    }
-}
-
-private extension Player {
-    func queuePlayerItemsPublisher() -> AnyPublisher<[AVPlayerItem], Never> {
-        queuePublisher
-            .withPrevious(Queue.initial)
-            .compactMap { [configuration] previous, current in
-                switch current.itemTransition {
-                case let .go(to: item):
-                    return AVPlayerItem.playerItems(
-                        for: current.elements.map(\.asset),
-                        replacing: previous.elements.map(\.asset),
-                        currentItem: item,
-                        length: configuration.preloadedItems
-                    )
-                case let .stop(on: item, with: _):
-                    if previous.elements.count == current.elements.count {
-                        return [item]
-                    }
-                    else {
-                        return AVPlayerItem.playerItems(
-                            for: current.elements.map(\.asset),
-                            replacing: previous.elements.map(\.asset),
-                            currentItem: item,
-                            length: configuration.preloadedItems
-                        )
-                    }
-                case .finish:
-                    return nil
-                }
-            }
-            .eraseToAnyPublisher()
-    }
-
-    private func queueElementsPublisher() -> AnyPublisher<[QueueElement], Never> {
-        $storedItems
-            .map { items in
-                Publishers.AccumulateLatestMany(items.map { item in
-                    item.$asset
-                        .map { QueueElement(item: item, asset: $0) }
-                })
-            }
-            .switchToLatest()
-            .eraseToAnyPublisher()
     }
 }

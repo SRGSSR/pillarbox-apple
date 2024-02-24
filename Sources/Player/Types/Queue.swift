@@ -6,56 +6,79 @@
 
 import AVFoundation
 
-struct QueueElement {
-    let item: PlayerItem
-    let asset: any Assetable
-
-    init(item: PlayerItem, asset: any Assetable) {
-        assert(item.id == asset.id)
-        self.item = item
-        self.asset = asset
-    }
-
-    func matches(_ playerItem: AVPlayerItem?) -> Bool {
-        item.matches(playerItem)
-    }
-}
-
-enum QueueUpdate {
-    case elements([QueueElement])
-    case itemTransition(ItemTransition)
-}
-
 struct Queue {
-    static let initial = Self(elements: [], itemTransition: .go(to: nil))
+    static let empty = Self(elements: [], itemState: .empty)
 
-    var currentIndex: Int? {
-        elements.firstIndex { $0.matches(itemTransition.state.item) }
+    let elements: [QueueElement]
+    let itemState: ItemState
+
+    var index: Int? {
+        elements.firstIndex { $0.matches(itemState.item) }
     }
 
-    var currentItem: PlayerItem? {
-        guard let currentIndex else { return nil }
-        return elements[currentIndex].item
+    var item: PlayerItem? {
+        guard let index else { return nil }
+        return elements[index].item
     }
 
     var error: Error? {
-        itemTransition.state.error
+        itemState.error
     }
 
-    let elements: [QueueElement]
-    let itemTransition: ItemTransition
+    var displayableError: Error? {
+        if let item = itemState.item {
+            return ItemError.intrinsicError(for: item) ?? itemState.error
+        }
+        else {
+            return itemState.error
+        }
+    }
 
-    init(elements: [QueueElement], itemTransition: ItemTransition) {
+    private var playerItem: AVPlayerItem? {
+        itemState.item
+    }
+
+    init(elements: [QueueElement], itemState: ItemState) {
         self.elements = elements
-        self.itemTransition = !elements.isEmpty ? itemTransition : .go(to: nil)
+        self.itemState = !elements.isEmpty ? itemState : .empty
+    }
+
+    // swiftlint:disable:next discouraged_optional_collection
+    static func playerItems(from previous: Self, to current: Self, length: Int) -> [AVPlayerItem]? {
+        if let previousItem = previous.playerItem, previous.error != nil {
+            return [previousItem]
+        }
+        else if let currentItem = current.playerItem, current.error != nil {
+            return [currentItem]
+        }
+        // TODO: Can probably merge both `AVPlayerItem.playerItems` below
+        else if let currentItem = current.playerItem {
+            return AVPlayerItem.playerItems(
+                for: current.elements.map(\.asset),
+                replacing: previous.elements.map(\.asset),
+                currentItem: currentItem,
+                length: length
+            )
+        }
+        else if previous.playerItem != nil {
+            return nil
+        }
+        else {
+            return AVPlayerItem.playerItems(
+                for: current.elements.map(\.asset),
+                replacing: previous.elements.map(\.asset),
+                currentItem: nil,
+                length: length
+            )
+        }
     }
 
     func updated(with update: QueueUpdate) -> Self {
         switch update {
         case let .elements(elements):
-            return .init(elements: elements, itemTransition: itemTransition)
-        case let .itemTransition(itemTransition):
-            return .init(elements: elements, itemTransition: itemTransition)
+            return .init(elements: elements, itemState: itemState)
+        case let .itemState(itemState):
+            return .init(elements: elements, itemState: itemState)
         }
     }
 }

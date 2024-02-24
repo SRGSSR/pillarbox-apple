@@ -15,11 +15,39 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    func itemTransitionPublisher() -> AnyPublisher<ItemTransition, Never> {
-        itemStatePublisher()
-            .withPrevious(.init(item: currentItem, error: currentItem?.error))
-            .map { ItemTransition.transition(from: $0.previous, to: $0.current) }
-            .removeDuplicates()
+    func itemStatePublisher() -> AnyPublisher<ItemState, Never> {
+        currentItemPublisher()
+            .map { item -> AnyPublisher<ItemState, Never> in
+                if let item {
+                    if let error = item.error {
+                        return Just(.init(item: item, error: error)).eraseToAnyPublisher()
+                    }
+                    else {
+                        return item.errorPublisher()
+                            .map { .init(item: item, error: $0) }
+                            .prepend(.init(item: item, error: nil))
+                            .eraseToAnyPublisher()
+                    }
+                }
+                else {
+                    print("--> here")
+                    return Just(.empty).eraseToAnyPublisher()
+                }
+            }
+            .switchToLatest()
+            .withPrevious(ItemState.empty)
+            .map { state -> ItemState in
+                if state.current.item == nil && state.previous.error != nil {
+                    return state.previous
+                }
+                else {
+                    return state.current
+                }
+            }
+            .map { state in
+                print("--> item state change: \(state)")
+                return state
+            }
             .eraseToAnyPublisher()
     }
 
@@ -44,29 +72,5 @@ extension AVPlayer {
         .map { .init(rate: $0, isExternalPlaybackActive: $1, isMuted: $2) }
         .removeDuplicates()
         .eraseToAnyPublisher()
-    }
-}
-
-private extension AVPlayer {
-    private func itemStatePublisher() -> AnyPublisher<ItemState, Never> {
-        currentItemPublisher()
-            .map { item -> AnyPublisher<ItemState, Never> in
-                if let item {
-                    if let error = item.error {
-                        return Just(.init(item: item, error: error)).eraseToAnyPublisher()
-                    }
-                    else {
-                        return item.errorPublisher()
-                            .map { .init(item: item, error: $0) }
-                            .prepend(.init(item: item, error: nil))
-                            .eraseToAnyPublisher()
-                    }
-                }
-                else {
-                    return Just(.empty).eraseToAnyPublisher()
-                }
-            }
-            .switchToLatest()
-            .eraseToAnyPublisher()
     }
 }

@@ -154,7 +154,11 @@ class QueuePlayer: AVQueuePlayer {
 
 extension AVQueuePlayer {
     func replaceItems(with items: [AVPlayerItem]) {
-        guard self.items() != items else { return }
+        guard self.items() != items else {
+            print("--> skipped replacement, identical")
+            return
+        }
+        print("--> replace with \(items), previous is \(self.items())")
 
         if let firstItem = items.first {
             if firstItem !== self.items().first {

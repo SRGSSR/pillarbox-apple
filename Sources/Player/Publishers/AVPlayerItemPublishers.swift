@@ -112,6 +112,10 @@ extension AVPlayerItem {
             intrinsicErrorPublisher(),
             playbackErrorPublisher()
         )
+        .map { err in
+            print("--> error: \(err)")
+            return err
+        }
         .eraseToAnyPublisher()
     }
 
