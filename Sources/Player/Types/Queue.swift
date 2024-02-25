@@ -45,7 +45,7 @@ struct Queue {
 
     // swiftlint:disable:next discouraged_optional_collection
     static func playerItems(from previous: Self, to current: Self, length: Int) -> [AVPlayerItem]? {
-        if let previousItem = previous.playerItem, previous.error != nil {
+        if let previousItem = previous.playerItem, previous.error != nil, previous.index != nil {
             return AVPlayerItem.playerItems(
                 for: current.elements.map(\.asset),
                 replacing: previous.elements.map(\.asset),
