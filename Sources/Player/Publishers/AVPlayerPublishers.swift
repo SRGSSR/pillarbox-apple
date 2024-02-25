@@ -36,6 +36,8 @@ extension AVPlayer {
             .switchToLatest()
             .withPrevious(.empty)
             .map { state in
+                // `AVQueuePlayer` sometimes consumes failed items, transitioning to `nil`, sometimes not. We can
+                // make this behavior consistent by never consuming failed states.
                 if state.current.item == nil && state.previous.error != nil {
                     return state.previous
                 }
