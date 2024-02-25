@@ -233,20 +233,7 @@ public final class Player: ObservableObject, Equatable {
 
 private extension Player {
     func configureQueuePlayerItemsPublisher() {
-        queuePublisher
-            .withPrevious(.empty)
-            .compactMap { [configuration] previous, current in
-                guard let buffer = Queue.buffer(from: previous, to: current, length: configuration.preloadedItems) else {
-                    return nil
-                }
-                return AVPlayerItem.playerItems(
-                    for: current.elements.map(\.asset),
-                    replacing: previous.elements.map(\.asset),
-                    currentItem: buffer.item,
-                    length: buffer.length
-                )
-            }
-            .removeDuplicates()
+        queuePlayerItemsPublisher()
             .receiveOnMainThread()
             .sink { [queuePlayer] items in
                 queuePlayer.replaceItems(with: items)
