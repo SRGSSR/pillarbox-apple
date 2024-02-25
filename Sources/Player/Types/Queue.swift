@@ -44,7 +44,7 @@ struct Queue {
         else if let currentItem = current.playerItem {
             return .init(item: currentItem, length: length)
         }
-        else if previous.playerItem != nil {
+        else if previous.playerItem != nil, !current.elements.isEmpty {
             return nil
         }
         else {
