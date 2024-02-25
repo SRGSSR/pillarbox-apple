@@ -49,7 +49,6 @@ extension AVPlayerItem {
         currentItem: AVPlayerItem?,
         length: Int
     ) -> [AVPlayerItem] {
-        assert(length > 1)
         guard let currentItem else { return playerItems(from: Array(currentAssets.prefix(length))) }
         if let currentIndex = matchingIndex(for: currentItem, in: currentAssets) {
             let currentAsset = currentAssets[currentIndex]

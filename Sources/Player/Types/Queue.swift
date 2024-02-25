@@ -46,12 +46,21 @@ struct Queue {
     // swiftlint:disable:next discouraged_optional_collection
     static func playerItems(from previous: Self, to current: Self, length: Int) -> [AVPlayerItem]? {
         if let previousItem = previous.playerItem, previous.error != nil {
-            return [previousItem]
+            return AVPlayerItem.playerItems(
+                for: current.elements.map(\.asset),
+                replacing: previous.elements.map(\.asset),
+                currentItem: previousItem,
+                length: 1
+            )
         }
         else if let currentItem = current.playerItem, current.error != nil {
-            return [currentItem]
+            return AVPlayerItem.playerItems(
+                for: current.elements.map(\.asset),
+                replacing: previous.elements.map(\.asset),
+                currentItem: currentItem,
+                length: 1
+            )
         }
-        // TODO: Can probably merge both `AVPlayerItem.playerItems` below
         else if let currentItem = current.playerItem {
             return AVPlayerItem.playerItems(
                 for: current.elements.map(\.asset),
