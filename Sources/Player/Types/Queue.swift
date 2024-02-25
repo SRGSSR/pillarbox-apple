@@ -34,42 +34,21 @@ struct Queue {
         self.itemState = !elements.isEmpty ? itemState : .empty
     }
 
-    // swiftlint:disable:next discouraged_optional_collection
-    static func playerItems(from previous: Self, to current: Self, length: Int) -> [AVPlayerItem]? {
+    static func buffer(from previous: Self, to current: Self, length: Int) -> QueueBuffer? {
         if let previousItem = previous.playerItem, previous.error != nil, previous.index != nil {
-            return AVPlayerItem.playerItems(
-                for: current.elements.map(\.asset),
-                replacing: previous.elements.map(\.asset),
-                currentItem: previousItem,
-                length: 1
-            )
+            return .init(item: previousItem, length: 1)
         }
         else if let currentItem = current.playerItem, current.error != nil {
-            return AVPlayerItem.playerItems(
-                for: current.elements.map(\.asset),
-                replacing: previous.elements.map(\.asset),
-                currentItem: currentItem,
-                length: 1
-            )
+            return .init(item: currentItem, length: 1)
         }
         else if let currentItem = current.playerItem {
-            return AVPlayerItem.playerItems(
-                for: current.elements.map(\.asset),
-                replacing: previous.elements.map(\.asset),
-                currentItem: currentItem,
-                length: length
-            )
+            return .init(item: currentItem, length: length)
         }
         else if previous.playerItem != nil {
             return nil
         }
         else {
-            return AVPlayerItem.playerItems(
-                for: current.elements.map(\.asset),
-                replacing: previous.elements.map(\.asset),
-                currentItem: nil,
-                length: length
-            )
+            return .init(item: nil, length: length)
         }
     }
 
