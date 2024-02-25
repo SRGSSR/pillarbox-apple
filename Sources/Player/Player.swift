@@ -81,10 +81,6 @@ public final class Player: ObservableObject, Equatable {
         .scan(.empty) { queue, update -> Queue in
             queue.updated(with: update)
         }
-        .map { queue in
-            print("--> queue updated to \(queue)")
-            return queue
-        }
         .share(replay: 1)
         .eraseToAnyPublisher()
     }()
@@ -249,7 +245,6 @@ private extension Player {
             .removeDuplicates()
             .receiveOnMainThread()
             .sink { [queuePlayer] items in
-                print("--> intend to replace with \(items)")
                 queuePlayer.replaceItems(with: items)
             }
             .store(in: &cancellables)

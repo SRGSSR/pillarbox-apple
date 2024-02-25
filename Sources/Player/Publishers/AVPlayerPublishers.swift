@@ -30,23 +30,18 @@ extension AVPlayer {
                     }
                 }
                 else {
-                    print("--> here")
                     return Just(.empty).eraseToAnyPublisher()
                 }
             }
             .switchToLatest()
-            .withPrevious(ItemState.empty)
-            .map { state -> ItemState in
+            .withPrevious(.empty)
+            .map { state in
                 if state.current.item == nil && state.previous.error != nil {
                     return state.previous
                 }
                 else {
                     return state.current
                 }
-            }
-            .map { state in
-                print("--> item state change: \(state)")
-                return state
             }
             .eraseToAnyPublisher()
     }
