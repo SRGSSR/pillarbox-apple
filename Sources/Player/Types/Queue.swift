@@ -25,15 +25,6 @@ struct Queue {
         itemState.error
     }
 
-    var displayableError: Error? {
-        if let item = itemState.item {
-            return ItemError.intrinsicError(for: item) ?? itemState.error
-        }
-        else {
-            return itemState.error
-        }
-    }
-
     private var playerItem: AVPlayerItem? {
         itemState.item
     }
