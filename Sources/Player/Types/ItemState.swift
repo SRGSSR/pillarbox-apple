@@ -14,6 +14,12 @@ struct ItemState {
 
     init(item: AVPlayerItem?, error: Error?) {
         self.item = item
-        self.error = item != nil ? error : nil
+
+        if let error, item != nil {
+            self.error = ItemError.localizedError(from: error)
+        }
+        else {
+            self.error = nil
+        }
     }
 }
