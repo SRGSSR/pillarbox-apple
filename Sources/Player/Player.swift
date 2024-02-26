@@ -108,6 +108,16 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer
     }
 
+    /// The action that the player should perform when playback of an item ends.
+    public var actionAtItemEnd: AVPlayer.ActionAtItemEnd {
+        get {
+            queuePlayer.actionAtItemEnd
+        }
+        set {
+            queuePlayer.actionAtItemEnd = newValue
+        }
+    }
+
     /// A policy that determines how playback of audiovisual media continues when the app transitions
     /// to the background.
     public var audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy {
