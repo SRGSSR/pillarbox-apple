@@ -34,7 +34,9 @@ final class StoriesViewModel: ObservableObject {
     }
 
     private static func player(for story: Story) -> Player {
-        Player(item: Media(from: story.template).playerItem(), configuration: .externalPlaybackDisabled)
+        let player = Player(item: Media(from: story.template).playerItem(), configuration: .externalPlaybackDisabled)
+        player.actionAtItemEnd = .pause
+        return player
     }
 
     private static func players(
