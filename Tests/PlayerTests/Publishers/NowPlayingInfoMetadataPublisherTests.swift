@@ -21,7 +21,10 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
 
     func testImmediatelyAvailableWithoutMetadata() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
-        expectNothingPublished(from: player.nowPlayingInfoMetadataPublisher(), during: .seconds(1))
+        expectAtLeastSimilarPublished(
+            values: [[MPMediaItemPropertyTitle: ""]],
+            from: player.nowPlayingInfoMetadataPublisher()
+        )
     }
 
     func testAvailableAfterDelay() {
@@ -104,7 +107,25 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
     func testEntirePlayback() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url, metadata: AssetMetadataMock(title: "title")))
         expectAtLeastSimilarPublished(
-            values: [[MPMediaItemPropertyTitle: "title"]],
+            values: [[MPMediaItemPropertyTitle: "title"], [:]],
+            from: player.nowPlayingInfoMetadataPublisher()
+        ) {
+            player.play()
+        }
+    }
+
+    func testError() {
+        let player = Player(item: .simple(url: Stream.unavailable.url, metadata: AssetMetadataMock(title: "title")))
+        expectAtLeastSimilarPublished(
+            values: [
+                [
+                    MPMediaItemPropertyTitle: "title"
+                ],
+                [
+                    MPMediaItemPropertyTitle: "title",
+                    MPMediaItemPropertyArtist: "HTTP 404: File Not Found"
+                ]
+            ],
             from: player.nowPlayingInfoMetadataPublisher()
         ) {
             player.play()

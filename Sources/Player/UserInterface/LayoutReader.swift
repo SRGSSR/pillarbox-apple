@@ -9,9 +9,7 @@ import SwiftUI
 /// Layout information.
 public struct LayoutInfo {
     /// A placeholder for unfilled layout information.
-    public static var none: Self {
-        .init(isOverCurrentContext: false, isFullScreen: false)
-    }
+    public static let none = Self(isOverCurrentContext: false, isFullScreen: false)
 
     /// A Boolean describing whether the view covers its current context.
     public let isOverCurrentContext: Bool

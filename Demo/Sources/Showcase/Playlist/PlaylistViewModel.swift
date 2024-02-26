@@ -38,6 +38,7 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
         URLTemplate.bitmovin_360,
         URLTemplate.unauthorized,
         URLTemplate.unknown,
+        URLTemplate.unavailableMp3,
         URNTemplate.expired,
         URNTemplate.unknown
     ]

@@ -34,7 +34,7 @@ struct InlineSystemPlayerView: View {
 }
 
 extension InlineSystemPlayerView: SourceCodeViewable {
-    static var filePath: String { #file }
+    static let filePath = #file
 }
 
 #Preview {

@@ -4,6 +4,9 @@
 //  License information is available from the LICENSE file.
 //
 
-extension [String: String] {
-    static let test = ["media_title": "name"]
+import Foundation
+
+enum PlaybackSpeedUpdate: Equatable {
+    case value(Float)
+    case range(ClosedRange<Float>?)
 }

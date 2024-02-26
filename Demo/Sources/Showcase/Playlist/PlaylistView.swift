@@ -175,7 +175,7 @@ struct PlaylistView: View {
 }
 
 extension PlaylistView: SourceCodeViewable {
-    static var filePath: String { #file }
+    static let filePath = #file
 }
 
 #Preview {

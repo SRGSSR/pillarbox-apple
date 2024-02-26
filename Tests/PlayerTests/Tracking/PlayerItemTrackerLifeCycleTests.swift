@@ -69,4 +69,19 @@ final class PlayerItemTrackerLifeCycleTests: TestCase {
             player.play()
         }
     }
+
+    func testMoveCurrentItem() {
+        let publisher = TrackerLifeCycleMock.StatePublisher()
+        let player = Player()
+        expectAtLeastEqualPublished(values: [.initialized, .enabled], from: publisher) {
+            player.append(.simple(
+                url: Stream.onDemand.url,
+                trackerAdapters: [TrackerLifeCycleMock.adapter(statePublisher: publisher)]
+            ))
+            player.play()
+        }
+        expectNothingPublished(from: publisher, during: .seconds(1)) {
+            player.prepend(.simple(url: Stream.onDemand.url))
+        }
+    }
 }

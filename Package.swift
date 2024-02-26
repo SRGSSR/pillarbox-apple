@@ -31,6 +31,7 @@ let package = Package(
         )
     ],
     dependencies: [
+        .package(url: "https://github.com/CombineCommunity/CombineExt.git", .upToNextMinor(from: "1.8.1")),
         .package(url: "https://github.com/comScore/Comscore-Swift-Package-Manager.git", .upToNextMinor(from: "6.11.0")),
         .package(url: "https://github.com/CommandersAct/iOSV5.git", .upToNextMinor(from: "5.4.4")),
         .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.3")),
@@ -84,6 +85,7 @@ let package = Package(
             name: "PillarboxPlayer",
             dependencies: [
                 .target(name: "PillarboxCore"),
+                .product(name: "CombineExt", package: "CombineExt"),
                 .product(name: "DequeModule", package: "swift-collections"),
                 .product(name: "TimelaneCombine", package: "TimelaneCombine")
             ],

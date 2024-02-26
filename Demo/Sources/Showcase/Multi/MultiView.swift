@@ -65,7 +65,7 @@ struct MultiView: View {
 }
 
 extension MultiView: SourceCodeViewable {
-    static var filePath: String { #file }
+    static let filePath = #file
 }
 
 #Preview {

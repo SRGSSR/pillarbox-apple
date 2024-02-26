@@ -85,9 +85,11 @@ final class ExamplesViewModel: ObservableObject {
     ])
 
     let cornerCaseMedias = Template.medias(from: [
-        URNTemplate.expired,
         URNTemplate.unknown,
-        URLTemplate.unauthorized
+        URNTemplate.expired,
+        URLTemplate.unknown,
+        URLTemplate.unauthorized,
+        URLTemplate.unavailableMp3
     ])
 
     @Published private(set) var protectedMedias = [Media]()

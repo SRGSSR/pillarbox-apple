@@ -7,9 +7,7 @@
 import CoreMedia
 
 struct CoreProperties: Equatable {
-    static var empty: Self {
-        .init(itemProperties: .empty, mediaSelectionProperties: .empty, playbackProperties: .empty)
-    }
+    static let empty = Self(itemProperties: .empty, mediaSelectionProperties: .empty, playbackProperties: .empty)
 
     let itemProperties: ItemProperties
     let mediaSelectionProperties: MediaSelectionProperties
@@ -19,8 +17,8 @@ struct CoreProperties: Equatable {
 // MARK: ItemProperties
 
 extension CoreProperties {
-    var state: ItemState {
-        itemProperties.state
+    var itemStatus: ItemStatus {
+        itemProperties.status
     }
 
     var duration: CMTime {
@@ -47,7 +45,7 @@ extension CoreProperties {
     }
 
     var playbackState: PlaybackState {
-        .init(itemState: itemProperties.state, rate: rate)
+        .init(itemStatus: itemProperties.status, rate: rate)
     }
 }
 

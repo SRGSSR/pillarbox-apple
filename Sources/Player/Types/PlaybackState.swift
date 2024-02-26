@@ -15,8 +15,8 @@ public enum PlaybackState: Equatable {
     /// The player ended playback of an item.
     case ended
 
-    init(itemState: ItemState, rate: Float) {
-        switch itemState {
+    init(itemStatus: ItemStatus, rate: Float) {
+        switch itemStatus {
         case .readyToPlay:
             self = (rate == 0) ? .paused : .playing
         case .ended:

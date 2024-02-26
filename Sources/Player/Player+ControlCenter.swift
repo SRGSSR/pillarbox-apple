@@ -30,17 +30,14 @@ extension Player {
     }
 
     func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
-        currentPublisher()
-            .map { current in
-                guard let current else {
-                    return Just(NowPlayingInfo()).eraseToAnyPublisher()
+        queuePublisher
+            .compactMap { queue in
+                guard let index = queue.index else {
+                    return NowPlayingInfo()
                 }
-                return current.item.$asset
-                    .filter { !$0.resource.isLoading }
-                    .compactMap { $0.nowPlayingInfo() }
-                    .eraseToAnyPublisher()
+                let asset = queue.elements[index].asset
+                return !asset.resource.isLoading ? asset.nowPlayingInfo(with: queue.error) : nil
             }
-            .switchToLatest()
             .removeDuplicates { lhs, rhs in
                 // swiftlint:disable:next legacy_objc_type
                 NSDictionary(dictionary: lhs).isEqual(to: rhs)
@@ -82,8 +79,15 @@ private extension Player {
 
     func playRegistration() -> some RemoteCommandRegistrable {
         nowPlayingSession.remoteCommandCenter.register(command: \.playCommand) { [weak self] _ in
-            self?.play()
-            return .success
+            guard let self else { return .commandFailed }
+            if canReplay() {
+                replay()
+                return .commandFailed
+            }
+            else {
+                play()
+                return .success
+            }
         }
     }
 

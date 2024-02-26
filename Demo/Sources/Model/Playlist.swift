@@ -168,6 +168,12 @@ enum Playlist {
         URLTemplate.onDemandVideoHLS
     ]
 
+    static let videosWithOneFailingMp3Url: [Template] = [
+        URLTemplate.shortOnDemandVideoHLS,
+        URLTemplate.unavailableMp3,
+        URLTemplate.onDemandVideoHLS
+    ]
+
     static let videosWithOneFailingUrn: [Template] = [
         URNTemplate.onDemandVideo,
         URNTemplate.unknown,
@@ -188,6 +194,7 @@ enum Playlist {
         URNTemplate.unknown,
         URLTemplate.unknown,
         URNTemplate.expired,
-        URLTemplate.unauthorized
+        URLTemplate.unauthorized,
+        URLTemplate.unavailableMp3
     ]
 }

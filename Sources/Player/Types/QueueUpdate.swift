@@ -4,6 +4,9 @@
 //  License information is available from the LICENSE file.
 //
 
-extension [String: String] {
-    static let test = ["media_title": "name"]
+import Foundation
+
+enum QueueUpdate {
+    case elements([QueueElement])
+    case itemState(ItemState)
 }

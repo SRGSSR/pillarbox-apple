@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
-extension [String: String] {
-    static let test = ["media_title": "name"]
+enum ItemStatus: Equatable {
+    case unknown
+    case readyToPlay
+    case ended
 }

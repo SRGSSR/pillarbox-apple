@@ -6,6 +6,7 @@
 
 import AVFoundation
 import Combine
+import CombineExt
 import DequeModule
 import MediaPlayer
 import PillarboxCore
@@ -16,12 +17,10 @@ public final class Player: ObservableObject, Equatable {
     private static weak var currentPlayer: Player?
 
     /// The player version.
-    public static var version: String {
-        PackageInfo.version
-    }
+    public static let version = PackageInfo.version
 
     /// The last error received by the player.
-    @Published public private(set) var error: (any Error)?
+    @Published public private(set) var error: Error?
 
     /// The index of the current item in the queue.
     @Published public private(set) var currentIndex: Int?
@@ -70,17 +69,20 @@ public final class Player: ObservableObject, Equatable {
     /// fast-paced property changes into corresponding local bindings.
     public lazy var propertiesPublisher: AnyPublisher<PlayerProperties, Never> = {
         queuePlayer.propertiesPublisher()
-            .multicast { CurrentValueSubject<PlayerProperties, Never>(.empty) }
-            .autoconnect()
+            .share(replay: 1)
             .eraseToAnyPublisher()
     }()
 
-    lazy var itemUpdatePublisher: AnyPublisher<ItemUpdate, Never> = {
-        Publishers.CombineLatest($storedItems, queuePlayer.smoothCurrentItemPublisher())
-            .map { ItemUpdate(items: $0, currentItem: $1) }
-            .multicast { CurrentValueSubject<ItemUpdate, Never>(.empty) }
-            .autoconnect()
-            .eraseToAnyPublisher()
+    lazy var queuePublisher: AnyPublisher<Queue, Never> = {
+        Publishers.Merge(
+            elementsQueueUpdatePublisher(),
+            itemStateQueueUpdatePublisher()
+        )
+        .scan(.empty) { queue, update -> Queue in
+            queue.updated(with: update)
+        }
+        .share(replay: 1)
+        .eraseToAnyPublisher()
     }()
 
     /// A Boolean setting whether the audio output of the player must be muted.
@@ -156,9 +158,9 @@ public final class Player: ObservableObject, Equatable {
 
         configurePlayer()
 
-        configureControlCenterPublishers()
-        configureQueuePlayerUpdatePublishers()
         configurePublishedPropertyPublishers()
+        configureQueuePlayerUpdatePublishers()
+        configureControlCenterPublishers()
     }
 
     /// Creates a player with a single item in its queue.
@@ -207,7 +209,7 @@ public final class Player: ObservableObject, Equatable {
     }
 
     private func configureQueuePlayerUpdatePublishers() {
-        configureQueueItemsPublisher()
+        configureQueuePlayerItemsPublisher()
         configureRateUpdatePublisher()
         configureTextStyleRulesUpdatePublisher()
     }
@@ -230,8 +232,8 @@ public final class Player: ObservableObject, Equatable {
 }
 
 private extension Player {
-    func configureQueueItemsPublisher() {
-        queueItemsPublisher()
+    func configureQueuePlayerItemsPublisher() {
+        queuePlayerItemsPublisher()
             .receiveOnMainThread()
             .sink { [queuePlayer] items in
                 queuePlayer.replaceItems(with: items)
@@ -270,34 +272,27 @@ private extension Player {
     }
 
     func configureErrorPublisher() {
-        Publishers.Merge(
-            queuePlayer.errorPublisher(),
-            resetErrorPublisher()
-        )
-        .receiveOnMainThread()
-        .assign(to: &$error)
-    }
-
-    private func resetErrorPublisher() -> AnyPublisher<Error?, Never> {
-        $storedItems
-            .filter { $0.isEmpty }
-            .map { _ in nil }
-            .eraseToAnyPublisher()
+        queuePublisher
+            .map(\.error)
+            .removeDuplicates { $0 as? NSError == $1 as? NSError }
+            .receiveOnMainThread()
+            .assign(to: &$error)
     }
 
     func configureCurrentIndexPublisher() {
-        currentPublisher()
-            .map(\.?.index)
+        queuePublisher
+            .slice(at: \.index)
             .receiveOnMainThread()
             .lane("player_current_index")
             .assign(to: &$currentIndex)
     }
 
     func configureCurrentTrackerPublisher() {
-        currentPublisher()
-            .map { [weak self] current in
-                guard let self, let current else { return nil }
-                return CurrentTracker(item: current.item, player: self)
+        queuePublisher
+            .slice(at: \.item)
+            .map { [weak self] item in
+                guard let self, let item else { return nil }
+                return CurrentTracker(item: item, player: self)
             }
             .receiveOnMainThread()
             .assign(to: &$currentTracker)
@@ -328,18 +323,21 @@ private extension Player {
 
     func configureControlCenterRemoteCommandUpdatePublisher() {
         Publishers.CombineLatest(
-            itemUpdatePublisher,
+            queuePublisher,
             propertiesPublisher
         )
-        .sink { [weak self] update, properties in
+        .sink { [weak self] queue, properties in
             guard let self else { return }
-            let areSkipsEnabled = update.items.count <= 1 && properties.streamType != .live
-            nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
-            nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
+            let areSkipsEnabled = queue.elements.count <= 1 && properties.streamType != .live
+            let hasError = queue.error != nil
+            nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled && !hasError && canSkipForward()
+            nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled && !hasError && canSkipBackward()
+            nowPlayingSession.remoteCommandCenter.changePlaybackPositionCommand.isEnabled = !hasError
 
-            let index = update.currentIndex()
-            nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: update.items, streamType: properties.streamType)
-            nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: index, in: update.items)
+            let index = queue.index
+            let items = Deque(queue.elements.map(\.item))
+            nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: items, streamType: properties.streamType)
+            nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: index, in: items)
         }
         .store(in: &cancellables)
     }

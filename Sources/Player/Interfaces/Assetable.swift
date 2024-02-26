@@ -15,7 +15,7 @@ protocol Assetable {
     func updateMetadata()
     func disable()
 
-    func nowPlayingInfo() -> NowPlayingInfo?
+    func nowPlayingInfo(with error: Error?) -> NowPlayingInfo
     func playerItem(reload: Bool) -> AVPlayerItem
     func update(item: AVPlayerItem)
 }
@@ -27,6 +27,10 @@ extension Assetable {
 
     func playerItem() -> AVPlayerItem {
         playerItem(reload: false)
+    }
+
+    func nowPlayingInfo() -> NowPlayingInfo {
+        nowPlayingInfo(with: nil)
     }
 }
 
@@ -45,7 +49,6 @@ extension AVPlayerItem {
         currentItem: AVPlayerItem?,
         length: Int
     ) -> [AVPlayerItem] {
-        assert(length > 1)
         guard let currentItem else { return playerItems(from: Array(currentAssets.prefix(length))) }
         if let currentIndex = matchingIndex(for: currentItem, in: currentAssets) {
             let currentAsset = currentAssets[currentIndex]

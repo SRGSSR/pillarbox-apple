@@ -64,9 +64,7 @@ extension Resource {
     static let loadingUrl = URL(string: "pillarbox://loading.m3u8")!
     static let failingUrl = URL(string: "pillarbox://failing.m3u8")!
 
-    static var loading: Self {
-        .custom(url: loadingUrl, delegate: LoadingResourceLoaderDelegate())
-    }
+    static let loading = Self.custom(url: loadingUrl, delegate: LoadingResourceLoaderDelegate())
 
     static func failing(error: Error) -> Self {
         .custom(url: failingUrl, delegate: FailedResourceLoaderDelegate(error: error))

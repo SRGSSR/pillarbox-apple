@@ -4,9 +4,12 @@
 //  License information is available from the LICENSE file.
 //
 
+@testable import PillarboxPlayer
+
 import Foundation
 
-struct Current: Equatable {
-    let item: PlayerItem
-    let index: Int
+extension Player {
+    var urls: [URL] {
+        queuePlayer.items().compactMap(\.url)
+    }
 }

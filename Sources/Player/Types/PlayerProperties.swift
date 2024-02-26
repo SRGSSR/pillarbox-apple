@@ -8,14 +8,12 @@ import CoreMedia
 
 /// A type describing player properties.
 public struct PlayerProperties: Equatable {
-    static var empty: Self {
-        .init(
-            coreProperties: .empty,
-            timeProperties: .empty,
-            isEmpty: true,
-            seekTime: nil
-        )
-    }
+    static let empty = Self(
+        coreProperties: .empty,
+        timeProperties: .empty,
+        isEmpty: true,
+        seekTime: nil
+    )
 
     let coreProperties: CoreProperties
     private let timeProperties: TimeProperties
@@ -111,8 +109,8 @@ extension PlayerProperties {
         coreProperties.mediaSelectionProperties
     }
 
-    var state: ItemState {
-        coreProperties.state
+    var itemStatus: ItemStatus {
+        coreProperties.itemStatus
     }
 
     var duration: CMTime {

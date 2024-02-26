@@ -40,12 +40,6 @@ public extension Stream {
         duration: CMTime(value: 120, timescale: 1)
     )
 
-    /// A corrupt on-demand stream.
-    static let corruptOnDemand: Self = .init(
-        url: URL(string: "http://localhost:8123/simple/on_demand_corrupt/master.m3u8")!,
-        duration: CMTime(value: 2, timescale: 1)
-    )
-
     /// A live stream.
     static let live: Self = .init(
         url: URL(string: "http://localhost:8123/simple/live/master.m3u8")!,
@@ -106,6 +100,12 @@ public extension Stream {
     static let mp3: Self = .init(
         url: Bundle.module.url(forResource: "silence", withExtension: "mp3")!,
         duration: CMTime(value: 5, timescale: 1)
+    )
+
+    /// An unavailable MP3 stream.
+    static let unavailableMp3: Self = .init(
+        url: URL(string: "http://localhost:8123/unavailable.mp3")!,
+        duration: .indefinite
     )
 }
 

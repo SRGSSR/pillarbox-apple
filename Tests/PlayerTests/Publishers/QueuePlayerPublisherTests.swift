@@ -24,9 +24,9 @@ final class QueuePlayerPublisherTests: TestCase {
             .eraseToAnyPublisher()
     }
 
-    private static func statePublisher(for player: QueuePlayer) -> AnyPublisher<ItemState, Never> {
+    private static func itemStatusPublisher(for player: QueuePlayer) -> AnyPublisher<ItemStatus, Never> {
         player.propertiesPublisher()
-            .slice(at: \.state)
+            .slice(at: \.itemStatus)
             .eraseToAnyPublisher()
     }
 
@@ -78,21 +78,21 @@ final class QueuePlayerPublisherTests: TestCase {
         }
     }
 
-    func testStateEmpty() {
+    func testItemStatusEmpty() {
         let player = QueuePlayer()
         expectAtLeastEqualPublished(
             values: [.unknown],
-            from: Self.statePublisher(for: player)
+            from: Self.itemStatusPublisher(for: player)
         )
     }
 
-    func testStateLifeCycle() {
+    func testItemStatusLifeCycle() {
         let player = QueuePlayer(
             playerItem: .init(url: Stream.shortOnDemand.url)
         )
         expectAtLeastEqualPublished(
             values: [.unknown, .readyToPlay, .ended, .unknown],
-            from: Self.statePublisher(for: player)
+            from: Self.itemStatusPublisher(for: player)
         ) {
             player.play()
         }

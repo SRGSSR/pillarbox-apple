@@ -12,7 +12,7 @@ enum MediaDescription {
         case disabled
     }
 
-    private static var dateFormatter: DateFormatter = {
+    private static let dateFormatter = {
         let formatter = DateFormatter()
         formatter.timeZone = TimeZone(identifier: "Europe/Zurich")
         formatter.dateStyle = .long
@@ -21,7 +21,7 @@ enum MediaDescription {
         return formatter
     }()
 
-    private static var minuteFormatter: DateComponentsFormatter = {
+    private static let minuteFormatter = {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = .minute
         formatter.unitsStyle = .short

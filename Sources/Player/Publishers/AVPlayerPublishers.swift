@@ -15,27 +15,36 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
-    /// Publishes a stream of `AVPlayerItem` which preserves failed items.
-    func smoothCurrentItemPublisher() -> AnyPublisher<AVPlayerItem?, Never> {
-        itemTransitionPublisher()
-            .map { transition in
-                switch transition {
-                case let .advance(to: item):
-                    return item
-                case let .stop(on: item):
-                    return item
-                case .finish:
-                    return nil
+    func itemStatePublisher() -> AnyPublisher<ItemState, Never> {
+        currentItemPublisher()
+            .map { item -> AnyPublisher<ItemState, Never> in
+                if let item {
+                    if let error = item.error {
+                        return Just(.init(item: item, error: error)).eraseToAnyPublisher()
+                    }
+                    else {
+                        return item.errorPublisher()
+                            .map { .init(item: item, error: $0) }
+                            .prepend(.init(item: item, error: nil))
+                            .eraseToAnyPublisher()
+                    }
+                }
+                else {
+                    return Just(.empty).eraseToAnyPublisher()
                 }
             }
-            .eraseToAnyPublisher()
-    }
-
-    func itemTransitionPublisher() -> AnyPublisher<ItemTransition, Never> {
-        currentItemPublisher()
-            .withPrevious(nil)
-            .map { ItemTransition.transition(from: $0.previous, to: $0.current) }
-            .removeDuplicates()
+            .switchToLatest()
+            .withPrevious(.empty)
+            .map { state in
+                // `AVQueuePlayer` sometimes consumes failed items, transitioning to `nil`, sometimes not. We can
+                // make this behavior consistent by never consuming failed states.
+                if state.current.item == nil && state.previous.error != nil {
+                    return state.previous
+                }
+                else {
+                    return state.current
+                }
+            }
             .eraseToAnyPublisher()
     }
 
@@ -60,12 +69,5 @@ extension AVPlayer {
         .map { .init(rate: $0, isExternalPlaybackActive: $1, isMuted: $2) }
         .removeDuplicates()
         .eraseToAnyPublisher()
-    }
-
-    func errorPublisher() -> AnyPublisher<Error?, Never> {
-        currentItemPublisher()
-            .compactMap { $0?.errorPublisher() }
-            .switchToLatest()
-            .eraseToAnyPublisher()
     }
 }

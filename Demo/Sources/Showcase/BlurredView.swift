@@ -41,7 +41,7 @@ struct BlurredView: View {
 }
 
 extension BlurredView: SourceCodeViewable {
-    static var filePath: String { #file }
+    static let filePath = #file
 }
 
 #Preview {

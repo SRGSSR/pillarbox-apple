@@ -65,7 +65,5 @@ final class TimePropertiesTests: TestCase {
 }
 
 private extension CMTimeRange {
-    static var finite: Self {
-        .init(start: .zero, duration: .init(value: 1, timescale: 1))
-    }
+    static let finite = Self(start: .zero, duration: .init(value: 1, timescale: 1))
 }

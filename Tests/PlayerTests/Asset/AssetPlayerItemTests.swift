@@ -33,10 +33,8 @@ final class AssetPlayerItemTests: TestCase {
         let item = EmptyAsset.failed(error: StructError()).playerItem()
         _ = AVPlayer(playerItem: item)
         expectEqualPublished(
-            values: [
-                .unknown
-            ],
-            from: item.statePublisher(),
+            values: [.unknown],
+            from: item.statusPublisher(),
             during: .seconds(1)
         )
     }

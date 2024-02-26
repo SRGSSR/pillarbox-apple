@@ -159,6 +159,11 @@ extension AVQueuePlayer {
         if let firstItem = items.first {
             if firstItem !== self.items().first {
                 remove(firstItem)
+                // TODO: Workaround to fix incorrect recovery from failed MP3 playback (FB13650115). Remove when fixed.
+                if self.items().first?.error != nil {
+                    removeAllItems()
+                }
+                // End of workaround
                 replaceCurrentItem(with: firstItem)
             }
             removeAll(from: 1)
@@ -172,6 +177,7 @@ extension AVQueuePlayer {
     }
 
     private func removeAll(from index: Int) {
+        assert(index > 0, "The current item must not be removed")
         guard items().count > index else { return }
         items().suffix(from: index).forEach { remove($0) }
     }

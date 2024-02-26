@@ -30,11 +30,10 @@ enum URLTemplate {
         type: .url("https://rts-vod-amd.akamaized.net/ww/13317145/f1d49f18-f302-37ce-866c-1c1c9b76a824/master.m3u8")
     )
     static let onDemandVideoMP4 = Template(
-        title: "The dig",
+        title: "Swiss wheelchair athlete wins top award",
         description: "VOD - MP4",
-        // swiftlint:disable:next line_length
-        imageUrl: "https://www.swissinfo.ch/resource/image/47686506/landscape_ratio3x2/280/187/347ee14103b1b86184659b2fd04c69ba/8C028539EC620EFACC0BF2F61591E2F8/img_8527.jpg",
-        type: .url("https://media.swissinfo.ch/media/video/dddaff93-c2cd-4b6e-bdad-55f75a519480/rendition/154a844b-de1d-4854-93c1-5c61cd07e98c.mp4")
+        imageUrl: "https://cdn.prod.swi-services.ch/video-delivery/images/94f5f5d1-5d53-4336-afda-9198462c45d9/_.1hAGinujJ.yERGrrGNzBGCNSxmhKZT/16x9",
+        type: .url("https://cdn.prod.swi-services.ch/video-projects/94f5f5d1-5d53-4336-afda-9198462c45d9/localised-videos/ENG/renditions/ENG.mp4")
     )
     static let liveVideoHLS = Template(
         title: "Couleur 3 en vidéo (live)",
@@ -133,6 +132,11 @@ enum URLTemplate {
         title: "Unknown URL",
         description: "Content that does not exist",
         type: .url("http://localhost:8123/simple/unavailable/master.m3u8")
+    )
+    static let unavailableMp3 = Template(
+        title: "Unavailable MP3",
+        description: "MP3 that does not exist",
+        type: .url("http://localhost:8123/simple/unavailable.mp3")
     )
     static let unauthorized = Template(
         title: "Unauthorized URL",

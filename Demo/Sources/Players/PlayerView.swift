@@ -51,7 +51,7 @@ extension PlayerView {
 }
 
 extension PlayerView: SourceCodeViewable {
-    static var filePath: String { #file }
+    static let filePath = #file
 }
 
 #Preview {
