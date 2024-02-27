@@ -57,6 +57,11 @@ public struct ComScoreLabels {
 
     // MARK: Streaming labels
 
+    /// The value of `ns_st_id` (media player session identifier).
+    public var ns_st_id: String? {
+        extract()
+    }
+
     /// The value of `ns_st_ev` (streaming event).
     public var ns_st_ev: String? {
         extract()
