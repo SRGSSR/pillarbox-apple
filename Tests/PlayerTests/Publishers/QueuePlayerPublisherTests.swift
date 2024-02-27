@@ -109,11 +109,10 @@ final class QueuePlayerPublisherTests: TestCase {
             player.actionAtItemEnd = .pause
             player.play()
         }
-        expectAtLeastEqualPublishedNext(
+        expectAtLeastEqualPublished(
             values: [.readyToPlay],
             from: Self.itemStatusPublisher(for: player)
         ) {
-            player.actionAtItemEnd = .pause
             player.seek(to: .zero)
         }
     }

@@ -8,6 +8,12 @@ import AVFoundation
 import Combine
 import MediaAccessibility
 
+private enum ItemStatusUpdate {
+    case status(AVPlayerItem.Status)
+    case ended
+    case timebase
+}
+
 extension AVPlayerItem {
     func propertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
         Publishers.CombineLatest6(
@@ -39,21 +45,42 @@ extension AVPlayerItem {
     }
 
     func statusPublisher() -> AnyPublisher<ItemStatus, Never> {
-        Publishers.Merge(
-            publisher(for: \.status)
-                .map { status in
-                    switch status {
-                    case .readyToPlay:
-                        return .readyToPlay
-                    default:
-                        return .unknown
-                    }
-                },
-            NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: self)
-                .map { _ in .ended }
+        Publishers.Merge3(
+            statusUpdatePublisher(),
+            endedUpdatePublisher(),
+            timebaseUpdatePublisher()
         )
+        .scan(.unknown) { status, update in
+            switch update {
+            case let .status(itemStatus):
+                return itemStatus == .readyToPlay ? .readyToPlay : status
+            case .ended:
+                return .ended
+            case .timebase:
+                return status == .ended ? .readyToPlay : status
+            }
+        }
         .removeDuplicates()
         .eraseToAnyPublisher()
+    }
+
+    private func statusUpdatePublisher() -> AnyPublisher<ItemStatusUpdate, Never> {
+        publisher(for: \.status)
+            .map { .status($0) }
+            .eraseToAnyPublisher()
+    }
+
+    private func endedUpdatePublisher() -> AnyPublisher<ItemStatusUpdate, Never> {
+        NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: self)
+            .map { _ in .ended }
+            .eraseToAnyPublisher()
+    }
+
+    private func timebaseUpdatePublisher() -> AnyPublisher<ItemStatusUpdate, Never> {
+        publisher(for: \.timebase)
+            .dropFirst()
+            .map { _ in .timebase }
+            .eraseToAnyPublisher()
     }
 
     private func timePropertiesPublisher() -> AnyPublisher<TimeProperties, Never> {
