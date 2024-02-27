@@ -42,7 +42,6 @@ extension ComScoreStreamingAnalytics {
             notifyPause()
         case .ended:
             notifyEnd()
-            createPlaybackSession()
         default:
             break
         }
