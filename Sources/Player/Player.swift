@@ -31,7 +31,7 @@ public final class Player: ObservableObject, Equatable {
     @Published var storedItems: Deque<PlayerItem>
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
 
-    @Published private var isActive = false {
+    @Published var isActive = false {
         didSet {
             if isActive {
                 nowPlayingSession.becomeActiveIfPossible()
@@ -307,26 +307,21 @@ private extension Player {
 
 private extension Player {
     func configureControlCenterMetadataUpdatePublisher() {
-        Publishers.CombineLatest3(
-            nowPlayingInfoMetadataPublisher(),
-            nowPlayingInfoPlaybackPublisher(),
-            $isActive
-        )
-        .receiveOnMainThread()
-        .sink { [weak self] nowPlayingInfoMetadata, nowPlayingInfoPlayback, isActive in
-            guard let self else { return }
-            let nowPlayingInfo = isActive ? nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new } : [:]
-            updateControlCenter(nowPlayingInfo: nowPlayingInfo)
-        }
-        .store(in: &cancellables)
+        nowPlayingInfoPublisher()
+            .receiveOnMainThread()
+            .sink { [weak self] nowPlayingInfo in
+                self?.updateControlCenter(nowPlayingInfo: nowPlayingInfo)
+            }
+            .store(in: &cancellables)
     }
 
     func configureControlCenterRemoteCommandUpdatePublisher() {
-        Publishers.CombineLatest(
+        Publishers.CombineLatest3(
             queuePublisher,
-            propertiesPublisher
+            propertiesPublisher,
+            $isActive
         )
-        .sink { [weak self] queue, properties in
+        .sink { [weak self] queue, properties, _ in
             guard let self else { return }
             let areSkipsEnabled = queue.elements.count <= 1 && properties.streamType != .live
             let hasError = queue.error != nil
