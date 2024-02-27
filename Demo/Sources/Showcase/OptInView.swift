@@ -11,10 +11,14 @@ import SwiftUI
 struct OptInView: View {
     let media: Media
 
-    @StateObject private var player = Player(configuration: .standard)
+    @StateObject private var player = {
+        let player = Player(configuration: .standard)
+        player.isTrackingEnabled = false
+        return player
+    }()
 
-    @State private var isActive = true
-    @State private var supportsPictureInPicture = true
+    @State private var isActive = false
+    @State private var supportsPictureInPicture = false
     @State private var audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic
 
     var body: some View {
@@ -40,8 +44,8 @@ struct OptInView: View {
                 }
             }
         }
-        .onChange(of: isActive) { newValue in
-            if newValue {
+        .onChange(of: isActive) { isActive in
+            if isActive {
                 player.becomeActive()
             }
             else {
@@ -66,7 +70,6 @@ struct OptInView: View {
 
     private func play() {
         player.append(media.playerItem())
-        player.becomeActive()
         player.play()
     }
 }
