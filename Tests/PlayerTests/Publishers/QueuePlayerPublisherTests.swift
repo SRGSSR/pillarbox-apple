@@ -86,7 +86,7 @@ final class QueuePlayerPublisherTests: TestCase {
         )
     }
 
-    func testItemStatusLifeCycle() {
+    func testConsumedItemStatusLifeCycle() {
         let player = QueuePlayer(
             playerItem: .init(url: Stream.shortOnDemand.url)
         )
@@ -95,6 +95,26 @@ final class QueuePlayerPublisherTests: TestCase {
             from: Self.itemStatusPublisher(for: player)
         ) {
             player.play()
+        }
+    }
+
+    func testPausedItemStatusLifeCycle() {
+        let player = QueuePlayer(
+            playerItem: .init(url: Stream.shortOnDemand.url)
+        )
+        expectAtLeastEqualPublished(
+            values: [.unknown, .readyToPlay, .ended],
+            from: Self.itemStatusPublisher(for: player)
+        ) {
+            player.actionAtItemEnd = .pause
+            player.play()
+        }
+        expectAtLeastEqualPublishedNext(
+            values: [.readyToPlay],
+            from: Self.itemStatusPublisher(for: player)
+        ) {
+            player.actionAtItemEnd = .pause
+            player.seek(to: .zero)
         }
     }
 
