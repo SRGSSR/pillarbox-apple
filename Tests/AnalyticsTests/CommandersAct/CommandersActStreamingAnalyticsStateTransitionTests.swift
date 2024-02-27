@@ -183,9 +183,9 @@ final class CommandersActStreamingAnalyticsStateTransitionTests: CommandersActTe
         let analytics = CommandersActStreamingAnalytics()
         analytics.notify(.play)
         analytics.notify(.eof)
-        expectNoHits(during: .milliseconds(500)) {
+        expectAtLeastHits(.play()) {
             analytics.notify(.play)
-            expect(analytics.lastEvent).to(equal(.eof))
+            expect(analytics.lastEvent).to(equal(.play))
         }
     }
 
