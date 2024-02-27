@@ -61,6 +61,23 @@ extension Player {
             }
             .eraseToAnyPublisher()
     }
+
+    func nowPlayingInfoPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
+        $isActive
+            .map { [weak self] isActive in
+                guard let self, isActive else { return Just(NowPlayingInfo()).eraseToAnyPublisher() }
+                return Publishers.CombineLatest(
+                    nowPlayingInfoMetadataPublisher(),
+                    nowPlayingInfoPlaybackPublisher()
+                )
+                .map { nowPlayingInfoMetadata, nowPlayingInfoPlayback in
+                    nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new }
+                }
+                .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
 }
 
 private extension Player {
