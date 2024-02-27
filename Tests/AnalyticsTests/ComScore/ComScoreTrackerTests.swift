@@ -34,7 +34,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
         expectAtLeastHits(
             .play { labels in
                 expect(labels.ns_st_mp).to(equal("Pillarbox"))
-                expect(labels.ns_st_mv).notTo(beEmpty())
+                expect(labels.ns_st_mv).to(equal(PackageInfo.version))
                 expect(labels.cs_ucfr).to(beEmpty())
             }
         ) {

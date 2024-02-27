@@ -18,7 +18,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         expectAtLeastHits(
             .play { labels in
                 expect(labels.media_player_display).to(equal("Pillarbox"))
-                expect(labels.media_player_version).notTo(beEmpty())
+                expect(labels.media_player_version).to(equal(PackageInfo.version))
                 expect(labels.media_volume).notTo(beNil())
                 expect(labels.media_title).to(equal("name"))
                 expect(labels.media_audio_track).to(equal("UND"))
@@ -52,7 +52,7 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         expectAtLeastHits(
             .stop { labels in
                 expect(labels.media_player_display).to(equal("Pillarbox"))
-                expect(labels.media_player_version).notTo(beEmpty())
+                expect(labels.media_player_version).to(equal(PackageInfo.version))
                 expect(labels.media_volume).notTo(beNil())
                 expect(labels.media_title).to(equal("name"))
                 expect(labels.media_audio_track).to(equal("UND"))
