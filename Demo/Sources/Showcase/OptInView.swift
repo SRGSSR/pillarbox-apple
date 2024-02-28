@@ -29,7 +29,7 @@ struct OptInView: View {
                 .background(.black)
             List {
                 Toggle(isOn: $isActive) {
-                    Text("Active (in Control Center)")
+                    Text("Active (AirPlay / Control Center)")
                 }
                 Toggle(isOn: $supportsPictureInPicture) {
                     Text("Picture in Picture")
