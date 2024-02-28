@@ -8,12 +8,6 @@ import AVFoundation
 import Combine
 import MediaAccessibility
 
-private enum ItemStatusUpdate {
-    case status(AVPlayerItem.Status)
-    case ended
-    case timebase
-}
-
 extension AVPlayerItem {
     func propertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
         Publishers.CombineLatest6(
@@ -96,41 +90,38 @@ extension AVPlayerItem {
 
 extension AVPlayerItem {
     func statusPublisher() -> AnyPublisher<ItemStatus, Never> {
-        Publishers.Merge3(
-            statusUpdatePublisher(),
-            endedUpdatePublisher(),
-            timebaseUpdatePublisher()
+        Publishers.CombineLatest(
+            publisher(for: \.status),
+            isEndedPublisher()
         )
-        .scan(.unknown) { status, update in
-            switch update {
-            case let .status(itemStatus):
-                return itemStatus == .readyToPlay ? .readyToPlay : status
-            case .ended:
-                return .ended
-            case .timebase:
-                return status == .ended ? .readyToPlay : status
+        .map { status, isEnded -> ItemStatus in
+            switch status {
+            case .readyToPlay:
+                return isEnded ? .ended : .readyToPlay
+            default:
+                return .unknown
             }
         }
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
 
-    private func statusUpdatePublisher() -> AnyPublisher<ItemStatusUpdate, Never> {
-        publisher(for: \.status)
-            .map { .status($0) }
+    private func isEndedPublisher() -> AnyPublisher<Bool, Never> {
+        Publishers.Merge(endTimeNotificationPublisher(), timebaseUpdateNotificationPublisher())
+            .prepend(false)
             .eraseToAnyPublisher()
     }
 
-    private func endedUpdatePublisher() -> AnyPublisher<ItemStatusUpdate, Never> {
+    private func endTimeNotificationPublisher() -> AnyPublisher<Bool, Never> {
         NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: self)
-            .map { _ in .ended }
+            .map { _ in true }
             .eraseToAnyPublisher()
     }
 
-    private func timebaseUpdatePublisher() -> AnyPublisher<ItemStatusUpdate, Never> {
+    private func timebaseUpdateNotificationPublisher() -> AnyPublisher<Bool, Never> {
         publisher(for: \.timebase)
-            .dropFirst()
-            .map { _ in .timebase }
+            .compactMap { $0 }
+            .map { _ in false }
             .eraseToAnyPublisher()
     }
 }
