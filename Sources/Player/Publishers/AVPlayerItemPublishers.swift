@@ -113,7 +113,7 @@ extension AVPlayerItem {
     }
 
     private func endTimeNotificationPublisher() -> AnyPublisher<Bool, Never> {
-        NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: self)
+        NotificationCenter.default.weakPublisher(for: AVPlayerItem.didPlayToEndTimeNotification, object: self)
             .map { _ in true }
             .eraseToAnyPublisher()
     }
@@ -146,7 +146,7 @@ extension AVPlayerItem {
     }
 
     private func playbackErrorPublisher() -> AnyPublisher<Error, Never> {
-        NotificationCenter.default.weakPublisher(for: .AVPlayerItemFailedToPlayToEndTime, object: self)
+        NotificationCenter.default.weakPublisher(for: AVPlayerItem.didPlayToEndTimeNotification, object: self)
             .compactMap { notification in
                 guard let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error else {
                     return nil
