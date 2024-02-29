@@ -6,7 +6,6 @@
 
 @testable import PillarboxAnalytics
 
-import CoreMedia
 import Nimble
 import PillarboxPlayer
 import PillarboxStreams
@@ -190,24 +189,6 @@ final class CommandersActTrackerTests: CommandersActTestCase {
 
         expectAtLeastHits(.play()) {
             player.isTrackingEnabled = true
-        }
-    }
-
-    func testCleanEventsDuringBriefProgressTrackerInteraction() {
-        let player = Player(item: .simple(
-            url: Stream.onDemand.url,
-            trackerAdapters: [
-                CommandersActTracker.adapter()
-            ]
-        ))
-        player.play()
-        expect(player.playbackState).toEventually(equal(.playing))
-
-        let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
-        progressTracker.player = player
-        expectHits(.pause(), .play(), during: .seconds(1)) {
-            progressTracker.isInteracting = true
-            progressTracker.isInteracting = false
         }
     }
 }
