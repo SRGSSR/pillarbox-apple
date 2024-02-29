@@ -14,6 +14,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     let maximumValueLabel: () -> ValueLabel
     let onEditingChanged: (Bool) -> Void
     let onDragging: () -> Void
+    let forbiddenRanges: [ClosedRange<Float>]
 
     @GestureState private var gestureValue: DragGesture.Value?
     @State private var initialProgress: Float = 0
@@ -40,20 +41,22 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
         progressTracker: ProgressTracker,
         @ViewBuilder minimumValueLabel: @escaping () -> ValueLabel,
         @ViewBuilder maximumValueLabel: @escaping () -> ValueLabel,
+        forbiddenRanges: [ClosedRange<Float>] = [],
         onEditingChanged: @escaping (Bool) -> Void = { _ in },
         onDragging: @escaping () -> Void = {}
     ) {
         self.progressTracker = progressTracker
         self.minimumValueLabel = minimumValueLabel
         self.maximumValueLabel = maximumValueLabel
+        self.forbiddenRanges = forbiddenRanges
         self.onEditingChanged = onEditingChanged
         self.onDragging = onDragging
     }
 
     @ViewBuilder
-    private func rectangle(opacity: Double = 1, width: CGFloat? = nil) -> some View {
+    private func rectangle(opacity: Double = 1, width: CGFloat? = nil, color: Color = .white) -> some View {
         Rectangle()
-            .foregroundColor(.white)
+            .foregroundColor(color)
             .opacity(opacity)
             .frame(width: width)
     }
@@ -67,6 +70,9 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
                 rectangle(opacity: 0.3, width: geometry.size.width * CGFloat(buffer))
                     .animation(.linear(duration: 0.5), value: buffer)
                 rectangle(width: geometry.size.width * CGFloat(progressTracker.progress))
+                ForEach(forbiddenRanges, id: \.self) { range in
+                    addForbidden(range: range, width: geometry.size.width)
+                }
             }
             .onChange(of: gestureValue) { value in
                 updateProgress(for: value, in: geometry)
@@ -93,6 +99,14 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
             initialProgress = 0
             progressTracker.isInteracting = false
             onEditingChanged(false)
+        }
+    }
+
+    @ViewBuilder
+    private func addForbidden(range: ClosedRange<Float>, width: CGFloat, color: Color = .red) -> some View {
+        if let duration = progressTracker.timeRange?.duration.seconds {
+            rectangle(width: width * CGFloat(range.upperBound - range.lowerBound) / CGFloat(duration), color: color)
+                .offset(x: width * CGFloat(range.lowerBound) / CGFloat(duration))
         }
     }
 }
