@@ -116,8 +116,8 @@ struct LayoutReader_Previews: PreviewProvider {
                     .ignoresSafeArea()
                 Color.blue
                 VStack {
-                    Text(layoutInfo.isOverCurrentContext ? "✅ Over current context" : "❌ Not over current context")
-                    Text(layoutInfo.isFullScreen ? "✅ Full screen" : "❌ Not full screen")
+                    Text(verbatim: layoutInfo.isOverCurrentContext ? "✅ Over current context" : "❌ Not over current context")
+                    Text(verbatim: layoutInfo.isFullScreen ? "✅ Full screen" : "❌ Not full screen")
                 }
             }
             .readLayout(into: $layoutInfo)
@@ -132,8 +132,8 @@ struct LayoutReader_Previews: PreviewProvider {
                 Color.red
                 Color.blue
                 VStack {
-                    Text(layoutInfo.isOverCurrentContext ? "✅ Over current context" : "❌ Not over current context")
-                    Text(layoutInfo.isFullScreen ? "✅ Full screen" : "❌ Not full screen")
+                    Text(verbatim: layoutInfo.isOverCurrentContext ? "✅ Over current context" : "❌ Not over current context")
+                    Text(verbatim: layoutInfo.isFullScreen ? "✅ Full screen" : "❌ Not full screen")
                 }
             }
             .readLayout(into: $layoutInfo)
@@ -147,8 +147,8 @@ struct LayoutReader_Previews: PreviewProvider {
             ZStack {
                 Color.blue
                 VStack {
-                    Text(layoutInfo.isOverCurrentContext ? "❌ Over current context" : "✅ Not over current context")
-                    Text(layoutInfo.isFullScreen ? "❌ Full screen" : "✅ Not full screen")
+                    Text(verbatim: layoutInfo.isOverCurrentContext ? "❌ Over current context" : "✅ Not over current context")
+                    Text(verbatim: layoutInfo.isFullScreen ? "❌ Full screen" : "✅ Not full screen")
                 }
             }
             .frame(width: 400, height: 400)
@@ -165,8 +165,8 @@ struct LayoutReader_Previews: PreviewProvider {
                     ZStack {
                         Color.blue
                         VStack {
-                            Text(layoutInfo.isOverCurrentContext ? "✅ Over current context" : "❌ Not over current context")
-                            Text(layoutInfo.isFullScreen ? "❌ Full screen" : "✅ Not full screen")
+                            Text(verbatim: layoutInfo.isOverCurrentContext ? "✅ Over current context" : "❌ Not over current context")
+                            Text(verbatim: layoutInfo.isFullScreen ? "❌ Full screen" : "✅ Not full screen")
                         }
                     }
                     .interactiveDismissDisabled()

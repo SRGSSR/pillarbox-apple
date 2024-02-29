@@ -37,7 +37,6 @@
     },
     "This commercial content is not available." : {
       "comment" : "Blocking reason description message",
-      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -73,7 +72,6 @@
     },
     "This content is not available anymore." : {
       "comment" : "Blocking reason description message",
-      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -109,7 +107,6 @@
     },
     "This content is not available due to legal restrictions." : {
       "comment" : "Blocking reason description message",
-      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -145,7 +142,6 @@
     },
     "This content is not available outside Switzerland." : {
       "comment" : "Blocking reason description message",
-      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -181,7 +177,6 @@
     },
     "This content is not available yet." : {
       "comment" : "Blocking reason description message",
-      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -217,7 +212,6 @@
     },
     "This content is not available." : {
       "comment" : "Blocking reason description message",
-      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -253,7 +247,6 @@
     },
     "To protect children this content is only available between 8PM and 6AM." : {
       "comment" : "Blocking reason description message",
-      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -277,7 +270,6 @@
     },
     "To protect children this content is only available between 10PM and 5AM." : {
       "comment" : "Blocking reason description message",
-      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -299,13 +291,19 @@
         }
       }
     },
-    "Unknown error" : {
+    "Unknown error." : {
       "comment" : "Generic error message",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown error."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Erreur inconnue"
+            "value" : "Erreur inconnue."
           }
         }
       }

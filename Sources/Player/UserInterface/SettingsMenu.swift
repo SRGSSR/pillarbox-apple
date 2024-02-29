@@ -15,7 +15,7 @@ private struct PlaybackSpeedMenuContent: View {
     var body: some View {
         Picker("Playback Speed", selection: player.playbackSpeed) {
             ForEach(playbackSpeeds, id: \.self) { speed in
-                Text("\(speed, specifier: "%g×")").tag(speed)
+                Text("\(speed, specifier: "%g×")", comment: "Speed multiplier").tag(speed)
             }
         }
         .pickerStyle(.inline)
@@ -75,7 +75,7 @@ private struct SettingsMenuContent: View {
             player.playbackSpeedMenu()
         } label: {
             Label {
-                Text("Playback Speed", bundle: .module, comment: "Playback setting section")
+                Text("Playback Speed", bundle: .module, comment: "Playback setting menu title")
             } icon: {
                 Image(systemName: "speedometer")
             }
@@ -88,7 +88,7 @@ private struct SettingsMenuContent: View {
             player.mediaSelectionMenu(characteristic: .audible)
         } label: {
             Label {
-                Text("Languages", bundle: .module, comment: "Playback setting section")
+                Text("Languages", bundle: .module, comment: "Playback setting menu title")
             } icon: {
                 Image(systemName: "waveform.circle")
             }
@@ -101,7 +101,7 @@ private struct SettingsMenuContent: View {
             player.mediaSelectionMenu(characteristic: .legible)
         } label: {
             Label {
-                Text("Subtitles", bundle: .module, comment: "Playback setting section")
+                Text("Subtitles", bundle: .module, comment: "Playback setting menu title")
             } icon: {
                 Image(systemName: "captions.bubble")
             }
