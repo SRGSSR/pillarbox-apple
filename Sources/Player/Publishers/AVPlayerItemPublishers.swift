@@ -109,6 +109,7 @@ extension AVPlayerItem {
     private func isEndedPublisher() -> AnyPublisher<Bool, Never> {
         Publishers.Merge(endTimeNotificationPublisher(), timebaseUpdateNotificationPublisher())
             .prepend(false)
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
