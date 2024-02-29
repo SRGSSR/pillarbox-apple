@@ -38,24 +38,6 @@ extension AVPlayerItem {
         .eraseToAnyPublisher()
     }
 
-    func statusPublisher() -> AnyPublisher<ItemStatus, Never> {
-        Publishers.Merge(
-            publisher(for: \.status)
-                .map { status in
-                    switch status {
-                    case .readyToPlay:
-                        return .readyToPlay
-                    default:
-                        return .unknown
-                    }
-                },
-            NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: self)
-                .map { _ in .ended }
-        )
-        .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
-
     private func timePropertiesPublisher() -> AnyPublisher<TimeProperties, Never> {
         Publishers.CombineLatest3(
             publisher(for: \.loadedTimeRanges),
@@ -107,6 +89,45 @@ extension AVPlayerItem {
 }
 
 extension AVPlayerItem {
+    func statusPublisher() -> AnyPublisher<ItemStatus, Never> {
+        Publishers.CombineLatest(
+            publisher(for: \.status),
+            isEndedPublisher()
+        )
+        .map { status, isEnded -> ItemStatus in
+            switch status {
+            case .readyToPlay:
+                return isEnded ? .ended : .readyToPlay
+            default:
+                return .unknown
+            }
+        }
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
+
+    private func isEndedPublisher() -> AnyPublisher<Bool, Never> {
+        Publishers.Merge(endTimeNotificationPublisher(), timebaseUpdateNotificationPublisher())
+            .prepend(false)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    private func endTimeNotificationPublisher() -> AnyPublisher<Bool, Never> {
+        NotificationCenter.default.weakPublisher(for: AVPlayerItem.didPlayToEndTimeNotification, object: self)
+            .map { _ in true }
+            .eraseToAnyPublisher()
+    }
+
+    private func timebaseUpdateNotificationPublisher() -> AnyPublisher<Bool, Never> {
+        publisher(for: \.timebase)
+            .compactMap { $0 }
+            .map { _ in false }
+            .eraseToAnyPublisher()
+    }
+}
+
+extension AVPlayerItem {
     func errorPublisher() -> AnyPublisher<Error, Never> {
         Publishers.Merge(
             intrinsicErrorPublisher(),
@@ -126,7 +147,7 @@ extension AVPlayerItem {
     }
 
     private func playbackErrorPublisher() -> AnyPublisher<Error, Never> {
-        NotificationCenter.default.weakPublisher(for: .AVPlayerItemFailedToPlayToEndTime, object: self)
+        NotificationCenter.default.weakPublisher(for: AVPlayerItem.didPlayToEndTimeNotification, object: self)
             .compactMap { notification in
                 guard let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error else {
                     return nil

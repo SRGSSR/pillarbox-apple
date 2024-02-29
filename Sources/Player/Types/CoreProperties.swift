@@ -45,7 +45,7 @@ extension CoreProperties {
     }
 
     var playbackState: PlaybackState {
-        .init(itemStatus: itemProperties.status, rate: rate)
+        .init(itemStatus: itemStatus, rate: rate)
     }
 }
 

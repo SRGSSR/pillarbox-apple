@@ -54,10 +54,10 @@ final class CommandersActStreamingAnalytics {
         guard event != lastEvent else { return }
 
         switch (lastEvent, event) {
-        case (.pause, .seek), (.pause, .eof), (.seek, .pause), (.seek, .eof), (.eof, _), (.stop, _):
+        case (.pause, .seek), (.pause, .eof), (.seek, .pause), (.seek, .eof), (.stop, _):
             break
-        case let (.none, event) where event != .play:
-            return
+        case (.none, _) where event != .play, (.eof, _) where event != .play:
+            break
         default:
             sendEvent(event)
         }

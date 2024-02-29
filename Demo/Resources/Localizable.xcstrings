@@ -40,13 +40,19 @@
         }
       }
     },
-    "Active" : {
+    "Action at item end" : {
+
+    },
+    "Active (AirPlay / Control Center)" : {
 
     },
     "Add" : {
 
     },
     "Add a stream to the playlist" : {
+
+    },
+    "Advance" : {
 
     },
     "Android" : {
@@ -127,7 +133,13 @@
     "Mode" : {
 
     },
+    "None" : {
+
+    },
     "Opt-in features" : {
+
+    },
+    "Pause" : {
 
     },
     "Pauses" : {

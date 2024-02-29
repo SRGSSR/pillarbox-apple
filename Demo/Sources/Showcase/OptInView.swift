@@ -20,6 +20,7 @@ struct OptInView: View {
     @State private var isActive = false
     @State private var supportsPictureInPicture = false
     @State private var audiovisualBackgroundPlaybackPolicy: AVPlayerAudiovisualBackgroundPlaybackPolicy = .automatic
+    @State private var actionAtItemEnd: AVPlayer.ActionAtItemEnd = .advance
 
     var body: some View {
         VStack {
@@ -28,12 +29,13 @@ struct OptInView: View {
                 .background(.black)
             List {
                 Toggle(isOn: $isActive) {
-                    Text("Active")
+                    Text("Active (AirPlay / Control Center)")
                 }
                 Toggle(isOn: $supportsPictureInPicture) {
                     Text("Picture in Picture")
                 }
                 audiovisualBackgroundPlaybackPolicyPicker()
+                actionAtItemEndPicker()
 
                 Section {
                     Toggle(isOn: $player.isTrackingEnabled) {
@@ -55,6 +57,9 @@ struct OptInView: View {
         .onChange(of: audiovisualBackgroundPlaybackPolicy) { newValue in
             player.audiovisualBackgroundPlaybackPolicy = newValue
         }
+        .onChange(of: actionAtItemEnd) { newValue in
+            player.actionAtItemEnd = newValue
+        }
         .onAppear(perform: play)
         .tracked(name: "tracking")
     }
@@ -65,6 +70,15 @@ struct OptInView: View {
             Text("Automatic").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.automatic)
             Text("Continues if possible").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.continuesIfPossible)
             Text("Pauses").tag(AVPlayerAudiovisualBackgroundPlaybackPolicy.pauses)
+        }
+    }
+
+    @ViewBuilder
+    private func actionAtItemEndPicker() -> some View {
+        Picker("Action at item end", selection: $actionAtItemEnd) {
+            Text("Advance").tag(AVPlayer.ActionAtItemEnd.advance)
+            Text("Pause").tag(AVPlayer.ActionAtItemEnd.pause)
+            Text("None").tag(AVPlayer.ActionAtItemEnd.none)
         }
     }
 

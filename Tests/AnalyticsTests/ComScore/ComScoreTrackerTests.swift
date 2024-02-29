@@ -34,7 +34,7 @@ final class ComScoreTrackerTests: ComScoreTestCase {
         expectAtLeastHits(
             .play { labels in
                 expect(labels.ns_st_mp).to(equal("Pillarbox"))
-                expect(labels.ns_st_mv).notTo(beEmpty())
+                expect(labels.ns_st_mv).to(equal(PackageInfo.version))
                 expect(labels.cs_ucfr).to(beEmpty())
             }
         ) {
@@ -225,6 +225,44 @@ final class ComScoreTrackerTests: ComScoreTestCase {
                 expect(labels.ns_st_po).to(beCloseTo(100, within: 5))
             }
         ) {
+            player.play()
+        }
+    }
+
+    func testSessionRenewal() {
+        let player = Player(item: .simple(
+            url: Stream.shortOnDemand.url,
+            metadata: AssetMetadataMock(),
+            trackerAdapters: [
+                ComScoreTracker.adapter { _ in .test }
+            ]
+        ))
+        player.actionAtItemEnd = .pause
+
+        var ns_st_id: String?
+
+        expectAtLeastHits(
+            .play { labels in
+                ns_st_id = labels.ns_st_id
+            },
+            .end()
+        ) {
+            player.play()
+        }
+
+        expectAtLeastHits(
+            .play { labels in
+                expect(labels.ns_st_id).notTo(beNil())
+                expect(labels.ns_st_id).notTo(equal(ns_st_id))
+
+                // Other metadata must be preserved as well.
+                expect(labels.ns_st_mp).to(equal("Pillarbox"))
+                expect(labels.ns_st_mv).to(equal(PackageInfo.version))
+                expect(labels["media_title"]).to(equal("name"))
+                expect(labels.cs_ucfr).to(beEmpty())
+            }
+        ) {
+            player.seek(to: .zero)
             player.play()
         }
     }

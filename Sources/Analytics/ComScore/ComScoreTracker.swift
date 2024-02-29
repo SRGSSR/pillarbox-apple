@@ -22,22 +22,12 @@ public final class ComScoreTracker: PlayerItemTracker {
 
     public func enable(for player: Player) {
         self.player = player
-        streamingAnalytics.createPlaybackSession()
-        streamingAnalytics.setMediaPlayerName("Pillarbox")
-        streamingAnalytics.setMediaPlayerVersion(Player.version)
+        createPlaybackSession()
     }
 
     public func updateMetadata(with metadata: [String: String]) {
         self.metadata = metadata
-        let builder = SCORStreamingContentMetadataBuilder()
-        if let globals = Analytics.shared.comScoreGlobals {
-            builder.setCustomLabels(metadata.merging(globals.labels) { _, new in new })
-        }
-        else {
-            builder.setCustomLabels(metadata)
-        }
-        let contentMetadata = SCORStreamingContentMetadata(builder: builder)
-        streamingAnalytics.setMetadata(contentMetadata)
+        addMetadata(metadata)
     }
 
     public func updateProperties(with properties: PlayerProperties) {
@@ -58,11 +48,36 @@ public final class ComScoreTracker: PlayerItemTracker {
         case (false, false):
             streamingAnalytics.notifyBufferStop()
             streamingAnalytics.notifyEvent(for: properties.playbackState, at: properties.rate)
+            renewPlaybackSessionIfNeeded(for: properties.playbackState)
         }
     }
 
     public func disable() {
         streamingAnalytics = ComScoreStreamingAnalytics()
         player = nil
+    }
+
+    private func renewPlaybackSessionIfNeeded(for playbackState: PlaybackState) {
+        guard playbackState == .ended else { return }
+        createPlaybackSession()
+        addMetadata(metadata)
+    }
+
+    private func createPlaybackSession() {
+        streamingAnalytics.createPlaybackSession()
+        streamingAnalytics.setMediaPlayerName("Pillarbox")
+        streamingAnalytics.setMediaPlayerVersion(Player.version)
+    }
+
+    private func addMetadata(_ metadata: [String: String]) {
+        let builder = SCORStreamingContentMetadataBuilder()
+        if let globals = Analytics.shared.comScoreGlobals {
+            builder.setCustomLabels(metadata.merging(globals.labels) { _, new in new })
+        }
+        else {
+            builder.setCustomLabels(metadata)
+        }
+        let contentMetadata = SCORStreamingContentMetadata(builder: builder)
+        streamingAnalytics.setMetadata(contentMetadata)
     }
 }
