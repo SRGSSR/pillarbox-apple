@@ -42,7 +42,8 @@ public extension PlayerItem {
             .eraseToAnyPublisher()
         return .init(publisher: publisher, trackerAdapters: [
             ComScoreTracker.adapter { $0.analyticsData },
-            CommandersActTracker.adapter { $0.analyticsMetadata }
+            CommandersActTracker.adapter { $0.analyticsMetadata },
+            BlockedSegmentTracker.adapter { $0.mediaComposition }
         ] + trackerAdapters)
     }
 
