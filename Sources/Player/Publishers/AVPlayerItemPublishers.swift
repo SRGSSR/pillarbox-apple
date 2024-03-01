@@ -148,9 +148,7 @@ extension AVPlayerItem {
 
     private func playbackErrorPublisher() -> AnyPublisher<Error, Never> {
         NotificationCenter.default.weakPublisher(for: AVPlayerItem.failedToPlayToEndTimeNotification, object: self)
-            .compactMap { notification in
-                notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error
-            }
+            .compactMap { $0.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error }
             .eraseToAnyPublisher()
     }
 }
