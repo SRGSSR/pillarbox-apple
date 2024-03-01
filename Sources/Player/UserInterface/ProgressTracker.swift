@@ -58,8 +58,8 @@ public final class ProgressTracker: ObservableObject {
                 pausePlaybackIfNeeded(with: player)
             }
             else {
-                resumePlaybackIfNeeded(with: player)
                 seek(to: progress, optimal: false)
+                resumePlaybackIfNeeded(with: player)
             }
         }
     }
