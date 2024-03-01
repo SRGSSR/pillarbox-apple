@@ -492,6 +492,7 @@ private struct TimeSlider: View {
             maximumValueLabel: {
                 label(withText: formattedTotalTime)
             },
+            forbiddenRanges: player.forbiddenRanges.map { Float($0.lowerBound)...Float($0.upperBound) },
             onDragging: {
                 if UserDefaults.standard.seekBehavior == .deferred {
                     visibilityTracker.reset()
