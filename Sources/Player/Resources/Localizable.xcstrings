@@ -16,6 +16,12 @@
             "value" : "%g×"
           }
         },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%g×"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -51,6 +57,12 @@
             "value" : "Auto (Recommended)"
           }
         },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto (Recommended)"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -61,6 +73,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Automatici (consigliato)"
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Auto (Recommended)"
           }
         }
       }
@@ -80,6 +98,12 @@
             "value" : "Languages"
           }
         },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Languages"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -90,6 +114,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lingue"
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Languages"
           }
         }
       }
@@ -109,6 +139,12 @@
             "value" : "Off"
           }
         },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -119,6 +155,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Non attivi"
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Off"
           }
         }
       }
@@ -138,6 +180,12 @@
             "value" : "Playback Speed"
           }
         },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playback Speed"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -148,6 +196,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Velocità riproduzione"
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Playback Speed"
           }
         }
       }
@@ -167,6 +221,12 @@
             "value" : "Subtitles"
           }
         },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subtitles"
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -177,6 +237,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sottotitoli"
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Subtitles"
           }
         }
       }
