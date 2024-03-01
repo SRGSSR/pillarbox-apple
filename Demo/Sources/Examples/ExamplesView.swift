@@ -16,6 +16,9 @@ private struct TextFieldView: View {
                 .keyboardType(.URL)
                 .autocapitalization(.none)
                 .autocorrectionDisabled()
+                .onAppear {
+                    text = "urn:srf:video:40ca0277-0e53-4312-83e2-4710354ff53e"
+                }
 
 #if os(iOS)
             HStack(spacing: 0) {
