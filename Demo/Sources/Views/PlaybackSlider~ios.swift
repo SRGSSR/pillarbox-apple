@@ -105,7 +105,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     @ViewBuilder
     private func addForbidden(range: ClosedRange<Float>, width: CGFloat, color: Color = .red) -> some View {
         if let duration = progressTracker.timeRange?.duration.seconds {
-            rectangle(width: width * CGFloat(range.upperBound - range.lowerBound) / CGFloat(duration), color: color)
+            rectangle(opacity: 0.7, width: width * CGFloat(range.upperBound - range.lowerBound) / CGFloat(duration), color: .red)
                 .offset(x: width * CGFloat(range.lowerBound) / CGFloat(duration))
         }
     }
