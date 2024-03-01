@@ -25,7 +25,7 @@ class BlockedSegmentTracker: PlayerItemTracker {
                 guard let player else { return }
                 self?.forbiddenRanges.forEach { forbiddenRange in
                     if forbiddenRange.contains(player.time.seconds) {
-                        player.seek(after(.init(value: CMTimeValue(forbiddenRange.upperBound + 1), timescale: 1)))
+                        player.seek(after(.init(value: CMTimeValue(forbiddenRange.upperBound + 1), timescale: 1)), smooth: false)
                     }
                 }
             }
