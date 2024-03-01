@@ -19,19 +19,17 @@ class BlockedSegmentTracker: PlayerItemTracker {
     func enable(for player: Player) {
         self.player = player
 
-        Publishers.CombineLatest(
-            player.periodicTimePublisher(forInterval: CMTime(value: 1, timescale: 1)),
-            player.propertiesPublisher.slice(at: \.isBusy)
-        )
-        .sink { [weak self, weak player] _, _ in
-            guard let player else { return }
-            self?.forbiddenRanges.forEach { forbiddenRange in
-                if forbiddenRange.contains(player.time.seconds) {
-                    player.seek(at(.init(value: CMTimeValue(forbiddenRange.upperBound), timescale: 1)))
+        Timer.publish(every: 1 / 1_000, on: .current, in: .common)
+            .autoconnect()
+            .sink { [weak self, weak player] _ in
+                guard let player else { return }
+                self?.forbiddenRanges.forEach { forbiddenRange in
+                    if forbiddenRange.contains(player.time.seconds) {
+                        player.seek(after(.init(value: CMTimeValue(forbiddenRange.upperBound + 1), timescale: 1)))
+                    }
                 }
             }
-        }
-        .store(in: &cancellables)
+            .store(in: &cancellables)
     }
 
     func updateMetadata(with metadata: MediaComposition) {
@@ -41,14 +39,7 @@ class BlockedSegmentTracker: PlayerItemTracker {
             .reduce(into: []) { forbiddenRanges, range in
                 forbiddenRanges.append(range)
             }
-        let metadataItem = AVMutableMetadataItem()
-        metadataItem.identifier = AVMutableMetadataItem.identifier(
-            forKey: "forbidden-time-ranges",
-            keySpace: AVMetadataKeySpace(rawValue: "ch.srgssr.pillarbox")
-        )
-        // swiftlint:disable:next legacy_objc_type
-        metadataItem.value = forbiddenRanges as NSArray
-        self.player?.systemPlayer.currentItem?.externalMetadata.append(metadataItem)
+        player?.forbiddenRanges = forbiddenRanges
     }
 
     func updateProperties(with properties: PlayerProperties) {}
