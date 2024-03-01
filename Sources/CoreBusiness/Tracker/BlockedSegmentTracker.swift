@@ -19,13 +19,13 @@ class BlockedSegmentTracker: PlayerItemTracker {
     func enable(for player: Player) {
         self.player = player
 
-        Timer.publish(every: 1 / 1_000, on: .current, in: .common)
+        Timer.publish(every: 1 / 10, on: .current, in: .common)
             .autoconnect()
             .sink { [weak self, weak player] _ in
                 guard let player else { return }
                 self?.forbiddenRanges.forEach { forbiddenRange in
                     if forbiddenRange.contains(player.time.seconds) {
-                        player.seek(after(.init(value: CMTimeValue(forbiddenRange.upperBound + 1), timescale: 1)), smooth: false)
+                        player.seek(at(.init(value: CMTimeValue(forbiddenRange.upperBound + 1), timescale: 1)), smooth: false)
                     }
                 }
             }
