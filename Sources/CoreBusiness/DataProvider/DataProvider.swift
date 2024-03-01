@@ -41,7 +41,7 @@ final class DataProvider {
 
     private static func error(from mediaComposition: MediaComposition) -> Error? {
         let mainChapter = mediaComposition.mainChapter
-        if let blockingReason = mainChapter.blockingReason ?? mainChapter.segments.compactMap(\.blockingReason).first {
+        if let blockingReason = mainChapter.blockingReason {
             return DataError.blocked(withMessage: blockingReason.description)
         }
         else {
