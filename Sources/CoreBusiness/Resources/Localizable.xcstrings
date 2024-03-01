@@ -77,8 +77,8 @@
         },
         "rm" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "The data is invalid."
+            "state" : "translated",
+            "value" : "Las datas n'èn betg valaivlas."
           }
         }
       }
@@ -358,14 +358,14 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "To protect children this content is only available between 8PM and 6AM."
+            "state" : "translated",
+            "value" : "Per proteggere i bambini, questo media è disponibile solo fra le 20 e le 6."
           }
         },
         "rm" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "To protect children this content is only available between 8PM and 6AM."
+            "state" : "translated",
+            "value" : "Per proteger uffants, è quest medium disponibel mo tranter las 20.00 e las 06.00."
           }
         }
       }
@@ -399,14 +399,14 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "To protect children this content is only available between 10PM and 5AM."
+            "state" : "translated",
+            "value" : "Per proteggere i bambini, questo media è disponibile solo fra le 22 le 5."
           }
         },
         "rm" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "To protect children this content is only available between 10PM and 5AM."
+            "state" : "translated",
+            "value" : "Per proteger uffants, è quest medium disponibel mo tranter las 22.00 e las 05.00."
           }
         }
       }
@@ -446,8 +446,8 @@
         },
         "rm" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Unknown error."
+            "state" : "translated",
+            "value" : "Sbagl nunenconuschent."
           }
         }
       }

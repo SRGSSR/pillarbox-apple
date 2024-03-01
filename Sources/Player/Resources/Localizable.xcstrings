@@ -77,8 +77,8 @@
         },
         "rm" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Auto (Recommended)"
+            "state" : "translated",
+            "value" : "Automatisà (recumandà)"
           }
         }
       }
@@ -118,8 +118,8 @@
         },
         "rm" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Languages"
+            "state" : "translated",
+            "value" : "Linguas"
           }
         }
       }
@@ -159,8 +159,8 @@
         },
         "rm" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Off"
+            "state" : "translated",
+            "value" : "Deactivà"
           }
         }
       }
@@ -200,8 +200,8 @@
         },
         "rm" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Playback Speed"
+            "state" : "translated",
+            "value" : "Spertadad da reproducziun"
           }
         }
       }
@@ -241,8 +241,8 @@
         },
         "rm" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Subtitles"
+            "state" : "translated",
+            "value" : "Suttitels"
           }
         }
       }
