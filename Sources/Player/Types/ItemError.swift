@@ -13,8 +13,7 @@ enum ItemError {
         if nsError.userInfo[NSLocalizedDescriptionKey] != nil {
             return nsError
         }
-        else if nsError.debugDescription.contains("See -[AVPlayerItem errorLog]"),
-           let errorLog = item.errorLog(), let event = errorLog.events.last {
+        else if let errorLog = item.errorLog(), let event = errorLog.events.last {
             return NSError(
                 domain: event.errorDomain,
                 code: event.errorStatusCode,
