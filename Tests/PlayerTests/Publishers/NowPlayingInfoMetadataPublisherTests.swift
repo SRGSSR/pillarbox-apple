@@ -123,7 +123,7 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
                 ],
                 [
                     MPMediaItemPropertyTitle: "title",
-                    MPMediaItemPropertyArtist: "HTTP 404: File Not Found"
+                    MPMediaItemPropertyArtist: "The requested URL was not found on this server."
                 ]
             ],
             from: player.nowPlayingInfoMetadataPublisher()

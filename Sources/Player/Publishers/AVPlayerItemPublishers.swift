@@ -141,7 +141,7 @@ extension AVPlayerItem {
             .filter { $0 == .failed }
             .weakCapture(self)
             .map { _, item in
-                ItemError.intrinsicError(for: item) ?? PlaybackError.unknown
+                ItemError.error(for: item) ?? PlaybackError.unknown
             }
             .eraseToAnyPublisher()
     }
@@ -149,10 +149,7 @@ extension AVPlayerItem {
     private func playbackErrorPublisher() -> AnyPublisher<Error, Never> {
         NotificationCenter.default.weakPublisher(for: AVPlayerItem.failedToPlayToEndTimeNotification, object: self)
             .compactMap { notification in
-                guard let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error else {
-                    return nil
-                }
-                return ItemError.localizedError(from: error)
+                notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error
             }
             .eraseToAnyPublisher()
     }
