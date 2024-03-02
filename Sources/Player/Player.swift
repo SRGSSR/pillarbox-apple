@@ -69,7 +69,7 @@ public final class Player: ObservableObject, Equatable {
     /// fast-paced property changes into corresponding local bindings.
     public lazy var propertiesPublisher: AnyPublisher<PlayerProperties, Never> = {
         queuePlayer.propertiesPublisher()
-            .share(replay: 1)
+            .share2(replay: 1)
             .eraseToAnyPublisher()
     }()
 
@@ -81,7 +81,7 @@ public final class Player: ObservableObject, Equatable {
         .scan(.empty) { queue, update -> Queue in
             queue.updated(with: update)
         }
-        .share(replay: 1)
+        .share2(replay: 1)
         .eraseToAnyPublisher()
     }()
 
