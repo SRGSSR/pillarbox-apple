@@ -146,7 +146,7 @@ public extension Publisher {
     /// - Parameter bufferSize: A number of recent values that are buffered.
     ///
     /// Upon subscription new subscribers automatically receive recent values available from the buffer, as well as
-    /// any completion if relevant.
+    /// any relevant completion.
     func share(replay bufferSize: Int) -> AnyPublisher<Output, Failure> {
         multicast(subject: ReplaySubject(bufferSize: bufferSize))
             .autoconnect()
