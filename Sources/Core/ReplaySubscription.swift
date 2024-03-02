@@ -16,6 +16,18 @@ final class ReplaySubscription<Output, Failure>: Subscription where Failure: Err
         self.subscriber = AnySubscriber(subscriber)
     }
 
+    func replay(_ values: [Output], completion: Subscribers.Completion<Failure>?) {
+        withLock(lock) {
+            guard let subscriber = self.subscriber else { return }
+            values.forEach { value in
+                _ = subscriber.receive(value)
+            }
+            if let completion {
+                subscriber.receive(completion: completion)
+            }
+        }
+    }
+
     func request(_ demand: Subscribers.Demand) {
         withLock(lock) {
             self.demand += demand

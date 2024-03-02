@@ -52,12 +52,7 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
 
         withLock(lock) {
             subscriptions.append(subscription)
-            buffer.values.forEach { value in
-                subscription.receive(value)
-            }
-            if let completion {
-                subscription.receive(completion: completion)
-            }
+            subscription.replay(buffer.values, completion: completion)
         }
     }
 }
