@@ -140,3 +140,9 @@ public extension Publisher where Failure == Never {
         }
     }
 }
+
+public extension Publisher {
+    func share2(replay count: Int) -> AnyPublisher<Output, Failure> {
+        Empty().eraseToAnyPublisher()
+    }
+}
