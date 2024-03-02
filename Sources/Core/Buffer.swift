@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 /// A buffer able to hold a maximum number of values.
 final class Buffer<T> {
     private let size: Int

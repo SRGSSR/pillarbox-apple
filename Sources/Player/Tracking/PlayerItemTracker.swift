@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Combine
-
 /// A protocol for custom player item tracking implementation.
 ///
 /// For more information about implementing custom trackers please read <doc:tracking>.

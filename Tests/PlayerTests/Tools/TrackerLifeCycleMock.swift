@@ -7,7 +7,6 @@
 @testable import PillarboxPlayer
 
 import Combine
-import Foundation
 
 final class TrackerLifeCycleMock: PlayerItemTracker {
     typealias StatePublisher = PassthroughSubject<State, Never>

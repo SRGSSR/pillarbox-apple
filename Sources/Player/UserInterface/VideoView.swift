@@ -5,7 +5,6 @@
 //
 
 import AVFoundation
-import SceneKit
 import SwiftUI
 
 /// A view displaying video content provided by an associated player.

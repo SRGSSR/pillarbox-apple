@@ -6,7 +6,6 @@
 
 import AVFoundation
 import Combine
-import Foundation
 import PillarboxCore
 
 extension Player {

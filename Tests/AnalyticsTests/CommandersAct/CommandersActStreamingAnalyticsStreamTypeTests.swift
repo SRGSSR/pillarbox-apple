@@ -6,7 +6,6 @@
 
 @testable import PillarboxAnalytics
 
-import Foundation
 import Nimble
 
 // swiftlint:disable:next type_name

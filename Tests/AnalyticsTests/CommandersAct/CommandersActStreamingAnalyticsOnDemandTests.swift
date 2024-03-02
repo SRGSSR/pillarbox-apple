@@ -6,7 +6,6 @@
 
 @testable import PillarboxAnalytics
 
-import CoreMedia
 import Nimble
 import PillarboxCircumspect
 
