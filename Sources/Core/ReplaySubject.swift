@@ -7,6 +7,10 @@
 import Combine
 import Foundation
 
+/// A subject that stores a number of recent values into a buffer.
+///
+/// Upon subscription new subscribers automatically receive recent values available from the buffer, as well as
+/// any completion if relevant.
 public final class ReplaySubject<Output, Failure>: Subject where Failure: Error {
     private let buffer: Buffer<Output>
 

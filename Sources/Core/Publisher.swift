@@ -8,7 +8,6 @@ import Combine
 import Foundation
 
 // Borrowed from https://stackoverflow.com/a/67133582/760435
-
 public extension Publisher {
     /// Includes the current element as well as the previous element from the upstream publisher in a tuple where the
     /// previous element is optional.
@@ -144,10 +143,10 @@ public extension Publisher where Failure == Never {
 public extension Publisher {
     /// Shares the output of an upstream publisher with multiple subscribers.
     /// 
-    /// - Parameter bufferSize: A number of recent values that are kept buffer.
+    /// - Parameter bufferSize: A number of recent values that are buffered.
     ///
     /// Upon subscription new subscribers automatically receive recent values available from the buffer, as well as
-    /// completion.
+    /// any completion if relevant.
     func share(replay bufferSize: Int) -> AnyPublisher<Output, Failure> {
         multicast(subject: ReplaySubject(bufferSize: bufferSize))
             .autoconnect()
