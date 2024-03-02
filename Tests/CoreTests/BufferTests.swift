@@ -13,19 +13,19 @@ import XCTest
 final class BufferTests: XCTestCase {
     func testScarceBuffer() {
         let buffer = Buffer<Int>(size: 0)
-        expect(buffer.elements).to(beEmpty())
+        expect(buffer.values).to(beEmpty())
         buffer.append(1)
-        expect(buffer.elements).to(beEmpty())
+        expect(buffer.values).to(beEmpty())
     }
 
     func testBuffer() {
         let buffer = Buffer<Int>(size: 2)
-        expect(buffer.elements).to(beEmpty())
+        expect(buffer.values).to(beEmpty())
         buffer.append(1)
-        expect(buffer.elements).to(equalDiff([1]))
+        expect(buffer.values).to(equalDiff([1]))
         buffer.append(2)
-        expect(buffer.elements).to(equalDiff([1, 2]))
+        expect(buffer.values).to(equalDiff([1, 2]))
         buffer.append(3)
-        expect(buffer.elements).to(equalDiff([2, 3]))
+        expect(buffer.values).to(equalDiff([2, 3]))
     }
 }

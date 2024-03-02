@@ -42,7 +42,7 @@ private extension Publishers._PeriodicTimePublisher {
         private let interval: CMTime
         private let queue: DispatchQueue
 
-        private var demand = Subscribers.Demand.none
+        private var demand: Subscribers.Demand = .none
         private var timeObserver: Any?
 
         init(subscriber: S, player: AVPlayer, interval: CMTime, queue: DispatchQueue) {
@@ -69,9 +69,9 @@ private extension Publishers._PeriodicTimePublisher {
         }
 
         private func send(_ time: CMTime) {
-            guard let subscriber = self.subscriber, self.demand > .none else { return }
-            self.demand -= 1
-            self.demand += subscriber.receive(time)
+            guard let subscriber = self.subscriber, demand > .none else { return }
+            demand -= 1
+            demand += subscriber.receive(time)
         }
 
         private nonisolated func processTime(_ time: CMTime) {

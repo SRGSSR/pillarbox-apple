@@ -41,7 +41,7 @@ private extension Publishers._BoundaryTimePublisher {
         private let times: [CMTime]
         private let queue: DispatchQueue
 
-        private var demand = Subscribers.Demand.none
+        private var demand: Subscribers.Demand = .none
         private var timeObserver: Any?
 
         init(subscriber: S, player: AVPlayer, times: [CMTime], queue: DispatchQueue) {
@@ -69,9 +69,9 @@ private extension Publishers._BoundaryTimePublisher {
         }
 
         private func send() {
-            guard let subscriber = self.subscriber, self.demand > .none else { return }
-            self.demand -= 1
-            self.demand += subscriber.receive(())
+            guard let subscriber = self.subscriber, demand > .none else { return }
+            demand -= 1
+            demand += subscriber.receive(())
         }
 
         private nonisolated func processTime() {

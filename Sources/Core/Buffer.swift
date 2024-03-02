@@ -9,14 +9,15 @@ import Foundation
 final class Buffer<T> {
     let size: Int
 
-    private(set) var elements: [T] = []
+    private(set) var values: [T] = []
 
     init(size: Int) {
+        assert(size >= 0)
         self.size = size
     }
 
     func append(_ t: T) {
-        elements.append(t)
-        elements = elements.suffix(size)
+        values.append(t)
+        values = values.suffix(size)
     }
 }
