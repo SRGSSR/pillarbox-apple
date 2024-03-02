@@ -7,11 +7,12 @@
 import AVFoundation
 import Combine
 
-final actor PeriodicTimeSubscription<S, Failure>: Combine.Subscription where Failure: Error, S: Subscriber, S.Input == CMTime, S.Failure == Failure {
+final class PeriodicTimeSubscription<S, Failure>: Subscription where Failure: Error, S: Subscriber, S.Input == CMTime, S.Failure == Failure {
     private var subscriber: S?
     private let player: AVPlayer
     private let interval: CMTime
     private let queue: DispatchQueue
+    private let lock = NSRecursiveLock()
 
     private var demand: Subscribers.Demand = .none
     private var timeObserver: Any?
@@ -23,43 +24,31 @@ final actor PeriodicTimeSubscription<S, Failure>: Combine.Subscription where Fai
         self.queue = queue
     }
 
-    private func processDemand(_ demand: Subscribers.Demand) {
-        self.demand += demand
-        guard timeObserver == nil else { return }
-        timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: queue) { [weak self] time in
-            self?.processTime(time)
-        }
-    }
-
-    private func processCancellation() {
-        if let timeObserver {
-            player.removeTimeObserver(timeObserver)
-            self.timeObserver = nil
-        }
-        subscriber = nil
-    }
-
     private func send(_ time: CMTime) {
-        guard let subscriber = self.subscriber, demand > .none else { return }
-        demand -= 1
-        demand += subscriber.receive(time)
-    }
-
-    private nonisolated func processTime(_ time: CMTime) {
-        Task {
-            await send(time)
+        withLock(lock) {
+            guard let subscriber = self.subscriber, demand > .none else { return }
+            demand -= 1
+            demand += subscriber.receive(time)
         }
     }
 
-    nonisolated func request(_ demand: Subscribers.Demand) {
-        Task {
-            await processDemand(demand)
+    func request(_ demand: Subscribers.Demand) {
+        withLock(lock) {
+            self.demand += demand
+            guard timeObserver == nil else { return }
+            timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: queue) { [weak self] time in
+                self?.send(time)
+            }
         }
     }
 
-    nonisolated func cancel() {
-        Task {
-            await processCancellation()
+    func cancel() {
+        withLock(lock) {
+            if let timeObserver {
+                player.removeTimeObserver(timeObserver)
+                self.timeObserver = nil
+            }
+            subscriber = nil
         }
     }
 }

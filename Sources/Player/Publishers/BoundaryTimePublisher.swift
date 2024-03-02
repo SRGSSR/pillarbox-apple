@@ -7,13 +7,6 @@
 import AVFoundation
 import Combine
 
-extension Publishers {
-    static func BoundaryTimePublisher(for player: AVPlayer, times: [CMTime], queue: DispatchQueue = .main) -> AnyPublisher<Void, Never> {
-        _BoundaryTimePublisher(player: player, times: times, queue: queue)
-            .eraseToAnyPublisher()
-    }
-}
-
 private struct _BoundaryTimePublisher: Publisher {
     typealias Output = Void
     typealias Failure = Never
@@ -31,5 +24,12 @@ private struct _BoundaryTimePublisher: Publisher {
     func receive<S>(subscriber: S) where S: Subscriber, Never == S.Failure, Void == S.Input {
         let subscription = BoundaryTimeSubscription(subscriber: subscriber, player: player, times: times, queue: queue)
         subscriber.receive(subscription: subscription)
+    }
+}
+
+extension Publishers {
+    static func BoundaryTimePublisher(for player: AVPlayer, times: [CMTime], queue: DispatchQueue = .main) -> AnyPublisher<Void, Never> {
+        _BoundaryTimePublisher(player: player, times: times, queue: queue)
+            .eraseToAnyPublisher()
     }
 }

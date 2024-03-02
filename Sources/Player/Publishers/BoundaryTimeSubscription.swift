@@ -7,11 +7,12 @@
 import AVFoundation
 import Combine
 
-final actor BoundaryTimeSubscription<S, Failure>: Subscription where Failure: Error, S: Subscriber, S.Input == Void, S.Failure == Failure {
+final class BoundaryTimeSubscription<S, Failure>: Subscription where Failure: Error, S: Subscriber, S.Input == Void, S.Failure == Failure {
     private var subscriber: S?
     private let player: AVPlayer
     private let times: [CMTime]
     private let queue: DispatchQueue
+    private let lock = NSRecursiveLock()
 
     private var demand: Subscribers.Demand = .none
     private var timeObserver: Any?
@@ -23,44 +24,32 @@ final actor BoundaryTimeSubscription<S, Failure>: Subscription where Failure: Er
         self.queue = queue
     }
 
-    private func processDemand(_ demand: Subscribers.Demand) {
-        self.demand += demand
-        guard timeObserver == nil else { return }
-        let timeValues = times.map { NSValue(time: $0) }
-        timeObserver = player.addBoundaryTimeObserver(forTimes: timeValues, queue: queue) { [weak self] in
-            self?.processTime()
-        }
-    }
-
-    private func processCancellation() {
-        if let timeObserver {
-            player.removeTimeObserver(timeObserver)
-            self.timeObserver = nil
-        }
-        subscriber = nil
-    }
-
     private func send() {
-        guard let subscriber = self.subscriber, demand > .none else { return }
-        demand -= 1
-        demand += subscriber.receive(())
-    }
-
-    private nonisolated func processTime() {
-        Task {
-            await send()
+        withLock(lock) {
+            guard let subscriber = self.subscriber, demand > .none else { return }
+            demand -= 1
+            demand += subscriber.receive(())
         }
     }
 
-    nonisolated func request(_ demand: Subscribers.Demand) {
-        Task {
-            await processDemand(demand)
+    func request(_ demand: Subscribers.Demand) {
+        withLock(lock) {
+            self.demand += demand
+            guard timeObserver == nil else { return }
+            let timeValues = times.map { NSValue(time: $0) }
+            timeObserver = player.addBoundaryTimeObserver(forTimes: timeValues, queue: queue) { [weak self] in
+                self?.send()
+            }
         }
     }
 
-    nonisolated func cancel() {
-        Task {
-            await processCancellation()
+    func cancel() {
+        withLock(lock) {
+            if let timeObserver {
+                player.removeTimeObserver(timeObserver)
+                self.timeObserver = nil
+            }
+            subscriber = nil
         }
     }
 }
