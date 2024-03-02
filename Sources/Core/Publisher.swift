@@ -144,8 +144,11 @@ public extension Publisher where Failure == Never {
 public extension Publisher {
     /// Shares the output of an upstream publisher with multiple subscribers.
     /// 
-    /// - Parameter bufferSize: The number of recent values to deliver to new subscribers.
-    func share2(replay bufferSize: Int) -> AnyPublisher<Output, Failure> {
+    /// - Parameter bufferSize: A number of recent values that are kept buffer.
+    ///
+    /// Upon subscription new subscribers automatically receive recent values available from the buffer, as well as
+    /// completion.
+    func share(replay bufferSize: Int) -> AnyPublisher<Output, Failure> {
         multicast(subject: ReplaySubject(bufferSize: bufferSize))
             .autoconnect()
             .eraseToAnyPublisher()
