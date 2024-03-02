@@ -57,6 +57,9 @@ let package = Package(
         ),
         .target(
             name: "PillarboxCore",
+            dependencies: [
+                .product(name: "DequeModule", package: "swift-collections")
+            ],
             path: "Sources/Core"
         ),
         .target(
