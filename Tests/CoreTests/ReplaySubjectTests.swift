@@ -85,10 +85,10 @@ final class ReplaySubjectTests: XCTestCase {
 
     func testNoValueAfterCompletion() {
         let subject = ReplaySubject<Int, Never>(bufferSize: 2)
+        subject.send(1)
         subject.send(completion: .finished)
-        expectNothingPublished(from: subject, during: .milliseconds(100)) {
-            subject.send(1)
-        }
+        subject.send(2)
+        expectEqualPublished(values: [1], from: subject, during: .milliseconds(100))
     }
 
     func testCompletionWithMultipleSubscribers() {

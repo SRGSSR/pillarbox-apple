@@ -24,6 +24,7 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
 
     public func send(_ value: Output) {
         withLock(lock) {
+            guard self.completion == nil else { return }
             buffer.append(value)
             subscriptions.forEach { subscription in
                 subscription.receive(value)
@@ -51,7 +52,6 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
 
         withLock(lock) {
             subscriptions.append(subscription)
-
             buffer.values.forEach { value in
                 subscription.receive(value)
             }
