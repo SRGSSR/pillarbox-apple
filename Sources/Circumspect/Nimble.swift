@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+import Foundation
+
 /// Returns whether Nimble throw assertions are available or not.
 ///
 /// Call this function at the start of test methods using Nimble `throwAssertion()`. This ensures that:
