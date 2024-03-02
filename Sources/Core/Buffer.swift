@@ -6,9 +6,9 @@
 
 import Foundation
 
+/// A buffer able to hold a maximum number of values.
 final class Buffer<T> {
-    let size: Int
-
+    private let size: Int
     private(set) var values: [T] = []
 
     init(size: Int) {
@@ -17,6 +17,7 @@ final class Buffer<T> {
     }
 
     func append(_ t: T) {
+        guard size > 0 else { return }
         values.append(t)
         values = values.suffix(size)
     }
