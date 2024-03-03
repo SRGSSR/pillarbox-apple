@@ -10,16 +10,16 @@ import Nimble
 import PillarboxCircumspect
 import XCTest
 
-final class BufferTests: XCTestCase {
-    func testScarceBuffer() {
-        let buffer = Buffer<Int>(size: 0)
+final class LimitedBufferTests: XCTestCase {
+    func testBufferWithZeroSize() {
+        let buffer = LimitedBuffer<Int>(size: 0)
         expect(buffer.values).to(beEmpty())
         buffer.append(1)
         expect(buffer.values).to(beEmpty())
     }
 
-    func testBuffer() {
-        let buffer = Buffer<Int>(size: 2)
+    func testBufferWithFiniteSize() {
+        let buffer = LimitedBuffer<Int>(size: 2)
         expect(buffer.values).to(beEmpty())
         buffer.append(1)
         expect(buffer.values).to(equalDiff([1]))

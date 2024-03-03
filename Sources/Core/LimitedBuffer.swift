@@ -5,7 +5,7 @@
 //
 
 /// A buffer able to hold a maximum number of values.
-final class Buffer<T> {
+final class LimitedBuffer<T> {
     private let size: Int
     private(set) var values: [T] = []
 
