@@ -9,48 +9,42 @@ import Foundation
 
 final class ReplaySubscription<Output, Failure>: Subscription where Failure: Error {
     private var subscriber: AnySubscriber<Output, Failure>?
-    private var demand: Subscribers.Demand = .none
-    private let lock = NSRecursiveLock()
+    private var buffer = DemandBuffer<Output>()
 
-    init<S>(subscriber: S) where S: Subscriber, S.Input == Output, S.Failure == Failure {
+    init<S>(subscriber: S, values: [Output]) where S: Subscriber, S.Input == Output, S.Failure == Failure {
         self.subscriber = AnySubscriber(subscriber)
     }
 
-    func replay(_ values: [Output], completion: Subscribers.Completion<Failure>?) {
-        withLock(lock) {
-            guard let subscriber = self.subscriber else { return }
-            values.forEach { value in
-                _ = subscriber.receive(value)
-            }
-            if let completion {
-                subscriber.receive(completion: completion)
-            }
-        }
-    }
-
     func request(_ demand: Subscribers.Demand) {
-        withLock(lock) {
-            self.demand += demand
-        }
-    }
-
-    func receive(_ value: Output) {
-        withLock(lock) {
-            guard let subscriber = self.subscriber, demand > .none else { return }
-            demand -= 1
-            demand += subscriber.receive(value)
-        }
-    }
-
-    func receive(completion: Subscribers.Completion<Failure>) {
-        withLock(lock) {
-            subscriber?.receive(completion: completion)
-        }
+        process(buffer.request(demand))
     }
 
     func cancel() {
-        withLock(lock) {
-            subscriber = nil
+        subscriber = nil
+    }
+
+    func send(_ value: Output) {
+        process(buffer.append(value))
+    }
+
+    func send(completion: Subscribers.Completion<Failure>) {
+        process(completion: completion)
+    }
+
+    func replay(values: [Output], completion: Subscribers.Completion<Failure>?) {
+        process(values)
+        process(completion: completion)
+    }
+
+    private func process(_ values: [Output]) {
+        guard let subscriber else { return }
+        values.forEach { value in
+            subscriber.receive(value)
         }
+    }
+
+    private func process(completion: Subscribers.Completion<Failure>?) {
+        guard let subscriber, let completion else { return }
+        subscriber.receive(completion: completion)
     }
 }

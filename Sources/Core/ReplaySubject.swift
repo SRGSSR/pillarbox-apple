@@ -16,6 +16,8 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
 
     private var subscriptions: [ReplaySubscription<Output, Failure>] = []
     private var completion: Subscribers.Completion<Failure>?
+
+    // TODO:
     private let lock = NSRecursiveLock()
 
     init(bufferSize: Int) {
@@ -23,22 +25,18 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
     }
 
     public func send(_ value: Output) {
-        withLock(lock) {
-            guard self.completion == nil else { return }
-            buffer.append(value)
-            subscriptions.forEach { subscription in
-                subscription.receive(value)
-            }
+        guard self.completion == nil else { return }
+        buffer.append(value)
+        subscriptions.forEach { subscription in
+            subscription.send(value)
         }
     }
 
     public func send(completion: Subscribers.Completion<Failure>) {
-        withLock(lock) {
-            guard self.completion == nil else { return }
-            self.completion = completion
-            subscriptions.forEach { subscription in
-                subscription.receive(completion: completion)
-            }
+        guard self.completion == nil else { return }
+        self.completion = completion
+        subscriptions.forEach { subscription in
+            subscription.send(completion: completion)
         }
     }
 
@@ -47,12 +45,9 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
     }
 
     public func receive<S>(subscriber: S) where S: Subscriber, Failure == S.Failure, Output == S.Input {
-        let subscription = ReplaySubscription(subscriber: subscriber)
+        let subscription = ReplaySubscription(subscriber: subscriber, values: buffer.values)
         subscriber.receive(subscription: subscription)
-
-        withLock(lock) {
-            subscriptions.append(subscription)
-            subscription.replay(buffer.values, completion: completion)
-        }
+        subscription.replay(values: buffer.values, completion: completion)
+        subscriptions.append(subscription)
     }
 }
