@@ -17,7 +17,7 @@ final class DemandBuffer<T> {
     private(set) var values = Deque<T>()
     private(set) var requested: Subscribers.Demand = .none
 
-    init(_ values: [T] = []) {
+    init(_ values: [T]) {
         self.values = .init(values)
     }
 
@@ -46,6 +46,12 @@ final class DemandBuffer<T> {
             }
         }
         return actions
+    }
+}
+
+extension DemandBuffer: ExpressibleByArrayLiteral {
+    convenience init(arrayLiteral elements: T...) {
+        self.init(elements)
     }
 }
 

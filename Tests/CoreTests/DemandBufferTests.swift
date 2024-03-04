@@ -19,12 +19,12 @@ final class DemandBufferTests: XCTestCase {
     }
 
     func testPrefilledBuffer() {
-        let buffer = DemandBuffer([1, 2])
+        let buffer: DemandBuffer = [1, 2]
         expect(buffer.values).to(equalDiff([1, 2]))
     }
 
     func testAppendWithoutRequest() {
-        let buffer = DemandBuffer([1, 2])
+        let buffer: DemandBuffer = [1, 2]
         expect(buffer.values).to(equalDiff([1, 2]))
     }
 
@@ -35,13 +35,13 @@ final class DemandBufferTests: XCTestCase {
     }
 
     func testLimitedRequestWithPartiallyFilledBuffer() {
-        let buffer = DemandBuffer([1, 2])
+        let buffer: DemandBuffer = [1, 2]
         expect(buffer.request(.max(10))).to(equalDiff([.produce(1), .produce(2)]))
         expect(buffer.requested).to(equal(.max(8)))
     }
 
     func testLimitedRequestWithFullyFilledBuffer() {
-        let buffer = DemandBuffer([1, 2, 3, 4])
+        let buffer: DemandBuffer = [1, 2, 3, 4]
         expect(buffer.request(.max(2))).to(equalDiff([.produce(1), .produce(2), .complete]))
         expect(buffer.requested).to(equal(.max(0)))
         expect(buffer.append(5)).to(beEmpty())
@@ -54,7 +54,7 @@ final class DemandBufferTests: XCTestCase {
     }
 
     func testUnlimitedRequestWithFilledBuffer() {
-        let buffer = DemandBuffer([1, 2])
+        let buffer: DemandBuffer = [1, 2]
         expect(buffer.request(.unlimited)).to(equalDiff([.produce(1), .produce(2)]))
         expect(buffer.requested).to(equal(.unlimited))
     }
