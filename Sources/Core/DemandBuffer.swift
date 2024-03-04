@@ -17,6 +17,10 @@ final class DemandBuffer<T> {
     private(set) var values = Deque<T>()
     private(set) var requested: Subscribers.Demand = .none
 
+    init(_ values: [T] = []) {
+        self.values = .init(values)
+    }
+
     func append(_ value: T) -> [Action] {
         switch requested {
         case .unlimited:
