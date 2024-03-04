@@ -39,7 +39,8 @@ final class ReplaySubscription<Output, Failure>: Subscription where Failure: Err
     private func process(_ values: [Output]) {
         guard let subscriber else { return }
         values.forEach { value in
-            subscriber.receive(value)
+            let demand = subscriber.receive(value)
+            request(demand)
         }
     }
 
