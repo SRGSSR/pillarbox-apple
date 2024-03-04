@@ -17,9 +17,6 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
     private var subscriptions: [ReplaySubscription<Output, Failure>] = []
     private var completion: Subscribers.Completion<Failure>?
 
-    // TODO:
-    private let lock = NSRecursiveLock()
-
     init(bufferSize: Int) {
         buffer = .init(size: bufferSize)
     }

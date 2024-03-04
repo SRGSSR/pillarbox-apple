@@ -7,7 +7,6 @@
 import Combine
 import DequeModule
 
-// TODO: Locks
 final class DemandBuffer<T> {
     private(set) var values = Deque<T>()
     private(set) var requested: Subscribers.Demand = .none
