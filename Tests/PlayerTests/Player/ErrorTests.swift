@@ -35,7 +35,7 @@ final class ErrorTests: TestCase {
     func testInvalidStream() {
         let player = Player(item: .simple(url: Stream.unavailable.url))
         expectEqualPublishedNext(
-            values: [.init(rawValue: -12938)],
+            values: [.init(rawValue: NSURLErrorFileDoesNotExist)],
             from: Self.errorCodePublisher(for: player),
             during: .milliseconds(500)
         )

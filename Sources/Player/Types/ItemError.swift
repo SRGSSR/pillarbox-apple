@@ -8,34 +8,21 @@ import AVFoundation
 
 enum ItemError {
     /// Consolidates intrinsic error and error log information.
-    static func intrinsicError(for item: AVPlayerItem) -> Error? {
-        if let errorLog = item.errorLog(), let event = errorLog.events.last {
+    static func error(for item: AVPlayerItem) -> Error? {
+        guard let nsError = item.error as? NSError else { return nil }
+        if nsError.userInfo[NSLocalizedDescriptionKey] != nil {
+            return nsError
+        }
+        else if let errorLog = item.errorLog(), let event = errorLog.events.last {
             return NSError(
                 domain: event.errorDomain,
                 code: event.errorStatusCode,
                 userInfo: userInfo(for: event)
             )
         }
-        else if let error = item.error {
-            return localizedError(from: error)
-        }
         else {
-            return nil
+            return nsError
         }
-    }
-
-    static func localizedError(from error: Error) -> Error {
-        let bridgedError = error as NSError
-        var userInfo = bridgedError.userInfo
-
-        // Errors returned through `AVAssetResourceLoader` do not apply correct error localization rules. Fix.
-        let descriptionKey = "NSDescription"
-        if let description = userInfo[descriptionKey] {
-            userInfo[NSLocalizedDescriptionKey] = description
-            userInfo[descriptionKey] = nil
-        }
-
-        return NSError(domain: bridgedError.domain, code: bridgedError.code, userInfo: userInfo)
     }
 
     static func innerComment(from comment: String?) -> String? {

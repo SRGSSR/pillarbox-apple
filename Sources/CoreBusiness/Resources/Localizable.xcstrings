@@ -4,7 +4,19 @@
     "No playable resources could be found." : {
       "comment" : "Generic error message returned when no playable resources could be found",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No playable resources could be found."
+          }
+        },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No playable resources could be found."
+          }
+        },
+        "en-US" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No playable resources could be found."
@@ -15,13 +27,37 @@
             "state" : "translated",
             "value" : "Aucune ressource jouable n'a pu être trouvée."
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No playable resources could be found."
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "No playable resources could be found."
+          }
         }
       }
     },
     "The data is invalid" : {
       "comment" : "Generic error message returned when data is invalid",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "The data is invalid."
+          }
+        },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The data is invalid."
+          }
+        },
+        "en-US" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "The data is invalid."
@@ -32,12 +68,23 @@
             "state" : "translated",
             "value" : "Les données sont invalides."
           }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "The data is invalid."
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Las datas n'èn betg valaivlas."
+          }
         }
       }
     },
     "This commercial content is not available." : {
       "comment" : "Blocking reason description message",
-      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -46,6 +93,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This commercial content is not available."
+          }
+        },
+        "en-US" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "This commercial content is not available."
@@ -73,7 +126,6 @@
     },
     "This content is not available anymore." : {
       "comment" : "Blocking reason description message",
-      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -82,6 +134,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This content is not available anymore."
+          }
+        },
+        "en-US" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "This content is not available anymore."
@@ -109,7 +167,6 @@
     },
     "This content is not available due to legal restrictions." : {
       "comment" : "Blocking reason description message",
-      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -118,6 +175,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This content is not available due to legal restrictions."
+          }
+        },
+        "en-US" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "This content is not available due to legal restrictions."
@@ -145,7 +208,6 @@
     },
     "This content is not available outside Switzerland." : {
       "comment" : "Blocking reason description message",
-      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -154,6 +216,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This content is not available outside Switzerland."
+          }
+        },
+        "en-US" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "This content is not available outside Switzerland."
@@ -181,7 +249,6 @@
     },
     "This content is not available yet." : {
       "comment" : "Blocking reason description message",
-      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -190,6 +257,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This content is not available yet."
+          }
+        },
+        "en-US" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "This content is not available yet."
@@ -217,7 +290,6 @@
     },
     "This content is not available." : {
       "comment" : "Blocking reason description message",
-      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -226,6 +298,12 @@
           }
         },
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This content is not available."
+          }
+        },
+        "en-US" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "This content is not available."
@@ -253,7 +331,6 @@
     },
     "To protect children this content is only available between 8PM and 6AM." : {
       "comment" : "Blocking reason description message",
-      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -267,17 +344,34 @@
             "value" : "To protect children this content is only available between 8PM and 6AM."
           }
         },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To protect children this content is only available between 8PM and 6AM."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ce contenu n'est disponible qu'entre 20h et 6h afin de protéger le jeune public."
+            "value" : "Ce contenu n'est disponible qu'entre 20 h et 6 h afin de protéger le jeune public."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Per proteggere i bambini, questo media è disponibile solo fra le 20 e le 6."
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Per proteger uffants, è quest medium disponibel mo tranter las 20.00 e las 06.00."
           }
         }
       }
     },
     "To protect children this content is only available between 10PM and 5AM." : {
       "comment" : "Blocking reason description message",
-      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -291,21 +385,69 @@
             "value" : "To protect children this content is only available between 10PM and 5AM."
           }
         },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To protect children this content is only available between 10PM and 5AM."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ce contenu n'est disponible qu'entre 22h et 5h afin de protéger le jeune public."
+            "value" : "Ce contenu n'est disponible qu'entre 22 h et 5 h afin de protéger le jeune public."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Per proteggere i bambini, questo media è disponibile solo fra le 22 le 5."
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Per proteger uffants, è quest medium disponibel mo tranter las 22.00 e las 05.00."
           }
         }
       }
     },
-    "Unknown error" : {
+    "Unknown error." : {
       "comment" : "Generic error message",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Unknown error."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown error."
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown error."
+          }
+        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Erreur inconnue"
+            "value" : "Erreur inconnue."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Unknown error."
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sbagl nunenconuschent."
           }
         }
       }

@@ -41,25 +41,4 @@ final class ItemErrorTests: TestCase {
             """
         )).to(equal("HTTP 403: Forbidden"))
     }
-
-    func testLocalizedErrorFromLocalizedNSError() {
-        let error = NSError(domain: "domain", code: 1012, userInfo: [
-            NSLocalizedDescriptionKey: "Error description"
-        ])
-        expect(ItemError.localizedError(from: error) as NSError).to(equal(error))
-    }
-
-    func testLocalizedErrorFromNonLocalizedNSError() {
-        let error = NSError(domain: "domain", code: 1012, userInfo: [
-            "NSDescription": "Error description"
-        ])
-        let expectedError = NSError(domain: "domain", code: 1012, userInfo: [
-            NSLocalizedDescriptionKey: "Error description"
-        ])
-        expect(ItemError.localizedError(from: error) as NSError).to(equal(expectedError))
-    }
-
-    func testLocalizedErrorFromSwiftError() {
-        expect(ItemError.localizedError(from: StructError()) as NSError).to(equal(StructError() as NSError))
-    }
 }
