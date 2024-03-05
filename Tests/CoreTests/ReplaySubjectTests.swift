@@ -32,8 +32,7 @@ final class ReplaySubjectTests: XCTestCase {
         let subject = ReplaySubject<Int, Never>(bufferSize: 2)
         subject.send(1)
         subject.send(2)
-        subject
-            .send(3)
+        subject.send(3)
         expectEqualPublished(values: [2, 3], from: subject, during: .milliseconds(100))
     }
 
