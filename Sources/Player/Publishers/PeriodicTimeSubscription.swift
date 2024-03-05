@@ -6,15 +6,15 @@
 
 import AVFoundation
 import Combine
+import PillarboxCore
 
 final class PeriodicTimeSubscription<S, Failure>: Subscription where Failure: Error, S: Subscriber, S.Input == CMTime, S.Failure == Failure {
     private var subscriber: S?
     private let player: AVPlayer
     private let interval: CMTime
     private let queue: DispatchQueue
-    private let lock = NSRecursiveLock()
 
-    private var demand: Subscribers.Demand = .none
+    private let buffer = DemandBuffer<CMTime>()
     private var timeObserver: Any?
 
     init(subscriber: S, player: AVPlayer, interval: CMTime, queue: DispatchQueue) {
@@ -25,30 +25,31 @@ final class PeriodicTimeSubscription<S, Failure>: Subscription where Failure: Er
     }
 
     private func send(_ time: CMTime) {
-        withLock(lock) {
-            guard let subscriber = self.subscriber, demand > .none else { return }
-            demand -= 1
-            demand += subscriber.receive(time)
-        }
+        process(buffer.append(time))
     }
 
     func request(_ demand: Subscribers.Demand) {
-        withLock(lock) {
-            self.demand += demand
-            guard timeObserver == nil else { return }
+        if timeObserver == nil {
             timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: queue) { [weak self] time in
                 self?.send(time)
             }
         }
+        process(buffer.request(demand))
     }
 
     func cancel() {
-        withLock(lock) {
-            if let timeObserver {
-                player.removeTimeObserver(timeObserver)
-                self.timeObserver = nil
-            }
-            subscriber = nil
+        if let timeObserver {
+            player.removeTimeObserver(timeObserver)
+            self.timeObserver = nil
+        }
+        subscriber = nil
+    }
+
+    private func process(_ values: [CMTime]) {
+        guard let subscriber else { return }
+        values.forEach { value in
+            let demand = subscriber.receive(value)
+            request(demand)
         }
     }
 }

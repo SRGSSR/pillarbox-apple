@@ -6,8 +6,9 @@
 
 import Foundation
 
-func withLock(_ lock: NSLocking, execute: () -> Void) {
+func withLock<T>(_ lock: NSLocking, execute: () -> T) -> T {
     lock.lock()
-    execute()
+    let result = execute()
     lock.unlock()
+    return result
 }
