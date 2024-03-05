@@ -31,12 +31,12 @@ final class DemandBuffer<T> {
     }
 
     private func flush() -> [T] {
-        var actions = [T]()
-        while requested > 0, let value = values.popFirst() {
-            actions.append(value)
+        var values = [T]()
+        while requested > 0, let value = self.values.popFirst() {
+            values.append(value)
             requested -= 1
         }
-        return actions
+        return values
     }
 }
 
