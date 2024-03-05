@@ -122,4 +122,13 @@ final class ReplaySubjectTests: XCTestCase {
             ))
         expect(results).to(equalDiff([1, 2]))
     }
+
+    func testThreadSafety() {
+        let replaySubject = ReplaySubject<Int, Never>(bufferSize: 3)
+        for i in 0..<100 {
+            DispatchQueue.global().async {
+                replaySubject.send(i)
+            }
+        }
+    }
 }
