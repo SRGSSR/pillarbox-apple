@@ -6,15 +6,15 @@
 
 import AVFoundation
 import Combine
+import PillarboxCore
 
 final class BoundaryTimeSubscription<S, Failure>: Subscription where Failure: Error, S: Subscriber, S.Input == Void, S.Failure == Failure {
     private var subscriber: S?
     private let player: AVPlayer
     private let times: [CMTime]
     private let queue: DispatchQueue
-    private let lock = NSRecursiveLock()
 
-    private var demand: Subscribers.Demand = .none
+    private let buffer = DemandBuffer<Void>()
     private var timeObserver: Any?
 
     init(subscriber: S, player: AVPlayer, times: [CMTime], queue: DispatchQueue) {
@@ -25,31 +25,32 @@ final class BoundaryTimeSubscription<S, Failure>: Subscription where Failure: Er
     }
 
     private func send() {
-        withLock(lock) {
-            guard let subscriber = self.subscriber, demand > .none else { return }
-            demand -= 1
-            demand += subscriber.receive(())
-        }
+        process(buffer.append(()))
     }
 
     func request(_ demand: Subscribers.Demand) {
-        withLock(lock) {
-            self.demand += demand
-            guard timeObserver == nil else { return }
+        if timeObserver == nil {
             let timeValues = times.map { NSValue(time: $0) }
             timeObserver = player.addBoundaryTimeObserver(forTimes: timeValues, queue: queue) { [weak self] in
                 self?.send()
             }
         }
+        process(buffer.request(demand))
     }
 
     func cancel() {
-        withLock(lock) {
-            if let timeObserver {
-                player.removeTimeObserver(timeObserver)
-                self.timeObserver = nil
-            }
-            subscriber = nil
+        if let timeObserver {
+            player.removeTimeObserver(timeObserver)
+            self.timeObserver = nil
+        }
+        subscriber = nil
+    }
+
+    private func process(_ values: [Void]) {
+        guard let subscriber else { return }
+        values.forEach { value in
+            let demand = subscriber.receive(value)
+            request(demand)
         }
     }
 }
