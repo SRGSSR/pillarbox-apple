@@ -69,4 +69,13 @@ final class DemandBufferTests: XCTestCase {
         expect(buffer.append(1)).to(equalDiff([1]))
         expect(buffer.append(2)).to(equalDiff([2]))
     }
+
+    func testThreadSafety() {
+        let buffer = DemandBuffer([0...1000])
+        for _ in 0..<100 {
+            DispatchQueue.global().async {
+                _ = buffer.request(.unlimited)
+            }
+        }
+    }
 }
