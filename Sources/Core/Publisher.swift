@@ -141,9 +141,9 @@ public extension Publisher where Failure == Never {
 }
 
 public extension Publisher {
-    /// Shares the output of an upstream publisher with multiple subscribers.
-    /// 
-    /// - Parameter bufferSize: A number of recent values that are buffered.
+    /// Shares the output (including recent values) of an upstream publisher with multiple subscribers.
+    ///
+    /// - Parameter bufferSize: The maximum number of values that must be buffered.
     ///
     /// Upon subscription new subscribers automatically receive recent values available from the buffer, as well as
     /// any relevant completion.
