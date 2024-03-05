@@ -6,8 +6,6 @@
 
 @testable import PillarboxPlayer
 
-import AVFoundation
-import Combine
 import Nimble
 import PillarboxStreams
 

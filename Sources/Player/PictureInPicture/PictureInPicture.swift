@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import SwiftUI
+import Dispatch
 
 /// Manages Picture in Picture.
 public final class PictureInPicture {

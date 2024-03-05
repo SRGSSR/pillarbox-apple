@@ -6,7 +6,6 @@
 
 @testable import PillarboxPlayer
 
-import AVFoundation
 import PillarboxCircumspect
 import PillarboxStreams
 

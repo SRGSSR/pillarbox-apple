@@ -6,8 +6,6 @@
 
 @testable import PillarboxAnalytics
 
-import CoreMedia
-
 // swiftlint:disable:next type_name
 final class CommandersActStreamingAnalyticsHeartbeatOnDemandTests: CommandersActTestCase {
     func testNoHeartbeatInitially() {

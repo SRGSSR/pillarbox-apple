@@ -8,7 +8,6 @@ import Combine
 import Foundation
 
 // Borrowed from https://stackoverflow.com/a/67133582/760435
-
 public extension Publisher {
     /// Includes the current element as well as the previous element from the upstream publisher in a tuple where the
     /// previous element is optional.
@@ -138,5 +137,19 @@ public extension Publisher where Failure == Never {
         sink { [weak object] value in
             object?[keyPath: keyPath] = value
         }
+    }
+}
+
+public extension Publisher {
+    /// Shares the output (including recent values) of an upstream publisher with multiple subscribers.
+    ///
+    /// - Parameter bufferSize: The maximum number of values that must be buffered.
+    ///
+    /// Upon subscription new subscribers automatically receive recent values available from the buffer, as well as
+    /// any relevant completion.
+    func share(replay bufferSize: Int) -> AnyPublisher<Output, Failure> {
+        multicast(subject: ReplaySubject(bufferSize: bufferSize))
+            .autoconnect()
+            .eraseToAnyPublisher()
     }
 }

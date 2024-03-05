@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import SwiftUI
-
 /// A protocol to for objects persisted during Picture in Picture playback.
 ///
 /// The persisted object, if any, can be retrieved from the `persisted` property. The persisted object can also be

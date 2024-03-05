@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
+import Foundation
 
 /// A player configuration.
 public struct PlayerConfiguration {
