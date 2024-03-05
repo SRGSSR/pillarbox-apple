@@ -23,11 +23,6 @@ final class DemandBufferTests: XCTestCase {
         expect(buffer.values).to(equalDiff([1, 2]))
     }
 
-    func testAppendWithoutRequest() {
-        let buffer: DemandBuffer = [1, 2]
-        expect(buffer.values).to(equalDiff([1, 2]))
-    }
-
     func testLimitedRequestWithEmptyBuffer() {
         let buffer = DemandBuffer<Int>()
         expect(buffer.request(.max(2))).to(beEmpty())
