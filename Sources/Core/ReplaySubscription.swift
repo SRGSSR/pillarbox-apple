@@ -31,11 +31,6 @@ final class ReplaySubscription<Output, Failure>: Subscription where Failure: Err
         process(completion: completion)
     }
 
-    func replay(values: [Output], completion: Subscribers.Completion<Failure>?) {
-        process(values)
-        process(completion: completion)
-    }
-
     private func process(_ values: [Output]) {
         guard let subscriber else { return }
         values.forEach { value in

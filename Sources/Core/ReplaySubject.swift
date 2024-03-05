@@ -43,8 +43,13 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
 
     public func receive<S>(subscriber: S) where S: Subscriber, Failure == S.Failure, Output == S.Input {
         let subscription = ReplaySubscription(subscriber: subscriber, values: buffer.values)
+        buffer.values.forEach { value in
+            subscription.send(value)
+        }
         subscriber.receive(subscription: subscription)
-        subscription.replay(values: buffer.values, completion: completion)
+        if let completion {
+            subscription.send(completion: completion)
+        }
         subscriptions.append(subscription)
     }
 }
