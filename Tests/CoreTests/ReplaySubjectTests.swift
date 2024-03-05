@@ -7,6 +7,7 @@
 @testable import PillarboxCore
 
 import Combine
+import Nimble
 import PillarboxCircumspect
 import XCTest
 
@@ -101,28 +102,24 @@ final class ReplaySubjectTests: XCTestCase {
         expectOnlyEqualPublished(values: [1], from: subject)
     }
 
-    func testNoMoreValuesThanRequested() {
-        let subject = ReplaySubject<Int, Never>(bufferSize: 4)
-
+    func testRequestLessValuesThanAvailable() {
+        let subject = ReplaySubject<Int, Never>(bufferSize: 3)
         subject.send(1)
         subject.send(2)
         subject.send(3)
-        subject.send(4)
 
         var results = [Int]()
-        var completed = false
-
-        let subscriber = AnySubscriber<Int, Never>(
-            receiveSubscription: { subscription in
-                subscription.request(.max(3))
-            },
-            receiveValue: { results.append($0); return .none },
-            receiveCompletion: { _ in }
-        )
-
         subject
-            .subscribe(subscriber)
-
-        XCTAssertEqual(results, [1, 2, 3])
+            .subscribe(AnySubscriber<Int, Never>(
+                receiveSubscription: { subscription in
+                    subscription.request(.max(2))
+                },
+                receiveValue: { value in
+                    results.append(value)
+                    return .none
+                },
+                receiveCompletion: { _ in }
+            ))
+        expect(results).to(equalDiff([1, 2]))
     }
 }
