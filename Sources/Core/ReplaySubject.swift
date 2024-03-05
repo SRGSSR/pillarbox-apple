@@ -17,23 +17,29 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
     private var subscriptions: [ReplaySubscription<Output, Failure>] = []
     private var completion: Subscribers.Completion<Failure>?
 
+    private let lock = NSRecursiveLock()
+
     init(bufferSize: Int) {
         buffer = .init(size: bufferSize)
     }
 
     public func send(_ value: Output) {
-        guard self.completion == nil else { return }
-        buffer.append(value)
-        subscriptions.forEach { subscription in
-            subscription.send(value)
+        withLock(lock) {
+            guard self.completion == nil else { return }
+            buffer.append(value)
+            subscriptions.forEach { subscription in
+                subscription.send(value)
+            }
         }
     }
 
     public func send(completion: Subscribers.Completion<Failure>) {
-        guard self.completion == nil else { return }
-        self.completion = completion
-        subscriptions.forEach { subscription in
-            subscription.send(completion: completion)
+        withLock(lock) {
+            guard self.completion == nil else { return }
+            self.completion = completion
+            subscriptions.forEach { subscription in
+                subscription.send(completion: completion)
+            }
         }
     }
 
@@ -42,14 +48,16 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
     }
 
     public func receive<S>(subscriber: S) where S: Subscriber, Failure == S.Failure, Output == S.Input {
-        let subscription = ReplaySubscription(subscriber: subscriber, values: buffer.values)
-        buffer.values.forEach { value in
-            subscription.send(value)
+        withLock(lock) {
+            let subscription = ReplaySubscription(subscriber: subscriber, values: buffer.values)
+            buffer.values.forEach { value in
+                subscription.send(value)
+            }
+            subscriber.receive(subscription: subscription)
+            if let completion {
+                subscription.send(completion: completion)
+            }
+            subscriptions.append(subscription)
         }
-        subscriber.receive(subscription: subscription)
-        if let completion {
-            subscription.send(completion: completion)
-        }
-        subscriptions.append(subscription)
     }
 }
