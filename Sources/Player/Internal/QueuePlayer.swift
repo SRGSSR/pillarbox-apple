@@ -182,7 +182,6 @@ extension AVQueuePlayer {
         items().suffix(from: index).forEach { remove($0) }
     }
 
-    @objc
     private func append(_ items: [AVPlayerItem]) {
         items.forEach { insert($0, after: nil) }
     }
