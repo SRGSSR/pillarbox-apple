@@ -19,7 +19,10 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
 
     private let lock = NSRecursiveLock()
 
-    init(bufferSize: Int) {
+    /// Creates a subject able to buffer the provided number of values.
+    ///
+    /// - Parameter bufferSize: The buffer size.
+    public init(bufferSize: Int) {
         buffer = .init(size: bufferSize)
     }
 
