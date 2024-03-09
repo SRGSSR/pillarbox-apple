@@ -13,10 +13,8 @@ import Foundation
 /// any relevant completion.
 public final class ReplaySubject<Output, Failure>: Subject where Failure: Error {
     private let buffer: LimitedBuffer<Output>
-
     private var subscriptions: [ReplaySubscription<Output, Failure>] = []
     private var completion: Subscribers.Completion<Failure>?
-
     private let lock = NSRecursiveLock()
 
     /// Creates a subject able to buffer the provided number of values.
@@ -31,7 +29,10 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
             guard self.completion == nil else { return }
             buffer.append(value)
             subscriptions.forEach { subscription in
-                subscription.send(value)
+                subscription.append(value)
+            }
+            subscriptions.forEach { subscription in
+                subscription.send()
             }
         }
     }
@@ -54,7 +55,8 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
         withLock(lock) {
             let subscription = ReplaySubscription(subscriber: subscriber, values: buffer.values)
             buffer.values.forEach { value in
-                subscription.send(value)
+                subscription.append(value)
+                subscription.send()
             }
             subscriber.receive(subscription: subscription)
             if let completion {
