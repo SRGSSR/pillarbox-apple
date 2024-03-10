@@ -10,6 +10,7 @@ import Foundation
 final class ReplaySubscription<Output, Failure>: Subscription where Failure: Error {
     private var subscriber: AnySubscriber<Output, Failure>?
     private var buffer = DemandBuffer<Output>()
+    private var pendingValues: [Output] = []
 
     init<S>(subscriber: S, values: [Output]) where S: Subscriber, S.Input == Output, S.Failure == Failure {
         self.subscriber = AnySubscriber(subscriber)
@@ -23,8 +24,14 @@ final class ReplaySubscription<Output, Failure>: Subscription where Failure: Err
         subscriber = nil
     }
 
-    func send(_ value: Output) {
-        process(buffer.append(value))
+    func append(_ value: Output) {
+        pendingValues += buffer.append(value)
+    }
+
+    func send() {
+        let values = pendingValues
+        pendingValues = []
+        process(values)
     }
 
     func send(completion: Subscribers.Completion<Failure>) {

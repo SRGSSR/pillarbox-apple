@@ -130,4 +130,32 @@ final class ReplaySubjectTests: XCTestCase {
             }
         }
     }
+
+    func testDeliveryOrderInRecursiveScenario() {
+        let subject = ReplaySubject<Int, Never>(bufferSize: 1)
+        var cancellables = Set<AnyCancellable>()
+
+        var values: [String] = []
+
+        subject.sink { i in
+            values.append("A\(i)")
+        }
+        .store(in: &cancellables)
+
+        subject.sink { i in
+            values.append("B\(i)")
+            if i == 1 {
+                subject.send(2)
+            }
+        }
+        .store(in: &cancellables)
+
+        subject.sink { i in
+            values.append("C\(i)")
+        }
+        .store(in: &cancellables)
+
+        subject.send(1)
+        expect(values).to(equalDiff(["A1", "B1", "A2", "B2", "C1", "C2"]))
+    }
 }
