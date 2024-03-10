@@ -131,7 +131,7 @@ final class ReplaySubjectTests: XCTestCase {
         }
     }
 
-    func testRecursiveReplayDeliveryOrder() {
+    func testDeliveryOrderInRecursiveScenario() {
         let subject = ReplaySubject<Int, Never>(bufferSize: 1)
         var cancellables = Set<AnyCancellable>()
 
