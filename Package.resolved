@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/comScore/Comscore-Swift-Package-Manager.git",
       "state" : {
-        "revision" : "fef761279a592960243e67f2aea110c6fa097fd8",
-        "version" : "6.11.0"
+        "revision" : "2951e28ff65d1512727b854d9e64bc53bedfb6cf",
+        "version" : "6.12.0"
       }
     },
     {
@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mattgallagher/CwlCatchException.git",
       "state" : {
-        "revision" : "3b123999de19bf04905bc1dfdb76f817b0f2cc00",
-        "version" : "2.1.2"
+        "revision" : "3ef6999c73b6938cc0da422f2c912d0158abb0a0",
+        "version" : "2.2.0"
       }
     },
     {
@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mattgallagher/CwlPreconditionTesting.git",
       "state" : {
-        "revision" : "dc9af4781f2afdd1e68e90f80b8603be73ea7abc",
-        "version" : "2.2.0"
+        "revision" : "2ef56b2caf25f55fa7eef8784c30d5a767550f54",
+        "version" : "2.2.1"
       }
     },
     {
@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/CommandersAct/iOSV5.git",
       "state" : {
-        "revision" : "c699709090afee22a2b72078d753b729218b70ba",
-        "version" : "5.4.5"
+        "revision" : "3b5c3167d10bf009d1cd4aa9076600a1bde584d0",
+        "version" : "5.4.6"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Quick/Nimble.git",
       "state" : {
-        "revision" : "c1f3dd66222d5e7a1a20afc237f7e7bc432c564f",
-        "version" : "13.2.0"
+        "revision" : "efe11bbca024b57115260709b5c05e01131470d0",
+        "version" : "13.2.1"
       }
     },
     {
