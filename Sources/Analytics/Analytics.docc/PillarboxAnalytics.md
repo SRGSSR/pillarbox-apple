@@ -34,9 +34,11 @@ The PillarboxAnalytics framework always links against [AdSupport](https://develo
 
 > Important: SRG SSR apps must not implement [App Tracking Transparency](https://developer.apple.com/documentation/apptrackingtransparency). This ensures that the IDFA can never be read unintentionally.
 
-### App Privacy details
+### App privacy details
 
-When submitting an app to the App Store you must provide [App Privacy details](https://developer.apple.com/app-store/app-privacy-details/). The PillarboxAnalytics framework collects Identifiers (User ID) and usage data (Product Interaction) but never linked to a user.
+When submitting an app to the App Store you must provide [App privacy details](https://developer.apple.com/app-store/app-privacy-details/) that accurately reflect which data is collected by your app and to what purpose.
+
+To help you fill all required information Xcode organizer provides a way to generate a [consolidated privacy report for your app](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files/describing_data_use_in_privacy_manifests#4239187). This report automatically contains privacy details associated with Pillarbox and its 3rd party dependencies.
 
 ### Validation
 
