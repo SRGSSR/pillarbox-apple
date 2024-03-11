@@ -6,8 +6,8 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "No playable resources could be found."
+            "state" : "translated",
+            "value" : "Keine abspielbaren Inhalte gefunden."
           }
         },
         "en" : {
@@ -30,14 +30,14 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "No playable resources could be found."
+            "state" : "translated",
+            "value" : "Non è stato possibile trovare elementi riproducibili."
           }
         },
         "rm" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "No playable resources could be found."
+            "state" : "translated",
+            "value" : "Na chattà naginas resursas correspundentas."
           }
         }
       }
@@ -47,8 +47,8 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "The data is invalid."
+            "state" : "translated",
+            "value" : "Die Daten sind ungültig."
           }
         },
         "en" : {
@@ -71,8 +71,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "The data is invalid."
+            "state" : "translated",
+            "value" : "I dati non sono validi."
           }
         },
         "rm" : {
@@ -416,8 +416,8 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Unknown error."
+            "state" : "translated",
+            "value" : "Unbekannter Fehler."
           }
         },
         "en" : {
@@ -440,8 +440,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Unknown error."
+            "state" : "translated",
+            "value" : "Errore sconosciuto."
           }
         },
         "rm" : {
