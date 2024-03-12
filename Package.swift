@@ -48,6 +48,9 @@ let package = Package(
                 .product(name: "TCServerSide", package: "iOSV5")
             ],
             path: "Sources/Analytics",
+            resources: [
+                .process("Resources")
+            ],
             linkerSettings: [
                 .linkedFramework("AdSupport")
             ],
