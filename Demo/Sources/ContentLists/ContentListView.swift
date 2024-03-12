@@ -14,6 +14,9 @@ private struct LoadedView: View {
     let contents: [ContentListViewModel.Content]
     @EnvironmentObject private var router: Router
 
+    @AppStorage(UserDefaults.serverSettingKey)
+    private var serverSetting: ServerSetting = .production
+
     var body: some View {
         CustomList(data: contents) { content in
             if let content {
@@ -43,7 +46,7 @@ private struct LoadedView: View {
             return Template(
                 title: media.title,
                 description: MediaDescription.subtitle(for: media),
-                type: .urn(media.urn),
+                type: .urn(media.urn, server: serverSetting.server),
                 isMonoscopic: media.isMonoscopic
             )
         }
