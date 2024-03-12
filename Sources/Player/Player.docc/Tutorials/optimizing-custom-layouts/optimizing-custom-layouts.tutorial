@@ -1,6 +1,8 @@
 @Tutorial(time: 15) {
     @Intro(title: "Optimizing custom layouts") {
         Learn to rearrange your layout to minimize unnecessary refreshes.
+        
+        @Image(source: optimizing-custom-layouts, alt: "An image depicting layouts optimization.")
     }
     
     @Section(title: "Isolate progress updates") {
@@ -72,7 +74,7 @@
             }
             
             @Step {
-                Apply the `onReceive(player:assign:to:)` modifier to listen to buffer changes. Store updates into a corresponding `Float` state.
+                Apply the ``SwiftUI/View/onReceive(player:assign:to:)`` modifier to listen to buffer changes. Store updates into a corresponding `Float` state.
                 
                 @Code(name: "ContentView.swift", file: optimizing-custom-layouts-2-2.swift)
             }
@@ -94,7 +96,7 @@
             }
             
             @Step {
-                Apply the  `onReceive(player:assign:to:)` modifier in `BufferingView`, which requires the player to be received as parameter. Since nothing directly depends on player updates in the `ProgressSlider` body simply add a regular (non-observed) property.
+                Apply the  ``SwiftUI/View/onReceive(player:assign:to:)`` modifier in `BufferingView`, which requires the player to be received as parameter. Since nothing directly depends on player updates in the `ProgressSlider` body simply add a regular (non-observed) property.
                 
                 @Code(name: "ContentView.swift", file: optimizing-custom-layouts-2-5.swift)
             }
