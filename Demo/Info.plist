@@ -64,5 +64,7 @@
 	<string>Automatic</string>
 	<key>TestFlightApplicationIdentifier</key>
 	<string>$(TEST_FLIGHT_APPLICATION_IDENTIFIER)</string>
+	<key>MMFServiceURL</key>
+	<string>$(MMF_SERVICE_URL)</string>
 </dict>
 </plist>
