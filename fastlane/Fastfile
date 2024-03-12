@@ -63,13 +63,6 @@ end
 
 # -- xcconfig management
 
-def xcconfig_marketing_version
-  get_xcconfig_value(
-    path: APPLICATION_XCCONFIG_FILEPATH,
-    name: 'MARKETING_VERSION'
-  )
-end
-
 def xcconfig_build_number
   get_xcconfig_value(
     path: APPLICATION_XCCONFIG_FILEPATH,
@@ -180,7 +173,7 @@ end
 def deliver_demo_nightly(platform_id)
   ensure_configuration_availability
   build_number = bump_testflight_build_number(platform_id, :nightly)
-  add_version_badge(platform_id, xcconfig_marketing_version, build_number, 'orange')
+  add_version_badge(platform_id, last_git_tag, build_number, 'orange')
   build_and_sign_app(platform_id, :nightly)
   reset_git_repo(skip_clean: true)
   upload_app_to_testflight
@@ -189,7 +182,7 @@ end
 
 def deliver_demo_release(platform_id)
   ensure_configuration_availability
-  add_version_badge(platform_id, 'v.', xcconfig_marketing_version, 'blue')
+  add_version_badge(platform_id, 'v.', last_git_tag, 'blue')
   build_and_sign_app(platform_id, :release)
   reset_git_repo(skip_clean: true)
   upload_app_to_testflight
