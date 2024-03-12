@@ -30,13 +30,13 @@
             }
 
             @Step {
-                Bind the progress tracker to the player using the `bind(_:to:)` modifier. 
+                Bind the progress tracker to the player using the ``SwiftUI/View/bind(_:to:)-8fqem`` modifier. 
                 
                 @Code(name: "ContentView.swift", file: tracking-progress-1-4.swift)
             }
             
             @Step {
-                Use `Slider/init(progressTracker:)` to create a slider that reflects and controls the current progress. Add the slider as overlay with bottom alignment.
+                Use ``SwiftUI/Slider/init(progressTracker:onEditingChanged:)`` to create a slider that reflects and controls the current progress. Add the slider as overlay with bottom alignment.
                 
                 Build and run the app to see the result. Observe that the slider automatically updates as playback progresses and that it can be used to move playback to another position.
                 
