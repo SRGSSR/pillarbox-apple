@@ -20,8 +20,6 @@ private enum TriggerId: Hashable {
 /// - Simple assets which can be played from a simple URL.
 /// - Custom assets which require custom resource loading.
 /// - Encrypted assets which require a FairPlay content key session.
-///
-/// - Note: You can also create your own ``PlayerItem`` by extending the class.
 public final class PlayerItem: Equatable {
     private static let trigger = Trigger()
 
