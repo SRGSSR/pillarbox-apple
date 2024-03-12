@@ -6,8 +6,8 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "No playable resources could be found."
+            "state" : "translated",
+            "value" : "Keine abspielbaren Inhalte gefunden."
           }
         },
         "en" : {
@@ -30,25 +30,25 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "No playable resources could be found."
+            "state" : "translated",
+            "value" : "Non è stato possibile trovare elementi riproducibili."
           }
         },
         "rm" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "No playable resources could be found."
+            "state" : "translated",
+            "value" : "Na chattà naginas resursas correspundentas."
           }
         }
       }
     },
-    "The data is invalid" : {
+    "The data is invalid." : {
       "comment" : "Generic error message returned when data is invalid",
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "The data is invalid."
+            "state" : "translated",
+            "value" : "Die Daten sind ungültig."
           }
         },
         "en" : {
@@ -71,8 +71,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "The data is invalid."
+            "state" : "translated",
+            "value" : "I dati non sono validi."
           }
         },
         "rm" : {
@@ -154,7 +154,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Questo media non è più disponibile."
+            "value" : "Questo contenuto non è più disponibile."
           }
         },
         "rm" : {
@@ -195,7 +195,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Questo media non è disponibile a causa di restrizioni legali."
+            "value" : "Questo contenuto non è disponibile a causa di restrizioni legali."
           }
         },
         "rm" : {
@@ -236,7 +236,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Questo media non è disponibile fuori dalla Svizzera."
+            "value" : "Questo contenuto non è disponibile fuori dalla Svizzera."
           }
         },
         "rm" : {
@@ -277,7 +277,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Questo media non è ancora disponibile."
+            "value" : "Questo contenuto non è ancora disponibile."
           }
         },
         "rm" : {
@@ -318,7 +318,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Questo media non è disponibile."
+            "value" : "Questo contenuto non è disponibile."
           }
         },
         "rm" : {
@@ -359,7 +359,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Per proteggere i bambini, questo media è disponibile solo fra le 20 e le 6."
+            "value" : "Per proteggere i bambini, questo contenuto è disponibile solo tra le 20 e le 6."
           }
         },
         "rm" : {
@@ -400,7 +400,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Per proteggere i bambini, questo media è disponibile solo fra le 22 le 5."
+            "value" : "Per proteggere i bambini, questo contenuto è disponibile solo tra le 22 le 5."
           }
         },
         "rm" : {
@@ -416,8 +416,8 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Unknown error."
+            "state" : "translated",
+            "value" : "Unbekannter Fehler."
           }
         },
         "en" : {
@@ -440,8 +440,8 @@
         },
         "it" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Unknown error."
+            "state" : "translated",
+            "value" : "Errore sconosciuto."
           }
         },
         "rm" : {
