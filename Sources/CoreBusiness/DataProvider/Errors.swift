@@ -24,7 +24,7 @@ struct DataError: LocalizedError {
     ))
 
     static let malformedData = Self(errorDescription: NSLocalizedString(
-        "The data is invalid",
+        "The data is invalid.",
         bundle: .module,
         comment: "Generic error message returned when data is invalid"
     ))
