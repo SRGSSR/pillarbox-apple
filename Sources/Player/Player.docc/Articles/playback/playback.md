@@ -64,7 +64,7 @@ The player can be customized during the instantiation phase by providing a dedic
 
 The above examples use ``PlayerItem/simple(url:metadata:trackerAdapters:configuration:)`` player items that simply play the provided URLs. In general, though, the URL of the content to be played is not known beforehand and likely retrieved from some kind of web service.
 
-You can create player items that loads content in an arbitrary way as follows:
+You can create player items that load content in an arbitrary way as follows:
 
 1. Write a publisher which retrieves the URL to be played as well as any required metadata you might need. This publisher likely requires some external parameters to be provided, for example a content identifier.
 2. Map the result of your publisher to an ``Asset``. If you want to provide asset metadata, most notably for <doc:control-center> integration or custom <doc:tracking>, just define a corresponding type and associate an instance with your asset.
