@@ -154,7 +154,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Questo media non è più disponibile."
+            "value" : "Questo contenuto non è più disponibile."
           }
         },
         "rm" : {
@@ -195,7 +195,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Questo media non è disponibile a causa di restrizioni legali."
+            "value" : "Questo contenuto non è disponibile a causa di restrizioni legali."
           }
         },
         "rm" : {
@@ -236,7 +236,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Questo media non è disponibile fuori dalla Svizzera."
+            "value" : "Questo contenuto non è disponibile fuori dalla Svizzera."
           }
         },
         "rm" : {
@@ -277,7 +277,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Questo media non è ancora disponibile."
+            "value" : "Questo contenuto non è ancora disponibile."
           }
         },
         "rm" : {
@@ -318,7 +318,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Questo media non è disponibile."
+            "value" : "Questo contenuto non è disponibile."
           }
         },
         "rm" : {
@@ -359,7 +359,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Per proteggere i bambini, questo media è disponibile solo fra le 20 e le 6."
+            "value" : "Per proteggere i bambini, questo contenuto è disponibile solo tra le 20 e le 6."
           }
         },
         "rm" : {
@@ -400,7 +400,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Per proteggere i bambini, questo media è disponibile solo fra le 22 le 5."
+            "value" : "Per proteggere i bambini, questo contenuto è disponibile solo tra le 22 le 5."
           }
         },
         "rm" : {
