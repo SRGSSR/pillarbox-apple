@@ -14,6 +14,8 @@ public enum Server {
     case stage
     /// Test.
     case test
+    /// MMF.
+    case mmf
 
     internal var url: URL {
         switch self {
@@ -23,6 +25,8 @@ public enum Server {
             return URL(string: "https://il-stage.srgssr.ch")!
         case .test:
             return URL(string: "https://il-test.srgssr.ch")!
+        case .mmf:
+            return URL(string: "https://play-mmf.herokuapp.com")!
         }
     }
 }

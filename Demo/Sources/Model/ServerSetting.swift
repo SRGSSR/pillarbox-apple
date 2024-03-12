@@ -12,6 +12,7 @@ enum ServerSetting: Int, CaseIterable {
     case production
     case stage
     case test
+    case mmf
 
     var title: String {
         switch self {
@@ -21,6 +22,8 @@ enum ServerSetting: Int, CaseIterable {
             return "Stage"
         case .test:
             return "Test"
+        case .mmf:
+            return "MMF"
         }
     }
 
@@ -32,6 +35,8 @@ enum ServerSetting: Int, CaseIterable {
             return SRGIntegrationLayerStagingServiceURL()
         case .test:
             return SRGIntegrationLayerTestServiceURL()
+        case .mmf:
+            return URL(string: Bundle.main.infoDictionary?["MMFServiceURL"] as! String)!
         }
     }
 
@@ -43,6 +48,8 @@ enum ServerSetting: Int, CaseIterable {
             return .stage
         case .test:
             return .test
+        case .mmf:
+            return .mmf
         }
     }
 }
