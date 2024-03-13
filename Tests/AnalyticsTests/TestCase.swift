@@ -25,6 +25,7 @@ class TestCase: XCTestCase {
 
     override class func setUp() {
         PollingDefaults.timeout = .seconds(20)
+        PollingDefaults.pollInterval = .milliseconds(100)
         try? Analytics.shared.start(
             with: .init(vendor: .SRG, sourceKey: .developmentSourceKey, appSiteName: "site"),
             dataSource: dataSource
@@ -33,6 +34,7 @@ class TestCase: XCTestCase {
 
     override class func tearDown() {
         PollingDefaults.timeout = .seconds(1)
+        PollingDefaults.pollInterval = .milliseconds(10)
     }
 
     override func setUp() {
