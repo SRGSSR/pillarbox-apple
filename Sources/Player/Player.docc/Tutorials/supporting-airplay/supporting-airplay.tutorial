@@ -12,7 +12,7 @@
         
         @Steps {
             @Step {
-                Enable AirPlay in Xcode by enabling [background modes](https://developer.apple.com/documentation/avfoundation/media_playback/configuring_your_app_for_media_playback#418261).
+                Enable AirPlay in your app target [background modes](https://developer.apple.com/documentation/avfoundation/media_playback/configuring_your_app_for_media_playback#418261).
             }
             
             @Step {

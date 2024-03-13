@@ -11,7 +11,7 @@ Track player items during playback.
 
 The PillarboxPlayer framework offers a way to track an item during playback. This mechanism is mostly useful to gather analytics, perform Quality of Service (QoS) monitoring or save the current playback position into a local history, for example.
 
-You define which data is required by a tracker as well as its life cycle by creating a new class type and conforming it to the ``PlayerItemTracker`` protocol.
+You define which data is required by a tracker as well as its life cycle by creating a new class type and conforming it to the ``PlayerItemTracker`` protocol. This can be achieved in a few steps discussed below.
 
 ### Design data required by your tracker
 
@@ -39,7 +39,7 @@ Once types associated with an item tracker have been defined, start implementing
 
 ### Attach a tracker to an item
 
-You can attach a tracker to any item. The only requirement is that ``AssetMetadata`` supplied as part of the ``Asset`` retrieval process is transformed into ``PlayerItemTracker/Metadata`` required by the tracker.
+Once you have a tracker you can attach it to any item. The only requirement is that ``AssetMetadata`` supplied as part of the ``Asset`` retrieval process is transformed into ``PlayerItemTracker/Metadata`` required by the tracker.
 
 This transformation requires the use of a dedicated adapter, simply created from your custom tracker type using the ``PlayerItemTracker/adapter(configuration:mapper:)`` method. The adapter is also where you can supply any configuration required by your tracker:
 
