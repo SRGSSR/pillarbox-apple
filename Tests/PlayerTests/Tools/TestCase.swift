@@ -12,9 +12,11 @@ import XCTest
 class TestCase: XCTestCase {
     override class func setUp() {
         PollingDefaults.timeout = .seconds(20)
+        PollingDefaults.pollInterval = .milliseconds(100)
     }
 
     override class func tearDown() {
         PollingDefaults.timeout = .seconds(1)
+        PollingDefaults.pollInterval = .milliseconds(10)
     }
 }
