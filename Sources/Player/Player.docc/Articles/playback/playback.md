@@ -64,11 +64,11 @@ The player can be customized during the instantiation phase by providing a dedic
 
 The above examples use ``PlayerItem/simple(url:metadata:trackerAdapters:configuration:)`` player items that simply play the provided URLs. In general, though, the URL of the content to be played is not known beforehand and likely retrieved from some kind of web service.
 
-You can create player items that load content in an arbitrary way as follows:
+You can create player items that load content in custom way as follows:
 
 1. Write a publisher which retrieves the URL to be played as well as any required metadata you might need. This publisher likely requires some external parameters to be provided, for example a content identifier.
 2. Map the result of your publisher to an ``Asset``. If you want to provide asset metadata, most notably for <doc:control-center> integration or custom <doc:tracking>, just define a corresponding type and associate an instance with your asset.
-3. Create a ``PlayerItem`` with the corresponding initializer taking a publisher as argument. Your item initializer signature will likely reflect the external parameters required by your publisher.
+3. Create a ``PlayerItem`` with the corresponding initializer taking a publisher as argument. Your item initializer signature should likely reflect the external parameters required by your publisher.
 
 The resulting player item can then be played with ``Player`` instance, possibly mixed with content from other sources.
 
@@ -116,4 +116,4 @@ A player loaded with content starts in a paused state. To actually start playbac
 
 The ``PlayerConfiguration`` lets you customize how video playback behaves when the app goes into the background. The default [`audiovisualBackgroundPlaybackPolicy`](https://developer.apple.com/documentation/avfoundation/avplayer/3787548-audiovisualbackgroundplaybackpol) behavior pauses video playback in background but you can also choose to continue if possible.
 
-> Tip: <doc:picture-in-picture> provides a better experience than background video playback and should generally be implemented instead. You can use the default policy in this case.
+> Tip: If your app plays video content <doc:picture-in-picture> provides a better experience than background video playback and should generally be implemented instead. You can use the default policy in this case.

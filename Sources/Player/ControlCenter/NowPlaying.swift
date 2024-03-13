@@ -6,7 +6,7 @@
 
 import UIKit
 
-/// A type providing Control Center metadata.
+/// Metadata describing what is currently being played.
 public typealias NowPlayingInfo = [String: Any]
 
 /// Metadata providing information about what is currently being played.

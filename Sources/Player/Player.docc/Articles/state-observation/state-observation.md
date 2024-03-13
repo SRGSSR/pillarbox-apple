@@ -40,20 +40,20 @@ struct PlaybackView: View {
 
 Observing time is essential to any playback experience implementation. Time often needs to be observed at various time intervals for the same player instance. For example a progress bar might need to be refreshed every 1/10th of a second, while other parts of the same user interface might only require one refresh per second.
 
-Even if a single small time interval could be suitable for all needs (say 1/10th of a second), having ``Player`` publish time updates at a fast pace would force trigger unnecessary layout refreshes everywhere the player is observed.
+Even if a single small time interval could be suitable for most needs (say 1/10th of a second), having ``Player`` publish time updates at a fast pace would trigger layout refreshes everywhere the player is observed, even where not needed.
 
 For this reason ``Player`` does not publish time updates automatically. Explicit publisher subscription is required:
 
 - Use ``Player/periodicTimePublisher(forInterval:queue:)`` for periodic time updates.
 - Use ``Player/boundaryTimePublisher(for:queue:)`` to detect time traversal.
 
-When implementing a user interface, you should alternatively use ``ProgressTracker`` to observe progress changes without the need for explicit time update subscription.
+When implementing a user interface, you should rather use ``ProgressTracker`` to observe progress changes without the need for explicit time update subscription.
 
 ### Explicitly subscribe to frequent updates
 
 As for time updates discussed above, any other non-essential player state is not published and requires explicit subscription. This includes states derived from time range information, for example the stream type, or states which might be frequently updated like the current buffer position. Code that needs to observe these properties can subscribe to ``Player/propertiesPublisher``.
 
-Instead of subscribing to ``Player/propertiesPublisher``, view implementations can rely on the ``SwiftUI/View/onReceive(player:assign:to:)`` convenience modifier to locally observe a specific property key path and store associated values into a view state. For example, to display when a player is busy (i.e. seeking or buffering), subscribe to the corresponding change stream:
+Instead of subscribing to ``Player/propertiesPublisher``, view implementations can apply the ``SwiftUI/View/onReceive(player:assign:to:)`` convenience modifier to locally observe a specific property key path and store associated values into a view state. For example, to display when a player is busy (i.e. seeking or buffering), subscribe to the corresponding change stream:
 
 ```swift
 struct PlaybackView: View {
@@ -80,7 +80,7 @@ Check ``PlayerProperties`` for the list of all properties that are available for
 
 With SwiftUI it is especially important to [properly annotate](https://developer.apple.com/documentation/swiftui/model-data) properties so that changes to your models correctly drive updates to your user interface.
 
-Since ``Player`` is an [`ObservableObject`](https://developer.apple.com/documentation/combine/observableobject) the usual rules apply. Here is a quick summary that might prove helpful.
+Since ``Player`` is an [`ObservableObject`](https://developer.apple.com/documentation/combine/observableobject) the usual rules apply. A few general useful hints are provided below.
 
 #### Player neither owned nor observed by a view
 
