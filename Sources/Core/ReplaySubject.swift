@@ -54,6 +54,10 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
     public func receive<S>(subscriber: S) where S: Subscriber, Failure == S.Failure, Output == S.Input {
         withLock(lock) {
             let subscription = ReplaySubscription(subscriber: subscriber, values: buffer.values)
+            subscription.onCancel = { [weak self] in
+                guard let self else { return }
+                subscriptions.removeAll { $0 === subscription }
+            }
             buffer.values.forEach { value in
                 subscription.append(value)
                 subscription.send()
