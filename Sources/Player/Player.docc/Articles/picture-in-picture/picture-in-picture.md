@@ -12,7 +12,7 @@ Enable uninterrupted video playback experiences when multitasking.
 Pillarbox provides two modes of integration for Picture in Picture:
 
 - **Basic integration**, which enables Picture in Picture automatically when the application is sent to the background.
-- **Advanced integration**, which in addition allows the user to navigate your application while playing content with Picture in Picture. This requires the addition of a dedicated button with which Picture in Picture can be started interactively.
+- **Advanced integration**, which also allows the user to navigate your application while playing content with Picture in Picture. This requires the addition of a dedicated button with which Picture in Picture can be started interactively.
 
 No matter the integration mode you choose you must configure your app properly so that it can support Picture in Picture.
 
@@ -44,10 +44,12 @@ Advanced integration is more involved and requires additional integration steps 
 - Dismiss and restore your player user interface when appropriate.
 - Continue playing even when the player user interface has been dismissed.
 
+> Important: Only begin PiP playback in response to user interaction and never programmatically. The App Store review team rejects apps that fail to follow this requirement.
+
 Advanced integration is available both for ``VideoView`` as well as ``SystemVideoView`` and is usually achieved as follows:
 
 1. Apply ``VideoView/supportsPictureInPicture(_:)`` on your ``VideoView`` or ``SystemVideoView/supportsPictureInPicture(_:)`` on your ``SystemVideoView``.
-2. Ensure your player view state is persisted even when the player view is not displayed by conforming the associated class to ``PictureInPicturePersistable``. No method needs to be implemented.
+2. Ensure your player view state is persisted even when the player view is not displayed by conforming the associated class to ``PictureInPicturePersistable``. All associated methods are optional but can be used to hook into the Picture in Picture lifecycle if needed.
 3. Properly handle content updates in your shared player view state. This usually means you should:
     - Update your player when a new content is being played.
     - Avoid updating your player when the same content is played so that playback can continue uninterrupted.

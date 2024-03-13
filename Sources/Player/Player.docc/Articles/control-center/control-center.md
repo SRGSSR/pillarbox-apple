@@ -27,7 +27,7 @@ To associate Control Center metadata with a player item:
 
 ### Make a player instance active
 
-Several ``Player`` instances can coexist in an app but only one at most is able to integrate with the Control Center.
+Several ``Player`` instances can coexist in an app but at most one can be integrated with the Control Center at any time.
 
 When you want one player instance to take precedence call ``Player/becomeActive()``. Any other instance which might be active will resign in the process.
 

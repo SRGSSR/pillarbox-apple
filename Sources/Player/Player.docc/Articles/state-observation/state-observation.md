@@ -40,7 +40,7 @@ struct PlaybackView: View {
 
 Observing time is essential to any playback experience implementation. Time often needs to be observed at various time intervals for the same player instance. For example a progress bar might need to be refreshed every 1/10th of a second, while other parts of the same user interface might only require one refresh per second.
 
-Even if a single small time interval could be suitable for most needs (say 1/10th of a second), having ``Player`` publish time updates at a fast pace would trigger layout refreshes everywhere the player is observed, even where not needed.
+Even if a single small time interval could be suitable for most needs (say 1/10th of a second), having ``Player`` publish time updates at a fast pace would trigger layout refreshes everywhere the player is observed, often unnecessarily.
 
 For this reason ``Player`` does not publish time updates automatically. Explicit publisher subscription is required:
 

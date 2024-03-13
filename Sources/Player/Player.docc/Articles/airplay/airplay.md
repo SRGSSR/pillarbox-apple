@@ -26,7 +26,7 @@ For your application to be able to support AirPlay you must:
 
 A ``Player`` instance must support external playback to be used with AirPlay.
 
-This behavior, enabled by default, can be disabled using a custom ``PlayerConfiguration`` provided when instantiating a player. ``PlayerConfiguration`` also allows you to choose how external playback must behave when device mirroring over AirPlay is enabled.
+This behavior is enabled by default but can be tailored to your needs using a custom ``PlayerConfiguration`` provided when instantiating a player. ``PlayerConfiguration`` also allows you to choose how external playback must behave when device mirroring over AirPlay is enabled.
 
 Note that enabling external playback is required but not sufficient for AirPlay to be possible for some ``Player`` instance. You also need to make the player instance active.
 
