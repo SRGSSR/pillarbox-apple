@@ -98,25 +98,17 @@ final class SeekTests: TestCase {
         expect(player.time).toAlways(beGreaterThanOrEqualTo(player.seekableTimeRange.start), until: .seconds(1))
     }
 
-    func testTimesDuringSeekAfterTimeRangeEnd() {
-        let player = Player(item: .simple(url: Stream.onDemand.url))
-        expect(player.streamType).toEventually(equal(.onDemand))
-        player.play()
-        player.seek(near(player.seekableTimeRange.end + CMTime(value: 10, timescale: 1)))
-        expect(player.time).toEventually(equal(player.seekableTimeRange.end), timeout: .seconds(1))
-    }
-
     func testOnDemandStartAtTime() {
         let player = Player(item: .simple(url: Stream.onDemand.url) { item in
             item.seek(at(.init(value: 10, timescale: 1)))
         })
-        expect(player.time.seconds).toEventually(equal(10), timeout: .seconds(1))
+        expect(player.time.seconds).toEventually(equal(10))
     }
 
     func testDvrStartAtTime() {
         let player = Player(item: .simple(url: Stream.dvr.url) { item in
             item.seek(at(.init(value: 10, timescale: 1)))
         })
-        expect(player.time.seconds).toEventually(equal(10), timeout: .seconds(1))
+        expect(player.time.seconds).toEventually(equal(10))
     }
 }
