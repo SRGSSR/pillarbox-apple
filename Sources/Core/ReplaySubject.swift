@@ -13,9 +13,9 @@ import Foundation
 /// any relevant completion.
 public final class ReplaySubject<Output, Failure>: Subject where Failure: Error {
     private let buffer: LimitedBuffer<Output>
-    private var subscriptions: [ReplaySubscription<Output, Failure>] = []
     private var completion: Subscribers.Completion<Failure>?
     private let lock = NSRecursiveLock()
+    var subscriptions: [ReplaySubscription<Output, Failure>] = []
 
     /// Creates a subject able to buffer the provided number of values.
     ///
