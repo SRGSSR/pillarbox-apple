@@ -8,6 +8,8 @@ import Combine
 import Foundation
 
 final class ReplaySubscription<Output, Failure>: Subscription where Failure: Error {
+    var onCancel: (() -> Void)?
+
     private var subscriber: AnySubscriber<Output, Failure>?
     private var buffer = DemandBuffer<Output>()
     private var pendingValues: [Output] = []
@@ -22,6 +24,8 @@ final class ReplaySubscription<Output, Failure>: Subscription where Failure: Err
 
     func cancel() {
         subscriber = nil
+        onCancel?()
+        onCancel = nil
     }
 
     func append(_ value: Output) {

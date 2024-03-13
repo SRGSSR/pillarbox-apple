@@ -65,6 +65,15 @@ final class ReplaySubjectTests: XCTestCase {
         expectEqualPublished(values: [2, 3], from: subject, during: .milliseconds(100))
     }
 
+    func testSubscriptionRelease() {
+        let subject = ReplaySubject<Int, Never>(bufferSize: 1)
+        subject.send(1)
+
+        _ = subject.sink { _ in }
+
+        expect(subject.subscriptions).to(beEmpty())
+    }
+
     func testNewValuesWithMultipleSubscribers() {
         let subject = ReplaySubject<Int, Never>(bufferSize: 2)
         subject.send(1)
