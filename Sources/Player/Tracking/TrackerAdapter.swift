@@ -10,7 +10,7 @@ import Foundation
 /// An adapter which instantiates and manages a tracker of a specified type.
 ///
 /// An adapter transforms metadata delivered by a player item into the metadata format required by the tracker.
-public class TrackerAdapter<M: AssetMetadata> {
+public class TrackerAdapter<M> {
     private let tracker: any PlayerItemTracker
     private let update: (M) -> Void
     private var cancellables = Set<AnyCancellable>()
