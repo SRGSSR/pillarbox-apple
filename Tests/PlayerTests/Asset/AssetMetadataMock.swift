@@ -17,9 +17,3 @@ struct AssetMetadataMock: Decodable {
         self.description = description
     }
 }
-
-extension AssetMetadataMock: AssetMetadata {
-    func nowPlayingMetadata() -> NowPlayingMetadata {
-        .init(title: title, subtitle: subtitle, description: description)
-    }
-}

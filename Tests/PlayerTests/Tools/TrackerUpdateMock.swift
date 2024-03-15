@@ -48,7 +48,7 @@ final class TrackerUpdateMock<Metadata>: PlayerItemTracker where Metadata: Equat
 }
 
 extension TrackerUpdateMock {
-    static func adapter<M>(statePublisher: StatePublisher, mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> where M: AssetMetadata {
+    static func adapter<M>(statePublisher: StatePublisher, mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> {
         adapter(configuration: Configuration(statePublisher: statePublisher), mapper: mapper)
     }
 

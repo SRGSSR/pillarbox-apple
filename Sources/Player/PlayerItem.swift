@@ -28,7 +28,7 @@ public final class PlayerItem: Equatable {
     let id = UUID()
 
     /// Creates the item from an ``Asset`` publisher data source.
-    public init<P, M>(publisher: P, trackerAdapters: [TrackerAdapter<M>] = []) where P: Publisher, M: AssetMetadata, P.Output == Asset<M> {
+    public init<P, M>(publisher: P, trackerAdapters: [TrackerAdapter<M>] = []) where P: Publisher, P.Output == Asset<M> {
         asset = Asset<M>.loading.withId(id).withTrackerAdapters(trackerAdapters)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) {
             publisher
@@ -49,7 +49,7 @@ public final class PlayerItem: Equatable {
     /// - Parameters:
     ///   - asset: The asset to play.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    public convenience init<M>(asset: Asset<M>, trackerAdapters: [TrackerAdapter<M>] = []) where M: AssetMetadata {
+    public convenience init<M>(asset: Asset<M>, trackerAdapters: [TrackerAdapter<M>] = []) {
         self.init(publisher: Just(asset), trackerAdapters: trackerAdapters)
     }
 
@@ -85,7 +85,7 @@ public extension PlayerItem {
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self where M: AssetMetadata {
+    ) -> Self {
         .init(asset: .simple(url: url, metadata: metadata, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 
@@ -106,7 +106,7 @@ public extension PlayerItem {
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self where M: AssetMetadata {
+    ) -> Self {
         .init(asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 
@@ -125,7 +125,7 @@ public extension PlayerItem {
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self where M: AssetMetadata {
+    ) -> Self {
         .init(asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration), trackerAdapters: trackerAdapters)
     }
 }

@@ -51,7 +51,7 @@ public extension PlayerItemTracker {
     ///   - configuration: The tracker configuration.
     ///   - mapper: A closure that maps the tracker's metadata to another metadata.
     /// - Returns: The tracker adapter.
-    static func adapter<M>(configuration: Configuration, mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> where M: AssetMetadata {
+    static func adapter<M>(configuration: Configuration, mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> {
         TrackerAdapter(trackerType: Self.self, configuration: configuration, mapper: mapper)
     }
 
@@ -69,7 +69,7 @@ public extension PlayerItemTracker where Metadata == Void {
     ///
     /// - Parameter configuration: The tracker configuration.
     /// - Returns: The tracker adapter.
-    static func adapter<M>(configuration: Configuration) -> TrackerAdapter<M> where M: AssetMetadata {
+    static func adapter<M>(configuration: Configuration) -> TrackerAdapter<M> {
         TrackerAdapter(trackerType: Self.self, configuration: configuration) { _ in }
     }
 }
@@ -79,7 +79,7 @@ public extension PlayerItemTracker where Configuration == Void {
     ///
     /// - Parameter configuration: The tracker configuration.
     /// - Returns: The tracker adapter.
-    static func adapter<M>(mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> where M: AssetMetadata {
+    static func adapter<M>(mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> {
         TrackerAdapter(trackerType: Self.self, configuration: (), mapper: mapper)
     }
 
@@ -95,7 +95,7 @@ public extension PlayerItemTracker where Metadata == Void, Configuration == Void
     /// Creates an adapter for the receiver.
     ///
     /// - Returns: The tracker adapter.
-    static func adapter<M>() -> TrackerAdapter<M> where M: AssetMetadata {
+    static func adapter<M>() -> TrackerAdapter<M> {
         TrackerAdapter(trackerType: Self.self, configuration: ()) { _ in }
     }
 }

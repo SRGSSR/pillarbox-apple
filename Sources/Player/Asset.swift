@@ -32,7 +32,7 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
 /// - Simple assets which can be played directly.
 /// - Custom assets which require a custom resource loader delegate.
 /// - Encrypted assets which require a FairPlay content key session delegate.
-public struct Asset<M>: Assetable where M: AssetMetadata {
+public struct Asset<M>: Assetable {
     let id: UUID
     let resource: Resource
     private let metadata: M?
@@ -150,21 +150,22 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
     }
 
     func nowPlayingInfo(with error: Error?) -> NowPlayingInfo {
-        var nowPlayingInfo = NowPlayingInfo()
-        if let metadata = metadata?.nowPlayingMetadata() {
-            nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
-            nowPlayingInfo[MPMediaItemPropertyArtist] = error?.localizedDescription ?? metadata.subtitle
-            nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
-            if let image = metadata.image {
-                nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
-            }
-        }
-        else {
-            // Fill the title so that the Control Center can be enabled for the asset, even if it has no associated
-            // metadata.
-            nowPlayingInfo[MPMediaItemPropertyTitle] = error?.localizedDescription ?? ""
-        }
-        return nowPlayingInfo
+        [:]
+//        var nowPlayingInfo = NowPlayingInfo()
+//        if let metadata = metadata?.nowPlayingMetadata() {
+//            nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
+//            nowPlayingInfo[MPMediaItemPropertyArtist] = error?.localizedDescription ?? metadata.subtitle
+//            nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
+//            if let image = metadata.image {
+//                nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+//            }
+//        }
+//        else {
+//            // Fill the title so that the Control Center can be enabled for the asset, even if it has no associated
+//            // metadata.
+//            nowPlayingInfo[MPMediaItemPropertyTitle] = error?.localizedDescription ?? ""
+//        }
+//        return nowPlayingInfo
     }
 
     func playerItem(reload: Bool) -> AVPlayerItem {
@@ -185,7 +186,7 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
     }
 
     func update(item: AVPlayerItem) {
-        item.externalMetadata = Self.externalMetadata(from: metadata?.nowPlayingMetadata())
+        item.externalMetadata = [] // Self.externalMetadata(from: metadata?.nowPlayingMetadata())
     }
 }
 
@@ -265,15 +266,15 @@ extension Asset {
 }
 
 private extension Asset {
-    static func externalMetadata(from metadata: NowPlayingMetadata?) -> [AVMetadataItem] {
-        [
-            metadataItem(for: .commonIdentifierTitle, value: metadata?.title),
-            metadataItem(for: .iTunesMetadataTrackSubTitle, value: metadata?.subtitle),
-            metadataItem(for: .commonIdentifierArtwork, value: metadata?.image?.pngData()),
-            metadataItem(for: .commonIdentifierDescription, value: metadata?.description)
-        ]
-        .compactMap { $0 }
-    }
+//    static func externalMetadata(from metadata: NowPlayingMetadata?) -> [AVMetadataItem] {
+//        [
+//            metadataItem(for: .commonIdentifierTitle, value: metadata?.title),
+//            metadataItem(for: .iTunesMetadataTrackSubTitle, value: metadata?.subtitle),
+//            metadataItem(for: .commonIdentifierArtwork, value: metadata?.image?.pngData()),
+//            metadataItem(for: .commonIdentifierDescription, value: metadata?.description)
+//        ]
+//        .compactMap { $0 }
+//    }
 
     private static func metadataItem<T>(for identifier: AVMetadataIdentifier, value: T?) -> AVMetadataItem? {
         guard let value else { return nil }
