@@ -63,8 +63,13 @@ struct Media: Hashable {
     func playerItem() -> PlayerItem {
         switch type {
         case let .url(url):
-            return playerItem(for: url) { item in
-                item.seek(at(startTime))
+            if url.absoluteString.contains("lemanbleu.ch") {
+                return PlayerItem.lemanBleu(for: url)
+            }
+            else {
+                return playerItem(for: url) { item in
+                    item.seek(at(startTime))
+                }
             }
         case let .unbufferedUrl(url):
             return playerItem(for: url) { item in
