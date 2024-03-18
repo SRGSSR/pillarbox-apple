@@ -85,23 +85,3 @@ public struct MediaMetadata {
         chapter.title.lowercased() == show.title.lowercased()
     }
 }
-
-extension MediaMetadata {
-    struct DefaultExtractor: MetadataExtractor {
-        func update(metadata: MediaMetadata) {
-
-        }
-
-        func mediaItemInfo(at time: CMTime?) -> [String: Any] {
-            [:]
-        }
-        
-        func metadataItems(at time: CMTime?) -> [AVMetadataItem] {
-            []
-        }
-        
-        func navigationMarkerGroups() -> [AVTimedMetadataGroup] {
-            []
-        }
-    }
-}
