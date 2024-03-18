@@ -95,7 +95,7 @@ extension Media {
                         configuration: configuration
                     )
                 },
-            extractor: Extractor(),
+            mapperAdapter: MediaMapper.adapter(),
             trackerAdapters: [
                 DemoTracker.adapter { media in
                     DemoTracker.Metadata(title: media.title)
@@ -111,23 +111,5 @@ extension Media {
             .map { UIImage(data: $0) }
             .replaceError(with: nil)
             .eraseToAnyPublisher()
-    }
-}
-
-private extension Media {
-    struct Extractor: MetadataExtractor {
-        func update(metadata: Media) {}
-
-        func mediaItemInfo(at time: CMTime?) -> [String :Any] {
-            [:]
-        }
-        
-        func metadataItems(at time: CMTime?) -> [AVMetadataItem] {
-            []
-        }
-        
-        func navigationMarkerGroups() -> [AVTimedMetadataGroup] {
-            []
-        }
     }
 }
