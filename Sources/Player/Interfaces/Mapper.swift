@@ -7,14 +7,15 @@
 import AVFoundation
 import CoreMedia
 
-public protocol Mapper {
+public protocol Mapper: AnyObject {
     associatedtype Metadata
 
-    init(metadata: Metadata)
+    init()
 
-    func mediaItemInfo(at time: CMTime?, with error: Error?) -> NowPlayingInfo
-    func metadataItems(at time: CMTime?, with error: Error?) -> [AVMetadataItem]
+    func update(metadata: Metadata)
 
+    func mediaItemInfo(with error: Error?) -> NowPlayingInfo
+    func metadataItems() -> [AVMetadataItem]
     func navigationMarkerGroups() -> [AVTimedMetadataGroup]
 }
 

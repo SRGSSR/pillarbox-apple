@@ -29,7 +29,7 @@ public final class PlayerItem: Equatable {
 
     /// Creates the item from an ``Asset`` publisher data source.
     public init<P, M>(publisher: P, mapperAdapter: MapperAdapter<M>, trackerAdapters: [TrackerAdapter<M>] = []) where P: Publisher, P.Output == Asset<M> {
-        asset = Asset<M>.loading.withId(id).withTrackerAdapters(trackerAdapters)
+        asset = Asset<M>.loading.withId(id).withMapperAdapter(mapperAdapter).withTrackerAdapters(trackerAdapters)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) {
             publisher
                 .catch { error in
@@ -37,7 +37,9 @@ public final class PlayerItem: Equatable {
                 }
         }
         .map { [id] asset in
-            asset.withId(id).withTrackerAdapters(trackerAdapters)
+            let completeAsset = asset.withId(id).withMapperAdapter(mapperAdapter).withTrackerAdapters(trackerAdapters)
+            completeAsset.updateMetadata()
+            return completeAsset
         }
         .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))
         .receive(on: DispatchQueue.main)
