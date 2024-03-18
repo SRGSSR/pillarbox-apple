@@ -84,11 +84,7 @@ struct Media: Hashable {
     }
 }
 
-extension Media: AssetMetadata {
-    func nowPlayingMetadata() -> NowPlayingMetadata {
-        .init(title: title, subtitle: description, image: image)
-    }
-
+extension Media {
     private func playerItem(for url: URL, configuration: @escaping (AVPlayerItem) -> Void = { _ in }) -> PlayerItem {
         .init(
             publisher: imagePublisher()
@@ -99,6 +95,7 @@ extension Media: AssetMetadata {
                         configuration: configuration
                     )
                 },
+            extractor: Extractor(),
             trackerAdapters: [
                 DemoTracker.adapter { media in
                     DemoTracker.Metadata(title: media.title)
@@ -114,5 +111,23 @@ extension Media: AssetMetadata {
             .map { UIImage(data: $0) }
             .replaceError(with: nil)
             .eraseToAnyPublisher()
+    }
+}
+
+private extension Media {
+    struct Extractor: MetadataExtractor {
+        func update(metadata: Media) {}
+
+        func mediaItemInfo(at time: CMTime?) -> [String :Any] {
+            [:]
+        }
+        
+        func metadataItems(at time: CMTime?) -> [AVMetadataItem] {
+            []
+        }
+        
+        func navigationMarkerGroups() -> [AVTimedMetadataGroup] {
+            []
+        }
     }
 }

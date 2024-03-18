@@ -15,3 +15,19 @@ public protocol MetadataExtractor  {
     func metadataItems(at time: CMTime?) -> [AVMetadataItem]
     func navigationMarkerGroups() -> [AVTimedMetadataGroup]
 }
+
+struct EmptyMetadataExtractor: MetadataExtractor {
+    func update(metadata: Void) {}
+
+    func mediaItemInfo(at time: CMTime?) -> [String: Any] {
+        [:]
+    }
+    
+    func metadataItems(at time: CMTime?) -> [AVMetadataItem] {
+        []
+    }
+    
+    func navigationMarkerGroups() -> [AVTimedMetadataGroup] {
+        []
+    }
+}
