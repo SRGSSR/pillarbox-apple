@@ -9,10 +9,26 @@ import CoreMedia
 import MediaPlayer
 import PillarboxPlayer
 
-struct MediaMapper: Mapper {
-    let metadata: Media
+final class MediaMapper: Mapper {
+    private var metadata: Media?
 
-    func mediaItemInfo(at time: CMTime?, with error: (any Error)?) -> NowPlayingInfo {
+    init() {}
+
+    private static func metadataItem<T>(for identifier: AVMetadataIdentifier, value: T?) -> AVMetadataItem? {
+        guard let value else { return nil }
+        let item = AVMutableMetadataItem()
+        item.identifier = identifier
+        item.value = value as? NSCopying & NSObjectProtocol
+        item.extendedLanguageTag = "und"
+        return item.copy() as? AVMetadataItem
+    }
+
+    func update(metadata: Media) {
+        self.metadata = metadata
+    }
+
+    func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
+        guard let metadata else { return .init() }
         var nowPlayingInfo = NowPlayingInfo()
         nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
         nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
@@ -22,8 +38,14 @@ struct MediaMapper: Mapper {
         return nowPlayingInfo
     }
 
-    func metadataItems(at time: CMTime?, with error: (any Error)?) -> [AVMetadataItem] {
-        []
+    func metadataItems() -> [AVMetadataItem] {
+        guard let metadata else { return [] }
+        return [
+            Self.metadataItem(for: .commonIdentifierTitle, value: metadata.title),
+            Self.metadataItem(for: .commonIdentifierArtwork, value: metadata.image?.pngData()),
+            Self.metadataItem(for: .commonIdentifierDescription, value: metadata.description)
+        ]
+        .compactMap { $0 }
     }
 
     func navigationMarkerGroups() -> [AVTimedMetadataGroup] {

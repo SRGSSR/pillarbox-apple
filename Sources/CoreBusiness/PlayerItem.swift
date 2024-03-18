@@ -60,7 +60,7 @@ public extension PlayerItem {
         Self.urn(
             urn,
             server: server,
-            mapperAdapter: .init(mapperType: MediaMetadataMapper.self),
+            mapperAdapter: MediaMetadataMapper.adapter(),
             trackerAdapters: trackerAdapters,
             configuration: configuration
         )

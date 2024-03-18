@@ -16,6 +16,8 @@ protocol Assetable {
     func disable()
 
     func playerItem(reload: Bool) -> AVPlayerItem
+    func mediaItemInfo(with error: Error?) -> NowPlayingInfo
+
     func update(item: AVPlayerItem)
 }
 
