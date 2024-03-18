@@ -19,12 +19,13 @@ public extension PlayerItem {
     ///   - configuration: A closure to configure player items created from the receiver.
     ///
     /// In addition the item is automatically tracked according to SRG SSR analytics standards.
-    static func urn(
+    static func urn<E>(
         _ urn: String,
         server: Server = .production,
+        extractor: E,
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self {
+    ) -> Self where E: MetadataExtractor {
         let dataProvider = DataProvider(server: server)
         let publisher = dataProvider.playableMediaCompositionPublisher(forUrn: urn)
             .tryMap { mediaComposition in
@@ -43,10 +44,25 @@ public extension PlayerItem {
             }
             .switchToLatest()
             .eraseToAnyPublisher()
-        return .init(publisher: publisher, trackerAdapters: [
+        return .init(publisher: publisher, extractor: extractor, trackerAdapters: [
             ComScoreTracker.adapter { $0.analyticsData },
             CommandersActTracker.adapter { $0.analyticsMetadata }
         ] + trackerAdapters)
+    }
+
+    static func urn(
+        _ urn: String,
+        server: Server = .production,
+        trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+    ) -> Self {
+        Self.urn(
+            urn,
+            server: server,
+            extractor: MediaMetadata.DefaultExtractor(),
+            trackerAdapters: trackerAdapters,
+            configuration: configuration
+        )
     }
 
     private static func asset(for metadata: MediaMetadata, configuration: @escaping (AVPlayerItem) -> Void) -> Asset<MediaMetadata> {
