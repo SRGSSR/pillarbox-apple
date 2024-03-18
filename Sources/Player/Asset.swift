@@ -37,6 +37,7 @@ public struct Asset<M>: Assetable {
     let resource: Resource
     private let metadata: M?
     private let configuration: (AVPlayerItem) -> Void
+    private let mapperAdapter: MapperAdapter<M>?
     private let trackerAdapters: [TrackerAdapter<M>]
 
     init(
@@ -44,12 +45,14 @@ public struct Asset<M>: Assetable {
         resource: Resource,
         metadata: M?,
         configuration: @escaping (AVPlayerItem) -> Void,
+        mapperAdapter: MapperAdapter<M>?,
         trackerAdapters: [TrackerAdapter<M>]
     ) {
         self.id = id
         self.resource = resource
         self.metadata = metadata
         self.configuration = configuration
+        self.mapperAdapter = mapperAdapter
         self.trackerAdapters = trackerAdapters.map { $0.withId(id) }
     }
 
@@ -70,6 +73,7 @@ public struct Asset<M>: Assetable {
             resource: .simple(url: url),
             metadata: metadata,
             configuration: configuration,
+            mapperAdapter: nil,
             trackerAdapters: []
         )
     }
@@ -95,6 +99,7 @@ public struct Asset<M>: Assetable {
             resource: .custom(url: url, delegate: delegate),
             metadata: metadata,
             configuration: configuration,
+            mapperAdapter: nil,
             trackerAdapters: []
         )
     }
@@ -118,16 +123,42 @@ public struct Asset<M>: Assetable {
             resource: .encrypted(url: url, delegate: delegate),
             metadata: metadata,
             configuration: configuration,
+            mapperAdapter: nil,
             trackerAdapters: []
         )
     }
 
+    func withMapperAdapter(_ mapperAdapter: MapperAdapter<M>) -> Self {
+        .init(
+            id: id,
+            resource: resource,
+            metadata: metadata,
+            configuration: configuration,
+            mapperAdapter: mapperAdapter,
+            trackerAdapters: trackerAdapters
+        )
+    }
+
     func withTrackerAdapters(_ trackerAdapters: [TrackerAdapter<M>]) -> Self {
-        .init(id: id, resource: resource, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
+        .init(
+            id: id,
+            resource: resource,
+            metadata: metadata,
+            configuration: configuration,
+            mapperAdapter: mapperAdapter,
+            trackerAdapters: trackerAdapters
+        )
     }
 
     func withId(_ id: UUID) -> Self {
-        .init(id: id, resource: resource, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
+        .init(
+            id: id,
+            resource: resource,
+            metadata: metadata,
+            configuration: configuration,
+            mapperAdapter: mapperAdapter,
+            trackerAdapters: trackerAdapters
+        )
     }
 
     func enable(for player: Player) {
@@ -138,6 +169,7 @@ public struct Asset<M>: Assetable {
 
     func updateMetadata() {
         guard let metadata else { return }
+        mapperAdapter?.update(metadata: metadata)
         trackerAdapters.forEach { adapter in
             adapter.update(metadata: metadata)
         }
@@ -166,8 +198,13 @@ public struct Asset<M>: Assetable {
         }
     }
 
+    func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
+        mapperAdapter?.mediaItemInfo(with: error) ?? .init()
+    }
+
     func update(item: AVPlayerItem) {
-        item.externalMetadata = [] // Self.externalMetadata(from: metadata?.nowPlayingMetadata())
+        item.externalMetadata = mapperAdapter?.metadataItems() ?? []
+        // FIXME: On tvOS set navigation markers
     }
 }
 
@@ -187,6 +224,7 @@ public extension Asset where M == Never {
             resource: .simple(url: url),
             metadata: nil,
             configuration: configuration,
+            mapperAdapter: nil,
             trackerAdapters: []
         )
     }
@@ -210,6 +248,7 @@ public extension Asset where M == Never {
             resource: .custom(url: url, delegate: delegate),
             metadata: nil,
             configuration: configuration,
+            mapperAdapter: nil,
             trackerAdapters: []
         )
     }
@@ -231,6 +270,7 @@ public extension Asset where M == Never {
             resource: .encrypted(url: url, delegate: delegate),
             metadata: nil,
             configuration: configuration,
+            mapperAdapter: nil,
             trackerAdapters: []
         )
     }
@@ -238,32 +278,11 @@ public extension Asset where M == Never {
 
 extension Asset {
     static var loading: Self {
-        .init(id: UUID(), resource: .loading, metadata: nil, configuration: { _ in }, trackerAdapters: [])
+        .init(id: UUID(), resource: .loading, metadata: nil, configuration: { _ in }, mapperAdapter: nil, trackerAdapters: [])
     }
 
     static func failed(error: Error) -> Self {
-        .init(id: UUID(), resource: .failing(error: error), metadata: nil, configuration: { _ in }, trackerAdapters: [])
-    }
-}
-
-private extension Asset {
-//    static func externalMetadata(from metadata: NowPlayingMetadata?) -> [AVMetadataItem] {
-//        [
-//            metadataItem(for: .commonIdentifierTitle, value: metadata?.title),
-//            metadataItem(for: .iTunesMetadataTrackSubTitle, value: metadata?.subtitle),
-//            metadataItem(for: .commonIdentifierArtwork, value: metadata?.image?.pngData()),
-//            metadataItem(for: .commonIdentifierDescription, value: metadata?.description)
-//        ]
-//        .compactMap { $0 }
-//    }
-
-    private static func metadataItem<T>(for identifier: AVMetadataIdentifier, value: T?) -> AVMetadataItem? {
-        guard let value else { return nil }
-        let item = AVMutableMetadataItem()
-        item.identifier = identifier
-        item.value = value as? NSCopying & NSObjectProtocol
-        item.extendedLanguageTag = "und"
-        return item.copy() as? AVMetadataItem
+        .init(id: UUID(), resource: .failing(error: error), metadata: nil, configuration: { _ in }, mapperAdapter: nil, trackerAdapters: [])
     }
 }
 

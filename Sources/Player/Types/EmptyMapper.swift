@@ -6,14 +6,16 @@
 
 import AVFoundation
 
-struct EmptyMapper: Mapper {
-    init(metadata: Never) {}
+final class EmptyMapper: Mapper {
+    init() {}
 
-    func mediaItemInfo(at time: CMTime?, with error: (any Error)?) -> NowPlayingInfo {
+    func update(metadata: Never) {}
+
+    func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
         .init()
     }
     
-    func metadataItems(at time: CMTime?, with error: (any Error)?) -> [AVMetadataItem] {
+    func metadataItems() -> [AVMetadataItem] {
         []
     }
     
