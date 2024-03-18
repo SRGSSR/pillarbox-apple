@@ -17,6 +17,14 @@ final class CurrentTracker {
         configureTrackingPublisher(player: player)
     }
 
+    private func configureAssetPublisher(for item: PlayerItem) {
+        item.$asset
+            .sink { asset in
+                asset.updateMetadata()
+            }
+            .store(in: &cancellables)
+    }
+
     private func configureTrackingPublisher(player: Player) {
         player.$isTrackingEnabled
             .sink { [weak self, weak player] enabled in
@@ -28,14 +36,6 @@ final class CurrentTracker {
                 else {
                     disableAsset()
                 }
-            }
-            .store(in: &cancellables)
-    }
-
-    private func configureAssetPublisher(for item: PlayerItem) {
-        item.$asset
-            .sink { asset in
-                asset.updateMetadata()
             }
             .store(in: &cancellables)
     }

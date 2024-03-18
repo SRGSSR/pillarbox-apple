@@ -15,17 +15,18 @@ public extension PlayerItem {
     /// - Parameters:
     ///   - urn: The URN to play.
     ///   - server: The server which the URN is played from.
+    ///   - mapperAdapter: A `MapperAdapter` converting metadata into player metadata.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: A closure to configure player items created from the receiver.
     ///
     /// In addition the item is automatically tracked according to SRG SSR analytics standards.
-    static func urn<E>(
+    static func urn(
         _ urn: String,
         server: Server = .production,
-        extractor: E,
+        mapperAdapter: MapperAdapter<MediaMetadata>,
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self where E: MetadataExtractor {
+    ) -> Self {
         let dataProvider = DataProvider(server: server)
         let publisher = dataProvider.playableMediaCompositionPublisher(forUrn: urn)
             .tryMap { mediaComposition in
@@ -44,7 +45,7 @@ public extension PlayerItem {
             }
             .switchToLatest()
             .eraseToAnyPublisher()
-        return .init(publisher: publisher, extractor: extractor, trackerAdapters: [
+        return .init(publisher: publisher, mapperAdapter: mapperAdapter, trackerAdapters: [
             ComScoreTracker.adapter { $0.analyticsData },
             CommandersActTracker.adapter { $0.analyticsMetadata }
         ] + trackerAdapters)
@@ -59,7 +60,7 @@ public extension PlayerItem {
         Self.urn(
             urn,
             server: server,
-            extractor: MediaMetadata.DefaultExtractor(),
+            mapperAdapter: .init(mapperType: MediaMetadataMapper.self),
             trackerAdapters: trackerAdapters,
             configuration: configuration
         )
