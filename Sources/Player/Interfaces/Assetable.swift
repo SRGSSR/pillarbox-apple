@@ -8,12 +8,12 @@ import AVFoundation
 
 /// A protocol describing an asset.
 protocol Assetable {
-    associatedtype M
+    associatedtype Metadata
 
     var id: UUID { get }
     var resource: Resource { get }
-    var mapperAdapter: MapperAdapter<M>? { get }
-    var trackerAdapters: [TrackerAdapter<M>] { get }
+    var mapperAdapter: MapperAdapter<Metadata>? { get }
+    var trackerAdapters: [TrackerAdapter<Metadata>] { get }
 
     func updateMetadata()
 
