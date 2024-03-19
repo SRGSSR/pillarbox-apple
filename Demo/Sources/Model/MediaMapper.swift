@@ -9,7 +9,7 @@ import CoreMedia
 import MediaPlayer
 import PillarboxPlayer
 
-final class MediaMapper: Mapper {
+final class MediaMapper: MetadataMapper {
     private var metadata: Media?
 
     init() {}
