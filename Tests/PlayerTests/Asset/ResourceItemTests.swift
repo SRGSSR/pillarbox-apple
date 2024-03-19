@@ -10,9 +10,9 @@ import AVFoundation
 import PillarboxCircumspect
 import PillarboxStreams
 
-final class AssetPlayerItemTests: TestCase {
+final class ResourceItemTests: TestCase {
     func testNativePlayerItem() {
-        let item = Asset.simple(url: Stream.onDemand.url).playerItem()
+        let item = Resource.simple(url: Stream.onDemand.url).playerItem()
         _ = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false, true],
@@ -21,7 +21,7 @@ final class AssetPlayerItemTests: TestCase {
     }
 
     func testLoadingPlayerItem() {
-        let item = EmptyAsset.loading.playerItem()
+        let item = Resource.loading.playerItem()
         _ = AVPlayer(playerItem: item)
         expectAtLeastEqualPublished(
             values: [false],
@@ -30,7 +30,7 @@ final class AssetPlayerItemTests: TestCase {
     }
 
     func testFailingPlayerItem() {
-        let item = EmptyAsset.failed(error: StructError()).playerItem()
+        let item = Resource.failing(error: StructError()).playerItem()
         _ = AVPlayer(playerItem: item)
         expectEqualPublished(
             values: [.unknown],

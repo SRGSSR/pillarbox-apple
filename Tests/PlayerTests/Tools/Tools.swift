@@ -8,8 +8,6 @@
 
 import Foundation
 
-typealias EmptyAsset = Asset<Never>
-
 struct StructError: LocalizedError {
     var errorDescription: String? {
         "Struct error description"

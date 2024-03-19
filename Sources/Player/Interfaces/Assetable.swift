@@ -8,16 +8,16 @@ import AVFoundation
 
 /// A protocol describing an asset.
 protocol Assetable {
+    associatedtype M
+
     var id: UUID { get }
     var resource: Resource { get }
+    var mapperAdapter: MapperAdapter<M>? { get }
+    var trackerAdapters: [TrackerAdapter<M>] { get }
 
-    func enable(for player: Player)
     func updateMetadata()
-    func disable()
 
-    func playerItem(reload: Bool) -> AVPlayerItem
-    func mediaItemInfo(with error: Error?) -> NowPlayingInfo
-
+    func configure(item: AVPlayerItem)
     func update(item: AVPlayerItem)
 }
 
@@ -26,8 +26,37 @@ extension Assetable {
         id == playerItem?.id
     }
 
-    func playerItem() -> AVPlayerItem {
-        playerItem(reload: false)
+    func enable(for player: Player) {
+        trackerAdapters.forEach { adapter in
+            adapter.enable(for: player)
+        }
+    }
+
+    func disable() {
+        trackerAdapters.forEach { adapter in
+            adapter.disable()
+        }
+    }
+
+    func playerItem(reload: Bool = false) -> AVPlayerItem {
+        if reload, resource.isFailing {
+            let item = Resource.loading.playerItem().withId(id)
+            configure(item: item)
+            update(item: item)
+            PlayerItem.reload(for: id)
+            return item
+        }
+        else {
+            let item = resource.playerItem().withId(id)
+            configure(item: item)
+            update(item: item)
+            PlayerItem.load(for: id)
+            return item
+        }
+    }
+
+    func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
+        mapperAdapter?.mediaItemInfo(with: error) ?? .init()
     }
 }
 

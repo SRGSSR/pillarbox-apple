@@ -33,15 +33,15 @@ public final class PlayerItem: Equatable {
         mapperAdapter: MapperAdapter<M> = .empty(),
         trackerAdapters: [TrackerAdapter<M>] = []
     ) where P: Publisher, P.Output == Asset<M> {
-        asset = Asset.loading.withId(id).withMapperAdapter(mapperAdapter).withTrackerAdapters(trackerAdapters)
-        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) {
+        asset = ResourceContainer(resource: .loading, id: id, mapperAdapter: mapperAdapter, trackerAdapters: trackerAdapters)
+        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
             publisher
-                .catch { error in
-                    Just(.failed(error: error))
+                .map { asset in
+                    AssetContainer(asset: asset, id: id, mapperAdapter: mapperAdapter, trackerAdapters: trackerAdapters)
                 }
-        }
-        .map { [id] asset in
-            asset.withId(id).withMapperAdapter(mapperAdapter).withTrackerAdapters(trackerAdapters)
+                .catch { error in
+                    Just(ResourceContainer(resource: .failing(error: error), id: id, mapperAdapter: mapperAdapter, trackerAdapters: trackerAdapters))
+                }
         }
         .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))
         .receive(on: DispatchQueue.main)

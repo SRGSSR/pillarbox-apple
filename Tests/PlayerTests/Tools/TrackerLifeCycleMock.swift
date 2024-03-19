@@ -48,7 +48,7 @@ final class TrackerLifeCycleMock: PlayerItemTracker {
 }
 
 extension TrackerLifeCycleMock {
-    static func adapter(statePublisher: StatePublisher) -> TrackerAdapter<Never> {
+    static func adapter(statePublisher: StatePublisher) -> TrackerAdapter<Void> {
         adapter(configuration: Configuration(statePublisher: statePublisher))
     }
 }
