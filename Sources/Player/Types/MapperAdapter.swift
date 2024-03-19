@@ -8,15 +8,17 @@ import AVFoundation
 import CoreMedia
 
 public struct MapperAdapter<M> {
-    private let mapper: any MetadataMapper
+    private let metadataMapper: any MetadataMapper
     private let update: (M) -> Void
 
-    public init<T>(mapperType: T.Type) where T: MetadataMapper, T.Metadata == M {
-        let mapper = mapperType.init()
+    public init<T>(mapperType: T.Type, mapper: ((M) -> T.Metadata)?) where T: MetadataMapper {
+        let metadataMapper = mapperType.init()
         update = { metadata in
-            mapper.update(metadata: metadata)
+            if let mapper {
+                metadataMapper.update(metadata: mapper(metadata))
+            }
         }
-        self.mapper = mapper
+        self.metadataMapper = metadataMapper
     }
 
     public static func empty() -> Self {
@@ -28,14 +30,14 @@ public struct MapperAdapter<M> {
     }
 
     func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
-        mapper.mediaItemInfo(with: error)
+        metadataMapper.mediaItemInfo(with: error)
     }
 
     func metadataItems() -> [AVMetadataItem] {
-        mapper.metadataItems()
+        metadataMapper.metadataItems()
     }
 
     func navigationMarkerGroups() -> [AVTimedMetadataGroup] {
-        mapper.navigationMarkerGroups()
+        metadataMapper.navigationMarkerGroups()
     }
 }

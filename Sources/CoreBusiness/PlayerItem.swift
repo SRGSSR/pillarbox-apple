@@ -23,7 +23,7 @@ public extension PlayerItem {
     static func urn(
         _ urn: String,
         server: Server = .production,
-        mapperAdapter: MapperAdapter<MediaMetadata> = MediaMetadataMapper.adapter(),
+        mapperAdapter: MapperAdapter<MediaMetadata> = .standard(),
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
