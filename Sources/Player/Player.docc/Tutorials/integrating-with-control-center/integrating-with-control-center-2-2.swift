@@ -1,7 +1,9 @@
 import PillarboxPlayer
 import SwiftUI
 
-private struct Metadata: AssetMetadata {
+// FIXME: Update tutorial code
+
+private struct Metadata {
     func nowPlayingMetadata() -> NowPlayingMetadata {
         .init(title: "🍎", subtitle: "🍏", image: .apple)
     }
