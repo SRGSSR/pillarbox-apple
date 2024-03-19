@@ -6,10 +6,10 @@
 
 import AVFoundation
 
-final class EmptyMapper: MetadataMapper {
+final class EmptyMapper<M>: MetadataMapper {
     init() {}
 
-    func update(metadata: Never) {}
+    func update(metadata: M) {}
 
     func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
         .init()
