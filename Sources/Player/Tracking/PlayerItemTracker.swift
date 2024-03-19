@@ -54,13 +54,15 @@ public extension PlayerItemTracker {
     static func adapter<M>(configuration: Configuration, mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> {
         .init(trackerType: Self.self, configuration: configuration, mapper: mapper)
     }
+}
 
+public extension PlayerItemTracker where Configuration == Void {
     /// Creates an adapter for the receiver.
     ///
     /// - Parameter configuration: The tracker configuration.
     /// - Returns: The tracker adapter.
-    static func adapter(configuration: Configuration) -> TrackerAdapter<Never> {
-        .init(trackerType: Self.self, configuration: configuration, mapper: nil)
+    static func adapter<M>(mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> {
+        .init(trackerType: Self.self, configuration: (), mapper: mapper)
     }
 }
 
@@ -74,24 +76,7 @@ public extension PlayerItemTracker where Metadata == Void {
     }
 }
 
-public extension PlayerItemTracker where Configuration == Void {
-    /// Creates an adapter for the receiver.
-    ///
-    /// - Parameter configuration: The tracker configuration.
-    /// - Returns: The tracker adapter.
-    static func adapter<M>(mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> {
-        .init(trackerType: Self.self, configuration: (), mapper: mapper)
-    }
-
-    /// Creates an adapter for the receiver.
-    ///
-    /// - Returns: The tracker adapter.
-    static func adapter() -> TrackerAdapter<Never> {
-        .init(trackerType: Self.self, configuration: (), mapper: nil)
-    }
-}
-
-public extension PlayerItemTracker where Metadata == Void, Configuration == Void {
+public extension PlayerItemTracker where Configuration == Void, Metadata == Void {
     /// Creates an adapter for the receiver.
     ///
     /// - Returns: The tracker adapter.

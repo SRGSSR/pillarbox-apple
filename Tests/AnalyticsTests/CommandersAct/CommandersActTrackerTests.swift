@@ -35,7 +35,9 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter()
+                CommandersActTracker.adapter { _ in
+                    [:]
+                }
             ]
         ))
 
@@ -131,7 +133,9 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         var player: Player? = Player(item: .simple(
             url: Stream.shortOnDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter()
+                CommandersActTracker.adapter { _ in
+                    [:]
+                }
             ]
         ))
 
@@ -148,7 +152,9 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.unavailable.url,
             trackerAdapters: [
-                CommandersActTracker.adapter()
+                CommandersActTracker.adapter { _ in
+                    [:]
+                }
             ]
         ))
 
@@ -161,7 +167,9 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter()
+                CommandersActTracker.adapter { _ in
+                    [:]
+                }
             ]
         ))
 
@@ -177,7 +185,9 @@ final class CommandersActTrackerTests: CommandersActTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                CommandersActTracker.adapter()
+                CommandersActTracker.adapter { _ in
+                    [:]
+                }
             ]
         ))
 

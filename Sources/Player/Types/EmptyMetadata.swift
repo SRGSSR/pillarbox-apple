@@ -7,7 +7,7 @@
 import AVFoundation
 
 final class EmptyMetadata<M>: PlayerMetadata {
-    init() {}
+    init(configuration: Void) {}
 
     func update(metadata: M) {}
 
