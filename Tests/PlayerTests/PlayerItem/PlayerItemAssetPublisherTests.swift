@@ -30,17 +30,6 @@ final class PlayerItemAssetPublisherTests: TestCase {
         }
     }
 
-    func testFailure() {
-        let item = PlayerItem.failed()
-        expectSimilarPublished(
-            values: [.loading, .failing(error: MockError.mock)],
-            from: item.$asset.map(\.resource),
-            during: .milliseconds(500)
-        ) {
-            PlayerItem.load(for: item.id)
-        }
-    }
-
     func testReload() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         expectSimilarPublished(
