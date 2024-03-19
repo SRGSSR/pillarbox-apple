@@ -16,7 +16,7 @@ final class PlayerItemTrackerUpdateTests: TestCase {
         let item = PlayerItem.simple(
             url: Stream.shortOnDemand.url,
             metadata: AssetMetadataMock(title: "title"),
-            mapperAdapter: StandardMapper.adapter { metadata in
+            metadataAdapter: CommonMetadata.adapter { metadata in
                 .init(title: metadata.title)
             },
             trackerAdapters: [
