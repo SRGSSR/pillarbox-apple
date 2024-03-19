@@ -14,11 +14,11 @@ final class EmptyMapper<M>: MetadataMapper {
     func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
         .init()
     }
-    
+
     func metadataItems() -> [AVMetadataItem] {
         []
     }
-    
+
     func navigationMarkerGroups() -> [AVTimedMetadataGroup] {
         []
     }

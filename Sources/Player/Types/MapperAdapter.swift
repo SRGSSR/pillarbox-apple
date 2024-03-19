@@ -19,18 +19,22 @@ public struct MapperAdapter<M> {
         self.mapper = mapper
     }
 
+    public static func empty() -> Self {
+        EmptyMapper.adapter()
+    }
+
     func update(metadata: M) {
         update(metadata)
     }
-    
+
     func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
         mapper.mediaItemInfo(with: error)
     }
-    
+
     func metadataItems() -> [AVMetadataItem] {
         mapper.metadataItems()
     }
-    
+
     func navigationMarkerGroups() -> [AVTimedMetadataGroup] {
         mapper.navigationMarkerGroups()
     }
