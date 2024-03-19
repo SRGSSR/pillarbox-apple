@@ -8,10 +8,10 @@ import AVFoundation
 import MediaPlayer
 import PillarboxPlayer
 
-final class MediaMetadataMapper: MetadataMapper {
+public final class MediaMetadataMapper: MetadataMapper {
     private var metadata: MediaMetadata?
 
-    init() {}
+    public init() {}
 
     // TODO: Provide public helpers for item construction
     private static func metadataItem<T>(for identifier: AVMetadataIdentifier, value: T?) -> AVMetadataItem? {
@@ -23,11 +23,11 @@ final class MediaMetadataMapper: MetadataMapper {
         return item.copy() as? AVMetadataItem
     }
 
-    func update(metadata: MediaMetadata) {
+    public func update(metadata: MediaMetadata) {
         self.metadata = metadata
     }
 
-    func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
+    public func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
         guard let metadata else { return .init() }
         var nowPlayingInfo = NowPlayingInfo()
         nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
@@ -39,7 +39,7 @@ final class MediaMetadataMapper: MetadataMapper {
         return nowPlayingInfo
     }
 
-    func metadataItems() -> [AVMetadataItem] {
+    public func metadataItems() -> [AVMetadataItem] {
         guard let metadata else { return [] }
         return [
             Self.metadataItem(for: .commonIdentifierTitle, value: metadata.title),
@@ -50,7 +50,7 @@ final class MediaMetadataMapper: MetadataMapper {
         .compactMap { $0 }
     }
 
-    func navigationMarkerGroups() -> [AVTimedMetadataGroup] {
+    public func navigationMarkerGroups() -> [AVTimedMetadataGroup] {
         []
     }
 }

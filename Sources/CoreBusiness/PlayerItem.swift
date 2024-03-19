@@ -23,7 +23,7 @@ public extension PlayerItem {
     static func urn(
         _ urn: String,
         server: Server = .production,
-        mapperAdapter: MapperAdapter<MediaMetadata>,
+        mapperAdapter: MapperAdapter<MediaMetadata> = MediaMetadataMapper.adapter(),
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
@@ -49,21 +49,6 @@ public extension PlayerItem {
             ComScoreTracker.adapter { $0.analyticsData },
             CommandersActTracker.adapter { $0.analyticsMetadata }
         ] + trackerAdapters)
-    }
-
-    static func urn(
-        _ urn: String,
-        server: Server = .production,
-        trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
-        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self {
-        Self.urn(
-            urn,
-            server: server,
-            mapperAdapter: MediaMetadataMapper.adapter(),
-            trackerAdapters: trackerAdapters,
-            configuration: configuration
-        )
     }
 
     private static func asset(for metadata: MediaMetadata, configuration: @escaping (AVPlayerItem) -> Void) -> Asset<MediaMetadata> {
