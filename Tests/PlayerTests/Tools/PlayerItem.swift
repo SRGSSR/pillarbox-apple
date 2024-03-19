@@ -22,7 +22,7 @@ extension PlayerItem {
     static func mock(
         url: URL,
         loadedAfter delay: TimeInterval,
-        trackerAdapters: [TrackerAdapter<Never>] = []
+        trackerAdapters: [TrackerAdapter<Void>] = []
     ) -> Self {
         let publisher = Just(Asset.simple(url: url))
             .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
@@ -60,10 +60,7 @@ extension PlayerItem {
                 title: "title0",
                 subtitle: "subtitle0",
                 description: "description0"
-            ),
-            mapperAdapter: StandardMapper.adapter { metadata in
-                .init(title: metadata.title, subtitle: metadata.subtitle, description: metadata.description)
-            }
+            )
         ))
         return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
@@ -79,7 +76,7 @@ extension PlayerItem {
         return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
 
-    static func failed() -> Self {
-        .init(publisher: Just(Asset<Never>.failed(error: MockError.mock)))
-    }
+//    static func failed() -> Self {
+//        .init(publisher: Just(Asset<Never>.failed(error: MockError.mock)))
+//    }
 }
