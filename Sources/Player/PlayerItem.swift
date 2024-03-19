@@ -30,7 +30,7 @@ public final class PlayerItem: Equatable {
     /// Creates the item from an ``Asset`` publisher data source.
     public init<P, M>(
         publisher: P,
-        mapperAdapter: MapperAdapter<M>,
+        mapperAdapter: MapperAdapter<M> = .empty(),
         trackerAdapters: [TrackerAdapter<M>] = []
     ) where P: Publisher, P.Output == Asset<M> {
         asset = Asset<M>.loading.withId(id).withMapperAdapter(mapperAdapter).withTrackerAdapters(trackerAdapters)
@@ -56,7 +56,7 @@ public final class PlayerItem: Equatable {
     ///   - asset: The asset to play.
     ///   - mapperAdapter: A `MapperAdapter` converting metadata into player metadata.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    public convenience init<M>(asset: Asset<M>, mapperAdapter: MapperAdapter<M>, trackerAdapters: [TrackerAdapter<M>] = []) {
+    public convenience init<M>(asset: Asset<M>, mapperAdapter: MapperAdapter<M> = .empty(), trackerAdapters: [TrackerAdapter<M>] = []) {
         self.init(publisher: Just(asset), mapperAdapter: mapperAdapter, trackerAdapters: trackerAdapters)
     }
 
@@ -79,16 +79,6 @@ public final class PlayerItem: Equatable {
 }
 
 public extension PlayerItem {
-    convenience init<P, M>(publisher: P, trackerAdapters: [TrackerAdapter<M>] = []) where P: Publisher, P.Output == Asset<M> {
-        self.init(publisher: publisher, mapperAdapter: EmptyMapper.adapter(), trackerAdapters: trackerAdapters)
-    }
-
-    convenience init<M>(asset: Asset<M>, trackerAdapters: [TrackerAdapter<M>] = []) {
-        self.init(asset: asset, mapperAdapter: EmptyMapper.adapter(), trackerAdapters: trackerAdapters)
-    }
-}
-
-public extension PlayerItem {
     /// Returns a simple playable item.
     ///
     /// - Parameters:
@@ -101,7 +91,7 @@ public extension PlayerItem {
     static func simple<M>(
         url: URL,
         metadata: M,
-        mapperAdapter: MapperAdapter<M>,
+        mapperAdapter: MapperAdapter<M> = .empty(),
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
@@ -128,7 +118,7 @@ public extension PlayerItem {
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
         metadata: M,
-        mapperAdapter: MapperAdapter<M>,
+        mapperAdapter: MapperAdapter<M> = .empty(),
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
@@ -153,7 +143,7 @@ public extension PlayerItem {
         url: URL,
         delegate: AVContentKeySessionDelegate,
         metadata: M,
-        mapperAdapter: MapperAdapter<M>,
+        mapperAdapter: MapperAdapter<M> = .empty(),
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
@@ -175,12 +165,13 @@ public extension PlayerItem {
     /// - Returns: The item.
     static func simple(
         url: URL,
+        mapperAdapter: MapperAdapter<Never> = .empty(),
         trackerAdapters: [TrackerAdapter<Never>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
             asset: .simple(url: url, configuration: configuration),
-            mapperAdapter: EmptyMapper.adapter(),
+            mapperAdapter: mapperAdapter,
             trackerAdapters: trackerAdapters
         )
     }
@@ -198,12 +189,13 @@ public extension PlayerItem {
     static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
+        mapperAdapter: MapperAdapter<Never> = .empty(),
         trackerAdapters: [TrackerAdapter<Never>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
             asset: .custom(url: url, delegate: delegate, configuration: configuration),
-            mapperAdapter: EmptyMapper.adapter(),
+            mapperAdapter: mapperAdapter,
             trackerAdapters: trackerAdapters
         )
     }
@@ -219,12 +211,13 @@ public extension PlayerItem {
     static func encrypted(
         url: URL,
         delegate: AVContentKeySessionDelegate,
+        mapperAdapter: MapperAdapter<Never> = .empty(),
         trackerAdapters: [TrackerAdapter<Never>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
             asset: .encrypted(url: url, delegate: delegate, configuration: configuration),
-            mapperAdapter: EmptyMapper.adapter(),
+            mapperAdapter: mapperAdapter,
             trackerAdapters: trackerAdapters
         )
     }
