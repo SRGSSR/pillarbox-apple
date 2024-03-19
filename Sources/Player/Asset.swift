@@ -214,7 +214,7 @@ public struct Asset<M>: Assetable {
     }
 }
 
-public extension Asset where M == Never {
+public extension Asset where M == Void {
     /// Returns a simple asset playable from a URL.
     ///
     /// - Parameters:

@@ -163,8 +163,8 @@ public extension PlayerItem {
     /// - Returns: The item.
     static func simple(
         url: URL,
-        mapperAdapter: MapperAdapter<Never> = .empty(),
-        trackerAdapters: [TrackerAdapter<Never>] = [],
+        mapperAdapter: MapperAdapter<Void> = .empty(),
+        trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
@@ -187,8 +187,8 @@ public extension PlayerItem {
     static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
-        mapperAdapter: MapperAdapter<Never> = .empty(),
-        trackerAdapters: [TrackerAdapter<Never>] = [],
+        mapperAdapter: MapperAdapter<Void> = .empty(),
+        trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
@@ -209,8 +209,8 @@ public extension PlayerItem {
     static func encrypted(
         url: URL,
         delegate: AVContentKeySessionDelegate,
-        mapperAdapter: MapperAdapter<Never> = .empty(),
-        trackerAdapters: [TrackerAdapter<Never>] = [],
+        mapperAdapter: MapperAdapter<Void> = .empty(),
+        trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
