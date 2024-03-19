@@ -11,7 +11,7 @@ import Nimble
 import PillarboxPlayer
 import PillarboxStreams
 
-private struct AssetMetadataMock: AssetMetadata {}
+private struct AssetMetadataMock {}
 
 // Testing comScore end events is a bit tricky:
 //   1. Apparently comScore will never emit events if a play event is followed by an end event within ~5 seconds. For

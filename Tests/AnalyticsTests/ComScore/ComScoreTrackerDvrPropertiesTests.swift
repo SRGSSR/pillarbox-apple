@@ -11,7 +11,7 @@ import Nimble
 import PillarboxPlayer
 import PillarboxStreams
 
-private struct AssetMetadataMock: AssetMetadata {}
+private struct AssetMetadataMock {}
 
 final class ComScoreTrackerDvrPropertiesTests: ComScoreTestCase {
     func testOnDemand() {

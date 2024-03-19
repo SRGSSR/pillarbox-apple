@@ -1,7 +1,9 @@
 import PillarboxPlayer
 import SwiftUI
 
-private struct Metadata: AssetMetadata {}
+// FIXME: Update tutorial code
+
+private struct Metadata {}
 
 struct ContentView: View {
     @StateObject private var player = Player(item: .simple(
