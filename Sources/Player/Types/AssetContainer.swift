@@ -15,15 +15,15 @@ struct AssetContainer<M>: Assetable {
     let mapperAdapter: MapperAdapter<M>?
     let trackerAdapters: [TrackerAdapter<M>]
 
+    var resource: Resource {
+        asset.resource
+    }
+
     init(asset: Asset<M>, id: UUID, mapperAdapter: MapperAdapter<M>?, trackerAdapters: [TrackerAdapter<M>]) {
         self.asset = asset
         self.id = id
         self.mapperAdapter = mapperAdapter
         self.trackerAdapters = trackerAdapters
-    }
-
-    var resource: Resource {
-        asset.resource
     }
 
     func updateMetadata() {

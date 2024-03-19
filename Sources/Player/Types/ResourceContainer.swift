@@ -12,13 +12,6 @@ struct ResourceContainer<M>: Assetable {
     let mapperAdapter: MapperAdapter<M>?
     let trackerAdapters: [TrackerAdapter<M>]
 
-    init(resource: Resource, id: UUID, mapperAdapter: MapperAdapter<M>?, trackerAdapters: [TrackerAdapter<M>]) {
-        self.resource = resource
-        self.id = id
-        self.mapperAdapter = mapperAdapter
-        self.trackerAdapters = trackerAdapters
-    }
-
     func updateMetadata() {}
 
     func configure(item: AVPlayerItem) {}
