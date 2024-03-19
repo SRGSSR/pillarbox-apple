@@ -51,8 +51,4 @@ extension TrackerUpdateMock {
     static func adapter<M>(statePublisher: StatePublisher, mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> {
         adapter(configuration: Configuration(statePublisher: statePublisher), mapper: mapper)
     }
-
-    static func adapter(statePublisher: StatePublisher) -> TrackerAdapter<Never> {
-        adapter(configuration: Configuration(statePublisher: statePublisher))
-    }
 }

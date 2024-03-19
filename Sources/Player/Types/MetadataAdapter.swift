@@ -19,8 +19,8 @@ public struct MetadataAdapter<M> {
     /// - Parameters:
     ///   - metadataType: The type of metadata to instantiate and manage.
     ///   - mapper: The metadata mapper.
-    public init<T>(metadataType: T.Type, mapper: ((M) -> T.Metadata)?) where T: PlayerMetadata {
-        let playerMetadata = metadataType.init()
+    public init<T>(metadataType: T.Type, configuration: T.Configuration, mapper: ((M) -> T.Metadata)?) where T: PlayerMetadata {
+        let playerMetadata = metadataType.init(configuration: configuration)
         update = { metadata in
             if let mapper {
                 playerMetadata.update(metadata: mapper(metadata))
