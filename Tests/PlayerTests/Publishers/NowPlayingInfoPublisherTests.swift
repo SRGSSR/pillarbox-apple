@@ -20,7 +20,13 @@ final class NowPlayingInfoPublisherTests: TestCase {
     }
 
     func testActive() {
-        let player = Player(item: .simple(url: Stream.onDemand.url, metadata: AssetMetadataMock(title: "title")))
+        let player = Player(item: .simple(
+            url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(title: "title"),
+            mapperAdapter: StandardMapper.adapter { metadata in
+                .init(title: metadata.title)
+            }
+        ))
         expectAtLeastSimilarPublished(
             values: [[:], [MPMediaItemPropertyTitle: "title"]],
             from: player.nowPlayingInfoPublisher()
