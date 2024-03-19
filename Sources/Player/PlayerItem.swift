@@ -33,8 +33,8 @@ public final class PlayerItem: Equatable {
         metadataAdapter: MetadataAdapter<M> = .none(),
         trackerAdapters: [TrackerAdapter<M>] = []
     ) where P: Publisher, P.Output == Asset<M> {
-        let trackerAdapters = trackerAdapters.map { [id] in
-            $0.withId(id)
+        let trackerAdapters = trackerAdapters.map { [id] adapter in
+            adapter.withId(id)
         }
         asset = ResourceContainer(resource: .loading, id: id, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in

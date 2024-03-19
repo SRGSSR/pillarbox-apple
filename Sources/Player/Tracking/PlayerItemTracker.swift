@@ -28,7 +28,7 @@ public protocol PlayerItemTracker: AnyObject {
     /// - Parameter player: The player for which the tracker must be enabled.
     func enable(for player: Player)
 
-    /// A method called when tracker metadata is updated.
+    /// A method called when metadata is updated.
     ///
     /// - Parameter metadata: The updated metadata.
     func updateMetadata(with metadata: Metadata)
@@ -49,7 +49,7 @@ public extension PlayerItemTracker {
     ///
     /// - Parameters:
     ///   - configuration: The tracker configuration.
-    ///   - mapper: A closure that maps the tracker's metadata to another metadata.
+    ///   - mapper: A closure that maps an item metadata to tracker metadata.
     /// - Returns: The tracker adapter.
     static func adapter<M>(configuration: Configuration, mapper: @escaping (M) -> Metadata) -> TrackerAdapter<M> {
         .init(trackerType: Self.self, configuration: configuration, mapper: mapper)
