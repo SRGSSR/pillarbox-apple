@@ -25,7 +25,7 @@ public final class CommonMetadata: PlayerMetadata {
 
     private var metadata: Metadata?
 
-    public init() {}
+    public init(configuration: Void) {}
 
     public func update(metadata: Metadata) {
         self.metadata = metadata

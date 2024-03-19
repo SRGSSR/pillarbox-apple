@@ -9,10 +9,21 @@ import CoreMedia
 
 /// A protocol for custom player metadata integration.
 public protocol PlayerMetadata: AnyObject {
+    /// A type describing the configuration offered for metadata display.
+    ///
+    /// Use `Void` if no configuration is offered.
+    associatedtype Configuration
+
+    /// A type describing how metadata is stored internally.
+    ///
+    /// Use `Void` if no metadata is required. In such cases metadata can still be displayed by the player but in
+    /// a way that is not associated with any item.
     associatedtype Metadata
 
-    /// Creates an instance for holding player metadata.
-    init()
+    /// Creates an instance for holding metadata and formatting it for display by the player.
+    ///
+    /// - Parameter configuration: The metadata configuration.
+    init(configuration: Configuration)
 
     /// A method called when metadata is updated.
     ///
@@ -44,10 +55,22 @@ public protocol PlayerMetadata: AnyObject {
 public extension PlayerMetadata {
     /// Creates an adapter for the receiver with the provided mapping to its metadata format.
     ///
+    /// - Parameters:
+    ///   - configuration: The metadata configuration.
+    ///   - mapper: A closure that maps an item metadata to player metadata.
+    /// - Returns: The metadata adapter.
+    static func adapter<M>(configuration: Configuration, mapper: @escaping (M) -> Metadata) -> MetadataAdapter<M> {
+        .init(metadataType: Self.self, configuration: configuration, mapper: mapper)
+    }
+}
+
+public extension PlayerMetadata where Configuration == Void {
+    /// Creates an adapter for the receiver with the provided mapping to its metadata format.
+    ///
     /// - Parameter mapper: A closure that maps an item metadata to player metadata.
     /// - Returns: The metadata adapter.
     static func adapter<M>(mapper: @escaping (M) -> Metadata) -> MetadataAdapter<M> {
-        .init(metadataType: Self.self, mapper: mapper)
+        .init(metadataType: Self.self, configuration: (), mapper: mapper)
     }
 }
 
@@ -58,7 +81,19 @@ public extension PlayerMetadata where Metadata == Void {
     ///
     /// This adapter is useful when no metadata is delivered by the item but you still want to implement player
     /// metadata display (mostly static and not related to the item itself).
+    static func adapter<M>(configuration: Configuration) -> MetadataAdapter<M> {
+        .init(metadataType: Self.self, configuration: configuration) { _ in }
+    }
+}
+
+public extension PlayerMetadata where Configuration == Void, Metadata == Void {
+    /// Creates an adapter for the receiver.
+    ///
+    /// - Returns: The metadata adapter.
+    ///
+    /// This adapter is useful when no metadata is delivered by the item but you still want to implement player
+    /// metadata display (mostly static and not related to the item itself).
     static func adapter<M>() -> MetadataAdapter<M> {
-        .init(metadataType: Self.self) { _ in }
+        .init(metadataType: Self.self, configuration: ()) { _ in }
     }
 }

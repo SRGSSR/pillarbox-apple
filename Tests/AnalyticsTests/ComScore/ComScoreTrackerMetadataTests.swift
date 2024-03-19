@@ -53,7 +53,9 @@ final class ComScoreTrackerMetadataTests: ComScoreTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                ComScoreTracker.adapter()
+                ComScoreTracker.adapter { _ in
+                    [:]
+                }
             ]
         ))
 
