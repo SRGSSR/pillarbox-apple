@@ -28,7 +28,11 @@ public final class PlayerItem: Equatable {
     let id = UUID()
 
     /// Creates the item from an ``Asset`` publisher data source.
-    public init<P, M>(publisher: P, mapperAdapter: MapperAdapter<M>, trackerAdapters: [TrackerAdapter<M>] = []) where P: Publisher, P.Output == Asset<M> {
+    public init<P, M>(
+        publisher: P,
+        mapperAdapter: MapperAdapter<M>,
+        trackerAdapters: [TrackerAdapter<M>] = []
+    ) where P: Publisher, P.Output == Asset<M> {
         asset = Asset<M>.loading.withId(id).withMapperAdapter(mapperAdapter).withTrackerAdapters(trackerAdapters)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) {
             publisher
@@ -71,6 +75,16 @@ public final class PlayerItem: Equatable {
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
         asset.matches(playerItem)
+    }
+}
+
+public extension PlayerItem {
+    convenience init<P, M>(publisher: P, trackerAdapters: [TrackerAdapter<M>] = []) where P: Publisher, P.Output == Asset<M> {
+        self.init(publisher: publisher, mapperAdapter: EmptyMapper.adapter(), trackerAdapters: trackerAdapters)
+    }
+
+    convenience init<M>(asset: Asset<M>, trackerAdapters: [TrackerAdapter<M>] = []) {
+        self.init(asset: asset, mapperAdapter: EmptyMapper.adapter(), trackerAdapters: trackerAdapters)
     }
 }
 
