@@ -22,16 +22,7 @@ public struct MapperAdapter<M> {
     func update(metadata: M) {
         update(metadata)
     }
-}
-
-protocol MapperAdapting {
-    func mediaItemInfo(with error: Error?) -> NowPlayingInfo
-    func metadataItems() -> [AVMetadataItem]
-
-    func navigationMarkerGroups() -> [AVTimedMetadataGroup]
-}
-
-extension MapperAdapter: MapperAdapting {
+    
     func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
         mapper.mediaItemInfo(with: error)
     }
