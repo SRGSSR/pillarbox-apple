@@ -6,9 +6,9 @@
 
 import PillarboxPlayer
 
-public extension MapperAdapter where M == MediaMetadata {
-    static func standard() -> Self {
-        StandardMapper.adapter { metadata in
+public extension MetadataAdapter where M == MediaMetadata {
+    static func common() -> Self {
+        CommonMetadata.adapter { metadata in
             .init(
                 title: metadata.title,
                 subtitle: metadata.subtitle,

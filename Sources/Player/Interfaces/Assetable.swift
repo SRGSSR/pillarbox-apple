@@ -12,7 +12,7 @@ protocol Assetable {
 
     var id: UUID { get }
     var resource: Resource { get }
-    var mapperAdapter: MapperAdapter<Metadata>? { get }
+    var metadataAdapter: MetadataAdapter<Metadata>? { get }
     var trackerAdapters: [TrackerAdapter<Metadata>] { get }
 
     func updateMetadata()
@@ -56,7 +56,7 @@ extension Assetable {
     }
 
     func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
-        mapperAdapter?.mediaItemInfo(with: error) ?? .init()
+        metadataAdapter?.mediaItemInfo(with: error) ?? .init()
     }
 }
 

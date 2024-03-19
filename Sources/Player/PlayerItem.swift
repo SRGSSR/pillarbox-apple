@@ -30,20 +30,20 @@ public final class PlayerItem: Equatable {
     /// Creates the item from an ``Asset`` publisher data source.
     public init<P, M>(
         publisher: P,
-        mapperAdapter: MapperAdapter<M> = .empty(),
+        metadataAdapter: MetadataAdapter<M> = .none(),
         trackerAdapters: [TrackerAdapter<M>] = []
     ) where P: Publisher, P.Output == Asset<M> {
         let trackerAdapters = trackerAdapters.map { [id] in
             $0.withId(id)
         }
-        asset = ResourceContainer(resource: .loading, id: id, mapperAdapter: mapperAdapter, trackerAdapters: trackerAdapters)
+        asset = ResourceContainer(resource: .loading, id: id, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
             publisher
                 .map { asset in
-                    AssetContainer(asset: asset, id: id, mapperAdapter: mapperAdapter, trackerAdapters: trackerAdapters)
+                    AssetContainer(asset: asset, id: id, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters)
                 }
                 .catch { error in
-                    Just(ResourceContainer(resource: .failing(error: error), id: id, mapperAdapter: mapperAdapter, trackerAdapters: trackerAdapters))
+                    Just(ResourceContainer(resource: .failing(error: error), id: id, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters))
                 }
         }
         .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))
@@ -55,10 +55,10 @@ public final class PlayerItem: Equatable {
     ///
     /// - Parameters:
     ///   - asset: The asset to play.
-    ///   - mapperAdapter: A `MapperAdapter` converting metadata into player metadata.
+    ///   - metadataAdapter: A `MetadataAdapter` converting item metadata into player metadata.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    public convenience init<M>(asset: Asset<M>, mapperAdapter: MapperAdapter<M> = .empty(), trackerAdapters: [TrackerAdapter<M>] = []) {
-        self.init(publisher: Just(asset), mapperAdapter: mapperAdapter, trackerAdapters: trackerAdapters)
+    public convenience init<M>(asset: Asset<M>, metadataAdapter: MetadataAdapter<M> = .none(), trackerAdapters: [TrackerAdapter<M>] = []) {
+        self.init(publisher: Just(asset), metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters)
     }
 
     public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
@@ -85,20 +85,20 @@ public extension PlayerItem {
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - metadata: The metadata associated with the item.
-    ///   - mapperAdapter: A `MapperAdapter` converting metadata into player metadata.
+    ///   - metadataAdapter: A `MetadataAdapter` converting item metadata into player metadata.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The item.
     static func simple<M>(
         url: URL,
         metadata: M,
-        mapperAdapter: MapperAdapter<M> = .empty(),
+        metadataAdapter: MetadataAdapter<M> = .none(),
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
             asset: .simple(url: url, metadata: metadata, configuration: configuration),
-            mapperAdapter: mapperAdapter,
+            metadataAdapter: metadataAdapter,
             trackerAdapters: trackerAdapters
         )
     }
@@ -109,7 +109,7 @@ public extension PlayerItem {
     ///   - url: The URL to be played.
     ///   - delegate: The custom resource loader to use.
     ///   - metadata: The metadata associated with the item.
-    ///   - mapperAdapter: A `MapperAdapter` converting metadata into player metadata.
+    ///   - metadataAdapter: A `MetadataAdapter` converting item metadata into player metadata.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The item.
@@ -119,13 +119,13 @@ public extension PlayerItem {
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
         metadata: M,
-        mapperAdapter: MapperAdapter<M> = .empty(),
+        metadataAdapter: MetadataAdapter<M> = .none(),
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
             asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration),
-            mapperAdapter: mapperAdapter,
+            metadataAdapter: metadataAdapter,
             trackerAdapters: trackerAdapters
         )
     }
@@ -136,7 +136,7 @@ public extension PlayerItem {
     ///   - url: The URL to be played.
     ///   - delegate: The content key session delegate to use.
     ///   - metadata: The metadata associated with the item.
-    ///   - mapperAdapter: A `MapperAdapter` converting metadata into player metadata.
+    ///   - metadataAdapter: A `MetadataAdapter` converting item metadata into player metadata.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The item.
@@ -144,13 +144,13 @@ public extension PlayerItem {
         url: URL,
         delegate: AVContentKeySessionDelegate,
         metadata: M,
-        mapperAdapter: MapperAdapter<M> = .empty(),
+        metadataAdapter: MetadataAdapter<M> = .none(),
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
             asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration),
-            mapperAdapter: mapperAdapter,
+            metadataAdapter: metadataAdapter,
             trackerAdapters: trackerAdapters
         )
     }
@@ -166,13 +166,13 @@ public extension PlayerItem {
     /// - Returns: The item.
     static func simple(
         url: URL,
-        mapperAdapter: MapperAdapter<Void> = .empty(),
+        metadataAdapter: MetadataAdapter<Void> = .none(),
         trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
             asset: .simple(url: url, configuration: configuration),
-            mapperAdapter: mapperAdapter,
+            metadataAdapter: metadataAdapter,
             trackerAdapters: trackerAdapters
         )
     }
@@ -190,13 +190,13 @@ public extension PlayerItem {
     static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
-        mapperAdapter: MapperAdapter<Void> = .empty(),
+        metadataAdapter: MetadataAdapter<Void> = .none(),
         trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
             asset: .custom(url: url, delegate: delegate, configuration: configuration),
-            mapperAdapter: mapperAdapter,
+            metadataAdapter: metadataAdapter,
             trackerAdapters: trackerAdapters
         )
     }
@@ -212,13 +212,13 @@ public extension PlayerItem {
     static func encrypted(
         url: URL,
         delegate: AVContentKeySessionDelegate,
-        mapperAdapter: MapperAdapter<Void> = .empty(),
+        metadataAdapter: MetadataAdapter<Void> = .none(),
         trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
             asset: .encrypted(url: url, delegate: delegate, configuration: configuration),
-            mapperAdapter: mapperAdapter,
+            metadataAdapter: metadataAdapter,
             trackerAdapters: trackerAdapters
         )
     }

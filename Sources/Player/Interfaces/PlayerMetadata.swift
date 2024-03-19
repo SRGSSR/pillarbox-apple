@@ -7,7 +7,7 @@
 import AVFoundation
 import CoreMedia
 
-public protocol MetadataMapper: AnyObject {
+public protocol PlayerMetadata: AnyObject {
     associatedtype Metadata
 
     init()
@@ -19,14 +19,14 @@ public protocol MetadataMapper: AnyObject {
     func navigationMarkerGroups() -> [AVTimedMetadataGroup]
 }
 
-public extension MetadataMapper {
-    static func adapter<M>(mapper: @escaping (M) -> Metadata) -> MapperAdapter<M> {
-        .init(mapperType: Self.self, mapper: mapper)
+public extension PlayerMetadata {
+    static func adapter<M>(mapper: @escaping (M) -> Metadata) -> MetadataAdapter<M> {
+        .init(metadataType: Self.self, mapper: mapper)
     }
 }
 
-public extension MetadataMapper where Metadata == Void {
-    static func adapter<M>() -> MapperAdapter<M> {
-        .init(mapperType: Self.self) { _ in }
+public extension PlayerMetadata where Metadata == Void {
+    static func adapter<M>() -> MetadataAdapter<M> {
+        .init(metadataType: Self.self) { _ in }
     }
 }

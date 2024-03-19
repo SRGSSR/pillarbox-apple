@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-final class EmptyMapper<M>: MetadataMapper {
+final class EmptyMetadata<M>: PlayerMetadata {
     init() {}
 
     func update(metadata: M) {}
