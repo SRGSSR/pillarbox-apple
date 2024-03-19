@@ -95,7 +95,14 @@ extension Media {
                         configuration: configuration
                     )
                 },
-            mapperAdapter: MediaMapper.adapter(),
+            mapperAdapter: StandardMapper.adapter { metadata in
+                .init(
+                    title: metadata.title,
+                    subtitle: nil,
+                    description: metadata.description,
+                    image: metadata.image
+                )
+            },
             trackerAdapters: [
                 DemoTracker.adapter { media in
                     DemoTracker.Metadata(title: media.title)
