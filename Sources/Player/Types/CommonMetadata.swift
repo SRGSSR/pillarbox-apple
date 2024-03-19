@@ -89,3 +89,15 @@ public final class CommonMetadata: PlayerMetadata {
         return error?.localizedDescription
     }
 }
+
+public extension CommonMetadata {
+    /// Creates an adapter for the receiver with the provided mapping to its metadata format.
+    ///
+    /// - Parameters:
+    ///   - configuration: The metadata configuration.
+    ///   - mapper: A closure that maps an item metadata to player metadata.
+    /// - Returns: The metadata adapter.
+    static func adapter<M>(configuration: Configuration = .init(), mapper: @escaping (M) -> Metadata) -> MetadataAdapter<M> {
+        .init(metadataType: Self.self, configuration: configuration, mapper: mapper)
+    }
+}
