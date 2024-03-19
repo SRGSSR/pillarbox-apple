@@ -33,6 +33,9 @@ public final class PlayerItem: Equatable {
         mapperAdapter: MapperAdapter<M> = .empty(),
         trackerAdapters: [TrackerAdapter<M>] = []
     ) where P: Publisher, P.Output == Asset<M> {
+        let trackerAdapters = trackerAdapters.map { [id] in
+            $0.withId(id)
+        }
         asset = ResourceContainer(resource: .loading, id: id, mapperAdapter: mapperAdapter, trackerAdapters: trackerAdapters)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
             publisher
