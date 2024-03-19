@@ -95,7 +95,7 @@ extension Media {
                         configuration: configuration
                     )
                 },
-            metadataAdapter: CommonMetadata.adapter { metadata in
+            metadataAdapter: CommonMetadata.adapter(configuration: .init()) { metadata in
                 .init(
                     title: metadata.title,
                     description: metadata.description,

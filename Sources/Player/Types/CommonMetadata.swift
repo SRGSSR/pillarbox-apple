@@ -9,6 +9,14 @@ import MediaPlayer
 import UIKit
 
 public final class CommonMetadata: PlayerMetadata {
+    public struct Configuration {
+        public let displaysErrors: Bool
+
+        public init(displaysErrors: Bool = true) {
+            self.displaysErrors = displaysErrors
+        }
+    }
+
     public struct Metadata {
         public let title: String?
         public let subtitle: String?
@@ -23,9 +31,12 @@ public final class CommonMetadata: PlayerMetadata {
         }
     }
 
+    private let configuration: Configuration
     private var metadata: Metadata?
 
-    public init(configuration: Void) {}
+    public init(configuration: Configuration) {
+        self.configuration = configuration
+    }
 
     public func update(metadata: Metadata) {
         self.metadata = metadata
@@ -35,7 +46,7 @@ public final class CommonMetadata: PlayerMetadata {
         var nowPlayingInfo = NowPlayingInfo()
         if let metadata {
             nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
-            nowPlayingInfo[MPMediaItemPropertyArtist] = error?.localizedDescription ?? metadata.subtitle
+            nowPlayingInfo[MPMediaItemPropertyArtist] = errorMessage(from: error) ?? metadata.subtitle
             nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
             if let image = metadata.image {
                 nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
@@ -44,7 +55,7 @@ public final class CommonMetadata: PlayerMetadata {
         else {
             // Fill the title so that the Control Center can be enabled for the asset, even if it has no associated
             // metadata.
-            nowPlayingInfo[MPMediaItemPropertyTitle] = error?.localizedDescription ?? ""
+            nowPlayingInfo[MPMediaItemPropertyTitle] = errorMessage(from: error) ?? ""
         }
         return nowPlayingInfo
     }
@@ -71,5 +82,10 @@ public final class CommonMetadata: PlayerMetadata {
         item.value = value as? NSCopying & NSObjectProtocol
         item.extendedLanguageTag = "und"
         return item.copy() as? AVMetadataItem
+    }
+
+    private func errorMessage(from error: Error?) -> String? {
+        guard configuration.displaysErrors else { return nil }
+        return error?.localizedDescription
     }
 }
