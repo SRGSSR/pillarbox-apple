@@ -8,7 +8,7 @@ import AVFoundation
 import MediaPlayer
 import PillarboxPlayer
 
-final class MediaMetadataMapper: Mapper {
+final class MediaMetadataMapper: MetadataMapper {
     private var metadata: MediaMetadata?
 
     init() {}
