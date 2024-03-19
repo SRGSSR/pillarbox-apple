@@ -9,17 +9,6 @@
 import CoreMedia
 import PillarboxCircumspect
 
-// extension Asset: Similar {
-//    public static func ~~ (lhs: Self, rhs: Self) -> Bool {
-//        if let lhsUrl = lhs.playerItem().url, let rhsUrl = rhs.playerItem().url {
-//            return lhsUrl == rhsUrl
-//        }
-//        else {
-//            return false
-//        }
-//    }
-// }
-
 extension Resource: Similar {
     public static func ~~ (lhs: PillarboxPlayer.Resource, rhs: PillarboxPlayer.Resource) -> Bool {
         switch (lhs, rhs) {
