@@ -15,7 +15,7 @@ public final class StandardMapper: MetadataMapper {
         public let description: String?
         public let image: UIImage?
 
-        public init(title: String?, subtitle: String?, description: String?, image: UIImage?) {
+        public init(title: String? = nil, subtitle: String? = nil, description: String? = nil, image: UIImage? = nil) {
             self.title = title
             self.subtitle = subtitle
             self.description = description

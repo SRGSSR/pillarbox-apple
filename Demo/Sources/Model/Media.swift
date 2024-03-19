@@ -98,7 +98,6 @@ extension Media {
             mapperAdapter: StandardMapper.adapter { metadata in
                 .init(
                     title: metadata.title,
-                    subtitle: nil,
                     description: metadata.description,
                     image: metadata.image
                 )
