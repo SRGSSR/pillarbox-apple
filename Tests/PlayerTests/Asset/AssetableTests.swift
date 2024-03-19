@@ -10,20 +10,6 @@ import AVFoundation
 import Nimble
 import PillarboxStreams
 
-private extension AssetContainer where M == Void {
-    static func test(id: Character) -> any Assetable {
-        let group8 = String(repeating: id, count: 8)
-        let group4 = String(repeating: id, count: 4)
-        let group12 = String(repeating: id, count: 12)
-        return AssetContainer(
-            asset: .simple(url: Stream.onDemand.url),
-            id: UUID(uuidString: "\(group8)-\(group4)-\(group4)-\(group4)-\(group12)")!,
-            mapperAdapter: nil,
-            trackerAdapters: []
-        )
-    }
-}
-
 final class AssetableTests: TestCase {
     func testPlayerItemsWithoutCurrentItem() {
         let previousAssets: [any Assetable] = [
@@ -176,5 +162,19 @@ final class AssetableTests: TestCase {
         ]
         let result = AVPlayerItem.playerItems(for: currentAssets, replacing: previousAssets, currentItem: nil, length: 2)
         expect(result.count).to(equal(2))
+    }
+}
+
+private extension AssetContainer where M == Void {
+    static func test(id: Character) -> any Assetable {
+        let group8 = String(repeating: id, count: 8)
+        let group4 = String(repeating: id, count: 4)
+        let group12 = String(repeating: id, count: 12)
+        return AssetContainer(
+            asset: .simple(url: Stream.onDemand.url),
+            id: UUID(uuidString: "\(group8)-\(group4)-\(group4)-\(group4)-\(group12)")!,
+            mapperAdapter: nil,
+            trackerAdapters: []
+        )
     }
 }
