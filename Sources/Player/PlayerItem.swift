@@ -41,9 +41,7 @@ public final class PlayerItem: Equatable {
                 }
         }
         .map { [id] asset in
-            let completeAsset = asset.withId(id).withMapperAdapter(mapperAdapter).withTrackerAdapters(trackerAdapters)
-            completeAsset.updateMetadata()
-            return completeAsset
+            asset.withId(id).withMapperAdapter(mapperAdapter).withTrackerAdapters(trackerAdapters)
         }
         .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))
         .receive(on: DispatchQueue.main)

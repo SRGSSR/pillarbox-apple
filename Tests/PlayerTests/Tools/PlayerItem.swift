@@ -60,7 +60,10 @@ extension PlayerItem {
                 title: "title0",
                 subtitle: "subtitle0",
                 description: "description0"
-            )
+            ),
+            mapperAdapter: StandardMapper.adapter { metadata in
+                .init(title: metadata.title, subtitle: metadata.subtitle, description: metadata.description)
+            }
         ))
         return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }

@@ -66,7 +66,9 @@ public struct Asset<M>: Assetable {
     public static func simple(
         url: URL,
         metadata: M,
-        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in },
+        mapperAdapter: MapperAdapter<M>? = .empty(),
+        trackerAdapters: [TrackerAdapter<M>] = []
     ) -> Self {
         .init(
             id: UUID(),
@@ -92,7 +94,9 @@ public struct Asset<M>: Assetable {
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
         metadata: M,
-        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in },
+        mapperAdapter: MapperAdapter<M>? = .empty(),
+        trackerAdapters: [TrackerAdapter<M>] = []
     ) -> Self {
         .init(
             id: UUID(),
@@ -116,7 +120,9 @@ public struct Asset<M>: Assetable {
         url: URL,
         delegate: AVContentKeySessionDelegate,
         metadata: M,
-        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in },
+        mapperAdapter: MapperAdapter<M>? = .empty(),
+        trackerAdapters: [TrackerAdapter<M>] = []
     ) -> Self {
         .init(
             id: UUID(),
