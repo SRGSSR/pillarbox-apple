@@ -12,22 +12,22 @@ import AVFoundation
 struct AssetContainer<M>: Assetable {
     private let asset: Asset<M>
     let id: UUID
-    let mapperAdapter: MapperAdapter<M>?
+    let metadataAdapter: MetadataAdapter<M>?
     let trackerAdapters: [TrackerAdapter<M>]
 
     var resource: Resource {
         asset.resource
     }
 
-    init(asset: Asset<M>, id: UUID, mapperAdapter: MapperAdapter<M>?, trackerAdapters: [TrackerAdapter<M>]) {
+    init(asset: Asset<M>, id: UUID, metadataAdapter: MetadataAdapter<M>?, trackerAdapters: [TrackerAdapter<M>]) {
         self.asset = asset
         self.id = id
-        self.mapperAdapter = mapperAdapter
+        self.metadataAdapter = metadataAdapter
         self.trackerAdapters = trackerAdapters
     }
 
     func updateMetadata() {
-        mapperAdapter?.update(metadata: asset.metadata)
+        metadataAdapter?.update(metadata: asset.metadata)
         trackerAdapters.forEach { adapter in
             adapter.update(metadata: asset.metadata)
         }
@@ -38,7 +38,7 @@ struct AssetContainer<M>: Assetable {
     }
 
     func update(item: AVPlayerItem) {
-        item.externalMetadata = mapperAdapter?.metadataItems() ?? []
+        item.externalMetadata = metadataAdapter?.metadataItems() ?? []
         // FIXME: On tvOS set navigation markers
     }
 }

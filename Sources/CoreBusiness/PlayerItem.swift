@@ -15,7 +15,7 @@ public extension PlayerItem {
     /// - Parameters:
     ///   - urn: The URN to play.
     ///   - server: The server which the URN is played from.
-    ///   - mapperAdapter: A `MapperAdapter` converting metadata into player metadata.
+    ///   - metadataAdapter: A `MetadataAdapter` converting item metadata into player metadata.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: A closure to configure player items created from the receiver.
     ///
@@ -23,7 +23,7 @@ public extension PlayerItem {
     static func urn(
         _ urn: String,
         server: Server = .production,
-        mapperAdapter: MapperAdapter<MediaMetadata> = .standard(),
+        metadataAdapter: MetadataAdapter<MediaMetadata> = .common(),
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
@@ -45,7 +45,7 @@ public extension PlayerItem {
             }
             .switchToLatest()
             .eraseToAnyPublisher()
-        return .init(publisher: publisher, mapperAdapter: mapperAdapter, trackerAdapters: [
+        return .init(publisher: publisher, metadataAdapter: metadataAdapter, trackerAdapters: [
             ComScoreTracker.adapter { $0.analyticsData },
             CommandersActTracker.adapter { $0.analyticsMetadata }
         ] + trackerAdapters)
