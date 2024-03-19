@@ -23,7 +23,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             metadata: AssetMetadataMock(title: "title"),
-            metadataAdapter: CommonMetadata.adapter { metadata in
+            metadataAdapter: CommonMetadata.adapter(configuration: .init()) { metadata in
                 .init(title: metadata.title)
             }
         ))
