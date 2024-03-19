@@ -7,6 +7,7 @@
 import PillarboxPlayer
 
 public extension MetadataAdapter where M == MediaMetadata {
+    /// A metadata adapter displaying media metadata in a standard way.
     static func common() -> Self {
         CommonMetadata.adapter { metadata in
             .init(

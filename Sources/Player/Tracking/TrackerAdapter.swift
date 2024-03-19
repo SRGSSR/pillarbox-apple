@@ -16,7 +16,7 @@ public class TrackerAdapter<M> {
     private var cancellables = Set<AnyCancellable>()
     private var id = UUID()
 
-    /// Creates an adapter for a type of tracker with the provided mapping to its metadata format.
+    /// Creates an adapter for a type of tracker with the provided mapper.
     /// 
     /// - Parameters:
     ///   - trackerType: The type of the tracker to instantiate and manage.
