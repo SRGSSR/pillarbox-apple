@@ -20,7 +20,13 @@ public protocol MetadataMapper: AnyObject {
 }
 
 public extension MetadataMapper {
-    static func adapter() -> MapperAdapter<Metadata> {
-        .init(mapperType: Self.self)
+    static func adapter<M>(mapper: @escaping (M) -> Metadata) -> MapperAdapter<M> {
+        .init(mapperType: Self.self, mapper: mapper)
+    }
+}
+
+public extension MetadataMapper where Metadata == Void {
+    static func adapter<M>() -> MapperAdapter<M> {
+        .init(mapperType: Self.self) { _ in }
     }
 }
