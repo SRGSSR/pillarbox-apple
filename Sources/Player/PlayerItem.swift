@@ -33,7 +33,7 @@ public final class PlayerItem: Equatable {
         mapperAdapter: MapperAdapter<M> = .empty(),
         trackerAdapters: [TrackerAdapter<M>] = []
     ) where P: Publisher, P.Output == Asset<M> {
-        asset = Asset<M>.loading.withId(id).withMapperAdapter(mapperAdapter).withTrackerAdapters(trackerAdapters)
+        asset = Asset.loading.withId(id).withMapperAdapter(mapperAdapter).withTrackerAdapters(trackerAdapters)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) {
             publisher
                 .catch { error in
