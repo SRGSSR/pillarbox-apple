@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-final class EmptyMapper: Mapper {
+final class EmptyMapper: MetadataMapper {
     init() {}
 
     func update(metadata: Never) {}
