@@ -32,13 +32,19 @@ public final class CommonMetadata: PlayerMetadata {
     }
 
     public func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
-        guard let metadata else { return .init() }
         var nowPlayingInfo = NowPlayingInfo()
-        nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
-        nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
-        nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
-        if let image = metadata.image {
-            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+        if let metadata {
+            nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
+            nowPlayingInfo[MPMediaItemPropertyArtist] = error?.localizedDescription ?? metadata.subtitle
+            nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
+            if let image = metadata.image {
+                nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+            }
+        }
+        else {
+            // Fill the title so that the Control Center can be enabled for the asset, even if it has no associated
+            // metadata.
+            nowPlayingInfo[MPMediaItemPropertyTitle] = error?.localizedDescription ?? ""
         }
         return nowPlayingInfo
     }
