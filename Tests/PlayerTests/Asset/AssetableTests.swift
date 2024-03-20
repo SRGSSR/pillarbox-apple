@@ -173,7 +173,7 @@ private extension AssetContainer where M == Void {
         return AssetContainer(
             asset: .simple(url: Stream.onDemand.url),
             id: UUID(uuidString: "\(group8)-\(group4)-\(group4)-\(group4)-\(group12)")!,
-            metadataAdapter: nil,
+            metadataAdapter: .none(),
             trackerAdapters: []
         )
     }

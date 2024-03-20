@@ -9,7 +9,7 @@ import AVFoundation
 struct ResourceContainer<M>: Assetable {
     let resource: Resource
     let id: UUID
-    let metadataAdapter: MetadataAdapter<M>?
+    let metadataAdapter: MetadataAdapter<M>
     let trackerAdapters: [TrackerAdapter<M>]
 
     func updateMetadata() {}
