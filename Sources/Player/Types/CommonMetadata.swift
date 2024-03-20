@@ -21,6 +21,9 @@ public final class CommonMetadata: PlayerMetadata {
         public let title: String?
         public let subtitle: String?
         public let description: String?
+
+        // TODO: Likely better as a URL => would need to have lifecycle methods on PlayerMetadata so that we can
+        //       retrieve the image only when needed.
         public let image: UIImage?
 
         public init(title: String? = nil, subtitle: String? = nil, description: String? = nil, image: UIImage? = nil) {
