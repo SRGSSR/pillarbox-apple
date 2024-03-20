@@ -18,9 +18,9 @@ final class CurrentTracker {
     }
 
     private func configureMetadataUpdates(for item: PlayerItem) {
-        item.$asset
-            .sink { asset in
-                asset.updateMetadata()
+        item.$content
+            .sink { content in
+                content.updateMetadata()
             }
             .store(in: &cancellables)
     }
@@ -41,11 +41,11 @@ final class CurrentTracker {
     }
 
     private func enableTrackers(for player: Player) {
-        item.asset.enableTrackers(for: player)
+        item.content.enableTrackers(for: player)
     }
 
     private func disableTrackers() {
-        item.asset.disableTrackers()
+        item.content.disableTrackers()
     }
 
     private func disableTrackersIfNeeded() {

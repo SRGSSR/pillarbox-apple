@@ -14,7 +14,7 @@ final class PlayerItemAssetPublisherTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         expectSimilarPublished(
             values: [.loading],
-            from: item.$asset.map(\.resource),
+            from: item.$content.map(\.resource),
             during: .milliseconds(500)
         )
     }
@@ -23,7 +23,7 @@ final class PlayerItemAssetPublisherTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         expectSimilarPublished(
             values: [.loading, .simple(url: Stream.onDemand.url)],
-            from: item.$asset.map(\.resource),
+            from: item.$content.map(\.resource),
             during: .milliseconds(500)
         ) {
             PlayerItem.load(for: item.id)
@@ -34,7 +34,7 @@ final class PlayerItemAssetPublisherTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         expectSimilarPublished(
             values: [.loading, .simple(url: Stream.onDemand.url)],
-            from: item.$asset.map(\.resource),
+            from: item.$content.map(\.resource),
             during: .milliseconds(500)
         ) {
             PlayerItem.load(for: item.id)
@@ -42,7 +42,7 @@ final class PlayerItemAssetPublisherTests: TestCase {
 
         expectSimilarPublishedNext(
             values: [.simple(url: Stream.onDemand.url)],
-            from: item.$asset.map(\.resource),
+            from: item.$content.map(\.resource),
             during: .milliseconds(500)
         ) {
             PlayerItem.reload(for: item.id)
