@@ -13,7 +13,7 @@ extension Player {
         $storedItems
             .map { items in
                 Publishers.AccumulateLatestMany(items.map { item in
-                    item.$asset
+                    item.$content
                         .map { QueueElement(item: item, asset: $0) }
                 })
             }

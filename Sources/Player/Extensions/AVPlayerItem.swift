@@ -31,7 +31,7 @@ extension AVPlayerItem {
     }
 
     static func playerItems(from items: [PlayerItem], length: Int, reload: Bool) -> [AVPlayerItem] {
-        playerItems(from: items.prefix(length).map(\.asset), reload: reload)
+        playerItems(from: items.prefix(length).map(\.content), reload: reload)
     }
 }
 
