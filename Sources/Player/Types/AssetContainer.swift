@@ -6,20 +6,17 @@
 
 import AVFoundation
 
-// TODO: Check which methods are really required in Assetable protocol and which could be omitted or in a protocol
-//       extension instead. Update Assetable accordingly.
-
 struct AssetContainer<M>: Assetable {
     private let asset: Asset<M>
     let id: UUID
-    let metadataAdapter: MetadataAdapter<M>?
+    let metadataAdapter: MetadataAdapter<M>
     let trackerAdapters: [TrackerAdapter<M>]
 
     var resource: Resource {
         asset.resource
     }
 
-    init(asset: Asset<M>, id: UUID, metadataAdapter: MetadataAdapter<M>?, trackerAdapters: [TrackerAdapter<M>]) {
+    init(asset: Asset<M>, id: UUID, metadataAdapter: MetadataAdapter<M>, trackerAdapters: [TrackerAdapter<M>]) {
         self.asset = asset
         self.id = id
         self.metadataAdapter = metadataAdapter
@@ -27,7 +24,7 @@ struct AssetContainer<M>: Assetable {
     }
 
     func updateMetadata() {
-        metadataAdapter?.update(metadata: asset.metadata)
+        metadataAdapter.update(metadata: asset.metadata)
         trackerAdapters.forEach { adapter in
             adapter.update(metadata: asset.metadata)
         }
@@ -38,7 +35,7 @@ struct AssetContainer<M>: Assetable {
     }
 
     func update(item: AVPlayerItem) {
-        item.externalMetadata = metadataAdapter?.metadataItems() ?? []
+        item.externalMetadata = metadataAdapter.metadataItems()
         // FIXME: On tvOS set navigation markers
     }
 }
