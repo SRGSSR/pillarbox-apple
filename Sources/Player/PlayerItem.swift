@@ -23,7 +23,7 @@ private enum TriggerId: Hashable {
 public final class PlayerItem: Equatable {
     private static let trigger = Trigger()
 
-    @Published private(set) var asset: any Assetable
+    @Published private(set) var asset: any PlayerItemContent
 
     let id = UUID()
 
@@ -36,14 +36,14 @@ public final class PlayerItem: Equatable {
         let trackerAdapters = trackerAdapters.map { [id] adapter in
             adapter.withId(id)
         }
-        asset = ResourceContainer(resource: .loading, id: id, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters)
+        asset = ResourceContent(resource: .loading, id: id, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
             publisher
                 .map { asset in
-                    AssetContainer(asset: asset, id: id, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters)
+                    AssetContent(asset: asset, id: id, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters)
                 }
                 .catch { error in
-                    Just(ResourceContainer(resource: .failing(error: error), id: id, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters))
+                    Just(ResourceContent(resource: .failing(error: error), id: id, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters))
                 }
         }
         .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))

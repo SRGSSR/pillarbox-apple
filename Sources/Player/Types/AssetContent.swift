@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-struct AssetContainer<M>: Assetable {
+struct AssetContent<M>: PlayerItemContent {
     private let asset: Asset<M>
     let id: UUID
     let metadataAdapter: MetadataAdapter<M>

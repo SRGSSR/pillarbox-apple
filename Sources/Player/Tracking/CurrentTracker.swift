@@ -13,11 +13,11 @@ final class CurrentTracker {
 
     init(item: PlayerItem, player: Player) {
         self.item = item
-        configureAssetPublisher(for: item)
-        configureTrackingPublisher(player: player)
+        configureMetadataUpdates(for: item)
+        configureTracking(for: player)
     }
 
-    private func configureAssetPublisher(for item: PlayerItem) {
+    private func configureMetadataUpdates(for item: PlayerItem) {
         item.$asset
             .sink { asset in
                 asset.updateMetadata()
@@ -25,35 +25,35 @@ final class CurrentTracker {
             .store(in: &cancellables)
     }
 
-    private func configureTrackingPublisher(player: Player) {
+    private func configureTracking(for player: Player) {
         player.$isTrackingEnabled
             .sink { [weak self, weak player] enabled in
                 guard let self, let player, isEnabled != enabled else { return }
                 isEnabled = enabled
                 if enabled {
-                    enableAsset(for: player)
+                    enableTrackers(for: player)
                 }
                 else {
-                    disableAsset()
+                    disableTrackers()
                 }
             }
             .store(in: &cancellables)
     }
 
-    private func enableAsset(for player: Player) {
-        item.asset.enable(for: player)
+    private func enableTrackers(for player: Player) {
+        item.asset.enableTrackers(for: player)
     }
 
-    private func disableAsset() {
-        item.asset.disable()
+    private func disableTrackers() {
+        item.asset.disableTrackers()
     }
 
-    private func disableAssetIfNeeded() {
+    private func disableTrackersIfNeeded() {
         guard isEnabled else { return }
-        disableAsset()
+        disableTrackers()
     }
 
     deinit {
-        disableAssetIfNeeded()
+        disableTrackersIfNeeded()
     }
 }
