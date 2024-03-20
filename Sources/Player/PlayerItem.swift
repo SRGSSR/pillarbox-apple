@@ -23,7 +23,7 @@ private enum TriggerId: Hashable {
 public final class PlayerItem: Equatable {
     private static let trigger = Trigger()
 
-    @Published private(set) var asset: any PlayerItemContent
+    @Published private(set) var content: any PlayerItemContent
 
     let id = UUID()
 
@@ -36,7 +36,7 @@ public final class PlayerItem: Equatable {
         let trackerAdapters = trackerAdapters.map { [id] adapter in
             adapter.withId(id)
         }
-        asset = ResourceContent(resource: .loading, id: id, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters)
+        content = ResourceContent(resource: .loading, id: id, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
             publisher
                 .map { asset in
@@ -48,7 +48,7 @@ public final class PlayerItem: Equatable {
         }
         .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))
         .receive(on: DispatchQueue.main)
-        .assign(to: &$asset)
+        .assign(to: &$content)
     }
 
     /// Creates a player item from an ``Asset``.
@@ -75,7 +75,7 @@ public final class PlayerItem: Equatable {
     }
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
-        asset.matches(playerItem)
+        content.matches(playerItem)
     }
 }
 
@@ -226,6 +226,6 @@ public extension PlayerItem {
 
 extension PlayerItem: CustomDebugStringConvertible {
     public var debugDescription: String {
-        "\(asset)"
+        "\(content)"
     }
 }
