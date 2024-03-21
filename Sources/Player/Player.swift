@@ -42,7 +42,7 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    private var tracker: Tracker?
+    private var currentTracker: CurrentTracker?
 
     var properties: PlayerProperties = .empty {
         willSet {
@@ -172,7 +172,7 @@ public final class Player: ObservableObject, Equatable {
         configurePublishedPropertyPublishers()
         configureQueuePlayerUpdatePublishers()
         configureControlCenterPublishers()
-        configureTrackingPublishers()
+        configureCurrentTrackerPublishers()
     }
 
     /// Creates a player with a single item in its queue.
@@ -298,9 +298,9 @@ private extension Player {
             .assign(to: &$currentIndex)
     }
 
-    func configureTrackingPublishers() {
-        trackerPublisher()
-            .weakAssign(to: \.tracker, on: self)
+    func configureCurrentTrackerPublishers() {
+        currentTrackerPublisher()
+            .weakAssign(to: \.currentTracker, on: self)
             .store(in: &cancellables)
     }
 
