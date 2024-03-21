@@ -45,20 +45,21 @@ public final class CommonMetadata: PlayerMetadata {
         self.metadata = metadata
     }
 
-    public func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
+    public func mediaItemInfo() -> NowPlayingInfo {
         var nowPlayingInfo = NowPlayingInfo()
         if let metadata {
             nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
-            nowPlayingInfo[MPMediaItemPropertyArtist] = errorMessage(from: error) ?? metadata.subtitle
+            nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
             nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
             if let image = metadata.image {
                 nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
             }
         }
         else {
+            // TODO: Check if this is still true
             // Fill the title so that the Control Center can be enabled for the item, even if it has no associated
             // metadata.
-            nowPlayingInfo[MPMediaItemPropertyTitle] = errorMessage(from: error) ?? ""
+            nowPlayingInfo[MPMediaItemPropertyTitle] = ""
         }
         return nowPlayingInfo
     }
@@ -87,6 +88,7 @@ public final class CommonMetadata: PlayerMetadata {
         return item.copy() as? AVMetadataItem
     }
 
+    // FIXME: Display errors
     private func errorMessage(from error: Error?) -> String? {
         guard configuration.displaysErrors else { return nil }
         return error?.localizedDescription

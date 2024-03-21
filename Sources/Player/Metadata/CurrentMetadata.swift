@@ -9,10 +9,10 @@ import Combine
 final class CurrentMetadata {
     let item: PlayerItem
 
-    private let metadataSubject = CurrentValueSubject<NowPlayingInfo, Never>([:])
+    private let metadataSubject = CurrentValueSubject<Player.Metadata, Never>(.empty)
     private var cancellables = Set<AnyCancellable>()
 
-    var metadataPublisher: AnyPublisher<NowPlayingInfo, Never> {
+    var metadataPublisher: AnyPublisher<Player.Metadata, Never> {
         metadataSubject.eraseToAnyPublisher()
     }
 
@@ -22,7 +22,7 @@ final class CurrentMetadata {
         item.$content
             .sink { [metadataSubject] content in
                 content.updateMetadata()
-                metadataSubject.send(content.mediaItemInfo(with: nil))
+                metadataSubject.send(content.metadata())
             }
             .store(in: &cancellables)
     }

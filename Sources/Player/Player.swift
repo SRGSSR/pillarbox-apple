@@ -42,7 +42,8 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    private var currentMetadata: CurrentMetadata?
+    @Published public private(set) var metadata: Player.Metadata = .empty
+
     private var currentTracker: CurrentTracker?
 
     var properties: PlayerProperties = .empty {
@@ -85,13 +86,18 @@ public final class Player: ObservableObject, Equatable {
         .eraseToAnyPublisher()
     }()
 
-    private lazy var currentMetadataPublisher: AnyPublisher<CurrentMetadata?, Never> = {
+    private lazy var metadataPublisher: AnyPublisher<Player.Metadata, Never> = {
         queuePublisher
             .slice(at: \.item)
-            .scan(nil) { metadata, item in
+            .scan(Optional<CurrentMetadata>.none) { metadata, item in
                 guard let item else { return nil }
                 return CurrentMetadata(item: item)
             }
+            .map { currentMetadata in
+                guard let currentMetadata else { return Just(Player.Metadata.empty).eraseToAnyPublisher() }
+                return currentMetadata.metadataPublisher
+            }
+            .switchToLatest()
             .share(replay: 1)
             .eraseToAnyPublisher()
     }()
@@ -184,8 +190,6 @@ public final class Player: ObservableObject, Equatable {
         configurePublishedPropertyPublishers()
         configureQueuePlayerUpdatePublishers()
         configureControlCenterPublishers()
-
-        configureCurrentMetadataPublisher()
         configureCurrentTrackerPublishers()
     }
 
@@ -245,6 +249,7 @@ public final class Player: ObservableObject, Equatable {
         configureErrorPublisher()
         configureCurrentIndexPublisher()
         configurePlaybackSpeedPublisher()
+        configureMetadataPublisher()
     }
 
     deinit {
@@ -312,10 +317,10 @@ private extension Player {
             .assign(to: &$currentIndex)
     }
 
-    func configureCurrentMetadataPublisher() {
-        currentMetadataPublisher
-            .weakAssign(to: \.currentMetadata, on: self)
-            .store(in: &cancellables)
+    func configureMetadataPublisher() {
+        metadataPublisher
+            .receiveOnMainThread()
+            .assign(to: &$metadata)
     }
 
     func configureCurrentTrackerPublishers() {
@@ -333,19 +338,10 @@ private extension Player {
 
 private extension Player {
     func configureControlCenterMetadataUpdatePublisher() {
-        currentMetadataPublisher
-            .map { currentMetadata in
-                if let currentMetadata {
-                    return currentMetadata.metadataPublisher.eraseToAnyPublisher()
-                }
-                else {
-                    return Just([:]).eraseToAnyPublisher()
-                }
-            }
-            .switchToLatest()
+        metadataPublisher
             .receiveOnMainThread()
-            .sink { [weak self] nowPlayingInfo in
-                self?.updateControlCenter(nowPlayingInfo: nowPlayingInfo)
+            .sink { [weak self] metadata in
+                self?.updateControlCenter(nowPlayingInfo: metadata.mediaItemInfo)
             }
             .store(in: &cancellables)
     }
