@@ -85,6 +85,17 @@ public final class Player: ObservableObject, Equatable {
         .eraseToAnyPublisher()
     }()
 
+    private lazy var currentMetadataPublisher: AnyPublisher<CurrentMetadata?, Never> = {
+        queuePublisher
+            .slice(at: \.item)
+            .scan(nil) { metadata, item in
+                guard let item else { return nil }
+                return CurrentMetadata(item: item)
+            }
+            .share(replay: 1)
+            .eraseToAnyPublisher()
+    }()
+
     /// A Boolean setting whether the audio output of the player must be muted.
     public var isMuted: Bool {
         get {
@@ -302,7 +313,7 @@ private extension Player {
     }
 
     func configureCurrentMetadataPublisher() {
-        currentMetadataPublisher()
+        currentMetadataPublisher
             .weakAssign(to: \.currentMetadata, on: self)
             .store(in: &cancellables)
     }
