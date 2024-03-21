@@ -42,6 +42,7 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
+    private var currentMetadata: CurrentMetadata?
     private var currentTracker: CurrentTracker?
 
     var properties: PlayerProperties = .empty {
@@ -172,6 +173,8 @@ public final class Player: ObservableObject, Equatable {
         configurePublishedPropertyPublishers()
         configureQueuePlayerUpdatePublishers()
         configureControlCenterPublishers()
+
+        configureCurrentMetadataPublisher()
         configureCurrentTrackerPublishers()
     }
 
@@ -296,6 +299,12 @@ private extension Player {
             .receiveOnMainThread()
             .lane("player_current_index")
             .assign(to: &$currentIndex)
+    }
+
+    func configureCurrentMetadataPublisher() {
+        currentMetadataPublisher()
+            .weakAssign(to: \.currentMetadata, on: self)
+            .store(in: &cancellables)
     }
 
     func configureCurrentTrackerPublishers() {
