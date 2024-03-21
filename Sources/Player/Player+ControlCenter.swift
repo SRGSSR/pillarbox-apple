@@ -35,8 +35,8 @@ extension Player {
                 guard let index = queue.index else {
                     return NowPlayingInfo()
                 }
-                let asset = queue.elements[index].asset
-                return !asset.resource.isLoading ? asset.mediaItemInfo(with: queue.error) : nil
+                let content = queue.elements[index].content
+                return !content.resource.isLoading ? content.mediaItemInfo(with: queue.error) : nil
             }
             .removeDuplicates { lhs, rhs in
                 // swiftlint:disable:next legacy_objc_type

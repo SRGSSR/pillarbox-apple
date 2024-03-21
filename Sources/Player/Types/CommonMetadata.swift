@@ -56,7 +56,7 @@ public final class CommonMetadata: PlayerMetadata {
             }
         }
         else {
-            // Fill the title so that the Control Center can be enabled for the asset, even if it has no associated
+            // Fill the title so that the Control Center can be enabled for the item, even if it has no associated
             // metadata.
             nowPlayingInfo[MPMediaItemPropertyTitle] = errorMessage(from: error) ?? ""
         }
