@@ -333,7 +333,16 @@ private extension Player {
 
 private extension Player {
     func configureControlCenterMetadataUpdatePublisher() {
-        nowPlayingInfoPublisher()
+        currentMetadataPublisher
+            .map { currentMetadata in
+                if let currentMetadata {
+                    return currentMetadata.metadataPublisher.eraseToAnyPublisher()
+                }
+                else {
+                    return Just([:]).eraseToAnyPublisher()
+                }
+            }
+            .switchToLatest()
             .receiveOnMainThread()
             .sink { [weak self] nowPlayingInfo in
                 self?.updateControlCenter(nowPlayingInfo: nowPlayingInfo)
