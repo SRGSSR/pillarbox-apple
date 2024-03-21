@@ -16,6 +16,7 @@ protocol PlayerItemContent {
     var trackerAdapters: [TrackerAdapter<Metadata>] { get }
 
     func updateMetadata()
+    func updateTracker()
 
     func configure(item: AVPlayerItem)
     func update(item: AVPlayerItem)
