@@ -25,6 +25,9 @@ struct AssetContent<M>: PlayerItemContent {
 
     func updateMetadata() {
         metadataAdapter.update(metadata: asset.metadata)
+    }
+
+    func updateTracker() {
         trackerAdapters.forEach { adapter in
             adapter.update(metadata: asset.metadata)
         }
