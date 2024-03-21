@@ -56,8 +56,12 @@ extension PlayerItemContent {
         }
     }
 
-    func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
-        metadataAdapter.mediaItemInfo(with: error)
+    func metadata() -> Player.Metadata {
+        .init(
+            mediaItemInfo: metadataAdapter.mediaItemInfo(),
+            metadataItems: metadataAdapter.metadataItems(),
+            navigationMarkerGroups: metadataAdapter.navigationMarkerGroups()
+        )
     }
 }
 
