@@ -20,7 +20,7 @@ final class CurrentTracker {
     private func configureMetadataUpdates(for item: PlayerItem) {
         item.$content
             .sink { content in
-                content.updateMetadata()
+                content.updateTracker()
             }
             .store(in: &cancellables)
     }
