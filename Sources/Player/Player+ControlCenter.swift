@@ -28,56 +28,6 @@ extension Player {
         }
         commandRegistrations = []
     }
-
-    func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
-        queuePublisher
-            .compactMap { queue in
-                guard let index = queue.index else {
-                    return NowPlayingInfo()
-                }
-                let content = queue.elements[index].content
-                return !content.resource.isLoading ? content.mediaItemInfo(with: queue.error) : nil
-            }
-            .removeDuplicates { lhs, rhs in
-                // swiftlint:disable:next legacy_objc_type
-                NSDictionary(dictionary: lhs).isEqual(to: rhs)
-            }
-            .eraseToAnyPublisher()
-    }
-
-    func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
-        propertiesPublisher
-            .map { [weak queuePlayer] properties in
-                var nowPlayingInfo = NowPlayingInfo()
-                if properties.streamType != .unknown {
-                    nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (properties.streamType == .live)
-                    nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : properties.rate
-                    if let time = properties.seekTime ?? queuePlayer?.currentTime(), time.isValid {
-                        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - properties.seekableTimeRange.start).seconds
-                    }
-                    nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = properties.seekableTimeRange.duration.seconds
-                }
-                return nowPlayingInfo
-            }
-            .eraseToAnyPublisher()
-    }
-
-    func nowPlayingInfoPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
-        $isActive
-            .map { [weak self] isActive in
-                guard let self, isActive else { return Just(NowPlayingInfo()).eraseToAnyPublisher() }
-                return Publishers.CombineLatest(
-                    nowPlayingInfoMetadataPublisher(),
-                    nowPlayingInfoPlaybackPublisher()
-                )
-                .map { nowPlayingInfoMetadata, nowPlayingInfoPlayback in
-                    nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new }
-                }
-                .eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .eraseToAnyPublisher()
-    }
 }
 
 private extension Player {

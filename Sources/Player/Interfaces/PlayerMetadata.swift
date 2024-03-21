@@ -32,12 +32,11 @@ public protocol PlayerMetadata: AnyObject {
 
     /// A method formatting metadata for Control Center display.
     ///
-    /// - Parameter error: Error information which could possibly be displayed in the Control Center.
     /// - Returns: A dictionary suitable for display.
     ///
     /// Refer to the [official documentation](https://developer.apple.com/documentation/mediaplayer/mpnowplayinginfocenter#1674387)
     /// for more information.
-    func mediaItemInfo(with error: Error?) -> NowPlayingInfo
+    func mediaItemInfo() -> NowPlayingInfo
 
     /// A method formatting metadata for display in the standard system player user interface.
     ///
@@ -45,6 +44,7 @@ public protocol PlayerMetadata: AnyObject {
     ///
     /// Refer to the [official documentation](https://developer.apple.com/documentation/avkit/customizing_the_tvos_playback_experience)
     /// for more information.
+    // TODO: Possibly provide an API for convenient `AVMetadataItem` construction.
     func metadataItems() -> [AVMetadataItem]
 
     // TODO: `AVNavigationMarkersGroup` should be used but is available on tvOS only. We could maybe extend it to iOS
