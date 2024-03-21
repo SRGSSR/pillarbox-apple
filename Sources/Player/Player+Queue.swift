@@ -14,7 +14,7 @@ extension Player {
             .map { items in
                 Publishers.AccumulateLatestMany(items.map { item in
                     item.$content
-                        .map { QueueElement(item: item, asset: $0) }
+                        .map { QueueElement(item: item, content: $0) }
                 })
             }
             .switchToLatest()
@@ -36,8 +36,8 @@ extension Player {
                     return nil
                 }
                 return AVPlayerItem.playerItems(
-                    for: current.elements.map(\.asset),
-                    replacing: previous.elements.map(\.asset),
+                    for: current.elements.map(\.content),
+                    replacing: previous.elements.map(\.content),
                     currentItem: buffer.item,
                     length: buffer.length
                 )
