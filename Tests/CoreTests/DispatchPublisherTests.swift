@@ -8,6 +8,7 @@
 
 import Combine
 import Nimble
+import PillarboxCircumspect
 import XCTest
 
 final class DispatchPublisherTests: XCTestCase {
@@ -61,5 +62,32 @@ final class DispatchPublisherTests: XCTestCase {
             }
             .store(in: &cancellables)
         expect(value).to(equal(0))
+    }
+
+    func testReceiveOnMainThreadReceivesAllOutputFromMainThread() {
+        let publisher = [1, 2, 3].publisher
+            .receiveOnMainThread()
+        expectOnlyEqualPublished(values: [1, 2, 3], from: publisher)
+    }
+
+    func testReceiveOnMainThreadReceivesAllOutputFromBackgroundThreads() {
+        let publisher = [1, 2, 3].publisher
+            .receive(on: DispatchQueue(label: "com.srgssr.pillarbox-tests"))
+            .receiveOnMainThread()
+        expectOnlyEqualPublished(values: [1, 2, 3], from: publisher)
+    }
+
+    func testDelayIfNeededOutputOrderingWithNonZeroDelay() {
+        let delayedPublisher = [1, 2, 3].publisher
+            .delayIfNeeded(for: 0.1, scheduler: DispatchQueue.main)
+        let subject = CurrentValueSubject<Int, Never>(0)
+        expectEqualPublished(values: [0, 1, 2, 3], from: Publishers.Merge(delayedPublisher, subject), during: .milliseconds(100))
+    }
+
+    func testDelayIfNeededOutputOrderingWithZeroDelay() {
+        let delayedPublisher = [1, 2, 3].publisher
+            .delayIfNeeded(for: 0, scheduler: DispatchQueue.main)
+        let subject = CurrentValueSubject<Int, Never>(0)
+        expectEqualPublished(values: [1, 2, 3, 0], from: Publishers.Merge(delayedPublisher, subject), during: .milliseconds(100))
     }
 }
