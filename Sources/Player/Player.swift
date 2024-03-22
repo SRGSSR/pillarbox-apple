@@ -353,6 +353,7 @@ private extension Player {
             propertiesPublisher,
             $isActive
         )
+        .receiveOnMainThread()
         .sink { [weak self] queue, properties, _ in
             guard let self else { return }
             let areSkipsEnabled = queue.elements.count <= 1 && properties.streamType != .live
