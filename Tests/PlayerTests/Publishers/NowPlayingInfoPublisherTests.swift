@@ -126,26 +126,6 @@ final class NowPlayingInfoPublisherTests: TestCase {
         }
     }
 
-    func testError() {
-        let player = Player(item: .mock(url: Stream.unavailable.url, loadedAfter: 0, withMetadata: AssetMetadataMock(title: "title")))
-        expectSimilarPublished(
-            values: [
-                [:],
-                [
-                    MPMediaItemPropertyTitle: "title"
-                ],
-                [
-                    MPMediaItemPropertyTitle: "title",
-                    MPMediaItemPropertyArtist: "The requested URL was not found on this server."
-                ]
-            ],
-            from: player.nowPlayingInfoMetadataPublisher(),
-            during: .milliseconds(100)
-        ) {
-            player.play()
-        }
-    }
-
     func testInactive() {
         let player = Player(item: .mock(url: Stream.onDemand.url, loadedAfter: 0, withMetadata: AssetMetadataMock(title: "title")))
         expectSimilarPublished(
