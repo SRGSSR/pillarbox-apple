@@ -75,10 +75,6 @@ public final class CommonMetadata: PlayerMetadata {
         .compactMap { $0 }
     }
 
-    public func navigationMarkerGroups() -> [AVTimedMetadataGroup] {
-        []
-    }
-
     private func metadataItem<T>(for identifier: AVMetadataIdentifier, value: T?) -> AVMetadataItem? {
         guard let value else { return nil }
         let item = AVMutableMetadataItem()

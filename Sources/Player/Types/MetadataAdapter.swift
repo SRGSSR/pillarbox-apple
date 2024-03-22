@@ -45,8 +45,4 @@ public struct MetadataAdapter<M> {
     func metadataItems() -> [AVMetadataItem] {
         playerMetadata.metadataItems()
     }
-
-    func navigationMarkerGroups() -> [AVTimedMetadataGroup] {
-        playerMetadata.navigationMarkerGroups()
-    }
 }

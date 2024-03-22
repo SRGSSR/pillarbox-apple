@@ -59,8 +59,7 @@ extension PlayerItemContent {
     func metadata() -> Player.Metadata {
         .init(
             mediaItemInfo: metadataAdapter.mediaItemInfo(),
-            metadataItems: metadataAdapter.metadataItems(),
-            navigationMarkerGroups: metadataAdapter.navigationMarkerGroups()
+            metadataItems: metadataAdapter.metadataItems()
         )
     }
 }
