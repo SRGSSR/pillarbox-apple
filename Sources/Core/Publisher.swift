@@ -98,12 +98,13 @@ public extension Publisher {
         }
         .eraseToAnyPublisher()
     }
-    
+
     /// Delays delivery of all output to the downstream receiver by a specified amount of time on a particular scheduler.
     ///
     /// - Parameters:
     ///   - interval: The amount of time to delay.
-    ///   - tolerance: The allowed tolerance in delivering delayed events. The `Delay` publisher may deliver elements this much sooner or later than the interval specifies.
+    ///   - tolerance: The allowed tolerance in delivering delayed events. The `Delay` publisher may deliver elements 
+    ///     this much sooner or later than the interval specifies.
     ///   - scheduler: The scheduler to deliver the delayed events.
     ///   - options: Options relevant to the scheduler’s behavior.
     /// - Returns: A publisher that delays delivery of elements and completion to the downstream receiver.
@@ -114,7 +115,7 @@ public extension Publisher {
         tolerance: S.SchedulerTimeType.Stride? = nil,
         scheduler: S,
         options: S.SchedulerOptions? = nil
-    ) -> AnyPublisher<Output, Failure> where S : Scheduler {
+    ) -> AnyPublisher<Output, Failure> where S: Scheduler {
         flatMap { output in
             if interval != 0 {
                 return Just(output)
