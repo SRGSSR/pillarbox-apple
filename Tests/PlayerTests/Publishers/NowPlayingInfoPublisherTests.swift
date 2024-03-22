@@ -12,31 +12,11 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class NowPlayingInfoPublisherTests: TestCase {
-    private static func nowPlayingInfoMetadataPublisher(for player: Player) -> AnyPublisher<NowPlayingInfo, Never> {
-        player.nowPlayingInfoMetadataPublisher()
-            // TODO: Should we have equality / remove duplicate performed in Player.Metadata stream?
-            .removeDuplicates { lhs, rhs in
-                // swiftlint:disable:next legacy_objc_type
-                NSDictionary(dictionary: lhs).isEqual(to: rhs)
-            }
-            .eraseToAnyPublisher()
-    }
-
-    private static func nowPlayingInfoPublisher(for player: Player) -> AnyPublisher<NowPlayingInfo, Never> {
-        player.nowPlayingInfoPublisher()
-            // TODO: Should we have equality / remove duplicate performed in Player.Metadata stream?
-            .removeDuplicates { lhs, rhs in
-                // swiftlint:disable:next legacy_objc_type
-                NSDictionary(dictionary: lhs).isEqual(to: rhs)
-            }
-            .eraseToAnyPublisher()
-    }
-
     func testEmpty() {
         let player = Player()
         expectSimilarPublished(
             values: [[:]],
-            from: Self.nowPlayingInfoMetadataPublisher(for: player),
+            from: player.nowPlayingInfoMetadataPublisher(),
             during: .milliseconds(100)
         )
     }
@@ -45,7 +25,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expectSimilarPublished(
             values: [[:]],
-            from: Self.nowPlayingInfoMetadataPublisher(for: player),
+            from: player.nowPlayingInfoMetadataPublisher(),
             during: .milliseconds(100)
         )
     }
@@ -56,7 +36,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
         )
         expectSimilarPublished(
             values: [[:], [MPMediaItemPropertyTitle: "title"]],
-            from: Self.nowPlayingInfoMetadataPublisher(for: player),
+            from: player.nowPlayingInfoMetadataPublisher(),
             during: .milliseconds(200)
         )
     }
@@ -80,7 +60,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
                     MPMediaItemPropertyComments: "description"
                 ]
             ],
-            from: Self.nowPlayingInfoMetadataPublisher(for: player),
+            from: player.nowPlayingInfoMetadataPublisher(),
             during: .milliseconds(100)
         )
     }
@@ -101,7 +81,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
                     MPMediaItemPropertyComments: "description1"
                 ]
             ],
-            from: Self.nowPlayingInfoMetadataPublisher(for: player),
+            from: player.nowPlayingInfoMetadataPublisher(),
             during: .milliseconds(100)
         )
     }
@@ -117,7 +97,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
                     MPMediaItemPropertyComments: "Description 1"
                 ]
             ],
-            from: Self.nowPlayingInfoMetadataPublisher(for: player)
+            from: player.nowPlayingInfoMetadataPublisher()
         )
         expectSimilarPublishedNext(
             values: [
@@ -128,7 +108,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
                     MPMediaItemPropertyComments: "Description 2"
                 ]
             ],
-            from: Self.nowPlayingInfoMetadataPublisher(for: player),
+            from: player.nowPlayingInfoMetadataPublisher(),
             during: .milliseconds(100)
         ) {
             player.items = [.webServiceMock(media: .media2)]
@@ -139,7 +119,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
         let player = Player(item: .mock(url: Stream.shortOnDemand.url, loadedAfter: 0, withMetadata: AssetMetadataMock(title: "title")))
         expectSimilarPublished(
             values: [[:], [MPMediaItemPropertyTitle: "title"], [:]],
-            from: Self.nowPlayingInfoMetadataPublisher(for: player),
+            from: player.nowPlayingInfoMetadataPublisher(),
             during: .seconds(2)
         ) {
             player.play()
@@ -159,7 +139,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
                     MPMediaItemPropertyArtist: "The requested URL was not found on this server."
                 ]
             ],
-            from: Self.nowPlayingInfoMetadataPublisher(for: player),
+            from: player.nowPlayingInfoMetadataPublisher(),
             during: .milliseconds(100)
         ) {
             player.play()
@@ -170,7 +150,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
         let player = Player(item: .mock(url: Stream.onDemand.url, loadedAfter: 0, withMetadata: AssetMetadataMock(title: "title")))
         expectSimilarPublished(
             values: [[:]],
-            from: Self.nowPlayingInfoPublisher(for: player),
+            from: player.nowPlayingInfoPublisher(),
             during: .milliseconds(100)
         )
     }
@@ -179,14 +159,14 @@ final class NowPlayingInfoPublisherTests: TestCase {
         let player = Player(item: .mock(url: Stream.onDemand.url, loadedAfter: 0, withMetadata: AssetMetadataMock(title: "title")))
         expectAtLeastSimilarPublished(
             values: [[:], [MPNowPlayingInfoPropertyIsLiveStream: false]],
-            from: Self.nowPlayingInfoPublisher(for: player)
+            from: player.nowPlayingInfoPublisher()
         ) {
             player.isActive = true
         }
 
         expectSimilarPublishedNext(
             values: [[:]],
-            from: Self.nowPlayingInfoPublisher(for: player),
+            from: player.nowPlayingInfoPublisher(),
             during: .milliseconds(100)
         ) {
             player.isActive = false
