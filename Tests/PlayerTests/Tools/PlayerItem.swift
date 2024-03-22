@@ -25,7 +25,7 @@ extension PlayerItem {
         trackerAdapters: [TrackerAdapter<Void>] = []
     ) -> Self {
         let publisher = Just(Asset.simple(url: url))
-            .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
+            .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
         return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
 
@@ -35,9 +35,8 @@ extension PlayerItem {
         withMetadata: AssetMetadataMock,
         trackerAdapters: [TrackerAdapter<AssetMetadataMock>] = []
     ) -> Self {
-        // FIXME: Have delay = 0 deliver immediately without .delay. Probably implement dedicated operator
         let publisher = Just(Asset.simple(url: url, metadata: withMetadata))
-            .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
+            .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
         return .init(
             publisher: publisher,
             metadataAdapter: CommonMetadata.adapter { metadata in
@@ -60,8 +59,7 @@ extension PlayerItem {
                 description: "description1"
             )
         ))
-        // FIXME: Have delay = 0 deliver immediately without .delay. Probably implement dedicated operator
-        .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
+        .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
         .prepend(Asset.simple(
             url: url,
             metadata: AssetMetadataMock(
