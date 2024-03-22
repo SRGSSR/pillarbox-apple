@@ -8,10 +8,9 @@ import AVFoundation
 
 public extension Player {
     struct Metadata {
-        static let empty = Self.init(mediaItemInfo: .init(), metadataItems: [], navigationMarkerGroups: [])
+        static let empty = Self.init(mediaItemInfo: .init(), metadataItems: [])
 
         public let mediaItemInfo: NowPlayingInfo
         public let metadataItems: [AVMetadataItem]
-        public let navigationMarkerGroups: [AVTimedMetadataGroup]
     }
 }
