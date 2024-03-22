@@ -24,7 +24,7 @@ final class CurrentMetadata {
         item.$content
             .sink { [metadataSubject] content in
                 content.updateMetadata()
-                metadataSubject.send(content.metadata(with: error))
+                metadataSubject.send(content.metadata())
             }
             .store(in: &cancellables)
     }
