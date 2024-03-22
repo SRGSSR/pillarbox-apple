@@ -38,9 +38,13 @@ extension PlayerItem {
         // FIXME: Have delay = 0 deliver immediately without .delay. Probably implement dedicated operator
         let publisher = Just(Asset.simple(url: url, metadata: withMetadata))
             .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
-        return .init(publisher: publisher, metadataAdapter: CommonMetadata.adapter { metadata in
-            .init(title: metadata.title, subtitle: metadata.subtitle, description: metadata.description)
-        }, trackerAdapters: trackerAdapters)
+        return .init(
+            publisher: publisher,
+            metadataAdapter: CommonMetadata.adapter { metadata in
+                .init(title: metadata.title, subtitle: metadata.subtitle, description: metadata.description)
+            },
+            trackerAdapters: trackerAdapters
+        )
     }
 
     static func mock(
@@ -66,9 +70,13 @@ extension PlayerItem {
                 description: "description0"
             )
         ))
-        return .init(publisher: publisher, metadataAdapter: CommonMetadata.adapter { metadata in
-            .init(title: metadata.title, subtitle: metadata.subtitle, description: metadata.description)
-        }, trackerAdapters: trackerAdapters)
+        return .init(
+            publisher: publisher,
+            metadataAdapter: CommonMetadata.adapter { metadata in
+                .init(title: metadata.title, subtitle: metadata.subtitle, description: metadata.description)
+            },
+            trackerAdapters: trackerAdapters
+        )
     }
 
     static func webServiceMock(media: MediaMock, trackerAdapters: [TrackerAdapter<AssetMetadataMock>] = []) -> Self {
@@ -79,8 +87,12 @@ extension PlayerItem {
             .map { metadata in
                 Asset.simple(url: url, metadata: metadata)
             }
-        return .init(publisher: publisher, metadataAdapter: CommonMetadata.adapter { metadata in
+        return .init(
+            publisher: publisher,
+            metadataAdapter: CommonMetadata.adapter { metadata in
                 .init(title: metadata.title, subtitle: metadata.subtitle, description: metadata.description)
-            }, trackerAdapters: trackerAdapters)
+            },
+            trackerAdapters: trackerAdapters
+        )
     }
 }
