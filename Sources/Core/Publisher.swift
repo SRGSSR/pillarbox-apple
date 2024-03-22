@@ -82,6 +82,7 @@ public extension Publisher {
     ///
     /// - Returns: A publisher delivering elements on the main thread.
     func receiveOnMainThread() -> AnyPublisher<Output, Failure> {
+        // FIXME: Use flatMap and fix tests accordingly ([1, 2, 3].publisher must receive all values)
         map { output in
             // `receive(on: DispatchQueue.main)` defers execution if already on the main thread. Do nothing in this case.
             if Thread.isMainThread {

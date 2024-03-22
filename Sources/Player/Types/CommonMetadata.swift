@@ -55,12 +55,6 @@ public final class CommonMetadata: PlayerMetadata {
                 nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
             }
         }
-        else {
-            // TODO: Check if this is still true
-            // Fill the title so that the Control Center can be enabled for the item, even if it has no associated
-            // metadata.
-            nowPlayingInfo[MPMediaItemPropertyTitle] = ""
-        }
         return nowPlayingInfo
     }
 
