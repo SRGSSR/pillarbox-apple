@@ -38,13 +38,13 @@ public protocol PlayerMetadata: AnyObject {
     /// for more information.
     func mediaItemInfo() -> NowPlayingInfo
 
+    // TODO: Possibly provide an API for convenient `AVMetadataItem` construction.
     /// A method formatting metadata for display in the standard system player user interface.
     ///
     /// - Returns: An array of metadata items.
     ///
     /// Refer to the [official documentation](https://developer.apple.com/documentation/avkit/customizing_the_tvos_playback_experience)
     /// for more information.
-    // TODO: Possibly provide an API for convenient `AVMetadataItem` construction.
     func metadataItems() -> [AVMetadataItem]
 
     // TODO: `AVNavigationMarkersGroup` should be used but is available on tvOS only. We could maybe extend it to iOS

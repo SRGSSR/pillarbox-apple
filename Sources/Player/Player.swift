@@ -89,7 +89,7 @@ public final class Player: ObservableObject, Equatable {
     lazy var metadataPublisher: AnyPublisher<Player.Metadata, Never> = {
         queuePublisher
             .slice(at: \.item)
-            .scan(Optional<CurrentMetadata>.none) { metadata, item in
+            .scan(Optional<CurrentMetadata>.none) { _, item in
                 guard let item else { return nil }
                 return CurrentMetadata(item: item)
             }
