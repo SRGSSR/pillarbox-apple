@@ -98,6 +98,7 @@ public final class Player: ObservableObject, Equatable {
                 return currentMetadata.metadataPublisher
             }
             .switchToLatest()
+            .removeDuplicates()
             .share(replay: 1)
             .eraseToAnyPublisher()
     }()
