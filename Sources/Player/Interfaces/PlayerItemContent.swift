@@ -15,7 +15,7 @@ protocol PlayerItemContent {
     var metadataAdapter: MetadataAdapter<Metadata> { get }
     var trackerAdapters: [TrackerAdapter<Metadata>] { get }
 
-    func updateMetadata()
+    func updateMetadata(error: Error?)
     func updateTracker()
 
     func configure(item: AVPlayerItem)
@@ -56,9 +56,9 @@ extension PlayerItemContent {
         }
     }
 
-    func metadata(with error: Error?) -> Player.Metadata {
+    func metadata() -> Player.Metadata {
         .init(
-            mediaItemInfo: metadataAdapter.mediaItemInfo(with: error),
+            mediaItemInfo: metadataAdapter.mediaItemInfo(),
             metadataItems: metadataAdapter.metadataItems()
         )
     }
