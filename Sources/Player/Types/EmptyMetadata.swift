@@ -9,9 +9,9 @@ import AVFoundation
 final class EmptyMetadata<M>: PlayerMetadata {
     init(configuration: Void) {}
 
-    func update(metadata: M) {}
+    func update(metadata: M?, error: Error?) {}
 
-    func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
+    func mediaItemInfo() -> NowPlayingInfo {
         .init()
     }
 

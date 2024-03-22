@@ -88,12 +88,14 @@ public final class Player: ObservableObject, Equatable {
 
     lazy var metadataPublisher: AnyPublisher<Player.Metadata, Never> = {
         queuePublisher
-            .map { queue in
-                (item: queue.item, error: queue.error)
-            }
-            .scan(Optional<CurrentMetadata>.none) { _, data in
-                guard let item = data.item else { return nil }
-                return CurrentMetadata(item: item, error: data.error)
+            .scan(Optional<CurrentMetadata>.none) { currentMetadata, queue in
+                if let item = queue.item {
+                    guard item != currentMetadata?.item else { return currentMetadata }
+                    return CurrentMetadata(item: item, error: queue.error)
+                }
+                else {
+                    return nil
+                }
             }
             .map { currentMetadata in
                 guard let currentMetadata else { return Just(Player.Metadata.empty).eraseToAnyPublisher() }
