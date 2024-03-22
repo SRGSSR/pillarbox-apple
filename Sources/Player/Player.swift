@@ -86,7 +86,7 @@ public final class Player: ObservableObject, Equatable {
         .eraseToAnyPublisher()
     }()
 
-    private lazy var metadataPublisher: AnyPublisher<Player.Metadata, Never> = {
+    lazy var metadataPublisher: AnyPublisher<Player.Metadata, Never> = {
         queuePublisher
             .slice(at: \.item)
             .scan(Optional<CurrentMetadata>.none) { metadata, item in
@@ -338,10 +338,10 @@ private extension Player {
 
 private extension Player {
     func configureControlCenterMetadataUpdatePublisher() {
-        metadataPublisher
+        nowPlayingInfoPublisher()
             .receiveOnMainThread()
-            .sink { [weak self] metadata in
-                self?.updateControlCenter(nowPlayingInfo: metadata.mediaItemInfo)
+            .sink { [weak self] nowPlayingInfo in
+                self?.updateControlCenter(nowPlayingInfo: nowPlayingInfo)
             }
             .store(in: &cancellables)
     }

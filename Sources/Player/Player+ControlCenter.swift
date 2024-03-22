@@ -114,3 +114,46 @@ private extension Player {
         }
     }
 }
+
+extension Player {
+    func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
+        metadataPublisher
+            .map(\.mediaItemInfo)
+            .eraseToAnyPublisher()
+    }
+
+    private func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
+        propertiesPublisher
+            .map { [weak queuePlayer] properties in
+                var nowPlayingInfo = NowPlayingInfo()
+                // Always fill a key so that the Control Center can be enabled for the item, even if it has no associated metadata.
+                nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (properties.streamType == .live)
+                if properties.streamType != .unknown {
+                    nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = properties.isBuffering ? 0 : properties.rate
+                    if let time = properties.seekTime ?? queuePlayer?.currentTime(), time.isValid {
+                        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = (time - properties.seekableTimeRange.start).seconds
+                    }
+                    nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = properties.seekableTimeRange.duration.seconds
+                }
+                return nowPlayingInfo
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func nowPlayingInfoPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
+        $isActive
+            .map { [weak self] isActive in
+                guard let self, isActive else { return Just(NowPlayingInfo()).eraseToAnyPublisher() }
+                return Publishers.CombineLatest(
+                    nowPlayingInfoMetadataPublisher(),
+                    nowPlayingInfoPlaybackPublisher()
+                )
+                .map { nowPlayingInfoMetadata, nowPlayingInfoPlayback in
+                    nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new }
+                }
+                .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+}
