@@ -56,9 +56,9 @@ extension PlayerItemContent {
         }
     }
 
-    func metadata() -> Player.Metadata {
+    func metadata(with error: Error?) -> Player.Metadata {
         .init(
-            mediaItemInfo: metadataAdapter.mediaItemInfo(),
+            mediaItemInfo: metadataAdapter.mediaItemInfo(with: error),
             metadataItems: metadataAdapter.metadataItems()
         )
     }
