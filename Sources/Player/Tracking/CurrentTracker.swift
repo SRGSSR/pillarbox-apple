@@ -18,12 +18,12 @@ final class CurrentTracker {
         guard let player else { return nil }
         self.item = item
 
-        item.content.enableTrackers(for: player)
         item.$content
             .sink { content in
                 content.updateTracker()
             }
             .store(in: &cancellables)
+        item.content.enableTrackers(for: player)
     }
 
     deinit {
