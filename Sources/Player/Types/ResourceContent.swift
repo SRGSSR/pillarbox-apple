@@ -13,9 +13,7 @@ struct ResourceContent<M>: PlayerItemContent {
     let trackerAdapters: [TrackerAdapter<M>]
 
     func updateTracker() {}
-    func updateMetadata(error: Error?) {
-        metadataAdapter.update(metadata: nil, error: error)
-    }
+    func updateMetadata() {}
 
     func configure(item: AVPlayerItem) {}
 

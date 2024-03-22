@@ -36,18 +36,16 @@ public final class CommonMetadata: PlayerMetadata {
 
     private let configuration: Configuration
     private var metadata: Metadata?
-    private var error: Error?
 
     public init(configuration: Configuration) {
         self.configuration = configuration
     }
 
-    public func update(metadata: Metadata?, error: Error?) {
+    public func update(metadata: Metadata) {
         self.metadata = metadata
-        self.error = error
     }
 
-    public func mediaItemInfo() -> NowPlayingInfo {
+    public func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
         var nowPlayingInfo = NowPlayingInfo()
         if let metadata {
             nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title

@@ -8,7 +8,7 @@ import AVFoundation
 import CoreMedia
 
 /// A protocol for custom player metadata integration.
-public protocol PlayerMetadata {
+public protocol PlayerMetadata: AnyObject {
     /// A type describing the configuration offered for metadata display.
     ///
     /// Use `Void` if no configuration is offered.
@@ -28,7 +28,7 @@ public protocol PlayerMetadata {
     /// A method called when metadata is updated.
     ///
     /// - Parameter metadata: The updated metadata.
-    func update(metadata: Metadata?, error: Error?)
+    func update(metadata: Metadata)
 
     /// A method formatting metadata for Control Center display.
     ///
@@ -36,7 +36,7 @@ public protocol PlayerMetadata {
     ///
     /// Refer to the [official documentation](https://developer.apple.com/documentation/mediaplayer/mpnowplayinginfocenter#1674387)
     /// for more information.
-    func mediaItemInfo() -> NowPlayingInfo
+    func mediaItemInfo(with error: Error?) -> NowPlayingInfo
 
     // TODO: Possibly provide an API for convenient `AVMetadataItem` construction.
     /// A method formatting metadata for display in the standard system player user interface.
