@@ -38,8 +38,8 @@ public struct MetadataAdapter<M> {
         update(metadata)
     }
 
-    func mediaItemInfo() -> NowPlayingInfo {
-        playerMetadata.mediaItemInfo()
+    func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
+        playerMetadata.mediaItemInfo(with: error)
     }
 
     func metadataItems() -> [AVMetadataItem] {

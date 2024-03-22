@@ -11,7 +11,7 @@ final class EmptyMetadata<M>: PlayerMetadata {
 
     func update(metadata: M) {}
 
-    func mediaItemInfo() -> NowPlayingInfo {
+    func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
         .init()
     }
 

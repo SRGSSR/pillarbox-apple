@@ -36,7 +36,7 @@ public protocol PlayerMetadata: AnyObject {
     ///
     /// Refer to the [official documentation](https://developer.apple.com/documentation/mediaplayer/mpnowplayinginfocenter#1674387)
     /// for more information.
-    func mediaItemInfo() -> NowPlayingInfo
+    func mediaItemInfo(with error: Error?) -> NowPlayingInfo
 
     // TODO: Possibly provide an API for convenient `AVMetadataItem` construction.
     /// A method formatting metadata for display in the standard system player user interface.
