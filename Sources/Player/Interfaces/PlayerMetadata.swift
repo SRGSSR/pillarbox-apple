@@ -49,7 +49,7 @@ public protocol PlayerMetadata: AnyObject {
 
     // TODO: `AVNavigationMarkersGroup` should be used but is available on tvOS only. We could maybe extend it to iOS
     //       so that we have a common formalism to handle chapters.
-    func navigationMarkerGroups() -> [AVTimedMetadataGroup]
+    // func navigationMarkerGroups() -> [AVTimedMetadataGroup]
 }
 
 public extension PlayerMetadata {

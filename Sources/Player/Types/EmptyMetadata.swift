@@ -18,8 +18,4 @@ final class EmptyMetadata<M>: PlayerMetadata {
     func metadataItems() -> [AVMetadataItem] {
         []
     }
-
-    func navigationMarkerGroups() -> [AVTimedMetadataGroup] {
-        []
-    }
 }
