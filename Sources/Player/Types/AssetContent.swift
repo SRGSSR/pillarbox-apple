@@ -23,8 +23,8 @@ struct AssetContent<M>: PlayerItemContent {
         self.trackerAdapters = trackerAdapters
     }
 
-    func updateMetadata() {
-        metadataAdapter.update(metadata: asset.metadata)
+    func updateMetadata(error: Error?) {
+        metadataAdapter.update(metadata: asset.metadata, error: error)
     }
 
     func updateTracker() {
