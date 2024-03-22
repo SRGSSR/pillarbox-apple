@@ -77,13 +77,14 @@ public extension Publisher {
     func weakCapture<T>(_ other: T?) -> AnyPublisher<(Output, T), Failure> where T: AnyObject {
         weakCapture(other, at: \T.self)
     }
+}
 
+public extension Publisher {
     /// Safely receives elements from the upstream on the main thread.
     ///
     /// - Returns: A publisher delivering elements on the main thread.
     func receiveOnMainThread() -> AnyPublisher<Output, Failure> {
-        // FIXME: Use flatMap and fix tests accordingly ([1, 2, 3].publisher must receive all values)
-        map { output in
+        flatMap { output in
             // `receive(on: DispatchQueue.main)` defers execution if already on the main thread. Do nothing in this case.
             if Thread.isMainThread {
                 return Just(output)
@@ -95,7 +96,35 @@ public extension Publisher {
                     .eraseToAnyPublisher()
             }
         }
-        .switchToLatest()
+        .eraseToAnyPublisher()
+    }
+    
+    /// Delays delivery of all output to the downstream receiver by a specified amount of time on a particular scheduler.
+    ///
+    /// - Parameters:
+    ///   - interval: The amount of time to delay.
+    ///   - tolerance: The allowed tolerance in delivering delayed events. The `Delay` publisher may deliver elements this much sooner or later than the interval specifies.
+    ///   - scheduler: The scheduler to deliver the delayed events.
+    ///   - options: Options relevant to the scheduler’s behavior.
+    /// - Returns: A publisher that delays delivery of elements and completion to the downstream receiver.
+    ///
+    /// If the `interval` is zero the value is published synchronously, not on the specified scheduler.
+    func delayIfNeeded<S>(
+        for interval: S.SchedulerTimeType.Stride,
+        tolerance: S.SchedulerTimeType.Stride? = nil,
+        scheduler: S,
+        options: S.SchedulerOptions? = nil
+    ) -> AnyPublisher<Output, Failure> where S : Scheduler {
+        flatMap { output in
+            if interval != 0 {
+                return Just(output)
+                    .delay(for: interval, tolerance: tolerance, scheduler: scheduler, options: options)
+                    .eraseToAnyPublisher()
+            }
+            else {
+                return Just(output).eraseToAnyPublisher()
+            }
+        }
         .eraseToAnyPublisher()
     }
 }
