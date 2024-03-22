@@ -49,14 +49,16 @@ public final class CommonMetadata: PlayerMetadata {
         var nowPlayingInfo = NowPlayingInfo()
         if let metadata {
             nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
-            nowPlayingInfo[MPMediaItemPropertyArtist] = errorMessage(from: error) ?? metadata.subtitle
+            if configuration.displaysErrors, let error = error?.localizedDescription {
+                nowPlayingInfo[MPMediaItemPropertyArtist] = error
+            }
+            else {
+                nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
+            }
             nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
             if let image = metadata.image {
                 nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
             }
-        }
-        else {
-            nowPlayingInfo[MPMediaItemPropertyTitle] = errorMessage(from: error)
         }
         return nowPlayingInfo
     }
