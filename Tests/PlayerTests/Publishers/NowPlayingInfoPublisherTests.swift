@@ -132,12 +132,15 @@ final class NowPlayingInfoPublisherTests: TestCase {
             values: [
                 [:],
                 [
+                    MPMediaItemPropertyTitle: "title"
+                ],
+                [
                     MPMediaItemPropertyTitle: "title",
                     MPMediaItemPropertyArtist: "The requested URL was not found on this server."
                 ]
             ],
             from: player.nowPlayingInfoMetadataPublisher(),
-            during: .seconds(1)
+            during: .milliseconds(100)
         ) {
             player.play()
         }
