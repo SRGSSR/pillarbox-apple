@@ -8,6 +8,8 @@ import Combine
 
 final class CurrentMetadata {
     let item: PlayerItem
+    let error: Error?
+
     private let metadataSubject = CurrentValueSubject<Player.Metadata, Never>(.empty)
     private var cancellables = Set<AnyCancellable>()
 
@@ -17,10 +19,12 @@ final class CurrentMetadata {
 
     init(item: PlayerItem, error: Error?) {
         self.item = item
+        self.error = error
+
         item.$content
             .sink { [metadataSubject] content in
-                content.updateMetadata(error: error)
-                metadataSubject.send(content.metadata())
+                content.updateMetadata()
+                metadataSubject.send(content.metadata(with: error))
             }
             .store(in: &cancellables)
     }

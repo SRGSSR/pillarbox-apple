@@ -12,7 +12,7 @@ import CoreMedia
 /// An adapter transforms metadata delivered by a player item into a metadata format suitable for the player.
 public struct MetadataAdapter<M> {
     private let playerMetadata: any PlayerMetadata
-    private let update: (M?, Error?) -> Void
+    private let update: (M) -> Void
 
     /// Creates an adapter for a type of metadata with the provided mapper.
     ///
@@ -21,12 +21,9 @@ public struct MetadataAdapter<M> {
     ///   - mapper: The metadata mapper.
     public init<T>(metadataType: T.Type, configuration: T.Configuration, mapper: ((M) -> T.Metadata)?) where T: PlayerMetadata {
         let playerMetadata = metadataType.init(configuration: configuration)
-        update = { metadata, error in
-            if let mapper, let metadata {
-                playerMetadata.update(metadata: mapper(metadata), error: error)
-            }
-            else {
-                playerMetadata.update(metadata: nil, error: error)
+        update = { metadata in
+            if let mapper {
+                playerMetadata.update(metadata: mapper(metadata))
             }
         }
         self.playerMetadata = playerMetadata
@@ -37,12 +34,12 @@ public struct MetadataAdapter<M> {
         EmptyMetadata.adapter()
     }
 
-    func update(metadata: M?, error: Error?) {
-        update(metadata, error)
+    func update(metadata: M) {
+        update(metadata)
     }
 
-    func mediaItemInfo() -> NowPlayingInfo {
-        playerMetadata.mediaItemInfo()
+    func mediaItemInfo(with error: Error?) -> NowPlayingInfo {
+        playerMetadata.mediaItemInfo(with: error)
     }
 
     func metadataItems() -> [AVMetadataItem] {
