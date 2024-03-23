@@ -16,14 +16,14 @@ struct ItemContent {
             let item = Resource.loading.playerItem().withId(id)
             configure(item: item)
             update(item: item)
-            reloadItem(for: id)
+            ItemOrchestrator.reload(for: id)
             return item
         }
         else {
             let item = resource.playerItem().withId(id)
             configure(item: item)
             update(item: item)
-            loadItem(for: id)
+            ItemOrchestrator.load(for: id)
             return item
         }
     }

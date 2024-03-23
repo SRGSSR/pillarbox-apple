@@ -8,23 +8,6 @@ import Combine
 import Foundation
 import PillarboxCore
 
-private enum TriggerId: Hashable {
-    case load(UUID)
-    case reset(UUID)
-}
-
-// TODO: Where should we put the reload mechanism?
-private let kTrigger = Trigger()
-
-func loadItem(for id: UUID) {
-    kTrigger.activate(for: TriggerId.load(id))
-}
-
-func reloadItem(for id: UUID) {
-    kTrigger.activate(for: TriggerId.reset(id))
-    kTrigger.activate(for: TriggerId.load(id))
-}
-
 final class ItemLoader<M>: ItemLoading {
     private let id = UUID()
     private let trackerAdapters: [TrackerAdapter<M>]
@@ -43,7 +26,7 @@ final class ItemLoader<M>: ItemLoading {
             adapter.withId(id)
         }
 
-        Publishers.PublishAndRepeat(onOutputFrom: kTrigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
+        Publishers.PublishAndRepeat(onOutputFrom: ItemOrchestrator.resetSignal(for: id)) { [id] in
             publisher
                 .map { asset in
                     ItemContent(
@@ -56,7 +39,7 @@ final class ItemLoader<M>: ItemLoading {
                     Just(ItemContent(id: id, resource: .failing(error: error), metadata: .empty))
                 }
         }
-        .wait(untilOutputFrom: kTrigger.signal(activatedBy: TriggerId.load(id)))
+        .wait(untilOutputFrom: ItemOrchestrator.loadSignal(for: id))
         .receive(on: DispatchQueue.main)
         .assign(to: &$content)
     }

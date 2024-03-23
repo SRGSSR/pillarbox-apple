@@ -32,11 +32,7 @@ public final class PlayerItem: Equatable {
         metadataAdapter: MetadataAdapter<M> = .none(),
         trackerAdapters: [TrackerAdapter<M>] = []
     ) where P: Publisher, P.Output == Asset<M> {
-        loader = ItemLoader(
-            publisher: publisher,
-            metadataAdapter: metadataAdapter,
-            trackerAdapters: trackerAdapters
-        )
+        loader = ItemLoader(publisher: publisher, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters)
     }
 
     /// Creates a player item from an ``Asset``.
