@@ -8,15 +8,14 @@ import AVFoundation
 
 struct QueueElement {
     let item: PlayerItem
-    let content: any PlayerItemContent
+    let content: ItemContent
 
-    init(item: PlayerItem, content: any PlayerItemContent) {
-        assert(item.id == content.id)
+    init(item: PlayerItem, content: ItemContent) {
         self.item = item
         self.content = content
     }
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
-        item.matches(playerItem)
+        content.matches(playerItem)
     }
 }

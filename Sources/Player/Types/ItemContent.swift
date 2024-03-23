@@ -6,61 +6,40 @@
 
 import AVFoundation
 
-/// A protocol describing content associated with a player item.
-protocol PlayerItemContent {
-    associatedtype Metadata
-
-    var id: UUID { get }
-    var resource: Resource { get }
-    var metadataAdapter: MetadataAdapter<Metadata> { get }
-    var trackerAdapters: [TrackerAdapter<Metadata>] { get }
-
-    func updateMetadata()
-    func updateTracker()
-
-    func configure(item: AVPlayerItem)
-    func update(item: AVPlayerItem)
-}
-
-extension PlayerItemContent {
-    func matches(_ playerItem: AVPlayerItem?) -> Bool {
-        id == playerItem?.id
-    }
-
-    func enableTrackers(for player: Player) {
-        trackerAdapters.forEach { adapter in
-            adapter.enable(for: player)
-        }
-    }
-
-    func disableTrackers() {
-        trackerAdapters.forEach { adapter in
-            adapter.disable()
-        }
-    }
+struct ItemContent {
+    let id: UUID
+    let resource: Resource
+    let metadata: Player.Metadata
 
     func playerItem(reload: Bool = false) -> AVPlayerItem {
         if reload, resource.isFailing {
             let item = Resource.loading.playerItem().withId(id)
             configure(item: item)
             update(item: item)
-            PlayerItem.reload(for: id)
+            reloadItem(for: id)
             return item
         }
         else {
             let item = resource.playerItem().withId(id)
             configure(item: item)
             update(item: item)
-            PlayerItem.load(for: id)
+            loadItem(for: id)
             return item
         }
     }
 
-    func metadata() -> Player.Metadata {
-        .init(
-            mediaItemInfo: metadataAdapter.mediaItemInfo(),
-            metadataItems: metadataAdapter.metadataItems()
-        )
+    func matches(_ playerItem: AVPlayerItem?) -> Bool {
+        id == playerItem?.id
+    }
+
+    private func configure(item: AVPlayerItem) {
+        // TODO: Apply configuration block (store configuration in resource, or in ItemContent if more appropriate, or
+        //       maybe in a wrapper for Resource)
+    }
+
+    func update(item: AVPlayerItem) {
+        item.externalMetadata = metadata.metadataItems
+        // FIXME: On tvOS set navigation markers
     }
 }
 
@@ -74,8 +53,8 @@ extension AVPlayerItem {
     ///   - currentItem: The item currently being played by the player.
     /// - Returns: The list of player items to load into the player.
     static func playerItems(
-        for currentContents: [any PlayerItemContent],
-        replacing previousContents: [any PlayerItemContent],
+        for currentContents: [ItemContent],
+        replacing previousContents: [ItemContent],
         currentItem: AVPlayerItem?,
         length: Int
     ) -> [AVPlayerItem] {
@@ -98,15 +77,15 @@ extension AVPlayerItem {
         }
     }
 
-    static func playerItems(from contents: [any PlayerItemContent], reload: Bool = false) -> [AVPlayerItem] {
+    static func playerItems(from contents: [ItemContent], reload: Bool = false) -> [AVPlayerItem] {
         contents.map { $0.playerItem(reload: reload) }
     }
 
-    private static func matchingIndex(for item: AVPlayerItem, in contents: [any PlayerItemContent]) -> Int? {
+    private static func matchingIndex(for item: AVPlayerItem, in contents: [ItemContent]) -> Int? {
         contents.firstIndex { $0.matches(item) }
     }
 
-    private static func firstMatchingIndex(for contents: [any PlayerItemContent], in other: [any PlayerItemContent]) -> Int? {
+    private static func firstMatchingIndex(for contents: [ItemContent], in other: [ItemContent]) -> Int? {
         guard let match = contents.first(where: { content in
             other.contains(where: { $0.id == content.id })
         }) else {
@@ -115,16 +94,16 @@ extension AVPlayerItem {
         return matchingIndex(for: match, in: other)
     }
 
-    private static func matchingIndex(for content: any PlayerItemContent, in contents: [any PlayerItemContent]) -> Int? {
+    private static func matchingIndex(for content: ItemContent, in contents: [ItemContent]) -> Int? {
         contents.firstIndex { $0.id == content.id }
     }
 
-    private static func findContent(_ content: any PlayerItemContent, in contents: [any PlayerItemContent]) -> Bool {
+    private static func findContent(_ content: ItemContent, in contents: [ItemContent]) -> Bool {
         guard let match = contents.first(where: { $0.id == content.id }) else { return false }
         return match.resource == content.resource
     }
 
-    private static func firstCommonIndex(in contents: [any PlayerItemContent], matching other: [any PlayerItemContent], after item: AVPlayerItem) -> Int? {
+    private static func firstCommonIndex(in contents: [ItemContent], matching other: [ItemContent], after item: AVPlayerItem) -> Int? {
         guard let matchIndex = matchingIndex(for: item, in: other) else { return nil }
         return firstMatchingIndex(for: Array(other.suffix(from: matchIndex + 1)), in: contents)
     }

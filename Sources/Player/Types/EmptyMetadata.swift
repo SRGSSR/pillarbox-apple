@@ -6,16 +6,14 @@
 
 import AVFoundation
 
-final class EmptyMetadata<M>: PlayerMetadata {
+struct EmptyMetadata<M>: PlayerMetadata {
     init(configuration: Void) {}
 
-    func update(metadata: M) {}
-
-    func mediaItemInfo() -> NowPlayingInfo {
+    func mediaItemInfo(from metadata: M) -> NowPlayingInfo {
         .init()
     }
 
-    func metadataItems() -> [AVMetadataItem] {
+    func metadataItems(from metadata: M) -> [AVMetadataItem] {
         []
     }
 }

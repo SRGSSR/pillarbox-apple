@@ -8,11 +8,6 @@ import AVFoundation
 import Combine
 import PillarboxCore
 
-private enum TriggerId: Hashable {
-    case load(UUID)
-    case reset(UUID)
-}
-
 /// An item that can be inserted into a ``Player`` for playback.
 ///
 /// Convenience initialization methods are provided for different types of assets:
@@ -21,11 +16,15 @@ private enum TriggerId: Hashable {
 /// - Custom assets which require custom resource loading.
 /// - Encrypted assets which require a FairPlay content key session.
 public final class PlayerItem: Equatable {
-    private static let trigger = Trigger()
+    private let loader: any ItemLoading
 
-    @Published private(set) var content: any PlayerItemContent
+    var content: ItemContent {
+        loader.content
+    }
 
-    let id = UUID()
+    var contentPublisher: AnyPublisher<ItemContent, Never> {
+        loader.contentPublisher
+    }
 
     /// Creates the item from an ``Asset`` publisher data source.
     public init<P, M>(
@@ -33,22 +32,11 @@ public final class PlayerItem: Equatable {
         metadataAdapter: MetadataAdapter<M> = .none(),
         trackerAdapters: [TrackerAdapter<M>] = []
     ) where P: Publisher, P.Output == Asset<M> {
-        let trackerAdapters = trackerAdapters.map { [id] adapter in
-            adapter.withId(id)
-        }
-        content = ResourceContent(resource: .loading, id: id, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters)
-        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
-            publisher
-                .map { asset in
-                    AssetContent(asset: asset, id: id, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters)
-                }
-                .catch { error in
-                    Just(ResourceContent(resource: .failing(error: error), id: id, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters))
-                }
-        }
-        .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))
-        .receive(on: DispatchQueue.main)
-        .assign(to: &$content)
+        loader = ItemLoader(
+            publisher: publisher,
+            metadataAdapter: metadataAdapter,
+            trackerAdapters: trackerAdapters
+        )
     }
 
     /// Creates a player item from an ``Asset``.
@@ -65,17 +53,12 @@ public final class PlayerItem: Equatable {
         lhs === rhs
     }
 
-    static func load(for id: UUID) {
-        Self.trigger.activate(for: TriggerId.load(id))
+    func enableTrackers(for player: Player) {
+        loader.enableTrackers(for: player)
     }
 
-    static func reload(for id: UUID) {
-        Self.trigger.activate(for: TriggerId.reset(id))
-        Self.trigger.activate(for: TriggerId.load(id))
-    }
-
-    func matches(_ playerItem: AVPlayerItem?) -> Bool {
-        content.matches(playerItem)
+    func disableTrackers() {
+        loader.disableTrackers()
     }
 }
 
@@ -221,11 +204,5 @@ public extension PlayerItem {
             metadataAdapter: metadataAdapter,
             trackerAdapters: trackerAdapters
         )
-    }
-}
-
-extension PlayerItem: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        "\(content)"
     }
 }

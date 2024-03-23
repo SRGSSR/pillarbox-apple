@@ -89,13 +89,9 @@ public final class Player: ObservableObject, Equatable {
     lazy var metadataPublisher: AnyPublisher<Player.Metadata, Never> = {
         queuePublisher
             .slice(at: \.item)
-            .scan(Optional<CurrentMetadata>.none) { _, item in
-                guard let item else { return nil }
-                return CurrentMetadata(item: item)
-            }
-            .map { currentMetadata in
-                guard let currentMetadata else { return Just(Player.Metadata.empty).eraseToAnyPublisher() }
-                return currentMetadata.metadataPublisher
+            .map { item in
+                guard let item else { return Just(Player.Metadata.empty).eraseToAnyPublisher() }
+                return item.contentPublisher.map(\.metadata).eraseToAnyPublisher()
             }
             .switchToLatest()
             .removeDuplicates()
