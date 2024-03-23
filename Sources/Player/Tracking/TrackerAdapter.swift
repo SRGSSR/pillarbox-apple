@@ -40,6 +40,7 @@ public class TrackerAdapter<M> {
     func enable(for player: Player) {
         tracker.enable(for: player)
 
+        // TODO: Is there a cleaner implementation that avoids the need for id checks?
         player.propertiesPublisher
             .sink { [weak self] properties in
                 guard let self, properties.id == id else { return }
