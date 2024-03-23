@@ -6,6 +6,7 @@
 
 import Combine
 
+// TODO: Rename if tracking also managed.
 protocol ItemLoading {
     var content: ItemContent { get }
     var contentPublisher: AnyPublisher<ItemContent, Never> { get }

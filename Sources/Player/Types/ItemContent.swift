@@ -10,18 +10,31 @@ struct ItemContent {
     let id: UUID
     let resource: Resource
     let metadata: Player.Metadata
+    let configuration: ((AVPlayerItem) -> Void)?
+
+    init(
+        id: UUID,
+        resource: Resource,
+        metadata: Player.Metadata = .empty,
+        configuration: ((AVPlayerItem) -> Void)? = nil
+    ) {
+        self.id = id
+        self.resource = resource
+        self.metadata = metadata
+        self.configuration = configuration
+    }
 
     func playerItem(reload: Bool = false) -> AVPlayerItem {
         if reload, resource.isFailing {
             let item = Resource.loading.playerItem().withId(id)
-            configure(item: item)
+            configuration?(item)
             update(item: item)
             ItemOrchestrator.reload(for: id)
             return item
         }
         else {
             let item = resource.playerItem().withId(id)
-            configure(item: item)
+            configuration?(item)
             update(item: item)
             ItemOrchestrator.load(for: id)
             return item
@@ -30,11 +43,6 @@ struct ItemContent {
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
         id == playerItem?.id
-    }
-
-    private func configure(item: AVPlayerItem) {
-        // TODO: Apply configuration block (store configuration in resource, or in ItemContent if more appropriate, or
-        //       maybe in a wrapper for Resource)
     }
 
     func update(item: AVPlayerItem) {

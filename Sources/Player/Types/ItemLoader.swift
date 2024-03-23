@@ -19,7 +19,7 @@ final class ItemLoader<M>: ItemLoading {
         metadataAdapter: MetadataAdapter<M>,
         trackerAdapters: [TrackerAdapter<M>]
     ) where P: Publisher, P.Output == Asset<M> {
-        content = .init(id: id, resource: .loading, metadata: .empty)
+        content = .init(id: id, resource: .loading)
 
         // TODO: Is there now a way to avoid associating this id?
         self.trackerAdapters = trackerAdapters.map { [id] adapter in
@@ -32,11 +32,12 @@ final class ItemLoader<M>: ItemLoading {
                     ItemContent(
                         id: id,
                         resource: asset.resource,
-                        metadata: metadataAdapter.metadata(from: asset.metadata)
+                        metadata: metadataAdapter.metadata(from: asset.metadata),
+                        configuration: asset.configuration
                     )
                 }
                 .catch { error in
-                    Just(ItemContent(id: id, resource: .failing(error: error), metadata: .empty))
+                    Just(ItemContent(id: id, resource: .failing(error: error)))
                 }
         }
         .wait(untilOutputFrom: ItemOrchestrator.loadSignal(for: id))
