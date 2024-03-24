@@ -10,42 +10,27 @@ struct ItemContent {
     let id: UUID
     let resource: Resource
     let metadata: Player.Metadata
-    let configuration: ((AVPlayerItem) -> Void)?
-    let trigger: ItemTrigger
 
     init(
         id: UUID,
         resource: Resource,
-        metadata: Player.Metadata = .empty,
-        configuration: ((AVPlayerItem) -> Void)? = nil,
-        trigger: ItemTrigger
+        metadata: Player.Metadata = .empty
     ) {
         self.id = id
         self.resource = resource
         self.metadata = metadata
-        self.configuration = configuration
-        self.trigger = trigger
-    }
-
-    func playerItem(reload: Bool = false) -> AVPlayerItem {
-        if reload, resource.isFailing {
-            let item = Resource.loading.playerItem().withId(id)
-            configuration?(item)
-            update(item: item)
-            trigger.reload()
-            return item
-        }
-        else {
-            let item = resource.playerItem().withId(id)
-            configuration?(item)
-            update(item: item)
-            trigger.load()
-            return item
-        }
     }
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
         id == playerItem?.id
+    }
+
+    func matches(_ content: ItemContent) -> Bool {
+        id == content.id
+    }
+
+    func isIdentical(to content: ItemContent) -> Bool {
+        matches(content) && resource == content.resource
     }
 
     func update(item: AVPlayerItem) {
@@ -64,58 +49,57 @@ extension AVPlayerItem {
     ///   - currentItem: The item currently being played by the player.
     /// - Returns: The list of player items to load into the player.
     static func playerItems(
-        for currentContents: [ItemContent],
-        replacing previousContents: [ItemContent],
+        for currentElements: [QueueElement],
+        replacing previousElements: [QueueElement],
         currentItem: AVPlayerItem?,
         length: Int
     ) -> [AVPlayerItem] {
-        guard let currentItem else { return playerItems(from: Array(currentContents.prefix(length))) }
-        if let currentIndex = matchingIndex(for: currentItem, in: currentContents) {
-            let currentContent = currentContents[currentIndex]
-            if findContent(currentContent, in: previousContents) {
-                currentContent.update(item: currentItem)
-                return [currentItem] + playerItems(from: Array(currentContents.suffix(from: currentIndex + 1).prefix(length - 1)))
+        guard let currentItem else { return playerItems(from: Array(currentElements.prefix(length))) }
+        if let currentIndex = matchingIndex(for: currentItem, in: currentElements) {
+            let currentElement = currentElements[currentIndex]
+            if findIdentical(currentElement, in: previousElements) {
+                // currentElement.update(item: currentItem)
+                return [currentItem] + playerItems(from: Array(currentElements.suffix(from: currentIndex + 1).prefix(length - 1)))
             }
             else {
-                return playerItems(from: Array(currentContents.suffix(from: currentIndex).prefix(length)))
+                return playerItems(from: Array(currentElements.suffix(from: currentIndex).prefix(length)))
             }
         }
-        else if let commonIndex = firstCommonIndex(in: currentContents, matching: previousContents, after: currentItem) {
-            return playerItems(from: Array(currentContents.suffix(from: commonIndex).prefix(length)))
+        else if let commonIndex = firstCommonIndex(in: currentElements, matching: previousElements, after: currentItem) {
+            return playerItems(from: Array(currentElements.suffix(from: commonIndex).prefix(length)))
         }
         else {
-            return playerItems(from: Array(currentContents.prefix(length)))
+            return playerItems(from: Array(currentElements.prefix(length)))
         }
     }
 
-    static func playerItems(from contents: [ItemContent], reload: Bool = false) -> [AVPlayerItem] {
-        contents.map { $0.playerItem(reload: reload) }
+    static func playerItems(from elements: [QueueElement], reload: Bool = false) -> [AVPlayerItem] {
+        elements.map { $0.playerItem(reload: reload) }
     }
 
-    private static func matchingIndex(for item: AVPlayerItem, in contents: [ItemContent]) -> Int? {
-        contents.firstIndex { $0.matches(item) }
+    private static func matchingIndex(for item: AVPlayerItem, in elements: [QueueElement]) -> Int? {
+        elements.firstIndex { $0.matches(item) }
     }
 
-    private static func firstMatchingIndex(for contents: [ItemContent], in other: [ItemContent]) -> Int? {
-        guard let match = contents.first(where: { content in
-            other.contains(where: { $0.id == content.id })
+    private static func firstMatchingIndex(of elements: [QueueElement], in otherElements: [QueueElement]) -> Int? {
+        guard let match = elements.first(where: { content in
+            otherElements.contains(where: { $0.matches(content) })
         }) else {
             return nil
         }
-        return matchingIndex(for: match, in: other)
+        return otherElements.firstIndex { $0.matches(match) }
     }
 
-    private static func matchingIndex(for content: ItemContent, in contents: [ItemContent]) -> Int? {
-        contents.firstIndex { $0.id == content.id }
+    private static func findIdentical(_ element: QueueElement, in elements: [QueueElement]) -> Bool {
+        elements.contains { $0.isIdentical(to: element) }
     }
 
-    private static func findContent(_ content: ItemContent, in contents: [ItemContent]) -> Bool {
-        guard let match = contents.first(where: { $0.id == content.id }) else { return false }
-        return match.resource == content.resource
-    }
-
-    private static func firstCommonIndex(in contents: [ItemContent], matching other: [ItemContent], after item: AVPlayerItem) -> Int? {
-        guard let matchIndex = matchingIndex(for: item, in: other) else { return nil }
-        return firstMatchingIndex(for: Array(other.suffix(from: matchIndex + 1)), in: contents)
+    private static func firstCommonIndex(
+        in elements: [QueueElement],
+        matching otherElements: [QueueElement],
+        after item: AVPlayerItem
+    ) -> Int? {
+        guard let matchIndex = matchingIndex(for: item, in: otherElements) else { return nil }
+        return firstMatchingIndex(of: Array(otherElements.suffix(from: matchIndex + 1)), in: elements)
     }
 }

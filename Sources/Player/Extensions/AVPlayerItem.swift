@@ -31,7 +31,10 @@ extension AVPlayerItem {
     }
 
     static func playerItems(from items: [PlayerItem], length: Int, reload: Bool) -> [AVPlayerItem] {
-        playerItems(from: items.prefix(length).map(\.content), reload: reload)
+        let elements = items.prefix(length).map { item in
+            QueueElement(item: item, content: item.content)
+        }
+        return playerItems(from: elements, reload: reload)
     }
 }
 

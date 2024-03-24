@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import Combine
 
 // TODO: Rename if tracking also managed.

@@ -4,14 +4,20 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import Combine
 import Foundation
 import PillarboxCore
 
+private enum TriggerId: Hashable {
+    case load
+    case reset
+}
+
 final class ItemLoader<M>: ItemLoading {
     private let id = UUID()
     private let trackerAdapters: [TrackerAdapter<M>]
-    private let trigger = ItemTrigger()
+    private let trigger = Trigger()
 
     @Published private(set) var content: ItemContent
 
@@ -20,29 +26,27 @@ final class ItemLoader<M>: ItemLoading {
         metadataAdapter: MetadataAdapter<M>,
         trackerAdapters: [TrackerAdapter<M>]
     ) where P: Publisher, P.Output == Asset<M> {
-        content = .init(id: id, resource: .loading, trigger: trigger)
+        content = .init(id: id, resource: .loading)
 
         // TODO: Is there now a way to avoid associating this id?
         self.trackerAdapters = trackerAdapters.map { [id] adapter in
             adapter.withId(id)
         }
 
-        Publishers.PublishAndRepeat(onOutputFrom: trigger.resetSignal()) { [id, trigger] in
+        Publishers.PublishAndRepeat(onOutputFrom: trigger.signal(activatedBy: TriggerId.reset)) { [id] in
             publisher
                 .map { asset in
                     ItemContent(
                         id: id,
                         resource: asset.resource,
-                        metadata: metadataAdapter.metadata(from: asset.metadata),
-                        configuration: asset.configuration,
-                        trigger: trigger
+                        metadata: metadataAdapter.metadata(from: asset.metadata)
                     )
                 }
                 .catch { error in
-                    Just(ItemContent(id: id, resource: .failing(error: error), trigger: trigger))
+                    Just(ItemContent(id: id, resource: .failing(error: error)))
                 }
         }
-        .wait(untilOutputFrom: trigger.loadSignal())
+        .wait(untilOutputFrom: trigger.signal(activatedBy: TriggerId.load))
         .receive(on: DispatchQueue.main)
         .assign(to: &$content)
     }

@@ -36,8 +36,8 @@ extension Player {
                     return nil
                 }
                 return AVPlayerItem.playerItems(
-                    for: current.elements.map(\.content),
-                    replacing: previous.elements.map(\.content),
+                    for: current.elements,
+                    replacing: previous.elements,
                     currentItem: buffer.item,
                     length: buffer.length
                 )
