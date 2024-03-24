@@ -11,17 +11,20 @@ struct ItemContent {
     let resource: Resource
     let metadata: Player.Metadata
     let configuration: ((AVPlayerItem) -> Void)?
+    let trigger: ItemTrigger
 
     init(
         id: UUID,
         resource: Resource,
         metadata: Player.Metadata = .empty,
-        configuration: ((AVPlayerItem) -> Void)? = nil
+        configuration: ((AVPlayerItem) -> Void)? = nil,
+        trigger: ItemTrigger
     ) {
         self.id = id
         self.resource = resource
         self.metadata = metadata
         self.configuration = configuration
+        self.trigger = trigger
     }
 
     func playerItem(reload: Bool = false) -> AVPlayerItem {
@@ -29,14 +32,14 @@ struct ItemContent {
             let item = Resource.loading.playerItem().withId(id)
             configuration?(item)
             update(item: item)
-            ItemOrchestrator.reload(for: id)
+            trigger.reload()
             return item
         }
         else {
             let item = resource.playerItem().withId(id)
             configuration?(item)
             update(item: item)
-            ItemOrchestrator.load(for: id)
+            trigger.load()
             return item
         }
     }
