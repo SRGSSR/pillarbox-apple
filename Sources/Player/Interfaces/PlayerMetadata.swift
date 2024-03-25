@@ -8,7 +8,7 @@ import AVFoundation
 import CoreMedia
 
 /// A protocol for custom player metadata integration.
-public protocol PlayerMetadata: AnyObject {
+public protocol PlayerMetadata {
     /// A type describing the configuration offered for metadata display.
     ///
     /// Use `Void` if no configuration is offered.
