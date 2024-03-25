@@ -8,14 +8,11 @@ import AVFoundation
 import MediaPlayer
 import UIKit
 
-public final class CommonMetadata: PlayerMetadata {
+public struct CommonMetadata: PlayerMetadata {
     public struct Metadata {
         public let title: String?
         public let subtitle: String?
         public let description: String?
-
-        // TODO: Likely better as a URL => would need to have lifecycle methods on PlayerMetadata so that we can
-        //       retrieve the image only when needed.
         public let image: UIImage?
 
         public init(title: String? = nil, subtitle: String? = nil, description: String? = nil, image: UIImage? = nil) {
@@ -26,30 +23,21 @@ public final class CommonMetadata: PlayerMetadata {
         }
     }
 
-    private var metadata: Metadata?
-
     public init(configuration: Void) {}
 
-    public func update(metadata: Metadata) {
-        self.metadata = metadata
-    }
-
-    public func mediaItemInfo() -> NowPlayingInfo {
+    public func mediaItemInfo(from metadata: Metadata) -> NowPlayingInfo {
         var nowPlayingInfo = NowPlayingInfo()
-        if let metadata {
-            nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
-            nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
-            nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
-            if let image = metadata.image {
-                nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
-            }
+        nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
+        nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
+        nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
+        if let image = metadata.image {
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
         }
         return nowPlayingInfo
     }
 
-    public func metadataItems() -> [AVMetadataItem] {
-        guard let metadata else { return [] }
-        return [
+    public func metadataItems(from metadata: Metadata) -> [AVMetadataItem] {
+        [
             metadataItem(for: .commonIdentifierTitle, value: metadata.title),
             metadataItem(for: .iTunesMetadataTrackSubTitle, value: metadata.subtitle),
             metadataItem(for: .commonIdentifierArtwork, value: metadata.image?.pngData()),

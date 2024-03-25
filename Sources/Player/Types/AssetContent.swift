@@ -23,10 +23,6 @@ struct AssetContent<M>: PlayerItemContent {
         self.trackerAdapters = trackerAdapters
     }
 
-    func updateMetadata() {
-        metadataAdapter.update(metadata: asset.metadata)
-    }
-
     func updateTracker() {
         trackerAdapters.forEach { adapter in
             adapter.update(metadata: asset.metadata)
@@ -38,7 +34,7 @@ struct AssetContent<M>: PlayerItemContent {
     }
 
     func update(item: AVPlayerItem) {
-        item.externalMetadata = metadataAdapter.metadataItems()
+        // item.externalMetadata
         // FIXME: On tvOS set navigation markers
     }
 }

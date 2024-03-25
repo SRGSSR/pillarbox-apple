@@ -15,7 +15,6 @@ protocol PlayerItemContent {
     var metadataAdapter: MetadataAdapter<Metadata> { get }
     var trackerAdapters: [TrackerAdapter<Metadata>] { get }
 
-    func updateMetadata()
     func updateTracker()
 
     func configure(item: AVPlayerItem)
@@ -54,13 +53,6 @@ extension PlayerItemContent {
             PlayerItem.load(for: id)
             return item
         }
-    }
-
-    func metadata() -> Player.Metadata {
-        .init(
-            mediaItemInfo: metadataAdapter.mediaItemInfo(),
-            metadataItems: metadataAdapter.metadataItems()
-        )
     }
 }
 

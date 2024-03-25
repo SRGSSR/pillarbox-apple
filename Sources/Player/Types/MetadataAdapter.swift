@@ -8,11 +8,10 @@ import AVFoundation
 import CoreMedia
 
 /// An adapter which instantiates and manages metadata associated with a player.
-///  
+///
 /// An adapter transforms metadata delivered by a player item into a metadata format suitable for the player.
 public struct MetadataAdapter<M> {
-    private let playerMetadata: any PlayerMetadata
-    private let update: (M) -> Void
+    private let convert: (M) -> Player.Metadata
 
     /// Creates an adapter for a type of metadata with the provided mapper.
     ///
@@ -20,13 +19,15 @@ public struct MetadataAdapter<M> {
     ///   - metadataType: The type of metadata to instantiate and manage.
     ///   - mapper: The metadata mapper.
     public init<T>(metadataType: T.Type, configuration: T.Configuration, mapper: ((M) -> T.Metadata)?) where T: PlayerMetadata {
-        let playerMetadata = metadataType.init(configuration: configuration)
-        update = { metadata in
-            if let mapper {
-                playerMetadata.update(metadata: mapper(metadata))
-            }
+        convert = { metadata in
+            guard let mapper else { return .empty }
+            let playerMetadata = metadataType.init(configuration: configuration)
+            let mappedMetadata = mapper(metadata)
+            return .init(
+                mediaItemInfo: playerMetadata.mediaItemInfo(from: mappedMetadata),
+                metadataItems: playerMetadata.metadataItems(from: mappedMetadata)
+            )
         }
-        self.playerMetadata = playerMetadata
     }
 
     /// A special adapter which provides no metadata to the player.
@@ -34,15 +35,7 @@ public struct MetadataAdapter<M> {
         EmptyMetadata.adapter()
     }
 
-    func update(metadata: M) {
-        update(metadata)
-    }
-
-    func mediaItemInfo() -> NowPlayingInfo {
-        playerMetadata.mediaItemInfo()
-    }
-
-    func metadataItems() -> [AVMetadataItem] {
-        playerMetadata.metadataItems()
+    func metadata(from metadata: M) -> Player.Metadata {
+        convert(metadata)
     }
 }

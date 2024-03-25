@@ -17,15 +17,6 @@ enum Resource {
 
     private static let logger = Logger(category: "Resource")
 
-    var isLoading: Bool {
-        switch self {
-        case let .custom(url: url, _) where url == Self.loadingUrl:
-            true
-        default:
-            false
-        }
-    }
-
     var isFailing: Bool {
         switch self {
         case let .custom(url: url, _) where url == Self.failingUrl:
