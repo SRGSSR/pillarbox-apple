@@ -14,19 +14,18 @@ final class CurrentTracker {
     let item: PlayerItem
     private var cancellables = Set<AnyCancellable>()
 
-    init?(item: PlayerItem, player: Player?) {
-        guard let player else { return nil }
+    init(item: PlayerItem, player: Player) {
         self.item = item
+        item.enableTrackers(for: player)
 
-        item.$content
-            .sink { content in
-                content.updateTracker()
+        player.propertiesPublisher
+            .sink { properties in
+                item.updateTrackerProperties(properties)
             }
             .store(in: &cancellables)
-        item.content.enableTrackers(for: player)
     }
 
     deinit {
-        item.content.disableTrackers()
+        item.disableTrackers()
     }
 }

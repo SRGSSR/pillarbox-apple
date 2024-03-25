@@ -12,8 +12,8 @@ extension Player {
         Publishers.CombineLatest(queuePublisher.slice(at: \.item), $isTrackingEnabled)
             .map { (item: $0, isTrackingEnabled: $1) }
             .scan(nil) { [weak self] tracker, next in
-                if next.isTrackingEnabled, let item = next.item {
-                    guard tracker?.item != item else { return tracker }
+                if let self, next.isTrackingEnabled, let item = next.item {
+                    guard tracker?.item !== item else { return tracker }
                     return CurrentTracker(item: item, player: self)
                 }
                 else {

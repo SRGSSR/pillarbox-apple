@@ -79,6 +79,12 @@ public final class PlayerItem: Equatable {
     }
 }
 
+extension PlayerItem {
+    func enableTrackers(for player: Player) {}
+    func updateTrackerProperties(_ properties: PlayerProperties) {}
+    func disableTrackers() {}
+}
+
 public extension PlayerItem {
     /// Returns a simple playable item.
     ///

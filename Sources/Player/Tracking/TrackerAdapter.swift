@@ -13,7 +13,6 @@ import Foundation
 public class TrackerAdapter<M> {
     private let tracker: any PlayerItemTracker
     private let update: (M) -> Void
-    private var cancellables = Set<AnyCancellable>()
     private var id = UUID()
 
     /// Creates an adapter for a type of tracker with the provided mapper.
@@ -39,13 +38,6 @@ public class TrackerAdapter<M> {
 
     func enable(for player: Player) {
         tracker.enable(for: player)
-
-        player.propertiesPublisher
-            .sink { [weak self] properties in
-                guard let self, properties.id == id else { return }
-                tracker.updateProperties(with: properties)
-            }
-            .store(in: &cancellables)
     }
 
     func update(metadata: M) {
@@ -53,7 +45,6 @@ public class TrackerAdapter<M> {
     }
 
     func disable() {
-        cancellables = []
         tracker.disable()
     }
 }
