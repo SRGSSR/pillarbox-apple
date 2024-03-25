@@ -24,6 +24,7 @@ public final class PlayerItem: Equatable {
     private static let trigger = Trigger()
 
     @Published private(set) var content: any PlayerItemContent
+    private let trackerAdapters: [any TrackerLifeCycle]
 
     let id = UUID()
 
@@ -36,6 +37,7 @@ public final class PlayerItem: Equatable {
         let trackerAdapters = trackerAdapters.map { [id] adapter in
             adapter.withId(id)
         }
+        self.trackerAdapters = trackerAdapters
         content = ResourceContent(resource: .loading, id: id, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
             publisher
@@ -80,9 +82,23 @@ public final class PlayerItem: Equatable {
 }
 
 extension PlayerItem {
-    func enableTrackers(for player: Player) {}
-    func updateTrackerProperties(_ properties: PlayerProperties) {}
-    func disableTrackers() {}
+    func enableTrackers(for player: Player) {
+        trackerAdapters.forEach { adapter in
+            adapter.enable(for: player)
+        }
+    }
+
+    func updateTrackerProperties(_ properties: PlayerProperties) {
+        trackerAdapters.forEach { adapter in
+            adapter.updateProperties(properties)
+        }
+    }
+
+    func disableTrackers() {
+        trackerAdapters.forEach { adapter in
+            adapter.disable()
+        }
+    }
 }
 
 public extension PlayerItem {

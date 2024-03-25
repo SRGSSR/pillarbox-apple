@@ -36,13 +36,17 @@ public class TrackerAdapter<M> {
         return self
     }
 
+    func update(metadata: M) {
+        update(metadata)
+    }
+}
+
+extension TrackerAdapter: TrackerLifeCycle {
     func enable(for player: Player) {
         tracker.enable(for: player)
     }
 
-    func update(metadata: M) {
-        update(metadata)
-    }
+    func updateProperties(_ properties: PlayerProperties) {}
 
     func disable() {
         tracker.disable()
