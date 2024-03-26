@@ -22,4 +22,21 @@ struct AssetContent {
     func update(item: AVPlayerItem) {
         item.externalMetadata = metadata.metadataItems
     }
+
+    func playerItem(reload: Bool = false) -> AVPlayerItem {
+        if reload, resource.isFailing {
+            let item = Resource.loading.playerItem().withId(id)
+            // TODO: configure(item: item)
+            update(item: item)
+            PlayerItem.reload(for: id)
+            return item
+        }
+        else {
+            let item = resource.playerItem().withId(id)
+            // TODO: configure(item: item)
+            update(item: item)
+            PlayerItem.load(for: id)
+            return item
+        }
+    }
 }
