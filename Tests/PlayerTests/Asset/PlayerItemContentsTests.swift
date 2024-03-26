@@ -174,6 +174,6 @@ private extension AssetContent {
             id: UUID(uuidString: "\(group8)-\(group4)-\(group4)-\(group4)-\(group12)")!,
             resource: .simple(url: Stream.onDemand.url),
             metadata: .empty
-        )
+        ) { _ in }
     }
 }

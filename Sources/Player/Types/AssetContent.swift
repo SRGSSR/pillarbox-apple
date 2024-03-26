@@ -10,13 +10,14 @@ struct AssetContent {
     let id: UUID
     let resource: Resource
     let metadata: Player.Metadata
+    let configuration: (AVPlayerItem) -> Void
 
     static func loading(id: UUID) -> Self {
-        .init(id: id, resource: .loading, metadata: .empty)
+        .init(id: id, resource: .loading, metadata: .empty) { _ in }
     }
 
     static func failing(id: UUID, error: Error) -> Self {
-        .init(id: id, resource: .failing(error: error), metadata: .empty)
+        .init(id: id, resource: .failing(error: error), metadata: .empty) { _ in }
     }
 
     func update(item: AVPlayerItem) {
@@ -26,14 +27,14 @@ struct AssetContent {
     func playerItem(reload: Bool = false) -> AVPlayerItem {
         if reload, resource.isFailing {
             let item = Resource.loading.playerItem().withId(id)
-            // TODO: configure(item: item)
+            configuration(item)
             update(item: item)
             PlayerItem.reload(for: id)
             return item
         }
         else {
             let item = resource.playerItem().withId(id)
-            // TODO: configure(item: item)
+            configuration(item)
             update(item: item)
             PlayerItem.load(for: id)
             return item
