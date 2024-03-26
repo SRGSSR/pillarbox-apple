@@ -14,10 +14,6 @@ enum MediaMock: String {
     case media2
 }
 
-enum MockError: Error {
-    case mock
-}
-
 extension PlayerItem {
     static func mock(
         url: URL,
