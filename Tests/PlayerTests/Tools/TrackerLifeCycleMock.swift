@@ -23,7 +23,6 @@ final class TrackerLifeCycleMock: PlayerItemTracker {
     }
 
     private let configuration: Configuration
-    private var cancellables = Set<AnyCancellable>()
 
     init(configuration: Configuration) {
         self.configuration = configuration

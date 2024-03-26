@@ -24,7 +24,6 @@ final class TrackerUpdateMock<Metadata>: PlayerItemTracker where Metadata: Equat
     }
 
     private let configuration: Configuration
-    private var cancellables = Set<AnyCancellable>()
 
     init(configuration: Configuration) {
         self.configuration = configuration
