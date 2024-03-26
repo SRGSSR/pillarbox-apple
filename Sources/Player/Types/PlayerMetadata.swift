@@ -12,7 +12,6 @@ public struct PlayerMetadata: Equatable {
     public let mediaItemInfo: NowPlayingInfo
     public let metadataItems: [AVMetadataItem]
 
-    // FIXME: Make NowPlayingInfo a proper equatable type, then remove
     public static func == (lhs: Self, rhs: Self) -> Bool {
         // swiftlint:disable:next legacy_objc_type
         NSDictionary(dictionary: lhs.mediaItemInfo).isEqual(to: rhs.mediaItemInfo) && lhs.metadataItems == rhs.metadataItems
