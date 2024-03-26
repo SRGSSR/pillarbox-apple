@@ -6,6 +6,7 @@
 
 import AVFoundation
 import CoreMedia
+import MediaPlayer
 import PillarboxPlayer
 import SwiftUI
 
@@ -31,7 +32,7 @@ private struct MainView: View {
     var body: some View {
         ZStack {
             main()
-            timeBar()
+            bottomBar()
             topBar()
         }
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
@@ -63,6 +64,14 @@ private struct MainView: View {
             }
     }
 
+    private var title: String? {
+        player.metadata.nowPlayingInfo[MPMediaItemPropertyTitle] as? String
+    }
+
+    private var subtitle: String? {
+        player.metadata.nowPlayingInfo[MPMediaItemPropertyArtist] as? String
+    }
+
     @ViewBuilder
     private func main() -> some View {
         ZStack {
@@ -83,10 +92,32 @@ private struct MainView: View {
     }
 
     @ViewBuilder
-    private func timeBar() -> some View {
-        TimeBar(player: player, visibilityTracker: visibilityTracker, layout: $layout, isInteracting: $isInteracting)
-            .opacity(isUserInterfaceHidden ? 0 : 1)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+    private func metadata() -> some View {
+        VStack(alignment: .leading) {
+            if let subtitle {
+                Text(subtitle)
+                    .font(.caption2)
+                    .fontWeight(.bold)
+            }
+            if let title {
+                Text(title)
+                    .font(.headline)
+                    .fontWeight(.semibold)
+            }
+        }
+        .padding(.horizontal)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .foregroundStyle(.white)
+    }
+
+    @ViewBuilder
+    private func bottomBar() -> some View {
+        VStack {
+            metadata()
+            TimeBar(player: player, visibilityTracker: visibilityTracker, layout: $layout, isInteracting: $isInteracting)
+        }
+        .opacity(isUserInterfaceHidden ? 0 : 1)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 
     @ViewBuilder
