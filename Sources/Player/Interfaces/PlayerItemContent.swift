@@ -41,8 +41,7 @@ extension AVPlayerItem {
     }
 
     static func playerItems(from contents: [AssetContent], reload: Bool = false) -> [AVPlayerItem] {
-        // TODO: contents.map { $0.playerItem(reload: reload) }
-        []
+        contents.map { $0.playerItem(reload: reload) }
     }
 
     private static func matchingIndex(for item: AVPlayerItem, in contents: [AssetContent]) -> Int? {
