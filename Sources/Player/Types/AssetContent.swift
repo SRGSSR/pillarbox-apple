@@ -9,7 +9,7 @@ import AVFoundation
 struct AssetContent {
     let id: UUID
     let resource: Resource
-    let metadata: Player.Metadata
+    let metadata: PlayerMetadata
     let configuration: (AVPlayerItem) -> Void
 
     static func loading(id: UUID) -> Self {

@@ -42,7 +42,7 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    @Published public private(set) var metadata: Player.Metadata = .empty
+    @Published public private(set) var metadata: PlayerMetadata = .empty
 
     private var currentTracker: CurrentTracker?
 
@@ -86,11 +86,11 @@ public final class Player: ObservableObject, Equatable {
         .eraseToAnyPublisher()
     }()
 
-    lazy var metadataPublisher: AnyPublisher<Player.Metadata, Never> = {
+    lazy var metadataPublisher: AnyPublisher<PlayerMetadata, Never> = {
         queuePublisher
             .slice(at: \.item)
             .map { item in
-                guard let item else { return Just(Player.Metadata.empty).eraseToAnyPublisher() }
+                guard let item else { return Just(PlayerMetadata.empty).eraseToAnyPublisher() }
                 return item.$content.map(\.metadata).eraseToAnyPublisher()
             }
             .switchToLatest()

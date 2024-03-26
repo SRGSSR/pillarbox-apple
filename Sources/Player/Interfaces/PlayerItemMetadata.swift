@@ -7,8 +7,8 @@
 import AVFoundation
 import CoreMedia
 
-/// A protocol for custom player metadata integration.
-public protocol PlayerMetadata {
+/// A protocol for custom player item metadata integration.
+public protocol PlayerItemMetadata {
     /// A type describing the configuration offered for metadata display.
     ///
     /// Use `Void` if no configuration is offered.
@@ -42,7 +42,7 @@ public protocol PlayerMetadata {
     func metadataItems(from metadata: Metadata) -> [AVMetadataItem]
 }
 
-public extension PlayerMetadata {
+public extension PlayerItemMetadata {
     /// Creates an adapter for the receiver with the provided mapping to its metadata format.
     ///
     /// - Parameters:
@@ -54,7 +54,7 @@ public extension PlayerMetadata {
     }
 }
 
-public extension PlayerMetadata where Configuration == Void {
+public extension PlayerItemMetadata where Configuration == Void {
     /// Creates an adapter for the receiver with the provided mapping to its metadata format.
     ///
     /// - Parameter mapper: A closure that maps an item metadata to player metadata.
@@ -64,7 +64,7 @@ public extension PlayerMetadata where Configuration == Void {
     }
 }
 
-public extension PlayerMetadata where Metadata == Void {
+public extension PlayerItemMetadata where Metadata == Void {
     /// Creates an adapter for the receiver.
     ///
     /// - Returns: The metadata adapter.
@@ -76,7 +76,7 @@ public extension PlayerMetadata where Metadata == Void {
     }
 }
 
-public extension PlayerMetadata where Configuration == Void, Metadata == Void {
+public extension PlayerItemMetadata where Configuration == Void, Metadata == Void {
     /// Creates an adapter for the receiver.
     ///
     /// - Returns: The metadata adapter.

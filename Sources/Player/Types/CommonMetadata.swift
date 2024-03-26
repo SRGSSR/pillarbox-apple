@@ -8,7 +8,7 @@ import AVFoundation
 import MediaPlayer
 import UIKit
 
-public struct CommonMetadata: PlayerMetadata {
+public struct CommonMetadata: PlayerItemMetadata {
     public struct Metadata {
         public let title: String?
         public let subtitle: String?
