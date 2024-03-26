@@ -10,7 +10,7 @@ import AVFoundation
 import Nimble
 import PillarboxStreams
 
-final class PlayerItemContentsTests: TestCase {
+final class AVPlayerItemAssetContentUpdateTests: TestCase {
     func testPlayerItemsWithoutCurrentItem() {
         let previousContents: [AssetContent] = [
             .test(id: "1"),
@@ -62,14 +62,14 @@ final class PlayerItemContentsTests: TestCase {
 
     func testPlayerItemsWithPreservedCurrentItemAtEnd() {
         let currentItemContent = AssetContent.test(id: "3")
-        let previousContents: [AssetContent] = [
+        let previousContents = [
             .test(id: "1"),
             .test(id: "2"),
             currentItemContent,
             .test(id: "4"),
             .test(id: "5")
         ]
-        let currentContents: [AssetContent] = [
+        let currentContents = [
             .test(id: "A"),
             .test(id: "B"),
             .test(id: "C"),
