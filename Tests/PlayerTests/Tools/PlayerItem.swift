@@ -35,7 +35,7 @@ extension PlayerItem {
             .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
         return .init(
             publisher: publisher,
-            metadataAdapter: CommonMetadata.adapter { metadata in
+            metadataAdapter: StandardMetadata.adapter { metadata in
                 .init(title: metadata.title, subtitle: metadata.subtitle, description: metadata.description)
             },
             trackerAdapters: trackerAdapters
@@ -66,7 +66,7 @@ extension PlayerItem {
         ))
         return .init(
             publisher: publisher,
-            metadataAdapter: CommonMetadata.adapter { metadata in
+            metadataAdapter: StandardMetadata.adapter { metadata in
                 .init(title: metadata.title, subtitle: metadata.subtitle, description: metadata.description)
             },
             trackerAdapters: trackerAdapters
@@ -83,7 +83,7 @@ extension PlayerItem {
             }
         return .init(
             publisher: publisher,
-            metadataAdapter: CommonMetadata.adapter { metadata in
+            metadataAdapter: StandardMetadata.adapter { metadata in
                 .init(title: metadata.title, subtitle: metadata.subtitle, description: metadata.description)
             },
             trackerAdapters: trackerAdapters
