@@ -15,6 +15,7 @@ public struct StandardMetadata: PlayerItemMetadata {
     public func nowPlayingInfo(from metadata: Metadata) -> NowPlayingInfo {
         var nowPlayingInfo = NowPlayingInfo()
         nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
+        // FIXME: Probably twisting metadata here
         nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
         nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
         if let image = metadata.image {

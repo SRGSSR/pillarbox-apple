@@ -65,10 +65,12 @@ private struct MainView: View {
     }
 
     private var title: String? {
+        // TODO: Use AVMetadataItem
         player.metadata.nowPlayingInfo[MPMediaItemPropertyTitle] as? String
     }
 
     private var subtitle: String? {
+        // TODO: Use AVMetadataItem
         player.metadata.nowPlayingInfo[MPMediaItemPropertyArtist] as? String
     }
 
