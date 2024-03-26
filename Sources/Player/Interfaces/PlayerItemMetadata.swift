@@ -30,7 +30,7 @@ public protocol PlayerItemMetadata {
     ///
     /// Refer to the [official documentation](https://developer.apple.com/documentation/mediaplayer/mpnowplayinginfocenter#1674387)
     /// for more information.
-    func mediaItemInfo(from metadata: Metadata) -> NowPlayingInfo
+    func nowPlayingInfo(from metadata: Metadata) -> NowPlayingInfo
 
     /// A method formatting metadata for display in the standard system player user interface.
     ///

@@ -9,7 +9,7 @@ import AVFoundation
 struct EmptyMetadata<M>: PlayerItemMetadata {
     init(configuration: Void) {}
 
-    func mediaItemInfo(from metadata: M) -> NowPlayingInfo {
+    func nowPlayingInfo(from metadata: M) -> NowPlayingInfo {
         .init()
     }
 

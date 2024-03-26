@@ -26,7 +26,7 @@ public struct MetadataAdapter<M> {
             let playerMetadata = metadataType.init(configuration: configuration)
             let mappedMetadata = mapper(metadata)
             return .init(
-                mediaItemInfo: playerMetadata.mediaItemInfo(from: mappedMetadata),
+                nowPlayingInfo: playerMetadata.nowPlayingInfo(from: mappedMetadata),
                 metadataItems: playerMetadata.metadataItems(from: mappedMetadata)
             )
         }

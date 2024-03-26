@@ -25,7 +25,7 @@ public struct CommonMetadata: PlayerItemMetadata {
 
     public init(configuration: Void) {}
 
-    public func mediaItemInfo(from metadata: Metadata) -> NowPlayingInfo {
+    public func nowPlayingInfo(from metadata: Metadata) -> NowPlayingInfo {
         var nowPlayingInfo = NowPlayingInfo()
         nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
         nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
