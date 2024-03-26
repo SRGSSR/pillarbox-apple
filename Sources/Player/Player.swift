@@ -27,6 +27,9 @@ public final class Player: ObservableObject, Equatable {
     /// A Boolean setting whether trackers must be enabled or not.
     @Published public var isTrackingEnabled = true
 
+    /// The metadata related to the item being played.
+    @Published public private(set) var metadata: PlayerMetadata = .empty
+
     @Published var storedItems: Deque<PlayerItem>
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
 
@@ -41,8 +44,6 @@ public final class Player: ObservableObject, Equatable {
             }
         }
     }
-
-    @Published public private(set) var metadata: PlayerMetadata = .empty
 
     private var currentTracker: CurrentTracker?
 
