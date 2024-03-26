@@ -31,7 +31,7 @@ public final class PlayerItem: Equatable {
     /// Creates the item from an ``Asset`` publisher data source.
     public init<P, M>(
         publisher: P,
-        metadataAdapter: MetadataAdapter<M> = .none(),
+        metadataAdapter: MetadataAdapter<M> = .none,
         trackerAdapters: [TrackerAdapter<M>] = []
     ) where P: Publisher, P.Output == Asset<M> {
         let trackerAdapters = trackerAdapters.map { [id] adapter in
@@ -70,7 +70,7 @@ public final class PlayerItem: Equatable {
     ///   - asset: The asset to play.
     ///   - metadataAdapter: A `MetadataAdapter` converting item metadata into player metadata.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    public convenience init<M>(asset: Asset<M>, metadataAdapter: MetadataAdapter<M> = .none(), trackerAdapters: [TrackerAdapter<M>] = []) {
+    public convenience init<M>(asset: Asset<M>, metadataAdapter: MetadataAdapter<M> = .none, trackerAdapters: [TrackerAdapter<M>] = []) {
         self.init(publisher: Just(asset), metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters)
     }
 
@@ -125,7 +125,7 @@ public extension PlayerItem {
     static func simple<M>(
         url: URL,
         metadata: M,
-        metadataAdapter: MetadataAdapter<M> = .none(),
+        metadataAdapter: MetadataAdapter<M> = .none,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
@@ -152,7 +152,7 @@ public extension PlayerItem {
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
         metadata: M,
-        metadataAdapter: MetadataAdapter<M> = .none(),
+        metadataAdapter: MetadataAdapter<M> = .none,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
@@ -177,7 +177,7 @@ public extension PlayerItem {
         url: URL,
         delegate: AVContentKeySessionDelegate,
         metadata: M,
-        metadataAdapter: MetadataAdapter<M> = .none(),
+        metadataAdapter: MetadataAdapter<M> = .none,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
@@ -199,7 +199,7 @@ public extension PlayerItem {
     /// - Returns: The item.
     static func simple(
         url: URL,
-        metadataAdapter: MetadataAdapter<Void> = .none(),
+        metadataAdapter: MetadataAdapter<Void> = .none,
         trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
@@ -223,7 +223,7 @@ public extension PlayerItem {
     static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
-        metadataAdapter: MetadataAdapter<Void> = .none(),
+        metadataAdapter: MetadataAdapter<Void> = .none,
         trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
@@ -245,7 +245,7 @@ public extension PlayerItem {
     static func encrypted(
         url: URL,
         delegate: AVContentKeySessionDelegate,
-        metadataAdapter: MetadataAdapter<Void> = .none(),
+        metadataAdapter: MetadataAdapter<Void> = .none,
         trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {

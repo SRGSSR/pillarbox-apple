@@ -11,6 +11,11 @@ import CoreMedia
 ///
 /// An adapter transforms metadata delivered by a player item into a metadata format suitable for the player.
 public struct MetadataAdapter<M> {
+    /// A special adapter which provides no metadata to the player.
+    public static var none: Self {
+        EmptyMetadata.adapter()
+    }
+
     private let map: (M) -> PlayerMetadata
 
     /// Creates an adapter for a type of metadata with the provided mapper.
@@ -28,11 +33,6 @@ public struct MetadataAdapter<M> {
                 metadataItems: playerMetadata.metadataItems(from: mappedMetadata)
             )
         }
-    }
-
-    /// A special adapter which provides no metadata to the player.
-    public static func none() -> Self {
-        EmptyMetadata.adapter()
     }
 
     func metadata(from metadata: M) -> PlayerMetadata {
