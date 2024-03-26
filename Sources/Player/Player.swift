@@ -86,6 +86,19 @@ public final class Player: ObservableObject, Equatable {
         .eraseToAnyPublisher()
     }()
 
+    lazy var metadataPublisher: AnyPublisher<Player.Metadata, Never> = {
+        queuePublisher
+            .slice(at: \.item)
+            .map { item in
+                guard let item else { return Just(Player.Metadata.empty).eraseToAnyPublisher() }
+                return item.$content.map(\.metadata).eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .removeDuplicates()
+            .share(replay: 1)
+            .eraseToAnyPublisher()
+    }()
+
     /// A Boolean setting whether the audio output of the player must be muted.
     public var isMuted: Bool {
         get {
@@ -175,6 +188,7 @@ public final class Player: ObservableObject, Equatable {
         configureQueuePlayerUpdatePublishers()
         configureControlCenterPublishers()
         configureCurrentTrackerPublishers()
+        configureMetadataPublisher()
     }
 
     /// Creates a player with a single item in its queue.
@@ -298,6 +312,12 @@ private extension Player {
             .receiveOnMainThread()
             .lane("player_current_index")
             .assign(to: &$currentIndex)
+    }
+
+    func configureMetadataPublisher() {
+        metadataPublisher
+            .receiveOnMainThread()
+            .assign(to: &$metadata)
     }
 
     func configureCurrentTrackerPublishers() {
