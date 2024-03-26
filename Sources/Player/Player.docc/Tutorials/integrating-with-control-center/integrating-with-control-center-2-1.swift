@@ -1,8 +1,6 @@
 import PillarboxPlayer
 import SwiftUI
 
-// FIXME: Update tutorial code
-
 private struct Metadata {}
 
 struct ContentView: View {
