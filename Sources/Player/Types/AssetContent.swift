@@ -6,35 +6,20 @@
 
 import AVFoundation
 
-struct AssetContent<M>: PlayerItemContent {
-    private let asset: Asset<M>
+struct AssetContent {
     let id: UUID
-    let metadataAdapter: MetadataAdapter<M>
-    let trackerAdapters: [TrackerAdapter<M>]
+    let resource: Resource
+    let metadata: Player.Metadata
 
-    var resource: Resource {
-        asset.resource
+    static func loading(id: UUID) -> Self {
+        .init(id: id, resource: .loading, metadata: .empty)
     }
 
-    init(asset: Asset<M>, id: UUID, metadataAdapter: MetadataAdapter<M>, trackerAdapters: [TrackerAdapter<M>]) {
-        self.asset = asset
-        self.id = id
-        self.metadataAdapter = metadataAdapter
-        self.trackerAdapters = trackerAdapters
-    }
-
-    func updateTracker() {
-        trackerAdapters.forEach { adapter in
-            adapter.update(metadata: asset.metadata)
-        }
-    }
-
-    func configure(item: AVPlayerItem) {
-        asset.configuration(item)
+    static func failing(id: UUID, error: Error) -> Self {
+        .init(id: id, resource: .failing(error: error), metadata: .empty)
     }
 
     func update(item: AVPlayerItem) {
-        // item.externalMetadata
-        // FIXME: On tvOS set navigation markers
+        item.externalMetadata = metadata.metadataItems
     }
 }

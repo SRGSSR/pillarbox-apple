@@ -66,8 +66,8 @@ extension AVPlayerItem {
     ///   - currentItem: The item currently being played by the player.
     /// - Returns: The list of player items to load into the player.
     static func playerItems(
-        for currentContents: [any PlayerItemContent],
-        replacing previousContents: [any PlayerItemContent],
+        for currentContents: [AssetContent],
+        replacing previousContents: [AssetContent],
         currentItem: AVPlayerItem?,
         length: Int
     ) -> [AVPlayerItem] {
@@ -90,15 +90,16 @@ extension AVPlayerItem {
         }
     }
 
-    static func playerItems(from contents: [any PlayerItemContent], reload: Bool = false) -> [AVPlayerItem] {
-        contents.map { $0.playerItem(reload: reload) }
+    static func playerItems(from contents: [AssetContent], reload: Bool = false) -> [AVPlayerItem] {
+        // TODO: contents.map { $0.playerItem(reload: reload) }
+        []
     }
 
-    private static func matchingIndex(for item: AVPlayerItem, in contents: [any PlayerItemContent]) -> Int? {
-        contents.firstIndex { $0.matches(item) }
+    private static func matchingIndex(for item: AVPlayerItem, in contents: [AssetContent]) -> Int? {
+        contents.firstIndex { $0.id == item.id }
     }
 
-    private static func firstMatchingIndex(for contents: [any PlayerItemContent], in other: [any PlayerItemContent]) -> Int? {
+    private static func firstMatchingIndex(for contents: [AssetContent], in other: [AssetContent]) -> Int? {
         guard let match = contents.first(where: { content in
             other.contains(where: { $0.id == content.id })
         }) else {
@@ -107,16 +108,16 @@ extension AVPlayerItem {
         return matchingIndex(for: match, in: other)
     }
 
-    private static func matchingIndex(for content: any PlayerItemContent, in contents: [any PlayerItemContent]) -> Int? {
+    private static func matchingIndex(for content: AssetContent, in contents: [AssetContent]) -> Int? {
         contents.firstIndex { $0.id == content.id }
     }
 
-    private static func findContent(_ content: any PlayerItemContent, in contents: [any PlayerItemContent]) -> Bool {
+    private static func findContent(_ content: AssetContent, in contents: [AssetContent]) -> Bool {
         guard let match = contents.first(where: { $0.id == content.id }) else { return false }
         return match.resource == content.resource
     }
 
-    private static func firstCommonIndex(in contents: [any PlayerItemContent], matching other: [any PlayerItemContent], after item: AVPlayerItem) -> Int? {
+    private static func firstCommonIndex(in contents: [AssetContent], matching other: [AssetContent], after item: AVPlayerItem) -> Int? {
         guard let matchIndex = matchingIndex(for: item, in: other) else { return nil }
         return firstMatchingIndex(for: Array(other.suffix(from: matchIndex + 1)), in: contents)
     }

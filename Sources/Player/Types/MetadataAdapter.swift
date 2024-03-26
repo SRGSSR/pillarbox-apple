@@ -11,7 +11,7 @@ import CoreMedia
 ///
 /// An adapter transforms metadata delivered by a player item into a metadata format suitable for the player.
 public struct MetadataAdapter<M> {
-    private let convert: (M) -> Player.Metadata
+    private let map: (M) -> Player.Metadata
 
     /// Creates an adapter for a type of metadata with the provided mapper.
     ///
@@ -19,7 +19,7 @@ public struct MetadataAdapter<M> {
     ///   - metadataType: The type of metadata to instantiate and manage.
     ///   - mapper: The metadata mapper.
     public init<T>(metadataType: T.Type, configuration: T.Configuration, mapper: ((M) -> T.Metadata)?) where T: PlayerMetadata {
-        convert = { metadata in
+        map = { metadata in
             guard let mapper else { return .empty }
             let playerMetadata = metadataType.init(configuration: configuration)
             let mappedMetadata = mapper(metadata)
@@ -36,6 +36,6 @@ public struct MetadataAdapter<M> {
     }
 
     func metadata(from metadata: M) -> Player.Metadata {
-        convert(metadata)
+        map(metadata)
     }
 }

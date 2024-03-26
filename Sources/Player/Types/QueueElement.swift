@@ -8,9 +8,9 @@ import AVFoundation
 
 struct QueueElement {
     let item: PlayerItem
-    let content: any PlayerItemContent
+    let content: AssetContent
 
-    init(item: PlayerItem, content: any PlayerItemContent) {
+    init(item: PlayerItem, content: AssetContent) {
         assert(item.id == content.id)
         self.item = item
         self.content = content

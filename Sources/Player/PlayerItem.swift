@@ -23,7 +23,7 @@ private enum TriggerId: Hashable {
 public final class PlayerItem: Equatable {
     private static let trigger = Trigger()
 
-    @Published private(set) var content: any PlayerItemContent
+    @Published private(set) var content: AssetContent
     private let trackerAdapters: [any TrackerLifeCycle]
 
     let id = UUID()
@@ -38,14 +38,14 @@ public final class PlayerItem: Equatable {
             adapter.withId(id)
         }
         self.trackerAdapters = trackerAdapters
-        content = ResourceContent(resource: .loading, id: id, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters)
+        content = .loading(id: id)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
             publisher
                 .map { asset in
-                    AssetContent(asset: asset, id: id, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters)
+                    AssetContent(id: id, resource: asset.resource, metadata: metadataAdapter.metadata(from: asset.metadata))
                 }
                 .catch { error in
-                    Just(ResourceContent(resource: .failing(error: error), id: id, metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters))
+                    Just(.failing(id: id, error: error))
                 }
         }
         .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))
@@ -77,7 +77,7 @@ public final class PlayerItem: Equatable {
     }
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
-        content.matches(playerItem)
+        playerItem?.id == id
     }
 }
 
