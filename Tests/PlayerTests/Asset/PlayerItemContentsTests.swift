@@ -167,13 +167,20 @@ final class PlayerItemContentsTests: TestCase {
 
 private extension AssetContent {
     static func test(id: Character) -> Self {
-        let group8 = String(repeating: id, count: 8)
-        let group4 = String(repeating: id, count: 4)
-        let group12 = String(repeating: id, count: 12)
-        return AssetContent(
-            id: UUID(uuidString: "\(group8)-\(group4)-\(group4)-\(group4)-\(group12)")!,
-            resource: .simple(url: Stream.onDemand.url),
-            metadata: .empty
-        ) { _ in }
+        AssetContent(id: UUID(id), resource: .simple(url: Stream.onDemand.url), metadata: .empty) { _ in }
+    }
+}
+
+private extension UUID {
+    init(_ char: Character) {
+        self.init(
+            uuidString: """
+                \(String(repeating: char, count: 8))\
+                -\(String(repeating: char, count: 4))\
+                -\(String(repeating: char, count: 4))\
+                -\(String(repeating: char, count: 4))\
+                -\(String(repeating: char, count: 12))
+                """
+        )!
     }
 }
