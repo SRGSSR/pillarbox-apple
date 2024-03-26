@@ -14,18 +14,14 @@ enum MediaMock: String {
     case media2
 }
 
-enum MockError: Error {
-    case mock
-}
-
 extension PlayerItem {
     static func mock(
         url: URL,
         loadedAfter delay: TimeInterval,
-        trackerAdapters: [TrackerAdapter<Never>] = []
+        trackerAdapters: [TrackerAdapter<Void>] = []
     ) -> Self {
         let publisher = Just(Asset.simple(url: url))
-            .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
+            .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
         return .init(publisher: publisher, trackerAdapters: trackerAdapters)
     }
 
@@ -36,8 +32,14 @@ extension PlayerItem {
         trackerAdapters: [TrackerAdapter<AssetMetadataMock>] = []
     ) -> Self {
         let publisher = Just(Asset.simple(url: url, metadata: withMetadata))
-            .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
-        return .init(publisher: publisher, trackerAdapters: trackerAdapters)
+            .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
+        return .init(
+            publisher: publisher,
+            metadataAdapter: StandardMetadata.adapter { metadata in
+                .init(title: metadata.title, subtitle: metadata.subtitle, description: metadata.description)
+            },
+            trackerAdapters: trackerAdapters
+        )
     }
 
     static func mock(
@@ -53,7 +55,7 @@ extension PlayerItem {
                 description: "description1"
             )
         ))
-        .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
+        .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
         .prepend(Asset.simple(
             url: url,
             metadata: AssetMetadataMock(
@@ -62,7 +64,13 @@ extension PlayerItem {
                 description: "description0"
             )
         ))
-        return .init(publisher: publisher, trackerAdapters: trackerAdapters)
+        return .init(
+            publisher: publisher,
+            metadataAdapter: StandardMetadata.adapter { metadata in
+                .init(title: metadata.title, subtitle: metadata.subtitle, description: metadata.description)
+            },
+            trackerAdapters: trackerAdapters
+        )
     }
 
     static func webServiceMock(media: MediaMock, trackerAdapters: [TrackerAdapter<AssetMetadataMock>] = []) -> Self {
@@ -73,10 +81,12 @@ extension PlayerItem {
             .map { metadata in
                 Asset.simple(url: url, metadata: metadata)
             }
-        return .init(publisher: publisher, trackerAdapters: trackerAdapters)
-    }
-
-    static func failed() -> Self {
-        .init(publisher: Just(Asset<Never>.failed(error: MockError.mock)))
+        return .init(
+            publisher: publisher,
+            metadataAdapter: StandardMetadata.adapter { metadata in
+                .init(title: metadata.title, subtitle: metadata.subtitle, description: metadata.description)
+            },
+            trackerAdapters: trackerAdapters
+        )
     }
 }

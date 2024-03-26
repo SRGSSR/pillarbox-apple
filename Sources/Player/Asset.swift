@@ -5,9 +5,6 @@
 //
 
 import AVFoundation
-import MediaPlayer
-
-private var kIdKey: Void?
 
 private let kResourceLoaderQueue = DispatchQueue(label: "ch.srgssr.player.resource_loader")
 
@@ -32,25 +29,15 @@ final class ResourceLoadedPlayerItem: AVPlayerItem {
 /// - Simple assets which can be played directly.
 /// - Custom assets which require a custom resource loader delegate.
 /// - Encrypted assets which require a FairPlay content key session delegate.
-public struct Asset<M>: Assetable where M: AssetMetadata {
-    let id: UUID
+public struct Asset<M> {
     let resource: Resource
-    private let metadata: M?
-    private let configuration: (AVPlayerItem) -> Void
-    private let trackerAdapters: [TrackerAdapter<M>]
+    let metadata: M
+    let configuration: (AVPlayerItem) -> Void
 
-    init(
-        id: UUID,
-        resource: Resource,
-        metadata: M?,
-        configuration: @escaping (AVPlayerItem) -> Void,
-        trackerAdapters: [TrackerAdapter<M>]
-    ) {
-        self.id = id
+    init(resource: Resource, metadata: M, configuration: @escaping (AVPlayerItem) -> Void) {
         self.resource = resource
         self.metadata = metadata
         self.configuration = configuration
-        self.trackerAdapters = trackerAdapters.map { $0.withId(id) }
     }
 
     /// Returns a simple asset playable from a URL.
@@ -60,18 +47,8 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
     ///   - metadata: The metadata associated with the asset.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The asset.
-    public static func simple(
-        url: URL,
-        metadata: M,
-        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self {
-        .init(
-            id: UUID(),
-            resource: .simple(url: url),
-            metadata: metadata,
-            configuration: configuration,
-            trackerAdapters: []
-        )
+    public static func simple(url: URL, metadata: M, configuration: @escaping (AVPlayerItem) -> Void = { _ in }) -> Self {
+        .init(resource: .simple(url: url), metadata: metadata, configuration: configuration)
     }
 
     /// Returns an asset loaded with custom resource loading.
@@ -91,11 +68,9 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
-            id: UUID(),
             resource: .custom(url: url, delegate: delegate),
             metadata: metadata,
-            configuration: configuration,
-            trackerAdapters: []
+            configuration: configuration
         )
     }
 
@@ -114,82 +89,14 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
-            id: UUID(),
             resource: .encrypted(url: url, delegate: delegate),
             metadata: metadata,
-            configuration: configuration,
-            trackerAdapters: []
+            configuration: configuration
         )
-    }
-
-    func withTrackerAdapters(_ trackerAdapters: [TrackerAdapter<M>]) -> Self {
-        .init(id: id, resource: resource, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
-    }
-
-    func withId(_ id: UUID) -> Self {
-        .init(id: id, resource: resource, metadata: metadata, configuration: configuration, trackerAdapters: trackerAdapters)
-    }
-
-    func enable(for player: Player) {
-        trackerAdapters.forEach { adapter in
-            adapter.enable(for: player)
-        }
-    }
-
-    func updateMetadata() {
-        guard let metadata else { return }
-        trackerAdapters.forEach { adapter in
-            adapter.update(metadata: metadata)
-        }
-    }
-
-    func disable() {
-        trackerAdapters.forEach { adapter in
-            adapter.disable()
-        }
-    }
-
-    func nowPlayingInfo(with error: Error?) -> NowPlayingInfo {
-        var nowPlayingInfo = NowPlayingInfo()
-        if let metadata = metadata?.nowPlayingMetadata() {
-            nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
-            nowPlayingInfo[MPMediaItemPropertyArtist] = error?.localizedDescription ?? metadata.subtitle
-            nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
-            if let image = metadata.image {
-                nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
-            }
-        }
-        else {
-            // Fill the title so that the Control Center can be enabled for the asset, even if it has no associated
-            // metadata.
-            nowPlayingInfo[MPMediaItemPropertyTitle] = error?.localizedDescription ?? ""
-        }
-        return nowPlayingInfo
-    }
-
-    func playerItem(reload: Bool) -> AVPlayerItem {
-        if reload, resource.isFailing {
-            let item = Resource.loading.playerItem().withId(id)
-            configuration(item)
-            update(item: item)
-            PlayerItem.reload(for: id)
-            return item
-        }
-        else {
-            let item = resource.playerItem().withId(id)
-            configuration(item)
-            update(item: item)
-            PlayerItem.load(for: id)
-            return item
-        }
-    }
-
-    func update(item: AVPlayerItem) {
-        item.externalMetadata = Self.externalMetadata(from: metadata?.nowPlayingMetadata())
     }
 }
 
-public extension Asset where M == Never {
+public extension Asset where M == Void {
     /// Returns a simple asset playable from a URL.
     ///
     /// - Parameters:
@@ -201,11 +108,9 @@ public extension Asset where M == Never {
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
-            id: UUID(),
             resource: .simple(url: url),
-            metadata: nil,
-            configuration: configuration,
-            trackerAdapters: []
+            metadata: (),
+            configuration: configuration
         )
     }
 
@@ -224,11 +129,9 @@ public extension Asset where M == Never {
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
-            id: UUID(),
             resource: .custom(url: url, delegate: delegate),
-            metadata: nil,
-            configuration: configuration,
-            trackerAdapters: []
+            metadata: (),
+            configuration: configuration
         )
     }
 
@@ -245,63 +148,9 @@ public extension Asset where M == Never {
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
         .init(
-            id: UUID(),
             resource: .encrypted(url: url, delegate: delegate),
-            metadata: nil,
-            configuration: configuration,
-            trackerAdapters: []
+            metadata: (),
+            configuration: configuration
         )
-    }
-}
-
-extension Asset {
-    static var loading: Self {
-        .init(id: UUID(), resource: .loading, metadata: nil, configuration: { _ in }, trackerAdapters: [])
-    }
-
-    static func failed(error: Error) -> Self {
-        .init(id: UUID(), resource: .failing(error: error), metadata: nil, configuration: { _ in }, trackerAdapters: [])
-    }
-}
-
-private extension Asset {
-    static func externalMetadata(from metadata: NowPlayingMetadata?) -> [AVMetadataItem] {
-        [
-            metadataItem(for: .commonIdentifierTitle, value: metadata?.title),
-            metadataItem(for: .iTunesMetadataTrackSubTitle, value: metadata?.subtitle),
-            metadataItem(for: .commonIdentifierArtwork, value: metadata?.image?.pngData()),
-            metadataItem(for: .commonIdentifierDescription, value: metadata?.description)
-        ]
-        .compactMap { $0 }
-    }
-
-    private static func metadataItem<T>(for identifier: AVMetadataIdentifier, value: T?) -> AVMetadataItem? {
-        guard let value else { return nil }
-        let item = AVMutableMetadataItem()
-        item.identifier = identifier
-        item.value = value as? NSCopying & NSObjectProtocol
-        item.extendedLanguageTag = "und"
-        return item.copy() as? AVMetadataItem
-    }
-}
-
-extension AVPlayerItem {
-    /// An identifier for player items delivered by the same data source.
-    var id: UUID? {
-        get {
-            objc_getAssociatedObject(self, &kIdKey) as? UUID
-        }
-        set {
-            objc_setAssociatedObject(self, &kIdKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-    }
-
-    /// Assigns an identifier for player items delivered by the same data source.
-    /// 
-    /// - Parameter id: The id to assign.
-    /// - Returns: The receiver with the id assigned to it.
-    fileprivate func withId(_ id: UUID) -> AVPlayerItem {
-        self.id = id
-        return self
     }
 }

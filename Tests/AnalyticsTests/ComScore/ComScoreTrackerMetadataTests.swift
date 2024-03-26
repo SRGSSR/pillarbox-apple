@@ -10,7 +10,7 @@ import Nimble
 import PillarboxPlayer
 import PillarboxStreams
 
-private struct AssetMetadataMock: AssetMetadata {}
+private struct AssetMetadataMock {}
 
 final class ComScoreTrackerMetadataTests: ComScoreTestCase {
     func testMetadata() {
@@ -53,7 +53,9 @@ final class ComScoreTrackerMetadataTests: ComScoreTestCase {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
             trackerAdapters: [
-                ComScoreTracker.adapter()
+                ComScoreTracker.adapter { _ in
+                    [:]
+                }
             ]
         ))
 

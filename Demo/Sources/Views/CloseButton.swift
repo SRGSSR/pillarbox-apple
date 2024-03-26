@@ -5,7 +5,6 @@
 //
 
 import SwiftUI
-import UIKit
 
 struct CloseButton: View {
     @Environment(\.dismiss) private var dismiss

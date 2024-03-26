@@ -5,7 +5,6 @@
 //
 
 import Combine
-import Foundation
 
 final class ReplaySubscription<Output, Failure>: Subscription where Failure: Error {
     var onCancel: (() -> Void)?

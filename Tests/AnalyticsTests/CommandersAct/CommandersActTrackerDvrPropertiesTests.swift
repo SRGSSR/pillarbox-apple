@@ -12,7 +12,7 @@ import PillarboxCircumspect
 import PillarboxPlayer
 import PillarboxStreams
 
-private struct AssetMetadataMock: AssetMetadata {}
+private struct AssetMetadataMock {}
 
 final class CommandersActTrackerDvrPropertiesTests: CommandersActTestCase {
     func testOnDemand() {

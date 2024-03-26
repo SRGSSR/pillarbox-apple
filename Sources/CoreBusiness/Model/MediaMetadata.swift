@@ -8,7 +8,7 @@ import PillarboxPlayer
 import UIKit
 
 /// Metadata associated with content loaded from a URN.
-public struct MediaMetadata: AssetMetadata {
+public struct MediaMetadata {
     private static let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.timeZone = TimeZone(identifier: "Europe/Zurich")
@@ -81,9 +81,5 @@ public struct MediaMetadata: AssetMetadata {
 
     private static func areRedundant(chapter: Chapter, show: Show) -> Bool {
         chapter.title.lowercased() == show.title.lowercased()
-    }
-
-    public func nowPlayingMetadata() -> NowPlayingMetadata {
-        .init(title: title, subtitle: subtitle, description: description, image: image)
     }
 }

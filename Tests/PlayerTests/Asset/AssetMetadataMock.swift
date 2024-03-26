@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import PillarboxPlayer
-
 struct AssetMetadataMock: Decodable {
     let title: String
     let subtitle: String?
@@ -15,11 +13,5 @@ struct AssetMetadataMock: Decodable {
         self.title = title
         self.subtitle = subtitle
         self.description = description
-    }
-}
-
-extension AssetMetadataMock: AssetMetadata {
-    func nowPlayingMetadata() -> NowPlayingMetadata {
-        .init(title: title, subtitle: subtitle, description: description)
     }
 }

@@ -74,7 +74,7 @@ final class PlayerTests: TestCase {
             .simple(url: Stream.onDemand.url),
             .loading
         ]
-        expect(player.items.map(\.asset.resource)).toEventually(beSimilarTo(expectedResources))
-        expect(player.items.map(\.asset.resource)).toAlways(beSimilarTo(expectedResources), until: .seconds(1))
+        expect(player.items.map(\.content.resource)).toEventually(beSimilarTo(expectedResources))
+        expect(player.items.map(\.content.resource)).toAlways(beSimilarTo(expectedResources), until: .seconds(1))
     }
 }

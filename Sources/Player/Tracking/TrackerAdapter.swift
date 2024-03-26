@@ -4,19 +4,17 @@
 //  License information is available from the LICENSE file.
 //
 
-import Combine
 import Foundation
 
 /// An adapter which instantiates and manages a tracker of a specified type.
 ///
 /// An adapter transforms metadata delivered by a player item into the metadata format required by the tracker.
-public class TrackerAdapter<M: AssetMetadata> {
+public class TrackerAdapter<M> {
     private let tracker: any PlayerItemTracker
     private let update: (M) -> Void
-    private var cancellables = Set<AnyCancellable>()
     private var id = UUID()
 
-    /// Creates an adapter for a type of tracker with the provided mapping to its metadata format.
+    /// Creates an adapter for a type of tracker with the provided mapper.
     /// 
     /// - Parameters:
     ///   - trackerType: The type of the tracker to instantiate and manage.
@@ -37,23 +35,22 @@ public class TrackerAdapter<M: AssetMetadata> {
         return self
     }
 
+    func updateMetadata(with metadata: M) {
+        update(metadata)
+    }
+}
+
+extension TrackerAdapter: TrackerLifeCycle {
     func enable(for player: Player) {
         tracker.enable(for: player)
-
-        player.propertiesPublisher
-            .sink { [weak self] properties in
-                guard let self, properties.id == id else { return }
-                tracker.updateProperties(with: properties)
-            }
-            .store(in: &cancellables)
     }
 
-    func update(metadata: M) {
-        update(metadata)
+    func updateProperties(with properties: PlayerProperties) {
+        guard properties.id == id else { return }
+        tracker.updateProperties(with: properties)
     }
 
     func disable() {
-        cancellables = []
         tracker.disable()
     }
 }

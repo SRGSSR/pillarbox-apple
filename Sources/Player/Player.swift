@@ -27,6 +27,9 @@ public final class Player: ObservableObject, Equatable {
     /// A Boolean setting whether trackers must be enabled or not.
     @Published public var isTrackingEnabled = true
 
+    /// The metadata related to the item being played.
+    @Published public private(set) var metadata: PlayerMetadata = .empty
+
     @Published var storedItems: Deque<PlayerItem>
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
 
@@ -42,7 +45,7 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    @Published private var currentTracker: CurrentTracker?
+    private var currentTracker: CurrentTracker?
 
     var properties: PlayerProperties = .empty {
         willSet {
@@ -82,6 +85,19 @@ public final class Player: ObservableObject, Equatable {
         }
         .share(replay: 1)
         .eraseToAnyPublisher()
+    }()
+
+    lazy var metadataPublisher: AnyPublisher<PlayerMetadata, Never> = {
+        queuePublisher
+            .slice(at: \.item)
+            .map { item in
+                guard let item else { return Just(PlayerMetadata.empty).eraseToAnyPublisher() }
+                return item.$content.map(\.metadata).eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .removeDuplicates()
+            .share(replay: 1)
+            .eraseToAnyPublisher()
     }()
 
     /// A Boolean setting whether the audio output of the player must be muted.
@@ -172,6 +188,8 @@ public final class Player: ObservableObject, Equatable {
         configurePublishedPropertyPublishers()
         configureQueuePlayerUpdatePublishers()
         configureControlCenterPublishers()
+        configureCurrentTrackerPublishers()
+        configureMetadataPublisher()
     }
 
     /// Creates a player with a single item in its queue.
@@ -229,7 +247,6 @@ public final class Player: ObservableObject, Equatable {
         configurePropertiesPublisher()
         configureErrorPublisher()
         configureCurrentIndexPublisher()
-        configureCurrentTrackerPublisher()
         configurePlaybackSpeedPublisher()
     }
 
@@ -298,15 +315,16 @@ private extension Player {
             .assign(to: &$currentIndex)
     }
 
-    func configureCurrentTrackerPublisher() {
-        queuePublisher
-            .slice(at: \.item)
-            .map { [weak self] item in
-                guard let self, let item else { return nil }
-                return CurrentTracker(item: item, player: self)
-            }
+    func configureMetadataPublisher() {
+        metadataPublisher
             .receiveOnMainThread()
-            .assign(to: &$currentTracker)
+            .assign(to: &$metadata)
+    }
+
+    func configureCurrentTrackerPublishers() {
+        currentTrackerPublisher()
+            .weakAssign(to: \.currentTracker, on: self)
+            .store(in: &cancellables)
     }
 
     func configurePlaybackSpeedPublisher() {
@@ -332,6 +350,7 @@ private extension Player {
             propertiesPublisher,
             $isActive
         )
+        .receiveOnMainThread()
         .sink { [weak self] queue, properties, _ in
             guard let self else { return }
             let areSkipsEnabled = queue.elements.count <= 1 && properties.streamType != .live

@@ -23,7 +23,6 @@ final class TrackerLifeCycleMock: PlayerItemTracker {
     }
 
     private let configuration: Configuration
-    private var cancellables = Set<AnyCancellable>()
 
     init(configuration: Configuration) {
         self.configuration = configuration
@@ -48,7 +47,7 @@ final class TrackerLifeCycleMock: PlayerItemTracker {
 }
 
 extension TrackerLifeCycleMock {
-    static func adapter(statePublisher: StatePublisher) -> TrackerAdapter<Never> {
+    static func adapter(statePublisher: StatePublisher) -> TrackerAdapter<Void> {
         adapter(configuration: Configuration(statePublisher: statePublisher))
     }
 }

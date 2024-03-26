@@ -8,12 +8,12 @@ import AVFoundation
 
 struct QueueElement {
     let item: PlayerItem
-    let asset: any Assetable
+    let content: AssetContent
 
-    init(item: PlayerItem, asset: any Assetable) {
-        assert(item.id == asset.id)
+    init(item: PlayerItem, content: AssetContent) {
+        assert(item.id == content.id)
         self.item = item
-        self.asset = asset
+        self.content = content
     }
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {

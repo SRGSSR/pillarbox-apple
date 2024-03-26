@@ -6,7 +6,6 @@
 
 @testable import PillarboxPlayer
 
-import Foundation
 import Nimble
 
 final class ItemErrorTests: TestCase {

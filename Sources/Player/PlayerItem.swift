@@ -23,34 +23,55 @@ private enum TriggerId: Hashable {
 public final class PlayerItem: Equatable {
     private static let trigger = Trigger()
 
-    @Published private(set) var asset: any Assetable
+    @Published private(set) var content: AssetContent
+    private let trackerAdapters: [any TrackerLifeCycle]
 
     let id = UUID()
 
     /// Creates the item from an ``Asset`` publisher data source.
-    public init<P, M>(publisher: P, trackerAdapters: [TrackerAdapter<M>] = []) where P: Publisher, M: AssetMetadata, P.Output == Asset<M> {
-        asset = Asset<M>.loading.withId(id).withTrackerAdapters(trackerAdapters)
-        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) {
-            publisher
-                .catch { error in
-                    Just(.failed(error: error))
-                }
+    public init<P, M>(
+        publisher: P,
+        metadataAdapter: MetadataAdapter<M> = .none,
+        trackerAdapters: [TrackerAdapter<M>] = []
+    ) where P: Publisher, P.Output == Asset<M> {
+        let trackerAdapters = trackerAdapters.map { [id] adapter in
+            adapter.withId(id)
         }
-        .map { [id] asset in
-            asset.withId(id).withTrackerAdapters(trackerAdapters)
+        self.trackerAdapters = trackerAdapters
+        content = .loading(id: id)
+        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
+            Publishers.CombineLatest(
+                publisher,
+                Just(trackerAdapters).setFailureType(to: P.Failure.self)
+            )
+            .map { asset, trackerAdapters in
+                trackerAdapters.forEach { adapter in
+                    adapter.updateMetadata(with: asset.metadata)
+                }
+                return AssetContent(
+                    id: id,
+                    resource: asset.resource,
+                    metadata: metadataAdapter.metadata(from: asset.metadata),
+                    configuration: asset.configuration
+                )
+            }
+            .catch { error in
+                Just(.failing(id: id, error: error))
+            }
         }
         .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))
         .receive(on: DispatchQueue.main)
-        .assign(to: &$asset)
+        .assign(to: &$content)
     }
 
     /// Creates a player item from an ``Asset``.
     ///
     /// - Parameters:
     ///   - asset: The asset to play.
+    ///   - metadataAdapter: A `MetadataAdapter` converting item metadata into player metadata.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    public convenience init<M>(asset: Asset<M>, trackerAdapters: [TrackerAdapter<M>] = []) where M: AssetMetadata {
-        self.init(publisher: Just(asset), trackerAdapters: trackerAdapters)
+    public convenience init<M>(asset: Asset<M>, metadataAdapter: MetadataAdapter<M> = .none, trackerAdapters: [TrackerAdapter<M>] = []) {
+        self.init(publisher: Just(asset), metadataAdapter: metadataAdapter, trackerAdapters: trackerAdapters)
     }
 
     public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
@@ -67,7 +88,27 @@ public final class PlayerItem: Equatable {
     }
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
-        asset.matches(playerItem)
+        playerItem?.id == id
+    }
+}
+
+extension PlayerItem {
+    func enableTrackers(for player: Player) {
+        trackerAdapters.forEach { adapter in
+            adapter.enable(for: player)
+        }
+    }
+
+    func updateTrackerProperties(_ properties: PlayerProperties) {
+        trackerAdapters.forEach { adapter in
+            adapter.updateProperties(with: properties)
+        }
+    }
+
+    func disableTrackers() {
+        trackerAdapters.forEach { adapter in
+            adapter.disable()
+        }
     }
 }
 
@@ -77,16 +118,22 @@ public extension PlayerItem {
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - metadata: The metadata associated with the item.
+    ///   - metadataAdapter: A `MetadataAdapter` converting item metadata into player metadata.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The item.
     static func simple<M>(
         url: URL,
         metadata: M,
+        metadataAdapter: MetadataAdapter<M> = .none,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self where M: AssetMetadata {
-        .init(asset: .simple(url: url, metadata: metadata, configuration: configuration), trackerAdapters: trackerAdapters)
+    ) -> Self {
+        .init(
+            asset: .simple(url: url, metadata: metadata, configuration: configuration),
+            metadataAdapter: metadataAdapter,
+            trackerAdapters: trackerAdapters
+        )
     }
 
     /// Returns an item loaded with custom resource loading.
@@ -95,6 +142,7 @@ public extension PlayerItem {
     ///   - url: The URL to be played.
     ///   - delegate: The custom resource loader to use.
     ///   - metadata: The metadata associated with the item.
+    ///   - metadataAdapter: A `MetadataAdapter` converting item metadata into player metadata.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The item.
@@ -104,10 +152,15 @@ public extension PlayerItem {
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
         metadata: M,
+        metadataAdapter: MetadataAdapter<M> = .none,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self where M: AssetMetadata {
-        .init(asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration), trackerAdapters: trackerAdapters)
+    ) -> Self {
+        .init(
+            asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration),
+            metadataAdapter: metadataAdapter,
+            trackerAdapters: trackerAdapters
+        )
     }
 
     /// Returns an encrypted item loaded with a content key session.
@@ -116,6 +169,7 @@ public extension PlayerItem {
     ///   - url: The URL to be played.
     ///   - delegate: The content key session delegate to use.
     ///   - metadata: The metadata associated with the item.
+    ///   - metadataAdapter: A `MetadataAdapter` converting item metadata into player metadata.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: A closure to configure player items created from the receiver.
     /// - Returns: The item.
@@ -123,10 +177,15 @@ public extension PlayerItem {
         url: URL,
         delegate: AVContentKeySessionDelegate,
         metadata: M,
+        metadataAdapter: MetadataAdapter<M> = .none,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self where M: AssetMetadata {
-        .init(asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration), trackerAdapters: trackerAdapters)
+    ) -> Self {
+        .init(
+            asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration),
+            metadataAdapter: metadataAdapter,
+            trackerAdapters: trackerAdapters
+        )
     }
 }
 
@@ -140,10 +199,15 @@ public extension PlayerItem {
     /// - Returns: The item.
     static func simple(
         url: URL,
-        trackerAdapters: [TrackerAdapter<Never>] = [],
+        metadataAdapter: MetadataAdapter<Void> = .none,
+        trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .init(asset: .simple(url: url, configuration: configuration), trackerAdapters: trackerAdapters)
+        .init(
+            asset: .simple(url: url, configuration: configuration),
+            metadataAdapter: metadataAdapter,
+            trackerAdapters: trackerAdapters
+        )
     }
 
     /// Returns an item loaded with custom resource loading.
@@ -159,10 +223,15 @@ public extension PlayerItem {
     static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
-        trackerAdapters: [TrackerAdapter<Never>] = [],
+        metadataAdapter: MetadataAdapter<Void> = .none,
+        trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .init(asset: .custom(url: url, delegate: delegate, configuration: configuration), trackerAdapters: trackerAdapters)
+        .init(
+            asset: .custom(url: url, delegate: delegate, configuration: configuration),
+            metadataAdapter: metadataAdapter,
+            trackerAdapters: trackerAdapters
+        )
     }
 
     /// Returns an encrypted item loaded with a content key session.
@@ -176,15 +245,20 @@ public extension PlayerItem {
     static func encrypted(
         url: URL,
         delegate: AVContentKeySessionDelegate,
-        trackerAdapters: [TrackerAdapter<Never>] = [],
+        metadataAdapter: MetadataAdapter<Void> = .none,
+        trackerAdapters: [TrackerAdapter<Void>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
-        .init(asset: .encrypted(url: url, delegate: delegate, configuration: configuration), trackerAdapters: trackerAdapters)
+        .init(
+            asset: .encrypted(url: url, delegate: delegate, configuration: configuration),
+            metadataAdapter: metadataAdapter,
+            trackerAdapters: trackerAdapters
+        )
     }
 }
 
 extension PlayerItem: CustomDebugStringConvertible {
     public var debugDescription: String {
-        "\(asset)"
+        "\(content)"
     }
 }

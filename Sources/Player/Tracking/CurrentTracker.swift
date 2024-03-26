@@ -6,54 +6,26 @@
 
 import Combine
 
+/// Tracks the provided item during its lifecycle.
+///
+/// This class implements a Resource Acquisition Is Initialization (RAII) approach to ensure lifecycle events are
+/// properly balanced.
 final class CurrentTracker {
-    private let item: PlayerItem
-    private var isEnabled = false
+    let item: PlayerItem
     private var cancellables = Set<AnyCancellable>()
 
     init(item: PlayerItem, player: Player) {
         self.item = item
-        configureAssetPublisher(for: item)
-        configureTrackingPublisher(player: player)
-    }
+        item.enableTrackers(for: player)
 
-    private func configureTrackingPublisher(player: Player) {
-        player.$isTrackingEnabled
-            .sink { [weak self, weak player] enabled in
-                guard let self, let player, isEnabled != enabled else { return }
-                isEnabled = enabled
-                if enabled {
-                    enableAsset(for: player)
-                }
-                else {
-                    disableAsset()
-                }
+        player.propertiesPublisher
+            .sink { properties in
+                item.updateTrackerProperties(properties)
             }
             .store(in: &cancellables)
-    }
-
-    private func configureAssetPublisher(for item: PlayerItem) {
-        item.$asset
-            .sink { asset in
-                asset.updateMetadata()
-            }
-            .store(in: &cancellables)
-    }
-
-    private func enableAsset(for player: Player) {
-        item.asset.enable(for: player)
-    }
-
-    private func disableAsset() {
-        item.asset.disable()
-    }
-
-    private func disableAssetIfNeeded() {
-        guard isEnabled else { return }
-        disableAsset()
     }
 
     deinit {
-        disableAssetIfNeeded()
+        item.disableTrackers()
     }
 }

@@ -84,11 +84,7 @@ struct Media: Hashable {
     }
 }
 
-extension Media: AssetMetadata {
-    func nowPlayingMetadata() -> NowPlayingMetadata {
-        .init(title: title, subtitle: description, image: image)
-    }
-
+extension Media {
     private func playerItem(for url: URL, configuration: @escaping (AVPlayerItem) -> Void = { _ in }) -> PlayerItem {
         .init(
             publisher: imagePublisher()
@@ -99,6 +95,13 @@ extension Media: AssetMetadata {
                         configuration: configuration
                     )
                 },
+            metadataAdapter: StandardMetadata.adapter { metadata in
+                .init(
+                    title: metadata.title,
+                    subtitle: metadata.description,
+                    image: metadata.image
+                )
+            },
             trackerAdapters: [
                 DemoTracker.adapter { media in
                     DemoTracker.Metadata(title: media.title)

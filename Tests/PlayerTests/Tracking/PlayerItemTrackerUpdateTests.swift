@@ -16,13 +16,17 @@ final class PlayerItemTrackerUpdateTests: TestCase {
         let item = PlayerItem.simple(
             url: Stream.shortOnDemand.url,
             metadata: AssetMetadataMock(title: "title"),
-            trackerAdapters: [TrackerUpdateMock.adapter(statePublisher: publisher) { $0.title }]
+            metadataAdapter: StandardMetadata.adapter { metadata in
+                .init(title: metadata.title)
+            },
+            trackerAdapters: [
+                TrackerUpdateMock.adapter(statePublisher: publisher) { $0.title }
+            ]
         )
         expectAtLeastEqualPublished(
             values: [
-                .enabled,
-                .updatedProperties(for: item.id),
                 .updatedMetadata("title"),
+                .enabled,
                 .updatedProperties(for: item.id),
                 .disabled
             ],
@@ -41,9 +45,8 @@ final class PlayerItemTrackerUpdateTests: TestCase {
         ])
         expectAtLeastEqualPublished(
             values: [
-                .enabled,
-                .updatedProperties(for: item.id),
                 .updatedMetadata("title0"),
+                .enabled,
                 .updatedProperties(for: item.id),
                 .updatedMetadata("title1"),
                 .updatedProperties(for: item.id),
