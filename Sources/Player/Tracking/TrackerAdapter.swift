@@ -36,7 +36,7 @@ public class TrackerAdapter<M> {
         return self
     }
 
-    func update(metadata: M) {
+    func updateMetadata(with metadata: M) {
         update(metadata)
     }
 }
@@ -46,7 +46,7 @@ extension TrackerAdapter: TrackerLifeCycle {
         tracker.enable(for: player)
     }
 
-    func updateProperties(_ properties: PlayerProperties) {
+    func updateProperties(with properties: PlayerProperties) {
         guard properties.id == id else { return }
         tracker.updateProperties(with: properties)
     }

@@ -8,6 +8,6 @@ import Foundation
 
 protocol TrackerLifeCycle {
     func enable(for player: Player)
-    func updateProperties(_ properties: PlayerProperties)
+    func updateProperties(with properties: PlayerProperties)
     func disable()
 }

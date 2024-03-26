@@ -46,7 +46,7 @@ public final class PlayerItem: Equatable {
             )
             .map { asset, trackerAdapters in
                 trackerAdapters.forEach { adapter in
-                    adapter.update(metadata: asset.metadata)
+                    adapter.updateMetadata(with: asset.metadata)
                 }
                 return AssetContent(
                     id: id,
@@ -101,7 +101,7 @@ extension PlayerItem {
 
     func updateTrackerProperties(_ properties: PlayerProperties) {
         trackerAdapters.forEach { adapter in
-            adapter.updateProperties(properties)
+            adapter.updateProperties(with: properties)
         }
     }
 
