@@ -40,13 +40,24 @@ public final class PlayerItem: Equatable {
         self.trackerAdapters = trackerAdapters
         content = .loading(id: id)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
-            publisher
-                .map { asset in
-                    AssetContent(id: id, resource: asset.resource, metadata: metadataAdapter.metadata(from: asset.metadata), configuration: asset.configuration)
+            Publishers.CombineLatest(
+                publisher,
+                Just(trackerAdapters).setFailureType(to: P.Failure.self)
+            )
+            .map { asset, trackerAdapters in
+                trackerAdapters.forEach { adapter in
+                    adapter.update(metadata: asset.metadata)
                 }
-                .catch { error in
-                    Just(.failing(id: id, error: error))
-                }
+                return AssetContent(
+                    id: id,
+                    resource: asset.resource,
+                    metadata: metadataAdapter.metadata(from: asset.metadata),
+                    configuration: asset.configuration
+                )
+            }
+            .catch { error in
+                Just(.failing(id: id, error: error))
+            }
         }
         .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))
         .receive(on: DispatchQueue.main)

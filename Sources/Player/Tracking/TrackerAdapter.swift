@@ -46,7 +46,10 @@ extension TrackerAdapter: TrackerLifeCycle {
         tracker.enable(for: player)
     }
 
-    func updateProperties(_ properties: PlayerProperties) {}
+    func updateProperties(_ properties: PlayerProperties) {
+        guard properties.id == id else { return }
+        tracker.updateProperties(with: properties)
+    }
 
     func disable() {
         tracker.disable()
