@@ -6,56 +6,6 @@
 
 import AVFoundation
 
-/// A protocol describing content associated with a player item.
-protocol PlayerItemContent {
-    associatedtype Metadata
-
-    var id: UUID { get }
-    var resource: Resource { get }
-    var metadataAdapter: MetadataAdapter<Metadata> { get }
-    var trackerAdapters: [TrackerAdapter<Metadata>] { get }
-
-    func updateTracker()
-
-    func configure(item: AVPlayerItem)
-    func update(item: AVPlayerItem)
-}
-
-extension PlayerItemContent {
-    func matches(_ playerItem: AVPlayerItem?) -> Bool {
-        id == playerItem?.id
-    }
-
-    func enableTrackers(for player: Player) {
-        trackerAdapters.forEach { adapter in
-            adapter.enable(for: player)
-        }
-    }
-
-    func disableTrackers() {
-        trackerAdapters.forEach { adapter in
-            adapter.disable()
-        }
-    }
-
-    func playerItem(reload: Bool = false) -> AVPlayerItem {
-        if reload, resource.isFailing {
-            let item = Resource.loading.playerItem().withId(id)
-            configure(item: item)
-            update(item: item)
-            PlayerItem.reload(for: id)
-            return item
-        }
-        else {
-            let item = resource.playerItem().withId(id)
-            configure(item: item)
-            update(item: item)
-            PlayerItem.load(for: id)
-            return item
-        }
-    }
-}
-
 extension AVPlayerItem {
     /// Returns the list of `AVPlayerItems` to load into an `AVQueuePlayer` when a list of contents replaces a previous
     /// one.
