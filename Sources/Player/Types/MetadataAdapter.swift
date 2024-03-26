@@ -4,9 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import AVFoundation
-import CoreMedia
-
 /// An adapter which instantiates and manages metadata associated with a player.
 ///
 /// An adapter transforms metadata delivered by a player item into a metadata format suitable for the player.

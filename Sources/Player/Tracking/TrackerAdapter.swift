@@ -4,7 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Combine
 import Foundation
 
 /// An adapter which instantiates and manages a tracker of a specified type.

@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-@testable import PillarboxPlayer
-
 import Foundation
 
 struct StructError: LocalizedError {

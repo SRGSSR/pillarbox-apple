@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
-
 protocol TrackerLifeCycle {
     func enable(for player: Player)
     func updateProperties(with properties: PlayerProperties)

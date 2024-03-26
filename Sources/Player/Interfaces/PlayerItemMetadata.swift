@@ -5,7 +5,6 @@
 //
 
 import AVFoundation
-import CoreMedia
 
 /// A protocol for custom player item metadata integration.
 public protocol PlayerItemMetadata {
