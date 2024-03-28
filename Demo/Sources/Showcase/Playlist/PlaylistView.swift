@@ -10,22 +10,15 @@ import SwiftUI
 // Behavior: h-exp, v-exp
 private struct MediaCell: View {
     let media: Media
-    let isPlaying: Bool
 
     var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text(media.title)
-                if let description = media.description {
-                    Text(description)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
+        VStack(alignment: .leading) {
+            Text(media.title)
+            if let description = media.description {
+                Text(description)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
             }
-            Spacer()
-            Image(systemName: "play.circle")
-                .frame(maxWidth: 30, maxHeight: 30)
-                .opacity(isPlaying ? 1 : 0)
         }
     }
 }
@@ -160,7 +153,7 @@ struct PlaylistView: View {
             if layout != .maximized {
                 Toolbar(player: model.player, model: model)
                 List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
-                    MediaCell(media: media, isPlaying: media == model.currentMedia)
+                    MediaCell(media: media)
                 }
             }
         }
