@@ -38,20 +38,11 @@ public struct StandardMetadata: PlayerItemMetadata {
 
     public func metadataItems(from metadata: Metadata) -> [AVMetadataItem] {
         [
-            metadataItem(for: .commonIdentifierTitle, value: metadata.title),
-            metadataItem(for: .iTunesMetadataTrackSubTitle, value: metadata.subtitle),
-            metadataItem(for: .commonIdentifierArtwork, value: metadata.image?.pngData()),
-            metadataItem(for: .commonIdentifierDescription, value: metadata.description)
+            .init(for: .commonIdentifierTitle, value: metadata.title),
+            .init(for: .iTunesMetadataTrackSubTitle, value: metadata.subtitle),
+            .init(for: .commonIdentifierArtwork, value: metadata.image?.pngData()),
+            .init(for: .commonIdentifierDescription, value: metadata.description)
         ]
         .compactMap { $0 }
-    }
-
-    private func metadataItem<T>(for identifier: AVMetadataIdentifier, value: T?) -> AVMetadataItem? {
-        guard let value else { return nil }
-        let item = AVMutableMetadataItem()
-        item.identifier = identifier
-        item.value = value as? NSCopying & NSObjectProtocol
-        item.extendedLanguageTag = "und"
-        return item.copy() as? AVMetadataItem
     }
 }
