@@ -64,7 +64,7 @@ final class VisibilityTrackerTests: TestCase {
         let player = Player(item: PlayerItem.simple(url: Stream.onDemand.url))
         player.play()
         visibilityTracker.player = player
-        expect(visibilityTracker.isUserInterfaceHidden).toEventually(beTrue(), timeout: .seconds(1))
+        expect(visibilityTracker.isUserInterfaceHidden).toEventually(beTrue())
     }
 
     func testNoAutoHideWhilePaused() {
