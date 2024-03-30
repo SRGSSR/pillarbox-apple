@@ -26,17 +26,18 @@ final class CommandersActService {
 
     func start(with configuration: Analytics.Configuration) {
         vendor = configuration.vendor
-        guard let serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey) else { return }
-        serverSide.addPermanentData("app_library_version", withValue: Analytics.version)
-        serverSide.addPermanentData("navigation_app_site_name", withValue: configuration.appSiteName)
-        serverSide.addPermanentData("navigation_device", withValue: Self.device())
-        serverSide.enableRunningInBackground()
+        
+        if let serverSide = ServerSide(siteID: 3666, andSourceKey: configuration.sourceKey) {
+            serverSide.addPermanentData("app_library_version", withValue: Analytics.version)
+            serverSide.addPermanentData("navigation_app_site_name", withValue: configuration.appSiteName)
+            serverSide.addPermanentData("navigation_device", withValue: Self.device())
+            serverSide.enableRunningInBackground()
+            self.serverSide = serverSide
+        }
 
         // Use the legacy V4 identifier as unique identifier in V5.
         TCDevice.sharedInstance().sdkID = TCPredefinedVariables.sharedInstance().uniqueIdentifier()
         TCPredefinedVariables.sharedInstance().useLegacyUniqueIDForAnonymousID()
-
-        self.serverSide = serverSide
     }
 
     func trackPageView(_ pageView: CommandersActPageView) {
