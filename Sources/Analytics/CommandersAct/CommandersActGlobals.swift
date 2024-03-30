@@ -11,7 +11,7 @@ public struct CommandersActGlobals {
     /// Creates Commanders Act global labels.
     /// 
     /// - Parameters:
-    ///   - consentServices: The list of service allowed.
+    ///   - consentServices: The list of services for which the user provided consent.
     ///   - labels: Additional information associated with the global labels.
     public init(consentServices: [String], labels: [String: String]) {
         self.labels = labels.merging([
