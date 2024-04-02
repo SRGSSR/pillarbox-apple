@@ -103,8 +103,8 @@ extension Media {
                 )
             },
             trackerAdapters: [
-                DemoTracker.adapter { media in
-                    DemoTracker.Metadata(title: media.title)
+                DemoTracker.adapter { metadata in
+                    DemoTracker.Metadata(title: metadata.title)
                 }
             ]
         )

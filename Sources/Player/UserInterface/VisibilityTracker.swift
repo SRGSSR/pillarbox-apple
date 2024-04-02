@@ -38,7 +38,6 @@ import UIKit
 ///    can for example call this method during slider interactions so that the user interface stays visible while the
 ///    user is still moving the slider.
 ///
-///
 /// > Note: For step-by-step integration instructions have a look at the associated <doc:tracking-visibility> tutorial.
 @available(iOS 16, *)
 @available(tvOS, unavailable)

@@ -62,7 +62,9 @@ public class Analytics {
 
     /// Starts analytics with the specified configuration.
     ///
-    /// - Parameter configuration: The configuration to use.
+    /// - Parameters:
+    ///   - configuration: The configuration to use.
+    ///   - dataSource: The data source to use.
     ///
     /// This method must be called from your `UIApplicationDelegate.application(_:didFinishLaunchingWithOptions:)`
     /// delegate method implementation, otherwise the behavior is undefined.

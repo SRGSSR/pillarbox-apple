@@ -33,7 +33,7 @@ public struct Chapter: Decodable {
 
     /// The chapter image URL.
     ///
-    /// Use `SRGDataProvider.imagePublisher(for:width:)` to obtain a scaled downloadable version.
+    /// Use `DataProvider.imagePublisher(for:width:)` to obtain a scaled downloadable version.
     public let imageUrl: URL
 
     /// The content type.
