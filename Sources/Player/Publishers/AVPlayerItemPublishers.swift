@@ -154,7 +154,8 @@ extension AVPlayerItem {
 }
 
 extension AVPlayerItem {
-    func outputPublisher(identifiers: [AVMetadataIdentifier] = []) -> AnyPublisher<[AVTimedMetadataGroup], Never> {
-        Empty().eraseToAnyPublisher()
+    func metadataOutputPublisher(identifiers: [String] = [], queue: DispatchQueue = .main) -> AnyPublisher<[AVTimedMetadataGroup], Never> {
+        MetadataOutputPublisher(item: self, identifiers: identifiers, queue: queue)
+            .eraseToAnyPublisher()
     }
 }
