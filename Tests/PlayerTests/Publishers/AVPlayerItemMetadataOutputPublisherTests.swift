@@ -14,7 +14,9 @@ import PillarboxStreams
 final class AVPlayerItemMetadataOutputPublisherTests: TestCase {
     func testOutput() {
         let item = AVPlayerItem(url: Stream.onDemandWithForcedAndUnforcedLegibleOptions.url)
-        expectAtLeastPublished(values: [1], from: item.outputPublisher()) { _, _ in
+        let player = AVPlayer(playerItem: item)
+        player.play()
+        expectAtLeastPublished(values: [1], from: item.metadataOutputPublisher()) { _, _ in
             true
         }
     }
