@@ -21,7 +21,7 @@ private struct _BoundaryTimePublisher: Publisher {
         self.queue = queue
     }
 
-    func receive<S>(subscriber: S) where S: Subscriber, S.Failure == Never, S.Input == Void {
+    func receive<S>(subscriber: S) where S: Subscriber, S.Failure == Never, S.Input == Output {
         let subscription = BoundaryTimeSubscription(subscriber: subscriber, player: player, times: times, queue: queue)
         subscriber.receive(subscription: subscription)
     }
