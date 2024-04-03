@@ -8,7 +8,14 @@
 
 import AVFoundation
 import Combine
+import PillarboxCircumspect
 import PillarboxStreams
 
 final class AVPlayerItemMetadataOutputPublisherTests: TestCase {
+    func testOutput() {
+        let item = AVPlayerItem(url: Stream.onDemandWithForcedAndUnforcedLegibleOptions.url)
+        expectAtLeastPublished(values: [1], from: item.outputPublisher()) { _, _ in
+            true
+        }
+    }
 }
