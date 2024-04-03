@@ -152,3 +152,9 @@ extension AVPlayerItem {
             .eraseToAnyPublisher()
     }
 }
+
+extension AVPlayerItem {
+    func outputPublisher(identifiers: [AVMetadataIdentifier] = []) -> AnyPublisher<[AVTimedMetadataGroup], Never> {
+        Empty().eraseToAnyPublisher()
+    }
+}
