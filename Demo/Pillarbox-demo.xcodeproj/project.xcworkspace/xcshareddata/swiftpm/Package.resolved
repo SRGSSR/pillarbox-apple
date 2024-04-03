@@ -125,24 +125,6 @@
         "revision" : "94cf62b3ba8d4bed62680a282d4c25f9c63c2efb",
         "version" : "1.1.0"
       }
-    },
-    {
-      "identity" : "timelanecombine",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/icanzilb/TimelaneCombine",
-      "state" : {
-        "revision" : "e6837bcbb19332866d5e37d501c05d68fbf985f2",
-        "version" : "2.0.0"
-      }
-    },
-    {
-      "identity" : "timelanecore",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/icanzilb/TimelaneCore",
-      "state" : {
-        "revision" : "c554d6d61be14bd7acb8b10161fe5d9dc20d7fbc",
-        "version" : "2.0.2"
-      }
     }
   ],
   "version" : 2

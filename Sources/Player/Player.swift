@@ -9,7 +9,6 @@ import Combine
 import DequeModule
 import MediaPlayer
 import PillarboxCore
-import TimelaneCombine
 
 /// An observable audio / video player maintaining its items as a double-ended queue.
 public final class Player: ObservableObject, Equatable {
@@ -360,7 +359,6 @@ private extension Player {
         queuePublisher
             .slice(at: \.index)
             .receiveOnMainThread()
-            .lane("player_current_index")
             .assign(to: &$currentIndex)
     }
 

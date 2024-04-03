@@ -39,8 +39,7 @@ let package = Package(
         .package(url: "https://github.com/CommandersAct/iOSV5.git", .upToNextMinor(from: "5.4.0")),
         .package(url: "https://github.com/apple/swift-collections.git", .upToNextMajor(from: "1.0.0")),
         .package(url: "https://github.com/krzysztofzablocki/Difference.git", exact: "1.0.1"),
-        .package(url: "https://github.com/Quick/Nimble.git", .upToNextMajor(from: "13.0.0")),
-        .package(url: "https://github.com/icanzilb/TimelaneCombine.git", .upToNextMajor(from: "2.0.0"))
+        .package(url: "https://github.com/Quick/Nimble.git", .upToNextMajor(from: "13.0.0"))
     ],
     targets: [
         .target(
@@ -101,8 +100,7 @@ let package = Package(
             name: "PillarboxPlayer",
             dependencies: [
                 .target(name: "PillarboxCore"),
-                .product(name: "DequeModule", package: "swift-collections"),
-                .product(name: "TimelaneCombine", package: "TimelaneCombine")
+                .product(name: "DequeModule", package: "swift-collections")
             ],
             path: "Sources/Player",
             resources: [
