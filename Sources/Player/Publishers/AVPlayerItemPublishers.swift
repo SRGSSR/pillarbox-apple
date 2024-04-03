@@ -11,11 +11,9 @@ import MediaAccessibility
 extension AVPlayerItem {
     func propertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
         Publishers.CombineLatest6(
-            statusPublisher()
-                .lane("player_item_status"),
+            statusPublisher(),
             publisher(for: \.presentationSize),
-            mediaSelectionPropertiesPublisher()
-                .lane("player_item_media_selection"),
+            mediaSelectionPropertiesPublisher(),
             timePropertiesPublisher(),
             publisher(for: \.duration),
             minimumTimeOffsetFromLivePublisher()
@@ -41,8 +39,7 @@ extension AVPlayerItem {
     private func timePropertiesPublisher() -> AnyPublisher<TimeProperties, Never> {
         Publishers.CombineLatest3(
             publisher(for: \.loadedTimeRanges),
-            publisher(for: \.seekableTimeRanges)
-                .lane("player_item_seekable_time_ranges"),
+            publisher(for: \.seekableTimeRanges),
             publisher(for: \.isPlaybackLikelyToKeepUp)
         )
         .map { .init(loadedTimeRanges: $0, seekableTimeRanges: $1, isPlaybackLikelyToKeepUp: $2) }
