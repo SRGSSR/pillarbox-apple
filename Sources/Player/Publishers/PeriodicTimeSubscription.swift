@@ -8,7 +8,7 @@ import AVFoundation
 import Combine
 import PillarboxCore
 
-final class PeriodicTimeSubscription<S, Failure>: Subscription where Failure: Error, S: Subscriber, S.Input == CMTime, S.Failure == Failure {
+final class PeriodicTimeSubscription<S>: Subscription where S: Subscriber, S.Input == CMTime, S.Failure == Never {
     private var subscriber: S?
     private let player: AVPlayer
     private let interval: CMTime

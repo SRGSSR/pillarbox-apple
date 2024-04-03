@@ -8,7 +8,7 @@ import AVFoundation
 import Combine
 import PillarboxCore
 
-final class BoundaryTimeSubscription<S, Failure>: Subscription where Failure: Error, S: Subscriber, S.Input == Void, S.Failure == Failure {
+final class BoundaryTimeSubscription<S>: Subscription where S: Subscriber, S.Input == Void, S.Failure == Never {
     private var subscriber: S?
     private let player: AVPlayer
     private let times: [CMTime]
