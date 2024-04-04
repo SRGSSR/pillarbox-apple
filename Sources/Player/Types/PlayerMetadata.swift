@@ -19,8 +19,8 @@ public struct PlayerMetadata: Equatable {
 }
 
 public struct PlayerMetadata2 {
-    static let empty = Self(resource: .empty, external: .empty)
+    static let empty = Self(resource: .empty, content: .empty)
 
     public let resource: ResourceMetadata
-    public let external: ExternalMetadata
+    public let content: ContentMetadata
 }

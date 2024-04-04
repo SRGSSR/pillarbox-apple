@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-public struct ExternalMetadata {
+public struct ContentMetadata {
     static let empty = Self(items: [], chapters: [])
 
     public let items: [AVMetadataItem]

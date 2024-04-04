@@ -112,14 +112,14 @@ public final class Player: ObservableObject, Equatable {
                     playerItem.resourceMetadataPublisher(),
                     item.$content
                         .map { content in
-                            ExternalMetadata(
+                            ContentMetadata(
                                 items: content.metadata.metadataItems,
                                 // FIXME: Extract
                                 chapters: []
                             )
                         }
                 )
-                .map { PlayerMetadata2(resource: $0, external: $1) }
+                .map { PlayerMetadata2(resource: $0, content: $1) }
                 .eraseToAnyPublisher()
             }
             .switchToLatest()
