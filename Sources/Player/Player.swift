@@ -109,7 +109,7 @@ public final class Player: ObservableObject, Equatable {
                     return Just(PlayerMetadata2.empty).eraseToAnyPublisher()
                 }
                 return Publishers.CombineLatest(
-                    Just(ResourceMetadata.empty),
+                    playerItem.resourceMetadataPublisher(),
                     Just(ExternalMetadata.empty)
                 )
                 .map { PlayerMetadata2(resource: $0, external: $1) }

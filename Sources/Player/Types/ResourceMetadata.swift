@@ -10,6 +10,6 @@ public struct ResourceMetadata {
     static let empty = Self(items: [], timedItems: [], chapters: [])
 
     let items: [AVMetadataItem]
-    let timedItems: [AVMetadataItem]
+    let timedItems: [AVTimedMetadataGroup]
     let chapters: [AVMetadataGroup]
 }
