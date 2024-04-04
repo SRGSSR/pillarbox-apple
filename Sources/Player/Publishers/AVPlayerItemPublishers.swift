@@ -165,7 +165,8 @@ extension AVPlayerItem {
             asset.propertyPublisher(.metadata)
                 .replaceError(with: []),
             metadataOutputPublisher(),
-            Just([])
+            asset.chaptersPublisher(bestMatchingPreferredLanguages: Locale.preferredLanguages)
+                .replaceError(with: [])
         )
         .map { ResourceMetadata(items: $0, timedItems: $1, chapters: $2) }
         .eraseToAnyPublisher()
