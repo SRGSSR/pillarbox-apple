@@ -17,3 +17,10 @@ public struct PlayerMetadata: Equatable {
         NSDictionary(dictionary: lhs.nowPlayingInfo).isEqual(to: rhs.nowPlayingInfo) && lhs.metadataItems == rhs.metadataItems
     }
 }
+
+public struct PlayerMetadata2 {
+    static let empty = Self(resource: .empty, external: .empty)
+
+    public let resource: ResourceMetadata
+    public let external: ExternalMetadata
+}

@@ -30,6 +30,8 @@ public final class Player: ObservableObject, Equatable {
     /// The metadata related to the item being played.
     @Published public private(set) var metadata: PlayerMetadata = .empty
 
+    @Published public private(set) var metadata2: PlayerMetadata2 = .empty
+
     @Published var storedItems: Deque<PlayerItem>
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
 
