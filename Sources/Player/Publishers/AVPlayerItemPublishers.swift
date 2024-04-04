@@ -163,9 +163,11 @@ extension AVPlayerItem {
     func resourceMetadataPublisher() -> AnyPublisher<ResourceMetadata, Never> {
         Publishers.CombineLatest3(
             asset.propertyPublisher(.metadata)
+                .prepend([])
                 .replaceError(with: []),
             metadataOutputPublisher(),
             asset.chaptersPublisher(bestMatchingPreferredLanguages: Locale.preferredLanguages)
+                .prepend([])
                 .replaceError(with: [])
         )
         .map { ResourceMetadata(items: $0, timedItems: $1, chapters: $2) }

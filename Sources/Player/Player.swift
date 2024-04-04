@@ -110,7 +110,14 @@ public final class Player: ObservableObject, Equatable {
                 }
                 return Publishers.CombineLatest(
                     playerItem.resourceMetadataPublisher(),
-                    Just(ExternalMetadata.empty)
+                    item.$content
+                        .map { content in
+                            ExternalMetadata(
+                                items: content.metadata.metadataItems,
+                                // FIXME: Extract
+                                chapters: []
+                            )
+                        }
                 )
                 .map { PlayerMetadata2(resource: $0, external: $1) }
                 .eraseToAnyPublisher()
