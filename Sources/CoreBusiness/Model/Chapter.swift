@@ -23,10 +23,14 @@ public struct Chapter: Decodable {
         case imageUrl
         case title
         case urn
+        case fullLengthUrn
     }
 
     /// The chapter URN.
     public let urn: String
+
+    /// The full-length URN.
+    public let fullLengthUrn: String?
 
     /// The chapter title
     public let title: String

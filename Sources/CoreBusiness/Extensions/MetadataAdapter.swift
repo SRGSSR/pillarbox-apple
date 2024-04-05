@@ -15,14 +15,19 @@ public extension MetadataAdapter where M == MediaMetadata {
             subtitle: metadata.subtitle,
             description: metadata.description,
             image: metadata.image,
-            chapters: metadata.mediaComposition.chapters.map { chapter in
-                StandardMetadata.Chapter(
-                    title: chapter.title,
-                    range: chapter.timeRange,
-                    image: UIImage.image(with: .systemPink)
-                )
-            }
+            chapters: chapters(for: metadata)
         )
+    }
+
+    private static func chapters(for metadata: MediaMetadata) -> [StandardMetadata.Chapter] {
+        guard metadata.mediaComposition.mainChapter.fullLengthUrn == nil else { return [] }
+        return metadata.mediaComposition.chapters.dropFirst().map { chapter in
+            StandardMetadata.Chapter(
+                title: chapter.title,
+                range: chapter.timeRange,
+                image: UIImage.image(with: .systemPink)
+            )
+        }
     }
 }
 
