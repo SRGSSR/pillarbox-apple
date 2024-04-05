@@ -89,10 +89,8 @@ public final class Player: ObservableObject, Equatable {
 
     lazy var metadataPublisher: AnyPublisher<PlayerMetadata, Never> = {
         queuePublisher
-            .slice(at: \.item)
-            .map { item in
-                guard let item else { return Just(PlayerMetadata.empty).eraseToAnyPublisher() }
-                return item.$content.map(\.metadata).eraseToAnyPublisher()
+            .map { queue in
+                queue.metadataPublisher(bestMatchingPreferredLanguages: Locale.preferredLanguages + ["und"])
             }
             .switchToLatest()
             .removeDuplicates()
