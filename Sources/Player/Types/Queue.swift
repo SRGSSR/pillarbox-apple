@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import Combine
 
 struct Queue {
     static let empty = Self(elements: [], itemState: .empty)
@@ -59,5 +60,21 @@ struct Queue {
         case let .itemState(itemState):
             return .init(elements: elements, itemState: itemState)
         }
+    }
+
+    func metadataPublisher(bestMatchingPreferredLanguages preferredLanguages: [String]) -> AnyPublisher<PlayerMetadata, Never> {
+        guard let item, let playerItem else { return Just(PlayerMetadata.empty).eraseToAnyPublisher() }
+        return Publishers.CombineLatest(
+            item.$content.map(\.metadata),
+            playerItem.metadataPublisher(bestMatchingPreferredLanguages: preferredLanguages)
+        )
+        .map { contentMetadata, resourceMetadata in
+            PlayerMetadata(
+                nowPlayingInfo: contentMetadata.nowPlayingInfo,
+                items: contentMetadata.items + resourceMetadata.items,
+                chapterGroups: contentMetadata.chapterGroups + resourceMetadata.chapterGroups
+            )
+        }
+        .eraseToAnyPublisher()
     }
 }
