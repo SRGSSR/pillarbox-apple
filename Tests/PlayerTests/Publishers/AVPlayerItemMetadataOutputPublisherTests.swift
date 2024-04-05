@@ -16,8 +16,8 @@ final class AVPlayerItemMetadataOutputPublisherTests: TestCase {
         let item = AVPlayerItem(url: Stream.onDemandWithForcedAndUnforcedLegibleOptions.url)
         let player = AVPlayer(playerItem: item)
         player.play()
-        expectAtLeastPublished(values: [1], from: item.metadataOutputPublisher()) { _, _ in
-            true
+        expectAtLeastPublished(values: [true, false], from: item.metadataOutputPublisher()) { actualValue, expectedValue in
+            actualValue.isEmpty == expectedValue
         }
     }
 }
