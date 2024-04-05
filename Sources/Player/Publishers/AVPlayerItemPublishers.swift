@@ -86,13 +86,6 @@ extension AVPlayerItem {
             .prepend(.invalid)
             .eraseToAnyPublisher()
     }
-
-    private func metadataPublisher() -> AnyPublisher<[AVMetadataItem], Never> {
-        asset.propertyPublisher(.metadata)
-            .replaceError(with: [])
-            .prepend([])
-            .eraseToAnyPublisher()
-    }
 }
 
 extension AVPlayerItem {
@@ -161,8 +154,32 @@ extension AVPlayerItem {
 }
 
 extension AVPlayerItem {
+    func metadataPublisher(bestMatchingPreferredLanguages preferredLanguages: [String]) -> AnyPublisher<PlayerMetadata, Never> {
+        Publishers.CombineLatest3(
+            metadataPublisher(),
+            metadataOutputPublisher(),
+            chaptersPublisher(bestMatchingPreferredLanguages: preferredLanguages)
+        )
+        .map { PlayerMetadata(nowPlayingInfo: [:], items: $1.flatMap(\.items) + $0, chapterGroups: $2) }
+        .eraseToAnyPublisher()
+    }
+
     func metadataOutputPublisher(identifiers: [String] = [], queue: DispatchQueue = .main) -> AnyPublisher<[AVTimedMetadataGroup], Never> {
         MetadataOutputPublisher(item: self, identifiers: identifiers, queue: queue)
+            .prepend([])
+            .eraseToAnyPublisher()
+    }
+
+    private func chaptersPublisher(bestMatchingPreferredLanguages preferredLanguages: [String]) -> AnyPublisher<[AVTimedMetadataGroup], Never> {
+        asset.chaptersPublisher(bestMatchingPreferredLanguages: preferredLanguages)
+            .replaceError(with: [])
+            .prepend([])
+            .eraseToAnyPublisher()
+    }
+
+    private func metadataPublisher() -> AnyPublisher<[AVMetadataItem], Never> {
+        asset.propertyPublisher(.metadata)
+            .replaceError(with: [])
             .prepend([])
             .eraseToAnyPublisher()
     }

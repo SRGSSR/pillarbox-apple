@@ -46,7 +46,7 @@ public protocol PlayerItemMetadata {
     ///
     /// Refer to the [official documentation](https://developer.apple.com/documentation/avfoundation/media_playback/presenting_chapter_markers)
     /// for more information.
-    func chapterGroups(from metadata: Metadata) -> [AVMetadataGroup]
+    func chapterGroups(from metadata: Metadata) -> [AVTimedMetadataGroup]
 }
 
 public extension PlayerItemMetadata {
