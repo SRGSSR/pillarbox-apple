@@ -10,6 +10,7 @@
 		0E011D1A2B2DF9BE00DAAD3D /* MediaCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E011D192B2DF9BE00DAAD3D /* MediaCardView.swift */; };
 		0E4128BD2AFB7F2A00D67759 /* InlineSystemPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4128BC2AFB7F2A00D67759 /* InlineSystemPlayerView.swift */; };
 		0E4128BF2AFB959B00D67759 /* PlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4128BE2AFB959B00D67759 /* PlayerViewModel.swift */; };
+		0E46CC072BC02B1A00860407 /* chapters.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0E46CC062BC02B1000860407 /* chapters.mp4 */; };
 		0E48F3FC2B2DBAD4001982BB /* CustomNavigationLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E48F3FB2B2DBAD4001982BB /* CustomNavigationLink.swift */; };
 		0E6B995C29D43E4200D0276D /* OptInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6B995B29D43E4200D0276D /* OptInView.swift */; };
 		0EB94A1F2B5AE29000FF3175 /* HighSpeedView~ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB94A1E2B5AE29000FF3175 /* HighSpeedView~ios.swift */; };
@@ -97,6 +98,7 @@
 		0E011D192B2DF9BE00DAAD3D /* MediaCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaCardView.swift; sourceTree = "<group>"; };
 		0E4128BC2AFB7F2A00D67759 /* InlineSystemPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineSystemPlayerView.swift; sourceTree = "<group>"; };
 		0E4128BE2AFB959B00D67759 /* PlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewModel.swift; sourceTree = "<group>"; };
+		0E46CC062BC02B1000860407 /* chapters.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = chapters.mp4; sourceTree = "<group>"; };
 		0E48F3FB2B2DBAD4001982BB /* CustomNavigationLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationLink.swift; sourceTree = "<group>"; };
 		0E6B995B29D43E4200D0276D /* OptInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptInView.swift; sourceTree = "<group>"; };
 		0EB94A1E2B5AE29000FF3175 /* HighSpeedView~ios.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HighSpeedView~ios.swift"; sourceTree = "<group>"; };
@@ -472,6 +474,7 @@
 		6F917C072887EA8E004113BA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0E46CC062BC02B1000860407 /* chapters.mp4 */,
 				6F917C082887EA8E004113BA /* Assets.xcassets */,
 				6F02B3082AB870AD002D15DB /* Localizable.xcstrings */,
 				0EF2A5462B444ACD00F01804 /* Settings.bundle */,
@@ -592,6 +595,7 @@
 			files = (
 				0EF2A5472B444ACD00F01804 /* Settings.bundle in Resources */,
 				6F917C112887EA8E004113BA /* Preview Assets.xcassets in Resources */,
+				0E46CC072BC02B1A00860407 /* chapters.mp4 in Resources */,
 				6F917C0E2887EA8E004113BA /* Assets.xcassets in Resources */,
 				6F02B3092AB870AD002D15DB /* Localizable.xcstrings in Resources */,
 			);
