@@ -27,7 +27,8 @@ public struct MetadataAdapter<M> {
             let mappedMetadata = mapper(metadata)
             return .init(
                 nowPlayingInfo: playerMetadata.nowPlayingInfo(from: mappedMetadata),
-                metadataItems: playerMetadata.items(from: mappedMetadata)
+                items: playerMetadata.items(from: mappedMetadata),
+                chapterGroups: playerMetadata.chapterGroups(from: mappedMetadata)
             )
         }
     }

@@ -45,4 +45,8 @@ public struct StandardMetadata: PlayerItemMetadata {
         ]
         .compactMap { $0 }
     }
+
+    public func chapterGroups(from metadata: Metadata) -> [AVMetadataGroup] {
+        []
+    }
 }
