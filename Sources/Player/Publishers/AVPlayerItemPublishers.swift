@@ -86,6 +86,13 @@ extension AVPlayerItem {
             .prepend(.invalid)
             .eraseToAnyPublisher()
     }
+
+    private func metadataPublisher() -> AnyPublisher<[AVMetadataItem], Never> {
+        asset.propertyPublisher(.metadata)
+            .replaceError(with: [])
+            .prepend([])
+            .eraseToAnyPublisher()
+    }
 }
 
 extension AVPlayerItem {
