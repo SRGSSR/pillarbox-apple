@@ -46,4 +46,16 @@ final class AVAssetPublisherTests: TestCase {
         let error = try waitForFailure(from: asset.propertyPublisher(.duration, .preferredRate))
         expect(error).notTo(beNil())
     }
+
+    func testChapters() {
+        let asset = AVURLAsset(url: Stream.chaptersMp4.url)
+    }
+
+    func testWithoutChapters() {
+        let asset = AVURLAsset(url: Stream.onDemand.url)
+    }
+
+    func testChaptersWithFailure() {
+        let asset = AVURLAsset(url: Stream.unavailable.url)
+    }
 }
