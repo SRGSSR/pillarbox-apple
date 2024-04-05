@@ -25,6 +25,7 @@ public struct StandardMetadata: PlayerItemMetadata {
 
     public func items(from metadata: Metadata) -> [AVMetadataItem] {
         [
+            .init(for: .commonIdentifierAssetIdentifier, value: metadata.identifier),
             .init(for: .commonIdentifierTitle, value: metadata.title),
             .init(for: .iTunesMetadataTrackSubTitle, value: metadata.subtitle),
             .init(for: .commonIdentifierArtwork, value: metadata.image?.pngData()),
@@ -37,6 +38,7 @@ public struct StandardMetadata: PlayerItemMetadata {
         metadata.chapters.map { chapter in
             AVTimedMetadataGroup(
                 items: [
+                    .init(for: .commonIdentifierAssetIdentifier, value: metadata.identifier),
                     .init(for: .commonIdentifierTitle, value: chapter.title),
                     .init(for: .commonIdentifierArtwork, value: chapter.artwork?.pngData())
                 ].compactMap { $0 },
@@ -49,13 +51,22 @@ public struct StandardMetadata: PlayerItemMetadata {
 // swiftlint:disable missing_docs
 public extension StandardMetadata {
     struct Metadata {
+        public let identifier: String?
         public let title: String?
         public let subtitle: String?
         public let description: String?
         public let image: UIImage?
         public let chapters: [Chapter]
 
-        public init(title: String? = nil, subtitle: String? = nil, description: String? = nil, image: UIImage? = nil, chapters: [Chapter] = []) {
+        public init(
+            identifier: String? = nil,
+            title: String? = nil,
+            subtitle: String? = nil,
+            description: String? = nil,
+            image: UIImage? = nil,
+            chapters: [Chapter] = []
+        ) {
+            self.identifier = identifier
             self.title = title
             self.subtitle = subtitle
             self.description = description
