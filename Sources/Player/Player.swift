@@ -89,6 +89,7 @@ public final class Player: ObservableObject, Equatable {
 
     lazy var metadataPublisher: AnyPublisher<PlayerMetadata, Never> = {
         queuePublisher
+            .receive(on: DispatchQueue.main)
             .map { queue in
                 queue.metadataPublisher(bestMatchingPreferredLanguages: Locale.preferredLanguages + ["und"])
             }
