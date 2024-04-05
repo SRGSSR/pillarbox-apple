@@ -38,7 +38,7 @@ public protocol PlayerItemMetadata {
     ///
     /// Refer to the [official documentation](https://developer.apple.com/documentation/avkit/customizing_the_tvos_playback_experience)
     /// for more information.
-    func metadataItems(from metadata: Metadata) -> [AVMetadataItem]
+    func items(from metadata: Metadata) -> [AVMetadataItem]
 }
 
 public extension PlayerItemMetadata {

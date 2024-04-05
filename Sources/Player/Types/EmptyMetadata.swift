@@ -13,7 +13,7 @@ struct EmptyMetadata<M>: PlayerItemMetadata {
         .init()
     }
 
-    func metadataItems(from metadata: M) -> [AVMetadataItem] {
+    func items(from metadata: M) -> [AVMetadataItem] {
         []
     }
 }
