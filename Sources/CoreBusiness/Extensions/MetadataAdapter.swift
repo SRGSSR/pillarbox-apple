@@ -11,6 +11,7 @@ public extension MetadataAdapter where M == MediaMetadata {
     /// A metadata adapter displaying standard media metadata.
     static let standard: Self = StandardMetadata.adapter { metadata in
         .init(
+            identifier: metadata.mediaComposition.chapterUrn,
             title: metadata.title,
             subtitle: metadata.subtitle,
             description: metadata.description,
