@@ -36,7 +36,7 @@ public struct StandardMetadata: PlayerItemMetadata {
         return nowPlayingInfo
     }
 
-    public func metadataItems(from metadata: Metadata) -> [AVMetadataItem] {
+    public func items(from metadata: Metadata) -> [AVMetadataItem] {
         [
             .init(for: .commonIdentifierTitle, value: metadata.title),
             .init(for: .iTunesMetadataTrackSubTitle, value: metadata.subtitle),
