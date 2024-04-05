@@ -38,7 +38,7 @@ public struct StandardMetadata: PlayerItemMetadata {
             AVTimedMetadataGroup(
                 items: [
                     .init(for: .commonIdentifierTitle, value: chapter.title),
-                    .init(for: .commonIdentifierArtwork, value: chapter.artwork)
+                    .init(for: .commonIdentifierArtwork, value: chapter.artwork?.pngData())
                 ].compactMap { $0 },
                 timeRange: chapter.timeRange
             )
@@ -69,14 +69,12 @@ public extension StandardMetadata {
     struct Chapter {
         let title: String
         let timeRange: CMTimeRange
-        var artwork: Data?
+        var artwork: UIImage?
 
-        public init(title: String, range: CMTimeRange, imageUrl: URL) {
+        public init(title: String, range: CMTimeRange, image: UIImage?) {
             self.title = title
             self.timeRange = range
-            if let data = try? Data(contentsOf: imageUrl) {
-                self.artwork = UIImage(data: data)?.pngData()
-            }
+            self.artwork = image
         }
     }
 }

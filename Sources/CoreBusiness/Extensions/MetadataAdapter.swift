@@ -5,6 +5,7 @@
 //
 
 import PillarboxPlayer
+import UIKit
 
 public extension MetadataAdapter where M == MediaMetadata {
     /// A metadata adapter displaying standard media metadata.
@@ -18,9 +19,20 @@ public extension MetadataAdapter where M == MediaMetadata {
                 StandardMetadata.Chapter(
                     title: chapter.title,
                     range: chapter.timeRange,
-                    imageUrl: chapter.imageUrl
+                    image: UIImage.image(with: .systemPink)
                 )
             }
         )
+    }
+}
+
+private extension UIImage {
+    static func image(with color: UIColor) -> UIImage {
+        let rect = CGRect(x: 0, y: 0, width: 16, height: 9)
+        let renderer = UIGraphicsImageRenderer(bounds: rect)
+        return renderer.image { context in
+            color.setFill()
+            context.fill(rect)
+        }
     }
 }
