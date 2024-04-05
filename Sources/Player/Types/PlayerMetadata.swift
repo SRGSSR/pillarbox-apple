@@ -11,7 +11,7 @@ public struct PlayerMetadata: Equatable {
 
     public let nowPlayingInfo: NowPlayingInfo
     public let items: [AVMetadataItem]
-    public let chapterGroups: [AVMetadataGroup]
+    public let chapterGroups: [AVTimedMetadataGroup]
 
     public static func == (lhs: Self, rhs: Self) -> Bool {
         // swiftlint:disable:next legacy_objc_type
