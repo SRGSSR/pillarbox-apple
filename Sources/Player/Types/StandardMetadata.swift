@@ -8,21 +8,8 @@ import AVFoundation
 import MediaPlayer
 import UIKit
 
+/// A struct that conforms to the `PlayerItemMetadata`.
 public struct StandardMetadata: PlayerItemMetadata {
-    public struct Metadata {
-        public let title: String?
-        public let subtitle: String?
-        public let description: String?
-        public let image: UIImage?
-
-        public init(title: String? = nil, subtitle: String? = nil, description: String? = nil, image: UIImage? = nil) {
-            self.title = title
-            self.subtitle = subtitle
-            self.description = description
-            self.image = image
-        }
-    }
-
     public init(configuration: Void) {}
 
     public func nowPlayingInfo(from metadata: Metadata) -> NowPlayingInfo {
@@ -47,6 +34,47 @@ public struct StandardMetadata: PlayerItemMetadata {
     }
 
     public func chapterGroups(from metadata: Metadata) -> [AVTimedMetadataGroup] {
-        []
+        metadata.chapters.map { chapter in
+            AVTimedMetadataGroup(
+                items: [
+                    .init(for: .commonIdentifierTitle, value: chapter.title)
+                ].compactMap { $0 },
+                timeRange: chapter.timeRange
+            )
+        }
     }
 }
+
+// swiftlint:disable missing_docs
+public extension StandardMetadata {
+    struct Metadata {
+        public let title: String?
+        public let subtitle: String?
+        public let description: String?
+        public let image: UIImage?
+        public let chapters: [Chapter]
+
+        public init(title: String? = nil, subtitle: String? = nil, description: String? = nil, image: UIImage? = nil, chapters: [Chapter] = []) {
+            self.title = title
+            self.subtitle = subtitle
+            self.description = description
+            self.image = image
+            self.chapters = chapters
+        }
+    }
+}
+// swiftlint:enable missing_docs
+
+// swiftlint:disable missing_docs
+public extension StandardMetadata {
+    struct Chapter {
+        let title: String
+        let timeRange: CMTimeRange
+
+        public init(title: String, range: CMTimeRange) {
+            self.title = title
+            self.timeRange = range
+        }
+    }
+}
+// swiftlint:enable missing_docs
