@@ -226,3 +226,20 @@ extension AVAsset {
         .eraseToAnyPublisher()
     }
 }
+
+extension AVAsset {
+    func chaptersPublisher(bestMatchingPreferredLanguages preferredLanguages: [String]) -> AnyPublisher<[AVTimedMetadataGroup], Error> {
+        Future { promise in
+            Task {
+                do {
+                    let result = try await self.loadChapterMetadataGroups(bestMatchingPreferredLanguages: preferredLanguages)
+                    promise(.success(result))
+                }
+                catch {
+                    promise(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+}

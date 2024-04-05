@@ -47,15 +47,27 @@ final class AVAssetPublisherTests: TestCase {
         expect(error).notTo(beNil())
     }
 
-    func testChapters() {
+    func testChapters() throws {
         let asset = AVURLAsset(url: Stream.chaptersMp4.url)
+        let chapters = try waitForSingleOutput(from: asset.chaptersPublisher(bestMatchingPreferredLanguages: ["und"]))
+        expect(chapters.count).to(equal(4))
     }
 
-    func testWithoutChapters() {
+    func testWithNonMatchingChapters() throws {
+        let asset = AVURLAsset(url: Stream.chaptersMp4.url)
+        let chapters = try waitForSingleOutput(from: asset.chaptersPublisher(bestMatchingPreferredLanguages: ["fr"]))
+        expect(chapters).to(beEmpty())
+    }
+
+    func testWithoutChapters() throws {
         let asset = AVURLAsset(url: Stream.onDemand.url)
+        let chapters = try waitForSingleOutput(from: asset.chaptersPublisher(bestMatchingPreferredLanguages: ["und"]))
+        expect(chapters).to(beEmpty())
     }
 
-    func testChaptersWithFailure() {
+    func testChaptersWithFailure() throws {
         let asset = AVURLAsset(url: Stream.unavailable.url)
+        let error = try waitForFailure(from: asset.chaptersPublisher(bestMatchingPreferredLanguages: ["und"]))
+        expect(error).notTo(beNil())
     }
 }
