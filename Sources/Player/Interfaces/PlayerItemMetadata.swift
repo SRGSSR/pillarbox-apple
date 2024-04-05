@@ -39,6 +39,14 @@ public protocol PlayerItemMetadata {
     /// Refer to the [official documentation](https://developer.apple.com/documentation/avkit/customizing_the_tvos_playback_experience)
     /// for more information.
     func items(from metadata: Metadata) -> [AVMetadataItem]
+
+    /// A method formatting metadata for chapters.
+    ///
+    /// - Returns: An array of metadata groups.
+    ///
+    /// Refer to the [official documentation](https://developer.apple.com/documentation/avfoundation/media_playback/presenting_chapter_markers)
+    /// for more information.
+    func chapterGroups(from metadata: Metadata) -> [AVMetadataGroup]
 }
 
 public extension PlayerItemMetadata {

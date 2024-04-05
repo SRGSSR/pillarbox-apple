@@ -16,4 +16,8 @@ struct EmptyMetadata<M>: PlayerItemMetadata {
     func items(from metadata: M) -> [AVMetadataItem] {
         []
     }
+
+    func chapterGroups(from metadata: M) -> [AVMetadataGroup] {
+        []
+    }
 }

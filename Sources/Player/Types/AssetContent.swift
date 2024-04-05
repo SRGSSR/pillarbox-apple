@@ -21,7 +21,7 @@ struct AssetContent {
     }
 
     func update(item: AVPlayerItem) {
-        item.externalMetadata = metadata.metadataItems
+        item.externalMetadata = metadata.items
     }
 
     func playerItem(reload: Bool = false) -> AVPlayerItem {
