@@ -37,7 +37,8 @@ public struct StandardMetadata: PlayerItemMetadata {
         metadata.chapters.map { chapter in
             AVTimedMetadataGroup(
                 items: [
-                    .init(for: .commonIdentifierTitle, value: chapter.title)
+                    .init(for: .commonIdentifierTitle, value: chapter.title),
+                    .init(for: .commonIdentifierArtwork, value: chapter.artwork)
                 ].compactMap { $0 },
                 timeRange: chapter.timeRange
             )
@@ -63,17 +64,19 @@ public extension StandardMetadata {
         }
     }
 }
-// swiftlint:enable missing_docs
 
-// swiftlint:disable missing_docs
 public extension StandardMetadata {
     struct Chapter {
         let title: String
         let timeRange: CMTimeRange
+        var artwork: Data?
 
-        public init(title: String, range: CMTimeRange) {
+        public init(title: String, range: CMTimeRange, imageUrl: URL) {
             self.title = title
             self.timeRange = range
+            if let data = try? Data(contentsOf: imageUrl) {
+                self.artwork = UIImage(data: data)?.pngData()
+            }
         }
     }
 }

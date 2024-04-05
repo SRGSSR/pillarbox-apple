@@ -15,7 +15,11 @@ public extension MetadataAdapter where M == MediaMetadata {
             description: metadata.description,
             image: metadata.image,
             chapters: metadata.mediaComposition.chapters.map { chapter in
-                StandardMetadata.Chapter(title: chapter.title, range: chapter.timeRange)
+                StandardMetadata.Chapter(
+                    title: chapter.title,
+                    range: chapter.timeRange,
+                    imageUrl: chapter.imageUrl
+                )
             }
         )
     }
