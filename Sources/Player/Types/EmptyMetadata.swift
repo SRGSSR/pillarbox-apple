@@ -17,6 +17,10 @@ struct EmptyMetadata<M>: PlayerItemMetadata {
         []
     }
 
+    func timedGroups(from metadata: Metadata) -> [AVTimedMetadataGroup] {
+        []
+    }
+
     func chapterGroups(from metadata: M) -> [AVTimedMetadataGroup] {
         []
     }

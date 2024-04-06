@@ -34,6 +34,10 @@ public struct StandardMetadata: PlayerItemMetadata {
         .compactMap { $0 }
     }
 
+    public func timedGroups(from metadata: Metadata) -> [AVTimedMetadataGroup] {
+        []
+    }
+
     public func chapterGroups(from metadata: Metadata) -> [AVTimedMetadataGroup] {
         metadata.chapters.map { chapter in
             AVTimedMetadataGroup(

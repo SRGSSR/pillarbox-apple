@@ -6,11 +6,11 @@
 
 import AVFoundation
 
-/// A protocol for custom player item metadata integration.
+/// A protocol for player item metadata integration.
 public protocol PlayerItemMetadata {
     /// A type describing the configuration offered for metadata display.
     ///
-    /// Use `Void` if no configuration is offered.
+    /// Use `Void` if no such configuration is offered.
     associatedtype Configuration
 
     /// A type describing how metadata is stored internally.
@@ -24,7 +24,7 @@ public protocol PlayerItemMetadata {
     /// - Parameter configuration: The metadata configuration.
     init(configuration: Configuration)
 
-    /// A method formatting metadata for Control Center display.
+    /// Returns metadata for Control Center display.
     ///
     /// - Returns: A dictionary suitable for display.
     ///
@@ -32,7 +32,7 @@ public protocol PlayerItemMetadata {
     /// for more information.
     func nowPlayingInfo(from metadata: Metadata) -> NowPlayingInfo
 
-    /// A method formatting metadata for display in the standard system player user interface.
+    /// Returns metadata globally associated with the item.
     ///
     /// - Returns: An array of metadata items.
     ///
@@ -40,7 +40,15 @@ public protocol PlayerItemMetadata {
     /// for more information.
     func items(from metadata: Metadata) -> [AVMetadataItem]
 
-    /// A method formatting metadata for chapters.
+    /// Returns metadata associated with time ranges of the item.
+    ///
+    /// - Returns: An array of metadata groups.
+    ///
+    /// Can be used to return program or music information, for example. You can also simply the same groups as
+    /// for chapters.
+    func timedGroups(from metadata: Metadata) -> [AVTimedMetadataGroup]
+
+    /// Returns metadata describing how the content is structured and how it can be navigated.
     ///
     /// - Returns: An array of metadata groups.
     ///
