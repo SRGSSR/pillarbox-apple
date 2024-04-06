@@ -9,27 +9,27 @@
 import Nimble
 import XCTest
 
-final class ErrorsTests: XCTestCase {
-    private enum EnumError: LocalizedError {
-        case someError
+private enum EnumError: LocalizedError {
+    case someError
 
-        var errorDescription: String? {
-            "Enum error description"
-        }
-
-        var failureReason: String? {
-            "Enum failure reason"
-        }
-
-        var recoverySuggestion: String? {
-            "Enum recovery suggestion"
-        }
-
-        var helpAnchor: String? {
-            "Enum help anchor"
-        }
+    var errorDescription: String? {
+        "Enum error description"
     }
 
+    var failureReason: String? {
+        "Enum failure reason"
+    }
+
+    var recoverySuggestion: String? {
+        "Enum recovery suggestion"
+    }
+
+    var helpAnchor: String? {
+        "Enum help anchor"
+    }
+}
+
+final class ErrorsTests: XCTestCase {
     func testNSErrorFromNSError() {
         let error = NSError(domain: "domain", code: 1012, userInfo: [
             NSLocalizedDescriptionKey: "Error description",
