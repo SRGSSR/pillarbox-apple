@@ -160,7 +160,7 @@ extension AVPlayerItem {
             metadataOutputPublisher(),
             chaptersPublisher(bestMatchingPreferredLanguages: preferredLanguages)
         )
-        .map { PlayerMetadata(nowPlayingInfo: [:], items: $1.flatMap(\.items) + $0, chapterGroups: $2) }
+        .map { PlayerMetadata(nowPlayingInfo: [:], items: $0, timedGroups: $1, chapterGroups: $2) }
         .removeDuplicates()
         .eraseToAnyPublisher()
     }

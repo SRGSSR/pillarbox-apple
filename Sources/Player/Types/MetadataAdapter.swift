@@ -28,6 +28,7 @@ public struct MetadataAdapter<M> {
             return .init(
                 nowPlayingInfo: playerMetadata.nowPlayingInfo(from: mappedMetadata),
                 items: playerMetadata.items(from: mappedMetadata),
+                timedGroups: [],
                 chapterGroups: playerMetadata.chapterGroups(from: mappedMetadata)
             )
         }
