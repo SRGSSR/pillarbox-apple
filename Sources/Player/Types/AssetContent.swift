@@ -10,7 +10,7 @@ import AVKit
 struct AssetContent {
     let id: UUID
     let resource: Resource
-    let metadata: PlayerMetadata
+    let metadata: PlayerMetadata.Data
     let configuration: (AVPlayerItem) -> Void
 
     static func loading(id: UUID) -> Self {
@@ -25,7 +25,7 @@ struct AssetContent {
         item.externalMetadata = metadata.items
 #if os(tvOS)
         item.navigationMarkerGroups = [
-            AVNavigationMarkersGroup(title: "chapters", timedNavigationMarkers: metadata.chapterGroups)
+            AVNavigationMarkersGroup(title: "chapters", timedNavigationMarkers: metadata.content.chapterGroups)
         ]
 #endif
     }
