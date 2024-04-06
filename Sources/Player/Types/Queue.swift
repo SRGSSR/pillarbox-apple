@@ -68,14 +68,7 @@ struct Queue {
             item.$content.map(\.metadata),
             playerItem.metadataPublisher(bestMatchingPreferredLanguages: preferredLanguages)
         )
-        .map { contentMetadata, resourceMetadata in
-            PlayerMetadata(
-                nowPlayingInfo: contentMetadata.nowPlayingInfo,
-                items: contentMetadata.items + resourceMetadata.items,
-                timedGroups: contentMetadata.timedGroups + resourceMetadata.timedGroups,
-                chapterGroups: contentMetadata.chapterGroups + resourceMetadata.chapterGroups
-            )
-        }
+        .map { .init(content: $0, resource: $1) }
         .eraseToAnyPublisher()
     }
 }

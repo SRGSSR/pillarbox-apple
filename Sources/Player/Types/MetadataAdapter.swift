@@ -13,7 +13,7 @@ public struct MetadataAdapter<M> {
         EmptyMetadata.adapter()
     }
 
-    private let map: (M) -> PlayerMetadata
+    private let map: (M) -> PlayerMetadata.Data
 
     /// Creates an adapter for a type of metadata with the provided mapper.
     ///
@@ -34,7 +34,7 @@ public struct MetadataAdapter<M> {
         }
     }
 
-    func metadata(from metadata: M) -> PlayerMetadata {
+    func metadata(from metadata: M) -> PlayerMetadata.Data {
         map(metadata)
     }
 }
