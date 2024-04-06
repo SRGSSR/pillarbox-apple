@@ -72,6 +72,7 @@ struct Queue {
             PlayerMetadata(
                 nowPlayingInfo: contentMetadata.nowPlayingInfo,
                 items: contentMetadata.items + resourceMetadata.items,
+                timedGroups: contentMetadata.timedGroups + resourceMetadata.timedGroups,
                 chapterGroups: contentMetadata.chapterGroups + resourceMetadata.chapterGroups
             )
         }
