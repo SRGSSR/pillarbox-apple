@@ -22,4 +22,21 @@ public extension AVMetadataItem {
         item.extendedLanguageTag = "und"
         self.init(propertiesOf: item) { $0.respond(value: value) }
     }
+
+    /// Returns metadata items matching one of the specified identifiers.
+    ///
+    /// - Parameters:
+    ///   - items: The items to filter.
+    ///   - identifiers: The identifiers to filter items against.
+    ///
+    /// The initial item order is preserved.
+    static func metadataItems(
+        from items: [AVMetadataItem],
+        filteredByIdentifiers identifiers: [AVMetadataIdentifier]
+    ) -> [AVMetadataItem] {
+        items.filter { item in
+            guard let identifier = item.identifier else { return false }
+            return identifiers.contains(identifier)
+        }
+    }
 }
