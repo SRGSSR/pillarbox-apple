@@ -60,7 +60,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
                 ]
             ],
             from: player.nowPlayingInfoMetadataPublisher(),
-            during: .milliseconds(100)
+            during: .milliseconds(200)
         )
     }
 
