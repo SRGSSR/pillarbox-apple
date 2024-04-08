@@ -25,7 +25,7 @@ struct AssetContent {
         item.externalMetadata = metadata.items
 #if os(tvOS)
         item.navigationMarkerGroups = [
-            AVNavigationMarkersGroup(title: "chapters", timedNavigationMarkers: metadata.content.chapterGroups)
+            AVNavigationMarkersGroup(title: "chapters", timedNavigationMarkers: metadata.chapterGroups)
         ]
 #endif
     }
