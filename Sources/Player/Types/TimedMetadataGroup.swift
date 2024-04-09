@@ -8,5 +8,15 @@ import AVFoundation
 
 public struct TimedMetadataGroup {
     public let items: [MetadataItem]
-    public let timeRange: CMTimeRange
+    private let timeRange: CMTimeRange
+
+    init(items: [MetadataItem], timeRange: CMTimeRange) {
+        self.items = items
+        self.timeRange = timeRange
+    }
+
+    public func containsTime(_ time: CMTime) -> Bool {
+        guard timeRange.duration > CMTime(value: 1, timescale: 1) else { return true }
+        return timeRange.containsTime(time)
+    }
 }
