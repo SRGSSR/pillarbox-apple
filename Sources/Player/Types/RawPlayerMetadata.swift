@@ -24,6 +24,27 @@ struct RawPlayerMetadata: Equatable {
         .map { PlayerMetadata.Data(items: $0, timedGroups: $1, chapterGroups: $2) }
         .eraseToAnyPublisher()
     }
+
+    private static func fixedItems(from items: [AVMetadataItem]) -> [AVMetadataItem] {
+        items.map { item in
+            guard item.extendedLanguageTag == nil else { return item }
+            let copy = item.mutableCopy() as! AVMutableMetadataItem
+            copy.extendedLanguageTag = "und"
+            return copy
+        }
+    }
+
+    private static func fixedGroups(from groups: [AVTimedMetadataGroup]) -> [AVTimedMetadataGroup] {
+        groups.map { group in
+            AVTimedMetadataGroup(items: fixedItems(from: group.items), timeRange: group.timeRange)
+        }
+    }
+
+    init(items: [AVMetadataItem], timedGroups: [AVTimedMetadataGroup], chapterGroups: [AVTimedMetadataGroup]) {
+        self.items = Self.fixedItems(from: items)
+        self.timedGroups = Self.fixedGroups(from: timedGroups)
+        self.chapterGroups = Self.fixedGroups(from: chapterGroups)
+    }
 }
 
 private extension AVMetadataItem {
@@ -45,6 +66,7 @@ private extension AVMetadataItem {
                     return .init(identifier: identifier, value: value)
                 }
         })
+        .prepend([])
         .eraseToAnyPublisher()
     }
 }
@@ -57,6 +79,7 @@ private extension AVTimedMetadataGroup {
         Publishers.AccumulateLatestMany(groups.map { group in
             publisher(for: group, bestMatchingPreferredLanguages: preferredLanguages)
         })
+        .prepend([])
         .eraseToAnyPublisher()
     }
 

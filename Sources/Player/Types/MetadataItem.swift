@@ -14,3 +14,9 @@ public struct MetadataItem {
         value as? String
     }
 }
+
+extension MetadataItem: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        identifier.rawValue
+    }
+}
