@@ -117,10 +117,9 @@ private extension Player {
 
 extension Player {
     func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
-//        metadataPublisher
-//            .map(\.nowPlayingInfo)
-//            .eraseToAnyPublisher()
-        Just([:]).eraseToAnyPublisher()
+        metadataPublisher
+            .map(\.nowPlayingInfo)
+            .eraseToAnyPublisher()
     }
 
     private func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
