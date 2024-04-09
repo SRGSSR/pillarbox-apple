@@ -8,6 +8,10 @@ import AVFoundation
 import Combine
 
 public extension AVMetadataItem {
+    typealias Value = any NSCopying & NSObjectProtocol
+
+    static let defaultPreferredLanguages = Array(Locale.preferredLanguages.prefix(1) + ["und"])
+
     /// Creates a metadata item.
     ///
     /// - Parameters:
@@ -41,18 +45,11 @@ public extension AVMetadataItem {
         }
     }
 
-    typealias Value = any NSCopying & NSObjectProtocol
-
-    struct Key: Hashable {
-        let identifier: AVMetadataIdentifier
-        let language: String
-    }
-
     static func extract(
         items: [AVMetadataItem],
         filteredByIdentifiers identifiers: [AVMetadataIdentifier],
-        bestMatchingPreferredLanguages preferredLanguages: [String]
-    ) -> AnyPublisher<[Key: Value], Never> {
+        bestMatchingPreferredLanguages preferredLanguages: [String] = defaultPreferredLanguages
+    ) -> AnyPublisher<[AVMetadataIdentifier: Value], Never> {
         let filteredItems = AVMetadataItem.metadataItems(
             from: AVMetadataItem.metadataItems(from: items, filteredByIdentifiers: identifiers),
             filteredAndSortedAccordingToPreferredLanguages: preferredLanguages
@@ -60,15 +57,14 @@ public extension AVMetadataItem {
         return Publishers.MergeMany(filteredItems.map { item in
             item.propertyPublisher(.value)
                 .replaceError(with: nil)
-                .compactMap { value -> (key: Key, value: Value)? in
-                    guard let value, let identifier = item.identifier, let language = item.extendedLanguageTag else {
+                .compactMap { value -> (key: AVMetadataIdentifier, value: Value)? in
+                    guard let value, let identifier = item.identifier else {
                         return nil
                     }
-                    let key = Key(identifier: identifier, language: language)
-                    return (key: key, value: value)
+                    return (key: identifier, value: value)
                 }
         })
-        .scan([Key: Value]()) { initial, next in
+        .scan([AVMetadataIdentifier: Value]()) { initial, next in
             var updated = initial
             updated[next.key] = next.value
             return updated

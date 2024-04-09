@@ -154,11 +154,11 @@ extension AVPlayerItem {
 }
 
 extension AVPlayerItem {
-    func metadataPublisher(bestMatchingPreferredLanguages preferredLanguages: [String]) -> AnyPublisher<PlayerMetadata.Data, Never> {
+    func metadataPublisher() -> AnyPublisher<PlayerMetadata.Data, Never> {
         Publishers.CombineLatest3(
             metadataPublisher(),
             metadataOutputPublisher(),
-            chaptersPublisher(bestMatchingPreferredLanguages: preferredLanguages)
+            chaptersPublisher()
         )
         .map { .init(nowPlayingInfo: [:], items: $0, timedGroups: $1, chapterGroups: $2) }
         .removeDuplicates()
@@ -171,8 +171,8 @@ extension AVPlayerItem {
             .eraseToAnyPublisher()
     }
 
-    private func chaptersPublisher(bestMatchingPreferredLanguages preferredLanguages: [String]) -> AnyPublisher<[AVTimedMetadataGroup], Never> {
-        asset.chaptersPublisher(bestMatchingPreferredLanguages: preferredLanguages)
+    private func chaptersPublisher() -> AnyPublisher<[AVTimedMetadataGroup], Never> {
+        asset.chaptersPublisher()
             .replaceError(with: [])
             .prepend([])
             .eraseToAnyPublisher()

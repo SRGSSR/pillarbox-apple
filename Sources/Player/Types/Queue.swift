@@ -62,11 +62,11 @@ struct Queue {
         }
     }
 
-    func metadataPublisher(bestMatchingPreferredLanguages preferredLanguages: [String]) -> AnyPublisher<PlayerMetadata, Never> {
+    func metadataPublisher() -> AnyPublisher<PlayerMetadata, Never> {
         guard let item, let playerItem else { return Just(PlayerMetadata.empty).eraseToAnyPublisher() }
         return Publishers.CombineLatest(
             item.$content.map(\.metadata),
-            playerItem.metadataPublisher(bestMatchingPreferredLanguages: preferredLanguages)
+            playerItem.metadataPublisher()
         )
         .map { .init(content: $0, resource: $1) }
         .eraseToAnyPublisher()
