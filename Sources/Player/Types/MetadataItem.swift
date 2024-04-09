@@ -9,4 +9,8 @@ import AVFoundation
 public struct MetadataItem {
     public let identifier: AVMetadataIdentifier
     public let value: Any
+
+    public var stringValue: String? {
+        value as? String
+    }
 }
