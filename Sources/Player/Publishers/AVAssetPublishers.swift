@@ -44,7 +44,9 @@ extension AVAsset {
         .eraseToAnyPublisher()
     }
 
-    func chaptersPublisher(bestMatchingPreferredLanguages preferredLanguages: [String]) -> AnyPublisher<[AVTimedMetadataGroup], Error> {
+    func chaptersPublisher(
+        bestMatchingPreferredLanguages preferredLanguages: [String] = AVMetadataItem.defaultPreferredLanguages
+    ) -> AnyPublisher<[AVTimedMetadataGroup], Error> {
         Future { promise in
             Task {
                 do {

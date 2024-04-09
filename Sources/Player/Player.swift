@@ -90,9 +90,7 @@ public final class Player: ObservableObject, Equatable {
     lazy var metadataPublisher: AnyPublisher<PlayerMetadata, Never> = {
         queuePublisher
             .receive(on: RunLoop.main)
-            .map { queue in
-                queue.metadataPublisher(bestMatchingPreferredLanguages: Locale.preferredLanguages + ["und"])
-            }
+            .map { $0.metadataPublisher() }
             .switchToLatest()
             .removeDuplicates()
             .share(replay: 1)
