@@ -65,10 +65,25 @@ struct Queue {
     func metadataPublisher() -> AnyPublisher<PlayerMetadata, Never> {
         guard let item, let playerItem else { return Just(PlayerMetadata.empty).eraseToAnyPublisher() }
         return Publishers.CombineLatest(
-            item.$content.map(\.metadata),
-            playerItem.metadataPublisher()
+            Self.contentMetadataPublisher(for: item),
+            Self.resourceMetadataPublisher(for: playerItem)
         )
         .map { .init(content: $0, resource: $1) }
         .eraseToAnyPublisher()
+    }
+
+    private static func contentMetadataPublisher(for item: PlayerItem) -> AnyPublisher<PlayerMetadata.Data, Never> {
+        item.$content
+            .map(\.metadata)
+            .map { $0.publisher(bestMatchingPreferredLanguages: AVMetadataItem.defaultPreferredLanguages) }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+
+    private static func resourceMetadataPublisher(for playerItem: AVPlayerItem) -> AnyPublisher<PlayerMetadata.Data, Never> {
+        playerItem.metadataPublisher()
+            .map { $0.publisher(bestMatchingPreferredLanguages: AVMetadataItem.defaultPreferredLanguages) }
+            .switchToLatest()
+            .eraseToAnyPublisher()
     }
 }

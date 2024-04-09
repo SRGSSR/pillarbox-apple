@@ -154,13 +154,13 @@ extension AVPlayerItem {
 }
 
 extension AVPlayerItem {
-    func metadataPublisher() -> AnyPublisher<PlayerMetadata.Data, Never> {
+    func metadataPublisher() -> AnyPublisher<RawPlayerMetadata, Never> {
         Publishers.CombineLatest3(
             metadataPublisher(),
             metadataOutputPublisher(),
             chaptersPublisher()
         )
-        .map { .init(nowPlayingInfo: [:], items: $0, timedGroups: $1, chapterGroups: $2) }
+        .map { .init(items: $0, timedGroups: $1, chapterGroups: $2) }
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
