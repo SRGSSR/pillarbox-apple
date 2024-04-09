@@ -72,6 +72,11 @@ private struct MainView: View {
         player.metadata.items.first(where: { $0.identifier == .iTunesMetadataTrackSubTitle })?.stringValue
     }
 
+    private var chapterTitle: String? {
+        guard let timedGroup = player.metadata.timedGroups.first else { return nil }
+        return timedGroup.items.first(where: { $0.identifier == .icyMetadataStreamTitle })?.stringValue
+    }
+
     @ViewBuilder
     private func main() -> some View {
         ZStack {
@@ -103,6 +108,10 @@ private struct MainView: View {
                 Text(title)
                     .font(.headline)
                     .fontWeight(.semibold)
+            }
+            if let chapterTitle {
+                Text(chapterTitle)
+                    .font(.callout)
             }
         }
         .padding(.horizontal)

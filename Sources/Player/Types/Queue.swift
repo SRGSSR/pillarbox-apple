@@ -77,6 +77,7 @@ struct Queue {
             .map(\.metadata)
             .map { $0.publisher(bestMatchingPreferredLanguages: AVMetadataItem.defaultPreferredLanguages) }
             .switchToLatest()
+            .prepend(.empty)
             .eraseToAnyPublisher()
     }
 
@@ -84,6 +85,7 @@ struct Queue {
         playerItem.metadataPublisher()
             .map { $0.publisher(bestMatchingPreferredLanguages: AVMetadataItem.defaultPreferredLanguages) }
             .switchToLatest()
+            .prepend(.empty)
             .eraseToAnyPublisher()
     }
 }
