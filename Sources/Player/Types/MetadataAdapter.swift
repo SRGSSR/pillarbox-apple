@@ -13,7 +13,7 @@ public struct MetadataAdapter<M> {
         EmptyMetadata.adapter()
     }
 
-    private let map: (M) -> PlayerMetadata.Data
+    private let map: (M) -> RawPlayerMetadata
 
     /// Creates an adapter for a type of metadata with the provided mapper.
     ///
@@ -26,7 +26,6 @@ public struct MetadataAdapter<M> {
             let playerMetadata = metadataType.init(configuration: configuration)
             let mappedMetadata = mapper(metadata)
             return .init(
-                nowPlayingInfo: playerMetadata.nowPlayingInfo(from: mappedMetadata),
                 items: playerMetadata.items(from: mappedMetadata),
                 timedGroups: playerMetadata.timedGroups(from: mappedMetadata),
                 chapterGroups: playerMetadata.chapterGroups(from: mappedMetadata)
@@ -34,7 +33,7 @@ public struct MetadataAdapter<M> {
         }
     }
 
-    func metadata(from metadata: M) -> PlayerMetadata.Data {
+    func metadata(from metadata: M) -> RawPlayerMetadata {
         map(metadata)
     }
 }

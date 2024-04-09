@@ -92,7 +92,6 @@ public final class Player: ObservableObject, Equatable {
             .receive(on: RunLoop.main)
             .map { $0.metadataPublisher() }
             .switchToLatest()
-            .removeDuplicates()
             .share(replay: 1)
             .eraseToAnyPublisher()
     }()
