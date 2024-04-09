@@ -73,7 +73,7 @@ private struct MainView: View {
     }
 
     private var chapterTitle: String? {
-        guard let timedGroup = player.metadata.timedGroups.first else { return nil }
+        guard let timedGroup = player.metadata.timedGroups.first(where: { $0.containsTime(player.time) }) else { return nil }
         return timedGroup.items.first(where: { $0.identifier == .icyMetadataStreamTitle })?.stringValue
     }
 
