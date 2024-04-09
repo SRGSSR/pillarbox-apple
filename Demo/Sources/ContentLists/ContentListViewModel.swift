@@ -106,7 +106,7 @@ final class ContentListViewModel: ObservableObject, Refreshable {
             .map { $0.map { .show($0) } }
             .eraseToAnyPublisher()
         case .radioLivestreams:
-            return SRGDataProvider.current!.radioLivestreams(for: configuration.vendor)
+            return SRGDataProvider.current!.radioLivestreams(for: configuration.vendor, contentProviders: .all)
                 .map { $0.map { .media($0) } }
                 .eraseToAnyPublisher()
         case let .radioLatestMedias(radioChannel: radioChannel):
