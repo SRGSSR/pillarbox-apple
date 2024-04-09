@@ -65,13 +65,11 @@ private struct MainView: View {
     }
 
     private var title: String? {
-        // TODO: Use AVMetadataItem
-        player.metadata.nowPlayingInfo[MPMediaItemPropertyTitle] as? String
+        player.metadata.content.items.first(where: { $0.identifier == .commonIdentifierTitle })?.stringValue
     }
 
     private var subtitle: String? {
-        // TODO: Use AVMetadataItem
-        player.metadata.nowPlayingInfo[MPMediaItemPropertyArtist] as? String
+        player.metadata.content.items.first(where: { $0.identifier == .iTunesMetadataTrackSubTitle })?.stringValue
     }
 
     @ViewBuilder
