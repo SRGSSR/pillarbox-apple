@@ -12,18 +12,6 @@ import UIKit
 public struct StandardMetadata: PlayerItemMetadata {
     public init(configuration: Void) {}
 
-    public func nowPlayingInfo(from metadata: Metadata) -> NowPlayingInfo {
-        var nowPlayingInfo = NowPlayingInfo()
-        nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
-        // FIXME: Probably twisting metadata here
-        nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
-        nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
-        if let image = metadata.image {
-            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
-        }
-        return nowPlayingInfo
-    }
-
     public func items(from metadata: Metadata) -> [AVMetadataItem] {
         [
             .init(for: .commonIdentifierAssetIdentifier, value: metadata.identifier),

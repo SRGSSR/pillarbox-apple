@@ -7,6 +7,7 @@
 import AVFoundation
 
 /// A protocol for player item metadata integration.
+// TODO: Remove adapter, use protocol as direct recipe for conversion
 public protocol PlayerItemMetadata {
     /// A type describing the configuration offered for metadata display.
     ///
@@ -23,14 +24,6 @@ public protocol PlayerItemMetadata {
     ///
     /// - Parameter configuration: The metadata configuration.
     init(configuration: Configuration)
-
-    /// Returns metadata for Control Center display.
-    ///
-    /// - Returns: A dictionary suitable for display.
-    ///
-    /// Refer to the [official documentation](https://developer.apple.com/documentation/mediaplayer/mpnowplayinginfocenter#1674387)
-    /// for more information.
-    func nowPlayingInfo(from metadata: Metadata) -> NowPlayingInfo
 
     /// Returns metadata globally associated with the item.
     ///
