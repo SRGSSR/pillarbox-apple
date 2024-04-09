@@ -19,4 +19,16 @@ public struct PlayerMetadata {
 
     public let content: Data
     public let resource: Data
+
+    public var items: [MetadataItem] {
+        content.items + resource.items
+    }
+
+    public var timedGroups: [TimedMetadataGroup] {
+        content.timedGroups + resource.timedGroups
+    }
+
+    public var chapterGroups: [TimedMetadataGroup] {
+        content.chapterGroups + resource.chapterGroups
+    }
 }

@@ -65,11 +65,11 @@ private struct MainView: View {
     }
 
     private var title: String? {
-        player.metadata.content.items.first(where: { $0.identifier == .commonIdentifierTitle })?.stringValue
+        player.metadata.items.first(where: { $0.identifier == .commonIdentifierTitle })?.stringValue
     }
 
     private var subtitle: String? {
-        player.metadata.content.items.first(where: { $0.identifier == .iTunesMetadataTrackSubTitle })?.stringValue
+        player.metadata.items.first(where: { $0.identifier == .iTunesMetadataTrackSubTitle })?.stringValue
     }
 
     @ViewBuilder
