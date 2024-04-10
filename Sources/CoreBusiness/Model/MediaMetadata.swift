@@ -31,8 +31,8 @@ public struct MediaMetadata {
     public var title: String {
         let mainChapter = mediaComposition.mainChapter
         guard mainChapter.contentType != .livestream else { return mainChapter.title }
-        if let show = mediaComposition.show, Self.areRedundant(chapter: mainChapter, show: show) {
-            return Self.dateFormatter.string(from: mainChapter.date)
+        if let show = mediaComposition.show {
+            return show.title
         }
         else {
             return mainChapter.title
@@ -41,8 +41,19 @@ public struct MediaMetadata {
 
     /// The subtitle recommended for display.
     public var subtitle: String? {
-        guard mediaComposition.mainChapter.contentType != .livestream else { return nil }
-        return mediaComposition.show?.title
+        let mainChapter = mediaComposition.mainChapter
+        guard mainChapter.contentType != .livestream else { return nil }
+        if let show = mediaComposition.show {
+            if Self.areRedundant(chapter: mainChapter, show: show) {
+                return Self.dateFormatter.string(from: mainChapter.date)
+            }
+            else {
+                return mainChapter.title
+            }
+        }
+        else {
+            return nil
+        }
     }
 
     /// The content description.
