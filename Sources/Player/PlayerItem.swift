@@ -78,7 +78,7 @@ public final class PlayerItem: Equatable {
         publisher: P,
         trackerAdapters: [TrackerAdapter<M>] = []
     ) where P: Publisher, P.Output == Asset<M> {
-        self.init(publisher: publisher, metadataFormatter: EmptyMetadata(), trackerAdapters: trackerAdapters)
+        self.init(publisher: publisher, metadataFormatter: NullFormatter(), trackerAdapters: trackerAdapters)
     }
 
     /// Creates a player item from an ``Asset``.
@@ -101,7 +101,7 @@ public final class PlayerItem: Equatable {
     ///   - asset: The asset to play.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     public convenience init<M>(asset: Asset<M>, trackerAdapters: [TrackerAdapter<M>] = []) {
-        self.init(asset: asset, metadataFormatter: EmptyMetadata(), trackerAdapters: trackerAdapters)
+        self.init(asset: asset, metadataFormatter: NullFormatter(), trackerAdapters: trackerAdapters)
     }
 
     public static func == (lhs: PlayerItem, rhs: PlayerItem) -> Bool {
