@@ -39,6 +39,11 @@ public struct MediaMetadata {
         }
     }
 
+    /// A recommended identifier for the content.
+    public var identifier: String {
+        mediaComposition.chapterUrn
+    }
+
     /// The subtitle recommended for display.
     public var subtitle: String? {
         let mainChapter = mediaComposition.mainChapter

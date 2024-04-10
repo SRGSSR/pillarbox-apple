@@ -15,18 +15,18 @@ public extension PlayerItem {
     /// - Parameters:
     ///   - urn: The URN to play.
     ///   - server: The server which the URN is played from.
-    ///   - metadataAdapter: A `MetadataAdapter` converting item metadata into player metadata.
+    ///   - metadataFormatter: A metadata formatter.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: A closure to configure player items created from the receiver.
     ///
     /// In addition the item is automatically tracked according to SRG SSR analytics standards.
-    static func urn(
+    static func urn<F>(
         _ urn: String,
         server: Server = .production,
-        metadataAdapter: MetadataAdapter<MediaMetadata> = .standard,
+        metadataFormatter: F,
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self {
+    ) -> Self where F: PlayerMetadataFormatter, F.Metadata == MediaMetadata {
         let dataProvider = DataProvider(server: server)
         let publisher = dataProvider.playableMediaCompositionPublisher(forUrn: urn)
             .tryMap { mediaComposition in
@@ -45,10 +45,28 @@ public extension PlayerItem {
             }
             .switchToLatest()
             .eraseToAnyPublisher()
-        return .init(publisher: publisher, metadataAdapter: metadataAdapter, trackerAdapters: [
+        return .init(publisher: publisher, metadataFormatter: metadataFormatter, trackerAdapters: [
             ComScoreTracker.adapter { $0.analyticsData },
             CommandersActTracker.adapter { $0.analyticsMetadata }
         ] + trackerAdapters)
+    }
+
+    /// Creates a player item from a URN.
+    ///
+    /// - Parameters:
+    ///   - urn: The URN to play.
+    ///   - server: The server which the URN is played from.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - configuration: A closure to configure player items created from the receiver.
+    ///
+    /// In addition the item is automatically tracked according to SRG SSR analytics standards.
+    static func urn(
+        _ urn: String,
+        server: Server = .production,
+        trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
+        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+    ) -> Self {
+        Self.urn(urn, server: server, metadataFormatter: MediaMetadataFormatter(), trackerAdapters: trackerAdapters, configuration: configuration)
     }
 
     private static func asset(for metadata: MediaMetadata, configuration: @escaping (AVPlayerItem) -> Void) -> Asset<MediaMetadata> {

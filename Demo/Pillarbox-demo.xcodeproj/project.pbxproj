@@ -29,6 +29,7 @@
 		6F0E5CD32B3394EA0031E313 /* PiPButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E5CD22B3394EA0031E313 /* PiPButton.swift */; };
 		6F0E5CD52B33A41F0031E313 /* MonoscopicVideoView~ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E5CD42B33A41F0031E313 /* MonoscopicVideoView~ios.swift */; };
 		6F26F35E2B33B73900392ED4 /* SupportingBasicPictureInPicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F26F35D2B33B73900392ED4 /* SupportingBasicPictureInPicture.swift */; };
+		6F3E9BB92BC6CF0B0017F3BE /* MediaFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3E9BB82BC6CF0B0017F3BE /* MediaFormatter.swift */; };
 		6F59E87929CF31E10093E6FB /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84029CF31E10093E6FB /* SearchView.swift */; };
 		6F59E87A29CF31E10093E6FB /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84129CF31E10093E6FB /* SearchViewModel.swift */; };
 		6F59E87B29CF31E10093E6FB /* DemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84329CF31E10093E6FB /* DemoApp.swift */; };
@@ -117,6 +118,7 @@
 		6F0E5CD22B3394EA0031E313 /* PiPButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiPButton.swift; sourceTree = "<group>"; };
 		6F0E5CD42B33A41F0031E313 /* MonoscopicVideoView~ios.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MonoscopicVideoView~ios.swift"; sourceTree = "<group>"; };
 		6F26F35D2B33B73900392ED4 /* SupportingBasicPictureInPicture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingBasicPictureInPicture.swift; sourceTree = "<group>"; };
+		6F3E9BB82BC6CF0B0017F3BE /* MediaFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaFormatter.swift; sourceTree = "<group>"; };
 		6F45DB9A2893B773008ACCE6 /* Application.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
 		6F45DB9B2893B773008ACCE6 /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		6F45DB9D2893B773008ACCE6 /* Demo.nightly.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Demo.nightly.xcconfig; sourceTree = "<group>"; };
@@ -292,6 +294,7 @@
 			children = (
 				6F59E84B29CF31E10093E6FB /* Media.swift */,
 				6F59E84C29CF31E10093E6FB /* MediaDescription.swift */,
+				6F3E9BB82BC6CF0B0017F3BE /* MediaFormatter.swift */,
 				6F59E84A29CF31E10093E6FB /* Playlist.swift */,
 				6F59E84929CF31E10093E6FB /* RadioChannel.swift */,
 				6F59E84729CF31E10093E6FB /* ServerSetting.swift */,
@@ -670,6 +673,7 @@
 				6F59E8A429CF31E20093E6FB /* ExamplesViewModel.swift in Sources */,
 				6F59E89829CF31E20093E6FB /* PlayerConfiguration.swift in Sources */,
 				6F8459F22A38543400A7B5F2 /* Signal.swift in Sources */,
+				6F3E9BB92BC6CF0B0017F3BE /* MediaFormatter.swift in Sources */,
 				6FDB51CB2A4042B2001F430F /* Router.swift in Sources */,
 				6F59E88B29CF31E20093E6FB /* PlaylistViewModel.swift in Sources */,
 				6F59E87F29CF31E10093E6FB /* Template.swift in Sources */,

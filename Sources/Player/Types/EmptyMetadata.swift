@@ -6,9 +6,7 @@
 
 import AVFoundation
 
-struct EmptyMetadata<M>: PlayerItemMetadata {
-    init(configuration: Void) {}
-
+struct EmptyMetadata<M>: PlayerMetadataFormatter {
     func items(from metadata: M) -> [AVMetadataItem] {
         []
     }
