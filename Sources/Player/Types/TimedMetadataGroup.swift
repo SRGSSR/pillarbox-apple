@@ -6,16 +6,11 @@
 
 import AVFoundation
 
-public struct TimedMetadataGroup {
-    public let items: [MetadataItem]
-    private let timeRange: CMTimeRange
+struct TimedMetadataGroup {
+    let items: [MetadataItem]
+    let timeRange: CMTimeRange
 
-    init(items: [MetadataItem], timeRange: CMTimeRange) {
-        self.items = items
-        self.timeRange = timeRange
-    }
-
-    public func containsTime(_ time: CMTime) -> Bool {
+    func containsTime(_ time: CMTime) -> Bool {
         guard timeRange.duration > CMTime(value: 1, timescale: 1) else { return true }
         return timeRange.containsTime(time)
     }

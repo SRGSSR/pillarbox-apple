@@ -7,24 +7,33 @@
 import AVFoundation
 import UIKit
 
-public struct MetadataItem {
-    public let identifier: AVMetadataIdentifier
-    public let value: Any
+struct MetadataItem {
+    let identifier: AVMetadataIdentifier
+    let value: Any
 
-    // TODO: Better API than filtering by identifier and accessing with proper type. Maybe can keep MetadataItem
-    //       internal?
-
-    public var stringValue: String? {
+    var stringValue: String? {
         value as? String
     }
 
-    public var dataValue: Data? {
+    var integerValue: Int? {
+        value as? Int
+    }
+
+    var doubleValue: Double? {
+        value as? Double
+    }
+
+    var dateValue: Date? {
+        value as? Date
+    }
+
+    var dataValue: Data? {
         value as? Data
     }
 }
 
 extension MetadataItem: CustomDebugStringConvertible {
-    public var debugDescription: String {
+    var debugDescription: String {
         identifier.rawValue
     }
 }
