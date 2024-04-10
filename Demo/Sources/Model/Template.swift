@@ -19,79 +19,79 @@ private let kUnifiedStreamingImageUrl2 = URL("https://website-storage.unified-st
 enum URLTemplate {
     static let onDemandVideoHLS = Template(
         title: "Switzerland says sorry! The fondue invasion",
-        description: "VOD - HLS",
+        subtitle: "VOD - HLS",
         imageUrl: "https://cdn.prod.swi-services.ch/video-delivery/images/14e4562f-725d-4e41-a200-7fcaa77df2fe/5rwf1Bq_m3GC5secOZcIcgbbrbZPf4nI/16x9",
         type: .url("https://swi-vod.akamaized.net/videoJson/47603186/master.m3u8")
     )
     static let shortOnDemandVideoHLS = Template(
         title: "Des violents orages ont touché Ajaccio, chef-lieu de la Corse, jeudi",
-        description: "VOD - HLS (short)",
+        subtitle: "VOD - HLS (short)",
         imageUrl: "https://www.rts.ch/2022/08/18/12/38/13317144.image/16x9",
         type: .url("https://rts-vod-amd.akamaized.net/ww/13317145/f1d49f18-f302-37ce-866c-1c1c9b76a824/master.m3u8")
     )
     static let onDemandVideoMP4 = Template(
         title: "Swiss wheelchair athlete wins top award",
-        description: "VOD - MP4",
+        subtitle: "VOD - MP4",
         imageUrl: "https://cdn.prod.swi-services.ch/video-delivery/images/94f5f5d1-5d53-4336-afda-9198462c45d9/_.1hAGinujJ.yERGrrGNzBGCNSxmhKZT/16x9",
         type: .url("https://cdn.prod.swi-services.ch/video-projects/94f5f5d1-5d53-4336-afda-9198462c45d9/localised-videos/ENG/renditions/ENG.mp4")
     )
     static let liveVideoHLS = Template(
         title: "Couleur 3 en vidéo (live)",
-        description: "Video livestream - HLS",
+        subtitle: "Video livestream - HLS",
         imageUrl: "https://img.rts.ch/audio/2010/image/924h3y-25865853.image?w=640&h=640",
         type: .url("https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8?dw=0")
     )
     static let dvrVideoHLS = Template(
         title: "Couleur 3 en vidéo (DVR)",
-        description: "Video livestream with DVR - HLS",
+        subtitle: "Video livestream with DVR - HLS",
         imageUrl: "https://il.srgssr.ch/images/?imageUrl=https%3A%2F%2Fwww.rts.ch%2F2020%2F05%2F18%2F14%2F20%2F11333286.image%2F16x9&format=jpg&width=960",
         type: .url("https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8")
     )
     static let liveTimestampVideoHLS = Template(
         title: "Tageschau",
-        description: "Video livestream with DVR and timestamps - HLS",
+        subtitle: "Video livestream with DVR and timestamps - HLS",
         imageUrl: "https://images.tagesschau.de/image/89045d82-5cd5-46ad-8f91-73911add30ee/AAABh3YLLz0/AAABibBx2rU/20x9-1280/tagesschau-logo-100.jpg",
         type: .url("https://tagesschau.akamaized.net/hls/live/2020115/tagesschau/tagesschau_1/master.m3u8")
     )
     static let onDemandAudioMP3 = Template(
         title: "On en parle",
-        description: "AOD - MP3",
+        subtitle: "AOD - MP3",
         imageUrl: "https://www.rts.ch/2023/09/28/17/49/11872957.image?w=624&h=351",
         type: .url("https://rts-aod-dd.akamaized.net/ww/13306839/63cc2653-8305-3894-a448-108810b553ef.mp3")
     )
     static let liveAudioMP3 = Template(
         title: "Couleur 3 (live)",
-        description: "Audio livestream - MP3",
+        subtitle: "Audio livestream - MP3",
         imageUrl: "https://img.rts.ch/articles/2017/image/cxsqgp-25867841.image?w=640&h=640",
         type: .url("http://stream.srg-ssr.ch/m/couleur3/mp3_128")
     )
     static let appleBasic_4_3_HLS = Template(
         title: "Apple Basic 4:3",
-        description: "4x3 aspect ratio, H.264 @ 30Hz",
+        subtitle: "4x3 aspect ratio, H.264 @ 30Hz",
         imageUrl: kAppleImageUrl,
         type: .url("https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8")
     )
     static let appleBasic_16_9_TS_HLS = Template(
         title: "Apple Basic 16:9",
-        description: "16x9 aspect ratio, H.264 @ 30Hz",
+        subtitle: "16x9 aspect ratio, H.264 @ 30Hz",
         imageUrl: kAppleImageUrl,
         type: .url("https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8")
     )
     static let appleAdvanced_16_9_TS_HLS = Template(
         title: "Apple Advanced 16:9 (TS)",
-        description: "16x9 aspect ratio, H.264 @ 30Hz and 60Hz, Transport stream",
+        subtitle: "16x9 aspect ratio, H.264 @ 30Hz and 60Hz, Transport stream",
         imageUrl: kAppleImageUrl,
         type: .url("https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")
     )
     static let appleAdvanced_16_9_fMP4_HLS = Template(
         title: "Apple Advanced 16:9 (fMP4)",
-        description: "16x9 aspect ratio, H.264 @ 30Hz and 60Hz, Fragmented MP4",
+        subtitle: "16x9 aspect ratio, H.264 @ 30Hz and 60Hz, Fragmented MP4",
         imageUrl: kAppleImageUrl,
         type: .url("https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8")
     )
     static let appleAdvanced_16_9_HEVC_h264_HLS = Template(
         title: "Apple Advanced 16:9 (HEVC/H.264)",
-        description: "16x9 aspect ratio, H.264 and HEVC @ 30Hz and 60Hz",
+        subtitle: "16x9 aspect ratio, H.264 and HEVC @ 30Hz and 60Hz",
         imageUrl: kAppleImageUrl,
         type: .url("https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_adv_example_hevc/master.m3u8")
     )
@@ -119,28 +119,28 @@ enum URLTemplate {
     )
     static let uhdVideoHLS = Template(
         title: "Brain Farm Skate Phantom Flex",
-        description: "4K video",
+        subtitle: "4K video",
         imageUrl: "https://i.ytimg.com/vi/d4_96ZWu3Vk/maxresdefault.jpg",
         type: .url("http://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8")
     )
     static let onDemandVideoLocalHLS = Template(
         title: "Test video pattern",
-        description: "Stream served locally",
+        subtitle: "Stream served locally",
         type: .url("http://localhost:8123/simple/on_demand/master.m3u8")
     )
     static let unknown = Template(
         title: "Unknown URL",
-        description: "Content that does not exist",
+        subtitle: "Content that does not exist",
         type: .url("http://localhost:8123/simple/unavailable/master.m3u8")
     )
     static let unavailableMp3 = Template(
         title: "Unavailable MP3",
-        description: "MP3 that does not exist",
+        subtitle: "MP3 that does not exist",
         type: .url("http://localhost:8123/simple/unavailable.mp3")
     )
     static let unauthorized = Template(
         title: "Unauthorized URL",
-        description: "Content which cannot be accessed",
+        subtitle: "Content which cannot be accessed",
         type: .url("https://httpbin.org/status/403")
     )
     static let bitmovinOnDemandMultipleTracks = Template(
@@ -269,19 +269,19 @@ enum URNTemplate {
     )
     static let liveVideo = Template(
         title: "RSI 1",
-        description: "Live video",
+        subtitle: "Live video",
         imageUrl: "https://ws.srf.ch/asset/image/audio/6b100f6e-440c-4bfb-8372-89a0688c533a/EPISODE_IMAGE",
         type: .urn("urn:rsi:video:livestream_La1")
     )
     static let dvrVideo = Template(
         title: "RTS 1",
-        description: "DVR video livestream",
+        subtitle: "DVR video livestream",
         imageUrl: "https://www.rts.ch/2023/09/06/14/43/14253742.image/16x9",
         type: .urn("urn:rts:video:3608506")
     )
     static let dvrAudio = Template(
         title: "Couleur 3 (DVR)",
-        description: "DVR audio livestream",
+        subtitle: "DVR audio livestream",
         imageUrl: "https://img.rts.ch/articles/2017/image/cxsqgp-25867841.image?w=640&h=640",
         type: .urn("urn:rts:audio:3262363")
     )
@@ -293,13 +293,13 @@ enum URNTemplate {
     )
     static let expired = Template(
         title: "Expired URN",
-        description: "Content that is not available anymore",
+        subtitle: "Content that is not available anymore",
         imageUrl: "https://www.rts.ch/2022/09/20/09/57/13365589.image/16x9",
         type: .urn("urn:rts:video:13382911")
     )
     static let unknown = Template(
         title: "Unknown URN",
-        description: "Content that does not exist",
+        subtitle: "Content that does not exist",
         type: .urn("urn:srf:video:unknown")
     )
 }
@@ -307,13 +307,13 @@ enum URNTemplate {
 enum UnbufferedURLTemplate {
     static let liveVideo = Template(
         title: "Couleur 3 en direct",
-        description: "Live video (unbuffered)",
+        subtitle: "Live video (unbuffered)",
         imageUrl: "https://www.rts.ch/2020/05/18/14/20/11333286.image/16x9",
         type: .unbufferedUrl("https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8?dw=0")
     )
     static let liveAudio = Template(
         title: "Couleur 3 en direct",
-        description: "Audio livestream (unbuffered)",
+        subtitle: "Audio livestream (unbuffered)",
         imageUrl: "https://img.rts.ch/articles/2017/image/cxsqgp-25867841.image?w=320&h=320",
         type: .unbufferedUrl("http://stream.srg-ssr.ch/m/couleur3/mp3_128")
     )
@@ -321,14 +321,14 @@ enum UnbufferedURLTemplate {
 
 struct Template: Hashable {
     let title: String
-    let description: String?
+    let subtitle: String?
     let imageUrl: URL?
     let type: Media.`Type`
     let isMonoscopic: Bool
 
-    init(title: String, description: String? = nil, imageUrl: URL? = nil, type: Media.`Type`, isMonoscopic: Bool = false) {
+    init(title: String, subtitle: String? = nil, imageUrl: URL? = nil, type: Media.`Type`, isMonoscopic: Bool = false) {
         self.title = title
-        self.description = description
+        self.subtitle = subtitle
         self.imageUrl = imageUrl
         self.type = type
         self.isMonoscopic = isMonoscopic

@@ -52,6 +52,11 @@ public struct Chapter: Decodable {
     /// Returns whether the content is blocked for some reason.
     public let blockingReason: BlockingReason?
 
+    /// A recommended identifier for the content.
+    public var identifier: String {
+        urn
+    }
+
     /// The available segments.
     public var segments: [Segment] {
         _segments ?? []

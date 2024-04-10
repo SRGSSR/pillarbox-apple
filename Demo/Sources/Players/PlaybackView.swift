@@ -57,13 +57,6 @@ private struct MainView: View {
         visibilityTracker.isUserInterfaceHidden && !areControlsAlwaysVisible && !player.canReplay()
     }
 
-    private func magnificationGesture() -> some Gesture {
-        MagnificationGesture()
-            .onChanged { scale in
-                selectedGravity = scale > 1.0 ? .resizeAspectFill : .resizeAspect
-            }
-    }
-
     private var title: String? {
         player.metadata.stringValue(for: .commonIdentifierTitle, kind: .global)
     }
@@ -74,6 +67,13 @@ private struct MainView: View {
 
     private var chapterTitle: String? {
         player.metadata.stringValue(for: .icyMetadataStreamTitle, kind: .timed(player.time))
+    }
+
+    private func magnificationGesture() -> some Gesture {
+        MagnificationGesture()
+            .onChanged { scale in
+                selectedGravity = scale > 1.0 ? .resizeAspectFill : .resizeAspect
+            }
     }
 
     @ViewBuilder

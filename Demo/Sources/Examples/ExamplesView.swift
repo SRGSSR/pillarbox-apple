@@ -133,7 +133,7 @@ struct ExamplesView: View {
     private func section(title: String, medias: [Media]) -> some View {
         CustomSection(title) {
             ForEach(medias, id: \.self) { media in
-                Cell(title: media.title, subtitle: media.description, imageUrl: media.imageUrl) {
+                Cell(title: media.title, subtitle: media.subtitle, imageUrl: media.imageUrl) {
                     router.presented = .player(media: media)
                 }
             }

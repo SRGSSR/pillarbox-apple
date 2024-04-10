@@ -15,14 +15,10 @@ struct RawPlayerMetadata: Equatable {
     let timedGroups: [AVTimedMetadataGroup]
     let chapterGroups: [AVTimedMetadataGroup]
 
-    func publisher(bestMatchingPreferredLanguages preferredLanguages: [String]) -> AnyPublisher<PlayerMetadata._Data, Never> {
-        Publishers.CombineLatest3(
-            AVMetadataItem.publisher(for: items, bestMatchingPreferredLanguages: preferredLanguages),
-            AVTimedMetadataGroup.publisher(for: timedGroups, bestMatchingPreferredLanguages: preferredLanguages),
-            AVTimedMetadataGroup.publisher(for: chapterGroups, bestMatchingPreferredLanguages: preferredLanguages)
-        )
-        .map { .init(items: $0, timedGroups: $1, chapterGroups: $2) }
-        .eraseToAnyPublisher()
+    init(items: [AVMetadataItem], timedGroups: [AVTimedMetadataGroup], chapterGroups: [AVTimedMetadataGroup]) {
+        self.items = Self.fixedItems(from: items)
+        self.timedGroups = Self.fixedGroups(from: timedGroups)
+        self.chapterGroups = Self.fixedGroups(from: chapterGroups)
     }
 
     private static func fixedItems(from items: [AVMetadataItem]) -> [AVMetadataItem] {
@@ -40,10 +36,14 @@ struct RawPlayerMetadata: Equatable {
         }
     }
 
-    init(items: [AVMetadataItem], timedGroups: [AVTimedMetadataGroup], chapterGroups: [AVTimedMetadataGroup]) {
-        self.items = Self.fixedItems(from: items)
-        self.timedGroups = Self.fixedGroups(from: timedGroups)
-        self.chapterGroups = Self.fixedGroups(from: chapterGroups)
+    func publisher(bestMatchingPreferredLanguages preferredLanguages: [String]) -> AnyPublisher<PlayerMetadata._Data, Never> {
+        Publishers.CombineLatest3(
+            AVMetadataItem.publisher(for: items, bestMatchingPreferredLanguages: preferredLanguages),
+            AVTimedMetadataGroup.publisher(for: timedGroups, bestMatchingPreferredLanguages: preferredLanguages),
+            AVTimedMetadataGroup.publisher(for: chapterGroups, bestMatchingPreferredLanguages: preferredLanguages)
+        )
+        .map { .init(items: $0, timedGroups: $1, chapterGroups: $2) }
+        .eraseToAnyPublisher()
     }
 }
 
