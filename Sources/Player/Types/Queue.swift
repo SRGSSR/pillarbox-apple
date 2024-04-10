@@ -72,7 +72,7 @@ struct Queue {
         .eraseToAnyPublisher()
     }
 
-    private static func contentMetadataPublisher(for item: PlayerItem) -> AnyPublisher<PlayerMetadata.Data, Never> {
+    private static func contentMetadataPublisher(for item: PlayerItem) -> AnyPublisher<PlayerMetadata._Data, Never> {
         item.$content
             .map(\.metadata)
             .map { $0.publisher(bestMatchingPreferredLanguages: AVMetadataItem.defaultPreferredLanguages) }
@@ -81,7 +81,7 @@ struct Queue {
             .eraseToAnyPublisher()
     }
 
-    private static func resourceMetadataPublisher(for playerItem: AVPlayerItem) -> AnyPublisher<PlayerMetadata.Data, Never> {
+    private static func resourceMetadataPublisher(for playerItem: AVPlayerItem) -> AnyPublisher<PlayerMetadata._Data, Never> {
         playerItem.metadataPublisher()
             .map { $0.publisher(bestMatchingPreferredLanguages: AVMetadataItem.defaultPreferredLanguages) }
             .switchToLatest()

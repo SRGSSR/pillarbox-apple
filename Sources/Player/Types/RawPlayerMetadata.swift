@@ -15,13 +15,13 @@ struct RawPlayerMetadata: Equatable {
     let timedGroups: [AVTimedMetadataGroup]
     let chapterGroups: [AVTimedMetadataGroup]
 
-    func publisher(bestMatchingPreferredLanguages preferredLanguages: [String]) -> AnyPublisher<PlayerMetadata.Data, Never> {
+    func publisher(bestMatchingPreferredLanguages preferredLanguages: [String]) -> AnyPublisher<PlayerMetadata._Data, Never> {
         Publishers.CombineLatest3(
             AVMetadataItem.publisher(for: items, bestMatchingPreferredLanguages: preferredLanguages),
             AVTimedMetadataGroup.publisher(for: timedGroups, bestMatchingPreferredLanguages: preferredLanguages),
             AVTimedMetadataGroup.publisher(for: chapterGroups, bestMatchingPreferredLanguages: preferredLanguages)
         )
-        .map { PlayerMetadata.Data(items: $0, timedGroups: $1, chapterGroups: $2) }
+        .map { .init(items: $0, timedGroups: $1, chapterGroups: $2) }
         .eraseToAnyPublisher()
     }
 
