@@ -6,8 +6,8 @@
 
 import AVFoundation
 
-/// A protocol for player metadata formatting.
-public protocol PlayerMetadataFormatter {
+/// A protocol for player item metadata.
+public protocol PlayerItemMetadata {
     /// Returns metadata globally associated with the item.
     ///
     /// - Returns: An array of metadata items.
@@ -20,7 +20,7 @@ public protocol PlayerMetadataFormatter {
     ///
     /// - Returns: An array of metadata groups.
     ///
-    /// Can be used to return program or music information, for example. You can also simply the same groups as
+    /// Can be used to return program or music information, for example. You can also simply return the same groups as
     /// for chapters.
     func timedGroups() -> [AVTimedMetadataGroup]
 
