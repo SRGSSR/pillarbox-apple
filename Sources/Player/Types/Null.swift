@@ -8,7 +8,7 @@ import AVFoundation
 
 public struct Null {}
 
-extension Null: PlayerMetadataFormatter {
+extension Null: PlayerItemMetadata {
     public func items() -> [AVMetadataItem] { [] }
     public func timedGroups() -> [AVTimedMetadataGroup] { [] }
     public func chapterGroups() -> [AVTimedMetadataGroup] { [] }

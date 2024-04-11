@@ -116,7 +116,7 @@ public struct MediaMetadata {
     }
 }
 
-extension MediaMetadata: PlayerMetadataFormatter {
+extension MediaMetadata: PlayerItemMetadata {
     public func items() -> [AVMetadataItem] {
         [
             .init(for: .commonIdentifierAssetIdentifier, value: identifier),

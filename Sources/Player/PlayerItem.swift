@@ -36,7 +36,7 @@ public final class PlayerItem: Equatable {
     public init<P, M>(
         publisher: P,
         trackerAdapters: [TrackerAdapter<M>] = []
-    ) where P: Publisher, P.Output == Asset<M>, M: PlayerMetadataFormatter {
+    ) where P: Publisher, P.Output == Asset<M>, M: PlayerItemMetadata {
         let trackerAdapters = trackerAdapters.map { [id] adapter in
             adapter.withId(id)
         }
@@ -79,7 +79,7 @@ public final class PlayerItem: Equatable {
     public convenience init<M>(
         asset: Asset<M>,
         trackerAdapters: [TrackerAdapter<M>] = []
-    ) where M: PlayerMetadataFormatter {
+    ) where M: PlayerItemMetadata {
         self.init(publisher: Just(asset), trackerAdapters: trackerAdapters)
     }
 
@@ -135,7 +135,7 @@ public extension PlayerItem {
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self where M: PlayerMetadataFormatter {
+    ) -> Self where M: PlayerItemMetadata {
         .init(
             asset: .simple(url: url, metadata: metadata, configuration: configuration),
             trackerAdapters: trackerAdapters
@@ -159,7 +159,7 @@ public extension PlayerItem {
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self where M: PlayerMetadataFormatter {
+    ) -> Self where M: PlayerItemMetadata {
         .init(
             asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration),
             trackerAdapters: trackerAdapters
@@ -181,7 +181,7 @@ public extension PlayerItem {
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self where M: PlayerMetadataFormatter {
+    ) -> Self where M: PlayerItemMetadata {
         .init(
             asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration),
             trackerAdapters: trackerAdapters

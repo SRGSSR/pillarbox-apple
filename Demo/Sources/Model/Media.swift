@@ -113,7 +113,7 @@ extension Media {
     }
 }
 
-extension Media: PlayerMetadataFormatter {
+extension Media: PlayerItemMetadata {
     func items() -> [AVMetadataItem] {
         [
             .init(for: .commonIdentifierTitle, value: title),
