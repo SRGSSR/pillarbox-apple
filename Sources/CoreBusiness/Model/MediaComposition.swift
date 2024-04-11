@@ -11,6 +11,7 @@ public struct MediaComposition: Decodable {
         case _analyticsMetadata = "analyticsMetadata"
         case chapterUrn
         case _chapters = "chapterList"
+        case episode
         case show
     }
 
@@ -25,6 +26,9 @@ public struct MediaComposition: Decodable {
 
     /// The related show.
     public let show: Show?
+
+    /// The episode information.
+    public let episode: Episode?
 
     /// comScore analytics data.
     public var analyticsData: [String: String] {
