@@ -15,7 +15,8 @@ struct MediaMetadataFormatter: PlayerMetadataFormatter {
             .init(for: .commonIdentifierTitle, value: metadata.title),
             .init(for: .iTunesMetadataTrackSubTitle, value: metadata.subtitle),
             .init(for: .commonIdentifierArtwork, value: metadata.image?.pngData()),
-            .init(for: .commonIdentifierDescription, value: metadata.description)
+            .init(for: .commonIdentifierDescription, value: metadata.description),
+            .init(for: .quickTimeUserDataCreationDate, value: metadata.episodeDescription)
         ].compactMap { $0 }
     }
 
