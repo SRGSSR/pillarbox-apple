@@ -75,10 +75,10 @@ public struct MediaMetadata {
     public var episodeDescription: String? {
         guard let episode = mediaComposition.episode, let episodeNumber = episode.number else { return nil }
         if let seasonNumber = episode.seasonNumber {
-            return String(format: NSLocalizedString("S%d, E%d", bundle: .module, comment: "Short season / episode information"), seasonNumber, episodeNumber)
+            return String(localized: "S\(seasonNumber), E\(episodeNumber)", bundle: .module, comment: "Short season / episode information")
         }
         else {
-            return String(format: NSLocalizedString("E%d", bundle: .module, comment: "Short episode information"), episodeNumber)
+            return String(localized: "E\(episodeNumber)", bundle: .module, comment: "Short episode information")
         }
     }
 

@@ -1,37 +1,31 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "E%d" : {
+    "E%lld" : {
       "comment" : "Short episode information",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "F%d"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "E%d"
+            "value" : "F%lld"
           }
         },
         "en-US" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "E%d"
+            "value" : "E%lld"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "É%d"
+            "value" : "É%lld"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "P%d"
+            "value" : "P%lld"
           }
         }
       }
@@ -77,37 +71,37 @@
         }
       }
     },
-    "S%d, E%d" : {
+    "S%lld, E%lld" : {
       "comment" : "Short season / episode information",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "S%1$d, F%2$d"
+            "value" : "S%1$lld, F%2$lld"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "S%1$d, E%2$d"
+            "value" : "S%1$lld, E%2$lld"
           }
         },
         "en-US" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "S%1$d, E%2$d"
+            "value" : "S%1$lld, E%2$lld"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "S%1$d, É%2$d"
+            "value" : "S%1$lld, É%2$lld"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "S%1$d, P%2$d"
+            "value" : "S%1$lld, P%2$lld"
           }
         }
       }
