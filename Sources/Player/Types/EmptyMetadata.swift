@@ -6,9 +6,7 @@
 
 import AVFoundation
 
-public struct Null {}
-
-extension Null: PlayerItemMetadata {
+public struct EmptyMetadata: PlayerItemMetadata {
     public func items() -> [AVMetadataItem] { [] }
     public func timedGroups() -> [AVTimedMetadataGroup] { [] }
     public func chapterGroups() -> [AVTimedMetadataGroup] { [] }

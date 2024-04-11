@@ -96,7 +96,7 @@ public struct Asset<M> {
     }
 }
 
-public extension Asset where M == Null {
+public extension Asset where M == EmptyMetadata {
     /// Returns a simple asset playable from a URL.
     ///
     /// - Parameters:
