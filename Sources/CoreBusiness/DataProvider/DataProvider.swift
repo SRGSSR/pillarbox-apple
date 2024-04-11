@@ -78,15 +78,26 @@ final class DataProvider {
             .eraseToAnyPublisher()
     }
 
-    func imagePublisher(for url: URL, width: ImageWidth) -> AnyPublisher<UIImage, Error> {
+    func imagePublisher(for url: URL, width: ImageWidth) -> AnyPublisher<UIImage, Never> {
         session
             .dataTaskPublisher(for: scaledImageUrl(url, width: width))
             .map(\.data)
-            .tryMap { data in
-                guard let image = UIImage(data: data) else { throw DataError.malformedData }
-                return image
-            }
+            .replaceError(with: Data())
+            .compactMap { UIImage(data: $0) }
             .eraseToAnyPublisher()
+    }
+
+    func imagesPublisher(for mediaComposition: MediaComposition, width: ImageWidth) -> AnyPublisher<[String: UIImage], Never> {
+        Publishers.MergeMany(mediaComposition.allChapters.map { chapter in
+            imagePublisher(for: chapter.imageUrl, width: width)
+                .map { image in
+                    [chapter.urn: image]
+                }
+        })
+        .scan([:]) { initial, next in
+            initial.merging(next) { _, new in new }
+        }
+        .eraseToAnyPublisher()
     }
 
     private func scaledImageUrl(_ url: URL, width: ImageWidth) -> URL {
