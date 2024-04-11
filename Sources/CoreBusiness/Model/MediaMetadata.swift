@@ -71,6 +71,17 @@ public struct MediaMetadata {
         resource.streamType
     }
 
+    /// A description of the episode (season / episode).
+    public var episodeDescription: String? {
+        guard let episode = mediaComposition.episode else { return nil }
+        if let season = episode.season {
+            return "S\(season), E\(episode)"
+        }
+        else {
+            return "E\(episode)"
+        }
+    }
+
     /// The consolidated comScore analytics data.
     var analyticsData: [String: String] {
         var analyticsData = mediaComposition.mainChapter.analyticsData
