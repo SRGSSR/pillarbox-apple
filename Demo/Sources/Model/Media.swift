@@ -95,7 +95,6 @@ extension Media {
                         configuration: configuration
                     )
                 },
-            metadataFormatter: MediaFormatter(),
             trackerAdapters: [
                 DemoTracker.adapter { metadata in
                     DemoTracker.Metadata(title: metadata.title)
@@ -111,5 +110,23 @@ extension Media {
             .map { UIImage(data: $0) }
             .replaceError(with: nil)
             .eraseToAnyPublisher()
+    }
+}
+
+extension Media: PlayerMetadataFormatter {
+    func items() -> [AVMetadataItem] {
+        [
+            .init(for: .commonIdentifierTitle, value: title),
+            .init(for: .iTunesMetadataTrackSubTitle, value: subtitle),
+            .init(for: .commonIdentifierArtwork, value: image?.pngData())
+        ].compactMap { $0 }
+    }
+
+    func timedGroups() -> [AVTimedMetadataGroup] {
+        []
+    }
+
+    func chapterGroups() -> [AVTimedMetadataGroup] {
+        []
     }
 }
