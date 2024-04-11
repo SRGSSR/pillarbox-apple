@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import PillarboxPlayer
 import UIKit
 
@@ -112,6 +113,36 @@ public struct MediaMetadata {
 
     public func image(for chapter: Chapter) -> UIImage {
         UIImage.image(with: .systemPink)
+    }
+}
+
+extension MediaMetadata: PlayerMetadataFormatter {
+    public func items() -> [AVMetadataItem] {
+        [
+            .init(for: .commonIdentifierAssetIdentifier, value: identifier),
+            .init(for: .commonIdentifierTitle, value: title),
+            .init(for: .iTunesMetadataTrackSubTitle, value: subtitle),
+            .init(for: .commonIdentifierArtwork, value: image?.pngData()),
+            .init(for: .commonIdentifierDescription, value: description),
+            .init(for: .quickTimeUserDataCreationDate, value: episodeDescription)
+        ].compactMap { $0 }
+    }
+
+    public func timedGroups() -> [AVTimedMetadataGroup] {
+        []
+    }
+
+    public func chapterGroups() -> [AVTimedMetadataGroup] {
+        mediaComposition.chapters.map { chapter in
+            AVTimedMetadataGroup(
+                items: [
+                    .init(for: .commonIdentifierAssetIdentifier, value: chapter.identifier),
+                    .init(for: .commonIdentifierTitle, value: chapter.title),
+                    .init(for: .commonIdentifierArtwork, value: image(for: chapter))
+                ].compactMap { $0 },
+                timeRange: chapter.timeRange
+            )
+        }
     }
 }
 
