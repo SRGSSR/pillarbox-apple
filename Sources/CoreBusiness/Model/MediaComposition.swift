@@ -20,8 +20,7 @@ public struct MediaComposition: Decodable {
 
     /// The available chapters.
     public var chapters: [Chapter] {
-        guard mainChapter.fullLengthUrn == nil else { return [] }
-        return Array(_chapters.dropFirst())
+        _chapters.filter { $0.fullLengthUrn == chapterUrn }
     }
 
     /// The related show.
@@ -38,6 +37,10 @@ public struct MediaComposition: Decodable {
     /// Commanders Act analytics data.
     public var analyticsMetadata: [String: String] {
         _analyticsMetadata ?? [:]
+    }
+
+    var allChapters: [Chapter] {
+        [mainChapter] + chapters
     }
 
     // swiftlint:disable:next discouraged_optional_collection

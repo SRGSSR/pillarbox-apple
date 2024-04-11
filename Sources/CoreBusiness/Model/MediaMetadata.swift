@@ -26,7 +26,7 @@ public struct MediaMetadata {
     public let resource: Resource
 
     /// An associated image suitable for artwork display.
-    public let image: UIImage?
+    public let images: [String: UIImage]
 
     /// The title recommended for display.
     public var title: String {
@@ -101,10 +101,10 @@ public struct MediaMetadata {
         return analyticsMetadata
     }
 
-    init(mediaComposition: MediaComposition, resource: Resource, image: UIImage?) {
+    init(mediaComposition: MediaComposition, resource: Resource, images: [String: UIImage]) {
         self.mediaComposition = mediaComposition
         self.resource = resource
-        self.image = image
+        self.images = images
     }
 
     private static func areRedundant(chapter: Chapter, show: Show) -> Bool {
@@ -112,7 +112,7 @@ public struct MediaMetadata {
     }
 
     public func image(for chapter: Chapter) -> UIImage {
-        UIImage.image(with: .systemPink)
+        images[chapter.urn] ?? UIImage.image(with: .darkGray, width: CGFloat(DataProvider.ImageWidth.width480.rawValue))
     }
 }
 
@@ -122,7 +122,7 @@ extension MediaMetadata: PlayerItemMetadata {
             .init(for: .commonIdentifierAssetIdentifier, value: identifier),
             .init(for: .commonIdentifierTitle, value: title),
             .init(for: .iTunesMetadataTrackSubTitle, value: subtitle),
-            .init(for: .commonIdentifierArtwork, value: image?.pngData()),
+            .init(for: .commonIdentifierArtwork, value: image(for: mediaComposition.mainChapter).pngData()),
             .init(for: .commonIdentifierDescription, value: description),
             .init(for: .quickTimeUserDataCreationDate, value: episodeDescription)
         ].compactMap { $0 }
@@ -138,21 +138,10 @@ extension MediaMetadata: PlayerItemMetadata {
                 items: [
                     .init(for: .commonIdentifierAssetIdentifier, value: chapter.identifier),
                     .init(for: .commonIdentifierTitle, value: chapter.title),
-                    .init(for: .commonIdentifierArtwork, value: image(for: chapter))
+                    .init(for: .commonIdentifierArtwork, value: image(for: chapter).pngData())
                 ].compactMap { $0 },
                 timeRange: chapter.timeRange
             )
-        }
-    }
-}
-
-private extension UIImage {
-    static func image(with color: UIColor) -> UIImage {
-        let rect = CGRect(x: 0, y: 0, width: 16, height: 9)
-        let renderer = UIGraphicsImageRenderer(bounds: rect)
-        return renderer.image { context in
-            color.setFill()
-            context.fill(rect)
         }
     }
 }
