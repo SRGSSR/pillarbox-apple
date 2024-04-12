@@ -46,20 +46,12 @@ extension PlayerItem {
     ) -> Self {
         let publisher = Just(Asset.simple(
             url: url,
-            metadata: AssetMetadataMock(
-                title: "title1",
-                subtitle: "subtitle1",
-                description: "description1"
-            )
+            metadata: AssetMetadataMock(title: "title1", subtitle: "subtitle1")
         ))
         .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
         .prepend(Asset.simple(
             url: url,
-            metadata: AssetMetadataMock(
-                title: "title0",
-                subtitle: "subtitle0",
-                description: "description0"
-            )
+            metadata: AssetMetadataMock(title: "title0", subtitle: "subtitle0")
         ))
         return .init(
             publisher: publisher,

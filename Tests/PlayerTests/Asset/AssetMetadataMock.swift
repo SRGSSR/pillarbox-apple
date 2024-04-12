@@ -10,18 +10,19 @@ import PillarboxPlayer
 struct AssetMetadataMock: Decodable {
     let title: String
     let subtitle: String?
-    let description: String?
 
-    init(title: String, subtitle: String? = nil, description: String? = nil) {
+    init(title: String, subtitle: String? = nil) {
         self.title = title
         self.subtitle = subtitle
-        self.description = description
     }
 }
 
 extension AssetMetadataMock: AssetMetadata {
     func items() -> [AVMetadataItem] {
-        []
+        [
+            .init(for: .commonIdentifierTitle, value: title),
+            .init(for: .iTunesMetadataTrackSubTitle, value: subtitle)
+        ].compactMap { $0 }
     }
 
     func timedGroups() -> [AVTimedMetadataGroup] {

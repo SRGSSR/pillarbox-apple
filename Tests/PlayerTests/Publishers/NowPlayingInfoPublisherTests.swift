@@ -46,8 +46,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
             loadedAfter: 0,
             withMetadata: AssetMetadataMock(
                 title: "title",
-                subtitle: "subtitle",
-                description: "description"
+                subtitle: "subtitle"
             )
         ))
         expectSimilarPublished(
@@ -55,8 +54,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
                 [:],
                 [
                     MPMediaItemPropertyTitle: "title",
-                    MPMediaItemPropertyArtist: "subtitle",
-                    MPMediaItemPropertyComments: "description"
+                    MPMediaItemPropertyArtist: "subtitle"
                 ]
             ],
             from: player.nowPlayingInfoMetadataPublisher(),
@@ -71,13 +69,11 @@ final class NowPlayingInfoPublisherTests: TestCase {
                 [:],
                 [
                     MPMediaItemPropertyTitle: "title0",
-                    MPMediaItemPropertyArtist: "subtitle0",
-                    MPMediaItemPropertyComments: "description0"
+                    MPMediaItemPropertyArtist: "subtitle0"
                 ],
                 [
                     MPMediaItemPropertyTitle: "title1",
-                    MPMediaItemPropertyArtist: "subtitle1",
-                    MPMediaItemPropertyComments: "description1"
+                    MPMediaItemPropertyArtist: "subtitle1"
                 ]
             ],
             from: player.nowPlayingInfoMetadataPublisher(),
@@ -92,8 +88,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
                 [:],
                 [
                     MPMediaItemPropertyTitle: "Title 1",
-                    MPMediaItemPropertyArtist: "Subtitle 1",
-                    MPMediaItemPropertyComments: "Description 1"
+                    MPMediaItemPropertyArtist: "Subtitle 1"
                 ]
             ],
             from: player.nowPlayingInfoMetadataPublisher()
@@ -103,8 +98,7 @@ final class NowPlayingInfoPublisherTests: TestCase {
                 [:],
                 [
                     MPMediaItemPropertyTitle: "Title 2",
-                    MPMediaItemPropertyArtist: "Subtitle 2",
-                    MPMediaItemPropertyComments: "Description 2"
+                    MPMediaItemPropertyArtist: "Subtitle 2"
                 ]
             ],
             from: player.nowPlayingInfoMetadataPublisher(),
