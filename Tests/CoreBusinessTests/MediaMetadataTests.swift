@@ -17,8 +17,8 @@ final class MediaMetadataTests: XCTestCase {
             resource: mediaComposition.mainChapter.recommendedResource!,
             images: [:]
         )
-        expect(metadata.title).to(equal("On réunit des ex après leur rupture"))
-        expect(metadata.subtitle).to(equal("Yadebat"))
+        expect(metadata.title).to(equal("Yadebat"))
+        expect(metadata.subtitle).to(equal("On réunit des ex après leur rupture"))
         expect(metadata.description).to(equal("""
         Dans ce nouvel épisode de YADEBAT, Mélissa réunit 3 couples qui se sont séparés récemment. \
         Elles les a questionné en face à face pour connaître leurs différents ressentis et réactions.
@@ -32,8 +32,8 @@ final class MediaMetadataTests: XCTestCase {
             resource: mediaComposition.mainChapter.recommendedResource!,
             images: [:]
         )
-        expect(metadata.title).to(contain("February"))
-        expect(metadata.subtitle).to(equal("19h30"))
+        expect(metadata.title).to(equal("19h30"))
+        expect(metadata.subtitle).to(contain("February"))
         expect(metadata.description).to(beNil())
     }
 
