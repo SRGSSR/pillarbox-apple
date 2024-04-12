@@ -87,16 +87,16 @@ final class DataProvider {
             .eraseToAnyPublisher()
     }
 
-    func imagesPublisher(for mediaComposition: MediaComposition, width: ImageWidth) -> AnyPublisher<[String: UIImage], Never> {
+    func imageCatalogPublisher(for mediaComposition: MediaComposition, width: ImageWidth) -> AnyPublisher<ImageCatalog, Never> {
         Publishers.MergeMany(mediaComposition.allChapters.map { chapter in
             imagePublisher(for: chapter.imageUrl, width: width)
-                .map { image in
-                    [chapter.urn: image]
-                }
+                .map { [chapter.urn: $0] }
         })
+        .prepend([:])
         .scan([:]) { initial, next in
             initial.merging(next) { _, new in new }
         }
+        .map { ImageCatalog(images: $0, width: width) }
         .eraseToAnyPublisher()
     }
 

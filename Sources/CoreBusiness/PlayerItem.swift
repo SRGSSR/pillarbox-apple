@@ -32,9 +32,9 @@ public extension PlayerItem {
                 guard let resource = mainChapter.recommendedResource else {
                     throw DataError.noResourceAvailable
                 }
-                return dataProvider.imagesPublisher(for: mediaComposition, width: .width480)
-                    .map { images in
-                        let metadata = MediaMetadata(mediaComposition: mediaComposition, resource: resource, images: images)
+                return dataProvider.imageCatalogPublisher(for: mediaComposition, width: .width480)
+                    .map { imageCatalog in
+                        let metadata = MediaMetadata(mediaComposition: mediaComposition, resource: resource, imageCatalog: imageCatalog)
                         return Self.asset(for: metadata, configuration: configuration)
                     }
             }

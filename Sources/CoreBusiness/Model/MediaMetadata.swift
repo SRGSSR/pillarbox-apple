@@ -25,8 +25,8 @@ public struct MediaMetadata {
     /// The resource to be played.
     public let resource: Resource
 
-    /// An associated image suitable for artwork display.
-    public let images: [String: UIImage]
+    /// A catalog of images associated with the context.
+    let imageCatalog: ImageCatalog
 
     /// The title recommended for display.
     public var title: String {
@@ -101,28 +101,34 @@ public struct MediaMetadata {
         return analyticsMetadata
     }
 
-    init(mediaComposition: MediaComposition, resource: Resource, images: [String: UIImage]) {
+    init(mediaComposition: MediaComposition, resource: Resource, imageCatalog: ImageCatalog) {
         self.mediaComposition = mediaComposition
         self.resource = resource
-        self.images = images
+        self.imageCatalog = imageCatalog
     }
 
     private static func areRedundant(chapter: Chapter, show: Show) -> Bool {
         chapter.title.lowercased() == show.title.lowercased()
     }
 
-    public func image(for chapter: Chapter) -> UIImage {
-        images[chapter.urn] ?? UIImage.image(with: .darkGray, width: CGFloat(DataProvider.ImageWidth.width480.rawValue))
+    /// The image associated with a chapter, if any.
+    public func image(for chapter: Chapter) -> UIImage? {
+        imageCatalog.image(for: chapter.urn)
+    }
+
+    func placeholderImage() -> UIImage {
+        imageCatalog.placeholderImage()
     }
 }
 
 extension MediaMetadata: PlayerItemMetadata {
     public func items() -> [AVMetadataItem] {
-        [
+        let image = image(for: mediaComposition.mainChapter) ?? placeholderImage()
+        return [
             .init(for: .commonIdentifierAssetIdentifier, value: identifier),
             .init(for: .commonIdentifierTitle, value: title),
             .init(for: .iTunesMetadataTrackSubTitle, value: subtitle),
-            .init(for: .commonIdentifierArtwork, value: image(for: mediaComposition.mainChapter).pngData()),
+            .init(for: .commonIdentifierArtwork, value: image.pngData()),
             .init(for: .commonIdentifierDescription, value: description),
             .init(for: .quickTimeUserDataCreationDate, value: episodeDescription)
         ].compactMap { $0 }
@@ -134,11 +140,12 @@ extension MediaMetadata: PlayerItemMetadata {
 
     public func chapterGroups() -> [AVTimedMetadataGroup] {
         mediaComposition.chapters.map { chapter in
-            AVTimedMetadataGroup(
+            let image = image(for: chapter) ?? placeholderImage()
+            return AVTimedMetadataGroup(
                 items: [
                     .init(for: .commonIdentifierAssetIdentifier, value: chapter.identifier),
                     .init(for: .commonIdentifierTitle, value: chapter.title),
-                    .init(for: .commonIdentifierArtwork, value: image(for: chapter).pngData())
+                    .init(for: .commonIdentifierArtwork, value: image.pngData())
                 ].compactMap { $0 },
                 timeRange: chapter.timeRange
             )
