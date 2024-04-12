@@ -18,7 +18,7 @@ extension PlayerItem {
     static func mock(
         url: URL,
         loadedAfter delay: TimeInterval,
-        trackerAdapters: [TrackerAdapter<Void>] = []
+        trackerAdapters: [TrackerAdapter<EmptyMetadata>] = []
     ) -> Self {
         let publisher = Just(Asset.simple(url: url))
             .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
@@ -35,9 +35,6 @@ extension PlayerItem {
             .delayIfNeeded(for: .seconds(delay), scheduler: DispatchQueue.main)
         return .init(
             publisher: publisher,
-            metadataAdapter: StandardMetadata.adapter { metadata in
-                .init(title: metadata.title, subtitle: metadata.subtitle, description: metadata.description)
-            },
             trackerAdapters: trackerAdapters
         )
     }
@@ -66,9 +63,6 @@ extension PlayerItem {
         ))
         return .init(
             publisher: publisher,
-            metadataAdapter: StandardMetadata.adapter { metadata in
-                .init(title: metadata.title, subtitle: metadata.subtitle, description: metadata.description)
-            },
             trackerAdapters: trackerAdapters
         )
     }
@@ -83,9 +77,6 @@ extension PlayerItem {
             }
         return .init(
             publisher: publisher,
-            metadataAdapter: StandardMetadata.adapter { metadata in
-                .init(title: metadata.title, subtitle: metadata.subtitle, description: metadata.description)
-            },
             trackerAdapters: trackerAdapters
         )
     }
