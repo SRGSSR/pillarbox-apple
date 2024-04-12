@@ -6,22 +6,6 @@
 
 import AVFoundation
 
-private let kResourceLoaderQueue = DispatchQueue(label: "ch.srgssr.player.resource_loader")
-
-/// An item which stores its own custom resource loader delegate.
-final class ResourceLoadedPlayerItem: AVPlayerItem {
-    // swiftlint:disable:next weak_delegate
-    private let resourceLoaderDelegate: AVAssetResourceLoaderDelegate
-
-    init(url: URL, resourceLoaderDelegate: AVAssetResourceLoaderDelegate) {
-        self.resourceLoaderDelegate = resourceLoaderDelegate
-        let asset = AVURLAsset(url: url)
-        asset.resourceLoader.setDelegate(resourceLoaderDelegate, queue: kResourceLoaderQueue)
-        // Provide same key as for a standard asset, see `AVPlayerItem.init(asset:)` documentation.
-        super.init(asset: asset, automaticallyLoadedAssetKeys: ["duration"])
-    }
-}
-
 /// An asset representing content to be played.
 ///
 /// Three categories of assets are provided:
@@ -33,12 +17,6 @@ public struct Asset<M> {
     let resource: Resource
     let metadata: M
     let configuration: (AVPlayerItem) -> Void
-
-    init(resource: Resource, metadata: M, configuration: @escaping (AVPlayerItem) -> Void) {
-        self.resource = resource
-        self.metadata = metadata
-        self.configuration = configuration
-    }
 
     /// Returns a simple asset playable from a URL.
     /// 
