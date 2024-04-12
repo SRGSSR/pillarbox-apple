@@ -15,27 +15,6 @@ struct RawPlayerMetadata: Equatable {
     let timedGroups: [AVTimedMetadataGroup]
     let chapterGroups: [AVTimedMetadataGroup]
 
-    init(items: [AVMetadataItem], timedGroups: [AVTimedMetadataGroup], chapterGroups: [AVTimedMetadataGroup]) {
-        self.items = Self.fixedItems(from: items)
-        self.timedGroups = Self.fixedGroups(from: timedGroups)
-        self.chapterGroups = Self.fixedGroups(from: chapterGroups)
-    }
-
-    private static func fixedItems(from items: [AVMetadataItem]) -> [AVMetadataItem] {
-        items.map { item in
-            guard item.extendedLanguageTag == nil else { return item }
-            let copy = item.mutableCopy() as! AVMutableMetadataItem
-            copy.extendedLanguageTag = "und"
-            return copy
-        }
-    }
-
-    private static func fixedGroups(from groups: [AVTimedMetadataGroup]) -> [AVTimedMetadataGroup] {
-        groups.map { group in
-            AVTimedMetadataGroup(items: fixedItems(from: group.items), timeRange: group.timeRange)
-        }
-    }
-
     func publisher(bestMatchingPreferredLanguages preferredLanguages: [String]) -> AnyPublisher<PlayerMetadata._Data, Never> {
         Publishers.CombineLatest3(
             AVMetadataItem.publisher(for: items, bestMatchingPreferredLanguages: preferredLanguages),

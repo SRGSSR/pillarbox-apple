@@ -154,6 +154,21 @@ extension AVPlayerItem {
 }
 
 extension AVPlayerItem {
+    private static func fixedItems(from items: [AVMetadataItem]) -> [AVMetadataItem] {
+        items.map { item in
+            guard item.extendedLanguageTag == nil else { return item }
+            let copy = item.mutableCopy() as! AVMutableMetadataItem
+            copy.extendedLanguageTag = "und"
+            return copy
+        }
+    }
+
+    private static func fixedGroups(from groups: [AVTimedMetadataGroup]) -> [AVTimedMetadataGroup] {
+        groups.map { group in
+            AVTimedMetadataGroup(items: fixedItems(from: group.items), timeRange: group.timeRange)
+        }
+    }
+
     func metadataPublisher() -> AnyPublisher<RawPlayerMetadata, Never> {
         Publishers.CombineLatest3(
             metadataPublisher(),
@@ -167,21 +182,27 @@ extension AVPlayerItem {
 
     func metadataOutputPublisher(identifiers: [String] = [], queue: DispatchQueue = .main) -> AnyPublisher<[AVTimedMetadataGroup], Never> {
         MetadataOutputPublisher(item: self, identifiers: identifiers, queue: queue)
+            .map { Self.fixedGroups(from: $0) }
             .prepend([])
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
-    private func chaptersPublisher() -> AnyPublisher<[AVTimedMetadataGroup], Never> {
+    func chaptersPublisher() -> AnyPublisher<[AVTimedMetadataGroup], Never> {
         asset.chaptersPublisher()
+            .map { Self.fixedGroups(from: $0) }
             .replaceError(with: [])
             .prepend([])
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 
-    private func metadataPublisher() -> AnyPublisher<[AVMetadataItem], Never> {
+    func metadataPublisher() -> AnyPublisher<[AVMetadataItem], Never> {
         asset.propertyPublisher(.metadata)
+            .map { Self.fixedItems(from: $0) }
             .replaceError(with: [])
             .prepend([])
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 }
