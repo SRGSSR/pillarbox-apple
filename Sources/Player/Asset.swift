@@ -74,7 +74,7 @@ public struct Asset<M> {
     }
 }
 
-public extension Asset where M == EmptyMetadata {
+public extension Asset where M == Void {
     /// Returns a simple asset playable from a URL.
     ///
     /// - Parameters:
@@ -87,7 +87,7 @@ public extension Asset where M == EmptyMetadata {
     ) -> Self {
         .init(
             resource: .simple(url: url),
-            metadata: .init(),
+            metadata: (),
             configuration: configuration
         )
     }
@@ -108,7 +108,7 @@ public extension Asset where M == EmptyMetadata {
     ) -> Self {
         .init(
             resource: .custom(url: url, delegate: delegate),
-            metadata: .init(),
+            metadata: (),
             configuration: configuration
         )
     }
@@ -127,7 +127,7 @@ public extension Asset where M == EmptyMetadata {
     ) -> Self {
         .init(
             resource: .encrypted(url: url, delegate: delegate),
-            metadata: .init(),
+            metadata: (),
             configuration: configuration
         )
     }

@@ -11,13 +11,10 @@ import Nimble
 import PillarboxPlayer
 import PillarboxStreams
 
-private struct AssetMetadataMock {}
-
 final class ComScoreTrackerDvrPropertiesTests: ComScoreTestCase {
     func testOnDemand() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in .test }
             ]
@@ -36,7 +33,6 @@ final class ComScoreTrackerDvrPropertiesTests: ComScoreTestCase {
     func testLive() {
         let player = Player(item: .simple(
             url: Stream.live.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in .test }
             ]
@@ -55,7 +51,6 @@ final class ComScoreTrackerDvrPropertiesTests: ComScoreTestCase {
     func testDvrAtLiveEdge() {
         let player = Player(item: .simple(
             url: Stream.dvr.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in .test }
             ]
@@ -74,7 +69,6 @@ final class ComScoreTrackerDvrPropertiesTests: ComScoreTestCase {
     func testDvrAwayFromLiveEdge() {
         let player = Player(item: .simple(
             url: Stream.dvr.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in .test }
             ]

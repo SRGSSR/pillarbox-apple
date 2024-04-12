@@ -23,11 +23,11 @@ extension AssetMetadataMock: PlayerItemMetadata {
     func items() -> [AVMetadataItem] {
         []
     }
-    
+
     func timedGroups() -> [AVTimedMetadataGroup] {
         []
     }
-    
+
     func chapterGroups() -> [AVTimedMetadataGroup] {
         []
     }

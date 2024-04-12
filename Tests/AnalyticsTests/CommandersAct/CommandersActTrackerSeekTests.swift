@@ -10,13 +10,10 @@ import Nimble
 import PillarboxPlayer
 import PillarboxStreams
 
-private struct AssetMetadataMock {}
-
 final class CommandersActTrackerSeekTests: CommandersActTestCase {
     func testSeekWhilePlaying() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
             ]
@@ -40,7 +37,6 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
     func testSeekWhilePaused() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
             ]
@@ -64,7 +60,6 @@ final class CommandersActTrackerSeekTests: CommandersActTestCase {
     func testDestroyPlayerWhileSeeking() {
         var player: Player? = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
             ]

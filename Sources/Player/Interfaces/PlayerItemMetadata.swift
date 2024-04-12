@@ -32,3 +32,9 @@ public protocol PlayerItemMetadata {
     /// for more information.
     func chapterGroups() -> [AVTimedMetadataGroup]
 }
+
+extension PlayerItemMetadata {
+    func rawMetadata() -> RawPlayerMetadata {
+        .init(items: items(), timedGroups: timedGroups(), chapterGroups: chapterGroups())
+    }
+}

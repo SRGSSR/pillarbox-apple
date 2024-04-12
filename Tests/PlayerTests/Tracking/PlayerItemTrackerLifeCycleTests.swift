@@ -14,7 +14,7 @@ final class PlayerItemTrackerLifeCycleTests: TestCase {
         let publisher = TrackerLifeCycleMock.StatePublisher()
         expectAtLeastEqualPublished(values: [.initialized, .deinitialized], from: publisher) {
             _ = PlayerItem.simple(
-                url: Stream.shortOnDemand.url, 
+                url: Stream.shortOnDemand.url,
                 trackerAdapters: [TrackerLifeCycleMock.adapter(statePublisher: publisher)]
             )
         }

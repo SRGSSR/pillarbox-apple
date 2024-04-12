@@ -12,13 +12,10 @@ import PillarboxCircumspect
 import PillarboxPlayer
 import PillarboxStreams
 
-private struct AssetMetadataMock {}
-
 final class CommandersActTrackerPositionTests: CommandersActTestCase {
     func testLivePlayback() {
         let player = Player(item: .simple(
             url: Stream.live.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
             ]
@@ -40,7 +37,6 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
     func testDvrPlayback() {
         let player = Player(item: .simple(
             url: Stream.dvr.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
             ]
@@ -62,7 +58,6 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
     func testSeekDuringDvrPlayback() {
         let player = Player(item: .simple(
             url: Stream.dvr.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
             ]
@@ -86,7 +81,6 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
     func testDestroyDuringLivePlayback() {
         var player: Player? = Player(item: .simple(
             url: Stream.live.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
             ]
@@ -108,7 +102,6 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
     func testDestroyDuringDvrPlayback() {
         var player: Player? = Player(item: .simple(
             url: Stream.dvr.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
             ]
@@ -130,7 +123,6 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
     func testOnDemandStartAtGivenPosition() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
             ]
