@@ -169,7 +169,7 @@ extension AVPlayerItem {
         }
     }
 
-    func metadataPublisher() -> AnyPublisher<RawPlayerMetadata, Never> {
+    func rawMetadataPublisher() -> AnyPublisher<RawPlayerMetadata, Never> {
         Publishers.CombineLatest3(
             metadataPublisher(),
             metadataOutputPublisher(),

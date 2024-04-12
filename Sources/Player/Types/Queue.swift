@@ -63,7 +63,7 @@ struct Queue {
     }
 
     private static func resourceMetadataPublisher(for playerItem: AVPlayerItem) -> AnyPublisher<PlayerMetadata._Data, Never> {
-        playerItem.metadataPublisher()
+        playerItem.rawMetadataPublisher()
             .map { $0.publisher(bestMatchingPreferredLanguages: AVMetadataItem.defaultPreferredLanguages) }
             .switchToLatest()
             .prepend(.empty)

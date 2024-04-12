@@ -22,7 +22,7 @@ final class AVPlayerItemMetadataPublisherTests: TestCase {
             to: { actualValue, expectedValue in
                 actualValue.count == expectedValue
             },
-            during: .seconds(1)
+            during: .seconds(2)
         )
     }
 
