@@ -6,11 +6,9 @@
 
 import AVFoundation
 
-// TODO: Rename as AssetMetadata
-
 /// A protocol for player item metadata.
-public protocol PlayerItemMetadata {
-    /// Returns metadata globally associated with the item.
+public protocol AssetMetadata {
+    /// Returns metadata globally associated with an asset.
     ///
     /// - Returns: An array of metadata items.
     ///
@@ -18,7 +16,7 @@ public protocol PlayerItemMetadata {
     /// for more information.
     func items() -> [AVMetadataItem]
 
-    /// Returns metadata associated with time ranges of the item.
+    /// Returns metadata associated with time ranges of the asset.
     ///
     /// - Returns: An array of metadata groups.
     ///
@@ -35,7 +33,7 @@ public protocol PlayerItemMetadata {
     func chapterGroups() -> [AVTimedMetadataGroup]
 }
 
-extension PlayerItemMetadata {
+extension AssetMetadata {
     func rawMetadata() -> RawPlayerMetadata {
         .init(items: items(), timedGroups: timedGroups(), chapterGroups: chapterGroups())
     }

@@ -113,7 +113,7 @@ extension Media {
     }
 }
 
-extension Media: PlayerItemMetadata {
+extension Media: AssetMetadata {
     func items() -> [AVMetadataItem] {
         [
             .init(for: .commonIdentifierTitle, value: title),

@@ -36,7 +36,7 @@ public final class PlayerItem: Equatable {
     public convenience init<P, M>(
         publisher: P,
         trackerAdapters: [TrackerAdapter<M>] = []
-    ) where P: Publisher, P.Output == Asset<M>, M: PlayerItemMetadata {
+    ) where P: Publisher, P.Output == Asset<M>, M: AssetMetadata {
         self.init(
             publisher: publisher,
             metadataMapper: { $0.rawMetadata() },
@@ -52,7 +52,7 @@ public final class PlayerItem: Equatable {
     public convenience init<M>(
         asset: Asset<M>,
         trackerAdapters: [TrackerAdapter<M>] = []
-    ) where M: PlayerItemMetadata {
+    ) where M: AssetMetadata {
         self.init(publisher: Just(asset), trackerAdapters: trackerAdapters)
     }
 
@@ -171,7 +171,7 @@ public extension PlayerItem {
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self where M: PlayerItemMetadata {
+    ) -> Self where M: AssetMetadata {
         .init(
             asset: .simple(url: url, metadata: metadata, configuration: configuration),
             trackerAdapters: trackerAdapters
@@ -195,7 +195,7 @@ public extension PlayerItem {
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self where M: PlayerItemMetadata {
+    ) -> Self where M: AssetMetadata {
         .init(
             asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration),
             trackerAdapters: trackerAdapters
@@ -217,7 +217,7 @@ public extension PlayerItem {
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
-    ) -> Self where M: PlayerItemMetadata {
+    ) -> Self where M: AssetMetadata {
         .init(
             asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration),
             trackerAdapters: trackerAdapters

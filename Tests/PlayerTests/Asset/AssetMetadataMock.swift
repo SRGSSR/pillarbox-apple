@@ -19,7 +19,7 @@ struct AssetMetadataMock: Decodable {
     }
 }
 
-extension AssetMetadataMock: PlayerItemMetadata {
+extension AssetMetadataMock: AssetMetadata {
     func items() -> [AVMetadataItem] {
         []
     }

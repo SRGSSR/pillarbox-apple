@@ -125,7 +125,7 @@ public struct MediaMetadata {
     }
 }
 
-extension MediaMetadata: PlayerItemMetadata {
+extension MediaMetadata: AssetMetadata {
     public func items() -> [AVMetadataItem] {
         let image = artworkImage(for: mediaComposition.mainChapter)
         return [
