@@ -6,6 +6,8 @@
 
 import AVFoundation
 
+// TODO: Rename as AssetMetadata
+
 /// A protocol for player item metadata.
 public protocol PlayerItemMetadata {
     /// Returns metadata globally associated with the item.

@@ -116,19 +116,23 @@ public struct MediaMetadata {
         imageCatalog.image(for: chapter.urn)
     }
 
-    func placeholderImage() -> UIImage {
-        imageCatalog.placeholderImage
+    public func artworkImage(for chapter: Chapter) -> UIImage? {
+#if os(tvOS)
+        image(for: chapter) ?? imageCatalog.placeholderImage()
+#else
+        image(for: chapter)
+#endif
     }
 }
 
 extension MediaMetadata: PlayerItemMetadata {
     public func items() -> [AVMetadataItem] {
-        let image = image(for: mediaComposition.mainChapter) ?? placeholderImage()
+        let image = artworkImage(for: mediaComposition.mainChapter)
         return [
             .init(for: .commonIdentifierAssetIdentifier, value: identifier),
             .init(for: .commonIdentifierTitle, value: title),
             .init(for: .iTunesMetadataTrackSubTitle, value: subtitle),
-            .init(for: .commonIdentifierArtwork, value: image.pngData()),
+            .init(for: .commonIdentifierArtwork, value: image?.pngData()),
             .init(for: .commonIdentifierDescription, value: description),
             .init(for: .quickTimeUserDataCreationDate, value: episodeDescription)
         ].compactMap { $0 }
@@ -140,12 +144,12 @@ extension MediaMetadata: PlayerItemMetadata {
 
     public func chapterGroups() -> [AVTimedMetadataGroup] {
         mediaComposition.chapters.map { chapter in
-            let image = image(for: chapter) ?? placeholderImage()
+            let image = artworkImage(for: chapter)
             return AVTimedMetadataGroup(
                 items: [
                     .init(for: .commonIdentifierAssetIdentifier, value: chapter.identifier),
                     .init(for: .commonIdentifierTitle, value: chapter.title),
-                    .init(for: .commonIdentifierArtwork, value: image.pngData())
+                    .init(for: .commonIdentifierArtwork, value: image?.pngData())
                 ].compactMap { $0 },
                 timeRange: chapter.timeRange
             )
