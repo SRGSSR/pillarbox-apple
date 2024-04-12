@@ -11,11 +11,11 @@ struct ImageCatalog {
     let images: [String: UIImage]
     let width: DataProvider.ImageWidth
 
+    lazy var placeholderImage: UIImage = {
+        .image(with: .darkGray, width: CGFloat(width.rawValue))
+    }()
+
     func image(for identifier: String) -> UIImage? {
         images[identifier]
-    }
-
-    func placeholderImage() -> UIImage {
-        .image(with: .darkGray, width: CGFloat(width.rawValue))
     }
 }

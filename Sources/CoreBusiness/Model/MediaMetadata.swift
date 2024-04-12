@@ -117,7 +117,7 @@ public struct MediaMetadata {
     }
 
     func placeholderImage() -> UIImage {
-        imageCatalog.placeholderImage()
+        imageCatalog.placeholderImage
     }
 }
 
