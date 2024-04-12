@@ -6,7 +6,6 @@
 
 import AVFoundation
 import CoreMedia
-import MediaPlayer
 import PillarboxPlayer
 import SwiftUI
 
