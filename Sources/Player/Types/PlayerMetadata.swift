@@ -72,6 +72,10 @@ public struct PlayerMetadata {
 }
 
 public extension PlayerMetadata {
+    func value(for identifier: AVMetadataIdentifier, kind: Kind) -> Any? {
+        item(for: identifier, kind: kind)?.value
+    }
+
     func stringValue(for identifier: AVMetadataIdentifier, kind: Kind) -> String? {
         item(for: identifier, kind: kind)?.stringValue
     }
