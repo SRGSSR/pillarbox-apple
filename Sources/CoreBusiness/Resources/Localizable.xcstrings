@@ -25,7 +25,13 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "P%lld"
+            "value" : "E%lld"
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E%lld"
           }
         }
       }
@@ -101,7 +107,13 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "S%1$lld, P%2$lld"
+            "value" : "S%1$lld, E%2$lld"
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S%1$lld, E%2$lld"
           }
         }
       }
