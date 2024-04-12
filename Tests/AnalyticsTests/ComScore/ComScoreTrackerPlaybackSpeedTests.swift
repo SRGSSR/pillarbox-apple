@@ -10,13 +10,10 @@ import Nimble
 import PillarboxPlayer
 import PillarboxStreams
 
-private struct AssetMetadataMock {}
-
 final class ComScoreTrackerPlaybackSpeedTests: ComScoreTestCase {
     func testRateAtStart() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in .test }
             ]
