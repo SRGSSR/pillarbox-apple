@@ -75,7 +75,7 @@ struct Media: Hashable {
         case let .urn(urn, server: server):
             return .urn(urn, server: server, trackerAdapters: [
                 DemoTracker.adapter { metadata in
-                    DemoTracker.Metadata(title: metadata.title)
+                    DemoTracker.Metadata(title: metadata.mediaComposition.mainChapter.title)
                 }
             ]) { item in
                 item.seek(at(startTime))
@@ -114,19 +114,11 @@ extension Media {
 }
 
 extension Media: AssetMetadata {
-    func items() -> [AVMetadataItem] {
-        [
-            .init(for: .commonIdentifierTitle, value: title),
-            .init(for: .iTunesMetadataTrackSubTitle, value: subtitle),
-            .init(for: .commonIdentifierArtwork, value: image?.pngData())
-        ].compactMap { $0 }
+    var itemMetadata: ItemMetadata {
+        .init(title: title, subtitle: subtitle, image: image)
     }
 
-    func timedGroups() -> [AVTimedMetadataGroup] {
-        []
-    }
-
-    func chapterGroups() -> [AVTimedMetadataGroup] {
+    var chaptersMetadata: [ChapterMetadata] {
         []
     }
 }

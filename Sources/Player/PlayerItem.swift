@@ -39,7 +39,7 @@ public final class PlayerItem: Equatable {
     ) where P: Publisher, P.Output == Asset<M>, M: AssetMetadata {
         self.init(
             publisher: publisher,
-            metadataMapper: { $0.rawMetadata() },
+            metadataMapper: { $0.playerMetadata },
             trackerAdapters: trackerAdapters
         )
     }
@@ -86,7 +86,7 @@ public final class PlayerItem: Equatable {
 
     private init<P, M>(
         publisher: P,
-        metadataMapper: @escaping (M) -> RawPlayerMetadata,
+        metadataMapper: @escaping (M) -> PlayerMetadata,
         trackerAdapters: [TrackerAdapter<M>]
     ) where P: Publisher, P.Output == Asset<M> {
         let trackerAdapters = trackerAdapters.map { [id] adapter in
@@ -284,6 +284,15 @@ public extension PlayerItem {
             asset: .encrypted(url: url, delegate: delegate, configuration: configuration),
             trackerAdapters: trackerAdapters
         )
+    }
+}
+
+extension PlayerItem {
+    func playerMetadataPublisher() -> AnyPublisher<PlayerMetadata, Never> {
+        $content
+            .map(\.metadata)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 }
 

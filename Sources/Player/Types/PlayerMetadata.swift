@@ -9,104 +9,99 @@ import CoreMedia
 import MediaPlayer
 import PillarboxCore
 
-public struct PlayerMetadata {
-    struct _Data {
-        static let empty = Self(items: [], timedGroups: [], chapterGroups: [])
+public struct ItemMetadata: Equatable {
+    public static let empty = Self()
 
-        let items: [MetadataItem]
-        let timedGroups: [TimedMetadataGroup]
-        let chapterGroups: [TimedMetadataGroup]
+    public let identifier: String?
+    public let title: String?
+    public let subtitle: String?
+    public let description: String?
+    public let image: UIImage?
+    public let episode: String?
+
+    var externalMetadata: [AVMetadataItem] {
+        [
+            .init(identifier: .commonIdentifierAssetIdentifier, value: identifier),
+            .init(identifier: .commonIdentifierTitle, value: title),
+            .init(identifier: .iTunesMetadataTrackSubTitle, value: subtitle),
+            .init(identifier: .commonIdentifierArtwork, value: image?.pngData()),
+            .init(identifier: .commonIdentifierDescription, value: description),
+            .init(identifier: .quickTimeUserDataCreationDate, value: episode)
+        ].compactMap { $0 }
     }
 
-    // TODO: We could revisit the cases to have common names but different labels (e.g. chapter(time:) and chapter(index:))
-    //       once supported, see https://github.com/apple/swift/issues/52479
-    public enum Kind {
-        case global
-        case timed(CMTime)
-        case chapterAt(CMTime)
-        case chapter(Int)
-    }
-
-    static let empty = Self(content: .empty, resource: .empty)
-
-    let content: _Data
-    let resource: _Data
-
-    public var numberOfChapters: Int {
-        chapterGroups.count
-    }
-
-    var items: [MetadataItem] {
-        !content.items.isEmpty ? content.items : resource.items
-    }
-
-    var timedGroups: [TimedMetadataGroup] {
-        !content.timedGroups.isEmpty ? content.timedGroups : resource.timedGroups
-    }
-
-    var chapterGroups: [TimedMetadataGroup] {
-        !content.chapterGroups.isEmpty ? content.chapterGroups : resource.chapterGroups
-    }
-
-    var nowPlayingInfo: NowPlayingInfo {
+    fileprivate var nowPlayingInfo: NowPlayingInfo {
         var nowPlayingInfo = NowPlayingInfo()
-
-        nowPlayingInfo[MPMediaItemPropertyTitle] = stringValue(for: .commonIdentifierTitle, kind: .global)
-        nowPlayingInfo[MPMediaItemPropertyArtist] = stringValue(for: .iTunesMetadataTrackSubTitle, kind: .global)
-
-        if let imageData = dataValue(for: .commonIdentifierArtwork, kind: .global), let image = UIImage(data: imageData) {
+        nowPlayingInfo[MPMediaItemPropertyTitle] = title
+        nowPlayingInfo[MPMediaItemPropertyArtist] = subtitle
+        if let image {
             nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
         }
-
         return nowPlayingInfo
     }
 
-    private static func item(for identifier: AVMetadataIdentifier, in groups: [TimedMetadataGroup], at time: CMTime) -> MetadataItem? {
-        guard let group = groups.first(where: { $0.containsTime(time) }) else { return nil }
-        return item(for: identifier, in: group)
-    }
-
-    private static func item(for identifier: AVMetadataIdentifier, in group: TimedMetadataGroup) -> MetadataItem? {
-        group.items.first { $0.identifier == identifier }
+    public init(
+        identifier: String? = nil,
+        title: String? = nil,
+        subtitle: String? = nil,
+        description: String? = nil,
+        image: UIImage? = nil,
+        episode: String? = nil
+    ) {
+        self.identifier = identifier
+        self.title = title
+        self.subtitle = subtitle
+        self.description = description
+        self.image = image
+        self.episode = episode
     }
 }
 
-public extension PlayerMetadata {
-    func value(for identifier: AVMetadataIdentifier, kind: Kind) -> Any? {
-        item(for: identifier, kind: kind)?.value
+public struct ChapterMetadata: Equatable {
+    public let identifier: String?
+    public let title: String?
+    public let image: UIImage?
+    public let timeRange: CMTimeRange
+
+    fileprivate var timedNavigationMarker: AVTimedMetadataGroup {
+        .init(
+            items: [
+                .init(identifier: .commonIdentifierAssetIdentifier, value: identifier),
+                .init(identifier: .commonIdentifierTitle, value: title),
+                .init(identifier: .commonIdentifierArtwork, value: image?.pngData())
+            ].compactMap { $0 },
+            timeRange: timeRange
+        )
     }
 
-    func stringValue(for identifier: AVMetadataIdentifier, kind: Kind) -> String? {
-        item(for: identifier, kind: kind)?.stringValue
+    public init(
+        identifier: String? = nil,
+        title: String? = nil,
+        image: UIImage? = nil,
+        timeRange: CMTimeRange
+    ) {
+        self.identifier = identifier
+        self.title = title
+        self.image = image
+        self.timeRange = timeRange
+    }
+}
+
+public struct PlayerMetadata: Equatable {
+    static let empty = Self(item: .empty, chapters: [])
+
+    public let item: ItemMetadata
+    public let chapters: [ChapterMetadata]
+
+    var externalMetadata: [AVMetadataItem] {
+        item.externalMetadata
     }
 
-    func integerValue(for identifier: AVMetadataIdentifier, kind: Kind) -> Int? {
-        item(for: identifier, kind: kind)?.integerValue
+    var timedNavigationMarkers: [AVTimedMetadataGroup] {
+        chapters.map(\.timedNavigationMarker)
     }
 
-    func doubleValue(for identifier: AVMetadataIdentifier, kind: Kind) -> Double? {
-        item(for: identifier, kind: kind)?.doubleValue
-    }
-
-    func dateValue(for identifier: AVMetadataIdentifier, kind: Kind) -> Date? {
-        item(for: identifier, kind: kind)?.dateValue
-    }
-
-    func dataValue(for identifier: AVMetadataIdentifier, kind: Kind) -> Data? {
-        item(for: identifier, kind: kind)?.dataValue
-    }
-
-    private func item(for identifier: AVMetadataIdentifier, kind: Kind) -> MetadataItem? {
-        switch kind {
-        case .global:
-            return items.first { $0.identifier == identifier }
-        case let .timed(time):
-            return Self.item(for: identifier, in: timedGroups, at: time)
-        case let .chapterAt(time: time):
-            return Self.item(for: identifier, in: chapterGroups, at: time)
-        case let .chapter(index):
-            guard let group = chapterGroups[safeIndex: index] else { return nil }
-            return Self.item(for: identifier, in: group)
-        }
+    var nowPlayingInfo: NowPlayingInfo {
+        item.nowPlayingInfo
     }
 }

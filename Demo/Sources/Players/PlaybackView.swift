@@ -57,15 +57,11 @@ private struct MainView: View {
     }
 
     private var title: String? {
-        player.metadata.stringValue(for: .commonIdentifierTitle, kind: .global)
+        player.metadata.item.title
     }
 
     private var subtitle: String? {
-        player.metadata.stringValue(for: .iTunesMetadataTrackSubTitle, kind: .global)
-    }
-
-    private var chapterTitle: String? {
-        player.metadata.stringValue(for: .icyMetadataStreamTitle, kind: .timed(player.time))
+        player.metadata.item.subtitle
     }
 
     private func magnificationGesture() -> some Gesture {
@@ -106,10 +102,6 @@ private struct MainView: View {
                 Text(title)
                     .font(.headline)
                     .fontWeight(.semibold)
-            }
-            if let chapterTitle {
-                Text(chapterTitle)
-                    .font(.callout)
             }
         }
         .padding(.horizontal)

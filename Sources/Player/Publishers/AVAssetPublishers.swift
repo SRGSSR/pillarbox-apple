@@ -43,21 +43,4 @@ extension AVAsset {
         }
         .eraseToAnyPublisher()
     }
-
-    func chaptersPublisher(
-        bestMatchingPreferredLanguages preferredLanguages: [String] = AVMetadataItem.defaultPreferredLanguages
-    ) -> AnyPublisher<[AVTimedMetadataGroup], Error> {
-        Future { promise in
-            Task {
-                do {
-                    let result = try await self.loadChapterMetadataGroups(bestMatchingPreferredLanguages: preferredLanguages)
-                    promise(.success(result))
-                }
-                catch {
-                    promise(.failure(error))
-                }
-            }
-        }
-        .eraseToAnyPublisher()
-    }
 }

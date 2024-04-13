@@ -18,18 +18,11 @@ struct AssetMetadataMock: Decodable {
 }
 
 extension AssetMetadataMock: AssetMetadata {
-    func items() -> [AVMetadataItem] {
-        [
-            .init(for: .commonIdentifierTitle, value: title),
-            .init(for: .iTunesMetadataTrackSubTitle, value: subtitle)
-        ].compactMap { $0 }
+    var itemMetadata: ItemMetadata {
+        .init(title: title, subtitle: subtitle)
     }
 
-    func timedGroups() -> [AVTimedMetadataGroup] {
-        []
-    }
-
-    func chapterGroups() -> [AVTimedMetadataGroup] {
+    var chaptersMetadata: [ChapterMetadata] {
         []
     }
 }

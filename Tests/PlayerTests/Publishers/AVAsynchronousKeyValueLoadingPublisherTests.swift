@@ -49,13 +49,13 @@ final class AVAsynchronousKeyValueLoadingPublisherTests: TestCase {
     }
 
     func testMetadataItemFetch() throws {
-        let item = AVMetadataItem(for: .commonIdentifierTitle, value: "Title")!
+        let item = AVMetadataItem(identifier: .commonIdentifierTitle, value: "Title")!
         let title = try waitForSingleOutput(from: item.propertyPublisher(.stringValue))
         expect(title).to(equal("Title"))
     }
 
     func testMetadataItemFetchWithTypeMismatch() throws {
-        let item = AVMetadataItem(for: .commonIdentifierTitle, value: "Title")!
+        let item = AVMetadataItem(identifier: .commonIdentifierTitle, value: "Title")!
         let title = try waitForSingleOutput(from: item.propertyPublisher(.dateValue))
         expect(title).to(beNil())
     }

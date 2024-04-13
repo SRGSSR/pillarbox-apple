@@ -89,8 +89,11 @@ public final class Player: ObservableObject, Equatable {
 
     lazy var metadataPublisher: AnyPublisher<PlayerMetadata, Never> = {
         queuePublisher
-            .receive(on: RunLoop.main)
-            .map { $0.metadataPublisher() }
+            .slice(at: \.item)
+            .map { item -> AnyPublisher<PlayerMetadata, Never> in
+                guard let item else { return Just(.empty).eraseToAnyPublisher() }
+                return item.playerMetadataPublisher()
+            }
             .switchToLatest()
             .share(replay: 1)
             .eraseToAnyPublisher()

@@ -53,23 +53,6 @@ struct Queue {
         }
     }
 
-    private static func contentMetadataPublisher(for item: PlayerItem) -> AnyPublisher<PlayerMetadata._Data, Never> {
-        item.$content
-            .map(\.metadata)
-            .map { $0.publisher(bestMatchingPreferredLanguages: AVMetadataItem.defaultPreferredLanguages) }
-            .switchToLatest()
-            .prepend(.empty)
-            .eraseToAnyPublisher()
-    }
-
-    private static func resourceMetadataPublisher(for playerItem: AVPlayerItem) -> AnyPublisher<PlayerMetadata._Data, Never> {
-        playerItem.rawMetadataPublisher()
-            .map { $0.publisher(bestMatchingPreferredLanguages: AVMetadataItem.defaultPreferredLanguages) }
-            .switchToLatest()
-            .prepend(.empty)
-            .eraseToAnyPublisher()
-    }
-
     func updated(with update: QueueUpdate) -> Self {
         switch update {
         case let .elements(elements):
@@ -77,15 +60,5 @@ struct Queue {
         case let .itemState(itemState):
             return .init(elements: elements, itemState: itemState)
         }
-    }
-
-    func metadataPublisher() -> AnyPublisher<PlayerMetadata, Never> {
-        guard let item, let playerItem else { return Just(PlayerMetadata.empty).eraseToAnyPublisher() }
-        return Publishers.CombineLatest(
-            Self.contentMetadataPublisher(for: item),
-            Self.resourceMetadataPublisher(for: playerItem)
-        )
-        .map { .init(content: $0, resource: $1) }
-        .eraseToAnyPublisher()
     }
 }
