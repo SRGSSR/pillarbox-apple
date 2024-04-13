@@ -63,26 +63,16 @@ public struct MediaMetadata {
 }
 
 extension MediaMetadata: AssetMetadata {
-    public var itemMetadata: ItemMetadata {
+    public var playerMetadata: PlayerMetadata {
         .init(
             identifier: mediaComposition.chapterUrn,
             title: title,
             subtitle: subtitle,
             description: description,
             image: artworkImage(for: mediaComposition.mainChapter),
-            episode: episode
+            episode: episode,
+            chapters: chapters
         )
-    }
-
-    public var chaptersMetadata: [ChapterMetadata] {
-        mediaComposition.chapters.map { chapter in
-            .init(
-                identifier: chapter.urn,
-                title: chapter.title,
-                image: artworkImage(for: chapter),
-                timeRange: chapter.timeRange
-            )
-        }
     }
 
     var title: String {
@@ -123,6 +113,17 @@ extension MediaMetadata: AssetMetadata {
         }
         else {
             return String(localized: "E\(episodeNumber)", bundle: .module, comment: "Short episode information")
+        }
+    }
+
+    private var chapters: [ChapterMetadata] {
+        mediaComposition.chapters.map { chapter in
+            .init(
+                identifier: chapter.urn,
+                title: chapter.title,
+                image: artworkImage(for: chapter),
+                timeRange: chapter.timeRange
+            )
         }
     }
 

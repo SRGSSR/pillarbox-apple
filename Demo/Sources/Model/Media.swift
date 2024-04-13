@@ -114,11 +114,7 @@ extension Media {
 }
 
 extension Media: AssetMetadata {
-    var itemMetadata: ItemMetadata {
+    var playerMetadata: PlayerMetadata {
         .init(title: title, subtitle: subtitle, image: image)
-    }
-
-    var chaptersMetadata: [ChapterMetadata] {
-        []
     }
 }

@@ -57,11 +57,11 @@ private struct MainView: View {
     }
 
     private var title: String? {
-        player.metadata.item.title
+        player.metadata.title
     }
 
     private var subtitle: String? {
-        player.metadata.item.subtitle
+        player.metadata.subtitle
     }
 
     private func magnificationGesture() -> some Gesture {
