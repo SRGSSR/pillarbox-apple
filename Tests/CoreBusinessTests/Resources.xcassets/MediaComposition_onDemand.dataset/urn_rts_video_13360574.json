@@ -1,7 +1,9 @@
 {
    "chapterUrn" : "urn:rts:video:13360574",
    "episode" : {
-      "id" : "13360565",
+      "number": 12,
+        "seasonNumber": 2,
+        "id" : "13360565",
       "title" : "Yadebat",
       "publishedDate" : "2022-09-05T16:30:00+02:00",
       "imageUrl" : "https://www.rts.ch/2022/09/05/18/20/13360573.image/16x9",
