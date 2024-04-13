@@ -26,7 +26,7 @@ struct ImageCatalog {
         if let placeholderImage = Self.placeholderImages[width] {
             return placeholderImage
         }
-        let placeholderImage = UIImage.image(with: .darkGray, width: CGFloat(width.rawValue))
+        let placeholderImage = UIImage.image(color: .darkGray, width: CGFloat(width.rawValue))
         Self.placeholderImages[width] = placeholderImage
         return placeholderImage
     }
