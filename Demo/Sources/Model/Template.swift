@@ -240,10 +240,6 @@ enum URLTemplate {
         type: .url("https://cdn.bitmovin.com/content/assets/playhouse-vr/m3u8s/105560.m3u8"),
         isMonoscopic: true
     )
-    static let chapters = Template(
-        title: "Chapters",
-        type: .url(Bundle.main.url(forResource: "chapters", withExtension: "mp4")!)
-    )
 }
 
 enum URNTemplate {

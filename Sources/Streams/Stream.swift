@@ -102,12 +102,6 @@ public extension Stream {
         duration: CMTime(value: 5, timescale: 1)
     )
 
-    /// An MP4 stream with some chapters.
-    static let chaptersMp4: Self = .init(
-        url: Bundle.module.url(forResource: "chapters", withExtension: "mp4")!,
-        duration: CMTime(value: 4, timescale: 1)
-    )
-
     /// An unavailable MP3 stream.
     static let unavailableMp3: Self = .init(
         url: URL(string: "http://localhost:8123/unavailable.mp3")!,
