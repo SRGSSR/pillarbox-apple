@@ -9,9 +9,16 @@ import UIKit
 
 /// Metadata associated with a chapter.
 public struct ChapterMetadata: Equatable {
+    /// An identifier for the chapter.
     public let identifier: String?
+
+    /// The chapter title.
     public let title: String?
+
+    /// The image associated with the chapter.
     public let image: UIImage?
+
+    /// The time range covered by the chapter.
     public let timeRange: CMTimeRange
 
     var timedNavigationMarker: AVTimedMetadataGroup {
@@ -25,6 +32,13 @@ public struct ChapterMetadata: Equatable {
         )
     }
 
+    /// Creates a chapter.
+    ///
+    /// - Parameters:
+    ///   - identifier: An identifier for the chapter.
+    ///   - title: The chapter title.
+    ///   - image: The image associated with the chapter.
+    ///   - timeRange: The time range covered by the chapter.
     public init(
         identifier: String? = nil,
         title: String? = nil,
