@@ -92,9 +92,10 @@ public final class Player: ObservableObject, Equatable {
             .slice(at: \.item)
             .map { item -> AnyPublisher<PlayerMetadata, Never> in
                 guard let item else { return Just(.empty).eraseToAnyPublisher() }
-                return item.playerMetadataPublisher()
+                return item.metadataPublisher()
             }
             .switchToLatest()
+            .removeDuplicates()
             .share(replay: 1)
             .eraseToAnyPublisher()
     }()

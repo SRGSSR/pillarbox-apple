@@ -288,7 +288,7 @@ public extension PlayerItem {
 }
 
 extension PlayerItem {
-    func playerMetadataPublisher() -> AnyPublisher<PlayerMetadata, Never> {
+    func metadataPublisher() -> AnyPublisher<PlayerMetadata, Never> {
         $content
             .map(\.metadata)
             .removeDuplicates()
