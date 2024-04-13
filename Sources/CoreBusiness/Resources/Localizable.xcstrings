@@ -1,41 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "E%lld" : {
-      "comment" : "Short episode information",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "F%lld"
-          }
-        },
-        "en-US" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "E%lld"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "É%lld"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "E%lld"
-          }
-        },
-        "rm" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "E%lld"
-          }
-        }
-      }
-    },
     "No playable resources could be found." : {
       "comment" : "Generic error message returned when no playable resources could be found",
       "localizations" : {
@@ -73,47 +38,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Na chattà naginas resursas correspundentas."
-          }
-        }
-      }
-    },
-    "S%lld, E%lld" : {
-      "comment" : "Short season / episode information",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "S%1$lld, F%2$lld"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "S%1$lld, E%2$lld"
-          }
-        },
-        "en-US" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "S%1$lld, E%2$lld"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "S%1$lld, É%2$lld"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "S%1$lld, E%2$lld"
-          }
-        },
-        "rm" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "S%1$lld, E%2$lld"
           }
         }
       }

@@ -83,6 +83,47 @@
         }
       }
     },
+    "E%lld" : {
+      "comment" : "Short episode information",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "F%lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E%lld"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E%lld"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "É%lld"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "P%lld"
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E%lld"
+          }
+        }
+      }
+    },
     "Languages" : {
       "comment" : "Playback setting menu title",
       "localizations" : {
@@ -202,6 +243,47 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spertadad da reproducziun"
+          }
+        }
+      }
+    },
+    "S%lld, E%lld" : {
+      "comment" : "Short season / episode information",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S%1$lld, F%2$lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "S%1$lld, E%2$lld"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S%1$lld, E%2$lld"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S%1$lld, É%2$lld"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S%1$lld, P%2$lld"
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S%1$lld, E%2$lld"
           }
         }
       }

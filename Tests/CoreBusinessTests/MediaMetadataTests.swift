@@ -23,7 +23,7 @@ final class MediaMetadataTests: XCTestCase {
         Dans ce nouvel épisode de YADEBAT, Mélissa réunit 3 couples qui se sont séparés récemment. \
         Elles les a questionné en face à face pour connaître leurs différents ressentis et réactions.
         """))
-        expect(metadata.episode).to(equal("S2, E12"))
+        expect(metadata.episodeInformation).to(equal(.long(season: 2, episode: 12)))
     }
 
     func testRedundantMetadata() {
@@ -36,7 +36,7 @@ final class MediaMetadataTests: XCTestCase {
         expect(metadata.title).to(equal("19h30"))
         expect(metadata.subtitle).to(contain("February"))
         expect(metadata.description).to(beNil())
-        expect(metadata.episode).to(beNil())
+        expect(metadata.episodeInformation).to(beNil())
     }
 
     func testLiveMetadata() {
@@ -49,7 +49,7 @@ final class MediaMetadataTests: XCTestCase {
         expect(metadata.title).to(equal("La 1ère en direct"))
         expect(metadata.subtitle).to(beNil())
         expect(metadata.description).to(beNil())
-        expect(metadata.episode).to(beNil())
+        expect(metadata.episodeInformation).to(beNil())
     }
 
     func testAnalytics() {

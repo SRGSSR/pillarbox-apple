@@ -69,7 +69,7 @@ extension MediaMetadata: AssetMetadata {
             subtitle: subtitle,
             description: description,
             image: artworkImage(for: mediaComposition.mainChapter),
-            episode: episode,
+            episodeInformation: episodeInformation,
             chapters: chapters
         )
     }
@@ -105,13 +105,13 @@ extension MediaMetadata: AssetMetadata {
         mediaComposition.mainChapter.description
     }
 
-    var episode: String? {
+    var episodeInformation: EpisodeInformation? {
         guard let episode = mediaComposition.episode, let episodeNumber = episode.number else { return nil }
         if let seasonNumber = episode.seasonNumber {
-            return String(localized: "S\(seasonNumber), E\(episodeNumber)", bundle: .module, comment: "Short season / episode information")
+            return .long(season: seasonNumber, episode: episodeNumber)
         }
         else {
-            return String(localized: "E\(episodeNumber)", bundle: .module, comment: "Short episode information")
+            return .short(episode: episodeNumber)
         }
     }
 

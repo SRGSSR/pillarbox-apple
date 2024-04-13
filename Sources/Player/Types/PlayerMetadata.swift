@@ -27,10 +27,21 @@ public struct PlayerMetadata: Equatable {
     public let image: UIImage?
 
     /// Episode information associated with the content.
-    public let episode: String?
+    public let episodeInformation: EpisodeInformation?
 
     /// Chapter associated with the content.
     public let chapters: [ChapterMetadata]
+
+    var episodeDescription: String? {
+        switch episodeInformation {
+        case let .long(season: season, episode: episode):
+            return String(localized: "S\(season), E\(episode)", bundle: .module, comment: "Short season / episode information")
+        case let .short(episode: episode):
+            return String(localized: "E\(episode)", bundle: .module, comment: "Short episode information")
+        case nil:
+            return nil
+        }
+    }
 
     var externalMetadata: [AVMetadataItem] {
         [
@@ -39,7 +50,7 @@ public struct PlayerMetadata: Equatable {
             .init(identifier: .iTunesMetadataTrackSubTitle, value: subtitle),
             .init(identifier: .commonIdentifierArtwork, value: image?.pngData()),
             .init(identifier: .commonIdentifierDescription, value: description),
-            .init(identifier: .quickTimeUserDataCreationDate, value: episode)
+            .init(identifier: .quickTimeUserDataCreationDate, value: episodeDescription)
         ].compactMap { $0 }
     }
 
@@ -65,7 +76,7 @@ public struct PlayerMetadata: Equatable {
     ///   - subtitle: A subtitle for the content.
     ///   - description: A description of the content.
     ///   - image: The image associated with the content.
-    ///   - episode: Episode information associated with the content.
+    ///   - episodeInformation: Episode information associated with the content.
     ///   - chapters: Chapter associated with the content.
     public init(
         identifier: String? = nil,
@@ -73,7 +84,7 @@ public struct PlayerMetadata: Equatable {
         subtitle: String? = nil,
         description: String? = nil,
         image: UIImage? = nil,
-        episode: String? = nil,
+        episodeInformation: EpisodeInformation? = nil,
         chapters: [ChapterMetadata] = []
     ) {
         self.identifier = identifier
@@ -81,7 +92,7 @@ public struct PlayerMetadata: Equatable {
         self.subtitle = subtitle
         self.description = description
         self.image = image
-        self.episode = episode
+        self.episodeInformation = episodeInformation
         self.chapters = chapters
     }
 }
