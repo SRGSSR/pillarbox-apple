@@ -31,7 +31,7 @@ private struct MainView: View {
     var body: some View {
         ZStack {
             main()
-            bottomBar()
+            timeBar()
             topBar()
         }
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
@@ -54,14 +54,6 @@ private struct MainView: View {
 
     private var isUserInterfaceHidden: Bool {
         visibilityTracker.isUserInterfaceHidden && !areControlsAlwaysVisible && !player.canReplay()
-    }
-
-    private var title: String? {
-        player.metadata.title
-    }
-
-    private var subtitle: String? {
-        player.metadata.subtitle
     }
 
     private func magnificationGesture() -> some Gesture {
@@ -91,32 +83,10 @@ private struct MainView: View {
     }
 
     @ViewBuilder
-    private func metadata() -> some View {
-        VStack(alignment: .leading) {
-            if let subtitle {
-                Text(subtitle)
-                    .font(.caption2)
-                    .fontWeight(.bold)
-            }
-            if let title {
-                Text(title)
-                    .font(.headline)
-                    .fontWeight(.semibold)
-            }
-        }
-        .padding(.horizontal)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .foregroundStyle(.white)
-    }
-
-    @ViewBuilder
-    private func bottomBar() -> some View {
-        VStack {
-            metadata()
-            TimeBar(player: player, visibilityTracker: visibilityTracker, layout: $layout, isInteracting: $isInteracting)
-        }
-        .opacity(isUserInterfaceHidden ? 0 : 1)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+    private func timeBar() -> some View {
+        TimeBar(player: player, visibilityTracker: visibilityTracker, layout: $layout, isInteracting: $isInteracting)
+            .opacity(isUserInterfaceHidden ? 0 : 1)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 
     @ViewBuilder
