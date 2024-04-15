@@ -119,7 +119,7 @@ final class ExamplesViewModel: ObservableObject {
                 medias.map { media in
                     Media(
                         title: title(of: media),
-                        description: "DRM-protected video",
+                        subtitle: "DRM-protected video",
                         imageUrl: SRGDataProvider.current!.url(for: media.show?.image, size: .large),
                         type: .urn(media.urn),
                         isMonoscopic: media.isMonoscopic
@@ -137,7 +137,7 @@ final class ExamplesViewModel: ObservableObject {
                 medias.map { media in
                     Media(
                         title: media.title,
-                        description: "Token-protected video",
+                        subtitle: "Token-protected video",
                         imageUrl: SRGDataProvider.current!.url(for: media.image, size: .large),
                         type: .urn(media.urn),
                         isMonoscopic: media.isMonoscopic

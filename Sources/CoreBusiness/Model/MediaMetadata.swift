@@ -24,31 +24,8 @@ public struct MediaMetadata {
     /// The resource to be played.
     public let resource: Resource
 
-    /// An associated image suitable for artwork display.
-    public let image: UIImage?
-
-    /// The title recommended for display.
-    public var title: String {
-        let mainChapter = mediaComposition.mainChapter
-        guard mainChapter.contentType != .livestream else { return mainChapter.title }
-        if let show = mediaComposition.show, Self.areRedundant(chapter: mainChapter, show: show) {
-            return Self.dateFormatter.string(from: mainChapter.date)
-        }
-        else {
-            return mainChapter.title
-        }
-    }
-
-    /// The subtitle recommended for display.
-    public var subtitle: String? {
-        guard mediaComposition.mainChapter.contentType != .livestream else { return nil }
-        return mediaComposition.show?.title
-    }
-
-    /// The content description.
-    public var description: String? {
-        mediaComposition.mainChapter.description
-    }
+    /// A catalog of images associated with the context.
+    private let imageCatalog: ImageCatalog
 
     /// The stream type.
     public var streamType: StreamType {
@@ -73,13 +50,91 @@ public struct MediaMetadata {
         return analyticsMetadata
     }
 
-    init(mediaComposition: MediaComposition, resource: Resource, image: UIImage?) {
+    init(mediaComposition: MediaComposition, resource: Resource, imageCatalog: ImageCatalog) {
         self.mediaComposition = mediaComposition
         self.resource = resource
-        self.image = image
+        self.imageCatalog = imageCatalog
     }
 
     private static func areRedundant(chapter: Chapter, show: Show) -> Bool {
         chapter.title.lowercased() == show.title.lowercased()
+    }
+}
+
+extension MediaMetadata: AssetMetadata {
+    public var playerMetadata: PlayerMetadata {
+        .init(
+            identifier: mediaComposition.chapterUrn,
+            title: title,
+            subtitle: subtitle,
+            description: description,
+            image: artworkImage(for: mediaComposition.mainChapter),
+            episodeInformation: episodeInformation,
+            chapters: chapters
+        )
+    }
+
+    var title: String {
+        let mainChapter = mediaComposition.mainChapter
+        guard mainChapter.contentType != .livestream else { return mainChapter.title }
+        if let show = mediaComposition.show {
+            return show.title
+        }
+        else {
+            return mainChapter.title
+        }
+    }
+
+    var subtitle: String? {
+        let mainChapter = mediaComposition.mainChapter
+        guard mainChapter.contentType != .livestream else { return nil }
+        if let show = mediaComposition.show {
+            if Self.areRedundant(chapter: mainChapter, show: show) {
+                return Self.dateFormatter.string(from: mainChapter.date)
+            }
+            else {
+                return mainChapter.title
+            }
+        }
+        else {
+            return nil
+        }
+    }
+
+    var description: String? {
+        mediaComposition.mainChapter.description
+    }
+
+    var episodeInformation: EpisodeInformation? {
+        guard let episode = mediaComposition.episode, let episodeNumber = episode.number else { return nil }
+        if let seasonNumber = episode.seasonNumber {
+            return .long(season: seasonNumber, episode: episodeNumber)
+        }
+        else {
+            return .short(episode: episodeNumber)
+        }
+    }
+
+    private var chapters: [ChapterMetadata] {
+        mediaComposition.chapters.map { chapter in
+            .init(
+                identifier: chapter.urn,
+                title: chapter.title,
+                image: artworkImage(for: chapter),
+                timeRange: chapter.timeRange
+            )
+        }
+    }
+
+    private func image(for chapter: Chapter) -> UIImage? {
+        imageCatalog.image(for: chapter.urn)
+    }
+
+    private func artworkImage(for chapter: Chapter) -> UIImage? {
+#if os(tvOS)
+        image(for: chapter) ?? imageCatalog.placeholderImage()
+#else
+        image(for: chapter)
+#endif
     }
 }

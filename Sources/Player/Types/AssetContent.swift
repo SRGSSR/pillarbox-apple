@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import AVKit
 
 struct AssetContent {
     let id: UUID
@@ -21,7 +22,12 @@ struct AssetContent {
     }
 
     func update(item: AVPlayerItem) {
-        item.externalMetadata = metadata.metadataItems
+        item.externalMetadata = metadata.externalMetadata
+#if os(tvOS)
+        item.navigationMarkerGroups = [
+            AVNavigationMarkersGroup(title: "chapters", timedNavigationMarkers: metadata.timedNavigationMarkers)
+        ]
+#endif
     }
 
     func playerItem(reload: Bool = false) -> AVPlayerItem {

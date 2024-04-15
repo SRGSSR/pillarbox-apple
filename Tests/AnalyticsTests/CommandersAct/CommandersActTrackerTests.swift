@@ -10,13 +10,10 @@ import Nimble
 import PillarboxPlayer
 import PillarboxStreams
 
-private struct AssetMetadataMock {}
-
 final class CommandersActTrackerTests: CommandersActTestCase {
     func testInitiallyPlaying() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
             ]
@@ -47,7 +44,6 @@ final class CommandersActTrackerTests: CommandersActTestCase {
     func testPauseDuringPlayback() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
             ]
@@ -68,7 +64,6 @@ final class CommandersActTrackerTests: CommandersActTestCase {
     func testPlaybackEnd() {
         let player = Player(item: .simple(
             url: Stream.mediumOnDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
             ]
@@ -87,7 +82,6 @@ final class CommandersActTrackerTests: CommandersActTestCase {
     func testDestroyPlayerDuringPlayback() {
         var player: Player? = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
             ]
@@ -108,7 +102,6 @@ final class CommandersActTrackerTests: CommandersActTestCase {
     func testDestroyPlayerDuringPlaybackAtNonStandardPlaybackSpeed() {
         var player: Player? = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
             ]

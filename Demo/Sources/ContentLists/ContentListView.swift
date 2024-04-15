@@ -45,7 +45,7 @@ private struct LoadedView: View {
             guard case let .media(media) = content else { return nil }
             return Template(
                 title: media.title,
-                description: MediaDescription.subtitle(for: media),
+                subtitle: MediaDescription.subtitle(for: media),
                 type: .urn(media.urn, server: serverSetting.server),
                 isMonoscopic: media.isMonoscopic
             )

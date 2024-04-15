@@ -24,7 +24,7 @@ struct Media: Hashable {
     }
 
     let title: String
-    let description: String?
+    let subtitle: String?
     let imageUrl: URL?
     let image: UIImage?
     let type: `Type`
@@ -33,7 +33,7 @@ struct Media: Hashable {
 
     init(
         title: String,
-        description: String? = nil,
+        subtitle: String? = nil,
         imageUrl: URL? = nil,
         image: UIImage? = nil,
         type: `Type`,
@@ -41,7 +41,7 @@ struct Media: Hashable {
         startTime: CMTime = .zero
     ) {
         self.title = title
-        self.description = description
+        self.subtitle = subtitle
         self.imageUrl = imageUrl
         self.image = image
         self.type = type
@@ -52,7 +52,7 @@ struct Media: Hashable {
     init(from template: Template, startTime: CMTime = .zero) {
         self.init(
             title: template.title,
-            description: template.description,
+            subtitle: template.subtitle,
             imageUrl: template.imageUrl,
             type: template.type,
             isMonoscopic: template.isMonoscopic,
@@ -75,7 +75,7 @@ struct Media: Hashable {
         case let .urn(urn, server: server):
             return .urn(urn, server: server, trackerAdapters: [
                 DemoTracker.adapter { metadata in
-                    DemoTracker.Metadata(title: metadata.title)
+                    DemoTracker.Metadata(title: metadata.mediaComposition.mainChapter.title)
                 }
             ]) { item in
                 item.seek(at(startTime))
@@ -91,17 +91,10 @@ extension Media {
                 .map { image in
                     .simple(
                         url: url,
-                        metadata: Media(title: title, description: description, image: image, type: type),
+                        metadata: Media(title: title, subtitle: subtitle, image: image, type: type),
                         configuration: configuration
                     )
                 },
-            metadataAdapter: StandardMetadata.adapter { metadata in
-                .init(
-                    title: metadata.title,
-                    subtitle: metadata.description,
-                    image: metadata.image
-                )
-            },
             trackerAdapters: [
                 DemoTracker.adapter { metadata in
                     DemoTracker.Metadata(title: metadata.title)
@@ -117,5 +110,11 @@ extension Media {
             .map { UIImage(data: $0) }
             .replaceError(with: nil)
             .eraseToAnyPublisher()
+    }
+}
+
+extension Media: AssetMetadata {
+    var playerMetadata: PlayerMetadata {
+        .init(title: title, subtitle: subtitle, image: image)
     }
 }

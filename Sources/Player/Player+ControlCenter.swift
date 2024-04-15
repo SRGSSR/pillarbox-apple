@@ -119,6 +119,10 @@ extension Player {
     func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
         metadataPublisher
             .map(\.nowPlayingInfo)
+            .removeDuplicates { lhs, rhs in
+                // swiftlint:disable:next legacy_objc_type
+                NSDictionary(dictionary: lhs).isEqual(to: rhs)
+            }
             .eraseToAnyPublisher()
     }
 

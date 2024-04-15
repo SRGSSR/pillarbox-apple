@@ -14,8 +14,8 @@ private struct MediaCell: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(media.title)
-            if let description = media.description {
-                Text(description)
+            if let subtitle = media.subtitle {
+                Text(subtitle)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }

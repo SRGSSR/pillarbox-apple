@@ -4,14 +4,20 @@
 //  License information is available from the LICENSE file.
 //
 
+import PillarboxPlayer
+
 struct AssetMetadataMock: Decodable {
     let title: String
     let subtitle: String?
-    let description: String?
 
-    init(title: String, subtitle: String? = nil, description: String? = nil) {
+    init(title: String, subtitle: String? = nil) {
         self.title = title
         self.subtitle = subtitle
-        self.description = description
+    }
+}
+
+extension AssetMetadataMock: AssetMetadata {
+    var playerMetadata: PlayerMetadata {
+        .init(title: title, subtitle: subtitle)
     }
 }

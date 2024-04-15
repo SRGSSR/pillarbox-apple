@@ -12,7 +12,9 @@ public extension Array where Element: Hashable {
         var itemDictionnary = [Element: Bool]()
         return filter { itemDictionnary.updateValue(true, forKey: $0) == nil }
     }
+}
 
+public extension Array {
     /// Safely returns the item at the specified index.
     /// 
     /// - Parameter index: The index.

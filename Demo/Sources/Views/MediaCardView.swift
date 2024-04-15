@@ -32,7 +32,7 @@ private struct CardTopTrailingView: View {
 // Behavior: h-hug, v-hug
 private struct CardBottomView: View {
     let title: String?
-    let description: String?
+    let subtitle: String?
     let date: String?
 
     var body: some View {
@@ -41,13 +41,13 @@ private struct CardBottomView: View {
                 Text(title)
                     .foregroundStyle(.white)
                     .padding(.horizontal, 30)
-                    .padding(.bottom, description == nil ? 30 : 0)
+                    .padding(.bottom, subtitle == nil ? 30 : 0)
                     .lineLimit(1)
                     .font(.subheadline)
                     .fontWeight(.semibold)
             }
-            if let description {
-                Text(description)
+            if let subtitle {
+                Text(subtitle)
                     .foregroundStyle(Color(uiColor: UIColor.lightGray))
                     .font(.caption2)
                     .padding(.horizontal, 50)
@@ -97,7 +97,7 @@ struct MediaCardView: View {
                 CardTopTrailingView(duration: duration, type: type)
                     .frame(maxWidth: .infinity, alignment: .trailing)
                 Spacer()
-                CardBottomView(title: title, description: subtitle, date: date)
+                CardBottomView(title: title, subtitle: subtitle, date: date)
             }
         }
         .frame(width: size.width, height: size.height, alignment: .center)

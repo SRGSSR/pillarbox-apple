@@ -15,14 +15,15 @@ final class MediaMetadataTests: XCTestCase {
         let metadata = MediaMetadata(
             mediaComposition: mediaComposition,
             resource: mediaComposition.mainChapter.recommendedResource!,
-            image: nil
+            imageCatalog: .init(images: [:], width: .width480)
         )
-        expect(metadata.title).to(equal("On réunit des ex après leur rupture"))
-        expect(metadata.subtitle).to(equal("Yadebat"))
+        expect(metadata.title).to(equal("Yadebat"))
+        expect(metadata.subtitle).to(equal("On réunit des ex après leur rupture"))
         expect(metadata.description).to(equal("""
         Dans ce nouvel épisode de YADEBAT, Mélissa réunit 3 couples qui se sont séparés récemment. \
         Elles les a questionné en face à face pour connaître leurs différents ressentis et réactions.
         """))
+        expect(metadata.episodeInformation).to(equal(.long(season: 2, episode: 12)))
     }
 
     func testRedundantMetadata() {
@@ -30,11 +31,12 @@ final class MediaMetadataTests: XCTestCase {
         let metadata = MediaMetadata(
             mediaComposition: mediaComposition,
             resource: mediaComposition.mainChapter.recommendedResource!,
-            image: nil
+            imageCatalog: .init(images: [:], width: .width480)
         )
-        expect(metadata.title).to(contain("February"))
-        expect(metadata.subtitle).to(equal("19h30"))
+        expect(metadata.title).to(equal("19h30"))
+        expect(metadata.subtitle).to(contain("February"))
         expect(metadata.description).to(beNil())
+        expect(metadata.episodeInformation).to(beNil())
     }
 
     func testLiveMetadata() {
@@ -42,11 +44,12 @@ final class MediaMetadataTests: XCTestCase {
         let metadata = MediaMetadata(
             mediaComposition: mediaComposition,
             resource: mediaComposition.mainChapter.recommendedResource!,
-            image: nil
+            imageCatalog: .init(images: [:], width: .width480)
         )
         expect(metadata.title).to(equal("La 1ère en direct"))
         expect(metadata.subtitle).to(beNil())
         expect(metadata.description).to(beNil())
+        expect(metadata.episodeInformation).to(beNil())
     }
 
     func testAnalytics() {
@@ -54,7 +57,7 @@ final class MediaMetadataTests: XCTestCase {
         let metadata = MediaMetadata(
             mediaComposition: mediaComposition,
             resource: mediaComposition.mainChapter.recommendedResource!,
-            image: nil
+            imageCatalog: .init(images: [:], width: .width480)
         )
         expect(metadata.analyticsData).notTo(beEmpty())
         expect(metadata.analyticsMetadata).notTo(beEmpty())
@@ -65,7 +68,7 @@ final class MediaMetadataTests: XCTestCase {
         let metadata = MediaMetadata(
             mediaComposition: mediaComposition,
             resource: mediaComposition.mainChapter.recommendedResource!,
-            image: nil
+            imageCatalog: .init(images: [:], width: .width480)
         )
         expect(metadata.analyticsData).to(beEmpty())
         expect(metadata.analyticsMetadata).to(beEmpty())

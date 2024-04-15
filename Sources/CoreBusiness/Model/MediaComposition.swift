@@ -10,7 +10,8 @@ public struct MediaComposition: Decodable {
         case _analyticsData = "analyticsData"
         case _analyticsMetadata = "analyticsMetadata"
         case chapterUrn
-        case chapters = "chapterList"
+        case _chapters = "chapterList"
+        case episode
         case show
     }
 
@@ -18,10 +19,15 @@ public struct MediaComposition: Decodable {
     public let chapterUrn: String
 
     /// The available chapters.
-    public let chapters: [Chapter]
+    public var chapters: [Chapter] {
+        _chapters.filter { $0.fullLengthUrn == chapterUrn }
+    }
 
     /// The related show.
     public let show: Show?
+
+    /// The episode information.
+    public let episode: Episode?
 
     /// comScore analytics data.
     public var analyticsData: [String: String] {
@@ -33,15 +39,22 @@ public struct MediaComposition: Decodable {
         _analyticsMetadata ?? [:]
     }
 
+    var allChapters: [Chapter] {
+        [mainChapter] + chapters
+    }
+
     // swiftlint:disable:next discouraged_optional_collection
     private let _analyticsData: [String: String]?
+
     // swiftlint:disable:next discouraged_optional_collection
     private let _analyticsMetadata: [String: String]?
+
+    private let _chapters: [Chapter]
 }
 
 public extension MediaComposition {
     /// The main chapter.
     var mainChapter: Chapter {
-        chapters.first { $0.urn == chapterUrn }!
+        _chapters.first { $0.urn == chapterUrn }!
     }
 }

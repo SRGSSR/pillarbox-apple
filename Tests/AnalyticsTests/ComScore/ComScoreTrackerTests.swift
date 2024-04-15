@@ -11,8 +11,6 @@ import Nimble
 import PillarboxPlayer
 import PillarboxStreams
 
-private struct AssetMetadataMock {}
-
 // Testing comScore end events is a bit tricky:
 //   1. Apparently comScore will never emit events if a play event is followed by an end event within ~5 seconds. For
 //      this reason all tests checking end events must wait ~5 seconds after a play event.
@@ -25,7 +23,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testGlobals() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in .test }
             ]
@@ -45,7 +42,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testInitiallyPlaying() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in .test }
             ]
@@ -63,7 +59,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testInitiallyPaused() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in .test }
             ]
@@ -77,7 +72,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testPauseDuringPlayback() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in .test }
             ]
@@ -99,7 +93,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
         let player = Player(item: .simple(
             // See 1. at the top of this file.
             url: Stream.mediumOnDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in .test }
             ]
@@ -118,7 +111,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testDestroyPlayerDuringPlayback() {
         var player: Player? = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in .test }
             ]
@@ -141,7 +133,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testFailure() {
         let player = Player(item: .simple(
             url: Stream.unavailable.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in .test }
             ]
@@ -155,7 +146,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testDisableTrackingDuringPlayback() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in .test }
             ]
@@ -173,7 +163,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testEnableTrackingDuringPlayback() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in .test }
             ]
@@ -193,7 +182,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testInitialPlaybackRate() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in .test }
             ]
@@ -212,7 +200,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testOnDemandStartAtGivenPosition() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in .test }
             ]
@@ -232,7 +219,6 @@ final class ComScoreTrackerTests: ComScoreTestCase {
     func testSessionRenewal() {
         let player = Player(item: .simple(
             url: Stream.shortOnDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 ComScoreTracker.adapter { _ in .test }
             ]

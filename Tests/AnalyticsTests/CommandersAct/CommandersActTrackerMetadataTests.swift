@@ -10,8 +10,6 @@ import Nimble
 import PillarboxPlayer
 import PillarboxStreams
 
-private struct AssetMetadataMock {}
-
 final class CommandersActTrackerMetadataTests: CommandersActTestCase {
     func testWhenInitialized() {
         var player: Player?
@@ -27,7 +25,6 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         ) {
              player = Player(item: .simple(
                 url: Stream.shortOnDemand.url,
-                metadata: AssetMetadataMock(),
                 trackerAdapters: [
                     CommandersActTracker.adapter { _ in .test }
                 ]
@@ -40,7 +37,6 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
     func testWhenDestroyed() {
         var player: Player? = Player(item: .simple(
             url: Stream.shortOnDemand.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
             ]
@@ -71,7 +67,6 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
         ) {
              player = Player(item: .simple(
                 url: Stream.shortOnDemand.url,
-                metadata: AssetMetadataMock(),
                 trackerAdapters: [
                     CommandersActTracker.adapter { _ in .test }
                 ]
@@ -84,7 +79,6 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
     func testAudioTrack() {
         let player = Player(item: .simple(
             url: Stream.onDemandWithOptions.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
             ]
@@ -106,7 +100,6 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
     func testSubtitlesOff() {
         let player = Player(item: .simple(
             url: Stream.onDemandWithOptions.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
             ]
@@ -129,7 +122,6 @@ final class CommandersActTrackerMetadataTests: CommandersActTestCase {
     func testSubtitlesOn() {
         let player = Player(item: .simple(
             url: Stream.onDemandWithOptions.url,
-            metadata: AssetMetadataMock(),
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
             ]

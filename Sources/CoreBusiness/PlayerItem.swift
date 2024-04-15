@@ -15,7 +15,6 @@ public extension PlayerItem {
     /// - Parameters:
     ///   - urn: The URN to play.
     ///   - server: The server which the URN is played from.
-    ///   - metadataAdapter: A `MetadataAdapter` converting item metadata into player metadata.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: A closure to configure player items created from the receiver.
     ///
@@ -23,7 +22,6 @@ public extension PlayerItem {
     static func urn(
         _ urn: String,
         server: Server = .production,
-        metadataAdapter: MetadataAdapter<MediaMetadata> = .standard,
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
         configuration: @escaping (AVPlayerItem) -> Void = { _ in }
     ) -> Self {
@@ -34,18 +32,15 @@ public extension PlayerItem {
                 guard let resource = mainChapter.recommendedResource else {
                     throw DataError.noResourceAvailable
                 }
-                return dataProvider.imagePublisher(for: mainChapter.imageUrl, width: .width480)
-                    .map { Optional($0) }
-                    .replaceError(with: nil)
-                    .prepend(nil)
-                    .map { image in
-                        let metadata = MediaMetadata(mediaComposition: mediaComposition, resource: resource, image: image)
+                return dataProvider.imageCatalogPublisher(for: mediaComposition, width: .width480)
+                    .map { imageCatalog in
+                        let metadata = MediaMetadata(mediaComposition: mediaComposition, resource: resource, imageCatalog: imageCatalog)
                         return Self.asset(for: metadata, configuration: configuration)
                     }
             }
             .switchToLatest()
             .eraseToAnyPublisher()
-        return .init(publisher: publisher, metadataAdapter: metadataAdapter, trackerAdapters: [
+        return .init(publisher: publisher, trackerAdapters: [
             ComScoreTracker.adapter { $0.analyticsData },
             CommandersActTracker.adapter { $0.analyticsMetadata }
         ] + trackerAdapters)
