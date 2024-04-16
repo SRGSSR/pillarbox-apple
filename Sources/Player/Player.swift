@@ -180,7 +180,13 @@ public final class Player: ObservableObject, Equatable {
     ///   - configuration: The configuration to apply to the player.
     public init(items: [PlayerItem] = [], configuration: PlayerConfiguration = .init()) {
         storedItems = Deque(items)
+
+        // TODO: Check the behavior in the future tvOS versions, see https://github.com/SRGSSR/pillarbox-apple/issues/826
+#if os(tvOS)
+        nowPlayingSession = MPNowPlayingSession(players: [AVPlayer()])
+#else
         nowPlayingSession = MPNowPlayingSession(players: [queuePlayer])
+#endif
         self.configuration = configuration
 
         configurePlayer()
