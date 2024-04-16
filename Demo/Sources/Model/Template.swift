@@ -245,8 +245,8 @@ enum URLTemplate {
 enum URNTemplate {
     static let onDemandHorizontalVideo = Template(
         title: "Horizontal video",
-        imageUrl: "https://www.rts.ch/2015/05/28/20/19/6820735.image/16x9",
-        type: .urn("urn:rts:video:6820736")
+        imageUrl: "https://www.rts.ch/2024/04/10/19/23/14827621.image/16x9",
+        type: .urn("urn:rts:video:14827306")
     )
     static let onDemandSquareVideo = Template(
         title: "Square video",
@@ -264,10 +264,10 @@ enum URNTemplate {
         type: .urn("urn:rts:video:14080915")
     )
     static let liveVideo = Template(
-        title: "RSI 1",
+        title: "SRF 1",
         subtitle: "Live video",
-        imageUrl: "https://ws.srf.ch/asset/image/audio/6b100f6e-440c-4bfb-8372-89a0688c533a/EPISODE_IMAGE",
-        type: .urn("urn:rsi:video:livestream_La1")
+        imageUrl: "https://ws.srf.ch/asset/image/audio/d91bbe14-55dd-458c-bc88-963462972687/EPISODE_IMAGE",
+        type: .urn("urn:srf:video:c4927fcf-e1a0-0001-7edd-1ef01d441651")
     )
     static let dvrVideo = Template(
         title: "RTS 1",
