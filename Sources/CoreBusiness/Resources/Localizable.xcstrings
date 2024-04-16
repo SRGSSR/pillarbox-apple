@@ -16,12 +16,6 @@
             "value" : "No playable resources could be found."
           }
         },
-        "en-US" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No playable resources could be found."
-          }
-        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -52,12 +46,6 @@
           }
         },
         "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The data is invalid."
-          }
-        },
-        "en-US" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "The data is invalid."
@@ -98,12 +86,6 @@
             "value" : "This commercial content is not available."
           }
         },
-        "en-US" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This commercial content is not available."
-          }
-        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -134,12 +116,6 @@
           }
         },
         "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This content is not available anymore."
-          }
-        },
-        "en-US" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "This content is not available anymore."
@@ -180,12 +156,6 @@
             "value" : "This content is not available due to legal restrictions."
           }
         },
-        "en-US" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This content is not available due to legal restrictions."
-          }
-        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -216,12 +186,6 @@
           }
         },
         "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This content is not available outside Switzerland."
-          }
-        },
-        "en-US" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "This content is not available outside Switzerland."
@@ -262,12 +226,6 @@
             "value" : "This content is not available yet."
           }
         },
-        "en-US" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This content is not available yet."
-          }
-        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -298,12 +256,6 @@
           }
         },
         "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This content is not available."
-          }
-        },
-        "en-US" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "This content is not available."
@@ -344,12 +296,6 @@
             "value" : "To protect children this content is only available between 8PM and 6AM."
           }
         },
-        "en-US" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "To protect children this content is only available between 8PM and 6AM."
-          }
-        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -385,12 +331,6 @@
             "value" : "To protect children this content is only available between 10PM and 5AM."
           }
         },
-        "en-US" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "To protect children this content is only available between 10PM and 5AM."
-          }
-        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -421,12 +361,6 @@
           }
         },
         "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unknown error."
-          }
-        },
-        "en-US" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unknown error."
