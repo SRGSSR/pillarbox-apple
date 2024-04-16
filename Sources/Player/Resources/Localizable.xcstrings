@@ -16,12 +16,6 @@
             "value" : "%g×"
           }
         },
-        "en-US" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%g×"
-          }
-        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -52,12 +46,6 @@
           }
         },
         "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Auto (Recommended)"
-          }
-        },
-        "en-US" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Auto (Recommended)"
@@ -98,12 +86,6 @@
             "value" : "E%lld"
           }
         },
-        "en-US" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "E%lld"
-          }
-        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -134,12 +116,6 @@
           }
         },
         "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Languages"
-          }
-        },
-        "en-US" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Languages"
@@ -180,12 +156,6 @@
             "value" : "Off"
           }
         },
-        "en-US" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Off"
-          }
-        },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
@@ -216,12 +186,6 @@
           }
         },
         "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Playback Speed"
-          }
-        },
-        "en-US" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Playback Speed"
@@ -258,12 +222,6 @@
         },
         "en" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "S%1$lld, E%2$lld"
-          }
-        },
-        "en-US" : {
-          "stringUnit" : {
             "state" : "translated",
             "value" : "S%1$lld, E%2$lld"
           }
@@ -298,12 +256,6 @@
           }
         },
         "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Subtitles"
-          }
-        },
-        "en-US" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Subtitles"
