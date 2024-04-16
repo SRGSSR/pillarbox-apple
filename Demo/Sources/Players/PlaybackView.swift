@@ -31,7 +31,7 @@ private struct MainView: View {
     var body: some View {
         ZStack {
             main()
-            timeBar()
+            bottomBar()
             topBar()
         }
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
@@ -54,6 +54,14 @@ private struct MainView: View {
 
     private var isUserInterfaceHidden: Bool {
         visibilityTracker.isUserInterfaceHidden && !areControlsAlwaysVisible && !player.canReplay()
+    }
+
+    private var title: String? {
+        player.metadata.title
+    }
+
+    private var subtitle: String? {
+        player.metadata.subtitle
     }
 
     private func magnificationGesture() -> some Gesture {
@@ -83,10 +91,34 @@ private struct MainView: View {
     }
 
     @ViewBuilder
-    private func timeBar() -> some View {
-        TimeBar(player: player, visibilityTracker: visibilityTracker, layout: $layout, isInteracting: $isInteracting)
-            .opacity(isUserInterfaceHidden ? 0 : 1)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+    private func metadata() -> some View {
+        VStack(alignment: .leading) {
+            if let subtitle {
+                Text(subtitle)
+                    .font(.footnote)
+                    .fontWeight(.semibold)
+            }
+            if let title {
+                Text(title)
+                    .font(.title2)
+                    .fontWeight(.bold)
+            }
+        }
+        .padding(.horizontal)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .foregroundStyle(.white)
+    }
+
+    @ViewBuilder
+    private func bottomBar() -> some View {
+        VStack(spacing: 0) {
+            metadata()
+                .opacity(isUserInterfaceHidden || isInteracting ? 0 : 1)
+            TimeBar(player: player, visibilityTracker: visibilityTracker, layout: $layout, isInteracting: $isInteracting)
+                .opacity(isUserInterfaceHidden ? 0 : 1)
+        }
+        .animation(.linear(duration: 0.2), values: isUserInterfaceHidden, isInteracting)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 
     @ViewBuilder
