@@ -28,6 +28,10 @@ private struct MainView: View {
         player.isExternalPlaybackActive || player.mediaType == .audio
     }
 
+    private var prioritizesVideoDevices: Bool {
+        player.mediaType == .video
+    }
+
     var body: some View {
         ZStack {
             main()
@@ -130,8 +134,11 @@ private struct MainView: View {
     @ViewBuilder
     private func topBar() -> some View {
         HStack {
-            CloseButton()
-            PiPButton()
+            HStack(spacing: 20) {
+                CloseButton()
+                PiPButton()
+                routePickerView()
+            }
             Spacer()
             LoadingIndicator(player: player)
             VolumeButton(player: player)
@@ -142,6 +149,14 @@ private struct MainView: View {
     }
 
     @ViewBuilder
+    private func routePickerView() -> some View {
+        RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices)
+            .tint(.white)
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 20)
+    }
+
+    @ViewBuilder
     private func settingsMenu() -> some View {
         Menu {
             player.standardSettingMenu()
@@ -149,7 +164,6 @@ private struct MainView: View {
             Image(systemName: "ellipsis.circle")
                 .font(.system(size: 20))
                 .tint(.white)
-                .aspectRatio(contentMode: .fit)
         }
         .menuOrder(.fixed)
     }
