@@ -20,7 +20,7 @@ public struct PictureInPictureButton<Content>: View where Content: View {
     @State private var isActive = false
 
     public var body: some View {
-        ZStack {
+        Group {
             if isPossible && PictureInPicture.shared.persistable != nil {
                 Button(action: PictureInPicture.shared.custom.toggle) {
                     content(isActive)
