@@ -114,7 +114,10 @@ private struct MainView: View {
     @ViewBuilder
     private func bottomBar() -> some View {
         VStack {
-            metadata()
+            HStack(alignment: .bottom) {
+                metadata()
+                settingsMenu()
+            }
             TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting)
         }
         .preventsTouchPropagation()
@@ -136,6 +139,18 @@ private struct MainView: View {
         .opacity(isUserInterfaceHidden ? 0 : 1)
         .preventsTouchPropagation()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+    }
+
+    @ViewBuilder
+    private func settingsMenu() -> some View {
+        Menu {
+            player.standardSettingMenu()
+        } label: {
+            Image(systemName: "ellipsis.circle")
+                .tint(.white)
+                .aspectRatio(contentMode: .fit)
+        }
+        .menuOrder(.fixed)
     }
 
     @ViewBuilder
