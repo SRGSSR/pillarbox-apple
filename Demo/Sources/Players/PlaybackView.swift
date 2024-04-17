@@ -144,6 +144,7 @@ private struct MainView: View {
             VolumeButton(player: player)
         }
         .opacity(isUserInterfaceHidden ? 0 : 1)
+        .padding(.horizontal)
         .preventsTouchPropagation()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
     }
@@ -319,7 +320,7 @@ private struct VolumeButton: View {
         Button(action: toggleMuted) {
             Image(systemName: imageName)
                 .tint(.white)
-                .frame(width: 45, height: 45)
+                .font(.system(size: 20))
         }
     }
 
