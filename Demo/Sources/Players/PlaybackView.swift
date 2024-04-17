@@ -104,20 +104,21 @@ private struct MainView: View {
                     .fontWeight(.bold)
             }
         }
-        .padding(.horizontal)
         .frame(maxWidth: .infinity, alignment: .leading)
         .foregroundStyle(.white)
+        .opacity(isInteracting ? 0 : 1)
     }
 
     @ViewBuilder
     private func bottomBar() -> some View {
-        VStack(spacing: 0) {
+        VStack {
             metadata()
-                .opacity(isUserInterfaceHidden || isInteracting ? 0 : 1)
-            TimeBar(player: player, visibilityTracker: visibilityTracker, layout: $layout, isInteracting: $isInteracting)
-                .opacity(isUserInterfaceHidden ? 0 : 1)
+            TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting)
         }
+        .preventsTouchPropagation()
+        .opacity(isUserInterfaceHidden ? 0 : 1)
         .animation(.linear(duration: 0.2), values: isUserInterfaceHidden, isInteracting)
+        .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 
@@ -354,7 +355,6 @@ private struct LiveLabel: View {
 private struct TimeBar: View {
     @ObservedObject var player: Player
     @ObservedObject var visibilityTracker: VisibilityTracker
-    @Binding var layout: PlaybackView.Layout
     @Binding var isInteracting: Bool
 
     @StateObject private var progressTracker = ProgressTracker(
@@ -362,49 +362,10 @@ private struct TimeBar: View {
         seekBehavior: UserDefaults.standard.seekBehavior
     )
 
-    private var prioritizesVideoDevices: Bool {
-        player.mediaType == .video
-    }
-
     var body: some View {
-        HStack(spacing: 8) {
-            routePickerView()
-            HStack(spacing: 20) {
-                TimeSlider(player: player, progressTracker: progressTracker, visibilityTracker: visibilityTracker)
-                LiveLabel(player: player, progressTracker: progressTracker)
-
-                Group {
-                    settingsMenu()
-                    FullScreenButton(layout: $layout)
-                }
-                .padding(.vertical, 12)
-            }
-        }
-        .frame(height: 44)
-        .preventsTouchPropagation()
-        .padding(.trailing, 12)
-        .onChange(of: progressTracker.isInteracting) { isInteracting = $0 }
-        .bind(progressTracker, to: player)
-    }
-
-    @ViewBuilder
-    private func routePickerView() -> some View {
-        RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices)
-            .tint(.white)
-            .aspectRatio(contentMode: .fit)
-    }
-
-    @ViewBuilder
-    private func settingsMenu() -> some View {
-        Menu {
-            player.standardSettingMenu()
-        } label: {
-            Image(systemName: "ellipsis.circle")
-                .resizable()
-                .tint(.white)
-                .aspectRatio(contentMode: .fit)
-        }
-        .menuOrder(.fixed)
+        TimeSlider(player: player, progressTracker: progressTracker, visibilityTracker: visibilityTracker)
+            .onChange(of: progressTracker.isInteracting) { isInteracting = $0 }
+            .bind(progressTracker, to: player)
     }
 }
 
