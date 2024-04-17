@@ -97,11 +97,13 @@ private struct MainView: View {
                 Text(subtitle)
                     .font(.footnote)
                     .fontWeight(.semibold)
+                    .lineLimit(2)
             }
             if let title {
                 Text(title)
                     .font(.title2)
                     .fontWeight(.bold)
+                    .lineLimit(1)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
