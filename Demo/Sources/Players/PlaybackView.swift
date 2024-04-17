@@ -147,6 +147,7 @@ private struct MainView: View {
             player.standardSettingMenu()
         } label: {
             Image(systemName: "ellipsis.circle")
+                .font(.system(size: 20))
                 .tint(.white)
                 .aspectRatio(contentMode: .fit)
         }
