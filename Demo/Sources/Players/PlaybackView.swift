@@ -98,26 +98,28 @@ private struct MainView: View {
 
     @ViewBuilder
     private func metadata() -> some View {
-        VStack(alignment: .leading) {
-            HStack {
-                if let subtitle {
-                    LiveLabel(player: player, progressTracker: progressTracker)
-                    Text(subtitle)
-                        .font(.footnote)
-                        .fontWeight(.semibold)
-                        .lineLimit(2)
+        if layoutInfo.isFullScreen {
+            VStack(alignment: .leading) {
+                HStack {
+                    if let subtitle {
+                        LiveLabel(player: player, progressTracker: progressTracker)
+                        Text(subtitle)
+                            .font(.footnote)
+                            .fontWeight(.semibold)
+                            .lineLimit(2)
+                    }
+                }
+                if let title {
+                    Text(title)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .lineLimit(1)
                 }
             }
-            if let title {
-                Text(title)
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .lineLimit(1)
-            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .foregroundStyle(.white)
+            .opacity(isInteracting ? 0 : 1)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .foregroundStyle(.white)
-        .opacity(isInteracting ? 0 : 1)
     }
 
     @ViewBuilder
@@ -125,12 +127,19 @@ private struct MainView: View {
         VStack {
             HStack(alignment: .bottom) {
                 metadata()
-                HStack(spacing: 20) {
-                    LiveButton(player: player, progressTracker: progressTracker)
+                if layoutInfo.isFullScreen {
+                    HStack(spacing: 20) {
+                        LiveButton(player: player, progressTracker: progressTracker)
+                        settingsMenu()
+                    }
+                }
+            }
+            HStack(spacing: 20) {
+                TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting)
+                if !layoutInfo.isFullScreen {
                     settingsMenu()
                 }
             }
-            TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting)
         }
         .preventsTouchPropagation()
         .opacity(isUserInterfaceHidden ? 0 : 1)
