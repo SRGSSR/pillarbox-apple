@@ -64,7 +64,7 @@ struct ChaptersView: View {
             HStack(spacing: 15) {
                 ForEach(chapters, id: \.timeRange) { chapter in
                     Button(action: {
-                        player.seek(to: chapter.timeRange.start)
+                        player.seek(at(chapter.timeRange.start))
                     }) {
                         ChapterView(chapter: chapter)
                             .saturation(currentChapter == chapter ? 1 : 0)
