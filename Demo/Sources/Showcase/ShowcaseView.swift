@@ -70,6 +70,13 @@ struct ShowcaseView: View {
                 destination: .stories
             )
             .sourceCode(of: StoriesView.self)
+
+            cell(
+                title: "Chapters",
+                subtitle: "A visual way to handle chapters",
+                destination: .chapters(media: Media(from: URNTemplate.onDemandHorizontalVideo))
+            )
+            .sourceCode(of: ChaptersView.self)
         }
     }
 
@@ -235,13 +242,6 @@ struct ShowcaseView: View {
                 destination: .player(media: Media(from: URLTemplate.appleBasic_16_9_TS_HLS, startTime: .init(value: 10 * 60, timescale: 1)))
             )
             .sourceCode(of: PlayerView.self)
-
-            cell(
-                title: "Video URN - 12h45",
-                subtitle: "Content with chapters",
-                destination: .chapters(media: Media(from: URNTemplate.onDemandHorizontalVideo))
-            )
-            .sourceCode(of: ChaptersView.self)
         }
     }
 
