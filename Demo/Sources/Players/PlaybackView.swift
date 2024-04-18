@@ -101,8 +101,8 @@ private struct MainView: View {
         if layoutInfo.isFullScreen {
             VStack(alignment: .leading) {
                 HStack {
+                    LiveLabel(player: player, progressTracker: progressTracker)
                     if let subtitle {
-                        LiveLabel(player: player, progressTracker: progressTracker)
                         Text(subtitle)
                             .font(.footnote)
                             .fontWeight(.semibold)
