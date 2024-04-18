@@ -370,15 +370,12 @@ private struct LiveLabel: View {
     var body: some View {
         ZStack {
             if streamType == .dvr || streamType == .live {
-                Button(action: skipToLive) {
-                    Text("LIVE")
-                        .foregroundColor(.white)
-                        .padding(.vertical, 4)
-                        .padding(.horizontal, 6)
-                        .background(liveButtonColor)
-                        .cornerRadius(4)
-                }
-                .disabled(!canSkipToLive)
+                Text("LIVE")
+                    .font(.footnote)
+                    .padding(.horizontal, 7)
+                    .background(liveButtonColor)
+                    .foregroundColor(.white)
+                    .clipShape(.capsule)
             }
         }
         .onReceive(player: player, assign: \.streamType, to: $streamType)
