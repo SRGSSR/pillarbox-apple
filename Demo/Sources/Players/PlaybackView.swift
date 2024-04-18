@@ -168,10 +168,9 @@ private struct MainView: View {
             }
         }
         .opacity(isUserInterfaceHidden ? 0 : 1)
-        .padding(.horizontal)
-        .padding(.vertical, layoutInfo.isFullScreen ? nil : 0)
+        .topBarStyle()
         .preventsTouchPropagation()
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 
     @ViewBuilder
@@ -595,6 +594,7 @@ private struct ErrorView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay(alignment: .topLeading) {
             CloseButton()
+                .topBarStyle()
         }
     }
 }
@@ -628,6 +628,7 @@ struct PlaybackView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .overlay(alignment: .topLeading) {
                         CloseButton()
+                            .topBarStyle()
                     }
             }
         }
@@ -676,6 +677,13 @@ extension PlaybackView {
         var view = self
         view.supportsPictureInPicture = supportsPictureInPicture
         return view
+    }
+}
+
+private extension View {
+    func topBarStyle() -> some View {
+        padding(.horizontal)
+            .frame(minHeight: 60)
     }
 }
 
