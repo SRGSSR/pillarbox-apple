@@ -168,7 +168,8 @@ private struct MainView: View {
             }
         }
         .opacity(isUserInterfaceHidden ? 0 : 1)
-        .padding()
+        .padding(.horizontal)
+        .padding(.vertical, layoutInfo.isFullScreen ? nil : 0)
         .preventsTouchPropagation()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
     }
