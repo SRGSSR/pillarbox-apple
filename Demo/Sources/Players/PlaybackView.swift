@@ -123,7 +123,7 @@ private struct MainView: View {
     @ViewBuilder
     private func bottomBar() -> some View {
         VStack {
-            if layoutInfo.isFullScreen {
+            if isFullScreen {
                 HStack(alignment: .bottom) {
                     metadata()
                     bottomButtons()
@@ -131,7 +131,7 @@ private struct MainView: View {
             }
             HStack(spacing: 20) {
                 TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting)
-                if !layoutInfo.isFullScreen {
+                if !isFullScreen {
                     bottomButtons()
                 }
             }
@@ -140,7 +140,7 @@ private struct MainView: View {
         .opacity(isUserInterfaceHidden ? 0 : 1)
         .animation(.linear(duration: 0.2), values: isUserInterfaceHidden, isInteracting)
         .padding(.horizontal)
-        .padding(.vertical, layoutInfo.isFullScreen ? 60 : nil)
+        .padding(.vertical, isFullScreen ? 60 : nil)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 
