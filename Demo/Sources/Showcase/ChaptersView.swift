@@ -37,7 +37,8 @@ struct ChaptersView: View {
 
     private var currentChapter: ChapterMetadata? {
         chapters.first { chapter in
-            chapter.timeRange.containsTime(player.time)
+            guard let time = progressTracker.time else { return false }
+            return chapter.timeRange.containsTime(time)
         }
     }
 
