@@ -139,7 +139,8 @@ private struct MainView: View {
         .preventsTouchPropagation()
         .opacity(isUserInterfaceHidden ? 0 : 1)
         .animation(.linear(duration: 0.2), values: isUserInterfaceHidden, isInteracting)
-        .padding()
+        .padding(.horizontal)
+        .padding(.vertical, layoutInfo.isFullScreen ? 60 : nil)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 
@@ -167,7 +168,7 @@ private struct MainView: View {
             }
         }
         .opacity(isUserInterfaceHidden ? 0 : 1)
-        .padding(.horizontal)
+        .padding()
         .preventsTouchPropagation()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
     }
