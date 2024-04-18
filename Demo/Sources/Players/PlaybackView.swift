@@ -125,7 +125,10 @@ private struct MainView: View {
         VStack {
             HStack(alignment: .bottom) {
                 metadata()
-                settingsMenu()
+                HStack(spacing: 20) {
+                    LiveButton(player: player, progressTracker: progressTracker)
+                    settingsMenu()
+                }
             }
             TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting)
         }
@@ -368,7 +371,7 @@ private struct LiveLabel: View {
     }
 
     var body: some View {
-        ZStack {
+        Group {
             if streamType == .dvr || streamType == .live {
                 Text("LIVE")
                     .font(.footnote)
@@ -376,6 +379,30 @@ private struct LiveLabel: View {
                     .background(liveButtonColor)
                     .foregroundColor(.white)
                     .clipShape(.capsule)
+            }
+        }
+        .onReceive(player: player, assign: \.streamType, to: $streamType)
+    }
+}
+// Behavior: h-hug, v-hug
+private struct LiveButton: View {
+    @ObservedObject var player: Player
+    @ObservedObject var progressTracker: ProgressTracker
+    @State private var streamType: StreamType = .unknown
+
+    private var canSkipToLive: Bool {
+        streamType == .dvr && player.canSkipToDefault()
+    }
+
+    var body: some View {
+        Group {
+            if canSkipToLive {
+                Button(action: skipToLive) {
+                    Image(systemName: "forward.end.fill")
+                        .foregroundStyle(.white)
+                        .fontWeight(.ultraLight)
+                        .font(.system(size: 20))
+                }
             }
         }
         .onReceive(player: player, assign: \.streamType, to: $streamType)
