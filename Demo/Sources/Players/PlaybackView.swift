@@ -161,8 +161,10 @@ private struct MainView: View {
                 routePickerView()
             }
             Spacer()
-            LoadingIndicator(player: player)
-            VolumeButton(player: player)
+            HStack(spacing: 20) {
+                LoadingIndicator(player: player)
+                VolumeButton(player: player)
+            }
         }
         .opacity(isUserInterfaceHidden ? 0 : 1)
         .padding(.horizontal)
