@@ -18,10 +18,9 @@ private struct MainView: View {
     let isMonoscopic: Bool
     let supportsPictureInPicture: Bool
 
-    private let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
-
     @StateObject private var visibilityTracker = VisibilityTracker()
 
+    @State private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
     @State private var layoutInfo: LayoutInfo = .none
     @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
     @State private var isInteracting = false
@@ -43,6 +42,7 @@ private struct MainView: View {
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
         .animation(.defaultLinear, value: isUserInterfaceHidden)
         .bind(visibilityTracker, to: player)
+        .bind(progressTracker, to: player)
         ._debugBodyCounter()
     }
 
