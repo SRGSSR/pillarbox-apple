@@ -20,6 +20,7 @@ private struct MainView: View {
 
     @StateObject private var visibilityTracker = VisibilityTracker()
 
+    @State private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
     @State private var layoutInfo: LayoutInfo = .none
     @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
     @State private var isInteracting = false
@@ -28,15 +29,20 @@ private struct MainView: View {
         player.isExternalPlaybackActive || player.mediaType == .audio
     }
 
+    private var prioritizesVideoDevices: Bool {
+        player.mediaType == .video
+    }
+
     var body: some View {
         ZStack {
             main()
-            timeBar()
+            bottomBar()
             topBar()
         }
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
         .animation(.defaultLinear, value: isUserInterfaceHidden)
         .bind(visibilityTracker, to: player)
+        .bind(progressTracker, to: player)
         ._debugBodyCounter()
     }
 
@@ -54,6 +60,14 @@ private struct MainView: View {
 
     private var isUserInterfaceHidden: Bool {
         visibilityTracker.isUserInterfaceHidden && !areControlsAlwaysVisible && !player.canReplay()
+    }
+
+    private var title: String? {
+        player.metadata.title
+    }
+
+    private var subtitle: String? {
+        player.metadata.subtitle
     }
 
     private func magnificationGesture() -> some Gesture {
@@ -83,24 +97,100 @@ private struct MainView: View {
     }
 
     @ViewBuilder
-    private func timeBar() -> some View {
-        TimeBar(player: player, visibilityTracker: visibilityTracker, layout: $layout, isInteracting: $isInteracting)
-            .opacity(isUserInterfaceHidden ? 0 : 1)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+    private func metadata() -> some View {
+        VStack(alignment: .leading) {
+            HStack {
+                LiveLabel(player: player, progressTracker: progressTracker)
+                if let subtitle {
+                    Text(subtitle)
+                        .font(.footnote)
+                        .fontWeight(.semibold)
+                        .lineLimit(2)
+                }
+            }
+            if let title {
+                Text(title)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .lineLimit(1)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .foregroundStyle(.white)
+        .opacity(isInteracting ? 0 : 1)
+    }
+
+    @ViewBuilder
+    private func bottomBar() -> some View {
+        VStack {
+            if layoutInfo.isFullScreen {
+                HStack(alignment: .bottom) {
+                    metadata()
+                    bottomButtons()
+                }
+            }
+            HStack(spacing: 20) {
+                TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting)
+                if !layoutInfo.isFullScreen {
+                    bottomButtons()
+                }
+            }
+        }
+        .preventsTouchPropagation()
+        .opacity(isUserInterfaceHidden ? 0 : 1)
+        .animation(.linear(duration: 0.2), values: isUserInterfaceHidden, isInteracting)
+        .padding(.horizontal)
+        .padding(.vertical, layoutInfo.isFullScreen ? 60 : nil)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+    }
+
+    @ViewBuilder
+    private func bottomButtons() -> some View {
+        HStack(spacing: 20) {
+            LiveButton(player: player, progressTracker: progressTracker)
+            settingsMenu()
+            FullScreenButton(layout: $layout)
+        }
     }
 
     @ViewBuilder
     private func topBar() -> some View {
         HStack {
-            CloseButton()
-            PiPButton()
+            HStack(spacing: 20) {
+                CloseButton()
+                PiPButton()
+                routePickerView()
+            }
             Spacer()
-            LoadingIndicator(player: player)
-            VolumeButton(player: player)
+            HStack(spacing: 20) {
+                LoadingIndicator(player: player)
+                VolumeButton(player: player)
+            }
         }
         .opacity(isUserInterfaceHidden ? 0 : 1)
+        .padding()
         .preventsTouchPropagation()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+    }
+
+    @ViewBuilder
+    private func routePickerView() -> some View {
+        RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices)
+            .tint(.white)
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 20)
+    }
+
+    @ViewBuilder
+    private func settingsMenu() -> some View {
+        Menu {
+            player.standardSettingMenu()
+        } label: {
+            Image(systemName: "ellipsis.circle")
+                .font(.system(size: 20))
+                .tint(.white)
+        }
+        .menuOrder(.fixed)
     }
 
     @ViewBuilder
@@ -130,7 +220,7 @@ private struct MainView: View {
             Color(white: 0, opacity: 0.3)
                 .opacity(isUserInterfaceHidden || (isInteracting && !areControlsAlwaysVisible) ? 0 : 1)
                 .ignoresSafeArea()
-            ControlsView(player: player)
+            ControlsView(player: player, progressTracker: progressTracker)
                 .opacity(isUserInterfaceHidden || isInteracting ? 0 : 1)
         }
     }
@@ -150,7 +240,7 @@ private struct MainView: View {
 
 private struct ControlsView: View {
     @ObservedObject var player: Player
-    @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
+    @ObservedObject var progressTracker: ProgressTracker
 
     var body: some View {
         HStack(spacing: 30) {
@@ -216,9 +306,8 @@ private struct FullScreenButton: View {
         if let imageName {
             Button(action: toggleFullScreen) {
                 Image(systemName: imageName)
-                    .resizable()
                     .tint(.white)
-                    .aspectRatio(contentMode: .fit)
+                    .font(.system(size: 20))
             }
         }
     }
@@ -254,7 +343,7 @@ private struct VolumeButton: View {
         Button(action: toggleMuted) {
             Image(systemName: imageName)
                 .tint(.white)
-                .frame(width: 45, height: 45)
+                .font(.system(size: 20))
         }
     }
 
@@ -297,17 +386,38 @@ private struct LiveLabel: View {
     }
 
     var body: some View {
-        ZStack {
+        Group {
             if streamType == .dvr || streamType == .live {
+                Text("LIVE")
+                    .font(.footnote)
+                    .padding(.horizontal, 7)
+                    .background(liveButtonColor)
+                    .foregroundColor(.white)
+                    .clipShape(.capsule)
+            }
+        }
+        .onReceive(player: player, assign: \.streamType, to: $streamType)
+    }
+}
+// Behavior: h-hug, v-hug
+private struct LiveButton: View {
+    @ObservedObject var player: Player
+    @ObservedObject var progressTracker: ProgressTracker
+    @State private var streamType: StreamType = .unknown
+
+    private var canSkipToLive: Bool {
+        streamType == .dvr && player.canSkipToDefault()
+    }
+
+    var body: some View {
+        Group {
+            if canSkipToLive {
                 Button(action: skipToLive) {
-                    Text("LIVE")
-                        .foregroundColor(.white)
-                        .padding(.vertical, 4)
-                        .padding(.horizontal, 6)
-                        .background(liveButtonColor)
-                        .cornerRadius(4)
+                    Image(systemName: "forward.end.fill")
+                        .foregroundStyle(.white)
+                        .fontWeight(.ultraLight)
+                        .font(.system(size: 20))
                 }
-                .disabled(!canSkipToLive)
             }
         }
         .onReceive(player: player, assign: \.streamType, to: $streamType)
@@ -322,7 +432,6 @@ private struct LiveLabel: View {
 private struct TimeBar: View {
     @ObservedObject var player: Player
     @ObservedObject var visibilityTracker: VisibilityTracker
-    @Binding var layout: PlaybackView.Layout
     @Binding var isInteracting: Bool
 
     @StateObject private var progressTracker = ProgressTracker(
@@ -330,49 +439,10 @@ private struct TimeBar: View {
         seekBehavior: UserDefaults.standard.seekBehavior
     )
 
-    private var prioritizesVideoDevices: Bool {
-        player.mediaType == .video
-    }
-
     var body: some View {
-        HStack(spacing: 8) {
-            routePickerView()
-            HStack(spacing: 20) {
-                TimeSlider(player: player, progressTracker: progressTracker, visibilityTracker: visibilityTracker)
-                LiveLabel(player: player, progressTracker: progressTracker)
-
-                Group {
-                    settingsMenu()
-                    FullScreenButton(layout: $layout)
-                }
-                .padding(.vertical, 12)
-            }
-        }
-        .frame(height: 44)
-        .preventsTouchPropagation()
-        .padding(.trailing, 12)
-        .onChange(of: progressTracker.isInteracting) { isInteracting = $0 }
-        .bind(progressTracker, to: player)
-    }
-
-    @ViewBuilder
-    private func routePickerView() -> some View {
-        RoutePickerView(prioritizesVideoDevices: prioritizesVideoDevices)
-            .tint(.white)
-            .aspectRatio(contentMode: .fit)
-    }
-
-    @ViewBuilder
-    private func settingsMenu() -> some View {
-        Menu {
-            player.standardSettingMenu()
-        } label: {
-            Image(systemName: "ellipsis.circle")
-                .resizable()
-                .tint(.white)
-                .aspectRatio(contentMode: .fit)
-        }
-        .menuOrder(.fixed)
+        TimeSlider(player: player, progressTracker: progressTracker, visibilityTracker: visibilityTracker)
+            .onChange(of: progressTracker.isInteracting) { isInteracting = $0 }
+            .bind(progressTracker, to: player)
     }
 }
 

@@ -13,7 +13,7 @@ struct CloseButton: View {
         Button(action: dismiss.callAsFunction) {
             Image(systemName: "chevron.down")
                 .tint(.white)
-                .frame(width: 45, height: 45)
+                .font(.system(size: 20))
         }
         .shadow(color: .black, radius: 1)
     }
