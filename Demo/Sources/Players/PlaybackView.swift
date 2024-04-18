@@ -128,16 +128,13 @@ private struct MainView: View {
             HStack(alignment: .bottom) {
                 metadata()
                 if layoutInfo.isFullScreen {
-                    HStack(spacing: 20) {
-                        LiveButton(player: player, progressTracker: progressTracker)
-                        settingsMenu()
-                    }
+                    bottomButtons()
                 }
             }
             HStack(spacing: 20) {
                 TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting)
                 if !layoutInfo.isFullScreen {
-                    settingsMenu()
+                    bottomButtons()
                 }
             }
         }
@@ -146,6 +143,15 @@ private struct MainView: View {
         .animation(.linear(duration: 0.2), values: isUserInterfaceHidden, isInteracting)
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+    }
+
+    @ViewBuilder
+    private func bottomButtons() -> some View {
+        HStack(spacing: 20) {
+            LiveButton(player: player, progressTracker: progressTracker)
+            settingsMenu()
+            FullScreenButton(layout: $layout)
+        }
     }
 
     @ViewBuilder
@@ -299,9 +305,8 @@ private struct FullScreenButton: View {
         if let imageName {
             Button(action: toggleFullScreen) {
                 Image(systemName: imageName)
-                    .resizable()
                     .tint(.white)
-                    .aspectRatio(contentMode: .fit)
+                    .font(.system(size: 20))
             }
         }
     }
