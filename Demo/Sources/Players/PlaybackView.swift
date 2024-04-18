@@ -98,36 +98,34 @@ private struct MainView: View {
 
     @ViewBuilder
     private func metadata() -> some View {
-        if layoutInfo.isFullScreen {
-            VStack(alignment: .leading) {
-                HStack {
-                    LiveLabel(player: player, progressTracker: progressTracker)
-                    if let subtitle {
-                        Text(subtitle)
-                            .font(.footnote)
-                            .fontWeight(.semibold)
-                            .lineLimit(2)
-                    }
-                }
-                if let title {
-                    Text(title)
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .lineLimit(1)
+        VStack(alignment: .leading) {
+            HStack {
+                LiveLabel(player: player, progressTracker: progressTracker)
+                if let subtitle {
+                    Text(subtitle)
+                        .font(.footnote)
+                        .fontWeight(.semibold)
+                        .lineLimit(2)
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .foregroundStyle(.white)
-            .opacity(isInteracting ? 0 : 1)
+            if let title {
+                Text(title)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .lineLimit(1)
+            }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .foregroundStyle(.white)
+        .opacity(isInteracting ? 0 : 1)
     }
 
     @ViewBuilder
     private func bottomBar() -> some View {
         VStack {
-            HStack(alignment: .bottom) {
-                metadata()
-                if layoutInfo.isFullScreen {
+            if layoutInfo.isFullScreen {
+                HStack(alignment: .bottom) {
+                    metadata()
                     bottomButtons()
                 }
             }
