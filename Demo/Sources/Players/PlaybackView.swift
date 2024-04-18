@@ -18,6 +18,8 @@ private struct MainView: View {
     let isMonoscopic: Bool
     let supportsPictureInPicture: Bool
 
+    private let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
+
     @StateObject private var visibilityTracker = VisibilityTracker()
 
     @State private var layoutInfo: LayoutInfo = .none
@@ -97,11 +99,14 @@ private struct MainView: View {
     @ViewBuilder
     private func metadata() -> some View {
         VStack(alignment: .leading) {
-            if let subtitle {
-                Text(subtitle)
-                    .font(.footnote)
-                    .fontWeight(.semibold)
-                    .lineLimit(2)
+            HStack {
+                if let subtitle {
+                    LiveLabel(player: player, progressTracker: progressTracker)
+                    Text(subtitle)
+                        .font(.footnote)
+                        .fontWeight(.semibold)
+                        .lineLimit(2)
+                }
             }
             if let title {
                 Text(title)
@@ -196,7 +201,7 @@ private struct MainView: View {
             Color(white: 0, opacity: 0.3)
                 .opacity(isUserInterfaceHidden || (isInteracting && !areControlsAlwaysVisible) ? 0 : 1)
                 .ignoresSafeArea()
-            ControlsView(player: player)
+            ControlsView(player: player, progressTracker: progressTracker)
                 .opacity(isUserInterfaceHidden || isInteracting ? 0 : 1)
         }
     }
@@ -216,7 +221,7 @@ private struct MainView: View {
 
 private struct ControlsView: View {
     @ObservedObject var player: Player
-    @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
+    @ObservedObject var progressTracker: ProgressTracker
 
     var body: some View {
         HStack(spacing: 30) {
