@@ -33,23 +33,23 @@ private struct ChapterView: View {
 struct ChaptersView: View {
     private let player = Player()
     @State private var chapters: [ChapterMetadata] = []
+    @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 1))
+
+    private var currentChapter: ChapterMetadata? {
+        chapters.first { chapter in
+            chapter.timeRange.containsTime(player.time)
+        }
+    }
 
     let media: Media
 
     var body: some View {
         VStack {
             PlaybackView(player: player)
-            ScrollView(.horizontal) {
-                HStack(spacing: 20) {
-                    ForEach(chapters, id: \.timeRange) { chapter in
-                        ChapterView(chapter: chapter)
-                    }
-                }
-                .padding(.horizontal)
-            }
-            .scrollIndicators(.hidden)
+            chaptersView()
         }
         .background(.black)
+        .bind(progressTracker, to: player)
         .onReceive(player.$metadata, assign: \.chapters, to: $chapters)
         .onAppear(perform: play)
     }
@@ -57,6 +57,24 @@ struct ChaptersView: View {
     private func play() {
         player.append(media.playerItem())
         player.play()
+    }
+
+    private func chaptersView() -> some View {
+        ScrollView(.horizontal) {
+            HStack(spacing: 15) {
+                ForEach(chapters, id: \.timeRange) { chapter in
+                    Button(action: {
+                        player.seek(to: chapter.timeRange.start)
+                    }) {
+                        ChapterView(chapter: chapter)
+                            .saturation(currentChapter == chapter ? 1 : 0)
+                    }
+                }
+            }
+            .padding(.horizontal)
+        }
+        .scrollIndicators(.hidden)
+        ._debugBodyCounter(color: .green)
     }
 }
 
