@@ -73,7 +73,7 @@ private struct ChapterView: View {
     private func durationLabel() -> some View {
         if let formattedDuration {
             Text(formattedDuration)
-                .font(.footnote)
+                .font(.caption2)
                 .foregroundStyle(.white)
                 .padding(.horizontal, 4)
                 .padding(.vertical, 2)
