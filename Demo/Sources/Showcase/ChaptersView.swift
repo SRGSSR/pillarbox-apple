@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import CoreMedia
 import PillarboxPlayer
 import SwiftUI
 
@@ -65,7 +66,7 @@ struct ChaptersView: View {
             HStack(spacing: 15) {
                 ForEach(chapters, id: \.timeRange) { chapter in
                     Button(action: {
-                        player.seek(at(chapter.timeRange.start))
+                        player.seek(at(chapter.timeRange.start + CMTime(value: 1, timescale: 10)))
                     }) {
                         ChapterView(chapter: chapter)
                             .saturation(currentChapter == chapter ? 1 : 0)
