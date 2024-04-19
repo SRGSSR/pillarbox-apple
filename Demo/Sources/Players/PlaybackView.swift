@@ -683,7 +683,7 @@ extension PlaybackView {
 private extension View {
     func topBarStyle() -> some View {
         padding(.horizontal)
-            .frame(minHeight: 60)
+            .frame(minHeight: 35)
     }
 }
 
