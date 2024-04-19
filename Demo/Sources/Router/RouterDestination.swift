@@ -13,6 +13,7 @@ enum RouterDestination: Identifiable, Hashable {
     case inlineSystemPlayer(media: Media)
     case simplePlayer(media: Media)
     case optInPlayer(media: Media)
+    case chaptersPlayer(media: Media)
 
     case vanillaPlayer(item: AVPlayerItem)
 
@@ -22,7 +23,6 @@ enum RouterDestination: Identifiable, Hashable {
     case link(media: Media)
     case wrapped(media: Media)
     case transition(media: Media)
-    case chapters(media: Media)
 
     case stories
     case playlist(templates: [Template])
@@ -44,6 +44,8 @@ enum RouterDestination: Identifiable, Hashable {
             return "optInPlayer"
         case .vanillaPlayer:
             return "vanillaPlayer"
+        case .chaptersPlayer:
+            return "chaptersPlayer"
         case .blurred:
             return "blurred"
         case .twins:
@@ -62,8 +64,6 @@ enum RouterDestination: Identifiable, Hashable {
             return "playlist"
         case .contentList:
             return "contentList"
-        case .chapters:
-            return "chapters"
 #if os(iOS)
         case .webView:
             return "webView"
@@ -115,8 +115,8 @@ enum RouterDestination: Identifiable, Hashable {
             PlaylistView(templates: templates)
         case let .contentList(configuration: configuration):
             ContentListView(configuration: configuration)
-        case let .chapters(media: media):
-            ChaptersView(media: media)
+        case let .chaptersPlayer(media: media):
+            ChaptersPlayerView(media: media)
 #if os(iOS)
         case let .webView(url: url):
             WebView(url: url)

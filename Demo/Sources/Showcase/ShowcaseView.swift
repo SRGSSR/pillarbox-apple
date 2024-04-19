@@ -74,9 +74,9 @@ struct ShowcaseView: View {
             cell(
                 title: "Chapters",
                 subtitle: "A visual way to handle chapters",
-                destination: .chapters(media: Media(from: URNTemplate.onDemandHorizontalVideo))
+                destination: .chaptersPlayer(media: Media(from: URNTemplate.onDemandHorizontalVideo))
             )
-            .sourceCode(of: ChaptersView.self)
+            .sourceCode(of: ChaptersPlayerView.self)
         }
     }
 

@@ -44,7 +44,7 @@ private struct ChapterView: View {
     }
 }
 
-struct ChaptersView: View {
+struct ChaptersPlayerView: View {
     private let player = Player()
     @State private var layout: PlaybackView.Layout = .minimized
     @State private var chapters: [ChapterMetadata] = []
@@ -103,10 +103,10 @@ struct ChaptersView: View {
     }
 }
 
-extension ChaptersView: SourceCodeViewable {
+extension ChaptersPlayerView: SourceCodeViewable {
     static let filePath = #file
 }
 
 #Preview {
-    ChaptersView(media: Media(from: URNTemplate.onDemandHorizontalVideo))
+    ChaptersPlayerView(media: Media(from: URNTemplate.onDemandHorizontalVideo))
 }
