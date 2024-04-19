@@ -12,11 +12,21 @@ private struct ChapterView: View {
     let chapter: ChapterMetadata
 
     var body: some View {
-        VStack {
-            if let image = chapter.image {
-                Image(uiImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
+        ZStack(alignment: .bottom) {
+            ZStack {
+                Color(white: 1, opacity: 0.2)
+                if let image = chapter.image {
+                    Image(uiImage: image)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                }
+            }
+            .overlay {
+                LinearGradient(
+                    gradient: Gradient(colors: [.black.opacity(0.7), .clear]),
+                    startPoint: .bottom,
+                    endPoint: .top
+                )
             }
             if let title = chapter.title {
                 Text(title)
@@ -24,9 +34,11 @@ private struct ChapterView: View {
                     .font(.footnote)
                     .fontWeight(.semibold)
                     .lineLimit(2)
+                    .padding()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
         }
-        .frame(width: 200)
+        .frame(width: 200, height: 200 * 9 / 16)
         .clipShape(RoundedRectangle(cornerRadius: 5))
     }
 }
@@ -81,7 +93,6 @@ struct ChaptersView: View {
             .padding(.horizontal)
         }
         .scrollIndicators(.hidden)
-        ._debugBodyCounter(color: .green)
     }
 }
 
