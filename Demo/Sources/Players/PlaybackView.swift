@@ -122,7 +122,7 @@ private struct MainView: View {
 
     @ViewBuilder
     private func bottomBar() -> some View {
-        VStack {
+        VStack(spacing: 0) {
             if isFullScreen {
                 HStack(alignment: .bottom) {
                     metadata()
@@ -140,7 +140,7 @@ private struct MainView: View {
         .opacity(isUserInterfaceHidden ? 0 : 1)
         .animation(.linear(duration: 0.2), values: isUserInterfaceHidden, isInteracting)
         .padding(.horizontal)
-        .padding(.vertical, isFullScreen ? 30 : nil)
+        .padding(.vertical, 10)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 

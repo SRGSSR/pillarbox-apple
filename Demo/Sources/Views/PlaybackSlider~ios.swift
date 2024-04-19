@@ -25,7 +25,14 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
             progressBar()
             maximumValueLabel()
         }
-        .frame(height: 8)
+        .preventsTouchPropagation()
+        .gesture(
+            DragGesture(minimumDistance: 0)
+                .updating($gestureValue) { value, state, _ in
+                    state = value
+                }
+        )
+        .onReceive(player: progressTracker.player, assign: \.buffer, to: $buffer)
         .frame(maxWidth: .infinity)
     }
 
@@ -61,12 +68,6 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
                     .animation(.linear(duration: 0.5), value: buffer)
                 rectangle(width: geometry.size.width * CGFloat(progressTracker.progress))
             }
-            .gesture(
-                DragGesture(minimumDistance: 0)
-                    .updating($gestureValue) { value, state, _ in
-                        state = value
-                    }
-            )
             .onChange(of: gestureValue) { value in
                 updateProgress(for: value, in: geometry)
             }
@@ -74,7 +75,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
         .frame(height: progressTracker.isInteracting ? 16 : 8)
         .clipShape(.capsule)
         .animation(.easeInOut(duration: 0.4), value: progressTracker.isInteracting)
-        .onReceive(player: progressTracker.player, assign: \.buffer, to: $buffer)
+        .frame(height: 30)
     }
 
     private func updateProgress(for value: DragGesture.Value?, in geometry: GeometryProxy) {
