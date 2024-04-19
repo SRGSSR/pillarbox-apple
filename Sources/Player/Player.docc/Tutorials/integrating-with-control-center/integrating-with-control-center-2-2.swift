@@ -1,9 +1,9 @@
 import PillarboxPlayer
 import SwiftUI
 
-private struct Metadata {
-    func nowPlayingMetadata() -> NowPlayingMetadata {
-        .init(title: "🍎", subtitle: "🍏", image: .apple)
+private struct Metadata: AssetMetadata {
+    var playerMetadata: PlayerMetadata {
+        .init(title: "🍎", subtitle: "🍏", image: UIImage(named: "apple"))
     }
 }
 

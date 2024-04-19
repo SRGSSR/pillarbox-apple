@@ -1,9 +1,20 @@
+//
+//  Copyright (c) SRG SSR. All rights reserved.
+//
+//  License information is available from the LICENSE file.
+//
+
 import PillarboxPlayer
 import SwiftUI
 
-private struct Metadata: AssetMetadata {}
+private struct Metadata: AssetMetadata {
+    var playerMetadata: PlayerMetadata {
+        // swiftlint:disable:next object_literal
+        .init(title: "🍎", subtitle: "🍏", image: UIImage(named: "apple"))
+    }
+}
 
-struct ContentView: View {
+struct IntegratingWithControlCenter: View {
     @StateObject private var player = Player(item: .simple(
         url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!,
         metadata: Metadata()
@@ -19,4 +30,3 @@ struct ContentView: View {
         }
     }
 }
-
