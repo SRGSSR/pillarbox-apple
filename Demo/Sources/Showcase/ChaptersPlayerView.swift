@@ -14,34 +14,44 @@ private struct ChapterView: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            ZStack {
-                Color(white: 1, opacity: 0.2)
-                if let image = chapter.image {
-                    Image(uiImage: image)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                }
-            }
-            .animation(.defaultLinear, value: chapter.image)
-            .overlay {
-                LinearGradient(
-                    gradient: Gradient(colors: [.black.opacity(0.7), .clear]),
-                    startPoint: .bottom,
-                    endPoint: .top
-                )
-            }
-            if let title = chapter.title {
-                Text(title)
-                    .foregroundStyle(.white)
-                    .font(.footnote)
-                    .fontWeight(.semibold)
-                    .lineLimit(2)
-                    .padding()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-            }
+            imageView()
+            titleView()
         }
         .frame(width: Self.width, height: Self.width * 9 / 16)
         .clipShape(RoundedRectangle(cornerRadius: 5))
+    }
+
+    @ViewBuilder
+    private func imageView() -> some View {
+        ZStack {
+            Color(white: 1, opacity: 0.2)
+            if let image = chapter.image {
+                Image(uiImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            }
+        }
+        .animation(.defaultLinear, value: chapter.image)
+        .overlay {
+            LinearGradient(
+                gradient: Gradient(colors: [.black.opacity(0.7), .clear]),
+                startPoint: .bottom,
+                endPoint: .top
+            )
+        }
+    }
+
+    @ViewBuilder
+    private func titleView() -> some View {
+        if let title = chapter.title {
+            Text(title)
+                .foregroundStyle(.white)
+                .font(.footnote)
+                .fontWeight(.semibold)
+                .lineLimit(2)
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+        }
     }
 }
 
