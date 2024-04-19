@@ -46,10 +46,12 @@ private struct ChapterView: View {
 
 struct ChaptersView: View {
     private let player = Player()
-
     @State private var layout: PlaybackView.Layout = .minimized
     @State private var chapters: [ChapterMetadata] = []
     @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 1))
+    private var effectiveLayout: Binding<PlaybackView.Layout> {
+        !chapters.isEmpty ? $layout : .constant(.inline)
+    }
 
     private var currentChapter: ChapterMetadata? {
         chapters.first { chapter in
@@ -62,13 +64,13 @@ struct ChaptersView: View {
 
     var body: some View {
         VStack {
-            PlaybackView(player: player, layout: $layout)
+            PlaybackView(player: player, layout: effectiveLayout)
                 .supportsPictureInPicture()
             if layout != .maximized {
                 chaptersView()
             }
         }
-        .animation(.defaultLinear, value: layout)
+        .animation(.defaultLinear, values: layout, chapters)
         .background(.black)
         .bind(progressTracker, to: player)
         .onReceive(player.$metadata, assign: \.chapters, to: $chapters)
@@ -80,21 +82,24 @@ struct ChaptersView: View {
         player.play()
     }
 
+    @ViewBuilder
     private func chaptersView() -> some View {
-        ScrollView(.horizontal) {
-            HStack(spacing: 15) {
-                ForEach(chapters, id: \.timeRange) { chapter in
-                    Button(action: {
-                        player.seek(at(chapter.timeRange.start + CMTime(value: 1, timescale: 10)))
-                    }) {
-                        ChapterView(chapter: chapter)
-                            .saturation(currentChapter == chapter ? 1 : 0)
+        if !chapters.isEmpty {
+            ScrollView(.horizontal) {
+                HStack(spacing: 15) {
+                    ForEach(chapters, id: \.timeRange) { chapter in
+                        Button(action: {
+                            player.seek(at(chapter.timeRange.start + CMTime(value: 1, timescale: 10)))
+                        }) {
+                            ChapterView(chapter: chapter)
+                                .saturation(currentChapter == chapter ? 1 : 0)
+                        }
                     }
                 }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
+            .scrollIndicators(.hidden)
         }
-        .scrollIndicators(.hidden)
     }
 }
 
