@@ -16,6 +16,8 @@ public struct Chapter: Equatable {
     public let title: String?
 
     /// The image associated with the chapter.
+    ///
+    /// The image should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).
     public let image: UIImage?
 
     /// The time range covered by the chapter.

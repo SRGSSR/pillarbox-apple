@@ -30,7 +30,7 @@ public struct PlayerMetadata: Equatable {
 
     /// The image associated with the content.
     ///
-    /// Should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).
+    /// The image should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).
     public let image: UIImage?
 
     /// Episode information associated with the content.
