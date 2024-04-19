@@ -10,7 +10,19 @@ import SwiftUI
 
 private struct ChapterView: View {
     private static let width: CGFloat = 200
+
+    private static let durationFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.second, .minute]
+        formatter.zeroFormattingBehavior = .pad
+        return formatter
+    }()
+
     let chapter: Chapter
+
+    private var formattedDuration: String? {
+        Self.durationFormatter.string(from: Double(chapter.timeRange.duration.seconds))
+    }
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -39,6 +51,9 @@ private struct ChapterView: View {
                 endPoint: .top
             )
         }
+        .overlay(alignment: .topTrailing) {
+            durationLabel()
+        }
     }
 
     @ViewBuilder
@@ -51,6 +66,20 @@ private struct ChapterView: View {
                 .lineLimit(2)
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+        }
+    }
+
+    @ViewBuilder
+    private func durationLabel() -> some View {
+        if let formattedDuration {
+            Text(formattedDuration)
+                .font(.footnote)
+                .foregroundStyle(.white)
+                .padding(.horizontal, 4)
+                .padding(.vertical, 2)
+                .background(Color(white: 0, opacity: 0.8))
+                .clipShape(RoundedRectangle(cornerRadius: 2))
+                .padding(8)
         }
     }
 }
