@@ -22,7 +22,7 @@ public struct MediaMetadata {
     public let mediaComposition: MediaComposition
 
     /// The resource to be played.
-    public let resource: Resource
+    public let resource: MediaComposition.Resource
 
     /// A catalog of images associated with the context.
     private let imageCatalog: ImageCatalog
@@ -50,13 +50,13 @@ public struct MediaMetadata {
         return analyticsMetadata
     }
 
-    init(mediaComposition: MediaComposition, resource: Resource, imageCatalog: ImageCatalog) {
+    init(mediaComposition: MediaComposition, resource: MediaComposition.Resource, imageCatalog: ImageCatalog) {
         self.mediaComposition = mediaComposition
         self.resource = resource
         self.imageCatalog = imageCatalog
     }
 
-    private static func areRedundant(chapter: Chapter, show: Show) -> Bool {
+    private static func areRedundant(chapter: MediaComposition.Chapter, show: MediaComposition.Show) -> Bool {
         chapter.title.lowercased() == show.title.lowercased()
     }
 }
@@ -126,11 +126,11 @@ extension MediaMetadata: AssetMetadata {
         }
     }
 
-    private func image(for chapter: Chapter) -> UIImage? {
+    private func image(for chapter: MediaComposition.Chapter) -> UIImage? {
         imageCatalog.image(for: chapter.urn)
     }
 
-    private func artworkImage(for chapter: Chapter) -> UIImage? {
+    private func artworkImage(for chapter: MediaComposition.Chapter) -> UIImage? {
 #if os(tvOS)
         image(for: chapter) ?? imageCatalog.placeholderImage()
 #else

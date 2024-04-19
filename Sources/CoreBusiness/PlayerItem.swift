@@ -74,7 +74,10 @@ public extension PlayerItem {
         }
     }
 
-    private static func assetConfiguration(for resource: Resource, configuration: @escaping (AVPlayerItem) -> Void) -> ((AVPlayerItem) -> Void) {
+    private static func assetConfiguration(
+        for resource: MediaComposition.Resource,
+        configuration: @escaping (AVPlayerItem) -> Void
+    ) -> ((AVPlayerItem) -> Void) {
         { item in
             configuration(item)
 

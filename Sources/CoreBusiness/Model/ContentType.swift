@@ -4,23 +4,25 @@
 //  License information is available from the LICENSE file.
 //
 
-/// Content types.
-public enum ContentType: String, Decodable {
-    /// Episode.
-    case episode = "EPISODE"
+public extension MediaComposition {
+    /// Content types.
+    enum ContentType: String, Decodable {
+        /// Episode.
+        case episode = "EPISODE"
 
-    /// Extract.
-    case extract = "EXTRACT"
+        /// Extract.
+        case extract = "EXTRACT"
 
-    /// Trailer.
-    case trailer = "TRAILER"
+        /// Trailer.
+        case trailer = "TRAILER"
 
-    /// Clip.
-    case clip = "CLIP"
+        /// Clip.
+        case clip = "CLIP"
 
-    /// Livestream.
-    case livestream = "LIVESTREAM"
+        /// Livestream.
+        case livestream = "LIVESTREAM"
 
-    /// Scheduled livestream.
-    case scheduledLivestream = "SCHEDULED_LIVESTREAM"
+        /// Scheduled livestream.
+        case scheduledLivestream = "SCHEDULED_LIVESTREAM"
+    }
 }
