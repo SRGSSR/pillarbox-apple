@@ -32,8 +32,8 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
                     state = value
                 }
         )
-        .onReceive(player: progressTracker.player, assign: \.buffer, to: $buffer)
         .frame(maxWidth: .infinity)
+        .onReceive(player: progressTracker.player, assign: \.buffer, to: $buffer)
     }
 
     init(
