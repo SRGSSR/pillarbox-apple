@@ -14,16 +14,23 @@ public struct PlayerMetadata: Equatable {
     /// An identifier for the content.
     public let identifier: String?
 
-    /// The content title.
+    /// The content title
+    ///
+    /// For example the name of the show which the content is associated with, if any, otherwise the name
+    /// of the episode itself.
     public let title: String?
 
     /// A subtitle for the content.
+    ///
+    /// For example the name of the episode when a show name has been provided as title.
     public let subtitle: String?
 
     /// A description of the content.
     public let description: String?
 
     /// The image associated with the content.
+    ///
+    /// Should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).
     public let image: UIImage?
 
     /// Episode information associated with the content.
