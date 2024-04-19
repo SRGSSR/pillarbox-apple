@@ -72,7 +72,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
             }
         }
         .frame(height: progressTracker.isInteracting ? 16 : 8)
-        .clipShape(Capsule())
+        .clipShape(.capsule)
         .animation(.easeInOut(duration: 0.4), value: progressTracker.isInteracting)
         .onReceive(player: progressTracker.player, assign: \.buffer, to: $buffer)
     }
