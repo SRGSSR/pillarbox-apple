@@ -63,6 +63,7 @@ struct ChaptersView: View {
     var body: some View {
         VStack {
             PlaybackView(player: player, layout: $layout)
+                .supportsPictureInPicture()
             if layout != .maximized {
                 chaptersView()
             }
