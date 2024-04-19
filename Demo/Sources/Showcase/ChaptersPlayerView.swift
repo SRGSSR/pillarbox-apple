@@ -9,6 +9,7 @@ import PillarboxPlayer
 import SwiftUI
 
 private struct ChapterView: View {
+    private static let width: CGFloat = 200
     let chapter: ChapterMetadata
 
     var body: some View {
@@ -39,7 +40,7 @@ private struct ChapterView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
         }
-        .frame(width: 200, height: 200 * 9 / 16)
+        .frame(width: Self.width, height: Self.width * 9 / 16)
         .clipShape(RoundedRectangle(cornerRadius: 5))
     }
 }
@@ -49,6 +50,7 @@ struct ChaptersPlayerView: View {
     @State private var layout: PlaybackView.Layout = .minimized
     @State private var chapters: [ChapterMetadata] = []
     @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 1))
+
     private var effectiveLayout: Binding<PlaybackView.Layout> {
         !chapters.isEmpty ? $layout : .constant(.inline)
     }
