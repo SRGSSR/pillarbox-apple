@@ -134,7 +134,7 @@ struct ChaptersPlayerView: View {
                 HStack(spacing: 15) {
                     ForEach(chapters, id: \.timeRange) { chapter in
                         Button {
-                            player.seek(at(chapter.timeRange.start + CMTime(value: 1, timescale: 10)))
+                            player.seek(to: chapter)
                         } label: {
                             ChapterView(chapter: chapter, isHighlighted: chapter == currentChapter)
                         }
