@@ -104,7 +104,7 @@ private struct ContentCell: View {
                     type: .urn(media.urn, server: serverSetting.server),
                     isMonoscopic: media.isMonoscopic
                 )
-                router.presented = .player(media: media)
+                router.presented = .chapters(media: media)
             }
 #if os(iOS)
             .swipeActions { CopyButton(text: media.urn) }
