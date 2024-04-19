@@ -122,16 +122,16 @@ private struct MainView: View {
 
     @ViewBuilder
     private func bottomBar() -> some View {
-        VStack {
-            if layoutInfo.isFullScreen {
-                HStack(alignment: .bottom) {
-                    metadata()
+        VStack(spacing: 0) {
+            HStack(alignment: .bottom) {
+                metadata()
+                if isFullScreen {
                     bottomButtons()
                 }
             }
             HStack(spacing: 20) {
                 TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting)
-                if !layoutInfo.isFullScreen {
+                if !isFullScreen {
                     bottomButtons()
                 }
             }
@@ -140,7 +140,7 @@ private struct MainView: View {
         .opacity(isUserInterfaceHidden ? 0 : 1)
         .animation(.linear(duration: 0.2), values: isUserInterfaceHidden, isInteracting)
         .padding(.horizontal)
-        .padding(.vertical, layoutInfo.isFullScreen ? 60 : nil)
+        .padding(.vertical, 10)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 
@@ -168,9 +168,9 @@ private struct MainView: View {
             }
         }
         .opacity(isUserInterfaceHidden ? 0 : 1)
-        .padding()
+        .topBarStyle()
         .preventsTouchPropagation()
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 
     @ViewBuilder
@@ -594,6 +594,7 @@ private struct ErrorView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay(alignment: .topLeading) {
             CloseButton()
+                .topBarStyle()
         }
     }
 }
@@ -627,6 +628,7 @@ struct PlaybackView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .overlay(alignment: .topLeading) {
                         CloseButton()
+                            .topBarStyle()
                     }
             }
         }
@@ -675,6 +677,13 @@ extension PlaybackView {
         var view = self
         view.supportsPictureInPicture = supportsPictureInPicture
         return view
+    }
+}
+
+private extension View {
+    func topBarStyle() -> some View {
+        padding(.horizontal)
+            .frame(minHeight: 35)
     }
 }
 

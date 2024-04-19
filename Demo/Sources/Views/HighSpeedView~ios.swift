@@ -18,7 +18,7 @@ private struct HighSpeedCapsule: View {
             .padding(.vertical, 5)
             .foregroundStyle(.white)
             .background(.black.opacity(0.7))
-            .clipShape(Capsule())
+            .clipShape(.capsule)
     }
 }
 
