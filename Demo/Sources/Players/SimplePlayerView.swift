@@ -22,6 +22,8 @@ struct SimplePlayerView: View {
         }
         .overlay(alignment: .topLeading) {
             CloseButton()
+                .padding(.horizontal)
+                .frame(minHeight: 35)
         }
         .onAppear(perform: play)
         .onReceive(player: player, assign: \.isBusy, to: $isBusy)

@@ -40,6 +40,8 @@ struct TwinsView: View {
         }
         .overlay(alignment: .topLeading) {
             CloseButton()
+                .padding(.horizontal)
+                .frame(minHeight: 35)
         }
         .onAppear(perform: play)
         .onForeground(perform: resume)
