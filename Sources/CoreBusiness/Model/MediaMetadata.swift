@@ -115,7 +115,7 @@ extension MediaMetadata: AssetMetadata {
         }
     }
 
-    private var chapters: [ChapterMetadata] {
+    private var chapters: [Chapter] {
         mediaComposition.chapters.map { chapter in
             .init(
                 identifier: chapter.urn,

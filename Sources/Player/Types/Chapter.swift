@@ -7,8 +7,8 @@
 import AVFoundation
 import UIKit
 
-/// Metadata associated with a chapter.
-public struct ChapterMetadata: Equatable {
+/// A chapter representation.
+public struct Chapter: Equatable {
     /// An identifier for the chapter.
     public let identifier: String?
 
