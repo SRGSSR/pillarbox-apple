@@ -4,8 +4,10 @@
 //  License information is available from the LICENSE file.
 //
 
-/// A show description.
-public struct Show: Decodable {
-    /// The show title.
-    public let title: String
+public extension MediaComposition {
+    /// A show description.
+    struct Show: Decodable {
+        /// The show title.
+        public let title: String
+    }
 }

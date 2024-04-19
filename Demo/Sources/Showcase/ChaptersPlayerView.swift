@@ -10,7 +10,7 @@ import SwiftUI
 
 private struct ChapterView: View {
     private static let width: CGFloat = 200
-    let chapter: ChapterMetadata
+    let chapter: Chapter
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -48,14 +48,14 @@ private struct ChapterView: View {
 struct ChaptersPlayerView: View {
     private let player = Player()
     @State private var layout: PlaybackView.Layout = .minimized
-    @State private var chapters: [ChapterMetadata] = []
+    @State private var chapters: [Chapter] = []
     @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 1))
 
     private var effectiveLayout: Binding<PlaybackView.Layout> {
         !chapters.isEmpty ? $layout : .constant(.inline)
     }
 
-    private var currentChapter: ChapterMetadata? {
+    private var currentChapter: Chapter? {
         chapters.first { chapter in
             guard let time = progressTracker.time else { return false }
             return chapter.timeRange.containsTime(time)

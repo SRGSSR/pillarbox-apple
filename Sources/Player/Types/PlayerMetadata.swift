@@ -30,7 +30,7 @@ public struct PlayerMetadata: Equatable {
     public let episodeInformation: EpisodeInformation?
 
     /// Chapter associated with the content.
-    public let chapters: [ChapterMetadata]
+    public let chapters: [Chapter]
 
     var episodeDescription: String? {
         switch episodeInformation {
@@ -85,7 +85,7 @@ public struct PlayerMetadata: Equatable {
         description: String? = nil,
         image: UIImage? = nil,
         episodeInformation: EpisodeInformation? = nil,
-        chapters: [ChapterMetadata] = []
+        chapters: [Chapter] = []
     ) {
         self.identifier = identifier
         self.title = title
