@@ -21,6 +21,7 @@ private struct ChapterView: View {
                         .aspectRatio(contentMode: .fill)
                 }
             }
+            .animation(.defaultLinear, value: chapter.image)
             .overlay {
                 LinearGradient(
                     gradient: Gradient(colors: [.black.opacity(0.7), .clear]),
