@@ -18,6 +18,40 @@ private struct PulseSymbolEffect: ViewModifier {
     }
 }
 
+private struct ScrollClipDisabled: ViewModifier {
+    let isDisabled: Bool
+
+    init(_ isDisabled: Bool) {
+        self.isDisabled = isDisabled
+    }
+
+    func body(content: Content) -> some View {
+        Group {
+            if #available(iOS 17.0, tvOS 17.0, *) {
+                content
+                    .scrollClipDisabled(isDisabled)
+            }
+            else {
+                content
+            }
+        }
+    }
+}
+
+private struct ScaleEffect: ViewModifier {
+    let scale: CGFloat
+
+    func body(content: Content) -> some View {
+        if #available(iOS 17.0, tvOS 17.0, *) {
+            content
+                .scaleEffect(scale)
+        }
+        else {
+            content
+        }
+    }
+}
+
 extension View {
     /// Prevents touch propagation to views located below the receiver.
     func preventsTouchPropagation() -> some View {
@@ -38,6 +72,14 @@ extension View {
 
     func pulseSymbolEffect() -> some View {
         modifier(PulseSymbolEffect())
+    }
+
+    func scrollClipDisabled17(_ disabled: Bool = true) -> some View {
+        modifier(ScrollClipDisabled(disabled))
+    }
+
+    func scaleEffect17(_ scale: CGFloat) -> some View {
+        modifier(ScaleEffect(scale: scale))
     }
 }
 

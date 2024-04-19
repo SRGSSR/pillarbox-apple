@@ -19,6 +19,7 @@ private struct ChapterView: View {
     }()
 
     let chapter: Chapter
+    let isHighlighted: Bool
 
     private var formattedDuration: String? {
         Self.durationFormatter.string(from: Double(chapter.timeRange.duration.seconds))
@@ -31,6 +32,9 @@ private struct ChapterView: View {
         }
         .frame(width: Self.width, height: Self.width * 9 / 16)
         .clipShape(RoundedRectangle(cornerRadius: 5))
+        .saturation(isHighlighted ? 1 : 0)
+        .scaleEffect17(isHighlighted ? 1.05 : 1)
+        .animation(.defaultLinear, value: isHighlighted)
     }
 
     @ViewBuilder
@@ -129,17 +133,18 @@ struct ChaptersPlayerView: View {
             ScrollView(.horizontal) {
                 HStack(spacing: 15) {
                     ForEach(chapters, id: \.timeRange) { chapter in
-                        Button(action: {
+                        Button {
                             player.seek(at(chapter.timeRange.start + CMTime(value: 1, timescale: 10)))
-                        }) {
-                            ChapterView(chapter: chapter)
-                                .saturation(currentChapter == chapter ? 1 : 0)
+                        } label: {
+                            ChapterView(chapter: chapter, isHighlighted: chapter == currentChapter)
                         }
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
                 .padding(.horizontal)
             }
             .scrollIndicators(.hidden)
+            .scrollClipDisabled17()
         }
     }
 }
