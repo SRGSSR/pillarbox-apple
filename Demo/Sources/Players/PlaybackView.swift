@@ -140,7 +140,7 @@ private struct MainView: View {
         .opacity(isUserInterfaceHidden ? 0 : 1)
         .animation(.linear(duration: 0.2), values: isUserInterfaceHidden, isInteracting)
         .padding(.horizontal)
-        .padding(.vertical, isFullScreen ? 60 : nil)
+        .padding(.vertical, isFullScreen ? 30 : nil)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 
