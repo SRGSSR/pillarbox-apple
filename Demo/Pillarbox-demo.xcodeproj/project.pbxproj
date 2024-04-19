@@ -328,7 +328,6 @@
 			isa = PBXGroup;
 			children = (
 				6FCB9DDD29E024E900961B69 /* BlurredView.swift */,
-				0E46D3002BD2754400133AE2 /* ChaptersPlayerView.swift */,
 				6F59E86229CF31E10093E6FB /* LinkView.swift */,
 				6FAD51102B331A2C0078FE08 /* Multi */,
 				0E6B995B29D43E4200D0276D /* OptInView.swift */,
@@ -405,6 +404,7 @@
 			isa = PBXGroup;
 			children = (
 				6F59E86E29CF31E10093E6FB /* BasicPlaybackView.swift */,
+				0E46D3002BD2754400133AE2 /* ChaptersPlayerView.swift */,
 				0E4128BC2AFB7F2A00D67759 /* InlineSystemPlayerView.swift */,
 				6F59E86B29CF31E10093E6FB /* PlaybackView.swift */,
 				6F59E86A29CF31E10093E6FB /* PlayerConfiguration.swift */,
