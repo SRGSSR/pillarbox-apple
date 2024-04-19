@@ -30,7 +30,7 @@ extension PlayerItem {
 }
 
 extension PlayerItem {
-    private static func asset(for url: URL) -> AnyPublisher<Asset<Never>, any Error> {
+    private static func asset(for url: URL) -> AnyPublisher<Asset<Void>, any Error> {
         mediaUrlPublisher(for: url)
             .tryMap { Asset.simple(url: $0.mediaURL) }
             .eraseToAnyPublisher()
