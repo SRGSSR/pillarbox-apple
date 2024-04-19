@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-private struct PulseSymbolEffect: ViewModifier {
+private struct PulseSymbolEffect17: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 17.0, tvOS 17.0, *) {
             content
@@ -18,7 +18,7 @@ private struct PulseSymbolEffect: ViewModifier {
     }
 }
 
-private struct ScrollClipDisabled: ViewModifier {
+private struct ScrollClipDisabled17: ViewModifier {
     let isDisabled: Bool
 
     init(_ isDisabled: Bool) {
@@ -38,7 +38,7 @@ private struct ScrollClipDisabled: ViewModifier {
     }
 }
 
-private struct ScaleEffect: ViewModifier {
+private struct ScaleEffect17: ViewModifier {
     let scale: CGFloat
 
     func body(content: Content) -> some View {
@@ -70,16 +70,16 @@ extension View {
         )
     }
 
-    func pulseSymbolEffect() -> some View {
-        modifier(PulseSymbolEffect())
+    func pulseSymbolEffect17() -> some View {
+        modifier(PulseSymbolEffect17())
     }
 
     func scrollClipDisabled17(_ disabled: Bool = true) -> some View {
-        modifier(ScrollClipDisabled(disabled))
+        modifier(ScrollClipDisabled17(disabled))
     }
 
     func scaleEffect17(_ scale: CGFloat) -> some View {
-        modifier(ScaleEffect(scale: scale))
+        modifier(ScaleEffect17(scale: scale))
     }
 }
 
