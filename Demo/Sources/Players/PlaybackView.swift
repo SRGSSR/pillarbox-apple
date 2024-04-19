@@ -123,9 +123,9 @@ private struct MainView: View {
     @ViewBuilder
     private func bottomBar() -> some View {
         VStack(spacing: 0) {
-            if isFullScreen {
-                HStack(alignment: .bottom) {
-                    metadata()
+            HStack(alignment: .bottom) {
+                metadata()
+                if isFullScreen {
                     bottomButtons()
                 }
             }
