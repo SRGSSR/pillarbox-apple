@@ -33,6 +33,8 @@ private struct ChapterView: View {
 
 struct ChaptersView: View {
     private let player = Player()
+
+    @State private var layout: PlaybackView.Layout = .minimized
     @State private var chapters: [ChapterMetadata] = []
     @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 1))
 
@@ -47,9 +49,12 @@ struct ChaptersView: View {
 
     var body: some View {
         VStack {
-            PlaybackView(player: player)
-            chaptersView()
+            PlaybackView(player: player, layout: $layout)
+            if layout != .maximized {
+                chaptersView()
+            }
         }
+        .animation(.defaultLinear, value: layout)
         .background(.black)
         .bind(progressTracker, to: player)
         .onReceive(player.$metadata, assign: \.chapters, to: $chapters)
