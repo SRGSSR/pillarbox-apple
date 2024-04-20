@@ -111,6 +111,7 @@ private struct ChaptersList: View {
         .scrollIndicators(.hidden)
         .scrollClipDisabled17()
         .bind(progressTracker, to: player)
+        ._debugBodyCounter(color: .purple)
     }
 
     @ViewBuilder
