@@ -8,7 +8,7 @@ import CoreMedia
 import PillarboxPlayer
 import SwiftUI
 
-private struct ChapterView: View {
+private struct ChapterCell: View {
     private static let width: CGFloat = 200
 
     private static let durationFormatter: DateComponentsFormatter = {
@@ -88,14 +88,13 @@ private struct ChapterView: View {
     }
 }
 
-struct ChaptersPlayerView: View {
-    @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
-    @State private var layout: PlaybackView.Layout = .minimized
-    @State private var chapters: [Chapter] = []
+private struct ChaptersList: View {
+    @ObservedObject var player: Player
+
     @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 1))
 
-    private var currentLayout: Binding<PlaybackView.Layout> {
-        !chapters.isEmpty ? $layout : .constant(.inline)
+    private var chapters: [Chapter] {
+        player.metadata.chapters
     }
 
     private var currentChapter: Chapter? {
@@ -105,49 +104,71 @@ struct ChaptersPlayerView: View {
         }
     }
 
-    let media: Media
+    var body: some View {
+        ScrollView(.horizontal) {
+            chaptersList()
+        }
+        .scrollIndicators(.hidden)
+        .scrollClipDisabled17()
+        .bind(progressTracker, to: player)
+    }
+
+    @ViewBuilder
+    private func chaptersList() -> some View {
+        HStack(spacing: 15) {
+            ForEach(chapters, id: \.timeRange) { chapter in
+                Button {
+                    player.seek(to: chapter)
+                } label: {
+                    ChapterCell(chapter: chapter, isHighlighted: chapter == currentChapter)
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
+        }
+        .padding(.horizontal)
+    }
+}
+
+private struct MainView: View {
+    @ObservedObject var player: Player
+    @State private var layout: PlaybackView.Layout = .minimized
+
+    private var chapters: [Chapter] {
+        player.metadata.chapters
+    }
+
+    private var currentLayout: Binding<PlaybackView.Layout> {
+        !chapters.isEmpty ? $layout : .constant(.inline)
+    }
 
     var body: some View {
         VStack {
-            PlaybackView(player: model.player, layout: currentLayout)
+            PlaybackView(player: player, layout: currentLayout)
                 .supportsPictureInPicture()
-                .enabledForInAppPictureInPicture(persisting: model)
-            if layout != .maximized {
-                chaptersView()
+            if layout != .maximized, !chapters.isEmpty {
+                ChaptersList(player: player)
             }
         }
         .animation(.defaultLinear, values: layout, chapters)
-        .background(.black)
-        .bind(progressTracker, to: model.player)
-        .onReceive(model.player.$metadata, assign: \.chapters, to: $chapters)
-        .onAppear(perform: play)
-        .tracked(name: "chapters-player")
+    }
+}
+
+struct ChaptersPlayerView: View {
+    @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
+
+    let media: Media
+
+    var body: some View {
+        MainView(player: model.player)
+            .enabledForInAppPictureInPicture(persisting: model)
+            .background(.black)
+            .onAppear(perform: play)
+            .tracked(name: "chapters-player")
     }
 
     private func play() {
         model.media = media
         model.play()
-    }
-
-    @ViewBuilder
-    private func chaptersView() -> some View {
-        if !chapters.isEmpty {
-            ScrollView(.horizontal) {
-                HStack(spacing: 15) {
-                    ForEach(chapters, id: \.timeRange) { chapter in
-                        Button {
-                            model.player.seek(to: chapter)
-                        } label: {
-                            ChapterView(chapter: chapter, isHighlighted: chapter == currentChapter)
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                    }
-                }
-                .padding(.horizontal)
-            }
-            .scrollIndicators(.hidden)
-            .scrollClipDisabled17()
-        }
     }
 }
 
