@@ -89,12 +89,12 @@ private struct ChapterView: View {
 }
 
 struct ChaptersPlayerView: View {
-    private let player = Player()
+    @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
     @State private var layout: PlaybackView.Layout = .minimized
     @State private var chapters: [Chapter] = []
     @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 1))
 
-    private var effectiveLayout: Binding<PlaybackView.Layout> {
+    private var currentLayout: Binding<PlaybackView.Layout> {
         !chapters.isEmpty ? $layout : .constant(.inline)
     }
 
@@ -109,22 +109,23 @@ struct ChaptersPlayerView: View {
 
     var body: some View {
         VStack {
-            PlaybackView(player: player, layout: effectiveLayout)
+            PlaybackView(player: model.player, layout: currentLayout)
                 .supportsPictureInPicture()
+                .enabledForInAppPictureInPicture(persisting: model)
             if layout != .maximized {
                 chaptersView()
             }
         }
         .animation(.defaultLinear, values: layout, chapters)
         .background(.black)
-        .bind(progressTracker, to: player)
-        .onReceive(player.$metadata, assign: \.chapters, to: $chapters)
+        .bind(progressTracker, to: model.player)
+        .onReceive(model.player.$metadata, assign: \.chapters, to: $chapters)
         .onAppear(perform: play)
     }
 
     private func play() {
-        player.append(media.playerItem())
-        player.play()
+        model.media = media
+        model.play()
     }
 
     @ViewBuilder
@@ -134,7 +135,7 @@ struct ChaptersPlayerView: View {
                 HStack(spacing: 15) {
                     ForEach(chapters, id: \.timeRange) { chapter in
                         Button {
-                            player.seek(to: chapter)
+                            model.player.seek(to: chapter)
                         } label: {
                             ChapterView(chapter: chapter, isHighlighted: chapter == currentChapter)
                         }
