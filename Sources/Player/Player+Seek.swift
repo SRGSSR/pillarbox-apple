@@ -89,4 +89,14 @@ public extension Player {
         let position = Self.optimalPosition(reaching: time, for: queuePlayer.currentItem)
         seek(position, smooth: true, completion: completion)
     }
+
+    /// Performs a precise seek to a chapter.
+    ///
+    /// - Parameters:
+    ///   - chapter: The chapter to reach.
+    ///   - completion: A completion called when seeking ends. The provided Boolean informs whether the seek could
+    ///     finish without being cancelled.
+    func seek(to chapter: Chapter, completion: @escaping (Bool) -> Void = { _ in }) {
+        seek(at(chapter.timeRange.start + CMTime(value: 1, timescale: 10)), completion: completion)
+    }
 }

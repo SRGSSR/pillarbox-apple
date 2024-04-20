@@ -10,38 +10,81 @@ import SwiftUI
 
 private struct ChapterView: View {
     private static let width: CGFloat = 200
+
+    private static let durationFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.second, .minute]
+        formatter.zeroFormattingBehavior = .pad
+        return formatter
+    }()
+
     let chapter: Chapter
+    let isHighlighted: Bool
+
+    private var formattedDuration: String? {
+        Self.durationFormatter.string(from: Double(chapter.timeRange.duration.seconds))
+    }
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            ZStack {
-                Color(white: 1, opacity: 0.2)
-                if let image = chapter.image {
-                    Image(uiImage: image)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                }
-            }
-            .animation(.defaultLinear, value: chapter.image)
-            .overlay {
-                LinearGradient(
-                    gradient: Gradient(colors: [.black.opacity(0.7), .clear]),
-                    startPoint: .bottom,
-                    endPoint: .top
-                )
-            }
-            if let title = chapter.title {
-                Text(title)
-                    .foregroundStyle(.white)
-                    .font(.footnote)
-                    .fontWeight(.semibold)
-                    .lineLimit(2)
-                    .padding()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-            }
+            imageView()
+            titleView()
         }
         .frame(width: Self.width, height: Self.width * 9 / 16)
         .clipShape(RoundedRectangle(cornerRadius: 5))
+        .saturation(isHighlighted ? 1 : 0)
+        .scaleEffect17(isHighlighted ? 1.05 : 1)
+        .animation(.defaultLinear, value: isHighlighted)
+    }
+
+    @ViewBuilder
+    private func imageView() -> some View {
+        ZStack {
+            Color(white: 1, opacity: 0.2)
+            if let image = chapter.image {
+                Image(uiImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            }
+        }
+        .animation(.defaultLinear, value: chapter.image)
+        .overlay {
+            LinearGradient(
+                gradient: Gradient(colors: [.black.opacity(0.7), .clear]),
+                startPoint: .bottom,
+                endPoint: .top
+            )
+        }
+        .overlay(alignment: .topTrailing) {
+            durationLabel()
+        }
+    }
+
+    @ViewBuilder
+    private func titleView() -> some View {
+        if let title = chapter.title {
+            Text(title)
+                .foregroundStyle(.white)
+                .font(.footnote)
+                .fontWeight(.semibold)
+                .lineLimit(2)
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+        }
+    }
+
+    @ViewBuilder
+    private func durationLabel() -> some View {
+        if let formattedDuration {
+            Text(formattedDuration)
+                .font(.caption2)
+                .foregroundStyle(.white)
+                .padding(.horizontal, 4)
+                .padding(.vertical, 2)
+                .background(Color(white: 0, opacity: 0.8))
+                .clipShape(RoundedRectangle(cornerRadius: 2))
+                .padding(8)
+        }
     }
 }
 
@@ -90,17 +133,18 @@ struct ChaptersPlayerView: View {
             ScrollView(.horizontal) {
                 HStack(spacing: 15) {
                     ForEach(chapters, id: \.timeRange) { chapter in
-                        Button(action: {
-                            player.seek(at(chapter.timeRange.start + CMTime(value: 1, timescale: 10)))
-                        }) {
-                            ChapterView(chapter: chapter)
-                                .saturation(currentChapter == chapter ? 1 : 0)
+                        Button {
+                            player.seek(to: chapter)
+                        } label: {
+                            ChapterView(chapter: chapter, isHighlighted: chapter == currentChapter)
                         }
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
                 .padding(.horizontal)
             }
             .scrollIndicators(.hidden)
+            .scrollClipDisabled17()
         }
     }
 }

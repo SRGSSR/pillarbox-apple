@@ -188,7 +188,7 @@ struct SettingsView: View {
             Text("Made with ")
             Image(systemName: "heart.fill")
                 .foregroundColor(.red)
-                .pulseSymbolEffect()
+                .pulseSymbolEffect17()
             Text(" in Switzerland")
         }
         .frame(maxWidth: .infinity)
