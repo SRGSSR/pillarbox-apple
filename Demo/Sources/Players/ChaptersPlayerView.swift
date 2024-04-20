@@ -121,6 +121,7 @@ struct ChaptersPlayerView: View {
         .bind(progressTracker, to: model.player)
         .onReceive(model.player.$metadata, assign: \.chapters, to: $chapters)
         .onAppear(perform: play)
+        .tracked(name: "chapters-player")
     }
 
     private func play() {
