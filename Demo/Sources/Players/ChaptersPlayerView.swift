@@ -33,7 +33,7 @@ private struct ChapterCell: View {
         .frame(width: Self.width, height: Self.width * 9 / 16)
         .clipShape(RoundedRectangle(cornerRadius: 5))
         .saturation(isHighlighted ? 1 : 0)
-        .scaleEffect17(isHighlighted ? 1.05 : 1)
+        .scaleEffect17(isHighlighted ? 1.07 : 1)
         .animation(.defaultLinear, value: isHighlighted)
     }
 
