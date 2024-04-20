@@ -60,15 +60,17 @@ The PillarboxPlayer framework fully integrates with SwiftUI, embracing its decla
 - ``SeekBehavior``
 - ``StreamType``
 
+### Metadata
+
+- ``AssetMetadata``
+- ``PlayerMetadata``
+
 ### System Integration
 
 - <doc:airplay>
 - <doc:control-center>
 - <doc:picture-in-picture>
 
-- ``AssetMetadata``
-- ``NowPlayingInfo``
-- ``NowPlayingMetadata``
 - ``PictureInPicture``
 - ``PictureInPictureButton``
 - ``PictureInPictureDelegate``

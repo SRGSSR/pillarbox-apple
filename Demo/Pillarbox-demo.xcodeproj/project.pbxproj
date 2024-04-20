@@ -28,6 +28,7 @@
 		6F0B2E8B2A40EE0700B69675 /* ContentList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0B2E8A2A40EE0700B69675 /* ContentList.swift */; };
 		6F0E5CD32B3394EA0031E313 /* PiPButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E5CD22B3394EA0031E313 /* PiPButton.swift */; };
 		6F0E5CD52B33A41F0031E313 /* MonoscopicVideoView~ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E5CD42B33A41F0031E313 /* MonoscopicVideoView~ios.swift */; };
+		6F12A9522BD2B8A300AD6DDB /* IntegratingWithControlCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F12A9512BD2B8A300AD6DDB /* IntegratingWithControlCenter.swift */; };
 		6F26F35E2B33B73900392ED4 /* SupportingBasicPictureInPicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F26F35D2B33B73900392ED4 /* SupportingBasicPictureInPicture.swift */; };
 		6F59E87929CF31E10093E6FB /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84029CF31E10093E6FB /* SearchView.swift */; };
 		6F59E87A29CF31E10093E6FB /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84129CF31E10093E6FB /* SearchViewModel.swift */; };
@@ -116,6 +117,7 @@
 		6F0B2E8A2A40EE0700B69675 /* ContentList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentList.swift; sourceTree = "<group>"; };
 		6F0E5CD22B3394EA0031E313 /* PiPButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiPButton.swift; sourceTree = "<group>"; };
 		6F0E5CD42B33A41F0031E313 /* MonoscopicVideoView~ios.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MonoscopicVideoView~ios.swift"; sourceTree = "<group>"; };
+		6F12A9512BD2B8A300AD6DDB /* IntegratingWithControlCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegratingWithControlCenter.swift; sourceTree = "<group>"; };
 		6F26F35D2B33B73900392ED4 /* SupportingBasicPictureInPicture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingBasicPictureInPicture.swift; sourceTree = "<group>"; };
 		6F45DB9A2893B773008ACCE6 /* Application.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
 		6F45DB9B2893B773008ACCE6 /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
@@ -326,7 +328,6 @@
 			isa = PBXGroup;
 			children = (
 				6FCB9DDD29E024E900961B69 /* BlurredView.swift */,
-				0E46D3002BD2754400133AE2 /* ChaptersPlayerView.swift */,
 				6F59E86229CF31E10093E6FB /* LinkView.swift */,
 				6FAD51102B331A2C0078FE08 /* Multi */,
 				0E6B995B29D43E4200D0276D /* OptInView.swift */,
@@ -403,6 +404,7 @@
 			isa = PBXGroup;
 			children = (
 				6F59E86E29CF31E10093E6FB /* BasicPlaybackView.swift */,
+				0E46D3002BD2754400133AE2 /* ChaptersPlayerView.swift */,
 				0E4128BC2AFB7F2A00D67759 /* InlineSystemPlayerView.swift */,
 				6F59E86B29CF31E10093E6FB /* PlaybackView.swift */,
 				6F59E86A29CF31E10093E6FB /* PlayerConfiguration.swift */,
@@ -468,6 +470,7 @@
 				6F26F35D2B33B73900392ED4 /* SupportingBasicPictureInPicture.swift */,
 				6F7EAA542B17755C00194D03 /* TrackingProgressTutorial~ios.swift */,
 				6FD407882B189C0600D34BD1 /* TrackingVisibilityTutorial~ios.swift */,
+				6F12A9512BD2B8A300AD6DDB /* IntegratingWithControlCenter.swift */,
 			);
 			path = Tutorials;
 			sourceTree = "<group>";
@@ -656,6 +659,7 @@
 				0E48F3FC2B2DBAD4001982BB /* CustomNavigationLink.swift in Sources */,
 				6FD407892B189C0600D34BD1 /* TrackingVisibilityTutorial~ios.swift in Sources */,
 				0ECC5AD52A517A4C0064E701 /* PlaybackSlider~ios.swift in Sources */,
+				6F12A9522BD2B8A300AD6DDB /* IntegratingWithControlCenter.swift in Sources */,
 				0EE2A3B02B29F82200BAAD65 /* CustomSection.swift in Sources */,
 				6F59E89929CF31E20093E6FB /* PlaybackView.swift in Sources */,
 				6F59E8A029CF31E20093E6FB /* Constant.swift in Sources */,

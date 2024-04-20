@@ -1,20 +1,18 @@
 @Tutorial(time: 2) {
     @Intro(title: "Integrating with the Control Center") {
-        Enable control of playback directly from the Control Center.
+        Control playback directly from the Control Center.
 
         @Image(source: integrating-with-control-center, alt: "An image depicting the Control Center.")
     }
     
-    @Section(title: "Control Center and Playback") {
+    @Section(title: "Enable playback steering from the Control Center") {
         @ContentAndMedia {
-            Bind the ``Player`` and the Control Center.
+            Integrate a ``Player`` with the Control Center.
         }
 
         @Steps {
             @Step {
-                Start the playback.
-
-                Excellent! The player is now active, but the Control Center is not yet aware.
+                Create a ``Player`` with an associated ``VideoView``.
 
                 @Code(name: "ContentView.swift", file: integrating-with-control-center-1-1.swift) {
                     @Image(source: integrating-with-control-center-1-1, alt: "A screenshot from an iPhone")
@@ -22,9 +20,9 @@
             }
             
             @Step {
-                Link the ``Player`` with the Control Center.
+                Enable Control Center integration for the ``Player``.
 
-                Great! Now the player is linked to the Control Center, and we can use the controls.
+                The Control Center can now be used to steer playback but does not display any metadata yet.
                 
                 @Code(name: "ContentView.swift", file: integrating-with-control-center-1-2.swift) {
                     @Image(source: integrating-with-control-center-1-2, alt: "A screenshot from an iPhone")
@@ -33,17 +31,14 @@
         }
     }
     
-    @Section(title: "Control Center and Metadata") {
+    @Section(title: "Display metadata in the Control Center") {
         @ContentAndMedia {
-            Provide metadata to the Control Center.
+            Associate metadata with the content being played so that it can be displayed in the Control Center.
         }
         
         @Steps {
             @Step {
-                Add metadata to the ``Player``.
-                
-                By default the metadata is empty.
-                To populate the Control Center, additional steps are required.
+                Add metadata to the ``Player``, conforming to the ``AssetMetadata`` protocol.
 
                 @Code(name: "ContentView.swift", file: integrating-with-control-center-2-1.swift) {
                     @Image(source: integrating-with-control-center-2-1, alt: "A screenshot from an iPhone")
@@ -51,7 +46,9 @@
             }
             
             @Step {
-                Include a title, a subtitle, and an image.
+                Implement the protocol to return some ``PlayerMetadata``, including a title, a subtitle and an image.
+                
+                This code assumes that your application resources provide an image called `apple`.
                 
                 @Code(name: "ContentView.swift", file: integrating-with-control-center-2-2.swift) {
                     @Image(source: integrating-with-control-center-2-2, alt: "A screenshot from an iPhone")

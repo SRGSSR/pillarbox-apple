@@ -20,6 +20,7 @@ Its robust player provides all essential playback features you might expect:
 - Integration with the standard system playback user experience, both on iOS and tvOS.
 - Playlist management including bidirectional navigation.
 - Support for alternative audio tracks, Audio Description, subtitles, CC and SDH, all tightly integrated with standard system accessibility features.
+- Metadata and chapter support.
 - AirPlay compatibility.
 - Control center integration.
 - Multiple instance support.
@@ -40,6 +41,7 @@ From left to right:
 - Screenshots 1, 2 and 3: [Rich custom player user interface](Demo/Sources/Players/PlaybackView.swift).
 - Screenshot 4: [Player with associated playlist](Demo/Sources/Showcase/Playlist/PlaylistView.swift).
 - Screenshot 5: [Stories](Demo/Sources/Showcase/Stories/StoriesView.swift).
+- Screenshot 6: [Custom chapter navigation](Demo/Sources/Players/ChaptersPlayerView.swift).
 
 # Code example
 
