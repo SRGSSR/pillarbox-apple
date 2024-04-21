@@ -8,7 +8,7 @@ import CoreMedia
 import PillarboxPlayer
 import SwiftUI
 
-private struct ChapterView: View {
+private struct ChapterCell: View {
     private static let width: CGFloat = 200
 
     private static let durationFormatter: DateComponentsFormatter = {
@@ -33,7 +33,7 @@ private struct ChapterView: View {
         .frame(width: Self.width, height: Self.width * 9 / 16)
         .clipShape(RoundedRectangle(cornerRadius: 5))
         .saturation(isHighlighted ? 1 : 0)
-        .scaleEffect17(isHighlighted ? 1.05 : 1)
+        .scaleEffect17(isHighlighted ? 1.07 : 1)
         .animation(.defaultLinear, value: isHighlighted)
     }
 
@@ -88,14 +88,13 @@ private struct ChapterView: View {
     }
 }
 
-struct ChaptersPlayerView: View {
-    private let player = Player()
-    @State private var layout: PlaybackView.Layout = .minimized
-    @State private var chapters: [Chapter] = []
+private struct ChaptersList: View {
+    @ObservedObject var player: Player
+
     @StateObject private var progressTracker = ProgressTracker(interval: .init(value: 1, timescale: 1))
 
-    private var effectiveLayout: Binding<PlaybackView.Layout> {
-        !chapters.isEmpty ? $layout : .constant(.inline)
+    private var chapters: [Chapter] {
+        player.metadata.chapters
     }
 
     private var currentChapter: Chapter? {
@@ -105,47 +104,72 @@ struct ChaptersPlayerView: View {
         }
     }
 
-    let media: Media
-
     var body: some View {
-        VStack {
-            PlaybackView(player: player, layout: effectiveLayout)
-                .supportsPictureInPicture()
-            if layout != .maximized {
-                chaptersView()
-            }
+        ScrollView(.horizontal) {
+            chaptersList()
         }
-        .animation(.defaultLinear, values: layout, chapters)
-        .background(.black)
+        .scrollIndicators(.hidden)
+        .scrollClipDisabled17()
         .bind(progressTracker, to: player)
-        .onReceive(player.$metadata, assign: \.chapters, to: $chapters)
-        .onAppear(perform: play)
-    }
-
-    private func play() {
-        player.append(media.playerItem())
-        player.play()
+        ._debugBodyCounter(color: .purple)
     }
 
     @ViewBuilder
-    private func chaptersView() -> some View {
-        if !chapters.isEmpty {
-            ScrollView(.horizontal) {
-                HStack(spacing: 15) {
-                    ForEach(chapters, id: \.timeRange) { chapter in
-                        Button {
-                            player.seek(to: chapter)
-                        } label: {
-                            ChapterView(chapter: chapter, isHighlighted: chapter == currentChapter)
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                    }
+    private func chaptersList() -> some View {
+        HStack(spacing: 15) {
+            ForEach(chapters, id: \.timeRange) { chapter in
+                Button {
+                    player.seek(to: chapter)
+                } label: {
+                    ChapterCell(chapter: chapter, isHighlighted: chapter == currentChapter)
                 }
-                .padding(.horizontal)
+                .buttonStyle(PlainButtonStyle())
             }
-            .scrollIndicators(.hidden)
-            .scrollClipDisabled17()
         }
+        .padding(.horizontal)
+    }
+}
+
+private struct MainView: View {
+    @ObservedObject var player: Player
+    @State private var layout: PlaybackView.Layout = .minimized
+
+    private var chapters: [Chapter] {
+        player.metadata.chapters
+    }
+
+    private var currentLayout: Binding<PlaybackView.Layout> {
+        !chapters.isEmpty ? $layout : .constant(.inline)
+    }
+
+    var body: some View {
+        VStack {
+            PlaybackView(player: player, layout: currentLayout)
+                .supportsPictureInPicture()
+            if layout != .maximized, !chapters.isEmpty {
+                ChaptersList(player: player)
+            }
+        }
+        .animation(.defaultLinear, values: layout, chapters)
+    }
+}
+
+struct ChaptersPlayerView: View {
+    @StateObject private var model = PlayerViewModel.persisted ?? PlayerViewModel()
+
+    let media: Media
+
+    var body: some View {
+        MainView(player: model.player)
+            .enabledForInAppPictureInPicture(persisting: model)
+            .background(.black)
+            .onAppear(perform: play)
+            .tracked(name: "chapters-player")
+    }
+
+    private func play() {
+        model.media = media
+        model.play()
     }
 }
 
