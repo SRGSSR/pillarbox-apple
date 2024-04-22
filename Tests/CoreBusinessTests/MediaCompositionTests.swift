@@ -19,4 +19,9 @@ final class MediaCompositionTests: XCTestCase {
         let mediaComposition = Mock.mediaComposition(.mixed)
         expect(mediaComposition.chapters.count).to(equal(10))
     }
+
+    func testAudioChapterRemoval() {
+        let mediaComposition = Mock.mediaComposition(.audioChapters)
+        expect(mediaComposition.chapters).to(beEmpty())
+    }
 }
