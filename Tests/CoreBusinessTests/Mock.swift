@@ -16,6 +16,7 @@ enum Mock {
         case live
         case onDemand
         case redundant
+        case mixed
     }
 
     static func mediaComposition(_ kind: MediaCompositionKind = .onDemand) -> MediaComposition {
