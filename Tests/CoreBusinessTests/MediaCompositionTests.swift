@@ -14,4 +14,9 @@ final class MediaCompositionTests: XCTestCase {
         let mediaComposition = Mock.mediaComposition()
         expect(mediaComposition.mainChapter.urn).to(equal(mediaComposition.chapterUrn))
     }
+
+    func testChapters() {
+        let mediaComposition = Mock.mediaComposition(.mixed)
+        expect(mediaComposition.chapters.count).to(equal(10))
+    }
 }
