@@ -20,7 +20,7 @@ public struct MediaComposition: Decodable {
 
     /// The available chapters.
     public var chapters: [Chapter] {
-        _chapters.filter { $0.fullLengthUrn == chapterUrn }
+        _chapters.filter { $0.fullLengthUrn == chapterUrn && $0.mediaType == mainChapter.mediaType }
     }
 
     /// The related show.
