@@ -22,6 +22,7 @@ public extension MediaComposition {
             case date
             case description
             case imageUrl
+            case mediaType
             case title
             case urn
             case fullLengthUrn
@@ -46,6 +47,9 @@ public extension MediaComposition {
 
         /// The content type.
         public let contentType: ContentType
+
+        /// The media type.
+        public let mediaType: MediaType
 
         /// The publication date.
         public let date: Date
