@@ -83,7 +83,7 @@ public extension Player {
         }) else {
             return position
         }
-        return at(forbiddenTimeRange.end + CMTime(value: 1, timescale: 10))
+        return at(forbiddenTimeRange.end)
     }
 
     /// Performs an optimal seek to a given time, providing the best possible interactive user experience in all cases.
