@@ -12,6 +12,8 @@ class QueuePlayer: AVQueuePlayer {
 
     private var pendingSeeks = Deque<Seek>()
 
+    var forbiddenTimeRanges: [CMTimeRange] = []
+
     // Starting with iOS 17 accessing media selection criteria might be slow. Use a cache for the lifetime of the
     // player.
     private var mediaSelectionCriteria: [AVMediaCharacteristic: AVPlayerMediaSelectionCriteria?] = [:]
@@ -42,18 +44,19 @@ class QueuePlayer: AVQueuePlayer {
             return
         }
 
-        notifySeekStart(at: time)
-
-        let seek = Seek(
+        let seek = fixedSeek(Seek(
             time: time,
             toleranceBefore: toleranceBefore,
             toleranceAfter: toleranceAfter,
             isSmooth: smooth,
             completionHandler: completionHandler
-        )
+        ))
+
+        notifySeekStart(at: seek.time)
+
         pendingSeeks.append(seek)
 
-        if smooth && pendingSeeks.count != 1 {
+        if seek.isSmooth && pendingSeeks.count != 1 {
             return
         }
 
@@ -61,6 +64,21 @@ class QueuePlayer: AVQueuePlayer {
             guard let self else { return }
             notifySeekEnd()
         }
+    }
+
+    private func fixedSeek(_ seek: Seek) -> Seek {
+        guard let forbiddenTimeRange = forbiddenTimeRanges.first(where: { forbiddenTimeRange in
+            forbiddenTimeRange.containsTime(seek.time)
+        }) else {
+            return seek
+        }
+        return Seek(
+            time: forbiddenTimeRange.end,
+            toleranceBefore: .zero,
+            toleranceAfter: .zero,
+            isSmooth: false,
+            completionHandler: seek.completionHandler
+        )
     }
 
     func enqueue(seek: Seek, completion: @escaping () -> Void) {

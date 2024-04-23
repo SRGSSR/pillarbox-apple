@@ -63,7 +63,7 @@ public extension Player {
         completion: @escaping (Bool) -> Void = { _ in }
     ) {
         // Mitigates issues arising when seeking to the very end of the range by introducing a small offset.
-        let time = fixedPosition(position).time.clamped(to: seekableTimeRange, offset: CMTime(value: 1, timescale: 10))
+        let time = position.time.clamped(to: seekableTimeRange, offset: CMTime(value: 1, timescale: 10))
         guard time.isValid else {
             completion(true)
             return
@@ -75,15 +75,6 @@ public extension Player {
             smooth: smooth,
             completionHandler: completion
         )
-    }
-
-    private func fixedPosition(_ position: Position) -> Position {
-        guard let forbiddenTimeRange = metadata.forbiddenTimeRanges.first(where: { forbiddenTimeRange in
-            forbiddenTimeRange.containsTime(position.time)
-        }) else {
-            return position
-        }
-        return at(forbiddenTimeRange.end)
     }
 
     /// Performs an optimal seek to a given time, providing the best possible interactive user experience in all cases.

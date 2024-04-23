@@ -198,6 +198,7 @@ public final class Player: ObservableObject, Equatable {
         configureMetadataPublisher()
 
         metadataPublisher.map { [queuePlayer] metadata -> AnyPublisher<CMTime, Never> in
+            queuePlayer.forbiddenTimeRanges = metadata.forbiddenTimeRanges
             guard !metadata.forbiddenTimeRanges.isEmpty else { return Empty().eraseToAnyPublisher() }
             return Publishers.PeriodicTimePublisher(for: queuePlayer, interval: .init(value: 1, timescale: 10))
                 .compactMap { time in
