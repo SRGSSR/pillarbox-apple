@@ -39,6 +39,8 @@ public struct PlayerMetadata: Equatable {
     /// Chapter associated with the content.
     public let chapters: [Chapter]
 
+    public let forbiddenTimeRanges: [CMTimeRange]
+
     var episodeDescription: String? {
         switch episodeInformation {
         case let .long(season: season, episode: episode):
@@ -92,7 +94,8 @@ public struct PlayerMetadata: Equatable {
         description: String? = nil,
         image: UIImage? = nil,
         episodeInformation: EpisodeInformation? = nil,
-        chapters: [Chapter] = []
+        chapters: [Chapter] = [],
+        forbiddenTimeRanges: [CMTimeRange] = []
     ) {
         self.identifier = identifier
         self.title = title
@@ -101,5 +104,6 @@ public struct PlayerMetadata: Equatable {
         self.image = image
         self.episodeInformation = episodeInformation
         self.chapters = chapters
+        self.forbiddenTimeRanges = forbiddenTimeRanges
     }
 }
