@@ -72,10 +72,19 @@ extension MediaMetadata: AssetMetadata {
             image: artworkImage(for: mediaComposition.mainChapter),
             episodeInformation: episodeInformation,
             chapters: chapters,
-            forbiddenTimeRanges: mediaComposition.mainChapter.segments
-                .filter { $0.blockingReason != nil }
-                .map { CMTimeRange(start: .init(value: CMTimeValue($0.markIn), timescale: 1000), end: .init(value: CMTimeValue($0.markOut), timescale: 1000)) }
+            forbiddenTimeRanges: forbiddenTimeRanges
         )
+    }
+
+    private var forbiddenTimeRanges: [CMTimeRange] {
+        mediaComposition.mainChapter.segments
+            .filter { $0.blockingReason != nil }
+            .map { segment in
+                CMTimeRange(
+                    start: .init(value: CMTimeValue(segment.markIn), timescale: 1000),
+                    end: .init(value: CMTimeValue(segment.markOut), timescale: 1000)
+                )
+            }
     }
 
     var title: String {
