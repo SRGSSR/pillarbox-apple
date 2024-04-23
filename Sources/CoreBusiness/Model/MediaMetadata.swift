@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import CoreMedia
 import PillarboxPlayer
 import UIKit
 
@@ -70,7 +71,10 @@ extension MediaMetadata: AssetMetadata {
             description: description,
             image: artworkImage(for: mediaComposition.mainChapter),
             episodeInformation: episodeInformation,
-            chapters: chapters
+            chapters: chapters,
+            forbiddenTimeRanges: mediaComposition.mainChapter.segments
+                .filter { $0.blockingReason != nil }
+                .map { CMTimeRange(start: .init(value: CMTimeValue($0.markIn), timescale: 1000), end: .init(value: CMTimeValue($0.markOut), timescale: 1000)) }
         )
     }
 
