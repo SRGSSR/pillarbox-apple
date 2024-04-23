@@ -201,12 +201,7 @@ public final class Player: ObservableObject, Equatable {
             queuePlayer.forbiddenTimeRanges = metadata.forbiddenTimeRanges
             guard !metadata.forbiddenTimeRanges.isEmpty else { return Empty().eraseToAnyPublisher() }
             return Publishers.PeriodicTimePublisher(for: queuePlayer, interval: .init(value: 1, timescale: 10))
-                .compactMap { time in
-                    let forbiddenTimeRange = metadata.forbiddenTimeRanges.first { forbiddenTimeRange in
-                        forbiddenTimeRange.containsTime(time)
-                    }
-                    return forbiddenTimeRange?.end
-                }
+                .compactMap { $0.after(timeRanges: metadata.forbiddenTimeRanges) }
                 .eraseToAnyPublisher()
         }
         .switchToLatest()

@@ -51,9 +51,7 @@ class QueuePlayer: AVQueuePlayer {
             isSmooth: smooth,
             completionHandler: completionHandler
         ))
-
         notifySeekStart(at: seek.time)
-
         pendingSeeks.append(seek)
 
         if seek.isSmooth && pendingSeeks.count != 1 {
@@ -67,13 +65,9 @@ class QueuePlayer: AVQueuePlayer {
     }
 
     private func fixedSeek(_ seek: Seek) -> Seek {
-        guard let forbiddenTimeRange = forbiddenTimeRanges.first(where: { forbiddenTimeRange in
-            forbiddenTimeRange.containsTime(seek.time)
-        }) else {
-            return seek
-        }
+        guard let fixedTime = seek.time.after(timeRanges: forbiddenTimeRanges) else { return seek }
         return Seek(
-            time: forbiddenTimeRange.end,
+            time: fixedTime,
             toleranceBefore: .zero,
             toleranceAfter: .zero,
             isSmooth: false,

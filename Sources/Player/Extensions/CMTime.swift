@@ -13,4 +13,9 @@ extension CMTime {
         guard !offsetRange.isEmpty else { return offsetRange.start }
         return CMTimeClampToRange(self, range: offsetRange)
     }
+
+    func after(timeRanges: [CMTimeRange]) -> CMTime? {
+        let matchingRanges = timeRanges.filter { $0.containsTime(self) }
+        return matchingRanges.map(\.end).max()
+    }
 }
