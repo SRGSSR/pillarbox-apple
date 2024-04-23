@@ -11,7 +11,7 @@ import PillarboxPlayer
 
 class BlockedSegmentTracker: PlayerItemTracker {
     private var cancellables = Set<AnyCancellable>()
-    private var forbiddenRanges: [ClosedRange<TimeInterval>] = []
+    private var forbiddenRanges: [CMTimeRange] = []
     private weak var player: Player?
 
     required init(configuration: Void) {}
@@ -24,8 +24,8 @@ class BlockedSegmentTracker: PlayerItemTracker {
             .sink { [weak self, weak player] _ in
                 guard let player else { return }
                 self?.forbiddenRanges.forEach { forbiddenRange in
-                    if forbiddenRange.contains(player.time.seconds) {
-                        player.seek(at(.init(value: CMTimeValue(forbiddenRange.upperBound + 1), timescale: 1)), smooth: false)
+                    if forbiddenRange.containsTime(player.time) {
+                        player.seek(at(forbiddenRange.end + CMTime(value: 1, timescale: 10)), smooth: false)
                     }
                 }
             }
@@ -35,14 +35,17 @@ class BlockedSegmentTracker: PlayerItemTracker {
     func updateMetadata(with metadata: MediaComposition) {
         forbiddenRanges = metadata.mainChapter.segments
             .filter { $0.blockingReason != nil }
-            .map { TimeInterval($0.markIn / 1000)...TimeInterval($0.markOut / 1000) }
+            .map { CMTimeRange(start: .init(value: CMTimeValue($0.markIn), timescale: 1000), end: .init(value: CMTimeValue($0.markOut), timescale: 1000)) }
             .reduce(into: []) { forbiddenRanges, range in
                 forbiddenRanges.append(range)
             }
-        player?.forbiddenRanges = forbiddenRanges
+        DispatchQueue.main.async {
+            self.player?.forbiddenRanges = self.forbiddenRanges
+        }
     }
 
-    func updateProperties(with properties: PlayerProperties) {}
+    func updateProperties(with properties: PlayerProperties) {
+    }
 
     func disable() {}
 }

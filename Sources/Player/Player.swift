@@ -33,7 +33,7 @@ public final class Player: ObservableObject, Equatable {
     @Published var storedItems: Deque<PlayerItem>
     @Published var _playbackSpeed: PlaybackSpeed = .indefinite
 
-    @Published public var forbiddenRanges: [ClosedRange<TimeInterval>] = []
+    @Published public var forbiddenRanges: [CMTimeRange] = []
 
     @Published var isActive = false {
         didSet {
