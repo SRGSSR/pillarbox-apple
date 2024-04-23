@@ -52,4 +52,8 @@ public struct Chapter: Equatable {
         self.image = image
         self.timeRange = timeRange
     }
+
+    func containsTime(_ time: CMTime) -> Bool {
+        timeRange.containsTime(time)
+    }
 }

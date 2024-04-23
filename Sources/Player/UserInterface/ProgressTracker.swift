@@ -102,6 +102,12 @@ public final class ProgressTracker: ObservableObject {
         _progress != nil ? 0...1 : 0...0
     }
 
+    /// The current chapter.
+    public var chapter: Chapter? {
+        guard let player, let time else { return nil }
+        return player.metadata.chapters.first { $0.containsTime(time) }
+    }
+
     /// A Boolean reporting whether progress information is available.
     ///
     /// This Boolean is a recommendation you can use to entirely hide progress information in cases where it is not

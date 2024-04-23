@@ -97,13 +97,6 @@ private struct ChaptersList: View {
         player.metadata.chapters
     }
 
-    private var currentChapter: Chapter? {
-        chapters.first { chapter in
-            guard let time = progressTracker.time else { return false }
-            return chapter.timeRange.containsTime(time)
-        }
-    }
-
     var body: some View {
         ScrollView(.horizontal) {
             chaptersList()
@@ -121,7 +114,7 @@ private struct ChaptersList: View {
                 Button {
                     player.seek(to: chapter)
                 } label: {
-                    ChapterCell(chapter: chapter, isHighlighted: chapter == currentChapter)
+                    ChapterCell(chapter: chapter, isHighlighted: chapter == progressTracker.chapter)
                 }
                 .buttonStyle(PlainButtonStyle())
             }
