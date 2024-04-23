@@ -29,4 +29,9 @@ public extension Player {
     func boundaryTimePublisher(for times: [CMTime], queue: DispatchQueue = .main) -> AnyPublisher<Void, Never> {
         Publishers.BoundaryTimePublisher(for: queuePlayer, times: times, queue: queue)
     }
+
+    /// Publishes the current time, smoothing out emitted values during seeks.
+    func smoothCurrentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
+        queuePlayer.smoothCurrentTimePublisher(interval: interval, queue: queue)
+    }
 }
