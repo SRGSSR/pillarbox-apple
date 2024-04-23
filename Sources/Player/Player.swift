@@ -196,6 +196,23 @@ public final class Player: ObservableObject, Equatable {
         configureControlCenterPublishers()
         configureCurrentTrackerPublishers()
         configureMetadataPublisher()
+
+        metadataPublisher.map { [queuePlayer] metadata -> AnyPublisher<CMTime, Never> in
+            guard !metadata.forbiddenTimeRanges.isEmpty else { return Empty().eraseToAnyPublisher() }
+            return Publishers.PeriodicTimePublisher(for: queuePlayer, interval: .init(value: 1, timescale: 10))
+                .compactMap { time in
+                    let forbiddenTimeRange = metadata.forbiddenTimeRanges.first { forbiddenTimeRange in
+                        forbiddenTimeRange.containsTime(time)
+                    }
+                    return forbiddenTimeRange?.end
+                }
+                .eraseToAnyPublisher()
+        }
+        .switchToLatest()
+        .sink { [queuePlayer] seekTime in
+            queuePlayer.seek(to: seekTime, toleranceBefore: .zero, toleranceAfter: .zero)
+        }
+        .store(in: &cancellables)
     }
 
     /// Creates a player with a single item in its queue.
