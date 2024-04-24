@@ -111,6 +111,8 @@ public final class Player: ObservableObject, Equatable {
     }
 
     /// The current time.
+    ///
+    /// Returns `.invalid` when the time is unknown.
     public var time: CMTime {
         queuePlayer.currentTime().clamped(to: seekableTimeRange)
     }

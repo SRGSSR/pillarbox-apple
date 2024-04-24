@@ -90,10 +90,9 @@ public final class ProgressTracker: ObservableObject {
 
     /// The time corresponding to the current progress.
     ///
-    /// The returned value might be different from the player current time when interaction takes place.
-    ///
-    /// Non-`nil` returned times are guaranteed to be valid.
-    public var time: CMTime? {
+    /// Returns `.invalid` when the time range is unknown. The returned value might be different from the player current
+    /// time when interaction takes place.
+    public var time: CMTime {
         time(forProgress: _progress)
     }
 
@@ -112,10 +111,9 @@ public final class ProgressTracker: ObservableObject {
 
     /// The current time range.
     ///
-    /// Non-`nil` returned ranges are guaranteed to be valid.
-    public var timeRange: CMTimeRange? {
-        guard let timeRange = player?.seekableTimeRange, timeRange.isValidAndNotEmpty else { return nil }
-        return timeRange
+    /// Returns `.invalid` when the time range is unknown.
+    public var timeRange: CMTimeRange {
+        player?.seekableTimeRange ?? .invalid
     }
 
     /// Creates a progress tracker updating its progress at the specified interval.
@@ -166,7 +164,8 @@ public final class ProgressTracker: ObservableObject {
     }
 
     private func seek(to progress: Float, optimal: Bool) {
-        guard let player, let time = time(forProgress: progress) else { return }
+        guard let player else { return }
+        let time = time(forProgress: progress)
         if optimal {
             player.seek(to: time)
         }
@@ -175,8 +174,8 @@ public final class ProgressTracker: ObservableObject {
         }
     }
 
-    private func time(forProgress progress: Float?) -> CMTime? {
-        guard let timeRange, let progress else { return nil }
+    private func time(forProgress progress: Float?) -> CMTime {
+        guard let progress else { return .invalid }
         return timeRange.start + CMTimeMultiplyByFloat64(timeRange.duration, multiplier: Float64(progress))
     }
 

@@ -98,10 +98,7 @@ private struct ChaptersList: View {
     }
 
     private var currentChapter: Chapter? {
-        chapters.first { chapter in
-            guard let time = progressTracker.time else { return false }
-            return chapter.timeRange.containsTime(time)
-        }
+        chapters.first { $0.timeRange.containsTime(progressTracker.time) }
     }
 
     var body: some View {
