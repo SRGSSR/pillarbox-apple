@@ -11,6 +11,13 @@ final class ExamplesViewModel: ObservableObject {
         case reload
     }
 
+    let lemanBleuMedias = Template.medias(from: [
+        URLTemplate.lemanBleuLive,
+        URLTemplate.lemanBleu1,
+        URLTemplate.lemanBleu2,
+        URLTemplate.lemanBleu3
+    ])
+
     let urlMedias = Template.medias(from: [
         URLTemplate.onDemandVideoHLS,
         URLTemplate.shortOnDemandVideoHLS,

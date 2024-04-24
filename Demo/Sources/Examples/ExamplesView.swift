@@ -98,10 +98,16 @@ struct ExamplesView: View {
 
     @ViewBuilder
     private func content() -> some View {
+        lemanBleuSections()
         MediaEntryView()
         srgSections()
         thirdPartySections()
         miscellaneousSections()
+    }
+
+    @ViewBuilder
+    private func lemanBleuSections() -> some View {
+        section(title: "Léman Bleu", medias: model.lemanBleuMedias)
     }
 
     @ViewBuilder

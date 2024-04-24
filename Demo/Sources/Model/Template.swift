@@ -17,6 +17,30 @@ private let kUnifiedStreamingImageUrl2 = URL("https://website-storage.unified-st
 // Apple streams are found at https://developer.apple.com/streaming/examples/
 // Unified Streaming streams are found at https://demo.unified-streaming.com/k8s/features/stable/#!/hls
 enum URLTemplate {
+    static let lemanBleuLive = Template(
+        title: "Le Direct",
+        subtitle: "Léman Bleu",
+        imageUrl: "https://assets.lemanbleu.ch/Htdocs/Images/IF_Video/460_120402.jpg",
+        type: .url("https://naxoo.vedge.infomaniak.com/livecast/ik:naxoo/manifest.m3u8")
+    )
+    static let lemanBleu1 = Template(
+        title: "Fin de saison pour les Lions de Genève",
+        subtitle: "Sport",
+        imageUrl: "https://www.lemanbleu.ch/Htdocs/Files/Videos/Pictures/20896.jpg?CacheBusterGUID=948fca45-307a-4935-aca3-d812f1722af7",
+        type: .url("https://www.lemanbleu.ch/fr/Actualite/Sport/Fin-de-saison-pour-les-Lions-de-Geneve.html")
+    )
+    static let lemanBleu2 = Template(
+        title: "Le Grand Théâtre dévoile sa nouvelle saison",
+        subtitle: "Genève",
+        imageUrl: "https://www.lemanbleu.ch/Htdocs/Files/Videos/Pictures/20897.jpg?CacheBusterGUID=75689b21-0830-4eac-91dc-423c020f74bf",
+        type: .url("https://www.lemanbleu.ch/fr/Actualites/Geneve/Le-Grand-Theatre-devoile-sa-nouvelle-saison.html")
+    )
+    static let lemanBleu3 = Template(
+        title: "Edition du 23 avril 2024",
+        subtitle: "Le Journal",
+        imageUrl: "https://assets.lemanbleu.ch/Htdocs/Images/IF_Video/1898_395430.png",
+        type: .url("https://play.vod2.infomaniak.com/single/1jhvl2uqoex28/1jhvl2uqjuenp/1jhvl2uqoex35.mp4")
+    )
     static let onDemandVideoHLS = Template(
         title: "Switzerland says sorry! The fondue invasion",
         subtitle: "VOD - HLS",
