@@ -469,12 +469,12 @@ private struct TimeSlider: View {
 
     private var formattedElapsedTime: String? {
         guard streamType == .onDemand else { return nil }
-        return Self.formattedTime((progressTracker.time - progressTracker.timeRange.start).seconds, duration: progressTracker.timeRange.duration.seconds)
+        return Self.formattedTime((progressTracker.time - progressTracker.timeRange.start), duration: progressTracker.timeRange.duration)
     }
 
     private var formattedTotalTime: String? {
         guard streamType == .onDemand else { return nil }
-        return Self.formattedTime(progressTracker.timeRange.duration.seconds, duration: progressTracker.timeRange.duration.seconds)
+        return Self.formattedTime(progressTracker.timeRange.duration, duration: progressTracker.timeRange.duration)
     }
 
     private var isVisible: Bool {
@@ -504,12 +504,13 @@ private struct TimeSlider: View {
         .onReceive(player: player, assign: \.streamType, to: $streamType)
     }
 
-    private static func formattedTime(_ time: TimeInterval, duration: TimeInterval) -> String {
-        if duration < 60 * 60 {
-            return shortFormatter.string(from: time)!
+    private static func formattedTime(_ time: CMTime, duration: CMTime) -> String? {
+        guard time.isValid, duration.isValid else { return nil }
+        if duration.seconds < 60 * 60 {
+            return shortFormatter.string(from: time.seconds)!
         }
         else {
-            return longFormatter.string(from: time)!
+            return longFormatter.string(from: time.seconds)!
         }
     }
 
