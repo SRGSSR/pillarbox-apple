@@ -122,6 +122,8 @@ extension PlayerProperties {
 
 public extension PlayerProperties {
     /// The time range within which it is possible to seek.
+    ///
+    /// Returns `.invalid` when the time range is unknown.
     var seekableTimeRange: CMTimeRange {
         timeProperties.seekableTimeRange
     }

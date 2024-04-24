@@ -468,15 +468,13 @@ private struct TimeSlider: View {
     @State private var streamType: StreamType = .unknown
 
     private var formattedElapsedTime: String? {
-        guard streamType == .onDemand, let time = progressTracker.time, let timeRange = progressTracker.timeRange else {
-            return nil
-        }
-        return Self.formattedTime((time - timeRange.start).seconds, duration: timeRange.duration.seconds)
+        guard streamType == .onDemand else { return nil }
+        return Self.formattedTime((progressTracker.time - progressTracker.timeRange.start).seconds, duration: progressTracker.timeRange.duration.seconds)
     }
 
     private var formattedTotalTime: String? {
-        guard streamType == .onDemand, let timeRange = progressTracker.timeRange else { return nil }
-        return Self.formattedTime(timeRange.duration.seconds, duration: timeRange.duration.seconds)
+        guard streamType == .onDemand else { return nil }
+        return Self.formattedTime(progressTracker.timeRange.duration.seconds, duration: progressTracker.timeRange.duration.seconds)
     }
 
     private var isVisible: Bool {
