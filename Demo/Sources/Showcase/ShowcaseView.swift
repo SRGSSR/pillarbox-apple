@@ -86,6 +86,10 @@ struct ShowcaseView: View {
         // swiftlint:disable:next closure_body_length
         CustomSection("Playlists") {
             cell(
+                title: "Léman Bleu",
+                destination: .playlist(templates: Playlist.lemanBleu)
+            )
+            cell(
                 title: "Video URLs",
                 destination: .playlist(templates: Playlist.videoUrls)
             )

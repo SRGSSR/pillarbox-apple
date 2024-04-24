@@ -5,6 +5,13 @@
 //
 
 enum Playlist {
+    static let lemanBleu: [Template] = [
+        URLTemplate.lemanBleuLive,
+        URLTemplate.lemanBleu1,
+        URLTemplate.lemanBleu2,
+        URLTemplate.lemanBleu3
+    ]
+
     static let videoUrls: [Template] = [
         Template(
             title: "Le R. - Légumes trop chers",

@@ -10,6 +10,10 @@ import PillarboxPlayer
 
 final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     static let standardTemplates = [
+        URLTemplate.lemanBleuLive,
+        URLTemplate.lemanBleu1,
+        URLTemplate.lemanBleu2,
+        URLTemplate.lemanBleu3,
         URLTemplate.onDemandVideoHLS,
         URLTemplate.shortOnDemandVideoHLS,
         URLTemplate.onDemandVideoMP4,
