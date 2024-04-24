@@ -115,6 +115,11 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.currentTime().clamped(to: seekableTimeRange)
     }
 
+    /// The current chapter.
+    public var chapter: Chapter? {
+        metadata.chapters.first { $0.containsTime(time) }
+    }
+
     /// The low-level system player.
     ///
     /// Exposed for specific read-only needs like interfacing with `AVPlayer`-based 3rd party APIs. Mutating the state
