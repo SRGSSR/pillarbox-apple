@@ -70,7 +70,8 @@ extension MediaMetadata: AssetMetadata {
             description: description,
             image: artworkImage(for: mediaComposition.mainChapter),
             episodeInformation: episodeInformation,
-            chapters: chapters
+            chapters: chapters,
+            timeRanges: timeRanges
         )
     }
 
@@ -123,6 +124,17 @@ extension MediaMetadata: AssetMetadata {
                 image: artworkImage(for: chapter),
                 timeRange: chapter.timeRange
             )
+        }
+    }
+
+    private var timeRanges: [TimeRange] {
+        mediaComposition.mainChapter.timeIntervals.map { interval in
+            switch interval.kind {
+            case .opening:
+                TimeRange(kind: .credits(.opening), timeRange: interval.timeRange)
+            case .closing:
+                TimeRange(kind: .credits(.closing), timeRange: interval.timeRange)
+            }
         }
     }
 
