@@ -82,7 +82,6 @@ private struct MainView: View {
         ZStack {
             video()
             controls()
-            skipButton()
         }
         .ignoresSafeArea()
         .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
@@ -124,21 +123,24 @@ private struct MainView: View {
     @ViewBuilder
     private func bottomBar() -> some View {
         VStack(spacing: 0) {
+            skipButton()
             HStack(alignment: .bottom) {
                 metadata()
                 if isFullScreen {
                     bottomButtons()
                 }
             }
+            .opacity(isUserInterfaceHidden ? 0 : 1)
+
             HStack(spacing: 20) {
                 TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting)
                 if !isFullScreen {
                     bottomButtons()
                 }
             }
+            .opacity(isUserInterfaceHidden ? 0 : 1)
         }
         .preventsTouchPropagation()
-        .opacity(isUserInterfaceHidden ? 0 : 1)
         .animation(.linear(duration: 0.2), values: isUserInterfaceHidden, isInteracting)
         .padding(.horizontal)
         .padding(.vertical, 10)
@@ -229,9 +231,7 @@ private struct MainView: View {
     @ViewBuilder
     private func skipButton() -> some View {
         SkipButton(player: player, progressTacker: progressTracker)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-            .padding(.trailing, 20)
-            .padding(.bottom, !isUserInterfaceHidden ? 100 : 50)
+            .frame(maxWidth: .infinity, alignment: .trailing)
     }
 
     @ViewBuilder
