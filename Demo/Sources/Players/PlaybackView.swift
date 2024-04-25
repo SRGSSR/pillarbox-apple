@@ -82,6 +82,7 @@ private struct MainView: View {
         ZStack {
             video()
             controls()
+            skipButton()
         }
         .ignoresSafeArea()
         .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
@@ -123,13 +124,10 @@ private struct MainView: View {
     @ViewBuilder
     private func bottomBar() -> some View {
         VStack(spacing: 0) {
-            VStack(alignment: .trailing) {
-                SkipButton(player: player, progressTacker: progressTracker)
-                HStack(alignment: .bottom) {
-                    metadata()
-                    if isFullScreen {
-                        bottomButtons()
-                    }
+            HStack(alignment: .bottom) {
+                metadata()
+                if isFullScreen {
+                    bottomButtons()
                 }
             }
             HStack(spacing: 20) {
@@ -229,6 +227,14 @@ private struct MainView: View {
     }
 
     @ViewBuilder
+    private func skipButton() -> some View {
+        SkipButton(player: player, progressTacker: progressTracker)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+            .padding(.trailing, 20)
+            .padding(.bottom, !isUserInterfaceHidden ? 100 : 50)
+    }
+
+    @ViewBuilder
     private func image(name: String) -> some View {
         Image(systemName: name)
             .resizable()
@@ -248,7 +254,7 @@ private struct SkipButton: View {
     private var skippableTimeRange: TimeRange? {
         player.metadata.timeRanges.first { timeRange in
             // TODO: Use .opening
-            timeRange.kind == .credits(.closing) && timeRange.timeRange.containsTime(player.time)
+            timeRange.kind == .credits(.closing) && timeRange.timeRange.containsTime(progressTacker.time)
         }
     }
 
