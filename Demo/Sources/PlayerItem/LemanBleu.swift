@@ -7,9 +7,18 @@
 import Combine
 import Foundation
 import PillarboxPlayer
+import UIKit
 
 enum LemanBleuError: Error {
     case mediaUrlNotFound
+}
+
+private struct LemanBleuMetadata: AssetMetadata {
+    let image: UIImage
+
+    var playerMetadata: PlayerMetadata {
+        .init(image: image)
+    }
 }
 
 private struct LemanBleu {
@@ -35,9 +44,15 @@ extension PlayerItem {
 }
 
 extension PlayerItem {
-    private static func asset(for url: URL) -> AnyPublisher<Asset<Void>, any Error> {
+    private static func asset(for url: URL) -> AnyPublisher<Asset<LemanBleuMetadata>, any Error> {
         mediaUrlPublisher(for: url)
-            .tryMap { Asset.simple(url: $0.mediaURL) }
+            .tryMap { lemanBleu in
+                imagePublisher(for: lemanBleu.imageURL)
+                    .map { image in
+                        Asset.simple(url: lemanBleu.mediaURL, metadata: .init(image: image))
+                    }
+            }
+            .switchToLatest()
             .eraseToAnyPublisher()
     }
 
@@ -54,6 +69,14 @@ extension PlayerItem {
                 }
             }
             .mapError { _ in .mediaUrlNotFound }
+            .eraseToAnyPublisher()
+    }
+
+    private static func imagePublisher(for url: URL) -> AnyPublisher<UIImage, Never> {
+        URLSession.shared.dataTaskPublisher(for: url)
+            .map(\.data)
+            .replaceError(with: Data())
+            .compactMap { UIImage(data: $0) }
             .eraseToAnyPublisher()
     }
 }
