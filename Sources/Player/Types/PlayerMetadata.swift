@@ -88,7 +88,7 @@ public struct PlayerMetadata: Equatable {
     ///   - image: The image associated with the content.
     ///   - episodeInformation: Episode information associated with the content.
     ///   - chapters: Chapter associated with the content.
-    ///   - playbackRanges: Time ranges associated with the content.
+    ///   - timeRanges: Time ranges associated with the content.
     public init(
         identifier: String? = nil,
         title: String? = nil,
