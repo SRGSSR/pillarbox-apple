@@ -14,10 +14,11 @@ enum LemanBleuError: Error {
 }
 
 private struct LemanBleuMetadata: AssetMetadata {
+    let title: String
     let image: UIImage
 
     var playerMetadata: PlayerMetadata {
-        .init(image: image)
+        .init(title: title, image: image)
     }
 }
 
@@ -25,8 +26,10 @@ private struct LemanBleu {
     private static let baseUrl = "https://www.lemanbleu.ch"
     let imageURL: URL
     let mediaURL: URL
+    let title: String
 
-    init(imagePath: String, mediaPath: String) {
+    init(title: String, imagePath: String, mediaPath: String) {
+        self.title = title
         if mediaPath.hasPrefix("https://") {
             self.mediaURL = URL(string: mediaPath)!
         }
@@ -49,7 +52,7 @@ extension PlayerItem {
             .tryMap { lemanBleu in
                 imagePublisher(for: lemanBleu.imageURL)
                     .map { image in
-                        Asset.simple(url: lemanBleu.mediaURL, metadata: .init(image: image))
+                        Asset.simple(url: lemanBleu.mediaURL, metadata: .init(title: lemanBleu.title, image: image))
                     }
             }
             .switchToLatest()
@@ -61,8 +64,10 @@ extension PlayerItem {
             .map(\.data)
             .map { String(data: $0, encoding: .utf8)! }
             .tryMap { html in
-                if let data = try #/data-video-url="(?<imagePath>.*),(?<mediaPath>.*)\|/#.firstMatch(in: html) {
-                    LemanBleu(imagePath: String(data.imagePath), mediaPath: String(data.mediaPath))
+                if
+                    let data = try #/data-video-url="(?<imagePath>.*),(?<mediaPath>.*)\|/#.firstMatch(in: html),
+                    let metadata = try #/class="pageTitle">(?<title>.*)</#.firstMatch(in: html) {
+                    LemanBleu(title: String(metadata.title), imagePath: String(data.imagePath), mediaPath: String(data.mediaPath))
                 }
                 else {
                     throw LemanBleuError.mediaUrlNotFound
