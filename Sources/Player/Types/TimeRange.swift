@@ -6,16 +6,16 @@
 
 import CoreMedia
 
-/// Represents a time range of the playback.
-public struct PlaybackRange: Equatable {
+/// Represents a time range.
+public struct TimeRange: Equatable {
     /// The range type.
     public enum Kind: Equatable {
-        /// A credit.
-        case credit(Credit)
+        /// Credits.
+        case credits(Credits)
     }
 
-    /// The credit type.
-    public enum Credit {
+    /// The credits type.
+    public enum Credits {
         /// Opening.
         case opening
         /// Closing.

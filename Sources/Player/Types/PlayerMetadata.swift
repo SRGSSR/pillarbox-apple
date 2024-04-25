@@ -40,7 +40,7 @@ public struct PlayerMetadata: Equatable {
     public let chapters: [Chapter]
 
     /// Time ranges associated with the content.
-    public let playbackRanges: [PlaybackRange]
+    public let timeRanges: [TimeRange]
 
     var episodeDescription: String? {
         switch episodeInformation {
@@ -97,7 +97,7 @@ public struct PlayerMetadata: Equatable {
         image: UIImage? = nil,
         episodeInformation: EpisodeInformation? = nil,
         chapters: [Chapter] = [],
-        playbackRanges: [PlaybackRange] = []
+        timeRanges: [TimeRange] = []
     ) {
         self.identifier = identifier
         self.title = title
@@ -106,6 +106,6 @@ public struct PlayerMetadata: Equatable {
         self.image = image
         self.episodeInformation = episodeInformation
         self.chapters = chapters
-        self.playbackRanges = playbackRanges
+        self.timeRanges = timeRanges
     }
 }
