@@ -18,8 +18,13 @@ private struct LemanBleu {
     let mediaURL: URL
 
     init(imagePath: String, mediaPath: String) {
+        if mediaPath.hasPrefix("https://") {
+            self.mediaURL = URL(string: mediaPath)!
+        }
+        else {
+            self.mediaURL = URL(string: Self.baseUrl + mediaPath)!
+        }
         self.imageURL = URL(string: Self.baseUrl + imagePath)!
-        self.mediaURL = URL(string: Self.baseUrl + mediaPath)!
     }
 }
 
