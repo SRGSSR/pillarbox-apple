@@ -122,15 +122,25 @@ private struct MainView: View {
 
     @ViewBuilder
     private func bottomBar() -> some View {
-        VStack(spacing: 0) {
+        VStack(spacing: 20) {
             skipButton()
+            bottomControls()
+        }
+        .animation(.linear(duration: 0.2), values: isUserInterfaceHidden, isInteracting)
+        .padding(.horizontal)
+        .padding(.vertical, 10)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+    }
+
+    @ViewBuilder
+    private func bottomControls() -> some View {
+        VStack(spacing: 0) {
             HStack(alignment: .bottom) {
                 metadata()
                 if isFullScreen {
                     bottomButtons()
                 }
             }
-            .opacity(isUserInterfaceHidden ? 0 : 1)
 
             HStack(spacing: 20) {
                 TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting)
@@ -138,13 +148,9 @@ private struct MainView: View {
                     bottomButtons()
                 }
             }
-            .opacity(isUserInterfaceHidden ? 0 : 1)
         }
         .preventsTouchPropagation()
-        .animation(.linear(duration: 0.2), values: isUserInterfaceHidden, isInteracting)
-        .padding(.horizontal)
-        .padding(.vertical, 10)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+        .opacity(isUserInterfaceHidden ? 0 : 1)
     }
 
     @ViewBuilder
@@ -231,6 +237,7 @@ private struct MainView: View {
     @ViewBuilder
     private func skipButton() -> some View {
         SkipButton(player: player, progressTacker: progressTracker)
+            .padding(.trailing, 20)
             .frame(maxWidth: .infinity, alignment: .trailing)
     }
 
@@ -277,7 +284,6 @@ private struct SkipButton: View {
                         .foregroundStyle(.gray)
                 }
         }
-        .padding(.trailing, 20)
         .opacity(skippableTimeRange != nil ? 1 : 0)
         .animation(.easeInOut, value: skippableTimeRange)
     }
