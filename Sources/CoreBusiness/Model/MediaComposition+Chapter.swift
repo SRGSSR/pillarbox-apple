@@ -17,7 +17,7 @@ public extension MediaComposition {
             case _segments = "segmentList"
             case _markIn = "fullLengthMarkIn"
             case _markOut = "fullLengthMarkOut"
-            case _playbackRanges = "timeIntervalList"
+            case _creditRanges = "timeIntervalList"
             case blockingReason = "blockReason"
             case contentType = "type"
             case date
@@ -78,6 +78,11 @@ public extension MediaComposition {
             _analyticsMetadata ?? [:]
         }
 
+        /// The ranges for opening credit or closing credit.
+        public var creditRanges: [CreditRange] {
+            _creditRanges ?? []
+        }
+
         /// Time range associated with the chapter.
         public var timeRange: CMTimeRange {
             guard let _markIn, let _markOut else { return .zero }
@@ -100,7 +105,7 @@ public extension MediaComposition {
         private let _resources: [Resource]?
 
         // swiftlint:disable:next discouraged_optional_collection
-        private let _playbackRanges: [PlaybackRange]?
+        private let _creditRanges: [CreditRange]?
 
         private let _markIn: Int64?
         private let _markOut: Int64?

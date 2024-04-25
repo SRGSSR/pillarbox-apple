@@ -7,7 +7,7 @@
 import CoreMedia
 
 public extension MediaComposition {
-    struct PlaybackRange: Decodable {
+    struct CreditRange: Decodable {
         enum CodingKeys: String, CodingKey {
             case kind = "type"
             case _markIn = "markIn"
@@ -15,8 +15,8 @@ public extension MediaComposition {
         }
 
         public enum Kind: String, Decodable {
-            case openingCredits = "OPENING_CREDITS"
-            case closingCredits = "CLOSING_CREDITS"
+            case opening = "OPENING_CREDITS"
+            case closing = "CLOSING_CREDITS"
         }
 
         public let kind: Kind
