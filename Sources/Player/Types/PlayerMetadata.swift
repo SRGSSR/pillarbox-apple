@@ -36,8 +36,11 @@ public struct PlayerMetadata: Equatable {
     /// Episode information associated with the content.
     public let episodeInformation: EpisodeInformation?
 
-    /// Chapter associated with the content.
+    /// Chapters associated with the content.
     public let chapters: [Chapter]
+
+    /// Time ranges associated with the content.
+    public let playbackRanges: [PlaybackRange]
 
     var episodeDescription: String? {
         switch episodeInformation {
@@ -85,6 +88,7 @@ public struct PlayerMetadata: Equatable {
     ///   - image: The image associated with the content.
     ///   - episodeInformation: Episode information associated with the content.
     ///   - chapters: Chapter associated with the content.
+    ///   - playbackRanges: Time ranges associated with the content.
     public init(
         identifier: String? = nil,
         title: String? = nil,
@@ -92,7 +96,8 @@ public struct PlayerMetadata: Equatable {
         description: String? = nil,
         image: UIImage? = nil,
         episodeInformation: EpisodeInformation? = nil,
-        chapters: [Chapter] = []
+        chapters: [Chapter] = [],
+        playbackRanges: [PlaybackRange] = []
     ) {
         self.identifier = identifier
         self.title = title
@@ -101,5 +106,6 @@ public struct PlayerMetadata: Equatable {
         self.image = image
         self.episodeInformation = episodeInformation
         self.chapters = chapters
+        self.playbackRanges = playbackRanges
     }
 }
