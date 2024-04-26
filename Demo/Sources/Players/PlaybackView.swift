@@ -267,7 +267,7 @@ private struct SkipButton: View {
                 player.seek(to: skippableTimeRange.timeRange.end)
             }
         }) {
-            Text("Skip intro")
+            Text("Skip")
                 .font(.footnote)
                 .foregroundStyle(.white)
                 .padding(.vertical, 5)
@@ -753,8 +753,7 @@ private extension View {
 private extension Player {
     func skippableTimeRange(at time: CMTime) -> TimeRange? {
         metadata.timeRanges.first { timeRange in
-            // TODO: Use .opening
-            timeRange.kind == .credits(.closing) && timeRange.timeRange.containsTime(time)
+            timeRange.timeRange.containsTime(time)
         }
     }
 }
