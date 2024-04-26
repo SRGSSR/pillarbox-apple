@@ -572,6 +572,34 @@ private struct TimeSlider: View {
     }
 }
 
+#else
+
+private struct MainSystemView: View {
+    let player: Player
+    let supportsPictureInPicture: Bool
+    @ObservedObject var progressTracker: ProgressTracker
+
+    private var contextualActions: [ContextualAction] {
+        if let skippableTimeRange = player.skippableTimeRange(at: progressTracker.time) {
+            return [
+                .init(title: "Skip") {
+                    player.seek(to: skippableTimeRange.timeRange.end)
+                }
+            ]
+        }
+        else {
+            return []
+        }
+    }
+
+    var body: some View {
+        SystemVideoView(player: player)
+            .supportsPictureInPicture(supportsPictureInPicture)
+            .contextualActions(contextualActions)
+            .ignoresSafeArea()
+    }
+}
+
 #endif
 
 // Behavior: h-hug, v-hug
@@ -641,32 +669,6 @@ private struct ErrorView: View {
             CloseButton()
                 .topBarStyle()
         }
-    }
-}
-
-private struct MainSystemView: View {
-    let player: Player
-    let supportsPictureInPicture: Bool
-    @ObservedObject var progressTracker: ProgressTracker
-
-    private var contextualActions: [ContextualAction] {
-        if let skippableTimeRange = player.skippableTimeRange(at: progressTracker.time) {
-            return [
-                .init(title: "Skip") {
-                    player.seek(to: skippableTimeRange.timeRange.end)
-                }
-            ]
-        }
-        else {
-            return []
-        }
-    }
-
-    var body: some View {
-        SystemVideoView(player: player)
-            .supportsPictureInPicture(supportsPictureInPicture)
-            .contextualActions(contextualActions)
-            .ignoresSafeArea()
     }
 }
 

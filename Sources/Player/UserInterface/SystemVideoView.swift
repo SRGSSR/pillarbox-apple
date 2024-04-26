@@ -66,6 +66,8 @@ public extension SystemVideoView {
     /// Actions to present contextually during playback.
     ///
     /// - Parameter contextualActions: An array of action controls to present contextually during playback.
+    @available(iOS, unavailable)
+    @available(tvOS 16, *)
     func contextualActions(_ contextualActions: [ContextualAction]) -> SystemVideoView {
         var view = self
         view.contextualActions = contextualActions.map { action in
