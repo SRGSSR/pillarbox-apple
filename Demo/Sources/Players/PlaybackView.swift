@@ -42,7 +42,6 @@ private struct MainView: View {
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
         .animation(.defaultLinear, value: isUserInterfaceHidden)
         .bind(visibilityTracker, to: player)
-        ._debugBodyCounter()
     }
 
     private var isFullScreen: Bool {
@@ -645,21 +644,10 @@ private struct ErrorView: View {
     }
 }
 
-/// A playback view with standard controls. Requires an ancestor view to own the player to be used.
-/// Behavior: h-exp, v-exp
-struct PlaybackView: View {
-    enum Layout {
-        case inline
-        case minimized
-        case maximized
-    }
-
-    @ObservedObject private var player: Player
-    @Binding private var layout: Layout
-    @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
-
-    private var isMonoscopic = false
-    private var supportsPictureInPicture = false
+private struct MainSystemView: View {
+    let player: Player
+    let supportsPictureInPicture: Bool
+    @ObservedObject var progressTracker: ProgressTracker
 
     private var contextualActions: [ContextualAction] {
         if let skippableTimeRange = player.skippableTimeRange(at: progressTracker.time) {
@@ -673,6 +661,30 @@ struct PlaybackView: View {
             return []
         }
     }
+
+    var body: some View {
+        SystemVideoView(player: player)
+            .supportsPictureInPicture(supportsPictureInPicture)
+            .contextualActions(contextualActions)
+            .ignoresSafeArea()
+    }
+}
+
+/// A playback view with standard controls. Requires an ancestor view to own the player to be used.
+/// Behavior: h-exp, v-exp
+struct PlaybackView: View {
+    enum Layout {
+        case inline
+        case minimized
+        case maximized
+    }
+
+    @ObservedObject private var player: Player
+    @Binding private var layout: Layout
+    @State private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
+
+    private var isMonoscopic = false
+    private var supportsPictureInPicture = false
 
     var body: some View {
         ZStack {
@@ -719,13 +731,15 @@ struct PlaybackView: View {
                     .ignoresSafeArea()
             }
             else {
-                SystemVideoView(player: player)
-                    .supportsPictureInPicture(supportsPictureInPicture)
-                    .contextualActions(contextualActions)
-                    .ignoresSafeArea()
+                MainSystemView(
+                    player: player,
+                    supportsPictureInPicture: supportsPictureInPicture,
+                    progressTracker: progressTracker
+                )
             }
 #endif
         }
+        ._debugBodyCounter()
     }
 }
 
