@@ -15,17 +15,17 @@ public struct ContextualAction {
     public let image: UIImage?
 
     /// The action to execute.
-    public let action: () -> Void
+    public let handler: () -> Void
 
     /// Creates a new contextual action.
     ///
     /// - Parameters:
     ///   - title: Short display title.
     ///   - image: Image that can appear next to this action.
-    ///   - action: The action to execute.
-    public init(title: String, image: UIImage? = nil, action: @escaping () -> Void) {
+    ///   - handler: The action to execute.
+    public init(title: String, image: UIImage? = nil, handler: @escaping () -> Void) {
         self.title = title
         self.image = image
-        self.action = action
+        self.handler = handler
     }
 }

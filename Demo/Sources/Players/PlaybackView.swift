@@ -661,10 +661,10 @@ struct PlaybackView: View {
     private var isMonoscopic = false
     private var supportsPictureInPicture = false
 
-    private var contextualActions: [UIAction] {
+    private var contextualActions: [ContextualAction] {
         if let skippableTimeRange = player.skippableTimeRange(at: progressTracker.time) {
             return [
-                UIAction(title: "Skip", identifier: .init("skip")) { _ in
+                .init(title: "Skip") {
                     player.seek(to: skippableTimeRange.timeRange.end)
                 }
             ]
