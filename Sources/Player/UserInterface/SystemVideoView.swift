@@ -13,14 +13,15 @@ public struct SystemVideoView: View {
 
     private var gravity: AVLayerVideoGravity = .resizeAspect
     private var supportsPictureInPicture = false
+    private var contextualActions: [UIAction] = []
 
     public var body: some View {
         ZStack {
             if supportsPictureInPicture {
-                PictureInPictureSupportingSystemVideoView(player: player, gravity: gravity)
+                PictureInPictureSupportingSystemVideoView(player: player, gravity: gravity, contextualActions: contextualActions)
             }
             else {
-                BasicSystemVideoView(player: player, gravity: gravity)
+                BasicSystemVideoView(player: player, gravity: gravity, contextualActions: contextualActions)
             }
         }
         .onAppear {
@@ -59,6 +60,15 @@ public extension SystemVideoView {
     func supportsPictureInPicture(_ supportsPictureInPicture: Bool = true) -> SystemVideoView {
         var view = self
         view.supportsPictureInPicture = supportsPictureInPicture
+        return view
+    }
+
+    /// Actions to present contextually during playback.
+    ///
+    /// - Parameter contextualActions: An array of action controls to present contextually during playback.
+    func contextualActions(_ contextualActions: [UIAction] = []) -> SystemVideoView {
+        var view = self
+        view.contextualActions = contextualActions
         return view
     }
 }
