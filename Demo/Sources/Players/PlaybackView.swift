@@ -770,7 +770,12 @@ private extension View {
 private extension Player {
     func skippableTimeRange(at time: CMTime) -> TimeRange? {
         metadata.timeRanges.first { timeRange in
-            timeRange.containsTime(time)
+            if case .credits = timeRange.kind, timeRange.containsTime(time) {
+                return true
+            }
+            else {
+                return false
+            }
         }
     }
 }
