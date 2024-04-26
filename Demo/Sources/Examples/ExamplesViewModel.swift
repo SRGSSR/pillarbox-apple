@@ -20,7 +20,8 @@ final class ExamplesViewModel: ObservableObject {
         URLTemplate.liveTimestampVideoHLS,
         URLTemplate.onDemandAudioMP3,
         URLTemplate.liveAudioMP3,
-        URLTemplate.timeRangesVideo
+        URLTemplate.timeRangesVideo,
+        URLTemplate.blockedTimeRangesVideo
     ])
 
     let urnMedias = Template.medias(from: [
