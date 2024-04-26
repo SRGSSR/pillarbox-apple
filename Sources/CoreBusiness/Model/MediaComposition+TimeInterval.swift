@@ -15,7 +15,7 @@ public extension MediaComposition {
             case _markOut = "markOut"
         }
 
-        /// A kind of interval.
+        /// A kind of time interval.
         public enum Kind: String, Decodable {
             /// Openning credits.
             case openingCredits = "OPENING_CREDITS"
