@@ -28,6 +28,7 @@ struct PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable 
 
     let player: Player
     let gravity: AVLayerVideoGravity
+    let contextualActions: [UIAction]
 
     static func dismantleUIViewController(_ uiViewController: AVPlayerViewController, coordinator: Coordinator) {
         PictureInPicture.shared.system.relinquish(for: uiViewController)
@@ -50,6 +51,7 @@ struct PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable 
         uiViewController.player = player.systemPlayer
         uiViewController.videoGravity = gravity
 #if os(tvOS)
+        uiViewController.contextualActions = contextualActions
         context.coordinator.player = player
         context.coordinator.controller = uiViewController
 #endif

@@ -14,7 +14,7 @@ class QueuePlayer: AVQueuePlayer {
 
     // Starting with iOS 17 accessing media selection criteria might be slow. Use a cache for the lifetime of the
     // player.
-    var mediaSelectionCriteria: [AVMediaCharacteristic: AVPlayerMediaSelectionCriteria?] = [:]
+    private var mediaSelectionCriteria: [AVMediaCharacteristic: AVPlayerMediaSelectionCriteria?] = [:]
 
     private var targetSeek: Seek? {
         pendingSeeks.last

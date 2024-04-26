@@ -30,6 +30,7 @@ struct Media: Hashable {
     let type: `Type`
     let isMonoscopic: Bool
     let startTime: CMTime
+    let timeRanges: [TimeRange]
 
     init(
         title: String,
@@ -38,7 +39,8 @@ struct Media: Hashable {
         image: UIImage? = nil,
         type: `Type`,
         isMonoscopic: Bool = false,
-        startTime: CMTime = .zero
+        startTime: CMTime = .zero,
+        timeRanges: [TimeRange] = []
     ) {
         self.title = title
         self.subtitle = subtitle
@@ -47,6 +49,7 @@ struct Media: Hashable {
         self.type = type
         self.isMonoscopic = isMonoscopic
         self.startTime = startTime
+        self.timeRanges = timeRanges
     }
 
     init(from template: Template, startTime: CMTime = .zero) {
@@ -56,7 +59,8 @@ struct Media: Hashable {
             imageUrl: template.imageUrl,
             type: template.type,
             isMonoscopic: template.isMonoscopic,
-            startTime: startTime
+            startTime: startTime,
+            timeRanges: template.timeRanges
         )
     }
 
@@ -91,7 +95,7 @@ extension Media {
                 .map { image in
                     .simple(
                         url: url,
-                        metadata: Media(title: title, subtitle: subtitle, image: image, type: type),
+                        metadata: Media(title: title, subtitle: subtitle, image: image, type: type, timeRanges: timeRanges),
                         configuration: configuration
                     )
                 },
@@ -115,6 +119,6 @@ extension Media {
 
 extension Media: AssetMetadata {
     var playerMetadata: PlayerMetadata {
-        .init(title: title, subtitle: subtitle, image: image)
+        .init(title: title, subtitle: subtitle, image: image, timeRanges: timeRanges)
     }
 }

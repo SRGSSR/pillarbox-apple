@@ -17,10 +17,10 @@ private struct MainView: View {
     @Binding var layout: PlaybackView.Layout
     let isMonoscopic: Bool
     let supportsPictureInPicture: Bool
+    let progressTracker: ProgressTracker
 
     @StateObject private var visibilityTracker = VisibilityTracker()
 
-    @State private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
     @State private var layoutInfo: LayoutInfo = .none
     @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
     @State private var isInteracting = false
@@ -42,8 +42,6 @@ private struct MainView: View {
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
         .animation(.defaultLinear, value: isUserInterfaceHidden)
         .bind(visibilityTracker, to: player)
-        .bind(progressTracker, to: player)
-        ._debugBodyCounter()
     }
 
     private var isFullScreen: Bool {
@@ -122,6 +120,18 @@ private struct MainView: View {
 
     @ViewBuilder
     private func bottomBar() -> some View {
+        VStack(spacing: 20) {
+            skipButton()
+            bottomControls()
+        }
+        .animation(.linear(duration: 0.2), values: isUserInterfaceHidden, isInteracting)
+        .padding(.horizontal)
+        .padding(.vertical, 10)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+    }
+
+    @ViewBuilder
+    private func bottomControls() -> some View {
         VStack(spacing: 0) {
             HStack(alignment: .bottom) {
                 metadata()
@@ -129,6 +139,7 @@ private struct MainView: View {
                     bottomButtons()
                 }
             }
+
             HStack(spacing: 20) {
                 TimeBar(player: player, visibilityTracker: visibilityTracker, isInteracting: $isInteracting)
                 if !isFullScreen {
@@ -138,10 +149,6 @@ private struct MainView: View {
         }
         .preventsTouchPropagation()
         .opacity(isUserInterfaceHidden ? 0 : 1)
-        .animation(.linear(duration: 0.2), values: isUserInterfaceHidden, isInteracting)
-        .padding(.horizontal)
-        .padding(.vertical, 10)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
 
     @ViewBuilder
@@ -226,6 +233,13 @@ private struct MainView: View {
     }
 
     @ViewBuilder
+    private func skipButton() -> some View {
+        SkipButton(player: player, progressTacker: progressTracker)
+            .padding(.trailing, 20)
+            .frame(maxWidth: .infinity, alignment: .trailing)
+    }
+
+    @ViewBuilder
     private func image(name: String) -> some View {
         Image(systemName: name)
             .resizable()
@@ -235,6 +249,39 @@ private struct MainView: View {
             .contentShape(Rectangle())
             .foregroundColor(.white)
             .padding(60)
+    }
+}
+
+private struct SkipButton: View {
+    let player: Player
+    @ObservedObject var progressTacker: ProgressTracker
+
+    private var skippableTimeRange: TimeRange? {
+        player.skippableTimeRange(at: progressTacker.time)
+    }
+
+    var body: some View {
+        Button(action: skip) {
+            Text("Skip")
+                .font(.footnote)
+                .foregroundStyle(.white)
+                .padding(.vertical, 5)
+                .padding(.horizontal, 10)
+                .background {
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(Color(uiColor: UIColor.darkGray))
+                    RoundedRectangle(cornerRadius: 2)
+                        .stroke(lineWidth: 2.0)
+                        .foregroundStyle(.gray)
+                }
+        }
+        .opacity(skippableTimeRange != nil ? 1 : 0)
+        .animation(.easeInOut, value: skippableTimeRange)
+    }
+
+    private func skip() {
+        guard let skippableTimeRange else { return }
+        player.seek(to: skippableTimeRange.end)
     }
 }
 
@@ -526,6 +573,34 @@ private struct TimeSlider: View {
     }
 }
 
+#else
+
+private struct MainSystemView: View {
+    let player: Player
+    let supportsPictureInPicture: Bool
+    @ObservedObject var progressTracker: ProgressTracker
+
+    private var contextualActions: [ContextualAction] {
+        if let skippableTimeRange = player.skippableTimeRange(at: progressTracker.time) {
+            return [
+                .init(title: "Skip") {
+                    player.seek(to: skippableTimeRange.end)
+                }
+            ]
+        }
+        else {
+            return []
+        }
+    }
+
+    var body: some View {
+        SystemVideoView(player: player)
+            .supportsPictureInPicture(supportsPictureInPicture)
+            .contextualActions(contextualActions)
+            .ignoresSafeArea()
+    }
+}
+
 #endif
 
 // Behavior: h-hug, v-hug
@@ -609,6 +684,7 @@ struct PlaybackView: View {
 
     @ObservedObject private var player: Player
     @Binding private var layout: Layout
+    @State private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
 
     private var isMonoscopic = false
     private var supportsPictureInPicture = false
@@ -632,6 +708,7 @@ struct PlaybackView: View {
             }
         }
         .background(.black)
+        .bind(progressTracker, to: player)
     }
 
     init(player: Player, layout: Binding<Layout> = .constant(.inline)) {
@@ -647,7 +724,8 @@ struct PlaybackView: View {
                 player: player,
                 layout: $layout,
                 isMonoscopic: isMonoscopic,
-                supportsPictureInPicture: supportsPictureInPicture
+                supportsPictureInPicture: supportsPictureInPicture,
+                progressTracker: progressTracker
             )
 #else
             if isMonoscopic {
@@ -656,12 +734,15 @@ struct PlaybackView: View {
                     .ignoresSafeArea()
             }
             else {
-                SystemVideoView(player: player)
-                    .supportsPictureInPicture(supportsPictureInPicture)
-                    .ignoresSafeArea()
+                MainSystemView(
+                    player: player,
+                    supportsPictureInPicture: supportsPictureInPicture,
+                    progressTracker: progressTracker
+                )
             }
 #endif
         }
+        ._debugBodyCounter()
     }
 }
 
@@ -683,6 +764,14 @@ private extension View {
     func topBarStyle() -> some View {
         padding(.horizontal)
             .frame(minHeight: 35)
+    }
+}
+
+private extension Player {
+    func skippableTimeRange(at time: CMTime) -> TimeRange? {
+        metadata.timeRanges.first { timeRange in
+            timeRange.containsTime(time)
+        }
     }
 }
 
