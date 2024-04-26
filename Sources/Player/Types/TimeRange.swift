@@ -22,7 +22,7 @@ public struct TimeRange: Hashable, Equatable {
         case closing
     }
 
-    let timeRange: CMTimeRange
+    private let timeRange: CMTimeRange
 
     /// The kind of the time range.
     public let kind: Kind
@@ -47,7 +47,7 @@ public struct TimeRange: Hashable, Equatable {
         self.timeRange = timeRange
     }
 
-    /// Creates a valid time range with a start time and duration.
+    /// Creates a time range with a start time and duration.
     ///
     /// - Parameters:
     ///   - kind: The kind of the time range.
@@ -57,7 +57,7 @@ public struct TimeRange: Hashable, Equatable {
         self.init(kind: kind, timeRange: .init(start: start, duration: duration))
     }
 
-    /// Creates a valid time range from a start and end time.
+    /// Creates a time range from a start and end time.
     ///
     /// - Parameters:
     ///   - kind: The kind of the time range.
