@@ -261,11 +261,7 @@ private struct SkipButton: View {
     }
 
     var body: some View {
-        Button(action: {
-            if let skippableTimeRange {
-                player.seek(to: skippableTimeRange.timeRange.end)
-            }
-        }) {
+        Button(action: skip) {
             Text("Skip")
                 .font(.footnote)
                 .foregroundStyle(.white)
@@ -281,6 +277,11 @@ private struct SkipButton: View {
         }
         .opacity(skippableTimeRange != nil ? 1 : 0)
         .animation(.easeInOut, value: skippableTimeRange)
+    }
+
+    private func skip() {
+        guard let skippableTimeRange else { return }
+        player.seek(to: skippableTimeRange.end)
     }
 }
 
