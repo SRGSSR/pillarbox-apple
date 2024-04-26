@@ -12,6 +12,8 @@ public struct TimeRange: Hashable, Equatable {
     public enum Kind: Hashable, Equatable {
         /// Credits.
         case credits(Credits)
+        /// Blocked.
+        case blocked
     }
 
     /// The credits type.

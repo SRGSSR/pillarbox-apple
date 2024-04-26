@@ -136,6 +136,12 @@ extension MediaMetadata: AssetMetadata {
                 TimeRange(kind: .credits(.closing), start: interval.timeRange.start, end: interval.timeRange.end)
             }
         }
+        +
+        mediaComposition.mainChapter.segments
+            .filter { $0.blockingReason != nil }
+            .map { segment in
+                TimeRange(kind: .blocked, start: segment.timeRange.start, end: segment.timeRange.end)
+            }
     }
 
     private func image(for chapter: MediaComposition.Chapter) -> UIImage? {
