@@ -130,9 +130,9 @@ extension MediaMetadata: AssetMetadata {
     private var timeRanges: [TimeRange] {
         mediaComposition.mainChapter.timeIntervals.map { interval in
             switch interval.kind {
-            case .opening:
+            case .openingCredits:
                 TimeRange(kind: .credits(.opening), start: interval.timeRange.start, end: interval.timeRange.end)
-            case .closing:
+            case .closingCredits:
                 TimeRange(kind: .credits(.closing), start: interval.timeRange.start, end: interval.timeRange.end)
             }
         }
