@@ -17,10 +17,10 @@ private struct MainView: View {
     @Binding var layout: PlaybackView.Layout
     let isMonoscopic: Bool
     let supportsPictureInPicture: Bool
+    let progressTracker: ProgressTracker
 
     @StateObject private var visibilityTracker = VisibilityTracker()
 
-    @State private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
     @State private var layoutInfo: LayoutInfo = .none
     @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
     @State private var isInteracting = false
@@ -42,7 +42,6 @@ private struct MainView: View {
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
         .animation(.defaultLinear, value: isUserInterfaceHidden)
         .bind(visibilityTracker, to: player)
-        .bind(progressTracker, to: player)
         ._debugBodyCounter()
     }
 
@@ -259,16 +258,13 @@ private struct SkipButton: View {
     @ObservedObject var progressTacker: ProgressTracker
 
     private var skippableTimeRange: TimeRange? {
-        player.metadata.timeRanges.first { timeRange in
-            // TODO: Use .opening
-            timeRange.kind == .credits(.closing) && timeRange.timeRange.containsTime(progressTacker.time)
-        }
+        player.skippableTimeRange(at: progressTacker.time)
     }
 
     var body: some View {
         Button(action: {
-            if let endTime = skippableTimeRange?.timeRange.end {
-                player.seek(to: endTime)
+            if let skippableTimeRange {
+                player.seek(to: skippableTimeRange.timeRange.end)
             }
         }) {
             Text("Skip intro")
@@ -660,9 +656,23 @@ struct PlaybackView: View {
 
     @ObservedObject private var player: Player
     @Binding private var layout: Layout
+    @StateObject private var progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 1))
 
     private var isMonoscopic = false
     private var supportsPictureInPicture = false
+
+    private var contextualActions: [UIAction] {
+        if let skippableTimeRange = player.skippableTimeRange(at: progressTracker.time) {
+            return [
+                UIAction(title: "Skip", identifier: .init("skip")) { _ in
+                    player.seek(to: skippableTimeRange.timeRange.end)
+                }
+            ]
+        }
+        else {
+            return []
+        }
+    }
 
     var body: some View {
         ZStack {
@@ -683,6 +693,7 @@ struct PlaybackView: View {
             }
         }
         .background(.black)
+        .bind(progressTracker, to: player)
     }
 
     init(player: Player, layout: Binding<Layout> = .constant(.inline)) {
@@ -698,7 +709,8 @@ struct PlaybackView: View {
                 player: player,
                 layout: $layout,
                 isMonoscopic: isMonoscopic,
-                supportsPictureInPicture: supportsPictureInPicture
+                supportsPictureInPicture: supportsPictureInPicture,
+                progressTracker: progressTracker
             )
 #else
             if isMonoscopic {
@@ -709,6 +721,7 @@ struct PlaybackView: View {
             else {
                 SystemVideoView(player: player)
                     .supportsPictureInPicture(supportsPictureInPicture)
+                    .contextualActions(contextualActions)
                     .ignoresSafeArea()
             }
 #endif
@@ -734,6 +747,15 @@ private extension View {
     func topBarStyle() -> some View {
         padding(.horizontal)
             .frame(minHeight: 35)
+    }
+}
+
+private extension Player {
+    func skippableTimeRange(at time: CMTime) -> TimeRange? {
+        metadata.timeRanges.first { timeRange in
+            // TODO: Use .opening
+            timeRange.kind == .credits(.closing) && timeRange.timeRange.containsTime(time)
+        }
     }
 }
 

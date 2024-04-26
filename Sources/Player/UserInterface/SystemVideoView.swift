@@ -66,7 +66,7 @@ public extension SystemVideoView {
     /// Actions to present contextually during playback.
     ///
     /// - Parameter contextualActions: An array of action controls to present contextually during playback.
-    func contextualActions(_ contextualActions: [UIAction] = []) -> SystemVideoView {
+    func contextualActions(_ contextualActions: [UIAction]) -> SystemVideoView {
         var view = self
         view.contextualActions = contextualActions
         return view
