@@ -131,9 +131,9 @@ extension MediaMetadata: AssetMetadata {
         mediaComposition.mainChapter.timeIntervals.map { interval in
             switch interval.kind {
             case .opening:
-                TimeRange(kind: .credits(.opening), timeRange: interval.timeRange)
+                TimeRange(kind: .credits(.opening), start: interval.timeRange.start, end: interval.timeRange.end)
             case .closing:
-                TimeRange(kind: .credits(.closing), timeRange: interval.timeRange)
+                TimeRange(kind: .credits(.closing), start: interval.timeRange.start, end: interval.timeRange.end)
             }
         }
     }

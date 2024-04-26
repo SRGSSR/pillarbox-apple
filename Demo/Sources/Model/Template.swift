@@ -72,8 +72,8 @@ enum URLTemplate {
         imageUrl: "https://www.rts.ch/2023/05/01/10/22/10253916.image/16x9",
         type: .url("https://rts-vod-amd.akamaized.net/ch/13986102/d13bcd9d-7030-3f5a-b28c-f9abfa6795b8/master.m3u8"),
         timeRanges: [
-            .init(kind: .credits(.opening), timeRange: .init(start: .init(value: 3, timescale: 1), end: .init(value: 7, timescale: 1))),
-            .init(kind: .credits(.closing), timeRange: .init(start: .init(value: 163, timescale: 1), end: .init(value: 183_680, timescale: 1000)))
+            .init(kind: .credits(.opening), start: .init(value: 3, timescale: 1), end: .init(value: 7, timescale: 1)),
+            .init(kind: .credits(.closing), start: .init(value: 163, timescale: 1), end: .init(value: 183_680, timescale: 1000))
         ]
     )
     static let appleBasic_4_3_HLS = Template(

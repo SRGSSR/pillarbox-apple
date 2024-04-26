@@ -583,7 +583,7 @@ private struct MainSystemView: View {
         if let skippableTimeRange = player.skippableTimeRange(at: progressTracker.time) {
             return [
                 .init(title: "Skip") {
-                    player.seek(to: skippableTimeRange.timeRange.end)
+                    player.seek(to: skippableTimeRange.end)
                 }
             ]
         }
@@ -769,7 +769,7 @@ private extension View {
 private extension Player {
     func skippableTimeRange(at time: CMTime) -> TimeRange? {
         metadata.timeRanges.first { timeRange in
-            timeRange.timeRange.containsTime(time)
+            timeRange.containsTime(time)
         }
     }
 }
