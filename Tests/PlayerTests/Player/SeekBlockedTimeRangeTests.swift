@@ -20,6 +20,13 @@ private struct MockMetadata: AssetMetadata {
 }
 
 final class SeekBlockedTimeRangeTests: TestCase {
+    func testSeekInBlockedTimeRange() {
+        let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MockMetadata()))
+        expect(player.streamType).toEventually(equal(.onDemand))
+        player.seek(at(.init(value: 30, timescale: 1)))
+        expect(20...60).toNever(contain(Int(player.time.seconds)), until: .seconds(3))
+    }
+
     func testOnDemandStartInBlockedTimeRange() {
         let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MockMetadata()) { item in
             item.seek(at(.init(value: 30, timescale: 1)))
