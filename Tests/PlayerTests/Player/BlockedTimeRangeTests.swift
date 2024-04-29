@@ -21,7 +21,7 @@ private struct MockMetadata: AssetMetadata {
     }
 }
 
-final class SeekBlockedTimeRangeTests: TestCase {
+final class BlockedTimeRangeTests: TestCase {
     func testSeekInBlockedTimeRange() {
         let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MockMetadata()))
         expect(player.streamType).toEventually(equal(.onDemand))
@@ -35,7 +35,7 @@ final class SeekBlockedTimeRangeTests: TestCase {
             item.seek(at(.init(value: 29, timescale: 1)))
         })
         player.play()
-        expect(kBlockedTimeRange.containsTime(player.time)).toNever(beTrue(), until: .seconds(3))
+        expect(player.time).toEventually(beGreaterThan(kBlockedTimeRange.end), timeout: .seconds(3))
     }
 
     func testOnDemandStartInBlockedTimeRange() {
@@ -45,6 +45,6 @@ final class SeekBlockedTimeRangeTests: TestCase {
         // expect(player.time.seconds).toEventually(equal(60), timeout: .seconds(3))
 
         expect(player.streamType).toEventually(equal(.onDemand))
-        expect(20...60).toNever(contain(Int(player.time.seconds)), until: .seconds(3))
+        expect(player.time).toEventually(beGreaterThan(kBlockedTimeRange.end), timeout: .seconds(3))
     }
 }
