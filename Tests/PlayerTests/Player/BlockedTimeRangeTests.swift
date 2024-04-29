@@ -31,17 +31,15 @@ final class BlockedTimeRangeTests: TestCase {
     }
 
     func testBlockedTimeRangeTraversal() {
-        let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MockMetadata()) { item in
-            item.seek(at(.init(value: 29, timescale: 1)))
-        })
+        let configuration = PlayerItemConfiguration(position: at(.init(value: 29, timescale: 1)))
+        let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MockMetadata(), configuration: configuration))
         player.play()
         expect(player.time).toEventually(beGreaterThan(kBlockedTimeRange.end), timeout: .seconds(3))
     }
 
     func testOnDemandStartInBlockedTimeRange() {
-        let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MockMetadata()) { item in
-            item.seek(at(.init(value: 30, timescale: 1)))
-        })
+        let configuration = PlayerItemConfiguration(position: at(.init(value: 30, timescale: 1)))
+        let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MockMetadata(), configuration: configuration))
         // expect(player.time.seconds).toEventually(equal(60), timeout: .seconds(3))
 
         expect(player.streamType).toEventually(equal(.onDemand))

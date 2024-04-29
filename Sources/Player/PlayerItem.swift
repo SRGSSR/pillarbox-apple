@@ -170,7 +170,7 @@ public extension PlayerItem {
         url: URL,
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+        configuration: PlayerItemConfiguration = .init()
     ) -> Self where M: AssetMetadata {
         .init(
             asset: .simple(url: url, metadata: metadata, configuration: configuration),
@@ -194,7 +194,7 @@ public extension PlayerItem {
         delegate: AVAssetResourceLoaderDelegate,
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+        configuration: PlayerItemConfiguration = .init()
     ) -> Self where M: AssetMetadata {
         .init(
             asset: .custom(url: url, delegate: delegate, metadata: metadata, configuration: configuration),
@@ -216,7 +216,7 @@ public extension PlayerItem {
         delegate: AVContentKeySessionDelegate,
         metadata: M,
         trackerAdapters: [TrackerAdapter<M>] = [],
-        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+        configuration: PlayerItemConfiguration = .init()
     ) -> Self where M: AssetMetadata {
         .init(
             asset: .encrypted(url: url, delegate: delegate, metadata: metadata, configuration: configuration),
@@ -236,7 +236,7 @@ public extension PlayerItem {
     static func simple(
         url: URL,
         trackerAdapters: [TrackerAdapter<Void>] = [],
-        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+        configuration: PlayerItemConfiguration = .init()
     ) -> Self {
         .init(
             asset: .simple(url: url, configuration: configuration),
@@ -258,7 +258,7 @@ public extension PlayerItem {
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
         trackerAdapters: [TrackerAdapter<Void>] = [],
-        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+        configuration: PlayerItemConfiguration = .init()
     ) -> Self {
         .init(
             asset: .custom(url: url, delegate: delegate, configuration: configuration),
@@ -278,7 +278,7 @@ public extension PlayerItem {
         url: URL,
         delegate: AVContentKeySessionDelegate,
         trackerAdapters: [TrackerAdapter<Void>] = [],
-        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+        configuration: PlayerItemConfiguration = .init()
     ) -> Self {
         .init(
             asset: .encrypted(url: url, delegate: delegate, configuration: configuration),

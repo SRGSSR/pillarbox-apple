@@ -125,11 +125,9 @@ final class CommandersActTrackerPositionTests: CommandersActTestCase {
             url: Stream.onDemand.url,
             trackerAdapters: [
                 CommandersActTracker.adapter { _ in .test }
-            ]
-        ) { item in
-            item.seek(at(.init(value: 100, timescale: 1)))
-        })
-
+            ],
+            configuration: .init(position: at(.init(value: 100, timescale: 1)))
+        ))
         expectAtLeastHits(
             .play { labels in
                 expect(labels.media_position).to(equal(100))
