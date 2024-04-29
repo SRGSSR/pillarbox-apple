@@ -46,12 +46,75 @@
       }
     },
     {
+      "identity" : "libextobjc",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SRGSSR/libextobjc.git",
+      "state" : {
+        "revision" : "9c9a7327410fe3f7cdb695965ced43b9a7766ee0",
+        "version" : "0.6.0-srg4"
+      }
+    },
+    {
+      "identity" : "makvonotificationcenter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SRGSSR/MAKVONotificationCenter.git",
+      "state" : {
+        "revision" : "8bde3cdc872085bd31f4cfe546bdf8e6932a0806",
+        "version" : "1.0.0-srg6"
+      }
+    },
+    {
+      "identity" : "mantle",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Mantle/Mantle.git",
+      "state" : {
+        "revision" : "16f72bfe72a2ab29654ba894da1c32b17524e1a6",
+        "version" : "2.2.0"
+      }
+    },
+    {
       "identity" : "nimble",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Quick/Nimble.git",
       "state" : {
         "revision" : "1c49fc1243018f81a7ea99cb5e0985b00096e9f4",
         "version" : "13.3.0"
+      }
+    },
+    {
+      "identity" : "showtime",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/KaneCheshire/ShowTime.git",
+      "state" : {
+        "revision" : "f4e976931fc5f9b7a7d011f40c62a250c4ff53ab",
+        "version" : "2.5.3"
+      }
+    },
+    {
+      "identity" : "srgdataprovider-apple",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SRGSSR/srgdataprovider-apple.git",
+      "state" : {
+        "revision" : "b29c4e796d0c1dbe4bb05b1f79834f4560ee6347",
+        "version" : "19.0.2"
+      }
+    },
+    {
+      "identity" : "srglogger-apple",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SRGSSR/srglogger-apple.git",
+      "state" : {
+        "revision" : "dd98468422044b53e283d970809b8502e1ef5b8d",
+        "version" : "3.1.0"
+      }
+    },
+    {
+      "identity" : "srgnetwork-apple",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SRGSSR/srgnetwork-apple.git",
+      "state" : {
+        "revision" : "153a2544391c1aaccae2d38d8b113fd0a03421b8",
+        "version" : "3.1.0"
       }
     },
     {
