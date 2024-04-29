@@ -30,6 +30,14 @@ final class SeekBlockedTimeRangeTests: TestCase {
         expect(player.time).to(equal(kBlockedTimeRange.end))
     }
 
+    func testBlockedTimeRangeTraversal() {
+        let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MockMetadata()) { item in
+            item.seek(at(.init(value: 29, timescale: 1)))
+        })
+        player.play()
+        expect(kBlockedTimeRange.containsTime(player.time)).toNever(beTrue(), until: .seconds(3))
+    }
+
     func testOnDemandStartInBlockedTimeRange() {
         let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MockMetadata()) { item in
             item.seek(at(.init(value: 30, timescale: 1)))
