@@ -73,4 +73,31 @@ final class TimeTests: TestCase {
         expect(CMTime.invalid.clamped(to: range, offset: offset)).to(equal(.invalid))
         expect(CMTime(value: 1, timescale: 1).clamped(to: range, offset: offset)).to(equal(.invalid))
     }
+
+    func testAfterWithoutTimeRange() {
+        let time = CMTime(value: 5, timescale: 1)
+        expect(time.after(timeRanges: [])).to(beNil())
+    }
+
+    func testAfterWithMatchingTimeRange() {
+        let time = CMTime(value: 5, timescale: 1)
+        expect(time.after(timeRanges: [
+            .init(start: CMTime(value: 2, timescale: 1), end: CMTime(value: 6, timescale: 1))
+        ])).to(equal(CMTime(value: 6, timescale: 1)))
+    }
+
+    func testAfterWithoutMatchingTimeRange() {
+        let time = CMTime(value: 5, timescale: 1)
+        expect(time.after(timeRanges: [
+            .init(start: CMTime(value: 12, timescale: 1), end: CMTime(value: 16, timescale: 1))
+        ])).to(beNil())
+    }
+
+    func testAfterWithMatchingTimeRanges() {
+        let time = CMTime(value: 5, timescale: 1)
+        expect(time.after(timeRanges: [
+            .init(start: CMTime(value: 2, timescale: 1), end: CMTime(value: 6, timescale: 1)),
+            .init(start: CMTime(value: 4, timescale: 1), end: CMTime(value: 10, timescale: 1))
+        ])).to(equal(CMTime(value: 10, timescale: 1)))
+    }
 }
