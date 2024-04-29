@@ -8,6 +8,9 @@ import AVFoundation
 
 /// A player item configuration.
 public struct PlayerItemConfiguration {
+    /// The default configuration.
+    public static let `default` = Self()
+
     /// The position to start playback at.
     ///
     /// When the position time is `.zero`, playback efficiently starts at the default position:

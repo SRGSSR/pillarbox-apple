@@ -25,7 +25,7 @@ public struct Asset<M> {
     ///   - metadata: The metadata associated with the asset.
     ///   - configuration: The configuration to apply to the player item.
     /// - Returns: The asset.
-    public static func simple(url: URL, metadata: M, configuration: PlayerItemConfiguration = .init()) -> Self {
+    public static func simple(url: URL, metadata: M, configuration: PlayerItemConfiguration = .default) -> Self {
         .init(resource: .simple(url: url), metadata: metadata, configuration: configuration)
     }
 
@@ -43,7 +43,7 @@ public struct Asset<M> {
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
         metadata: M,
-        configuration: PlayerItemConfiguration = .init()
+        configuration: PlayerItemConfiguration = .default
     ) -> Self {
         .init(
             resource: .custom(url: url, delegate: delegate),
@@ -64,7 +64,7 @@ public struct Asset<M> {
         url: URL,
         delegate: AVContentKeySessionDelegate,
         metadata: M,
-        configuration: PlayerItemConfiguration = .init()
+        configuration: PlayerItemConfiguration = .default
     ) -> Self {
         .init(
             resource: .encrypted(url: url, delegate: delegate),
@@ -83,7 +83,7 @@ public extension Asset where M == Void {
     /// - Returns: The asset.
     static func simple(
         url: URL,
-        configuration: PlayerItemConfiguration = .init()
+        configuration: PlayerItemConfiguration = .default
     ) -> Self {
         .init(
             resource: .simple(url: url),
@@ -104,7 +104,7 @@ public extension Asset where M == Void {
     static func custom(
         url: URL,
         delegate: AVAssetResourceLoaderDelegate,
-        configuration: PlayerItemConfiguration = .init()
+        configuration: PlayerItemConfiguration = .default
     ) -> Self {
         .init(
             resource: .custom(url: url, delegate: delegate),
@@ -123,7 +123,7 @@ public extension Asset where M == Void {
     static func encrypted(
         url: URL,
         delegate: AVContentKeySessionDelegate,
-        configuration: PlayerItemConfiguration = .init()
+        configuration: PlayerItemConfiguration = .default
     ) -> Self {
         .init(
             resource: .encrypted(url: url, delegate: delegate),

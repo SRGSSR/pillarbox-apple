@@ -8,6 +8,9 @@ import Foundation
 
 /// A player configuration.
 public struct PlayerConfiguration {
+    /// The default configuration.
+    public static let `default` = Self()
+
     /// A Boolean value that indicates whether the player allows switching to external playback mode.
     public let allowsExternalPlayback: Bool
 

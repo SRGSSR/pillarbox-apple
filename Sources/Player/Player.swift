@@ -180,7 +180,7 @@ public final class Player: ObservableObject, Equatable {
     /// - Parameters:
     ///   - items: The items to be queued initially.
     ///   - configuration: The configuration to apply to the player.
-    public init(items: [PlayerItem] = [], configuration: PlayerConfiguration = .init()) {
+    public init(items: [PlayerItem] = [], configuration: PlayerConfiguration = .default) {
         storedItems = Deque(items)
 
         // TODO: Check the behavior in the future tvOS versions, see https://github.com/SRGSSR/pillarbox-apple/issues/826
@@ -206,7 +206,7 @@ public final class Player: ObservableObject, Equatable {
     /// - Parameters:
     ///   - item: The item to queue.
     ///   - configuration: The configuration to apply to the player.
-    public convenience init(item: PlayerItem, configuration: PlayerConfiguration = .init()) {
+    public convenience init(item: PlayerItem, configuration: PlayerConfiguration = .default) {
         self.init(items: [item], configuration: configuration)
     }
 
