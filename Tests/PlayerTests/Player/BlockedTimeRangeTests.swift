@@ -26,7 +26,7 @@ final class BlockedTimeRangeTests: TestCase {
         let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MockMetadata()))
         expect(player.streamType).toEventually(equal(.onDemand))
         player.seek(at(.init(value: 30, timescale: 1)))
-        expect(kBlockedTimeRange.containsTime(player.time)).toNever(beTrue(), until: .seconds(3))
+        expect(kBlockedTimeRange.containsTime(player.time)).toNever(beTrue(), until: .seconds(2))
         expect(player.time).to(equal(kBlockedTimeRange.end))
     }
 
@@ -34,15 +34,12 @@ final class BlockedTimeRangeTests: TestCase {
         let configuration = PlayerItemConfiguration(position: at(.init(value: 29, timescale: 1)))
         let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MockMetadata(), configuration: configuration))
         player.play()
-        expect(player.time).toEventually(beGreaterThan(kBlockedTimeRange.end), timeout: .seconds(3))
+        expect(player.time).toEventually(beGreaterThan(kBlockedTimeRange.end))
     }
 
     func testOnDemandStartInBlockedTimeRange() {
         let configuration = PlayerItemConfiguration(position: at(.init(value: 30, timescale: 1)))
         let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MockMetadata(), configuration: configuration))
-        // expect(player.time.seconds).toEventually(equal(60), timeout: .seconds(3))
-
-        expect(player.streamType).toEventually(equal(.onDemand))
-        expect(player.time).toEventually(beGreaterThan(kBlockedTimeRange.end), timeout: .seconds(3))
+        expect(player.time).toEventually(equal(kBlockedTimeRange.end))
     }
 }

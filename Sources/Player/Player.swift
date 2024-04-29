@@ -198,7 +198,7 @@ public final class Player: ObservableObject, Equatable {
         configureControlCenterPublishers()
         configureCurrentTrackerPublishers()
         configureMetadataPublisher()
-        configureBlockedTimeRangesPublisher()
+        configureBlockedTimeRangesPublishers()
     }
 
     /// Creates a player with a single item in its queue.
@@ -342,11 +342,15 @@ private extension Player {
             .assign(to: &$_playbackSpeed)
     }
 
-    func configureBlockedTimeRangesPublisher() {
+    func configureBlockedTimeRangesPublishers() {
         blockedTimeRangePublisher()
             .sink { [weak self] time in
                 self?.seek(at(time))
             }
+            .store(in: &cancellables)
+
+        metadataPublisher.slice(at: \.blockedTimeRanges)
+            .assign(to: \.blockedTimeRanges, on: queuePlayer)
             .store(in: &cancellables)
     }
 }

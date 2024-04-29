@@ -41,8 +41,9 @@ public struct PlayerItemConfiguration {
     }
 
     func apply(to item: AVPlayerItem, with metadata: PlayerMetadata) {
-        // FIXME: Use metadata to seek at allowed position
-        item.seek(to: position.time, toleranceBefore: position.toleranceBefore, toleranceAfter: position.toleranceAfter, completionHandler: nil)
+        if let position = position.after(metadata.blockedTimeRanges.map { .init(start: $0.start, end: $0.end) }) {
+            item.seek(to: position.time, toleranceBefore: position.toleranceBefore, toleranceAfter: position.toleranceAfter, completionHandler: nil)
+        }
         item.automaticallyPreservesTimeOffsetFromLive = automaticallyPreservesTimeOffsetFromLive
         item.preferredForwardBufferDuration = preferredForwardBufferDuration
     }
