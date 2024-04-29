@@ -11,6 +11,14 @@ import Nimble
 import PillarboxCircumspect
 import PillarboxStreams
 
+private struct MockMetadata: AssetMetadata {
+    var playerMetadata: PlayerMetadata {
+        .init(timeRanges: [
+            .init(kind: .blocked, start: .init(value: 20, timescale: 1), end: .init(value: 60, timescale: 1))
+        ])
+    }
+}
+
 final class SeekTests: TestCase {
     func testSeekWhenEmpty() {
         let player = Player()
@@ -110,5 +118,15 @@ final class SeekTests: TestCase {
             item.seek(at(.init(value: 10, timescale: 1)))
         })
         expect(player.time.seconds).toEventually(equal(10))
+    }
+
+    func testOnDemandStartInBlockedTimeRange() {
+        let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MockMetadata()) { item in
+            item.seek(at(.init(value: 30, timescale: 1)))
+        })
+        // expect(player.time.seconds).toEventually(equal(60), timeout: .seconds(3))
+
+        expect(player.streamType).toEventually(equal(.onDemand))
+        expect(20...60).toNever(contain(Int(player.time.seconds)), until: .seconds(3))
     }
 }
