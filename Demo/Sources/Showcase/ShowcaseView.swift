@@ -70,13 +70,6 @@ struct ShowcaseView: View {
                 destination: .stories
             )
             .sourceCode(of: StoriesView.self)
-
-            cell(
-                title: "Chapters",
-                subtitle: "A visual way to handle chapters",
-                destination: .chaptersPlayer(media: Media(from: URNTemplate.onDemandHorizontalVideo))
-            )
-            .sourceCode(of: ChaptersPlayerView.self)
         }
     }
 
