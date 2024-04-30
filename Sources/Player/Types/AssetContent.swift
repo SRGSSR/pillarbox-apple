@@ -36,17 +36,21 @@ struct AssetContent {
     func playerItem(reload: Bool = false) -> AVPlayerItem {
         if reload, resource.isFailing {
             let item = Resource.loading.playerItem().withId(id)
-            configuration.apply(to: item, with: metadata)
+            configure(item: item)
             update(item: item)
             PlayerItem.reload(for: id)
             return item
         }
         else {
             let item = resource.playerItem().withId(id)
-            configuration.apply(to: item, with: metadata)
+            configure(item: item)
             update(item: item)
             PlayerItem.load(for: id)
             return item
         }
+    }
+
+    private func configure(item: AVPlayerItem) {
+        configuration.apply(to: item, with: metadata)
     }
 }
