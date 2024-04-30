@@ -16,14 +16,14 @@ public extension PlayerItem {
     ///   - urn: The URN to play.
     ///   - server: The server which the URN is played from.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: A closure to configure player items created from the receiver.
+    ///   - configuration: The configuration to apply to the player item.
     ///
     /// In addition the item is automatically tracked according to SRG SSR analytics standards.
     static func urn(
         _ urn: String,
         server: Server = .production,
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
-        configuration: @escaping (AVPlayerItem) -> Void = { _ in }
+        configuration: PlayerItemConfiguration = .default
     ) -> Self {
         let dataProvider = DataProvider(server: server)
         let publisher = dataProvider.playableMediaCompositionPublisher(forUrn: urn)
@@ -46,7 +46,7 @@ public extension PlayerItem {
         ] + trackerAdapters)
     }
 
-    private static func asset(for metadata: MediaMetadata, configuration: @escaping (AVPlayerItem) -> Void) -> Asset<MediaMetadata> {
+    private static func asset(for metadata: MediaMetadata, configuration: PlayerItemConfiguration) -> Asset<MediaMetadata> {
         let resource = metadata.resource
         let configuration = assetConfiguration(for: resource, configuration: configuration)
 
@@ -76,18 +76,11 @@ public extension PlayerItem {
 
     private static func assetConfiguration(
         for resource: MediaComposition.Resource,
-        configuration: @escaping (AVPlayerItem) -> Void
-    ) -> ((AVPlayerItem) -> Void) {
-        { item in
-            configuration(item)
-
-            // Limit buffering and force the player to return to the live edge when re-buffering. This ensures
-            // livestreams cannot be paused and resumed in the past, as requested by business people.
-            //
-            // This setup is performed after any custom configuration to avoid being overridden.
-            guard resource.streamType == .live else { return }
-            item.automaticallyPreservesTimeOffsetFromLive = true
-            item.preferredForwardBufferDuration = 1
-        }
+        configuration: PlayerItemConfiguration
+    ) -> PlayerItemConfiguration {
+        // Limit buffering and force the player to return to the live edge when re-buffering. This ensures
+        // livestreams cannot be paused and resumed in the past, as requested by business people.
+        guard resource.streamType == .live else { return configuration }
+        return .init(position: configuration.position, automaticallyPreservesTimeOffsetFromLive: true, preferredForwardBufferDuration: 1)
     }
 }

@@ -7,13 +7,17 @@
 import CoreMedia
 
 struct Seek: Equatable {
-    let time: CMTime
-    let toleranceBefore: CMTime
-    let toleranceAfter: CMTime
+    let position: Position
     let isSmooth: Bool
     let completionHandler: (Bool) -> Void
 
     private let id = UUID()
+
+    init(_ position: Position, isSmooth: Bool, completionHandler: @escaping (Bool) -> Void) {
+        self.position = position
+        self.isSmooth = isSmooth
+        self.completionHandler = completionHandler
+    }
 
     static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id

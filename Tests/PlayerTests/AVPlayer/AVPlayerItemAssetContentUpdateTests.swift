@@ -167,7 +167,7 @@ final class AVPlayerItemAssetContentUpdateTests: TestCase {
 
 private extension AssetContent {
     static func test(id: Character) -> Self {
-        AssetContent(id: UUID(id), resource: .simple(url: Stream.onDemand.url), metadata: .empty) { _ in }
+        AssetContent(id: UUID(id), resource: .simple(url: Stream.onDemand.url), metadata: .empty, configuration: .default)
     }
 }
 

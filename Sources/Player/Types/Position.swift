@@ -22,6 +22,11 @@ public struct Position {
         self.toleranceBefore = toleranceBefore
         self.toleranceAfter = toleranceAfter
     }
+
+    func after(_ timeRanges: [CMTimeRange]) -> Self? {
+        guard let timeAfter = time.after(timeRanges: timeRanges) else { return nil }
+        return .init(time: timeAfter, toleranceBefore: .zero, toleranceAfter: toleranceAfter)
+    }
 }
 
 /// Returns a position with explicitly associated tolerances.

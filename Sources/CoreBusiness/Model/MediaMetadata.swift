@@ -128,6 +128,18 @@ extension MediaMetadata: AssetMetadata {
     }
 
     private var timeRanges: [TimeRange] {
+        blockedTimeRanges + creditsTimeRanges
+    }
+
+    private var blockedTimeRanges: [TimeRange] {
+        mediaComposition.mainChapter.segments
+            .filter { $0.blockingReason != nil }
+            .map { segment in
+                TimeRange(kind: .blocked, start: segment.timeRange.start, end: segment.timeRange.end)
+            }
+    }
+
+    private var creditsTimeRanges: [TimeRange] {
         mediaComposition.mainChapter.timeIntervals.map { interval in
             switch interval.kind {
             case .openingCredits:

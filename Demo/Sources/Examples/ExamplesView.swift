@@ -123,6 +123,7 @@ struct ExamplesView: View {
 
     @ViewBuilder
     private func miscellaneousSections() -> some View {
+        section(title: "Time ranges", medias: model.timeRangesMedias)
         section(title: "Aspect ratios", medias: model.aspectRatioMedias)
         section(title: "360° videos", medias: model.threeSixtyMedias)
         section(title: "Unbuffered streams", medias: model.unbufferedMedias)

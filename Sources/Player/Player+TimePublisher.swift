@@ -30,3 +30,18 @@ public extension Player {
         Publishers.BoundaryTimePublisher(for: queuePlayer, times: times, queue: queue)
     }
 }
+
+extension Player {
+    func nextUnblockedTimePublisher() -> AnyPublisher<CMTime, Never> {
+        metadataPublisher
+            .slice(at: \.blockedTimeRanges)
+            .map { [queuePlayer] blockedTimeRanges -> AnyPublisher<CMTime, Never> in
+                guard !blockedTimeRanges.isEmpty else { return Empty().eraseToAnyPublisher() }
+                return Publishers.PeriodicTimePublisher(for: queuePlayer, interval: .init(value: 1, timescale: 10))
+                    .compactMap { $0.after(timeRanges: blockedTimeRanges) }
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+}

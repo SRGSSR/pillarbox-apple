@@ -263,16 +263,17 @@ private struct SkipButton: View {
     var body: some View {
         Button(action: skip) {
             Text("Skip")
-                .font(.footnote)
+                .font(.subheadline)
+                .bold()
                 .foregroundStyle(.white)
-                .padding(.vertical, 5)
+                .padding(.vertical, 8)
                 .padding(.horizontal, 10)
                 .background {
                     RoundedRectangle(cornerRadius: 2)
-                        .fill(Color(uiColor: UIColor.darkGray))
+                        .fill(Color(white: 0.1))
                     RoundedRectangle(cornerRadius: 2)
                         .stroke(lineWidth: 2.0)
-                        .foregroundStyle(.gray)
+                        .foregroundStyle(Color(white: 0.3))
                 }
         }
         .opacity(skippableTimeRange != nil ? 1 : 0)
@@ -770,7 +771,12 @@ private extension View {
 private extension Player {
     func skippableTimeRange(at time: CMTime) -> TimeRange? {
         metadata.timeRanges.first { timeRange in
-            timeRange.containsTime(time)
+            if case .credits = timeRange.kind, timeRange.containsTime(time) {
+                return true
+            }
+            else {
+                return false
+            }
         }
     }
 }

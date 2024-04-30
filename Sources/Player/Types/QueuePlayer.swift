@@ -11,6 +11,7 @@ class QueuePlayer: AVQueuePlayer {
     static let notificationCenter = NotificationCenter()
 
     private var pendingSeeks = Deque<Seek>()
+    var blockedTimeRanges: [CMTimeRange] = []
 
     // Starting with iOS 17 accessing media selection criteria might be slow. Use a cache for the lifetime of the
     // player.
@@ -21,7 +22,7 @@ class QueuePlayer: AVQueuePlayer {
     }
 
     var targetSeekTime: CMTime? {
-        targetSeek?.time
+        targetSeek?.position.time
     }
 
     override func seek(to time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
@@ -42,18 +43,16 @@ class QueuePlayer: AVQueuePlayer {
             return
         }
 
-        notifySeekStart(at: time)
-
-        let seek = Seek(
-            time: time,
-            toleranceBefore: toleranceBefore,
-            toleranceAfter: toleranceAfter,
+        let seek = unblockedSeek(Seek(
+            to(time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter),
             isSmooth: smooth,
             completionHandler: completionHandler
-        )
+        ))
+
+        notifySeekStart(at: seek.position.time)
         pendingSeeks.append(seek)
 
-        if smooth && pendingSeeks.count != 1 {
+        if seek.isSmooth && pendingSeeks.count != 1 {
             return
         }
 
@@ -64,18 +63,28 @@ class QueuePlayer: AVQueuePlayer {
     }
 
     func enqueue(seek: Seek, completion: @escaping () -> Void) {
-        self.seek(safelyTo: seek.time, toleranceBefore: seek.toleranceBefore, toleranceAfter: seek.toleranceAfter) { [weak self] finished in
+        self.seek(safelyTo: seek.position) { [weak self] finished in
             self?.process(seek: seek, finished: finished, completion: completion)
         }
     }
 
-    private func seek(safelyTo time: CMTime, toleranceBefore: CMTime, toleranceAfter: CMTime, completionHandler: @escaping (Bool) -> Void) {
+    private func seek(safelyTo position: Position, completionHandler: @escaping (Bool) -> Void) {
         let endTimeRange = CMTimeRange(start: timeRange.end - CMTime(value: 18, timescale: 1), end: timeRange.end)
-        if duration.isIndefinite || !endTimeRange.containsTime(time) {
-            super.seek(to: time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter, completionHandler: completionHandler)
+        if duration.isIndefinite || !endTimeRange.containsTime(position.time) {
+            super.seek(
+                to: position.time,
+                toleranceBefore: position.toleranceBefore,
+                toleranceAfter: position.toleranceAfter,
+                completionHandler: completionHandler
+            )
         }
         else {
-            super.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero, completionHandler: completionHandler)
+            super.seek(
+                to: position.time,
+                toleranceBefore: .zero,
+                toleranceAfter: .zero,
+                completionHandler: completionHandler
+            )
         }
     }
 
@@ -115,6 +124,11 @@ class QueuePlayer: AVQueuePlayer {
 
     private func notifySeekEnd() {
         Self.notificationCenter.post(name: .didSeek, object: self)
+    }
+
+    private func unblockedSeek(_ seek: Seek) -> Seek {
+        guard let allowedPosition = seek.position.after(blockedTimeRanges) else { return seek }
+        return Seek(allowedPosition, isSmooth: false, completionHandler: seek.completionHandler)
     }
 
     override func mediaSelectionCriteria(forMediaCharacteristic mediaCharacteristic: AVMediaCharacteristic) -> AVPlayerMediaSelectionCriteria? {

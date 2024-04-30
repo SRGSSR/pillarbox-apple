@@ -67,29 +67,31 @@ struct Media: Hashable {
     func playerItem() -> PlayerItem {
         switch type {
         case let .url(url):
-            return playerItem(for: url) { item in
-                item.seek(at(startTime))
-            }
+            return playerItem(for: url, configuration: .init(position: at(startTime)))
         case let .unbufferedUrl(url):
-            return playerItem(for: url) { item in
-                item.automaticallyPreservesTimeOffsetFromLive = true
-                item.preferredForwardBufferDuration = 1
-                item.seek(at(startTime))
-            }
+            let configuration = PlayerItemConfiguration(
+                position: at(startTime),
+                automaticallyPreservesTimeOffsetFromLive: true,
+                preferredForwardBufferDuration: 1
+            )
+            return playerItem(for: url, configuration: configuration)
         case let .urn(urn, server: server):
-            return .urn(urn, server: server, trackerAdapters: [
-                DemoTracker.adapter { metadata in
-                    DemoTracker.Metadata(title: metadata.mediaComposition.mainChapter.title)
-                }
-            ]) { item in
-                item.seek(at(startTime))
-            }
+            return .urn(
+                urn,
+                server: server,
+                trackerAdapters: [
+                    DemoTracker.adapter { metadata in
+                        DemoTracker.Metadata(title: metadata.mediaComposition.mainChapter.title)
+                    }
+                ],
+                configuration: .init(position: at(startTime))
+            )
         }
     }
 }
 
 extension Media {
-    private func playerItem(for url: URL, configuration: @escaping (AVPlayerItem) -> Void = { _ in }) -> PlayerItem {
+    private func playerItem(for url: URL, configuration: PlayerItemConfiguration) -> PlayerItem {
         .init(
             publisher: imagePublisher()
                 .map { image in

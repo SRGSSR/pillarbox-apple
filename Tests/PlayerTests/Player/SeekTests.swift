@@ -11,6 +11,14 @@ import Nimble
 import PillarboxCircumspect
 import PillarboxStreams
 
+private struct MockMetadata: AssetMetadata {
+    var playerMetadata: PlayerMetadata {
+        .init(timeRanges: [
+            .init(kind: .blocked, start: .init(value: 20, timescale: 1), end: .init(value: 60, timescale: 1))
+        ])
+    }
+}
+
 final class SeekTests: TestCase {
     func testSeekWhenEmpty() {
         let player = Player()
@@ -99,16 +107,14 @@ final class SeekTests: TestCase {
     }
 
     func testOnDemandStartAtTime() {
-        let player = Player(item: .simple(url: Stream.onDemand.url) { item in
-            item.seek(at(.init(value: 10, timescale: 1)))
-        })
+        let configuration = PlayerItemConfiguration(position: at(.init(value: 10, timescale: 1)))
+        let player = Player(item: .simple(url: Stream.onDemand.url, configuration: configuration))
         expect(player.time.seconds).toEventually(equal(10))
     }
 
     func testDvrStartAtTime() {
-        let player = Player(item: .simple(url: Stream.dvr.url) { item in
-            item.seek(at(.init(value: 10, timescale: 1)))
-        })
+        let configuration = PlayerItemConfiguration(position: at(.init(value: 10, timescale: 1)))
+        let player = Player(item: .simple(url: Stream.dvr.url, configuration: configuration))
         expect(player.time.seconds).toEventually(equal(10))
     }
 }

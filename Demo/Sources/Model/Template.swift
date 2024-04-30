@@ -76,6 +76,17 @@ enum URLTemplate {
             .init(kind: .credits(.closing), start: .init(value: 163, timescale: 1), end: .init(value: 183_680, timescale: 1000))
         ]
     )
+    static let blockedTimeRangesVideo = Template(
+        title: "Apple Basic 16:9",
+        subtitle: "Content with blocked time ranges",
+        imageUrl: kAppleImageUrl,
+        type: .url("https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8"),
+        timeRanges: [
+            .init(kind: .blocked, start: .init(value: 0, timescale: 1), end: .init(value: 300, timescale: 1)),
+            .init(kind: .blocked, start: .init(value: 600, timescale: 1), end: .init(value: 900, timescale: 1)),
+            .init(kind: .blocked, start: .init(value: 700, timescale: 1), end: .init(value: 1200, timescale: 1))
+        ]
+    )
     static let appleBasic_4_3_HLS = Template(
         title: "Apple Basic 4:3",
         subtitle: "4x3 aspect ratio, H.264 @ 30Hz",
