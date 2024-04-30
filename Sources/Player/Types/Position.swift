@@ -24,8 +24,8 @@ public struct Position {
     }
 
     func after(_ timeRanges: [CMTimeRange]) -> Self? {
-        guard let fixedTime = time.after(timeRanges: timeRanges) else { return nil }
-        return .init(time: fixedTime, toleranceBefore: .zero, toleranceAfter: toleranceAfter)
+        guard let timeAfter = time.after(timeRanges: timeRanges) else { return nil }
+        return .init(time: timeAfter, toleranceBefore: .zero, toleranceAfter: toleranceAfter)
     }
 }
 
