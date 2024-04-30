@@ -42,8 +42,8 @@ public struct PlayerMetadata: Equatable {
     /// Time ranges associated with the content.
     public let timeRanges: [TimeRange]
 
-    var blockedTimeRanges: [TimeRange] {
-        timeRanges.filter { $0.kind == .blocked }
+    var blockedTimeRanges: [CMTimeRange] {
+        timeRanges.filter { $0.kind == .blocked }.map { .init(start: $0.start, end: $0.end) }
     }
 
     var episodeDescription: String? {

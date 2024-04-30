@@ -24,7 +24,7 @@ struct AssetContent {
     func update(item: AVPlayerItem) {
         item.externalMetadata = metadata.externalMetadata
 #if os(tvOS)
-        item.interstitialTimeRanges = CMTimeRange.flatten(metadata.blockedTimeRanges.map { .init(start: $0.start, end: $0.end) }).map { timeRange in
+        item.interstitialTimeRanges = CMTimeRange.flatten(metadata.blockedTimeRanges).map { timeRange in
             .init(timeRange: timeRange)
         }
         item.navigationMarkerGroups = [

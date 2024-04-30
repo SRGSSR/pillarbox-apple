@@ -11,7 +11,7 @@ class QueuePlayer: AVQueuePlayer {
     static let notificationCenter = NotificationCenter()
 
     private var pendingSeeks = Deque<Seek>()
-    var blockedTimeRanges: [TimeRange] = []
+    var blockedTimeRanges: [CMTimeRange] = []
 
     // Starting with iOS 17 accessing media selection criteria might be slow. Use a cache for the lifetime of the
     // player.
@@ -127,7 +127,7 @@ class QueuePlayer: AVQueuePlayer {
     }
 
     private func fixedSeek(_ seek: Seek) -> Seek {
-        guard let fixedPosition = seek.position.after(blockedTimeRanges.map { .init(start: $0.start, end: $0.end) }) else { return seek }
+        guard let fixedPosition = seek.position.after(blockedTimeRanges) else { return seek }
         return Seek(
             fixedPosition,
             isSmooth: false,
