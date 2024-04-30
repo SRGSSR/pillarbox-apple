@@ -41,9 +41,8 @@ public struct PlayerItemConfiguration {
     }
 
     func apply(to item: AVPlayerItem, with metadata: PlayerMetadata) {
-        if let position = position.after(metadata.blockedTimeRanges) {
-            item.seek(to: position.time, toleranceBefore: position.toleranceBefore, toleranceAfter: position.toleranceAfter, completionHandler: nil)
-        }
+        let position = position.after(metadata.blockedTimeRanges) ?? position
+        item.seek(to: position.time, toleranceBefore: position.toleranceBefore, toleranceAfter: position.toleranceAfter, completionHandler: nil)
         item.automaticallyPreservesTimeOffsetFromLive = automaticallyPreservesTimeOffsetFromLive
         item.preferredForwardBufferDuration = preferredForwardBufferDuration
     }
