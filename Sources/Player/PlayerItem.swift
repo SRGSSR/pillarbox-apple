@@ -164,7 +164,7 @@ public extension PlayerItem {
     ///   - url: The URL to be played.
     ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: A closure to configure player items created from the receiver.
+    ///   - configuration: The configuration to apply to the player item.
     /// - Returns: The item.
     static func simple<M>(
         url: URL,
@@ -185,7 +185,7 @@ public extension PlayerItem {
     ///   - delegate: The custom resource loader to use.
     ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: A closure to configure player items created from the receiver.
+    ///   - configuration: The configuration to apply to the player item.
     /// - Returns: The item.
     ///
     /// The scheme of the URL to be played has to be recognized by the associated resource loader delegate.
@@ -209,7 +209,7 @@ public extension PlayerItem {
     ///   - delegate: The content key session delegate to use.
     ///   - metadata: The metadata associated with the item.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: A closure to configure player items created from the receiver.
+    ///   - configuration: The configuration to apply to the player item.
     /// - Returns: The item.
     static func encrypted<M>(
         url: URL,
@@ -231,7 +231,7 @@ public extension PlayerItem {
     /// - Parameters:
     ///   - url: The URL to be played.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: A closure to configure player items created from the receiver.
+    ///   - configuration: The configuration to apply to the player item.
     /// - Returns: The item.
     static func simple(
         url: URL,
@@ -250,7 +250,7 @@ public extension PlayerItem {
     ///   - url: The URL to be played.
     ///   - delegate: The custom resource loader to use.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: A closure to configure player items created from the receiver.
+    ///   - configuration: The configuration to apply to the player item.
     /// - Returns: The item.
     ///
     /// The scheme of the URL to be played has to be recognized by the associated resource loader delegate.
@@ -272,7 +272,7 @@ public extension PlayerItem {
     ///   - url: The URL to be played.
     ///   - delegate: The content key session delegate to use.
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
-    ///   - configuration: A closure to configure player items created from the receiver.
+    ///   - configuration: The configuration to apply to the player item.
     /// - Returns: The item.
     static func encrypted(
         url: URL,
