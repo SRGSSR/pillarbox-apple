@@ -343,7 +343,7 @@ private extension Player {
     }
 
     func configureBlockedTimeRangesPublishers() {
-        blockedTimeRangePublisher()
+        nextUnblockedTimePublisher()
             .sink { [weak self] time in
                 self?.seek(at(time))
             }

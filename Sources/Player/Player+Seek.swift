@@ -101,20 +101,3 @@ public extension Player {
         seek(at(chapter.timeRange.start + CMTime(value: 1, timescale: 10)), completion: completion)
     }
 }
-
-extension Player {
-    func blockedTimeRangePublisher() -> AnyPublisher<CMTime, Never> {
-        metadataPublisher.map { [queuePlayer] metadata -> AnyPublisher<CMTime, Never> in
-            guard !metadata.blockedTimeRanges.isEmpty else { return Empty().eraseToAnyPublisher() }
-            return Publishers.PeriodicTimePublisher(for: queuePlayer, interval: .init(value: 1, timescale: 10))
-                .compactMap { time in
-                    time.after(timeRanges: metadata.blockedTimeRanges.map { timeRange in
-                        CMTimeRange(start: timeRange.start, end: timeRange.end)
-                    })
-                }
-                .eraseToAnyPublisher()
-        }
-        .switchToLatest()
-        .eraseToAnyPublisher()
-    }
-}
