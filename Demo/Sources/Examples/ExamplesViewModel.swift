@@ -19,9 +19,7 @@ final class ExamplesViewModel: ObservableObject {
         URLTemplate.dvrVideoHLS,
         URLTemplate.liveTimestampVideoHLS,
         URLTemplate.onDemandAudioMP3,
-        URLTemplate.liveAudioMP3,
-        URLTemplate.timeRangesVideo,
-        URLTemplate.blockedTimeRangesVideo
+        URLTemplate.liveAudioMP3
     ])
 
     let urnMedias = Template.medias(from: [
@@ -92,6 +90,11 @@ final class ExamplesViewModel: ObservableObject {
         URLTemplate.unknown,
         URLTemplate.unauthorized,
         URLTemplate.unavailableMp3
+    ])
+
+    let timeRangesMedias = Template.medias(from: [
+        URLTemplate.timeRangesVideo,
+        URLTemplate.blockedTimeRangesVideo
     ])
 
     @Published private(set) var protectedMedias = [Media]()
