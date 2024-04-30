@@ -14,11 +14,11 @@ struct AssetContent {
     let configuration: PlayerItemConfiguration
 
     static func loading(id: UUID) -> Self {
-        .init(id: id, resource: .loading, metadata: .empty, configuration: .init())
+        .init(id: id, resource: .loading, metadata: .empty, configuration: .default)
     }
 
     static func failing(id: UUID, error: Error) -> Self {
-        .init(id: id, resource: .failing(error: error), metadata: .empty, configuration: .init())
+        .init(id: id, resource: .failing(error: error), metadata: .empty, configuration: .default)
     }
 
     func update(item: AVPlayerItem) {
