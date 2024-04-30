@@ -43,7 +43,7 @@ class QueuePlayer: AVQueuePlayer {
             return
         }
 
-        let seek = fixedSeek(Seek(
+        let seek = unblockedSeek(Seek(
             to(time, toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter),
             isSmooth: smooth,
             completionHandler: completionHandler
@@ -126,13 +126,9 @@ class QueuePlayer: AVQueuePlayer {
         Self.notificationCenter.post(name: .didSeek, object: self)
     }
 
-    private func fixedSeek(_ seek: Seek) -> Seek {
-        guard let fixedPosition = seek.position.after(blockedTimeRanges) else { return seek }
-        return Seek(
-            fixedPosition,
-            isSmooth: false,
-            completionHandler: seek.completionHandler
-        )
+    private func unblockedSeek(_ seek: Seek) -> Seek {
+        guard let allowedPosition = seek.position.after(blockedTimeRanges) else { return seek }
+        return Seek(allowedPosition, isSmooth: false, completionHandler: seek.completionHandler)
     }
 
     override func mediaSelectionCriteria(forMediaCharacteristic mediaCharacteristic: AVMediaCharacteristic) -> AVPlayerMediaSelectionCriteria? {
