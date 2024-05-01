@@ -21,7 +21,7 @@ struct AssetContent {
         .init(id: id, resource: .failing(error: error), metadata: .empty, configuration: .default)
     }
 
-    func update(item: AVPlayerItem) {
+    func update(item: AVPlayerItem, nextContent: AssetContent?) {
         item.externalMetadata = metadata.externalMetadata
 #if os(tvOS)
         item.interstitialTimeRanges = CMTimeRange.flatten(metadata.blockedTimeRanges).map { timeRange in
@@ -33,18 +33,18 @@ struct AssetContent {
 #endif
     }
 
-    func playerItem(reload: Bool = false) -> AVPlayerItem {
+    func playerItem(reload: Bool = false, nextContent: AssetContent? = nil) -> AVPlayerItem {
         if reload, resource.isFailing {
             let item = Resource.loading.playerItem().withId(id)
             configure(item: item)
-            update(item: item)
+            update(item: item, nextContent: nextContent)
             PlayerItem.reload(for: id)
             return item
         }
         else {
             let item = resource.playerItem().withId(id)
             configure(item: item)
-            update(item: item)
+            update(item: item, nextContent: nextContent)
             PlayerItem.load(for: id)
             return item
         }

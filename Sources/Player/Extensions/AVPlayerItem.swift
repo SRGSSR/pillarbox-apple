@@ -33,8 +33,9 @@ extension AVPlayerItem {
         if let currentIndex = matchingIndex(for: currentItem, in: currentContents) {
             let currentContent = currentContents[currentIndex]
             if findContent(currentContent, in: previousContents) {
-                currentContent.update(item: currentItem)
-                return [currentItem] + playerItems(from: Array(currentContents.suffix(from: currentIndex + 1).prefix(length - 1)))
+                let nextContents = Array(currentContents.suffix(from: currentIndex + 1).prefix(length - 1))
+                currentContent.update(item: currentItem, nextContent: nextContents.first)
+                return [currentItem] + playerItems(from: nextContents)
             }
             else {
                 return playerItems(from: Array(currentContents.suffix(from: currentIndex).prefix(length)))
@@ -53,7 +54,9 @@ extension AVPlayerItem {
     }
 
     private static func playerItems(from contents: [AssetContent], reload: Bool = false) -> [AVPlayerItem] {
-        contents.map { $0.playerItem(reload: reload) }
+        contents.enumerated().map { index, content in
+            content.playerItem(reload: reload, nextContent: contents[safeIndex: index + 1])
+        }
     }
 
     private static func matchingIndex(for item: AVPlayerItem, in contents: [AssetContent]) -> Int? {
