@@ -150,12 +150,14 @@ struct PlaylistView: View {
             PlaybackView(player: model.player, layout: $layout)
                 .monoscopic(model.isMonoscopic)
                 .supportsPictureInPicture()
+#if os(iOS)
             if layout != .maximized {
                 Toolbar(player: model.player, model: model)
                 List($model.medias, id: \.self, editActions: .all, selection: $model.currentMedia) { $media in
                     MediaCell(media: media)
                 }
             }
+#endif
         }
         .animation(.defaultLinear, value: layout)
         .onAppear {
