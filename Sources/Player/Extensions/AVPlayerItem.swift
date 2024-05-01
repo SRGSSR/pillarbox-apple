@@ -52,7 +52,7 @@ extension AVPlayerItem {
         playerItems(from: items.prefix(length).map(\.content), reload: reload)
     }
 
-    static func playerItems(from contents: [AssetContent], reload: Bool = false) -> [AVPlayerItem] {
+    private static func playerItems(from contents: [AssetContent], reload: Bool = false) -> [AVPlayerItem] {
         contents.map { $0.playerItem(reload: reload) }
     }
 
