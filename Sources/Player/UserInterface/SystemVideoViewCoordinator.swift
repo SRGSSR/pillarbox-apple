@@ -8,6 +8,8 @@ import AVKit
 import Combine
 import UIKit
 
+import SwiftUI
+
 @available(iOS, unavailable)
 final class SystemVideoViewCoordinator: NSObject {
     var player: Player? {
@@ -29,6 +31,7 @@ final class SystemVideoViewCoordinator: NSObject {
 @available(iOS, unavailable)
 extension SystemVideoViewCoordinator: AVPlayerViewControllerDelegate {
     func playerViewController(_ playerViewController: AVPlayerViewController, shouldPresent proposal: AVContentProposal) -> Bool {
+        playerViewController.contentProposalViewController = ContentProposalHostController(playerViewFrame: nil, content: Color.blue)
         return true
     }
 
