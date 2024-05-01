@@ -9,7 +9,7 @@ import Combine
 import UIKit
 
 @available(iOS, unavailable)
-final class SystemVideoViewCoordinator {
+final class SystemVideoViewCoordinator: NSObject {
     var player: Player? {
         didSet {
             configurePlaybackSpeedPublisher(player: player, controller: controller)
@@ -18,11 +18,25 @@ final class SystemVideoViewCoordinator {
 
     var controller: AVPlayerViewController? {
         didSet {
+            controller?.delegate = self
             configurePlaybackSpeedPublisher(player: player, controller: controller)
         }
     }
 
     private var cancellable: AnyCancellable?
+}
+
+@available(iOS, unavailable)
+extension SystemVideoViewCoordinator: AVPlayerViewControllerDelegate {
+    func playerViewController(_ playerViewController: AVPlayerViewController, shouldPresent proposal: AVContentProposal) -> Bool {
+        return true
+    }
+
+    func playerViewController(_ playerViewController: AVPlayerViewController, didAccept proposal: AVContentProposal) {
+        player?.advanceToNext()
+    }
+
+    func playerViewController(_ playerViewController: AVPlayerViewController, didReject proposal: AVContentProposal) {}
 }
 
 @available(iOS, unavailable)
