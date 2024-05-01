@@ -21,7 +21,7 @@ private class PlayerViewController: AVPlayerViewController {
 // swiftlint:disable:next type_name
 struct PictureInPictureSupportingSystemVideoView: UIViewControllerRepresentable {
 #if os(tvOS)
-    typealias Coordinator = AVPlayerViewControllerSpeedCoordinator
+    typealias Coordinator = SystemVideoViewCoordinator
 #else
     typealias Coordinator = Void
 #endif

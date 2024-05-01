@@ -13,7 +13,7 @@ struct BasicSystemVideoView: UIViewControllerRepresentable {
     let contextualActions: [UIAction]
 
 #if os(tvOS)
-    func makeCoordinator() -> AVPlayerViewControllerSpeedCoordinator {
+    func makeCoordinator() -> SystemVideoViewCoordinator {
         .init()
     }
 #endif
