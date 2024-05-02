@@ -15,13 +15,20 @@ public struct Chapter: Equatable {
     /// The chapter title.
     public let title: String?
 
-    /// The source of the image associated with the chapter.
-    ///
-    /// The image should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).
-    public let imageSource: ImageSource
+    /// The image associated with the content.
+    public var image: UIImage? {
+        switch imageSource {
+        case let .image(image):
+            return image
+        default:
+            return nil
+        }
+    }
 
     /// The time range covered by the chapter.
     public let timeRange: CMTimeRange
+
+    private let imageSource: ImageSource
 
     var timedNavigationMarker: AVTimedMetadataGroup {
         .init(
@@ -41,6 +48,8 @@ public struct Chapter: Equatable {
     ///   - title: The chapter title.
     ///   - imageSource: The source of the image associated with the content.
     ///   - timeRange: The time range covered by the chapter.
+    ///
+    /// The image should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).
     public init(
         identifier: String? = nil,
         title: String? = nil,
@@ -51,14 +60,5 @@ public struct Chapter: Equatable {
         self.title = title
         self.imageSource = imageSource
         self.timeRange = timeRange
-    }
-}
-
-public extension Chapter {
-    /// The image associated with the chapter.
-    ///
-    /// Lazily loaded when accessed for the first time.
-    var image: UIImage? {
-        nil
     }
 }
