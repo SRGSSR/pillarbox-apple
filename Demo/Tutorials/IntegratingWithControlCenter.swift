@@ -10,7 +10,7 @@ import SwiftUI
 private struct Metadata: AssetMetadata {
     var playerMetadata: PlayerMetadata {
         // swiftlint:disable:next object_literal
-        .init(title: "🍎", subtitle: "🍏")
+        .init(title: "🍎", subtitle: "🍏", imageSource: .image(.init(named: "apple")!))
     }
 }
 

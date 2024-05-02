@@ -59,6 +59,7 @@ extension MediaMetadata: AssetMetadata {
             title: title,
             subtitle: subtitle,
             description: description,
+            imageSource: .url(mediaComposition.mainChapter.imageUrl),
             episodeInformation: episodeInformation,
             chapters: chapters,
             timeRanges: timeRanges
@@ -111,6 +112,7 @@ extension MediaMetadata: AssetMetadata {
             .init(
                 identifier: chapter.urn,
                 title: chapter.title,
+                imageSource: .url(chapter.imageUrl),
                 timeRange: chapter.timeRange
             )
         }
