@@ -28,6 +28,11 @@ public struct PlayerMetadata: Equatable {
     /// A description of the content.
     public let description: String?
 
+    /// The source of the image associated with the content.
+    ///
+    /// The image should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).
+    public let imageSource: ImageSource
+
     /// Episode information associated with the content.
     public let episodeInformation: EpisodeInformation?
 
@@ -84,6 +89,7 @@ public struct PlayerMetadata: Equatable {
     ///   - title: The content title.
     ///   - subtitle: A subtitle for the content.
     ///   - description: A description of the content.
+    ///   - imageSource: The source of the image associated with the content.
     ///   - episodeInformation: Episode information associated with the content.
     ///   - chapters: Chapter associated with the content.
     ///   - timeRanges: Time ranges associated with the content.
@@ -92,6 +98,7 @@ public struct PlayerMetadata: Equatable {
         title: String? = nil,
         subtitle: String? = nil,
         description: String? = nil,
+        imageSource: ImageSource = .none,
         episodeInformation: EpisodeInformation? = nil,
         chapters: [Chapter] = [],
         timeRanges: [TimeRange] = []
@@ -100,17 +107,18 @@ public struct PlayerMetadata: Equatable {
         self.title = title
         self.subtitle = subtitle
         self.description = description
+        self.imageSource = imageSource
         self.episodeInformation = episodeInformation
         self.chapters = chapters
         self.timeRanges = timeRanges
     }
 }
 
-extension PlayerMetadata {
+public extension PlayerMetadata {
     /// The image associated with the content.
     ///
-    /// The image should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).
-    public var image: UIImage? {
+    /// Lazily loaded when accessed for the first time.
+    var image: UIImage? {
         nil
     }
 }

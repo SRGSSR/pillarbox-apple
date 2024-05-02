@@ -15,6 +15,11 @@ public struct Chapter: Equatable {
     /// The chapter title.
     public let title: String?
 
+    /// The source of the image associated with the chapter.
+    ///
+    /// The image should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).
+    public let imageSource: ImageSource
+
     /// The time range covered by the chapter.
     public let timeRange: CMTimeRange
 
@@ -34,24 +39,26 @@ public struct Chapter: Equatable {
     /// - Parameters:
     ///   - identifier: An identifier for the chapter.
     ///   - title: The chapter title.
-    ///   - image: The image associated with the chapter.
+    ///   - imageSource: The source of the image associated with the content.
     ///   - timeRange: The time range covered by the chapter.
     public init(
         identifier: String? = nil,
         title: String? = nil,
+        imageSource: ImageSource = .none,
         timeRange: CMTimeRange
     ) {
         self.identifier = identifier
         self.title = title
+        self.imageSource = imageSource
         self.timeRange = timeRange
     }
 }
 
-extension Chapter {
+public extension Chapter {
     /// The image associated with the chapter.
     ///
-    /// The image should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).
-    public var image: UIImage? {
+    /// Lazily loaded when accessed for the first time.
+    var image: UIImage? {
         nil
     }
 }
