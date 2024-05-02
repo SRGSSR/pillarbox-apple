@@ -87,19 +87,6 @@ final class DataProvider {
             .eraseToAnyPublisher()
     }
 
-    func imageCatalogPublisher(for mediaComposition: MediaComposition, width: ImageWidth) -> AnyPublisher<ImageCatalog, Never> {
-        Publishers.MergeMany(mediaComposition.allChapters.map { chapter in
-            imagePublisher(for: chapter.imageUrl, width: width)
-                .map { [chapter.urn: $0] }
-        })
-        .prepend([:])
-        .scan([:]) { initial, next in
-            initial.merging(next) { _, new in new }
-        }
-        .map { ImageCatalog(images: $0, width: width) }
-        .eraseToAnyPublisher()
-    }
-
     private func scaledImageUrl(_ url: URL, width: ImageWidth) -> URL {
         guard var components = URLComponents(
             url: server.url.appending(path: "images/"),

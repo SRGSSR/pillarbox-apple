@@ -15,11 +15,6 @@ public struct Chapter: Equatable {
     /// The chapter title.
     public let title: String?
 
-    /// The image associated with the chapter.
-    ///
-    /// The image should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).
-    public let image: UIImage?
-
     /// The time range covered by the chapter.
     public let timeRange: CMTimeRange
 
@@ -44,12 +39,19 @@ public struct Chapter: Equatable {
     public init(
         identifier: String? = nil,
         title: String? = nil,
-        image: UIImage? = nil,
         timeRange: CMTimeRange
     ) {
         self.identifier = identifier
         self.title = title
-        self.image = image
         self.timeRange = timeRange
+    }
+}
+
+extension Chapter {
+    /// The image associated with the chapter.
+    ///
+    /// The image should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).
+    public var image: UIImage? {
+        nil
     }
 }

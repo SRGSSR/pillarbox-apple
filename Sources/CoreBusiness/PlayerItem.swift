@@ -32,13 +32,9 @@ public extension PlayerItem {
                 guard let resource = mainChapter.recommendedResource else {
                     throw DataError.noResourceAvailable
                 }
-                return dataProvider.imageCatalogPublisher(for: mediaComposition, width: .width480)
-                    .map { imageCatalog in
-                        let metadata = MediaMetadata(mediaComposition: mediaComposition, resource: resource, imageCatalog: imageCatalog)
-                        return Self.asset(for: metadata, configuration: configuration)
-                    }
+                let metadata = MediaMetadata(mediaComposition: mediaComposition, resource: resource)
+                return Self.asset(for: metadata, configuration: configuration)
             }
-            .switchToLatest()
             .eraseToAnyPublisher()
         return .init(publisher: publisher, trackerAdapters: [
             ComScoreTracker.adapter { $0.analyticsData },

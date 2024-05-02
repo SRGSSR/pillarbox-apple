@@ -24,9 +24,6 @@ public struct MediaMetadata {
     /// The resource to be played.
     public let resource: MediaComposition.Resource
 
-    /// A catalog of images associated with the context.
-    private let imageCatalog: ImageCatalog
-
     /// The stream type.
     public var streamType: StreamType {
         resource.streamType
@@ -50,12 +47,6 @@ public struct MediaMetadata {
         return analyticsMetadata
     }
 
-    init(mediaComposition: MediaComposition, resource: MediaComposition.Resource, imageCatalog: ImageCatalog) {
-        self.mediaComposition = mediaComposition
-        self.resource = resource
-        self.imageCatalog = imageCatalog
-    }
-
     private static func areRedundant(chapter: MediaComposition.Chapter, show: MediaComposition.Show) -> Bool {
         chapter.title.lowercased() == show.title.lowercased()
     }
@@ -68,7 +59,6 @@ extension MediaMetadata: AssetMetadata {
             title: title,
             subtitle: subtitle,
             description: description,
-            image: artworkImage(for: mediaComposition.mainChapter),
             episodeInformation: episodeInformation,
             chapters: chapters,
             timeRanges: timeRanges
@@ -121,7 +111,6 @@ extension MediaMetadata: AssetMetadata {
             .init(
                 identifier: chapter.urn,
                 title: chapter.title,
-                image: artworkImage(for: chapter),
                 timeRange: chapter.timeRange
             )
         }
@@ -148,17 +137,5 @@ extension MediaMetadata: AssetMetadata {
                 TimeRange(kind: .credits(.closing), start: interval.timeRange.start, end: interval.timeRange.end)
             }
         }
-    }
-
-    private func image(for chapter: MediaComposition.Chapter) -> UIImage? {
-        imageCatalog.image(for: chapter.urn)
-    }
-
-    private func artworkImage(for chapter: MediaComposition.Chapter) -> UIImage? {
-#if os(tvOS)
-        image(for: chapter) ?? imageCatalog.placeholderImage()
-#else
-        image(for: chapter)
-#endif
     }
 }

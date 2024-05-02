@@ -121,6 +121,6 @@ extension Media {
 
 extension Media: AssetMetadata {
     var playerMetadata: PlayerMetadata {
-        .init(title: title, subtitle: subtitle, image: image, timeRanges: timeRanges)
+        .init(title: title, subtitle: subtitle, timeRanges: timeRanges)
     }
 }
