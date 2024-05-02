@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import Combine
 import UIKit
 
 /// A chapter representation.
@@ -60,5 +61,17 @@ public struct Chapter: Equatable {
         self.title = title
         self.imageSource = imageSource
         self.timeRange = timeRange
+    }
+}
+
+extension Chapter {
+    func chapterPublisher() -> AnyPublisher<Chapter, Never> {
+        imageSource.imageSourcePublisher()
+            .map { self.with(imageSource: $0) }
+            .eraseToAnyPublisher()
+    }
+
+    private func with(imageSource: ImageSource) -> Self {
+        .init(identifier: identifier, title: title, imageSource: imageSource, timeRange: timeRange)
     }
 }

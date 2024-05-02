@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import Combine
 import MediaPlayer
 
 /// Metadata associated with playback.
@@ -120,5 +121,33 @@ public struct PlayerMetadata: Equatable {
         self.episodeInformation = episodeInformation
         self.chapters = chapters
         self.timeRanges = timeRanges
+    }
+}
+
+extension PlayerMetadata {
+    func playerMetadataPublisher() -> AnyPublisher<PlayerMetadata, Never> {
+        Publishers.CombineLatest(
+            imageSource.imageSourcePublisher(),
+            chaptersPublisher()
+        )
+        .map { self.with(imageSource: $0, chapters: $1) }
+        .eraseToAnyPublisher()
+    }
+
+    private func chaptersPublisher() -> AnyPublisher<[Chapter], Never> {
+        Publishers.AccumulateLatestMany(chapters.map { $0.chapterPublisher() })
+    }
+
+    private func with(imageSource: ImageSource, chapters: [Chapter]) -> Self {
+        .init(
+            identifier: identifier,
+            title: title,
+            subtitle: subtitle,
+            description: description,
+            imageSource: imageSource,
+            episodeInformation: episodeInformation,
+            chapters: chapters,
+            timeRanges: timeRanges
+        )
     }
 }

@@ -103,10 +103,17 @@ public final class PlayerItem: Equatable {
                 trackerAdapters.forEach { adapter in
                     adapter.updateMetadata(with: asset.metadata)
                 }
-                return AssetContent(
+                return Publishers.CombineLatest(
+                    Just(asset),
+                    metadataMapper(asset.metadata).playerMetadataPublisher()
+                )
+            }
+            .switchToLatest()
+            .map { asset, metadata in
+                AssetContent(
                     id: id,
                     resource: asset.resource,
-                    metadata: metadataMapper(asset.metadata),
+                    metadata: metadata,
                     configuration: asset.configuration
                 )
             }
