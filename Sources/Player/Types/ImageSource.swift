@@ -34,6 +34,7 @@ extension ImageSource {
             }
             .replaceError(with: self)
             .prepend(self)
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 }
