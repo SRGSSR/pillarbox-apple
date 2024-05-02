@@ -14,7 +14,8 @@ final class MediaMetadataTests: XCTestCase {
         let mediaComposition = Mock.mediaComposition(.onDemand)
         let metadata = MediaMetadata(
             mediaComposition: mediaComposition,
-            resource: mediaComposition.mainChapter.recommendedResource!
+            resource: mediaComposition.mainChapter.recommendedResource!,
+            dataProvider: DataProvider(server: .production)
         )
         expect(metadata.title).to(equal("Yadebat"))
         expect(metadata.subtitle).to(equal("On réunit des ex après leur rupture"))
@@ -29,7 +30,8 @@ final class MediaMetadataTests: XCTestCase {
         let mediaComposition = Mock.mediaComposition(.redundant)
         let metadata = MediaMetadata(
             mediaComposition: mediaComposition,
-            resource: mediaComposition.mainChapter.recommendedResource!
+            resource: mediaComposition.mainChapter.recommendedResource!,
+            dataProvider: DataProvider(server: .production)
         )
         expect(metadata.title).to(equal("19h30"))
         expect(metadata.subtitle).to(contain("February"))
@@ -41,7 +43,8 @@ final class MediaMetadataTests: XCTestCase {
         let mediaComposition = Mock.mediaComposition(.live)
         let metadata = MediaMetadata(
             mediaComposition: mediaComposition,
-            resource: mediaComposition.mainChapter.recommendedResource!
+            resource: mediaComposition.mainChapter.recommendedResource!,
+            dataProvider: DataProvider(server: .production)
         )
         expect(metadata.title).to(equal("La 1ère en direct"))
         expect(metadata.subtitle).to(beNil())
@@ -53,7 +56,8 @@ final class MediaMetadataTests: XCTestCase {
         let mediaComposition = Mock.mediaComposition(.onDemand)
         let metadata = MediaMetadata(
             mediaComposition: mediaComposition,
-            resource: mediaComposition.mainChapter.recommendedResource!
+            resource: mediaComposition.mainChapter.recommendedResource!,
+            dataProvider: DataProvider(server: .production)
         )
         expect(metadata.analyticsData).notTo(beEmpty())
         expect(metadata.analyticsMetadata).notTo(beEmpty())
@@ -63,7 +67,8 @@ final class MediaMetadataTests: XCTestCase {
         let mediaComposition = Mock.mediaComposition(.missingAnalytics)
         let metadata = MediaMetadata(
             mediaComposition: mediaComposition,
-            resource: mediaComposition.mainChapter.recommendedResource!
+            resource: mediaComposition.mainChapter.recommendedResource!,
+            dataProvider: DataProvider(server: .production)
         )
         expect(metadata.analyticsData).to(beEmpty())
         expect(metadata.analyticsMetadata).to(beEmpty())

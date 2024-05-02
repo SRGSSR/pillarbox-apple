@@ -32,7 +32,7 @@ public extension PlayerItem {
                 guard let resource = mainChapter.recommendedResource else {
                     throw DataError.noResourceAvailable
                 }
-                let metadata = MediaMetadata(mediaComposition: mediaComposition, resource: resource)
+                let metadata = MediaMetadata(mediaComposition: mediaComposition, resource: resource, dataProvider: dataProvider)
                 return Self.asset(for: metadata, configuration: configuration)
             }
             .eraseToAnyPublisher()

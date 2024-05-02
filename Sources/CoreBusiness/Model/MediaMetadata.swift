@@ -24,6 +24,8 @@ public struct MediaMetadata {
     /// The resource to be played.
     public let resource: MediaComposition.Resource
 
+    private let dataProvider: DataProvider
+
     /// The stream type.
     public var streamType: StreamType {
         resource.streamType
@@ -47,6 +49,12 @@ public struct MediaMetadata {
         return analyticsMetadata
     }
 
+    init(mediaComposition: MediaComposition, resource: MediaComposition.Resource, dataProvider: DataProvider) {
+        self.mediaComposition = mediaComposition
+        self.resource = resource
+        self.dataProvider = dataProvider
+    }
+
     private static func areRedundant(chapter: MediaComposition.Chapter, show: MediaComposition.Show) -> Bool {
         chapter.title.lowercased() == show.title.lowercased()
     }
@@ -59,7 +67,7 @@ extension MediaMetadata: AssetMetadata {
             title: title,
             subtitle: subtitle,
             description: description,
-            imageSource: .url(mediaComposition.mainChapter.imageUrl),
+            imageSource: .url(imageUrl(for: mediaComposition.mainChapter)),
             episodeInformation: episodeInformation,
             chapters: chapters,
             timeRanges: timeRanges
@@ -112,7 +120,7 @@ extension MediaMetadata: AssetMetadata {
             .init(
                 identifier: chapter.urn,
                 title: chapter.title,
-                imageSource: .url(chapter.imageUrl),
+                imageSource: .url(imageUrl(for: chapter)),
                 timeRange: chapter.timeRange
             )
         }
@@ -139,5 +147,9 @@ extension MediaMetadata: AssetMetadata {
                 TimeRange(kind: .credits(.closing), start: interval.timeRange.start, end: interval.timeRange.end)
             }
         }
+    }
+
+    private func imageUrl(for chapter: MediaComposition.Chapter) -> URL {
+        dataProvider.scaledImageUrl(chapter.imageUrl, width: .width480)
     }
 }

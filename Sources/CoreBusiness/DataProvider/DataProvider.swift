@@ -78,16 +78,7 @@ final class DataProvider {
             .eraseToAnyPublisher()
     }
 
-    func imagePublisher(for url: URL, width: ImageWidth) -> AnyPublisher<UIImage, Never> {
-        session
-            .dataTaskPublisher(for: scaledImageUrl(url, width: width))
-            .map(\.data)
-            .replaceError(with: Data())
-            .compactMap { UIImage(data: $0) }
-            .eraseToAnyPublisher()
-    }
-
-    private func scaledImageUrl(_ url: URL, width: ImageWidth) -> URL {
+    func scaledImageUrl(_ url: URL, width: ImageWidth) -> URL {
         guard var components = URLComponents(
             url: server.url.appending(path: "images/"),
             resolvingAgainstBaseURL: false
