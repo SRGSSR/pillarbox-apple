@@ -6,7 +6,7 @@
 
 @testable import PillarboxPlayer
 
-import CircumspectTests
+import PillarboxCircumspect
 import UIKit
 
 final class ImageSourceTests: TestCase {
