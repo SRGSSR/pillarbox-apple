@@ -201,10 +201,23 @@ private struct MainView: View {
     }
 
     @ViewBuilder
+    private func audioArtwork() -> some View {
+        if let image = player.metadata.image {
+            Image(uiImage: image)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        else {
+            image(name: "music.note.tv.fill")
+        }
+    }
+
+    @ViewBuilder
     private func video() -> some View {
         ZStack {
             if player.mediaType == .audio {
-                image(name: "music.note.tv.fill")
+               audioArtwork()
             }
             else if player.isExternalPlaybackActive {
                 image(name: "tv")
