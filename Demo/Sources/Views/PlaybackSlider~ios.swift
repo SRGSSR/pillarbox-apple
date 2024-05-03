@@ -12,6 +12,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
 
     let minimumValueLabel: () -> ValueLabel
     let maximumValueLabel: () -> ValueLabel
+    let timeRanges: [TimeRange]
     let onEditingChanged: (Bool) -> Void
     let onDragging: () -> Void
 
@@ -40,22 +41,42 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
         progressTracker: ProgressTracker,
         @ViewBuilder minimumValueLabel: @escaping () -> ValueLabel,
         @ViewBuilder maximumValueLabel: @escaping () -> ValueLabel,
+        timeRanges: [TimeRange],
         onEditingChanged: @escaping (Bool) -> Void = { _ in },
         onDragging: @escaping () -> Void = {}
     ) {
         self.progressTracker = progressTracker
         self.minimumValueLabel = minimumValueLabel
         self.maximumValueLabel = maximumValueLabel
+        self.timeRanges = timeRanges
         self.onEditingChanged = onEditingChanged
         self.onDragging = onDragging
     }
 
+    private static func color(for timeRange: TimeRange) -> Color {
+        switch timeRange.kind {
+        case .credits:
+            return .orange
+        case .blocked:
+            return .red
+        }
+    }
+
     @ViewBuilder
-    private func rectangle(opacity: Double = 1, width: CGFloat? = nil) -> some View {
+    private func rectangle(opacity: Double = 1, width: CGFloat? = nil, color: Color = .white) -> some View {
         Rectangle()
-            .foregroundColor(.white)
+            .foregroundColor(color)
             .opacity(opacity)
             .frame(width: width)
+    }
+
+    @ViewBuilder
+    private func timeRangeRectangle(timeRange: TimeRange, width: CGFloat, color: Color) -> some View {
+        if progressTracker.timeRange.isValid {
+            let duration = progressTracker.timeRange.duration.seconds
+            rectangle(opacity: 0.7, width: width * CGFloat(timeRange.end.seconds - timeRange.start.seconds) / CGFloat(duration), color: color)
+                .offset(x: width * CGFloat(timeRange.start.seconds) / CGFloat(duration))
+        }
     }
 
     @ViewBuilder
@@ -67,6 +88,10 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
                 rectangle(opacity: 0.3, width: geometry.size.width * CGFloat(buffer))
                     .animation(.linear(duration: 0.5), value: buffer)
                 rectangle(width: geometry.size.width * CGFloat(progressTracker.progress))
+
+                ForEach(timeRanges, id: \.self) { timeRange in
+                    timeRangeRectangle(timeRange: timeRange, width: geometry.size.width, color: Self.color(for: timeRange))
+                }
             }
             .onChange(of: gestureValue) { value in
                 updateProgress(for: value, in: geometry)
@@ -99,7 +124,7 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
 
 extension PlaybackSlider where ValueLabel == EmptyView {
     init(progressTracker: ProgressTracker) {
-        self.init(progressTracker: progressTracker, minimumValueLabel: { EmptyView() }, maximumValueLabel: { EmptyView() })
+        self.init(progressTracker: progressTracker, minimumValueLabel: { EmptyView() }, maximumValueLabel: { EmptyView() }, timeRanges: [])
     }
 }
 
