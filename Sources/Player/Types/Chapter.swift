@@ -27,12 +27,7 @@ public struct Chapter: Equatable {
 
     /// The image associated with the content.
     public var image: UIImage? {
-        switch imageSource {
-        case let .image(image):
-            return image
-        default:
-            return nil
-        }
+        imageSource.image
     }
 
     /// The time range covered by the chapter.

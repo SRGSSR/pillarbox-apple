@@ -31,12 +31,7 @@ public struct PlayerMetadata: Equatable {
 
     /// The image associated with the content.
     public var image: UIImage? {
-        switch imageSource {
-        case let .image(image):
-            return image
-        default:
-            return nil
-        }
+        imageSource.image
     }
 
     private let imageSource: ImageSource

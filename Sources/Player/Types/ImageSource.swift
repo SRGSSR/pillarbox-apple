@@ -22,6 +22,15 @@ public enum ImageSource: Equatable {
 }
 
 extension ImageSource {
+    var image: UIImage? {
+        switch self {
+        case let .image(image):
+            return image
+        default:
+            return nil
+        }
+    }
+
     func imageSourcePublisher() -> AnyPublisher<ImageSource, Never> {
         switch self {
         case let .url(url):
