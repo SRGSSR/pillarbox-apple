@@ -151,6 +151,9 @@ let package = Package(
                 .target(name: "PillarboxPlayer"),
                 .target(name: "PillarboxStreams"),
                 .product(name: "OrderedCollections", package: "swift-collections")
+            ],
+            resources: [
+                .process("Resources")
             ]
         )
     ]

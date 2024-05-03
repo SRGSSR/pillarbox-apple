@@ -8,6 +8,22 @@
 
 import CoreMedia
 import PillarboxCircumspect
+import UIKit
+
+extension ImageSource: Similar {
+    public static func ~~ (lhs: ImageSource, rhs: ImageSource) -> Bool {
+        switch (lhs, rhs) {
+        case (.none, .none):
+            return true
+        case let (.url(lhsUrl), .url(rhsUrl)):
+            return lhsUrl == rhsUrl
+        case let (.image(lhsImage), .image(rhsImage)):
+            return lhsImage.pngData() == rhsImage.pngData()
+        default:
+            return false
+        }
+    }
+}
 
 extension Resource: Similar {
     public static func ~~ (lhs: PillarboxPlayer.Resource, rhs: PillarboxPlayer.Resource) -> Bool {

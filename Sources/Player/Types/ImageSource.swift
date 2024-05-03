@@ -34,10 +34,10 @@ extension ImageSource {
     private func imageSourcePublisher(for url: URL) -> AnyPublisher<ImageSource, Never> {
         kSession.dataTaskPublisher(for: url)
             .map { data, _ in
-                guard let image = UIImage(data: data) else { return self }
+                guard let image = UIImage(data: data) else { return .none }
                 return .image(image)
             }
-            .replaceError(with: self)
+            .replaceError(with: .none)
             .prepend(self)
             .removeDuplicates()
             .eraseToAnyPublisher()
