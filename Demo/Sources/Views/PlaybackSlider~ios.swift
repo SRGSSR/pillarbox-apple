@@ -20,10 +20,6 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     @State private var initialProgress: Float = 0
     @State private var buffer: Float = 0
 
-    private var blockedTimeRanges: [TimeRange] {
-        timeRanges.filter { $0.kind == .blocked }
-    }
-
     var body: some View {
         HStack {
             minimumValueLabel()
@@ -57,6 +53,15 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
         self.onDragging = onDragging
     }
 
+    private static func color(for timeRange: TimeRange) -> Color {
+        switch timeRange.kind {
+        case .credits:
+            return .orange
+        case .blocked:
+            return .red
+        }
+    }
+
     @ViewBuilder
     private func rectangle(opacity: Double = 1, width: CGFloat? = nil, color: Color = .white) -> some View {
         Rectangle()
@@ -66,17 +71,10 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     }
 
     @ViewBuilder
-    private func blockedRectangles(width: CGFloat) -> some View {
-        ForEach(blockedTimeRanges, id: \.self) { timeRange in
-            add(timeRange: timeRange, width: width, color: .red)
-        }
-    }
-
-    @ViewBuilder
-    private func add(timeRange: TimeRange, width: CGFloat, color: Color) -> some View {
+    private func timeRangeRectangle(timeRange: TimeRange, width: CGFloat, color: Color) -> some View {
         if progressTracker.timeRange.isValid {
             let duration = progressTracker.timeRange.duration.seconds
-            rectangle(opacity: 0.4, width: width * CGFloat(timeRange.end.seconds - timeRange.start.seconds) / CGFloat(duration), color: color)
+            rectangle(opacity: 0.7, width: width * CGFloat(timeRange.end.seconds - timeRange.start.seconds) / CGFloat(duration), color: color)
                 .offset(x: width * CGFloat(timeRange.start.seconds) / CGFloat(duration))
         }
     }
@@ -91,7 +89,9 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
                     .animation(.linear(duration: 0.5), value: buffer)
                 rectangle(width: geometry.size.width * CGFloat(progressTracker.progress))
 
-                blockedRectangles(width: geometry.size.width)
+                ForEach(timeRanges, id: \.self) { timeRange in
+                    timeRangeRectangle(timeRange: timeRange, width: geometry.size.width, color: Self.color(for: timeRange))
+                }
             }
             .onChange(of: gestureValue) { value in
                 updateProgress(for: value, in: geometry)
