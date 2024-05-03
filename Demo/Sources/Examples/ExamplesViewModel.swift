@@ -94,7 +94,8 @@ final class ExamplesViewModel: ObservableObject {
 
     let timeRangesMedias = Template.medias(from: [
         URLTemplate.timeRangesVideo,
-        URLTemplate.blockedTimeRangesVideo
+        URLTemplate.blockedTimeRangesVideo,
+        URNTemplate.blockedTimeRangesVideo
     ])
 
     @Published private(set) var protectedMedias = [Media]()
