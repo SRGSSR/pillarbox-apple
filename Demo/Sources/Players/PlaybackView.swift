@@ -538,6 +538,7 @@ private struct TimeSlider: View {
             maximumValueLabel: {
                 label(withText: formattedTotalTime)
             },
+            timeRanges: player.metadata.timeRanges,
             onDragging: {
                 if UserDefaults.standard.seekBehavior == .deferred {
                     visibilityTracker.reset()
