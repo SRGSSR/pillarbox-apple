@@ -20,6 +20,10 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     @State private var initialProgress: Float = 0
     @State private var buffer: Float = 0
 
+    private var blockedTimeRanges: [TimeRange] {
+        timeRanges.filter { $0.kind == .blocked }
+    }
+
     var body: some View {
         HStack {
             minimumValueLabel()
@@ -62,6 +66,13 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
     }
 
     @ViewBuilder
+    private func blockedRectangles(width: CGFloat) -> some View {
+        ForEach(blockedTimeRanges, id: \.self) { timeRange in
+            add(timeRange: timeRange, width: width, color: .red)
+        }
+    }
+
+    @ViewBuilder
     private func add(timeRange: TimeRange, width: CGFloat, color: Color) -> some View {
         if progressTracker.timeRange.isValid {
             let duration = progressTracker.timeRange.duration.seconds
@@ -79,9 +90,8 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
                 rectangle(opacity: 0.3, width: geometry.size.width * CGFloat(buffer))
                     .animation(.linear(duration: 0.5), value: buffer)
                 rectangle(width: geometry.size.width * CGFloat(progressTracker.progress))
-                ForEach(timeRanges.filter { $0.kind == .blocked }, id: \.self) { timeRange in
-                    add(timeRange: timeRange, width: geometry.size.width, color: .red)
-                }
+
+                blockedRectangles(width: geometry.size.width)
             }
             .onChange(of: gestureValue) { value in
                 updateProgress(for: value, in: geometry)
