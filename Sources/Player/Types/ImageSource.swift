@@ -7,10 +7,18 @@
 import Combine
 import UIKit
 
+/// An image source.
 public enum ImageSource: Equatable {
+    /// No image.
     case none
+
+    /// URL.
     case url(URL)
+
+    /// Request.
     case request(URLRequest)
+
+    /// Image.
     case image(UIImage)
 }
 
