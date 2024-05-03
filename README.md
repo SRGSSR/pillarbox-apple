@@ -41,7 +41,7 @@ From left to right:
 - Screenshots 1, 2 and 3: [Rich custom player user interface](Demo/Sources/Players/PlaybackView.swift).
 - Screenshot 4: [Player with associated playlist](Demo/Sources/Showcase/Playlist/PlaylistView.swift).
 - Screenshot 5: [Stories](Demo/Sources/Showcase/Stories/StoriesView.swift).
-- Screenshot 6: [Custom chapter navigation](Demo/Sources/Players/ChaptersPlayerView.swift).
+- Screenshot 6: [Custom chapter navigation](Demo/Sources/Players/PlayerView.swift).
 
 # Code example
 
