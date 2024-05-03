@@ -68,6 +68,10 @@ private struct MainView: View {
         player.metadata.subtitle
     }
 
+    private var image: UIImage? {
+        player.metadata.image
+    }
+
     private func magnificationGesture() -> some Gesture {
         MagnificationGesture()
             .onChanged { scale in
@@ -201,23 +205,18 @@ private struct MainView: View {
     }
 
     @ViewBuilder
-    private func audioArtwork() -> some View {
-        if let image = player.metadata.image {
-            Image(uiImage: image)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-        else {
-            image(name: "music.note.tv.fill")
-        }
+    private func artwork(for image: UIImage) -> some View {
+        Image(uiImage: image)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     @ViewBuilder
     private func video() -> some View {
         ZStack {
-            if player.mediaType == .audio {
-               audioArtwork()
+            if player.mediaType == .audio, let image {
+               artwork(for: image)
             }
             else if player.isExternalPlaybackActive {
                 image(name: "tv")
@@ -231,7 +230,7 @@ private struct MainView: View {
                     .supportsPictureInPicture(supportsPictureInPicture)
             }
         }
-        .animation(.easeIn(duration: 0.2), values: player.mediaType, player.isExternalPlaybackActive)
+        .animation(.easeIn(duration: 0.2), values: player.mediaType, player.isExternalPlaybackActive, image)
     }
 
     @ViewBuilder

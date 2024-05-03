@@ -63,6 +63,12 @@ extension View {
             .animation(animation, value: v2)
     }
 
+    func animation<V1, V2, V3>(_ animation: Animation?, values v1: V1, _ v2: V2, _ v3: V3) -> some View where V1: Equatable, V2: Equatable, V3: Equatable {
+        self.animation(animation, value: v1)
+            .animation(animation, value: v2)
+            .animation(animation, value: v3)
+    }
+
     func tracked(name: String, levels: [String] = []) -> some View {
         tracked(
             comScore: .init(name: name),
