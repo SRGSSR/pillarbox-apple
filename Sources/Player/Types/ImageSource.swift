@@ -7,6 +7,8 @@
 import Combine
 import UIKit
 
+private let kSession = URLSession(configuration: .default)
+
 /// An image source.
 public enum ImageSource: Equatable {
     /// No image.
@@ -35,7 +37,7 @@ extension ImageSource {
     }
 
     private func imageSourcePublisher(for request: URLRequest) -> AnyPublisher<ImageSource, Never> {
-        URLSession.shared.dataTaskPublisher(for: request)
+        kSession.dataTaskPublisher(for: request)
             .map { data, _ in
                 guard let image = UIImage(data: data) else { return self }
                 return .image(image)
