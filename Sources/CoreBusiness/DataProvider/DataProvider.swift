@@ -30,7 +30,7 @@ final class DataProvider {
 
     init(server: Server = .production) {
         self.server = server
-        session = URLSession(configuration: .ephemeral)
+        session = URLSession(configuration: .default)
     }
 
     static func decoder() -> JSONDecoder {
