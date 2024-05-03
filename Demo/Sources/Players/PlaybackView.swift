@@ -224,7 +224,7 @@ private struct MainView: View {
     @ViewBuilder
     private func controls() -> some View {
         ZStack {
-            Color(white: 0, opacity: 0.3)
+            Color(white: 0, opacity: 0.5)
                 .opacity(isUserInterfaceHidden || (isInteracting && !areControlsAlwaysVisible) ? 0 : 1)
                 .ignoresSafeArea()
             ControlsView(player: player, progressTracker: progressTracker)
