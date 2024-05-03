@@ -17,9 +17,6 @@ public enum ImageSource: Equatable {
     /// URL.
     case url(URL)
 
-    /// Request.
-    case request(URLRequest)
-
     /// Image.
     case image(UIImage)
 }
@@ -28,16 +25,14 @@ extension ImageSource {
     func imageSourcePublisher() -> AnyPublisher<ImageSource, Never> {
         switch self {
         case let .url(url):
-            return imageSourcePublisher(for: .init(url: url))
-        case let .request(request):
-            return imageSourcePublisher(for: request)
+            return imageSourcePublisher(for: url)
         default:
             return Just(self).eraseToAnyPublisher()
         }
     }
 
-    private func imageSourcePublisher(for request: URLRequest) -> AnyPublisher<ImageSource, Never> {
-        kSession.dataTaskPublisher(for: request)
+    private func imageSourcePublisher(for url: URL) -> AnyPublisher<ImageSource, Never> {
+        kSession.dataTaskPublisher(for: url)
             .map { data, _ in
                 guard let image = UIImage(data: data) else { return self }
                 return .image(image)
