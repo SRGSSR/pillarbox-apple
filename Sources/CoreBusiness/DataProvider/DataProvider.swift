@@ -13,6 +13,7 @@ final class DataProvider {
         case width240 = 240
         case width320 = 320
         case width480 = 480
+        case width720 = 720
         case width960 = 960
         case width1920 = 1920
     }
@@ -30,7 +31,7 @@ final class DataProvider {
 
     init(server: Server = .production) {
         self.server = server
-        session = URLSession(configuration: .ephemeral)
+        session = URLSession(configuration: .default)
     }
 
     static func decoder() -> JSONDecoder {
@@ -78,29 +79,7 @@ final class DataProvider {
             .eraseToAnyPublisher()
     }
 
-    func imagePublisher(for url: URL, width: ImageWidth) -> AnyPublisher<UIImage, Never> {
-        session
-            .dataTaskPublisher(for: scaledImageUrl(url, width: width))
-            .map(\.data)
-            .replaceError(with: Data())
-            .compactMap { UIImage(data: $0) }
-            .eraseToAnyPublisher()
-    }
-
-    func imageCatalogPublisher(for mediaComposition: MediaComposition, width: ImageWidth) -> AnyPublisher<ImageCatalog, Never> {
-        Publishers.MergeMany(mediaComposition.allChapters.map { chapter in
-            imagePublisher(for: chapter.imageUrl, width: width)
-                .map { [chapter.urn: $0] }
-        })
-        .prepend([:])
-        .scan([:]) { initial, next in
-            initial.merging(next) { _, new in new }
-        }
-        .map { ImageCatalog(images: $0, width: width) }
-        .eraseToAnyPublisher()
-    }
-
-    private func scaledImageUrl(_ url: URL, width: ImageWidth) -> URL {
+    func scaledImageUrl(_ url: URL, width: ImageWidth) -> URL {
         guard var components = URLComponents(
             url: server.url.appending(path: "images/"),
             resolvingAgainstBaseURL: false

@@ -8,10 +8,13 @@
 public enum PlaybackState: Equatable {
     /// The player is idle.
     case idle
+
     /// The player is currently playing content.
     case playing
+
     /// The player has been paused.
     case paused
+
     /// The player ended playback of an item.
     case ended
 

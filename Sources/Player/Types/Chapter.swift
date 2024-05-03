@@ -5,33 +5,49 @@
 //
 
 import AVFoundation
+import Combine
 import UIKit
 
 /// A chapter representation.
 public struct Chapter: Equatable {
+    private static let placeholderImage: UIImage = {
+        let rect = CGRect(x: 0, y: 0, width: 16, height: 9)
+        let renderer = UIGraphicsImageRenderer(bounds: rect)
+        return renderer.image { context in
+            UIColor.darkGray.setFill()
+            context.fill(rect)
+        }
+    }()
+
     /// An identifier for the chapter.
     public let identifier: String?
 
     /// The chapter title.
     public let title: String?
 
-    /// The image associated with the chapter.
-    ///
-    /// The image should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).
-    public let image: UIImage?
+    /// The image associated with the content.
+    public var image: UIImage? {
+        imageSource.image
+    }
 
     /// The time range covered by the chapter.
     public let timeRange: CMTimeRange
+
+    private let imageSource: ImageSource
 
     var timedNavigationMarker: AVTimedMetadataGroup {
         .init(
             items: [
                 .init(identifier: .commonIdentifierAssetIdentifier, value: identifier),
                 .init(identifier: .commonIdentifierTitle, value: title),
-                .init(identifier: .commonIdentifierArtwork, value: image?.pngData())
+                .init(identifier: .commonIdentifierArtwork, value: artworkImage.pngData())
             ].compactMap { $0 },
             timeRange: timeRange
         )
+    }
+
+    private var artworkImage: UIImage {
+        image ?? Self.placeholderImage
     }
 
     /// Creates a chapter.
@@ -39,17 +55,31 @@ public struct Chapter: Equatable {
     /// - Parameters:
     ///   - identifier: An identifier for the chapter.
     ///   - title: The chapter title.
-    ///   - image: The image associated with the chapter.
+    ///   - imageSource: The source of the image associated with the content.
     ///   - timeRange: The time range covered by the chapter.
+    ///
+    /// The image should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).
     public init(
         identifier: String? = nil,
         title: String? = nil,
-        image: UIImage? = nil,
+        imageSource: ImageSource = .none,
         timeRange: CMTimeRange
     ) {
         self.identifier = identifier
         self.title = title
-        self.image = image
+        self.imageSource = imageSource
         self.timeRange = timeRange
+    }
+}
+
+extension Chapter {
+    func chapterPublisher() -> AnyPublisher<Chapter, Never> {
+        imageSource.imageSourcePublisher()
+            .map { self.with(imageSource: $0) }
+            .eraseToAnyPublisher()
+    }
+
+    private func with(imageSource: ImageSource) -> Self {
+        .init(identifier: identifier, title: title, imageSource: imageSource, timeRange: timeRange)
     }
 }

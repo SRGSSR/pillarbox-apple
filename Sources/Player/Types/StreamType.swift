@@ -10,10 +10,13 @@ import CoreMedia
 public enum StreamType {
     /// Unknown stream.
     case unknown
+
     /// On-demand stream.
     case onDemand
+
     /// Livestream without DVR.
     case live
+
     /// Livestream with DVR.
     case dvr
 

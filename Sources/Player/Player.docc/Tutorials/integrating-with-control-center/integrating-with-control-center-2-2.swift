@@ -3,7 +3,7 @@ import SwiftUI
 
 private struct Metadata: AssetMetadata {
     var playerMetadata: PlayerMetadata {
-        .init(title: "🍎", subtitle: "🍏", image: UIImage(named: "apple"))
+        .init(title: "🍎", subtitle: "🍏", imageSource: .image(.init(named: "apple")!))
     }
 }
 

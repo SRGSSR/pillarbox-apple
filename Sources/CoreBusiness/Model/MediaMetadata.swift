@@ -24,8 +24,7 @@ public struct MediaMetadata {
     /// The resource to be played.
     public let resource: MediaComposition.Resource
 
-    /// A catalog of images associated with the context.
-    private let imageCatalog: ImageCatalog
+    private let dataProvider: DataProvider
 
     /// The stream type.
     public var streamType: StreamType {
@@ -50,10 +49,10 @@ public struct MediaMetadata {
         return analyticsMetadata
     }
 
-    init(mediaComposition: MediaComposition, resource: MediaComposition.Resource, imageCatalog: ImageCatalog) {
+    init(mediaComposition: MediaComposition, resource: MediaComposition.Resource, dataProvider: DataProvider) {
         self.mediaComposition = mediaComposition
         self.resource = resource
-        self.imageCatalog = imageCatalog
+        self.dataProvider = dataProvider
     }
 
     private static func areRedundant(chapter: MediaComposition.Chapter, show: MediaComposition.Show) -> Bool {
@@ -68,7 +67,7 @@ extension MediaMetadata: AssetMetadata {
             title: title,
             subtitle: subtitle,
             description: description,
-            image: artworkImage(for: mediaComposition.mainChapter),
+            imageSource: .url(imageUrl(for: mediaComposition.mainChapter)),
             episodeInformation: episodeInformation,
             chapters: chapters,
             timeRanges: timeRanges
@@ -121,7 +120,7 @@ extension MediaMetadata: AssetMetadata {
             .init(
                 identifier: chapter.urn,
                 title: chapter.title,
-                image: artworkImage(for: chapter),
+                imageSource: .url(imageUrl(for: chapter)),
                 timeRange: chapter.timeRange
             )
         }
@@ -150,15 +149,7 @@ extension MediaMetadata: AssetMetadata {
         }
     }
 
-    private func image(for chapter: MediaComposition.Chapter) -> UIImage? {
-        imageCatalog.image(for: chapter.urn)
-    }
-
-    private func artworkImage(for chapter: MediaComposition.Chapter) -> UIImage? {
-#if os(tvOS)
-        image(for: chapter) ?? imageCatalog.placeholderImage()
-#else
-        image(for: chapter)
-#endif
+    private func imageUrl(for chapter: MediaComposition.Chapter) -> URL {
+        dataProvider.scaledImageUrl(chapter.imageUrl, width: .width480)
     }
 }

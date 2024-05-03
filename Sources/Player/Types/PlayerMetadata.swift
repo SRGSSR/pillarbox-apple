@@ -5,6 +5,7 @@
 //
 
 import AVFoundation
+import Combine
 import MediaPlayer
 
 /// Metadata associated with playback.
@@ -29,9 +30,11 @@ public struct PlayerMetadata: Equatable {
     public let description: String?
 
     /// The image associated with the content.
-    ///
-    /// The image should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).
-    public let image: UIImage?
+    public var image: UIImage? {
+        imageSource.image
+    }
+
+    private let imageSource: ImageSource
 
     /// Episode information associated with the content.
     public let episodeInformation: EpisodeInformation?
@@ -89,16 +92,18 @@ public struct PlayerMetadata: Equatable {
     ///   - title: The content title.
     ///   - subtitle: A subtitle for the content.
     ///   - description: A description of the content.
-    ///   - image: The image associated with the content.
+    ///   - imageSource: The source of the image associated with the content.
     ///   - episodeInformation: Episode information associated with the content.
     ///   - chapters: Chapter associated with the content.
     ///   - timeRanges: Time ranges associated with the content.
+    ///
+    /// The image should usually be reasonable in size (less than 1000px wide / tall is in general sufficient).
     public init(
         identifier: String? = nil,
         title: String? = nil,
         subtitle: String? = nil,
         description: String? = nil,
-        image: UIImage? = nil,
+        imageSource: ImageSource = .none,
         episodeInformation: EpisodeInformation? = nil,
         chapters: [Chapter] = [],
         timeRanges: [TimeRange] = []
@@ -107,9 +112,37 @@ public struct PlayerMetadata: Equatable {
         self.title = title
         self.subtitle = subtitle
         self.description = description
-        self.image = image
+        self.imageSource = imageSource
         self.episodeInformation = episodeInformation
         self.chapters = chapters
         self.timeRanges = timeRanges
+    }
+}
+
+extension PlayerMetadata {
+    func playerMetadataPublisher() -> AnyPublisher<PlayerMetadata, Never> {
+        Publishers.CombineLatest(
+            imageSource.imageSourcePublisher(),
+            chaptersPublisher()
+        )
+        .map { self.with(imageSource: $0, chapters: $1) }
+        .eraseToAnyPublisher()
+    }
+
+    private func chaptersPublisher() -> AnyPublisher<[Chapter], Never> {
+        Publishers.AccumulateLatestMany(chapters.map { $0.chapterPublisher() })
+    }
+
+    private func with(imageSource: ImageSource, chapters: [Chapter]) -> Self {
+        .init(
+            identifier: identifier,
+            title: title,
+            subtitle: subtitle,
+            description: description,
+            imageSource: imageSource,
+            episodeInformation: episodeInformation,
+            chapters: chapters,
+            timeRanges: timeRanges
+        )
     }
 }

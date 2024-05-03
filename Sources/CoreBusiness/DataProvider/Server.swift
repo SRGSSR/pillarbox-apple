@@ -10,10 +10,13 @@ import Foundation
 public enum Server {
     /// Production.
     case production
+
     /// Stage.
     case stage
+
     /// Test.
     case test
+
     /// MMF.
     case mmf
 

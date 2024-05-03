@@ -61,7 +61,7 @@ extension PlayerItem {
 
     static func webServiceMock(media: MediaMock, trackerAdapters: [TrackerAdapter<AssetMetadataMock>] = []) -> Self {
         let url = URL(string: "http://localhost:8123/json/\(media).json")!
-        let publisher = URLSession(configuration: .ephemeral).dataTaskPublisher(for: url)
+        let publisher = URLSession(configuration: .default).dataTaskPublisher(for: url)
             .map(\.data)
             .decode(type: AssetMetadataMock.self, decoder: JSONDecoder())
             .map { metadata in

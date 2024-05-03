@@ -8,8 +8,10 @@
 public enum MediaType {
     /// Unknown media type.
     case unknown
+
     /// Audio.
     case audio
+
     /// Video.
     case video
 }
