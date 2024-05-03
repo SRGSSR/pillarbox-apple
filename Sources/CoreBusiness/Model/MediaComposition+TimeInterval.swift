@@ -17,7 +17,7 @@ public extension MediaComposition {
 
         /// A kind of time interval.
         public enum Kind: String, Decodable {
-            /// Openning credits.
+            /// Opening credits.
             case openingCredits = "OPENING_CREDITS"
 
             /// Closing credits.

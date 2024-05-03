@@ -8,14 +8,19 @@
 public enum Vendor: String {
     /// SRF.
     case SRF
+
     /// RTS.
     case RTS
+
     /// RSI.
     case RSI
+
     /// RTR.
     case RTR
+
     /// SWI.
     case SWI
+
     /// SRG.
     case SRG
 }

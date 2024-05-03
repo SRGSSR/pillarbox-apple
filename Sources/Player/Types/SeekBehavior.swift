@@ -8,6 +8,7 @@
 public enum SeekBehavior {
     /// A behavior updating progress immediately during a seek.
     case immediate
+
     /// A behavior deferring progress update after a seek ends.
     case deferred
 }
