@@ -39,7 +39,7 @@ public struct PlayerMetadata: Equatable {
         }
     }
 
-    public let imageSource: ImageSource
+    private let imageSource: ImageSource
 
     /// Episode information associated with the content.
     public let episodeInformation: EpisodeInformation?
