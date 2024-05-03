@@ -13,6 +13,7 @@ final class DataProvider {
         case width240 = 240
         case width320 = 320
         case width480 = 480
+        case width720 = 720
         case width960 = 960
         case width1920 = 1920
     }
