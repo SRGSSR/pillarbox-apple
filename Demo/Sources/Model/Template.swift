@@ -297,6 +297,12 @@ enum URNTemplate {
         imageUrl: "https://www.rts.ch/2023/09/06/14/43/14253742.image/16x9",
         type: .urn("urn:rts:video:3608506")
     )
+    static let blockedTimeRangesVideo = Template(
+        title: "Puls - Gehirnerschütterung, Akutgeriatrie, Erlenpollen im Winter",
+        subtitle: "Content with a blocked time range",
+        imageUrl: "https://ws.srf.ch/asset/image/audio/3bc7c819-9f77-4b2f-bbb1-6787df21d7bc/WEBVISUAL/1641807822.jpg",
+        type: .urn("urn:srf:video:40ca0277-0e53-4312-83e2-4710354ff53e")
+    )
     static let dvrAudio = Template(
         title: "Couleur 3 (DVR)",
         subtitle: "DVR audio livestream",
