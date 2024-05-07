@@ -284,10 +284,34 @@
     "This content is temporarily unavailable for journalistic reasons." : {
       "comment" : "Blocking reason description message",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Inhalt steht aus publizistischen Gründen vorübergehend nicht zur Verfügung."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "This content is temporarily unavailable for journalistic reasons."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce contenu est temporairement indisponible pour des raisons éditoriales."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Questo contenuto è temporaneamente non disponibile per motivi editoriali."
+          }
+        },
+        "rm" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quest cuntegn na stat ad interim betg a disposiziun per motivs publicistics."
           }
         }
       }
