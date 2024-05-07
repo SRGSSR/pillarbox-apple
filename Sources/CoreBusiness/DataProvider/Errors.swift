@@ -17,14 +17,14 @@ enum TokenError: Error {
 }
 
 struct DataError: LocalizedError {
-    static let noResourceAvailable = Self(errorDescription: NSLocalizedString(
-        "No playable resources could be found.",
+    static let noResourceAvailable = Self(errorDescription: String(
+        localized: "No playable resources could be found.",
         bundle: .module,
         comment: "Generic error message returned when no playable resources could be found"
     ))
 
-    static let malformedData = Self(errorDescription: NSLocalizedString(
-        "The data is invalid.",
+    static let malformedData = Self(errorDescription: String(
+        localized: "The data is invalid.",
         bundle: .module,
         comment: "Generic error message returned when data is invalid"
     ))

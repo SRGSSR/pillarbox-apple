@@ -37,50 +37,50 @@ public extension MediaComposition {
         public var description: String {
             switch self {
             case .ageRating12:
-                return NSLocalizedString(
-                    "To protect children this content is only available between 8PM and 6AM.",
+                return String(
+                    localized: "To protect children this content is only available between 8PM and 6AM.",
                     bundle: .module,
                     comment: "Blocking reason description message"
                 )
             case .ageRating18:
-                return NSLocalizedString(
-                    "To protect children this content is only available between 10PM and 5AM.",
+                return String(
+                    localized: "To protect children this content is only available between 10PM and 5AM.",
                     bundle: .module,
                     comment: "Blocking reason description message"
                 )
             case .commercial:
-                return NSLocalizedString(
-                    "This commercial content is not available.",
+                return String(
+                    localized: "This commercial content is not available.",
                     bundle: .module,
                     comment: "Blocking reason description message"
                 )
             case .endDate:
-                return NSLocalizedString(
-                    "This content is not available anymore.",
+                return String(
+                    localized: "This content is not available anymore.",
                     bundle: .module,
                     comment: "Blocking reason description message"
                 )
             case .geoblocked:
-                return NSLocalizedString(
-                    "This content is not available outside Switzerland.",
+                return String(
+                    localized: "This content is not available outside Switzerland.",
                     bundle: .module,
                     comment: "Blocking reason description message"
                 )
             case .legal:
-                return NSLocalizedString(
-                    "This content is not available due to legal restrictions.",
+                return String(
+                    localized: "This content is not available due to legal restrictions.",
                     bundle: .module,
                     comment: "Blocking reason description message"
                 )
             case .startDate:
-                return NSLocalizedString(
-                    "This content is not available yet.",
+                return String(
+                    localized: "This content is not available yet.",
                     bundle: .module,
                     comment: "Blocking reason description message"
                 )
             case .unknown:
-                return NSLocalizedString(
-                    "This content is not available.",
+                return String(
+                    localized: "This content is not available.",
                     bundle: .module,
                     comment: "Blocking reason description message"
                 )
