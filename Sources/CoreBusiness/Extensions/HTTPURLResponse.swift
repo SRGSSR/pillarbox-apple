@@ -21,7 +21,7 @@ extension HTTPURLResponse {
             return description.capitalizingFirstLetter()
         }
         else {
-            return NSLocalizedString("Unknown error.", bundle: .module, comment: "Generic error message")
+            return String(localized: "Unknown error.", bundle: .module, comment: "Generic error message")
         }
     }
 }

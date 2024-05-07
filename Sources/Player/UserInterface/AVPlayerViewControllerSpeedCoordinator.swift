@@ -62,7 +62,7 @@ private extension AVPlayerViewControllerSpeedCoordinator {
         }
         return [
             UIMenu(
-                title: NSLocalizedString("Playback Speed", bundle: .module, comment: "Playback speed menu title"),
+                title: String(localized: "Playback Speed", bundle: .module, comment: "Playback speed menu title"),
                 image: UIImage(systemName: "speedometer"),
                 options: [.singleSelection],
                 children: speedActions
