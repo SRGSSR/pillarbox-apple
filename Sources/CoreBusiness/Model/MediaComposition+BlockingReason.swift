@@ -18,16 +18,19 @@ public extension MediaComposition {
         /// Commercial reason.
         case commercial = "COMMERCIAL"
 
-        /// Content is not available anymore.
+        /// Not available anymore.
         case endDate = "ENDDATE"
 
-        /// Content is geoblocked.
+        /// Geoblocked.
         case geoblocked = "GEOBLOCK"
+
+        /// Journalistic reason.
+        case journalistic = "JOURNALISTIC"
 
         /// Legal reason.
         case legal = "LEGAL"
 
-        /// Content is not available yet.
+        /// Not available yet.
         case startDate = "STARTDATE"
 
         /// Unknown reason.
@@ -63,6 +66,12 @@ public extension MediaComposition {
             case .geoblocked:
                 return String(
                     localized: "This content is not available outside Switzerland.",
+                    bundle: .module,
+                    comment: "Blocking reason description message"
+                )
+            case .journalistic:
+                return String(
+                    localized: "This content is temporarily unavailable for journalistic reasons.",
                     bundle: .module,
                     comment: "Blocking reason description message"
                 )
