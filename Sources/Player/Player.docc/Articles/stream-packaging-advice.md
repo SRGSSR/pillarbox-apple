@@ -53,3 +53,12 @@ If you think audible or legible renditions are incorrectly handled for some cont
 The player still attempts to offer a good scrubbing experience when I-frame playlists are not available. In this case seek requests are performed in sequence, avoiding pending request interruption and eliminating superfluous seeks (an approach called _smooth seeking_). Note that this experience is an order of magnitude slower than the one obtained with trick mode, though.
 
 Note that I-frame playlists are a [must-have](https://developer.apple.com/documentation/http-live-streaming/hls-authoring-specification-for-apple-devices#Trick-Play) for tvOS since they are the only way to provide previews during scrubbing.
+
+### Links
+
+Please refer to the official documentation for more information:
+
+- [HTTP Live Streaming](https://developer.apple.com/streaming/)
+- [HLS Authoring Specification for Apple Devices](https://developer.apple.com/documentation/http_live_streaming/hls_authoring_specification_for_apple_devices/)
+- [RFC 8216](https://tools.ietf.org/html/rfc8216/)
+- [Playlist examples](https://developer.apple.com/documentation/http-live-streaming/example-playlists-for-http-live-streaming)
