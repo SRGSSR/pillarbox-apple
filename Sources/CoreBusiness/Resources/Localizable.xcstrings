@@ -281,6 +281,17 @@
         }
       }
     },
+    "This content is temporarily unavailable for journalistic reasons." : {
+      "comment" : "Blocking reason description message",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This content is temporarily unavailable for journalistic reasons."
+          }
+        }
+      }
+    },
     "To protect children this content is only available between 8PM and 6AM." : {
       "comment" : "Blocking reason description message",
       "localizations" : {
