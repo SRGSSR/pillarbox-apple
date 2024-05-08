@@ -20,7 +20,7 @@ public enum Server {
     /// MMF.
     case mmf
 
-    internal var url: URL {
+    var url: URL {
         switch self {
         case .production:
             return URL(string: "https://il.srgssr.ch")!
