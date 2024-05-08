@@ -8,13 +8,19 @@ import Foundation
 import PillarboxPlayer
 
 extension PlayerConfiguration {
-    static let standard = Self(
-        usesExternalPlaybackWhileMirroring: !UserDefaults.standard.presenterModeEnabled,
-        smartNavigationEnabled: UserDefaults.standard.smartNavigationEnabled
-    )
+    static var standard: Self {
+        let userDefaults = UserDefaults.standard
+        return .init(
+            usesExternalPlaybackWhileMirroring: !userDefaults.presenterModeEnabled,
+            smartNavigationEnabled: userDefaults.smartNavigationEnabled
+        )
+    }
 
-    static let externalPlaybackDisabled = Self(
-        allowsExternalPlayback: false,
-        smartNavigationEnabled: UserDefaults.standard.smartNavigationEnabled
-    )
+    static var externalPlaybackDisabled: Self {
+        let userDefaults = UserDefaults.standard
+        return .init(
+            allowsExternalPlayback: false,
+            smartNavigationEnabled: userDefaults.smartNavigationEnabled
+        )
+    }
 }
