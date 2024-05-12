@@ -52,6 +52,10 @@ private struct MainView: View {
         layoutInfo.isOverCurrentContext ? selectedGravity : .resizeAspect
     }
 
+    private var toggleGestureMask: GestureMask {
+        !isInteracting ? .all : .subviews
+    }
+
     private var magnificationGestureMask: GestureMask {
         layoutInfo.isOverCurrentContext ? .all : .subviews
     }
@@ -72,11 +76,21 @@ private struct MainView: View {
         player.metadata.image
     }
 
+    private func toggleGesture() -> some Gesture {
+        TapGesture()
+            .onEnded(visibilityTracker.toggle)
+    }
+
     private func magnificationGesture() -> some Gesture {
         MagnificationGesture()
             .onChanged { scale in
                 selectedGravity = scale > 1.0 ? .resizeAspectFill : .resizeAspect
             }
+    }
+
+    private func visibilityResetGesture() -> some Gesture {
+        TapGesture()
+            .onEnded(visibilityTracker.reset)
     }
 
     @ViewBuilder
@@ -89,12 +103,9 @@ private struct MainView: View {
         .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
         .readLayout(into: $layoutInfo)
         .accessibilityAddTraits(.isButton)
-        .onTapGesture(perform: visibilityTracker.toggle)
+        .gesture(toggleGesture(), including: toggleGestureMask)
         .gesture(magnificationGesture(), including: magnificationGestureMask)
-        .simultaneousGesture(
-            TapGesture()
-                .onEnded { _ in visibilityTracker.reset() }
-        )
+        .simultaneousGesture(visibilityResetGesture())
         .supportsHighSpeed(!isMonoscopic, for: player)
     }
 
