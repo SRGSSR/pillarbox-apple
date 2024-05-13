@@ -12,7 +12,7 @@ import UIKit
 
 extension ImageSource: Similar {
     public static func ~~ (lhs: ImageSource, rhs: ImageSource) -> Bool {
-        switch (lhs, rhs) {
+        switch (lhs.kind, rhs.kind) {
         case (.none, .none):
             return true
         case let (.url(lhsUrl), .url(rhsUrl)):
