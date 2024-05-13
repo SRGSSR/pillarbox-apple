@@ -63,7 +63,7 @@ public struct PlayerMetadata: Equatable {
             .init(identifier: .commonIdentifierAssetIdentifier, value: identifier),
             .init(identifier: .commonIdentifierTitle, value: title),
             .init(identifier: .iTunesMetadataTrackSubTitle, value: subtitle),
-            .init(identifier: .commonIdentifierArtwork, value: image?.pngData()),
+            .init(identifier: .commonIdentifierArtwork, value: artworkData),
             .init(identifier: .commonIdentifierDescription, value: description),
             .init(identifier: .quickTimeUserDataCreationDate, value: episodeDescription)
         ].compactMap { $0 }
@@ -81,6 +81,14 @@ public struct PlayerMetadata: Equatable {
 
     var timedNavigationMarkers: [AVTimedMetadataGroup] {
         chapters.map(\.timedNavigationMarker)
+    }
+
+    private var artworkData: Data? {
+#if os(tvOS)
+        image?.pngData()
+#else
+        nil
+#endif
     }
 
     /// Creates metadata.
