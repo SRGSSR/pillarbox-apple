@@ -63,8 +63,8 @@ public struct PlayerMetadata: Equatable {
             .init(identifier: .commonIdentifierAssetIdentifier, value: identifier),
             .init(identifier: .commonIdentifierTitle, value: title),
             .init(identifier: .iTunesMetadataTrackSubTitle, value: subtitle),
-            .init(identifier: .commonIdentifierArtwork, value: artworkData),
             .init(identifier: .commonIdentifierDescription, value: description),
+            .init(identifier: .commonIdentifierArtwork, value: artworkData),
             .init(identifier: .quickTimeUserDataCreationDate, value: episodeDescription)
         ].compactMap { $0 }
     }
