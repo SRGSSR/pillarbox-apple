@@ -41,13 +41,13 @@ private struct ChapterCell: View {
     private func imageView() -> some View {
         ZStack {
             Color(white: 1, opacity: 0.2)
-            if let image = chapter.image {
-                Image(uiImage: image)
+            LazyImage(source: chapter.imageSource) { image in
+                image
                     .resizable()
                     .aspectRatio(contentMode: .fill)
             }
         }
-        .animation(.defaultLinear, value: chapter.image)
+        .animation(.defaultLinear, value: chapter.imageSource)
         .overlay {
             LinearGradient(
                 gradient: Gradient(colors: [.black.opacity(0.7), .clear]),
