@@ -5,7 +5,19 @@
 //
 
 /// Metadata describing what is currently being played.
-///
-/// Refer to the [official documentation](https://developer.apple.com/documentation/mediaplayer/mpnowplayinginfocenter#1674387)
-/// for a list of available keys.
-typealias NowPlayingInfo = [String: Any]
+struct NowPlaying {
+    typealias Info = [String: Any]
+
+    static let empty = Self(metadata: .empty, playbackInfo: [:])
+
+    let metadata: PlayerMetadata
+    let playbackInfo: Info
+
+    var isEmpty: Bool {
+        metadata == .empty && playbackInfo.isEmpty
+    }
+
+    var info: Info {
+        metadata.nowPlayingInfo.merging(playbackInfo) { _, new in new }
+    }
+}

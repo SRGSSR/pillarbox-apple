@@ -69,8 +69,8 @@ public struct PlayerMetadata: Equatable {
         ].compactMap { $0 }
     }
 
-    var nowPlayingInfo: NowPlayingInfo {
-        var nowPlayingInfo = NowPlayingInfo()
+    var nowPlayingInfo: NowPlaying.Info {
+        var nowPlayingInfo = NowPlaying.Info()
         nowPlayingInfo[MPMediaItemPropertyTitle] = title
         nowPlayingInfo[MPMediaItemPropertyArtist] = subtitle
         if let image {

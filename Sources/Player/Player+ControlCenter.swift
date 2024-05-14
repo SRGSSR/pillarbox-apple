@@ -8,13 +8,13 @@ import Combine
 import MediaPlayer
 
 extension Player {
-    func updateControlCenter(nowPlayingInfo: NowPlayingInfo) {
-        if !nowPlayingInfo.isEmpty {
+    func updateControlCenter(nowPlaying: NowPlaying) {
+        if !nowPlaying.isEmpty {
             if nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo == nil {
                 uninstallRemoteCommands()
                 installRemoteCommands()
             }
-            nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
+            nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nowPlaying.info
         }
         else {
             uninstallRemoteCommands()
@@ -116,20 +116,10 @@ private extension Player {
 }
 
 extension Player {
-    func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
-        metadataPublisher
-            .map(\.nowPlayingInfo)
-            .removeDuplicates { lhs, rhs in
-                // swiftlint:disable:next legacy_objc_type
-                NSDictionary(dictionary: lhs).isEqual(to: rhs)
-            }
-            .eraseToAnyPublisher()
-    }
-
-    private func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
+    private func nowPlayingInfoPlaybackPublisher() -> AnyPublisher<NowPlaying.Info, Never> {
         propertiesPublisher
             .map { [weak queuePlayer] properties in
-                var nowPlayingInfo = NowPlayingInfo()
+                var nowPlayingInfo = NowPlaying.Info()
                 // Always fill a key so that the Control Center can be enabled for the item, even if it has no associated metadata.
                 nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = (properties.streamType == .live)
                 if properties.streamType != .unknown {
@@ -144,17 +134,15 @@ extension Player {
             .eraseToAnyPublisher()
     }
 
-    func nowPlayingInfoPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
+    func nowPlayingPublisher() -> AnyPublisher<NowPlaying, Never> {
         $isActive
             .map { [weak self] isActive in
-                guard let self, isActive else { return Just(NowPlayingInfo()).eraseToAnyPublisher() }
+                guard let self, isActive else { return Just(NowPlaying.empty).eraseToAnyPublisher() }
                 return Publishers.CombineLatest(
-                    nowPlayingInfoMetadataPublisher(),
+                    metadataPublisher,
                     nowPlayingInfoPlaybackPublisher()
                 )
-                .map { nowPlayingInfoMetadata, nowPlayingInfoPlayback in
-                    nowPlayingInfoMetadata.merging(nowPlayingInfoPlayback) { _, new in new }
-                }
+                .map { NowPlaying(metadata: $0, playbackInfo: $1) }
                 .eraseToAnyPublisher()
             }
             .switchToLatest()
