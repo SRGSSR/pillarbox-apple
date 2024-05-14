@@ -9,9 +9,7 @@ Enable playback steering from the Control Center.
 
 ## Overview
 
-> Important: Control Center integration is only meaningful for iOS apps.
-
-``Player`` natively integrates with the iOS Control Center. Most of this integration happens automatically but your app is still responsible of activating the player instance which must be associated with the Control Center. It must also provide the metadata (title, artwork image) associated with the ``PlayerItem`` currently being played.
+``Player`` natively integrates with the Control Center. Most of this integration happens automatically but your app is still responsible of activating the player instance which must be associated with the Control Center. It must also provide the metadata (title, artwork image) associated with the ``PlayerItem`` currently being played.
 
 > Note: For an example of use have a look at the <doc:integrating-with-control-center> tutorial.
 
@@ -34,3 +32,11 @@ Several ``Player`` instances can coexist in an app but at most one can be integr
 When you want one player instance to take precedence call ``Player/becomeActive()``. Any other instance which might be active will resign in the process.
 
 You can manually call ``Player/resignActive()`` to have a player resign. Note that a player instance will automatically resign when deinitialized.
+
+### Extend support to tvOS
+
+Control Center integration on tvOS requires the use of ``SystemVideoView``, which automatically displays metadata provided for the item currently being played.
+
+Making a player instance active is still required since this ensures that iOS devices used as remotes can display current item information in their own Control Center.
+
+> Note: The tvOS Control Center only displays information about audio content being played.
