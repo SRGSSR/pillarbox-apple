@@ -219,6 +219,7 @@ private struct MainView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .animation(.easeIn(duration: 0.2), value: imageSource)
     }
 
     @ViewBuilder
@@ -239,7 +240,7 @@ private struct MainView: View {
                     .supportsPictureInPicture(supportsPictureInPicture)
             }
         }
-        .animation(.easeIn(duration: 0.2), values: player.mediaType, player.isExternalPlaybackActive, player.metadata.imageSource)
+        .animation(.easeIn(duration: 0.2), values: player.mediaType, player.isExternalPlaybackActive)
     }
 
     @ViewBuilder
