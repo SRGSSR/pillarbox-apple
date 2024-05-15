@@ -62,6 +62,8 @@ The PillarboxPlayer framework fully integrates with SwiftUI, embracing its decla
 
 ### Metadata
 
+- <doc:metadata>
+
 - ``AssetMetadata``
 - ``PlayerMetadata``
 

@@ -41,6 +41,8 @@ Once types associated with an item tracker have been defined, start implementing
 
 Once you have a tracker you can attach it to any item. The only requirement is that ``AssetMetadata`` supplied as part of the ``Asset`` retrieval process is transformed into ``PlayerItemTracker/Metadata`` required by the tracker.
 
+> Tip: More information about <doc:metadata> is available from the dedicated article.
+
 This transformation requires the use of a dedicated adapter, simply created from your custom tracker type using the ``PlayerItemTracker/adapter(configuration:mapper:)`` method. The adapter is also where you can supply any configuration required by your tracker:
 
 ```swift
