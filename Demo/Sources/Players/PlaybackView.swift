@@ -33,6 +33,10 @@ private struct MainView: View {
         player.mediaType == .video
     }
 
+    private var shouldHideInterface: Bool {
+        isUserInterfaceHidden || (isInteracting && !areControlsAlwaysVisible)
+    }
+
     var body: some View {
         ZStack {
             main()
@@ -126,7 +130,7 @@ private struct MainView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .foregroundStyle(.white)
-        .opacity(isInteracting ? 0 : 1)
+        .opacity(shouldHideInterface ? 0 : 1)
     }
 
     @ViewBuilder
@@ -185,7 +189,7 @@ private struct MainView: View {
                 VolumeButton(player: player)
             }
         }
-        .opacity(isUserInterfaceHidden ? 0 : 1)
+        .opacity(shouldHideInterface ? 0 : 1)
         .topBarStyle()
         .preventsTouchPropagation()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -247,11 +251,10 @@ private struct MainView: View {
     private func controls() -> some View {
         ZStack {
             Color(white: 0, opacity: 0.5)
-                .opacity(isUserInterfaceHidden || (isInteracting && !areControlsAlwaysVisible) ? 0 : 1)
                 .ignoresSafeArea()
             ControlsView(player: player, progressTracker: progressTracker)
-                .opacity(isUserInterfaceHidden || isInteracting ? 0 : 1)
         }
+        .opacity(shouldHideInterface ? 0 : 1)
     }
 
     @ViewBuilder
