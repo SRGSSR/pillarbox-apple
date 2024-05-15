@@ -12,7 +12,7 @@ import UIKit
 
 extension ImageSource: Similar {
     public static func ~~ (lhs: ImageSource, rhs: ImageSource) -> Bool {
-        switch (lhs, rhs) {
+        switch (lhs.kind, rhs.kind) {
         case (.none, .none):
             return true
         case let (.url(lhsUrl), .url(rhsUrl)):
@@ -38,7 +38,7 @@ extension Resource: Similar {
     }
 }
 
-extension NowPlayingInfo: Similar {
+extension NowPlaying.Info: Similar {
     public static func ~~ (lhs: Self, rhs: Self) -> Bool {
         // swiftlint:disable:next legacy_objc_type
         NSDictionary(dictionary: lhs).isEqual(to: rhs)

@@ -30,7 +30,8 @@ private struct ChapterCell: View {
             imageView()
             titleView()
         }
-        .frame(width: Self.width, height: Self.width * 9 / 16)
+        .aspectRatio(16 / 9, contentMode: .fit)
+        .frame(width: Self.width)
         .clipShape(RoundedRectangle(cornerRadius: 5))
         .saturation(isHighlighted ? 1 : 0)
         .scaleEffect17(isHighlighted ? 1.07 : 1)
@@ -41,13 +42,13 @@ private struct ChapterCell: View {
     private func imageView() -> some View {
         ZStack {
             Color(white: 1, opacity: 0.2)
-            if let image = chapter.image {
-                Image(uiImage: image)
+            LazyImage(source: chapter.imageSource) { image in
+                image
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
+                    .aspectRatio(contentMode: .fit)
             }
         }
-        .animation(.defaultLinear, value: chapter.image)
+        .animation(.defaultLinear, value: chapter.imageSource)
         .overlay {
             LinearGradient(
                 gradient: Gradient(colors: [.black.opacity(0.7), .clear]),

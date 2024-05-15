@@ -25,15 +25,11 @@ public struct Chapter: Equatable {
     /// The chapter title.
     public let title: String?
 
-    /// The image associated with the content.
-    public var image: UIImage? {
-        imageSource.image
-    }
+    /// The source of the image associated with the content.
+    public let imageSource: ImageSource
 
     /// The time range covered by the chapter.
     public let timeRange: CMTimeRange
-
-    private let imageSource: ImageSource
 
     var timedNavigationMarker: AVTimedMetadataGroup {
         .init(
@@ -47,7 +43,7 @@ public struct Chapter: Equatable {
     }
 
     private var artworkImage: UIImage {
-        image ?? Self.placeholderImage
+        imageSource.image ?? Self.placeholderImage
     }
 
     /// Creates a chapter.

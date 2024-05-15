@@ -27,31 +27,50 @@ final class ImageSourceTests: TestCase {
         )
     }
 
-    func testValidUrl() {
+    func testNonLoadedImageForValidUrl() {
         let url = Bundle.module.url(forResource: "pixel", withExtension: "jpg")!
-        let image = UIImage(contentsOfFile: url.path())!
+        let source = ImageSource.url(url)
         expectSimilarPublished(
-            values: [.url(url), .image(image)],
-            from: ImageSource.url(url).imageSourcePublisher(),
+            values: [.url(url)],
+            from: source.imageSourcePublisher(),
             during: .milliseconds(100)
         )
+    }
+
+    func testLoadedImageForValidUrl() {
+        let url = Bundle.module.url(forResource: "pixel", withExtension: "jpg")!
+        let image = UIImage(contentsOfFile: url.path())!
+        let source = ImageSource.url(url)
+        expectSimilarPublished(
+            values: [.url(url), .image(image)],
+            from: source.imageSourcePublisher(),
+            during: .milliseconds(100)
+        ) {
+            _ = source.image
+        }
     }
 
     func testInvalidImageFormat() {
         let url = Bundle.module.url(forResource: "invalid", withExtension: "jpg")!
+        let source = ImageSource.url(url)
         expectSimilarPublished(
             values: [.url(url), .none],
-            from: ImageSource.url(url).imageSourcePublisher(),
+            from: source.imageSourcePublisher(),
             during: .milliseconds(100)
-        )
+        ) {
+            _ = source.image
+        }
     }
 
     func testFailingUrl() {
         let url = URL(string: "https://localhost/missing.jpg")!
+        let source = ImageSource.url(url)
         expectSimilarPublished(
             values: [.url(url), .none],
-            from: ImageSource.url(url).imageSourcePublisher(),
+            from: source.imageSourcePublisher(),
             during: .seconds(1)
-        )
+        ) {
+            _ = source.image
+        }
     }
 }

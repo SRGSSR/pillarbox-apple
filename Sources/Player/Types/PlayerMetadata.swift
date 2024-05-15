@@ -29,12 +29,8 @@ public struct PlayerMetadata: Equatable {
     /// A description of the content.
     public let description: String?
 
-    /// The image associated with the content.
-    public var image: UIImage? {
-        imageSource.image
-    }
-
-    private let imageSource: ImageSource
+    /// The source of the image associated with the content.
+    public let imageSource: ImageSource
 
     /// Episode information associated with the content.
     public let episodeInformation: EpisodeInformation?
@@ -63,17 +59,17 @@ public struct PlayerMetadata: Equatable {
             .init(identifier: .commonIdentifierAssetIdentifier, value: identifier),
             .init(identifier: .commonIdentifierTitle, value: title),
             .init(identifier: .iTunesMetadataTrackSubTitle, value: subtitle),
-            .init(identifier: .commonIdentifierArtwork, value: image?.pngData()),
             .init(identifier: .commonIdentifierDescription, value: description),
+            .init(identifier: .commonIdentifierArtwork, value: artworkData),
             .init(identifier: .quickTimeUserDataCreationDate, value: episodeDescription)
         ].compactMap { $0 }
     }
 
-    var nowPlayingInfo: NowPlayingInfo {
-        var nowPlayingInfo = NowPlayingInfo()
+    var nowPlayingInfo: NowPlaying.Info {
+        var nowPlayingInfo = NowPlaying.Info()
         nowPlayingInfo[MPMediaItemPropertyTitle] = title
         nowPlayingInfo[MPMediaItemPropertyArtist] = subtitle
-        if let image {
+        if let image = imageSource.image {
             nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
         }
         return nowPlayingInfo
@@ -81,6 +77,14 @@ public struct PlayerMetadata: Equatable {
 
     var timedNavigationMarkers: [AVTimedMetadataGroup] {
         chapters.map(\.timedNavigationMarker)
+    }
+
+    private var artworkData: Data? {
+#if os(tvOS)
+        imageSource.image?.pngData()
+#else
+        nil
+#endif
     }
 
     /// Creates metadata.
