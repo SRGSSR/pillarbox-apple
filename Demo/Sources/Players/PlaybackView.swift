@@ -44,7 +44,7 @@ private struct MainView: View {
             topBar()
         }
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
-        .animation(.defaultLinear, value: isUserInterfaceHidden)
+        .animation(.defaultLinear, value: shouldHideInterface)
         .bind(visibilityTracker, to: player)
     }
 
