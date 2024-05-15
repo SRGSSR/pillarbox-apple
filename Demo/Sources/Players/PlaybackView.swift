@@ -217,9 +217,9 @@ private struct MainView: View {
             image
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .animation(.easeIn(duration: 0.2), value: imageSource)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     @ViewBuilder
