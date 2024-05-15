@@ -26,7 +26,7 @@ private struct MainView: View {
     @State private var isInteracting = false
 
     private var areControlsAlwaysVisible: Bool {
-        player.isExternalPlaybackActive || player.mediaType == .audio
+        player.isExternalPlaybackActive || player.mediaType != .video
     }
 
     private var prioritizesVideoDevices: Bool {
