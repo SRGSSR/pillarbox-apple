@@ -139,7 +139,7 @@ private struct MainView: View {
             skipButton()
             bottomControls()
         }
-        .animation(.linear(duration: 0.2), values: isUserInterfaceHidden, isInteracting)
+        .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
         .padding(.horizontal)
         .padding(.vertical, 10)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
