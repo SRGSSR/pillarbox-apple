@@ -213,6 +213,7 @@ private struct MainView: View {
                 .tint(.white)
         }
         .menuOrder(.fixed)
+        .opacity(shouldHideInterface ? 0 : 1)
     }
 
     @ViewBuilder
