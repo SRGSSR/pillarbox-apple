@@ -173,6 +173,7 @@ private struct MainView: View {
             settingsMenu()
             FullScreenButton(layout: $layout)
         }
+        .opacity(shouldHideInterface ? 0 : 1)
     }
 
     @ViewBuilder
@@ -213,7 +214,6 @@ private struct MainView: View {
                 .tint(.white)
         }
         .menuOrder(.fixed)
-        .opacity(shouldHideInterface ? 0 : 1)
     }
 
     @ViewBuilder
