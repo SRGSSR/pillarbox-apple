@@ -25,16 +25,16 @@ private struct MainView: View {
     @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
     @State private var isInteracting = false
 
-    private var areControlsAlwaysVisible: Bool {
-        player.isExternalPlaybackActive || player.mediaType != .video
-    }
-
     private var prioritizesVideoDevices: Bool {
         player.mediaType == .video
     }
 
     private var shouldHideInterface: Bool {
-        isUserInterfaceHidden || (isInteracting && !areControlsAlwaysVisible)
+        isUserInterfaceHidden || (isInteracting && !shouldKeepControlsAlwaysVisible)
+    }
+
+    private var shouldKeepControlsAlwaysVisible: Bool {
+        player.isExternalPlaybackActive || player.mediaType != .video
     }
 
     var body: some View {
@@ -65,7 +65,7 @@ private struct MainView: View {
     }
 
     private var isUserInterfaceHidden: Bool {
-        visibilityTracker.isUserInterfaceHidden && !areControlsAlwaysVisible && !player.canReplay()
+        visibilityTracker.isUserInterfaceHidden && !shouldKeepControlsAlwaysVisible && !player.canReplay()
     }
 
     private var title: String? {
