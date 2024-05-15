@@ -6,7 +6,7 @@
 
 import UIKit
 
-/// A `UImage` that displays an image from an associated source.
+/// A `UIImage` that displays an image from an associated source.
 ///
 /// The image is loaded when needed and delivered through usual `PlayerMetadata` updates.
 public func LazyUIImage(source: ImageSource) -> UIImage? {
