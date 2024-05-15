@@ -67,6 +67,7 @@
 - ``isExternalPlaybackActive``
 - ``isMuted``
 - ``mediaType``
+- ``metadata``
 - ``playbackState``
 - ``presentationSize``
 - ``propertiesPublisher``
@@ -84,7 +85,8 @@
 
 - ``canSeek(to:)``
 - ``seek(_:smooth:completion:)``
-- ``seek(to:completion:)``
+- ``seek(to:completion:)-9bknb``
+- ``seek(to:completion:)-2ypz8``
 - ``after(_:)``
 - ``at(_:)``
 - ``before(_:)``
