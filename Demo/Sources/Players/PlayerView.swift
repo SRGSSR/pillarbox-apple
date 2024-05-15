@@ -30,7 +30,8 @@ private struct ChapterCell: View {
             imageView()
             titleView()
         }
-        .frame(width: Self.width, height: Self.width * 9 / 16)
+        .aspectRatio(16 / 9, contentMode: .fit)
+        .frame(width: Self.width)
         .clipShape(RoundedRectangle(cornerRadius: 5))
         .saturation(isHighlighted ? 1 : 0)
         .scaleEffect17(isHighlighted ? 1.07 : 1)
@@ -44,7 +45,7 @@ private struct ChapterCell: View {
             LazyImage(source: chapter.imageSource) { image in
                 image
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
+                    .aspectRatio(contentMode: .fit)
             }
         }
         .animation(.defaultLinear, value: chapter.imageSource)
