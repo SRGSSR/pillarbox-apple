@@ -78,11 +78,11 @@ public final class ProgressTracker: ObservableObject {
     /// progress is available or not.
     public var progress: Float {
         get {
-            _progress ?? 0
+            Self.validProgress(_progress, in: range)
         }
         set {
             guard _progress != nil else { return }
-            _progress = newValue.clamped(to: range)
+            _progress = Self.validProgress(newValue, in: range)
             guard seekBehavior == .immediate else { return }
             seek(to: newValue, optimal: true)
         }
@@ -93,7 +93,7 @@ public final class ProgressTracker: ObservableObject {
     /// Returns `.invalid` when the time range is unknown. The returned value might be different from the player current
     /// time when interaction takes place.
     public var time: CMTime {
-        time(forProgress: _progress)
+        Self.time(forProgress: _progress, in: timeRange)
     }
 
     /// The allowed range for progress values.
@@ -158,25 +158,29 @@ public final class ProgressTracker: ObservableObject {
         .eraseToAnyPublisher()
     }
 
-    private static func progress(for time: CMTime, in timeRange: CMTimeRange) -> Float? {
+    static func progress(for time: CMTime, in timeRange: CMTimeRange) -> Float? {
         guard time.isValid, timeRange.isValidAndNotEmpty else { return nil }
-        return Float((time - timeRange.start).seconds / timeRange.duration.seconds).clamped(to: 0...1)
+        return Float((time - timeRange.start).seconds / timeRange.duration.seconds)
+    }
+
+    static func validProgress(_ progress: Float?, in range: ClosedRange<Float>) -> Float {
+        (progress ?? 0).clamped(to: range)
+    }
+
+    static func time(forProgress progress: Float?, in timeRange: CMTimeRange) -> CMTime {
+        guard let progress else { return .invalid }
+        return timeRange.start + CMTimeMultiplyByFloat64(timeRange.duration, multiplier: Float64(progress))
     }
 
     private func seek(to progress: Float, optimal: Bool) {
         guard let player else { return }
-        let time = time(forProgress: progress)
+        let time = Self.time(forProgress: progress, in: timeRange)
         if optimal {
             player.seek(to: time)
         }
         else {
             player.seek(near(time), smooth: false)
         }
-    }
-
-    private func time(forProgress progress: Float?) -> CMTime {
-        guard let progress else { return .invalid }
-        return timeRange.start + CMTimeMultiplyByFloat64(timeRange.duration, multiplier: Float64(progress))
     }
 
     private func pausePlaybackIfNeeded(with player: Player?) {
