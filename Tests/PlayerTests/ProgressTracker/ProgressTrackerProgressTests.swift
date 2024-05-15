@@ -136,4 +136,22 @@ final class ProgressTrackerProgressTests: TestCase {
             progressTracker.player = player
         }
     }
+
+    func testProgressForTimeInTimeRange() {
+        let timeRange = CMTimeRange(start: .zero, end: .init(value: 10, timescale: 1))
+        expect(ProgressTracker.progress(for: .init(value: 5, timescale: 1), in: timeRange)).to(equal(0.5))
+        expect(ProgressTracker.progress(for: .init(value: 15, timescale: 1), in: timeRange)).to(equal(1.5))
+    }
+
+    func testValidProgressInRange() {
+        expect(ProgressTracker.validProgress(nil, in: 0...1)).to(equal(0))
+        expect(ProgressTracker.validProgress(0.5, in: 0...1)).to(equal(0.5))
+        expect(ProgressTracker.validProgress(1.5, in: 0...1)).to(equal(1))
+    }
+
+    func testTimeForProgressInTimeRange() {
+        let timeRange = CMTimeRange(start: .zero, end: .init(value: 10, timescale: 1))
+        expect(ProgressTracker.time(forProgress: 0.5, in: timeRange)).to(equal(CMTime(value: 5, timescale: 1)))
+        expect(ProgressTracker.time(forProgress: 1.5, in: timeRange)).to(equal(CMTime(value: 15, timescale: 1)))
+    }
 }
