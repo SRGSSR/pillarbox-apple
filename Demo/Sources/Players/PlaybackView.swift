@@ -25,12 +25,16 @@ private struct MainView: View {
     @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
     @State private var isInteracting = false
 
-    private var areControlsAlwaysVisible: Bool {
-        player.isExternalPlaybackActive || player.mediaType == .audio
-    }
-
     private var prioritizesVideoDevices: Bool {
         player.mediaType == .video
+    }
+
+    private var shouldHideInterface: Bool {
+        isUserInterfaceHidden || (isInteracting && !shouldKeepControlsAlwaysVisible)
+    }
+
+    private var shouldKeepControlsAlwaysVisible: Bool {
+        player.isExternalPlaybackActive || player.mediaType != .video
     }
 
     var body: some View {
@@ -40,7 +44,7 @@ private struct MainView: View {
             topBar()
         }
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
-        .animation(.defaultLinear, value: isUserInterfaceHidden)
+        .animation(.defaultLinear, value: shouldHideInterface)
         .bind(visibilityTracker, to: player)
     }
 
@@ -61,7 +65,7 @@ private struct MainView: View {
     }
 
     private var isUserInterfaceHidden: Bool {
-        visibilityTracker.isUserInterfaceHidden && !areControlsAlwaysVisible && !player.canReplay()
+        visibilityTracker.isUserInterfaceHidden && !shouldKeepControlsAlwaysVisible && !player.canReplay()
     }
 
     private var title: String? {
@@ -126,7 +130,7 @@ private struct MainView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .foregroundStyle(.white)
-        .opacity(isInteracting ? 0 : 1)
+        .opacity(shouldHideInterface ? 0 : 1)
     }
 
     @ViewBuilder
@@ -135,7 +139,7 @@ private struct MainView: View {
             skipButton()
             bottomControls()
         }
-        .animation(.linear(duration: 0.2), values: isUserInterfaceHidden, isInteracting)
+        .animation(.defaultLinear, values: isUserInterfaceHidden, isInteracting)
         .padding(.horizontal)
         .padding(.vertical, 10)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
@@ -164,10 +168,12 @@ private struct MainView: View {
 
     @ViewBuilder
     private func bottomButtons() -> some View {
-        HStack(spacing: 20) {
-            LiveButton(player: player, progressTracker: progressTracker)
-            settingsMenu()
-            FullScreenButton(layout: $layout)
+        if !shouldHideInterface {
+            HStack(spacing: 20) {
+                LiveButton(player: player, progressTracker: progressTracker)
+                settingsMenu()
+                FullScreenButton(layout: $layout)
+            }
         }
     }
 
@@ -179,13 +185,14 @@ private struct MainView: View {
                 PiPButton()
                 routePickerView()
             }
+            .opacity(shouldHideInterface ? 0 : 1)
             Spacer()
             HStack(spacing: 20) {
                 LoadingIndicator(player: player)
                 VolumeButton(player: player)
+                    .opacity(shouldHideInterface ? 0 : 1)
             }
         }
-        .opacity(isUserInterfaceHidden ? 0 : 1)
         .topBarStyle()
         .preventsTouchPropagation()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -247,11 +254,10 @@ private struct MainView: View {
     private func controls() -> some View {
         ZStack {
             Color(white: 0, opacity: 0.5)
-                .opacity(isUserInterfaceHidden || (isInteracting && !areControlsAlwaysVisible) ? 0 : 1)
                 .ignoresSafeArea()
             ControlsView(player: player, progressTracker: progressTracker)
-                .opacity(isUserInterfaceHidden || isInteracting ? 0 : 1)
         }
+        .opacity(shouldHideInterface ? 0 : 1)
     }
 
     @ViewBuilder
