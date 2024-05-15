@@ -185,13 +185,14 @@ private struct MainView: View {
                 PiPButton()
                 routePickerView()
             }
+            .opacity(shouldHideInterface ? 0 : 1)
             Spacer()
             HStack(spacing: 20) {
                 LoadingIndicator(player: player)
                 VolumeButton(player: player)
+                    .opacity(shouldHideInterface ? 0 : 1)
             }
         }
-        .opacity(shouldHideInterface ? 0 : 1)
         .topBarStyle()
         .preventsTouchPropagation()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
