@@ -83,7 +83,7 @@ Documentation is also available for companion products:
 - [Circumspect](https://swiftpackageindex.com/SRGSSR/pillarbox-apple/documentation/pillarboxcircumspect): A [Nimble](https://github.com/Quick/Nimble)-based framework for testing Combine publishers.
 
 > [!TIP]
-> Documentation available from the above links opens for the latest tag. Use Swift Package Index navigation top bar to quickly switch another tag or to `main`.
+> Documentation available from the above links opens for the latest tag. Use Swift Package Index navigation top bar to quickly switch to another tag or `main`.
 
 ## Miscellaneous documentation
 
