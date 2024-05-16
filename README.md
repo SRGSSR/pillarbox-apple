@@ -50,7 +50,7 @@ From left to right:
 
 # Compatibility
 
-The library is suitable for applications running on iOS 16, tvOS 16 and above. The project is meant to be compiled with the latest versions of Xcode and of the Swift compiler.
+The library is suitable for applications running on iOS 16, tvOS 16 and above.
 
 # Integration
 
