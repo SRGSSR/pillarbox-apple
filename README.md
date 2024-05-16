@@ -80,7 +80,7 @@ Documentation for each major product provided by Pillarbox can also be found onl
 Documentation is also available for companion products:
 
 - [Core](https://swiftpackageindex.com/SRGSSR/pillarbox-apple/documentation/pillarboxcore): Essential tools used when implementing Pillarbox.
-- [Circumspect](https://swiftpackageindex.com/SRGSSR/pillarbox-apple/documentation/pillarboxcircumpsect): A [Nimble](https://github.com/Quick/Nimble)-based framework for testing Combine publishers.
+- [Circumspect](https://swiftpackageindex.com/SRGSSR/pillarbox-apple/documentation/pillarboxcircumspect): A [Nimble](https://github.com/Quick/Nimble)-based framework for testing Combine publishers.
 
 > [!TIP]
 > Documentation available from the above links opens for the latest tag. Use Swift Package Index navigation top bar to quickly switch another tag or to `main`.
