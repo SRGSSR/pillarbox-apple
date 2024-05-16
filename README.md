@@ -76,15 +76,46 @@ With the expressiveness of SwiftUI, our rich playback API and the set of compone
 
 The library is suitable for applications running on iOS 16, tvOS 16 and above. The project is meant to be compiled with the latest versions of Xcode and of the Swift compiler.
 
-# Contributing
-
-If you want to contribute to the project have a look at our [contributing guide](docs/CONTRIBUTING.md).
-
 # Integration
 
 The library can be integrated using [Swift Package Manager](https://swift.org/package-manager) directly [within Xcode](https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app). You can also declare the library as a dependency of another one directly in the associated `Package.swift` manifest.
 
 If you want your application to run on Silicon Macs as an iPad application you must add `-weak_framework MediaPlayer` to your target _Other Linker Flags_ setting.
+
+# Documentation
+
+Pillarbox documentation includes articles, tutorials and an API reference to help you learn more about available features and how to integrate them into your application.
+
+> [!TIP]
+> If you discover errors in the documentation or if some documentation is missing please file a dedicated [issue](https://github.com/SRGSSR/pillarbox-apple/issues/new/choose). You can also directly submit documentation improvements via [pull requests](https://github.com/SRGSSR/pillarbox-apple/compare).
+
+## DocC documentation
+
+Documentation is available as a [DocC](https://developer.apple.com/documentation/docc) documentation catalog. This catalog must be built by opening the project with Xcode and selecting _Product_ > _Build Documentation_. You can then access it right from within the Xcode documentation window.
+
+## Online documentation
+
+Documentation for each major product provided by Pillarbox can also be found online on [Swift Package Index](https://swiftpackageindex.com/SRGSSR/pillarbox-apple):
+
+- [Player](https://swiftpackageindex.com/SRGSSR/pillarbox-apple/documentation/pillarboxplayer): Create engaging audio and video playback experiences.
+- [Analytics](https://swiftpackageindex.com/SRGSSR/pillarbox-apple/documentation/pillarboxanalytics): Measure app usage according to SRG SSR requirements.
+- [CoreBusiness](https://swiftpackageindex.com/SRGSSR/pillarbox-apple/documentation/pillarboxcorebusiness): Play SRG SSR content with the Player framework.
+
+Documentation is also available for companion products:
+
+- [Core](https://swiftpackageindex.com/SRGSSR/pillarbox-apple/documentation/pillarboxcore): Essential tools used when implementing Pillarbox.
+- [Circumspect](https://swiftpackageindex.com/SRGSSR/pillarbox-apple/documentation/pillarboxcircumpsect): A [Nimble](https://github.com/Quick/Nimble)-based framework for testing Combine publishers.
+
+> [!TIP]
+> Documentation available from the above links opens for the latest tag. Use Swift Package Index navigation top bar to quickly switch another tag or to `main`.
+
+## Miscellaneous documentation
+
+Further documentation is also available by following the links below:
+
+- [Known issues](docs/KNOWN_ISSUES.md)
+- [Development setup](docs/DEVELOPMENT_SETUP.md)
+- [Continuous integration](docs/CONTINUOUS_INTEGRATION.md)
 
 # Plugins
 
@@ -100,19 +131,9 @@ If you are using Xcode Cloud this can be achieved with a [custom build script](h
 
 If your project is built with `xcodebuild` directly the same effect can be achieved by passing the `-skipPackagePluginValidation` option.
 
-# Getting started
+# Contributing
 
-To learn more about integration of Pillarbox into your project please have a look at our generated Xcode documentation.
-
-# Documentation
-
-Documentation is available as a [DocC](https://developer.apple.com/documentation/docc) documentation catalog. This catalog must be built by opening the project with Xcode and selecting _Product_ > _Build Documentation_. You can then access it right from within the Xcode documentation window.
-
-Further documentation is also available by following the links below:
-
-- [Known issues](docs/KNOWN_ISSUES.md)
-- [Development setup](docs/DEVELOPMENT_SETUP.md)
-- [Continuous integration](docs/CONTINUOUS_INTEGRATION.md)
+If you want to contribute to the project have a look at our [contributing guide](docs/CONTRIBUTING.md).
 
 # License
 
