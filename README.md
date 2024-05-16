@@ -12,6 +12,9 @@ Pillarbox is the iOS and tvOS modern reactive SRG SSR player ecosystem implement
 - Analytics and QoS integration.
 - User interface layout in SwiftUI.
 
+> [!IMPORTANT]
+> Even though Pillarbox offers features that are specific to our company, its player is fully generic and can be used to play any kind of content.
+
 # Features
 
 Pillarbox robust player provides all essential playback features you might expect:
