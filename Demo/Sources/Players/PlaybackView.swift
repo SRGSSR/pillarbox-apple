@@ -168,13 +168,12 @@ private struct MainView: View {
 
     @ViewBuilder
     private func bottomButtons() -> some View {
-        if !shouldHideInterface {
-            HStack(spacing: 20) {
-                LiveButton(player: player, progressTracker: progressTracker)
-                settingsMenu()
-                FullScreenButton(layout: $layout)
-            }
+        HStack(spacing: 20) {
+            LiveButton(player: player, progressTracker: progressTracker)
+            settingsMenu()
+            FullScreenButton(layout: $layout)
         }
+        .opacity(isFullScreen && shouldHideInterface ? 0 : 1)
     }
 
     @ViewBuilder
