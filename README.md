@@ -12,7 +12,9 @@ Pillarbox is the iOS and tvOS modern reactive SRG SSR player ecosystem implement
 - Analytics and QoS integration.
 - User interface layout in SwiftUI.
 
-Its robust player provides all essential playback features you might expect:
+# Features
+
+Pillarbox robust player provides all essential playback features you might expect:
 
 - Audio and video (standard / monoscopic 360°) playback.
 - Support for on-demand and live streams (with or without DVR).
@@ -42,35 +44,6 @@ From left to right:
 - Screenshot 4: [Player with associated playlist](Demo/Sources/Showcase/Playlist/PlaylistView.swift).
 - Screenshot 5: [Stories](Demo/Sources/Showcase/Stories/StoriesView.swift).
 - Screenshot 6: [Custom chapter navigation](Demo/Sources/Players/PlayerView.swift).
-
-# Code example
-
-With Pillarbox creating a custom video player user interface has never been easier. Simply instantiate a `Player` and start building your user interface in SwiftUI right away:
-
-```swift
-import PillarboxPlayer
-import SwiftUI
-
-struct PlayerView: View {
-    @StateObject private var player = Player(
-        item: .simple(url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!)
-    )
-
-    var body: some View {
-        ZStack {
-            VideoView(player: player)
-            Button(action: player.togglePlayPause) {
-                Image(systemName: player.shouldPlay ? "pause.circle.fill" : "play.circle.fill")
-                    .resizable()
-                    .frame(width: 80, height: 80)
-            }
-        }
-        .onAppear(perform: player.play)
-    }
-}
-```
-
-With the expressiveness of SwiftUI, our rich playback API and the set of components at your disposal you will have a full-fledged player user interface in no time.
 
 # Compatibility
 
@@ -130,6 +103,35 @@ defaults write com.apple.dt.Xcode IDESkipPackagePluginFingerprintValidatation -b
 If you are using Xcode Cloud this can be achieved with a [custom build script](https://developer.apple.com/documentation/xcode/writing-custom-build-scripts).
 
 If your project is built with `xcodebuild` directly the same effect can be achieved by passing the `-skipPackagePluginValidation` option.
+
+# Code example
+
+With Pillarbox creating a custom video player user interface has never been easier. Simply instantiate a `Player` and start building your user interface in SwiftUI right away:
+
+```swift
+import PillarboxPlayer
+import SwiftUI
+
+struct PlayerView: View {
+    @StateObject private var player = Player(
+        item: .simple(url: URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8")!)
+    )
+
+    var body: some View {
+        ZStack {
+            VideoView(player: player)
+            Button(action: player.togglePlayPause) {
+                Image(systemName: player.shouldPlay ? "pause.circle.fill" : "play.circle.fill")
+                    .resizable()
+                    .frame(width: 80, height: 80)
+            }
+        }
+        .onAppear(perform: player.play)
+    }
+}
+```
+
+With the expressiveness of SwiftUI, our rich playback API and the set of components at your disposal you will have a full-fledged player user interface in no time.
 
 # Contributing
 
