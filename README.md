@@ -74,8 +74,8 @@ Documentation is available as a [DocC](https://developer.apple.com/documentation
 Documentation for each major product provided by Pillarbox can also be found online on [Swift Package Index](https://swiftpackageindex.com/SRGSSR/pillarbox-apple):
 
 - [Player](https://swiftpackageindex.com/SRGSSR/pillarbox-apple/documentation/pillarboxplayer): Create engaging audio and video playback experiences.
-- [Analytics](https://swiftpackageindex.com/SRGSSR/pillarbox-apple/documentation/pillarboxanalytics): Measure app usage according to SRG SSR requirements.
 - [CoreBusiness](https://swiftpackageindex.com/SRGSSR/pillarbox-apple/documentation/pillarboxcorebusiness): Play SRG SSR content with the Player framework.
+- [Analytics](https://swiftpackageindex.com/SRGSSR/pillarbox-apple/documentation/pillarboxanalytics): Measure app usage according to SRG SSR requirements.
 
 Documentation is also available for companion products:
 
