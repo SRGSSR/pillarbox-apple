@@ -188,8 +188,9 @@ private struct MainView: View {
             Spacer()
             HStack(spacing: 20) {
                 LoadingIndicator(player: player)
-                VolumeButton(player: player)
-                    .opacity(shouldHideInterface ? 0 : 1)
+                if !shouldHideInterface {
+                    VolumeButton(player: player)
+                }
             }
         }
         .topBarStyle()
