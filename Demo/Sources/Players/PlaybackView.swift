@@ -188,7 +188,6 @@ private struct MainView: View {
             Spacer()
             HStack(spacing: 20) {
                 LoadingIndicator(player: player)
-                    .animation(nil, value: shouldHideInterface)
                 if !shouldHideInterface {
                     VolumeButton(player: player)
                 }
