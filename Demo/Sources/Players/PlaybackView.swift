@@ -567,6 +567,7 @@ private struct TimeSlider: View {
                 label(withText: formattedTotalTime)
             },
             timeRanges: player.metadata.timeRanges,
+            // swiftlint:disable:next trailing_closure
             onDragging: {
                 if UserDefaults.standard.seekBehavior == .deferred {
                     visibilityTracker.reset()

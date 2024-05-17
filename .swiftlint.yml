@@ -32,6 +32,7 @@ disabled_rules:
   - no_grouping_extension
   - no_magic_numbers
   - nslocalizedstring_require_bundle
+  - one_declaration_per_file
   - required_deinit
   - sorted_enum_cases
   - statement_position
@@ -134,6 +135,7 @@ opt_in_rules:
   - return_value_from_void_function
   - self_binding
   - self_in_property_initialization
+  - shorthand_argument
   - shorthand_optional_binding
   - single_test_class
   - sorted_first_last
