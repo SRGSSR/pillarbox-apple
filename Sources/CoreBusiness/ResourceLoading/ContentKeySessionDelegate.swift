@@ -35,7 +35,7 @@ final class ContentKeySessionDelegate: NSObject, AVContentKeySessionDelegate {
         let (certificateData, _) = try await session.httpData(from: certificateUrl)
         let contentKeyRequestData = try await keyRequest.makeStreamingContentKeyRequestData(
             forApp: certificateData,
-            contentIdentifier: Data("content_id".utf8 )
+            contentIdentifier: Data("content_id".utf8)
         )
         guard let contentKeyContextRequest = Self.contentKeyContextRequest(
             from: keyRequest.identifier,
