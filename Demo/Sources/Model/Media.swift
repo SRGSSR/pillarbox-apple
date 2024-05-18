@@ -16,7 +16,11 @@ struct Media: Hashable {
     enum `Type`: Hashable {
         case url(URL)
         case unbufferedUrl(URL)
-        case urn(String)
+        case urn(String, serverSetting: ServerSetting)
+
+        static func urn(_ urn: String) -> Self {
+            .urn(urn, serverSetting: .production)
+        }
     }
 
     let title: String
@@ -71,10 +75,10 @@ struct Media: Hashable {
                 preferredForwardBufferDuration: 1
             )
             return playerItem(for: url, configuration: configuration)
-        case let .urn(urn):
+        case let .urn(urn, serverSetting: serverSetting):
             return .urn(
                 urn,
-                server: .production,
+                server: serverSetting.server,
                 trackerAdapters: [
                     DemoTracker.adapter { metadata in
                         DemoTracker.Metadata(title: metadata.mediaComposition.mainChapter.title)

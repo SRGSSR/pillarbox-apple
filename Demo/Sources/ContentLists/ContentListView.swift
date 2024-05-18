@@ -46,7 +46,7 @@ private struct LoadedView: View {
             return Template(
                 title: media.title,
                 subtitle: MediaDescription.subtitle(for: media),
-                type: .urn(media.urn),
+                type: .urn(media.urn, serverSetting: serverSetting),
                 isMonoscopic: media.isMonoscopic
             )
         }
@@ -101,7 +101,7 @@ private struct ContentCell: View {
             ) {
                 let media = Media(
                     title: title,
-                    type: .urn(media.urn),
+                    type: .urn(media.urn, serverSetting: serverSetting),
                     isMonoscopic: media.isMonoscopic
                 )
                 router.presented = .player(media: media)
