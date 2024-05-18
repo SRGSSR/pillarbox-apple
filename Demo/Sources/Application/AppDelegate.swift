@@ -37,7 +37,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         UserDefaults.standard.publisher(for: \.serverSetting)
             .receiveOnMainThread()
             .sink { serverSetting in
-                SRGDataProvider.current = SRGDataProvider(serviceURL: serverSetting.url)
+                SRGDataProvider.current = serverSetting.dataProvider
             }
             .store(in: &cancellables)
     }
