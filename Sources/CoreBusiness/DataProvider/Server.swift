@@ -33,7 +33,7 @@ public struct Server {
         self.requestBuilder = requestBuilder
         self.resizedImageUrlBuilder = resizedImageUrlBuilder
     }
-    
+
     /// Custom environment.
     ///
     /// - Parameters:

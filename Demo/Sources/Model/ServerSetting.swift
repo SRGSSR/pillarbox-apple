@@ -36,17 +36,17 @@ enum ServerSetting: Int, CaseIterable {
         case .test:
             return "Test"
         case .productionCH:
-            return "Production (CH)"
+            return "Production - CH"
         case .stageCH:
-            return "Stage (CH)"
+            return "Stage - CH"
         case .testCH:
-            return "Test (CH)"
+            return "Test - CH"
         case .productionWW:
-            return "Production (WW)"
+            return "Production - WW"
         case .stageWW:
-            return "Stage (WW)"
+            return "Stage - WW"
         case .testWW:
-            return "Test (WW)"
+            return "Test - WW"
         case .samProduction:
             return "SAM Production"
         case .samStage:
