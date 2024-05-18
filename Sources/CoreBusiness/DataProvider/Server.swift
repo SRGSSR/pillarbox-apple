@@ -41,8 +41,8 @@ public struct Server {
     ///     URL and unique identifier (URN).
     ///   - resizedImageUrlBuilder: A closure building a resized URL for an input URL and width.
     ///
-    /// Use custom servers to connect to services which can pose as SRG SSR servers and deliver the same playback
-    /// metadata format (and image scaling capability if possible).
+    /// Useful for servers which can pose as SRG SSR servers and deliver the same playback metadata format (and
+    /// image resizing capabilities if possible).
     public static func custom(
         requestBuilder: @escaping (String) -> URLRequest,
         resizedImageUrlBuilder: @escaping (URL, ImageWidth) -> URL
@@ -52,10 +52,12 @@ public struct Server {
 
     /// Custom environment.
     ///
-    /// - Parameter baseUrl: The base URL of the server.
+    /// - Parameters:
+    ///   - baseUrl: The base URL of the server.
+    ///   - queryItems: Additional query items to use.
     ///
-    /// Use custom servers to connect to services which can exactly pose as SRG SSR servers and deliver the same playback
-    /// metadata format and image scaling. All required services must be implemented for the same base URL.
+    /// Useful for servers which can exactly pose as SRG SSR servers and deliver the same playback metadata format and
+    /// image scaling capabilities.
     public static func custom(baseUrl: URL, queryItems: [URLQueryItem] = []) -> Self {
         .custom { urn in
             standardRequest(forUrn: urn, baseUrl: baseUrl, queryItems: queryItems)
