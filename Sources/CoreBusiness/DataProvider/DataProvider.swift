@@ -34,7 +34,7 @@ final class DataProvider {
     }
 
     func mediaCompositionPublisher(forUrn urn: String) -> AnyPublisher<MediaComposition, Error> {
-        session.dataTaskPublisher(for: server.request(for: urn))
+        session.dataTaskPublisher(for: server.request(forUrn: urn))
             .mapHttpErrors()
             .map(\.data)
             .decode(type: MediaComposition.self, decoder: Self.decoder())

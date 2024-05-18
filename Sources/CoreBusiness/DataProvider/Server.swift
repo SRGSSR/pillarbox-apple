@@ -56,39 +56,47 @@ public struct Server {
     ///
     /// Use custom servers to connect to services which can exactly pose as SRG SSR servers and deliver the same playback
     /// metadata format and image scaling. All required services must be implemented for the same base URL.
-    public static func custom(baseUrl: URL) -> Self {
+    public static func custom(baseUrl: URL, queryItems: [URLQueryItem] = []) -> Self {
         .custom { urn in
-            let url = baseUrl.appending(path: "integrationlayer/2.1/mediaComposition/byUrn/\(urn)")
-            guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
-                return .init(url: url)
-            }
-            components.queryItems = [
-                URLQueryItem(name: "onlyChapters", value: "true"),
-                URLQueryItem(name: "vector", value: vector)
-            ]
-            return .init(url: components.url ?? url)
+            standardRequest(forUrn: urn, baseUrl: baseUrl, queryItems: queryItems)
         } resizedImageUrlBuilder: { url, width in
-            guard var components = URLComponents(
-                url: baseUrl.appending(path: "images/"),
-                resolvingAgainstBaseURL: false
-            ) else {
-                return url
-            }
-            components.queryItems = [
-                URLQueryItem(name: "imageUrl", value: url.absoluteString),
-                URLQueryItem(name: "format", value: "jpg"),
-                URLQueryItem(name: "width", value: String(width.rawValue))
-            ]
-            if let scaledUrl = components.url {
-                return scaledUrl
-            }
-            else {
-                return url
-            }
+            standardResizedImageUrl(url, width: width, baseUrl: baseUrl, queryItems: queryItems)
         }
     }
 
-    func request(for urn: String) -> URLRequest {
+    private static func standardRequest(forUrn urn: String, baseUrl: URL, queryItems: [URLQueryItem]) -> URLRequest {
+        let url = baseUrl.appending(path: "integrationlayer/2.1/mediaComposition/byUrn/\(urn)")
+        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+            return .init(url: url)
+        }
+        components.queryItems = queryItems + [
+            URLQueryItem(name: "onlyChapters", value: "true"),
+            URLQueryItem(name: "vector", value: vector)
+        ]
+        return .init(url: components.url ?? url)
+    }
+
+    private static func standardResizedImageUrl(_ url: URL, width: ImageWidth, baseUrl: URL, queryItems: [URLQueryItem]) -> URL {
+        guard var components = URLComponents(
+            url: baseUrl.appending(path: "images/"),
+            resolvingAgainstBaseURL: false
+        ) else {
+            return url
+        }
+        components.queryItems = queryItems + [
+            URLQueryItem(name: "imageUrl", value: url.absoluteString),
+            URLQueryItem(name: "format", value: "jpg"),
+            URLQueryItem(name: "width", value: String(width.rawValue))
+        ]
+        if let scaledUrl = components.url {
+            return scaledUrl
+        }
+        else {
+            return url
+        }
+    }
+
+    func request(forUrn urn: String) -> URLRequest {
         requestBuilder(urn)
     }
 
