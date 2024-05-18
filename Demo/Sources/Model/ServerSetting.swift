@@ -49,7 +49,7 @@ enum ServerSetting: Int, CaseIterable {
         case .test:
             return .test
         case .mmf:
-            return .mmf
+            return .custom(baseUrl: url)
         }
     }
 }

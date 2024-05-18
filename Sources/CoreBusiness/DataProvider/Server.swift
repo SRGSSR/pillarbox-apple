@@ -7,29 +7,92 @@
 import Foundation
 
 /// A server environment.
-public enum Server {
+public struct Server {
+#if os(iOS)
+    private static let vector = "appplay"
+#else
+    private static let vector = "tvplay"
+#endif
+
     /// Production.
-    case production
+    public static let production = custom(baseUrl: URL(string: "https://il.srgssr.ch")!)
 
     /// Stage.
-    case stage
+    public static let stage = custom(baseUrl: URL(string: "https://il-stage.srgssr.ch")!)
 
     /// Test.
-    case test
+    public static let test = custom(baseUrl: URL(string: "https://il-test.srgssr.ch")!)
 
-    /// MMF.
-    case mmf
+    private let requestBuilder: (String) -> URLRequest
+    private let resizedImageUrlBuilder: (URL, ImageWidth) -> URL
 
-    var url: URL {
-        switch self {
-        case .production:
-            return URL(string: "https://il.srgssr.ch")!
-        case .stage:
-            return URL(string: "https://il-stage.srgssr.ch")!
-        case .test:
-            return URL(string: "https://il-test.srgssr.ch")!
-        case .mmf:
-            return URL(string: "https://play-mmf.herokuapp.com")!
+    private init(
+        requestBuilder: @escaping (String) -> URLRequest,
+        resizedImageUrlBuilder: @escaping (URL, ImageWidth) -> URL
+    ) {
+        self.requestBuilder = requestBuilder
+        self.resizedImageUrlBuilder = resizedImageUrlBuilder
+    }
+    
+    /// Custom environment.
+    ///
+    /// - Parameters:
+    ///   - requestBuilder: A closure building a playback metadata (media composition) request from a base
+    ///     URL and unique identifier (URN).
+    ///   - resizedImageUrlBuilder: A closure building a resized URL for an input URL and width.
+    ///
+    /// Use custom servers to connect to services which can pose as SRG SSR servers and deliver the same playback
+    /// metadata format (and image scaling capability if possible).
+    public static func custom(
+        requestBuilder: @escaping (String) -> URLRequest,
+        resizedImageUrlBuilder: @escaping (URL, ImageWidth) -> URL
+    ) -> Self {
+        .init(requestBuilder: requestBuilder, resizedImageUrlBuilder: resizedImageUrlBuilder)
+    }
+
+    /// Custom environment.
+    ///
+    /// - Parameter baseUrl: The base URL of the server.
+    ///
+    /// Use custom servers to connect to services which can exactly pose as SRG SSR servers and deliver the same playback
+    /// metadata format and image scaling. All required services must be implemented for the same base URL.
+    public static func custom(baseUrl: URL) -> Self {
+        .custom { urn in
+            let url = baseUrl.appending(path: "integrationlayer/2.1/mediaComposition/byUrn/\(urn)")
+            guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+                return .init(url: url)
+            }
+            components.queryItems = [
+                URLQueryItem(name: "onlyChapters", value: "true"),
+                URLQueryItem(name: "vector", value: vector)
+            ]
+            return .init(url: components.url ?? url)
+        } resizedImageUrlBuilder: { url, width in
+            guard var components = URLComponents(
+                url: baseUrl.appending(path: "images/"),
+                resolvingAgainstBaseURL: false
+            ) else {
+                return url
+            }
+            components.queryItems = [
+                URLQueryItem(name: "imageUrl", value: url.absoluteString),
+                URLQueryItem(name: "format", value: "jpg"),
+                URLQueryItem(name: "width", value: String(width.rawValue))
+            ]
+            if let scaledUrl = components.url {
+                return scaledUrl
+            }
+            else {
+                return url
+            }
         }
+    }
+
+    func request(for urn: String) -> URLRequest {
+        requestBuilder(urn)
+    }
+
+    func resizedImageUrl(_ url: URL, width: ImageWidth) -> URL {
+        resizedImageUrlBuilder(url, width)
     }
 }
