@@ -104,6 +104,6 @@ enum ServerSetting: Int, CaseIterable {
     }
 
     var server: Server {
-        .custom(baseUrl: baseUrl, queryItems: queryItems)
+        .init(baseUrl: baseUrl, queryItems: queryItems)
     }
 }
