@@ -9,13 +9,13 @@ import SRGDataProvider
 
 @objc
 enum ServerSetting: Int, CaseIterable {
-    case production
-    case stage
-    case test
+    case ilProduction
+    case ilStage
+    case ilTest
 
-    case productionCH
-    case stageCH
-    case testCH
+    case ilProductionCH
+    case ilStageCH
+    case ilTestCH
 
     case productionWW
     case stageWW
@@ -29,24 +29,24 @@ enum ServerSetting: Int, CaseIterable {
 
     var title: String {
         switch self {
-        case .production:
-            return "Production"
-        case .stage:
-            return "Stage"
-        case .test:
-            return "Test"
-        case .productionCH:
-            return "Production - CH"
-        case .stageCH:
-            return "Stage - CH"
-        case .testCH:
-            return "Test - CH"
+        case .ilProduction:
+            return "IL Production"
+        case .ilStage:
+            return "IL Stage"
+        case .ilTest:
+            return "IL Test"
+        case .ilProductionCH:
+            return "IL Production - CH"
+        case .ilStageCH:
+            return "IL Stage - CH"
+        case .ilTestCH:
+            return "IL Test - CH"
         case .productionWW:
-            return "Production - WW"
+            return "IL Production - WW"
         case .stageWW:
-            return "Stage - WW"
+            return "IL Stage - WW"
         case .testWW:
-            return "Test - WW"
+            return "IL Test - WW"
         case .samProduction:
             return "SAM Production"
         case .samStage:
@@ -66,11 +66,11 @@ enum ServerSetting: Int, CaseIterable {
 
     private var baseUrl: URL {
         switch self {
-        case .production, .productionCH, .productionWW:
+        case .ilProduction, .ilProductionCH, .productionWW:
             return SRGIntegrationLayerProductionServiceURL()
-        case .stage, .stageCH, .stageWW:
+        case .ilStage, .ilStageCH, .stageWW:
             return SRGIntegrationLayerStagingServiceURL()
-        case .test, .testCH, .testWW:
+        case .ilTest, .ilTestCH, .testWW:
             return SRGIntegrationLayerTestServiceURL()
         case .samProduction:
             return SRGIntegrationLayerProductionServiceURL().appending(component: "sam")
@@ -92,7 +92,7 @@ enum ServerSetting: Int, CaseIterable {
 
     private var queryItems: [URLQueryItem] {
         switch self {
-        case .productionCH, .stageCH, .testCH:
+        case .ilProductionCH, .ilStageCH, .ilTestCH:
             return [URLQueryItem(name: "forceLocation", value: "CH")]
         case .productionWW, .stageWW, .testWW:
             return [URLQueryItem(name: "forceLocation", value: "WW")]

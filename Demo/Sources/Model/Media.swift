@@ -19,7 +19,7 @@ struct Media: Hashable {
         case urn(String, serverSetting: ServerSetting)
 
         static func urn(_ urn: String) -> Self {
-            .urn(urn, serverSetting: .production)
+            .urn(urn, serverSetting: .ilProduction)
         }
     }
 

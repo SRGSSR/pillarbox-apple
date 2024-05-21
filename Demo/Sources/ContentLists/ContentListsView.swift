@@ -10,7 +10,7 @@ import SwiftUI
 // Behavior: h-exp, v-exp
 struct ContentListsView: View {
     @AppStorage(UserDefaults.serverSettingKey)
-    private var selectedServerSetting: ServerSetting = .production
+    private var selectedServerSetting: ServerSetting = .ilProduction
 
     var body: some View {
         CustomList {
