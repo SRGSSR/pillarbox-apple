@@ -60,13 +60,13 @@ public struct Server {
     /// image scaling capabilities.
     public static func custom(baseUrl: URL, queryItems: [URLQueryItem] = []) -> Self {
         .custom { urn in
-            standardRequest(forUrn: urn, baseUrl: baseUrl, queryItems: queryItems)
+            request(forUrn: urn, baseUrl: baseUrl, queryItems: queryItems)
         } resizedImageUrlBuilder: { url, width in
-            standardResizedImageUrl(url, width: width, baseUrl: baseUrl, queryItems: queryItems)
+            resizedImageUrl(url, width: width, baseUrl: baseUrl, queryItems: queryItems)
         }
     }
 
-    private static func standardRequest(forUrn urn: String, baseUrl: URL, queryItems: [URLQueryItem]) -> URLRequest {
+    private static func request(forUrn urn: String, baseUrl: URL, queryItems: [URLQueryItem]) -> URLRequest {
         let url = baseUrl.appending(path: "integrationlayer/2.1/mediaComposition/byUrn/\(urn)")
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
             return .init(url: url)
@@ -78,7 +78,7 @@ public struct Server {
         return .init(url: components.url ?? url)
     }
 
-    private static func standardResizedImageUrl(_ url: URL, width: ImageWidth, baseUrl: URL, queryItems: [URLQueryItem]) -> URL {
+    private static func resizedImageUrl(_ url: URL, width: ImageWidth, baseUrl: URL, queryItems: [URLQueryItem]) -> URL {
         guard var components = URLComponents(
             url: baseUrl.appending(path: "images/"),
             resolvingAgainstBaseURL: false
