@@ -26,11 +26,11 @@ public struct Server {
     private let baseUrl: URL
     private let queryItems: [URLQueryItem]
 
-    /// Custom environment.
+    /// Creates a server with custom settings.
     ///
     /// - Parameters:
     ///   - baseUrl: The base URL of the server.
-    ///   - queryItems: Additional query items to use.
+    ///   - queryItems: Additional query items to associate with each request.
     ///
     /// Useful for servers which can exactly pose as SRG SSR servers and deliver the same playback metadata format and
     /// image scaling capabilities.
@@ -39,7 +39,7 @@ public struct Server {
         self.queryItems = queryItems
     }
 
-    func request(forUrn urn: String) -> URLRequest {
+    func mediaCompositionRequest(forUrn urn: String) -> URLRequest {
         let url = baseUrl.appending(path: "integrationlayer/2.1/mediaComposition/byUrn/\(urn)")
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
             return .init(url: url)
