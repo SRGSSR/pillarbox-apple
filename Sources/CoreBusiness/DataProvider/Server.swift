@@ -23,31 +23,31 @@ public struct Server {
     /// Test.
     public static let test = custom(baseUrl: URL(string: "https://il-test.srgssr.ch")!)
 
-    private let requestBuilder: (String) -> URLRequest
+    private let mediaCompositionBuilder: (String) -> URLRequest
     private let resizedImageUrlBuilder: (URL, ImageWidth) -> URL
 
     private init(
-        requestBuilder: @escaping (String) -> URLRequest,
+        mediaCompositionBuilder: @escaping (String) -> URLRequest,
         resizedImageUrlBuilder: @escaping (URL, ImageWidth) -> URL
     ) {
-        self.requestBuilder = requestBuilder
+        self.mediaCompositionBuilder = mediaCompositionBuilder
         self.resizedImageUrlBuilder = resizedImageUrlBuilder
     }
 
     /// Custom environment.
     ///
     /// - Parameters:
-    ///   - requestBuilder: A closure building a playback metadata (media composition) request from a base
-    ///     URL and unique identifier (URN).
+    ///   - mediaCompositionBuilder: A closure building a media composition request from a base URL and unique
+    ///     identifier (URN).
     ///   - resizedImageUrlBuilder: A closure building a resized URL for an input URL and width.
     ///
     /// Useful for servers which can pose as SRG SSR servers and deliver the same playback metadata format (and
     /// image resizing capabilities if possible).
     public static func custom(
-        requestBuilder: @escaping (String) -> URLRequest,
+        mediaCompositionBuilder: @escaping (String) -> URLRequest,
         resizedImageUrlBuilder: @escaping (URL, ImageWidth) -> URL
     ) -> Self {
-        .init(requestBuilder: requestBuilder, resizedImageUrlBuilder: resizedImageUrlBuilder)
+        .init(mediaCompositionBuilder: mediaCompositionBuilder, resizedImageUrlBuilder: resizedImageUrlBuilder)
     }
 
     /// Custom environment.
@@ -99,7 +99,7 @@ public struct Server {
     }
 
     func request(forUrn urn: String) -> URLRequest {
-        requestBuilder(urn)
+        mediaCompositionBuilder(urn)
     }
 
     func resizedImageUrl(_ url: URL, width: ImageWidth) -> URL {
