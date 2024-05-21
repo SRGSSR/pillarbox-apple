@@ -15,7 +15,7 @@ private struct LoadedView: View {
     @EnvironmentObject private var router: Router
 
     @AppStorage(UserDefaults.serverSettingKey)
-    private var serverSetting: ServerSetting = .production
+    private var serverSetting: ServerSetting = .ilProduction
 
     var body: some View {
         CustomList(data: contents) { content in
@@ -46,7 +46,7 @@ private struct LoadedView: View {
             return Template(
                 title: media.title,
                 subtitle: MediaDescription.subtitle(for: media),
-                type: .urn(media.urn, server: serverSetting.server),
+                type: .urn(media.urn, serverSetting: serverSetting),
                 isMonoscopic: media.isMonoscopic
             )
         }
@@ -66,7 +66,7 @@ private struct ContentCell: View {
     let content: ContentListViewModel.Content
 
     @AppStorage(UserDefaults.serverSettingKey)
-    private var serverSetting: ServerSetting = .production
+    private var serverSetting: ServerSetting = .ilProduction
 
     @EnvironmentObject private var router: Router
 
@@ -101,7 +101,7 @@ private struct ContentCell: View {
             ) {
                 let media = Media(
                     title: title,
-                    type: .urn(media.urn, server: serverSetting.server),
+                    type: .urn(media.urn, serverSetting: serverSetting),
                     isMonoscopic: media.isMonoscopic
                 )
                 router.presented = .player(media: media)

@@ -106,7 +106,7 @@ struct ExamplesView: View {
 
     @ViewBuilder
     private func srgSections() -> some View {
-        section(title: "SRG SSR streams (URLs)", medias: model.urlMedias)
+        section(title: "Various streams (URLs)", medias: model.urlMedias)
         section(title: "SRG SSR streams (URNs)", medias: model.urnMedias)
         if !model.protectedMedias.isEmpty {
             section(title: "Protected streams (URNs)", medias: model.protectedMedias)

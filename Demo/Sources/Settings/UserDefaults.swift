@@ -45,7 +45,7 @@ extension UserDefaults {
     }
 
     @objc dynamic var serverSetting: ServerSetting {
-        .init(rawValue: integer(forKey: Self.serverSettingKey)) ?? .production
+        .init(rawValue: integer(forKey: Self.serverSettingKey)) ?? .ilProduction
     }
 
     func registerDefaults() {
@@ -53,7 +53,7 @@ extension UserDefaults {
             Self.presenterModeEnabledKey: false,
             Self.seekBehaviorSettingKey: SeekBehaviorSetting.immediate.rawValue,
             Self.smartNavigationEnabledKey: true,
-            Self.serverSettingKey: ServerSetting.production.rawValue
+            Self.serverSettingKey: ServerSetting.ilProduction.rawValue
         ])
     }
 }

@@ -150,6 +150,6 @@ extension MediaMetadata: AssetMetadata {
     }
 
     private func imageUrl(for chapter: MediaComposition.Chapter) -> URL {
-        dataProvider.scaledImageUrl(chapter.imageUrl, width: .width720)
+        dataProvider.resizedImageUrl(chapter.imageUrl, width: .width720)
     }
 }
