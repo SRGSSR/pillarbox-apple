@@ -17,9 +17,9 @@ enum ServerSetting: Int, CaseIterable {
     case ilStageCH
     case ilTestCH
 
-    case productionWW
-    case stageWW
-    case testWW
+    case ilProductionWW
+    case ilStageWW
+    case ilTestWW
 
     case samProduction
     case samStage
@@ -41,11 +41,11 @@ enum ServerSetting: Int, CaseIterable {
             return "IL Stage - CH"
         case .ilTestCH:
             return "IL Test - CH"
-        case .productionWW:
+        case .ilProductionWW:
             return "IL Production - WW"
-        case .stageWW:
+        case .ilStageWW:
             return "IL Stage - WW"
-        case .testWW:
+        case .ilTestWW:
             return "IL Test - WW"
         case .samProduction:
             return "SAM Production"
@@ -66,11 +66,11 @@ enum ServerSetting: Int, CaseIterable {
 
     private var baseUrl: URL {
         switch self {
-        case .ilProduction, .ilProductionCH, .productionWW:
+        case .ilProduction, .ilProductionCH, .ilProductionWW:
             return SRGIntegrationLayerProductionServiceURL()
-        case .ilStage, .ilStageCH, .stageWW:
+        case .ilStage, .ilStageCH, .ilStageWW:
             return SRGIntegrationLayerStagingServiceURL()
-        case .ilTest, .ilTestCH, .testWW:
+        case .ilTest, .ilTestCH, .ilTestWW:
             return SRGIntegrationLayerTestServiceURL()
         case .samProduction:
             return SRGIntegrationLayerProductionServiceURL().appending(component: "sam")
@@ -94,7 +94,7 @@ enum ServerSetting: Int, CaseIterable {
         switch self {
         case .ilProductionCH, .ilStageCH, .ilTestCH:
             return [URLQueryItem(name: "forceLocation", value: "CH")]
-        case .productionWW, .stageWW, .testWW:
+        case .ilProductionWW, .ilStageWW, .ilTestWW:
             return [URLQueryItem(name: "forceLocation", value: "WW")]
         case .samProduction, .samStage, .samTest:
             return [URLQueryItem(name: "forceSAM", value: "true")]
