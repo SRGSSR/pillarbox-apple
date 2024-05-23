@@ -14,7 +14,7 @@ private struct LoadedView: View {
     let contents: [ContentListViewModel.Content]
     @EnvironmentObject private var router: Router
 
-    @AppStorage(UserDefaults.serverSettingKey)
+    @AppStorage(UserDefaults.DemoSettingKey.serverSetting.rawValue)
     private var serverSetting: ServerSetting = .ilProduction
 
     var body: some View {
@@ -65,7 +65,7 @@ private struct LoadedView: View {
 private struct ContentCell: View {
     let content: ContentListViewModel.Content
 
-    @AppStorage(UserDefaults.serverSettingKey)
+    @AppStorage(UserDefaults.DemoSettingKey.serverSetting.rawValue)
     private var serverSetting: ServerSetting = .ilProduction
 
     @EnvironmentObject private var router: Router

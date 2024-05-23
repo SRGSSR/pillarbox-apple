@@ -56,7 +56,7 @@ private struct InfoCell: View {
 }
 
 struct SettingsView: View {
-    private static let playbackHudFontSizes = constant(iOS: 8..<20, tvOS: 8..<40)
+    private static let playbackHudFontSizes = constant(iOS: 8..<21, tvOS: 8..<41)
 
     private static let numberFormatter = {
         let formatter = NumberFormatter()
@@ -64,28 +64,28 @@ struct SettingsView: View {
         return formatter
     }()
 
-    @AppStorage(UserDefaults.presenterModeEnabledKey)
+    @AppStorage(UserDefaults.DemoSettingKey.presenterModeEnabled.rawValue)
     private var isPresenterModeEnabled = false
 
-    @AppStorage(UserDefaults.smartNavigationEnabledKey)
+    @AppStorage(UserDefaults.DemoSettingKey.smartNavigationEnabled.rawValue)
     private var isSmartNavigationEnabled = true
 
-    @AppStorage(UserDefaults.seekBehaviorSettingKey)
+    @AppStorage(UserDefaults.DemoSettingKey.seekBehaviorSetting.rawValue)
     private var seekBehaviorSetting: SeekBehaviorSetting = .immediate
 
-    @AppStorage(UserDefaults.playbackHudKey.enabled, store: .playbackHud)
+    @AppStorage(UserDefaults.PlaybackHudSettingKey.enabled.rawValue, store: .playbackHud)
     private var playbackHudEnabled: Bool = false
 
-    @AppStorage(UserDefaults.playbackHudKey.fontSize, store: .playbackHud)
+    @AppStorage(UserDefaults.PlaybackHudSettingKey.fontSize.rawValue, store: .playbackHud)
     private var playbackHudFontSize: Int = 8
 
-    @AppStorage(UserDefaults.playbackHudKey.color, store: .playbackHud)
+    @AppStorage(UserDefaults.PlaybackHudSettingKey.color.rawValue, store: .playbackHud)
     private var playbackHudColor: PlaybackHudColor = .yellow
 
-    @AppStorage(UserDefaults.playbackHudKey.xOffset, store: .playbackHud)
+    @AppStorage(UserDefaults.PlaybackHudSettingKey.xOffset.rawValue, store: .playbackHud)
     private var playbackHudXOffset: Int = 0
 
-    @AppStorage(UserDefaults.playbackHudKey.yOffset, store: .playbackHud)
+    @AppStorage(UserDefaults.PlaybackHudSettingKey.yOffset.rawValue, store: .playbackHud)
     private var playbackHudYOffset: Int = 0
 
     private var version: String {
@@ -208,6 +208,9 @@ struct SettingsView: View {
                 }
                 numberTextField("X offset", value: $playbackHudXOffset)
                 numberTextField("Y offset", value: $playbackHudYOffset)
+                Button(action: UserDefaults.resetPlaybackHudSettings) {
+                    Text("Reset")
+                }
             }
         } header: {
             Text("Playback HUD")

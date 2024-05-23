@@ -26,17 +26,19 @@ enum PlaybackHudColor: Int {
 // 
 // For more information see https://stackoverflow.com/a/47856467/760435
 extension UserDefaults {
-    static let presenterModeEnabledKey = "presenterModeEnabled"
-    static let smartNavigationEnabledKey = "smartNavigationEnabled"
-    static let seekBehaviorSettingKey = "seekBehaviorSetting"
-    static let serverSettingKey = "serverSetting"
+    enum DemoSettingKey: String, CaseIterable {
+        case presenterModeEnabled
+        case smartNavigationEnabled
+        case seekBehaviorSetting
+        case serverSetting
+    }
 
     @objc dynamic var presenterModeEnabled: Bool {
-        bool(forKey: Self.presenterModeEnabledKey)
+        bool(forKey: DemoSettingKey.presenterModeEnabled.rawValue)
     }
 
     @objc dynamic var smartNavigationEnabled: Bool {
-        bool(forKey: Self.smartNavigationEnabledKey)
+        bool(forKey: DemoSettingKey.smartNavigationEnabled.rawValue)
     }
 
     var seekBehavior: SeekBehavior {
@@ -49,31 +51,38 @@ extension UserDefaults {
     }
 
     @objc dynamic var seekBehaviorSetting: SeekBehaviorSetting {
-        .init(rawValue: integer(forKey: Self.seekBehaviorSettingKey)) ?? .immediate
+        .init(rawValue: integer(forKey: DemoSettingKey.seekBehaviorSetting.rawValue)) ?? .immediate
     }
 
     @objc dynamic var serverSetting: ServerSetting {
-        .init(rawValue: integer(forKey: Self.serverSettingKey)) ?? .ilProduction
+        .init(rawValue: integer(forKey: DemoSettingKey.serverSetting.rawValue)) ?? .ilProduction
     }
 
     func registerDefaults() {
         register(defaults: [
-            Self.presenterModeEnabledKey: false,
-            Self.seekBehaviorSettingKey: SeekBehaviorSetting.immediate.rawValue,
-            Self.smartNavigationEnabledKey: true,
-            Self.serverSettingKey: ServerSetting.ilProduction.rawValue
+            DemoSettingKey.presenterModeEnabled.rawValue: false,
+            DemoSettingKey.seekBehaviorSetting.rawValue: SeekBehaviorSetting.immediate.rawValue,
+            DemoSettingKey.smartNavigationEnabled.rawValue: true,
+            DemoSettingKey.serverSetting.rawValue: ServerSetting.ilProduction.rawValue
         ])
     }
 }
 
 extension UserDefaults {
+    enum PlaybackHudSettingKey: String, CaseIterable {
+        case enabled = "enable"                 // Bool
+        case color                              // Int, see `PlaybackHudColor`.
+        case fontSize = "fontsize"              // Int >= 8
+        case xOffset = "xoffset"                // Int >= 1
+        case yOffset = "yoffset"                // Int >= 1
+    }
+
     static let playbackHud = UserDefaults(suiteName: "com.apple.avfoundation.videoperformancehud")
 
-    enum playbackHudKey {
-        static let enabled = "enable"                 // Bool
-        static let color = "color"                    // Int, see `PlaybackHudColor`.
-        static let fontSize = "fontsize"              // Int >= 8
-        static let xOffset = "xoffset"                // Int >= 1
-        static let yOffset = "yoffset"                // Int >= 1
+    static func resetPlaybackHudSettings() {
+        guard let playbackHud else { return }
+        PlaybackHudSettingKey.allCases.forEach { key in
+            playbackHud.removeObject(forKey: key.rawValue)
+        }
     }
 }
