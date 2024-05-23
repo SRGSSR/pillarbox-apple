@@ -65,6 +65,9 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.seekBehaviorSettingKey)
     private var seekBehaviorSetting: SeekBehaviorSetting = .immediate
 
+    @AppStorage("enable", store: .init(suiteName: "com.apple.avfoundation.videoperformancehud"))
+    private var playbackHudEnabled: Bool = false
+
     private var version: String {
         Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
     }
@@ -109,6 +112,7 @@ struct SettingsView: View {
         applicationSection()
         playerSection()
         debuggingSection()
+        playbackHudSection()
 #if os(iOS)
         gitHubSection()
 #endif
@@ -160,6 +164,16 @@ struct SettingsView: View {
             UrlCacheView()
         } header: {
             Text("Debugging")
+                .headerStyle()
+        }
+    }
+
+    @ViewBuilder
+    private func playbackHudSection() -> some View {
+        Section {
+            Toggle("Enabled", isOn: $playbackHudEnabled)
+        } header: {
+            Text("Playback HUD")
                 .headerStyle()
         }
     }
