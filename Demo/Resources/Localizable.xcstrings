@@ -67,6 +67,9 @@
     "Automatic" : {
 
     },
+    "Blue" : {
+
+    },
     "Both" : {
 
     },
@@ -77,6 +80,9 @@
 
     },
     "Clear URL cache" : {
+
+    },
+    "Color" : {
 
     },
     "Content displayed" : {
@@ -109,7 +115,13 @@
     "Examples" : {
 
     },
+    "Font size" : {
+
+    },
     "GitHub" : {
+
+    },
+    "Green" : {
 
     },
     "Immediate" : {
@@ -169,6 +181,9 @@
     "Project" : {
 
     },
+    "Red" : {
+
+    },
     "Search" : {
 
     },
@@ -220,10 +235,25 @@
     "Use a proxy tool to observe events." : {
 
     },
+    "Value" : {
+
+    },
     "Version information" : {
 
     },
     "Web" : {
+
+    },
+    "White" : {
+
+    },
+    "X offset" : {
+
+    },
+    "Y offset" : {
+
+    },
+    "Yellow" : {
 
     }
   },

@@ -56,6 +56,14 @@ private struct InfoCell: View {
 }
 
 struct SettingsView: View {
+    private static let playbackHudFontSizes = constant(iOS: 8..<20, tvOS: 8..<40)
+
+    private static let numberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter
+    }()
+
     @AppStorage(UserDefaults.presenterModeEnabledKey)
     private var isPresenterModeEnabled = false
 
@@ -65,8 +73,20 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.seekBehaviorSettingKey)
     private var seekBehaviorSetting: SeekBehaviorSetting = .immediate
 
-    @AppStorage("enable", store: .init(suiteName: "com.apple.avfoundation.videoperformancehud"))
+    @AppStorage(UserDefaults.playbackHudKey.enabled, store: .playbackHud)
     private var playbackHudEnabled: Bool = false
+
+    @AppStorage(UserDefaults.playbackHudKey.fontSize, store: .playbackHud)
+    private var playbackHudFontSize: Int = 8
+
+    @AppStorage(UserDefaults.playbackHudKey.color, store: .playbackHud)
+    private var playbackHudColor: PlaybackHudColor = .yellow
+
+    @AppStorage(UserDefaults.playbackHudKey.xOffset, store: .playbackHud)
+    private var playbackHudXOffset: Int = 0
+
+    @AppStorage(UserDefaults.playbackHudKey.yOffset, store: .playbackHud)
+    private var playbackHudYOffset: Int = 0
 
     private var version: String {
         Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
@@ -86,6 +106,7 @@ struct SettingsView: View {
             content()
                 .padding(.horizontal, constant(iOS: 0, tvOS: 20))
         }
+        .animation(.defaultLinear, value: playbackHudEnabled)
         .tracked(name: "settings")
 #if os(iOS)
         .navigationTitle("Settings")
@@ -172,9 +193,37 @@ struct SettingsView: View {
     private func playbackHudSection() -> some View {
         Section {
             Toggle("Enabled", isOn: $playbackHudEnabled)
+            if playbackHudEnabled {
+                Picker("Font size", selection: $playbackHudFontSize) {
+                    ForEach(Self.playbackHudFontSizes, id: \.self) { size in
+                        Text(verbatim: "\(size)").tag(size)
+                    }
+                }
+                Picker("Color", selection: $playbackHudColor) {
+                    Text("Yellow").tag(PlaybackHudColor.yellow)
+                    Text("Green").tag(PlaybackHudColor.green)
+                    Text("Red").tag(PlaybackHudColor.red)
+                    Text("Blue").tag(PlaybackHudColor.blue)
+                    Text("White").tag(PlaybackHudColor.white)
+                }
+                numberTextField("X offset", value: $playbackHudXOffset)
+                numberTextField("Y offset", value: $playbackHudYOffset)
+            }
         } header: {
             Text("Playback HUD")
                 .headerStyle()
+        }
+    }
+
+    @ViewBuilder
+    private func numberTextField(_ key: LocalizedStringKey, value: Binding<Int>) -> some View {
+        HStack {
+            Text(key)
+            Spacer()
+            TextField("Value", value: value, format: .number)
+                .multilineTextAlignment(.trailing)
+                .foregroundColor(.secondary)
+                .keyboardType(.numberPad)
         }
     }
 

@@ -13,6 +13,14 @@ enum SeekBehaviorSetting: Int {
     case deferred
 }
 
+enum PlaybackHudColor: Int {
+    case yellow = 0
+    case green = 1
+    case red = 2
+    case blue = 3
+    case white = 4
+}
+
 // Extensions allowing the use of KVO to detect user default changes by key.
 // Keys and dynamic property names must match.
 // 
@@ -55,5 +63,17 @@ extension UserDefaults {
             Self.smartNavigationEnabledKey: true,
             Self.serverSettingKey: ServerSetting.ilProduction.rawValue
         ])
+    }
+}
+
+extension UserDefaults {
+    static let playbackHud = UserDefaults(suiteName: "com.apple.avfoundation.videoperformancehud")
+
+    enum playbackHudKey {
+        static let enabled = "enable"                 // Bool
+        static let color = "color"                    // Int, see `PlaybackHudColor`.
+        static let fontSize = "fontsize"              // Int >= 8
+        static let xOffset = "xoffset"                // Int >= 1
+        static let yOffset = "yoffset"                // Int >= 1
     }
 }
