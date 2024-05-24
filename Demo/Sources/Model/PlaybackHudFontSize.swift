@@ -12,15 +12,9 @@ enum PlaybackHudFontSize: Int, CaseIterable {
     case `default`
     case large
 
-#if os(tvOS)
-    private static let smallValue = 30
-    private static let defaultValue = 40
-    private static let largeValue = 50
-#else
-    private static let smallValue = 9
-    private static let defaultValue = 18
-    private static let largeValue = 27
-#endif
+    private static let smallValue = constant(iOS: 9, tvOS: 30)
+    private static let defaultValue = constant(iOS: 18, tvOS: 40)
+    private static let largeValue = constant(iOS: 27, tvOS: 50)
 
     var name: String {
         switch self {
