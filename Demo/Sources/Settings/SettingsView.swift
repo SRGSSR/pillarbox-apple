@@ -194,7 +194,9 @@ struct SettingsView: View {
                         Text(verbatim: "\(size) pt").tag(size)
                     }
                 }
+#if os(tvOS)
                 .pickerStyle(.navigationLink)
+#endif
 
                 Picker("Color", selection: $playbackHudColor) {
                     Text("Yellow").tag(PlaybackHudColor.yellow)
@@ -203,7 +205,9 @@ struct SettingsView: View {
                     Text("Blue").tag(PlaybackHudColor.blue)
                     Text("White").tag(PlaybackHudColor.white)
                 }
+#if os(tvOS)
                 .pickerStyle(.navigationLink)
+#endif
 
                 numberEditor("X offset", value: $playbackHudXOffset)
                 numberEditor("Y offset", value: $playbackHudYOffset)
