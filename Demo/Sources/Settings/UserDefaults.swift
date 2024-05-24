@@ -58,8 +58,8 @@ extension UserDefaults {
         .init(rawValue: integer(forKey: DemoSettingKey.serverSetting.rawValue)) ?? .ilProduction
     }
 
-    private func registerDefaultDemoSettings() {
-        register(defaults: [
+    private static func registerDefaultDemoSettings() {
+        UserDefaults.standard.register(defaults: [
             DemoSettingKey.presenterModeEnabled.rawValue: false,
             DemoSettingKey.seekBehaviorSetting.rawValue: SeekBehaviorSetting.immediate.rawValue,
             DemoSettingKey.smartNavigationEnabled.rawValue: true,
@@ -91,8 +91,8 @@ extension UserDefaults {
         }
     }
 
-    private func registerDefaultPlaybackHudSettings() {
-        register(defaults: [
+    private static func registerDefaultPlaybackHudSettings() {
+        playbackHud?.register(defaults: [
             PlaybackHudSettingKey.fontSize.rawValue: Self.playbackHudDefaultFontSize,
             PlaybackHudSettingKey.xOffset.rawValue: Self.playbackHudDefaultHudXOffset,
             PlaybackHudSettingKey.yOffset.rawValue: Self.playbackHudDefaultHudYOffset
@@ -101,7 +101,7 @@ extension UserDefaults {
 }
 
 extension UserDefaults {
-    func registerDefaults() {
+    static func registerDefaults() {
         registerDefaultDemoSettings()
         registerDefaultPlaybackHudSettings()
     }
