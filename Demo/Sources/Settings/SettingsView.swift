@@ -69,7 +69,7 @@ struct SettingsView: View {
     private var playbackHudEnabled: Bool = false
 
     @AppStorage(UserDefaults.PlaybackHudSettingKey.fontSize.rawValue, store: .playbackHud)
-    private var playbackHudFontSize: Int = 8
+    private var playbackHudFontSize: Int = UserDefaults.playbackHudDefaultFontSize
 
     @AppStorage(UserDefaults.PlaybackHudSettingKey.color.rawValue, store: .playbackHud)
     private var playbackHudColor: PlaybackHudColor = .yellow
