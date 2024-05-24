@@ -8,9 +8,15 @@ import Foundation
 import UIKit
 
 enum PlaybackHudFontSize: Int, CaseIterable {
+#if os(tvOS)
+    private static let smallValue = 30
+    private static let defaultValue = 40
+    private static let largeValue = 50
+#else
     private static let smallValue = 9
     private static let defaultValue = 18
     private static let largeValue = 27
+#endif
 
     case small
     case `default`
