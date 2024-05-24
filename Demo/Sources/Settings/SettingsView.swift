@@ -56,8 +56,6 @@ private struct InfoCell: View {
 }
 
 struct SettingsView: View {
-    private static let playbackHudFontSizes = constant(iOS: 8..<21, tvOS: 8..<41)
-
     private static let numberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -195,7 +193,7 @@ struct SettingsView: View {
             Toggle("Enabled", isOn: $playbackHudEnabled)
             if playbackHudEnabled {
                 Picker("Font size", selection: $playbackHudFontSize) {
-                    ForEach(Self.playbackHudFontSizes, id: \.self) { size in
+                    ForEach(UserDefaults.playbackHudFontSizes, id: \.self) { size in
                         Text(verbatim: "\(size)").tag(size)
                     }
                 }

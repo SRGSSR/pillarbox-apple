@@ -58,7 +58,7 @@ extension UserDefaults {
         .init(rawValue: integer(forKey: DemoSettingKey.serverSetting.rawValue)) ?? .ilProduction
     }
 
-    func registerDefaults() {
+    private func registerDefaultDemoSettings() {
         register(defaults: [
             DemoSettingKey.presenterModeEnabled.rawValue: false,
             DemoSettingKey.seekBehaviorSetting.rawValue: SeekBehaviorSetting.immediate.rawValue,
@@ -78,11 +78,25 @@ extension UserDefaults {
     }
 
     static let playbackHud = UserDefaults(suiteName: "com.apple.avfoundation.videoperformancehud")
+    static let playbackHudFontSizes = constant(iOS: 8..<41, tvOS: 30..<101)
 
     static func resetPlaybackHudSettings() {
         guard let playbackHud else { return }
         PlaybackHudSettingKey.allCases.forEach { key in
             playbackHud.removeObject(forKey: key.rawValue)
         }
+    }
+
+    private func registerDefaultPlaybackHudSettings() {
+        register(defaults: [
+            PlaybackHudSettingKey.fontSize.rawValue: constant(iOS: 18, tvOS: 40)
+        ])
+    }
+}
+
+extension UserDefaults {
+    func registerDefaults() {
+        registerDefaultDemoSettings()
+        registerDefaultPlaybackHudSettings()
     }
 }
