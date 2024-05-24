@@ -78,7 +78,7 @@ extension UserDefaults {
     }
 
     static let playbackHud = UserDefaults(suiteName: "com.apple.avfoundation.videoperformancehud")
-    static let playbackHudFontSizes = constant(iOS: 8..<41, tvOS: 30..<101)
+    static let playbackHudFontSizes = constant(iOS: 8..<41, tvOS: 20..<61)
 
     static func resetPlaybackHudSettings() {
         guard let playbackHud else { return }
