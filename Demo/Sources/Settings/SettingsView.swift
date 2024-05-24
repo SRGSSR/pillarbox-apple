@@ -125,9 +125,7 @@ struct SettingsView: View {
         applicationSection()
         playerSection()
         debuggingSection()
-        if !ProcessInfo.processInfo.isiOSAppOnMac {
-            playbackHudSection()
-        }
+        playbackHudSection()
 #if os(iOS)
         gitHubSection()
 #endif
