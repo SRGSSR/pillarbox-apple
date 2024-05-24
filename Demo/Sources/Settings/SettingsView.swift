@@ -194,9 +194,11 @@ struct SettingsView: View {
             if playbackHudEnabled {
                 Picker("Font size", selection: $playbackHudFontSize) {
                     ForEach(UserDefaults.playbackHudFontSizes, id: \.self) { size in
-                        Text(verbatim: "\(size)").tag(size)
+                        Text(verbatim: "\(size) pt").tag(size)
                     }
                 }
+                .pickerStyle(.navigationLink)
+
                 Picker("Color", selection: $playbackHudColor) {
                     Text("Yellow").tag(PlaybackHudColor.yellow)
                     Text("Green").tag(PlaybackHudColor.green)
@@ -204,11 +206,15 @@ struct SettingsView: View {
                     Text("Blue").tag(PlaybackHudColor.blue)
                     Text("White").tag(PlaybackHudColor.white)
                 }
+                .pickerStyle(.navigationLink)
+
                 numberTextField("X offset", value: $playbackHudXOffset)
                 numberTextField("Y offset", value: $playbackHudYOffset)
+
                 Button(action: UserDefaults.resetPlaybackHudSettings) {
                     Text("Reset")
                 }
+                .foregroundStyle(.red)
             }
         } header: {
             Text("Playback HUD")
