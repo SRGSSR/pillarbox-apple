@@ -71,6 +71,7 @@ private extension CommandersActStreamingAnalytics {
         guard let player else { return }
         setMetadata(value: volume(for: player), forKey: "media_volume")
         setMetadata(value: audioTrack(for: player), forKey: "media_audio_track")
+        setMetadata(value: audioDescription(for: player), forKey: "media_audiodescription_on")
         setMetadata(value: subtitleOn(for: player), forKey: "media_subtitles_on")
         setMetadata(value: subtitleSelection(for: player), forKey: "media_subtitle_selection")
     }
@@ -90,6 +91,15 @@ private extension CommandersActStreamingAnalytics {
             return languageCode(from: option)
         default:
             return languageCode(from: nil)
+        }
+    }
+
+    private func audioDescription(for player: Player) -> String? {
+        switch player.currentMediaOption(for: .audible) {
+        case let .on(option):
+            return option.hasMediaCharacteristic(.describesVideoForAccessibility) ? "true" : "false"
+        default:
+            return nil
         }
     }
 
