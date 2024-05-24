@@ -69,7 +69,7 @@ struct SettingsView: View {
     private var playbackHudEnabled = false
 
     @AppStorage(UserDefaults.PlaybackHudSettingKey.fontSize.rawValue, store: .playbackHud)
-    private var playbackHudFontSize = UserDefaults.playbackHudDefaultFontSize
+    private var playbackHudFontSize = PlaybackHudFontSize.default
 
     @AppStorage(UserDefaults.PlaybackHudSettingKey.color.rawValue, store: .playbackHud)
     private var playbackHudColor: PlaybackHudColor = .yellow
@@ -190,8 +190,8 @@ struct SettingsView: View {
             Toggle("Enabled", isOn: $playbackHudEnabled)
             if playbackHudEnabled {
                 Picker("Font size", selection: $playbackHudFontSize) {
-                    ForEach(UserDefaults.playbackHudFontSizes, id: \.self) { size in
-                        Text(verbatim: "\(size) pt").tag(size)
+                    ForEach(PlaybackHudFontSize.allCases, id: \.self) { size in
+                        Text(size.name).tag(size)
                     }
                 }
 #if os(tvOS)
