@@ -214,6 +214,7 @@ struct SettingsView: View {
 
                 Button(action: UserDefaults.resetPlaybackHudSettings) {
                     Text("Reset")
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .foregroundStyle(.red)
             }
