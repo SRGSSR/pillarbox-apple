@@ -56,14 +56,29 @@ private struct InfoCell: View {
 }
 
 struct SettingsView: View {
-    @AppStorage(UserDefaults.presenterModeEnabledKey)
+    @AppStorage(UserDefaults.DemoSettingKey.presenterModeEnabled.rawValue)
     private var isPresenterModeEnabled = false
 
-    @AppStorage(UserDefaults.smartNavigationEnabledKey)
+    @AppStorage(UserDefaults.DemoSettingKey.smartNavigationEnabled.rawValue)
     private var isSmartNavigationEnabled = true
 
-    @AppStorage(UserDefaults.seekBehaviorSettingKey)
+    @AppStorage(UserDefaults.DemoSettingKey.seekBehaviorSetting.rawValue)
     private var seekBehaviorSetting: SeekBehaviorSetting = .immediate
+
+    @AppStorage(UserDefaults.PlaybackHudSettingKey.enabled.rawValue, store: .playbackHud)
+    private var playbackHudEnabled = false
+
+    @AppStorage(UserDefaults.PlaybackHudSettingKey.fontSize.rawValue, store: .playbackHud)
+    private var playbackHudFontSize: PlaybackHudFontSize = .default
+
+    @AppStorage(UserDefaults.PlaybackHudSettingKey.color.rawValue, store: .playbackHud)
+    private var playbackHudColor: PlaybackHudColor = .yellow
+
+    @AppStorage(UserDefaults.PlaybackHudSettingKey.xOffset.rawValue, store: .playbackHud)
+    private var playbackHudXOffset = UserDefaults.playbackHudDefaultHudXOffset
+
+    @AppStorage(UserDefaults.PlaybackHudSettingKey.yOffset.rawValue, store: .playbackHud)
+    private var playbackHudYOffset = UserDefaults.playbackHudDefaultHudYOffset
 
     private var version: String {
         Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
@@ -83,6 +98,7 @@ struct SettingsView: View {
             content()
                 .padding(.horizontal, constant(iOS: 0, tvOS: 20))
         }
+        .animation(.defaultLinear, value: playbackHudEnabled)
         .tracked(name: "settings")
 #if os(iOS)
         .navigationTitle("Settings")
@@ -109,6 +125,7 @@ struct SettingsView: View {
         applicationSection()
         playerSection()
         debuggingSection()
+        playbackHudSection()
 #if os(iOS)
         gitHubSection()
 #endif
@@ -148,6 +165,9 @@ struct SettingsView: View {
             Text("Immediate").tag(SeekBehaviorSetting.immediate)
             Text("Deferred").tag(SeekBehaviorSetting.deferred)
         }
+#if os(tvOS)
+        .pickerStyle(.navigationLink)
+#endif
     }
 
     @ViewBuilder
@@ -162,6 +182,74 @@ struct SettingsView: View {
             Text("Debugging")
                 .headerStyle()
         }
+    }
+
+    @ViewBuilder
+    private func playbackHudSection() -> some View {
+        Section {
+            Toggle("Enabled", isOn: $playbackHudEnabled)
+            if playbackHudEnabled {
+                Picker("Font size", selection: $playbackHudFontSize) {
+                    ForEach(PlaybackHudFontSize.allCases, id: \.self) { size in
+                        Text(size.name).tag(size)
+                    }
+                }
+#if os(tvOS)
+                .pickerStyle(.navigationLink)
+#endif
+
+                Picker("Color", selection: $playbackHudColor) {
+                    Text("Yellow").tag(PlaybackHudColor.yellow)
+                    Text("Green").tag(PlaybackHudColor.green)
+                    Text("Red").tag(PlaybackHudColor.red)
+                    Text("Blue").tag(PlaybackHudColor.blue)
+                    Text("White").tag(PlaybackHudColor.white)
+                }
+#if os(tvOS)
+                .pickerStyle(.navigationLink)
+#endif
+
+                numberEditor("X offset", value: $playbackHudXOffset)
+                numberEditor("Y offset", value: $playbackHudYOffset)
+
+                Button(action: UserDefaults.resetPlaybackHudSettings) {
+                    Text("Reset")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .foregroundStyle(.red)
+            }
+        } header: {
+            Text("Playback HUD")
+                .headerStyle()
+        } footer: {
+            Text("Shows a video overlay displaying various playback-related statistics.")
+        }
+    }
+
+    @ViewBuilder
+    private func numberEditor(_ key: LocalizedStringKey, value: Binding<Int>) -> some View {
+#if os(iOS)
+        Stepper(value: value) {
+            HStack {
+                Text(key)
+                numberTextField(value: value)
+            }
+        }
+#else
+        HStack {
+            Text(key)
+            Spacer()
+            numberTextField(value: value)
+        }
+#endif
+    }
+
+    @ViewBuilder
+    private func numberTextField(value: Binding<Int>) -> some View {
+        TextField("Value", value: value, format: .number)
+            .multilineTextAlignment(.trailing)
+            .foregroundColor(.secondary)
+            .keyboardType(.numberPad)
     }
 
     @ViewBuilder
@@ -192,9 +280,6 @@ struct SettingsView: View {
             Text(" in Switzerland")
         }
         .frame(maxWidth: .infinity)
-#if os(tvOS)
-        .focusable()
-#endif
     }
 
 #if os(iOS)

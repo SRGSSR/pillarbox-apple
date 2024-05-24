@@ -67,6 +67,9 @@
     "Automatic" : {
 
     },
+    "Blue" : {
+
+    },
     "Both" : {
 
     },
@@ -77,6 +80,9 @@
 
     },
     "Clear URL cache" : {
+
+    },
+    "Color" : {
 
     },
     "Content displayed" : {
@@ -100,13 +106,22 @@
     "Embeddings" : {
 
     },
+    "Enabled" : {
+
+    },
     "Enter URL or URN" : {
 
     },
     "Examples" : {
 
     },
+    "Font size" : {
+
+    },
     "GitHub" : {
+
+    },
+    "Green" : {
 
     },
     "Immediate" : {
@@ -151,6 +166,9 @@
     "Play" : {
 
     },
+    "Playback HUD" : {
+
+    },
     "Player" : {
 
     },
@@ -161,6 +179,12 @@
 
     },
     "Project" : {
+
+    },
+    "Red" : {
+
+    },
+    "Reset" : {
 
     },
     "Search" : {
@@ -176,6 +200,9 @@
 
     },
     "Showcase" : {
+
+    },
+    "Shows a video overlay displaying various playback-related statistics." : {
 
     },
     "Simulate memory warning" : {
@@ -214,10 +241,25 @@
     "Use a proxy tool to observe events." : {
 
     },
+    "Value" : {
+
+    },
     "Version information" : {
 
     },
     "Web" : {
+
+    },
+    "White" : {
+
+    },
+    "X offset" : {
+
+    },
+    "Y offset" : {
+
+    },
+    "Yellow" : {
 
     }
   },

@@ -16,7 +16,7 @@ struct SimplePlayerView: View {
 
     var body: some View {
         ZStack {
-            VideoView(player: player)
+            videoView()
             progressView()
             playbackButton()
         }
@@ -28,6 +28,13 @@ struct SimplePlayerView: View {
         .onAppear(perform: play)
         .onReceive(player: player, assign: \.isBusy, to: $isBusy)
         .tracked(name: "simple-player")
+    }
+
+    @ViewBuilder
+    private func videoView() -> some View {
+        VideoView(player: player)
+            .background(.black)
+            .ignoresSafeArea()
     }
 
     @ViewBuilder
