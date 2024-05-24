@@ -221,7 +221,7 @@ struct SettingsView: View {
             Text("Playback HUD")
                 .headerStyle()
         } footer: {
-            Text("Shows a video overlay displaying various information about content being played.")
+            Text("Shows a video overlay displaying various playback-related statistics.")
         }
     }
 
