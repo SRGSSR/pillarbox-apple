@@ -7,9 +7,9 @@
 import Foundation
 
 enum PlaybackHudColor: Int {
-    case yellow = 0
-    case green = 1
-    case red = 2
-    case blue = 3
-    case white = 4
+    case yellow
+    case green
+    case red
+    case blue
+    case white
 }
