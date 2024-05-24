@@ -98,6 +98,7 @@ struct SettingsView: View {
             content()
                 .padding(.horizontal, constant(iOS: 0, tvOS: 20))
         }
+        .scrollDismissesKeyboard(.immediately)
         .animation(.defaultLinear, value: playbackHudEnabled)
         .tracked(name: "settings")
 #if os(iOS)

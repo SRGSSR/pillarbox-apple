@@ -87,6 +87,7 @@ struct ExamplesView: View {
                 .scrollDismissesKeyboard(.immediately)
                 .animation(.defaultLinear, value: model.protectedMedias)
         }
+        .scrollDismissesKeyboard(.immediately)
         .tracked(name: "examples")
 #if os(iOS)
         .navigationTitle("Examples")
