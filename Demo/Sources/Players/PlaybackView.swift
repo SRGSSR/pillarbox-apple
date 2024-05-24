@@ -773,6 +773,9 @@ struct PlaybackView: View {
             }
 #endif
         }
+        .overlay {
+            LogsView(player: player)
+        }
         ._debugBodyCounter()
     }
 }
