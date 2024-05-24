@@ -11,12 +11,10 @@ enum PlaybackHudFontSize: Int, CaseIterable {
     private static let smallValue = 9
     private static let defaultValue = 18
     private static let largeValue = 27
-    private static let extraLargeValue = 36
 
     case small
     case `default`
     case large
-    case extraLarge
 
     var name: String {
         switch self {
@@ -26,8 +24,6 @@ enum PlaybackHudFontSize: Int, CaseIterable {
             return "Default"
         case .large:
             return "Large"
-        case .extraLarge:
-            return "Extra large"
         }
     }
 
@@ -49,8 +45,6 @@ enum PlaybackHudFontSize: Int, CaseIterable {
             return defaultValue
         case .large:
             return largeValue
-        case .extraLarge:
-            return extraLargeValue
         }
     }
 
@@ -60,8 +54,6 @@ enum PlaybackHudFontSize: Int, CaseIterable {
             return .small
         case largeValue:
             return .large
-        case extraLargeValue:
-            return .extraLarge
         default:
             return .default
         }
