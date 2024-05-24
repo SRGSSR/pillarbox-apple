@@ -56,12 +56,6 @@ private struct InfoCell: View {
 }
 
 struct SettingsView: View {
-    private static let numberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        return formatter
-    }()
-
     @AppStorage(UserDefaults.DemoSettingKey.presenterModeEnabled.rawValue)
     private var isPresenterModeEnabled = false
 
