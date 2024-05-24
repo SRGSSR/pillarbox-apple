@@ -66,19 +66,19 @@ struct SettingsView: View {
     private var seekBehaviorSetting: SeekBehaviorSetting = .immediate
 
     @AppStorage(UserDefaults.PlaybackHudSettingKey.enabled.rawValue, store: .playbackHud)
-    private var playbackHudEnabled: Bool = false
+    private var playbackHudEnabled = false
 
     @AppStorage(UserDefaults.PlaybackHudSettingKey.fontSize.rawValue, store: .playbackHud)
-    private var playbackHudFontSize: Int = UserDefaults.playbackHudDefaultFontSize
+    private var playbackHudFontSize = UserDefaults.playbackHudDefaultFontSize
 
     @AppStorage(UserDefaults.PlaybackHudSettingKey.color.rawValue, store: .playbackHud)
     private var playbackHudColor: PlaybackHudColor = .yellow
 
     @AppStorage(UserDefaults.PlaybackHudSettingKey.xOffset.rawValue, store: .playbackHud)
-    private var playbackHudXOffset: Int = 0
+    private var playbackHudXOffset = UserDefaults.playbackHudDefaultHudXOffset
 
     @AppStorage(UserDefaults.PlaybackHudSettingKey.yOffset.rawValue, store: .playbackHud)
-    private var playbackHudYOffset: Int = 0
+    private var playbackHudYOffset = UserDefaults.playbackHudDefaultHudYOffset
 
     private var version: String {
         Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String

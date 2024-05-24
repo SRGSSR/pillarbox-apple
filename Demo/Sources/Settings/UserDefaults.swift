@@ -81,6 +81,8 @@ extension UserDefaults {
     static let playbackHudFontSizes = constant(iOS: 8..<41, tvOS: 20..<61)
 
     static let playbackHudDefaultFontSize = constant(iOS: 18, tvOS: 40)
+    static let playbackHudDefaultHudXOffset = 20
+    static let playbackHudDefaultHudYOffset = 20
 
     static func resetPlaybackHudSettings() {
         guard let playbackHud else { return }
@@ -91,7 +93,9 @@ extension UserDefaults {
 
     private func registerDefaultPlaybackHudSettings() {
         register(defaults: [
-            PlaybackHudSettingKey.fontSize.rawValue: Self.playbackHudDefaultFontSize
+            PlaybackHudSettingKey.fontSize.rawValue: Self.playbackHudDefaultFontSize,
+            PlaybackHudSettingKey.xOffset.rawValue: Self.playbackHudDefaultHudXOffset,
+            PlaybackHudSettingKey.yOffset.rawValue: Self.playbackHudDefaultHudYOffset
         ])
     }
 }
