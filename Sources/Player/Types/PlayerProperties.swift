@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import CoreMedia
 
 /// A type describing player properties.
@@ -101,6 +102,16 @@ public extension PlayerProperties {
     /// A Boolean describing whether the player is currently muted.
     var isMuted: Bool {
         coreProperties.isMuted
+    }
+
+    /// The last event log that occurs in the player.
+    var accessLog: AVPlayerItemAccessLogEvent? {
+        coreProperties.itemProperties.accessLog
+    }
+
+    /// The last error log that occurs in the player.
+    var errorLog: AVPlayerItemErrorLogEvent? {
+        coreProperties.itemProperties.errorLog
     }
 }
 

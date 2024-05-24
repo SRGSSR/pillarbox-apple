@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-extension AVPlayerItemAccessLogEvent {
+public extension AVPlayerItemAccessLogEvent {
     // --------------> MASTER
     //                              indicatedBitrate
     //                                    |
@@ -20,6 +20,7 @@ extension AVPlayerItemAccessLogEvent {
     //          v
     // segmentsDownloadedDuration == Chunk size
 
+    /// Info.
     var info: String { // 🔴 (Unusable/Useless) 🟢 (Usable) 🔵 (Accumulate)
         """
         🔵 numberOfMediaRequests ➡️ \(numberOfMediaRequests)

@@ -6,7 +6,8 @@
 
 import AVFoundation
 
-extension AVPlayerItemErrorLogEvent {
+public extension AVPlayerItemErrorLogEvent {
+    /// Info.
     var info: String {
         """
         date ➡️ \(dateFormat(for: date))

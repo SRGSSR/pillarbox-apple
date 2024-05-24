@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import CoreMedia
 
 // MARK: Public CoreProperties shortcut
@@ -39,6 +40,16 @@ public extension Player {
     /// A Boolean describing whether the player is currently playing video in external playback mode.
     var isExternalPlaybackActive: Bool {
         properties.isExternalPlaybackActive
+    }
+
+    /// The last event log that occurs in the player.
+    var accessLog: AVPlayerItemAccessLogEvent? {
+        properties.accessLog
+    }
+
+    /// The last error log that occurs in the player.
+    var errorLog: AVPlayerItemErrorLogEvent? {
+        properties.errorLog
     }
 }
 
