@@ -216,6 +216,8 @@ struct SettingsView: View {
         } header: {
             Text("Playback HUD")
                 .headerStyle()
+        } footer: {
+            Text("Shows a video overlay displaying various information about content being played.")
         }
     }
 
@@ -273,9 +275,6 @@ struct SettingsView: View {
             Text(" in Switzerland")
         }
         .frame(maxWidth: .infinity)
-#if os(tvOS)
-        .focusable()
-#endif
     }
 
 #if os(iOS)
