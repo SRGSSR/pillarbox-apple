@@ -208,8 +208,8 @@ struct SettingsView: View {
                 }
                 .pickerStyle(.navigationLink)
 
-                numberTextField("X offset", value: $playbackHudXOffset)
-                numberTextField("Y offset", value: $playbackHudYOffset)
+                numberEditor("X offset", value: $playbackHudXOffset)
+                numberEditor("Y offset", value: $playbackHudYOffset)
 
                 Button(action: UserDefaults.resetPlaybackHudSettings) {
                     Text("Reset")
@@ -223,15 +223,29 @@ struct SettingsView: View {
     }
 
     @ViewBuilder
-    private func numberTextField(_ key: LocalizedStringKey, value: Binding<Int>) -> some View {
+    private func numberEditor(_ key: LocalizedStringKey, value: Binding<Int>) -> some View {
+#if os(iOS)
+        Stepper(value: value) {
+            HStack {
+                Text(key)
+                numberTextField(value: value)
+            }
+        }
+#else
         HStack {
             Text(key)
             Spacer()
-            TextField("Value", value: value, format: .number)
-                .multilineTextAlignment(.trailing)
-                .foregroundColor(.secondary)
-                .keyboardType(.numberPad)
+            numberTextField(value: value)
         }
+#endif
+    }
+
+    @ViewBuilder
+    private func numberTextField(value: Binding<Int>) -> some View {
+        TextField("Value", value: value, format: .number)
+            .multilineTextAlignment(.trailing)
+            .foregroundColor(.secondary)
+            .keyboardType(.numberPad)
     }
 
     @ViewBuilder
