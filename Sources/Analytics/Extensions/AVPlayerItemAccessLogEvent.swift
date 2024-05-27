@@ -20,8 +20,13 @@ public extension AVPlayerItemAccessLogEvent {
     //          v
     // segmentsDownloadedDuration == Chunk size
 
+    private var networkBandwidth: Double? {
+        guard transferDuration > 0 else { return nil }
+        return Double(numberOfBytesTransferred * 8) / transferDuration
+    }
+
     /// Info.
-    var info: String { // 🔴 (Unusable/Useless) 🟢 (Usable) 🔵 (Accumulate)
+    var info: String { // 🔴 (Unusable/Useless) 🟢 (Usable) 🔵 (Accumulate) 🟡 (Computed)
         """
         🔵 numberOfMediaRequests ➡️ \(numberOfMediaRequests)
         🔴 playbackStartDate ➡️ \(dateFormat(for: playbackStartDate))
@@ -35,6 +40,7 @@ public extension AVPlayerItemAccessLogEvent {
         🔵 numberOfStalls ➡️ \(numberOfStalls)
         🔵 numberOfBytesTransferred ➡️ \(bytesFormat(for: numberOfBytesTransferred))
         transferDuration ➡️ \(transferDuration)
+        🟡 Network bandwidth ➡️ \(bytesFormat(for: networkBandwidth))
         observedBitrate ➡️ \(bytesFormat(for: observedBitrate))
         🟢 indicatedBitrate ➡️ \(indicatedBitrate)
         indicatedAverageBitrate ➡️ \(bytesFormat(for: indicatedAverageBitrate))
