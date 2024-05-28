@@ -63,13 +63,13 @@ public struct PlayerItemLogs: Equatable {
         """
         🟢 Session ID: \(lastAccessEventLog?.playbackSessionID ?? "")
         🟢 URI: \(lastAccessEventLog?.uri ?? "")
-        🟢 Startup time: \(startupTime)
+        🟢 Startup time: \(String(format: "%.2f", startupTime))
         🟢 Playback start offset: \(timeFormat(for: lastAccessEventLog?.playbackStartOffset))
-        🔵 Duration Watched: \(durationWatched)
+        🔵 Duration Watched: \(timeFormat(for: durationWatched))
         🔵 Number of media requests: \(numberOfMediaRequests)
         🔵 Number of stalls: \(numberOfStalls)
         🔵 Number of bytes transferred: \(bytesFormat(for: numberOfBytesTransferred))
-        🔵 Transferred duration: \(transferredDuration)
+        🔵 Transferred duration: \(String(format: "%.2f", transferredDuration))
         🟡 Network bandwidth: \(bytesFormat(for: networkBytesTransferred))
         """
     }
