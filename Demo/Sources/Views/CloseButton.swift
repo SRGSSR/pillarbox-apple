@@ -16,5 +16,6 @@ struct CloseButton: View {
                 .font(.system(size: 20))
         }
         .shadow(color: .black, radius: 1)
+        .keyboardShortcut(.escape, modifiers: [])
     }
 }
