@@ -65,6 +65,7 @@ public struct PlayerItemLogs: Equatable {
         🟢 URI: \(lastAccessEventLog?.uri ?? "")
         🟢 Startup time: \(String(format: "%.2f", startupTime))
         🟢 Playback start offset: \(timeFormat(for: lastAccessEventLog?.playbackStartOffset))
+        🟢 Segments downloaded duration: \(lastAccessEventLog?.segmentsDownloadedDuration ?? 0)
         🔵 Duration Watched: \(timeFormat(for: durationWatched))
         🔵 Number of media requests: \(numberOfMediaRequests)
         🔵 Number of stalls: \(numberOfStalls)
