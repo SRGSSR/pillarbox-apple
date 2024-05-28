@@ -19,7 +19,7 @@ extension AVPlayerItem {
             timePropertiesPublisher(),
             publisher(for: \.duration),
             minimumTimeOffsetFromLivePublisher(),
-            logsPublisher()
+            periodicLogsPublisher()
         )
         .map { [weak self] status, presentationSize, mediaSelectionProperties, timeProperties, duration, minimumTimeOffsetFromLive, logs in
             let isKnown = (status != .unknown)
@@ -156,6 +156,15 @@ extension AVPlayerItem {
 }
 
 extension AVPlayerItem {
+    private func periodicLogsPublisher() -> AnyPublisher<PlayerItemLogs, Never> {
+        Publishers.CombineLatest(logsPublisher(), Timer.publish(every: 1, tolerance: 0, on: .current, in: .common, options: .none).autoconnect())
+            .weakCapture(self)
+            .map { _, item in
+                PlayerItemLogs(accessLogEvents: item.accessLog()?.events ?? [], errorLogEvents: item.errorLog()?.events ?? [])
+            }
+            .eraseToAnyPublisher()
+    }
+
     private func logsPublisher() -> AnyPublisher<PlayerItemLogs, Never> {
         Publishers.CombineLatest(accessLogEventsPublisher(), errorLogEventsPublisher())
             .map { accessLogEvents, errorLogEvents in
