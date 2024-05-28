@@ -14,5 +14,6 @@ struct PiPButton: View {
                 .tint(.white)
                 .font(.system(size: 20))
         }
+        .keyboardShortcut("p", modifiers: [])
     }
 }
