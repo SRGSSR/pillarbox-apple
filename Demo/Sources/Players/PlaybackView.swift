@@ -424,6 +424,7 @@ private struct VolumeButton: View {
                 .tint(.white)
                 .font(.system(size: 20))
         }
+        .keyboardShortcut("m", modifiers: [])
     }
 
     private var imageName: String {
