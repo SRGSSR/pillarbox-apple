@@ -17,4 +17,16 @@ public struct PlayerItemLogs: Equatable {
     public var lastErrorEventLog: AVPlayerItemErrorLogEvent? {
         errorLogEvents.last
     }
+
+    public var durationWatched: TimeInterval {
+        accessLogEvents.reduce(into: 0) { watchedTime, log in
+            watchedTime += log.durationWatched
+        }
+    }
+
+    public var prettyPrinted: String {
+        """
+        🟡 Duration Watched: \(durationWatched)
+        """
+    }
 }

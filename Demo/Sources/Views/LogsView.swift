@@ -15,13 +15,13 @@ struct LogsView: View {
     var body: some View {
         GeometryReader { geometry in
             HStack(spacing: 0) {
-                if let accessLog = logs?.lastAccessEventLog {
-                    Text(verbatim: accessLog.info)
+                if let logs {
+                    Text(verbatim: logs.prettyPrinted)
                         .textStyle(background: .yellow)
-                }
-                if let errorLog = logs?.lastErrorEventLog {
-                    Text(verbatim: errorLog.info)
-                        .textStyle(background: .red)
+                    if let errorLog = logs.lastErrorEventLog {
+                        Text(verbatim: errorLog.info)
+                            .textStyle(background: .red)
+                    }
                 }
             }
             .frame(width: geometry.size.width, height: geometry.size.height / 2)
