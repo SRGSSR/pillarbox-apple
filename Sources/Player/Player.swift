@@ -201,6 +201,7 @@ public final class Player: ObservableObject, Equatable {
         configureBlockedTimeRangesPublishers()
 
         logItemStatusStartupTime()
+        logItemIsPlaybackLikelyToKeepUpTime()
     }
 
     // Not recommended
@@ -222,6 +223,26 @@ public final class Player: ObservableObject, Equatable {
                     }
                 default:
                     break
+                }
+            }
+            .store(in: &cancellables)
+    }
+
+    // Not recommended
+    private func logItemIsPlaybackLikelyToKeepUpTime() {
+        var startDate: Date? = nil
+        queuePlayer.publisher(for: \.currentItem)
+            .compactMap { $0 }
+            .map { item in
+                item.publisher(for: \.isPlaybackLikelyToKeepUp)
+            }
+            .switchToLatest()
+            .sink { isPlaybackLikelyToKeepUp in
+                if !isPlaybackLikelyToKeepUp {
+                    startDate = Date()
+                }
+                else if let startDate {
+                    print("--> startup time (likely to keep up): \(Date().timeIntervalSince(startDate))")
                 }
             }
             .store(in: &cancellables)
