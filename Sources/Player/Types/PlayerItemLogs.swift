@@ -10,10 +10,6 @@ public struct PlayerItemLogs: Equatable {
     let accessLogEvents: [AVPlayerItemAccessLogEvent]
     let errorLogEvents: [AVPlayerItemErrorLogEvent]
 
-    public var firstAccessEventLog: AVPlayerItemAccessLogEvent? {
-        accessLogEvents.first
-    }
-
     public var lastAccessEventLog: AVPlayerItemAccessLogEvent? {
         accessLogEvents.last
     }
@@ -57,11 +53,17 @@ public struct PlayerItemLogs: Equatable {
         return Double(numberOfBytesTransferred) * 8 / transferredDuration
     }
 
+    public var startupTime: TimeInterval {
+        accessLogEvents.first { log in
+            log.startupTime != -1
+        }?.startupTime ?? 0
+    }
+
     public var prettyPrinted: String {
         """
         🟢 Session ID: \(lastAccessEventLog?.playbackSessionID ?? "")
         🟢 URI: \(lastAccessEventLog?.uri ?? "")
-        🟢 Startup time: \(firstAccessEventLog?.startupTime ?? 0)
+        🟢 Startup time: \(startupTime)
         🔵 Duration Watched: \(durationWatched)
         🔵 Number of media requests: \(numberOfMediaRequests)
         🔵 Number of stalls: \(numberOfStalls)
