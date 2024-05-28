@@ -677,7 +677,9 @@ private struct PlaybackButton: View {
                 Color.clear
             }
         }
+#if os(iOS)
         .keyboardShortcut(.space, modifiers: [])
+#endif
         .aspectRatio(contentMode: .fit)
         .frame(minWidth: 120, maxHeight: 90)
     }
