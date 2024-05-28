@@ -29,9 +29,6 @@ struct LogsView: View {
         }
         .allowsHitTesting(false)
         .onReceive(player: player, assign: \.logs, to: $logs)
-#if os(iOS)
-        .onChange(of: logs) { UIPasteboard.general.string = $0?.lastAccessEventLog?.uri }
-#endif
     }
 }
 
