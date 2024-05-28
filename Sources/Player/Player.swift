@@ -199,6 +199,32 @@ public final class Player: ObservableObject, Equatable {
         configureCurrentTrackerPublishers()
         configureMetadataPublisher()
         configureBlockedTimeRangesPublishers()
+
+        logItemStatusStartupTime()
+    }
+
+    // Not recommended
+    private func logItemStatusStartupTime() {
+        var startDate: Date? = nil
+        queuePlayer.publisher(for: \.currentItem)
+            .compactMap { $0 }
+            .map { item in
+                item.publisher(for: \.status)
+            }
+            .switchToLatest()
+            .sink { status in
+                switch status {
+                case .unknown:
+                    startDate = Date()
+                case .readyToPlay:
+                    if let startDate {
+                        print("--> startup time (item status): \(Date().timeIntervalSince(startDate))")
+                    }
+                default:
+                    break
+                }
+            }
+            .store(in: &cancellables)
     }
 
     /// Creates a player with a single item in its queue.
