@@ -6,10 +6,15 @@
 
 import AVFoundation
 import Combine
+import CoreMedia
 import DequeModule
 import MediaPlayer
 import PillarboxCore
 import TimelaneCombine
+
+extension CMTimebase {
+    static let effectiveRateChangedNotification = Notification.Name(rawValue: kCMTimebaseNotification_EffectiveRateChanged as String)
+}
 
 /// An observable audio / video player maintaining its items as a double-ended queue.
 public final class Player: ObservableObject, Equatable {
@@ -201,7 +206,8 @@ public final class Player: ObservableObject, Equatable {
         configureBlockedTimeRangesPublishers()
 
         logItemStatusStartupTime()
-        logItemIsPlaybackLikelyToKeepUpTime()
+        logItemIsPlaybackLikelyToKeepUpStartupTime()
+        logItemTimebaseEffectiveRateChangedStartupTime()
     }
 
     // Not recommended
@@ -229,7 +235,7 @@ public final class Player: ObservableObject, Equatable {
     }
 
     // Not recommended
-    private func logItemIsPlaybackLikelyToKeepUpTime() {
+    private func logItemIsPlaybackLikelyToKeepUpStartupTime() {
         var startDate: Date? = nil
         queuePlayer.publisher(for: \.currentItem)
             .compactMap { $0 }
@@ -243,6 +249,28 @@ public final class Player: ObservableObject, Equatable {
                 }
                 else if let startDate {
                     print("--> startup time (likely to keep up): \(Date().timeIntervalSince(startDate))")
+                }
+            }
+            .store(in: &cancellables)
+    }
+
+    // Recommended
+    private func logItemTimebaseEffectiveRateChangedStartupTime() {
+        var startDate: Date? = nil
+        queuePlayer.publisher(for: \.currentItem)
+            .compactMap { $0 }
+            .map { item in
+                NotificationCenter.default.publisher(for: CMTimebase.effectiveRateChangedNotification, object: item.timebase)
+                    .map { _ in true }
+                    .prepend(false)
+            }
+            .switchToLatest()
+            .sink { started in
+                if !started {
+                    startDate = Date()
+                }
+                else if let startDate {
+                    print("--> startup time (timebase): \(Date().timeIntervalSince(startDate))")
                 }
             }
             .store(in: &cancellables)
