@@ -64,6 +64,7 @@ public struct PlayerItemLogs: Equatable {
         🟢 Session ID: \(lastAccessEventLog?.playbackSessionID ?? "")
         🟢 URI: \(lastAccessEventLog?.uri ?? "")
         🟢 Startup time: \(startupTime)
+        🟢 Playback start offset: \(timeFormat(for: lastAccessEventLog?.playbackStartOffset))
         🔵 Duration Watched: \(durationWatched)
         🔵 Number of media requests: \(numberOfMediaRequests)
         🔵 Number of stalls: \(numberOfStalls)
@@ -76,8 +77,15 @@ public struct PlayerItemLogs: Equatable {
 
 private extension PlayerItemLogs {
     func bytesFormat(for property: Any?) -> String {
-         let formatter = ByteCountFormatter()
-         formatter.countStyle = .binary
-         return formatter.string(for: property) ?? "---"
-     }
+        let formatter = ByteCountFormatter()
+        formatter.countStyle = .binary
+        return formatter.string(for: property) ?? "---"
+    }
+
+    func timeFormat(for time: TimeInterval?) -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.second, .minute, .hour]
+        formatter.zeroFormattingBehavior = .pad
+        return formatter.string(from: time ?? 0) ?? "---"
+    }
 }
