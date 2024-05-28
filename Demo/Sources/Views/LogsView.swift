@@ -31,7 +31,9 @@ struct LogsView: View {
         .allowsHitTesting(false)
         .onReceive(player: player, assign: \.accessLog, to: $accessLog)
         .onReceive(player: player, assign: \.errorLog, to: $errorLog)
+#if os(iOS)
         .onChange(of: accessLog) { UIPasteboard.general.string = $0?.uri }
+#endif
     }
 }
 
