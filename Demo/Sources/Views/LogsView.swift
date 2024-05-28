@@ -10,17 +10,16 @@ import SwiftUI
 
 struct LogsView: View {
     @ObservedObject var player: Player
-    @State private var accessLog: AVPlayerItemAccessLogEvent?
-    @State private var errorLog: AVPlayerItemErrorLogEvent?
+    @State private var logs: PlayerItemLogs?
 
     var body: some View {
         GeometryReader { geometry in
             HStack(spacing: 0) {
-                if let accessLog {
+                if let accessLog = logs?.lastAccessEventLog {
                     Text(verbatim: accessLog.info)
                         .textStyle(background: .yellow)
                 }
-                if let errorLog {
+                if let errorLog = logs?.lastErrorEventLog {
                     Text(verbatim: errorLog.info)
                         .textStyle(background: .red)
                 }
@@ -29,10 +28,9 @@ struct LogsView: View {
             .offset(y: geometry.size.height / 2)
         }
         .allowsHitTesting(false)
-        .onReceive(player: player, assign: \.accessLog, to: $accessLog)
-        .onReceive(player: player, assign: \.errorLog, to: $errorLog)
+        .onReceive(player: player, assign: \.logs, to: $logs)
 #if os(iOS)
-        .onChange(of: accessLog) { UIPasteboard.general.string = $0?.uri }
+        .onChange(of: logs) { UIPasteboard.general.string = $0?.lastAccessEventLog?.uri }
 #endif
     }
 }

@@ -10,7 +10,7 @@ import MediaAccessibility
 
 extension AVPlayerItem {
     func propertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
-        Publishers.CombineLatest8(
+        Publishers.CombineLatest7(
             statusPublisher()
                 .lane("player_item_status"),
             publisher(for: \.presentationSize),
@@ -19,10 +19,9 @@ extension AVPlayerItem {
             timePropertiesPublisher(),
             publisher(for: \.duration),
             minimumTimeOffsetFromLivePublisher(),
-            accessLogPublisher(),
-            errorLogPublisher()
+            logsPublisher()
         )
-        .map { [weak self] status, presentationSize, mediaSelectionProperties, timeProperties, duration, minimumTimeOffsetFromLive, accessLog, errorLog in
+        .map { [weak self] status, presentationSize, mediaSelectionProperties, timeProperties, duration, minimumTimeOffsetFromLive, logs in
             let isKnown = (status != .unknown)
             return .init(
                 itemProperties: .init(
@@ -31,8 +30,7 @@ extension AVPlayerItem {
                     duration: isKnown ? duration : .invalid,
                     minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
                     presentationSize: isKnown ? presentationSize : nil,
-                    accessLog: accessLog,
-                    errorLog: errorLog
+                    logs: logs
                 ),
                 mediaSelectionProperties: mediaSelectionProperties,
                 timeProperties: isKnown ? timeProperties : .empty
@@ -158,17 +156,25 @@ extension AVPlayerItem {
 }
 
 extension AVPlayerItem {
-    private func accessLogPublisher() -> AnyPublisher<AVPlayerItemAccessLogEvent?, Never> {
-        NotificationCenter.default.weakPublisher(for: AVPlayerItem.newAccessLogEntryNotification, object: self)
-            .map { ($0.object as? AVPlayerItem)?.accessLog()?.events.last }
-            .prepend(nil)
+    private func logsPublisher() -> AnyPublisher<PlayerItemLogs, Never> {
+        Publishers.CombineLatest(accessLogEventsPublisher(), errorLogEventsPublisher())
+            .map { accessLogEvents, errorLogEvents in
+                PlayerItemLogs(accessLogEvents: accessLogEvents, errorLogEvents: errorLogEvents)
+            }
             .eraseToAnyPublisher()
     }
 
-    private func errorLogPublisher() -> AnyPublisher<AVPlayerItemErrorLogEvent?, Never> {
+    private func accessLogEventsPublisher() -> AnyPublisher<[AVPlayerItemAccessLogEvent], Never> {
+        NotificationCenter.default.weakPublisher(for: AVPlayerItem.newAccessLogEntryNotification, object: self)
+            .compactMap { ($0.object as? AVPlayerItem)?.accessLog()?.events }
+            .prepend([])
+            .eraseToAnyPublisher()
+    }
+
+    private func errorLogEventsPublisher() -> AnyPublisher<[AVPlayerItemErrorLogEvent], Never> {
         NotificationCenter.default.weakPublisher(for: AVPlayerItem.newErrorLogEntryNotification, object: self)
-            .map { ($0.object as? AVPlayerItem)?.errorLog()?.events.last }
-            .prepend(nil)
+            .compactMap { ($0.object as? AVPlayerItem)?.errorLog()?.events }
+            .prepend([])
             .eraseToAnyPublisher()
     }
 }

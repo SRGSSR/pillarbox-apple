@@ -104,14 +104,9 @@ public extension PlayerProperties {
         coreProperties.isMuted
     }
 
-    /// The last event log that occurs in the player.
-    var accessLog: AVPlayerItemAccessLogEvent? {
-        coreProperties.itemProperties.accessLog
-    }
-
-    /// The last error log that occurs in the player.
-    var errorLog: AVPlayerItemErrorLogEvent? {
-        coreProperties.itemProperties.errorLog
+    /// Represent the chronological sequence of events contained in the item log.
+    var logs: PlayerItemLogs? {
+        coreProperties.itemProperties.logs
     }
 }
 

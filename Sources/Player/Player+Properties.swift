@@ -42,14 +42,9 @@ public extension Player {
         properties.isExternalPlaybackActive
     }
 
-    /// The last event log that occurs in the player.
-    var accessLog: AVPlayerItemAccessLogEvent? {
-        properties.accessLog
-    }
-
-    /// The last error log that occurs in the player.
-    var errorLog: AVPlayerItemErrorLogEvent? {
-        properties.errorLog
+    /// Represent the chronological sequence of events contained in the item log.
+    var logs: PlayerItemLogs? {
+        properties.logs
     }
 }
 

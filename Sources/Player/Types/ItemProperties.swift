@@ -14,8 +14,7 @@ struct ItemProperties: Equatable {
         duration: .invalid,
         minimumTimeOffsetFromLive: .invalid,
         presentationSize: nil,
-        accessLog: nil,
-        errorLog: nil
+        logs: nil
     )
 
     let item: AVPlayerItem?
@@ -26,6 +25,5 @@ struct ItemProperties: Equatable {
 
     let presentationSize: CGSize?
 
-    let accessLog: AVPlayerItemAccessLogEvent?
-    let errorLog: AVPlayerItemErrorLogEvent?
+    let logs: PlayerItemLogs?
 }
