@@ -387,6 +387,7 @@ private struct FullScreenButton: View {
                     .tint(.white)
                     .font(.system(size: 20))
             }
+            .keyboardShortcut("f", modifiers: [])
         }
     }
 
