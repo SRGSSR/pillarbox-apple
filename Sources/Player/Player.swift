@@ -208,6 +208,10 @@ public final class Player: ObservableObject, Equatable {
         logItemStatusStartupTime()
         logItemIsPlaybackLikelyToKeepUpStartupTime()
         logItemTimebaseEffectiveRateChangedStartupTime()
+
+        logItemStatusStartupEvent()
+        logItemIsPlaybackLikelyToKeepUpStartupEvent()
+        logItemTimebaseEffectiveRateChangedStartupEvent()
     }
 
     // Not recommended
@@ -272,6 +276,47 @@ public final class Player: ObservableObject, Equatable {
                 else if let startDate {
                     print("--> startup time (timebase): \(Date().timeIntervalSince(startDate))")
                 }
+            }
+            .store(in: &cancellables)
+    }
+
+    private func logItemStatusStartupEvent() {
+        queuePlayer.publisher(for: \.currentItem)
+            .compactMap { $0 }
+            .map { item in
+                item.publisher(for: \.status)
+            }
+            .switchToLatest()
+            .sink { status in
+                print("--> [notif] ready to play at \(Date().timeIntervalSinceReferenceDate)")
+            }
+            .store(in: &cancellables)
+    }
+
+    private func logItemIsPlaybackLikelyToKeepUpStartupEvent() {
+        queuePlayer.publisher(for: \.currentItem)
+            .compactMap { $0 }
+            .map { item in
+                item.publisher(for: \.isPlaybackLikelyToKeepUp)
+            }
+            .switchToLatest()
+            .sink { isPlaybackLikelyToKeepUp in
+                if isPlaybackLikelyToKeepUp {
+                    print("--> [notif] isLikelyToKeepUp: \(Date().timeIntervalSinceReferenceDate)")
+                }
+            }
+            .store(in: &cancellables)
+    }
+
+    private func logItemTimebaseEffectiveRateChangedStartupEvent() {
+        queuePlayer.publisher(for: \.currentItem)
+            .compactMap { $0 }
+            .map { item in
+                NotificationCenter.default.publisher(for: CMTimebase.effectiveRateChangedNotification, object: item.timebase)
+            }
+            .switchToLatest()
+            .sink { _ in
+                print("--> [notif] timebase rate did change: \(Date().timeIntervalSinceReferenceDate)")
             }
             .store(in: &cancellables)
     }
