@@ -13,7 +13,7 @@ public extension Player {
     ///
     /// - Returns: `true` if possible.
     ///
-    /// Performs smart navigation if enabled in the ``PlayerConfiguration``. Smart navigation takes into account the
+    /// Performs smart navigation if enabled in the ``Player/configuration``. Smart navigation takes into account the
     /// current position in an item. If close enough to the item start position then navigation will be moved to the
     /// previous item, otherwise playback will be returned to the item start position. This behavior is only applied
     /// for on-demand streams.
@@ -23,7 +23,7 @@ public extension Player {
 
     /// Returns to the previous content.
     ///
-    /// Performs smart navigation if enabled in the ``PlayerConfiguration``. Smart navigation takes into account the
+    /// Performs smart navigation if enabled in the ``Player/configuration``. Smart navigation takes into account the
     /// current position in an item. If close enough to the item start position then navigation will be moved to the
     /// previous item, otherwise playback will be returned to the item start position. This behavior is only applied
     /// for on-demand streams.
@@ -65,7 +65,7 @@ extension Player {
 }
 
 private extension Player {
-    func isAwayFromStartTime(interval: TimeInterval) -> Bool {
+    func isAwayFromStartTime(withInterval interval: TimeInterval) -> Bool {
         time.isValid && seekableTimeRange.isValid && (time - seekableTimeRange.start).seconds >= interval
     }
 
@@ -74,7 +74,7 @@ private extension Player {
         case .immediate:
             return false
         case let .smart(interval: interval):
-            return (streamType == .onDemand && isAwayFromStartTime(interval: interval)) || !canReturnToPreviousItem()
+            return (streamType == .onDemand && isAwayFromStartTime(withInterval: interval)) || !canReturnToPreviousItem()
         }
     }
 }
