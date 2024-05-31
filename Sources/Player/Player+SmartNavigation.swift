@@ -13,18 +13,20 @@ public extension Player {
     ///
     /// - Returns: `true` if possible.
     ///
-    /// Smart navigation takes into account the current position in an item. If close enough to the item start position
-    /// then navigation will be moved to the previous item, otherwise playback will be returned to the item start
-    /// position. This behavior is only applied for on-demand streams.
+    /// Performs smart navigation if enabled in the ``PlayerConfiguration``. Smart navigation takes into account the
+    /// current position in an item. If close enough to the item start position then navigation will be moved to the
+    /// previous item, otherwise playback will be returned to the item start position. This behavior is only applied
+    /// for on-demand streams.
     func canReturnToPrevious() -> Bool {
         canReturn(before: currentIndex, in: storedItems, streamType: streamType)
     }
 
     /// Returns to the previous content.
     ///
-    /// Smart navigation takes into account the current position in an item. If close enough to the item start position
-    /// then navigation will be moved to the previous item, otherwise playback will be returned to the item start
-    /// position. This behavior is only applied for on-demand streams.
+    /// Performs smart navigation if enabled in the ``PlayerConfiguration``. Smart navigation takes into account the
+    /// current position in an item. If close enough to the item start position then navigation will be moved to the
+    /// previous item, otherwise playback will be returned to the item start position. This behavior is only applied
+    /// for on-demand streams.
     func returnToPrevious() {
         if shouldSeekToStartTime() {
             seek(near(.zero))
