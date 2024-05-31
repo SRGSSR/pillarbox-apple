@@ -12,7 +12,7 @@ extension PlayerConfiguration {
         let userDefaults = UserDefaults.standard
         return .init(
             usesExternalPlaybackWhileMirroring: !userDefaults.presenterModeEnabled,
-            smartNavigationEnabled: userDefaults.smartNavigationEnabled
+            navigationMode: userDefaults.smartNavigationEnabled ? .smart(interval: 3) : .immediate
         )
     }
 
@@ -20,7 +20,7 @@ extension PlayerConfiguration {
         let userDefaults = UserDefaults.standard
         return .init(
             allowsExternalPlayback: false,
-            smartNavigationEnabled: userDefaults.smartNavigationEnabled
+            navigationMode: userDefaults.smartNavigationEnabled ? .smart(interval: 3) : .immediate
         )
     }
 }

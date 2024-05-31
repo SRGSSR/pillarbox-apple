@@ -22,10 +22,8 @@ public struct PlayerConfiguration {
     /// A Boolean indicating whether video playback prevents display and device sleep.
     public let preventsDisplaySleepDuringVideoPlayback: Bool
 
-    /// A Boolean controlling whether smart playlist navigation is enabled.
-    ///
-    /// See `returnToPrevious()` for more information.
-    public let isSmartNavigationEnabled: Bool
+    /// The navigation mode.
+    public let navigationMode: NavigationMode
 
     /// The forward skip interval in seconds.
     public let forwardSkipInterval: TimeInterval
@@ -41,7 +39,7 @@ public struct PlayerConfiguration {
         allowsExternalPlayback: Bool = true,
         usesExternalPlaybackWhileMirroring: Bool = false,
         preventsDisplaySleepDuringVideoPlayback: Bool = true,
-        smartNavigationEnabled: Bool = true,
+        navigationMode: NavigationMode = .smart(interval: 3),
         backwardSkipInterval: TimeInterval = 10,
         forwardSkipInterval: TimeInterval = 10
     ) {
@@ -50,7 +48,7 @@ public struct PlayerConfiguration {
         self.allowsExternalPlayback = allowsExternalPlayback
         self.usesExternalPlaybackWhileMirroring = usesExternalPlaybackWhileMirroring
         self.preventsDisplaySleepDuringVideoPlayback = preventsDisplaySleepDuringVideoPlayback
-        self.isSmartNavigationEnabled = smartNavigationEnabled
+        self.navigationMode = navigationMode
         self.backwardSkipInterval = backwardSkipInterval
         self.forwardSkipInterval = forwardSkipInterval
     }
