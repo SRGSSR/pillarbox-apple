@@ -52,7 +52,7 @@ public extension Player {
 extension Player {
     func canReturn(before index: Int?, in items: Deque<PlayerItem>, streamType: StreamType) -> Bool {
         switch configuration.navigationMode {
-        case let .smart(interval) where streamType == .onDemand:
+        case .smart where streamType == .onDemand:
             return true
         default:
             return canReturnToItem(before: index, in: items)
