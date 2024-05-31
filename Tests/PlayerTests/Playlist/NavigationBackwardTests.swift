@@ -12,7 +12,7 @@ import PillarboxStreams
 
 final class NavigationBackwardTests: TestCase {
     private static func configuration() -> PlayerConfiguration {
-        .init(smartNavigationEnabled: false)
+        .init(navigationMode: .immediate)
     }
 
     func testReturnForOnDemandAtBeginningWithoutPreviousItem() {

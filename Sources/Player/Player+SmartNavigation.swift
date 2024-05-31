@@ -51,10 +51,10 @@ public extension Player {
 
 extension Player {
     func canReturn(before index: Int?, in items: Deque<PlayerItem>, streamType: StreamType) -> Bool {
-        if configuration.isSmartNavigationEnabled && streamType == .onDemand {
+        switch configuration.navigationMode {
+        case let .smart(interval) where streamType == .onDemand:
             return true
-        }
-        else {
+        default:
             return canReturnToItem(before: index, in: items)
         }
     }
@@ -65,14 +65,16 @@ extension Player {
 }
 
 private extension Player {
-    static let startTimeThreshold: TimeInterval = 3
-
-    func isFarFromStartTime() -> Bool {
-        time.isValid && seekableTimeRange.isValid && (time - seekableTimeRange.start).seconds >= Self.startTimeThreshold
+    func isAwayFromStartTime(interval: TimeInterval) -> Bool {
+        time.isValid && seekableTimeRange.isValid && (time - seekableTimeRange.start).seconds >= interval
     }
 
     func shouldSeekToStartTime() -> Bool {
-        guard configuration.isSmartNavigationEnabled else { return false }
-        return (streamType == .onDemand && isFarFromStartTime()) || !canReturnToPreviousItem()
+        switch configuration.navigationMode {
+        case .immediate:
+            return false
+        case let .smart(interval: interval):
+            return (streamType == .onDemand && isAwayFromStartTime(interval: interval)) || !canReturnToPreviousItem()
+        }
     }
 }

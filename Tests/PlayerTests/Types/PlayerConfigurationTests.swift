@@ -15,7 +15,7 @@ final class PlayerConfigurationTests: TestCase {
         expect(player.configuration.allowsExternalPlayback).to(beTrue())
         expect(player.configuration.usesExternalPlaybackWhileMirroring).to(beFalse())
         expect(player.configuration.preventsDisplaySleepDuringVideoPlayback).to(beTrue())
-        expect(player.configuration.isSmartNavigationEnabled).to(beTrue())
+        expect(player.configuration.navigationMode).to(equal(.smart(interval: 3)))
         expect(player.configuration.backwardSkipInterval).to(equal(10))
         expect(player.configuration.forwardSkipInterval).to(equal(10))
         expect(player.configuration.preloadedItems).to(equal(2))
@@ -26,7 +26,7 @@ final class PlayerConfigurationTests: TestCase {
             allowsExternalPlayback: false,
             usesExternalPlaybackWhileMirroring: true,
             preventsDisplaySleepDuringVideoPlayback: false,
-            smartNavigationEnabled: false,
+            navigationMode: .immediate,
             backwardSkipInterval: 42,
             forwardSkipInterval: 47
         )
@@ -34,7 +34,7 @@ final class PlayerConfigurationTests: TestCase {
         expect(player.configuration.allowsExternalPlayback).to(beFalse())
         expect(player.configuration.usesExternalPlaybackWhileMirroring).to(beTrue())
         expect(player.configuration.preventsDisplaySleepDuringVideoPlayback).to(beFalse())
-        expect(player.configuration.isSmartNavigationEnabled).to(beFalse())
+        expect(player.configuration.navigationMode).to(equal(.immediate))
         expect(player.configuration.backwardSkipInterval).to(equal(42))
         expect(player.configuration.forwardSkipInterval).to(equal(47))
     }
