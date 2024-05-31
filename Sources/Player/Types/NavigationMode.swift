@@ -8,21 +8,19 @@ import Foundation
 
 /// A navigation mode.
 ///
-/// Controls the way items in a queue are navigated when the smart navigation APIs are used. These include:
+/// Controls the way items in a playback queue are navigated when the following navigation APIs are used:
 ///
-///   - ``Player/canReturnToPrevious()``
 ///   - ``Player/returnToPrevious()``
-///   - ``Player/canAdvanceToNext()``
 ///   - ``Player/advanceToNext()``
 public enum NavigationMode: Equatable {
-    /// Standard navigation.
-    ///
-    /// Navigation between items is immediate.
+    /// Immediate navigation.
     case immediate
 
     /// Smart navigation.
     ///
-    /// Navigating back to a previous immediate is only immediate within the first seconds of playback, controlled
-    /// by the specified interval.
+    /// Makes ``Player/returnToPrevious()`` jump to the start position of the current item when within the first
+    /// seconds of playback (as defined by the associated interval), otherwise returns to the previous item.
+    ///
+    /// > Note: This behavior is only meaningful for on-demand streams.
     case smart(interval: TimeInterval)
 }
