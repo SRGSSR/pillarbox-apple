@@ -345,7 +345,7 @@ private struct SkipBackwardButton: View {
         .frame(height: 45)
         .opacity(player.canSkipBackward() ? 1 : 0)
         .animation(.defaultLinear, value: player.canSkipBackward())
-        .keyboardShortcut(.leftArrow, modifiers: [])
+        .keyboardShortcut("s", modifiers: [])
     }
 
     private func skipBackward() {
@@ -368,7 +368,7 @@ private struct SkipForwardButton: View {
         .frame(height: 45)
         .opacity(player.canSkipForward() ? 1 : 0)
         .animation(.defaultLinear, value: player.canSkipForward())
-        .keyboardShortcut(.rightArrow, modifiers: [])
+        .keyboardShortcut("d", modifiers: [])
     }
 
     private func skipForward() {
