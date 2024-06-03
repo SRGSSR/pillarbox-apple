@@ -16,5 +16,8 @@ struct CloseButton: View {
                 .font(.system(size: 20))
         }
         .shadow(color: .black, radius: 1)
+#if os(iOS)
+        .keyboardShortcut(.escape, modifiers: [])
+#endif
     }
 }

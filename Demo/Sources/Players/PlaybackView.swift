@@ -345,6 +345,7 @@ private struct SkipBackwardButton: View {
         .frame(height: 45)
         .opacity(player.canSkipBackward() ? 1 : 0)
         .animation(.defaultLinear, value: player.canSkipBackward())
+        .keyboardShortcut("s", modifiers: [])
     }
 
     private func skipBackward() {
@@ -367,6 +368,7 @@ private struct SkipForwardButton: View {
         .frame(height: 45)
         .opacity(player.canSkipForward() ? 1 : 0)
         .animation(.defaultLinear, value: player.canSkipForward())
+        .keyboardShortcut("d", modifiers: [])
     }
 
     private func skipForward() {
@@ -385,6 +387,7 @@ private struct FullScreenButton: View {
                     .tint(.white)
                     .font(.system(size: 20))
             }
+            .keyboardShortcut("f", modifiers: [])
         }
     }
 
@@ -421,6 +424,7 @@ private struct VolumeButton: View {
                 .tint(.white)
                 .font(.system(size: 20))
         }
+        .keyboardShortcut("m", modifiers: [])
     }
 
     private var imageName: String {
@@ -673,6 +677,9 @@ private struct PlaybackButton: View {
                 Color.clear
             }
         }
+#if os(iOS)
+        .keyboardShortcut(.space, modifiers: [])
+#endif
         .aspectRatio(contentMode: .fit)
         .frame(minWidth: 120, maxHeight: 90)
     }

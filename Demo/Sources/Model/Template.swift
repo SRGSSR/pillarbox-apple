@@ -143,7 +143,7 @@ enum URLTemplate {
         title: "Brain Farm Skate Phantom Flex",
         subtitle: "4K video",
         imageUrl: "https://i.ytimg.com/vi/d4_96ZWu3Vk/maxresdefault.jpg",
-        type: .url("http://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8")
+        type: .url("https://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8")
     )
     static let onDemandVideoLocalHLS = Template(
         title: "Test video pattern",
