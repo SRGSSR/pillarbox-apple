@@ -26,21 +26,13 @@ public extension PlayerItem {
         trackerAdapters: [TrackerAdapter<MediaMetadata>] = [],
         configuration: PlayerItemConfiguration = .default
     ) -> Self {
-        let dataProvider = DataProvider(server: server)
-        let publisher = dataProvider.playableMediaCompositionPublisher(forUrn: urn)
-            .tryMap { mediaComposition in
-                let mainChapter = mediaComposition.mainChapter
-                guard let resource = mainChapter.recommendedResource else {
-                    throw DataError.noResourceAvailable
-                }
-                let metadata = MediaMetadata(mediaComposition: mediaComposition, resource: resource, dataProvider: dataProvider)
-                return Self.asset(for: metadata, configuration: configuration)
-            }
-            .eraseToAnyPublisher()
-        return .init(publisher: publisher, trackerAdapters: [
-            ComScoreTracker.adapter { $0.analyticsData },
-            CommandersActTracker.adapter { $0.analyticsMetadata }
-        ] + trackerAdapters)
+        .init(
+            publisher: publisher(for: urn, server: server, configuration: configuration),
+            trackerAdapters: [
+                ComScoreTracker.adapter { $0.analyticsData },
+                CommandersActTracker.adapter { $0.analyticsMetadata }
+            ] + trackerAdapters
+        )
     }
 
     /// Creates a player item from a URL, loaded with standard SRG SSR token protection.
@@ -91,6 +83,20 @@ public extension PlayerItem {
 }
 
 private extension PlayerItem {
+    static func publisher(for urn: String, server: Server, configuration: PlayerItemConfiguration) -> AnyPublisher<Asset<MediaMetadata>, Error> {
+        let dataProvider = DataProvider(server: server)
+        return dataProvider.playableMediaCompositionPublisher(forUrn: urn)
+            .tryMap { mediaComposition in
+                let mainChapter = mediaComposition.mainChapter
+                guard let resource = mainChapter.recommendedResource else {
+                    throw DataError.noResourceAvailable
+                }
+                let metadata = MediaMetadata(mediaComposition: mediaComposition, resource: resource, dataProvider: dataProvider)
+                return Self.asset(for: metadata, configuration: configuration)
+            }
+            .eraseToAnyPublisher()
+    }
+
     static func asset(for metadata: MediaMetadata, configuration: PlayerItemConfiguration) -> Asset<MediaMetadata> {
         let resource = metadata.resource
         let configuration = assetConfiguration(for: resource, configuration: configuration)
