@@ -18,8 +18,8 @@ public extension PlayerItem {
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: The configuration to apply to the player item.
     ///
-    /// Metadata is automatically associated with the item. Tracking is performed according to SRG SSR analytics
-    /// standards.
+    /// Metadata is automatically associated with the item. In addition to trackers you provide, tracking is performed
+    /// according to SRG SSR analytics standards.
     static func urn(
         _ urn: String,
         server: Server = .production,
@@ -97,7 +97,7 @@ private extension PlayerItem {
             .eraseToAnyPublisher()
     }
 
-    static func asset(for metadata: MediaMetadata, configuration: PlayerItemConfiguration) -> Asset<MediaMetadata> {
+    private static func asset(for metadata: MediaMetadata, configuration: PlayerItemConfiguration) -> Asset<MediaMetadata> {
         let resource = metadata.resource
         let configuration = assetConfiguration(for: resource, configuration: configuration)
 
@@ -114,7 +114,7 @@ private extension PlayerItem {
         }
     }
 
-    static func assetConfiguration(
+    private static func assetConfiguration(
         for resource: MediaComposition.Resource,
         configuration: PlayerItemConfiguration
     ) -> PlayerItemConfiguration {

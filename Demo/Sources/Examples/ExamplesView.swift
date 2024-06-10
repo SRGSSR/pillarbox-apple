@@ -46,7 +46,7 @@ private struct TextFieldView: View {
 }
 
 private struct MediaEntryView: View {
-    enum Kind {
+    private enum Kind {
         case url
         case urn
         case tokenProtected
@@ -65,7 +65,7 @@ private struct MediaEntryView: View {
             return .init(title: "URL", type: .url(url))
         case .tokenProtected:
             guard let url else { return .init(from: URLTemplate.unknown) }
-            return .init(title: "Token protected", type: .tokenProtectedUrl(url))
+            return .init(title: "Token-protected", type: .tokenProtectedUrl(url))
         case .encrypted:
             guard let url, let certificateUrl else { return .init(from: URLTemplate.unknown) }
             return .init(title: "Encrypted", type: .encryptedUrl(url, certificateUrl: certificateUrl))
