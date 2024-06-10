@@ -151,10 +151,9 @@ struct ExamplesView: View {
     var body: some View {
         CustomList {
             content()
-                .scrollDismissesKeyboard(.immediately)
-                .animation(.defaultLinear, value: model.protectedMedias)
         }
         .scrollDismissesKeyboard(.immediately)
+        .animation(.defaultLinear, value: model.protectedMedias)
         .tracked(name: "examples")
 #if os(iOS)
         .navigationTitle("Examples")
