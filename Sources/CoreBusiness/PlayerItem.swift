@@ -18,7 +18,8 @@ public extension PlayerItem {
     ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
     ///   - configuration: The configuration to apply to the player item.
     ///
-    /// In addition the item is automatically tracked according to SRG SSR analytics standards.
+    /// Metadata is automatically associated with the item. Tracking is performed according to SRG SSR analytics
+    /// standards.
     static func urn(
         _ urn: String,
         server: Server = .production,
@@ -42,35 +43,72 @@ public extension PlayerItem {
         ] + trackerAdapters)
     }
 
-    private static func asset(for metadata: MediaMetadata, configuration: PlayerItemConfiguration) -> Asset<MediaMetadata> {
+    /// Creates a player item from a URL, loaded with standard SRG SSR token protection.
+    ///
+    /// - Parameters:
+    ///   - url: The URL to play.
+    ///   - metadata: The metadata associated with the item.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - configuration: The configuration to apply to the player item.
+    ///
+    /// No SRG SSR standard tracking is made. Use `ComScoreTracker` and `CommandersActTracker` to implement standard
+    /// tracking.
+    static func tokenProtected<M>(
+        url: URL,
+        metadata: M,
+        trackerAdapters: [TrackerAdapter<M>] = [],
+        configuration: PlayerItemConfiguration = .default
+    ) -> Self where M: AssetMetadata {
+        .init(
+            asset: .tokenProtected(url: url, metadata: metadata, configuration: configuration),
+            trackerAdapters: trackerAdapters
+        )
+    }
+
+    /// Creates a player item from a URL, loaded with standard SRG SSR DRM protection.
+    ///
+    /// - Parameters:
+    ///   - url: The URL to play.
+    ///   - certificateUrl: The URL of the certificate to use.
+    ///   - metadata: The metadata associated with the item.
+    ///   - trackerAdapters: An array of `TrackerAdapter` instances to use for tracking playback events.
+    ///   - configuration: The configuration to apply to the player item.
+    ///
+    /// No SRG SSR standard tracking is made. Use `ComScoreTracker` and `CommandersActTracker` to implement standard
+    /// tracking.
+    static func encrypted<M>(
+        url: URL,
+        certificateUrl: URL,
+        metadata: M,
+        trackerAdapters: [TrackerAdapter<M>] = [],
+        configuration: PlayerItemConfiguration = .default
+    ) -> Self where M: AssetMetadata {
+        .init(
+            asset: .encrypted(url: url, certificateUrl: certificateUrl, metadata: metadata, configuration: configuration),
+            trackerAdapters: trackerAdapters
+        )
+    }
+}
+
+private extension PlayerItem {
+    static func asset(for metadata: MediaMetadata, configuration: PlayerItemConfiguration) -> Asset<MediaMetadata> {
         let resource = metadata.resource
         let configuration = assetConfiguration(for: resource, configuration: configuration)
 
         if let certificateUrl = resource.drms.first(where: { $0.type == .fairPlay })?.certificateUrl {
-            return .encrypted(
-                url: resource.url,
-                delegate: ContentKeySessionDelegate(certificateUrl: certificateUrl),
-                metadata: metadata,
-                configuration: configuration
-            )
+            return .encrypted(url: resource.url, certificateUrl: certificateUrl, metadata: metadata, configuration: configuration)
         }
         else {
             switch resource.tokenType {
             case .akamai:
-                let id = UUID()
-                return .custom(
-                    url: AkamaiURLCoding.encodeUrl(resource.url, id: id),
-                    delegate: AkamaiResourceLoaderDelegate(id: id),
-                    metadata: metadata,
-                    configuration: configuration
-                )
+                return .tokenProtected(url: resource.url, metadata: metadata, configuration: configuration)
             default:
                 return .simple(url: resource.url, metadata: metadata, configuration: configuration)
             }
         }
     }
 
-    private static func assetConfiguration(
+    static func assetConfiguration(
         for resource: MediaComposition.Resource,
         configuration: PlayerItemConfiguration
     ) -> PlayerItemConfiguration {
