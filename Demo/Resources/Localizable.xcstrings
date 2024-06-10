@@ -109,9 +109,6 @@
     "Enabled" : {
 
     },
-    "Enter URL or URN" : {
-
-    },
     "Examples" : {
 
     },
@@ -128,6 +125,9 @@
 
     },
     "Improves playlist navigation so that it feels more natural." : {
+
+    },
+    "Kind" : {
 
     },
     "Layouts" : {
@@ -217,6 +217,12 @@
     "Source code" : {
 
     },
+    "SRG SSR DRM encryption" : {
+
+    },
+    "SRG SSR token protection" : {
+
+    },
     "Stop" : {
 
     },
@@ -236,6 +242,12 @@
 
     },
     "Tracking" : {
+
+    },
+    "URL" : {
+
+    },
+    "URN" : {
 
     },
     "Use a proxy tool to observe events." : {

@@ -8,15 +8,15 @@ import SwiftUI
 
 // Behavior: h-exp, v-hug
 private struct TextFieldView: View {
-    @Binding var text: String
+    private let placeholder: String
+    @Binding private var text: String
 
     var body: some View {
         HStack {
-            TextField("Enter URL or URN", text: $text)
+            TextField(placeholder, text: $text)
                 .keyboardType(.URL)
                 .autocapitalization(.none)
                 .autocorrectionDisabled()
-
 #if os(iOS)
             HStack(spacing: 0) {
                 Button(action: clear) {
@@ -35,40 +35,107 @@ private struct TextFieldView: View {
         }
     }
 
+    init(_ placeholder: String, text: Binding<String>) {
+        self.placeholder = placeholder
+        self._text = text
+    }
+
     private func clear() {
         text = ""
     }
 }
 
 private struct MediaEntryView: View {
+    enum Kind {
+        case url
+        case urn
+        case tokenProtected
+        case encrypted
+    }
+
+    @State private var kind: Kind = .url
     @State private var text = ""
+    @State private var certificateUrlString = ""
     @EnvironmentObject private var router: Router
 
     private var media: Media {
-        let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        if trimmedText.hasPrefix("urn") {
-            return .init(title: "URN", type: .urn(trimmedText))
-        }
-        else if let url = URL(string: trimmedText) {
+        switch kind {
+        case .url:
+            guard let url else { return .init(from: URLTemplate.unknown) }
             return .init(title: "URL", type: .url(url))
+        case .tokenProtected:
+            guard let url else { return .init(from: URLTemplate.unknown) }
+            return .init(title: "Token protected", type: .tokenProtectedUrl(url))
+        case .encrypted:
+            guard let url, let certificateUrl else { return .init(from: URLTemplate.unknown) }
+            return .init(title: "Encrypted", type: .encryptedUrl(url, certificateUrl: certificateUrl))
+        case .urn:
+            return .init(title: trimmedText, type: .urn(trimmedText))
         }
-        else {
-            return .init(from: URLTemplate.unknown)
+    }
+
+    private var trimmedText: String {
+        text.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private var url: URL? {
+        URL(string: trimmedText)
+    }
+
+    private var certificateUrl: URL? {
+        URL(string: certificateUrlString.trimmingCharacters(in: .whitespacesAndNewlines))
+    }
+
+    private var textPlaceholder: String {
+        switch kind {
+        case .urn:
+            return "URN"
+        default:
+            return "URL"
+        }
+    }
+
+    private var isValid: Bool {
+        switch kind {
+        case .urn:
+            return !text.isEmpty
+        case .encrypted:
+            return url != nil && certificateUrl != nil
+        default:
+            return url != nil
         }
     }
 
     var body: some View {
         VStack {
-            TextFieldView(text: $text)
-            if !text.isEmpty {
+            kindPicker()
+            TextFieldView(textPlaceholder, text: $text)
+            if kind == .encrypted {
+                TextFieldView("Certificate URL", text: $certificateUrlString)
+            }
+            if isValid {
                 Button(action: play) {
                     Text("Play")
                 }
                 .foregroundColor(Color.accentColor)
             }
         }
+        .transaction { $0.animation = nil }
         .buttonStyle(.plain)
         .padding(constant(iOS: 0, tvOS: 30))
+    }
+
+    @ViewBuilder
+    private func kindPicker() -> some View {
+        Picker("Kind", selection: $kind) {
+            Text("URL").tag(Kind.url)
+            Text("URN").tag(Kind.urn)
+            Text("SRG SSR token protection").tag(Kind.tokenProtected)
+            Text("SRG SSR DRM encryption").tag(Kind.encrypted)
+        }
+#if os(tvOS)
+        .pickerStyle(.navigationLink)
+#endif
     }
 
     private func play() {

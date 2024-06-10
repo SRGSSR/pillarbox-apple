@@ -15,6 +15,8 @@ import UIKit
 struct Media: Hashable {
     enum `Type`: Hashable {
         case url(URL)
+        case tokenProtectedUrl(URL)
+        case encryptedUrl(URL, certificateUrl: URL)
         case unbufferedUrl(URL)
         case urn(String, serverSetting: ServerSetting)
 
@@ -67,14 +69,18 @@ struct Media: Hashable {
     func playerItem() -> PlayerItem {
         switch type {
         case let .url(url):
-            return playerItem(for: url, configuration: .init(position: at(startTime)))
+            return simplePlayerItem(for: url, configuration: .init(position: at(startTime)))
+        case let .tokenProtectedUrl(url):
+            return tokenProtectedPlayerItem(for: url, configuration: .init(position: at(startTime)))
+        case let .encryptedUrl(url, certificateUrl: certificateUrl):
+            return encryptedPlayerItem(for: url, certificateUrl: certificateUrl, configuration: .init(position: at(startTime)))
         case let .unbufferedUrl(url):
             let configuration = PlayerItemConfiguration(
                 position: at(startTime),
                 automaticallyPreservesTimeOffsetFromLive: true,
                 preferredForwardBufferDuration: 1
             )
-            return playerItem(for: url, configuration: configuration)
+            return simplePlayerItem(for: url, configuration: configuration)
         case let .urn(urn, serverSetting: serverSetting):
             return .urn(
                 urn,
@@ -91,7 +97,7 @@ struct Media: Hashable {
 }
 
 extension Media {
-    private func playerItem(for url: URL, configuration: PlayerItemConfiguration) -> PlayerItem {
+    private func simplePlayerItem(for url: URL, configuration: PlayerItemConfiguration) -> PlayerItem {
         .init(
             publisher: imagePublisher()
                 .map { image in
@@ -106,6 +112,23 @@ extension Media {
                     DemoTracker.Metadata(title: metadata.title)
                 }
             ]
+        )
+    }
+
+    private func tokenProtectedPlayerItem(for url: URL, configuration: PlayerItemConfiguration) -> PlayerItem {
+        .tokenProtected(
+            url: url,
+            metadata: Media(title: title, subtitle: subtitle, image: image, type: type, timeRanges: timeRanges),
+            configuration: configuration
+        )
+    }
+
+    private func encryptedPlayerItem(for url: URL, certificateUrl: URL, configuration: PlayerItemConfiguration) -> PlayerItem {
+        .encrypted(
+            url: url,
+            certificateUrl: certificateUrl,
+            metadata: Media(title: title, subtitle: subtitle, image: image, type: type, timeRanges: timeRanges),
+            configuration: configuration
         )
     }
 
