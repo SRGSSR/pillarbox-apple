@@ -38,8 +38,8 @@ struct AccessLogEvent {
     let downloadOverdue: Int
     let switchBitrate: Double
 
-    init(
-        playbackStartDate: Date,
+    init?(
+        playbackStartDate: Date?,
         uri: String?,
         serverAddress: String?,
         playbackSessionId: String?,
@@ -64,6 +64,7 @@ struct AccessLogEvent {
         downloadOverdue: Int,
         switchBitrate: Double
     ) {
+        guard let playbackStartDate else { return nil }
         self.playbackStartDate = playbackStartDate
 
         self.uri = uri
@@ -96,7 +97,7 @@ struct AccessLogEvent {
 extension AccessLogEvent {
     init?(_ event: AVPlayerItemAccessLogEvent) {
         self.init(
-            playbackStartDate: event.playbackStartDate ?? Date(),
+            playbackStartDate: event.playbackStartDate,
             uri: event.uri,
             serverAddress: event.serverAddress,
             playbackSessionId: event.playbackSessionID,
