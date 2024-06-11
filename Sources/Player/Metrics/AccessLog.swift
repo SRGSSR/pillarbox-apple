@@ -10,17 +10,25 @@ struct AccessLog {
     let previousEvents: [AccessLogEvent]
     let currentEvent: AccessLogEvent?
 
-    init(events: [AccessLogEvent?]) {
-        previousEvents = Array(events.prefix(max(events.count - 1, 0))).compactMap { $0 }
+    init(events: [AccessLogEvent?], after date: Date?) {
+        let eventCount = max(events.count - 1, 0)
+        previousEvents = Array(events.prefix(eventCount)).compactMap { event in
+            Self.event(event, date: date)
+        }
         if let lastEvent = events.last {
-            currentEvent = lastEvent
+            currentEvent = Self.event(lastEvent, date: date)
         }
         else {
             currentEvent = nil
         }
     }
 
-    init(_ log: AVPlayerItemAccessLog) {
-        self.init(events: log.events.map { .init($0) })
+    init(_ log: AVPlayerItemAccessLog, after date: Date?) {
+        self.init(events: log.events.map { .init($0) }, after: date)
+    }
+
+    static func event(_ event: AccessLogEvent?, date: Date?) -> AccessLogEvent? {
+        guard let date, let event else { return event }
+        return event.playbackStartDate > date ? event : nil
     }
 }

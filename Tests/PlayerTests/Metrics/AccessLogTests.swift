@@ -11,46 +11,88 @@ import Nimble
 
 class AccessLogTests: TestCase {
     func testNoEvent() {
-        let log = AccessLog(events: [])
+        let log = AccessLog(events: [], after: nil)
         expect(log.previousEvents).to(beEmpty())
         expect(log.currentEvent).to(beNil())
     }
 
     func testSingleEvent() {
-        let log = AccessLog(events: [.init(numberOfStalls: 1)])
+        let log = AccessLog(events: [.init(numberOfStalls: 1)], after: nil)
         expect(log.previousEvents).to(beEmpty())
         expect(log.currentEvent?.numberOfStalls).to(equal(1))
     }
 
     func testMultipleEvents() {
-        let log = AccessLog(events: [.init(numberOfStalls: 1), .init(numberOfStalls: 2)])
+        let log = AccessLog(events: [.init(numberOfStalls: 1), .init(numberOfStalls: 2)], after: nil)
         expect(log.previousEvents.map(\.numberOfStalls)).to(equal([1]))
         expect(log.currentEvent?.numberOfStalls).to(equal(2))
     }
 
     func testMultipleInvalidEvents() {
-        let log = AccessLog(events: [nil, nil])
+        let log = AccessLog(events: [nil, nil], after: nil)
         expect(log.previousEvents).to(beEmpty())
         expect(log.currentEvent).to(beNil())
     }
 
     func testValidAndInvalidEvents() {
-        let log = AccessLog(events: [.init(numberOfStalls: 1), nil])
+        let log = AccessLog(events: [.init(numberOfStalls: 1), nil], after: nil)
         expect(log.previousEvents.map(\.numberOfStalls)).to(equal([1]))
         expect(log.currentEvent).to(beNil())
     }
 
     func testInvalidAndValidEvents() {
-        let log = AccessLog(events: [nil, .init(numberOfStalls: 2)])
+        let log = AccessLog(events: [nil, .init(numberOfStalls: 2)], after: nil)
         expect(log.previousEvents).to(beEmpty())
         expect(log.currentEvent?.numberOfStalls).to(equal(2))
+    }
+
+    func testDateBefore() {
+        let log = AccessLog(
+            events: [
+                .init(playbackStartDate: Date(timeIntervalSince1970: 1), numberOfStalls: 1),
+                .init(playbackStartDate: Date(timeIntervalSince1970: 2), numberOfStalls: 2),
+                .init(playbackStartDate: Date(timeIntervalSince1970: 3), numberOfStalls: 3)
+            ],
+            after: Date(timeIntervalSince1970: 1)
+        )
+
+        expect(log.previousEvents.map(\.numberOfStalls)).to(equal([2]))
+        expect(log.currentEvent?.numberOfStalls).to(equal(3))
+    }
+
+    func testDateInside() {
+        let log = AccessLog(
+            events: [
+                .init(playbackStartDate: Date(timeIntervalSince1970: 1), numberOfStalls: 1),
+                .init(playbackStartDate: Date(timeIntervalSince1970: 2), numberOfStalls: 2),
+                .init(playbackStartDate: Date(timeIntervalSince1970: 3), numberOfStalls: 3)
+            ],
+            after: Date(timeIntervalSince1970: 2)
+        )
+
+        expect(log.previousEvents).to(beEmpty())
+        expect(log.currentEvent?.numberOfStalls).to(equal(3))
+    }
+
+    func testDateAfter() {
+        let log = AccessLog(
+            events: [
+                .init(playbackStartDate: Date(timeIntervalSince1970: 1), numberOfStalls: 1),
+                .init(playbackStartDate: Date(timeIntervalSince1970: 2), numberOfStalls: 2),
+                .init(playbackStartDate: Date(timeIntervalSince1970: 3), numberOfStalls: 3)
+            ],
+            after: Date(timeIntervalSince1970: 3)
+        )
+
+        expect(log.previousEvents).to(beEmpty())
+        expect(log.currentEvent).to(beNil())
     }
 }
 
 private extension AccessLogEvent {
-    init(numberOfStalls: Int = -1) {
+    init(playbackStartDate: Date = Date(), numberOfStalls: Int = -1) {
         self.init(
-            playbackStartDate: Date(),
+            playbackStartDate: playbackStartDate,
             uri: nil,
             serverAddress: nil,
             playbackSessionId: nil,
