@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
+import AVFoundation
 
 struct AccessLogEvent {
     let playbackStartDate: Date
@@ -37,4 +37,99 @@ struct AccessLogEvent {
     let segmentsDownloadedDuration: TimeInterval
     let downloadOverdue: Int
     let switchBitrate: Double
+}
+
+extension AccessLogEvent {
+    init?(_ event: AVPlayerItemAccessLogEvent) {
+        self.init(
+            playbackStartDate: event.playbackStartDate ?? Date(),
+            uri: event.uri,
+            serverAddress: event.serverAddress,
+            playbackSessionId: event.playbackSessionID,
+            playbackStartOffset: event.playbackStartOffset,
+            playbackType: event.playbackType,
+            startupTime: event.startupTime,
+            observedBitrateStandardDeviation: event.observedBitrateStandardDeviation,
+            indicatedBitrate: event.indicatedBitrate,
+            observedBitrate: event.observedBitrate,
+            averageAudioBitrate: event.averageAudioBitrate,
+            averageVideoBitrate: event.averageVideoBitrate,
+            indicatedAverageBitrate: event.indicatedAverageBitrate,
+            numberOfServerAddressChanges: event.numberOfServerAddressChanges,
+            mediaRequestsWWAN: event.mediaRequestsWWAN,
+            transferDuration: event.transferDuration,
+            numberOfBytesTransferred: event.numberOfBytesTransferred,
+            numberOfMediaRequests: event.numberOfMediaRequests,
+            durationWatched: event.durationWatched,
+            numberOfDroppedVideoFrames: event.numberOfDroppedVideoFrames,
+            numberOfStalls: event.numberOfStalls,
+            segmentsDownloadedDuration: event.segmentsDownloadedDuration,
+            downloadOverdue: event.downloadOverdue,
+            switchBitrate: event.switchBitrate
+        )
+    }
+
+    init(
+        playbackStartDate: Date,
+        uri: String?,
+        serverAddress: String?,
+        playbackSessionId: String?,
+        playbackStartOffset: TimeInterval,
+        playbackType: String?,
+        startupTime: TimeInterval,
+        observedBitrateStandardDeviation: Double,
+        indicatedBitrate: Double,
+        observedBitrate: Double,
+        averageAudioBitrate: Double,
+        averageVideoBitrate: Double,
+        indicatedAverageBitrate: Double,
+        numberOfServerAddressChanges: Int,
+        mediaRequestsWWAN: Int,
+        transferDuration: TimeInterval,
+        numberOfBytesTransferred: Int64,
+        numberOfMediaRequests: Int,
+        durationWatched: TimeInterval,
+        numberOfDroppedVideoFrames: Int,
+        numberOfStalls: Int,
+        segmentsDownloadedDuration: TimeInterval,
+        downloadOverdue: Int,
+        switchBitrate: Double
+    ) {
+        self.playbackStartDate = playbackStartDate
+
+        self.uri = uri
+        self.serverAddress = serverAddress
+        self.playbackSessionId = playbackSessionId
+        self.playbackStartOffset = Self.optional(playbackStartOffset)
+        self.playbackType = playbackType
+        self.startupTime = Self.optional(startupTime)
+        self.observedBitrateStandardDeviation = Self.optional(observedBitrateStandardDeviation)
+        self.indicatedBitrate = Self.optional(indicatedBitrate)
+        self.observedBitrate = Self.optional(observedBitrate)
+        self.averageAudioBitrate = Self.optional(averageAudioBitrate)
+        self.averageVideoBitrate = Self.optional(averageVideoBitrate)
+        self.indicatedAverageBitrate = Self.optional(indicatedAverageBitrate)
+
+        self.numberOfServerAddressChanges = Self.nonNegative(numberOfServerAddressChanges)
+        self.mediaRequestsWWAN = Self.nonNegative(mediaRequestsWWAN)
+        self.transferDuration = Self.nonNegative(transferDuration)
+        self.numberOfBytesTransferred = Self.nonNegative(numberOfBytesTransferred)
+        self.numberOfMediaRequests = Self.nonNegative(numberOfMediaRequests)
+        self.durationWatched = Self.nonNegative(durationWatched)
+        self.numberOfDroppedVideoFrames = Self.nonNegative(numberOfDroppedVideoFrames)
+        self.numberOfStalls = Self.nonNegative(numberOfStalls)
+        self.segmentsDownloadedDuration = Self.nonNegative(segmentsDownloadedDuration)
+        self.downloadOverdue = Self.nonNegative(downloadOverdue)
+        self.switchBitrate = Self.nonNegative(switchBitrate)
+    }
+}
+
+extension AccessLogEvent {
+    static func nonNegative<T>(_ value: T) -> T where T: Comparable & SignedNumeric {
+        max(value, .zero)
+    }
+
+    static func optional<T>(_ value: T) -> T? where T: Comparable & SignedNumeric {
+        value < .zero ? nil : value
+    }
 }
