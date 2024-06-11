@@ -37,37 +37,6 @@ struct AccessLogEvent {
     let segmentsDownloadedDuration: TimeInterval
     let downloadOverdue: Int
     let switchBitrate: Double
-}
-
-extension AccessLogEvent {
-    init?(_ event: AVPlayerItemAccessLogEvent) {
-        self.init(
-            playbackStartDate: event.playbackStartDate ?? Date(),
-            uri: event.uri,
-            serverAddress: event.serverAddress,
-            playbackSessionId: event.playbackSessionID,
-            playbackStartOffset: event.playbackStartOffset,
-            playbackType: event.playbackType,
-            startupTime: event.startupTime,
-            observedBitrateStandardDeviation: event.observedBitrateStandardDeviation,
-            indicatedBitrate: event.indicatedBitrate,
-            observedBitrate: event.observedBitrate,
-            averageAudioBitrate: event.averageAudioBitrate,
-            averageVideoBitrate: event.averageVideoBitrate,
-            indicatedAverageBitrate: event.indicatedAverageBitrate,
-            numberOfServerAddressChanges: event.numberOfServerAddressChanges,
-            mediaRequestsWWAN: event.mediaRequestsWWAN,
-            transferDuration: event.transferDuration,
-            numberOfBytesTransferred: event.numberOfBytesTransferred,
-            numberOfMediaRequests: event.numberOfMediaRequests,
-            durationWatched: event.durationWatched,
-            numberOfDroppedVideoFrames: event.numberOfDroppedVideoFrames,
-            numberOfStalls: event.numberOfStalls,
-            segmentsDownloadedDuration: event.segmentsDownloadedDuration,
-            downloadOverdue: event.downloadOverdue,
-            switchBitrate: event.switchBitrate
-        )
-    }
 
     init(
         playbackStartDate: Date,
@@ -121,6 +90,37 @@ extension AccessLogEvent {
         self.segmentsDownloadedDuration = Self.nonNegative(segmentsDownloadedDuration)
         self.downloadOverdue = Self.nonNegative(downloadOverdue)
         self.switchBitrate = Self.nonNegative(switchBitrate)
+    }
+}
+
+extension AccessLogEvent {
+    init?(_ event: AVPlayerItemAccessLogEvent) {
+        self.init(
+            playbackStartDate: event.playbackStartDate ?? Date(),
+            uri: event.uri,
+            serverAddress: event.serverAddress,
+            playbackSessionId: event.playbackSessionID,
+            playbackStartOffset: event.playbackStartOffset,
+            playbackType: event.playbackType,
+            startupTime: event.startupTime,
+            observedBitrateStandardDeviation: event.observedBitrateStandardDeviation,
+            indicatedBitrate: event.indicatedBitrate,
+            observedBitrate: event.observedBitrate,
+            averageAudioBitrate: event.averageAudioBitrate,
+            averageVideoBitrate: event.averageVideoBitrate,
+            indicatedAverageBitrate: event.indicatedAverageBitrate,
+            numberOfServerAddressChanges: event.numberOfServerAddressChanges,
+            mediaRequestsWWAN: event.mediaRequestsWWAN,
+            transferDuration: event.transferDuration,
+            numberOfBytesTransferred: event.numberOfBytesTransferred,
+            numberOfMediaRequests: event.numberOfMediaRequests,
+            durationWatched: event.durationWatched,
+            numberOfDroppedVideoFrames: event.numberOfDroppedVideoFrames,
+            numberOfStalls: event.numberOfStalls,
+            segmentsDownloadedDuration: event.segmentsDownloadedDuration,
+            downloadOverdue: event.downloadOverdue,
+            switchBitrate: event.switchBitrate
+        )
     }
 }
 
