@@ -19,7 +19,7 @@ struct MetricsState {
             return .init(date: date, total: total, previousOpenEvent: openEvent, openEvent: log.openEvent)
         }
         let total = log.closedEvents.reduce(total) { initial, next in
-            initial.adding(next)
+            initial.adding(.metrics(from: next))
         }
         return .init(date: lastClosedEvent.playbackStartDate, total: total, previousOpenEvent: openEvent, openEvent: log.openEvent)
     }
@@ -45,7 +45,7 @@ struct MetricsState {
                 averageVideoBitrate: event.averageVideoBitrate,
                 indicatedAverageBitrate: event.indicatedAverageBitrate,
                 increment: event.increment(from: previousOpenEvent),
-                total: total.adding(.zero.adding(event))
+                total: total.adding(.metrics(from: event))
             )
         }
         else {

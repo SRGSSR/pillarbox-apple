@@ -8,21 +8,19 @@ import Foundation
 
 /// Values associated with metrics.
 public struct MetricsValues: Equatable {
-    static var zero: Self {
-        .init(
-            numberOfServerAddressChanges: 0,
-            mediaRequestsWWAN: 0,
-            transferDuration: 0,
-            numberOfBytesTransferred: 0,
-            numberOfMediaRequests: 0,
-            durationWatched: 0,
-            numberOfDroppedVideoFrames: 0,
-            numberOfStalls: 0,
-            segmentsDownloadedDuration: 0,
-            downloadOverdue: 0,
-            switchBitrate: 0
-        )
-    }
+    static let zero = Self(
+        numberOfServerAddressChanges: 0,
+        mediaRequestsWWAN: 0,
+        transferDuration: 0,
+        numberOfBytesTransferred: 0,
+        numberOfMediaRequests: 0,
+        durationWatched: 0,
+        numberOfDroppedVideoFrames: 0,
+        numberOfStalls: 0,
+        segmentsDownloadedDuration: 0,
+        downloadOverdue: 0,
+        switchBitrate: 0
+    )
 
     // MARK: Getting Server-Related Log Events
 
@@ -62,38 +60,55 @@ public struct MetricsValues: Equatable {
 
     /// The bandwidth value that causes a switch, up or down, in the item's quality being played.
     public let switchBitrate: Double
+
+    static func metrics(from event: AccessLogEvent?) -> Self {
+        guard let event else { return .zero }
+        return .init(
+            numberOfServerAddressChanges: event.numberOfServerAddressChanges,
+            mediaRequestsWWAN: event.mediaRequestsWWAN,
+            transferDuration: event.transferDuration,
+            numberOfBytesTransferred: event.numberOfBytesTransferred,
+            numberOfMediaRequests: event.numberOfMediaRequests,
+            durationWatched: event.durationWatched,
+            numberOfDroppedVideoFrames: event.numberOfDroppedVideoFrames,
+            numberOfStalls: event.numberOfStalls,
+            segmentsDownloadedDuration: event.segmentsDownloadedDuration,
+            downloadOverdue: event.downloadOverdue,
+            switchBitrate: event.switchBitrate
+        )
+    }
 }
 
 extension MetricsValues {
-    func adding(_ event: AccessLogEvent) -> Self {
+    func adding(_ values: Self) -> Self {
         .init(
-            numberOfServerAddressChanges: event.numberOfServerAddressChanges + numberOfServerAddressChanges,
-            mediaRequestsWWAN: event.mediaRequestsWWAN + mediaRequestsWWAN,
-            transferDuration: event.transferDuration + transferDuration,
-            numberOfBytesTransferred: event.numberOfBytesTransferred + numberOfBytesTransferred,
-            numberOfMediaRequests: event.numberOfMediaRequests + numberOfMediaRequests,
-            durationWatched: event.durationWatched + durationWatched,
-            numberOfDroppedVideoFrames: event.numberOfDroppedVideoFrames + numberOfDroppedVideoFrames,
-            numberOfStalls: event.numberOfStalls + numberOfStalls,
-            segmentsDownloadedDuration: event.segmentsDownloadedDuration + segmentsDownloadedDuration,
-            downloadOverdue: event.downloadOverdue + downloadOverdue,
-            switchBitrate: event.switchBitrate + switchBitrate
+            numberOfServerAddressChanges: numberOfServerAddressChanges + values.numberOfServerAddressChanges,
+            mediaRequestsWWAN: mediaRequestsWWAN + values.mediaRequestsWWAN,
+            transferDuration: transferDuration + values.transferDuration,
+            numberOfBytesTransferred: numberOfBytesTransferred + values.numberOfBytesTransferred,
+            numberOfMediaRequests: numberOfMediaRequests + values.numberOfMediaRequests,
+            durationWatched: durationWatched + values.durationWatched,
+            numberOfDroppedVideoFrames: numberOfDroppedVideoFrames + values.numberOfDroppedVideoFrames,
+            numberOfStalls: numberOfStalls + values.numberOfStalls,
+            segmentsDownloadedDuration: segmentsDownloadedDuration + values.segmentsDownloadedDuration,
+            downloadOverdue: downloadOverdue + values.downloadOverdue,
+            switchBitrate: switchBitrate + values.switchBitrate
         )
     }
 
-    func adding(_ values: Self) -> Self {
+    func subtracting(_ values: Self) -> Self {
         .init(
-            numberOfServerAddressChanges: values.numberOfServerAddressChanges + numberOfServerAddressChanges,
-            mediaRequestsWWAN: values.mediaRequestsWWAN + mediaRequestsWWAN,
-            transferDuration: values.transferDuration + transferDuration,
-            numberOfBytesTransferred: values.numberOfBytesTransferred + numberOfBytesTransferred,
-            numberOfMediaRequests: values.numberOfMediaRequests + numberOfMediaRequests,
-            durationWatched: values.durationWatched + durationWatched,
-            numberOfDroppedVideoFrames: values.numberOfDroppedVideoFrames + numberOfDroppedVideoFrames,
-            numberOfStalls: values.numberOfStalls + numberOfStalls,
-            segmentsDownloadedDuration: values.segmentsDownloadedDuration + segmentsDownloadedDuration,
-            downloadOverdue: values.downloadOverdue + downloadOverdue,
-            switchBitrate: values.switchBitrate + switchBitrate
+            numberOfServerAddressChanges: numberOfServerAddressChanges - values.numberOfServerAddressChanges,
+            mediaRequestsWWAN: mediaRequestsWWAN - values.mediaRequestsWWAN,
+            transferDuration: transferDuration - values.transferDuration,
+            numberOfBytesTransferred: numberOfBytesTransferred - values.numberOfBytesTransferred,
+            numberOfMediaRequests: numberOfMediaRequests - values.numberOfMediaRequests,
+            durationWatched: durationWatched - values.durationWatched,
+            numberOfDroppedVideoFrames: numberOfDroppedVideoFrames - values.numberOfDroppedVideoFrames,
+            numberOfStalls: numberOfStalls - values.numberOfStalls,
+            segmentsDownloadedDuration: segmentsDownloadedDuration - values.segmentsDownloadedDuration,
+            downloadOverdue: downloadOverdue - values.downloadOverdue,
+            switchBitrate: switchBitrate - values.switchBitrate
         )
     }
 }
