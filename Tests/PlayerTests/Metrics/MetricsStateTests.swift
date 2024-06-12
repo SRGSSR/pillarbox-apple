@@ -84,6 +84,26 @@ class MetricsStateTests: TestCase {
         expect(metrics.total.downloadOverdue).to(equal(19))
         expect(metrics.total.switchBitrate).to(equal(20))
     }
+
+    func testUpdate() {
+        let initialState = MetricsState.empty.updated(with: .init(
+            events: [
+                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 2)
+            ],
+            after: nil
+        ))
+        let state = initialState.updated(with: .init(
+            events: [
+                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 5)
+            ],
+            after: .init(timeIntervalSince1970: 1)
+        ))
+
+        let metrics = state.metrics()
+        expect(metrics.increment.numberOfStalls).to(equal(3))
+        expect(metrics.total.numberOfStalls).to(equal(5))
+    }
 }
 
 private extension AccessLogEvent {
