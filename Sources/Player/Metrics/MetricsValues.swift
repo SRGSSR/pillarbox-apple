@@ -63,3 +63,37 @@ public struct MetricsValues: Equatable {
     /// The bandwidth value that causes a switch, up or down, in the item's quality being played.
     public let switchBitrate: Double
 }
+
+extension MetricsValues {
+    func adding(_ event: AccessLogEvent) -> Self {
+        .init(
+            numberOfServerAddressChanges: event.numberOfServerAddressChanges + numberOfServerAddressChanges,
+            mediaRequestsWWAN: event.mediaRequestsWWAN + mediaRequestsWWAN,
+            transferDuration: event.transferDuration + transferDuration,
+            numberOfBytesTransferred: event.numberOfBytesTransferred + numberOfBytesTransferred,
+            numberOfMediaRequests: event.numberOfMediaRequests + numberOfMediaRequests,
+            durationWatched: event.durationWatched + durationWatched,
+            numberOfDroppedVideoFrames: event.numberOfDroppedVideoFrames + numberOfDroppedVideoFrames,
+            numberOfStalls: event.numberOfStalls + numberOfStalls,
+            segmentsDownloadedDuration: event.segmentsDownloadedDuration + segmentsDownloadedDuration,
+            downloadOverdue: event.downloadOverdue + downloadOverdue,
+            switchBitrate: event.switchBitrate + switchBitrate
+        )
+    }
+
+    func adding(_ values: Self) -> Self {
+        .init(
+            numberOfServerAddressChanges: values.numberOfServerAddressChanges + numberOfServerAddressChanges,
+            mediaRequestsWWAN: values.mediaRequestsWWAN + mediaRequestsWWAN,
+            transferDuration: values.transferDuration + transferDuration,
+            numberOfBytesTransferred: values.numberOfBytesTransferred + numberOfBytesTransferred,
+            numberOfMediaRequests: values.numberOfMediaRequests + numberOfMediaRequests,
+            durationWatched: values.durationWatched + durationWatched,
+            numberOfDroppedVideoFrames: values.numberOfDroppedVideoFrames + numberOfDroppedVideoFrames,
+            numberOfStalls: values.numberOfStalls + numberOfStalls,
+            segmentsDownloadedDuration: values.segmentsDownloadedDuration + segmentsDownloadedDuration,
+            downloadOverdue: values.downloadOverdue + downloadOverdue,
+            switchBitrate: values.switchBitrate + switchBitrate
+        )
+    }
+}
