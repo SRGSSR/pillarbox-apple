@@ -85,7 +85,7 @@ class MetricsStateTests: TestCase {
         expect(metrics.total.switchBitrate).to(equal(20))
     }
 
-    func testUpdate() {
+    func testUpdateWithSameEvent() {
         let initialState = MetricsState.empty.updated(with: .init(
             events: [
                 .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
@@ -103,6 +103,28 @@ class MetricsStateTests: TestCase {
         let metrics = state.metrics()
         expect(metrics.increment.numberOfStalls).to(equal(3))
         expect(metrics.total.numberOfStalls).to(equal(6))
+    }
+
+    func testUpdateWithNewEvent() {
+        let initialState = MetricsState.empty.updated(with: .init(
+            events: [
+                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 5)
+            ],
+            after: nil
+        ))
+        let state = initialState.updated(with: .init(
+            events: [
+                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 8),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 3), numberOfStalls: 2)
+            ],
+            after: .init(timeIntervalSince1970: 1)
+        ))
+
+        let metrics = state.metrics()
+        expect(metrics.increment.numberOfStalls).to(equal(5))
+        expect(metrics.total.numberOfStalls).to(equal(11))
     }
 
     func testWithInvalidUpdate() {
