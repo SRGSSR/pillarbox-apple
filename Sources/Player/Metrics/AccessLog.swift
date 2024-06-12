@@ -13,10 +13,10 @@ struct AccessLog {
     init(events: [AccessLogEvent?], after date: Date?) {
         let eventCount = max(events.count - 1, 0)
         previousEvents = Array(events.prefix(eventCount)).compactMap { event in
-            Self.event(event, date: date)
+            Self.event(event, after: date)
         }
         if let lastEvent = events.last {
-            currentEvent = Self.event(lastEvent, date: date)
+            currentEvent = Self.event(lastEvent, after: date)
         }
         else {
             currentEvent = nil
@@ -27,7 +27,7 @@ struct AccessLog {
         self.init(events: log.events.map { .init($0) }, after: date)
     }
 
-    static func event(_ event: AccessLogEvent?, date: Date?) -> AccessLogEvent? {
+    static func event(_ event: AccessLogEvent?, after date: Date?) -> AccessLogEvent? {
         guard let date, let event else { return event }
         return event.playbackStartDate > date ? event : nil
     }
