@@ -102,6 +102,13 @@ public extension PlayerProperties {
     var isMuted: Bool {
         coreProperties.isMuted
     }
+
+    /// The current player metrics.
+    ///
+    /// Each call to this function might return different results reflecting the most recent metrics available.
+    func metrics() -> Metrics {
+        coreProperties.metrics()
+    }
 }
 
 extension PlayerProperties {

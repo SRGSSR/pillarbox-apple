@@ -25,4 +25,9 @@ struct ItemProperties: Equatable {
 
     let presentationSize: CGSize?
     let metricsState: MetricsState
+
+    func metrics() -> Metrics {
+        guard let log = item?.accessLog() else { return metricsState.metrics() }
+        return metricsState.updated(with: log).metrics()
+    }
 }
