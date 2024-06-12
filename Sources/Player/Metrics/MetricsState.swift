@@ -28,23 +28,23 @@ struct MetricsState {
     }
 
     func metrics() -> Metrics {
-        if let openEvent {
+        if let event = openEvent ?? previousOpenEvent {
             return .init(
-                uri: openEvent.uri,
-                serverAddress: openEvent.serverAddress,
-                playbackSessionId: openEvent.playbackSessionId,
-                playbackStartDate: openEvent.playbackStartDate,
-                playbackStartOffset: openEvent.playbackStartOffset,
-                playbackType: openEvent.playbackType,
-                startupTime: openEvent.startupTime,
-                observedBitrateStandardDeviation: openEvent.observedBitrateStandardDeviation,
-                indicatedBitrate: openEvent.indicatedBitrate,
-                observedBitrate: openEvent.observedBitrate,
-                averageAudioBitrate: openEvent.averageAudioBitrate,
-                averageVideoBitrate: openEvent.averageVideoBitrate,
-                indicatedAverageBitrate: openEvent.indicatedAverageBitrate,
-                increment: openEvent.increment(from: previousOpenEvent),
-                total: total.adding(.zero.adding(openEvent))
+                uri: event.uri,
+                serverAddress: event.serverAddress,
+                playbackSessionId: event.playbackSessionId,
+                playbackStartDate: event.playbackStartDate,
+                playbackStartOffset: event.playbackStartOffset,
+                playbackType: event.playbackType,
+                startupTime: event.startupTime,
+                observedBitrateStandardDeviation: event.observedBitrateStandardDeviation,
+                indicatedBitrate: event.indicatedBitrate,
+                observedBitrate: event.observedBitrate,
+                averageAudioBitrate: event.averageAudioBitrate,
+                averageVideoBitrate: event.averageVideoBitrate,
+                indicatedAverageBitrate: event.indicatedAverageBitrate,
+                increment: event.increment(from: previousOpenEvent),
+                total: total.adding(.zero.adding(event))
             )
         }
         else {

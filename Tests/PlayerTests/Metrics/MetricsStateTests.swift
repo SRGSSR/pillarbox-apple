@@ -104,6 +104,24 @@ class MetricsStateTests: TestCase {
         expect(metrics.increment.numberOfStalls).to(equal(3))
         expect(metrics.total.numberOfStalls).to(equal(6))
     }
+
+    func testWithInvalidUpdate() {
+        let initialState = MetricsState.empty.updated(with: .init(
+            events: [
+                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 2)
+            ],
+            after: nil
+        ))
+        let state = initialState.updated(with: .init(
+            events: [nil],
+            after: .init(timeIntervalSince1970: 1)
+        ))
+
+        let metrics = state.metrics()
+        expect(metrics.increment.numberOfStalls).to(equal(0))
+        expect(metrics.total.numberOfStalls).to(equal(3))
+    }
 }
 
 private extension AccessLogEvent {
