@@ -7,20 +7,21 @@
 import AVFoundation
 
 struct MetricsState {
-    static let empty = Self(date: nil, total: .zero, openEvent: nil, previousOpenEvent: nil)
+    static let empty = Self(date: nil, total: .zero, previousOpenEvent: nil, openEvent: nil)
+
     let date: Date?
     let total: MetricsValues
-    let openEvent: AccessLogEvent?
     let previousOpenEvent: AccessLogEvent?
+    let openEvent: AccessLogEvent?
 
     func updated(with log: AccessLog) -> Self {
         guard let lastClosedEvent = log.closedEvents.last else {
-            return .init(date: date, total: total, openEvent: log.openEvent, previousOpenEvent: openEvent)
+            return .init(date: date, total: total, previousOpenEvent: openEvent, openEvent: log.openEvent)
         }
         let total = log.closedEvents.reduce(total) { initial, next in
             initial.adding(next)
         }
-        return .init(date: lastClosedEvent.playbackStartDate, total: total, openEvent: log.openEvent, previousOpenEvent: openEvent)
+        return .init(date: lastClosedEvent.playbackStartDate, total: total, previousOpenEvent: openEvent, openEvent: log.openEvent)
     }
 
     func updated(with log: AVPlayerItemAccessLog) -> Self {
