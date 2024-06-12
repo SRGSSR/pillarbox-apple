@@ -85,7 +85,7 @@ class MetricsStateTests: TestCase {
         expect(metrics.total.switchBitrate).to(equal(20))
     }
 
-    func testUpdateWithSameEvent() {
+    func testUpdateOpenEvent() {
         let initialState = MetricsState.empty.updated(with: .init(
             events: [
                 .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
@@ -95,6 +95,7 @@ class MetricsStateTests: TestCase {
         ))
         let state = initialState.updated(with: .init(
             events: [
+                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
                 .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 5)
             ],
             after: .init(timeIntervalSince1970: 1)
@@ -105,7 +106,7 @@ class MetricsStateTests: TestCase {
         expect(metrics.total.numberOfStalls).to(equal(6))
     }
 
-    func testUpdateWithNewEvent() {
+    func testUpdateWithClosedAndOpenEvents() {
         let initialState = MetricsState.empty.updated(with: .init(
             events: [
                 .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
@@ -136,13 +137,17 @@ class MetricsStateTests: TestCase {
             after: nil
         ))
         let state = initialState.updated(with: .init(
-            events: [nil],
+            events: [
+                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 4),
+                nil
+            ],
             after: .init(timeIntervalSince1970: 1)
         ))
 
         let metrics = state.metrics()
-        expect(metrics.increment.numberOfStalls).to(equal(0))
-        expect(metrics.total.numberOfStalls).to(equal(3))
+        expect(metrics.increment.numberOfStalls).to(equal(2))
+        expect(metrics.total.numberOfStalls).to(equal(5))
     }
 }
 
