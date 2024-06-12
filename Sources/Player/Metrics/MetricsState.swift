@@ -7,19 +7,19 @@
 import AVFoundation
 
 struct MetricsState {
-    static let empty = Self(date: nil, total: .zero, lastEvent: nil)
+    static let empty = Self(date: nil, total: .zero, openEvent: nil)
     let date: Date?
     let total: MetricsValues
-    let lastEvent: AccessLogEvent?
+    let openEvent: AccessLogEvent?
 
     func updated(with log: AccessLog) -> Self {
-        guard let lastPreviousEvent = log.previousEvents.last else {
-            return .init(date: date, total: total, lastEvent: log.currentEvent)
+        guard let lastClosedEvent = log.closedEvents.last else {
+            return .init(date: date, total: total, openEvent: log.openEvent)
         }
-        let total = log.previousEvents.reduce(total) { initial, next in
+        let total = log.closedEvents.reduce(total) { initial, next in
             initial.adding(next)
         }
-        return .init(date: lastPreviousEvent.playbackStartDate, total: total, lastEvent: log.currentEvent)
+        return .init(date: lastClosedEvent.playbackStartDate, total: total, openEvent: log.openEvent)
     }
 
     func updated(with log: AVPlayerItemAccessLog) -> Self {
@@ -27,22 +27,22 @@ struct MetricsState {
     }
 
     func metrics() -> Metrics {
-        if let lastEvent {
-            let increment = MetricsValues.zero.adding(lastEvent)
+        if let openEvent {
+            let increment = MetricsValues.zero.adding(openEvent)
             return .init(
-                uri: lastEvent.uri,
-                serverAddress: lastEvent.serverAddress,
-                playbackSessionId: lastEvent.playbackSessionId,
-                playbackStartDate: lastEvent.playbackStartDate,
-                playbackStartOffset: lastEvent.playbackStartOffset,
-                playbackType: lastEvent.playbackType,
-                startupTime: lastEvent.startupTime,
-                observedBitrateStandardDeviation: lastEvent.observedBitrateStandardDeviation,
-                indicatedBitrate: lastEvent.indicatedBitrate,
-                observedBitrate: lastEvent.observedBitrate,
-                averageAudioBitrate: lastEvent.averageAudioBitrate,
-                averageVideoBitrate: lastEvent.averageVideoBitrate,
-                indicatedAverageBitrate: lastEvent.indicatedAverageBitrate,
+                uri: openEvent.uri,
+                serverAddress: openEvent.serverAddress,
+                playbackSessionId: openEvent.playbackSessionId,
+                playbackStartDate: openEvent.playbackStartDate,
+                playbackStartOffset: openEvent.playbackStartOffset,
+                playbackType: openEvent.playbackType,
+                startupTime: openEvent.startupTime,
+                observedBitrateStandardDeviation: openEvent.observedBitrateStandardDeviation,
+                indicatedBitrate: openEvent.indicatedBitrate,
+                observedBitrate: openEvent.observedBitrate,
+                averageAudioBitrate: openEvent.averageAudioBitrate,
+                averageVideoBitrate: openEvent.averageVideoBitrate,
+                indicatedAverageBitrate: openEvent.indicatedAverageBitrate,
                 increment: increment,
                 total: total.adding(increment)
             )

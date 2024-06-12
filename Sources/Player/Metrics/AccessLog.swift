@@ -7,19 +7,19 @@
 import AVFoundation
 
 struct AccessLog {
-    let previousEvents: [AccessLogEvent]
-    let currentEvent: AccessLogEvent?
+    let closedEvents: [AccessLogEvent]
+    let openEvent: AccessLogEvent?
 
     init(events: [AccessLogEvent?], after date: Date?) {
         let eventCount = max(events.count - 1, 0)
-        previousEvents = Array(events.prefix(eventCount)).compactMap { event in
+        closedEvents = Array(events.prefix(eventCount)).compactMap { event in
             Self.event(event, after: date)
         }
         if let lastEvent = events.last {
-            currentEvent = Self.event(lastEvent, after: date)
+            openEvent = Self.event(lastEvent, after: date)
         }
         else {
-            currentEvent = nil
+            openEvent = nil
         }
     }
 

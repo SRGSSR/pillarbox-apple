@@ -12,38 +12,38 @@ import Nimble
 class AccessLogTests: TestCase {
     func testNoEvent() {
         let log = AccessLog(events: [], after: nil)
-        expect(log.previousEvents).to(beEmpty())
-        expect(log.currentEvent).to(beNil())
+        expect(log.closedEvents).to(beEmpty())
+        expect(log.openEvent).to(beNil())
     }
 
     func testSingleEvent() {
         let log = AccessLog(events: [.init(numberOfStalls: 1)], after: nil)
-        expect(log.previousEvents).to(beEmpty())
-        expect(log.currentEvent?.numberOfStalls).to(equal(1))
+        expect(log.closedEvents).to(beEmpty())
+        expect(log.openEvent?.numberOfStalls).to(equal(1))
     }
 
     func testMultipleEvents() {
         let log = AccessLog(events: [.init(numberOfStalls: 1), .init(numberOfStalls: 2)], after: nil)
-        expect(log.previousEvents.map(\.numberOfStalls)).to(equal([1]))
-        expect(log.currentEvent?.numberOfStalls).to(equal(2))
+        expect(log.closedEvents.map(\.numberOfStalls)).to(equal([1]))
+        expect(log.openEvent?.numberOfStalls).to(equal(2))
     }
 
     func testMultipleInvalidEvents() {
         let log = AccessLog(events: [nil, nil], after: nil)
-        expect(log.previousEvents).to(beEmpty())
-        expect(log.currentEvent).to(beNil())
+        expect(log.closedEvents).to(beEmpty())
+        expect(log.openEvent).to(beNil())
     }
 
     func testValidAndInvalidEvents() {
         let log = AccessLog(events: [.init(numberOfStalls: 1), nil], after: nil)
-        expect(log.previousEvents.map(\.numberOfStalls)).to(equal([1]))
-        expect(log.currentEvent).to(beNil())
+        expect(log.closedEvents.map(\.numberOfStalls)).to(equal([1]))
+        expect(log.openEvent).to(beNil())
     }
 
     func testInvalidAndValidEvents() {
         let log = AccessLog(events: [nil, .init(numberOfStalls: 2)], after: nil)
-        expect(log.previousEvents).to(beEmpty())
-        expect(log.currentEvent?.numberOfStalls).to(equal(2))
+        expect(log.closedEvents).to(beEmpty())
+        expect(log.openEvent?.numberOfStalls).to(equal(2))
     }
 
     func testDateBefore() {
@@ -56,8 +56,8 @@ class AccessLogTests: TestCase {
             after: Date(timeIntervalSince1970: 1)
         )
 
-        expect(log.previousEvents.map(\.numberOfStalls)).to(equal([2]))
-        expect(log.currentEvent?.numberOfStalls).to(equal(3))
+        expect(log.closedEvents.map(\.numberOfStalls)).to(equal([2]))
+        expect(log.openEvent?.numberOfStalls).to(equal(3))
     }
 
     func testDateInside() {
@@ -70,8 +70,8 @@ class AccessLogTests: TestCase {
             after: Date(timeIntervalSince1970: 2)
         )
 
-        expect(log.previousEvents).to(beEmpty())
-        expect(log.currentEvent?.numberOfStalls).to(equal(3))
+        expect(log.closedEvents).to(beEmpty())
+        expect(log.openEvent?.numberOfStalls).to(equal(3))
     }
 
     func testDateAfter() {
@@ -84,8 +84,8 @@ class AccessLogTests: TestCase {
             after: Date(timeIntervalSince1970: 3)
         )
 
-        expect(log.previousEvents).to(beEmpty())
-        expect(log.currentEvent).to(beNil())
+        expect(log.closedEvents).to(beEmpty())
+        expect(log.openEvent).to(beNil())
     }
 }
 
