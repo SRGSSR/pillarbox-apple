@@ -133,4 +133,38 @@ extension AccessLogEvent {
     static func optional<T>(_ value: T) -> T? where T: Comparable & SignedNumeric {
         value < .zero ? nil : value
     }
+
+    func increment(from event: Self?) -> MetricsValues {
+        // TODO: Refact
+        if let event {
+            .init(
+                numberOfServerAddressChanges: numberOfServerAddressChanges - event.numberOfServerAddressChanges,
+                mediaRequestsWWAN: mediaRequestsWWAN - event.mediaRequestsWWAN,
+                transferDuration: transferDuration - event.transferDuration,
+                numberOfBytesTransferred: numberOfBytesTransferred - event.numberOfBytesTransferred,
+                numberOfMediaRequests: numberOfMediaRequests - event.numberOfMediaRequests,
+                durationWatched: durationWatched - event.durationWatched,
+                numberOfDroppedVideoFrames: numberOfDroppedVideoFrames - event.numberOfDroppedVideoFrames,
+                numberOfStalls: numberOfStalls - event.numberOfStalls,
+                segmentsDownloadedDuration: segmentsDownloadedDuration - event.segmentsDownloadedDuration,
+                downloadOverdue: downloadOverdue - event.downloadOverdue,
+                switchBitrate: switchBitrate - event.switchBitrate
+            )
+        }
+        else {
+            .init(
+                numberOfServerAddressChanges: numberOfServerAddressChanges,
+                mediaRequestsWWAN: mediaRequestsWWAN,
+                transferDuration: transferDuration,
+                numberOfBytesTransferred: numberOfBytesTransferred,
+                numberOfMediaRequests: numberOfMediaRequests,
+                durationWatched: durationWatched,
+                numberOfDroppedVideoFrames: numberOfDroppedVideoFrames,
+                numberOfStalls: numberOfStalls,
+                segmentsDownloadedDuration: segmentsDownloadedDuration,
+                downloadOverdue: downloadOverdue,
+                switchBitrate: switchBitrate
+            )
+        }
+    }
 }

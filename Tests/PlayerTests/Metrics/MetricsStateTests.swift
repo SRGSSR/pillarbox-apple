@@ -102,7 +102,7 @@ class MetricsStateTests: TestCase {
 
         let metrics = state.metrics()
         expect(metrics.increment.numberOfStalls).to(equal(3))
-        expect(metrics.total.numberOfStalls).to(equal(5))
+        expect(metrics.total.numberOfStalls).to(equal(6))
     }
 }
 
