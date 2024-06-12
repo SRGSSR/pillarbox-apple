@@ -163,9 +163,9 @@ extension AVPlayerItem {
                 return item.accessLog()
             }
             .prepend(accessLog())
+            .compactMap { $0 }
             .scan(.empty) { initial, next in
-                guard let next else { return initial }
-                return initial.updated(with: next)
+                initial.updated(with: next)
             }
             .removeDuplicates()
             .eraseToAnyPublisher()
