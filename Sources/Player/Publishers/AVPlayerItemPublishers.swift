@@ -10,7 +10,7 @@ import MediaAccessibility
 
 extension AVPlayerItem {
     func propertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
-        Publishers.CombineLatest6(
+        Publishers.CombineLatest7(
             statusPublisher()
                 .lane("player_item_status"),
             publisher(for: \.presentationSize),
@@ -18,9 +18,10 @@ extension AVPlayerItem {
                 .lane("player_item_media_selection"),
             timePropertiesPublisher(),
             publisher(for: \.duration),
-            minimumTimeOffsetFromLivePublisher()
+            minimumTimeOffsetFromLivePublisher(),
+            metricsStatePublisher()
         )
-        .map { [weak self] status, presentationSize, mediaSelectionProperties, timeProperties, duration, minimumTimeOffsetFromLive in
+        .map { [weak self] status, presentationSize, mediaSelectionProperties, timeProperties, duration, minimumTimeOffsetFromLive, metricsState in
             let isKnown = (status != .unknown)
             return .init(
                 itemProperties: .init(
@@ -28,7 +29,8 @@ extension AVPlayerItem {
                     status: status,
                     duration: isKnown ? duration : .invalid,
                     minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
-                    presentationSize: isKnown ? presentationSize : nil
+                    presentationSize: isKnown ? presentationSize : nil,
+                    metricsState: metricsState
                 ),
                 mediaSelectionProperties: mediaSelectionProperties,
                 timeProperties: isKnown ? timeProperties : .empty
@@ -149,6 +151,23 @@ extension AVPlayerItem {
     private func playbackErrorPublisher() -> AnyPublisher<Error, Never> {
         NotificationCenter.default.weakPublisher(for: AVPlayerItem.failedToPlayToEndTimeNotification, object: self)
             .compactMap { $0.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error }
+            .eraseToAnyPublisher()
+    }
+}
+
+extension AVPlayerItem {
+    func metricsStatePublisher() -> AnyPublisher<MetricsState, Never> {
+        NotificationCenter.default.weakPublisher(for: AVPlayerItem.newAccessLogEntryNotification, object: self)
+            .map { notification in
+                guard let item = notification.object as? AVPlayerItem else { return nil }
+                return item.accessLog()
+            }
+            .prepend(accessLog())
+            .scan(.empty) { initial, next in
+                guard let next else { return initial }
+                return initial.updated(with: next)
+            }
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 }

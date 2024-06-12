@@ -42,7 +42,7 @@ class MetricsStateTests: TestCase {
                     switchBitrate: 20
                 )
             ],
-            after: initialState.date
+            after: nil
         ))
         let metrics = state.metrics()
 

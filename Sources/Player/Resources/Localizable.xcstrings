@@ -177,7 +177,7 @@
       }
     },
     "Playback Speed" : {
-      "comment" : "Playback setting menu title\nPlayback speed menu title",
+      "comment" : "Playback speed menu title",
       "localizations" : {
         "de" : {
           "stringUnit" : {

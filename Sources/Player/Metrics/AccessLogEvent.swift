@@ -6,7 +6,7 @@
 
 import AVFoundation
 
-struct AccessLogEvent {
+struct AccessLogEvent: Equatable {
     let playbackStartDate: Date
 
     // MARK: Optional information

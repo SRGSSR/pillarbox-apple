@@ -6,13 +6,13 @@
 
 import AVFoundation
 
-struct MetricsState {
+struct MetricsState: Equatable {
     static let empty = Self(date: nil, total: .zero, previousOpenEvent: nil, openEvent: nil)
 
-    let date: Date?
-    let total: MetricsValues
-    let previousOpenEvent: AccessLogEvent?
-    let openEvent: AccessLogEvent?
+    private let date: Date?
+    private let total: MetricsValues
+    private let previousOpenEvent: AccessLogEvent?
+    private let openEvent: AccessLogEvent?
 
     func updated(with log: AccessLog) -> Self {
         guard let lastClosedEvent = log.closedEvents.last else {
