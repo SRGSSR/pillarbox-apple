@@ -9,7 +9,7 @@ import AVFoundation
 struct MetricsState: Equatable {
     static let empty = Self(cache: .empty, metrics: .empty)
 
-    private let cache: MetricsCache
+    private let cache: Cache
     let metrics: Metrics
 
     func updated(with log: AccessLog) -> Self {
@@ -34,5 +34,24 @@ struct MetricsState: Equatable {
 
     func updated(with log: AVPlayerItemAccessLog) -> Self {
         updated(with: .init(log, after: cache.date))
+    }
+}
+
+private extension MetricsState {
+    struct Cache: Equatable {
+        static let empty = Self(date: nil, total: .zero)
+
+        let date: Date?
+        let total: MetricsValues
+
+        func updated(with events: [AccessLogEvent]) -> Self {
+            guard let lastEvent = events.last else { return self }
+            return .init(
+                date: lastEvent.playbackStartDate,
+                total: events.reduce(total) { initial, next in
+                    initial.adding(.values(from: next))
+                }
+            )
+        }
     }
 }
