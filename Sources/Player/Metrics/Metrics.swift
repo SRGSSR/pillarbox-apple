@@ -78,3 +78,25 @@ public struct Metrics: Equatable {
     /// The associated total.
     public let total: MetricsValues
 }
+
+extension Metrics {
+    func updated(with event: AccessLogEvent, total: MetricsValues) -> Metrics {
+        .init(
+            uri: event.uri,
+            serverAddress: event.serverAddress,
+            playbackSessionId: event.playbackSessionId,
+            playbackStartDate: event.playbackStartDate,
+            playbackStartOffset: event.playbackStartOffset,
+            playbackType: event.playbackType,
+            startupTime: event.startupTime,
+            observedBitrateStandardDeviation: event.observedBitrateStandardDeviation,
+            indicatedBitrate: event.indicatedBitrate,
+            observedBitrate: event.observedBitrate,
+            averageAudioBitrate: event.averageAudioBitrate,
+            averageVideoBitrate: event.averageVideoBitrate,
+            indicatedAverageBitrate: event.indicatedAverageBitrate,
+            increment: total.subtracting(self.total),
+            total: total
+        )
+    }
+}

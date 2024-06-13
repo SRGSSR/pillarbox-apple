@@ -12,26 +12,6 @@ struct MetricsState: Equatable {
     private let cache: MetricsCache
     let metrics: Metrics
 
-    private func updatedMetrics(with event: AccessLogEvent, total: MetricsValues) -> Metrics {
-        .init(
-            uri: event.uri,
-            serverAddress: event.serverAddress,
-            playbackSessionId: event.playbackSessionId,
-            playbackStartDate: event.playbackStartDate,
-            playbackStartOffset: event.playbackStartOffset,
-            playbackType: event.playbackType,
-            startupTime: event.startupTime,
-            observedBitrateStandardDeviation: event.observedBitrateStandardDeviation,
-            indicatedBitrate: event.indicatedBitrate,
-            observedBitrate: event.observedBitrate,
-            averageAudioBitrate: event.averageAudioBitrate,
-            averageVideoBitrate: event.averageVideoBitrate,
-            indicatedAverageBitrate: event.indicatedAverageBitrate,
-            increment: total.subtracting(metrics.total),
-            total: total
-        )
-    }
-
     func updated(with log: AccessLog) -> Self {
         let cache = cache.updated(with: log.closedEvents)
 
@@ -39,13 +19,13 @@ struct MetricsState: Equatable {
             let total = cache.total.adding(.values(from: openEvent))
             return .init(
                 cache: cache,
-                metrics: updatedMetrics(with: openEvent, total: total)
+                metrics: metrics.updated(with: openEvent, total: total)
             )
         }
         else if let lastClosedEvent = log.closedEvents.last {
             return .init(
                 cache: cache,
-                metrics: updatedMetrics(with: lastClosedEvent, total: cache.total)
+                metrics: metrics.updated(with: lastClosedEvent, total: cache.total)
             )
         }
         else {
