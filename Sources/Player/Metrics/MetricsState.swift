@@ -7,23 +7,23 @@
 import AVFoundation
 
 struct MetricsState: Equatable {
-    static let empty = Self(date: nil, total: .zero, metrics: .empty)
+    static let empty = Self(cachedDate: nil, cachedTotal: .zero, metrics: .empty)
 
-    private let date: Date?
-    private let total: MetricsValues
+    private let cachedDate: Date?
+    private let cachedTotal: MetricsValues
 
     let metrics: Metrics
 
     func updated(with log: AccessLog) -> Self {
-        let total = log.closedEvents.reduce(total) { initial, next in
+        let total = log.closedEvents.reduce(cachedTotal) { initial, next in
             initial.adding(.values(from: next))
         }
 
         if let openEvent = log.openEvent {
             let openTotal = total.adding(.values(from: openEvent))
             return .init(
-                date: log.closedEvents.last?.playbackStartDate ?? date,
-                total: total,
+                cachedDate: log.closedEvents.last?.playbackStartDate ?? cachedDate,
+                cachedTotal: total,
                 metrics: .init(
                     uri: openEvent.uri,
                     serverAddress: openEvent.serverAddress,
@@ -45,8 +45,8 @@ struct MetricsState: Equatable {
         }
         else if let lastClosedEvent = log.closedEvents.last {
             return .init(
-                date: lastClosedEvent.playbackStartDate,
-                total: total,
+                cachedDate: lastClosedEvent.playbackStartDate,
+                cachedTotal: total,
                 metrics: .init(
                     uri: lastClosedEvent.uri,
                     serverAddress: lastClosedEvent.serverAddress,
@@ -72,6 +72,6 @@ struct MetricsState: Equatable {
     }
 
     func updated(with log: AVPlayerItemAccessLog) -> Self {
-        updated(with: .init(log, after: date))
+        updated(with: .init(log, after: cachedDate))
     }
 }
