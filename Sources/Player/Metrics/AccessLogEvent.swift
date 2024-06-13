@@ -133,10 +133,4 @@ extension AccessLogEvent {
     static func optional<T>(_ value: T) -> T? where T: Comparable & SignedNumeric {
         value < .zero ? nil : value
     }
-
-    func increment(from other: Self?) -> MetricsValues {
-        let values = MetricsValues.metrics(from: self)
-        let otherValues = MetricsValues.metrics(from: other)
-        return values.subtracting(otherValues)
-    }
 }

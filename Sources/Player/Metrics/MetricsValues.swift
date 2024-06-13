@@ -61,9 +61,8 @@ public struct MetricsValues: Equatable {
     /// The bandwidth value that causes a switch, up or down, in the item's quality being played.
     public let switchBitrate: Double
 
-    static func metrics(from event: AccessLogEvent?) -> Self {
-        guard let event else { return .zero }
-        return .init(
+    static func values(from event: AccessLogEvent) -> Self {
+        .init(
             numberOfServerAddressChanges: event.numberOfServerAddressChanges,
             mediaRequestsWWAN: event.mediaRequestsWWAN,
             transferDuration: event.transferDuration,

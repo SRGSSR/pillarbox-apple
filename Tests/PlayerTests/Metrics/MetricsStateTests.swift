@@ -44,8 +44,8 @@ class MetricsStateTests: TestCase {
             ],
             after: nil
         ))
-        let metrics = state.metrics()
-
+        
+        let metrics = state.metrics
         expect(metrics.playbackStartDate).to(equal(Date(timeIntervalSince1970: 1)))
         expect(metrics.uri).to(equal("uri"))
         expect(metrics.serverAddress).to(equal("serverAddress"))
@@ -101,7 +101,7 @@ class MetricsStateTests: TestCase {
             after: .init(timeIntervalSince1970: 1)
         ))
 
-        let metrics = state.metrics()
+        let metrics = state.metrics
         expect(metrics.increment.numberOfStalls).to(equal(3))
         expect(metrics.total.numberOfStalls).to(equal(6))
     }
@@ -123,7 +123,7 @@ class MetricsStateTests: TestCase {
             after: .init(timeIntervalSince1970: 1)
         ))
 
-        let metrics = state.metrics()
+        let metrics = state.metrics
         expect(metrics.increment.numberOfStalls).to(equal(5))
         expect(metrics.total.numberOfStalls).to(equal(11))
     }
@@ -145,7 +145,7 @@ class MetricsStateTests: TestCase {
             after: .init(timeIntervalSince1970: 1)
         ))
 
-        let metrics = state.metrics()
+        let metrics = state.metrics
         expect(metrics.increment.numberOfStalls).to(equal(2))
         expect(metrics.total.numberOfStalls).to(equal(5))
     }

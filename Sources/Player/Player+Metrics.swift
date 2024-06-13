@@ -27,7 +27,7 @@ public extension Player {
                     .scan(MetricsState.empty) { initial, next in
                         initial.updated(with: next)
                     }
-                    .map { $0.metrics() }
+                    .map(\.metrics)
                     .eraseToAnyPublisher()
             }
             .switchToLatest()
