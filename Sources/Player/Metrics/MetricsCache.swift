@@ -13,11 +13,12 @@ struct MetricsCache: Equatable {
     let total: MetricsValues
 
     func updated(with events: [AccessLogEvent]) -> Self {
-        events.reduce(self) { initial, next in
-            .init(
-                date: next.playbackStartDate,
-                total: total.adding(.values(from: next))
-            )
-        }
+        guard let lastEvent = events.last else { return self }
+        return .init(
+            date: lastEvent.playbackStartDate,
+            total: events.reduce(total) { initial, next in
+                initial.adding(.values(from: next))
+            }
+        )
     }
 }
