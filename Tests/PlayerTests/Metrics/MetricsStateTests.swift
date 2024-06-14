@@ -61,6 +61,29 @@ class MetricsStateTests: TestCase {
         expect(metrics.total.numberOfStalls).to(equal(11))
     }
 
+    func testUpdateWithMultipleClosedAndInvalidEvents() {
+        let initialState = MetricsState.empty.updated(with: .init(
+            events: [
+                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 5)
+            ],
+            after: nil
+        ))!
+        let state = initialState.updated(with: .init(
+            events: [
+                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 8),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 3), numberOfStalls: 2),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 4), numberOfStalls: 7)
+            ],
+            after: .init(timeIntervalSince1970: 1)
+        ))!
+
+        let metrics = state.metrics(from: initialState)!
+        expect(metrics.increment.numberOfStalls).to(equal(12))
+        expect(metrics.total.numberOfStalls).to(equal(18))
+    }
+
     func testUpdateWithClosedAndInvalidEvents() {
         let initialState = MetricsState.empty.updated(with: .init(
             events: [
