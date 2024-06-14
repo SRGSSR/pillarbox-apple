@@ -107,6 +107,11 @@ The PillarboxPlayer framework fully integrates with SwiftUI, embracing its decla
 - ``SCNQuaternionRotate(_:_:_:)``
 - ``SCNQuaternionWithAngleAndAxis(_:_:_:_:)``
 
+### Metrics
+
+- ``Metrics``
+- ``MetricsValues``
+
 ### Technical Notes
 
 - <doc:stream-packaging-advice>
