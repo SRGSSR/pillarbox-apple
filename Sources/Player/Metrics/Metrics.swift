@@ -15,7 +15,7 @@ public struct Metrics: Equatable {
     /// The player time at the time metrics were captured.
     public let time: CMTime
 
-    // MARK: Getting Server-Related Log Events
+    // MARK: Server information
 
     /// The URI of the playback item.
     public let uri: String?
@@ -23,10 +23,10 @@ public struct Metrics: Equatable {
     /// The IP address of the server that was the source of the last delivered media segment.
     public let serverAddress: String?
 
+    // MARK: Playback-related information
+
     /// A GUID that identifies the current playback session.
     public let playbackSessionId: String?
-
-    // MARK: Getting Playback-Related Log Events
 
     /// The offset, in seconds, in the playlist where the last uninterrupted period of playback began.
     public let playbackStartOffset: TimeInterval?
@@ -37,16 +37,19 @@ public struct Metrics: Equatable {
     /// The accumulated duration, in seconds, until the player item is ready to play.
     public let startupTime: TimeInterval?
 
-    // MARK: Getting Bit Rate Log Events
-    // The observed properties measure actual network download performance and indicated properties measure the bit rate of the media.
+    // MARK: Bitrate information
 
     /// The standard deviation of the observed segment download bit rates.
+    ///
+    /// Measures actual network download performance.
     public let observedBitrateStandardDeviation: Double?
 
     /// The throughput, in bits per second, required to play the stream, as advertised by the server.
     public let indicatedBitrate: Double?
 
-    /// The empirical throughput, in bits per second, across all media downloaded (bandwidth).
+    /// The empirical throughput, in bits per second, across all media downloaded.
+    ///
+    /// Measures actual network download performance. Provides a bandwidth estimate.
     public let observedBitrate: Double?
 
     /// The audio track’s average bit rate, in bits per second.
@@ -57,6 +60,8 @@ public struct Metrics: Equatable {
 
     /// The average throughput, in bits per second, required to play the stream, as advertised by the server.
     public let indicatedAverageBitrate: Double?
+
+    // MARK: Values
 
     /// The associated increment.
     public let increment: MetricsValues
