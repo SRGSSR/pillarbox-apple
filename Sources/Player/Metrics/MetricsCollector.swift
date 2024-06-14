@@ -5,6 +5,7 @@
 //
 
 import Combine
+import CoreMedia
 import SwiftUI
 
 public final class MetricsCollector: ObservableObject {
@@ -12,6 +13,16 @@ public final class MetricsCollector: ObservableObject {
     ///
     /// Use `View.bind(_:to:)` in SwiftUI code.
     @Published public var player: Player?
+
+    /// Creates a metrics collector gathering metrics at the specified interval.
+    ///
+    /// - Parameter interval: The interval at which progress must be updated, according to progress of the current
+    ///   time of the associated player timebase.
+    ///
+    /// Additional metrics will be collected when time jumps or when playback starts or stops.
+    public init(interval: CMTime) {
+
+    }
 }
 
 public extension View {

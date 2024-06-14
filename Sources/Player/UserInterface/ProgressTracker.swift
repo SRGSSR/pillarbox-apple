@@ -10,12 +10,12 @@ import SwiftUI
 
 /// An observable object tracking playback progress.
 ///
-/// A progress tracker is an [ObservableObject](https://developer.apple.com/documentation/combine/observableobject) 
+/// A progress tracker is an [ObservableObject](https://developer.apple.com/documentation/combine/observableobject)
 /// used to read and update the progress of an associated ``Player``. It automatically provides current progress
 /// information as well as the available range for its values. It also ensures that interactive progress updates
 /// do not conflict with reported progress updates, ensuring a smooth user experience.
 ///
-/// > Warning: Progress trackers should be associated with local view scopes to avoid unnecessary view body refreshes. 
+/// > Warning: Progress trackers should be associated with local view scopes to avoid unnecessary view body refreshes.
 /// Please refer to <doc:state-observation> for more information.
 ///
 /// ## Usage
@@ -117,9 +117,13 @@ public final class ProgressTracker: ObservableObject {
     }
 
     /// Creates a progress tracker updating its progress at the specified interval.
-    ///  
-    /// - Parameter interval: The interval at which progress must be updated.
-    /// - Parameter seekBehavior: The seek behavior to apply.
+    ///
+    /// - Parameters:
+    ///   - interval: The interval at which progress must be updated, according to progress of the current
+    ///     time of the timebase.
+    ///   - seekBehavior: The seek behavior to apply.
+    ///
+    /// Additional updates will happen when time jumps or when playback starts or stops.
     public init(interval: CMTime, seekBehavior: SeekBehavior = .immediate) {
         self.seekBehavior = seekBehavior
         $player
