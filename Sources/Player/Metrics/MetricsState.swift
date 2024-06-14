@@ -12,7 +12,7 @@ struct MetricsState: Equatable {
     private let time: CMTime
     private let event: AccessLogEvent?
     private let total: MetricsValues
-    private let cache: Cache
+    let cache: Cache
 
     func updated(with log: AccessLog, at time: CMTime) -> Self? {
         let cache = cache.updated(with: log)
@@ -55,7 +55,7 @@ struct MetricsState: Equatable {
     }
 }
 
-private extension MetricsState {
+extension MetricsState {
     struct Cache: Equatable {
         static let empty = Self(date: nil, total: .zero)
 
