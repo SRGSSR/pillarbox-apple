@@ -79,35 +79,35 @@ public struct MetricsValues: Equatable {
 }
 
 extension MetricsValues {
-    func adding(_ values: Self) -> Self {
+    static func + (lhs: Self, rhs: Self) -> Self {
         .init(
-            numberOfServerAddressChanges: numberOfServerAddressChanges + values.numberOfServerAddressChanges,
-            mediaRequestsWWAN: mediaRequestsWWAN + values.mediaRequestsWWAN,
-            transferDuration: transferDuration + values.transferDuration,
-            numberOfBytesTransferred: numberOfBytesTransferred + values.numberOfBytesTransferred,
-            numberOfMediaRequests: numberOfMediaRequests + values.numberOfMediaRequests,
-            durationWatched: durationWatched + values.durationWatched,
-            numberOfDroppedVideoFrames: numberOfDroppedVideoFrames + values.numberOfDroppedVideoFrames,
-            numberOfStalls: numberOfStalls + values.numberOfStalls,
-            segmentsDownloadedDuration: segmentsDownloadedDuration + values.segmentsDownloadedDuration,
-            downloadOverdue: downloadOverdue + values.downloadOverdue,
-            switchBitrate: switchBitrate + values.switchBitrate
+            numberOfServerAddressChanges: lhs.numberOfServerAddressChanges + rhs.numberOfServerAddressChanges,
+            mediaRequestsWWAN: lhs.mediaRequestsWWAN + rhs.mediaRequestsWWAN,
+            transferDuration: lhs.transferDuration + rhs.transferDuration,
+            numberOfBytesTransferred: lhs.numberOfBytesTransferred + rhs.numberOfBytesTransferred,
+            numberOfMediaRequests: lhs.numberOfMediaRequests + rhs.numberOfMediaRequests,
+            durationWatched: lhs.durationWatched + rhs.durationWatched,
+            numberOfDroppedVideoFrames: lhs.numberOfDroppedVideoFrames + rhs.numberOfDroppedVideoFrames,
+            numberOfStalls: lhs.numberOfStalls + rhs.numberOfStalls,
+            segmentsDownloadedDuration: lhs.segmentsDownloadedDuration + rhs.segmentsDownloadedDuration,
+            downloadOverdue: lhs.downloadOverdue + rhs.downloadOverdue,
+            switchBitrate: lhs.switchBitrate + rhs.switchBitrate
         )
     }
 
-    func subtracting(_ values: Self) -> Self {
+    static func - (lhs: Self, rhs: Self) -> Self {
         .init(
-            numberOfServerAddressChanges: numberOfServerAddressChanges - values.numberOfServerAddressChanges,
-            mediaRequestsWWAN: mediaRequestsWWAN - values.mediaRequestsWWAN,
-            transferDuration: transferDuration - values.transferDuration,
-            numberOfBytesTransferred: numberOfBytesTransferred - values.numberOfBytesTransferred,
-            numberOfMediaRequests: numberOfMediaRequests - values.numberOfMediaRequests,
-            durationWatched: durationWatched - values.durationWatched,
-            numberOfDroppedVideoFrames: numberOfDroppedVideoFrames - values.numberOfDroppedVideoFrames,
-            numberOfStalls: numberOfStalls - values.numberOfStalls,
-            segmentsDownloadedDuration: segmentsDownloadedDuration - values.segmentsDownloadedDuration,
-            downloadOverdue: downloadOverdue - values.downloadOverdue,
-            switchBitrate: switchBitrate - values.switchBitrate
+            numberOfServerAddressChanges: lhs.numberOfServerAddressChanges - rhs.numberOfServerAddressChanges,
+            mediaRequestsWWAN: lhs.mediaRequestsWWAN - rhs.mediaRequestsWWAN,
+            transferDuration: lhs.transferDuration - rhs.transferDuration,
+            numberOfBytesTransferred: lhs.numberOfBytesTransferred - rhs.numberOfBytesTransferred,
+            numberOfMediaRequests: lhs.numberOfMediaRequests - rhs.numberOfMediaRequests,
+            durationWatched: lhs.durationWatched - rhs.durationWatched,
+            numberOfDroppedVideoFrames: lhs.numberOfDroppedVideoFrames - rhs.numberOfDroppedVideoFrames,
+            numberOfStalls: lhs.numberOfStalls - rhs.numberOfStalls,
+            segmentsDownloadedDuration: lhs.segmentsDownloadedDuration - rhs.segmentsDownloadedDuration,
+            downloadOverdue: lhs.downloadOverdue - rhs.downloadOverdue,
+            switchBitrate: lhs.switchBitrate - rhs.switchBitrate
         )
     }
 }
