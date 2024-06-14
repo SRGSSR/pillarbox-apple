@@ -193,7 +193,7 @@ final class MetricsStateTests: TestCase {
         )
         let state = MetricsState.empty.updated(with: log, at: .zero)!
         expect(log.closedEvents.count).to(equal(2))
-        expect(state.cache.date).to(beNil())
+        expect(state.cache.date).to(equal(.init(timeIntervalSince1970: 2)))
         expect(state.cache.total.numberOfStalls).to(equal(30))
     }
 
