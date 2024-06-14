@@ -182,6 +182,12 @@ final class MetricsStateTests: TestCase {
         expect(metrics.total.switchBitrate).to(equal(20))
     }
 
+    func testEmptyCache() {
+        let state = MetricsState.empty
+        expect(state.cache.date).to(beNil())
+        expect(state.cache.total.numberOfStalls).to(equal(0))
+    }
+
     func testCacheWithoutDate() {
         let log = AccessLog(
             events: [
