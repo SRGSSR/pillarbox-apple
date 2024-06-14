@@ -18,7 +18,7 @@ struct MetricsState: Equatable {
 
     private func updatedWithOpenEvent(from log: AccessLog) -> Self? {
         guard let openEvent = log.openEvent else { return nil }
-        let updatedCache = cache.updated(with: log.closedEvents)
+        let updatedCache = cache.updated(with: log)
         return .init(
             metrics: metrics.updated(
                 with: openEvent,
@@ -30,7 +30,7 @@ struct MetricsState: Equatable {
 
     private func updatedWithClosedEvents(from log: AccessLog) -> Self? {
         guard let lastClosedEvent = log.closedEvents.last else { return nil }
-        let updatedCache = cache.updated(with: log.closedEvents)
+        let updatedCache = cache.updated(with: log)
         return .init(
             metrics: metrics.updated(with: lastClosedEvent, total: updatedCache.total),
             cache: updatedCache
@@ -49,11 +49,11 @@ private extension MetricsState {
         let date: Date?
         let total: MetricsValues
 
-        func updated(with events: [AccessLogEvent]) -> Self {
-            guard let lastEvent = events.last else { return self }
+        func updated(with log: AccessLog) -> Self {
+            guard let lastEvent = log.closedEvents.last else { return self }
             return .init(
                 date: lastEvent.playbackStartDate,
-                total: events.reduce(total) { initial, next in
+                total: log.closedEvents.reduce(total) { initial, next in
                     initial.adding(.values(from: next))
                 }
             )
