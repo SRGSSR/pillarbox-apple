@@ -19,10 +19,10 @@ private let kUnifiedStreamingImageUrl2 = URL("https://website-storage.unified-st
 // Unified Streaming streams are found at https://demo.unified-streaming.com/k8s/features/stable/#!/hls
 enum URLTemplate {
     static let onDemandVideoHLS = Template(
-        title: "Switzerland says sorry! The fondue invasion",
+        title: "Sacha part à la rencontre d'univers atypiques",
         subtitle: "VOD - HLS",
-        imageUrl: "https://cdn.prod.swi-services.ch/video-delivery/images/14e4562f-725d-4e41-a200-7fcaa77df2fe/5rwf1Bq_m3GC5secOZcIcgbbrbZPf4nI/16x9",
-        type: .url("https://swi-vod.akamaized.net/videoJson/47603186/master.m3u8")
+        imageUrl: "https://www.rts.ch/2024/06/13/11/34/14970435.image/16x9",
+        type: .url("https://rts-vod-amd.akamaized.net/ww/14970442/7510ee63-05a4-3d48-8d26-1f1b3a82f6be/master.m3u8")
     )
     static let shortOnDemandVideoHLS = Template(
         title: "Des violents orages ont touché Ajaccio, chef-lieu de la Corse, jeudi",
