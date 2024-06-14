@@ -10,8 +10,81 @@ import AVFoundation
 import Nimble
 
 class MetricsStateTests: TestCase {
+    func testUpdateWithoutEvents() {
+        let state = MetricsState.empty.updated(with: .init(
+            events: [],
+            after: .init(timeIntervalSince1970: 1)
+        ))
+        expect(state).to(beNil())
+    }
+
+    func testUpdateWithOpenEvent() {
+        let initialState = MetricsState.empty.updated(with: .init(
+            events: [
+                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 2)
+            ],
+            after: nil
+        ))!
+        let state = initialState.updated(with: .init(
+            events: [
+                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 5)
+            ],
+            after: .init(timeIntervalSince1970: 1)
+        ))!
+
+        let metrics = state.metrics(from: initialState)!
+        expect(metrics.increment.numberOfStalls).to(equal(3))
+        expect(metrics.total.numberOfStalls).to(equal(6))
+    }
+
+    func testUpdateWithClosedAndOpenEvents() {
+        let initialState = MetricsState.empty.updated(with: .init(
+            events: [
+                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 5)
+            ],
+            after: nil
+        ))!
+        let state = initialState.updated(with: .init(
+            events: [
+                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 8),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 3), numberOfStalls: 2)
+            ],
+            after: .init(timeIntervalSince1970: 1)
+        ))!
+
+        let metrics = state.metrics(from: initialState)!
+        expect(metrics.increment.numberOfStalls).to(equal(5))
+        expect(metrics.total.numberOfStalls).to(equal(11))
+    }
+
+    func testUpdateWithClosedAndInvalidEvents() {
+        let initialState = MetricsState.empty.updated(with: .init(
+            events: [
+                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 2)
+            ],
+            after: nil
+        ))!
+        let state = initialState.updated(with: .init(
+            events: [
+                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 4),
+                nil
+            ],
+            after: .init(timeIntervalSince1970: 1)
+        ))!
+
+        let metrics = state.metrics(from: initialState)!
+        expect(metrics.increment.numberOfStalls).to(equal(2))
+        expect(metrics.total.numberOfStalls).to(equal(5))
+    }
+
     // swiftlint:disable:next function_body_length
-    func testFirstUpdate() {
+    func testMetrics() {
         let initialState = MetricsState.empty
         let state = initialState.updated(with: .init(
             events: [
@@ -43,7 +116,7 @@ class MetricsStateTests: TestCase {
                 )
             ],
             after: nil
-        ))
+        ))!
 
         let metrics = state.metrics(from: initialState)!
         expect(metrics.playbackStartDate).to(equal(Date(timeIntervalSince1970: 1)))
@@ -83,75 +156,6 @@ class MetricsStateTests: TestCase {
         expect(metrics.total.segmentsDownloadedDuration).to(equal(18))
         expect(metrics.total.downloadOverdue).to(equal(19))
         expect(metrics.total.switchBitrate).to(equal(20))
-    }
-
-    func testUpdateWithOpenEvent() {
-        let initialState = MetricsState.empty.updated(with: .init(
-            events: [
-                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 2)
-            ],
-            after: nil
-        ))
-        let state = initialState.updated(with: .init(
-            events: [
-                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 5)
-            ],
-            after: .init(timeIntervalSince1970: 1)
-        ))
-
-        let metrics = state.metrics(from: initialState)!
-        expect(metrics.increment.numberOfStalls).to(equal(3))
-        expect(metrics.total.numberOfStalls).to(equal(6))
-    }
-
-    func testUpdateWithClosedAndOpenEvents() {
-        let initialState = MetricsState.empty.updated(with: .init(
-            events: [
-                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 5)
-            ],
-            after: nil
-        ))
-        let state = initialState.updated(with: .init(
-            events: [
-                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 8),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 3), numberOfStalls: 2)
-            ],
-            after: .init(timeIntervalSince1970: 1)
-        ))
-
-        let metrics = state.metrics(from: initialState)!
-        expect(metrics.increment.numberOfStalls).to(equal(5))
-        expect(metrics.total.numberOfStalls).to(equal(11))
-    }
-
-    func testUpdateWithClosedAndInvalidEvents() {
-        let initialState = MetricsState.empty.updated(with: .init(
-            events: [
-                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 2)
-            ],
-            after: nil
-        ))
-        let state = initialState.updated(with: .init(
-            events: [
-                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 4),
-                nil
-            ],
-            after: .init(timeIntervalSince1970: 1)
-        ))
-
-        let metrics = state.metrics(from: initialState)!
-        expect(metrics.increment.numberOfStalls).to(equal(2))
-        expect(metrics.total.numberOfStalls).to(equal(5))
-    }
-
-    func testUpdateWithoutEvents() {
-        
     }
 }
 

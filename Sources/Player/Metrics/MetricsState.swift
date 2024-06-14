@@ -13,7 +13,7 @@ struct MetricsState: Equatable {
     private let total: MetricsValues
     private let cache: Cache
 
-    func updated(with log: AccessLog) -> Self {
+    func updated(with log: AccessLog) -> Self? {
         let cache = cache.updated(with: log)
         if let openEvent = log.openEvent {
             return .init(event: openEvent, total: cache.total.adding(.values(from: openEvent)), cache: cache)
@@ -22,15 +22,16 @@ struct MetricsState: Equatable {
             return .init(event: lastClosedEvent, total: cache.total, cache: cache)
         }
         else {
-            return self
+            return nil
         }
     }
 
-    func updated(with log: AVPlayerItemAccessLog) -> Self {
-        updated(with: .init(log, after: cache.date))
+    func updated(with log: AVPlayerItemAccessLog?) -> Self? {
+        guard let log else { return nil }
+        return updated(with: .init(log, after: cache.date))
     }
 
-    func metrics(from state: MetricsState) -> Metrics? {
+    func metrics(from state: Self) -> Metrics? {
         guard let event else { return nil }
         return .init(
             playbackStartDate: event.playbackStartDate,

@@ -27,7 +27,7 @@ struct ItemProperties: Equatable {
     let metricsState: MetricsState
 
     func metrics() -> Metrics? {
-        guard let log = item?.accessLog() else { return nil }
-        return metricsState.updated(with: log).metrics(from: metricsState)
+        guard let updatedState = metricsState.updated(with: item?.accessLog()) else { return nil }
+        return updatedState.metrics(from: metricsState)
     }
 }

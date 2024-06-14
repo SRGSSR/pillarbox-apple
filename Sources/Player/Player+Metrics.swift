@@ -26,7 +26,7 @@ public extension Player {
                 return Publishers.PeriodicTimePublisher(for: queuePlayer, interval: interval, queue: kMetricsQueue)
                     .compactMap { _ in item.accessLog() }
                     .scan(MetricsState.empty) { initial, next in
-                        initial.updated(with: next)
+                        initial.updated(with: next) ?? initial
                     }
                     .removeDuplicates()
                     .withPrevious(MetricsState.empty)
