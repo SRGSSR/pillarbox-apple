@@ -196,6 +196,22 @@ final class MetricsStateTests: TestCase {
         expect(state.cache.date).to(beNil())
         expect(state.cache.total.numberOfStalls).to(equal(30))
     }
+
+    func testCacheWithDate() {
+        let log = AccessLog(
+            events: [
+                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 10),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 20),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 3), numberOfStalls: 50)
+            ],
+            after: .init(timeIntervalSince1970: 1)
+        )
+        let state = MetricsState.empty.updated(with: log, at: .zero)!
+
+        expect(log.closedEvents.count).to(equal(1))
+        expect(state.cache.date).to(equal(.init(timeIntervalSince1970: 2)))
+        expect(state.cache.total.numberOfStalls).to(equal(20))
+    }
 }
 
 private extension AccessLogEvent {
