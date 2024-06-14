@@ -109,4 +109,4 @@ The PillarboxPlayer framework fully integrates with SwiftUI, embracing its decla
 
 ### Technical Notes
 
-- <doc:stream-packaging-advice>
+- <doc:stream-encoding-and-packaging-advice>
