@@ -24,7 +24,7 @@ public extension Player {
             .map { [queuePlayer] item -> AnyPublisher<Metrics?, Never> in
                 guard let item else { return Just(nil).eraseToAnyPublisher() }
                 return Publishers.PeriodicTimePublisher(for: queuePlayer, interval: interval, queue: kMetricsQueue)
-                    .compactMap { _ in item.accessLog() }
+                    .map { _ in item.accessLog() }
                     .scan(MetricsState.empty) { initial, next in
                         initial.updated(with: next) ?? initial
                     }

@@ -163,7 +163,6 @@ extension AVPlayerItem {
                 return item.accessLog()
             }
             .prepend(accessLog())
-            .compactMap { $0 }
             .scan(.empty) { initial, next in
                 initial.updated(with: next) ?? initial
             }
