@@ -14,6 +14,11 @@ public final class MetricsCollector: ObservableObject {
     /// Use `View.bind(_:to:)` in SwiftUI code.
     @Published public var player: Player?
 
+    /// The available metrics history.
+    ///
+    /// Entries are sorted from the lowest to the most recent one.
+    @Published public private(set) var metrics: [Metrics] = []
+
     /// Creates a metrics collector gathering metrics at the specified interval.
     ///
     /// - Parameter interval: The interval at which progress must be updated, according to progress of the current
@@ -21,7 +26,21 @@ public final class MetricsCollector: ObservableObject {
     ///
     /// Additional metrics will be collected when time jumps or when playback starts or stops.
     public init(interval: CMTime) {
-
+        $player
+            .removeDuplicates()
+            .map { player -> AnyPublisher<Metrics?, Never> in
+                guard let player else {
+                    return Just(nil).eraseToAnyPublisher()
+                }
+                return player.periodicMetricsPublisher(forInterval: interval)
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .compactMap { $0 }
+            .removeDuplicates()
+            .scan([]) { $0 + [$1] }
+            .receiveOnMainThread()
+            .assign(to: &$metrics)
     }
 }
 
