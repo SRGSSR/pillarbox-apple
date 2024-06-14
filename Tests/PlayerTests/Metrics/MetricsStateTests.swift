@@ -181,6 +181,21 @@ final class MetricsStateTests: TestCase {
         expect(metrics.total.downloadOverdue).to(equal(19))
         expect(metrics.total.switchBitrate).to(equal(20))
     }
+
+    func testCacheWithoutDate() {
+        let log = AccessLog(
+            events: [
+                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 10),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 20),
+                .init(playbackStartDate: .init(timeIntervalSince1970: 3), numberOfStalls: 50)
+            ],
+            after: nil
+        )
+        let state = MetricsState.empty.updated(with: log, at: .zero)!
+        expect(log.closedEvents.count).to(equal(2))
+        expect(state.cache.date).to(beNil())
+        expect(state.cache.total.numberOfStalls).to(equal(30))
+    }
 }
 
 private extension AccessLogEvent {
