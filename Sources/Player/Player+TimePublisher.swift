@@ -11,11 +11,12 @@ public extension Player {
     /// Returns a publisher periodically emitting the current time while the player is playing content.
     ///
     /// - Parameters:
-    ///   - interval: The interval at which events must be emitted.
+    ///   - interval: The interval at which events must be emitted, according to progress of the current time of the timebase.
     ///   - queue: The queue on which values are published.
     /// - Returns: The publisher.
     ///
-    /// The publisher does not emit any value on subscription. Only valid times are emitted.
+    /// The publisher does not emit any value on subscription. Only valid times are emitted. Additional non-periodic
+    /// updates will be published when time jumps or when playback starts or stops.
     func periodicTimePublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<CMTime, Never> {
         Publishers.PeriodicTimePublisher(for: queuePlayer, interval: interval, queue: queue)
     }

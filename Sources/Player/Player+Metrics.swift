@@ -11,14 +11,14 @@ import PillarboxCore
 private let kMetricsQueue = DispatchQueue(label: "ch.srgssr.player.metrics")
 
 public extension Player {
-    /// Returns a publisher periodically emitting the player metrics the player is playing content.
+    /// Returns a publisher periodically emitting metrics when the player is playing content.
     ///
     /// - Parameters:
-    ///   - interval: The interval at which events must be emitted.
+    ///   - interval: The interval at which events must be emitted, according to progress of the current time of the timebase.
     ///   - queue: The queue on which values are published.
     /// - Returns: The publisher.
     ///
-    /// Additional updates will be published whenever time jumps and whenever playback starts or stops.
+    /// Additional non-periodic updates will be published when time jumps or when playback starts or stops.
     func periodicMetricsPublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<Metrics?, Never> {
         queuePlayer.currentItemPublisher()
             .map { [queuePlayer] item -> AnyPublisher<Metrics?, Never> in
