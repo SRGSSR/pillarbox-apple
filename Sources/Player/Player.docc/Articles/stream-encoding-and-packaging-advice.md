@@ -73,6 +73,7 @@ These most notably contain the `mediastreamvalidator` command which which HLS st
 The following commands can be useful to inspect streams:
 
 - ffprobe, which is part of [ffmpeg](https://ffmpeg.org/ffprobe.html).
+- [TSDuck](https://tsduck.io/)
 - [MediaInfo](https://mediaarea.net/en/MediaInfo), which provides a GUI as well as a command-line tool.
 
 #### Proxy applications
