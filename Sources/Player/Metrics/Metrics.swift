@@ -8,23 +8,8 @@ import Foundation
 
 /// An object used to capture metrics associated with a player.
 public struct Metrics: Equatable {
-    static let empty = Self(
-        uri: nil,
-        serverAddress: nil,
-        playbackSessionId: nil,
-        playbackStartDate: nil,
-        playbackStartOffset: nil,
-        playbackType: nil,
-        startupTime: nil,
-        observedBitrateStandardDeviation: nil,
-        indicatedBitrate: nil,
-        observedBitrate: nil,
-        averageAudioBitrate: nil,
-        averageVideoBitrate: nil,
-        indicatedAverageBitrate: nil,
-        increment: .zero,
-        total: .zero
-    )
+    /// The date and time at which playback began.
+    public let playbackStartDate: Date
 
     // MARK: Getting Server-Related Log Events
 
@@ -38,9 +23,6 @@ public struct Metrics: Equatable {
     public let playbackSessionId: String?
 
     // MARK: Getting Playback-Related Log Events
-
-    /// The date and time at which playback began.
-    public let playbackStartDate: Date?
 
     /// The offset, in seconds, in the playlist where the last uninterrupted period of playback began.
     public let playbackStartOffset: TimeInterval?
@@ -77,26 +59,4 @@ public struct Metrics: Equatable {
 
     /// The associated total.
     public let total: MetricsValues
-}
-
-extension Metrics {
-    func updated(with event: AccessLogEvent, total: MetricsValues) -> Metrics {
-        .init(
-            uri: event.uri,
-            serverAddress: event.serverAddress,
-            playbackSessionId: event.playbackSessionId,
-            playbackStartDate: event.playbackStartDate,
-            playbackStartOffset: event.playbackStartOffset,
-            playbackType: event.playbackType,
-            startupTime: event.startupTime,
-            observedBitrateStandardDeviation: event.observedBitrateStandardDeviation,
-            indicatedBitrate: event.indicatedBitrate,
-            observedBitrate: event.observedBitrate,
-            averageAudioBitrate: event.averageAudioBitrate,
-            averageVideoBitrate: event.averageVideoBitrate,
-            indicatedAverageBitrate: event.indicatedAverageBitrate,
-            increment: total.subtracting(self.total),
-            total: total
-        )
-    }
 }

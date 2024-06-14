@@ -33,7 +33,7 @@ extension CoreProperties {
         itemProperties.presentationSize
     }
 
-    func metrics() -> Metrics {
+    func metrics() -> Metrics? {
         itemProperties.metrics()
     }
 }

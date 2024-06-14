@@ -103,10 +103,10 @@ public extension PlayerProperties {
         coreProperties.isMuted
     }
 
-    /// The current player metrics.
+    /// The current player metrics, if available.
     ///
     /// Each call to this function might return different results reflecting the most recent metrics available.
-    func metrics() -> Metrics {
+    func metrics() -> Metrics? {
         coreProperties.metrics()
     }
 }

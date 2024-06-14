@@ -6,6 +6,7 @@
 
 import Combine
 import CoreMedia
+import PillarboxCore
 
 private let kMetricsQueue = DispatchQueue(label: "ch.srgssr.player.metrics")
 
@@ -18,16 +19,18 @@ public extension Player {
     /// - Returns: The publisher.
     ///
     /// Additional updates will be published whenever time jumps and whenever playback starts or stops.
-    func periodicMetricsPublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<Metrics, Never> {
+    func periodicMetricsPublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<Metrics?, Never> {
         queuePlayer.currentItemPublisher()
-            .map { [queuePlayer] item -> AnyPublisher<Metrics, Never> in
-                guard let item else { return Just(.empty).eraseToAnyPublisher() }
+            .map { [queuePlayer] item -> AnyPublisher<Metrics?, Never> in
+                guard let item else { return Just(nil).eraseToAnyPublisher() }
                 return Publishers.PeriodicTimePublisher(for: queuePlayer, interval: interval, queue: kMetricsQueue)
                     .compactMap { _ in item.accessLog() }
                     .scan(MetricsState.empty) { initial, next in
                         initial.updated(with: next)
                     }
-                    .map(\.metrics)
+                    .removeDuplicates()
+                    .withPrevious(MetricsState.empty)
+                    .map { $0.current.metrics(from: $0.previous) }
                     .eraseToAnyPublisher()
             }
             .switchToLatest()

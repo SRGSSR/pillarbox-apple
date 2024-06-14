@@ -7,38 +7,48 @@
 import AVFoundation
 
 struct MetricsState: Equatable {
-    static let empty = Self(metrics: .empty, cache: .empty)
+    static let empty = Self(event: nil, total: .zero, cache: .empty)
 
-    let metrics: Metrics
+    private let event: AccessLogEvent?
+    private let total: MetricsValues
     private let cache: Cache
 
     func updated(with log: AccessLog) -> Self {
-        updatedWithOpenEvent(from: log) ?? updatedWithClosedEvents(from: log) ?? .empty
-    }
-
-    private func updatedWithOpenEvent(from log: AccessLog) -> Self? {
-        guard let openEvent = log.openEvent else { return nil }
-        let updatedCache = cache.updated(with: log)
-        return .init(
-            metrics: metrics.updated(
-                with: openEvent,
-                total: updatedCache.total.adding(.values(from: openEvent))
-            ),
-            cache: updatedCache
-        )
-    }
-
-    private func updatedWithClosedEvents(from log: AccessLog) -> Self? {
-        guard let lastClosedEvent = log.closedEvents.last else { return nil }
-        let updatedCache = cache.updated(with: log)
-        return .init(
-            metrics: metrics.updated(with: lastClosedEvent, total: updatedCache.total),
-            cache: updatedCache
-        )
+        let cache = cache.updated(with: log)
+        if let openEvent = log.openEvent {
+            return .init(event: openEvent, total: cache.total.adding(.values(from: openEvent)), cache: cache)
+        }
+        else if let lastClosedEvent = log.closedEvents.last {
+            return .init(event: lastClosedEvent, total: cache.total, cache: cache)
+        }
+        else {
+            return self
+        }
     }
 
     func updated(with log: AVPlayerItemAccessLog) -> Self {
         updated(with: .init(log, after: cache.date))
+    }
+
+    func metrics(from state: MetricsState) -> Metrics? {
+        guard let event else { return nil }
+        return .init(
+            playbackStartDate: event.playbackStartDate,
+            uri: event.uri,
+            serverAddress: event.serverAddress,
+            playbackSessionId: event.playbackSessionId,
+            playbackStartOffset: event.playbackStartOffset,
+            playbackType: event.playbackType,
+            startupTime: event.startupTime,
+            observedBitrateStandardDeviation: event.observedBitrateStandardDeviation,
+            indicatedBitrate: event.indicatedBitrate,
+            observedBitrate: event.observedBitrate,
+            averageAudioBitrate: event.averageAudioBitrate,
+            averageVideoBitrate: event.averageVideoBitrate,
+            indicatedAverageBitrate: event.indicatedAverageBitrate,
+            increment: total.subtracting(state.total),
+            total: total
+        )
     }
 }
 

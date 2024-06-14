@@ -45,7 +45,7 @@ class MetricsStateTests: TestCase {
             after: nil
         ))
 
-        let metrics = state.metrics
+        let metrics = state.metrics(from: initialState)!
         expect(metrics.playbackStartDate).to(equal(Date(timeIntervalSince1970: 1)))
         expect(metrics.uri).to(equal("uri"))
         expect(metrics.serverAddress).to(equal("serverAddress"))
@@ -85,7 +85,7 @@ class MetricsStateTests: TestCase {
         expect(metrics.total.switchBitrate).to(equal(20))
     }
 
-    func testUpdateOpenEvent() {
+    func testUpdateWithOpenEvent() {
         let initialState = MetricsState.empty.updated(with: .init(
             events: [
                 .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
@@ -101,7 +101,7 @@ class MetricsStateTests: TestCase {
             after: .init(timeIntervalSince1970: 1)
         ))
 
-        let metrics = state.metrics
+        let metrics = state.metrics(from: initialState)!
         expect(metrics.increment.numberOfStalls).to(equal(3))
         expect(metrics.total.numberOfStalls).to(equal(6))
     }
@@ -123,12 +123,12 @@ class MetricsStateTests: TestCase {
             after: .init(timeIntervalSince1970: 1)
         ))
 
-        let metrics = state.metrics
+        let metrics = state.metrics(from: initialState)!
         expect(metrics.increment.numberOfStalls).to(equal(5))
         expect(metrics.total.numberOfStalls).to(equal(11))
     }
 
-    func testWithInvalidUpdate() {
+    func testUpdateWithClosedAndInvalidEvents() {
         let initialState = MetricsState.empty.updated(with: .init(
             events: [
                 .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
@@ -145,9 +145,13 @@ class MetricsStateTests: TestCase {
             after: .init(timeIntervalSince1970: 1)
         ))
 
-        let metrics = state.metrics
+        let metrics = state.metrics(from: initialState)!
         expect(metrics.increment.numberOfStalls).to(equal(2))
         expect(metrics.total.numberOfStalls).to(equal(5))
+    }
+
+    func testUpdateWithoutEvents() {
+        
     }
 }
 
