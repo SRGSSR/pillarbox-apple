@@ -4,12 +4,16 @@
 //  License information is available from the LICENSE file.
 //
 
+import CoreMedia
 import Foundation
 
 /// An object used to capture metrics associated with a player.
 public struct Metrics: Equatable {
     /// The date and time at which playback began.
     public let playbackStartDate: Date
+
+    /// The player time at the time metrics were captured.
+    public let time: CMTime
 
     // MARK: Getting Server-Related Log Events
 

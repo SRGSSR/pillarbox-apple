@@ -14,7 +14,7 @@ class MetricsStateTests: TestCase {
         let state = MetricsState.empty.updated(with: .init(
             events: [],
             after: .init(timeIntervalSince1970: 1)
-        ))
+        ), at: .zero)
         expect(state).to(beNil())
     }
 
@@ -25,14 +25,14 @@ class MetricsStateTests: TestCase {
                 .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 2)
             ],
             after: nil
-        ))!
+        ), at: .zero)!
         let state = initialState.updated(with: .init(
             events: [
                 .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
                 .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 5)
             ],
             after: .init(timeIntervalSince1970: 1)
-        ))!
+        ), at: .zero)!
 
         let metrics = state.metrics(from: initialState)!
         expect(metrics.increment.numberOfStalls).to(equal(3))
@@ -46,7 +46,7 @@ class MetricsStateTests: TestCase {
                 .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 5)
             ],
             after: nil
-        ))!
+        ), at: .zero)!
         let state = initialState.updated(with: .init(
             events: [
                 .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
@@ -54,7 +54,7 @@ class MetricsStateTests: TestCase {
                 .init(playbackStartDate: .init(timeIntervalSince1970: 3), numberOfStalls: 2)
             ],
             after: .init(timeIntervalSince1970: 1)
-        ))!
+        ), at: .zero)!
 
         let metrics = state.metrics(from: initialState)!
         expect(metrics.increment.numberOfStalls).to(equal(5))
@@ -68,7 +68,7 @@ class MetricsStateTests: TestCase {
                 .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 5)
             ],
             after: nil
-        ))!
+        ), at: .zero)!
         let state = initialState.updated(with: .init(
             events: [
                 .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
@@ -77,7 +77,7 @@ class MetricsStateTests: TestCase {
                 .init(playbackStartDate: .init(timeIntervalSince1970: 4), numberOfStalls: 7)
             ],
             after: .init(timeIntervalSince1970: 1)
-        ))!
+        ), at: .zero)!
 
         let metrics = state.metrics(from: initialState)!
         expect(metrics.increment.numberOfStalls).to(equal(12))
@@ -91,7 +91,7 @@ class MetricsStateTests: TestCase {
                 .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 2)
             ],
             after: nil
-        ))!
+        ), at: .zero)!
         let state = initialState.updated(with: .init(
             events: [
                 .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
@@ -99,7 +99,7 @@ class MetricsStateTests: TestCase {
                 nil
             ],
             after: .init(timeIntervalSince1970: 1)
-        ))!
+        ), at: .zero)!
 
         let metrics = state.metrics(from: initialState)!
         expect(metrics.increment.numberOfStalls).to(equal(2))
@@ -139,10 +139,11 @@ class MetricsStateTests: TestCase {
                 )
             ],
             after: nil
-        ))!
+        ), at: .init(value: 12, timescale: 1))!
 
         let metrics = state.metrics(from: initialState)!
         expect(metrics.playbackStartDate).to(equal(Date(timeIntervalSince1970: 1)))
+        expect(metrics.time).to(equal(.init(value: 12, timescale: 1)))
         expect(metrics.uri).to(equal("uri"))
         expect(metrics.serverAddress).to(equal("serverAddress"))
         expect(metrics.playbackSessionId).to(equal("playbackSessionId"))

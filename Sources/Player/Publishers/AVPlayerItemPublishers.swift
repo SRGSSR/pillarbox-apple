@@ -158,13 +158,10 @@ extension AVPlayerItem {
 extension AVPlayerItem {
     func metricsStatePublisher() -> AnyPublisher<MetricsState, Never> {
         NotificationCenter.default.weakPublisher(for: AVPlayerItem.newAccessLogEntryNotification, object: self)
-            .map { notification in
-                guard let item = notification.object as? AVPlayerItem else { return nil }
-                return item.accessLog()
-            }
-            .prepend(accessLog())
+            .compactMap { $0.object as? AVPlayerItem }
+            .prepend(self)
             .scan(.empty) { initial, next in
-                initial.updated(with: next) ?? initial
+                initial.updated(with: next.accessLog(), at: next.currentTime()) ?? initial
             }
             .removeDuplicates()
             .eraseToAnyPublisher()

@@ -7,34 +7,36 @@
 import AVFoundation
 
 struct MetricsState: Equatable {
-    static let empty = Self(event: nil, total: .zero, cache: .empty)
+    static let empty = Self(time: nil, event: nil, total: .zero, cache: .empty)
 
+    private let time: CMTime?
     private let event: AccessLogEvent?
     private let total: MetricsValues
     private let cache: Cache
 
-    func updated(with log: AccessLog) -> Self? {
+    func updated(with log: AccessLog, at time: CMTime) -> Self? {
         let cache = cache.updated(with: log)
         if let openEvent = log.openEvent {
-            return .init(event: openEvent, total: cache.total + .values(from: openEvent), cache: cache)
+            return .init(time: time, event: openEvent, total: cache.total + .values(from: openEvent), cache: cache)
         }
         else if let lastClosedEvent = log.closedEvents.last {
-            return .init(event: lastClosedEvent, total: cache.total, cache: cache)
+            return .init(time: time, event: lastClosedEvent, total: cache.total, cache: cache)
         }
         else {
             return nil
         }
     }
 
-    func updated(with log: AVPlayerItemAccessLog?) -> Self? {
+    func updated(with log: AVPlayerItemAccessLog?, at time: CMTime) -> Self? {
         guard let log else { return nil }
-        return updated(with: .init(log, after: cache.date))
+        return updated(with: .init(log, after: cache.date), at: time)
     }
 
     func metrics(from state: Self) -> Metrics? {
-        guard let event else { return nil }
+        guard let event, let time else { return nil }
         return .init(
             playbackStartDate: event.playbackStartDate,
+            time: time,
             uri: event.uri,
             serverAddress: event.serverAddress,
             playbackSessionId: event.playbackSessionId,
