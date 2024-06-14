@@ -33,7 +33,7 @@ public struct MetricsValues: Equatable {
     /// The accumulated duration, in seconds, of active network transfer of bytes.
     public let transferDuration: TimeInterval
 
-    /// The accumulated number of bytes transferred by the item.
+    /// The accumulated number of bytes transferred by the current item.
     public let numberOfBytesTransferred: Int64
 
     /// The number of media read requests from the server to this client.
@@ -41,10 +41,10 @@ public struct MetricsValues: Equatable {
 
     // MARK: Getting Playback-Related Log Events
 
-    /// The accumulated duration, in seconds, of the media played.
+    /// The accumulated playback duration of the current item, in seconds.
     public let durationWatched: TimeInterval
 
-    /// The total number of dropped video frames
+    /// The total number of dropped video frames.
     public let numberOfDroppedVideoFrames: Int
 
     /// The total number of playback stalls encountered.
