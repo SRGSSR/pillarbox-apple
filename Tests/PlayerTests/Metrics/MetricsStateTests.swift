@@ -44,7 +44,7 @@ class MetricsStateTests: TestCase {
             ],
             after: nil
         ))
-        
+
         let metrics = state.metrics
         expect(metrics.playbackStartDate).to(equal(Date(timeIntervalSince1970: 1)))
         expect(metrics.uri).to(equal("uri"))

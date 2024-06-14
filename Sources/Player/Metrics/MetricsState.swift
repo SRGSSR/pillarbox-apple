@@ -7,29 +7,34 @@
 import AVFoundation
 
 struct MetricsState: Equatable {
-    static let empty = Self(cache: .empty, metrics: .empty)
+    static let empty = Self(metrics: .empty, cache: .empty)
 
-    private let cache: Cache
     let metrics: Metrics
+    private let cache: Cache
 
     func updated(with log: AccessLog) -> Self {
-        let cache = cache.updated(with: log.closedEvents)
-        if let openEvent = log.openEvent {
-            let total = cache.total.adding(.values(from: openEvent))
-            return .init(
-                cache: cache,
-                metrics: metrics.updated(with: openEvent, total: total)
-            )
-        }
-        else if let lastClosedEvent = log.closedEvents.last {
-            return .init(
-                cache: cache,
-                metrics: metrics.updated(with: lastClosedEvent, total: cache.total)
-            )
-        }
-        else {
-            return self
-        }
+        updatedWithOpenEvent(from: log) ?? updatedWithClosedEvents(from: log) ?? .empty
+    }
+
+    private func updatedWithOpenEvent(from log: AccessLog) -> Self? {
+        guard let openEvent = log.openEvent else { return nil }
+        let updatedCache = cache.updated(with: log.closedEvents)
+        return .init(
+            metrics: metrics.updated(
+                with: openEvent,
+                total: updatedCache.total.adding(.values(from: openEvent))
+            ),
+            cache: updatedCache
+        )
+    }
+
+    private func updatedWithClosedEvents(from log: AccessLog) -> Self? {
+        guard let lastClosedEvent = log.closedEvents.last else { return nil }
+        let updatedCache = cache.updated(with: log.closedEvents)
+        return .init(
+            metrics: metrics.updated(with: lastClosedEvent, total: updatedCache.total),
+            cache: updatedCache
+        )
     }
 
     func updated(with log: AVPlayerItemAccessLog) -> Self {
