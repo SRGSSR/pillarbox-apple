@@ -9,7 +9,7 @@
 import AVFoundation
 import Nimble
 
-class MetricsStateTests: TestCase {
+final class MetricsStateTests: TestCase {
     func testUpdateWithoutEvents() {
         let state = MetricsState.empty.updated(with: .init(
             events: [],

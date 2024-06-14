@@ -9,7 +9,7 @@
 import AVFoundation
 import Nimble
 
-class AccessLogEventTests: TestCase {
+final class AccessLogEventTests: TestCase {
     func testNegativeValues() {
         let event = AccessLogEvent(
             playbackStartDate: Date(),
@@ -37,7 +37,6 @@ class AccessLogEventTests: TestCase {
             downloadOverdue: -1,
             switchBitrate: -1
         )!
-
         expect(event.playbackStartOffset).to(beNil())
         expect(event.startupTime).to(beNil())
         expect(event.observedBitrateStandardDeviation).to(beNil())
@@ -86,7 +85,6 @@ class AccessLogEventTests: TestCase {
             downloadOverdue: -1,
             switchBitrate: -1
         )
-
         expect(event).to(beNil())
     }
 }
