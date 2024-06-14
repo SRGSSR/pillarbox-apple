@@ -11,8 +11,7 @@ struct AccessLog {
     let openEvent: AccessLogEvent?
 
     init(events: [AccessLogEvent?], after date: Date?) {
-        let eventCount = max(events.count - 1, 0)
-        closedEvents = Array(events.prefix(eventCount)).compactMap { event in
+         closedEvents = Array(events.prefix(max(events.count - 1, 0))).compactMap { event in
             Self.event(event, after: date)
         }
         if let lastEvent = events.last {
