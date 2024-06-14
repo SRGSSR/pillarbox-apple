@@ -7,9 +7,9 @@
 import AVFoundation
 
 struct MetricsState: Equatable {
-    static let empty = Self(time: nil, event: nil, total: .zero, cache: .empty)
+    static let empty = Self(time: .invalid, event: nil, total: .zero, cache: .empty)
 
-    private let time: CMTime?
+    private let time: CMTime
     private let event: AccessLogEvent?
     private let total: MetricsValues
     private let cache: Cache
@@ -33,7 +33,7 @@ struct MetricsState: Equatable {
     }
 
     func metrics(from state: Self) -> Metrics? {
-        guard let event, let time else { return nil }
+        guard let event else { return nil }
         return .init(
             playbackStartDate: event.playbackStartDate,
             time: time,
