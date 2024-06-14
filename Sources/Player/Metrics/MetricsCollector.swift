@@ -8,6 +8,19 @@ import Combine
 import CoreMedia
 import SwiftUI
 
+/// An observable object collecting player metrics.
+///
+/// A metrics collector is an [ObservableObject](https://developer.apple.com/documentation/combine/observableobject)
+/// used to collect metrics associated with a ``Player`` at a regular interval.
+///
+/// ## Usage
+///
+/// A metrics collector is used as follows:
+///
+/// 1. Instantiate a `MetricsCollector` in your view hierarchy, setting up the refresh interval you need.
+/// 2. Bind the progress tracker to a ``Player`` instance by applying the ``SwiftUI/View/bind(_:to:)`` modifier.
+/// 3. Current metrics can be retrieved from the ``metrics`` property and displayed in any way you want, e.g. in a
+///    textual form or with charts.
 public final class MetricsCollector: ObservableObject {
     /// The player to attach.
     ///
@@ -21,7 +34,7 @@ public final class MetricsCollector: ObservableObject {
 
     /// Creates a metrics collector gathering metrics at the specified interval.
     ///
-    /// - Parameter interval: The interval at which progress must be updated, according to progress of the current
+    /// - Parameter interval: The interval at which metrics must be gathered, according to progress of the current
     ///   time of the associated player timebase.
     ///
     /// Additional metrics will be collected when time jumps or when playback starts or stops.
