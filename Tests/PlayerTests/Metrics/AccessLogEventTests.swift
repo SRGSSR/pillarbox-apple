@@ -30,7 +30,7 @@ final class AccessLogEventTests: TestCase {
             transferDuration: -1,
             numberOfBytesTransferred: -1,
             numberOfMediaRequests: -1,
-            durationWatched: -1,
+            playbackDuration: -1,
             numberOfDroppedVideoFrames: -1,
             numberOfStalls: -1,
             segmentsDownloadedDuration: -1,
@@ -50,7 +50,7 @@ final class AccessLogEventTests: TestCase {
         expect(event.transferDuration).to(equal(0))
         expect(event.numberOfBytesTransferred).to(equal(0))
         expect(event.numberOfMediaRequests).to(equal(0))
-        expect(event.durationWatched).to(equal(0))
+        expect(event.playbackDuration).to(equal(0))
         expect(event.numberOfDroppedVideoFrames).to(equal(0))
         expect(event.numberOfStalls).to(equal(0))
         expect(event.segmentsDownloadedDuration).to(equal(0))
@@ -78,7 +78,7 @@ final class AccessLogEventTests: TestCase {
             transferDuration: -1,
             numberOfBytesTransferred: -1,
             numberOfMediaRequests: -1,
-            durationWatched: -1,
+            playbackDuration: -1,
             numberOfDroppedVideoFrames: -1,
             numberOfStalls: -1,
             segmentsDownloadedDuration: -1,

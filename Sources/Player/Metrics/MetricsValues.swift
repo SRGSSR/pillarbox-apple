@@ -14,7 +14,7 @@ public struct MetricsValues: Equatable {
         transferDuration: 0,
         numberOfBytesTransferred: 0,
         numberOfMediaRequests: 0,
-        durationWatched: 0,
+        playbackDuration: 0,
         numberOfDroppedVideoFrames: 0,
         numberOfStalls: 0,
         segmentsDownloadedDuration: 0,
@@ -42,7 +42,7 @@ public struct MetricsValues: Equatable {
     // MARK: Getting Playback-Related Log Events
 
     /// The accumulated playback duration of the current item, in seconds.
-    public let durationWatched: TimeInterval
+    public let playbackDuration: TimeInterval
 
     /// The total number of dropped video frames.
     public let numberOfDroppedVideoFrames: Int
@@ -68,7 +68,7 @@ public struct MetricsValues: Equatable {
             transferDuration: event.transferDuration,
             numberOfBytesTransferred: event.numberOfBytesTransferred,
             numberOfMediaRequests: event.numberOfMediaRequests,
-            durationWatched: event.durationWatched,
+            playbackDuration: event.playbackDuration,
             numberOfDroppedVideoFrames: event.numberOfDroppedVideoFrames,
             numberOfStalls: event.numberOfStalls,
             segmentsDownloadedDuration: event.segmentsDownloadedDuration,
@@ -86,7 +86,7 @@ extension MetricsValues {
             transferDuration: lhs.transferDuration + rhs.transferDuration,
             numberOfBytesTransferred: lhs.numberOfBytesTransferred + rhs.numberOfBytesTransferred,
             numberOfMediaRequests: lhs.numberOfMediaRequests + rhs.numberOfMediaRequests,
-            durationWatched: lhs.durationWatched + rhs.durationWatched,
+            playbackDuration: lhs.playbackDuration + rhs.playbackDuration,
             numberOfDroppedVideoFrames: lhs.numberOfDroppedVideoFrames + rhs.numberOfDroppedVideoFrames,
             numberOfStalls: lhs.numberOfStalls + rhs.numberOfStalls,
             segmentsDownloadedDuration: lhs.segmentsDownloadedDuration + rhs.segmentsDownloadedDuration,
@@ -102,7 +102,7 @@ extension MetricsValues {
             transferDuration: lhs.transferDuration - rhs.transferDuration,
             numberOfBytesTransferred: lhs.numberOfBytesTransferred - rhs.numberOfBytesTransferred,
             numberOfMediaRequests: lhs.numberOfMediaRequests - rhs.numberOfMediaRequests,
-            durationWatched: lhs.durationWatched - rhs.durationWatched,
+            playbackDuration: lhs.playbackDuration - rhs.playbackDuration,
             numberOfDroppedVideoFrames: lhs.numberOfDroppedVideoFrames - rhs.numberOfDroppedVideoFrames,
             numberOfStalls: lhs.numberOfStalls - rhs.numberOfStalls,
             segmentsDownloadedDuration: lhs.segmentsDownloadedDuration - rhs.segmentsDownloadedDuration,

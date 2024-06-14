@@ -130,7 +130,7 @@ final class MetricsStateTests: TestCase {
                     transferDuration: 12,
                     numberOfBytesTransferred: 13,
                     numberOfMediaRequests: 14,
-                    durationWatched: 15,
+                    playbackDuration: 15,
                     numberOfDroppedVideoFrames: 16,
                     numberOfStalls: 17,
                     segmentsDownloadedDuration: 18,
@@ -162,7 +162,7 @@ final class MetricsStateTests: TestCase {
         expect(metrics.increment.transferDuration).to(equal(12))
         expect(metrics.increment.numberOfBytesTransferred).to(equal(13))
         expect(metrics.increment.numberOfMediaRequests).to(equal(14))
-        expect(metrics.increment.durationWatched).to(equal(15))
+        expect(metrics.increment.playbackDuration).to(equal(15))
         expect(metrics.increment.numberOfDroppedVideoFrames).to(equal(16))
         expect(metrics.increment.numberOfStalls).to(equal(17))
         expect(metrics.increment.segmentsDownloadedDuration).to(equal(18))
@@ -174,7 +174,7 @@ final class MetricsStateTests: TestCase {
         expect(metrics.total.transferDuration).to(equal(12))
         expect(metrics.total.numberOfBytesTransferred).to(equal(13))
         expect(metrics.total.numberOfMediaRequests).to(equal(14))
-        expect(metrics.total.durationWatched).to(equal(15))
+        expect(metrics.total.playbackDuration).to(equal(15))
         expect(metrics.total.numberOfDroppedVideoFrames).to(equal(16))
         expect(metrics.total.numberOfStalls).to(equal(17))
         expect(metrics.total.segmentsDownloadedDuration).to(equal(18))
@@ -204,7 +204,7 @@ private extension AccessLogEvent {
             transferDuration: -1,
             numberOfBytesTransferred: -1,
             numberOfMediaRequests: -1,
-            durationWatched: -1,
+            playbackDuration: -1,
             numberOfDroppedVideoFrames: -1,
             numberOfStalls: numberOfStalls,
             segmentsDownloadedDuration: -1,

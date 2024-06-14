@@ -31,7 +31,7 @@ struct AccessLogEvent: Equatable {
     let transferDuration: TimeInterval
     let numberOfBytesTransferred: Int64
     let numberOfMediaRequests: Int
-    let durationWatched: TimeInterval
+    let playbackDuration: TimeInterval
     let numberOfDroppedVideoFrames: Int
     let numberOfStalls: Int
     let segmentsDownloadedDuration: TimeInterval
@@ -57,7 +57,7 @@ struct AccessLogEvent: Equatable {
         transferDuration: TimeInterval,
         numberOfBytesTransferred: Int64,
         numberOfMediaRequests: Int,
-        durationWatched: TimeInterval,
+        playbackDuration: TimeInterval,
         numberOfDroppedVideoFrames: Int,
         numberOfStalls: Int,
         segmentsDownloadedDuration: TimeInterval,
@@ -85,7 +85,7 @@ struct AccessLogEvent: Equatable {
         self.transferDuration = Self.nonNegative(transferDuration)
         self.numberOfBytesTransferred = Self.nonNegative(numberOfBytesTransferred)
         self.numberOfMediaRequests = Self.nonNegative(numberOfMediaRequests)
-        self.durationWatched = Self.nonNegative(durationWatched)
+        self.playbackDuration = Self.nonNegative(playbackDuration)
         self.numberOfDroppedVideoFrames = Self.nonNegative(numberOfDroppedVideoFrames)
         self.numberOfStalls = Self.nonNegative(numberOfStalls)
         self.segmentsDownloadedDuration = Self.nonNegative(segmentsDownloadedDuration)
@@ -115,7 +115,7 @@ extension AccessLogEvent {
             transferDuration: event.transferDuration,
             numberOfBytesTransferred: event.numberOfBytesTransferred,
             numberOfMediaRequests: event.numberOfMediaRequests,
-            durationWatched: event.durationWatched,
+            playbackDuration: event.durationWatched,
             numberOfDroppedVideoFrames: event.numberOfDroppedVideoFrames,
             numberOfStalls: event.numberOfStalls,
             segmentsDownloadedDuration: event.segmentsDownloadedDuration,

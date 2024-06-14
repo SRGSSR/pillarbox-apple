@@ -110,7 +110,7 @@ private extension AccessLogEvent {
             transferDuration: -1,
             numberOfBytesTransferred: -1,
             numberOfMediaRequests: -1,
-            durationWatched: -1,
+            playbackDuration: -1,
             numberOfDroppedVideoFrames: -1,
             numberOfStalls: numberOfStalls,
             segmentsDownloadedDuration: -1,
