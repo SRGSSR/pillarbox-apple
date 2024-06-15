@@ -167,8 +167,9 @@ private struct MainView: View {
             }
             .animation(.defaultLinear, values: layout, chapters)
         } sheet: {
-            MetricsView(metricsCollector: metricsCollector)
-                .ignoresSafeArea()
+            NavigationStack {
+                MetricsView(metricsCollector: metricsCollector)
+            }
         }
         .bind(metricsCollector, to: player)
     }
@@ -187,7 +188,7 @@ private struct AdaptiveSheetContainer<Content, Sheet>: View where Content: View,
             content(toggle)
                 .sheet(isPresented: $isPresented) {
                     sheet()
-                        .presentationDetents([.medium])
+                        .presentationDetents([.medium, .large])
                 }
         default:
             HStack(spacing: 0) {

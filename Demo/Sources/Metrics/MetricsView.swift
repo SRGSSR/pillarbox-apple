@@ -15,20 +15,31 @@ struct MetricsView: View {
         metricsCollector.metrics
     }
 
+    private var currentMetrics: Metrics? {
+        metrics.last
+    }
+
     var body: some View {
-        if !metrics.isEmpty {
-            ScrollView {
-                VStack {
-                    IndicatedBitrateChart(metrics: metrics)
-                    ObservedBitrateChart(metrics: metrics)
-                    MediaRequestChart(metrics: metrics)
+        Group {
+            if !metrics.isEmpty {
+                ScrollView {
+                    VStack {
+                        if let currentMetrics = metrics.last {
+                            MetricsInfoView(metrics: currentMetrics)
+                        }
+                        IndicatedBitrateChart(metrics: metrics)
+                        ObservedBitrateChart(metrics: metrics)
+                        MediaRequestChart(metrics: metrics)
+                    }
+                    .padding(.vertical)
                 }
-                .padding(.vertical)
+            }
+            else {
+                MessageView(message: "No metrics", icon: .empty)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-        else {
-            MessageView(message: "No metrics", icon: .empty)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
+        .navigationTitle("Metrics")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
