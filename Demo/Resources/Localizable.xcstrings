@@ -67,9 +67,6 @@
     "Automatic" : {
 
     },
-    "Bandwidth (Mbps)" : {
-
-    },
     "Blue" : {
 
     },
@@ -164,6 +161,15 @@
 
     },
     "None" : {
+
+    },
+    "Observed Bitrate (Mbps)" : {
+
+    },
+    "Observed Bitrate Max" : {
+
+    },
+    "Observed Bitrate Min" : {
 
     },
     "Opt-in features" : {

@@ -22,5 +22,6 @@ struct IndicatedBitrateChart: View {
                 .foregroundStyle(.red)
             }
         }
+        .padding()
     }
 }

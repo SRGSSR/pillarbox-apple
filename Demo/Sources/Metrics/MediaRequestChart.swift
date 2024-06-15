@@ -19,5 +19,6 @@ struct MediaRequestChart: View {
             )
             .foregroundStyle(.yellow)
         }
+        .padding()
     }
 }

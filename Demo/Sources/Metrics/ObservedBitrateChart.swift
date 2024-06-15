@@ -13,14 +13,34 @@ struct ObservedBitrateChart: View {
 
     var body: some View {
         Chart(Array(metrics.enumerated()), id: \.offset) { metrics in
-            if let observedBitrate = metrics.element.observedBitrate {
+            if let observedBitrate = Self.observedBitrateMbps(from: metrics.element) {
                 LineMark(
                     x: .value("Index", metrics.offset),
-                    y: .value("Bandwidth (Mbps)", observedBitrate / 1_000_000),
-                    series: .value("Mbps", "Bandwidth")
+                    y: .value("Observed Bitrate (Mbps)", observedBitrate),
+                    series: .value("Mbps", "Observed Bitrate")
                 )
                 .foregroundStyle(.blue)
+
+                if let observedBitrateStandardDeviation = Self.observedBitrateStandardDeviationMbps(from: metrics.element) {
+                    AreaMark(
+                        x: .value("Index", metrics.offset),
+                        yStart: .value("Observed Bitrate Min", observedBitrate - observedBitrateStandardDeviation / 2),
+                        yEnd: .value("Observed Bitrate Max", observedBitrate + observedBitrateStandardDeviation / 2)
+                    )
+                    .opacity(0.3)
+                }
             }
         }
+        .padding()
+    }
+
+    private static func observedBitrateMbps(from metrics: Metrics) -> Double? {
+        guard let value = metrics.observedBitrate else { return nil }
+        return value / 1_000_000
+    }
+
+    private static func observedBitrateStandardDeviationMbps(from metrics: Metrics) -> Double? {
+        guard let value = metrics.observedBitrateStandardDeviation else { return nil }
+        return value / 1_000_000
     }
 }
