@@ -12,20 +12,15 @@ struct IndicatedBitrateChart: View {
     let metrics: [Metrics]
 
     var body: some View {
-        Chart {
-            ForEach(Array(metrics.enumerated()), id: \.offset) { metrics in
-                if let indicatedBitrate = metrics.element.indicatedBitrate {
-                    LineMark(
-                        x: .value("Index", metrics.offset),
-                        y: .value("Indicated (Mbps)", indicatedBitrate / 1_000_000),
-                        series: .value("Mbps", "Indicated")
-                    )
-                    .foregroundStyle(.red)
-                }
+        Chart(Array(metrics.enumerated()), id: \.offset) { metrics in
+            if let indicatedBitrate = metrics.element.indicatedBitrate {
+                LineMark(
+                    x: .value("Index", metrics.offset),
+                    y: .value("Indicated (Mbps)", indicatedBitrate / 1_000_000),
+                    series: .value("Mbps", "Indicated")
+                )
+                .foregroundStyle(.red)
             }
-        }
-        .chartYAxis {
-            AxisMarks(position: .leading)
         }
     }
 }
