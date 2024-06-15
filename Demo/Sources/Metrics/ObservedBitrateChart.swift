@@ -14,11 +14,27 @@ struct ObservedBitrateChart: View {
     let metrics: [Metrics]
 
     var body: some View {
-        VStack {
+        VStack(spacing: 8) {
             title()
             chart()
+            summary()
         }
         .padding()
+    }
+
+    private var currentObservedBitrateMbps: Double? {
+        guard let currentMetrics = metrics.last else { return nil }
+        return Self.observedBitrateMbps(from: currentMetrics)
+    }
+
+    private var minObservedBitrateMbps: Double? {
+        guard let max = metrics.compactMap(\.observedBitrate).min() else { return nil }
+        return max / 1_000_000
+    }
+
+    private var maxObservedBitrateMbps: Double? {
+        guard let max = metrics.compactMap(\.observedBitrate).max() else { return nil }
+        return max / 1_000_000
     }
 
     private static func observedBitrateMbps(from metrics: Metrics) -> Double? {
@@ -65,5 +81,22 @@ struct ObservedBitrateChart: View {
             AxisMarks(position: .leading)
             AxisMarks(position: .trailing)
         }
+    }
+
+    @ViewBuilder
+    private func summary() -> some View {
+        HStack {
+            if let minObservedBitrateMbps {
+                Text("Min. \(minObservedBitrateMbps, specifier: "%.02f") Mbps")
+            }
+            if let currentObservedBitrateMbps {
+                Text("Curr. \(currentObservedBitrateMbps, specifier: "%.02f") Mbps")
+            }
+            if let maxObservedBitrateMbps {
+                Text("Max. \(maxObservedBitrateMbps, specifier: "%.02f") Mbps")
+            }
+        }
+        .font(.caption)
+        .foregroundStyle(.secondary)
     }
 }

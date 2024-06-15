@@ -14,11 +14,16 @@ struct MediaRequestChart: View {
     let metrics: [Metrics]
 
     var body: some View {
-        VStack {
+        VStack(spacing: 8) {
             title()
             chart()
+            summary()
         }
         .padding()
+    }
+
+    private var total: Int {
+        metrics.last?.total.numberOfMediaRequests ?? 0
     }
 
     @ViewBuilder
@@ -43,5 +48,12 @@ struct MediaRequestChart: View {
             AxisMarks(position: .leading)
             AxisMarks(position: .trailing)
         }
+    }
+
+    @ViewBuilder
+    private func summary() -> some View {
+        Text("Total \(total)")
+            .font(.caption)
+            .foregroundStyle(.secondary)
     }
 }

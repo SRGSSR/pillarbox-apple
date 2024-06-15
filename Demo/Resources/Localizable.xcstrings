@@ -91,6 +91,9 @@
     "Continues if possible" : {
 
     },
+    "Curr. %.02f Mbps" : {
+
+    },
     "Debugging" : {
 
     },
@@ -151,10 +154,16 @@
     "Made with " : {
 
     },
+    "Max. %.02f Mbps" : {
+
+    },
     "Mbps" : {
 
     },
     "Media requests" : {
+
+    },
+    "Min. %.02f Mbps" : {
 
     },
     "Mode" : {
@@ -266,6 +275,9 @@
 
     },
     "Top" : {
+
+    },
+    "Total %lld" : {
 
     },
     "Tracking" : {

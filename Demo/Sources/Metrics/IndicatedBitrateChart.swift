@@ -14,11 +14,32 @@ struct IndicatedBitrateChart: View {
     let metrics: [Metrics]
 
     var body: some View {
-        VStack {
+        VStack(spacing: 8) {
             title()
             chart()
+            summary()
         }
         .padding()
+    }
+
+    private var currentIndicatedBitrateMbps: Double? {
+        guard let currentMetrics = metrics.last else { return nil }
+        return Self.indicatedBitrateMbps(from: currentMetrics)
+    }
+
+    private var minIndicatedBitrateMbps: Double? {
+        guard let max = metrics.compactMap(\.indicatedBitrate).min() else { return nil }
+        return max / 1_000_000
+    }
+
+    private var maxIndicatedBitrateMbps: Double? {
+        guard let max = metrics.compactMap(\.indicatedBitrate).max() else { return nil }
+        return max / 1_000_000
+    }
+
+    private static func indicatedBitrateMbps(from metrics: Metrics) -> Double? {
+        guard let value = metrics.indicatedBitrate else { return nil }
+        return value / 1_000_000
     }
 
     @ViewBuilder
@@ -31,10 +52,10 @@ struct IndicatedBitrateChart: View {
     @ViewBuilder
     private func chart() -> some View {
         Chart(Array(metrics.suffix(Self.maxX).enumerated()), id: \.offset) { metrics in
-            if let indicatedBitrate = metrics.element.indicatedBitrate {
+            if let indicatedBitrate = Self.indicatedBitrateMbps(from: metrics.element) {
                 LineMark(
                     x: .value("Index", metrics.offset),
-                    y: .value("Indicated bitrate (Mbps)", indicatedBitrate / 1_000_000),
+                    y: .value("Indicated bitrate (Mbps)", indicatedBitrate),
                     series: .value("Mbps", "Indicated bitrate")
                 )
                 .foregroundStyle(.red)
@@ -46,5 +67,22 @@ struct IndicatedBitrateChart: View {
             AxisMarks(position: .leading)
             AxisMarks(position: .trailing)
         }
+    }
+
+    @ViewBuilder
+    private func summary() -> some View {
+        HStack {
+            if let minIndicatedBitrateMbps {
+                Text("Min. \(minIndicatedBitrateMbps, specifier: "%.02f") Mbps")
+            }
+            if let currentIndicatedBitrateMbps {
+                Text("Curr. \(currentIndicatedBitrateMbps, specifier: "%.02f") Mbps")
+            }
+            if let maxIndicatedBitrateMbps {
+                Text("Max. \(maxIndicatedBitrateMbps, specifier: "%.02f") Mbps")
+            }
+        }
+        .font(.caption)
+        .foregroundStyle(.secondary)
     }
 }
