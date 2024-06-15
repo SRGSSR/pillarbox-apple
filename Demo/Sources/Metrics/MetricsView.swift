@@ -9,16 +9,14 @@ import PillarboxPlayer
 import SwiftUI
 
 struct MetricsView: View {
-    let player: Player
-
-    @StateObject private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1))
+    @ObservedObject var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1))
 
     private var metrics: [Metrics] {
         metricsCollector.metrics
     }
 
     var body: some View {
-        Group {
+        ScrollView {
             if !metrics.isEmpty {
                 VStack {
                     IndicatedBitrateChart(metrics: metrics)
@@ -33,6 +31,5 @@ struct MetricsView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-        .bind(metricsCollector, to: player)
     }
 }

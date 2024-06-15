@@ -131,10 +131,13 @@ private struct ChaptersList: View {
 private struct MainView: View {
     @ObservedObject var player: Player
 
+    @State private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1))
+
     let isMonoscopic: Bool
     let supportsPictureInPicture: Bool
 
     @State private var layout: PlaybackView.Layout = .minimized
+    @State private var isMetricsSheetPresented = false
 
     private var chapters: [Chapter] {
         player.metadata.chapters
@@ -153,10 +156,21 @@ private struct MainView: View {
             if layout != .maximized, !chapters.isEmpty {
                 ChaptersList(player: player)
             }
-            MetricsView(player: player)
+            Button(action: showMetrics) {
+                Text("Metrics")
+            }
 #endif
         }
         .animation(.defaultLinear, values: layout, chapters)
+        .sheet(isPresented: $isMetricsSheetPresented) {
+            MetricsView(metricsCollector: metricsCollector)
+                .presentationDetents([.medium])
+        }
+        .bind(metricsCollector, to: player)
+    }
+
+    private func showMetrics() {
+        isMetricsSheetPresented.toggle()
     }
 }
 
