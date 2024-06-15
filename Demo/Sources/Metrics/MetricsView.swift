@@ -18,15 +18,21 @@ struct MetricsView: View {
     }
 
     var body: some View {
-        VStack {
-            IndicatedBitrateChart(metrics: metrics)
-            ObservedBitrateChart(metrics: metrics)
-            MediaRequestChart(metrics: metrics)
+        Group {
+            if !metrics.isEmpty {
+                VStack {
+                    IndicatedBitrateChart(metrics: metrics)
+                    ObservedBitrateChart(metrics: metrics)
+                    MediaRequestChart(metrics: metrics)
+                }
+            }
+            else {
+                Text("No metrics")
+                    .foregroundColor(.secondary)
+                    .padding()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
         }
         .bind(metricsCollector, to: player)
     }
-}
-
-#Preview {
-    MetricsView(player: .init(item: .urn("urn:rts:video:14968211")))
 }
