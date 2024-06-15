@@ -61,5 +61,9 @@ struct ObservedBitrateChart: View {
         }
         .chartXAxis(.hidden)
         .chartXScale(domain: 0...Self.maxX - 1)
+        .chartYAxis {
+            AxisMarks(position: .leading)
+            AxisMarks(position: .trailing)
+        }
     }
 }
