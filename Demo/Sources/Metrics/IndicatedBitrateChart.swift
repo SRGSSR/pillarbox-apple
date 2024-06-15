@@ -9,10 +9,12 @@ import PillarboxPlayer
 import SwiftUI
 
 struct IndicatedBitrateChart: View {
+    private static let maxX = 120
+
     let metrics: [Metrics]
 
     var body: some View {
-        Chart(Array(metrics.enumerated()), id: \.offset) { metrics in
+        Chart(Array(metrics.suffix(Self.maxX).enumerated()), id: \.offset) { metrics in
             if let indicatedBitrate = metrics.element.indicatedBitrate {
                 LineMark(
                     x: .value("Index", metrics.offset),
@@ -22,6 +24,8 @@ struct IndicatedBitrateChart: View {
                 .foregroundStyle(.red)
             }
         }
+        .chartXAxis(.hidden)
+        .chartXScale(domain: 0...Self.maxX - 1)
         .padding()
     }
 }
