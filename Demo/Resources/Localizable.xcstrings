@@ -133,7 +133,7 @@
     "Index" : {
 
     },
-    "Indicated (Mbps)" : {
+    "Indicated bitrate (Mbps)" : {
 
     },
     "Layouts" : {
@@ -166,13 +166,13 @@
     "None" : {
 
     },
-    "Observed Bitrate (Mbps)" : {
+    "Observed bitrate (Mbps)" : {
 
     },
-    "Observed Bitrate Max" : {
+    "Observed bitrate max" : {
 
     },
-    "Observed Bitrate Min" : {
+    "Observed bitrate min" : {
 
     },
     "Opt-in features" : {

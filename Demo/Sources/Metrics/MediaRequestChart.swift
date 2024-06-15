@@ -14,6 +14,22 @@ struct MediaRequestChart: View {
     let metrics: [Metrics]
 
     var body: some View {
+        VStack {
+            title()
+            chart()
+        }
+        .padding()
+    }
+
+    @ViewBuilder
+    private func title() -> some View {
+        Text("Media requests")
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
+    }
+
+    @ViewBuilder
+    private func chart() -> some View {
         Chart(Array(metrics.suffix(Self.maxX).enumerated()), id: \.offset) { metrics in
             BarMark(
                 x: .value("Index", metrics.offset),
@@ -23,6 +39,5 @@ struct MediaRequestChart: View {
         }
         .chartXAxis(.hidden)
         .chartXScale(domain: 0...Self.maxX - 1)
-        .padding()
     }
 }

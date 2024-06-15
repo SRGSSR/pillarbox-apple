@@ -14,18 +14,33 @@ struct IndicatedBitrateChart: View {
     let metrics: [Metrics]
 
     var body: some View {
+        VStack {
+            title()
+            chart()
+        }
+        .padding()
+    }
+
+    @ViewBuilder
+    private func title() -> some View {
+        Text("Indicated bitrate (Mbps)")
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
+    }
+
+    @ViewBuilder
+    private func chart() -> some View {
         Chart(Array(metrics.suffix(Self.maxX).enumerated()), id: \.offset) { metrics in
             if let indicatedBitrate = metrics.element.indicatedBitrate {
                 LineMark(
                     x: .value("Index", metrics.offset),
-                    y: .value("Indicated (Mbps)", indicatedBitrate / 1_000_000),
-                    series: .value("Mbps", "Indicated")
+                    y: .value("Indicated bitrate (Mbps)", indicatedBitrate / 1_000_000),
+                    series: .value("Mbps", "Indicated bitrate")
                 )
                 .foregroundStyle(.red)
             }
         }
         .chartXAxis(.hidden)
         .chartXScale(domain: 0...Self.maxX - 1)
-        .padding()
     }
 }

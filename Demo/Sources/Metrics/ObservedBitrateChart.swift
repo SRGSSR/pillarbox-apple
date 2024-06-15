@@ -14,27 +14,10 @@ struct ObservedBitrateChart: View {
     let metrics: [Metrics]
 
     var body: some View {
-        Chart(Array(metrics.suffix(Self.maxX).enumerated()), id: \.offset) { metrics in
-            if let observedBitrate = Self.observedBitrateMbps(from: metrics.element) {
-                LineMark(
-                    x: .value("Index", metrics.offset),
-                    y: .value("Observed Bitrate (Mbps)", observedBitrate),
-                    series: .value("Mbps", "Observed Bitrate")
-                )
-                .foregroundStyle(.blue)
-
-                if let observedBitrateStandardDeviation = Self.observedBitrateStandardDeviationMbps(from: metrics.element) {
-                    AreaMark(
-                        x: .value("Index", metrics.offset),
-                        yStart: .value("Observed Bitrate Min", observedBitrate - observedBitrateStandardDeviation / 2),
-                        yEnd: .value("Observed Bitrate Max", observedBitrate + observedBitrateStandardDeviation / 2)
-                    )
-                    .opacity(0.3)
-                }
-            }
+        VStack {
+            title()
+            chart()
         }
-        .chartXAxis(.hidden)
-        .chartXScale(domain: 0...Self.maxX - 1)
         .padding()
     }
 
@@ -46,5 +29,37 @@ struct ObservedBitrateChart: View {
     private static func observedBitrateStandardDeviationMbps(from metrics: Metrics) -> Double? {
         guard let value = metrics.observedBitrateStandardDeviation else { return nil }
         return value / 1_000_000
+    }
+
+    @ViewBuilder
+    private func title() -> some View {
+        Text("Observed bitrate (Mbps)")
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
+    }
+
+    @ViewBuilder
+    private func chart() -> some View {
+        Chart(Array(metrics.suffix(Self.maxX).enumerated()), id: \.offset) { metrics in
+            if let observedBitrate = Self.observedBitrateMbps(from: metrics.element) {
+                LineMark(
+                    x: .value("Index", metrics.offset),
+                    y: .value("Observed bitrate (Mbps)", observedBitrate),
+                    series: .value("Mbps", "Observed bitrate")
+                )
+                .foregroundStyle(.blue)
+
+                if let observedBitrateStandardDeviation = Self.observedBitrateStandardDeviationMbps(from: metrics.element) {
+                    AreaMark(
+                        x: .value("Index", metrics.offset),
+                        yStart: .value("Observed bitrate min", observedBitrate - observedBitrateStandardDeviation / 2),
+                        yEnd: .value("Observed bitrate max", observedBitrate + observedBitrateStandardDeviation / 2)
+                    )
+                    .opacity(0.3)
+                }
+            }
+        }
+        .chartXAxis(.hidden)
+        .chartXScale(domain: 0...Self.maxX - 1)
     }
 }
