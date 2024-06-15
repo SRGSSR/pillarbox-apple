@@ -67,6 +67,9 @@
     "Automatic" : {
 
     },
+    "Bandwidth (Mbps)" : {
+
+    },
     "Blue" : {
 
     },
@@ -130,6 +133,12 @@
     "Kind" : {
 
     },
+    "Index" : {
+
+    },
+    "Indicated (Mbps)" : {
+
+    },
     "Layouts" : {
 
     },
@@ -143,6 +152,9 @@
 
     },
     "Made with " : {
+
+    },
+    "Mbps" : {
 
     },
     "Mode" : {
@@ -221,6 +233,9 @@
 
     },
     "SRG SSR token protection" : {
+
+    },
+    "Stalls" : {
 
     },
     "Stop" : {

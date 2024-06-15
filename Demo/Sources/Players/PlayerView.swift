@@ -153,6 +153,7 @@ private struct MainView: View {
             if layout != .maximized, !chapters.isEmpty {
                 ChaptersList(player: player)
             }
+            MetricsView(player: player)
 #endif
         }
         .animation(.defaultLinear, values: layout, chapters)
