@@ -16,20 +16,19 @@ struct MetricsView: View {
     }
 
     var body: some View {
-        ScrollView {
-            if !metrics.isEmpty {
+        if !metrics.isEmpty {
+            ScrollView {
                 VStack {
                     IndicatedBitrateChart(metrics: metrics)
                     ObservedBitrateChart(metrics: metrics)
                     MediaRequestChart(metrics: metrics)
                 }
+                .padding(.vertical)
             }
-            else {
-                Text("No metrics")
-                    .foregroundColor(.secondary)
-                    .padding()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
+        }
+        else {
+            MessageView(message: "No metrics", icon: .empty)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }
