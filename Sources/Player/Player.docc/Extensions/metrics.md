@@ -4,7 +4,7 @@
 
 ### Date and time
 
-- ``playbackStartDate`
+- ``playbackStartDate``
 - ``time``
 
 ### Server information
@@ -17,8 +17,7 @@
 - ``playbackSessionId``
 - ``playbackStartOffset``
 - ``playbackType``
-- ``StreamType``
-
+- ``startupTime``
 
 ### Bitrate information
 

@@ -14,7 +14,7 @@ public extension View {
     ///   - publisher: The publisher to subscribe to.
     ///   - keyPath: The key path to extract.
     ///   - binding: The binding to which values must be assigned.
-    ///   - Returns: A view that fills the given binding when the `publisher` emits an event.
+    /// - Returns: A view that fills the given binding when the `publisher` emits an event.
     func onReceive<P, T>(
         _ publisher: P,
         assign keyPath: KeyPath<P.Output, T>,

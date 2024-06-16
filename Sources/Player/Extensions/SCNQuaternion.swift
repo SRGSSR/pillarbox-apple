@@ -58,9 +58,7 @@ public func SCNQuaternionWithAngleAndAxis(_ radians: Float, _ x: Float, _ y: Flo
 
 /// Returns a quaternion matching the provided CoreMotion attitude.
 ///
-/// - Parameters:
-///   - attitude: The current device orientation in space, as returned by a `CMMotionManager` instance.
-///   - interfaceOrientation: The interface orientation.
+/// - Parameter attitude: The current device orientation in space, as returned by a `CMMotionManager` instance.
 /// - Returns: The quaternion.
 ///
 /// Unlike [`CMAttitude/quaternion`](https://developer.apple.com/documentation/coremotion/cmattitude/1616025-quaternion)
