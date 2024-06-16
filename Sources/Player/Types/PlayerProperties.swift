@@ -105,7 +105,9 @@ public extension PlayerProperties {
 
     /// The current player metrics, if available.
     ///
-    /// Each call to this function might return different results reflecting the most recent metrics available.
+    /// Each call to this function might return different results reflecting the most recent metrics available. The
+    /// included ``Metrics/increment`` collates data from the most recent period of playback not interrupted by a
+    /// seek or variant switch.
     func metrics() -> Metrics? {
         coreProperties.metrics()
     }
