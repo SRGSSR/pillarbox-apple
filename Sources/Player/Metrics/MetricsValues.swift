@@ -22,7 +22,7 @@ public struct MetricsValues: Equatable {
         switchBitrate: 0
     )
 
-    // MARK: Getting Server-Related Log Events
+    // MARK: Server information
 
     /// A count of changes to the server address over the last uninterrupted period of playback.
     public let numberOfServerAddressChanges: Int
@@ -39,7 +39,7 @@ public struct MetricsValues: Equatable {
     /// The number of media read requests from the server to this client.
     public let numberOfMediaRequests: Int
 
-    // MARK: Getting Playback-Related Log Events
+    // MARK: Playback-related information
 
     /// The accumulated playback duration of the current item, in seconds.
     public let playbackDuration: TimeInterval
@@ -56,7 +56,7 @@ public struct MetricsValues: Equatable {
     /// The total number of times that downloading the segments took too long.
     public let downloadOverdue: Int
 
-    // MARK: Getting Bit Rate Log Events
+    // MARK: Bitrate information
 
     /// The bandwidth value that causes a switch, up or down, in the item's quality being played.
     public let switchBitrate: Double
