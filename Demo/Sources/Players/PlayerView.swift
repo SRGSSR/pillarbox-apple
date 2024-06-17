@@ -131,8 +131,6 @@ private struct ChaptersList: View {
 private struct MainView: View {
     @ObservedObject var player: Player
 
-    @State private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1))
-
     let isMonoscopic: Bool
     let supportsPictureInPicture: Bool
 
@@ -147,66 +145,17 @@ private struct MainView: View {
     }
 
     var body: some View {
-        AdaptiveSheetContainer { action in
-            VStack {
-                PlaybackView(player: player, layout: currentLayout)
-                    .monoscopic(isMonoscopic)
-                    .supportsPictureInPicture(supportsPictureInPicture)
-    #if os(iOS)
-                if layout != .maximized, !chapters.isEmpty {
-                    ChaptersList(player: player)
-                }
-    #endif
+        VStack {
+            PlaybackView(player: player, layout: currentLayout)
+                .monoscopic(isMonoscopic)
+                .supportsPictureInPicture(supportsPictureInPicture)
+#if os(iOS)
+            if layout != .maximized, !chapters.isEmpty {
+                ChaptersList(player: player)
             }
-            .background(.black)
-            .safeAreaInset(edge: .bottom, alignment: .trailing, spacing: 0) {
-                Button(action: action) {
-                    Label("Metrics", systemImage: "chart.bar.fill")
-                }
-                .padding(.horizontal)
-            }
-            .animation(.defaultLinear, values: layout, chapters)
-        } sheet: {
-            NavigationStack {
-                MetricsView(metricsCollector: metricsCollector)
-            }
+#endif
         }
-        .bind(metricsCollector, to: player)
-    }
-}
-
-private struct AdaptiveSheetContainer<Content, Sheet>: View where Content: View, Sheet: View {
-    @ViewBuilder let content: (@escaping () -> Void) -> Content
-    @ViewBuilder let sheet: () -> Sheet
-
-    @State private var isPresented = false
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-
-    var body: some View {
-        switch horizontalSizeClass {
-        case .compact:
-            content(toggle)
-                .sheet(isPresented: $isPresented) {
-                    sheet()
-                        .presentationDetents([.medium, .large])
-                }
-        default:
-            HStack(spacing: 0) {
-                content(toggle)
-                if isPresented {
-                    sheet()
-                        .background(.ultraThinMaterial)
-                        .frame(width: 420)
-                        .transition(.move(edge: .trailing))
-                }
-            }
-        }
-    }
-
-    private func toggle() {
-        withAnimation {
-            isPresented.toggle()
-        }
+        .animation(.defaultLinear, values: layout, chapters)
     }
 }
 
@@ -222,6 +171,7 @@ struct PlayerView: View {
     var body: some View {
         MainView(player: model.player, isMonoscopic: media.isMonoscopic, supportsPictureInPicture: supportsPictureInPicture)
             .enabledForInAppPictureInPicture(persisting: model)
+            .background(.black)
             .onAppear(perform: play)
             .tracked(name: "player")
     }

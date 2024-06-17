@@ -167,7 +167,7 @@
 
     },
     "Metrics" : {
-
+      "comment" : "Playback setting menu title"
     },
     "Min. %.02f Mbps" : {
 
@@ -278,6 +278,9 @@
 
     },
     "TestFlight builds" : {
+
+    },
+    "Toggle metrics" : {
 
     },
     "Top" : {
