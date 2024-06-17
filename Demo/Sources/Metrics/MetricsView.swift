@@ -28,6 +28,7 @@ struct MetricsView: View {
                     }
                     indicatedBitrateSection()
                     observedBitrateSection()
+                    dataVolumeSection()
                     mediaRequestsSection()
                     stallsSection()
                     frameDropsSection()
@@ -55,6 +56,14 @@ struct MetricsView: View {
             ObservedBitrateChart(metrics: metrics)
         } header: {
             Text("Observed bitrate")
+        }
+    }
+
+    private func dataVolumeSection() -> some View {
+        Section {
+            DataVolumeChart(metrics: metrics)
+        } header: {
+            Text("Data volume")
         }
     }
 

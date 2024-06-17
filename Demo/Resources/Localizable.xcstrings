@@ -94,6 +94,12 @@
     "Curr. %.02f Mbps" : {
 
     },
+    "Data volume" : {
+
+    },
+    "Data volume (MB)" : {
+
+    },
     "Debugging" : {
 
     },
@@ -164,6 +170,9 @@
 
     },
     "Max. %.02f Mbps" : {
+
+    },
+    "MB" : {
 
     },
     "Mbps" : {
