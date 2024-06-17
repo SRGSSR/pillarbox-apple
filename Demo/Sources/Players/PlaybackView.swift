@@ -48,9 +48,7 @@ private struct MainView: View {
             }
             .animation(.defaultLinear, value: shouldHideInterface)
         } sheet: {
-            NavigationStack {
-                MetricsView(metricsCollector: metricsCollector)
-            }
+            MetricsView(metricsCollector: metricsCollector)
         }
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
         .bind(visibilityTracker, to: player)
@@ -640,21 +638,44 @@ private struct AdaptiveSheetContainer<Content, Sheet>: View where Content: View,
     var body: some View {
         switch horizontalSizeClass {
         case .compact:
-            content()
-                .sheet(isPresented: $isPresenting) {
-                    sheet()
-                        .presentationDetents([.medium, .large])
-                }
+            compactView()
         default:
-            HStack(spacing: 0) {
-                content()
-                if isPresenting {
-                    sheet()
-                        .frame(width: 420)
-                }
-            }
-            .animation(.default, value: isPresenting)
+            defaultView()
         }
+    }
+
+    private func compactView() -> some View {
+        content()
+            .sheet(isPresented: $isPresenting) {
+                NavigationStack {
+                    sheet()
+                }
+                .presentationDetents([.medium, .large])
+            }
+    }
+
+    private func defaultView() -> some View {
+        HStack(spacing: 0) {
+            content()
+            if isPresenting {
+                NavigationStack {
+                    sheet()
+                        .toolbar(content: toolbarContent)
+                }
+                .frame(width: 420)
+            }
+        }
+        .animation(.default, value: isPresenting)
+    }
+
+    private func toolbarContent() -> some ToolbarContent {
+        ToolbarItem(placement: .topBarLeading) {
+            Button("Close", action: close)
+        }
+    }
+
+    private func close() {
+        isPresenting = false
     }
 }
 
