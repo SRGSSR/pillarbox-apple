@@ -28,6 +28,7 @@ struct MetricsView: View {
                     }
                     indicatedBitrateSection()
                     observedBitrateSection()
+                    stallsSection()
                     mediaRequestsSection()
                 }
             }
@@ -53,6 +54,14 @@ struct MetricsView: View {
             ObservedBitrateChart(metrics: metrics)
         } header: {
             Text("Observed bitrate")
+        }
+    }
+
+    private func stallsSection() -> some View {
+        Section {
+            StallsChart(metrics: metrics)
+        } header: {
+            Text("Stalls")
         }
     }
 
