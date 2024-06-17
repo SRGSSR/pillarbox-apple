@@ -133,6 +133,9 @@
     "Index" : {
 
     },
+    "Indicated bitrate" : {
+
+    },
     "Indicated bitrate (Mbps)" : {
 
     },
@@ -178,6 +181,9 @@
     "None" : {
 
     },
+    "Observed bitrate" : {
+
+    },
     "Observed bitrate (Mbps)" : {
 
     },
@@ -200,12 +206,6 @@
 
     },
     "Play" : {
-
-    },
-    "Playback duration: %@" : {
-
-    },
-    "Playback duration: %lf" : {
 
     },
     "Playback HUD" : {
@@ -287,9 +287,6 @@
 
     },
     "Tracking" : {
-
-    },
-    "Type: %@" : {
 
     },
     "URL" : {

@@ -14,12 +14,8 @@ struct IndicatedBitrateChart: View {
     let metrics: [Metrics]
 
     var body: some View {
-        VStack(spacing: 8) {
-            title()
-            chart()
-            summary()
-        }
-        .padding()
+        chart()
+        summary()
     }
 
     private var currentIndicatedBitrateMbps: Double? {
@@ -43,13 +39,6 @@ struct IndicatedBitrateChart: View {
     }
 
     @ViewBuilder
-    private func title() -> some View {
-        Text("Indicated bitrate (Mbps)")
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
-    }
-
-    @ViewBuilder
     private func chart() -> some View {
         Chart(Array(metrics.suffix(Self.maxX).enumerated()), id: \.offset) { metrics in
             if let indicatedBitrate = Self.indicatedBitrateMbps(from: metrics.element) {
@@ -63,10 +52,8 @@ struct IndicatedBitrateChart: View {
         }
         .chartXAxis(.hidden)
         .chartXScale(domain: 0...Self.maxX - 1)
-        .chartYAxis {
-            AxisMarks(position: .leading)
-            AxisMarks(position: .trailing)
-        }
+        .chartYAxisLabel("Mbps")
+        .padding()
     }
 
     @ViewBuilder
@@ -82,7 +69,8 @@ struct IndicatedBitrateChart: View {
                 Text("Max. \(maxIndicatedBitrateMbps, specifier: "%.02f") Mbps")
             }
         }
-        .font(.caption)
+        .font(.caption2)
         .foregroundStyle(.secondary)
+        .frame(maxWidth: .infinity, alignment: .center)
     }
 }

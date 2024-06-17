@@ -22,16 +22,13 @@ struct MetricsView: View {
     var body: some View {
         Group {
             if !metrics.isEmpty {
-                ScrollView {
-                    VStack {
-                        if let currentMetrics = metrics.last {
-                            MetricsInfoView(metrics: currentMetrics)
-                        }
-                        IndicatedBitrateChart(metrics: metrics)
-                        ObservedBitrateChart(metrics: metrics)
-                        MediaRequestChart(metrics: metrics)
+                List {
+                    if let currentMetrics = metrics.last {
+                        MetricsInfoView(metrics: currentMetrics)
                     }
-                    .padding(.vertical)
+                    indicatedBitrateSection()
+                    observedBitrateSection()
+                    mediaRequestsSection()
                 }
             }
             else {
@@ -41,5 +38,29 @@ struct MetricsView: View {
         }
         .navigationTitle("Metrics")
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func indicatedBitrateSection() -> some View {
+        Section {
+            IndicatedBitrateChart(metrics: metrics)
+        } header: {
+            Text("Indicated bitrate")
+        }
+    }
+
+    private func observedBitrateSection() -> some View {
+        Section {
+            ObservedBitrateChart(metrics: metrics)
+        } header: {
+            Text("Observed bitrate")
+        }
+    }
+
+    private func mediaRequestsSection() -> some View {
+        Section {
+            MediaRequestChart(metrics: metrics)
+        } header: {
+            Text("Media requests")
+        }
     }
 }

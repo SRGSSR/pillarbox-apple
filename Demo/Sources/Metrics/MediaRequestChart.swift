@@ -14,23 +14,12 @@ struct MediaRequestChart: View {
     let metrics: [Metrics]
 
     var body: some View {
-        VStack(spacing: 8) {
-            title()
-            chart()
-            summary()
-        }
-        .padding()
+        chart()
+        summary()
     }
 
     private var total: Int {
         metrics.last?.total.numberOfMediaRequests ?? 0
-    }
-
-    @ViewBuilder
-    private func title() -> some View {
-        Text("Media requests")
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
     }
 
     @ViewBuilder
@@ -44,16 +33,14 @@ struct MediaRequestChart: View {
         }
         .chartXAxis(.hidden)
         .chartXScale(domain: 0...Self.maxX - 1)
-        .chartYAxis {
-            AxisMarks(position: .leading)
-            AxisMarks(position: .trailing)
-        }
+        .padding()
     }
 
     @ViewBuilder
     private func summary() -> some View {
         Text("Total \(total)")
-            .font(.caption)
+            .font(.caption2)
             .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity, alignment: .center)
     }
 }

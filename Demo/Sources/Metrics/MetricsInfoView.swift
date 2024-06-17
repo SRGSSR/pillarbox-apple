@@ -22,15 +22,20 @@ struct MetricsInfoView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading) {
-            Text("Type: \(metrics.playbackType ?? "-")")
-            if let playbackDuration {
-                Text("Playback duration: \(playbackDuration)")
-            }
+        cell("Type", value: metrics.playbackType ?? "-")
+        if let playbackDuration {
+            cell("Playback duration", value: playbackDuration)
         }
-        .font(.subheadline)
-        .foregroundStyle(.secondary)
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func cell(_ name: String, value: String) -> some View {
+        HStack {
+            Text(name)
+            Spacer()
+            Text(value)
+                .monospacedDigit()
+                .multilineTextAlignment(.trailing)
+                .foregroundColor(.secondary)
+        }
     }
 }
