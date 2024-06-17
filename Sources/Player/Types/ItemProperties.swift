@@ -13,7 +13,8 @@ struct ItemProperties: Equatable {
         status: .unknown,
         duration: .invalid,
         minimumTimeOffsetFromLive: .invalid,
-        presentationSize: nil
+        presentationSize: nil,
+        metricsState: .empty
     )
 
     let item: AVPlayerItem?
@@ -23,4 +24,10 @@ struct ItemProperties: Equatable {
     let minimumTimeOffsetFromLive: CMTime
 
     let presentationSize: CGSize?
+    let metricsState: MetricsState
+
+    func metrics() -> Metrics? {
+        guard let item, let updatedState = metricsState.updated(with: item.accessLog(), at: item.currentTime()) else { return nil }
+        return updatedState.metrics(from: metricsState)
+    }
 }

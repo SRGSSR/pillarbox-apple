@@ -13,7 +13,7 @@ public extension View {
     ///   - player: The player.
     ///   - keyPath: The key path to extract.
     ///   - binding: The binding to which the value must be assigned.
-    ///   - Returns: A view that fills the given binding when the player's publisher emits an
+    /// - Returns: A view that fills the given binding when the player's publisher emits an
     ///   event.
     ///
     /// > Warning: Be careful to associate often updated state to local view scopes to avoid unnecessary view body refreshes. Please

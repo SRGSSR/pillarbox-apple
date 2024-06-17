@@ -117,8 +117,9 @@ public final class ProgressTracker: ObservableObject {
     }
 
     /// Creates a progress tracker updating its progress at the specified interval.
-    /// 
+    ///  
     /// - Parameter interval: The interval at which progress must be updated.
+    /// - Parameter seekBehavior: The seek behavior to apply.
     public init(interval: CMTime, seekBehavior: SeekBehavior = .immediate) {
         self.seekBehavior = seekBehavior
         $player

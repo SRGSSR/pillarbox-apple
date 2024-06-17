@@ -32,6 +32,10 @@ extension CoreProperties {
     var presentationSize: CGSize? {
         itemProperties.presentationSize
     }
+
+    func metrics() -> Metrics? {
+        itemProperties.metrics()
+    }
 }
 
 extension CoreProperties {
