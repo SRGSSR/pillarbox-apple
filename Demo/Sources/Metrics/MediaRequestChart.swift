@@ -33,7 +33,7 @@ struct MediaRequestChart: View {
         }
         .chartXAxis(.hidden)
         .chartXScale(domain: 0...Self.maxX - 1)
-        .padding()
+        .padding(.vertical)
     }
 
     @ViewBuilder

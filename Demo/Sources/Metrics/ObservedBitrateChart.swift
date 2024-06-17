@@ -67,7 +67,7 @@ struct ObservedBitrateChart: View {
         .chartXAxis(.hidden)
         .chartXScale(domain: 0...Self.maxX - 1)
         .chartYAxisLabel("Mbps")
-        .padding()
+        .padding(.vertical)
     }
 
     @ViewBuilder
