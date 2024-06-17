@@ -21,11 +21,16 @@ struct MetricsInfoView: View {
         Self.dateComponentsFormatter.string(from: metrics.total.playbackDuration)
     }
 
+    private var bytesTransferred: String {
+        ByteCountFormatStyle().format(metrics.total.numberOfBytesTransferred)
+    }
+
     var body: some View {
         cell("Type", value: metrics.playbackType ?? "-")
         if let playbackDuration {
             cell("Playback duration", value: playbackDuration)
         }
+        cell("Data volume", value: bytesTransferred)
     }
 
     private func cell(_ name: String, value: String) -> some View {
