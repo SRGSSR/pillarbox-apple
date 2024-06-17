@@ -82,9 +82,6 @@
     "Clear URL cache" : {
 
     },
-    "Close" : {
-
-    },
     "Color" : {
 
     },
@@ -125,6 +122,9 @@
 
     },
     "Green" : {
+
+    },
+    "Hide" : {
 
     },
     "Immediate" : {
@@ -244,6 +244,9 @@
     "Settings" : {
 
     },
+    "Show metrics" : {
+
+    },
     "Showcase" : {
 
     },
@@ -281,9 +284,6 @@
 
     },
     "TestFlight builds" : {
-
-    },
-    "Toggle metrics" : {
 
     },
     "Top" : {

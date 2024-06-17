@@ -228,8 +228,10 @@ private struct MainView: View {
 
     @ViewBuilder
     private func metricsMenu() -> some View {
-        Button(action: toggleMetrics) {
-            Label("Toggle metrics", systemImage: "chart.bar")
+        if !isPresentingMetrics {
+            Button(action: showMetrics) {
+                Label("Show metrics", systemImage: "chart.bar")
+            }
         }
     }
 
@@ -294,8 +296,8 @@ private struct MainView: View {
             .padding(60)
     }
 
-    private func toggleMetrics() {
-        isPresentingMetrics.toggle()
+    private func showMetrics() {
+        isPresentingMetrics = true
     }
 }
 
@@ -670,7 +672,7 @@ private struct AdaptiveSheetContainer<Content, Sheet>: View where Content: View,
 
     private func toolbarContent() -> some ToolbarContent {
         ToolbarItem(placement: .topBarLeading) {
-            Button("Close", action: close)
+            Button("Hide", action: close)
         }
     }
 
