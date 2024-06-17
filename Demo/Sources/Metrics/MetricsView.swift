@@ -35,7 +35,7 @@ struct MetricsView: View {
                 }
             }
             else {
-                MessageView(message: "No metrics", icon: .empty)
+                MessageView(message: "No metrics", icon: .system("chart.bar.fill"))
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }

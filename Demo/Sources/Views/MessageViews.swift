@@ -10,10 +10,21 @@ protocol Refreshable {
     func refresh() async
 }
 
-enum MessageIcon: String {
-    case error = "exclamationmark.bubble"
-    case empty = "circle.slash"
-    case search = "magnifyingglass"
+enum MessageIcon {
+    case error
+    case empty
+    case system(String)
+
+    var systemName: String {
+        switch self {
+        case .error:
+            return "exclamationmark.bubble"
+        case .empty:
+            return "circle.slash"
+        case let .system(name):
+            return name
+        }
+    }
 }
 
 struct MessageView: View {
@@ -22,7 +33,7 @@ struct MessageView: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            Image(systemName: icon.rawValue)
+            Image(systemName: icon.systemName)
                 .resizable()
                 .frame(width: 90, height: 90)
             Text(message)
