@@ -28,8 +28,9 @@ struct MetricsView: View {
                     }
                     indicatedBitrateSection()
                     observedBitrateSection()
-                    stallsSection()
                     mediaRequestsSection()
+                    stallsSection()
+                    frameDropsSection()
                 }
             }
             else {
@@ -57,6 +58,14 @@ struct MetricsView: View {
         }
     }
 
+    private func mediaRequestsSection() -> some View {
+        Section {
+            MediaRequestChart(metrics: metrics)
+        } header: {
+            Text("Media requests")
+        }
+    }
+
     private func stallsSection() -> some View {
         Section {
             StallsChart(metrics: metrics)
@@ -65,11 +74,11 @@ struct MetricsView: View {
         }
     }
 
-    private func mediaRequestsSection() -> some View {
+    private func frameDropsSection() -> some View {
         Section {
-            MediaRequestChart(metrics: metrics)
+            FrameDropsChart(metrics: metrics)
         } header: {
-            Text("Media requests")
+            Text("Frame drops")
         }
     }
 }
