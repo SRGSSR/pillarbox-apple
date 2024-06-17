@@ -130,13 +130,13 @@
     "Improves playlist navigation so that it feels more natural." : {
 
     },
-    "Kind" : {
-
-    },
     "Index" : {
 
     },
     "Indicated bitrate (Mbps)" : {
+
+    },
+    "Kind" : {
 
     },
     "Layouts" : {
@@ -265,9 +265,6 @@
     "SRG SSR token protection" : {
 
     },
-    "Stalls" : {
-
-    },
     "Stop" : {
 
     },
@@ -292,13 +289,13 @@
     "Tracking" : {
 
     },
+    "Type: %@" : {
+
+    },
     "URL" : {
 
     },
     "URN" : {
-
-    },
-    "Type: %@" : {
 
     },
     "Use a proxy tool to observe events." : {
