@@ -3,13 +3,6 @@ name: 💭 Question
 description: Ask us for guidance or help.
 labels: ["question", "triage"]
 body:
-  - type: textarea
-    id: description
-    attributes:
-      label: Detailed question
-      description: Please develop your question in further detail.
-    validations:
-      required: true
   - type: checkboxes
     attributes:
       label: Can your answer be found elsewhere?
@@ -23,3 +16,10 @@ body:
             I have browsed the available documentation and found no answer
             to my question.
           required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Detailed question
+      description: Please develop your question in further detail.
+    validations:
+      required: true

@@ -3,6 +3,19 @@ name: 💡 Feature request
 description: Request a feature or submit an idea you have.
 labels: ["enhancement", "triage"]
 body:
+  - type: checkboxes
+    attributes:
+      label: Is there an existing similar feature request?
+      options:
+        - label: >
+            I have searched existing
+            [features](https://github.com/SRGSSR/pillarbox-apple/issues?q=is%3Aissue+label%3Aenhancement+)
+            and found no similar request.
+          required: true
+        - label: >
+            I have browsed the available API and found no way to achieve
+            the use case I described.
+          required: true
   - type: textarea
     id: use_case
     attributes:
@@ -28,16 +41,3 @@ body:
       label: Alternatives considered
       description: >
         Describe any alternative solutions you might consider applicable.
-  - type: checkboxes
-    attributes:
-      label: Is there an existing similar feature request?
-      options:
-        - label: >
-            I have searched existing
-            [features](https://github.com/SRGSSR/pillarbox-apple/issues?q=is%3Aissue+label%3Aenhancement+)
-            and found no similar request.
-          required: true
-        - label: >
-            I have browsed the available API and found no way to achieve
-            the use case I described.
-          required: true
