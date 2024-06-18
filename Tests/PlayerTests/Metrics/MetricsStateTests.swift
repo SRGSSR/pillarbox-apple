@@ -10,100 +10,10 @@ import AVFoundation
 import Nimble
 
 final class MetricsStateTests: TestCase {
-    func testUpdateWithoutEvents() {
-        let state = MetricsState.empty.updated(with: .init(
-            events: [],
-            after: .init(timeIntervalSince1970: 1)
-        ), at: .zero)
-        expect(state).to(beNil())
-    }
-
-    func testUpdateWithOpenEvent() {
-        let initialState = MetricsState.empty.updated(with: .init(
-            events: [
-                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 2)
-            ],
-            after: nil
-        ), at: .zero)!
-        let state = initialState.updated(with: .init(
-            events: [
-                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 5)
-            ],
-            after: .init(timeIntervalSince1970: 1)
-        ), at: .zero)!
-
-        let metrics = state.metrics(from: initialState)!
-        expect(metrics.increment.numberOfStalls).to(equal(3))
-        expect(metrics.total.numberOfStalls).to(equal(6))
-    }
-
-    func testUpdateWithClosedAndOpenEvents() {
-        let initialState = MetricsState.empty.updated(with: .init(
-            events: [
-                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 5)
-            ],
-            after: nil
-        ), at: .zero)!
-        let state = initialState.updated(with: .init(
-            events: [
-                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 8),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 3), numberOfStalls: 2)
-            ],
-            after: .init(timeIntervalSince1970: 1)
-        ), at: .zero)!
-
-        let metrics = state.metrics(from: initialState)!
-        expect(metrics.increment.numberOfStalls).to(equal(5))
-        expect(metrics.total.numberOfStalls).to(equal(11))
-    }
-
-    func testUpdateWithMultipleClosedAndInvalidEvents() {
-        let initialState = MetricsState.empty.updated(with: .init(
-            events: [
-                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 5)
-            ],
-            after: nil
-        ), at: .zero)!
-        let state = initialState.updated(with: .init(
-            events: [
-                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 8),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 3), numberOfStalls: 2),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 4), numberOfStalls: 7)
-            ],
-            after: .init(timeIntervalSince1970: 1)
-        ), at: .zero)!
-
-        let metrics = state.metrics(from: initialState)!
-        expect(metrics.increment.numberOfStalls).to(equal(12))
-        expect(metrics.total.numberOfStalls).to(equal(18))
-    }
-
-    func testUpdateWithClosedAndInvalidEvents() {
-        let initialState = MetricsState.empty.updated(with: .init(
-            events: [
-                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 2)
-            ],
-            after: nil
-        ), at: .zero)!
-        let state = initialState.updated(with: .init(
-            events: [
-                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 1),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 4),
-                nil
-            ],
-            after: .init(timeIntervalSince1970: 1)
-        ), at: .zero)!
-
-        let metrics = state.metrics(from: initialState)!
-        expect(metrics.increment.numberOfStalls).to(equal(2))
-        expect(metrics.total.numberOfStalls).to(equal(5))
+    func testEmpty() {
+        let state = MetricsState.empty
+        expect(state.cache.count).to(equal(0))
+        expect(state.cache.total.numberOfStalls).to(equal(0))
     }
 
     // swiftlint:disable:next function_body_length
@@ -138,7 +48,7 @@ final class MetricsStateTests: TestCase {
                     switchBitrate: 20
                 )
             ],
-            after: nil
+            after: 0
         ), at: .init(value: 12, timescale: 1))!
 
         let metrics = state.metrics(from: initialState)!
@@ -182,50 +92,44 @@ final class MetricsStateTests: TestCase {
         expect(metrics.total.switchBitrate).to(equal(20))
     }
 
-    func testEmptyCache() {
-        let state = MetricsState.empty
-        expect(state.cache.date).to(beNil())
-        expect(state.cache.total.numberOfStalls).to(equal(0))
+    func testUpdateWithoutEvents() {
+        let state = MetricsState.empty.updated(with: .init(events: [], after: 0), at: .zero)
+        expect(state).to(beNil())
     }
 
-    func testCacheWithoutDate() {
-        let log = AccessLog(
+    func testUpdateWithClosedAndOpenEvents() {
+        let initialState = MetricsState.empty.updated(with: .init(
             events: [
-                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 10),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 20),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 3), numberOfStalls: 50)
+                .init(numberOfStalls: 1),
+                .init(numberOfStalls: 5)
             ],
-            after: nil
-        )
-        let state = MetricsState.empty.updated(with: log, at: .zero)!
-        expect(log.closedEvents.count).to(equal(2))
-        expect(state.cache.date).to(equal(.init(timeIntervalSince1970: 2)))
-        expect(state.cache.total.numberOfStalls).to(equal(30))
-    }
+            after: 0
+        ), at: .zero)!
+        let state = initialState.updated(with: .init(
+            events: [
+                .init(numberOfStalls: 1),
+                .init(numberOfStalls: 8),
+                .init(numberOfStalls: 2),
+                .init(numberOfStalls: 7)
+            ],
+            after: 1
+        ), at: .zero)!
 
-    func testCacheWithDate() {
-        let log = AccessLog(
-            events: [
-                .init(playbackStartDate: .init(timeIntervalSince1970: 1), numberOfStalls: 10),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 2), numberOfStalls: 20),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 3), numberOfStalls: 50),
-                .init(playbackStartDate: .init(timeIntervalSince1970: 4), numberOfStalls: 30)
-            ],
-            after: .init(timeIntervalSince1970: 1)
-        )
-        let state = MetricsState.empty.updated(with: log, at: .zero)!
-        expect(log.closedEvents.count).to(equal(2))
-        expect(state.cache.date).to(equal(.init(timeIntervalSince1970: 3)))
-        expect(state.cache.total.numberOfStalls).to(equal(70))
+        expect(state.cache.count).to(equal(3))
+        expect(state.cache.total.numberOfStalls).to(equal(11))
+
+        let metrics = state.metrics(from: initialState)!
+        expect(metrics.increment.numberOfStalls).to(equal(12))
+        expect(metrics.total.numberOfStalls).to(equal(18))
     }
 }
 
 private extension AccessLogEvent {
-    init(playbackStartDate: Date = Date(), numberOfStalls: Int = -1) {
+    init(numberOfStalls: Int = -1) {
         self.init(
             uri: nil,
             serverAddress: nil,
-            playbackStartDate: playbackStartDate,
+            playbackStartDate: nil,
             playbackSessionId: nil,
             playbackStartOffset: -1,
             playbackType: nil,
