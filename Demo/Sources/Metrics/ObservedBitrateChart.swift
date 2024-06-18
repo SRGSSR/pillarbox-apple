@@ -57,8 +57,8 @@ struct ObservedBitrateChart: View {
                 if let observedBitrateStandardDeviation = Self.observedBitrateStandardDeviationMbps(from: metrics.element) {
                     AreaMark(
                         x: .value("Index", metrics.offset),
-                        yStart: .value("Observed bitrate min", observedBitrate - observedBitrateStandardDeviation / 2),
-                        yEnd: .value("Observed bitrate max", observedBitrate + observedBitrateStandardDeviation / 2)
+                        yStart: .value("Observed bitrate min", observedBitrate - observedBitrateStandardDeviation),
+                        yEnd: .value("Observed bitrate max", observedBitrate + observedBitrateStandardDeviation)
                     )
                     .opacity(0.3)
                 }
