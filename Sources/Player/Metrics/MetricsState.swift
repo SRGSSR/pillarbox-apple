@@ -29,7 +29,7 @@ struct MetricsState: Equatable {
 
     func updated(with log: AVPlayerItemAccessLog?, at time: CMTime) -> Self? {
         guard let log else { return nil }
-        return updated(with: .init(log, after: cache.date), at: time)
+        return updated(with: .init(log, after: cache.index), at: time)
     }
 
     func metrics(from state: Self) -> Metrics? {
@@ -57,15 +57,14 @@ struct MetricsState: Equatable {
 
 extension MetricsState {
     struct Cache: Equatable {
-        static let empty = Self(date: nil, total: .zero)
+        static let empty = Self(index: 0, total: .zero)
 
-        let date: Date?
+        let index: Int
         let total: MetricsValues
 
         func updated(with log: AccessLog) -> Self {
-            guard let lastEvent = log.closedEvents.last else { return self }
-            return .init(
-                date: lastEvent.playbackStartDate,
+            .init(
+                index: index + log.closedEvents.count,
                 total: log.closedEvents.reduce(total) { initial, next in
                     initial + .values(from: next)
                 }
