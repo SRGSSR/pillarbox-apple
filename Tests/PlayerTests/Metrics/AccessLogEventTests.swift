@@ -12,9 +12,9 @@ import Nimble
 final class AccessLogEventTests: TestCase {
     func testNegativeValues() {
         let event = AccessLogEvent(
-            playbackStartDate: Date(),
             uri: nil,
             serverAddress: nil,
+            playbackStartDate: Date(),
             playbackSessionId: nil,
             playbackStartOffset: -1,
             playbackType: nil,
@@ -36,7 +36,7 @@ final class AccessLogEventTests: TestCase {
             segmentsDownloadedDuration: -1,
             downloadOverdue: -1,
             switchBitrate: -1
-        )!
+        )
         expect(event.playbackStartOffset).to(beNil())
         expect(event.startupTime).to(beNil())
         expect(event.observedBitrateStandardDeviation).to(beNil())
@@ -60,9 +60,9 @@ final class AccessLogEventTests: TestCase {
 
     func testMissingPlaybackStartDate() {
         let event = AccessLogEvent(
-            playbackStartDate: nil,
             uri: nil,
             serverAddress: nil,
+            playbackStartDate: nil,
             playbackSessionId: nil,
             playbackStartOffset: -1,
             playbackType: nil,

@@ -7,12 +7,11 @@
 import AVFoundation
 
 struct AccessLogEvent: Equatable {
-    let playbackStartDate: Date
-
     // MARK: Optional information
 
     let uri: String?
     let serverAddress: String?
+    let playbackStartDate: Date?
     let playbackSessionId: String?
     let playbackStartOffset: TimeInterval?
     let playbackType: String?
@@ -38,10 +37,10 @@ struct AccessLogEvent: Equatable {
     let downloadOverdue: Int
     let switchBitrate: Double
 
-    init?(
-        playbackStartDate: Date?,
+    init(
         uri: String?,
         serverAddress: String?,
+        playbackStartDate: Date?,
         playbackSessionId: String?,
         playbackStartOffset: TimeInterval,
         playbackType: String?,
@@ -64,11 +63,9 @@ struct AccessLogEvent: Equatable {
         downloadOverdue: Int,
         switchBitrate: Double
     ) {
-        guard let playbackStartDate else { return nil }
-        self.playbackStartDate = playbackStartDate
-
         self.uri = uri
         self.serverAddress = serverAddress
+        self.playbackStartDate = playbackStartDate
         self.playbackSessionId = playbackSessionId
         self.playbackStartOffset = Self.optional(playbackStartOffset)
         self.playbackType = playbackType
@@ -95,11 +92,11 @@ struct AccessLogEvent: Equatable {
 }
 
 extension AccessLogEvent {
-    init?(_ event: AVPlayerItemAccessLogEvent) {
+    init(_ event: AVPlayerItemAccessLogEvent) {
         self.init(
-            playbackStartDate: event.playbackStartDate,
             uri: event.uri,
             serverAddress: event.serverAddress,
+            playbackStartDate: event.playbackStartDate,
             playbackSessionId: event.playbackSessionID,
             playbackStartOffset: event.playbackStartOffset,
             playbackType: event.playbackType,

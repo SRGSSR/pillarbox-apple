@@ -90,11 +90,11 @@ class AccessLogTests: TestCase {
 }
 
 private extension AccessLogEvent {
-    init(playbackStartDate: Date = Date(), numberOfStalls: Int = -1) {
+    init(playbackStartDate: Date? = nil, numberOfStalls: Int = -1) {
         self.init(
-            playbackStartDate: playbackStartDate,
             uri: nil,
             serverAddress: nil,
+            playbackStartDate: playbackStartDate,
             playbackSessionId: nil,
             playbackStartOffset: -1,
             playbackType: nil,
@@ -116,6 +116,6 @@ private extension AccessLogEvent {
             segmentsDownloadedDuration: -1,
             downloadOverdue: -1,
             switchBitrate: -1
-        )!
+        )
     }
 }

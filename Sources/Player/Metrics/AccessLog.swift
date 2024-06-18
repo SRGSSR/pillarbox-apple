@@ -27,7 +27,7 @@ struct AccessLog {
     }
 
     static func event(_ event: AccessLogEvent?, after date: Date?) -> AccessLogEvent? {
-        guard let date, let event else { return event }
-        return event.playbackStartDate > date ? event : nil
+        guard let date, let event, let playbackDate = event.playbackStartDate else { return event }
+        return playbackDate > date ? event : nil
     }
 }

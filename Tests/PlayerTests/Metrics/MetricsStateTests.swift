@@ -112,9 +112,9 @@ final class MetricsStateTests: TestCase {
         let state = initialState.updated(with: .init(
             events: [
                 .init(
-                    playbackStartDate: Date(timeIntervalSince1970: 1),
                     uri: "uri",
                     serverAddress: "serverAddress",
+                    playbackStartDate: Date(timeIntervalSince1970: 1),
                     playbackSessionId: "playbackSessionId",
                     playbackStartOffset: 2,
                     playbackType: "playbackType",
@@ -223,9 +223,9 @@ final class MetricsStateTests: TestCase {
 private extension AccessLogEvent {
     init(playbackStartDate: Date = Date(), numberOfStalls: Int = -1) {
         self.init(
-            playbackStartDate: playbackStartDate,
             uri: nil,
             serverAddress: nil,
+            playbackStartDate: playbackStartDate,
             playbackSessionId: nil,
             playbackStartOffset: -1,
             playbackType: nil,
@@ -247,6 +247,6 @@ private extension AccessLogEvent {
             segmentsDownloadedDuration: -1,
             downloadOverdue: -1,
             switchBitrate: -1
-        )!
+        )
     }
 }

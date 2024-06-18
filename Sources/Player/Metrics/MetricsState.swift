@@ -35,10 +35,10 @@ struct MetricsState: Equatable {
     func metrics(from state: Self) -> Metrics? {
         guard let event else { return nil }
         return .init(
-            playbackStartDate: event.playbackStartDate,
             time: time,
             uri: event.uri,
             serverAddress: event.serverAddress,
+            playbackStartDate: event.playbackStartDate,
             playbackSessionId: event.playbackSessionId,
             playbackStartOffset: event.playbackStartOffset,
             playbackType: event.playbackType,
