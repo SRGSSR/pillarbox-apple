@@ -160,8 +160,8 @@ extension AVPlayerItem {
         NotificationCenter.default.weakPublisher(for: AVPlayerItem.newAccessLogEntryNotification, object: self)
             .compactMap { $0.object as? AVPlayerItem }
             .prepend(self)
-            .scan(.empty) { initial, next in
-                initial.updated(with: next.accessLog(), at: next.currentTime()) ?? initial
+            .scan(.empty) { state, item in
+                state.updated(with: item.accessLog(), at: item.currentTime())
             }
             .removeDuplicates()
             .eraseToAnyPublisher()

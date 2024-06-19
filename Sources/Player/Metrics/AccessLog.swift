@@ -7,21 +7,13 @@
 import AVFoundation
 
 struct AccessLog {
-    let closedEvents: [AccessLogEvent]
-    let openEvent: AccessLogEvent?
+    let events: [AccessLogEvent]
 
-    init(events: [AccessLogEvent], after index: Int) {
-        if index < events.count {
-            closedEvents = Array(events[index..<events.count - 1])
-            openEvent = events.last
-        }
-        else {
-            closedEvents = []
-            openEvent = nil
-        }
+    init(events: [AccessLogEvent]) {
+        self.events = events
     }
 
     init(_ log: AVPlayerItemAccessLog, after index: Int) {
-        self.init(events: log.events.map { .init($0) }, after: index)
+        self.init(events: log.events.map { .init($0) })
     }
 }
