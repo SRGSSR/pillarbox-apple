@@ -9,7 +9,7 @@ import PillarboxPlayer
 import SwiftUI
 
 struct StallsChart: View {
-    private static let maxX = 120
+    private static let maxX = 90
 
     let metrics: [Metrics]
 
@@ -27,7 +27,8 @@ struct StallsChart: View {
         Chart(Array(metrics.suffix(Self.maxX).enumerated()), id: \.offset) { metrics in
             BarMark(
                 x: .value("Index", metrics.offset),
-                y: .value("Stalls", metrics.element.increment.numberOfStalls)
+                y: .value("Stalls", metrics.element.increment.numberOfStalls),
+                width: .inset(1)
             )
             .foregroundStyle(.pink)
         }

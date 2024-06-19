@@ -9,7 +9,7 @@ import PillarboxPlayer
 import SwiftUI
 
 struct DataVolumeChart: View {
-    private static let maxX = 120
+    private static let maxX = 90
 
     let metrics: [Metrics]
 
@@ -17,7 +17,8 @@ struct DataVolumeChart: View {
         Chart(Array(metrics.suffix(Self.maxX).enumerated()), id: \.offset) { metrics in
             BarMark(
                 x: .value("Index", metrics.offset),
-                y: .value("Data volume (MB)", metrics.element.increment.numberOfBytesTransferred / 1_000_000)
+                y: .value("Data volume (MB)", metrics.element.increment.numberOfBytesTransferred / 1_000_000),
+                width: .inset(1)
             )
             .foregroundStyle(.cyan)
         }

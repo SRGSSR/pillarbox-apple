@@ -9,7 +9,7 @@ import PillarboxPlayer
 import SwiftUI
 
 struct FrameDropsChart: View {
-    private static let maxX = 120
+    private static let maxX = 90
 
     let metrics: [Metrics]
 
@@ -27,7 +27,8 @@ struct FrameDropsChart: View {
         Chart(Array(metrics.suffix(Self.maxX).enumerated()), id: \.offset) { metrics in
             BarMark(
                 x: .value("Index", metrics.offset),
-                y: .value("Frame drops", metrics.element.increment.numberOfDroppedVideoFrames)
+                y: .value("Frame drops", metrics.element.increment.numberOfDroppedVideoFrames),
+                width: .inset(1)
             )
             .foregroundStyle(.purple)
         }

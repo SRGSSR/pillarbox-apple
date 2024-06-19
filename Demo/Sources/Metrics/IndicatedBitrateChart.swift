@@ -9,7 +9,7 @@ import PillarboxPlayer
 import SwiftUI
 
 struct IndicatedBitrateChart: View {
-    private static let maxX = 120
+    private static let maxX = 90
 
     let metrics: [Metrics]
 
