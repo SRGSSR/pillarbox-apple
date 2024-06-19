@@ -3,6 +3,17 @@ name: 🐞 Bug report
 description: File a bug report
 labels: ["bug", "triage"]
 body:
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: >
+        Please search to see if an
+        [issue](https://github.com/SRGSSR/pillarbox-apple/issues?q=is%3Aissue)
+        already exists for the bug you encountered.
+      options:
+        - label: >
+            I have searched existing issues and found no similar bug report.
+          required: true
   - type: textarea
     id: description
     attributes:
@@ -54,14 +65,3 @@ body:
     attributes:
       label: Code sample
       description: Attach a code sample reproducing the issue if possible.
-  - type: checkboxes
-    attributes:
-      label: Is there an existing issue for this?
-      description: >
-        Please search to see if an
-        [issue](https://github.com/SRGSSR/pillarbox-apple/issues?q=is%3Aissue)
-        already exists for the bug you encountered.
-      options:
-        - label: >
-            I have searched existing issues and found no similar bug report.
-          required: true
