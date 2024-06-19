@@ -9,7 +9,7 @@ import PillarboxPlayer
 import SwiftUI
 
 struct MetricsView: View {
-    @ObservedObject var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1))
+    @ObservedObject var metricsCollector: MetricsCollector
 
     private var metrics: [Metrics] {
         metricsCollector.metrics
@@ -89,5 +89,22 @@ struct MetricsView: View {
         } header: {
             Text("Frame drops")
         }
+    }
+}
+
+struct MetricsView_Previews: PreviewProvider {
+    private struct MetricsPreview: View {
+        @State private var player = Player(item: Media(from: URLTemplate.appleAdvanced_16_9_TS_HLS).playerItem())
+        @StateObject private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1))
+
+        var body: some View {
+            MetricsView(metricsCollector: metricsCollector)
+                .bind(metricsCollector, to: player)
+                .onAppear(perform: player.play)
+        }
+    }
+
+    static var previews: some View {
+        MetricsPreview()
     }
 }
