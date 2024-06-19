@@ -12,13 +12,13 @@ struct DataVolumeChart: View {
     let metrics: [Metrics]
     let limit: Int
 
-    private var bytesTransferred: String {
-        ByteCountFormatStyle().format(metrics.last?.total.numberOfBytesTransferred ?? 0)
-    }
-
     var body: some View {
         chart()
         summary()
+    }
+
+    private var bytesTransferred: String {
+        ByteCountFormatStyle().format(metrics.last?.total.numberOfBytesTransferred ?? 0)
     }
 
     @ViewBuilder

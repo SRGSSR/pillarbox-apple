@@ -13,14 +13,6 @@ struct MetricsView: View {
 
     @ObservedObject var metricsCollector: MetricsCollector
 
-    private var metrics: [Metrics] {
-        metricsCollector.metrics
-    }
-
-    private var currentMetrics: Metrics? {
-        metrics.last
-    }
-
     var body: some View {
         Group {
             if !metrics.isEmpty {
@@ -45,6 +37,14 @@ struct MetricsView: View {
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
 #endif
+    }
+
+    private var metrics: [Metrics] {
+        metricsCollector.metrics
+    }
+
+    private var currentMetrics: Metrics? {
+        metrics.last
     }
 
     private func indicatedBitrateSection() -> some View {
