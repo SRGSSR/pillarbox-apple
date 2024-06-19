@@ -9,7 +9,7 @@ import PillarboxPlayer
 import SwiftUI
 
 struct MetricsView: View {
-    static let limit = 90
+    private static let limit = 90
 
     @ObservedObject var metricsCollector: MetricsCollector
 
