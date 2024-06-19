@@ -17,6 +17,10 @@ struct MetricsInfoView: View {
 
     let metrics: Metrics
 
+    private var uri: String {
+        metrics.uri ?? "-"
+    }
+
     private var playbackDuration: String {
         Self.dateComponentsFormatter.string(from: metrics.total.playbackDuration) ?? "-"
     }
@@ -31,7 +35,10 @@ struct MetricsInfoView: View {
     }
 
     var body: some View {
-        cell("URI", value: metrics.uri ?? "-")
+        cell("URI", value: uri)
+#if os(iOS)
+            .swipeActions { CopyButton(text: uri) }
+#endif
         cell("Type", value: metrics.playbackType ?? "-")
         cell("Playback duration", value: playbackDuration)
         cell("Data volume", value: bytesTransferred)

@@ -12,7 +12,7 @@ struct DataVolumeChart: View {
     private static let maxX = 90
 
     let metrics: [Metrics]
-    
+
     private var bytesTransferred: String {
         ByteCountFormatStyle().format(metrics.last?.total.numberOfBytesTransferred ?? 0)
     }
