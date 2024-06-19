@@ -12,8 +12,18 @@ struct DataVolumeChart: View {
     private static let maxX = 90
 
     let metrics: [Metrics]
+    
+    private var bytesTransferred: String {
+        ByteCountFormatStyle().format(metrics.last?.total.numberOfBytesTransferred ?? 0)
+    }
 
     var body: some View {
+        chart()
+        summary()
+    }
+
+    @ViewBuilder
+    private func chart() -> some View {
         Chart(Array(metrics.suffix(Self.maxX).enumerated()), id: \.offset) { metrics in
             BarMark(
                 x: .value("Index", metrics.offset),
@@ -26,5 +36,13 @@ struct DataVolumeChart: View {
         .chartXScale(domain: 0...Self.maxX - 1)
         .chartYAxisLabel("MB")
         .padding(.vertical)
+    }
+
+    @ViewBuilder
+    private func summary() -> some View {
+        Text("Total \(bytesTransferred)")
+            .font(.caption2)
+            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity, alignment: .center)
     }
 }
