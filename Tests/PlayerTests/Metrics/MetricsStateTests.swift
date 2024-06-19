@@ -10,48 +10,39 @@ import AVFoundation
 import Nimble
 
 final class MetricsStateTests: TestCase {
-    func testEmpty() {
-        let state = MetricsState.empty
-        expect(state.cache.count).to(equal(0))
-        expect(state.cache.total.numberOfStalls).to(equal(0))
-    }
-
     // swiftlint:disable:next function_body_length
     func testMetrics() {
         let initialState = MetricsState.empty
-        let state = initialState.updated(with: .init(
-            events: [
-                .init(
-                    uri: "uri",
-                    serverAddress: "serverAddress",
-                    playbackStartDate: Date(timeIntervalSince1970: 1),
-                    playbackSessionId: "playbackSessionId",
-                    playbackStartOffset: 2,
-                    playbackType: "playbackType",
-                    startupTime: 3,
-                    observedBitrateStandardDeviation: 4,
-                    indicatedBitrate: 5,
-                    observedBitrate: 6,
-                    averageAudioBitrate: 7,
-                    averageVideoBitrate: 8,
-                    indicatedAverageBitrate: 9,
-                    numberOfServerAddressChanges: 10,
-                    mediaRequestsWWAN: 11,
-                    transferDuration: 12,
-                    numberOfBytesTransferred: 13,
-                    numberOfMediaRequests: 14,
-                    playbackDuration: 15,
-                    numberOfDroppedVideoFrames: 16,
-                    numberOfStalls: 17,
-                    segmentsDownloadedDuration: 18,
-                    downloadOverdue: 19,
-                    switchBitrate: 20
-                )
-            ],
-            after: 0
-        ), at: .init(value: 12, timescale: 1))!
+        let state = initialState.updated(with: [
+            .init(
+                uri: "uri",
+                serverAddress: "serverAddress",
+                playbackStartDate: Date(timeIntervalSince1970: 1),
+                playbackSessionId: "playbackSessionId",
+                playbackStartOffset: 2,
+                playbackType: "playbackType",
+                startupTime: 3,
+                observedBitrateStandardDeviation: 4,
+                indicatedBitrate: 5,
+                observedBitrate: 6,
+                averageAudioBitrate: 7,
+                averageVideoBitrate: 8,
+                indicatedAverageBitrate: 9,
+                numberOfServerAddressChanges: 10,
+                mediaRequestsWWAN: 11,
+                transferDuration: 12,
+                numberOfBytesTransferred: 13,
+                numberOfMediaRequests: 14,
+                playbackDuration: 15,
+                numberOfDroppedVideoFrames: 16,
+                numberOfStalls: 17,
+                segmentsDownloadedDuration: 18,
+                downloadOverdue: 19,
+                switchBitrate: 20
+            )
+        ], at: .init(value: 12, timescale: 1))
 
-        let metrics = state.metrics(from: initialState)!
+        let metrics = state.metrics(from: initialState)
         expect(metrics.playbackStartDate).to(equal(Date(timeIntervalSince1970: 1)))
         expect(metrics.time).to(equal(.init(value: 12, timescale: 1)))
         expect(metrics.uri).to(equal("uri"))
@@ -90,37 +81,6 @@ final class MetricsStateTests: TestCase {
         expect(metrics.total.segmentsDownloadedDuration).to(equal(18))
         expect(metrics.total.downloadOverdue).to(equal(19))
         expect(metrics.total.switchBitrate).to(equal(20))
-    }
-
-    func testUpdateWithoutEvents() {
-        let state = MetricsState.empty.updated(with: .init(events: [], after: 0), at: .zero)
-        expect(state).to(beNil())
-    }
-
-    func testUpdateWithClosedAndOpenEvents() {
-        let initialState = MetricsState.empty.updated(with: .init(
-            events: [
-                .init(numberOfStalls: 1),
-                .init(numberOfStalls: 5)
-            ],
-            after: 0
-        ), at: .zero)!
-        let state = initialState.updated(with: .init(
-            events: [
-                .init(numberOfStalls: 1),
-                .init(numberOfStalls: 8),
-                .init(numberOfStalls: 2),
-                .init(numberOfStalls: 7)
-            ],
-            after: 1
-        ), at: .zero)!
-
-        expect(state.cache.count).to(equal(3))
-        expect(state.cache.total.numberOfStalls).to(equal(11))
-
-        let metrics = state.metrics(from: initialState)!
-        expect(metrics.increment.numberOfStalls).to(equal(12))
-        expect(metrics.total.numberOfStalls).to(equal(18))
     }
 }
 
