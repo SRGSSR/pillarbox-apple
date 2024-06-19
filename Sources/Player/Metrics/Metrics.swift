@@ -9,9 +9,6 @@ import Foundation
 
 /// An object used to capture metrics associated with a player.
 public struct Metrics: Equatable {
-    /// The date and time at which playback began.
-    public let playbackStartDate: Date
-
     /// The player time at the time metrics were captured.
     public let time: CMTime
 
@@ -24,6 +21,9 @@ public struct Metrics: Equatable {
     public let serverAddress: String?
 
     // MARK: Playback-related information
+
+    /// The date and time at which playback began.
+    public let playbackStartDate: Date?
 
     /// A GUID that identifies the current playback session.
     public let playbackSessionId: String?
