@@ -9,6 +9,8 @@ import PillarboxPlayer
 import SwiftUI
 
 struct MetricsView: View {
+    static let limit = 90
+
     @ObservedObject var metricsCollector: MetricsCollector
 
     private var metrics: [Metrics] {
@@ -40,12 +42,14 @@ struct MetricsView: View {
             }
         }
         .navigationTitle("Metrics")
+#if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
+#endif
     }
 
     private func indicatedBitrateSection() -> some View {
         Section {
-            IndicatedBitrateChart(metrics: metrics)
+            IndicatedBitrateChart(metrics: metrics, limit: Self.limit)
         } header: {
             Text("Indicated bitrate")
         }
@@ -53,7 +57,7 @@ struct MetricsView: View {
 
     private func observedBitrateSection() -> some View {
         Section {
-            ObservedBitrateChart(metrics: metrics)
+            ObservedBitrateChart(metrics: metrics, limit: Self.limit)
         } header: {
             Text("Observed bitrate")
         }
@@ -61,7 +65,7 @@ struct MetricsView: View {
 
     private func dataVolumeSection() -> some View {
         Section {
-            DataVolumeChart(metrics: metrics)
+            DataVolumeChart(metrics: metrics, limit: Self.limit)
         } header: {
             Text("Data volume")
         }
@@ -69,7 +73,7 @@ struct MetricsView: View {
 
     private func mediaRequestsSection() -> some View {
         Section {
-            MediaRequestChart(metrics: metrics)
+            MediaRequestChart(metrics: metrics, limit: Self.limit)
         } header: {
             Text("Media requests")
         }
@@ -77,7 +81,7 @@ struct MetricsView: View {
 
     private func stallsSection() -> some View {
         Section {
-            StallsChart(metrics: metrics)
+            StallsChart(metrics: metrics, limit: Self.limit)
         } header: {
             Text("Stalls")
         }
@@ -85,7 +89,7 @@ struct MetricsView: View {
 
     private func frameDropsSection() -> some View {
         Section {
-            FrameDropsChart(metrics: metrics)
+            FrameDropsChart(metrics: metrics, limit: Self.limit)
         } header: {
             Text("Frame drops")
         }

@@ -9,9 +9,8 @@ import PillarboxPlayer
 import SwiftUI
 
 struct ObservedBitrateChart: View {
-    private static let maxX = 90
-
     let metrics: [Metrics]
+    let limit: Int
 
     var body: some View {
         chart()
@@ -45,7 +44,7 @@ struct ObservedBitrateChart: View {
 
     @ViewBuilder
     private func chart() -> some View {
-        Chart(Array(metrics.suffix(Self.maxX).enumerated()), id: \.offset) { metrics in
+        Chart(Array(metrics.suffix(limit).enumerated()), id: \.offset) { metrics in
             if let observedBitrate = Self.observedBitrateMbps(from: metrics.element) {
                 LineMark(
                     x: .value("Index", metrics.offset),
@@ -65,7 +64,7 @@ struct ObservedBitrateChart: View {
             }
         }
         .chartXAxis(.hidden)
-        .chartXScale(domain: 0...Self.maxX - 1)
+        .chartXScale(domain: 0...limit - 1)
         .chartYAxisLabel("Mbps")
         .padding(.vertical)
     }

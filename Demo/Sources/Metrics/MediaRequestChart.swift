@@ -9,9 +9,8 @@ import PillarboxPlayer
 import SwiftUI
 
 struct MediaRequestChart: View {
-    private static let maxX = 90
-
     let metrics: [Metrics]
+    let limit: Int
 
     var body: some View {
         chart()
@@ -24,7 +23,7 @@ struct MediaRequestChart: View {
 
     @ViewBuilder
     private func chart() -> some View {
-        Chart(Array(metrics.suffix(Self.maxX).enumerated()), id: \.offset) { metrics in
+        Chart(Array(metrics.suffix(limit).enumerated()), id: \.offset) { metrics in
             BarMark(
                 x: .value("Index", metrics.offset),
                 y: .value("Media requests", metrics.element.increment.numberOfMediaRequests),
@@ -33,7 +32,7 @@ struct MediaRequestChart: View {
             .foregroundStyle(.yellow)
         }
         .chartXAxis(.hidden)
-        .chartXScale(domain: 0...Self.maxX - 1)
+        .chartXScale(domain: 0...limit - 1)
         .padding(.vertical)
     }
 

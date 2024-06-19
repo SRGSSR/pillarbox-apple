@@ -9,9 +9,8 @@ import PillarboxPlayer
 import SwiftUI
 
 struct DataVolumeChart: View {
-    private static let maxX = 90
-
     let metrics: [Metrics]
+    let limit: Int
 
     private var bytesTransferred: String {
         ByteCountFormatStyle().format(metrics.last?.total.numberOfBytesTransferred ?? 0)
@@ -24,7 +23,7 @@ struct DataVolumeChart: View {
 
     @ViewBuilder
     private func chart() -> some View {
-        Chart(Array(metrics.suffix(Self.maxX).enumerated()), id: \.offset) { metrics in
+        Chart(Array(metrics.suffix(limit).enumerated()), id: \.offset) { metrics in
             BarMark(
                 x: .value("Index", metrics.offset),
                 y: .value("Data volume (MB)", metrics.element.increment.numberOfBytesTransferred / 1_000_000),
@@ -33,7 +32,7 @@ struct DataVolumeChart: View {
             .foregroundStyle(.cyan)
         }
         .chartXAxis(.hidden)
-        .chartXScale(domain: 0...Self.maxX - 1)
+        .chartXScale(domain: 0...limit - 1)
         .chartYAxisLabel("MB")
         .padding(.vertical)
     }
