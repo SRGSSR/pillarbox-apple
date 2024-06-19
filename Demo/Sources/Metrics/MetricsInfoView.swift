@@ -17,8 +17,8 @@ struct MetricsInfoView: View {
 
     let metrics: Metrics
 
-    private var playbackDuration: String? {
-        Self.dateComponentsFormatter.string(from: metrics.total.playbackDuration)
+    private var playbackDuration: String {
+        Self.dateComponentsFormatter.string(from: metrics.total.playbackDuration) ?? "-"
     }
 
     private var bytesTransferred: String {
@@ -31,10 +31,9 @@ struct MetricsInfoView: View {
     }
 
     var body: some View {
+        cell("URI", value: metrics.uri ?? "-")
         cell("Type", value: metrics.playbackType ?? "-")
-        if let playbackDuration {
-            cell("Playback duration", value: playbackDuration)
-        }
+        cell("Playback duration", value: playbackDuration)
         cell("Data volume", value: bytesTransferred)
         cell("Startup time", value: startupTime)
     }
@@ -45,7 +44,7 @@ struct MetricsInfoView: View {
             Spacer()
             Text(value)
                 .monospacedDigit()
-                .multilineTextAlignment(.trailing)
+                .lineLimit(1)
                 .foregroundColor(.secondary)
         }
     }
