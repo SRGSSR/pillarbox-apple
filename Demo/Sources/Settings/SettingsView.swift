@@ -28,7 +28,7 @@ private struct UrlCacheView: View {
     }
 
     private func updateCacheSize() {
-        urlCacheSize = ByteCountFormatter.string(fromByteCount: Int64(URLCache.shared.currentDiskUsage), countStyle: .binary)
+        urlCacheSize = ByteCountFormatStyle().format(Int64(URLCache.shared.currentDiskUsage))
     }
 
     private func clearUrlCache() {

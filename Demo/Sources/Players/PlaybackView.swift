@@ -12,6 +12,7 @@ import SwiftUI
 #if os(iOS)
 
 // Behavior: h-exp, v-exp
+// swiftlint:disable:next type_body_length
 private struct MainView: View {
     @ObservedObject var player: Player
     @Binding var layout: PlaybackView.Layout
@@ -20,8 +21,10 @@ private struct MainView: View {
     let progressTracker: ProgressTracker
 
     @StateObject private var visibilityTracker = VisibilityTracker()
+    @State private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1))
 
     @State private var layoutInfo: LayoutInfo = .none
+    @State private var isPresentingMetrics = false
     @State private var selectedGravity: AVLayerVideoGravity = .resizeAspect
     @State private var isInteracting = false
 
@@ -38,14 +41,19 @@ private struct MainView: View {
     }
 
     var body: some View {
-        ZStack {
-            main()
-            bottomBar()
-            topBar()
+        AdaptiveSheetContainer(isPresenting: $isPresentingMetrics) {
+            ZStack {
+                main()
+                bottomBar()
+                topBar()
+            }
+            .animation(.defaultLinear, value: shouldHideInterface)
+        } sheet: {
+            MetricsView(metricsCollector: metricsCollector)
         }
         .statusBarHidden(isFullScreen ? isUserInterfaceHidden : false)
-        .animation(.defaultLinear, value: shouldHideInterface)
         .bind(visibilityTracker, to: player)
+        .bind(metricsCollector, to: player)
     }
 
     private var isFullScreen: Bool {
@@ -210,12 +218,22 @@ private struct MainView: View {
     private func settingsMenu() -> some View {
         Menu {
             player.standardSettingMenu()
+            metricsMenu()
         } label: {
             Image(systemName: "ellipsis.circle")
                 .font(.system(size: 20))
                 .tint(.white)
         }
         .menuOrder(.fixed)
+    }
+
+    @ViewBuilder
+    private func metricsMenu() -> some View {
+        if !isPresentingMetrics {
+            Button(action: showMetrics) {
+                Label("Show metrics", systemImage: "chart.bar")
+            }
+        }
     }
 
     @ViewBuilder
@@ -277,6 +295,10 @@ private struct MainView: View {
             .contentShape(Rectangle())
             .foregroundColor(.white)
             .padding(60)
+    }
+
+    private func showMetrics() {
+        isPresentingMetrics = true
     }
 }
 
@@ -605,6 +627,58 @@ private struct TimeSlider: View {
                 .foregroundColor(.white)
                 .shadow(color: .init(white: 0.2, opacity: 0.8), radius: 15)
         }
+    }
+}
+
+private struct AdaptiveSheetContainer<Content, Sheet>: View where Content: View, Sheet: View {
+    @Binding var isPresenting: Bool
+
+    @ViewBuilder let content: () -> Content
+    @ViewBuilder let sheet: () -> Sheet
+
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
+    var body: some View {
+        switch horizontalSizeClass {
+        case .compact:
+            compactView()
+        default:
+            defaultView()
+        }
+    }
+
+    private func compactView() -> some View {
+        content()
+            .sheet(isPresented: $isPresenting) {
+                NavigationStack {
+                    sheet()
+                }
+                .presentationDetents([.medium, .large])
+            }
+    }
+
+    private func defaultView() -> some View {
+        HStack(spacing: 0) {
+            content()
+            if isPresenting {
+                NavigationStack {
+                    sheet()
+                        .toolbar(content: toolbarContent)
+                }
+                .frame(width: 420)
+            }
+        }
+        .animation(.default, value: isPresenting)
+    }
+
+    private func toolbarContent() -> some ToolbarContent {
+        ToolbarItem(placement: .topBarLeading) {
+            Button("Hide", action: close)
+        }
+    }
+
+    private func close() {
+        isPresenting = false
     }
 }
 

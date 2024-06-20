@@ -91,6 +91,15 @@
     "Continues if possible" : {
 
     },
+    "Curr. %.02f Mbps" : {
+
+    },
+    "Data volume" : {
+
+    },
+    "Data volume (MB)" : {
+
+    },
     "Debugging" : {
 
     },
@@ -115,16 +124,31 @@
     "Font size" : {
 
     },
+    "Frame drops" : {
+
+    },
     "GitHub" : {
 
     },
     "Green" : {
 
     },
+    "Hide" : {
+
+    },
     "Immediate" : {
 
     },
     "Improves playlist navigation so that it feels more natural." : {
+
+    },
+    "Index" : {
+
+    },
+    "Indicated bitrate" : {
+
+    },
+    "Indicated bitrate (Mbps)" : {
 
     },
     "Kind" : {
@@ -145,10 +169,43 @@
     "Made with " : {
 
     },
+    "Max. %.02f Mbps" : {
+
+    },
+    "MB" : {
+
+    },
+    "Mbps" : {
+
+    },
+    "Media requests" : {
+
+    },
+    "Metrics" : {
+      "comment" : "Playback setting menu title"
+    },
+    "Min. %.02f Mbps" : {
+
+    },
     "Mode" : {
 
     },
+    "No metrics" : {
+
+    },
     "None" : {
+
+    },
+    "Observed bitrate" : {
+
+    },
+    "Observed bitrate (Mbps)" : {
+
+    },
+    "Observed bitrate max" : {
+
+    },
+    "Observed bitrate min" : {
 
     },
     "Opt-in features" : {
@@ -199,6 +256,9 @@
     "Settings" : {
 
     },
+    "Show metrics" : {
+
+    },
     "Showcase" : {
 
     },
@@ -223,6 +283,9 @@
     "SRG SSR token protection" : {
 
     },
+    "Stalls" : {
+
+    },
     "Stop" : {
 
     },
@@ -239,6 +302,12 @@
 
     },
     "Top" : {
+
+    },
+    "Total %@" : {
+
+    },
+    "Total %lld" : {
 
     },
     "Tracking" : {

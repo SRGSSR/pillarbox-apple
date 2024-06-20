@@ -16,7 +16,7 @@ struct SearchView: View {
         ZStack {
             switch model.state {
             case .empty:
-                MessageView(message: "Enter something to search.", icon: .search)
+                MessageView(message: "Enter something to search.", icon: .system("magnifyingglass"))
             case .loading:
                 ProgressView()
             case let .loaded(medias: medias):
