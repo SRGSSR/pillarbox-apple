@@ -18,7 +18,7 @@ final class MetricsCollectorTests: TestCase {
         expectAtLeastEqualPublished(
             values: [[]],
             from: metricsCollector.$metrics
-                .map { $0.map(\.uri) }
+                .map { $0.compactMap(\.uri) }
                 .removeDuplicates()
         )
     }
@@ -28,7 +28,7 @@ final class MetricsCollectorTests: TestCase {
         expectAtLeastEqualPublished(
             values: [[]],
             from: metricsCollector.$metrics
-                .map { $0.map(\.uri) }
+                .map { $0.compactMap(\.uri) }
                 .removeDuplicates()
         ) {
             metricsCollector.player = Player()
@@ -42,7 +42,7 @@ final class MetricsCollectorTests: TestCase {
         expectAtLeastEqualPublished(
             values: [[]],
             from: metricsCollector.$metrics
-                .map { $0.map(\.uri) }
+                .map { $0.compactMap(\.uri) }
                 .removeDuplicates()
         ) {
             metricsCollector.player = player
@@ -56,7 +56,7 @@ final class MetricsCollectorTests: TestCase {
         expectAtLeastEqualPublished(
             values: [[], [Stream.onDemand.url.absoluteString]],
             from: metricsCollector.$metrics
-                .map { $0.map(\.uri) }
+                .map { $0.compactMap(\.uri) }
                 .removeDuplicates()
         ) {
             metricsCollector.player = player
