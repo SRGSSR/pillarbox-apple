@@ -30,4 +30,10 @@ extension MPRemoteCommandCenter {
     func unregister(_ registration: some RemoteCommandRegistrable) {
         self[keyPath: registration.command].removeTarget(registration.target)
     }
+
+    func unregister(_ registrations: [any RemoteCommandRegistrable]) {
+        registrations.forEach { registration in
+            unregister(registration)
+        }
+    }
 }

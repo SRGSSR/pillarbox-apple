@@ -21,13 +21,6 @@ extension Player {
             nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nil
         }
     }
-
-    func uninstallRemoteCommands() {
-        commandRegistrations.forEach { registration in
-            nowPlayingSession.remoteCommandCenter.unregister(registration)
-        }
-        commandRegistrations = []
-    }
 }
 
 private extension Player {
@@ -42,6 +35,11 @@ private extension Player {
             skipBackwardRegistration(),
             skipForwardRegistration()
         ]
+    }
+
+    func uninstallRemoteCommands() {
+        nowPlayingSession.remoteCommandCenter.unregister(commandRegistrations)
+        commandRegistrations = []
     }
 
     func playRegistration() -> some RemoteCommandRegistrable {
