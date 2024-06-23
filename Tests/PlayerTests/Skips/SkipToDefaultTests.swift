@@ -11,6 +11,7 @@ import Nimble
 import PillarboxStreams
 
 final class SkipToDefaultTests: TestCase {
+    @MainActor
     func testSkipWhenEmpty() {
         let player = Player()
         waitUntil { done in
@@ -22,6 +23,7 @@ final class SkipToDefaultTests: TestCase {
         }
     }
 
+    @MainActor
     func testSkipForUnknown() {
         let player = Player(item: .simple(url: Stream.unavailable.url))
         expect(player.streamType).toEventually(equal(.unknown))
@@ -34,6 +36,7 @@ final class SkipToDefaultTests: TestCase {
         }
     }
 
+    @MainActor
     func testSkipForOnDemand() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
@@ -46,6 +49,7 @@ final class SkipToDefaultTests: TestCase {
         }
     }
 
+    @MainActor
     func testSkipForLive() {
         let player = Player(item: .simple(url: Stream.live.url))
         expect(player.streamType).toEventually(equal(.live))
@@ -57,6 +61,7 @@ final class SkipToDefaultTests: TestCase {
         }
     }
 
+    @MainActor
     func testSkipForDvrInLiveConditions() {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
@@ -69,6 +74,7 @@ final class SkipToDefaultTests: TestCase {
         }
     }
 
+    @MainActor
     func testSkipForDvrInPastConditions() {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)

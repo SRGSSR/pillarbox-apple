@@ -261,7 +261,6 @@ public final class Player: ObservableObject, Equatable {
     }
 
     deinit {
-        // FIXME: MainActor
         // uninstallRemoteCommands()
 
         // Avoid sound continuing in background when the underlying `AVQueuePlayer` is kept for a little while longer, 

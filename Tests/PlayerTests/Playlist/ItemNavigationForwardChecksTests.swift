@@ -10,6 +10,7 @@ import Nimble
 import PillarboxStreams
 
 final class ItemNavigationForwardChecksTests: TestCase {
+    @MainActor
     func testCanAdvanceToNextItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -17,6 +18,7 @@ final class ItemNavigationForwardChecksTests: TestCase {
         expect(player.canAdvanceToNextItem()).to(beTrue())
     }
 
+    @MainActor
     func testCannotAdvanceToNextItemAtBack() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -25,6 +27,7 @@ final class ItemNavigationForwardChecksTests: TestCase {
         expect(player.canAdvanceToNextItem()).to(beFalse())
     }
 
+    @MainActor
     func testCannotAdvanceToNextItemWhenEmpty() {
         let player = Player()
         expect(player.canAdvanceToNextItem()).to(beFalse())

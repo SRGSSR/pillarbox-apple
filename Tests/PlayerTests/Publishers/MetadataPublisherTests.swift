@@ -12,10 +12,12 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class MetadataPublisherTests: TestCase {
+    @MainActor
     private static func titlePublisherTest(for player: Player) -> AnyPublisher<String?, Never> {
         player.metadataPublisher.map(\.title).eraseToAnyPublisher()
     }
 
+    @MainActor
     func testEmpty() {
         let player = Player()
         expectEqualPublished(
@@ -25,6 +27,7 @@ final class MetadataPublisherTests: TestCase {
         )
     }
 
+    @MainActor
     func testImmediatelyAvailableWithoutMetadata() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expectEqualPublished(
@@ -34,6 +37,7 @@ final class MetadataPublisherTests: TestCase {
         )
     }
 
+    @MainActor
     func testAvailableAfterDelay() {
         let player = Player(
             item: .mock(url: Stream.onDemand.url, loadedAfter: 0.1, withMetadata: AssetMetadataMock(title: "title"))
@@ -45,6 +49,7 @@ final class MetadataPublisherTests: TestCase {
         )
     }
 
+    @MainActor
     func testImmediatelyAvailableWithMetadata() {
         let player = Player(item: .mock(
             url: Stream.onDemand.url,
@@ -58,6 +63,7 @@ final class MetadataPublisherTests: TestCase {
         )
     }
 
+    @MainActor
     func testUpdate() {
         let player = Player(item: .mock(url: Stream.onDemand.url, withMetadataUpdateAfter: 0.1))
         expectEqualPublished(
@@ -67,6 +73,7 @@ final class MetadataPublisherTests: TestCase {
         )
     }
 
+    @MainActor
     func testNetworkItemReloading() {
         let player = Player(item: .webServiceMock(media: .media1))
         expectAtLeastEqualPublished(
@@ -82,6 +89,7 @@ final class MetadataPublisherTests: TestCase {
         }
     }
 
+    @MainActor
     func testEntirePlayback() {
         let player = Player(item: .mock(url: Stream.shortOnDemand.url, loadedAfter: 0, withMetadata: AssetMetadataMock(title: "title")))
         expectEqualPublished(

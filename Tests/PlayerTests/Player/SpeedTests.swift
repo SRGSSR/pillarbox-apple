@@ -11,12 +11,14 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class SpeedTests: TestCase {
+    @MainActor
     func testEmpty() {
         let player = Player()
         expect(player.effectivePlaybackSpeed).toAlways(equal(1), until: .seconds(2))
         expect(player.playbackSpeedRange).toAlways(equal(1...1), until: .seconds(2))
     }
 
+    @MainActor
     func testNoSpeedUpdateWhenEmpty() {
         let player = Player()
         player.setDesiredPlaybackSpeed(2)
@@ -24,6 +26,7 @@ final class SpeedTests: TestCase {
         expect(player.playbackSpeedRange).toAlways(equal(1...1), until: .seconds(2))
     }
 
+    @MainActor
     func testOnDemand() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         player.setDesiredPlaybackSpeed(2)
@@ -31,6 +34,7 @@ final class SpeedTests: TestCase {
         expect(player.playbackSpeedRange).toEventually(equal(0.1...2))
     }
 
+    @MainActor
     func testDvr() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         player.setDesiredPlaybackSpeed(0.5)
@@ -38,6 +42,7 @@ final class SpeedTests: TestCase {
         expect(player.playbackSpeedRange).toEventually(equal(0.1...1))
     }
 
+    @MainActor
     func testLive() {
         let player = Player(item: .simple(url: Stream.live.url))
         player.setDesiredPlaybackSpeed(2)
@@ -45,6 +50,7 @@ final class SpeedTests: TestCase {
         expect(player.playbackSpeedRange).toAlways(equal(1...1), until: .seconds(2))
     }
 
+    @MainActor
     func testDvrInThePast() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         expect(player.seekableTimeRange).toEventuallyNot(equal(.invalid))
@@ -59,6 +65,7 @@ final class SpeedTests: TestCase {
         expect(player.effectivePlaybackSpeed).toEventually(equal(2))
     }
 
+    @MainActor
     func testPlaylistOnDemandToLive() {
         let item1 = PlayerItem(asset: .simple(url: Stream.onDemand.url))
         let item2 = PlayerItem(asset: .simple(url: Stream.live.url))
@@ -72,6 +79,7 @@ final class SpeedTests: TestCase {
         expect(player.playbackSpeedRange).toEventually(equal(1...1))
     }
 
+    @MainActor
     func testPlaylistOnDemandToOnDemand() {
         let item1 = PlayerItem(asset: .simple(url: Stream.onDemand.url))
         let item2 = PlayerItem(asset: .simple(url: Stream.onDemand.url))
@@ -84,6 +92,7 @@ final class SpeedTests: TestCase {
         expect(player.playbackSpeedRange).toEventually(equal(0.1...2))
     }
 
+    @MainActor
     func testSpeedUpdateWhenStartingPlayback() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         expectEqualPublished(
@@ -95,6 +104,7 @@ final class SpeedTests: TestCase {
         }
     }
 
+    @MainActor
     func testSpeedRangeUpdateWhenStartingPlayback() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         expectEqualPublished(
@@ -106,6 +116,7 @@ final class SpeedTests: TestCase {
         }
     }
 
+    @MainActor
     func testSpeedUpdateWhenApproachingLiveEdge() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         player.play()
@@ -124,6 +135,7 @@ final class SpeedTests: TestCase {
         expect(player.playbackSpeedRange).toEventually(equal(0.1...1))
     }
 
+    @MainActor
     func testPlaylistEnd() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         player.setDesiredPlaybackSpeed(2)
@@ -134,6 +146,7 @@ final class SpeedTests: TestCase {
         expect(player.playbackSpeedRange).toEventually(equal(1...1))
     }
 
+    @MainActor
     func testItemAppendMustStartAtCurrentSpeed() {
         let player = Player()
         player.setDesiredPlaybackSpeed(2)
@@ -141,6 +154,7 @@ final class SpeedTests: TestCase {
         expect(player.effectivePlaybackSpeed).toEventually(equal(2))
     }
 
+    @MainActor
     func testInitialSpeedMustSetRate() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         player.setDesiredPlaybackSpeed(2)
@@ -149,6 +163,7 @@ final class SpeedTests: TestCase {
         expect(player.queuePlayer.rate).toEventually(equal(2))
     }
 
+    @MainActor
     func testSpeedUpdateMustUpdateRate() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         player.play()
@@ -159,6 +174,7 @@ final class SpeedTests: TestCase {
         expect(player.queuePlayer.rate).toEventually(equal(2))
     }
 
+    @MainActor
     func testSpeedUpdateWhilePausedMustUpdateRate() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.playbackState).toEventually(equal(.paused))
@@ -170,6 +186,7 @@ final class SpeedTests: TestCase {
         expect(player.queuePlayer.rate).toEventually(equal(2))
     }
 
+    @MainActor
     func testSpeedUpdateMustNotResumePlayback() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.playbackState).toEventually(equal(.paused))
@@ -177,6 +194,7 @@ final class SpeedTests: TestCase {
         expect(player.playbackState).toAlways(equal(.paused), until: .seconds(2))
     }
 
+    @MainActor
     func testPlayMustNotResetSpeed() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
@@ -185,6 +203,7 @@ final class SpeedTests: TestCase {
         expect(player.effectivePlaybackSpeed).toEventually(equal(2))
     }
 
+    @MainActor
     func testRateChangeMustNotUpdatePlaybackSpeedOutsideAVPlayerViewController() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
@@ -192,6 +211,7 @@ final class SpeedTests: TestCase {
         expect(player.effectivePlaybackSpeed).toAlways(equal(1), until: .seconds(2))
     }
 
+    @MainActor
     func testNoDesiredUpdateIsIgnored() {
         let player = Player()
         expectAtLeastEqualPublished(values: [

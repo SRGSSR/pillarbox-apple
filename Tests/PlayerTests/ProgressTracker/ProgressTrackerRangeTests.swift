@@ -13,6 +13,7 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class ProgressTrackerRangeTests: TestCase {
+    @MainActor
     func testUnbound() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         expectAtLeastEqualPublished(
@@ -22,6 +23,7 @@ final class ProgressTrackerRangeTests: TestCase {
         )
     }
 
+    @MainActor
     func testEmptyPlayer() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         expectAtLeastEqualPublished(
@@ -33,6 +35,7 @@ final class ProgressTrackerRangeTests: TestCase {
         }
     }
 
+    @MainActor
     func testPausedPlayer() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
@@ -46,6 +49,7 @@ final class ProgressTrackerRangeTests: TestCase {
         }
     }
 
+    @MainActor
     func testEntirePlayback() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
@@ -60,6 +64,7 @@ final class ProgressTrackerRangeTests: TestCase {
         }
     }
 
+    @MainActor
     func testPausedDvrStream() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.dvr.url)
@@ -73,6 +78,7 @@ final class ProgressTrackerRangeTests: TestCase {
         }
     }
 
+    @MainActor
     func testPlayerChange() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
@@ -90,6 +96,7 @@ final class ProgressTrackerRangeTests: TestCase {
         }
     }
 
+    @MainActor
     func testPlayerSetToNil() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
@@ -107,6 +114,7 @@ final class ProgressTrackerRangeTests: TestCase {
         }
     }
 
+    @MainActor
     func testBoundToPlayerAtSomeTime() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)

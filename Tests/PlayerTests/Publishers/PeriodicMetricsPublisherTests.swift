@@ -11,6 +11,7 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class PeriodicMetricsPublisherTests: TestCase {
+    @MainActor
     func testEmpty() {
         let player = Player()
             expectEqualPublished(
@@ -20,6 +21,7 @@ final class PeriodicMetricsPublisherTests: TestCase {
             )
     }
 
+    @MainActor
     func testPlayback() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)

@@ -11,6 +11,7 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class ItemsTests: TestCase {
+    @MainActor
     func testItemsOnFirstItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -21,6 +22,7 @@ final class ItemsTests: TestCase {
         expect(player.nextItems).to(equalDiff([item2, item3]))
     }
 
+    @MainActor
     func testItemsOnMiddleItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -32,6 +34,7 @@ final class ItemsTests: TestCase {
         expect(player.nextItems).to(equalDiff([item3]))
     }
 
+    @MainActor
     func testItemsOnLastItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -44,6 +47,7 @@ final class ItemsTests: TestCase {
         expect(player.nextItems).to(beEmpty())
     }
 
+    @MainActor
     func testEmpty() {
         let player = Player()
         expect(player.currentIndex).to(beNil())
@@ -52,6 +56,7 @@ final class ItemsTests: TestCase {
         expect(player.previousItems).to(beEmpty())
     }
 
+    @MainActor
     func testRemoveAll() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         expect(player.currentIndex).to(equal(0))
@@ -59,6 +64,7 @@ final class ItemsTests: TestCase {
         expect(player.currentIndex).to(beNil())
     }
 
+    @MainActor
     func testAppendAfterRemoveAll() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         player.removeAllItems()

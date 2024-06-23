@@ -11,6 +11,7 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class ItemInsertionBeforeTests: TestCase {
+    @MainActor
     func testInsertItemBeforeNextItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -21,6 +22,7 @@ final class ItemInsertionBeforeTests: TestCase {
         expect(player.items).to(equalDiff([item1, insertedItem, item2, item3]))
     }
 
+    @MainActor
     func testInsertItemBeforeCurrentItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -32,6 +34,7 @@ final class ItemInsertionBeforeTests: TestCase {
         expect(player.items).to(equalDiff([item1, insertedItem, item2, item3]))
     }
 
+    @MainActor
     func testInsertItemBeforePreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -44,6 +47,7 @@ final class ItemInsertionBeforeTests: TestCase {
         expect(player.items).to(equalDiff([item1, insertedItem, item2, item3]))
     }
 
+    @MainActor
     func testInsertItemBeforeFirstItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -53,6 +57,7 @@ final class ItemInsertionBeforeTests: TestCase {
         expect(player.items).to(equalDiff([insertedItem, item1, item2]))
     }
 
+    @MainActor
     func testInsertItemBeforeIdenticalItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -61,6 +66,7 @@ final class ItemInsertionBeforeTests: TestCase {
         expect(player.items).to(equalDiff([item1, item2]))
     }
 
+    @MainActor
     func testInsertItemBeforeForeignItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let insertedItem = PlayerItem.simple(url: Stream.onDemand.url)
@@ -70,6 +76,7 @@ final class ItemInsertionBeforeTests: TestCase {
         expect(player.items).to(equalDiff([item]))
     }
 
+    @MainActor
     func testInsertItemBeforeNil() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item])
@@ -78,6 +85,7 @@ final class ItemInsertionBeforeTests: TestCase {
         expect(player.items).to(equalDiff([insertedItem, item]))
     }
 
+    @MainActor
     func testPrependItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item])

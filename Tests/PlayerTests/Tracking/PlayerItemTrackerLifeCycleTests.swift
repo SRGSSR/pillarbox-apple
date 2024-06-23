@@ -10,6 +10,7 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class PlayerItemTrackerLifeCycleTests: TestCase {
+    @MainActor
     func testPlayerItemLifeCycle() {
         let publisher = TrackerLifeCycleMock.StatePublisher()
         expectAtLeastEqualPublished(values: [.initialized, .deinitialized], from: publisher) {
@@ -20,6 +21,7 @@ final class PlayerItemTrackerLifeCycleTests: TestCase {
         }
     }
 
+    @MainActor
     func testItemPlayback() {
         let player = Player()
         let publisher = TrackerLifeCycleMock.StatePublisher()
@@ -32,6 +34,7 @@ final class PlayerItemTrackerLifeCycleTests: TestCase {
         }
     }
 
+    @MainActor
     func testItemEntirePlayback() {
         let player = Player()
         let publisher = TrackerLifeCycleMock.StatePublisher()
@@ -44,6 +47,7 @@ final class PlayerItemTrackerLifeCycleTests: TestCase {
         }
     }
 
+    @MainActor
     func testNetworkLoadedItemEntirePlayback() {
         let player = Player()
         let publisher = TrackerLifeCycleMock.StatePublisher()
@@ -57,6 +61,7 @@ final class PlayerItemTrackerLifeCycleTests: TestCase {
         }
     }
 
+    @MainActor
     func testFailedItem() {
         let player = Player()
         let publisher = TrackerLifeCycleMock.StatePublisher()
@@ -69,6 +74,7 @@ final class PlayerItemTrackerLifeCycleTests: TestCase {
         }
     }
 
+    @MainActor
     func testMoveCurrentItem() {
         let publisher = TrackerLifeCycleMock.StatePublisher()
         let player = Player()

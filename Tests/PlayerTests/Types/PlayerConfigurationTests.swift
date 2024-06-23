@@ -9,6 +9,7 @@
 import Nimble
 
 final class PlayerConfigurationTests: TestCase {
+    @MainActor
     func testPlayerConfigurationDefaultValues() {
         let configuration = PlayerConfiguration()
         let player = Player(configuration: configuration)
@@ -21,6 +22,7 @@ final class PlayerConfigurationTests: TestCase {
         expect(player.configuration.preloadedItems).to(equal(2))
     }
 
+    @MainActor
     func testPlayerConfigurationInit() {
         let configuration = PlayerConfiguration(
             allowsExternalPlayback: false,

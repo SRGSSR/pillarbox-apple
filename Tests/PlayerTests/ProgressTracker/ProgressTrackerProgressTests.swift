@@ -13,6 +13,7 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class ProgressTrackerProgressTests: TestCase {
+    @MainActor
     func testUnbound() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         expectAtLeastEqualPublished(
@@ -22,6 +23,7 @@ final class ProgressTrackerProgressTests: TestCase {
         )
     }
 
+    @MainActor
     func testEmptyPlayer() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         expectAtLeastEqualPublished(
@@ -33,6 +35,7 @@ final class ProgressTrackerProgressTests: TestCase {
         }
     }
 
+    @MainActor
     func testPausedPlayer() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
@@ -46,6 +49,7 @@ final class ProgressTrackerProgressTests: TestCase {
         }
     }
 
+    @MainActor
     func testEntirePlayback() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
@@ -62,6 +66,7 @@ final class ProgressTrackerProgressTests: TestCase {
         }
     }
 
+    @MainActor
     func testPausedDvrStream() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.dvr.url)
@@ -76,6 +81,7 @@ final class ProgressTrackerProgressTests: TestCase {
         }
     }
 
+    @MainActor
     func testPlayerChange() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
@@ -94,6 +100,7 @@ final class ProgressTrackerProgressTests: TestCase {
         }
     }
 
+    @MainActor
     func testPlayerSetToNil() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
@@ -112,6 +119,7 @@ final class ProgressTrackerProgressTests: TestCase {
         }
     }
 
+    @MainActor
     func testBoundToPlayerAtSomeTime() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
@@ -137,18 +145,21 @@ final class ProgressTrackerProgressTests: TestCase {
         }
     }
 
+    @MainActor
     func testProgressForTimeInTimeRange() {
         let timeRange = CMTimeRange(start: .zero, end: .init(value: 10, timescale: 1))
         expect(ProgressTracker.progress(for: .init(value: 5, timescale: 1), in: timeRange)).to(equal(0.5))
         expect(ProgressTracker.progress(for: .init(value: 15, timescale: 1), in: timeRange)).to(equal(1.5))
     }
 
+    @MainActor
     func testValidProgressInRange() {
         expect(ProgressTracker.validProgress(nil, in: 0...1)).to(equal(0))
         expect(ProgressTracker.validProgress(0.5, in: 0...1)).to(equal(0.5))
         expect(ProgressTracker.validProgress(1.5, in: 0...1)).to(equal(1))
     }
 
+    @MainActor
     func testTimeForProgressInTimeRange() {
         let timeRange = CMTimeRange(start: .zero, end: .init(value: 10, timescale: 1))
         expect(ProgressTracker.time(forProgress: 0.5, in: timeRange)).to(equal(CMTime(value: 5, timescale: 1)))

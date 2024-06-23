@@ -13,12 +13,14 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class SkipForwardTests: TestCase {
+    @MainActor
     private func isSeekingPublisher(for player: Player) -> AnyPublisher<Bool, Never> {
         player.propertiesPublisher
             .slice(at: \.isSeeking)
             .eraseToAnyPublisher()
     }
 
+    @MainActor
     func testSkipWhenEmpty() {
         let player = Player()
         waitUntil { done in
@@ -29,6 +31,7 @@ final class SkipForwardTests: TestCase {
         }
     }
 
+    @MainActor
     func testSkipForOnDemand() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
@@ -42,6 +45,7 @@ final class SkipForwardTests: TestCase {
         }
     }
 
+    @MainActor
     func testMultipleSkipsForOnDemand() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
@@ -60,6 +64,7 @@ final class SkipForwardTests: TestCase {
         }
     }
 
+    @MainActor
     func testSkipForLive() {
         let player = Player(item: .simple(url: Stream.live.url))
         expect(player.streamType).toEventually(equal(.live))
@@ -71,6 +76,7 @@ final class SkipForwardTests: TestCase {
         }
     }
 
+    @MainActor
     func testSkipForDvr() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         expect(player.streamType).toEventually(equal(.dvr))
@@ -84,6 +90,7 @@ final class SkipForwardTests: TestCase {
         }
     }
 
+    @MainActor
     func testSkipNearEndDoesNotSeekAnymore() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
@@ -102,6 +109,7 @@ final class SkipForwardTests: TestCase {
         }
     }
 
+    @MainActor
     func testSkipNearEndCompletion() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))

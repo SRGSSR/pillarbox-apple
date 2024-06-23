@@ -12,6 +12,7 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class ItemsUpdateTests: TestCase {
+    @MainActor
     func testUpdateWithCurrentItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -23,6 +24,7 @@ final class ItemsUpdateTests: TestCase {
         expect(player.currentIndex).to(equal(2))
     }
 
+    @MainActor
     func testUpdateWithCurrentItemMustNotInterruptPlayback() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemandWithForcedAndUnforcedLegibleOptions.url)
@@ -34,6 +36,7 @@ final class ItemsUpdateTests: TestCase {
         expect(player.queuePlayer.currentItem?.url).toAlways(equal(Stream.onDemand.url), until: .seconds(2))
     }
 
+    @MainActor
     func testUpdateWithoutCurrentItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)

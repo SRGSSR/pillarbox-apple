@@ -13,6 +13,7 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class ErrorTests: TestCase {
+    @MainActor
     private static func errorCodePublisher(for player: Player) -> AnyPublisher<URLError.Code?, Never> {
         player.$error
             .map { error in
@@ -22,16 +23,19 @@ final class ErrorTests: TestCase {
             .eraseToAnyPublisher()
     }
 
+    @MainActor
     func testNoStream() {
         let player = Player()
         expectNothingPublishedNext(from: player.$error, during: .milliseconds(500))
     }
 
+    @MainActor
     func testValidStream() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expectNothingPublishedNext(from: player.$error, during: .milliseconds(500))
     }
 
+    @MainActor
     func testInvalidStream() {
         let player = Player(item: .simple(url: Stream.unavailable.url))
         expectEqualPublishedNext(
@@ -41,6 +45,7 @@ final class ErrorTests: TestCase {
         )
     }
 
+    @MainActor
     func testReset() {
         let player = Player(item: .simple(url: Stream.unavailable.url))
         expect(player.error).toEventuallyNot(beNil())

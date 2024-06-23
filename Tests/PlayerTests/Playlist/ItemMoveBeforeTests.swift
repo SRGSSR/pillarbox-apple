@@ -11,6 +11,7 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class ItemMoveBeforeTests: TestCase {
+    @MainActor
     func testMovePreviousItemBeforeNextItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -21,6 +22,7 @@ final class ItemMoveBeforeTests: TestCase {
         expect(player.items).to(equalDiff([item2, item1, item3]))
     }
 
+    @MainActor
     func testMovePreviousItemBeforeCurrentItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -32,6 +34,7 @@ final class ItemMoveBeforeTests: TestCase {
         expect(player.items).to(equalDiff([item2, item1, item3]))
     }
 
+    @MainActor
     func testMovePreviousItemBeforePreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -43,6 +46,7 @@ final class ItemMoveBeforeTests: TestCase {
         expect(player.items).to(equalDiff([item2, item1, item3]))
     }
 
+    @MainActor
     func testMoveCurrentItemBeforeNextItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -53,6 +57,7 @@ final class ItemMoveBeforeTests: TestCase {
         expect(player.items).to(equalDiff([item2, item1, item3]))
     }
 
+    @MainActor
     func testMoveCurrentItemBeforePreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -64,6 +69,7 @@ final class ItemMoveBeforeTests: TestCase {
         expect(player.items).to(equalDiff([item2, item1, item3]))
     }
 
+    @MainActor
     func testMoveNextItemBeforePreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -74,6 +80,7 @@ final class ItemMoveBeforeTests: TestCase {
         expect(player.items).to(equalDiff([item3, item1, item2]))
     }
 
+    @MainActor
     func testMoveNextItemBeforeCurrentItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -84,6 +91,7 @@ final class ItemMoveBeforeTests: TestCase {
         expect(player.items).to(equalDiff([item1, item3, item2]))
     }
 
+    @MainActor
     func testMoveNextItemBeforeNextItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -93,6 +101,7 @@ final class ItemMoveBeforeTests: TestCase {
         expect(player.items).to(equalDiff([item1, item3, item2]))
     }
 
+    @MainActor
     func testMoveItemBeforeIdenticalItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item])
@@ -100,6 +109,7 @@ final class ItemMoveBeforeTests: TestCase {
         expect(player.items).to(equalDiff([item]))
     }
 
+    @MainActor
     func testMoveItemBeforeItemAlreadyAtExpectedLocation() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -108,6 +118,7 @@ final class ItemMoveBeforeTests: TestCase {
         expect(player.items).to(equalDiff([item1, item2]))
     }
 
+    @MainActor
     func testMoveForeignItemBeforeItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let foreignItem = PlayerItem.simple(url: Stream.onDemand.url)
@@ -116,6 +127,7 @@ final class ItemMoveBeforeTests: TestCase {
         expect(player.items).to(equalDiff([item]))
     }
 
+    @MainActor
     func testMoveBeforeForeignItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let foreignItem = PlayerItem.simple(url: Stream.onDemand.url)
@@ -124,6 +136,7 @@ final class ItemMoveBeforeTests: TestCase {
         expect(player.items).to(equalDiff([item]))
     }
 
+    @MainActor
     func testMoveItemBeforeFirstItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -132,6 +145,7 @@ final class ItemMoveBeforeTests: TestCase {
         expect(player.items).to(equalDiff([item2, item1]))
     }
 
+    @MainActor
     func testMoveBeforeNil() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -140,6 +154,7 @@ final class ItemMoveBeforeTests: TestCase {
         expect(player.items).to(equalDiff([item2, item1]))
     }
 
+    @MainActor
     func testMoveFirstItemBeforeNil() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(items: [item])

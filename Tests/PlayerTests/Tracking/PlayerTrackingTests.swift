@@ -10,6 +10,7 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class PlayerTrackingTests: TestCase {
+    @MainActor
     func testTrackingDisabled() {
         let player = Player()
         player.isTrackingEnabled = false
@@ -28,6 +29,7 @@ final class PlayerTrackingTests: TestCase {
         }
     }
 
+    @MainActor
     func testTrackingEnabledDuringPlayback() {
         let player = Player()
         player.isTrackingEnabled = false
@@ -54,6 +56,7 @@ final class PlayerTrackingTests: TestCase {
         }
     }
 
+    @MainActor
     func testTrackingDisabledDuringPlayback() {
         let player = Player()
         player.isTrackingEnabled = true
@@ -80,6 +83,7 @@ final class PlayerTrackingTests: TestCase {
         }
     }
 
+    @MainActor
     func testTrackingEnabledTwice() {
         let publisher = TrackerLifeCycleMock.StatePublisher()
 
