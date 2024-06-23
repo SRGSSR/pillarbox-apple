@@ -12,6 +12,7 @@ import PillarboxCore
 import TimelaneCombine
 
 /// An observable audio / video player maintaining its items as a double-ended queue.
+@MainActor
 public final class Player: ObservableObject, Equatable {
     private static weak var currentPlayer: Player?
 
@@ -210,7 +211,7 @@ public final class Player: ObservableObject, Equatable {
         self.init(items: [item], configuration: configuration)
     }
 
-    public static func == (lhs: Player, rhs: Player) -> Bool {
+    public nonisolated static func == (lhs: Player, rhs: Player) -> Bool {
         lhs === rhs
     }
 
@@ -260,7 +261,8 @@ public final class Player: ObservableObject, Equatable {
     }
 
     deinit {
-        uninstallRemoteCommands()
+        // FIXME: MainActor
+        // uninstallRemoteCommands()
 
         // Avoid sound continuing in background when the underlying `AVQueuePlayer` is kept for a little while longer, 
         // see https://github.com/SRGSSR/pillarbox-apple/issues/520

@@ -37,6 +37,7 @@ import SwiftUI
 /// slider, see ``SwiftUI/Slider/init(progressTracker:label:minimumValueLabel:maximumValueLabel:onEditingChanged:)``.
 ///
 /// > Note: For step-by-step integration instructions have a look at the associated <doc:tracking-progress> tutorial.
+@MainActor
 public final class ProgressTracker: ObservableObject {
     /// The player to attach.
     ///
