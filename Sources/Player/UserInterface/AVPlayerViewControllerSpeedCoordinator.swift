@@ -9,6 +9,7 @@ import Combine
 import UIKit
 
 @available(iOS, unavailable)
+@MainActor
 final class AVPlayerViewControllerSpeedCoordinator {
     var player: Player? {
         didSet {

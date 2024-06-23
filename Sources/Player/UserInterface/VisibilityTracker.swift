@@ -41,6 +41,7 @@ import UIKit
 /// > Note: For step-by-step integration instructions have a look at the associated <doc:tracking-visibility> tutorial.
 @available(iOS 16, *)
 @available(tvOS, unavailable)
+@MainActor
 public final class VisibilityTracker: ObservableObject {
     private enum TriggerId {
         case reset

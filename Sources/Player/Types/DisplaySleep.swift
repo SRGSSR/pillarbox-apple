@@ -11,6 +11,7 @@ import UIKit
 /// There is no real reliable way to manage `isIdleTimerDisabled` as soon as 3rd party code is involved, but this
 /// class at least implements correct reference counting for the PillarboxPlayer framework. This ensures that the
 /// idle timer is enabled most of the time, as written in `isIdleTimerDisabled` documentation.
+@MainActor
 final class DisplaySleep {
     static let shared = DisplaySleep()
 
