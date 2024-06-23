@@ -11,6 +11,7 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class ItemRemovalTests: TestCase {
+    @MainActor
     func testRemovePreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -21,6 +22,7 @@ final class ItemRemovalTests: TestCase {
         expect(player.items).to(equalDiff([item2, item3]))
     }
 
+    @MainActor
     func testRemoveCurrentItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -32,6 +34,7 @@ final class ItemRemovalTests: TestCase {
         expect(player.items).to(equalDiff([item1, item3]))
     }
 
+    @MainActor
     func testRemoveNextItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -42,6 +45,7 @@ final class ItemRemovalTests: TestCase {
         expect(player.items).to(equalDiff([item1, item2]))
     }
 
+    @MainActor
     func testRemoveForeignItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let foreignItem = PlayerItem.simple(url: Stream.onDemand.url)
@@ -50,6 +54,7 @@ final class ItemRemovalTests: TestCase {
         expect(player.items).to(equalDiff([item]))
     }
 
+    @MainActor
     func testRemoveAllItems() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)

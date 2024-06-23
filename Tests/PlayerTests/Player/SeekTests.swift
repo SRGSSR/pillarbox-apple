@@ -20,6 +20,7 @@ private struct MockMetadata: AssetMetadata {
 }
 
 final class SeekTests: TestCase {
+    @MainActor
     func testSeekWhenEmpty() {
         let player = Player()
         waitUntil { done in
@@ -30,6 +31,7 @@ final class SeekTests: TestCase {
         }
     }
 
+    @MainActor
     func testSeekInTimeRange() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
@@ -41,6 +43,7 @@ final class SeekTests: TestCase {
         }
     }
 
+    @MainActor
     func testSeekInEmptyTimeRange() {
         let player = Player(item: .simple(url: Stream.live.url))
         expect(player.streamType).toEventually(equal(.live))
@@ -52,6 +55,7 @@ final class SeekTests: TestCase {
         }
     }
 
+    @MainActor
     func testSeekToTimeRangeStart() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
@@ -63,6 +67,7 @@ final class SeekTests: TestCase {
         }
     }
 
+    @MainActor
     func testSeekToTimeRangeEnd() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
@@ -74,6 +79,7 @@ final class SeekTests: TestCase {
         }
     }
 
+    @MainActor
     func testSeekBeforeTimeRangeStart() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
@@ -86,6 +92,7 @@ final class SeekTests: TestCase {
         }
     }
 
+    @MainActor
     func testSeekAfterTimeRangeEnd() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
@@ -98,6 +105,7 @@ final class SeekTests: TestCase {
         }
     }
 
+    @MainActor
     func testTimesDuringSeekBeforeTimeRangeStart() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
@@ -106,12 +114,14 @@ final class SeekTests: TestCase {
         expect(player.time).toAlways(beGreaterThanOrEqualTo(player.seekableTimeRange.start), until: .seconds(1))
     }
 
+    @MainActor
     func testOnDemandStartAtTime() {
         let configuration = PlayerItemConfiguration(position: at(.init(value: 10, timescale: 1)))
         let player = Player(item: .simple(url: Stream.onDemand.url, configuration: configuration))
         expect(player.time.seconds).toEventually(equal(10))
     }
 
+    @MainActor
     func testDvrStartAtTime() {
         let configuration = PlayerItemConfiguration(position: at(.init(value: 10, timescale: 1)))
         let player = Player(item: .simple(url: Stream.dvr.url, configuration: configuration))

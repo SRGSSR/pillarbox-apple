@@ -18,17 +18,20 @@ final class TextStyleRulesTests: TestCase {
         ])
     ]
 
+    @MainActor
     func testDefaultWithEmptyPlayer() {
         let player = Player()
         expect(player.textStyleRules).to(beEmpty())
     }
 
+    @MainActor
     func testDefaultWithLoadedPlayer() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.textStyleRules).to(beEmpty())
         expect(player.queuePlayer.currentItem?.textStyleRules).to(beEmpty())
     }
 
+    @MainActor
     func testStyleUpdate() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         player.textStyleRules = Self.textStyleRules
@@ -36,6 +39,7 @@ final class TextStyleRulesTests: TestCase {
         expect(player.queuePlayer.currentItem?.textStyleRules).to(equal(Self.textStyleRules))
     }
 
+    @MainActor
     func testStylePreservedBetweenItems() {
         let player = Player(items: [
             .simple(url: Stream.shortOnDemand.url),

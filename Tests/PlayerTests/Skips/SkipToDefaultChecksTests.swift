@@ -11,29 +11,34 @@ import Nimble
 import PillarboxStreams
 
 final class SkipToDefaultChecksTests: TestCase {
+    @MainActor
     func testCannotSkipWhenEmpty() {
         let player = Player()
         expect(player.canSkipToDefault()).to(beFalse())
     }
 
+    @MainActor
     func testCannotSkipForUnknown() {
         let player = Player(item: .simple(url: Stream.unavailable.url))
         expect(player.streamType).toEventually(equal(.unknown))
         expect(player.canSkipToDefault()).to(beFalse())
     }
 
+    @MainActor
     func testCanSkipForOnDemand() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
         expect(player.canSkipToDefault()).to(beTrue())
     }
 
+    @MainActor
     func testCannotSkipForDvrInLiveConditions() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         expect(player.streamType).toEventually(equal(.dvr))
         expect(player.canSkipToDefault()).to(beFalse())
     }
 
+    @MainActor
     func testCanSkipForDvrInPastConditions() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         expect(player.streamType).toEventually(equal(.dvr))
@@ -47,6 +52,7 @@ final class SkipToDefaultChecksTests: TestCase {
         expect(player.canSkipToDefault()).to(beTrue())
     }
 
+    @MainActor
     func testCanSkipForLive() {
         let player = Player(item: .simple(url: Stream.live.url))
         expect(player.streamType).toEventually(equal(.live))

@@ -11,6 +11,7 @@ import Nimble
 import PillarboxStreams
 
 final class NavigationSmartBackwardChecksTests: TestCase {
+    @MainActor
     func testCanReturnForOnDemandAtBeginningWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
@@ -18,6 +19,7 @@ final class NavigationSmartBackwardChecksTests: TestCase {
         expect(player.canReturnToPrevious()).to(beTrue())
     }
 
+    @MainActor
     func testCanReturnForOnDemandNearBeginningWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
@@ -32,6 +34,7 @@ final class NavigationSmartBackwardChecksTests: TestCase {
         expect(player.canReturnToPrevious()).to(beTrue())
     }
 
+    @MainActor
     func testCanReturnForOnDemandAtBeginningWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -41,6 +44,7 @@ final class NavigationSmartBackwardChecksTests: TestCase {
         expect(player.canReturnToPrevious()).to(beTrue())
     }
 
+    @MainActor
     func testCanReturnForOnDemandNotAtBeginning() {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -57,6 +61,7 @@ final class NavigationSmartBackwardChecksTests: TestCase {
         expect(player.canReturnToPrevious()).to(beTrue())
     }
 
+    @MainActor
     func testCanReturnForLiveWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.live.url)
@@ -66,6 +71,7 @@ final class NavigationSmartBackwardChecksTests: TestCase {
         expect(player.canReturnToPrevious()).to(beTrue())
     }
 
+    @MainActor
     func testCannotReturnForLiveWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.live.url)
         let player = Player(item: item)
@@ -73,6 +79,7 @@ final class NavigationSmartBackwardChecksTests: TestCase {
         expect(player.canReturnToPrevious()).to(beFalse())
     }
 
+    @MainActor
     func testCanReturnForDvrWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.dvr.url)
@@ -82,6 +89,7 @@ final class NavigationSmartBackwardChecksTests: TestCase {
         expect(player.canReturnToPrevious()).to(beTrue())
     }
 
+    @MainActor
     func testCannotReturnForDvrWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
@@ -89,6 +97,7 @@ final class NavigationSmartBackwardChecksTests: TestCase {
         expect(player.canReturnToPrevious()).to(beFalse())
     }
 
+    @MainActor
     func testCanReturnForUnknownWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)
@@ -98,6 +107,7 @@ final class NavigationSmartBackwardChecksTests: TestCase {
         expect(player.canReturnToPrevious()).to(beTrue())
     }
 
+    @MainActor
     func testCannotReturnForUnknownWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.unavailable.url)
         let player = Player(item: item)

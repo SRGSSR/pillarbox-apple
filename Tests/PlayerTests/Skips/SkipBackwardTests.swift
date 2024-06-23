@@ -12,6 +12,7 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class SkipBackwardTests: TestCase {
+    @MainActor
     func testSkipWhenEmpty() {
         let player = Player()
         waitUntil { done in
@@ -22,6 +23,7 @@ final class SkipBackwardTests: TestCase {
         }
     }
 
+    @MainActor
     func testSkipForOnDemand() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
@@ -35,6 +37,7 @@ final class SkipBackwardTests: TestCase {
         }
     }
 
+    @MainActor
     func testMultipleSkipsForOnDemand() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.streamType).toEventually(equal(.onDemand))
@@ -53,6 +56,7 @@ final class SkipBackwardTests: TestCase {
         }
     }
 
+    @MainActor
     func testSkipForLive() {
         let player = Player(item: .simple(url: Stream.live.url))
         expect(player.streamType).toEventually(equal(.live))
@@ -64,6 +68,7 @@ final class SkipBackwardTests: TestCase {
         }
     }
 
+    @MainActor
     func testSkipForDvr() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         expect(player.streamType).toEventually(equal(.dvr))

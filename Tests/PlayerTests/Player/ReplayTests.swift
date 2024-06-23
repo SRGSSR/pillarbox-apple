@@ -10,12 +10,14 @@ import Nimble
 import PillarboxStreams
 
 final class ReplayTests: TestCase {
+    @MainActor
     func testWithOneGoodItem() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         player.replay()
         expect(player.currentIndex).to(equal(0))
     }
 
+    @MainActor
     func testWithOneGoodItemPlayedEntirely() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         player.play()
@@ -24,6 +26,7 @@ final class ReplayTests: TestCase {
         expect(player.currentIndex).toEventually(equal(0))
     }
 
+    @MainActor
     func testWithOneBadItem() {
         let player = Player(item: .simple(url: Stream.unavailable.url))
         expect(player.currentIndex).toAlways(equal(0), until: .milliseconds(500))
@@ -31,6 +34,7 @@ final class ReplayTests: TestCase {
         expect(player.currentIndex).toAlways(equal(0), until: .milliseconds(500))
     }
 
+    @MainActor
     func testWithManyGoodItems() {
         let player = Player(items: [
             .simple(url: Stream.shortOnDemand.url),
@@ -42,6 +46,7 @@ final class ReplayTests: TestCase {
         expect(player.currentIndex).to(equal(1))
     }
 
+    @MainActor
     func testWithManyBadItems() {
         let player = Player(items: [
             .simple(url: Stream.unavailable.url),
@@ -53,6 +58,7 @@ final class ReplayTests: TestCase {
         expect(player.currentIndex).toAlways(equal(0), until: .milliseconds(500))
     }
 
+    @MainActor
     func testWithOneGoodItemAndOneBadItem() {
         let player = Player(items: [
             .simple(url: Stream.shortOnDemand.url),
@@ -64,6 +70,7 @@ final class ReplayTests: TestCase {
         expect(player.currentIndex).to(equal(1))
     }
 
+    @MainActor
     func testResumePlaybackIfNeeded() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         player.play()

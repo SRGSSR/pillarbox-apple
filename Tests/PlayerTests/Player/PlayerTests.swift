@@ -12,6 +12,7 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class PlayerTests: TestCase {
+    @MainActor
     func testDeallocation() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         var player: Player? = Player(item: item)
@@ -23,11 +24,13 @@ final class PlayerTests: TestCase {
         expect(weakPlayer).to(beNil())
     }
 
+    @MainActor
     func testTimesWhenEmpty() {
         let player = Player()
         expect(player.time).toAlways(equal(.invalid), until: .seconds(1))
     }
 
+    @MainActor
     func testTimesInEmptyRange() {
         let player = Player(item: .simple(url: Stream.live.url))
         expect(player.seekableTimeRange).toEventuallyNot(equal(.invalid))
@@ -35,6 +38,7 @@ final class PlayerTests: TestCase {
         expect(player.time).toNever(equal(.invalid), until: .seconds(1))
     }
 
+    @MainActor
     func testTimesStayInRange() {
         let player = Player(item: .simple(url: Stream.dvr.url))
         expect(player.seekableTimeRange).toEventuallyNot(equal(.invalid))
@@ -45,12 +49,14 @@ final class PlayerTests: TestCase {
         .toAlways(beTrue(), until: .seconds(1))
     }
 
+    @MainActor
     func testMetadataUpdatesMustNotChangePlayerItem() {
         let player = Player(item: .mock(url: Stream.onDemand.url, withMetadataUpdateAfter: 1))
         let publisher = player.queuePlayer.currentItemPublisher().compactMap(\.?.url)
         expectEqualPublishedNext(values: [Stream.onDemand.url], from: publisher, during: .seconds(2))
     }
 
+    @MainActor
     func testRetrieveCurrentValueOnSubscription() {
         let player = Player(item: .simple(url: Stream.onDemand.url))
         expect(player.properties.isBuffering).toEventually(beFalse())
@@ -61,6 +67,7 @@ final class PlayerTests: TestCase {
         )
     }
 
+    @MainActor
     func testPreloadedItems() {
         let player = Player(
             items: [

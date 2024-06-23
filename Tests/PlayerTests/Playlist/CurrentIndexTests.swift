@@ -12,6 +12,7 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class CurrentIndexTests: TestCase {
+    @MainActor
     func testCurrentIndex() {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
@@ -21,6 +22,7 @@ final class CurrentIndexTests: TestCase {
         }
     }
 
+    @MainActor
     func testCurrentIndexWithFirstFailedItem() {
         let item1 = PlayerItem.simple(url: Stream.unavailable.url)
         let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
@@ -30,6 +32,7 @@ final class CurrentIndexTests: TestCase {
         }
     }
 
+    @MainActor
     func testCurrentIndexWithMiddleFailedItem() {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)
@@ -40,6 +43,7 @@ final class CurrentIndexTests: TestCase {
         }
     }
 
+    @MainActor
     func testCurrentIndexWithLastFailedItem() {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)
@@ -49,6 +53,7 @@ final class CurrentIndexTests: TestCase {
         }
     }
 
+    @MainActor
     func testCurrentIndexWithFirstItemRemoved() {
         let item1 = PlayerItem.simple(url: Stream.unavailable.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -58,6 +63,7 @@ final class CurrentIndexTests: TestCase {
         expect(player.currentIndex).toAlways(equal(0), until: .seconds(1))
     }
 
+    @MainActor
     func testCurrentIndexWithSecondItemRemoved() {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)
@@ -70,16 +76,19 @@ final class CurrentIndexTests: TestCase {
         expect(player.currentIndex).toAlways(equal(1), until: .seconds(1))
     }
 
+    @MainActor
     func testCurrentIndexWithFailedItem() {
         let player = Player(item: .simple(url: Stream.unavailable.url))
         expectEqualPublished(values: [0], from: player.$currentIndex, during: .milliseconds(500))
     }
 
+    @MainActor
     func testCurrentIndexWithEmptyPlayer() {
         let player = Player()
         expect(player.currentIndex).to(beNil())
     }
 
+    @MainActor
     func testSlowFirstCurrentIndex() {
         let item1 = PlayerItem.mock(url: Stream.shortOnDemand.url, loadedAfter: 1)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -89,6 +98,7 @@ final class CurrentIndexTests: TestCase {
         }
     }
 
+    @MainActor
     func testCurrentIndexAfterPlayerEnded() {
         let item = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item])
@@ -97,6 +107,7 @@ final class CurrentIndexTests: TestCase {
         }
     }
 
+    @MainActor
     func testSetCurrentIndex() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
@@ -106,6 +117,7 @@ final class CurrentIndexTests: TestCase {
         }
     }
 
+    @MainActor
     func testSetCurrentIndexUpdatePlayerCurrentItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
@@ -116,11 +128,13 @@ final class CurrentIndexTests: TestCase {
         }
     }
 
+    @MainActor
     func testSetCurrentIndexToInvalidValue() {
         let player = Player()
         expect { try player.setCurrentIndex(1) }.to(throwError(PlaybackError.itemOutOfBounds))
     }
 
+    @MainActor
     func testSetCurrentIndexToSameValue() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
@@ -130,6 +144,7 @@ final class CurrentIndexTests: TestCase {
         }
     }
 
+    @MainActor
     func testPlayerPreloadedItemCount() {
         let player = Player(items: [
             PlayerItem.simple(url: Stream.onDemand.url),

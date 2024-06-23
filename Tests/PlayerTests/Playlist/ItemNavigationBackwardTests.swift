@@ -10,6 +10,7 @@ import Nimble
 import PillarboxStreams
 
 final class ItemNavigationBackwardTests: TestCase {
+    @MainActor
     func testReturnToPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -19,6 +20,7 @@ final class ItemNavigationBackwardTests: TestCase {
         expect(player.currentIndex).to(equal(0))
     }
 
+    @MainActor
     func testReturnToPreviousItemAtFront() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -27,6 +29,7 @@ final class ItemNavigationBackwardTests: TestCase {
         expect(player.currentIndex).to(equal(0))
     }
 
+    @MainActor
     func testReturnToPreviousItemOnFailedItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)

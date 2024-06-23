@@ -10,6 +10,7 @@ import Nimble
 import PillarboxStreams
 
 final class NavigationSmartForwardTests: TestCase {
+    @MainActor
     func testAdvanceForOnDemandWithNextItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.live.url)
@@ -19,6 +20,7 @@ final class NavigationSmartForwardTests: TestCase {
         expect(player.currentIndex).to(equal(1))
     }
 
+    @MainActor
     func testAdvanceForOnDemandWithoutNextItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
@@ -27,6 +29,7 @@ final class NavigationSmartForwardTests: TestCase {
         expect(player.currentIndex).to(equal(0))
     }
 
+    @MainActor
     func testAdvanceForLiveWithNextItem() {
         let item1 = PlayerItem.simple(url: Stream.live.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -36,6 +39,7 @@ final class NavigationSmartForwardTests: TestCase {
         expect(player.currentIndex).to(equal(1))
     }
 
+    @MainActor
     func testAdvanceForLiveWithoutNextItem() {
         let item = PlayerItem.simple(url: Stream.live.url)
         let player = Player(item: item)
@@ -44,6 +48,7 @@ final class NavigationSmartForwardTests: TestCase {
         expect(player.currentIndex).to(equal(0))
     }
 
+    @MainActor
     func testAdvanceForDvrWithNextItem() {
         let item1 = PlayerItem.simple(url: Stream.dvr.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -53,6 +58,7 @@ final class NavigationSmartForwardTests: TestCase {
         expect(player.currentIndex).to(equal(1))
     }
 
+    @MainActor
     func testAdvanceForDvrWithoutNextItem() {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item)
@@ -61,6 +67,7 @@ final class NavigationSmartForwardTests: TestCase {
         expect(player.currentIndex).to(equal(0))
     }
 
+    @MainActor
     func testAdvanceForUnknownWithNextItem() {
         let item1 = PlayerItem.simple(url: Stream.unavailable.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -70,6 +77,7 @@ final class NavigationSmartForwardTests: TestCase {
         expect(player.currentIndex).to(equal(1))
     }
 
+    @MainActor
     func testAdvanceForUnknownWithoutNextItem() {
         let item = PlayerItem.simple(url: Stream.unavailable.url)
         let player = Player(item: item)

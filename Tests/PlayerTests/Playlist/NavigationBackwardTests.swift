@@ -15,6 +15,7 @@ final class NavigationBackwardTests: TestCase {
         .init(navigationMode: .immediate)
     }
 
+    @MainActor
     func testReturnForOnDemandAtBeginningWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item, configuration: Self.configuration())
@@ -23,6 +24,7 @@ final class NavigationBackwardTests: TestCase {
         expect(player.currentIndex).to(equal(0))
     }
 
+    @MainActor
     func testReturnForOnDemandNearBeginningWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item, configuration: Self.configuration())
@@ -39,6 +41,7 @@ final class NavigationBackwardTests: TestCase {
         expect(player.time).toNever(equal(.zero), until: .seconds(3))
     }
 
+    @MainActor
     func testReturnForOnDemandAtBeginningWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -49,6 +52,7 @@ final class NavigationBackwardTests: TestCase {
         expect(player.currentIndex).to(equal(0))
     }
 
+    @MainActor
     func testReturnForOnDemandNotAtBeginning() {
         let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.onDemand.url)
@@ -66,6 +70,7 @@ final class NavigationBackwardTests: TestCase {
         expect(player.time).toEventually(equal(.zero))
     }
 
+    @MainActor
     func testReturnForLiveWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.live.url)
@@ -76,6 +81,7 @@ final class NavigationBackwardTests: TestCase {
         expect(player.currentIndex).to(equal(0))
     }
 
+    @MainActor
     func testReturnForLiveWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.live.url)
         let player = Player(item: item, configuration: Self.configuration())
@@ -84,6 +90,7 @@ final class NavigationBackwardTests: TestCase {
         expect(player.currentIndex).to(equal(0))
     }
 
+    @MainActor
     func testReturnForDvrWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.dvr.url)
@@ -94,6 +101,7 @@ final class NavigationBackwardTests: TestCase {
         expect(player.currentIndex).to(equal(0))
     }
 
+    @MainActor
     func testReturnForDvrWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.dvr.url)
         let player = Player(item: item, configuration: Self.configuration())
@@ -102,6 +110,7 @@ final class NavigationBackwardTests: TestCase {
         expect(player.currentIndex).to(equal(0))
     }
 
+    @MainActor
     func testReturnForUnknownWithPreviousItem() {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.unavailable.url)
@@ -112,6 +121,7 @@ final class NavigationBackwardTests: TestCase {
         expect(player.currentIndex).to(equal(0))
     }
 
+    @MainActor
     func testReturnForUnknownWithoutPreviousItem() {
         let item = PlayerItem.simple(url: Stream.unavailable.url)
         let player = Player(item: item, configuration: Self.configuration())
@@ -120,6 +130,7 @@ final class NavigationBackwardTests: TestCase {
         expect(player.currentIndex).to(equal(0))
     }
 
+    @MainActor
     func testPlayerPreloadedItemCount() {
         let player = Player(items: [
             PlayerItem.simple(url: Stream.onDemand.url),

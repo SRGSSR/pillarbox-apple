@@ -11,6 +11,7 @@ import Nimble
 import PillarboxStreams
 
 final class ProgressTrackerPlaybackStateTests: TestCase {
+    @MainActor
     func testInteractionPausesPlayback() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
@@ -26,6 +27,7 @@ final class ProgressTrackerPlaybackStateTests: TestCase {
         expect(player.playbackState).toEventually(equal(.playing))
     }
 
+    @MainActor
     func testInteractionDoesUpdateAlreadyPausedPlayback() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
@@ -40,6 +42,7 @@ final class ProgressTrackerPlaybackStateTests: TestCase {
         expect(player.playbackState).toAlways(equal(.paused), until: .seconds(1))
     }
 
+    @MainActor
     func testTransferInteractionBetweenPlayers() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
 

@@ -10,6 +10,7 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class PlayerItemTrackerUpdateTests: TestCase {
+    @MainActor
     func testMetadata() {
         let player = Player()
         let publisher = TrackerUpdateMock<String>.StatePublisher()
@@ -34,6 +35,7 @@ final class PlayerItemTrackerUpdateTests: TestCase {
         }
     }
 
+    @MainActor
     func testMetadataUpdate() {
         let player = Player()
         let publisher = TrackerUpdateMock<String>.StatePublisher()

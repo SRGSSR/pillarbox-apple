@@ -42,6 +42,7 @@ private struct MetadataWithNestedBlockedTimeRanges: AssetMetadata {
 }
 
 final class BlockedTimeRangeTests: TestCase {
+    @MainActor
     func testSeekInBlockedTimeRange() {
         let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MetadataWithBlockedTimeRange()))
         expect(player.streamType).toEventually(equal(.onDemand))
@@ -50,6 +51,7 @@ final class BlockedTimeRangeTests: TestCase {
         expect(player.time).to(equal(kBlockedTimeRange.end))
     }
 
+    @MainActor
     func testSeekInOverlappingBlockedTimeRange() {
         let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MetadataWithOverlappingBlockedTimeRanges()))
         expect(player.streamType).toEventually(equal(.onDemand))
@@ -58,6 +60,7 @@ final class BlockedTimeRangeTests: TestCase {
         expect(player.time).to(equal(kOverlappingBlockedTimeRange.end))
     }
 
+    @MainActor
     func testSeekInNestedBlockedTimeRange() {
         let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MetadataWithNestedBlockedTimeRanges()))
         expect(player.streamType).toEventually(equal(.onDemand))
@@ -66,6 +69,7 @@ final class BlockedTimeRangeTests: TestCase {
         expect(player.time).to(equal(kBlockedTimeRange.end))
     }
 
+    @MainActor
     func testBlockedTimeRangeTraversal() {
         let configuration = PlayerItemConfiguration(position: at(.init(value: 29, timescale: 1)))
         let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MetadataWithBlockedTimeRange(), configuration: configuration))
@@ -73,6 +77,7 @@ final class BlockedTimeRangeTests: TestCase {
         expect(player.time).toEventually(beGreaterThan(kBlockedTimeRange.end))
     }
 
+    @MainActor
     func testOnDemandStartInBlockedTimeRange() {
         let configuration = PlayerItemConfiguration(position: at(.init(value: 30, timescale: 1)))
         let player = Player(item: .simple(url: Stream.onDemand.url, metadata: MetadataWithBlockedTimeRange(), configuration: configuration))

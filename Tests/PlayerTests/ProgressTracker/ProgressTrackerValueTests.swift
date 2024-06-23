@@ -11,6 +11,7 @@ import Nimble
 import PillarboxStreams
 
 final class ProgressTrackerValueTests: TestCase {
+    @MainActor
     func testProgressValueInRange() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
@@ -22,6 +23,7 @@ final class ProgressTrackerValueTests: TestCase {
         expect(progressTracker.progress).to(beCloseTo(0.5, within: 0.1))
     }
 
+    @MainActor
     func testProgressValueBelowZero() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
@@ -33,6 +35,7 @@ final class ProgressTrackerValueTests: TestCase {
         expect(progressTracker.progress).to(beCloseTo(0, within: 0.1))
     }
 
+    @MainActor
     func testProgressValueAboveOne() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let item = PlayerItem.simple(url: Stream.onDemand.url)
@@ -44,6 +47,7 @@ final class ProgressTrackerValueTests: TestCase {
         expect(progressTracker.progress).to(beCloseTo(1, within: 0.1))
     }
 
+    @MainActor
     func testCannotChangeProgressWhenUnavailable() {
         let progressTracker = ProgressTracker(interval: CMTime(value: 1, timescale: 4))
         let player = Player()

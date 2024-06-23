@@ -13,12 +13,14 @@ import PillarboxCircumspect
 import PillarboxStreams
 
 final class ProgressTrackerSeekBehaviorTests: TestCase {
+    @MainActor
     private func isSeekingPublisher(for player: Player) -> AnyPublisher<Bool, Never> {
         player.propertiesPublisher
             .slice(at: \.isSeeking)
             .eraseToAnyPublisher()
     }
 
+    @MainActor
     func testImmediateSeek() {
         let progressTracker = ProgressTracker(
             interval: CMTime(value: 1, timescale: 4),
@@ -39,6 +41,7 @@ final class ProgressTrackerSeekBehaviorTests: TestCase {
         expect(progressTracker.progress).to(equal(0.5))
     }
 
+    @MainActor
     func testDeferredSeek() {
         let progressTracker = ProgressTracker(
             interval: CMTime(value: 1, timescale: 4),
