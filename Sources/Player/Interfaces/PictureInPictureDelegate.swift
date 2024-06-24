@@ -8,6 +8,7 @@
 ///
 /// Applications which require in-app Picture in Picture support must setup a delegate and rely on the Picture in
 /// Picture life cycle to dismiss and restore views as required.
+@MainActor
 public protocol PictureInPictureDelegate: AnyObject {
     /// Called when Picture in Picture is about to start.
     ///

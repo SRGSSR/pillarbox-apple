@@ -7,6 +7,7 @@
 import AVKit
 
 /// Manages Picture in Picture for `SystemVideoView` instances.
+@MainActor
 final class SystemPictureInPicture: NSObject {
     private(set) var isActive = false
 
@@ -54,7 +55,7 @@ final class SystemPictureInPicture: NSObject {
     }
 }
 
-extension SystemPictureInPicture: AVPlayerViewControllerDelegate {
+extension SystemPictureInPicture: @preconcurrency AVPlayerViewControllerDelegate {
     func playerViewControllerWillStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
         isActive = true
         acquire(for: playerViewController)

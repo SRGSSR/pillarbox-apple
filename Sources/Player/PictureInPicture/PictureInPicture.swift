@@ -7,6 +7,7 @@
 import Dispatch
 
 /// Manages Picture in Picture.
+@MainActor
 public final class PictureInPicture {
     /// The shared instance managing Picture in Picture.
     public static let shared = PictureInPicture()

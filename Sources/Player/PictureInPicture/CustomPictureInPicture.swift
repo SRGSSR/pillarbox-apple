@@ -8,6 +8,7 @@ import AVKit
 import Combine
 
 /// Manages Picture in Picture for `VideoView` instances.
+@MainActor
 final class CustomPictureInPicture: NSObject {
     @Published private(set) var isPossible = false
     @Published private(set) var isActive = false
@@ -97,7 +98,7 @@ final class CustomPictureInPicture: NSObject {
     }
 }
 
-extension CustomPictureInPicture: AVPictureInPictureControllerDelegate {
+extension CustomPictureInPicture: @preconcurrency AVPictureInPictureControllerDelegate {
     func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         isActive = true
         acquire(for: pictureInPictureController.playerLayer)

@@ -9,6 +9,7 @@
 /// The persisted object, if any, can be retrieved from the `persisted` property. The persisted object can also be
 /// notified about the Picture in Picture lifecycle, e.g to perform some bookkeeping work or to pause / resume
 /// processes.
+@MainActor
 public protocol PictureInPicturePersistable: AnyObject {
     /// Called when Picture in Picture is about to start.
     func pictureInPictureWillStart()
@@ -23,6 +24,7 @@ public protocol PictureInPicturePersistable: AnyObject {
     func pictureInPictureDidStop()
 }
 
+@MainActor
 public extension PictureInPicturePersistable {
     /// The currently persisted instance, if any.
     static var persisted: Self? {
