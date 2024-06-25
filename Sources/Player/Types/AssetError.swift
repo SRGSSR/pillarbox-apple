@@ -9,4 +9,9 @@ import Foundation
 public struct AssetError<M>: Error {
     let error: Error
     let metadata: M
+
+    public init(error: Error, metadata: M) {
+        self.error = error
+        self.metadata = metadata
+    }
 }

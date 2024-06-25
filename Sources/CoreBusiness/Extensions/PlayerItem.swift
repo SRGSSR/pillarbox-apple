@@ -85,20 +85,27 @@ public extension PlayerItem {
 private extension PlayerItem {
     static func publisher(for urn: String, server: Server, configuration: PlayerItemConfiguration) -> AnyPublisher<Asset<MediaMetadata>, Error> {
         let dataProvider = DataProvider(server: server)
-        return dataProvider.playableMediaCompositionPublisher(forUrn: urn)
+        return dataProvider.mediaCompositionPublisher(forUrn: urn)
             .tryMap { mediaComposition in
                 let mainChapter = mediaComposition.mainChapter
+                
                 guard let resource = mainChapter.recommendedResource else {
-                    throw DataError.noResourceAvailable
+                    let metadata = MediaMetadata(mediaComposition: mediaComposition, resource: nil, dataProvider: dataProvider)
+                    throw AssetError(error: DataError.noResourceAvailable, metadata: metadata)
                 }
+
+                if let error = Self.error(from: mediaComposition) {
+                    let metadata = MediaMetadata(mediaComposition: mediaComposition, resource: resource, dataProvider: dataProvider)
+                    throw AssetError(error: error, metadata: metadata)
+                }
+
                 let metadata = MediaMetadata(mediaComposition: mediaComposition, resource: resource, dataProvider: dataProvider)
-                return Self.asset(for: metadata, configuration: configuration)
+                return Self.asset(for: metadata, resource: resource, configuration: configuration)
             }
             .eraseToAnyPublisher()
     }
 
-    private static func asset(for metadata: MediaMetadata, configuration: PlayerItemConfiguration) -> Asset<MediaMetadata> {
-        let resource = metadata.resource
+    private static func asset(for metadata: MediaMetadata, resource: MediaComposition.Resource, configuration: PlayerItemConfiguration) -> Asset<MediaMetadata> {
         let configuration = assetConfiguration(for: resource, configuration: configuration)
 
         if let certificateUrl = resource.drms.first(where: { $0.type == .fairPlay })?.certificateUrl {
@@ -111,6 +118,16 @@ private extension PlayerItem {
             default:
                 return .simple(url: resource.url, metadata: metadata, configuration: configuration)
             }
+        }
+    }
+
+    private static func error(from mediaComposition: MediaComposition) -> Error? {
+        let mainChapter = mediaComposition.mainChapter
+        if let blockingReason = mainChapter.blockingReason {
+            return DataError.blocked(withMessage: blockingReason.description)
+        }
+        else {
+            return nil
         }
     }
 
