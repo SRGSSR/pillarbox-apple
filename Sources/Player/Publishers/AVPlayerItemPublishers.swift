@@ -9,6 +9,14 @@ import Combine
 import MediaAccessibility
 
 extension AVPlayerItem {
+    func eventAPublisher() -> AnyPublisher<MetricEvent, Never> {
+        Empty().eraseToAnyPublisher()
+    }
+
+    func eventBPublisher() -> AnyPublisher<MetricEvent, Never> {
+        Empty().eraseToAnyPublisher()
+    }
+
     func propertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
         Publishers.CombineLatest7(
             statusPublisher()

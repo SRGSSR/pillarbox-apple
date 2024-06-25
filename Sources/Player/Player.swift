@@ -11,6 +11,20 @@ import MediaPlayer
 import PillarboxCore
 import TimelaneCombine
 
+public struct MetricEvent {
+    public enum `Type`{
+        case loading
+        case loaded
+        case ready
+        // case native(AVMetricEvent)
+    }
+
+    public let type: `Type`
+    public let date: Date
+    public let time: CMTime
+    public let playbackSessionId: String?
+}
+
 /// An observable audio / video player maintaining its items as a double-ended queue.
 public final class Player: ObservableObject, Equatable {
     private static weak var currentPlayer: Player?
@@ -55,6 +69,18 @@ public final class Player: ObservableObject, Equatable {
             objectWillChange.send()
         }
     }
+
+    public lazy var metricsEventPublisher: AnyPublisher<MetricEvent, Never> = {
+        queuePlayer.currentItemPublisher()
+            .compactMap { $0 }
+            .map { item in
+                Publishers.Merge(
+                    item.eventAPublisher(), item.eventBPublisher()
+                )
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }()
 
     /// The player configuration.
     public let configuration: PlayerConfiguration

@@ -50,6 +50,10 @@ extension TrackerAdapter: TrackerLifeCycle {
         tracker.updateProperties(with: properties)
     }
 
+    func notifyMetricsEvent(_ event: MetricEvent) {
+        tracker.notifyMetricsEvent(event)
+    }
+
     func disable() {
         tracker.disable()
     }

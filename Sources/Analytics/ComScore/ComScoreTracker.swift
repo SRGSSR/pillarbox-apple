@@ -51,6 +51,10 @@ public final class ComScoreTracker: PlayerItemTracker {
         }
     }
 
+    public func notifyMetricsEvent(_ event: MetricEvent) {
+
+    }
+
     public func disable() {
         streamingAnalytics = ComScoreStreamingAnalytics()
         player = nil

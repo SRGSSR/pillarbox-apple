@@ -28,6 +28,17 @@ public final class CommandersActTracker: PlayerItemTracker {
         self.metadata = metadata
     }
 
+    public func notifyMetricsEvent(_ event: MetricEvent) {
+        switch event.type {
+        case .loading:
+            break
+        case .loaded:
+            break
+        case .ready:
+            break
+        }
+    }
+
     public func updateProperties(with properties: PlayerProperties) {
         streamingAnalytics.notify(streamType: properties.streamType)
 

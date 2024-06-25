@@ -157,6 +157,12 @@ extension PlayerItem {
         }
     }
 
+    func notifyMetricsEvent(_ event: MetricEvent) {
+        trackerAdapters.forEach { adapter in
+            adapter.notifyMetricsEvent(event)
+        }
+    }
+
     func disableTrackers() {
         trackerAdapters.forEach { adapter in
             adapter.disable()
