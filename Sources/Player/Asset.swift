@@ -72,6 +72,17 @@ public struct Asset<M> {
             configuration: configuration
         )
     }
+
+    public static func unavailable(
+        with error: Error,
+        metadata: M
+    ) -> Self {
+        .init(
+            resource: .failing(error: error),
+            metadata: metadata,
+            configuration: .default
+        )
+    }
 }
 
 public extension Asset where M == Void {
@@ -129,6 +140,14 @@ public extension Asset where M == Void {
             resource: .encrypted(url: url, delegate: delegate),
             metadata: (),
             configuration: configuration
+        )
+    }
+
+    static func unavailable(with error: Error) -> Self {
+        .init(
+            resource: .failing(error: error),
+            metadata: (),
+            configuration: .default
         )
     }
 }
