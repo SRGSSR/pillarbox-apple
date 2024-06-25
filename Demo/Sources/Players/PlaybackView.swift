@@ -250,10 +250,9 @@ private struct MainView: View {
     @ViewBuilder
     private func video() -> some View {
         ZStack {
-            if player.mediaType == .audio {
-                artwork(for: player.metadata.imageSource)
-            }
-            else if player.isExternalPlaybackActive {
+            artwork(for: player.metadata.imageSource)
+            
+            if player.isExternalPlaybackActive {
                 image(name: "tv")
             }
             else if isMonoscopic {
@@ -803,10 +802,7 @@ struct PlaybackView: View {
 
     var body: some View {
         ZStack {
-            if let error = player.error {
-                ErrorView(description: error.localizedDescription, player: player)
-            }
-            else if !player.items.isEmpty {
+            if !player.items.isEmpty {
                 mainView()
                     .persistentSystemOverlays(.hidden)
             }
@@ -839,6 +835,9 @@ struct PlaybackView: View {
                 supportsPictureInPicture: supportsPictureInPicture,
                 progressTracker: progressTracker
             )
+            if let error = player.error {
+                ErrorView(description: error.localizedDescription, player: player)
+            }
 #else
             if isMonoscopic {
                 VideoView(player: player)
