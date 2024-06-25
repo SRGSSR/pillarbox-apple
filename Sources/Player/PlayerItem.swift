@@ -118,7 +118,7 @@ public final class PlayerItem: Equatable {
                 )
             }
             .catch { error in
-                Just(.failing(id: id, error: error))
+                Just(.failing(id: id, metadata: .empty, error: error))
             }
         }
         .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))

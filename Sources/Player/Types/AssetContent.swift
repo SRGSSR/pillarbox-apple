@@ -17,8 +17,8 @@ struct AssetContent {
         .init(id: id, resource: .loading, metadata: .empty, configuration: .default)
     }
 
-    static func failing(id: UUID, error: Error) -> Self {
-        .init(id: id, resource: .failing(error: error), metadata: .empty, configuration: .default)
+    static func failing(id: UUID, metadata: PlayerMetadata, error: Error) -> Self {
+        .init(id: id, resource: .failing(error: error), metadata: metadata, configuration: .default)
     }
 
     func update(item: AVPlayerItem) {
