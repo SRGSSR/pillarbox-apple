@@ -117,8 +117,14 @@ public final class PlayerItem: Equatable {
                     configuration: asset.configuration
                 )
             }
-            .catch { error in
-                Just(.failing(id: id, metadata: .empty, error: error))
+            .catch { error -> AnyPublisher<AssetContent, Never> in
+                if let metadataError = error as? AssetError<M> {
+                    // TODO: Should register for playerMetadataPublisher() updates
+                    return Just(.failing(id: id, metadata: metadataMapper(metadataError.metadata), error: error)).eraseToAnyPublisher()
+                }
+                else {
+                    return Just(.failing(id: id, metadata: .empty, error: error)).eraseToAnyPublisher()
+                }
             }
         }
         .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))

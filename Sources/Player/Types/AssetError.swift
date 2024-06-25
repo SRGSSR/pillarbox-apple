@@ -6,7 +6,7 @@
 
 import Foundation
 
-public struct AssetError<M>: Error where M: AssetMetadata {
+public struct AssetError<M>: Error {
     let error: Error
     let metadata: M
 }
