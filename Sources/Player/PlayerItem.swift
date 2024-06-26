@@ -120,7 +120,7 @@ public final class PlayerItem: Equatable {
             .catch { error -> AnyPublisher<AssetContent, Never> in
                 if let metadataError = error as? AssetError<M> {
                     return metadataMapper(metadataError.metadata).playerMetadataPublisher()
-                        .map { .failing(id: id, metadata: $0, error: error) }
+                        .map { .failing(id: id, metadata: $0, error: metadataError.error) }
                         .eraseToAnyPublisher()
                 }
                 else {
