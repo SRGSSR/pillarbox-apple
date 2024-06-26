@@ -22,13 +22,13 @@ public struct MediaMetadata {
     public let mediaComposition: MediaComposition
 
     /// The resource to be played.
-    public let resource: MediaComposition.Resource?
+    public let resource: MediaComposition.Resource
 
     private let dataProvider: DataProvider
 
     /// The stream type.
     public var streamType: StreamType {
-        resource?.streamType ?? .unknown
+        resource.streamType
     }
 
     /// The consolidated comScore analytics data.
@@ -36,9 +36,7 @@ public struct MediaMetadata {
         var analyticsData = mediaComposition.mainChapter.analyticsData
         guard !analyticsData.isEmpty else { return [:] }
         analyticsData.merge(mediaComposition.analyticsData) { _, new in new }
-        if let resource {
-            analyticsData.merge(resource.analyticsData) { _, new in new }
-        }
+        analyticsData.merge(resource.analyticsData) { _, new in new }
         return analyticsData
     }
 
@@ -47,13 +45,11 @@ public struct MediaMetadata {
         var analyticsMetadata = mediaComposition.mainChapter.analyticsMetadata
         guard !analyticsMetadata.isEmpty else { return [:] }
         analyticsMetadata.merge(mediaComposition.analyticsMetadata) { _, new in new }
-        if let resource {
-            analyticsMetadata.merge(resource.analyticsMetadata) { _, new in new }
-        }
+        analyticsMetadata.merge(resource.analyticsMetadata) { _, new in new }
         return analyticsMetadata
     }
 
-    init(mediaComposition: MediaComposition, resource: MediaComposition.Resource?, dataProvider: DataProvider) {
+    init(mediaComposition: MediaComposition, resource: MediaComposition.Resource, dataProvider: DataProvider) {
         self.mediaComposition = mediaComposition
         self.resource = resource
         self.dataProvider = dataProvider

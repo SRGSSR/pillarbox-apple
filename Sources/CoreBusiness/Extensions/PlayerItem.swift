@@ -88,22 +88,20 @@ private extension PlayerItem {
         return dataProvider.mediaCompositionPublisher(forUrn: urn)
             .tryMap { mediaComposition in
                 let mainChapter = mediaComposition.mainChapter
-
                 guard let resource = mainChapter.recommendedResource else {
-                    let metadata = MediaMetadata(mediaComposition: mediaComposition, resource: nil, dataProvider: dataProvider)
-                    return .unavailable(with: DataError.noResourceAvailable, metadata: metadata)
+                    throw DataError.noResourceAvailable
                 }
-
                 let metadata = MediaMetadata(mediaComposition: mediaComposition, resource: resource, dataProvider: dataProvider)
-                if let error = Self.error(from: mediaComposition) {
+                if let error = error(from: mediaComposition) {
                     return .unavailable(with: error, metadata: metadata)
                 }
-                return Self.asset(for: metadata, resource: resource, configuration: configuration)
+                return asset(for: metadata, configuration: configuration)
             }
             .eraseToAnyPublisher()
     }
 
-    private static func asset(for metadata: MediaMetadata, resource: MediaComposition.Resource, configuration: PlayerItemConfiguration) -> Asset<MediaMetadata> {
+    private static func asset(for metadata: MediaMetadata, configuration: PlayerItemConfiguration) -> Asset<MediaMetadata> {
+        let resource = metadata.resource
         let configuration = assetConfiguration(for: resource, configuration: configuration)
 
         if let certificateUrl = resource.drms.first(where: { $0.type == .fairPlay })?.certificateUrl {
