@@ -49,10 +49,10 @@ public func equalDiff<T>(_ expectedValue: T?) -> Matcher<T> where T: Equatable {
 }
 
 /// Matches close signed numeric values up to a given tolerance.
-public func beCloseTo<Value: SignedNumeric & Comparable>(
+public func beCloseTo<Value>(
     _ expectedValue: Value,
     within delta: Value = 1
-) -> Matcher<Value> {
+) -> Matcher<Value> where Value: SignedNumeric & Comparable {
     let message = "be close to <\(stringify(expectedValue))> (within \(stringify(delta)))"
     return Matcher.define { actualExpression in
         let actualValue = try actualExpression.evaluate()
