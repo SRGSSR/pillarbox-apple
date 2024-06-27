@@ -11,10 +11,10 @@ public struct MetricEvent {
     /// A kind of metric event.
     public enum Kind {
         /// Asset loading.
-        case assetLoading(TimeMetrics)
+        case assetLoading(DateInterval)
 
         /// Resource loading.
-        case resourceLoading(TimeMetrics)
+        case resourceLoading(DateInterval)
     }
 
     /// The kind of event.
