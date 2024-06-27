@@ -199,6 +199,7 @@ public final class Player: ObservableObject, Equatable {
         configureCurrentTrackerPublishers()
         configureMetadataPublisher()
         configureBlockedTimeRangesPublishers()
+        configureMetricEventPublisher()
     }
 
     /// Creates a player with a single item in its queue.
@@ -386,5 +387,15 @@ private extension Player {
             nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: index, in: items)
         }
         .store(in: &cancellables)
+    }
+}
+
+private extension Player {
+    func configureMetricEventPublisher() {
+        queuePlayer.initialPlaybackLikelyToKeepUpDateIntervalPublisher()
+            .sink { interval in
+                print("--> duration: \(interval.duration)")
+            }
+            .store(in: &cancellables)
     }
 }

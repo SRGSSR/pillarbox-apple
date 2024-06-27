@@ -70,4 +70,16 @@ extension AVPlayer {
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
+
+    func initialPlaybackLikelyToKeepUpDateIntervalPublisher() -> AnyPublisher<DateInterval, Never> {
+            currentItemPublisher()
+                .compactMap { $0 }
+                .filter { !$0.isLoading }
+                .map { item in
+                    item.initialPlaybackLikelyToKeepUpPublisher()
+                        .measureDateInterval()
+                }
+                .switchToLatest()
+                .eraseToAnyPublisher()
+        }
 }
