@@ -78,7 +78,7 @@ extension AVPlayer {
                 .map { item in
                     item.initialPlaybackLikelyToKeepUpPublisher()
                         .measureDateInterval()
-                        .map { .init(log: item.metricLog, event: .init(kind: .resourceLoading($0), time: item.currentTime())) }
+                        .map { .init(log: item.metricLog, event: .init(id: item.id, kind: .resourceLoading($0), time: item.currentTime())) }
                 }
                 .switchToLatest()
                 .eraseToAnyPublisher()

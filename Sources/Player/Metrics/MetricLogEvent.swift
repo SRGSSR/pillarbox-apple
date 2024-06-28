@@ -17,6 +17,9 @@ public struct MetricLogEvent {
         case resourceLoading(DateInterval)
     }
 
+    /// The identifier of event.
+    public let id: UUID?
+
     /// The kind of event.
     public let kind: Kind
 
@@ -38,7 +41,8 @@ public struct MetricLogEvent {
         }
     }
 
-    init(kind: Kind, date: Date = .init(), time: CMTime = .invalid) {
+    init(id: UUID?, kind: Kind, date: Date = .init(), time: CMTime = .invalid) {
+        self.id = id
         self.kind = kind
         self.date = date
         self.time = time
