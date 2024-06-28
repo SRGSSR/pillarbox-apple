@@ -71,13 +71,14 @@ extension AVPlayer {
         .eraseToAnyPublisher()
     }
 
-    func initialPlaybackLikelyToKeepUpDateIntervalPublisher() -> AnyPublisher<DateInterval, Never> {
+    func initialPlaybackLikelyToKeepUpDateIntervalPublisher() -> AnyPublisher<MetricLogUpdate, Never> {
             currentItemPublisher()
                 .compactMap { $0 }
                 .filter { !$0.isLoading }
                 .map { item in
                     item.initialPlaybackLikelyToKeepUpPublisher()
                         .measureDateInterval()
+                        .map { .init(log: item.metricLog, event: .init(kind: .resourceLoading($0), time: item.currentTime())) }
                 }
                 .switchToLatest()
                 .eraseToAnyPublisher()
