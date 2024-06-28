@@ -393,8 +393,10 @@ private extension Player {
 private extension Player {
     func configureMetricEventPublisher() {
         queuePlayer.initialPlaybackLikelyToKeepUpDateIntervalPublisher()
-            .sink { interval in
-                print("--> duration: \(interval.duration)")
+            .sink { update in
+                Task {
+                    await update.save()
+                }
             }
             .store(in: &cancellables)
     }

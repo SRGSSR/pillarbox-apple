@@ -5,7 +5,7 @@
 //
 
 actor MetricLog {
-    var events: [MetricLogEvent] = []
+    private(set) var events: [MetricLogEvent] = []
 
     func addEvent(_ event: MetricLogEvent) {
         events.append(event)
