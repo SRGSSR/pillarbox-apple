@@ -28,6 +28,16 @@ public struct MetricLogEvent {
     /// Might be `.invalid`.
     public let time: CMTime
 
+    /// The event duration.
+    public var duration: TimeInterval {
+        switch kind {
+        case .assetLoading(let dateInterval):
+            return dateInterval.duration
+        case .resourceLoading(let dateInterval):
+            return dateInterval.duration
+        }
+    }
+
     init(kind: Kind, date: Date = .init(), time: CMTime = .invalid) {
         self.kind = kind
         self.date = date
