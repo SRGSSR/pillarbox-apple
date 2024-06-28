@@ -51,6 +51,7 @@ extension TrackerAdapter: TrackerLifeCycle {
     }
 
     func updateMetrics(with events: [MetricLogEvent]) {
+        guard events.first?.id == id else { return }
         tracker.updateMetrics(with: events)
     }
 
