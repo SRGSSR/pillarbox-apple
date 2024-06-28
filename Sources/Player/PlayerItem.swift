@@ -27,6 +27,7 @@ public final class PlayerItem: Equatable {
     private let trackerAdapters: [any TrackerLifeCycle]
 
     let id = UUID()
+    let metricLog = MetricLog()
 
     /// Creates an item loaded from an ``Asset`` publisher data source.
     ///
@@ -94,7 +95,7 @@ public final class PlayerItem: Equatable {
         }
         self.trackerAdapters = trackerAdapters
         content = .loading(id: id)
-        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
+        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id, metricLog] in
             Publishers.CombineLatest(
                 publisher,
                 Just(trackerAdapters).setFailureType(to: P.Failure.self)
@@ -114,7 +115,8 @@ public final class PlayerItem: Equatable {
                     id: id,
                     resource: asset.resource,
                     metadata: metadata,
-                    configuration: asset.configuration
+                    configuration: asset.configuration,
+                    metricLog: metricLog
                 )
             }
             .catch { error in

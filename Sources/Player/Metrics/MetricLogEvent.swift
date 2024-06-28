@@ -6,8 +6,8 @@
 
 import CoreMedia
 
-/// A metric event.
-public struct MetricEvent {
+/// A metric log event.
+public struct MetricLogEvent {
     /// A kind of metric event.
     public enum Kind {
         /// Asset loading.
