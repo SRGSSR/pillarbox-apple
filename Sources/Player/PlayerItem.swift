@@ -110,7 +110,6 @@ public final class PlayerItem: Equatable {
             )
             .measureDateInterval { dateInterval in
                 let event = MetricEvent(kind: .assetLoading(dateInterval), date: dateInterval.start)
-                //print("--> send \(event)")
                 metricEventSubject.send(event)
             }
             .map { asset, trackerAdapters in
