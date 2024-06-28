@@ -26,8 +26,16 @@ public final class PlayerItem: Equatable {
     @Published private(set) var content: AssetContent
 
     private let trackerAdapters: [any TrackerLifeCycle]
+    private let metricEventSubject = PassthroughSubject<MetricEvent, Never>()
 
     let id = UUID()
+
+    lazy var metricEventPublisher: AnyPublisher<[MetricEvent], Never> = {
+        metricEventSubject
+            .scan([]) { $0 + [$1] }
+            .receiveOnMainThread()
+            .eraseToAnyPublisher()
+    }()
 
     /// Creates an item loaded from an ``Asset`` publisher data source.
     ///
@@ -95,13 +103,15 @@ public final class PlayerItem: Equatable {
         }
         self.trackerAdapters = trackerAdapters
         content = .loading(id: id)
-        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
+        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id, metricEventSubject] in
             Publishers.CombineLatest(
                 publisher,
                 Just(trackerAdapters).setFailureType(to: P.Failure.self)
             )
             .measureDateInterval { dateInterval in
-                
+                let event = MetricEvent(kind: .assetLoading(dateInterval), date: dateInterval.start)
+                //print("--> send \(event)")
+                metricEventSubject.send(event)
             }
             .map { asset, trackerAdapters in
                 trackerAdapters.forEach { adapter in
@@ -140,6 +150,10 @@ public final class PlayerItem: Equatable {
 
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
         playerItem?.id == id
+    }
+
+    func sendMetricEvent(_ event: MetricEvent) {
+        metricEventSubject.send(event)
     }
 }
 

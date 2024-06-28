@@ -100,6 +100,18 @@ public final class Player: ObservableObject, Equatable {
             .eraseToAnyPublisher()
     }()
 
+    public lazy var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> = {
+        queuePublisher
+            .slice(at: \.item)
+            .map { item -> AnyPublisher<[MetricEvent], Never> in
+                guard let item else { return Just([]).eraseToAnyPublisher() }
+                return item.metricEventPublisher
+            }
+            .switchToLatest()
+            .share(replay: 1)
+            .eraseToAnyPublisher()
+    }()
+
     /// A Boolean setting whether the audio output of the player must be muted.
     public var isMuted: Bool {
         get {
@@ -199,7 +211,12 @@ public final class Player: ObservableObject, Equatable {
         configureCurrentTrackerPublishers()
         configureMetadataPublisher()
         configureBlockedTimeRangesPublishers()
-        configureMetricEventPublisher()
+
+        metricEventsPublisher
+            .sink { events in
+                print("--> events: \(events)")
+            }
+            .store(in: &cancellables)
     }
 
     /// Creates a player with a single item in its queue.
@@ -390,8 +407,3 @@ private extension Player {
     }
 }
 
-private extension Player {
-    func configureMetricEventPublisher() {
-        
-    }
-}
