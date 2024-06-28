@@ -407,3 +407,7 @@ private extension Player {
     }
 }
 
+// Idea:
+// - Pass PlayerItem to AssetContent so that AVPlayerItem can communicate with it (warning: retain cycle?)
+// - Add measure(first:) or measure(where:) operators to selectively measure things. Avoid introducing another publisher just
+//   for the sake of measurements. Build into existing pipelines.
