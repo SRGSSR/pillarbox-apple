@@ -186,7 +186,7 @@ public extension Publisher {
 }
 
 public extension Publisher {
-    /// Measure the interval between consecutive outputs.
+    /// Measure the date interval between consecutive outputs.
     ///
     /// Similar to ``Publisher/measureInterval(using:options:)`` but providing date interval information as well as
     /// the interval between subscription and the first output.
@@ -197,13 +197,13 @@ public extension Publisher {
             .eraseToAnyPublisher()
     }
 
-    /// Measure the interval between consecutive outputs.
+    /// Measure the date interval between consecutive outputs.
     ///
-    /// - Parameter measure: A closure called for each output.
+    /// - Parameter measure: A closure called for each output delivered upstream.
     ///
     /// Similar to ``Publisher/measureInterval(using:options:)`` but providing date interval information as well as
     /// the interval between subscription and the first output.
-    func measure(_ measure: @escaping (DateInterval) -> Void) -> AnyPublisher<Output, Failure> {
+    func measureDateInterval(perform measure: @escaping (DateInterval) -> Void) -> AnyPublisher<Output, Failure> {
         var startDate: Date?
         return handleEvents(
             receiveSubscription: { _ in

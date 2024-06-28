@@ -21,10 +21,16 @@ public struct MetricLogEvent {
     public let kind: Kind
 
     /// The date at which the event was created.
-    public let date = Date()
+    public let date: Date
 
     /// The player time.
     ///
     /// Might be `.invalid`.
     public let time: CMTime
+
+    init(kind: Kind, date: Date = .init(), time: CMTime = .invalid) {
+        self.kind = kind
+        self.date = date
+        self.time = time
+    }
 }

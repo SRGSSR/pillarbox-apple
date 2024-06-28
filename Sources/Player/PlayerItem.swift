@@ -100,6 +100,12 @@ public final class PlayerItem: Equatable {
                 publisher,
                 Just(trackerAdapters).setFailureType(to: P.Failure.self)
             )
+            .measureDateInterval { dateInterval in
+                let event = MetricLogEvent(kind: .assetLoading(dateInterval), date: dateInterval.start)
+                Task {
+                    await metricLog.addEvent(event)
+                }
+            }
             .map { asset, trackerAdapters in
                 trackerAdapters.forEach { adapter in
                     adapter.updateMetadata(with: asset.metadata)
@@ -111,13 +117,7 @@ public final class PlayerItem: Equatable {
             }
             .switchToLatest()
             .map { asset, metadata in
-                AssetContent(
-                    id: id,
-                    resource: asset.resource,
-                    metadata: metadata,
-                    configuration: asset.configuration,
-                    metricLog: metricLog
-                )
+                AssetContent(id: id, resource: asset.resource, metadata: metadata, configuration: asset.configuration, metricLog: metricLog)
             }
             .catch { error in
                 Just(.failing(id: id, error: error))

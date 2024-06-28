@@ -43,7 +43,7 @@ final class MeasurePublisherTests: XCTestCase {
         let expectation = expectation(description: "Done")
         Just(1)
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
-            .measure { interval in
+            .measureDateInterval { interval in
                 expect(interval.duration).to(beCloseTo(0.5, within: 0.1))
                 expectation.fulfill()
             }
@@ -57,7 +57,7 @@ final class MeasurePublisherTests: XCTestCase {
         var durations: [TimeInterval] = []
         [1, 2].publisher
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
-            .measure { interval in
+            .measureDateInterval { interval in
                 durations.append(interval.duration)
             }
             .sink(
@@ -78,7 +78,7 @@ final class MeasurePublisherTests: XCTestCase {
     func testClosureWithoutEvent() {
         let expectation = expectation(description: "Done")
         Empty<Int, Never>()
-            .measure { _ in
+            .measureDateInterval { _ in
                 fail("Must never be called")
             }
             .sink(
@@ -94,7 +94,7 @@ final class MeasurePublisherTests: XCTestCase {
     func testClosureWithError() {
         let expectation = expectation(description: "Done")
         Fail<Int, Error>(error: MockedError())
-            .measure { _ in
+            .measureDateInterval { _ in
                 fail("Must never be called")
             }
             .sink(
