@@ -60,6 +60,8 @@ public final class CommandersActTracker: PlayerItemTracker {
         }
     }
 
+    public func updateMetrics(with events: [MetricLogEvent]) {}
+
     public func disable() {
         streamingAnalytics = CommandersActStreamingAnalytics()
         player = nil

@@ -23,6 +23,11 @@ final class CurrentTracker {
                 item.updateTrackerProperties(properties)
             }
             .store(in: &cancellables)
+        player.metricLogEventsPublisher
+            .sink { events in
+                item.updateMetricEvents(events)
+            }
+            .store(in: &cancellables)
     }
 
     deinit {

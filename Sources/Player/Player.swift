@@ -75,6 +75,17 @@ public final class Player: ObservableObject, Equatable {
             .eraseToAnyPublisher()
     }()
 
+    lazy var metricLogEventsPublisher: AnyPublisher<[MetricLogEvent], Never> = {
+        queuePublisher
+            .compactMap(\.item)
+            .map { item in
+                item.metricLog.eventsPublisher()
+            }
+            .switchToLatest()
+            .share(replay: 1)
+            .eraseToAnyPublisher()
+    }()
+
     lazy var queuePublisher: AnyPublisher<Queue, Never> = {
         Publishers.Merge(
             elementsQueueUpdatePublisher(),
@@ -394,9 +405,7 @@ private extension Player {
     func configureMetricEventPublisher() {
         queuePlayer.initialPlaybackLikelyToKeepUpDateIntervalPublisher()
             .sink { update in
-                Task {
-                    await update.save()
-                }
+                update.save()
             }
             .store(in: &cancellables)
     }

@@ -13,7 +13,7 @@ struct MetricLogUpdate {
         self.event = event
     }
 
-    func save() async {
-        await log?.addEvent(event)
+    func save() {
+        log?.addEvent(event)
     }
 }

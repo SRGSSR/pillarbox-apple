@@ -4,10 +4,19 @@
 //  License information is available from the LICENSE file.
 //
 
-actor MetricLog {
-    private(set) var events: [MetricLogEvent] = []
+import Combine
+
+final class MetricLog {
+    private var events: [MetricLogEvent] = []
+
+    private let eventsSubject = PassthroughSubject<[MetricLogEvent], Never>()
 
     func addEvent(_ event: MetricLogEvent) {
-        events.append(event)
+        events += [event]
+        eventsSubject.send(events)
+    }
+
+    func eventsPublisher() -> AnyPublisher<[MetricLogEvent], Never> {
+        eventsSubject.eraseToAnyPublisher()
     }
 }
