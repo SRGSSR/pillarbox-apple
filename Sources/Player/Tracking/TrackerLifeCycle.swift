@@ -7,5 +7,6 @@
 protocol TrackerLifeCycle {
     func enable(for player: Player)
     func updateProperties(with properties: PlayerProperties)
+    func updateMetrics(with events: [MetricLogEvent])
     func disable()
 }

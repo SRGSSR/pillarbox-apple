@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Combine
 import ComScore
 import PillarboxPlayer
 
@@ -50,6 +51,8 @@ public final class ComScoreTracker: PlayerItemTracker {
             renewPlaybackSessionIfNeeded(for: properties.playbackState)
         }
     }
+
+    public func updateMetrics(with events: [MetricLogEvent]) {}
 
     public func disable() {
         streamingAnalytics = ComScoreStreamingAnalytics()

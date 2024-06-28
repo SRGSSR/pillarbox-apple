@@ -102,9 +102,7 @@ public final class PlayerItem: Equatable {
             )
             .measureDateInterval { dateInterval in
                 let event = MetricLogEvent(kind: .assetLoading(dateInterval), date: dateInterval.start)
-                Task {
-                    await metricLog.addEvent(event)
-                }
+                metricLog.addEvent(event)
             }
             .map { asset, trackerAdapters in
                 trackerAdapters.forEach { adapter in
@@ -156,6 +154,12 @@ extension PlayerItem {
     func updateTrackerProperties(_ properties: PlayerProperties) {
         trackerAdapters.forEach { adapter in
             adapter.updateProperties(with: properties)
+        }
+    }
+
+    func updateMetricEvents(_ events: [MetricLogEvent]) {
+        trackerAdapters.forEach { adapter in
+            adapter.updateMetrics(with: events)
         }
     }
 
