@@ -40,7 +40,7 @@ public protocol PlayerItemTracker: AnyObject {
     /// This method can be called quite often. Implementations should avoid performing significant work unnecessarily.
     func updateProperties(with properties: PlayerProperties)
 
-    func updateMetrics(with events: [MetricLogEvent])
+    func updateMetrics(with events: [MetricEvent])
 
     /// A method called when the tracker is disabled.
     func disable()

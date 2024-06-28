@@ -33,6 +33,8 @@ final class TrackerLifeCycleMock: PlayerItemTracker {
 
     func updateProperties(with properties: PlayerProperties) {}
 
+    func updateMetrics(with events: [MetricEvent]) {}
+
     func enable(for player: Player) {
         configuration.statePublisher.send(.enabled)
     }
