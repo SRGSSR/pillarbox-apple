@@ -77,10 +77,9 @@ public final class Player: ObservableObject, Equatable {
 
     lazy var metricLogEventsPublisher: AnyPublisher<[MetricLogEvent], Never> = {
         queuePublisher
-            .compactMap(\.item)
-            .map { item in
-                item.metricLog.eventsPublisher()
-            }
+            .slice(at: \.item)
+            .compactMap { $0 }
+            .map { $0.metricLog.eventsPublisher() }
             .switchToLatest()
             .share(replay: 1)
             .eraseToAnyPublisher()
