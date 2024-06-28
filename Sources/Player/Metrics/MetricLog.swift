@@ -7,13 +7,10 @@
 import Combine
 
 final class MetricLog {
-    private var events: [MetricLogEvent] = []
-
-    private let eventsSubject = PassthroughSubject<[MetricLogEvent], Never>()
+    private let eventsSubject = CurrentValueSubject<[MetricLogEvent], Never>([])
 
     func addEvent(_ event: MetricLogEvent) {
-        events += [event]
-        eventsSubject.send(events)
+        eventsSubject.send(eventsSubject.value + [event])
     }
 
     func eventsPublisher() -> AnyPublisher<[MetricLogEvent], Never> {
