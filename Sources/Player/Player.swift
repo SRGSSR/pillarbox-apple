@@ -408,6 +408,9 @@ private extension Player {
 }
 
 // Idea:
-// - Pass PlayerItem to AssetContent so that AVPlayerItem can communicate with it (warning: retain cycle?)
+// - Pass subject to AssetContent so that AVPlayerItem can communicate events to it. Maybe wrap into a type that represents
+//   a measurement tool, with a simple API (send).
 // - Add measure(first:) or measure(where:) operators to selectively measure things. Avoid introducing another publisher just
-//   for the sake of measurements. Build into existing pipelines.
+//   for the sake of measurements. Build into existing pipelines since all processes we measure are processes that are ultimately
+//   done already!
+// - Maybe measure(tool:) operators could be useful to forward the tool to sections to be measured.
