@@ -2,6 +2,7 @@
 
 @Metadata {
     @PageColor(purple)
+    @PageImage(purpose: card, source: metadata-card, alt: "An image depicting a database.")
 }
 
 Associate metadata with the content being played.

@@ -21,6 +21,7 @@ The PillarboxPlayer framework fully integrates with SwiftUI, embracing its decla
 @Links(visualStyle: detailedGrid) {
     - <doc:playback>
     - <doc:state-observation>
+    - <doc:metadata>
     - <doc:tracking>
 }
 
