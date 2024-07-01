@@ -219,15 +219,15 @@ public extension Publisher {
         .eraseToAnyPublisher()
     }
 
-    /// Measure the date interval between consecutive outputs.
+    /// Measure the date interval between consecutive outputs filtered by a condition.
     ///
     /// - Parameters
-    ///    - condition: A closure called to filter the output.
     ///    - measure: A closure called for each output delivered upstream.
+    ///    - condition: A closure called to filter the output.
     ///
     /// Similar to ``Publisher/measureInterval(using:options:)`` but providing date interval information as well as
     /// the interval between subscription and the first output.
-    func measureDateInterval(when condition: @escaping (Output) -> Bool, perform measure: @escaping (DateInterval) -> Void) -> AnyPublisher<Output, Failure> {
+    func measureDateInterval(perform measure: @escaping (DateInterval) -> Void, when condition: @escaping (Output) -> Bool) -> AnyPublisher<Output, Failure> {
         var startDate: Date?
         return handleEvents(
             receiveSubscription: { _ in
@@ -238,6 +238,33 @@ public extension Publisher {
                 let end = Date()
                 measure(.init(start: start, end: end))
                 startDate = end
+            }
+        )
+        .eraseToAnyPublisher()
+    }
+
+    /// Measure the first date interval between consecutive outputs when the condition is met.
+    ///
+    /// - Parameters
+    ///    - measure: A closure called for each output delivered upstream.
+    ///    - condition: A closure called to filter the ouput.
+    ///
+    /// Similar to ``Publisher/measureInterval(using:options:)`` but providing date interval information as well as
+    /// the interval between subscription and the first output.
+    func measureDateInterval(
+        perform measure: @escaping (DateInterval) -> Void,
+        firstWhen condition: @escaping (Output) -> Bool
+    ) -> AnyPublisher<Output, Failure> {
+        var startDate: Date?
+        return handleEvents(
+            receiveSubscription: { _ in
+                startDate = Date()
+            },
+            receiveOutput: { output in
+                guard let start = startDate, condition(output) else { return }
+                let end = Date()
+                measure(.init(start: start, end: end))
+                startDate = nil
             }
         )
         .eraseToAnyPublisher()
