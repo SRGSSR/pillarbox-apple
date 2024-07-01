@@ -6,7 +6,7 @@
 
 import Combine
 
-final class MetricLog {
+struct MetricLog {
     private let eventsSubject = CurrentValueSubject<[MetricLogEvent], Never>([])
 
     func addEvent(_ event: MetricLogEvent) {
