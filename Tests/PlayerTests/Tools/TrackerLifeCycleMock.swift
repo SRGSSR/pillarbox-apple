@@ -30,6 +30,7 @@ final class TrackerLifeCycleMock: PlayerItemTracker {
     }
 
     func updateMetadata(with metadata: Void) {}
+    func updateMetrics(with events: [MetricLogEvent]) {}
 
     func updateProperties(with properties: PlayerProperties) {}
 
