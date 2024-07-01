@@ -15,7 +15,9 @@ private struct MockedError: Error {}
 
 final class MeasurePublisherTests: XCTestCase {
     private var cancellables = Set<AnyCancellable>()
+}
 
+extension MeasurePublisherTests {
     func testWithSingleEvent() {
         let publisher = Just(1)
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
@@ -38,7 +40,9 @@ final class MeasurePublisherTests: XCTestCase {
             .measureDateInterval()
         expectNothingPublished(from: publisher, during: .seconds(1))
     }
+}
 
+extension MeasurePublisherTests {
     func testClosureWithSingleEvent() {
         let expectation = expectation(description: "Done")
         Just(1)
@@ -105,5 +109,68 @@ final class MeasurePublisherTests: XCTestCase {
             )
             .store(in: &cancellables)
         wait(for: [expectation], timeout: 0.5)
+    }
+}
+
+extension MeasurePublisherTests {
+    func testWhenConditionSatisfied() {
+        let expectation = expectation(description: "Done")
+        Just(1)
+            .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .measureDateInterval { interval in
+                expect(interval.duration).to(beCloseTo(0.5, within: 0.1))
+                expectation.fulfill()
+            } when: { _ in
+                true
+            }
+            .sink { _ in }
+            .store(in: &cancellables)
+        wait(for: [expectation], timeout: 1)
+    }
+
+    func testWhenConditionNotSatisfied() {
+        let expectation = expectation(description: "Done")
+        Just(1)
+            .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .measureDateInterval { _ in
+                fail("Must never be called")
+            } when: { _ in
+                false
+            }
+            .sink(
+                receiveCompletion: { _ in
+                    expectation.fulfill()
+                },
+                receiveValue: { _ in }
+            )
+            .store(in: &cancellables)
+        wait(for: [expectation], timeout: 1)
+    }
+}
+
+extension MeasurePublisherTests {
+    func testFirstWhen() {
+        let expectation = expectation(description: "Done")
+        var durations: [TimeInterval] = []
+        [1, 2].publisher
+            .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .measureDateInterval { interval in
+                durations.append(interval.duration)
+            } firstWhen: { _ in
+                true
+            }
+            .sink(
+                receiveCompletion: { _ in
+                    expectation.fulfill()
+                },
+                receiveValue: { _ in }
+            )
+            .store(in: &cancellables)
+        wait(for: [expectation], timeout: 1)
+
+        expect(durations.count).to(equal(1))
+        zip(durations, [0.5]).forEach { duration, expected in
+            expect(duration).to(beCloseTo(expected, within: 0.1))
+        }
     }
 }
