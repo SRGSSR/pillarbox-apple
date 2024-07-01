@@ -48,9 +48,14 @@ private struct TextFieldView: View {
 private struct MediaEntryView: View {
     private enum Kind {
         case url
-        case urn
         case tokenProtected
         case encrypted
+        case ilProductionUrn
+        case ilStageUrn
+        case ilTestUrn
+        case samProductionUrn
+        case samStageUrn
+        case samTestUrn
     }
 
     @State private var kind: Kind = .url
@@ -69,8 +74,18 @@ private struct MediaEntryView: View {
         case .encrypted:
             guard let url, let certificateUrl else { return .init(from: URLTemplate.unknown) }
             return .init(title: "Encrypted", type: .encryptedUrl(url, certificateUrl: certificateUrl))
-        case .urn:
-            return .init(title: trimmedText, type: .urn(trimmedText))
+        case .ilProductionUrn:
+            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .ilProduction))
+        case .ilStageUrn:
+            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .ilStage))
+        case .ilTestUrn:
+            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .ilTest))
+        case .samProductionUrn:
+            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .samProduction))
+        case .samStageUrn:
+            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .samStage))
+        case .samTestUrn:
+            return .init(title: trimmedText, type: .urn(trimmedText, serverSetting: .samTest))
         }
     }
 
@@ -88,7 +103,7 @@ private struct MediaEntryView: View {
 
     private var textPlaceholder: String {
         switch kind {
-        case .urn:
+        case .ilProductionUrn, .ilStageUrn, .ilTestUrn, .samProductionUrn, .samStageUrn, .samTestUrn:
             return "URN"
         default:
             return "URL"
@@ -97,7 +112,7 @@ private struct MediaEntryView: View {
 
     private var isValid: Bool {
         switch kind {
-        case .urn:
+        case .ilProductionUrn, .ilStageUrn, .ilTestUrn, .samProductionUrn, .samStageUrn, .samTestUrn:
             return !text.isEmpty
         case .encrypted:
             return url != nil && certificateUrl != nil
@@ -129,9 +144,16 @@ private struct MediaEntryView: View {
     private func kindPicker() -> some View {
         Picker("Kind", selection: $kind) {
             Text("URL").tag(Kind.url)
-            Text("URN").tag(Kind.urn)
-            Text("SRG SSR token protection").tag(Kind.tokenProtected)
-            Text("SRG SSR DRM encryption").tag(Kind.encrypted)
+            Text("URL with SRG SSR token protection").tag(Kind.tokenProtected)
+            Text("URL with SRG SSR DRM encryption").tag(Kind.encrypted)
+            Divider()
+            Text("URN (IL Production)").tag(Kind.ilProductionUrn)
+            Text("URN (IL Stage)").tag(Kind.ilStageUrn)
+            Text("URN (IL Test)").tag(Kind.ilTestUrn)
+            Divider()
+            Text("URN (SAM Production)").tag(Kind.samProductionUrn)
+            Text("URN (SAM Stage)").tag(Kind.samStageUrn)
+            Text("URN (SAM Test)").tag(Kind.samTestUrn)
         }
 #if os(tvOS)
         .pickerStyle(.navigationLink)

@@ -277,12 +277,6 @@
     "Source code" : {
 
     },
-    "SRG SSR DRM encryption" : {
-
-    },
-    "SRG SSR token protection" : {
-
-    },
     "Stalls" : {
 
     },
@@ -316,7 +310,31 @@
     "URL" : {
 
     },
+    "URL with SRG SSR DRM encryption" : {
+
+    },
+    "URL with SRG SSR token protection" : {
+
+    },
     "URN" : {
+
+    },
+    "URN (IL Production)" : {
+
+    },
+    "URN (IL Stage)" : {
+
+    },
+    "URN (IL Test)" : {
+
+    },
+    "URN (SAM Production)" : {
+
+    },
+    "URN (SAM Stage)" : {
+
+    },
+    "URN (SAM Test)" : {
 
     },
     "Use a proxy tool to observe events." : {
