@@ -6,8 +6,8 @@
 
 import CoreMedia
 
-/// A metric log event.
-public struct MetricLogEvent {
+/// A metric event.
+public struct MetricEvent {
     /// A kind of metric event.
     public enum Kind {
         /// Asset loading.
@@ -49,7 +49,7 @@ public struct MetricLogEvent {
     }
 }
 
-extension MetricLogEvent: CustomDebugStringConvertible {
+extension MetricEvent: CustomDebugStringConvertible {
     public var debugDescription: String {
         switch kind {
         case .assetLoading(let dateInterval):

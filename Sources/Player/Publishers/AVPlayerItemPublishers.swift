@@ -171,11 +171,4 @@ extension AVPlayerItem {
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
-
-    func initialPlaybackLikelyToKeepUpPublisher() -> AnyPublisher<Void, Never> {
-        publisher(for: \.isPlaybackLikelyToKeepUp)
-            .first { $0 }
-            .map { _ in () }
-            .eraseToAnyPublisher()
-    }
 }

@@ -121,10 +121,3 @@ extension AVPlayerItem {
         return self
     }
 }
-
-extension AVPlayerItem {
-    var isLoading: Bool {
-        guard let urlAsset = asset as? AVURLAsset else { return false }
-        return urlAsset.url == Resource.loadingUrl
-    }
-}

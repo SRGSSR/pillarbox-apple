@@ -52,7 +52,7 @@ public final class ComScoreTracker: PlayerItemTracker {
         }
     }
 
-    public func updateMetrics(with events: [MetricLogEvent]) {}
+    public func updateMetrics(with events: [MetricEvent]) {}
 
     public func disable() {
         streamingAnalytics = ComScoreStreamingAnalytics()

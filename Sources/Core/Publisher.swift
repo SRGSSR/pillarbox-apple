@@ -189,9 +189,6 @@ public extension Publisher {
     /// Measure the date interval between consecutive outputs.
     ///
     /// - Parameter measure: A closure called for each output delivered upstream.
-    ///
-    /// Similar to ``Publisher/measureInterval(using:options:)`` but providing date interval information as well as
-    /// the interval between subscription and the first output.
     func measureDateInterval(perform measure: @escaping (DateInterval) -> Void) -> AnyPublisher<Output, Failure> {
         var startDate: Date?
         return handleEvents(
@@ -211,11 +208,8 @@ public extension Publisher {
     /// Measure the date interval between consecutive outputs filtered by a condition.
     ///
     /// - Parameters
-    ///    - measure: A closure called for each output delivered upstream.
-    ///    - condition: A closure called to filter the output.
-    ///
-    /// Similar to ``Publisher/measureInterval(using:options:)`` but providing date interval information as well as
-    /// the interval between subscription and the first output.
+    ///    - measure: A closure called for each matching output delivered upstream.
+    ///    - condition: A closure called to filter matching outputs.
     func measureDateInterval(perform measure: @escaping (DateInterval) -> Void, when condition: @escaping (Output) -> Bool) -> AnyPublisher<Output, Failure> {
         var startDate: Date?
         return handleEvents(
@@ -232,14 +226,11 @@ public extension Publisher {
         .eraseToAnyPublisher()
     }
 
-    /// Measure the first date interval between consecutive outputs when the condition is met.
+    /// Measure the date interval until an output matches a given condition for the first time.
     ///
     /// - Parameters
     ///    - measure: A closure called for each output delivered upstream.
-    ///    - condition: A closure called to filter the ouput.
-    ///
-    /// Similar to ``Publisher/measureInterval(using:options:)`` but providing date interval information as well as
-    /// the interval between subscription and the first output.
+    ///    - condition: A closure called to find the first matching output.
     func measureDateInterval(
         perform measure: @escaping (DateInterval) -> Void,
         firstWhen condition: @escaping (Output) -> Bool

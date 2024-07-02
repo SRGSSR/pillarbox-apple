@@ -101,7 +101,7 @@ public final class PlayerItem: Equatable {
                 Just(trackerAdapters).setFailureType(to: P.Failure.self)
             )
             .measureDateInterval { dateInterval in
-                let event = MetricLogEvent(id: id, kind: .assetLoading(dateInterval), date: dateInterval.start)
+                let event = MetricEvent(id: id, kind: .assetLoading(dateInterval), date: dateInterval.start)
                 metricLog.addEvent(event)
             }
             .map { asset, trackerAdapters in
@@ -157,7 +157,7 @@ extension PlayerItem {
         }
     }
 
-    func updateMetricEvents(_ events: [MetricLogEvent]) {
+    func updateMetricEvents(_ events: [MetricEvent]) {
         trackerAdapters.forEach { adapter in
             adapter.updateMetrics(with: events)
         }

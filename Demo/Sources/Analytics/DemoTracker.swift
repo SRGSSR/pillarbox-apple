@@ -30,7 +30,7 @@ final class DemoTracker: PlayerItemTracker {
 
     func updateProperties(with properties: PlayerProperties) {}
 
-    func updateMetrics(with events: [MetricLogEvent]) {
+    func updateMetrics(with events: [MetricEvent]) {
         Self.logger.debug("Metric events for \(self.id): \(events)")
     }
 
