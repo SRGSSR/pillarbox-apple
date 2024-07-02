@@ -151,13 +151,12 @@ extension MeasurePublisherTests {
 extension MeasurePublisherTests {
     func testFirstWhen() {
         let expectation = expectation(description: "Done")
-        var durations: [TimeInterval] = []
-        [1, 2].publisher
+        [1, 2, 3].publisher
             .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .measureDateInterval { interval in
-                durations.append(interval.duration)
-            } firstWhen: { _ in
-                true
+                expect(interval.duration).to(beCloseTo(0.5, within: 0.1))
+            } firstWhen: { value in
+                value == 2
             }
             .sink(
                 receiveCompletion: { _ in
@@ -167,10 +166,5 @@ extension MeasurePublisherTests {
             )
             .store(in: &cancellables)
         wait(for: [expectation], timeout: 1)
-
-        expect(durations.count).to(equal(1))
-        zip(durations, [0.5]).forEach { duration, expected in
-            expect(duration).to(beCloseTo(expected, within: 0.1))
-        }
     }
 }
