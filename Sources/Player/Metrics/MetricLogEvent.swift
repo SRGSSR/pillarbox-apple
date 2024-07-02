@@ -48,3 +48,14 @@ public struct MetricLogEvent {
         self.time = time
     }
 }
+
+extension MetricLogEvent: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch kind {
+        case .assetLoading(let dateInterval):
+            return "assetLoading(\(dateInterval.duration))"
+        case .resourceLoading(let dateInterval):
+            return "resourceLoading(\(dateInterval.duration))"
+        }
+    }
+}
