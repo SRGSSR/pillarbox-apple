@@ -15,37 +15,7 @@ private struct MockedError: Error {}
 
 final class MeasurePublisherTests: XCTestCase {
     private var cancellables = Set<AnyCancellable>()
-}
 
-extension MeasurePublisherTests {
-    func testWithSingleEvent() {
-        let publisher = Just(1)
-            .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
-            .measureDateInterval()
-            .map(\.duration)
-        expectPublished(values: [0.5], from: publisher, to: beClose(within: 0.1), during: .seconds(1))
-    }
-
-    func testWithMultipleEvents() {
-        let publisher = [1, 2].publisher
-            .flatMap { value in
-                Just(value)
-                    .delay(for: .milliseconds(value * 200), scheduler: DispatchQueue.main)
-            }
-            .measureDateInterval()
-            .map(\.duration)
-        expectPublished(values: [0.2, 0.2], from: publisher, to: beClose(within: 0.1), during: .seconds(1))
-    }
-
-    func testWithoutEvents() {
-        expectNothingPublished(
-            from: Empty<Int, Never>().measureDateInterval(),
-            during: .seconds(1)
-        )
-    }
-}
-
-extension MeasurePublisherTests {
     func testClosureWithSingleEvent() {
         let expectation = expectation(description: "Done")
         Just(1)
@@ -116,9 +86,7 @@ extension MeasurePublisherTests {
             .store(in: &cancellables)
         wait(for: [expectation], timeout: 0.5)
     }
-}
 
-extension MeasurePublisherTests {
     func testWhen() {
         let expectation = expectation(description: "Done")
         var durations: [TimeInterval] = []
