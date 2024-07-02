@@ -12,13 +12,14 @@ struct AssetContent {
     let resource: Resource
     let metadata: PlayerMetadata
     let configuration: PlayerItemConfiguration
+    let metricLog: MetricLog?
 
     static func loading(id: UUID) -> Self {
-        .init(id: id, resource: .loading, metadata: .empty, configuration: .default)
+        .init(id: id, resource: .loading, metadata: .empty, configuration: .default, metricLog: nil)
     }
 
     static func failing(id: UUID, error: Error) -> Self {
-        .init(id: id, resource: .failing(error: error), metadata: .empty, configuration: .default)
+        .init(id: id, resource: .failing(error: error), metadata: .empty, configuration: .default, metricLog: nil)
     }
 
     func update(item: AVPlayerItem) {
@@ -35,14 +36,14 @@ struct AssetContent {
 
     func playerItem(reload: Bool = false) -> AVPlayerItem {
         if reload, resource.isFailing {
-            let item = Resource.loading.playerItem().withId(id)
+            let item = Resource.loading.playerItem().withId(id).withMetricLog(metricLog)
             configure(item: item)
             update(item: item)
             PlayerItem.reload(for: id)
             return item
         }
         else {
-            let item = resource.playerItem().withId(id)
+            let item = resource.playerItem().withId(id).withMetricLog(metricLog)
             configure(item: item)
             update(item: item)
             PlayerItem.load(for: id)

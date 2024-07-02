@@ -46,6 +46,11 @@ extension AVPlayerItem {
             publisher(for: \.seekableTimeRanges)
                 .lane("player_item_seekable_time_ranges"),
             publisher(for: \.isPlaybackLikelyToKeepUp)
+                .measureDateInterval { [metricLog, id] interval in
+                    metricLog?.addEvent(.init(id: id, kind: .resourceLoading(interval)))
+                } firstWhen: { isPlaybackLikelyToKeepUp in
+                    isPlaybackLikelyToKeepUp
+                }
         )
         .map { .init(loadedTimeRanges: $0, seekableTimeRanges: $1, isPlaybackLikelyToKeepUp: $2) }
         .removeDuplicates()
