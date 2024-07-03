@@ -46,12 +46,10 @@ extension TrackerAdapter: TrackerLifeCycle {
     }
 
     func updateProperties(with properties: PlayerProperties) {
-        guard properties.id == id else { return }
         tracker.updateProperties(with: properties)
     }
 
     func updateMetrics(with events: [MetricEvent]) {
-        guard events.first?.id == id else { return }
         tracker.updateMetrics(with: events)
     }
 

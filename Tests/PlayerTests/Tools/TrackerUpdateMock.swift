@@ -16,7 +16,7 @@ final class TrackerUpdateMock<Metadata>: PlayerItemTracker where Metadata: Equat
         case enabled
         case disabled
         case updatedMetadata(Metadata)
-        case updatedProperties(for: UUID)
+        case updatedProperties
     }
 
     struct Configuration {
@@ -38,7 +38,7 @@ final class TrackerUpdateMock<Metadata>: PlayerItemTracker where Metadata: Equat
     }
 
     func updateProperties(with properties: PlayerProperties) {
-        configuration.statePublisher.send(.updatedProperties(for: properties.id))
+        configuration.statePublisher.send(.updatedProperties)
     }
 
     func updateMetrics(with events: [MetricEvent]) {}
