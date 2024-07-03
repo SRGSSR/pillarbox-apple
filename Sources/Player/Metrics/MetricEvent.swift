@@ -17,8 +17,7 @@ public struct MetricEvent {
         case resourceLoading(DateInterval)
     }
 
-    /// The identifier of event.
-    public let id: UUID?
+    let id: UUID?
 
     /// The kind of event.
     public let kind: Kind
