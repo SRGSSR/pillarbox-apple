@@ -96,7 +96,7 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
     }
 
     init() {
-        configureCurrentItemPublisher()
+        configureCurrentMediaPublisher()
     }
 
     private static func updated(
@@ -143,7 +143,7 @@ final class PlaylistViewModel: ObservableObject, PictureInPicturePersistable {
         medias = []
     }
 
-    private func configureCurrentItemPublisher() {
+    private func configureCurrentMediaPublisher() {
         Publishers.CombineLatest(player.$currentIndex, $items)
             .map { index, items in
                 guard let index, index < items.count else { return nil }
