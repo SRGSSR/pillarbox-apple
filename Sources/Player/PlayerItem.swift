@@ -90,9 +90,6 @@ public final class PlayerItem: Equatable {
         metadataMapper: @escaping (M) -> PlayerMetadata,
         trackerAdapters: [TrackerAdapter<M>]
     ) where P: Publisher, P.Output == Asset<M> {
-        let trackerAdapters = trackerAdapters.map { [id] adapter in
-            adapter.withId(id)
-        }
         self.trackerAdapters = trackerAdapters
         content = .loading(id: id)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id, metricLog] in

@@ -12,7 +12,6 @@ import Foundation
 public class TrackerAdapter<M> {
     private let tracker: any PlayerItemTracker
     private let update: (M) -> Void
-    private var id = UUID()
 
     /// Creates an adapter for a type of tracker with the provided mapper.
     /// 
@@ -28,11 +27,6 @@ public class TrackerAdapter<M> {
             }
         }
         self.tracker = tracker
-    }
-
-    func withId(_ id: UUID) -> Self {
-        self.id = id
-        return self
     }
 
     func updateMetadata(with metadata: M) {
