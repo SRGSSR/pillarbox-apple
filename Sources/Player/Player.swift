@@ -75,7 +75,8 @@ public final class Player: ObservableObject, Equatable {
             .eraseToAnyPublisher()
     }()
 
-    lazy var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> = {
+    /// A shared publisher providing metric events of the current item.
+    public lazy var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> = {
         queuePublisher
             .slice(at: \.item)
             .compactMap { $0 }
