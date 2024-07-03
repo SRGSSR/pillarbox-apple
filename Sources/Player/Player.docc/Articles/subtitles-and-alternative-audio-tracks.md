@@ -45,4 +45,4 @@ You can also build an entirely custom media selection user interface with the he
 
 ### Stream packaging requirements
 
-Automatic media selection requires content to be packaged according to standards discussed in <doc:stream-packaging-advice>. Please check the associated troubleshooting guide should automatic selection not work according to your expectations.
+Automatic media selection requires content to be packaged according to standards discussed in <doc:stream-encoding-and-packaging-advice>. Please check the associated troubleshooting guide should automatic selection not work according to your expectations.
