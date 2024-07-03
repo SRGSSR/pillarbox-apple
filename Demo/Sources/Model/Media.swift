@@ -98,27 +98,22 @@ struct Media: Hashable {
 
 extension Media {
     private func simplePlayerItem(for url: URL, configuration: PlayerItemConfiguration) -> PlayerItem {
-        .init(
-            publisher: imagePublisher()
-                .map { image in
-                    .simple(
-                        url: url,
-                        metadata: Media(title: title, subtitle: subtitle, image: image, type: type, timeRanges: timeRanges),
-                        configuration: configuration
-                    )
-                },
+        .simple(
+            url: url,
+            metadata: Media(title: title, subtitle: subtitle, imageUrl: imageUrl, image: image, type: type, timeRanges: timeRanges),
             trackerAdapters: [
                 DemoTracker.adapter { metadata in
                     DemoTracker.Metadata(title: metadata.title)
                 }
-            ]
+            ],
+            configuration: configuration
         )
     }
 
     private func tokenProtectedPlayerItem(for url: URL, configuration: PlayerItemConfiguration) -> PlayerItem {
         .tokenProtected(
             url: url,
-            metadata: Media(title: title, subtitle: subtitle, image: image, type: type, timeRanges: timeRanges),
+            metadata: Media(title: title, subtitle: subtitle, imageUrl: imageUrl, image: image, type: type, timeRanges: timeRanges),
             configuration: configuration
         )
     }
@@ -127,18 +122,9 @@ extension Media {
         .encrypted(
             url: url,
             certificateUrl: certificateUrl,
-            metadata: Media(title: title, subtitle: subtitle, image: image, type: type, timeRanges: timeRanges),
+            metadata: Media(title: title, subtitle: subtitle, imageUrl: imageUrl, image: image, type: type, timeRanges: timeRanges),
             configuration: configuration
         )
-    }
-
-    private func imagePublisher() -> AnyPublisher<UIImage?, Never> {
-        guard let imageUrl else { return Just(nil).eraseToAnyPublisher() }
-        return URLSession.shared.dataTaskPublisher(for: imageUrl)
-            .map(\.data)
-            .map { UIImage(data: $0) }
-            .replaceError(with: nil)
-            .eraseToAnyPublisher()
     }
 }
 
@@ -148,7 +134,14 @@ extension Media: AssetMetadata {
     }
 
     private var imageSource: ImageSource {
-        guard let image else { return .none }
-        return .image(image)
+        if let image {
+            return .image(image)
+        }
+        else if let imageUrl {
+            return .url(imageUrl)
+        }
+        else {
+            return .none
+        }
     }
 }
