@@ -75,17 +75,6 @@ public final class Player: ObservableObject, Equatable {
             .eraseToAnyPublisher()
     }()
 
-    /// A shared publisher providing metric events of the current item.
-    public lazy var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> = {
-        queuePublisher
-            .slice(at: \.item)
-            .compactMap { $0 }
-            .map { $0.metricLog.eventsPublisher() }
-            .switchToLatest()
-            .share(replay: 1)
-            .eraseToAnyPublisher()
-    }()
-
     lazy var queuePublisher: AnyPublisher<Queue, Never> = {
         Publishers.Merge(
             elementsQueueUpdatePublisher(),
