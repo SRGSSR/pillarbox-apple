@@ -100,7 +100,7 @@ public final class Player: ObservableObject, Equatable {
                 return item.metricLog.eventsPublisher()
             }
             .switchToLatest()
-            .share(replay: 0)
+            .share()
             .eraseToAnyPublisher()
     }()
 

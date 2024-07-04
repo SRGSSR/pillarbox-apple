@@ -6,14 +6,18 @@
 
 import Combine
 
-struct MetricLog {
+class MetricLog {
+    var events: [MetricEvent] = []
     private let eventsSubject = PassthroughSubject<MetricEvent, Never>()
 
     func addEvent(_ event: MetricEvent) {
+        events.append(event)
         eventsSubject.send(event)
     }
 
     func eventsPublisher() -> AnyPublisher<MetricEvent, Never> {
-        eventsSubject.eraseToAnyPublisher()
+        eventsSubject
+            .prepend(events)
+            .eraseToAnyPublisher()
     }
 }
