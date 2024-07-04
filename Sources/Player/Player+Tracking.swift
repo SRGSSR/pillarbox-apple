@@ -9,7 +9,7 @@ import PillarboxCore
 
 extension Player {
     func currentTrackerPublisher() -> AnyPublisher<CurrentTracker?, Never> {
-        Publishers.CombineLatest(queuePublisher.slice(at: \.item), $isTrackingEnabled)
+        Publishers.CombineLatest(currentItemPublisher(), $isTrackingEnabled)
             .map { (item: $0, isTrackingEnabled: $1) }
             .scan(nil) { [weak self] tracker, next in
                 if let self, next.isTrackingEnabled, let item = next.item {

@@ -91,11 +91,10 @@ public final class Player: ObservableObject, Equatable {
         .share(replay: 1)
         .eraseToAnyPublisher()
     }()
-    
+
     /// A shared publisher delivering metric events.
     public lazy var metricEventPublisher: AnyPublisher<MetricEvent, Never> = {
-        queuePublisher
-            .slice(at: \.item)
+        currentItemPublisher()
             .map { item -> AnyPublisher<MetricEvent, Never> in
                 guard let item else { return Empty().eraseToAnyPublisher() }
                 return item.metricLog.eventsPublisher()
@@ -118,8 +117,7 @@ public final class Player: ObservableObject, Equatable {
     }()
 
     lazy var metadataPublisher: AnyPublisher<PlayerMetadata, Never> = {
-        queuePublisher
-            .slice(at: \.item)
+        currentItemPublisher()
             .map { item -> AnyPublisher<PlayerMetadata, Never> in
                 guard let item else { return Just(.empty).eraseToAnyPublisher() }
                 return item.metadataPublisher()
@@ -321,7 +319,7 @@ private extension Player {
     func configureTextStyleRulesUpdatePublisher() {
         Publishers.CombineLatest(
             textStyleRulesPublisher,
-            currentItemPublisher()
+            currentPlayerItemPublisher()
         )
         .sink { textStyleRules, item in
             item?.textStyleRules = textStyleRules

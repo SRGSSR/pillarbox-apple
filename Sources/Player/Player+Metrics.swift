@@ -21,7 +21,7 @@ public extension Player {
     /// Additional non-periodic updates will be published when time jumps or when playback starts or stops. The
     /// included ``Metrics/increment`` collates data since the previous periodic update.
     func periodicMetricsPublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<Metrics?, Never> {
-        currentItemPublisher()
+        currentPlayerItemPublisher()
             .map { [queuePlayer] item -> AnyPublisher<Metrics?, Never> in
                 guard let item else { return Just(nil).eraseToAnyPublisher() }
                 return Publishers.PeriodicTimePublisher(for: queuePlayer, interval: interval, queue: kMetricsQueue)
