@@ -45,12 +45,6 @@ extension NowPlaying.Info: Similar {
     }
 }
 
-func beClose(within tolerance: Float) -> ((Float, Float) -> Bool) {
-    { lhs, rhs in
-        fabsf(lhs - rhs) <= tolerance
-    }
-}
-
 func beClose(within tolerance: TimeInterval) -> ((CMTime, CMTime) -> Bool) {
     CMTime.close(within: tolerance)
 }

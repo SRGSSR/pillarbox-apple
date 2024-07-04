@@ -23,6 +23,12 @@ final class CurrentTracker {
                 item.updateTrackerProperties(properties)
             }
             .store(in: &cancellables)
+
+        item.metricLog.eventsPublisher()
+            .sink { events in
+                item.updateMetricEvents(events)
+            }
+            .store(in: &cancellables)
     }
 
     deinit {

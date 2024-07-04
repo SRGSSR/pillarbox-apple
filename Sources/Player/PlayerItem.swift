@@ -27,6 +27,7 @@ public final class PlayerItem: Equatable {
     private let trackerAdapters: [any TrackerLifeCycle]
 
     let id = UUID()
+    let metricLog = MetricLog()
 
     /// Creates an item loaded from an ``Asset`` publisher data source.
     ///
@@ -89,16 +90,17 @@ public final class PlayerItem: Equatable {
         metadataMapper: @escaping (M) -> PlayerMetadata,
         trackerAdapters: [TrackerAdapter<M>]
     ) where P: Publisher, P.Output == Asset<M> {
-        let trackerAdapters = trackerAdapters.map { [id] adapter in
-            adapter.withId(id)
-        }
         self.trackerAdapters = trackerAdapters
         content = .loading(id: id)
-        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id] in
+        Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id, metricLog] in
             Publishers.CombineLatest(
                 publisher,
                 Just(trackerAdapters).setFailureType(to: P.Failure.self)
             )
+            .measureDateInterval { dateInterval in
+                let event = MetricEvent(kind: .assetLoading(dateInterval), date: dateInterval.start)
+                metricLog.addEvent(event)
+            }
             .map { asset, trackerAdapters in
                 trackerAdapters.forEach { adapter in
                     adapter.updateMetadata(with: asset.metadata)
@@ -110,12 +112,7 @@ public final class PlayerItem: Equatable {
             }
             .switchToLatest()
             .map { asset, metadata in
-                AssetContent(
-                    id: id,
-                    resource: asset.resource,
-                    metadata: metadata,
-                    configuration: asset.configuration
-                )
+                AssetContent(id: id, resource: asset.resource, metadata: metadata, configuration: asset.configuration, metricLog: metricLog)
             }
             .catch { error in
                 Just(.failing(id: id, error: error))
@@ -154,6 +151,12 @@ extension PlayerItem {
     func updateTrackerProperties(_ properties: PlayerProperties) {
         trackerAdapters.forEach { adapter in
             adapter.updateProperties(with: properties)
+        }
+    }
+
+    func updateMetricEvents(_ events: [MetricEvent]) {
+        trackerAdapters.forEach { adapter in
+            adapter.updateMetrics(with: events)
         }
     }
 

@@ -184,3 +184,69 @@ public extension Publisher {
             .eraseToAnyPublisher()
     }
 }
+
+public extension Publisher {
+    /// Measure the date interval between consecutive outputs.
+    ///
+    /// - Parameter measure: A closure called for each output delivered upstream.
+    func measureDateInterval(perform measure: @escaping (DateInterval) -> Void) -> AnyPublisher<Output, Failure> {
+        var startDate: Date?
+        return handleEvents(
+            receiveSubscription: { _ in
+                startDate = Date()
+            },
+            receiveOutput: { _ in
+                guard let start = startDate else { return }
+                let end = Date()
+                measure(.init(start: start, end: end))
+                startDate = end
+            }
+        )
+        .eraseToAnyPublisher()
+    }
+
+    /// Measure the date interval between consecutive outputs filtered by a condition.
+    ///
+    /// - Parameters
+    ///    - measure: A closure called for each matching output delivered upstream.
+    ///    - condition: A closure called to filter matching outputs.
+    func measureDateInterval(perform measure: @escaping (DateInterval) -> Void, when condition: @escaping (Output) -> Bool) -> AnyPublisher<Output, Failure> {
+        var startDate: Date?
+        return handleEvents(
+            receiveSubscription: { _ in
+                startDate = Date()
+            },
+            receiveOutput: { output in
+                guard let start = startDate, condition(output) else { return }
+                let end = Date()
+                measure(.init(start: start, end: end))
+                startDate = end
+            }
+        )
+        .eraseToAnyPublisher()
+    }
+
+    /// Measure the date interval until an output matches a given condition for the first time.
+    ///
+    /// - Parameters
+    ///    - measure: A closure called for each output delivered upstream.
+    ///    - condition: A closure called to find the first matching output.
+    func measureDateInterval(
+        perform measure: @escaping (DateInterval) -> Void,
+        firstWhen condition: @escaping (Output) -> Bool
+    ) -> AnyPublisher<Output, Failure> {
+        var startDate: Date?
+        return handleEvents(
+            receiveSubscription: { _ in
+                startDate = Date()
+            },
+            receiveOutput: { output in
+                guard let start = startDate, condition(output) else { return }
+                let end = Date()
+                measure(.init(start: start, end: end))
+                startDate = nil
+            }
+        )
+        .eraseToAnyPublisher()
+    }
+}
