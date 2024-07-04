@@ -48,9 +48,9 @@ public struct MetricEvent {
 extension MetricEvent: CustomStringConvertible {
     public var description: String {
         switch kind {
-        case .assetLoading(let dateInterval):
+        case let .assetLoading(dateInterval):
             return "assetLoading(\(dateInterval.duration))"
-        case .resourceLoading(let dateInterval):
+        case let .resourceLoading(dateInterval):
             return "resourceLoading(\(dateInterval.duration))"
         }
     }
