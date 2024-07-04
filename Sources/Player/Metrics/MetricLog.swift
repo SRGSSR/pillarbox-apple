@@ -7,13 +7,13 @@
 import Combine
 
 struct MetricLog {
-    private let eventsSubject = CurrentValueSubject<[MetricEvent], Never>([])
+    private let eventsSubject = PassthroughSubject<MetricEvent, Never>()
 
     func addEvent(_ event: MetricEvent) {
-        eventsSubject.send(eventsSubject.value + [event])
+        eventsSubject.send(event)
     }
 
-    func eventsPublisher() -> AnyPublisher<[MetricEvent], Never> {
+    func eventsPublisher() -> AnyPublisher<MetricEvent, Never> {
         eventsSubject.eraseToAnyPublisher()
     }
 }

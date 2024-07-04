@@ -24,9 +24,9 @@ final class CurrentTracker {
             }
             .store(in: &cancellables)
 
-        player.metricEventsPublisher
-            .sink { events in
-                item.updateMetricEvents(events)
+        player.metricEventPublisher
+            .sink { event in
+                item.receiveMetricEvent(event)
             }
             .store(in: &cancellables)
     }

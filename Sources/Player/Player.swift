@@ -117,11 +117,11 @@ public final class Player: ObservableObject, Equatable {
             .eraseToAnyPublisher()
     }()
 
-    public lazy var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> = {
+    public lazy var metricEventPublisher: AnyPublisher<MetricEvent, Never> = {
         queuePublisher
             .slice(at: \.item)
-            .map { item -> AnyPublisher<[MetricEvent], Never> in
-                guard let item else { return Just([]).eraseToAnyPublisher() }
+            .map { item -> AnyPublisher<MetricEvent, Never> in
+                guard let item else { return Empty().eraseToAnyPublisher() }
                 return item.metricLog.eventsPublisher()
             }
             .switchToLatest()
