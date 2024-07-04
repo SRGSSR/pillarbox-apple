@@ -42,6 +42,11 @@ public final class MetricsCollector: ObservableObject {
     ///
     /// Additional metrics will be collected when time jumps or when playback starts or stops.
     public init(interval: CMTime) {
+        configureMetricsPublisher(interval: interval)
+        configureMetricEventsPublisher()
+    }
+
+    private func configureMetricsPublisher(interval: CMTime) {
         $player
             .removeDuplicates()
             .map { player -> AnyPublisher<Metrics?, Never> in
@@ -57,6 +62,9 @@ public final class MetricsCollector: ObservableObject {
             .scan([]) { $0 + [$1] }
             .receiveOnMainThread()
             .assign(to: &$metrics)
+    }
+
+    private func configureMetricEventsPublisher() {
         $player
             .removeDuplicates()
             .map { player -> AnyPublisher<[MetricEvent], Never> in
