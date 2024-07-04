@@ -320,7 +320,7 @@ private extension Player {
     func configureTextStyleRulesUpdatePublisher() {
         Publishers.CombineLatest(
             textStyleRulesPublisher,
-            queuePublisher.slice(at: \.itemState.item)
+            currentItemPublisher()
         )
         .sink { textStyleRules, item in
             item?.textStyleRules = textStyleRules

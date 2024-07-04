@@ -60,8 +60,7 @@ extension Player {
 
 extension Player {
     func playerItemPropertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
-        queuePublisher
-            .slice(at: \.itemState.item)
+        currentItemPublisher()
             .map { item in
                 guard let item else { return Just(PlayerItemProperties.empty).eraseToAnyPublisher() }
                 return item.propertiesPublisher()
