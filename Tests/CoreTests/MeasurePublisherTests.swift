@@ -16,7 +16,7 @@ private struct MockedError: Error {}
 final class MeasurePublisherTests: XCTestCase {
     private var cancellables = Set<AnyCancellable>()
 
-    func testClosureWithSingleEvent() {
+    func testWithSingleEvent() {
         let expectation = expectation(description: "Done")
         Just(1)
             .delay(for: .milliseconds(200), scheduler: DispatchQueue.main)
@@ -29,7 +29,7 @@ final class MeasurePublisherTests: XCTestCase {
         wait(for: [expectation], timeout: 1)
     }
 
-    func testClosureWithMultipleEvents() {
+    func testWithMultipleEvents() {
         let expectation = expectation(description: "Done")
         var durations: [TimeInterval] = []
         [1, 2].publisher
@@ -55,7 +55,7 @@ final class MeasurePublisherTests: XCTestCase {
         }
     }
 
-    func testClosureWithoutEvent() {
+    func testWithoutEvent() {
         let expectation = expectation(description: "Done")
         Empty<Int, Never>()
             .measureDateInterval { _ in
@@ -71,7 +71,7 @@ final class MeasurePublisherTests: XCTestCase {
         wait(for: [expectation], timeout: 0.5)
     }
 
-    func testClosureWithError() {
+    func testWithError() {
         let expectation = expectation(description: "Done")
         Fail<Int, Error>(error: MockedError())
             .measureDateInterval { _ in
