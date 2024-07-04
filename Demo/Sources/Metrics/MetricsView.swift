@@ -60,6 +60,7 @@ private struct StartupTimesSectionContent: View {
         cell("Asset loading", value: assetLoadingDuration)
         cell("Resource loading", value: resourceLoadingDuration)
         cell("Initial buffering", value: startupTime)
+        cell("Total", value: totalDuration)
     }
 
     private var startupTime: String {
@@ -87,6 +88,12 @@ private struct StartupTimesSectionContent: View {
                 return nil
             }
         }.last         // Last resource loading event (might have several ones in a single session)
+    }
+
+    private var totalDuration: String {
+        guard let resourceLoadingInterval else { return "-" }
+        let totalInterval = resourceLoadingInterval + (assetLoadingInterval ?? 0)
+        return String(format: "%.6fs", totalInterval)
     }
 
     private var assetLoadingDuration: String {
