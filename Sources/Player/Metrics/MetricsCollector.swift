@@ -27,10 +27,13 @@ public final class MetricsCollector: ObservableObject {
     /// Use `View.bind(_:to:)` in SwiftUI code.
     @Published public var player: Player?
 
-    /// The available metrics history.
+    /// The available metrics history for the item being played, if any.
     ///
     /// Entries are sorted from the lowest to the most recent one.
     @Published public private(set) var metrics: [Metrics] = []
+
+    /// The metric event history for the item being played, if any.
+    @Published public private(set) var metricEvents: [MetricEvent] = []
 
     /// Creates a metrics collector gathering metrics at the specified interval.
     ///
@@ -54,6 +57,17 @@ public final class MetricsCollector: ObservableObject {
             .scan([]) { $0 + [$1] }
             .receiveOnMainThread()
             .assign(to: &$metrics)
+        $player
+            .removeDuplicates()
+            .map { player -> AnyPublisher<[MetricEvent], Never> in
+                guard let player else {
+                    return Just([]).eraseToAnyPublisher()
+                }
+                return player.metricEventsPublisher
+            }
+            .switchToLatest()
+            .receiveOnMainThread()
+            .assign(to: &$metricEvents)
     }
 }
 

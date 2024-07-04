@@ -18,7 +18,7 @@ struct MetricsView: View {
             if !metrics.isEmpty {
                 List {
                     if let currentMetrics = metrics.last {
-                        MetricsInfoView(metrics: currentMetrics)
+                        MetricsInfoView(metrics: currentMetrics, metricEvents: metricsCollector.metricEvents)
                     }
                     indicatedBitrateSection()
                     observedBitrateSection()
