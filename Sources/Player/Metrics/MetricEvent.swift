@@ -11,9 +11,13 @@ public struct MetricEvent {
     /// A kind of metric event.
     public enum Kind {
         /// Asset loading.
+        ///
+        /// Measures the time for a ``PlayerItem`` to load its associated asset.
         case assetLoading(DateInterval)
 
         /// Resource loading.
+        ///
+        /// Measures the time for the player to load the associated asset resource until playback is ready to start.
         case resourceLoading(DateInterval)
     }
 
