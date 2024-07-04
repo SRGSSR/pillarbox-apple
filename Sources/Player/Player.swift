@@ -91,6 +91,19 @@ public final class Player: ObservableObject, Equatable {
         .share(replay: 1)
         .eraseToAnyPublisher()
     }()
+    
+    /// A shared publisher delivering metric events.
+    public lazy var metricEventPublisher: AnyPublisher<MetricEvent, Never> = {
+        queuePublisher
+            .slice(at: \.item)
+            .map { item -> AnyPublisher<MetricEvent, Never> in
+                guard let item else { return Empty().eraseToAnyPublisher() }
+                return item.metricLog.eventsPublisher()
+            }
+            .switchToLatest()
+            .share(replay: 0)
+            .eraseToAnyPublisher()
+    }()
 
     lazy var queuePublisher: AnyPublisher<Queue, Never> = {
         Publishers.Merge(
@@ -113,18 +126,6 @@ public final class Player: ObservableObject, Equatable {
             }
             .switchToLatest()
             .removeDuplicates()
-            .share(replay: 1)
-            .eraseToAnyPublisher()
-    }()
-
-    public lazy var metricEventPublisher: AnyPublisher<MetricEvent, Never> = {
-        queuePublisher
-            .slice(at: \.item)
-            .map { item -> AnyPublisher<MetricEvent, Never> in
-                guard let item else { return Empty().eraseToAnyPublisher() }
-                return item.metricLog.eventsPublisher()
-            }
-            .switchToLatest()
             .share(replay: 1)
             .eraseToAnyPublisher()
     }()

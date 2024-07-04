@@ -6,7 +6,6 @@
 
 import Combine
 import CoreMedia
-import PillarboxCore
 
 // MARK: Public CoreProperties shortcut
 
