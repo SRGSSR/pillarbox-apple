@@ -8,6 +8,101 @@ import Charts
 import PillarboxPlayer
 import SwiftUI
 
+private struct InformationSectionContent: View {
+    private static let dateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .second, .minute]
+        formatter.zeroFormattingBehavior = .pad
+        return formatter
+    }()
+
+    let metrics: Metrics
+
+    var body: some View {
+        cell("URI", value: uri)
+#if os(iOS)
+            .swipeActions { CopyButton(text: uri) }
+#endif
+        cell("Type", value: metrics.playbackType ?? "-")
+        cell("Playback duration", value: playbackDuration)
+        cell("Data volume", value: bytesTransferred)
+    }
+
+    private var uri: String {
+        metrics.uri ?? "-"
+    }
+
+    private var playbackDuration: String {
+        InformationSectionContent.dateComponentsFormatter.string(from: metrics.total.playbackDuration) ?? "-"
+    }
+
+    private var bytesTransferred: String {
+        ByteCountFormatStyle().format(metrics.total.numberOfBytesTransferred)
+    }
+
+    private func cell(_ name: LocalizedStringKey, value: String) -> some View {
+        HStack {
+            Text(name)
+            Spacer()
+            Text(value)
+                .monospacedDigit()
+                .lineLimit(1)
+                .foregroundColor(.secondary)
+        }
+    }
+}
+
+private struct StartupTimesSectionContent: View {
+    let metrics: Metrics
+    let metricEvents: [MetricEvent]
+
+    var body: some View {
+        cell("Asset loading", value: assetLoadingDuration)
+        cell("Resource loading", value: resourceLoadingDuration)
+        cell("Initial buffering", value: startupTime)
+    }
+
+    private var startupTime: String {
+        guard let startupTime = metrics.startupTime else { return "-" }
+        return String(format: "%.6fs", startupTime)
+    }
+
+    private var assetLoadingDuration: String {
+        guard let duration = metricEvents.compactMap({ event in
+            switch event.kind {
+            case let .assetLoading(interval):
+                return interval.duration
+            default:
+                return nil
+            }
+        }).last else { return "-" }
+        return String(format: "%.6fs", duration)
+    }
+
+    private var resourceLoadingDuration: String {
+        guard let duration = metricEvents.compactMap({ event in
+            switch event.kind {
+            case let .resourceLoading(interval):
+                return interval.duration
+            default:
+                return nil
+            }
+        }).last else { return "-" }
+        return String(format: "%.6fs", duration)
+    }
+
+    private func cell(_ name: LocalizedStringKey, value: String) -> some View {
+        HStack {
+            Text(name)
+            Spacer()
+            Text(value)
+                .monospacedDigit()
+                .lineLimit(1)
+                .foregroundColor(.secondary)
+        }
+    }
+}
+
 struct MetricsView: View {
     private static let limit = 90
 
@@ -17,9 +112,8 @@ struct MetricsView: View {
         Group {
             if !metrics.isEmpty {
                 List {
-                    if let currentMetrics = metrics.last {
-                        MetricsInfoView(metrics: currentMetrics, metricEvents: metricsCollector.metricEvents)
-                    }
+                    informationSection()
+                    startupTimesSection()
                     indicatedBitrateSection()
                     observedBitrateSection()
                     dataVolumeSection()
@@ -43,8 +137,34 @@ struct MetricsView: View {
         metricsCollector.metrics
     }
 
+    private var metricEvents: [MetricEvent] {
+        metricsCollector.metricEvents
+    }
+
     private var currentMetrics: Metrics? {
         metrics.last
+    }
+
+    @ViewBuilder
+    private func informationSection() -> some View {
+        if let currentMetrics = metrics.last {
+            Section {
+                InformationSectionContent(metrics: currentMetrics)
+            } header: {
+                Text("Information")
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func startupTimesSection() -> some View {
+        if let currentMetrics = metrics.last {
+            Section {
+                StartupTimesSectionContent(metrics: currentMetrics, metricEvents: metricEvents)
+            } header: {
+                Text("Startup times")
+            }
+        }
     }
 
     private func indicatedBitrateSection() -> some View {
