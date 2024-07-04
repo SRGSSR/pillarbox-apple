@@ -117,6 +117,18 @@ public final class Player: ObservableObject, Equatable {
             .eraseToAnyPublisher()
     }()
 
+    public lazy var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> = {
+        queuePublisher
+            .slice(at: \.item)
+            .map { item -> AnyPublisher<[MetricEvent], Never> in
+                guard let item else { return Just([]).eraseToAnyPublisher() }
+                return item.metricLog.eventsPublisher()
+            }
+            .switchToLatest()
+            .share(replay: 1)
+            .eraseToAnyPublisher()
+    }()
+
     /// A Boolean setting whether the audio output of the player must be muted.
     public var isMuted: Bool {
         get {
