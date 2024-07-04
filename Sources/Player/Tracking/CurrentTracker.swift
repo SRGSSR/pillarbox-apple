@@ -24,7 +24,7 @@ final class CurrentTracker {
             }
             .store(in: &cancellables)
 
-        player.metricEventPublisher
+        item.metricLog.eventPublisher()
             .sink { event in
                 item.receiveMetricEvent(event)
             }

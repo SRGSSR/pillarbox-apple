@@ -12,13 +12,13 @@ import PillarboxCircumspect
 final class MetricLogTests: TestCase {
     func testEmpty() {
         let metricLog = MetricLog()
-        expectNothingPublished(from: metricLog.eventsPublisher(), during: .milliseconds(100))
+        expectNothingPublished(from: metricLog.eventPublisher(), during: .milliseconds(100))
     }
 
     func testOneEvent() {
         let metricLog = MetricLog()
         let event = MetricEvent(kind: .assetLoading(.init()))
-        expectSimilarPublished(values: [event], from: metricLog.eventsPublisher(), during: .milliseconds(100)) {
+        expectSimilarPublished(values: [event], from: metricLog.eventPublisher(), during: .milliseconds(100)) {
             metricLog.addEvent(event)
         }
     }
@@ -27,7 +27,7 @@ final class MetricLogTests: TestCase {
         let metricLog = MetricLog()
         let event1 = MetricEvent(kind: .assetLoading(.init()))
         let event2 = MetricEvent(kind: .resourceLoading(.init()))
-        expectSimilarPublished(values: [event1, event2], from: metricLog.eventsPublisher(), during: .milliseconds(100)) {
+        expectSimilarPublished(values: [event1, event2], from: metricLog.eventPublisher(), during: .milliseconds(100)) {
             metricLog.addEvent(event1)
             metricLog.addEvent(event2)
         }
@@ -39,6 +39,6 @@ final class MetricLogTests: TestCase {
         let event2 = MetricEvent(kind: .resourceLoading(.init()))
         metricLog.addEvent(event1)
         metricLog.addEvent(event2)
-        expectSimilarPublished(values: [event1, event2], from: metricLog.eventsPublisher(), during: .milliseconds(100))
+        expectSimilarPublished(values: [event1, event2], from: metricLog.eventPublisher(), during: .milliseconds(100))
     }
 }

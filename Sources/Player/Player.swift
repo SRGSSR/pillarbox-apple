@@ -92,15 +92,18 @@ public final class Player: ObservableObject, Equatable {
         .eraseToAnyPublisher()
     }()
 
-    /// A shared publisher delivering metric events.
-    public lazy var metricEventPublisher: AnyPublisher<MetricEvent, Never> = {
+    /// A shared publisher delivering metric events
+    ///
+    /// All metric events related to the item currently being played, if any, are received upon subscription.
+    public lazy var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> = {
         currentItemPublisher()
-            .map { item -> AnyPublisher<MetricEvent, Never> in
-                guard let item else { return Empty().eraseToAnyPublisher() }
-                return item.metricLog.eventsPublisher()
+            .map { item -> AnyPublisher<[MetricEvent], Never> in
+                guard let item else { return Just([]).eraseToAnyPublisher() }
+                return item.metricLog.$events
+                    .eraseToAnyPublisher()
             }
             .switchToLatest()
-            .share()
+            .share(replay: 1)
             .eraseToAnyPublisher()
     }()
 

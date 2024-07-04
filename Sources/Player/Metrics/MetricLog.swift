@@ -13,7 +13,7 @@ final class MetricLog {
         events.append(event)
     }
 
-    func eventsPublisher() -> AnyPublisher<MetricEvent, Never> {
+    func eventPublisher() -> AnyPublisher<MetricEvent, Never> {
         $events
             .compactMap(\.last)
             .prepend(events.prefix(max(events.count - 1, 0)))
