@@ -31,9 +31,9 @@ public struct MetricEvent {
     /// The event duration.
     public var duration: TimeInterval {
         switch kind {
-        case .assetLoading(let dateInterval):
+        case let .assetLoading(dateInterval):
             return dateInterval.duration
-        case .resourceLoading(let dateInterval):
+        case let .resourceLoading(dateInterval):
             return dateInterval.duration
         }
     }
