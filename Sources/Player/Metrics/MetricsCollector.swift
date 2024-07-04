@@ -57,9 +57,11 @@ public final class MetricsCollector: ObservableObject {
                     .eraseToAnyPublisher()
             }
             .switchToLatest()
-            .compactMap { $0 }
             .removeDuplicates()
-            .scan([]) { $0 + [$1] }
+            .scan([]) { initial, next in
+                guard let next else { return [] }
+                return initial + [next]
+            }
             .receiveOnMainThread()
             .assign(to: &$metrics)
     }
