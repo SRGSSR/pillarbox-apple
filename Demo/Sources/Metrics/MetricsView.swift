@@ -33,7 +33,7 @@ private struct InformationSectionContent: View {
     }
 
     private var playbackDuration: String {
-        InformationSectionContent.dateComponentsFormatter.string(from: metrics.total.playbackDuration) ?? "-"
+        Self.dateComponentsFormatter.string(from: metrics.total.playbackDuration) ?? "-"
     }
 
     private var bytesTransferred: String {
@@ -67,28 +67,36 @@ private struct StartupTimesSectionContent: View {
         return String(format: "%.6fs", startupTime)
     }
 
-    private var assetLoadingDuration: String {
-        guard let duration = metricEvents.compactMap({ event in
+    private var assetLoadingInterval: TimeInterval? {
+        metricEvents.compactMap { event in
             switch event.kind {
             case let .assetLoading(interval):
                 return interval.duration
             default:
                 return nil
             }
-        }).last else { return "-" }
-        return String(format: "%.6fs", duration)
+        }.first        // First asset loading event
     }
 
-    private var resourceLoadingDuration: String {
-        guard let duration = metricEvents.compactMap({ event in
+    private var resourceLoadingInterval: TimeInterval? {
+        metricEvents.compactMap { event in
             switch event.kind {
             case let .resourceLoading(interval):
                 return interval.duration
             default:
                 return nil
             }
-        }).last else { return "-" }
-        return String(format: "%.6fs", duration)
+        }.last         // Last resource loading event (might have several ones in a single session)
+    }
+
+    private var assetLoadingDuration: String {
+        guard let assetLoadingInterval else { return "-" }
+        return String(format: "%.6fs", assetLoadingInterval)
+    }
+
+    private var resourceLoadingDuration: String {
+        guard let resourceLoadingInterval else { return "-" }
+        return String(format: "%.6fs", resourceLoadingInterval)
     }
 
     private func cell(_ name: LocalizedStringKey, value: String) -> some View {
