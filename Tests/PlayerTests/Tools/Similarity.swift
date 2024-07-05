@@ -48,10 +48,10 @@ extension NowPlaying.Info: Similar {
 extension MetricEvent: Similar {
     public static func ~~ (lhs: MetricEvent, rhs: MetricEvent) -> Bool {
         switch (lhs.kind, rhs.kind) {
-        case let (.assetLoading(lhsInterval), .assetLoading(rhsInterval)):
-            return lhsInterval == rhsInterval
-        case let (.resourceLoading(lhsInterval), .resourceLoading(rhsInterval)):
-            return lhsInterval == rhsInterval
+        case (.assetLoading, .assetLoading):
+            return true
+        case (.resourceLoading, .resourceLoading):
+            return true
         default:
             return false
         }
