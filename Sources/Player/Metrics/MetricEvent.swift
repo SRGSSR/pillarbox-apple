@@ -21,7 +21,7 @@ public struct MetricEvent {
         case resourceLoading(DateInterval)
 
         /// Failure.
-        case failure(level: ErrorLevel, error: Error)
+        case failure(level: ErrorLevel, domain: ErrorDomain, error: Error)
     }
 
     /// The kind of event.
@@ -61,8 +61,8 @@ extension MetricEvent: CustomStringConvertible {
             return "assetLoading(\(dateInterval.duration))"
         case let .resourceLoading(dateInterval):
             return "resourceLoading(\(dateInterval.duration))"
-        case let .failure(level: level, error: error):
-            return "failure(level: \(level), error: \(error.localizedDescription))"
+        case let .failure(level: level, domain: domain, error: error):
+            return "failure(level: \(level), domain: \(domain), error: \(error.localizedDescription))"
         }
     }
 }
