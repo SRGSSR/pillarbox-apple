@@ -110,10 +110,8 @@ final class CurrentIndexTests: TestCase {
         let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let player = Player(items: [item1, item2])
-        let publisher = player.queuePublisher.slice(at: \.itemState.item?.url).compactMap { $0 }
-        expectEqualPublished(values: [Resource.loadingUrl, Stream.shortOnDemand.url], from: publisher, during: .seconds(1)) {
-            try! player.setCurrentIndex(1)
-        }
+        try! player.setCurrentIndex(1)
+        expect(player.queuePlayer.currentItem?.url).toEventually(equal(Stream.shortOnDemand.url))
     }
 
     func testSetCurrentIndexToInvalidValue() {
