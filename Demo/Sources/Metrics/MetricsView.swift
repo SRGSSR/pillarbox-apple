@@ -123,24 +123,17 @@ struct MetricsView: View {
     @ObservedObject var metricsCollector: MetricsCollector
 
     var body: some View {
-        Group {
-            if !metrics.isEmpty {
-                List {
-                    informationSection()
-                    startupTimesSection()
-                    indicatedBitrateSection()
-                    observedBitrateSection()
-                    dataVolumeSection()
-                    mediaRequestsSection()
-                    stallsSection()
-                    frameDropsSection()
-                }
-            }
-            else {
-                MessageView(message: "No metrics", icon: .system("chart.bar"))
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
+        List {
+            informationSection()
+            startupTimesSection()
+            indicatedBitrateSection()
+            observedBitrateSection()
+            dataVolumeSection()
+            mediaRequestsSection()
+            stallsSection()
+            frameDropsSection()
         }
+        .transaction { $0.animation = nil }
         .navigationTitle("Metrics")
 #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
@@ -159,6 +152,14 @@ struct MetricsView: View {
         metrics.last
     }
 
+    private func startupTimesSection() -> some View {
+        Section {
+            StartupTimesSectionContent(metricEvents: metricEvents)
+        } header: {
+            Text("Startup times")
+        }
+    }
+
     @ViewBuilder
     private func informationSection() -> some View {
         if let currentMetrics = metrics.last {
@@ -171,59 +172,68 @@ struct MetricsView: View {
     }
 
     @ViewBuilder
-    private func startupTimesSection() -> some View {
-        Section {
-            StartupTimesSectionContent(metricEvents: metricEvents)
-        } header: {
-            Text("Startup times")
-        }
-    }
-
     private func indicatedBitrateSection() -> some View {
-        Section {
-            IndicatedBitrateChart(metrics: metrics, limit: Self.limit)
-        } header: {
-            Text("Indicated bitrate")
+        if !metrics.isEmpty {
+            Section {
+                IndicatedBitrateChart(metrics: metrics, limit: Self.limit)
+            } header: {
+                Text("Indicated bitrate")
+            }
         }
     }
 
+    @ViewBuilder
     private func observedBitrateSection() -> some View {
-        Section {
-            ObservedBitrateChart(metrics: metrics, limit: Self.limit)
-        } header: {
-            Text("Observed bitrate")
+        if !metrics.isEmpty {
+            Section {
+                ObservedBitrateChart(metrics: metrics, limit: Self.limit)
+            } header: {
+                Text("Observed bitrate")
+            }
         }
     }
 
+    @ViewBuilder
     private func dataVolumeSection() -> some View {
-        Section {
-            DataVolumeChart(metrics: metrics, limit: Self.limit)
-        } header: {
-            Text("Data volume")
+        if !metrics.isEmpty {
+            Section {
+                DataVolumeChart(metrics: metrics, limit: Self.limit)
+            } header: {
+                Text("Data volume")
+            }
         }
     }
 
+    @ViewBuilder
     private func mediaRequestsSection() -> some View {
-        Section {
-            MediaRequestChart(metrics: metrics, limit: Self.limit)
-        } header: {
-            Text("Media requests")
+        if !metrics.isEmpty {
+            Section {
+                MediaRequestChart(metrics: metrics, limit: Self.limit)
+            } header: {
+                Text("Media requests")
+            }
         }
     }
 
+    @ViewBuilder
     private func stallsSection() -> some View {
-        Section {
-            StallsChart(metrics: metrics, limit: Self.limit)
-        } header: {
-            Text("Stalls")
+        if !metrics.isEmpty {
+            Section {
+                StallsChart(metrics: metrics, limit: Self.limit)
+            } header: {
+                Text("Stalls")
+            }
         }
     }
 
+    @ViewBuilder
     private func frameDropsSection() -> some View {
-        Section {
-            FrameDropsChart(metrics: metrics, limit: Self.limit)
-        } header: {
-            Text("Frame drops")
+        if !metrics.isEmpty {
+            Section {
+                FrameDropsChart(metrics: metrics, limit: Self.limit)
+            } header: {
+                Text("Frame drops")
+            }
         }
     }
 }
