@@ -17,12 +17,13 @@ public extension Player {
     ///   - interval: The interval at which the history should be updated, according to progress of the current time of
     ///     the timebase.
     ///   - queue: The queue on which values are published.
+    ///   - limit: The maximum number of items to keep in the history.
     /// - Returns: The publisher.
     ///
     /// Additional non-periodic updates will be published when time jumps or when playback starts or stops. Each
     /// included ``Metrics/increment`` collates data since the entry that precedes it in the history. No updates are
     /// published if no metrics are provided for the item being played.
-    func periodicMetricsPublisher(forInterval interval: CMTime, queue: DispatchQueue = .main) -> AnyPublisher<[Metrics], Never> {
+    func periodicMetricsPublisher(forInterval interval: CMTime, queue: DispatchQueue = .main, limit: Int = .max) -> AnyPublisher<[Metrics], Never> {
         currentPlayerItemPublisher()
             .map { [queuePlayer] item -> AnyPublisher<[Metrics], Never> in
                 guard let item else { return Just([]).eraseToAnyPublisher() }
@@ -34,7 +35,7 @@ public extension Player {
                     }
                     .withPrevious(MetricsState.empty)
                     .map { $0.current.metrics(from: $0.previous) }
-                    .scan([]) { $0 + [$1] }
+                    .scan([]) { ($0 + [$1]).suffix(limit) }
                     .prepend([])
                     .eraseToAnyPublisher()
             }

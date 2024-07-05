@@ -48,4 +48,15 @@ final class PeriodicMetricsPublisherTests: TestCase {
             player.play()
         }
     }
+
+    func testLimit() {
+        let item = PlayerItem.simple(url: Stream.onDemand.url)
+        let player = Player(item: item)
+        expectAtLeastEqualPublished(
+            values: [0, 1, 2, 2, 2, 2],
+            from: player.periodicMetricsPublisher(forInterval: .init(value: 1, timescale: 4), limit: 2).map(\.count)
+        ) {
+            player.play()
+        }
+    }
 }
