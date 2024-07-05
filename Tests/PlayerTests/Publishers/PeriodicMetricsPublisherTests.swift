@@ -32,15 +32,12 @@ final class PeriodicMetricsPublisherTests: TestCase {
     }
 
     func testPlaylist() {
-        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
+        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
         let item2 = PlayerItem.simple(url: Stream.mediumOnDemand.url)
         let player = Player(items: [item1, item2])
-        let publisher = player.periodicMetricsPublisher(forInterval: .init(value: 1, timescale: 4)).map(\.count)
-        expectAtLeastEqualPublished(values: [0, 1], from: publisher) {
+        let publisher = player.periodicMetricsPublisher(forInterval: .init(value: 1, timescale: 1)).map(\.count)
+        expectAtLeastEqualPublished(values: [0, 1, 0, 1], from: publisher) {
             player.play()
-        }
-        expectAtLeastEqualPublished(values: [0, 1, 2], from: publisher) {
-            player.advanceToNextItem()
         }
     }
 
