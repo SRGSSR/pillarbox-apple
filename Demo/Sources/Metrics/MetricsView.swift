@@ -59,7 +59,6 @@ private struct InformationSectionContent: View {
 }
 
 private struct StartupTimesSectionContent: View {
-    let metrics: Metrics
     let metricEvents: [MetricEvent]
 
     var body: some View {
@@ -173,12 +172,10 @@ struct MetricsView: View {
 
     @ViewBuilder
     private func startupTimesSection() -> some View {
-        if let currentMetrics = metrics.last {
-            Section {
-                StartupTimesSectionContent(metrics: currentMetrics, metricEvents: metricEvents)
-            } header: {
-                Text("Startup times")
-            }
+        Section {
+            StartupTimesSectionContent(metricEvents: metricEvents)
+        } header: {
+            Text("Startup times")
         }
     }
 
