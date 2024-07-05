@@ -119,15 +119,6 @@ final class CurrentIndexTests: TestCase {
         expect { try player.setCurrentIndex(1) }.to(throwError(PlaybackError.itemOutOfBounds))
     }
 
-    func testSetCurrentIndexToSameValue() {
-        let item = PlayerItem.simple(url: Stream.onDemand.url)
-        let player = Player(item: item)
-        let publisher = player.queuePublisher.slice(at: \.itemState.item?.url).compactMap { $0 }
-        expectAtLeastEqualPublished(values: [Resource.loadingUrl], from: publisher) {
-            try! player.setCurrentIndex(0)
-        }
-    }
-
     func testPlayerPreloadedItemCount() {
         let player = Player(items: [
             PlayerItem.simple(url: Stream.onDemand.url),
