@@ -31,4 +31,17 @@ final class PeriodicMetricsPublisherTests: TestCase {
             player.play()
         }
     }
+
+    func testPlaylist() {
+        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let item2 = PlayerItem.simple(url: Stream.mediumOnDemand.url)
+        let player = Player(items: [item1, item2])
+        expectAtLeastEqualPublished(
+            values: [nil, Stream.shortOnDemand.url.absoluteString, Stream.mediumOnDemand.url.absoluteString],
+            from: player.periodicMetricsPublisher(forInterval: .init(value: 2, timescale: 1))
+                .map(\.?.uri)
+        ) {
+            player.play()
+        }
+    }
 }
