@@ -79,6 +79,9 @@
     "Bottom" : {
 
     },
+    "Buffering" : {
+
+    },
     "Cancel" : {
 
     },
@@ -155,9 +158,6 @@
 
     },
     "Information" : {
-
-    },
-    "Initial buffering" : {
 
     },
     "Kind" : {

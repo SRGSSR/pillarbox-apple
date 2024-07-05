@@ -26,6 +26,7 @@ private struct InformationSectionContent: View {
         cell("Type", value: metrics.playbackType ?? "-")
         cell("Playback duration", value: playbackDuration)
         cell("Data volume", value: bytesTransferred)
+        cell("Buffering", value: startupTime)
     }
 
     private var uri: String {
@@ -38,6 +39,11 @@ private struct InformationSectionContent: View {
 
     private var bytesTransferred: String {
         ByteCountFormatStyle().format(metrics.total.numberOfBytesTransferred)
+    }
+
+    private var startupTime: String {
+        guard let startupTime = metrics.startupTime else { return "-" }
+        return String(format: "%.6fs", startupTime)
     }
 
     private func cell(_ name: LocalizedStringKey, value: String) -> some View {
@@ -59,13 +65,7 @@ private struct StartupTimesSectionContent: View {
     var body: some View {
         cell("Asset loading", value: assetLoadingDuration)
         cell("Resource loading", value: resourceLoadingDuration)
-        cell("Initial buffering", value: startupTime)
         cell("Total", value: totalDuration)
-    }
-
-    private var startupTime: String {
-        guard let startupTime = metrics.startupTime else { return "-" }
-        return String(format: "%.6fs", startupTime)
     }
 
     private var assetLoadingInterval: TimeInterval? {
@@ -76,7 +76,7 @@ private struct StartupTimesSectionContent: View {
             default:
                 return nil
             }
-        }.first        // First asset loading event
+        }.last
     }
 
     private var resourceLoadingInterval: TimeInterval? {
@@ -87,7 +87,7 @@ private struct StartupTimesSectionContent: View {
             default:
                 return nil
             }
-        }.last         // Last resource loading event (might have several ones in a single session)
+        }.last
     }
 
     private var totalDuration: String {
