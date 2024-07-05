@@ -43,4 +43,12 @@ final class PeriodicMetricsPublisherTests: TestCase {
             player.advanceToNextItem()
         }
     }
+
+    func testNoMetricsForLiveMp3() {
+        let player = Player(item: .simple(url: Stream.liveMp3.url))
+        let publisher = player.periodicMetricsPublisher(forInterval: .init(value: 1, timescale: 4)).map(\.count)
+        expectEqualPublished(values: [0], from: publisher, during: .milliseconds(500)) {
+            player.play()
+        }
+    }
 }
