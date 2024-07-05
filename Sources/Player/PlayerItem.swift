@@ -117,7 +117,7 @@ public final class PlayerItem: Equatable {
             .handleEvents(receiveCompletion: { completion in
                 switch completion {
                 case let .failure(error):
-                    let event = MetricEvent(kind: .failure(level: .fatal, error: error))
+                    let event = MetricEvent(kind: .failure(level: .fatal, domain: .asset, error: error))
                     metricLog.addEvent(event)
                 default:
                     break
