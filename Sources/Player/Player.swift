@@ -92,9 +92,10 @@ public final class Player: ObservableObject, Equatable {
         .eraseToAnyPublisher()
     }()
 
-    /// A shared publisher delivering metric events
+    /// A shared publisher delivering metric events associated to the current item.
     ///
     /// All metric events related to the item currently being played, if any, are received upon subscription.
+    /// Events are ordered from the oldest to the newest one.
     public lazy var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> = {
         currentItemPublisher()
             .map { item -> AnyPublisher<[MetricEvent], Never> in

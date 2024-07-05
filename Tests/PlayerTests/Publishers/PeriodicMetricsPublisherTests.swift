@@ -14,8 +14,8 @@ final class PeriodicMetricsPublisherTests: TestCase {
     func testEmpty() {
         let player = Player()
             expectEqualPublished(
-                values: [nil],
-                from: player.periodicMetricsPublisher(forInterval: .init(value: 1, timescale: 4)),
+                values: [0],
+                from: player.periodicMetricsPublisher(forInterval: .init(value: 1, timescale: 4)).map(\.count),
                 during: .seconds(1)
             )
     }
@@ -24,24 +24,23 @@ final class PeriodicMetricsPublisherTests: TestCase {
         let item = PlayerItem.simple(url: Stream.onDemand.url)
         let player = Player(item: item)
         expectAtLeastEqualPublished(
-            values: [nil, Stream.onDemand.url.absoluteString],
-            from: player.periodicMetricsPublisher(forInterval: .init(value: 1, timescale: 4))
-                .map(\.?.uri)
+            values: [0, 1, 2],
+            from: player.periodicMetricsPublisher(forInterval: .init(value: 1, timescale: 4)).map(\.count)
         ) {
             player.play()
         }
     }
 
     func testPlaylist() {
-        let item1 = PlayerItem.simple(url: Stream.shortOnDemand.url)
+        let item1 = PlayerItem.simple(url: Stream.onDemand.url)
         let item2 = PlayerItem.simple(url: Stream.mediumOnDemand.url)
         let player = Player(items: [item1, item2])
-        expectAtLeastEqualPublished(
-            values: [nil, Stream.shortOnDemand.url.absoluteString, Stream.mediumOnDemand.url.absoluteString],
-            from: player.periodicMetricsPublisher(forInterval: .init(value: 2, timescale: 1))
-                .map(\.?.uri)
-        ) {
+        let publisher = player.periodicMetricsPublisher(forInterval: .init(value: 1, timescale: 4)).map(\.count)
+        expectAtLeastEqualPublished(values: [0, 1], from: publisher) {
             player.play()
+        }
+        expectAtLeastEqualPublished(values: [0, 1, 2], from: publisher) {
+            player.advanceToNextItem()
         }
     }
 }

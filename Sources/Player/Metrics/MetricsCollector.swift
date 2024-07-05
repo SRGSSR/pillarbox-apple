@@ -49,19 +49,14 @@ public final class MetricsCollector: ObservableObject {
     private func configureMetricsPublisher(interval: CMTime) {
         $player
             .removeDuplicates()
-            .map { player -> AnyPublisher<Metrics?, Never> in
+            .map { player -> AnyPublisher<[Metrics], Never> in
                 guard let player else {
-                    return Just(nil).eraseToAnyPublisher()
+                    return Just([]).eraseToAnyPublisher()
                 }
                 return player.periodicMetricsPublisher(forInterval: interval)
                     .eraseToAnyPublisher()
             }
             .switchToLatest()
-            .removeDuplicates()
-            .scan([]) { initial, next in
-                guard let next else { return [] }
-                return initial + [next]
-            }
             .receiveOnMainThread()
             .assign(to: &$metrics)
     }
