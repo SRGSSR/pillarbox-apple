@@ -19,6 +19,9 @@ public struct MetricEvent {
         ///
         /// Measures the time for the player to load the associated resource until playback is ready to start.
         case resourceLoading(DateInterval)
+
+        /// Failure.
+        case failure(level: ErrorLevel, error: Error)
     }
 
     /// The kind of event.
@@ -39,6 +42,8 @@ public struct MetricEvent {
             return dateInterval.duration
         case let .resourceLoading(dateInterval):
             return dateInterval.duration
+        default:
+            return 0
         }
     }
 
@@ -56,6 +61,8 @@ extension MetricEvent: CustomStringConvertible {
             return "assetLoading(\(dateInterval.duration))"
         case let .resourceLoading(dateInterval):
             return "resourceLoading(\(dateInterval.duration))"
+        case let .failure(level: level, error: error):
+            return "failure(level: \(level), error: \(error.localizedDescription))"
         }
     }
 }
