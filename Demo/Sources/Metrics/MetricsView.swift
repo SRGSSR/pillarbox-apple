@@ -118,8 +118,6 @@ private struct StartupTimesSectionContent: View {
 }
 
 struct MetricsView: View {
-    private static let limit = 90
-
     @ObservedObject var metricsCollector: MetricsCollector
 
     var body: some View {
@@ -144,17 +142,9 @@ struct MetricsView: View {
         metricsCollector.metrics
     }
 
-    private var metricEvents: [MetricEvent] {
-        metricsCollector.metricEvents
-    }
-
-    private var currentMetrics: Metrics? {
-        metrics.last
-    }
-
     private func startupTimesSection() -> some View {
         Section {
-            StartupTimesSectionContent(metricEvents: metricEvents)
+            StartupTimesSectionContent(metricEvents: metricsCollector.metricEvents)
         } header: {
             Text("Startup times")
         }
@@ -175,7 +165,7 @@ struct MetricsView: View {
     private func indicatedBitrateSection() -> some View {
         if !metrics.isEmpty {
             Section {
-                IndicatedBitrateChart(metrics: metrics, limit: Self.limit)
+                IndicatedBitrateChart(metrics: metrics, limit: metricsCollector.limit)
             } header: {
                 Text("Indicated bitrate")
             }
@@ -186,7 +176,7 @@ struct MetricsView: View {
     private func observedBitrateSection() -> some View {
         if !metrics.isEmpty {
             Section {
-                ObservedBitrateChart(metrics: metrics, limit: Self.limit)
+                ObservedBitrateChart(metrics: metrics, limit: metricsCollector.limit)
             } header: {
                 Text("Observed bitrate")
             }
@@ -197,7 +187,7 @@ struct MetricsView: View {
     private func dataVolumeSection() -> some View {
         if !metrics.isEmpty {
             Section {
-                DataVolumeChart(metrics: metrics, limit: Self.limit)
+                DataVolumeChart(metrics: metrics, limit: metricsCollector.limit)
             } header: {
                 Text("Data volume")
             }
@@ -208,7 +198,7 @@ struct MetricsView: View {
     private func mediaRequestsSection() -> some View {
         if !metrics.isEmpty {
             Section {
-                MediaRequestChart(metrics: metrics, limit: Self.limit)
+                MediaRequestChart(metrics: metrics, limit: metricsCollector.limit)
             } header: {
                 Text("Media requests")
             }
@@ -219,7 +209,7 @@ struct MetricsView: View {
     private func stallsSection() -> some View {
         if !metrics.isEmpty {
             Section {
-                StallsChart(metrics: metrics, limit: Self.limit)
+                StallsChart(metrics: metrics, limit: metricsCollector.limit)
             } header: {
                 Text("Stalls")
             }
@@ -230,7 +220,7 @@ struct MetricsView: View {
     private func frameDropsSection() -> some View {
         if !metrics.isEmpty {
             Section {
-                FrameDropsChart(metrics: metrics, limit: Self.limit)
+                FrameDropsChart(metrics: metrics, limit: metricsCollector.limit)
             } header: {
                 Text("Frame drops")
             }

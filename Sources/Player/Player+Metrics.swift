@@ -17,7 +17,7 @@ public extension Player {
     ///   - interval: The interval at which the history should be updated, according to progress of the current time of
     ///     the timebase.
     ///   - queue: The queue on which values are published.
-    ///   - limit: The maximum number of items to keep in the history.
+    ///   - limit: The maximum number of metrics to keep in the history.
     /// - Returns: The publisher.
     ///
     /// Additional non-periodic updates will be published when time jumps or when playback starts or stops. Each
