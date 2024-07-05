@@ -17,7 +17,7 @@ public struct MetricEvent {
 
         /// Resource loading.
         ///
-        /// Measures the time for the player to load the associated asset resource until playback is ready to start.
+        /// Measures the time for the player to load the associated resource until playback is ready to start.
         case resourceLoading(DateInterval)
     }
 
