@@ -8,30 +8,6 @@ import Combine
 import CoreMedia
 
 extension QueuePlayer {
-    func propertiesPublisher() -> AnyPublisher<PlayerProperties, Never> {
-        Publishers.CombineLatest3(
-            playerItemPropertiesPublisher(),
-            playbackPropertiesPublisher(),
-            seekTimePublisher()
-        )
-        .map { playerItemProperties, playbackProperties, seekTime in
-            .init(
-                coreProperties: .init(
-                    itemProperties: playerItemProperties.itemProperties,
-                    mediaSelectionProperties: playerItemProperties.mediaSelectionProperties,
-                    playbackProperties: playbackProperties
-                ),
-                timeProperties: playerItemProperties.timeProperties,
-                isEmpty: playerItemProperties.isEmpty,
-                seekTime: seekTime
-            )
-        }
-        .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
-}
-
-extension QueuePlayer {
     /// Publishes the current time, smoothing out emitted values during seeks.
     func smoothCurrentTimePublisher(interval: CMTime, queue: DispatchQueue) -> AnyPublisher<CMTime, Never> {
         Publishers.CombineLatest(

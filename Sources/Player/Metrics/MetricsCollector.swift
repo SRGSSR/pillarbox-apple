@@ -27,10 +27,13 @@ public final class MetricsCollector: ObservableObject {
     /// Use `View.bind(_:to:)` in SwiftUI code.
     @Published public var player: Player?
 
-    /// The available metrics history.
+    /// The available metrics history for the item being played, if any.
     ///
     /// Entries are sorted from the lowest to the most recent one.
     @Published public private(set) var metrics: [Metrics] = []
+
+    /// The metric event history for the item being played, if any.
+    @Published public private(set) var metricEvents: [MetricEvent] = []
 
     /// Creates a metrics collector gathering metrics at the specified interval.
     ///
@@ -39,6 +42,11 @@ public final class MetricsCollector: ObservableObject {
     ///
     /// Additional metrics will be collected when time jumps or when playback starts or stops.
     public init(interval: CMTime) {
+        configureMetricsPublisher(interval: interval)
+        configureMetricEventsPublisher()
+    }
+
+    private func configureMetricsPublisher(interval: CMTime) {
         $player
             .removeDuplicates()
             .map { player -> AnyPublisher<Metrics?, Never> in
@@ -49,11 +57,27 @@ public final class MetricsCollector: ObservableObject {
                     .eraseToAnyPublisher()
             }
             .switchToLatest()
-            .compactMap { $0 }
             .removeDuplicates()
-            .scan([]) { $0 + [$1] }
+            .scan([]) { initial, next in
+                guard let next else { return [] }
+                return initial + [next]
+            }
             .receiveOnMainThread()
             .assign(to: &$metrics)
+    }
+
+    private func configureMetricEventsPublisher() {
+        $player
+            .removeDuplicates()
+            .map { player -> AnyPublisher<[MetricEvent], Never> in
+                guard let player else {
+                    return Just([]).eraseToAnyPublisher()
+                }
+                return player.metricEventsPublisher
+            }
+            .switchToLatest()
+            .receiveOnMainThread()
+            .assign(to: &$metricEvents)
     }
 }
 

@@ -6,14 +6,17 @@
 
 import Combine
 
-struct MetricLog {
-    private let eventsSubject = CurrentValueSubject<[MetricEvent], Never>([])
+final class MetricLog {
+    @Published private(set) var events: [MetricEvent] = []
 
     func addEvent(_ event: MetricEvent) {
-        eventsSubject.send(eventsSubject.value + [event])
+        events.append(event)
     }
 
-    func eventsPublisher() -> AnyPublisher<[MetricEvent], Never> {
-        eventsSubject.eraseToAnyPublisher()
+    func eventPublisher() -> AnyPublisher<MetricEvent, Never> {
+        $events
+            .compactMap(\.last)
+            .prepend(events.prefix(max(events.count - 1, 0)))
+            .eraseToAnyPublisher()
     }
 }

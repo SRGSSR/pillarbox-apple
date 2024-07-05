@@ -13,12 +13,7 @@ public extension Player {
     /// playback will start again from the failed item.
     func canReplay() -> Bool {
         guard !storedItems.isEmpty else { return false }
-        if let item = queuePlayer.items().first {
-            return item.error != nil
-        }
-        else {
-            return true
-        }
+        return queuePlayer.items().isEmpty || error != nil
     }
 
     /// Replays the content, resuming playback automatically.

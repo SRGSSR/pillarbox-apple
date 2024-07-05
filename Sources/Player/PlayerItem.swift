@@ -154,9 +154,9 @@ extension PlayerItem {
         }
     }
 
-    func updateMetricEvents(_ events: [MetricEvent]) {
+    func receiveMetricEvent(_ event: MetricEvent) {
         trackerAdapters.forEach { adapter in
-            adapter.updateMetrics(with: events)
+            adapter.receiveMetricEvent(event)
         }
     }
 

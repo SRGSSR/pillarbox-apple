@@ -47,8 +47,9 @@ final class PlayerTests: TestCase {
 
     func testMetadataUpdatesMustNotChangePlayerItem() {
         let player = Player(item: .mock(url: Stream.onDemand.url, withMetadataUpdateAfter: 1))
-        let publisher = player.queuePlayer.currentItemPublisher().compactMap(\.?.url)
-        expectEqualPublishedNext(values: [Stream.onDemand.url], from: publisher, during: .seconds(2))
+        expect(player.queuePlayer.currentItem?.url).toEventually(equal(Stream.onDemand.url))
+        let currentItem = player.queuePlayer.currentItem
+        expect(player.queuePlayer.currentItem).toAlways(equal(currentItem), until: .seconds(2))
     }
 
     func testRetrieveCurrentValueOnSubscription() {

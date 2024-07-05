@@ -11,9 +11,13 @@ public struct MetricEvent {
     /// A kind of metric event.
     public enum Kind {
         /// Asset loading.
+        ///
+        /// Measures the time for a ``PlayerItem`` to load its associated asset.
         case assetLoading(DateInterval)
 
         /// Resource loading.
+        ///
+        /// Measures the time for the player to load the associated resource until playback is ready to start.
         case resourceLoading(DateInterval)
     }
 
@@ -45,12 +49,12 @@ public struct MetricEvent {
     }
 }
 
-extension MetricEvent: CustomDebugStringConvertible {
-    public var debugDescription: String {
+extension MetricEvent: CustomStringConvertible {
+    public var description: String {
         switch kind {
-        case .assetLoading(let dateInterval):
+        case let .assetLoading(dateInterval):
             return "assetLoading(\(dateInterval.duration))"
-        case .resourceLoading(let dateInterval):
+        case let .resourceLoading(dateInterval):
             return "resourceLoading(\(dateInterval.duration))"
         }
     }

@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import Combine
 import CoreMedia
 
 // MARK: Public CoreProperties shortcut
@@ -53,5 +54,19 @@ extension Player {
 
     var seekableTimeRange: CMTimeRange {
         properties.seekableTimeRange
+    }
+}
+
+extension Player {
+    func playerItemPropertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
+        currentPlayerItemPublisher()
+            .map { item in
+                guard let item else { return Just(PlayerItemProperties.empty).eraseToAnyPublisher() }
+                return item.propertiesPublisher()
+            }
+            .switchToLatest()
+            .prepend(.empty)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 }

@@ -42,8 +42,8 @@ public protocol PlayerItemTracker: AnyObject {
 
     /// A method called when a metric event is received.
     /// 
-    /// - Parameter events: All metric events related to the item, from the oldest to the newest one.
-    func updateMetrics(with events: [MetricEvent])
+    /// - Parameter event: The received event.
+    func receiveMetricEvent(_ event: MetricEvent)
 
     /// A method called when the tracker is disabled.
     func disable()

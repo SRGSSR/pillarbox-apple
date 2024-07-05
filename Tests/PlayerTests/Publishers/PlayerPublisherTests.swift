@@ -9,41 +9,42 @@
 import AVFoundation
 import Combine
 import PillarboxCircumspect
+import PillarboxCore
 import PillarboxStreams
 
-final class QueuePlayerPublisherTests: TestCase {
-    private static func bufferingPublisher(for player: QueuePlayer) -> AnyPublisher<Bool, Never> {
-        player.propertiesPublisher()
+final class PlayerPublisherTests: TestCase {
+    private static func bufferingPublisher(for player: Player) -> AnyPublisher<Bool, Never> {
+        player.propertiesPublisher
             .slice(at: \.isBuffering)
             .eraseToAnyPublisher()
     }
 
-    private static func presentationSizePublisher(for player: QueuePlayer) -> AnyPublisher<CGSize?, Never> {
-        player.propertiesPublisher()
+    private static func presentationSizePublisher(for player: Player) -> AnyPublisher<CGSize?, Never> {
+        player.propertiesPublisher
             .slice(at: \.presentationSize)
             .eraseToAnyPublisher()
     }
 
-    private static func itemStatusPublisher(for player: QueuePlayer) -> AnyPublisher<ItemStatus, Never> {
-        player.propertiesPublisher()
+    private static func itemStatusPublisher(for player: Player) -> AnyPublisher<ItemStatus, Never> {
+        player.propertiesPublisher
             .slice(at: \.itemStatus)
             .eraseToAnyPublisher()
     }
 
-    private static func durationPublisher(for player: QueuePlayer) -> AnyPublisher<CMTime, Never> {
-        player.propertiesPublisher()
+    private static func durationPublisher(for player: Player) -> AnyPublisher<CMTime, Never> {
+        player.propertiesPublisher
             .slice(at: \.duration)
             .eraseToAnyPublisher()
     }
 
-    private static func seekableTimeRangePublisher(for player: QueuePlayer) -> AnyPublisher<CMTimeRange, Never> {
-        player.propertiesPublisher()
+    private static func seekableTimeRangePublisher(for player: Player) -> AnyPublisher<CMTimeRange, Never> {
+        player.propertiesPublisher
             .slice(at: \.seekableTimeRange)
             .eraseToAnyPublisher()
     }
 
     func testBufferingEmpty() {
-        let player = QueuePlayer()
+        let player = Player()
         expectEqualPublished(
             values: [false],
             from: Self.bufferingPublisher(for: player),
@@ -52,7 +53,7 @@ final class QueuePlayerPublisherTests: TestCase {
     }
 
     func testBuffering() {
-        let player = QueuePlayer(playerItem: .init(url: Stream.onDemand.url))
+        let player = Player(item: .simple(url: Stream.onDemand.url))
         expectEqualPublished(
             values: [true, false],
             from: Self.bufferingPublisher(for: player),
@@ -61,7 +62,7 @@ final class QueuePlayerPublisherTests: TestCase {
     }
 
     func testPresentationSizeEmpty() {
-        let player = QueuePlayer()
+        let player = Player()
         expectAtLeastEqualPublished(
             values: [nil],
             from: Self.presentationSizePublisher(for: player)
@@ -69,7 +70,7 @@ final class QueuePlayerPublisherTests: TestCase {
     }
 
     func testPresentationSize() {
-        let player = QueuePlayer(url: Stream.shortOnDemand.url)
+        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         expectAtLeastEqualPublished(
             values: [nil, CGSize(width: 640, height: 360), nil],
             from: Self.presentationSizePublisher(for: player)
@@ -79,7 +80,7 @@ final class QueuePlayerPublisherTests: TestCase {
     }
 
     func testItemStatusEmpty() {
-        let player = QueuePlayer()
+        let player = Player()
         expectAtLeastEqualPublished(
             values: [.unknown],
             from: Self.itemStatusPublisher(for: player)
@@ -87,9 +88,7 @@ final class QueuePlayerPublisherTests: TestCase {
     }
 
     func testConsumedItemStatusLifeCycle() {
-        let player = QueuePlayer(
-            playerItem: .init(url: Stream.shortOnDemand.url)
-        )
+        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         expectAtLeastEqualPublished(
             values: [.unknown, .readyToPlay, .ended, .unknown],
             from: Self.itemStatusPublisher(for: player)
@@ -99,9 +98,7 @@ final class QueuePlayerPublisherTests: TestCase {
     }
 
     func testPausedItemStatusLifeCycle() {
-        let player = QueuePlayer(
-            playerItem: .init(url: Stream.shortOnDemand.url)
-        )
+        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         expectAtLeastEqualPublished(
             values: [.unknown, .readyToPlay, .ended],
             from: Self.itemStatusPublisher(for: player)
@@ -109,7 +106,7 @@ final class QueuePlayerPublisherTests: TestCase {
             player.actionAtItemEnd = .pause
             player.play()
         }
-        expectAtLeastEqualPublished(
+        expectAtLeastEqualPublishedNext(
             values: [.readyToPlay],
             from: Self.itemStatusPublisher(for: player)
         ) {
@@ -118,7 +115,7 @@ final class QueuePlayerPublisherTests: TestCase {
     }
 
     func testDurationEmpty() {
-        let player = QueuePlayer()
+        let player = Player()
         expectAtLeastPublished(
             values: [.invalid],
             from: Self.durationPublisher(for: player),
@@ -127,7 +124,7 @@ final class QueuePlayerPublisherTests: TestCase {
     }
 
     func testDuration() {
-        let player = QueuePlayer(playerItem: .init(url: Stream.shortOnDemand.url))
+        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         expectAtLeastPublished(
             values: [.invalid, Stream.shortOnDemand.duration, .invalid],
             from: Self.durationPublisher(for: player),
@@ -138,7 +135,7 @@ final class QueuePlayerPublisherTests: TestCase {
     }
 
     func testSeekableTimeRangeEmpty() {
-        let player = QueuePlayer()
+        let player = Player()
         expectAtLeastEqualPublished(
             values: [.invalid],
             from: Self.seekableTimeRangePublisher(for: player)
@@ -146,9 +143,7 @@ final class QueuePlayerPublisherTests: TestCase {
     }
 
     func testSeekableTimeRangeLifeCycle() {
-        let player = QueuePlayer(
-            playerItem: .init(url: Stream.shortOnDemand.url)
-        )
+        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         expectAtLeastPublished(
             values: [
                 .invalid,
@@ -158,6 +153,16 @@ final class QueuePlayerPublisherTests: TestCase {
             from: Self.seekableTimeRangePublisher(for: player),
             to: beClose(within: 1)
         ) {
+            player.play()
+        }
+    }
+
+    func testMetricEventsPublisher() {
+        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
+        expectAtLeastSimilarPublished(values: [
+            [.init(kind: .assetLoading(.init()))],
+            [.init(kind: .assetLoading(.init())), .init(kind: .resourceLoading(.init()))]
+        ], from: player.metricEventsPublisher) {
             player.play()
         }
     }

@@ -70,7 +70,39 @@ public final class Player: ObservableObject, Equatable {
     /// When implementing a custom SwiftUI user interface, you should use `View.onReceive(player:assign:to:)` to read
     /// fast-paced property changes into corresponding local bindings.
     public lazy var propertiesPublisher: AnyPublisher<PlayerProperties, Never> = {
-        queuePlayer.propertiesPublisher()
+        Publishers.CombineLatest3(
+            playerItemPropertiesPublisher(),
+            queuePlayer.playbackPropertiesPublisher(),
+            queuePlayer.seekTimePublisher()
+        )
+        .map { playerItemProperties, playbackProperties, seekTime in
+            .init(
+                coreProperties: .init(
+                    itemProperties: playerItemProperties.itemProperties,
+                    mediaSelectionProperties: playerItemProperties.mediaSelectionProperties,
+                    playbackProperties: playbackProperties
+                ),
+                timeProperties: playerItemProperties.timeProperties,
+                isEmpty: playerItemProperties.isEmpty,
+                seekTime: seekTime
+            )
+        }
+        .removeDuplicates()
+        .share(replay: 1)
+        .eraseToAnyPublisher()
+    }()
+
+    /// A shared publisher delivering metric events
+    ///
+    /// All metric events related to the item currently being played, if any, are received upon subscription.
+    public lazy var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> = {
+        currentItemPublisher()
+            .map { item -> AnyPublisher<[MetricEvent], Never> in
+                guard let item else { return Just([]).eraseToAnyPublisher() }
+                return item.metricLog.$events
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
             .share(replay: 1)
             .eraseToAnyPublisher()
     }()
@@ -88,8 +120,7 @@ public final class Player: ObservableObject, Equatable {
     }()
 
     lazy var metadataPublisher: AnyPublisher<PlayerMetadata, Never> = {
-        queuePublisher
-            .slice(at: \.item)
+        currentItemPublisher()
             .map { item -> AnyPublisher<PlayerMetadata, Never> in
                 guard let item else { return Just(.empty).eraseToAnyPublisher() }
                 return item.metadataPublisher()
@@ -291,7 +322,7 @@ private extension Player {
     func configureTextStyleRulesUpdatePublisher() {
         Publishers.CombineLatest(
             textStyleRulesPublisher,
-            queuePlayer.currentItemPublisher()
+            currentPlayerItemPublisher()
         )
         .sink { textStyleRules, item in
             item?.textStyleRules = textStyleRules

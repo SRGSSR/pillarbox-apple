@@ -73,6 +73,6 @@ final class MetricsCollectorTests: TestCase {
         expect(metricsCollector.metrics).toEventuallyNot(beEmpty())
 
         metricsCollector.player = nil
-        expect(metricsCollector.metrics).notTo(beEmpty())
+        expect(metricsCollector.metrics).to(beEmpty())
     }
 }

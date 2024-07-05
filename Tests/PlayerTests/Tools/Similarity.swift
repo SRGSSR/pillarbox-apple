@@ -45,6 +45,17 @@ extension NowPlaying.Info: Similar {
     }
 }
 
+extension MetricEvent: Similar {
+    public static func ~~ (lhs: MetricEvent, rhs: MetricEvent) -> Bool {
+        switch (lhs.kind, rhs.kind) {
+        case (.assetLoading, .assetLoading), (.resourceLoading, .resourceLoading):
+            return true
+        default:
+            return false
+        }
+    }
+}
+
 func beClose(within tolerance: TimeInterval) -> ((CMTime, CMTime) -> Bool) {
     CMTime.close(within: tolerance)
 }
