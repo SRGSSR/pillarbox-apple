@@ -19,6 +19,10 @@ extension AVPlayer {
                     }
                     else {
                         return item.errorPublisher()
+                            .handleEvents(receiveOutput: { error in
+                                let event = MetricEvent(kind: .failure(level: .fatal, error: error))
+                                item.metricLog?.addEvent(event)
+                            })
                             .map { .init(item: item, error: $0) }
                             .prepend(.init(item: item, error: nil))
                             .eraseToAnyPublisher()
