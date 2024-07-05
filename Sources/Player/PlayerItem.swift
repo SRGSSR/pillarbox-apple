@@ -114,6 +114,15 @@ public final class PlayerItem: Equatable {
             .map { asset, metadata in
                 AssetContent(id: id, resource: asset.resource, metadata: metadata, configuration: asset.configuration, metricLog: metricLog)
             }
+            .handleEvents(receiveCompletion: { completion in
+                switch completion {
+                case let .failure(error):
+                    let event = MetricEvent(kind: .failure(level: .fatal, error: error))
+                    metricLog.addEvent(event)
+                default:
+                    break
+                }
+            })
             .catch { error in
                 Just(.failing(id: id, error: error))
             }
