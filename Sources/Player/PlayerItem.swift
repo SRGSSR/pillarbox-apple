@@ -99,7 +99,7 @@ public final class PlayerItem: Equatable {
             )
             .measureDateInterval { dateInterval in
                 let event = MetricEvent(kind: .assetLoading(dateInterval), date: dateInterval.start)
-                metricLog.addEvent(event)
+                metricLog.appendEvent(event)
             }
             .map { asset, trackerAdapters in
                 trackerAdapters.forEach { adapter in
@@ -119,7 +119,7 @@ public final class PlayerItem: Equatable {
                 case let .failure(error):
                     let payload = ErrorMetricPayload(level: .fatal, domain: .asset, error: error)
                     let event = MetricEvent(kind: .error(payload))
-                    metricLog.addEvent(event)
+                    metricLog.appendEvent(event)
                 default:
                     break
                 }

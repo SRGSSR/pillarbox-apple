@@ -23,7 +23,7 @@ extension AVPlayer {
                                 guard let metricLog = item.metricLog else { return }
                                 let payload = ErrorMetricPayload(level: .fatal, domain: .resource, error: error)
                                 let event = MetricEvent(kind: .error(payload), time: item.currentTime())
-                                metricLog.addEvent(event)
+                                metricLog.appendEvent(event)
                             })
                             .map { .init(item: item, error: $0) }
                             .prepend(.init(item: item, error: nil))

@@ -9,7 +9,7 @@ import Combine
 final class MetricLog {
     @Published private(set) var events: [MetricEvent] = []
 
-    func addEvent(_ event: MetricEvent) {
+    func appendEvent(_ event: MetricEvent) {
         events.append(event)
     }
 
