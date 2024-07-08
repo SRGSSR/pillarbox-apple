@@ -19,12 +19,14 @@ final class CurrentTracker {
         item.enableTrackers(for: player)
 
         player.propertiesPublisher
+            .receiveOnMainThread()
             .sink { properties in
                 item.updateTrackerProperties(properties)
             }
             .store(in: &cancellables)
 
         item.metricLog.eventPublisher()
+            .receiveOnMainThread()
             .sink { event in
                 item.receiveMetricEvent(event)
             }
