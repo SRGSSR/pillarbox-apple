@@ -91,12 +91,15 @@ public final class PlayerItem: Equatable {
         trackerAdapters: [TrackerAdapter<M>]
     ) where P: Publisher, P.Output == Asset<M> {
         self.trackerAdapters = trackerAdapters
-        content = .loading(id: id)
+        content = .loading(id: id, metricLog: metricLog)
         Publishers.PublishAndRepeat(onOutputFrom: Self.trigger.signal(activatedBy: TriggerId.reset(id))) { [id, metricLog] in
             Publishers.CombineLatest(
                 publisher,
                 Just(trackerAdapters).setFailureType(to: P.Failure.self)
             )
+            .handleEvents(receiveSubscription: { _ in
+                metricLog.clearAll()
+            })
             .measureDateInterval { dateInterval in
                 let event = MetricEvent(kind: .assetLoading(dateInterval), date: dateInterval.start)
                 metricLog.appendEvent(event)
@@ -114,18 +117,8 @@ public final class PlayerItem: Equatable {
             .map { asset, metadata in
                 AssetContent(id: id, resource: asset.resource, metadata: metadata, configuration: asset.configuration, metricLog: metricLog)
             }
-            .handleEvents(receiveCompletion: { completion in
-                switch completion {
-                case let .failure(error):
-                    let payload = ErrorMetricPayload(level: .fatal, domain: .asset, error: error)
-                    let event = MetricEvent(kind: .error(payload))
-                    metricLog.appendEvent(event)
-                default:
-                    break
-                }
-            })
             .catch { error in
-                Just(.failing(id: id, error: error))
+                Just(.failing(id: id, error: error, metricLog: metricLog))
             }
         }
         .wait(untilOutputFrom: Self.trigger.signal(activatedBy: TriggerId.load(id)))

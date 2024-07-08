@@ -24,6 +24,10 @@ final class CurrentTracker {
             }
             .store(in: &cancellables)
 
+        item.metricLog.persistentEvents.forEach { event in
+            item.receiveMetricEvent(event)
+        }
+
         item.metricLog.eventPublisher()
             .sink { event in
                 item.receiveMetricEvent(event)

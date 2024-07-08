@@ -47,6 +47,15 @@ public struct MetricEvent {
         }
     }
 
+    var isPersistent: Bool {
+        switch kind {
+        case .assetLoading:
+            return true
+        default:
+            return false
+        }
+    }
+
     init(kind: Kind, date: Date = .init(), time: CMTime = .invalid) {
         self.kind = kind
         self.date = date
