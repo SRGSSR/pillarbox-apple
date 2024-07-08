@@ -9,6 +9,8 @@ import PillarboxPlayer
 import SwiftUI
 
 struct DataVolumeChart: View {
+    private static let megabytes = MeasurementFormatter().string(from: UnitInformationStorage.megabytes)
+
     let metrics: [Metrics]
     let limit: Int
 
@@ -26,14 +28,14 @@ struct DataVolumeChart: View {
         Chart(Array(metrics.suffix(limit).enumerated()), id: \.offset) { metrics in
             BarMark(
                 x: .value("Index", metrics.offset),
-                y: .value("Data volume (MB)", metrics.element.increment.numberOfBytesTransferred / 1_000_000),
+                y: .value("Data volume (\(Self.megabytes)", metrics.element.increment.numberOfBytesTransferred / 1_000_000),
                 width: .inset(1)
             )
             .foregroundStyle(.cyan)
         }
         .chartXAxis(.hidden)
         .chartXScale(domain: 0...limit - 1)
-        .chartYAxisLabel("MB")
+        .chartYAxisLabel(Self.megabytes)
         .padding(.vertical)
     }
 

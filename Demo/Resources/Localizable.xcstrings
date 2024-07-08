@@ -103,7 +103,7 @@
     "Data volume" : {
 
     },
-    "Data volume (MB)" : {
+    "Data volume (%@" : {
 
     },
     "Debugging" : {
@@ -179,9 +179,6 @@
 
     },
     "Max. %.02f Mbps" : {
-
-    },
-    "MB" : {
 
     },
     "Mbps" : {
