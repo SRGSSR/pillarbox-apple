@@ -35,6 +35,8 @@ public struct MetricEvent {
     /// Might be `.invalid`.
     public let time: CMTime
 
+    public let isPersistent: Bool
+
     /// The event duration.
     public var duration: TimeInterval {
         switch kind {
@@ -47,10 +49,11 @@ public struct MetricEvent {
         }
     }
 
-    init(kind: Kind, date: Date = .init(), time: CMTime = .invalid) {
+    init(kind: Kind, date: Date = .init(), time: CMTime = .invalid, isPersistent: Bool) {
         self.kind = kind
         self.date = date
         self.time = time
+        self.isPersistent = isPersistent
     }
 }
 

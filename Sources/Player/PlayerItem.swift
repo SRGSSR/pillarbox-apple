@@ -97,8 +97,11 @@ public final class PlayerItem: Equatable {
                 publisher,
                 Just(trackerAdapters).setFailureType(to: P.Failure.self)
             )
+            .handleEvents(receiveSubscription: { _ in
+                metricLog.clearAll()
+            })
             .measureDateInterval { dateInterval in
-                let event = MetricEvent(kind: .assetLoading(dateInterval), date: dateInterval.start)
+                let event = MetricEvent(kind: .assetLoading(dateInterval), date: dateInterval.start, isPersistent: true)
                 metricLog.appendEvent(event)
             }
             .map { asset, trackerAdapters in
@@ -118,7 +121,7 @@ public final class PlayerItem: Equatable {
                 switch completion {
                 case let .failure(error):
                     let payload = ErrorMetricPayload(level: .fatal, domain: .asset, error: error)
-                    let event = MetricEvent(kind: .error(payload))
+                    let event = MetricEvent(kind: .error(payload), isPersistent: true)
                     metricLog.appendEvent(event)
                 default:
                     break

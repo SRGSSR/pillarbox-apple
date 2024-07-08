@@ -35,6 +35,7 @@ struct AssetContent {
     }
 
     func playerItem(reload: Bool = false) -> AVPlayerItem {
+        metricLog?.clearTransient()
         if reload, resource.isFailing {
             let item = Resource.loading.playerItem().withId(id).withMetricLog(metricLog)
             configure(item: item)
