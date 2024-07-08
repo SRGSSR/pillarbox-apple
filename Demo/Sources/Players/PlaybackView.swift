@@ -21,7 +21,7 @@ private struct MainView: View {
     let progressTracker: ProgressTracker
 
     @StateObject private var visibilityTracker = VisibilityTracker()
-    @State private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1))
+    @State private var metricsCollector = MetricsCollector(interval: .init(value: 1, timescale: 1), limit: 90)
 
     @State private var layoutInfo: LayoutInfo = .none
     @State private var isPresentingMetrics = false

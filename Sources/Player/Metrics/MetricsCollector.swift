@@ -22,6 +22,9 @@ import SwiftUI
 /// 3. Current metrics can be retrieved from the ``metrics`` property and displayed in any way you want, e.g. in a
 ///    textual form or with charts.
 public final class MetricsCollector: ObservableObject {
+    /// The maximum number of metrics to keep in the history.
+    public let limit: Int
+
     /// The player to attach.
     ///
     /// Use `View.bind(_:to:)` in SwiftUI code.
@@ -37,11 +40,15 @@ public final class MetricsCollector: ObservableObject {
 
     /// Creates a metrics collector gathering metrics at the specified interval.
     ///
-    /// - Parameter interval: The interval at which metrics must be gathered, according to progress of the current
-    ///   time of the associated player timebase.
+    /// - Parameters:
+    ///   - interval: The interval at which metrics must be gathered, according to progress of the current
+    ///     time of the associated player timebase.
+    ///   - limit: The maximum number of metrics to keep in the history.
     ///
     /// Additional metrics will be collected when time jumps or when playback starts or stops.
-    public init(interval: CMTime) {
+    public init(interval: CMTime, limit: Int = .max) {
+        self.limit = limit
+
         configureMetricsPublisher(interval: interval)
         configureMetricEventsPublisher()
     }
@@ -49,19 +56,14 @@ public final class MetricsCollector: ObservableObject {
     private func configureMetricsPublisher(interval: CMTime) {
         $player
             .removeDuplicates()
-            .map { player -> AnyPublisher<Metrics?, Never> in
+            .map { [limit] player -> AnyPublisher<[Metrics], Never> in
                 guard let player else {
-                    return Just(nil).eraseToAnyPublisher()
+                    return Just([]).eraseToAnyPublisher()
                 }
-                return player.periodicMetricsPublisher(forInterval: interval)
+                return player.periodicMetricsPublisher(forInterval: interval, limit: limit)
                     .eraseToAnyPublisher()
             }
             .switchToLatest()
-            .removeDuplicates()
-            .scan([]) { initial, next in
-                guard let next else { return [] }
-                return initial + [next]
-            }
             .receiveOnMainThread()
             .assign(to: &$metrics)
     }

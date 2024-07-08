@@ -107,6 +107,12 @@ public extension Stream {
         url: URL(string: "http://localhost:8123/unavailable.mp3")!,
         duration: .indefinite
     )
+
+    /// A MP3 live stream.
+    static let liveMp3: Self = .init(
+        url: URL(string: "http://stream.srg-ssr.ch/m/couleur3/mp3_128")!,
+        duration: .indefinite
+    )
 }
 
 public extension Stream {

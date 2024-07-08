@@ -17,8 +17,12 @@ struct MetricsState: Equatable {
         .init(time: time, event: events.last, total: events.reduce(.zero) { $0 + .values(from: $1) })
     }
 
+    func updated(with events: [AVPlayerItemAccessLogEvent], at time: CMTime) -> Self {
+        updated(with: events.map { .init($0) }, at: time)
+    }
+
     func updated(with log: AVPlayerItemAccessLog?, at time: CMTime) -> Self {
-        updated(with: log?.events.map { .init($0) } ?? [], at: time)
+        updated(with: log?.events ?? [], at: time)
     }
 
     func metrics(from state: Self) -> Metrics {
