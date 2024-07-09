@@ -50,8 +50,9 @@ final class CurrentTracker {
     }
 
     private func configureMetricEventPublisher(for player: Player) {
-        player.metricEventPublisher()
-            .receiveOnMainThread()
+        player.metricEventsPublisher
+            .map { $0 }
+            .switchToLatest()
             .sink { [weak self] event in
                 self?.item?.receiveMetricEvent(event)
             }

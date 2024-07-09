@@ -47,26 +47,15 @@ public extension Player {
 }
 
 extension Player {
-    func metricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
-        Publishers.Merge(itemMetricEventPublisher(), playerItemMetricEventPublisher())
-            .eraseToAnyPublisher()
-    }
-
-    private func itemMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+    func metricEventPublisher() -> AnyPublisher<AnyPublisher<MetricEvent, Never>, Never> {
         queuePublisher
-            .slice(at: \.item)
-            .compactMap { $0 }
-            .map { $0.metricLog.eventPublisher() }
-            .switchToLatest()
-            .eraseToAnyPublisher()
-    }
-
-    private func playerItemMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
-        queuePublisher
-            .slice(at: \.itemState.item)
-            .compactMap { $0 }
-            .map { $0.metricLog.eventPublisher() }
-            .switchToLatest()
+            .withPrevious()
+            .compactMap { queue -> AnyPublisher<MetricEvent, Never>? in
+                guard let item = queue.current.item else { return nil }
+                item.metricLog.connect(to: queue.current.itemState.item?.metricLog)
+                guard item != queue.previous?.item else { return nil }
+                return item.metricLog.eventPublisher()
+            }
             .eraseToAnyPublisher()
     }
 }
