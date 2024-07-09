@@ -97,7 +97,7 @@ public final class Player: ObservableObject, Equatable {
     /// All metric events related to the item currently being played, if any, are received upon subscription.
     /// Events are ordered from the oldest to the newest one.
     public lazy var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> = {
-        Empty().eraseToAnyPublisher()
+        currentTracker.metricEventsPublisher
     }()
 
     lazy var queuePublisher: AnyPublisher<Queue, Never> = {
