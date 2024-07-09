@@ -13,6 +13,10 @@ final class MetricLog {
         events.append(event)
     }
 
+    func clear() {
+        events.removeAll()
+    }
+
     func eventPublisher() -> AnyPublisher<MetricEvent, Never> {
         $events
             .compactMap(\.last)
