@@ -76,6 +76,11 @@ public final class MetricsCollector: ObservableObject {
                     return Just([]).eraseToAnyPublisher()
                 }
                 return player.metricEventsPublisher
+                    .map { publisher in
+                        publisher.scan([]) { $0 + [$1] }
+                    }
+                    .switchToLatest()
+                    .eraseToAnyPublisher()
             }
             .switchToLatest()
             .receiveOnMainThread()
