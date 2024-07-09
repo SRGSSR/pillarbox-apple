@@ -98,6 +98,7 @@ public final class PlayerItem: Equatable {
                 Just(trackerAdapters).setFailureType(to: P.Failure.self)
             )
             .handleEvents(receiveSubscription: { _ in
+                // swiftlint:disable:previous trailing_closure
                 metricLog.clear()
             })
             .measureDateInterval { dateInterval in

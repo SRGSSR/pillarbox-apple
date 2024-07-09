@@ -44,7 +44,9 @@ public extension Player {
             .receive(on: queue)
             .eraseToAnyPublisher()
     }
+}
 
+extension Player {
     func metricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
         Publishers.Merge(itemMetricEventPublisher(), playerItemMetricEventPublisher())
             .eraseToAnyPublisher()
