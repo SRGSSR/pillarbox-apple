@@ -10,7 +10,7 @@ import CoreMedia
 import PillarboxCircumspect
 import UIKit
 
-extension ImageSource: Similar {
+extension ImageSource: @retroactive Similar {
     public static func ~~ (lhs: ImageSource, rhs: ImageSource) -> Bool {
         switch (lhs.kind, rhs.kind) {
         case (.none, .none):
@@ -34,7 +34,7 @@ extension ImageSource: Similar {
     }
 }
 
-extension Resource: Similar {
+extension Resource: @retroactive Similar {
     public static func ~~ (lhs: PillarboxPlayer.Resource, rhs: PillarboxPlayer.Resource) -> Bool {
         switch (lhs, rhs) {
         case let (.simple(url: lhsUrl), .simple(url: rhsUrl)),
@@ -47,14 +47,14 @@ extension Resource: Similar {
     }
 }
 
-extension NowPlaying.Info: Similar {
+extension NowPlaying.Info: @retroactive Similar {
     public static func ~~ (lhs: Self, rhs: Self) -> Bool {
         // swiftlint:disable:next legacy_objc_type
         NSDictionary(dictionary: lhs).isEqual(to: rhs)
     }
 }
 
-extension MetricEvent: Similar {
+extension MetricEvent: @retroactive Similar {
     public static func ~~ (lhs: MetricEvent, rhs: MetricEvent) -> Bool {
         switch (lhs.kind, rhs.kind) {
         case (.metadata, .metadata), (.asset, .asset), (.failure, .failure), (.warning, .warning):
