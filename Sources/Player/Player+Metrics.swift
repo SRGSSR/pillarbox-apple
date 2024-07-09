@@ -56,10 +56,7 @@ extension Player {
         queuePublisher
             .slice(at: \.item)
             .compactMap { $0 }
-            .map { item in
-                item.metricLog.eventPublisher()
-                    .prepend(item.metricLog.events)
-            }
+            .map { $0.metricLog.eventPublisher() }
             .switchToLatest()
             .eraseToAnyPublisher()
     }
@@ -68,10 +65,7 @@ extension Player {
         queuePublisher
             .slice(at: \.itemState.item)
             .compactMap { $0 }
-            .map { item in
-                item.metricLog.eventPublisher()
-                    .prepend(item.metricLog.events)
-            }
+            .map { $0.metricLog.eventPublisher() }
             .switchToLatest()
             .eraseToAnyPublisher()
     }

@@ -21,6 +21,8 @@ final class MetricLog {
     }
 
     func eventPublisher() -> AnyPublisher<MetricEvent, Never> {
-        subject.eraseToAnyPublisher()
+        subject
+            .prepend(events)
+            .eraseToAnyPublisher()
     }
 }
