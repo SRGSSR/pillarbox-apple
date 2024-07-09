@@ -24,11 +24,18 @@ final class CurrentTracker {
             }
             .store(in: &cancellables)
 
-        item.metricLog.eventPublisher()
-            .sink { event in
-                item.receiveMetricEvent(event)
-            }
-            .store(in: &cancellables)
+        Publishers.Merge(
+            player.queuePublisher
+                .slice(at: \.itemState.item)
+                .compactMap { $0 }
+                .map { $0.metricLog.eventPublisher() }
+                .switchToLatest(),
+            item.metricLog.eventPublisher()
+        )
+        .sink { event in
+            item.receiveMetricEvent(event)
+        }
+        .store(in: &cancellables)
     }
 
     deinit {
