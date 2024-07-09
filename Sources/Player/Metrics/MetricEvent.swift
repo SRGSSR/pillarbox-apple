@@ -62,7 +62,7 @@ extension MetricEvent: CustomStringConvertible {
         case let .resourceLoading(dateInterval):
             return "resourceLoading(\(dateInterval.duration))"
         case let .error(payload):
-            return "failure(level: \(payload.level), domain: \(payload.domain), error: \(payload.error.localizedDescription))"
+            return "failure(level: \(payload.level), error: \(payload.error.localizedDescription))"
         }
     }
 }
