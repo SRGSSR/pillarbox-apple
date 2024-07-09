@@ -8,13 +8,43 @@ import Combine
 import Foundation
 
 final class CurrentTracker {
-    weak var player: Player?
+    private var cancellables = Set<AnyCancellable>()
+    private weak var player: Player?
+
+    private var item: PlayerItem? {
+        willSet {
+            item?.disableTrackers()
+        }
+        didSet {
+            guard let player else { return }
+            item?.enableTrackers(for: player)
+        }
+    }
 
     init(player: Player) {
         self.player = player
+
+        player.queuePublisher
+            .slice(at: \.item)
+            .sink { [weak self] item in
+                self?.item = item
+            }
+            .store(in: &cancellables)
+
+        player.propertiesPublisher
+            .sink { [weak self] properties in
+                self?.item?.updateTrackerProperties(properties)
+            }
+            .store(in: &cancellables)
+
+        player.metricEventPublisher()
+            .sink { [weak self] event in
+                self?.item?.receiveMetricEvent(event)
+            }
+            .store(in: &cancellables)
     }
 
-    lazy var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> = {
-        Empty().eraseToAnyPublisher()
-    }()
+    deinit {
+        item?.disableTrackers()
+    }
 }
