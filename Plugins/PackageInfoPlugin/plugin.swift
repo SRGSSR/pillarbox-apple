@@ -13,12 +13,12 @@ struct PackageInfoPlugin: BuildToolPlugin {
         [
             .prebuildCommand(
                 displayName: "Provide package information as a generated Swift file",
-                executable: try context.tool(named: "PackageInfo").path,
+                executable: try context.tool(named: "PackageInfo").url,
                 arguments: [
-                    "\(target.directory.appending("../.."))",
-                    "\(context.pluginWorkDirectory)"
+                    context.package.directoryURL.path(),
+                    context.pluginWorkDirectoryURL.path()
                 ],
-                outputFilesDirectory: context.pluginWorkDirectory
+                outputFilesDirectory: context.pluginWorkDirectoryURL
             )
         ]
     }
