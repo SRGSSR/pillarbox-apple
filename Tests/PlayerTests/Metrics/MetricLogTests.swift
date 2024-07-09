@@ -24,4 +24,13 @@ final class MetricLogTests: TestCase {
             expect(metricLog.events).to(beSimilarTo([event]))
         }
     }
+
+    func testPreviousEvent() {
+        let metricLog = MetricLog()
+        let event1 = MetricEvent(kind: .assetLoading(.init()))
+        let event2 = MetricEvent(kind: .resourceLoading(.init()))
+        metricLog.appendEvent(event1)
+        metricLog.appendEvent(event2)
+        expectSimilarPublished(values: [event1, event2], from: metricLog.eventPublisher(), during: .milliseconds(100))
+    }
 }
