@@ -45,8 +45,6 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    private var currentTracker: CurrentTracker?
-
     var properties: PlayerProperties = .empty {
         willSet {
             guard properties.coreProperties != newValue.coreProperties else {
@@ -97,15 +95,7 @@ public final class Player: ObservableObject, Equatable {
     /// All metric events related to the item currently being played, if any, are received upon subscription.
     /// Events are ordered from the oldest to the newest one.
     public lazy var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> = {
-        currentItemPublisher()
-            .map { item -> AnyPublisher<[MetricEvent], Never> in
-                guard let item else { return Just([]).eraseToAnyPublisher() }
-                return item.metricLog.$events
-                    .eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .share(replay: 1)
-            .eraseToAnyPublisher()
+        Empty().eraseToAnyPublisher()
     }()
 
     lazy var queuePublisher: AnyPublisher<Queue, Never> = {
@@ -228,7 +218,6 @@ public final class Player: ObservableObject, Equatable {
         configurePublishedPropertyPublishers()
         configureQueuePlayerUpdatePublishers()
         configureControlCenterPublishers()
-        configureCurrentTrackerPublishers()
         configureMetadataPublisher()
         configureBlockedTimeRangesPublishers()
     }
@@ -360,12 +349,6 @@ private extension Player {
         metadataPublisher
             .receiveOnMainThread()
             .assign(to: &$metadata)
-    }
-
-    func configureCurrentTrackerPublishers() {
-        currentTrackerPublisher()
-            .weakAssign(to: \.currentTracker, on: self)
-            .store(in: &cancellables)
     }
 
     func configurePlaybackSpeedPublisher() {
