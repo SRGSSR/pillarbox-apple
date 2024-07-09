@@ -25,7 +25,12 @@ public final class Player: ObservableObject, Equatable {
     @Published public private(set) var currentIndex: Int?
 
     /// A Boolean setting whether trackers must be enabled or not.
-    @Published public var isTrackingEnabled = true
+    @Published public var isTrackingEnabled = true {
+        didSet {
+            guard isTrackingEnabled != oldValue else { return }
+            configureTracking()
+        }
+    }
 
     /// The metadata related to the item being played.
     @Published public private(set) var metadata: PlayerMetadata = .empty
@@ -45,7 +50,7 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
-    private lazy var currentTracker = CurrentTracker(player: self)
+    private var currentTracker: CurrentTracker?
 
     var properties: PlayerProperties = .empty {
         willSet {
@@ -219,6 +224,7 @@ public final class Player: ObservableObject, Equatable {
         self.configuration = configuration
 
         configurePlayer()
+        configureTracking()
 
         configurePublishedPropertyPublishers()
         configureQueuePlayerUpdatePublishers()
@@ -283,6 +289,10 @@ public final class Player: ObservableObject, Equatable {
         configureErrorPublisher()
         configureCurrentIndexPublisher()
         configurePlaybackSpeedPublisher()
+    }
+
+    private func configureTracking() {
+        currentTracker = isTrackingEnabled ? CurrentTracker(player: self) : nil
     }
 
     deinit {
