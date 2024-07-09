@@ -20,6 +20,7 @@ extension AVPlayer {
                     else {
                         return item.errorPublisher()
                             .handleEvents(receiveOutput: { error in
+                                // swiftlint:disable:previous trailing_closure
                                 let payload = ErrorMetricPayload(level: .fatal, error: error)
                                 let event = MetricEvent(kind: .error(payload), time: item.currentTime())
                                 item.metricLog.appendEvent(event)
