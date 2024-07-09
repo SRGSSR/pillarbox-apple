@@ -26,18 +26,21 @@ final class CurrentTracker {
 
         player.queuePublisher
             .slice(at: \.item)
+            .receiveOnMainThread()
             .sink { [weak self] item in
                 self?.item = item
             }
             .store(in: &cancellables)
 
         player.propertiesPublisher
+            .receiveOnMainThread()
             .sink { [weak self] properties in
                 self?.item?.updateTrackerProperties(properties)
             }
             .store(in: &cancellables)
 
         player.metricEventPublisher()
+            .receiveOnMainThread()
             .sink { [weak self] event in
                 self?.item?.receiveMetricEvent(event)
             }
