@@ -45,6 +45,8 @@ public final class Player: ObservableObject, Equatable {
         }
     }
 
+    private lazy var currentTracker = CurrentTracker(player: self)
+
     var properties: PlayerProperties = .empty {
         willSet {
             guard properties.coreProperties != newValue.coreProperties else {
