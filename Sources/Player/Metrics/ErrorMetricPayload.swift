@@ -15,20 +15,8 @@ public struct ErrorMetricPayload {
         case warning
     }
 
-    /// An error domain.
-    public enum Domain: String {
-        /// Asset-related.
-        case asset
-
-        /// Resource-related.
-        case resource
-    }
-
     /// The error level.
     public let level: Level
-
-    /// The error domain.
-    public let domain: Domain
 
     /// The detailed error.
     public let error: Error
