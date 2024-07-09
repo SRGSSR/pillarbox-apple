@@ -44,4 +44,33 @@ public extension Player {
             .receive(on: queue)
             .eraseToAnyPublisher()
     }
+
+    func metricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+        Publishers.Merge(itemMetricEventPublisher(), playerItemMetricEventPublisher())
+            .eraseToAnyPublisher()
+    }
+
+    private func itemMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+        queuePublisher
+            .slice(at: \.item)
+            .compactMap { $0 }
+            .map { item in
+                item.metricLog.eventPublisher()
+                    .prepend(item.metricLog.events)
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+
+    private func playerItemMetricEventPublisher() -> AnyPublisher<MetricEvent, Never> {
+        queuePublisher
+            .slice(at: \.itemState.item)
+            .compactMap { $0 }
+            .map { item in
+                item.metricLog.eventPublisher()
+                    .prepend(item.metricLog.events)
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
 }
