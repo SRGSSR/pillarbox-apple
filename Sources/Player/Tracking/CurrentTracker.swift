@@ -13,10 +13,11 @@ final class CurrentTracker {
 
     private var item: PlayerItem? {
         willSet {
+            guard item != newValue else { return }
             item?.disableTrackers()
         }
         didSet {
-            guard let player else { return }
+            guard let player, item != oldValue else { return }
             item?.enableTrackers(for: player)
         }
     }
@@ -26,21 +27,18 @@ final class CurrentTracker {
 
         player.queuePublisher
             .slice(at: \.item)
-            .receiveOnMainThread()
             .sink { [weak self] item in
                 self?.item = item
             }
             .store(in: &cancellables)
 
         player.propertiesPublisher
-            .receiveOnMainThread()
             .sink { [weak self] properties in
                 self?.item?.updateTrackerProperties(properties)
             }
             .store(in: &cancellables)
 
         player.metricEventPublisher()
-            .receiveOnMainThread()
             .sink { [weak self] event in
                 self?.item?.receiveMetricEvent(event)
             }
