@@ -25,20 +25,33 @@ final class CurrentTracker {
     init(player: Player) {
         self.player = player
 
+        configureItemPublisher(for: player)
+        configurePropertiesPublisher(for: player)
+        configureMetricEventPublisher(for: player)
+    }
+
+    private func configureItemPublisher(for player: Player) {
         player.queuePublisher
             .slice(at: \.item)
+            .receiveOnMainThread()
             .sink { [weak self] item in
                 self?.item = item
             }
             .store(in: &cancellables)
+    }
 
+    private func configurePropertiesPublisher(for player: Player) {
         player.propertiesPublisher
+            .receiveOnMainThread()
             .sink { [weak self] properties in
                 self?.item?.updateTrackerProperties(properties)
             }
             .store(in: &cancellables)
+    }
 
+    private func configureMetricEventPublisher(for player: Player) {
         player.metricEventPublisher()
+            .receiveOnMainThread()
             .sink { [weak self] event in
                 self?.item?.receiveMetricEvent(event)
             }
