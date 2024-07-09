@@ -115,7 +115,7 @@ public final class PlayerItem: Equatable {
             }
             .switchToLatest()
             .map { asset, metadata in
-                AssetContent(id: id, resource: asset.resource, metadata: metadata, configuration: asset.configuration, metricLog: metricLog)
+                AssetContent(id: id, resource: asset.resource, metadata: metadata, configuration: asset.configuration)
             }
             .handleEvents(receiveCompletion: { completion in
                 switch completion {
