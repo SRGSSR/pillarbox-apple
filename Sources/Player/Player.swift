@@ -97,7 +97,7 @@ public final class Player: ObservableObject, Equatable {
         .eraseToAnyPublisher()
     }()
 
-    lazy var metricEventMetaPublisher: AnyPublisher<AnyPublisher<MetricEvent, Never>, Never> = {
+    lazy var consolidatedMetricEventPublisher: AnyPublisher<AnyPublisher<MetricEvent, Never>, Never> = {
         queuePublisher
             .withPrevious(.empty)
             .compactMap { queue in

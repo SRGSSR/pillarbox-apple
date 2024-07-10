@@ -50,7 +50,7 @@ public final class MetricsCollector: ObservableObject {
         self.limit = limit
 
         configureMetricsPublisher(interval: interval)
-        configureMetricEventsPublisher()
+        configurecurrentMetricEventsPublisher()
     }
 
     private func configureMetricsPublisher(interval: CMTime) {
@@ -68,14 +68,14 @@ public final class MetricsCollector: ObservableObject {
             .assign(to: &$metrics)
     }
 
-    private func configureMetricEventsPublisher() {
+    private func configurecurrentMetricEventsPublisher() {
         $player
             .removeDuplicates()
             .map { player -> AnyPublisher<[MetricEvent], Never> in
                 guard let player else {
                     return Just([]).eraseToAnyPublisher()
                 }
-                return player.metricEventsPublisher
+                return player.currentMetricEventsPublisher
             }
             .switchToLatest()
             .receiveOnMainThread()

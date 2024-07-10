@@ -52,7 +52,7 @@ public extension Player {
     /// All metric events related to the item currently being played, if any, are received upon subscription.
     /// Events are ordered from the oldest to the newest one.
     var metricEventPublisher: AnyPublisher<MetricEvent, Never> {
-        metricEventMetaPublisher
+        consolidatedMetricEventPublisher
             // swiftlint:disable:next array_init
             .map { $0 }
             .switchToLatest()
@@ -63,8 +63,8 @@ public extension Player {
     ///
     /// All metric events related to the item currently being played, if any, are received upon subscription.
     /// Events are ordered from the oldest to the newest one.
-    var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> {
-        metricEventMetaPublisher
+    var currentMetricEventsPublisher: AnyPublisher<[MetricEvent], Never> {
+        consolidatedMetricEventPublisher
             .map { publisher in
                 publisher.scan([]) { $0 + [$1] }
             }
