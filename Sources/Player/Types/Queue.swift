@@ -25,7 +25,7 @@ struct Queue {
         itemState.error
     }
 
-    private var playerItem: AVPlayerItem? {
+    var playerItem: AVPlayerItem? {
         itemState.item
     }
 

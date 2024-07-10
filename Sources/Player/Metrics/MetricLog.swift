@@ -10,7 +10,7 @@ final class MetricLog {
     private(set) var events: [MetricEvent] = []
 
     private let subject = PassthroughSubject<MetricEvent, Never>()
-    private let otherSubject = PassthroughSubject<MetricEvent, Never>()
+    private let joinedSubject = PassthroughSubject<MetricEvent, Never>()
 
     private var cancellable: AnyCancellable?
 
@@ -26,14 +26,14 @@ final class MetricLog {
     func eventPublisher() -> AnyPublisher<MetricEvent, Never> {
         Publishers.Merge(
             subject,
-            otherSubject
+            joinedSubject
         )
         .prepend(events)
         .eraseToAnyPublisher()
     }
 
-    func connect(to other: MetricLog?) {
-        cancellable = other?.subject
-            .subscribe(otherSubject)
+    func join(with other: MetricLog?) {
+        cancellable = other?.eventPublisher()
+            .subscribe(joinedSubject)
     }
 }

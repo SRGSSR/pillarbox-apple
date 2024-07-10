@@ -53,6 +53,7 @@ public extension Player {
     /// Events are ordered from the oldest to the newest one.
     var metricEventPublisher: AnyPublisher<MetricEvent, Never> {
         metricEventMetaPublisher
+            // swiftlint:disable:next array_init
             .map { $0 }
             .switchToLatest()
             .eraseToAnyPublisher()
