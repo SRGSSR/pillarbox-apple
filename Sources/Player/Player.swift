@@ -99,11 +99,14 @@ public final class Player: ObservableObject, Equatable {
 
     lazy var metricEventMetaPublisher: AnyPublisher<AnyPublisher<MetricEvent, Never>, Never> = {
         queuePublisher
-            .withPrevious()
-            .compactMap { queue -> AnyPublisher<MetricEvent, Never>? in
-                guard let item = queue.current.item else { return nil }
-                item.metricLog.connect(to: queue.current.itemState.item?.metricLog)
-                guard item != queue.previous?.item else { return nil }
+            .withPrevious(.empty)
+            .compactMap { queue in
+                guard let item = queue.current.item else { return Empty().eraseToAnyPublisher() }
+                let playerItem = queue.current.playerItem
+                if playerItem !== queue.previous.playerItem {
+                    item.metricLog.join(with: playerItem?.metricLog)
+                }
+                guard item != queue.previous.item else { return nil }
                 return item.metricLog.eventPublisher()
             }
             .share(replay: 1)
