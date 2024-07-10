@@ -97,12 +97,15 @@ public final class Player: ObservableObject, Equatable {
         .eraseToAnyPublisher()
     }()
 
-    /// A shared publisher delivering metric events associated to the current item.
-    ///
-    /// All metric events related to the item currently being played, if any, are received upon subscription.
-    /// Events are ordered from the oldest to the newest one.
-    public lazy var metricEventsPublisher: AnyPublisher<AnyPublisher<MetricEvent, Never>, Never> = {
-        metricEventPublisher()
+    lazy var metricEventMetaPublisher: AnyPublisher<AnyPublisher<MetricEvent, Never>, Never> = {
+        queuePublisher
+            .withPrevious()
+            .compactMap { queue -> AnyPublisher<MetricEvent, Never>? in
+                guard let item = queue.current.item else { return nil }
+                item.metricLog.connect(to: queue.current.itemState.item?.metricLog)
+                guard item != queue.previous?.item else { return nil }
+                return item.metricLog.eventPublisher()
+            }
             .share(replay: 1)
             .eraseToAnyPublisher()
     }()

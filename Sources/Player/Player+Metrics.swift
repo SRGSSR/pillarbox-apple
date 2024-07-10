@@ -46,16 +46,28 @@ public extension Player {
     }
 }
 
-extension Player {
-    func metricEventPublisher() -> AnyPublisher<AnyPublisher<MetricEvent, Never>, Never> {
-        queuePublisher
-            .withPrevious()
-            .compactMap { queue -> AnyPublisher<MetricEvent, Never>? in
-                guard let item = queue.current.item else { return nil }
-                item.metricLog.connect(to: queue.current.itemState.item?.metricLog)
-                guard item != queue.previous?.item else { return nil }
-                return item.metricLog.eventPublisher()
+public extension Player {
+    /// A shared publisher delivering metric events as a single consolidated stream.
+    ///
+    /// All metric events related to the item currently being played, if any, are received upon subscription.
+    /// Events are ordered from the oldest to the newest one.
+    var metricEventPublisher: AnyPublisher<MetricEvent, Never> {
+        metricEventMetaPublisher
+            .map { $0 }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+
+    /// A shared publisher delivering metric events associated with the current item.
+    ///
+    /// All metric events related to the item currently being played, if any, are received upon subscription.
+    /// Events are ordered from the oldest to the newest one.
+    var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> {
+        metricEventMetaPublisher
+            .map { publisher in
+                publisher.scan([]) { $0 + [$1] }
             }
+            .switchToLatest()
             .eraseToAnyPublisher()
     }
 }
