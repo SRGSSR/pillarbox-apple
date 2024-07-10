@@ -15,6 +15,8 @@ extension AVPlayer {
             .map { item -> AnyPublisher<ItemState, Never> in
                 if let item {
                     if let error = item.error {
+                        let event = MetricEvent(kind: .failure(error: error, level: .fatal), time: item.currentTime())
+                        item.metricLog.appendEvent(event)
                         return Just(.init(item: item, error: error)).eraseToAnyPublisher()
                     }
                     else {
