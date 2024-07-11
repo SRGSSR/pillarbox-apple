@@ -11,14 +11,35 @@ import Combine
 import PillarboxCircumspect
 import PillarboxStreams
 
-final class MetricsPublisherTests: TestCase {
-    func testCurrentMetricEventsPublisher() {
+final class CurrentMetricEventsPublisherTests: TestCase {
+    func testPlayback() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
-        expectAtLeastSimilarPublished(values: [
-            [.init(kind: .assetLoading(.init()))],
-            [.init(kind: .assetLoading(.init())), .init(kind: .resourceLoading(.init()))]
-        ], from: player.currentMetricEventsPublisher) {
+        expectAtLeastSimilarPublished(
+            values: [
+                [.init(kind: .assetLoading(.init()))],
+                [.init(kind: .assetLoading(.init())), .init(kind: .resourceLoading(.init()))]
+            ],
+            from: player.currentMetricEventsPublisher
+        ) {
             player.play()
         }
+    }
+
+    func testAssetFailure() {
+    }
+
+    func testPlaybackFailure() {
+    }
+
+    func testRetryAfterFailure() {
+    }
+
+    func testPlaylistTransition() {
+    }
+
+    func testPlaylistTransitionToFailingItem() {
+    }
+
+    func testMoveInPlaylist() {
     }
 }
