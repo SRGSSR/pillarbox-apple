@@ -98,15 +98,9 @@ public final class Player: ObservableObject, Equatable {
     }()
 
     lazy var consolidatedMetricEventPublisher: AnyPublisher<AnyPublisher<MetricEvent, Never>, Never> = {
-        queuePublisher
-            .withPrevious(.empty)
-            .compactMap { queue in
-                guard let item = queue.current.item else { return Empty().eraseToAnyPublisher() }
-                let playerItem = queue.current.playerItem
-                if playerItem !== queue.previous.playerItem {
-                    item.metricLog.join(with: playerItem?.metricLog)
-                }
-                guard item != queue.previous.item else { return nil }
+        currentItemPublisher()
+            .map { item in
+                guard let item else { return Empty().eraseToAnyPublisher() }
                 return item.metricLog.eventPublisher()
             }
             .share(replay: 1)
