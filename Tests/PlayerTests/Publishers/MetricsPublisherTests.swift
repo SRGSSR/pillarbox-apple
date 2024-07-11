@@ -14,6 +14,16 @@ import PillarboxStreams
 private struct MockedError: Error {}
 
 final class CurrentMetricEventsPublisherTests: TestCase {
+    func testEmpty() {
+        let player = Player()
+        expectAtLeastSimilarPublished(
+            values: [
+                []
+            ],
+            from: player.currentMetricEventsPublisher
+        )
+    }
+
     func testPlayback() {
         let player = Player(item: .simple(url: Stream.shortOnDemand.url))
         expectAtLeastSimilarPublished(
@@ -30,6 +40,7 @@ final class CurrentMetricEventsPublisherTests: TestCase {
         let player = Player(item: .init(publisher: publisher))
         expectAtLeastSimilarPublished(
             values: [
+                [],
                 [.init(kind: .failure(error: MockedError(), level: .fatal))]
             ],
             from: player.currentMetricEventsPublisher
@@ -56,7 +67,6 @@ final class CurrentMetricEventsPublisherTests: TestCase {
             values: [
                 [.init(kind: .assetLoading(.init()))],
                 [.init(kind: .assetLoading(.init())), .init(kind: .resourceLoading(.init()))],
-                [.init(kind: .assetLoading(.init()))],
                 [.init(kind: .assetLoading(.init())), .init(kind: .resourceLoading(.init()))]
             ],
             from: player.currentMetricEventsPublisher
@@ -74,7 +84,6 @@ final class CurrentMetricEventsPublisherTests: TestCase {
             values: [
                 [.init(kind: .assetLoading(.init()))],
                 [.init(kind: .assetLoading(.init())), .init(kind: .resourceLoading(.init()))],
-                [.init(kind: .assetLoading(.init()))],
                 [.init(kind: .assetLoading(.init())), .init(kind: .failure(error: MockedError(), level: .fatal))]
             ],
             from: player.currentMetricEventsPublisher
