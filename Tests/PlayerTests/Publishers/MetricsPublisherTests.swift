@@ -66,9 +66,20 @@ final class CurrentMetricEventsPublisherTests: TestCase {
     }
 
     func testPlaylistTransitionToFailingItem() {
-
-    }
-
-    func testAdvanceInPlaylist() {
+        let player = Player(items: [
+            .simple(url: Stream.shortOnDemand.url),
+            .simple(url: Stream.unavailable.url)
+        ])
+        expectAtLeastSimilarPublished(
+            values: [
+                [.init(kind: .assetLoading(.init()))],
+                [.init(kind: .assetLoading(.init())), .init(kind: .resourceLoading(.init()))],
+                [.init(kind: .assetLoading(.init()))],
+                [.init(kind: .assetLoading(.init())), .init(kind: .failure(error: MockedError(), level: .fatal))]
+            ],
+            from: player.currentMetricEventsPublisher
+        ) {
+            player.play()
+        }
     }
 }
