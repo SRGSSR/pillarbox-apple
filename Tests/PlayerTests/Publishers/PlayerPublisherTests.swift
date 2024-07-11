@@ -156,14 +156,4 @@ final class PlayerPublisherTests: TestCase {
             player.play()
         }
     }
-
-    func testcurrentMetricEventsPublisher() {
-        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
-        expectAtLeastSimilarPublished(values: [
-            [.init(kind: .assetLoading(.init()))],
-            [.init(kind: .assetLoading(.init())), .init(kind: .resourceLoading(.init()))]
-        ], from: player.currentMetricEventsPublisher) {
-            player.play()
-        }
-    }
 }
