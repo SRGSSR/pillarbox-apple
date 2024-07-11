@@ -7,7 +7,7 @@
 import CoreMedia
 
 /// A metric event.
-public struct MetricEvent: Equatable {
+public struct MetricEvent: Hashable {
     /// A kind of metric event.
     public enum Kind {
         /// Asset loading.
@@ -55,8 +55,12 @@ public struct MetricEvent: Equatable {
         self.time = time
     }
 
-    public static func == (lhs: MetricEvent, rhs: MetricEvent) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
 
