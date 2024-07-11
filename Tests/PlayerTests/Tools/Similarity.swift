@@ -50,6 +50,8 @@ extension MetricEvent: Similar {
         switch (lhs.kind, rhs.kind) {
         case (.assetLoading, .assetLoading), (.resourceLoading, .resourceLoading):
             return true
+        case let (.failure(error: _, level: lhsLevel), .failure(error: _, level: rhsLevel)):
+            return lhsLevel == rhsLevel
         default:
             return false
         }

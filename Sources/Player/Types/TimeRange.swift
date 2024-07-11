@@ -21,6 +21,7 @@ public struct TimeRange: Hashable, Equatable {
     public enum Credits {
         /// Opening.
         case opening
+        
         /// Closing.
         case closing
     }
