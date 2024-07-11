@@ -220,12 +220,6 @@ public final class Player: ObservableObject, Equatable {
         configureControlCenterPublishers()
         configureMetadataPublisher()
         configureBlockedTimeRangesPublishers()
-
-        metricEventsPublisher
-            .sink { events in
-                print("--> events: \(events)")
-            }
-            .store(in: &cancellables)
     }
 
     /// Creates a player with a single item in its queue.
