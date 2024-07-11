@@ -47,13 +47,41 @@ public extension Player {
 }
 
 public extension Player {
-    /// A shared publisher delivering metric events as a single consolidated stream.
+    /// A publisher delivering metric events for the current item.
     ///
     /// All metric events related to the item currently being played, if any, are received upon subscription.
-    /// Events are ordered from the oldest to the newest one.
-    var metricEventPublisher: AnyPublisher<MetricEvent, Never> {
-        currentMetricEventsPublisher
-            .compactMap(\.last)
+    var currentMetricEventsPublisher: AnyPublisher<[MetricEvent], Never> {
+        metricEventUpdatePublisher
+            .map(\.events)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    /// A publisher delivering new metric events.
+    ///
+    /// All metric events related to the item currently being played, if any, are received upon subscription.
+    var metricEventsPublisher: AnyPublisher<[MetricEvent], Never> {
+        metricEventUpdatePublisher
+            .map(\.newEvents)
+            .filter { !$0.isEmpty }
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    private var metricEventUpdatePublisher: AnyPublisher<MetricEventUpdate, Never> {
+        queuePublisher
+            .withPrevious(.empty)
+            .map { queue -> AnyPublisher<MetricEventUpdate, Never> in
+                guard let items = queue.current.items else {
+                    return Just(.empty).eraseToAnyPublisher()
+                }
+                let update = QueueItems.metricEventUpdate(from: queue.previous.items, to: items)
+                return items.metricEventPublisher()
+                    .scan(update) { $0.updated(with: $1) }
+                    .prepend(update)
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
             .removeDuplicates()
             .eraseToAnyPublisher()
     }

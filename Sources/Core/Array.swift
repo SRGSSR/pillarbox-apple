@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+import OrderedCollections
+
 public extension Array where Element: Hashable {
     /// Removes duplicates from the receiver, preserving the initial item order.
     ///
@@ -11,6 +13,15 @@ public extension Array where Element: Hashable {
     func removeDuplicates() -> [Element] {
         var itemDictionnary = [Element: Bool]()
         return filter { itemDictionnary.updateValue(true, forKey: $0) == nil }
+    }
+
+    /// Subtracts an array from the receiver.
+    ///
+    /// - Parameter other: The array to subtract.
+    /// - Returns: The receiver, from which elements from the provided array are removed. The order of the items
+    ///   in the receiver is preserved.
+    func subtracting(_ other: [Element]) -> [Element] {
+        Array(OrderedSet(self).subtracting(Set(other)))
     }
 }
 

@@ -97,31 +97,6 @@ public final class Player: ObservableObject, Equatable {
         .eraseToAnyPublisher()
     }()
 
-    /// A shared publisher delivering metric events associated with the current item.
-    ///
-    /// All metric events related to the item currently being played, if any, are received upon subscription.
-    /// Events are ordered from the oldest to the newest one.
-    public lazy var currentMetricEventsPublisher: AnyPublisher<[MetricEvent], Never> = {
-        queuePublisher
-            .map { queue -> AnyPublisher<[MetricEvent], Never> in
-                guard let item = queue.item, let playerItem = queue.playerItem else {
-                    return Just([]).eraseToAnyPublisher()
-                }
-                let events = (item.metricLog.events + playerItem.metricLog.events).sorted { $0.date < $1.date }
-                return Publishers.Merge(
-                    item.metricLog.eventPublisher(),
-                    playerItem.metricLog.eventPublisher()
-                )
-                .scan(events) { $0 + [$1] }
-                .prepend(events)
-                .eraseToAnyPublisher()
-            }
-            .switchToLatest()
-            .removeDuplicates()
-            .share(replay: 1)
-            .eraseToAnyPublisher()
-    }()
-
     lazy var queuePublisher: AnyPublisher<Queue, Never> = {
         Publishers.Merge(
             elementsQueueUpdatePublisher(),
@@ -245,6 +220,12 @@ public final class Player: ObservableObject, Equatable {
         configureControlCenterPublishers()
         configureMetadataPublisher()
         configureBlockedTimeRangesPublishers()
+
+        metricEventsPublisher
+            .sink { events in
+                print("--> events: \(events)")
+            }
+            .store(in: &cancellables)
     }
 
     /// Creates a player with a single item in its queue.

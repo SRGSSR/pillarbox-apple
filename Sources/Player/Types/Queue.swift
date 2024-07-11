@@ -25,8 +25,15 @@ struct Queue {
         itemState.error
     }
 
-    var playerItem: AVPlayerItem? {
+    private var playerItem: AVPlayerItem? {
         itemState.item
+    }
+
+    var items: QueueItems? {
+        guard let item, let playerItem else {
+            return nil
+        }
+        return .init(item: item, playerItem: playerItem)
     }
 
     init(elements: [QueueElement], itemState: ItemState) {
@@ -58,6 +65,17 @@ struct Queue {
             return .init(elements: elements, itemState: itemState)
         case let .itemState(itemState):
             return .init(elements: elements, itemState: itemState)
+        }
+    }
+}
+
+extension Queue: CustomDebugStringConvertible {
+    var debugDescription: String {
+        if let id = item?.id, let playerItem {
+            return "item = \(id), playerItem = \(playerItem)"
+        }
+        else {
+            return "item = -"
         }
     }
 }

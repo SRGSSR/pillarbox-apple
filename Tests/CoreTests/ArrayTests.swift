@@ -21,4 +21,9 @@ final class ArrayTests: XCTestCase {
         expect([1, 2, 3][safeIndex: -1]).to(beNil())
         expect([1, 2, 3][safeIndex: 3]).to(beNil())
     }
+
+    func testSubtracting() {
+        expect([1, 2, 3, 4].subtracting([])).to(equalDiff([1, 2, 3, 4]))
+        expect([1, 2, 3, 4].subtracting([4, 2, 5])).to(equalDiff([1, 3]))
+    }
 }
