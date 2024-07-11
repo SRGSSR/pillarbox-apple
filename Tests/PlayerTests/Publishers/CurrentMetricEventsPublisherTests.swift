@@ -8,6 +8,7 @@
 
 import AVFoundation
 import Combine
+import Nimble
 import PillarboxCircumspect
 import PillarboxStreams
 
@@ -29,10 +30,13 @@ final class CurrentMetricEventsPublisherTests: TestCase {
         expectAtLeastSimilarPublished(
             values: [
                 [.init(kind: .assetLoading(.init()))],
-                [.init(kind: .assetLoading(.init())), .init(kind: .resourceLoading(.init()))]
+                [.init(kind: .assetLoading(.init())), .init(kind: .resourceLoading(.init()))],
+                []
             ],
             from: player.currentMetricEventsPublisher
-        )
+        ) {
+            player.play()
+        }
     }
 
     func testAssetFailure() {
@@ -90,5 +94,16 @@ final class CurrentMetricEventsPublisherTests: TestCase {
         ) {
             player.play()
         }
+    }
+
+    func testInitialDelivery() {
+        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
+        expect(player.playbackState).toEventually(equal(.paused))
+        expectAtLeastSimilarPublished(
+            values: [
+                [.init(kind: .assetLoading(.init())), .init(kind: .resourceLoading(.init()))]
+            ],
+            from: player.currentMetricEventsPublisher
+        )
     }
 }

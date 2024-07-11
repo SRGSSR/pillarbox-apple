@@ -8,6 +8,7 @@
 
 import AVFoundation
 import Combine
+import Nimble
 import PillarboxCircumspect
 import PillarboxStreams
 
@@ -16,7 +17,7 @@ private struct MockedError: Error {}
 final class MetricEventsPublisherTests: TestCase {
     func testEmpty() {
         let player = Player()
-        expectNothingPublished(from: player.metricEventsPublisher)
+        expectNothingPublished(from: player.metricEventsPublisher, during: .milliseconds(500))
     }
 
     func testPlayback() {
@@ -84,5 +85,16 @@ final class MetricEventsPublisherTests: TestCase {
         ) {
             player.play()
         }
+    }
+
+    func testInitialDelivery() {
+        let player = Player(item: .simple(url: Stream.shortOnDemand.url))
+        expect(player.playbackState).toEventually(equal(.paused))
+        expectAtLeastSimilarPublished(
+            values: [
+                [.init(kind: .assetLoading(.init())), .init(kind: .resourceLoading(.init()))]
+            ],
+            from: player.metricEventsPublisher
+        )
     }
 }
