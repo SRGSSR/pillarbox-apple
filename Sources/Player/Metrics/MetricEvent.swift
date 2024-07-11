@@ -7,7 +7,7 @@
 import CoreMedia
 
 /// A metric event.
-public struct MetricEvent {
+public struct MetricEvent: Equatable {
     /// A kind of metric event.
     public enum Kind {
         /// Asset loading.
@@ -23,6 +23,8 @@ public struct MetricEvent {
         /// Failure.
         case failure(error: Error, level: ErrorLevel)
     }
+
+    private let id = UUID()
 
     /// The kind of event.
     public let kind: Kind
@@ -51,6 +53,10 @@ public struct MetricEvent {
         self.kind = kind
         self.date = date
         self.time = time
+    }
+
+    public static func == (lhs: MetricEvent, rhs: MetricEvent) -> Bool {
+        lhs.id == rhs.id
     }
 }
 

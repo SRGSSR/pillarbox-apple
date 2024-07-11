@@ -52,23 +52,9 @@ public extension Player {
     /// All metric events related to the item currently being played, if any, are received upon subscription.
     /// Events are ordered from the oldest to the newest one.
     var metricEventPublisher: AnyPublisher<MetricEvent, Never> {
-        consolidatedMetricEventPublisher
-            // swiftlint:disable:next array_init
-            .map { $0 }
-            .switchToLatest()
-            .eraseToAnyPublisher()
-    }
-
-    /// A shared publisher delivering metric events associated with the current item.
-    ///
-    /// All metric events related to the item currently being played, if any, are received upon subscription.
-    /// Events are ordered from the oldest to the newest one.
-    var currentMetricEventsPublisher: AnyPublisher<[MetricEvent], Never> {
-        consolidatedMetricEventPublisher
-            .map { publisher in
-                publisher.scan([]) { $0 + [$1] }
-            }
-            .switchToLatest()
+        currentMetricEventsPublisher
+            .compactMap(\.last)
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 }
