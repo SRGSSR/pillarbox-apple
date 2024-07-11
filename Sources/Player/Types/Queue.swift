@@ -68,14 +68,3 @@ struct Queue {
         }
     }
 }
-
-extension Queue: CustomDebugStringConvertible {
-    var debugDescription: String {
-        if let id = item?.id, let playerItem {
-            return "item = \(id), playerItem = \(playerItem)"
-        }
-        else {
-            return "item = -"
-        }
-    }
-}
