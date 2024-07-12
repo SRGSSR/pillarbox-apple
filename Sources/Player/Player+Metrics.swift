@@ -60,10 +60,8 @@ extension Player {
     var metricEventPublisher: AnyPublisher<MetricEvent, Never> {
         metricEventUpdatePublisher
             .map(\.newEvents)
-            .filter { !$0.isEmpty }
             .map { $0.publisher }
             .switchToLatest()
-            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 

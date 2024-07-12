@@ -4,8 +4,6 @@
 //  License information is available from the LICENSE file.
 //
 
-import OrderedCollections
-
 public extension Array where Element: Hashable {
     /// Removes duplicates from the receiver, preserving the initial item order.
     ///
