@@ -79,7 +79,8 @@ final class MetricEventPublisherTests: TestCase {
             values: [
                 .init(kind: .assetLoading(.init())),
                 .init(kind: .resourceLoading(.init())),
-                .init(kind: .assetLoading(.init())), .init(kind: .resourceLoading(.init()))
+                .init(kind: .assetLoading(.init())),
+                .init(kind: .resourceLoading(.init()))
             ],
             from: player.metricEventPublisher
         ) {
@@ -96,7 +97,8 @@ final class MetricEventPublisherTests: TestCase {
             values: [
                 .init(kind: .assetLoading(.init())),
                 .init(kind: .resourceLoading(.init())),
-                .init(kind: .assetLoading(.init())), .init(kind: .failure(error: MockedError(), level: .fatal))
+                .init(kind: .assetLoading(.init())),
+                .init(kind: .failure(error: MockedError(), level: .fatal))
             ],
             from: player.metricEventPublisher
         ) {
@@ -109,7 +111,8 @@ final class MetricEventPublisherTests: TestCase {
         expect(player.playbackState).toEventually(equal(.paused))
         expectAtLeastSimilarPublished(
             values: [
-                .init(kind: .assetLoading(.init())), .init(kind: .resourceLoading(.init()))
+                .init(kind: .assetLoading(.init())),
+                .init(kind: .resourceLoading(.init()))
             ],
             from: player.metricEventPublisher
         )

@@ -22,9 +22,6 @@ struct MetricEventUpdate {
     }
 
     func updated(with event: MetricEvent) -> Self {
-        .init(
-            previousEvents: events,
-            newEvents: [event]
-        )
+        .init(previousEvents: events, newEvents: [event])
     }
 }

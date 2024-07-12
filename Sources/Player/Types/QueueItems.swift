@@ -18,10 +18,7 @@ struct QueueItems: Equatable {
             return update(from: previous.events(), to: current.events())
         }
         else {
-            return .init(
-                previousEvents: [],
-                newEvents: current.events()
-            )
+            return .init(previousEvents: [], newEvents: current.events())
         }
     }
 
