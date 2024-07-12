@@ -123,9 +123,9 @@ final class MeasurePublisherTests: XCTestCase {
                 Just(value)
                     .delay(for: .milliseconds(value * 100), scheduler: DispatchQueue.main)
             }
-            .measureDateInterval { interval in
+            .measureFirstDateInterval { interval in
                 durations.append(interval.duration)
-            } firstWhen: { value in
+            } when: { value in
                 value.isMultiple(of: 2)
             }
             .sink(

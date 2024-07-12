@@ -189,6 +189,8 @@ public extension Publisher {
     /// Measure the date interval between consecutive outputs.
     ///
     /// - Parameter measure: A closure called for each output delivered upstream.
+    ///
+    /// The first measurement is made relative to the time at which subscription to the publisher was made.
     func measureDateInterval(perform measure: @escaping (DateInterval) -> Void) -> AnyPublisher<Output, Failure> {
         var startDate: Date?
         return handleEvents(
@@ -210,6 +212,8 @@ public extension Publisher {
     /// - Parameters
     ///    - measure: A closure called for each matching output delivered upstream.
     ///    - condition: A closure called to filter matching outputs.
+    ///
+    /// The first measurement is made relative to the time at which subscription to the publisher was made.
     func measureDateInterval(perform measure: @escaping (DateInterval) -> Void, when condition: @escaping (Output) -> Bool) -> AnyPublisher<Output, Failure> {
         var startDate: Date?
         return handleEvents(
@@ -231,9 +235,11 @@ public extension Publisher {
     /// - Parameters
     ///    - measure: A closure called for each output delivered upstream.
     ///    - condition: A closure called to find the first matching output.
-    func measureDateInterval(
+    ///
+    /// The measurement is made relative to the time at which subscription to the publisher was made.
+    func measureFirstDateInterval(
         perform measure: @escaping (DateInterval) -> Void,
-        firstWhen condition: @escaping (Output) -> Bool
+        when condition: @escaping (Output) -> Bool
     ) -> AnyPublisher<Output, Failure> {
         var startDate: Date?
         return handleEvents(
