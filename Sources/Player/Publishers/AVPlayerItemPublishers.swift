@@ -46,8 +46,9 @@ extension AVPlayerItem {
             publisher(for: \.seekableTimeRanges)
                 .lane("player_item_seekable_time_ranges"),
             publisher(for: \.isPlaybackLikelyToKeepUp)
-                .measureDateInterval { [metricLog] interval in
-                    let event = MetricEvent(kind: .resourceLoading(interval))
+                .measureDateInterval { [weak self] interval in
+                    guard let self else { return }
+                    let event = MetricEvent(kind: .resourceLoading(interval), time: currentTime())
                     metricLog.appendEvent(event)
                 } firstWhen: { isPlaybackLikelyToKeepUp in
                     isPlaybackLikelyToKeepUp
