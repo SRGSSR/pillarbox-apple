@@ -139,7 +139,14 @@ extension AVPlayerItem {
 
 extension AVPlayerItem {
     func isStalledPublisher() -> AnyPublisher<Bool, Never> {
-        Just(false).eraseToAnyPublisher()
+        Publishers.Merge(
+            NotificationCenter.default.weakPublisher(for: AVPlayerItem.playbackStalledNotification, object: self)
+                .map { _ in true },
+            publisher(for: \.isPlaybackLikelyToKeepUp)
+                .compactMap { $0 ? false : nil }
+        )
+        .removeDuplicates()
+        .eraseToAnyPublisher()
     }
 }
 
