@@ -142,4 +142,34 @@ final class MeasurePublisherTests: XCTestCase {
             expect(duration).to(beCloseTo(expected, within: 0.1))
         }
     }
+
+    func testAfterWhen() {
+        let expectation = expectation(description: "Done")
+        var durations: [TimeInterval] = []
+        [1, 2, 3, 4, 5, 6].publisher
+            .flatMap { value in
+                Just(value)
+                    .delay(for: .milliseconds(value * 100), scheduler: DispatchQueue.main)
+            }
+            .measureDateInterval { interval in
+                durations.append(interval.duration)
+            } after: { value in
+                value.isMultiple(of: 2)
+            } when: { value in
+                value.isMultiple(of: 5)
+            }
+            .sink(
+                receiveCompletion: { _ in
+                    expectation.fulfill()
+                },
+                receiveValue: { _ in }
+            )
+            .store(in: &cancellables)
+        wait(for: [expectation], timeout: 1)
+
+        expect(durations.count).to(equal(1))
+        zip(durations, [0.3]).forEach { duration, expected in
+            expect(duration).to(beCloseTo(expected, within: 0.1))
+        }
+    }
 }

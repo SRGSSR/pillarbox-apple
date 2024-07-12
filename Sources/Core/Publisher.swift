@@ -255,4 +255,35 @@ public extension Publisher {
         )
         .eraseToAnyPublisher()
     }
+
+    /// Measure date intervals, starting after some condition is satisfied and ending when another one is satisfied.
+    ///
+    /// - Parameters
+    ///    - measure: A closure called for each output delivered upstream.
+    ///    - startCondition: A closure called to determine when a measurement must start.
+    ///    - endCondition: A closure called to to determine when a measurement must stop.
+    ///
+    /// A measurement is made for each pair of matching conditions.
+    func measureDateInterval(
+        perform measure: @escaping (DateInterval) -> Void,
+        after startCondition: @escaping (Output) -> Bool,
+        when endCondition: @escaping (Output) -> Bool
+    ) -> AnyPublisher<Output, Failure> {
+        var startDate: Date?
+        return handleEvents(
+            // swiftlint:disable:next trailing_closure
+            receiveOutput: { output in
+                if let start = startDate {
+                    guard endCondition(output) else { return }
+                    let end = Date()
+                    measure(.init(start: start, end: end))
+                    startDate = nil
+                }
+                else if startCondition(output) {
+                    startDate = Date()
+                }
+            }
+        )
+        .eraseToAnyPublisher()
+    }
 }
