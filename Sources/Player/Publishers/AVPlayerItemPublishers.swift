@@ -147,6 +147,8 @@ extension AVPlayerItem {
             publisher(for: \.isPlaybackLikelyToKeepUp)
                 .compactMap { $0 ? false : nil }
         )
+        .prepend(false)
+        .removeDuplicates()
         .measureDateInterval { [weak self] dateInterval in
             guard let self else { return }
             let event = MetricEvent(kind: .resumeAfterStall(dateInterval), time: currentTime())
@@ -159,7 +161,6 @@ extension AVPlayerItem {
         } when: { isStalled in
             !isStalled
         }
-        .removeDuplicates()
         .eraseToAnyPublisher()
     }
 }
