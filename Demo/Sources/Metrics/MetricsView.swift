@@ -90,8 +90,8 @@ private struct StartupTimesSectionContent: View {
     }
 
     private var totalDuration: String {
-        guard let resourceLoadingInterval else { return "-" }
-        let totalInterval = resourceLoadingInterval + (assetLoadingInterval ?? 0)
+        guard let resourceLoadingInterval, let assetLoadingInterval else { return "-" }
+        let totalInterval = resourceLoadingInterval + assetLoadingInterval
         return String(format: "%.6fs", totalInterval)
     }
 
