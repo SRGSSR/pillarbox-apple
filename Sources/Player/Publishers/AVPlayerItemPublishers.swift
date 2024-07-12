@@ -7,6 +7,7 @@
 import AVFoundation
 import Combine
 import MediaAccessibility
+import PillarboxCore
 
 extension AVPlayerItem {
     func propertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
@@ -48,8 +49,9 @@ extension AVPlayerItem {
             publisher(for: \.seekableTimeRanges)
                 .lane("player_item_seekable_time_ranges"),
             publisher(for: \.isPlaybackLikelyToKeepUp)
-                .measureFirstDateInterval { [metricLog] interval in
-                    let event = MetricEvent(kind: .resourceLoading(interval))
+                .measureFirstDateInterval { [weak self] interval in
+                    guard let self else { return }
+                    let event = MetricEvent(kind: .resourceLoading(interval), time: currentTime())
                     metricLog.appendEvent(event)
                 } when: { isPlaybackLikelyToKeepUp in
                     isPlaybackLikelyToKeepUp
@@ -145,6 +147,18 @@ extension AVPlayerItem {
             publisher(for: \.isPlaybackLikelyToKeepUp)
                 .compactMap { $0 ? false : nil }
         )
+        .measureDateInterval { [weak self] dateInterval in
+            guard let self else { return }
+            let event = MetricEvent(kind: .resumeAfterStall(dateInterval), time: currentTime())
+            metricLog.appendEvent(event)
+        } after: { [weak self] isStalled in
+            guard let self, isStalled else { return false }
+            let event = MetricEvent(kind: .stall, time: currentTime())
+            metricLog.appendEvent(event)
+            return true
+        } when: { isStalled in
+            !isStalled
+        }
         .removeDuplicates()
         .eraseToAnyPublisher()
     }

@@ -25,6 +25,14 @@ public struct MetricEvent: Hashable {
 
         /// Warning.
         case warning(Error)
+
+        /// Stall.
+        case stall
+
+        /// Resume after stall.
+        ///
+        /// Measures the time for the player to recover after a stall.
+        case resumeAfterStall(DateInterval)
     }
 
     private let id = UUID()
@@ -78,6 +86,10 @@ extension MetricEvent: CustomStringConvertible {
             return "failure(\(error.localizedDescription))"
         case let .warning(error):
             return "warning(\(error.localizedDescription))"
+        case .stall:
+            return "stall"
+        case let .resumeAfterStall(dateInterval):
+            return "resumeAfterStall(\(dateInterval.duration))"
         }
     }
 }
