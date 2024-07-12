@@ -30,9 +30,7 @@ struct Queue {
     }
 
     var items: QueueItems? {
-        guard let item, let playerItem else {
-            return nil
-        }
+        guard let item, let playerItem else { return nil }
         return .init(item: item, playerItem: playerItem)
     }
 
