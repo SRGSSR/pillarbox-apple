@@ -162,7 +162,25 @@ extension AVPlayerItem {
     }
 
     private func errorLogPublisher() -> AnyPublisher<Error, Never> {
-        Empty().eraseToAnyPublisher()
+        NotificationCenter.default.weakPublisher(for: AVPlayerItem.newErrorLogEntryNotification, object: self)
+            .compactMap { notification -> Error? in
+                guard let item = notification.object as? AVPlayerItem, let lastErrorEvent = item.errorLog()?.events.last else { return nil }
+                return NSError(
+                    domain: lastErrorEvent.errorDomain,
+                    code: lastErrorEvent.errorStatusCode,
+                    userInfo: [
+                        NSLocalizedDescriptionKey: lastErrorEvent.errorComment
+                    ].compactMapValues { $0 }
+                )
+            }
+            .handleEvents(receiveOutput: { [weak self] error in
+                // swiftlint:disable:previous trailing_closure
+                guard let self else { return }
+                let event = MetricEvent(kind: .warning(error), time: currentTime())
+                metricLog.appendEvent(event)
+            })
+            .filter { _ in false }
+            .eraseToAnyPublisher()
     }
 }
 
