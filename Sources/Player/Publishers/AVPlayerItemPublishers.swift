@@ -140,7 +140,7 @@ extension AVPlayerItem {
         Publishers.Merge3(
             intrinsicErrorPublisher(),
             playbackErrorPublisher(),
-            errorLogPublisher()
+            errorLogMonitoringPublisher()
         )
         .eraseToAnyPublisher()
     }
@@ -161,7 +161,7 @@ extension AVPlayerItem {
             .eraseToAnyPublisher()
     }
 
-    private func errorLogPublisher() -> AnyPublisher<Error, Never> {
+    private func errorLogMonitoringPublisher() -> AnyPublisher<Error, Never> {
         NotificationCenter.default.weakPublisher(for: AVPlayerItem.newErrorLogEntryNotification, object: self)
             .compactMap { notification -> Error? in
                 guard let item = notification.object as? AVPlayerItem, let lastErrorEvent = item.errorLog()?.events.last else { return nil }
