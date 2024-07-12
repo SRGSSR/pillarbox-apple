@@ -231,7 +231,7 @@ private struct MainView: View {
     private func metricsMenu() -> some View {
         if !isPresentingMetrics {
             Button(action: showMetrics) {
-                Label("Show metrics", systemImage: "chart.bar")
+                Label("Metrics", systemImage: "chart.bar")
             }
         }
     }
