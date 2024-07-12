@@ -14,14 +14,6 @@ public extension Array where Element: Hashable {
         var itemDictionnary = [Element: Bool]()
         return filter { itemDictionnary.updateValue(true, forKey: $0) == nil }
     }
-
-    /// Subtracts an array from the receiver.
-    ///
-    /// - Parameter other: The array to subtract.
-    /// - Returns: The receiver, from which elements from the provided array are removed.
-    func subtracting(_ other: [Element]) -> [Element] {
-        Array(OrderedSet(self).subtracting(Set(other)))
-    }
 }
 
 public extension Array {

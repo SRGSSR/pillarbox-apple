@@ -6,7 +6,7 @@
 
 import Foundation
 
-struct MetricEventUpdate: Equatable {
+struct MetricEventUpdate {
     static let empty = Self(previousEvents: [], newEvents: [])
 
     let previousEvents: [MetricEvent]
@@ -14,6 +14,11 @@ struct MetricEventUpdate: Equatable {
 
     var events: [MetricEvent] {
         previousEvents + newEvents
+    }
+
+    init(previousEvents: [MetricEvent], newEvents: [MetricEvent]) {
+        self.previousEvents = previousEvents.sorted { $0.date < $1.date }
+        self.newEvents = newEvents.sorted { $0.date < $1.date }
     }
 
     func updated(with event: MetricEvent) -> Self {

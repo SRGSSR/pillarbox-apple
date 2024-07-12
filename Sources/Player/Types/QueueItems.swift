@@ -6,20 +6,16 @@
 
 import AVFoundation
 import Combine
+import OrderedCollections
 import PillarboxCore
 
-struct QueueItems {
+struct QueueItems: Equatable {
     let item: PlayerItem
     let playerItem: AVPlayerItem
 
     static func metricEventUpdate(from previous: Self?, to current: Self) -> MetricEventUpdate {
         if let previous, previous.item == current.item {
-            let previousEvents = previous.events()
-            let currentEvents = current.events()
-            return .init(
-                previousEvents: previousEvents,
-                newEvents: currentEvents.subtracting(previousEvents)
-            )
+            return update(from: previous.events(), to: current.events())
         }
         else {
             return .init(
@@ -29,8 +25,18 @@ struct QueueItems {
         }
     }
 
-    func events() -> [MetricEvent] {
-        (item.metricLog.events + playerItem.metricLog.events).sorted { $0.date < $1.date }
+    private static func update(from previousEvents: [MetricEvent], to currentEvents: [MetricEvent]) -> MetricEventUpdate {
+        let previousEventsSet = OrderedSet(previousEvents)
+        let currentEventsSet = OrderedSet(currentEvents)
+        let previousCommonEventsSet = previousEventsSet.intersection(currentEventsSet)
+        return .init(
+            previousEvents: Array(previousCommonEventsSet),
+            newEvents: Array(currentEventsSet.subtracting(previousCommonEventsSet))
+        )
+    }
+
+    private func events() -> [MetricEvent] {
+        item.metricLog.events + playerItem.metricLog.events
     }
 
     func metricEventPublisher() -> AnyPublisher<MetricEvent, Never> {

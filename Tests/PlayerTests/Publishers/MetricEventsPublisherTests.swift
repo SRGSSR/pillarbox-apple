@@ -44,11 +44,18 @@ final class MetricEventsPublisherTests: TestCase {
         let player = Player(item: .init(publisher: publisher))
         expectAtLeastSimilarPublished(
             values: [
-                [],
                 [.init(kind: .failure(error: MockedError(), level: .fatal))]
             ],
             from: player.metricEventsPublisher
         )
+        expectAtLeastSimilarPublishedNext(
+            values: [
+                [.init(kind: .failure(error: MockedError(), level: .fatal))]
+            ],
+            from: player.metricEventsPublisher
+        ) {
+            player.replay()
+        }
     }
 
     func testPlaybackFailure() {
@@ -60,6 +67,14 @@ final class MetricEventsPublisherTests: TestCase {
             ],
             from: player.metricEventsPublisher
         )
+        expectAtLeastSimilarPublishedNext(
+            values: [
+                [.init(kind: .assetLoading(.init())), .init(kind: .failure(error: MockedError(), level: .fatal))]
+            ],
+            from: player.metricEventsPublisher
+        ) {
+            player.replay()
+        }
     }
 
     func testPlaylistTransition() {

@@ -40,6 +40,14 @@ final class MetricEventPublisherTests: TestCase {
             ],
             from: player.metricEventPublisher
         )
+        expectAtLeastSimilarPublished(
+            values: [
+                .init(kind: .failure(error: MockedError(), level: .fatal))
+            ],
+            from: player.metricEventPublisher
+        ) {
+            player.replay()
+        }
     }
 
     func testPlaybackFailure() {
@@ -51,6 +59,15 @@ final class MetricEventPublisherTests: TestCase {
             ],
             from: player.metricEventPublisher
         )
+        expectAtLeastSimilarPublished(
+            values: [
+                .init(kind: .assetLoading(.init())),
+                .init(kind: .failure(error: MockedError(), level: .fatal))
+            ],
+            from: player.metricEventPublisher
+        ) {
+            player.replay()
+        }
     }
 
     func testPlaylistTransition() {

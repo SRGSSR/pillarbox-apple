@@ -69,19 +69,20 @@ extension Player {
 
     private var metricEventUpdatePublisher: AnyPublisher<MetricEventUpdate, Never> {
         queuePublisher
-            .withPrevious(.empty)
-            .map { queue -> AnyPublisher<MetricEventUpdate, Never> in
-                guard let items = queue.current.items else {
+            .slice(at: \.items)
+            .withPrevious(nil)
+            .compactMap { items -> AnyPublisher<MetricEventUpdate, Never> in
+                guard let currentItems = items.current else {
                     return Just(.empty).eraseToAnyPublisher()
                 }
-                let update = QueueItems.metricEventUpdate(from: queue.previous.items, to: items)
-                return items.metricEventPublisher()
+                let update = QueueItems.metricEventUpdate(from: items.previous, to: currentItems)
+                return currentItems.metricEventPublisher()
                     .scan(update) { $0.updated(with: $1) }
                     .prepend(update)
+                    .filter { !$0.newEvents.isEmpty }
                     .eraseToAnyPublisher()
             }
             .switchToLatest()
-            .removeDuplicates()
             .eraseToAnyPublisher()
     }
 }
