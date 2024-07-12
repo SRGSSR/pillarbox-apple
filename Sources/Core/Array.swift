@@ -18,8 +18,7 @@ public extension Array where Element: Hashable {
     /// Subtracts an array from the receiver.
     ///
     /// - Parameter other: The array to subtract.
-    /// - Returns: The receiver, from which elements from the provided array are removed. The order of the items
-    ///   in the receiver is preserved.
+    /// - Returns: The receiver, from which elements from the provided array are removed.
     func subtracting(_ other: [Element]) -> [Element] {
         Array(OrderedSet(self).subtracting(Set(other)))
     }

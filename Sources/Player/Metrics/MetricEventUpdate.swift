@@ -6,7 +6,7 @@
 
 import Foundation
 
-public struct MetricEventUpdate: Equatable {
+struct MetricEventUpdate: Equatable {
     static let empty = Self(previousEvents: [], newEvents: [])
 
     let previousEvents: [MetricEvent]

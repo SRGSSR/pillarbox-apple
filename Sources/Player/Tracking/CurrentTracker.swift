@@ -50,12 +50,9 @@ final class CurrentTracker {
     }
 
     private func configureMetricEventPublisher(for player: Player) {
-        player.metricEventsPublisher
-            .sink { [weak self] events in
-                guard let item = self?.item else { return }
-                events.forEach { event in
-                    item.receiveMetricEvent(event)
-                }
+        player.metricEventPublisher
+            .sink { [weak self] event in
+                self?.item?.receiveMetricEvent(event)
             }
             .store(in: &cancellables)
     }

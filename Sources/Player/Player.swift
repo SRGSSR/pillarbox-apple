@@ -261,6 +261,10 @@ public final class Player: ObservableObject, Equatable {
         queuePlayer.preventsDisplaySleepDuringVideoPlayback = configuration.preventsDisplaySleepDuringVideoPlayback
     }
 
+    private func configureTracking() {
+        currentTracker = isTrackingEnabled ? CurrentTracker(player: self) : nil
+    }
+
     private func configureControlCenterPublishers() {
         guard !ProcessInfo.processInfo.isiOSAppOnMac else { return }
         configureControlCenterMetadataUpdatePublisher()
@@ -278,10 +282,6 @@ public final class Player: ObservableObject, Equatable {
         configureErrorPublisher()
         configureCurrentIndexPublisher()
         configurePlaybackSpeedPublisher()
-    }
-
-    private func configureTracking() {
-        currentTracker = isTrackingEnabled ? CurrentTracker(player: self) : nil
     }
 
     deinit {

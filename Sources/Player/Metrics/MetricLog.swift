@@ -10,7 +10,6 @@ final class MetricLog {
     private(set) var events: [MetricEvent] = []
 
     private let subject = PassthroughSubject<MetricEvent, Never>()
-    private var cancellable: AnyCancellable?
 
     func appendEvent(_ event: MetricEvent) {
         events.append(event)

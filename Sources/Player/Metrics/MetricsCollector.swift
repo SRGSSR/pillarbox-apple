@@ -75,7 +75,7 @@ public final class MetricsCollector: ObservableObject {
                 guard let player else {
                     return Just([]).eraseToAnyPublisher()
                 }
-                return player.currentMetricEventsPublisher
+                return player.metricEventsPublisher
             }
             .switchToLatest()
             .receiveOnMainThread()

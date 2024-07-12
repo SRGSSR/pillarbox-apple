@@ -13,7 +13,7 @@ struct QueueItems {
     let playerItem: AVPlayerItem
 
     static func metricEventUpdate(from previous: Self?, to current: Self) -> MetricEventUpdate {
-        if let previous, previous.item.id == current.item.id {
+        if let previous, previous.item == current.item {
             let previousEvents = previous.events()
             let currentEvents = current.events()
             return .init(
