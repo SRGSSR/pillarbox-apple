@@ -38,6 +38,11 @@ public final class MetricsCollector: ObservableObject {
     /// The metric event history for the item being played, if any.
     @Published public private(set) var metricEvents: [MetricEvent] = []
 
+    /// A Boolean value that indicates whether no data is available from the collector.
+    public var isEmpty: Bool {
+        metrics.isEmpty && metricEvents.isEmpty
+    }
+
     /// Creates a metrics collector gathering metrics at the specified interval.
     ///
     /// - Parameters:
