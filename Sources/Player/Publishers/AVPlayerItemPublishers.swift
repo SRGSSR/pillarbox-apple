@@ -10,7 +10,7 @@ import MediaAccessibility
 
 extension AVPlayerItem {
     func propertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
-        Publishers.CombineLatest7(
+        Publishers.CombineLatest8(
             statusPublisher()
                 .lane("player_item_status"),
             publisher(for: \.presentationSize),
@@ -19,9 +19,10 @@ extension AVPlayerItem {
             timePropertiesPublisher(),
             publisher(for: \.duration),
             minimumTimeOffsetFromLivePublisher(),
-            metricsStatePublisher()
+            metricsStatePublisher(),
+            isStalledPublisher()
         )
-        .map { [weak self] status, presentationSize, mediaSelectionProperties, timeProperties, duration, minimumTimeOffsetFromLive, metricsState in
+        .map { [weak self] status, presentationSize, mediaSelectionProperties, timeProperties, duration, minimumTimeOffsetFromLive, metricsState, isStalled in
             let isKnown = (status != .unknown)
             return .init(
                 itemProperties: .init(
@@ -30,7 +31,8 @@ extension AVPlayerItem {
                     duration: isKnown ? duration : .invalid,
                     minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
                     presentationSize: isKnown ? presentationSize : nil,
-                    metricsState: metricsState
+                    metricsState: metricsState,
+                    isStalled: isStalled
                 ),
                 mediaSelectionProperties: mediaSelectionProperties,
                 timeProperties: isKnown ? timeProperties : .empty
@@ -132,6 +134,12 @@ extension AVPlayerItem {
             .compactMap { $0 }
             .map { _ in false }
             .eraseToAnyPublisher()
+    }
+}
+
+extension AVPlayerItem {
+    func isStalledPublisher() -> AnyPublisher<Bool, Never> {
+        Just(false).eraseToAnyPublisher()
     }
 }
 

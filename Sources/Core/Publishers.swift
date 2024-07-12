@@ -42,16 +42,16 @@ public extension Publishers {
                 .map { [$0] }
                 .eraseToAnyPublisher()
         case 2:
-            return Publishers.CombineLatest(publishersArray[0], publishersArray[1])
+            return CombineLatest(publishersArray[0], publishersArray[1])
                 .map { [$0, $1] }
                 .eraseToAnyPublisher()
         case 3:
-            return Publishers.CombineLatest3(publishersArray[0], publishersArray[1], publishersArray[2])
+            return CombineLatest3(publishersArray[0], publishersArray[1], publishersArray[2])
                 .map { [$0, $1, $2] }
                 .eraseToAnyPublisher()
         default:
             let half = publishersArray.count / 2
-            return Publishers.CombineLatest(
+            return CombineLatest(
                 AccumulateLatestMany(Array(publishersArray[0..<half])),
                 AccumulateLatestMany(Array(publishersArray[half..<publishersArray.count]))
             )
@@ -65,7 +65,7 @@ public extension Publishers {
     /// A publisher that receives and combines the latest elements from five publishers.
     static func CombineLatest5<A, B, C, D, E>(_ a: A, _ b: B, _ c: C, _ d: D, _ e: E) -> AnyPublisher<(A.Output, B.Output, C.Output, D.Output, E.Output), A.Failure> where A: Publisher, B: Publisher, C: Publisher, D: Publisher, E: Publisher, B.Failure == A.Failure, C.Failure == A.Failure, D.Failure == A.Failure, E.Failure == A.Failure {
         // swiftlint:disable:previous large_tuple line_length
-        Publishers.CombineLatest(Publishers.CombineLatest4(a, b, c, d), e)
+        CombineLatest(CombineLatest4(a, b, c, d), e)
             .map { ($0.0, $0.1, $0.2, $0.3, $1) }
             .eraseToAnyPublisher()
     }
@@ -73,7 +73,7 @@ public extension Publishers {
     /// A publisher that receives and combines the latest elements from six publishers.
     static func CombineLatest6<A, B, C, D, E, F>(_ a: A, _ b: B, _ c: C, _ d: D, _ e: E, _ f: F) -> AnyPublisher<(A.Output, B.Output, C.Output, D.Output, E.Output, F.Output), A.Failure> where A: Publisher, B: Publisher, C: Publisher, D: Publisher, E: Publisher, F: Publisher, B.Failure == A.Failure, C.Failure == A.Failure, D.Failure == A.Failure, E.Failure == A.Failure, F.Failure == A.Failure {
         // swiftlint:disable:previous large_tuple line_length
-        Publishers.CombineLatest3(Publishers.CombineLatest4(a, b, c, d), e, f)
+        CombineLatest3(CombineLatest4(a, b, c, d), e, f)
             .map { ($0.0, $0.1, $0.2, $0.3, $1, $2) }
             .eraseToAnyPublisher()
     }
@@ -81,8 +81,16 @@ public extension Publishers {
     /// A publisher that receives and combines the latest elements from seven publishers.
     static func CombineLatest7<A, B, C, D, E, F, G>(_ a: A, _ b: B, _ c: C, _ d: D, _ e: E, _ f: F, _ g: G) -> AnyPublisher<(A.Output, B.Output, C.Output, D.Output, E.Output, F.Output, G.Output), A.Failure> where A: Publisher, B: Publisher, C: Publisher, D: Publisher, E: Publisher, F: Publisher, G: Publisher, B.Failure == A.Failure, C.Failure == A.Failure, D.Failure == A.Failure, E.Failure == A.Failure, F.Failure == A.Failure, G.Failure == A.Failure {
         // swiftlint:disable:previous large_tuple line_length
-        Publishers.CombineLatest4(Publishers.CombineLatest4(a, b, c, d), e, f, g)
+        CombineLatest4(CombineLatest4(a, b, c, d), e, f, g)
             .map { ($0.0, $0.1, $0.2, $0.3, $1, $2, $3) }
+            .eraseToAnyPublisher()
+    }
+
+    /// A publisher that receives and combines the latest elements from eight publishers.
+    static func CombineLatest8<A, B, C, D, E, F, G, H>(_ a: A, _ b: B, _ c: C, _ d: D, _ e: E, _ f: F, _ g: G, _ h: H) -> AnyPublisher<(A.Output, B.Output, C.Output, D.Output, E.Output, F.Output, G.Output, H.Output), A.Failure> where A: Publisher, B: Publisher, C: Publisher, D: Publisher, E: Publisher, F: Publisher, G: Publisher, H: Publisher, B.Failure == A.Failure, C.Failure == A.Failure, D.Failure == A.Failure, E.Failure == A.Failure, F.Failure == A.Failure, G.Failure == A.Failure, H.Failure == A.Failure {
+        // swiftlint:disable:previous large_tuple line_length
+        CombineLatest4(CombineLatest5(a, b, c, d, e), f, g, h)
+            .map { ($0.0, $0.1, $0.2, $0.3, $0.4, $1, $2, $3) }
             .eraseToAnyPublisher()
     }
 }
