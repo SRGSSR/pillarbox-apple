@@ -153,6 +153,7 @@ struct MetricsView: View {
                 stallsChartSection()
                 frameDropsChartSection()
             }
+            eventLogSection()
         }
     }
 
@@ -227,6 +228,16 @@ struct MetricsView: View {
             FrameDropsChart(metrics: metrics, limit: metricsCollector.limit)
         } header: {
             Text("Frame drops")
+        }
+    }
+
+    private func eventLogSection() -> some View {
+        Section {
+            ForEach(metricsCollector.metricEvents, id: \.self) { event in
+                MetricEventCell(event: event)
+            }
+        } header: {
+            Text("Event log")
         }
     }
 }
