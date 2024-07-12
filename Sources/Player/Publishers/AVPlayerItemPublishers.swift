@@ -137,9 +137,10 @@ extension AVPlayerItem {
 
 extension AVPlayerItem {
     func errorPublisher() -> AnyPublisher<Error, Never> {
-        Publishers.Merge(
+        Publishers.Merge3(
             intrinsicErrorPublisher(),
-            playbackErrorPublisher()
+            playbackErrorPublisher(),
+            errorLogPublisher()
         )
         .eraseToAnyPublisher()
     }
@@ -158,6 +159,10 @@ extension AVPlayerItem {
         NotificationCenter.default.weakPublisher(for: AVPlayerItem.failedToPlayToEndTimeNotification, object: self)
             .compactMap { $0.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error }
             .eraseToAnyPublisher()
+    }
+
+    private func errorLogPublisher() -> AnyPublisher<Error, Never> {
+        Empty().eraseToAnyPublisher()
     }
 }
 
