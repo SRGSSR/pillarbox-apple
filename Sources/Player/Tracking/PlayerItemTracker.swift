@@ -47,11 +47,13 @@ public protocol PlayerItemTracker: AnyObject {
     /// - Parameter event: The received event.
     func receiveMetricEvent(_ event: MetricEvent)
 
+#if compiler(>=6.0)
     /// A method called when a metric event is received.
     ///
     /// - Parameter event: The received event.
     @available(iOS 18.0, tvOS 18.0, *)
     func receiveNativeMetricEvent(_ event: AVMetricEvent)
+#endif
 
     /// A method called when the tracker is disabled.
     func disable()

@@ -175,6 +175,7 @@ extension AVPlayerItem {
     }
 }
 
+#if compiler(>=6.0)
 @available(iOS 18.0, tvOS 18.0, *)
 extension AVPlayerItem {
     func nativeMetricEventPublisher() -> AnyPublisher<AVMetricEvent, Error> {
@@ -200,3 +201,4 @@ extension AVPlayerItem {
         .eraseToAnyPublisher()
     }
 }
+#endif

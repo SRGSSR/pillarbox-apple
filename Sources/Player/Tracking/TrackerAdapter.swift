@@ -47,10 +47,12 @@ extension TrackerAdapter: TrackerLifeCycle {
         tracker.receiveMetricEvent(event)
     }
 
+#if compiler(>=6.0)
     @available(iOS 18.0, tvOS 18.0, *)
     func receiveNativeMetricEvent(_ event: AVMetricEvent) {
         tracker.receiveNativeMetricEvent(event)
     }
+#endif
 
     func disable() {
         tracker.disable()

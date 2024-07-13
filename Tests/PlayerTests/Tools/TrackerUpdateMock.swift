@@ -43,8 +43,10 @@ final class TrackerUpdateMock<Metadata>: PlayerItemTracker where Metadata: Equat
 
     func receiveMetricEvent(_ event: MetricEvent) {}
 
+#if compiler(>=6.0)
     @available(iOS 18.0, tvOS 18.0, *)
     func receiveNativeMetricEvent(_ event: AVMetricEvent) {}
+#endif
 
     func disable() {
         configuration.statePublisher.send(.disabled)

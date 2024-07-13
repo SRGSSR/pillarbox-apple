@@ -6,6 +6,7 @@
 
 import Combine
 
+#if compiler(>=6.0)
 /// A publisher that delivers output from an `AsyncSequence`.
 @available(iOS 18.0, tvOS 18.0, *)
 public struct AsyncSequencePublisher<Output, Failure>: Publisher where Failure: Error {
@@ -77,3 +78,4 @@ extension AsyncSequencePublisher {
         }
     }
 }
+#endif

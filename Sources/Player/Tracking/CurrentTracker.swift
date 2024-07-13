@@ -59,12 +59,14 @@ final class CurrentTracker {
     }
 
     private func configureNativeMetricEventPublisher(for player: Player) {
+#if compiler(>=6.0)
         guard #available(iOS 18, tvOS 18, *) else { return }
         player.nativeMetricEventPublisher
             .sink { [weak self] event in
                 self?.item?.receiveNativeMetricEvent(event)
             }
             .store(in: &cancellables)
+#endif
     }
 
     deinit {

@@ -12,6 +12,7 @@ import XCTest
 
 private struct MockError: Error {}
 
+#if compiler(>=6.0)
 @available(iOS 18.0, tvOS 18.0, *)
 final class AsyncSequencePublisherTests: XCTestCase {
     func testEmptySequence() {
@@ -32,3 +33,4 @@ final class AsyncSequencePublisherTests: XCTestCase {
         expectFailure(from: publisher)
     }
 }
+#endif

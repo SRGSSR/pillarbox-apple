@@ -36,8 +36,10 @@ final class TrackerLifeCycleMock: PlayerItemTracker {
 
     func receiveMetricEvent(_ event: MetricEvent) {}
 
+#if compiler(>=6.0)
     @available(iOS 18.0, tvOS 18.0, *)
     func receiveNativeMetricEvent(_ event: AVMetricEvent) {}
+#endif
 
     func enable(for player: Player) {
         configuration.statePublisher.send(.enabled)

@@ -62,8 +62,10 @@ public final class CommandersActTracker: PlayerItemTracker {
 
     public func receiveMetricEvent(_ event: MetricEvent) {}
 
+#if compiler(>=6.0)
     @available(iOS 18.0, tvOS 18.0, *)
     public func receiveNativeMetricEvent(_ event: AVMetricEvent) {}
+#endif
 
     public func disable() {
         streamingAnalytics = CommandersActStreamingAnalytics()

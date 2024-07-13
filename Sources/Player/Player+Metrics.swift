@@ -57,6 +57,7 @@ public extension Player {
     }
 }
 
+#if compiler(>=6.0)
 @available(iOS 18.0, tvOS 18.0, *)
 public extension Player {
     /// A publisher delivering native metric events associated with the current item.
@@ -112,6 +113,7 @@ public extension Player {
             .eraseToAnyPublisher()
     }
 }
+#endif
 
 extension Player {
     var metricEventPublisher: AnyPublisher<MetricEvent, Never> {
