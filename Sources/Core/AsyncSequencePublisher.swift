@@ -42,7 +42,7 @@ extension AsyncSequencePublisher {
             process(buffer.append(output))
         }
 
-        private func consume(sequence: any AsyncSequence<Output, Failure>) async throws {
+        private func iterate() async throws {
             do {
                 for try await output in sequence {
                     self.send(output)
@@ -57,7 +57,7 @@ extension AsyncSequencePublisher {
         func request(_ demand: Subscribers.Demand) {
             if task == nil {
                 task = Task {
-                    try await consume(sequence: sequence)
+                    try await iterate()
                 }
             }
             process(buffer.request(demand))
