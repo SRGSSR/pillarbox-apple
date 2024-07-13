@@ -220,27 +220,6 @@ public final class Player: ObservableObject, Equatable {
         configureControlCenterPublishers()
         configureMetadataPublisher()
         configureBlockedTimeRangesPublishers()
-
-        if #available(iOS 18, tvOS 18, *) {
-            queuePlayer.publisher(for: \.currentItem)
-                .compactMap { $0 }
-                .map { item in
-                    item.metricEventsPublisher(
-                        forTypes: AVMetricHLSPlaylistRequestEvent.self,
-                        AVMetricPlayerItemVariantSwitchStartEvent.self,
-                        AVMetricPlayerItemPlaybackSummaryEvent.self
-                    )
-                }
-                .switchToLatest()
-                .sink(
-                    receiveCompletion: { _ in
-                    },
-                    receiveValue: { v in
-                        print("--> metric: \(v)")
-                    }
-                )
-                .store(in: &cancellables)
-        }
     }
 
     /// Creates a player with a single item in its queue.

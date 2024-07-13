@@ -4,6 +4,8 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
+
 /// A protocol for custom player item tracking implementation.
 ///
 /// For more information about implementing custom trackers please read <doc:tracking>.
@@ -44,6 +46,12 @@ public protocol PlayerItemTracker: AnyObject {
     /// 
     /// - Parameter event: The received event.
     func receiveMetricEvent(_ event: MetricEvent)
+
+    /// A method called when a metric event is received.
+    ///
+    /// - Parameter event: The received event.
+    @available(iOS 18.0, tvOS 18.0, *)
+    func receiveNativeMetricEvent(_ event: AVMetricEvent)
 
     /// A method called when the tracker is disabled.
     func disable()

@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
+import AVFoundation
 
 /// An adapter which instantiates and manages a tracker of a specified type.
 ///
@@ -45,6 +45,11 @@ extension TrackerAdapter: TrackerLifeCycle {
 
     func receiveMetricEvent(_ event: MetricEvent) {
         tracker.receiveMetricEvent(event)
+    }
+
+    @available(iOS 18.0, tvOS 18.0, *)
+    func receiveNativeMetricEvent(_ event: AVMetricEvent) {
+        tracker.receiveNativeMetricEvent(event)
     }
 
     func disable() {

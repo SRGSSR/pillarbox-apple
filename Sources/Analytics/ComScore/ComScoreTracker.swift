@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import ComScore
 import PillarboxPlayer
 
@@ -52,6 +53,9 @@ public final class ComScoreTracker: PlayerItemTracker {
     }
 
     public func receiveMetricEvent(_ event: MetricEvent) {}
+
+    @available(iOS 18.0, tvOS 18.0, *)
+    public func receiveNativeMetricEvent(_ event: AVMetricEvent) {}
 
     public func disable() {
         streamingAnalytics = ComScoreStreamingAnalytics()

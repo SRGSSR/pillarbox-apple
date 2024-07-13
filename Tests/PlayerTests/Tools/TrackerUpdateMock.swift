@@ -6,8 +6,8 @@
 
 @testable import PillarboxPlayer
 
+import AVFoundation
 import Combine
-import Foundation
 
 final class TrackerUpdateMock<Metadata>: PlayerItemTracker where Metadata: Equatable {
     typealias StatePublisher = PassthroughSubject<State, Never>
@@ -42,6 +42,9 @@ final class TrackerUpdateMock<Metadata>: PlayerItemTracker where Metadata: Equat
     }
 
     func receiveMetricEvent(_ event: MetricEvent) {}
+
+    @available(iOS 18.0, tvOS 18.0, *)
+    func receiveNativeMetricEvent(_ event: AVMetricEvent) {}
 
     func disable() {
         configuration.statePublisher.send(.disabled)

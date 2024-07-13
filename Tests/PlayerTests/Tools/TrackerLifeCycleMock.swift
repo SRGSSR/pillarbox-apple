@@ -6,6 +6,7 @@
 
 @testable import PillarboxPlayer
 
+import AVFoundation
 import Combine
 
 final class TrackerLifeCycleMock: PlayerItemTracker {
@@ -34,6 +35,9 @@ final class TrackerLifeCycleMock: PlayerItemTracker {
     func updateProperties(with properties: PlayerProperties) {}
 
     func receiveMetricEvent(_ event: MetricEvent) {}
+
+    @available(iOS 18.0, tvOS 18.0, *)
+    func receiveNativeMetricEvent(_ event: AVMetricEvent) {}
 
     func enable(for player: Player) {
         configuration.statePublisher.send(.enabled)

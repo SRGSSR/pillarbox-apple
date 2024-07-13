@@ -4,7 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
-import Foundation
+import AVFoundation
 import os
 import PillarboxPlayer
 
@@ -32,6 +32,11 @@ final class DemoTracker: PlayerItemTracker {
 
     func receiveMetricEvent(_ event: MetricEvent) {
         Self.logger.debug("Receive metric event for \(self.id): \(event)")
+    }
+
+    @available(iOS 18.0, tvOS 18.0, *)
+    func receiveNativeMetricEvent(_ event: AVMetricEvent) {
+        Self.logger.debug("Receive native metric event for \(self.id): \(event)")
     }
 
     func disable() {

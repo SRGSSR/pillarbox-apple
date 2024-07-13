@@ -57,6 +57,10 @@ final class CurrentTracker {
             .store(in: &cancellables)
     }
 
+    private func configureNativeMetricEventPublisher(for player: Player) {
+        // TODO
+    }
+
     deinit {
         item?.disableTrackers()
     }

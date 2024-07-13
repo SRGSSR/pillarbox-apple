@@ -164,6 +164,13 @@ extension PlayerItem {
         }
     }
 
+    @available(iOS 18.0, tvOS 18.0, *)
+    func receiveNativeMetricEvent(_ event: AVMetricEvent) {
+        trackerAdapters.forEach { adapter in
+            adapter.receiveNativeMetricEvent(event)
+        }
+    }
+
     func disableTrackers() {
         trackerAdapters.forEach { adapter in
             adapter.disable()
