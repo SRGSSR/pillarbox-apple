@@ -4,6 +4,7 @@
 //  License information is available from the LICENSE file.
 //
 
+import AVFoundation
 import Combine
 import CoreMedia
 import PillarboxCore
@@ -52,6 +53,62 @@ public extension Player {
             .switchToLatest()
             .removeDuplicates()
             .receive(on: queue)
+            .eraseToAnyPublisher()
+    }
+}
+
+@available(iOS 18.0, tvOS 18.0, *)
+public extension Player {
+    /// A publisher delivering native metric events associated with the current item.
+    var nativeMetricEventPublisher: AnyPublisher<AVMetricEvent, Never> {
+        currentPlayerItemPublisher()
+            .map { item -> AnyPublisher<AVMetricEvent, Never> in
+                guard let item else { return Empty().eraseToAnyPublisher() }
+                return item.nativeMetricEventPublisher()
+                    .catch { _ in Empty() }
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+
+    /// A publisher delivering native metric events of a given type associated with the current item.
+    ///
+    /// - Parameter type: The type of event.
+    /// - Returns: The publisher.
+    func nativeMetricEventPublisher<Event>(forType type: Event.Type) -> AnyPublisher<Event, Never> where Event: AVMetricEvent {
+        currentPlayerItemPublisher()
+            .map { item -> AnyPublisher<Event, Never> in
+                guard let item else { return Empty().eraseToAnyPublisher() }
+                return item.nativeMetricEventPublisher(forType: type)
+                    .catch { _ in Empty() }
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .eraseToAnyPublisher()
+    }
+
+    /// A publisher delivering native metric events of given types associated with the current item.
+    ///
+    /// - Parameters:
+    ///   - firstType: The first type of event.
+    ///   - secondType: The second type of event.
+    ///   - otherTypes: As many other types of events as desired.
+    /// - Returns: The publisher.
+    func nativeMetricEventPublisher<FirstEvent, SecondEvent, each OtherEventPack>(
+        forTypes firstType: FirstEvent.Type,
+        _ secondType: SecondEvent.Type,
+        _ otherTypes: repeat (each OtherEventPack).Type
+    ) -> AnyPublisher<AVMetricEvent, Never>
+    where FirstEvent: AVMetricEvent, SecondEvent: AVMetricEvent, repeat each OtherEventPack: AVMetricEvent {
+        currentPlayerItemPublisher()
+            .map { item -> AnyPublisher<AVMetricEvent, Never> in
+                guard let item else { return Empty().eraseToAnyPublisher() }
+                return item.nativeMetricEventPublisher(forTypes: firstType, secondType, repeat each otherTypes)
+                    .catch { _ in Empty() }
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
             .eraseToAnyPublisher()
     }
 }
