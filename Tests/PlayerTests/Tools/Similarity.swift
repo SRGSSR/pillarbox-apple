@@ -48,10 +48,8 @@ extension NowPlaying.Info: Similar {
 extension MetricEvent: Similar {
     public static func ~~ (lhs: MetricEvent, rhs: MetricEvent) -> Bool {
         switch (lhs.kind, rhs.kind) {
-        case (.assetLoading, .assetLoading), (.resourceLoading, .resourceLoading):
+        case (.assetLoading, .assetLoading), (.resourceLoading, .resourceLoading), (.failure, .failure), (.warning, .warning):
             return true
-        case let (.failure(error: _, level: lhsLevel), .failure(error: _, level: rhsLevel)):
-            return lhsLevel == rhsLevel
         default:
             return false
         }

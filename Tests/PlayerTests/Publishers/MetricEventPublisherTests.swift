@@ -36,13 +36,13 @@ final class MetricEventPublisherTests: TestCase {
         let player = Player(item: .init(publisher: publisher))
         expectAtLeastSimilarPublished(
             values: [
-                .init(kind: .failure(error: MockedError(), level: .fatal))
+                .init(kind: .failure(MockedError()))
             ],
             from: player.metricEventPublisher
         )
         expectAtLeastSimilarPublished(
             values: [
-                .init(kind: .failure(error: MockedError(), level: .fatal))
+                .init(kind: .failure(MockedError()))
             ],
             from: player.metricEventPublisher
         ) {
@@ -55,14 +55,14 @@ final class MetricEventPublisherTests: TestCase {
         expectAtLeastSimilarPublished(
             values: [
                 .init(kind: .assetLoading(.init())),
-                .init(kind: .failure(error: MockedError(), level: .fatal))
+                .init(kind: .failure(MockedError()))
             ],
             from: player.metricEventPublisher
         )
         expectAtLeastSimilarPublished(
             values: [
                 .init(kind: .assetLoading(.init())),
-                .init(kind: .failure(error: MockedError(), level: .fatal))
+                .init(kind: .failure(MockedError()))
             ],
             from: player.metricEventPublisher
         ) {
@@ -98,7 +98,7 @@ final class MetricEventPublisherTests: TestCase {
                 .init(kind: .assetLoading(.init())),
                 .init(kind: .resourceLoading(.init())),
                 .init(kind: .assetLoading(.init())),
-                .init(kind: .failure(error: MockedError(), level: .fatal))
+                .init(kind: .failure(MockedError()))
             ],
             from: player.metricEventPublisher
         ) {

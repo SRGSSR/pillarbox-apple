@@ -44,13 +44,13 @@ final class MetricEventsPublisherTests: TestCase {
         let player = Player(item: .init(publisher: publisher))
         expectAtLeastSimilarPublished(
             values: [
-                [.init(kind: .failure(error: MockedError(), level: .fatal))]
+                [.init(kind: .failure(MockedError()))]
             ],
             from: player.metricEventsPublisher
         )
         expectAtLeastSimilarPublishedNext(
             values: [
-                [.init(kind: .failure(error: MockedError(), level: .fatal))]
+                [.init(kind: .failure(MockedError()))]
             ],
             from: player.metricEventsPublisher
         ) {
@@ -63,13 +63,13 @@ final class MetricEventsPublisherTests: TestCase {
         expectAtLeastSimilarPublished(
             values: [
                 [.init(kind: .assetLoading(.init()))],
-                [.init(kind: .assetLoading(.init())), .init(kind: .failure(error: MockedError(), level: .fatal))]
+                [.init(kind: .assetLoading(.init())), .init(kind: .failure(MockedError()))]
             ],
             from: player.metricEventsPublisher
         )
         expectAtLeastSimilarPublishedNext(
             values: [
-                [.init(kind: .assetLoading(.init())), .init(kind: .failure(error: MockedError(), level: .fatal))]
+                [.init(kind: .assetLoading(.init())), .init(kind: .failure(MockedError()))]
             ],
             from: player.metricEventsPublisher
         ) {
@@ -103,7 +103,7 @@ final class MetricEventsPublisherTests: TestCase {
             values: [
                 [.init(kind: .assetLoading(.init()))],
                 [.init(kind: .assetLoading(.init())), .init(kind: .resourceLoading(.init()))],
-                [.init(kind: .assetLoading(.init())), .init(kind: .failure(error: MockedError(), level: .fatal))]
+                [.init(kind: .assetLoading(.init())), .init(kind: .failure(MockedError()))]
             ],
             from: player.metricEventsPublisher
         ) {

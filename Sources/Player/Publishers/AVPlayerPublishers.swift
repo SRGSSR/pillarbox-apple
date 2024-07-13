@@ -15,7 +15,7 @@ extension AVPlayer {
             .map { item -> AnyPublisher<ItemState, Never> in
                 if let item {
                     if let error = item.error {
-                        let event = MetricEvent(kind: .failure(error: error, level: .fatal), time: item.currentTime())
+                        let event = MetricEvent(kind: .failure(error), time: item.currentTime())
                         item.metricLog.appendEvent(event)
                         return Just(.init(item: item, error: error)).eraseToAnyPublisher()
                     }
@@ -23,7 +23,7 @@ extension AVPlayer {
                         return item.errorPublisher()
                             .handleEvents(receiveOutput: { error in
                                 // swiftlint:disable:previous trailing_closure
-                                let event = MetricEvent(kind: .failure(error: error, level: .fatal), time: item.currentTime())
+                                let event = MetricEvent(kind: .failure(error), time: item.currentTime())
                                 item.metricLog.appendEvent(event)
                             })
                             .map { .init(item: item, error: $0) }

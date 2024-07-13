@@ -21,7 +21,10 @@ public struct MetricEvent: Hashable {
         case resourceLoading(DateInterval)
 
         /// Failure.
-        case failure(error: Error, level: ErrorLevel)
+        case failure(Error)
+
+        /// Warning.
+        case warning(Error)
     }
 
     private let id = UUID()
@@ -71,8 +74,10 @@ extension MetricEvent: CustomStringConvertible {
             return "assetLoading(\(dateInterval.duration))"
         case let .resourceLoading(dateInterval):
             return "resourceLoading(\(dateInterval.duration))"
-        case let .failure(error: error, level: level):
-            return "failure(level: \(level), error: \(error.localizedDescription))"
+        case let .failure(error):
+            return "failure(\(error.localizedDescription))"
+        case let .warning(error):
+            return "warning(\(error.localizedDescription))"
         }
     }
 }
