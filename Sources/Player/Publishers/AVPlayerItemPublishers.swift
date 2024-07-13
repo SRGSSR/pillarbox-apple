@@ -185,4 +185,18 @@ extension AVPlayerItem {
         AsyncSequencePublisher(from: metrics(forType: type))
             .eraseToAnyPublisher()
     }
+
+    @available(iOS 18.0, tvOS 18.0, *)
+    func metricEventsPublisher<FirstMetricEvent, SecondMetricEvent, each OtherMetricEventPack>(
+        forTypes firstType: FirstMetricEvent.Type,
+        _ secondType: SecondMetricEvent.Type,
+        _ otherTypes: repeat (each OtherMetricEventPack).Type
+    ) -> AnyPublisher<AVMetricEvent, Error>
+    where FirstMetricEvent: AVMetricEvent, SecondMetricEvent: AVMetricEvent, repeat each OtherMetricEventPack: AVMetricEvent {
+        AsyncSequencePublisher(
+            from: metrics(forType: firstType).chronologicalMerge(with: metrics(forType: secondType), repeat metrics(forType: each otherTypes))
+        )
+        .map(\.0)
+        .eraseToAnyPublisher()
+    }
 }

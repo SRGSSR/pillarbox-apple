@@ -225,7 +225,11 @@ public final class Player: ObservableObject, Equatable {
             queuePlayer.publisher(for: \.currentItem)
                 .compactMap { $0 }
                 .map { item in
-                    item.metricEventsPublisher()
+                    item.metricEventsPublisher(
+                        forTypes: AVMetricHLSPlaylistRequestEvent.self,
+                        AVMetricPlayerItemVariantSwitchStartEvent.self,
+                        AVMetricPlayerItemPlaybackSummaryEvent.self
+                    )
                 }
                 .switchToLatest()
                 .sink(
