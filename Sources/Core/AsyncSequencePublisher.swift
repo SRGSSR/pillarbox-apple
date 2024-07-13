@@ -45,7 +45,7 @@ extension AsyncSequencePublisher {
         private func iterate() async throws {
             do {
                 for try await output in sequence {
-                    self.send(output)
+                    send(output)
                 }
                 subscriber?.receive(completion: .finished)
             }
