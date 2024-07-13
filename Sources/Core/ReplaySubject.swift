@@ -51,7 +51,7 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
         subscription.request(.unlimited)
     }
 
-    public func receive<S>(subscriber: S) where S: Subscriber, Failure == S.Failure, Output == S.Input {
+    public func receive<S>(subscriber: S) where S: Subscriber, S.Input == Output, S.Failure == Failure {
         withLock(lock) {
             let subscription = ReplaySubscription(subscriber: subscriber, values: buffer.values)
             subscription.onCancel = { [weak self] in

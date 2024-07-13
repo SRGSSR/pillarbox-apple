@@ -21,7 +21,7 @@ private struct _PeriodicTimePublisher: Publisher {
         self.queue = queue
     }
 
-    func receive<S>(subscriber: S) where S: Subscriber, S.Failure == Never, S.Input == Output {
+    func receive<S>(subscriber: S) where S: Subscriber, S.Input == Output, S.Failure == Never {
         let subscription = PeriodicTimeSubscription(subscriber: subscriber, player: player, interval: interval, queue: queue)
         subscriber.receive(subscription: subscription)
     }
