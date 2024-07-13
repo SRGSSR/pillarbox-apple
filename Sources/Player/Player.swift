@@ -225,14 +225,16 @@ public final class Player: ObservableObject, Equatable {
             queuePlayer.publisher(for: \.currentItem)
                 .compactMap { $0 }
                 .map { item in
-                    return AsyncSequencePublisher(from: item.allMetrics())
+                    item.metricEventsPublisher()
                 }
                 .switchToLatest()
-                .sink(receiveCompletion: { _ in
-
-                }, receiveValue: { v in
-                    print("--> metric: \(v)")
-                })
+                .sink(
+                    receiveCompletion: { _ in
+                    },
+                    receiveValue: { v in
+                        print("--> metric: \(v)")
+                    }
+                )
                 .store(in: &cancellables)
         }
     }

@@ -7,6 +7,7 @@
 import AVFoundation
 import Combine
 import MediaAccessibility
+import PillarboxCore
 
 extension AVPlayerItem {
     func propertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
@@ -170,6 +171,18 @@ extension AVPlayerItem {
                 state.updated(with: item.accessLog(), at: item.currentTime())
             }
             .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    @available(iOS 18.0, tvOS 18.0, *)
+    func metricEventsPublisher() -> AnyPublisher<AVMetricEvent, Error> {
+        AsyncSequencePublisher(from: allMetrics())
+            .eraseToAnyPublisher()
+    }
+
+    @available(iOS 18.0, tvOS 18.0, *)
+    func metricEventsPublisher<MetricEvent>(forType type: MetricEvent.Type) -> AnyPublisher<MetricEvent, Error> where MetricEvent: AVMetricEvent {
+        AsyncSequencePublisher(from: metrics(forType: type))
             .eraseToAnyPublisher()
     }
 }
