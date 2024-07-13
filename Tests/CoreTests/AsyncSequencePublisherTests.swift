@@ -32,5 +32,8 @@ final class AsyncSequencePublisherTests: XCTestCase {
         let publisher = AsyncSequencePublisher(from: sequence)
         expectFailure(from: publisher)
     }
+
+    // TODO: There seems to be an issue with multiple subscribers, only one receives the events (currently the
+    //       CurrentTracker). Find the root cause.
 }
 #endif
