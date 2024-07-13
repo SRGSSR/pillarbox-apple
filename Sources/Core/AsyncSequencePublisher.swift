@@ -6,10 +6,14 @@
 
 import Combine
 
+/// A publisher that delivers output from an `AsyncSequence`.
 @available(iOS 18.0, tvOS 18.0, *)
 public struct AsyncSequencePublisher<Output, Failure>: Publisher where Failure: Error {
     private let sequence: any AsyncSequence<Output, Failure>
 
+    /// Creates a publisher from a given `AsyncSequence`.
+    ///
+    /// - Parameter sequence: The `AsyncSequence` to iterate on.
     public init<A>(from sequence: A) where A: AsyncSequence, A.Element == Output, A.Failure == Failure {
         self.sequence = sequence
     }
