@@ -23,7 +23,7 @@ private struct _BoundaryTimePublisher: Publisher {
     }
 
     func receive<S>(subscriber: S) where S: Subscriber, S.Input == Output, S.Failure == Failure {
-        let subscription = _Subscription(subscriber: subscriber, player: player, times: times, queue: queue)
+        let subscription = BoundaryTimeSubscription(subscriber: subscriber, player: player, times: times, queue: queue)
         subscriber.receive(subscription: subscription)
     }
 }
@@ -35,8 +35,8 @@ extension Publishers {
     }
 }
 
-private extension _BoundaryTimePublisher {
-    final class _Subscription<S>: Subscription where S: Subscriber, S.Input == Output, S.Failure == Failure {
+extension _BoundaryTimePublisher {
+    private final class BoundaryTimeSubscription<S>: Subscription where S: Subscriber, S.Input == Output, S.Failure == Failure {
         private var subscriber: S?
         private let player: AVPlayer
         private let times: [CMTime]

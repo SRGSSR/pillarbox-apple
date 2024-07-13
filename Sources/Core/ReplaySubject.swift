@@ -15,7 +15,7 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
     private let buffer: LimitedBuffer<Output>
     private var completion: Subscribers.Completion<Failure>?
     private let lock = NSRecursiveLock()
-    var subscriptions: [_Subscription] = []
+    var subscriptions: [ReplaySubscription] = []
 
     /// Creates a subject able to buffer the provided number of values.
     ///
@@ -53,7 +53,7 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
 
     public func receive<S>(subscriber: S) where S: Subscriber, S.Input == Output, S.Failure == Failure {
         withLock(lock) {
-            let subscription = _Subscription(subscriber: subscriber, values: buffer.values)
+            let subscription = ReplaySubscription(subscriber: subscriber, values: buffer.values)
             subscription.onCancel = { [weak self] in
                 guard let self else { return }
                 subscriptions.removeAll { $0 === subscription }
@@ -72,7 +72,7 @@ public final class ReplaySubject<Output, Failure>: Subject where Failure: Error 
 }
 
 extension ReplaySubject {
-    final class _Subscription: Subscription {
+    final class ReplaySubscription: Subscription {
         var onCancel: (() -> Void)?
 
         private var subscriber: AnySubscriber<Output, Failure>?

@@ -23,7 +23,7 @@ private struct _PeriodicTimePublisher: Publisher {
     }
 
     func receive<S>(subscriber: S) where S: Subscriber, S.Input == Output, S.Failure == Failure {
-        let subscription = _Subscription(subscriber: subscriber, player: player, interval: interval, queue: queue)
+        let subscription = PeriodicTimeSubscription(subscriber: subscriber, player: player, interval: interval, queue: queue)
         subscriber.receive(subscription: subscription)
     }
 }
@@ -36,8 +36,8 @@ extension Publishers {
     }
 }
 
-private extension _PeriodicTimePublisher {
-    final class _Subscription<S>: Subscription where S: Subscriber, S.Input == Output, S.Failure == Failure {
+extension _PeriodicTimePublisher {
+    private final class PeriodicTimeSubscription<S>: Subscription where S: Subscriber, S.Input == Output, S.Failure == Failure {
         private var subscriber: S?
         private let player: AVPlayer
         private let interval: CMTime
