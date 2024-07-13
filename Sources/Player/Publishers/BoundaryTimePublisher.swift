@@ -52,10 +52,6 @@ private extension _BoundaryTimePublisher {
             self.queue = queue
         }
 
-        private func send() {
-            process(buffer.append(()))
-        }
-
         func request(_ demand: Subscribers.Demand) {
             if timeObserver == nil {
                 let timeValues = times.map { NSValue(time: $0) }
@@ -64,6 +60,10 @@ private extension _BoundaryTimePublisher {
                 }
             }
             process(buffer.request(demand))
+        }
+
+        private func send() {
+            process(buffer.append(()))
         }
 
         func cancel() {

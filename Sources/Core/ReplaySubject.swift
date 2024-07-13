@@ -87,12 +87,6 @@ extension ReplaySubject {
             process(buffer.request(demand))
         }
 
-        func cancel() {
-            subscriber = nil
-            onCancel?()
-            onCancel = nil
-        }
-
         func append(_ value: Output) {
             pendingValues += buffer.append(value)
         }
@@ -105,6 +99,12 @@ extension ReplaySubject {
 
         func send(completion: Subscribers.Completion<Failure>) {
             process(completion: completion)
+        }
+
+        func cancel() {
+            subscriber = nil
+            onCancel?()
+            onCancel = nil
         }
 
         private func process(_ values: [Output]) {

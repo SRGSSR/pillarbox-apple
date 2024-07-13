@@ -53,10 +53,6 @@ private extension _PeriodicTimePublisher {
             self.queue = queue
         }
 
-        private func send(_ time: CMTime) {
-            process(buffer.append(time))
-        }
-
         func request(_ demand: Subscribers.Demand) {
             if timeObserver == nil {
                 timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: queue) { [weak self] time in
@@ -64,6 +60,10 @@ private extension _PeriodicTimePublisher {
                 }
             }
             process(buffer.request(demand))
+        }
+
+        private func send(_ time: CMTime) {
+            process(buffer.append(time))
         }
 
         func cancel() {
