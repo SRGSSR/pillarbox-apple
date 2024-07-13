@@ -28,6 +28,7 @@ final class CurrentTracker {
         configureItemPublisher(for: player)
         configurePropertiesPublisher(for: player)
         configureMetricEventPublisher(for: player)
+        configureNativeMetricEventPublisher(for: player)
     }
 
     private func configureItemPublisher(for player: Player) {
@@ -58,7 +59,12 @@ final class CurrentTracker {
     }
 
     private func configureNativeMetricEventPublisher(for player: Player) {
-        // TODO
+        guard #available(iOS 18, tvOS 18, *) else { return }
+        player.nativeMetricEventPublisher
+            .sink { [weak self] event in
+                self?.item?.receiveNativeMetricEvent(event)
+            }
+            .store(in: &cancellables)
     }
 
     deinit {
