@@ -173,26 +173,26 @@ extension AVPlayerItem {
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
+}
 
-    @available(iOS 18.0, tvOS 18.0, *)
-    func metricEventsPublisher() -> AnyPublisher<AVMetricEvent, Error> {
+@available(iOS 18.0, tvOS 18.0, *)
+extension AVPlayerItem {
+    func nativeMetricEventPublisher() -> AnyPublisher<AVMetricEvent, Error> {
         AsyncSequencePublisher(from: allMetrics())
             .eraseToAnyPublisher()
     }
 
-    @available(iOS 18.0, tvOS 18.0, *)
-    func metricEventsPublisher<MetricEvent>(forType type: MetricEvent.Type) -> AnyPublisher<MetricEvent, Error> where MetricEvent: AVMetricEvent {
+    func nativeMetricEventPublisher<Event>(forType type: Event.Type) -> AnyPublisher<Event, Error> where Event: AVMetricEvent {
         AsyncSequencePublisher(from: metrics(forType: type))
             .eraseToAnyPublisher()
     }
 
-    @available(iOS 18.0, tvOS 18.0, *)
-    func metricEventsPublisher<FirstMetricEvent, SecondMetricEvent, each OtherMetricEventPack>(
-        forTypes firstType: FirstMetricEvent.Type,
-        _ secondType: SecondMetricEvent.Type,
-        _ otherTypes: repeat (each OtherMetricEventPack).Type
+    func nativeMetricEventPublisher<FirstEvent, SecondEvent, each OtherEventPack>(
+        forTypes firstType: FirstEvent.Type,
+        _ secondType: SecondEvent.Type,
+        _ otherTypes: repeat (each OtherEventPack).Type
     ) -> AnyPublisher<AVMetricEvent, Error>
-    where FirstMetricEvent: AVMetricEvent, SecondMetricEvent: AVMetricEvent, repeat each OtherMetricEventPack: AVMetricEvent {
+    where FirstEvent: AVMetricEvent, SecondEvent: AVMetricEvent, repeat each OtherEventPack: AVMetricEvent {
         AsyncSequencePublisher(
             from: metrics(forType: firstType).chronologicalMerge(with: metrics(forType: secondType), repeat metrics(forType: each otherTypes))
         )
