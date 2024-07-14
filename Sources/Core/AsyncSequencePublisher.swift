@@ -43,7 +43,7 @@ extension AsyncSequencePublisher {
             process(buffer.append(output))
         }
 
-        private func iterate() async throws {
+        private func iterate() async {
             do {
                 for try await output in sequence {
                     send(output)
@@ -58,7 +58,7 @@ extension AsyncSequencePublisher {
         func request(_ demand: Subscribers.Demand) {
             if task == nil {
                 task = Task {
-                    try await iterate()
+                    await iterate()
                 }
             }
             process(buffer.request(demand))
