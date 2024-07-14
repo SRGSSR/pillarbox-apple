@@ -66,6 +66,7 @@ extension AsyncSequencePublisher {
 
         func cancel() {
             task?.cancel()
+            task = nil
             subscriber = nil
         }
 
