@@ -164,7 +164,7 @@ extension AVPlayerItem {
     private func errorLogMonitoringPublisher() -> AnyPublisher<Error, Never> {
         NotificationCenter.default.weakPublisher(for: AVPlayerItem.newErrorLogEntryNotification, object: self)
             .compactMap { notification -> Error? in
-                guard let item = notification.object as? AVPlayerItem, let lastErrorEvent = item.errorLog()?.events.last else { return nil }
+                guard let lastErrorEvent = (notification.object as? AVPlayerItem)?.errorLog()?.events.last else { return nil }
                 return NSError(
                     domain: lastErrorEvent.errorDomain,
                     code: lastErrorEvent.errorStatusCode,
