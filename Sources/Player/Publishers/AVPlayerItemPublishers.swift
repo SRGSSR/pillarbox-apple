@@ -149,7 +149,7 @@ extension AVPlayerItem {
         )
         .prepend(false)
         .removeDuplicates()
-        .measureDateInterval { [weak self] dateInterval in
+        .measureEachDateInterval { [weak self] dateInterval in
             guard let self else { return }
             let event = MetricEvent(kind: .resumeAfterStall(dateInterval), time: currentTime())
             metricLog.appendEvent(event)
@@ -158,7 +158,7 @@ extension AVPlayerItem {
             let event = MetricEvent(kind: .stall, time: currentTime())
             metricLog.appendEvent(event)
             return true
-        } when: { isStalled in
+        } until: { isStalled in
             !isStalled
         }
         .eraseToAnyPublisher()

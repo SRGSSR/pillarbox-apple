@@ -143,7 +143,7 @@ final class MeasurePublisherTests: XCTestCase {
         }
     }
 
-    func testAfterWhen() {
+    func testEachAfterUntil() {
         let expectation = expectation(description: "Done")
         var durations: [TimeInterval] = []
         [1, 2, 3, 4, 5, 6].publisher
@@ -151,11 +151,11 @@ final class MeasurePublisherTests: XCTestCase {
                 Just(value)
                     .delay(for: .milliseconds(value * 100), scheduler: DispatchQueue.main)
             }
-            .measureDateInterval { interval in
+            .measureEachDateInterval { interval in
                 durations.append(interval.duration)
             } after: { value in
                 value.isMultiple(of: 2)
-            } when: { value in
+            } until: { value in
                 value.isMultiple(of: 5)
             }
             .sink(

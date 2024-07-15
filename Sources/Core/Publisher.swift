@@ -264,10 +264,10 @@ public extension Publisher {
     ///    - endCondition: A closure called to to determine when a measurement must stop.
     ///
     /// A measurement is made for each pair of matching conditions.
-    func measureDateInterval(
+    func measureEachDateInterval(
         perform measure: @escaping (DateInterval) -> Void,
         after startCondition: @escaping (Output) -> Bool,
-        when endCondition: @escaping (Output) -> Bool
+        until endCondition: @escaping (Output) -> Bool
     ) -> AnyPublisher<Output, Failure> {
         var startDate: Date?
         return handleEvents(
