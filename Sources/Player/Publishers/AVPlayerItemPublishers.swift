@@ -167,9 +167,10 @@ extension AVPlayerItem {
 
 extension AVPlayerItem {
     func errorPublisher() -> AnyPublisher<Error, Never> {
-        Publishers.Merge(
+        Publishers.Merge3(
             intrinsicErrorPublisher(),
-            playbackErrorPublisher()
+            playbackErrorPublisher(),
+            errorLogMonitoringPublisher()
         )
         .eraseToAnyPublisher()
     }
@@ -187,6 +188,28 @@ extension AVPlayerItem {
     private func playbackErrorPublisher() -> AnyPublisher<Error, Never> {
         NotificationCenter.default.weakPublisher(for: AVPlayerItem.failedToPlayToEndTimeNotification, object: self)
             .compactMap { $0.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error }
+            .eraseToAnyPublisher()
+    }
+
+    private func errorLogMonitoringPublisher() -> AnyPublisher<Error, Never> {
+        NotificationCenter.default.weakPublisher(for: AVPlayerItem.newErrorLogEntryNotification, object: self)
+            .compactMap { notification -> Error? in
+                guard let lastErrorEvent = (notification.object as? AVPlayerItem)?.errorLog()?.events.last else { return nil }
+                return NSError(
+                    domain: lastErrorEvent.errorDomain,
+                    code: lastErrorEvent.errorStatusCode,
+                    userInfo: [
+                        NSLocalizedDescriptionKey: lastErrorEvent.errorComment
+                    ].compactMapValues { $0 }
+                )
+            }
+            .handleEvents(receiveOutput: { [weak self] error in
+                // swiftlint:disable:previous trailing_closure
+                guard let self else { return }
+                let event = MetricEvent(kind: .warning(error), time: currentTime())
+                metricLog.appendEvent(event)
+            })
+            .filter { _ in false }
             .eraseToAnyPublisher()
     }
 }
