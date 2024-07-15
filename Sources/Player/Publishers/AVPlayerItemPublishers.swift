@@ -7,10 +7,11 @@
 import AVFoundation
 import Combine
 import MediaAccessibility
+import PillarboxCore
 
 extension AVPlayerItem {
     func propertiesPublisher() -> AnyPublisher<PlayerItemProperties, Never> {
-        Publishers.CombineLatest7(
+        Publishers.CombineLatest8(
             statusPublisher()
                 .lane("player_item_status"),
             publisher(for: \.presentationSize),
@@ -19,9 +20,10 @@ extension AVPlayerItem {
             timePropertiesPublisher(),
             publisher(for: \.duration),
             minimumTimeOffsetFromLivePublisher(),
-            metricsStatePublisher()
+            metricsStatePublisher(),
+            isStalledPublisher()
         )
-        .map { [weak self] status, presentationSize, mediaSelectionProperties, timeProperties, duration, minimumTimeOffsetFromLive, metricsState in
+        .map { [weak self] status, presentationSize, mediaSelectionProperties, timeProperties, duration, minimumTimeOffsetFromLive, metricsState, isStalled in
             let isKnown = (status != .unknown)
             return .init(
                 itemProperties: .init(
@@ -30,7 +32,8 @@ extension AVPlayerItem {
                     duration: isKnown ? duration : .invalid,
                     minimumTimeOffsetFromLive: minimumTimeOffsetFromLive,
                     presentationSize: isKnown ? presentationSize : nil,
-                    metricsState: metricsState
+                    metricsState: metricsState,
+                    isStalled: isStalled
                 ),
                 mediaSelectionProperties: mediaSelectionProperties,
                 timeProperties: isKnown ? timeProperties : .empty
@@ -46,10 +49,11 @@ extension AVPlayerItem {
             publisher(for: \.seekableTimeRanges)
                 .lane("player_item_seekable_time_ranges"),
             publisher(for: \.isPlaybackLikelyToKeepUp)
-                .measureDateInterval { [metricLog] interval in
-                    let event = MetricEvent(kind: .resourceLoading(interval))
+                .measureFirstDateInterval { [weak self] interval in
+                    guard let self else { return }
+                    let event = MetricEvent(kind: .resourceLoading(interval), time: currentTime())
                     metricLog.appendEvent(event)
-                } firstWhen: { isPlaybackLikelyToKeepUp in
+                } when: { isPlaybackLikelyToKeepUp in
                     isPlaybackLikelyToKeepUp
                 }
         )
@@ -132,6 +136,32 @@ extension AVPlayerItem {
             .compactMap { $0 }
             .map { _ in false }
             .eraseToAnyPublisher()
+    }
+}
+
+extension AVPlayerItem {
+    func isStalledPublisher() -> AnyPublisher<Bool, Never> {
+        Publishers.Merge(
+            NotificationCenter.default.weakPublisher(for: AVPlayerItem.playbackStalledNotification, object: self)
+                .map { _ in true },
+            publisher(for: \.isPlaybackLikelyToKeepUp)
+                .compactMap { $0 ? false : nil }
+        )
+        .prepend(false)
+        .removeDuplicates()
+        .measureEachDateInterval { [weak self] dateInterval in
+            guard let self else { return }
+            let event = MetricEvent(kind: .resumeAfterStall(dateInterval), time: currentTime())
+            metricLog.appendEvent(event)
+        } after: { [weak self] isStalled in
+            guard let self, isStalled else { return false }
+            let event = MetricEvent(kind: .stall, time: currentTime())
+            metricLog.appendEvent(event)
+            return true
+        } until: { isStalled in
+            !isStalled
+        }
+        .eraseToAnyPublisher()
     }
 }
 
